@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <ul v-if="selector" class="validator-selection">
+      <ul v-if="selector" class="validator-selectionpart">
         <li v-for="validator in validators" :key="validator" @click="vldPicker(validator)">
           <div class="validator-icons"><img :src="validator.icon" :alt="validator.name" /></div>
           <div class="validators-name">
@@ -182,7 +182,7 @@ export default {
 }
 .validator-state_Icon-icon {
   display: flex;
-  width: 45%;
+  width: 38%;
   height: 95%;
   border-radius: 50%;
   border: #bfbfbf;
@@ -201,7 +201,7 @@ export default {
 .redCounter {
   color: #ff5733;
 }
-.validator-selection {
+.validator-selectionpart {
   width: 90%;
   height: 90%;
   display: flex;
@@ -209,22 +209,26 @@ export default {
   align-items: center;
   flex-direction: column;
   position: absolute;
-  background: #17a2b8;
+  background: #1258a2;
   top: 10%;
   overflow-y: scroll;
+  opacity: 1 !important;
+  border-radius: 0 0 10px 10px;
 }
-.validator-selection li {
+.validator-selectionpart li {
   width: 100%;
-  height: 20%;
+  height: 30%;
   display: flex;
-  border-bottom: 1px solid #242529;
+  border-bottom: 1px solid #dfdfdf;
   color: #eee;
   margin-bottom: 1%;
   cursor: pointer;
+  background: #1258a2;
+  z-index: 100;
 }
-.validator-selection li:hover {
+.validator-selectionpart li:hover {
   background: #dfdfdf;
-  color: #242529;
+  color: #1258a2;
 }
 .validator-icons {
   width: 18%;
@@ -299,7 +303,7 @@ export default {
   z-index: 0;
 }
 .disabled {
-  opacity: 0.2;
+  opacity: 0.5;
   pointer-events: none;
   user-select: none;
 }
