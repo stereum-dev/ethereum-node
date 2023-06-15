@@ -182,7 +182,7 @@ export default {
 }
 .validator-state_Icon-icon {
   display: flex;
-  width: 45%;
+  width: 38%;
   height: 95%;
   border-radius: 50%;
   border: #bfbfbf;
