@@ -48,15 +48,15 @@
             </div> -->
 
             <div class="inputBox_select-box">
-              <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="toggleDropDown">
+              <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="toglDropDown">
                 {{ selectedItem }}
               </div>
               <div v-else class="wrapper">
-                <div v-if="selectedIcon !== ''" class="iconbox" @click="toggleDropDown">
+                <div v-if="selectedIcon !== ''" class="iconbox" @click="toglDropDown">
                   <img :src="selectedIcon" :alt="selectedItem" />
                 </div>
-                <div v-if="selectedIcon !== ''" class="selected-item" @click="toggleDropDown">{{ selectedItem }}</div>
-                <div v-else class="w-selected" @click="tglDropdown">{{ selectedItem }}</div>
+                <div v-if="selectedIcon !== ''" class="selected-item" @click="toglDropDown">{{ selectedItem }}</div>
+                <div v-else class="w-selected" @click="toglDropDown">{{ selectedItem }}</div>
                 <div class="openURL" @click="openWindow">
                   <img src="/img/icon/service-icons/internet.png" alt="Internet" />
                 </div>
@@ -158,7 +158,7 @@ export default {
       let url = this.checkPointSync;
       window.open(url, "_blank");
     },
-    toggleDropDown() {
+    toglDropDown() {
       this.dropdown = !this.dropdown;
     },
     linkPicker(item) {
@@ -275,7 +275,7 @@ export default {
   cursor: pointer;
 }
 .w-selected {
-  width: 84%;
+  width: 80%;
   height: 90%;
   display: flex;
   justify-content: center;
@@ -485,14 +485,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.syncContent .inputBox_select {
-  width: 60%;
-  height: 80%;
-  background-color: #1e2226;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
 .inputBox_select_icon {
   width: 10%;
   height: 100%;
@@ -510,48 +503,6 @@ export default {
   align-items: center;
   cursor: pointer;
   background-color: #151a1e;
-}
-
-.inputBox_select .triangle {
-  width: 14%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  background-color: #151a1e;
-}
-.arrow {
-  border: solid #d5d5d5;
-  border-width: 0 2px 2px 0;
-  display: flex;
-  padding: 10%;
-  margin-right: 15%;
-}
-.down {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-}
-.up {
-  transform: rotate(225deg);
-  -webkit-transform: rotate(225deg);
-}
-
-.syncContent .inputBox_select .select {
-  width: 86%;
-  height: 100%;
-  border-radius: 5px;
-  background-color: #151a1e;
-  color: #d5d5d5;
-  font-size: 80%;
-  font-weight: 400;
-  padding: 5px;
-  padding-left: 10px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-x: auto;
-  white-space: nowrap;
 }
 
 .selection-column {
