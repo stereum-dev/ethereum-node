@@ -37,15 +37,6 @@
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
             </div>
-            <!-- <div class="inputBox_select">
-              <div class="select">
-                {{ selectedItem }}
-              </div>
-              <div class="triangle" @click="toggleDropDown">
-                <i v-if="dropdown" class="arrow up"></i>
-                <i v-else class="arrow down"></i>
-              </div>
-            </div> -->
 
             <div class="inputBox_select-box">
               <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="toglDropDown">
