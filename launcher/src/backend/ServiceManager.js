@@ -1279,7 +1279,7 @@ export class ServiceManager {
     let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
     let serviceNameConfig = [];
     console.log(arrayOfServices);
-    for (let i = 0; i < arrayOfServices.length - 1; i++) {
+    for (let i = 0; i < arrayOfServices.length; i++) {
       let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
 
       const exportObject = {
