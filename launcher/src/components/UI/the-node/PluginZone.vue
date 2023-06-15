@@ -92,6 +92,7 @@ import { toRaw } from "vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useNodeManage } from "../../../store/nodeManage";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
 import PluginLogs from "./PluginLogs.vue";
@@ -138,11 +139,14 @@ export default {
   },
   computed: {
     ...mapWritableState(useServices, {
-      resyncSeparateModal: "resyncSeparateModal",
       installedServices: "installedServices",
       runningServices: "runningServices",
-      selectedServiceToResync: "selectedServiceToResync",
+      
     }),
+    ...mapWritableState(useNodeManage, {
+      selectedServiceToResync: "selectedServiceToResync",
+      resyncSeparateModal: "resyncSeparateModal"
+    })
   },
   methods: {
     serviceStateStatus(item) {

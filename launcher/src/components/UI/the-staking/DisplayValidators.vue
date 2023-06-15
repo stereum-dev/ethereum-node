@@ -112,11 +112,10 @@
               <div class="option-box">
                 <div class="grafiti-box">
                   <img
-                    :class="{ disabled: disable }"
                     class="grafiti-icon"
-                    src="../../../../public/img/icon/the-staking/option-graffiti.png"
+                    src="../../../../public/img/icon/the-staking/fee-recepient.png"
                     alt="icon"
-                    @click="grafitiDisplayHandler(item)"
+                    @click="feeRecepientDisplayHandler(item)"
                   />
                 </div>
                 <div class="copy-box">
@@ -156,13 +155,21 @@
                 </div>
               </div>
             </div>
+            <FeeRecepientValidator
+              v-if="item.isFeeRecepientBoxActive"
+              @confirm-change="
+                (enteredAddress) => {
+                  feeRecepientConfirmHandler(item, enteredAddress);
+                }
+              "
+            />
             <RenameValidator
               v-if="item.isRenameActive"
               :item="item"
               @change-name="renameValidatorHandler"
               @close-rename="closeRenameHandler"
             />
-            <GrafitiValidator v-if="item.isGrafitiBoxActive" @confirm-change="grafitiConfirmHandler(item)" />
+
             <ExitValidator
               v-if="item.isExitBoxActive"
               @back-btn="(item.isExitBoxActive = false), (deactiveInsertValidator = false)"
@@ -295,7 +302,7 @@
 
 <script>
 import KeyModal from "./KeyModal.vue";
-import GrafitiValidator from "./GrafitiValidator.vue";
+import FeeRecepientValidator from "./FeeRecepientValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
 import ExitValidator from "./ExitValidator.vue";
 import ExitValidatorsModal from "./ExitValidatorsModal.vue";
@@ -324,7 +331,7 @@ export default {
   components: {
     KeyModal,
     FeeRecipient,
-    GrafitiValidator,
+    FeeRecepientValidator,
     RenameValidator,
     ExitValidator,
     RemoveValidator,
@@ -353,7 +360,6 @@ export default {
       messageIsError: false,
       bDialogVisible: false,
       selectValidatorServiceForKey: false,
-
       feeRecipientBoxActive: false,
       feeInputActive: false,
       importIsProcessing: true, //it has to change to true
@@ -372,7 +378,6 @@ export default {
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
-
       ImportSlashingActive: false,
       slashingDB: "",
       keyIcon: {
@@ -403,15 +408,15 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      selectedIcon: "selectedIcon",
       buttonState: "buttonState",
-      importValidatorKeyActive: "importValidatorKeyActive",
-      passwordInputActive: "passwordInputActive",
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useStakingStore, {
+      importValidatorKeyActive: "importValidatorKeyActive",
+      passwordInputActive: "passwordInputActive",
+      selectedIcon: "selectedIcon",
       selectedValdiatorService: "selectedValdiatorService",
       totalBalance: "totalBalance",
       keys: "keys",
@@ -495,7 +500,7 @@ export default {
   beforeMount() {
     this.keys = this.keys.map((item) => {
       return {
-        isGrafitiBoxActive: false,
+        isFeeRecepientBoxActive: false,
         isRemoveBoxActive: false,
         isRemoveModalActive: false,
         isExitBoxActive: false,
@@ -542,13 +547,18 @@ export default {
           throw err;
         });
     },
-    grafitiDisplayHandler(el) {
-      el.isGrafitiBoxActive = true;
+    feeRecepientDisplayHandler(el) {
+      el.isFeeRecepientBoxActive = true;
       el.isRemoveModalActive = true;
     },
 
-    grafitiConfirmHandler(el) {
-      el.isGrafitiBoxActive = false;
+    async feeRecepientConfirmHandler(key, input) {
+      key.isFeeRecepientBoxActive = false;
+      if(/0x[a-fA-F0-9]{40}/g.test(input)) {
+        await ControlService.setFeeRecipient({serviceID: key.validatorID, pubkey: key.key, address: input})
+      } else {
+        await ControlService.deleteFeeRecipient({serviceID: key.validatorID, pubkey: key.key})
+      }
     },
     renameDisplayHandler(el) {
       el.isRenameActive = true;
@@ -751,6 +761,7 @@ export default {
                   activeSince: "-",
                   status: "loading",
                   balance: "-",
+                  network: client.config.network
                 };
               })
             );
@@ -815,7 +826,7 @@ export default {
           let now = new Date();
           latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
           let activationEpoch = parseInt(info.activationepoch);
-          if (this.currentNetwork.network === "gnosis") {
+          if (key.network === "gnosis") {
             d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
           } else {
             d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);

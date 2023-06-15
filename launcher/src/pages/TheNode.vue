@@ -21,7 +21,7 @@
                   <img :src="currentNetwork?.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
                 </div>
                 <div class="networkSelect">
-                  <span>{{ currentNetwork.name }}</span>
+                  <span>{{ currentNetwork?.name ?  currentNetwork.name : ""}}</span>
                 </div>
               </div>
             </div>

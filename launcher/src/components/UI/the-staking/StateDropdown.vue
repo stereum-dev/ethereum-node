@@ -1,7 +1,7 @@
 <template>
   <div class="dropDown_parent">
     <div class="dropDown_box">
-      <div class="dropDown" @click="toggleDropDown">
+      <div class="dropDown" :class="{ disabled: currentNetwork.network === 'gnosis' }" @click="toggleDropDown">
         <div v-if="!selectedValidator.key" class="options">Choose a validator</div>
         <div v-else class="options">
           {{ selectedValidator.key }}
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
   props: {
     keys: {
@@ -33,6 +35,11 @@ export default {
       dropDownIsOpen: false,
       selectedValidator: {},
     };
+  },
+  computed: {
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
   },
   methods: {
     toggleDropDown() {

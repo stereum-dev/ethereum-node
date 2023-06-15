@@ -14,11 +14,11 @@
           <span class="epochNumber">{{ stats.currentEpoch }}</span>
         </div>
         <div class="slotBox">
-          <span class="firstNumber">{{ stats.idx }}#</span>
+          <span class="firstNumber">{{ stats.currentSlot ? ((stats.currentSlot % 32) +1 )  : 0}}#</span>
           <span class="outOf">/</span>
           <span class="secondNumber">32#</span>
           <span class="divider"></span>
-          <span class="slotNumber">{{ stats.attestationSlot }}</span>
+          <span class="slotNumber">{{ stats.currentSlot }}</span>
         </div>
       </div>
     </div>

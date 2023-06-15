@@ -20,7 +20,7 @@
         >
           <div class="langIco"><img :src="linkF.langImg" /></div>
           <div class="langName">
-            <span>{{ link.langName }}</span>
+            <span>{{ linkF.langName }}</span>
           </div>
         </flag-button>
       </lang-dialog>
