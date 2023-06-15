@@ -376,5 +376,16 @@
     "seventhSlide": "Type in “ETH” as the currency symbol",
     "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
     "ninethSlide": "Click on “SAVE”"
+  },
+  "stakeGuide": {
+    "syncCheck": "First Check if your Node is synced",
+    "scrollMessage": "Scroll to change slides faster",
+    "stake": "staking",
+    "scrollClick": "Click on Staking",
+    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
+    "clickIcon": "Click on the icon of your validator client",
+    "cong": "Congrats you are done!",
+    "clickPass": "Please click here to enter your password and confirm.",
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   }
 }
