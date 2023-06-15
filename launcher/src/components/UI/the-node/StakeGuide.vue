@@ -191,16 +191,6 @@ export default {
         }, 200);
       }
     },
-    // dropFileHandler(event) {
-    //   let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
-    //   if (validator && validator.map((e) => e.state).includes("running")) {
-    //     let droppedFiles = event.dataTransfer.files;
-    //     if (droppedFiles[0]["type"] === "application/json") {
-    //       this.keyFiles.push(...droppedFiles);
-    //     }
-    //   }
-    //   this.isDragOver = false;
-    // },
     nextSlide() {
       this.nextStep++;
       if (this.nextStep > 56) {
