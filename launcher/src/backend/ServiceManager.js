@@ -1242,25 +1242,7 @@ export class ServiceManager {
     if (jobs.includes("SWITCH CLIENT")) {
       try {
         let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
-        let sortedTasks = [];
-        switchTasks
-          .filter((c) => c.service.category === "validator")
-          .forEach((switchTask) => {
-            sortedTasks.push(switchTask);
-          });
-        switchTasks
-          .filter((c) => c.service.category === "consensus")
-          .forEach((switchTask) => {
-            sortedTasks.push(switchTask);
-            console.log(switchTask.service.service);
-          });
-        switchTasks
-          .filter((c) => c.service.category === "execution")
-          .forEach((switchTask) => {
-            sortedTasks.push(switchTask);
-            console.log(switchTask.service.service);
-          });
-        for (const switchTask of sortedTasks) {
+        for (const switchTask of switchTasks) {
           await this.switchServices(switchTask);
         }
         let services = await this.readServiceConfigurations();
