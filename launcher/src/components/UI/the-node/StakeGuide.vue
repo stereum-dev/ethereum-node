@@ -5,14 +5,14 @@
         <div class="header-node" @click.prevent="stakeGuideStep1">
           <div class="title">{{ $t("pagesnav.control") }}</div>
         </div>
-        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow" />
         <div class="step-one">
           <span>{{ $t("rpcGuide.clickNav") }}</span>
         </div>
       </div>
     </div>
     <div v-if="stakeSecondStep" class="wrapper">
-      <h1>First Check if your Node is synced</h1>
+      <h1>{{ $t("stakeGuide.syncCheck") }}</h1>
       <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
       <div class="left-slide"></div>
       <div class="top-slide"></div>
@@ -29,13 +29,13 @@
         </div>
         <div ref="modalContainer" class="stake-modal_container" @wheel="handleScroll">
           <div class="stake-modal-arr">
-            <div class="left" data-tooltip="Scroll to change slides faster" @click="prevSlide"></div>
+            <div class="left" :data-tooltip="$t('stakeGuide.scrollMessage')" @click="prevSlide"></div>
           </div>
           <div class="stake-modal_slider-tutorial">
             <img :src="slide" alt="slide" />
           </div>
           <div class="stake-modal-arr">
-            <div class="right" data-tooltip="Scroll to change slides faster" @click="nextSlide"></div>
+            <div class="right" :data-tooltip="$t('stakeGuide.scrollMessage')" @click="nextSlide"></div>
           </div>
         </div>
       </div>
@@ -43,42 +43,42 @@
     <div v-if="goForStake" class="bg-dark">
       <div v-if="stakeBtn" class="wrapper">
         <div class="header-node-staking" @click.prevent="stakeGuideStep2">
-          <div class="title">staking</div>
+          <div class="title">{{ $t("stakeGuide.stake") }}</div>
         </div>
-        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow-staking" />
+        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow-staking" />
         <div class="staking-step-one">
-          <span>Click on Staking</span>
+          <span>{{ $t("stakeGuide.scrollClick") }}</span>
         </div>
       </div>
       <div v-if="insertVal" class="wrapper">
         <div v-if="!isDragOver && dragStep === false" class="message-stake-wrapper">
-          <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
-          <div>
-            <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
+          <img src="/img/icon/arrows/drag.png" class="drag-icon" alt="" />
+          <div class="drag-message">
+            <span>{{ $t("stakeGuide.drag") }}</span>
           </div>
         </div>
         <div v-if="clickService" class="message-stake-wrapper">
           <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
-            <span>Click on the icon of your validator client</span>
+            <span>{{ $t("stakeGuide.clickIcon") }}</span>
           </div>
         </div>
         <div v-if="stakeCongrats" class="message-stake-wrapper-last">
           <div class="staking-step-two">
-            <span>Congrats you are done!</span>
+            <span>{{ $t("stakeGuide.cong") }}</span>
           </div>
         </div>
         <div v-if="passPointer" class="message-stake-wrapper">
           <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
-            <span>Please click here to enter your password and confirm.</span>
+            <span>{{ $t("stakeGuide.clickPass") }}</span>
           </div>
         </div>
         <div v-if="modalGuide" class="modal-guide-wrapper">
-          <img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" class="point-to-modal" />
+          <img src="/img/icon/arrows/Pointer1.png" alt="" class="point-to-modal" />
         </div>
         <div v-if="modalGuide" class="staking-step-three">
-          <span>Choose "No" if you have no Slashing Protection Database from a prior Node</span>
+          <span>{{ $t("stakeGuide.noSlash") }}</span>
         </div>
 
         <div class="DisplayValidators-bg"></div>
@@ -258,6 +258,20 @@ export default {
 };
 </script>
 <style scoped>
+.drag-message {
+  color: #c1c1c1;
+  font-size: 150%;
+  margin-left: 5%;
+  font-weight: 600;
+  width: 100%;
+  height: 10%;
+  top: 40%;
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  z-index: 1;
+}
 [data-tooltip] {
   position: relative;
   cursor: default;
@@ -265,7 +279,6 @@ export default {
 [data-tooltip]::after {
   position: absolute;
   width: max-content;
-  left: -30000%;
   text-align: center;
   content: attr(data-tooltip);
   background: black;
