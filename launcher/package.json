@@ -1,6 +1,6 @@
 {
   "name": "stereum-launcher",
-  "version": "2.0.0-rc.18",
+  "version": "2.0.0-rc.19",
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": "stereum.net",
@@ -14,7 +14,7 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test-coverage": "jest --coverage",
     "watch:css": "npx tailwindcss -i ./src/main.css -o ./public/output.css --watch",
     "lint:fix": "eslint --ext .js,.vue --ignore-path ../.gitignore --fix src",

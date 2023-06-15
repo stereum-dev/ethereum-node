@@ -22,9 +22,13 @@
             class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-12"
             @click="selectNetwork(state)"
           >
-            <div class="w-1/2 flex justify-start space-x-4 pl-10">
-              <img :src="state.icon" alt="Icon" class="w-6" />
-              <span class="text-md uppercase">{{ state.name }}</span>
+            <div class="selectRow">
+              <div class="item-box">
+                <div class="item-box_icon"><img :src="state.icon" :alt="state.name" class="w-6" /></div>
+                <div class="item-box_name">
+                  <span class="text-md uppercase">{{ state.name }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -118,6 +122,35 @@ export default {
 };
 </script>
 <style scoped>
+.selectRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.item-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+}
+.item-box_icon {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item-box_name {
+  width: 90%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 10%;
+}
 .plugin-parent {
   width: 97%;
   height: 75%;

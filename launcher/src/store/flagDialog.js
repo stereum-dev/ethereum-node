@@ -52,7 +52,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langSelect: "img/flag/turkey.png",
           langName: "Türkçe",
           label: "tr",
-          enable: false,
+          enable: true,
         },
         {
           langImg: "img/flag/netherlands.png",

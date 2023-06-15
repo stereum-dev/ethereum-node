@@ -51,10 +51,10 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
-      selectedIcon: "selectedIcon",
       buttonState: "buttonState",
     }),
     ...mapWritableState(useStakingStore, {
+      selectedIcon: "selectedIcon",
       selectedValdiatorService: "selectedValdiatorService",
       insertKeyBoxActive: "insertKeyBoxActive",
       enterPasswordBox: "enterPasswordBox",
