@@ -401,5 +401,15 @@
   "selectionOption": {
     "graffiti": "graffiti",
     "removeKeys": "Remove all keys"
+  },
+  "syncCommitte": {
+    "total": "total",
+    "status": "STATUS",
+    "particip": "PARTICIPATING",
+    "noParticip": "NOT PARTICIPATING",
+    "start": "Start",
+    "end": "End",
+    "newSync": "New Sync Committee in",
+    "hours": "hours"
   }
 }
