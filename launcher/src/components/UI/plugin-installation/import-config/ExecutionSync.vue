@@ -12,8 +12,8 @@
     <div class="syncBox">
       <div class="syncContent">
         <div class="syncText">
-          <span>GENESIS</span>
-          <span>Syncs your clients</span>
+          <span>{{ $t("executionSync.gen") }}</span>
+          <span>{{ $t("executionSync.syncClient") }}</span>
         </div>
       </div>
     </div>

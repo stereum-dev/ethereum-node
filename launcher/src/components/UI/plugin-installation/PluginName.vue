@@ -49,7 +49,7 @@
         </div>
         <div class="option-content">
           <div class="optionHeader">
-            <span>ADDITIONAL OPTIONS</span>
+            <span>{{ $t("pluginName.addOpt") }}</span>
           </div>
           <div class="option-content_box gap-y-2">
             <div class="network-parent">
@@ -217,7 +217,7 @@ export default {
           filter = (item) => {
             if (element.category === "validator" && element.service !== "CharonService") {
               return item.service === "TekuValidatorService";
-            }else if (element.category === "validator") {
+            } else if (element.category === "validator") {
               return item.service === "CharonService";
             }
             if (element.category === "consensus") {

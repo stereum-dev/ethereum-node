@@ -4,18 +4,17 @@
       <div class="content-box shadow-md shadow-gray-700">
         <div class="description">
           <p>
-            With this installation option you are able to import a used Stereum config file to replicate your node
-            setup.
+            {{ $t("uploadConfig.message") }}
           </p>
         </div>
         <div class="uploadBox">
           <div class="uploadBox__title">
-            <span>SELECT A STEREUM CONFIG FILE TO UPLOAD IT</span>
+            <span>{{ $t("uploadConfig.selectConfig") }}</span>
           </div>
           <div class="uploadBox__content">
             <div class="uploadBox__content__file">
               <label class="w-full block mb-2 text-xs text-left font-medium text-slate-100" for="file_input">
-                <span class="ml-2">Config file</span>
+                <span class="ml-2">{{ $t("uploadConfig.configFile") }}</span>
                 <div class="input cursor-pointer">
                   <input
                     id="file_input"
