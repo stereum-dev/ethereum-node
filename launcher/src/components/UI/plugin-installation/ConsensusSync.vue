@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "@/store/nodeManage";
@@ -152,11 +153,28 @@ export default {
     toglDropDown() {
       this.dropdown = !this.dropdown;
     },
-    linkPicker(item) {
+    async linkPicker(item) {
+      this.selectedItem = "Validating...";
+      this.selectedIcon = "/img/icon/control/spinner.gif";
+      this.checkPointSync = "";
+      this.dropdown = false;
+      const isCheckpointValid = await ControlService.isCheckpointValid(item.url);
+      if (!isCheckpointValid) {
+        this.selectedItem = "INVALID";
+        this.selectedIcon = item.icon;
+        setTimeout(
+          function (me) {
+            me.selectedItem = "- SELECT A SOURCE -";
+            me.selectedIcon = "";
+          },
+          1000,
+          this
+        );
+        return;
+      }
       this.selectedItem = item.name;
       this.selectedIcon = item.icon;
       this.checkPointSync = item.url;
-      this.dropdown = false;
     },
     setSelectedLinks() {
       switch (this.currentNetwork.id) {
