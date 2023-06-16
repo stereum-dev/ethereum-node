@@ -489,5 +489,13 @@
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
     "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
     "configFile": "Config file"
+  },
+  "fastSync": {
+    "header": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE",
+    "gen": "GENESIS",
+    "sync": "Syncs from genesis",
+    "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   }
 }
