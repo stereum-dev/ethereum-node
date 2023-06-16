@@ -38,11 +38,6 @@
     "docsTitle": "chain docs",
     "docsText": "A handy link to the network logs' documentation for your selected node configuration."
   },
-  "notifModal": {
-    "notification": "Notifications",
-    "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Click outside to cancel"
-  },
   "settingPanel": {
     "stereumName": "stereum settings",
     "langName": "Language  Selection",
@@ -452,6 +447,16 @@
     "message": "by initiating resync you will delete the database of",
     "msgPartTwo": " source will be used for resynchronization",
     "resync": "resync",
+    "close": "click outside to close"
+  },
+  "notifModal": {
+    "addNotif": "add a notification channel",
+    "chooseNotif": "Choose what kind of Notification Channel you want to configure",
+    "stereumMonitor": "Stereum Node Monitor",
+    "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
+    "stepTwo": "Open the app on your smartphone",
+    "stepThree": "Scan the QR Code",
+    "stepFour": "Send a test notification",
     "close": "click outside to close"
   }
 }
