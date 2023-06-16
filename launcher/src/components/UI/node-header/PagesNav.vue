@@ -13,6 +13,7 @@
     </li>
   </ul>
 </template>
+<script></script>
 <style scoped>
 .router__items {
   width: 30%;
