@@ -43,13 +43,13 @@
       >
         <div class="btnContent">
           <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
-          <span>graffiti</span>
+          <span>{{ $t("selectionOption.graffiti") }}</span>
         </div>
       </div>
       <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
         <div class="btnContent">
           <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-          <span>Remove all keys</span>
+          <span>{{ $t("selectionOption.removeKeys") }}</span>
         </div>
       </div>
     </div>

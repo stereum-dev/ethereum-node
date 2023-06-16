@@ -397,5 +397,9 @@
   },
   "disableStake": {
     "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+  },
+  "selectionOption": {
+    "graffiti": "graffiti",
+    "removeKeys": "Remove all keys"
   }
 }
