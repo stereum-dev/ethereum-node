@@ -10,10 +10,10 @@
       </div>
       <div class="copy-icon" @click="$emit('copyError')">
         <img src="/img/icon/service-icons/copy1.png" alt="icon" />
-        <span>copied!</span>
+        <span>{{ $t("errTerminal.copy") }}</span>
       </div>
       <div class="btn-box">
-        <span>Click outside to close</span>
+        <span>{{ $t("errTerminal.close") }}</span>
       </div>
     </div>
   </div>

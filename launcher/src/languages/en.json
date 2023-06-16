@@ -503,5 +503,9 @@
     "message": "Do you want to remove the saved connection?",
     "rem": "Remove",
     "close": "click outside to close"
+  },
+  "errTerminal": {
+    "copy": "copied!",
+    "close": "click outside to close"
   }
 }
