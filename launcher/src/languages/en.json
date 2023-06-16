@@ -394,5 +394,8 @@
     "assignSlot": "Assigned Slot",
     "noAsign": "Not Assigned",
     "nxtBlck": "Next Block Proposal in:"
+  },
+  "disableStake": {
+    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
   }
 }
