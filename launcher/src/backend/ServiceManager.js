@@ -577,8 +577,7 @@ export class ServiceManager {
   async switchServices(switchTask) {
     let services = await this.readServiceConfigurations();
 
-    let previousService = services.filter((service) => service.id === switchTask.service.config.serviceID);
-    previousService = previousService[0];
+    let previousService = services.find((service) => service.id === switchTask.service.config.serviceID);
     let servicesBelow = [];
     switch (switchTask.service.category) {
       case "execution":
@@ -975,68 +974,50 @@ export class ServiceManager {
     let ELInstalls = tasks.filter((t) => t.service.category === "execution");
     ELInstalls.forEach((t) => {
       let service = this.getService(t.service.service, t.data);
-      if (!Object.hasOwn(t.service, "config")) {
-        t.service.id = service.id;
-      } else {
-        t.service.config.serviceID = service.id;
-      }
+      t.service.config.serviceID = service.id;
       newServices.push(service);
     });
     let CLInstalls = tasks.filter((t) => t.service.category === "consensus");
     CLInstalls.forEach((t) => {
       if (t.data.executionClients.length > 0) {
         t.data.executionClients = t.data.executionClients.map((ec) => {
-          let id = Object.hasOwn(ec, "config") ? ec.config.serviceID : ec.id;
+          let id = ec.config ? ec.config.serviceID : ec.id;
           if (id) {
             return services.find((s) => s.id === id);
           }
-          id = Object.hasOwn(CLInstalls.find((el) => el.service.id === ec.id).service, "config")
-            ? ELInstalls.find((el) => el.service.id === ec.id).service.config.serviceID
-            : ELInstalls.find((el) => el.service.id === ec.id).service.id;
+          id = ELInstalls.find((el) => el.service.id === ec.id).service.config.serviceID;
           return newServices.find((s) => s.id === id);
         });
       }
       let service = this.getService(t.service.service, t.data);
-      if (!Object.hasOwn(t.service, "config")) {
-        t.service.id = service.id;
-      } else {
-        t.service.config.serviceID = service.id;
-      }
+      t.service.config.serviceID = service.id;
       newServices.push(service);
     });
     let VLInstalls = tasks.filter((t) => t.service.category === "validator");
     VLInstalls.forEach((t) => {
       if (t.data.beaconServices.length > 0) {
         t.data.beaconServices = t.data.beaconServices.map((bc) => {
-          let id = Object.hasOwn(bc, "config") ? bc.config.serviceID : bc.id;
+          let id = bc.config ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
           }
-          id = Object.hasOwn(CLInstalls.find((el) => el.service.id === bc.id).service, "config")
-            ? CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID
-            : CLInstalls.find((el) => el.service.id === bc.id).service.id;
+          id = CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID;
           return newServices.find((s) => s.id === id);
         });
       }
       let service = this.getService(t.service.service, t.data);
-      if (!Object.hasOwn(t.service, "config")) {
-        t.service.id = service.id;
-      } else {
-        t.service.config.serviceID = service.id;
-      }
+      t.service.config.serviceID = service.id;
       newServices.push(service);
     });
     let PInstalls = tasks.filter((t) => t.service.category === "service");
     PInstalls.forEach((t) => {
       if (t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService") {
         t.data.beaconServices = t.data.beaconServices.map((bc) => {
-          let id = Object.hasOwn(bc, "config") ? bc.config.serviceID : bc.id;
+          let id = bc.config ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
           }
-          id = Object.hasOwn(CLInstalls.find((el) => el.service.id === bc.id).service, "config")
-            ? CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID
-            : CLInstalls.find((el) => el.service.id === bc.id).service.id;
+          id = CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID;
           return newServices.find((s) => s.id === id);
         });
       }
@@ -1260,7 +1241,6 @@ export class ServiceManager {
   async exportConfig() {
     let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
     let serviceNameConfig = [];
-    console.log(arrayOfServices);
     for (let i = 0; i < arrayOfServices.length; i++) {
       let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
 
