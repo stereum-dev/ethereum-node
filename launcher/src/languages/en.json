@@ -225,6 +225,7 @@
     "path": "INSTALLATION PATH",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "plugin": "INSTALLED SERVICES",
+    "addOpt": "ADDITIONAL OPTIONS",
     "back": "BACK",
     "next": "NEXT"
   },
