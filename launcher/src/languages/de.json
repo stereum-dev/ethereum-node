@@ -38,11 +38,6 @@
     "docsTitle": "Dokumentation",
     "docsText": "Ein praktischer Link zur Dokumentation des Netzwerkprotokolls für die ausgewählte Node-Konfiguration."
   },
-  "notifModal": {
-    "notification": "Benachrichtigungen",
-    "notifText": "Sie können verschiedene Benachrichtigungsquellen einrichten, über die Sie benachrichtigt werden möchten",
-    "cancelText": "Außerhalb klicken, um abzubrechen"
-  },
   "settingPanel": {
     "stereumName": "Stereum Einstellungen",
     "langName": "Sprachauswahl",
@@ -94,19 +89,20 @@
     "delete": "LÖSCHEN"
   },
   "updatePanel": {
-    "launcherTitle": "launcher",
+    "launcherTitle": "Launcher",
+    "version": "Version",
     "current": "aktuelle",
     "nodeTitle": "Node Updates",
     "latest": "neueste",
     "auto": "Auto Update",
     "available": "verfügbar",
     "searching": "Suche nach Updates...",
-    "serviceTitle": "plug-in updates",
+    "serviceTitle": "Plug-in-Updates",
     "serviceDesc": "Updates für die installierte Auswahl von PLUG-INs",
     "availablePlugin": "VERFÜGBARE PLUG-IN UPDATES",
     "all": "Alle aktualisieren",
-    "osTitle": "server os updates",
-    "availableUpdates": "available updates"
+    "osTitle": "Server OS Updates",
+    "availableUpdates": "Updates"
   },
   "controlPage": {
     "node": "NODE",
@@ -115,7 +111,7 @@
     "read": "LESEN",
     "inclusionDistance": "INKLUSIONSDISTANZ",
     "rpc": "RPC-Endpunkt",
-    "ws": "WS-ENDPOINT",
+    "ws": "WS-ENDPUNKT",
     "syncStatus": "SYNC STATUS",
     "hard": "SPEICHERVOLUMEN",
     "free": "FREI",
@@ -144,11 +140,11 @@
     "importKey": "Importiere Validatorschlüssel",
     "waitMessage": "Dies kann einige Zeit dauern",
     "waitForImport": "Bitte warte bis der Schlüssel importiert ist",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
-    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
-    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "I am sure",
-    "cancel": "cancel"
+    "warningMessage": "Unsere zusätzlichen Slashing Protection Checks haben gezeigt, dass einer der Validatoren, die Sie importieren wollen, in den letzten 2 Epochen aktiv war!",
+    "warningAlarm": "WARNUNG: Sie laufen ein hohes Risiko \"geslashed\" zu werden!",
+    "warningQuestion": "SIND SIE SICH SICHER, DASS SIE DIE VALIDATOR KEYS IMPORTIEREN WOLLEN?",
+    "sure": "Ich bin mir sicher",
+    "cancel": "Abbrechen"
   },
   "enterPass": {
     "enterPass": "PASSWORT EINGEBEN & IMPORTIEREN"
@@ -229,6 +225,7 @@
     "path": "INSTALLATIONSPFAD",
     "syncClient": "SYNCHRONISIERT IHREN CLIENT VOM BEGINN DER BLOCKCHAIN AN",
     "plugin": "INSTALLIERTE DIENSTE",
+    "addOpt": "ADDITIONAL OPTIONS",
     "back": "ZURÜCK",
     "next": "WEITER"
   },
@@ -286,8 +283,8 @@
     "copiedMessage": "DATA-API-URL kopiert!",
     "RPCTurnOnMessage": "Bitte schalten Sie zuerst den RPC-Tunnel ein!",
     "RPCCopiedMessage": "RPC-URL kopiert!",
-    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "WSTurnOnMessage": "Bitte schalten Sie zuerst den DATA-API-Tunnel ein!",
+    "WSCopiedMessage": "WS-URL in Zwischenablage kopiert!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
@@ -325,18 +322,18 @@
   },
   "importSlashingModal": {
     "slashModalMessage": "Möchten Sie mit einer Slashing Protection Datenbank importieren?",
-    "importMessage": "Import your slashing database file.",
+    "importMessage": "Importieren Sie Ihre Slashing-Datenbankdatei.",
     "chooseFile": "Datei auswählen",
     "continue": "Fortsetzen"
   },
   "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+    "noValidatorInstalled": "Es ist kein Validator-Client installiert!",
+    "disabledStakingMessage": "Installieren Sie mindestens einen Validator-Client, um den Import von Validator-Schlüsseln zu aktivieren."
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
-    "logOutBtn": "Log out"
+    "logOutTitle": "ABMELDEN",
+    "logOutQuestion": "SIND SIE SICH SICHER DASS SIE SICH VON IHREM NODE SERVER ABMELDEN WOLLEN?",
+    "logOutBtn": "Abmelden"
   },
   "prunningModal": {
     "prunningText": "GETH verbraucht Speicherplatz, der im Laufe seiner Betriebszeit wächst. Das Löschen unnötiger Daten und das Freigeben von Speicherplatz aus der Geth-Datenbank kann mehrere Stunden dauern. Dies muss durchgeführt werden, wenn Geth nicht ausgeführt wird. WENN DER LÖSCHVORGANG GESTARTET WIRD, WIRD IHR NODE OFFLINE GEHEN UND POTENZIELLE ATTESTATIONSPFLICHTEN NICHT MEHR ERFÜLLEN.",
@@ -347,7 +344,7 @@
     "restarQ": "Sind Sie sich sicher, dass Sie neu starten wollen?",
     "restartMessage": "Ihre Node kann dabei offline gehen!",
     "restart": "Neustart",
-    "confirmMessage": "Are you sure you want turn your node"
+    "confirmMessage": "Bist du sicher, dass du deine Node [...] möchtest?"
   },
   "nukeModal": {
     "nukeQ": "Sind Sie sicher, dass Sie STEREUM & ALLE DIENSTE VON DEM SERVER entfernen möchten?",
@@ -359,20 +356,155 @@
     "turnOn": "Bitte einschalten"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Click on the “ON/OFF” button to open your port",
-    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Click x to cancel",
-    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
-    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
-    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Click on the Network button",
-    "thirdSlide": "Click on “Add Network”",
-    "fourthSlide": "Type in a name for your network",
-    "fivethSlide": "Paste in the copied URL from Stereum",
-    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "Type in “ETH” as the currency symbol",
-    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
-    "ninethSlide": "Click on “SAVE”"
+    "clickNav": "Klicken Sie auf „KONTROLLE“ um zu dem Dashboard zu gelangen.",
+    "toggleMessage": "Klicken Sie auf den \"ON/OFF\"-Button, um Ihren Port zu öffnen",
+    "clickExtention": "Klicken Sie auf \"Ihr Execution Client\", um die RPC-URL zu kopieren",
+    "clickCancel": "Klicken Sie X, um abzubrechen",
+    "firstMessage": "Das RPC-Endpoint Widget befindet sich im Dashboard. Bitte aktivieren Sie den Button und klicken Sie auf „Execution Client“, um zum nächsten Schritt zu gelangen.",
+    "secondMessage": "Sie können Ihre Transaktion jetzt mit METAMASK senden. Wenn Sie Transaktionen abschicken, klicken Sie auf „EIN“, um Ihren Port wieder zu schließen",
+    "firstSlide": "Melden Sie sich jetzt in Ihre dAPP oder Wallet ein, die Sie verwenden möchten (in unserem Fall MetaMask)",
+    "secondSlide": "Klicken Sie \"Network\" (Netzwerk)",
+    "thirdSlide": "Klicken Sie auf \"Add Network\"",
+    "fourthSlide": "Geben Sie einen Namen für Ihr Netzwerk ein",
+    "fivethSlide": "Kopieren Sie die URL aus Stereum in das Feld",
+    "sixthSlide": "Geben Sie die CHAIN-ID ein, auf der Ihr Knoten läuft (für GoerliTestnet ist es 5)",
+    "seventhSlide": "Geben Sie \"ETH\" als Währungssymbol ein",
+    "eightthSlide": "OPTIONAL - Sie können in eine Block-Explorer-URL einfügen",
+    "ninethSlide": "Klicken Sie auf \"Speichern\""
+  },
+  "stakeGuide": {
+    "syncCheck": "First Check if your Node is synced",
+    "scrollMessage": "Scroll to change slides faster",
+    "stake": "staking",
+    "scrollClick": "Click on Staking",
+    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
+    "clickIcon": "Click on the icon of your validator client",
+    "cong": "Congrats you are done!",
+    "clickPass": "Please click here to enter your password and confirm.",
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
+    "test": "testtesttestte"
+  },
+  "blockProduct": {
+    "status": "STATUS",
+    "assignSlot": "Assigned Slot",
+    "noAsign": "Not Assigned",
+    "nxtBlck": "Next Block Proposal in:"
+  },
+  "disableStake": {
+    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+  },
+  "selectionOption": {
+    "graffiti": "graffiti",
+    "removeKeys": "Remove all keys"
+  },
+  "syncCommitte": {
+    "total": "total",
+    "status": "STATUS",
+    "particip": "PARTICIPATING",
+    "noParticip": "NOT PARTICIPATING",
+    "start": "Start",
+    "end": "End",
+    "newSync": "New Sync Committee in",
+    "hours": "hours"
+  },
+  "theAttes": {
+    "lastAttest": "Last Attestation Slot:",
+    "keyStatus": "Key Status:",
+    "attest": "ATTESTING",
+    "pending": "PENDING",
+    "nxtAttest": "next Attestation Slot:",
+    "slotRem": "Slots remaining",
+    "tillAtest": "till attestation"
+  },
+  "confirmModal": {
+    "message": "Your node will go off line while you do this!",
+    "turnOn": "turn on",
+    "turnOff": "turn off",
+    "close": "click outside to close"
+  },
+  "nodeAlert": {
+    "lowSpace": "LOW STORAGE SPACE",
+    "missAttest": "MISSED ATTESTATION",
+    "use": "USAGE",
+    "noFee": "no fee recipient",
+    "stereumUpt": "STEREUM UPDATE"
+  },
+  "restartModalNode": {
+    "message": "are you sure you want to",
+    "close": "click outside to close"
+  },
+  "resyncModal": {
+    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
+    "sync": "SYNCHRONISATION",
+    "gen": "GENESIS",
+    "chkSync": "CHECKPOINT SYNC",
+    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cont": "CONTINUE",
+    "resync": "RESYNC",
+    "close": "click outside to close"
+  },
+  "resyncSeparateService": {
+    "message": "by initiating resync you will delete the database of",
+    "msgPartTwo": " source will be used for resynchronization",
+    "resync": "resync",
+    "close": "click outside to close"
+  },
+  "notifModal": {
+    "addNotif": "add a notification channel",
+    "chooseNotif": "Choose what kind of Notification Channel you want to configure",
+    "stereumMonitor": "Stereum Node Monitor",
+    "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
+    "stepTwo": "Open the app on your smartphone",
+    "stepThree": "Scan the QR Code",
+    "stepFour": "Send a test notification",
+    "close": "click outside to close"
+  },
+  "replacePanel": {
+    "client": "Client",
+    "sync": "SYNC",
+    "gen": "GENESIS",
+    "chkPoint": "CHECKPOINT",
+    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cancel": "CANCEL",
+    "confirm": "CONFIRM"
+  },
+  "executionSync": {
+    "gen": "GENESIS",
+    "syncClient": "Syncs your clients"
+  },
+  "importingList": {
+    "nodeConf": "Node Config"
+  },
+  "importingSyncing": {
+    "message": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE"
+  },
+  "importingVerify": {
+    "pluginInst": "Plugins To Install",
+    "cat": "category",
+    "path": "path"
+  },
+  "uploadConfig": {
+    "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
+    "configFile": "Config file"
+  },
+  "fastSync": {
+    "header": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE",
+    "gen": "GENESIS",
+    "sync": "Syncs from genesis",
+    "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
+  },
+  "deleteModal": {
+    "message": "Do you want to remove the saved connection?",
+    "rem": "Remove",
+    "close": "click outside to close"
+  },
+  "errTerminal": {
+    "copy": "copied!",
+    "close": "click outside to close"
   }
 }
