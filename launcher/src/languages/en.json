@@ -498,5 +498,10 @@
     "gen": "GENESIS",
     "sync": "Syncs from genesis",
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
+  },
+  "deleteModal": {
+    "message": "Do you want to remove the saved connection?",
+    "rem": "Remove",
+    "close": "click outside to close"
   }
 }
