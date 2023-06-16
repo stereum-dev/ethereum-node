@@ -437,5 +437,15 @@
   "restartModalNode": {
     "message": "are you sure you want to",
     "close": "click outside to close"
+  },
+  "resyncModal": {
+    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
+    "sync": "SYNCHRONISATION",
+    "gen": "GENESIS",
+    "chkSync": "CHECKPOINT SYNC",
+    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cont": "CONTINUE",
+    "resync": "RESYNC",
+    "close": "click outside to close"
   }
 }
