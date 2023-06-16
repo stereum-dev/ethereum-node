@@ -474,5 +474,10 @@
   },
   "importingList": {
     "nodeConf": "Node Config"
+  },
+  "importingSyncing": {
+    "message": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE"
   }
 }
