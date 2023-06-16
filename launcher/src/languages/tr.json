@@ -230,6 +230,7 @@
     "path": "KURULUM DİZİNİ",
     "syncClient": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
     "plugin": "KURULAN SERVİSLER",
+    "addOpt": "ADDITIONAL OPTIONS",
     "back": "GERİ",
     "next": "SONRAKİ"
   },
@@ -375,5 +376,141 @@
     "seventhSlide": "Para birimi simgesi olarak \"ETH\" yazın",
     "eightthSlide": "İSTEĞE BAĞLI - bir Blok Gezgini URL'si yazabilirsiniz (örn. etherscan)",
     "ninethSlide": "“KAYDET” e tıklayın"
+  },
+  "stakeGuide": {
+    "syncCheck": "First Check if your Node is synced",
+    "scrollMessage": "Scroll to change slides faster",
+    "stake": "staking",
+    "scrollClick": "Click on Staking",
+    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
+    "clickIcon": "Click on the icon of your validator client",
+    "cong": "Congrats you are done!",
+    "clickPass": "Please click here to enter your password and confirm.",
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
+    "test": "testtesttestte"
+  },
+  "blockProduct": {
+    "status": "STATUS",
+    "assignSlot": "Assigned Slot",
+    "noAsign": "Not Assigned",
+    "nxtBlck": "Next Block Proposal in:"
+  },
+  "disableStake": {
+    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+  },
+  "selectionOption": {
+    "graffiti": "graffiti",
+    "removeKeys": "Remove all keys"
+  },
+  "syncCommitte": {
+    "total": "total",
+    "status": "STATUS",
+    "particip": "PARTICIPATING",
+    "noParticip": "NOT PARTICIPATING",
+    "start": "Start",
+    "end": "End",
+    "newSync": "New Sync Committee in",
+    "hours": "hours"
+  },
+  "theAttes": {
+    "lastAttest": "Last Attestation Slot:",
+    "keyStatus": "Key Status:",
+    "attest": "ATTESTING",
+    "pending": "PENDING",
+    "nxtAttest": "next Attestation Slot:",
+    "slotRem": "Slots remaining",
+    "tillAtest": "till attestation"
+  },
+  "confirmModal": {
+    "message": "Your node will go off line while you do this!",
+    "turnOn": "turn on",
+    "turnOff": "turn off",
+    "close": "click outside to close"
+  },
+  "nodeAlert": {
+    "lowSpace": "LOW STORAGE SPACE",
+    "missAttest": "MISSED ATTESTATION",
+    "use": "USAGE",
+    "noFee": "no fee recipient",
+    "stereumUpt": "STEREUM UPDATE"
+  },
+  "restartModalNode": {
+    "message": "are you sure you want to",
+    "close": "click outside to close"
+  },
+  "resyncModal": {
+    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
+    "sync": "SYNCHRONISATION",
+    "gen": "GENESIS",
+    "chkSync": "CHECKPOINT SYNC",
+    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cont": "CONTINUE",
+    "resync": "RESYNC",
+    "close": "click outside to close"
+  },
+  "resyncSeparateService": {
+    "message": "by initiating resync you will delete the database of",
+    "msgPartTwo": " source will be used for resynchronization",
+    "resync": "resync",
+    "close": "click outside to close"
+  },
+  "notifModal": {
+    "addNotif": "add a notification channel",
+    "chooseNotif": "Choose what kind of Notification Channel you want to configure",
+    "stereumMonitor": "Stereum Node Monitor",
+    "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
+    "stepTwo": "Open the app on your smartphone",
+    "stepThree": "Scan the QR Code",
+    "stepFour": "Send a test notification",
+    "close": "click outside to close"
+  },
+  "replacePanel": {
+    "client": "Client",
+    "sync": "SYNC",
+    "gen": "GENESIS",
+    "chkPoint": "CHECKPOINT",
+    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cancel": "CANCEL",
+    "confirm": "CONFIRM"
+  },
+  "executionSync": {
+    "gen": "GENESIS",
+    "syncClient": "Syncs your clients"
+  },
+  "importingList": {
+    "nodeConf": "Node Config"
+  },
+  "importingSyncing": {
+    "message": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE"
+  },
+  "importingVerify": {
+    "pluginInst": "Plugins To Install",
+    "cat": "category",
+    "path": "path"
+  },
+  "uploadConfig": {
+    "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
+    "configFile": "Config file"
+  },
+  "fastSync": {
+    "header": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE",
+    "gen": "GENESIS",
+    "sync": "Syncs from genesis",
+    "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
+  },
+  "deleteModal": {
+    "message": "Do you want to remove the saved connection?",
+    "rem": "Remove",
+    "close": "click outside to close"
+  },
+  "errTerminal": {
+    "copy": "copied!",
+    "close": "click outside to close"
+
   }
 }
