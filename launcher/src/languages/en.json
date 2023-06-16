@@ -447,5 +447,11 @@
     "cont": "CONTINUE",
     "resync": "RESYNC",
     "close": "click outside to close"
+  },
+  "resyncSeparateService": {
+    "message": "by initiating resync you will delete the database of",
+    "msgPartTwo": " source will be used for resynchronization",
+    "resync": "resync",
+    "close": "click outside to close"
   }
 }
