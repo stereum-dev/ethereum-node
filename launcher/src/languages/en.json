@@ -479,5 +479,10 @@
     "message": "Set how the Node clients will synchronize their blockchain data.",
     "client": "CLIENTs",
     "syncSrc": "SYNC SOURCE"
+  },
+  "importingVerify": {
+    "pluginInst": "Plugins To Install",
+    "cat": "category",
+    "path": "path"
   }
 }
