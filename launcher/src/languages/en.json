@@ -433,5 +433,9 @@
     "use": "USAGE",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE"
+  },
+  "restartModalNode": {
+    "message": "are you sure you want to",
+    "close": "click outside to close"
   }
 }
