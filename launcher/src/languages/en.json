@@ -420,5 +420,11 @@
     "nxtAttest": "next Attestation Slot:",
     "slotRem": "Slots remaining",
     "tillAtest": "till attestation"
+  },
+  "confirmModal": {
+    "message": "Your node will go off line while you do this!",
+    "turnOn": "turn on",
+    "turnOff": "turn off",
+    "close": "click outside to close"
   }
 }
