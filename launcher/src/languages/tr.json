@@ -38,6 +38,11 @@
     "docsTitle": "zincir dökümanları",
     "docsText": "Seçtiğiniz düğüm yapılandırması için ağ günlüklerinin belgelerine kullanışlı bir bağlantı."
   },
+  "notifModal": {
+    "notification": "Bildirimler",
+    "notifText": "Burada farklı bildirim kaynakları ve bildirim almak istediğiniz durumu ayarlayabilirsiniz",
+    "cancelText": "Çıkmak için pencere dışında bir yere tıklayın"
+  },
   "settingPanel": {
     "stereumName": "stereum ayarları",
     "langName": "Dil Seçimi",
@@ -506,5 +511,6 @@
   "errTerminal": {
     "copy": "copied!",
     "close": "click outside to close"
+
   }
 }

@@ -3,38 +3,42 @@
  */
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
-import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceManager } from "../ServiceManager.js";
-import { NethermindService } from "./NethermindService.js";
+import { TaskManager } from "../TaskManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(500000);
 
 test("nethermind installationm", async () => {
+  const testServer = new HetznerServer();
+  const keyResponse = await testServer.createSSHKey("Nethermind--integration-test--ubuntu-2204")
+
   const serverSettings = {
     name: "Nethermind--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
+    ssh_keys: [
+      keyResponse.ssh_key.id
+    ],
   };
 
-  const testServer = new HetznerServer();
   await testServer.create(serverSettings);
   log.info("Server started");
 
   const connectionParams = {
     host: testServer.serverIPv4,
     port: "22",
-    username: "root",
-    password: testServer.serverRootPassword,
-    privatekey: undefined,
+    user: "root",
+    privateKey: testServer.sshKeyPair.private,
   };
-  const nodeConnection = new NodeConnection(connectionParams);
-  const serviceManager = new ServiceManager(nodeConnection);
-  await testServer.connect(nodeConnection);
 
-  //change password
-  await testServer.passwordAuthentication(testServer.serverRootPassword);
+  const nodeConnection = new NodeConnection(connectionParams);
+  const taskManager = new TaskManager(nodeConnection);
+  const serviceManager = new ServiceManager(nodeConnection);
+  await testServer.checkServerConnection(nodeConnection);
+
+  await nodeConnection.establish(taskManager)
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -51,16 +55,8 @@ test("nethermind installationm", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install nethermind
-  const ports = [
-    new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-    new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-  ];
+  let executionClient = serviceManager.getService("NethermindService", { network: "goerli", installDir: "/opt/stereum" })
 
-  let executionClient = NethermindService.buildByUserInput(
-    "goerli",
-    ports,
-    nodeConnection.settings.stereum.settings.controls_install_path + "/nethermind"
-  );
   let versions = await nodeConnection.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
 
@@ -75,10 +71,9 @@ test("nethermind installationm", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
     if (
-      /Old Headers/.test(status.stdout) &&
+      /Nethermind initialization completed/.test(status.stdout) &&
       /Sync peers/.test(status.stdout) &&
-      !/Permission denied/.test(status.stdout) &&
-      !/An error occurred while trying to encrypt the provided data/.test(status.stdout)
+      /http:\/\/0\.0\.0\.0:8545 ; http:\/\/0\.0\.0\.0:8546 ; http:\/\/0\.0\.0\.0:8551/.test(status.stdout)
     ) {
       condition = true;
     }
@@ -89,8 +84,8 @@ test("nethermind installationm", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
+  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
   await nodeConnection.destroyNode();
-  await nodeConnection.sshService.disconnect();
   await testServer.destroy();
 
   //check ufw
@@ -104,8 +99,7 @@ test("nethermind installationm", async () => {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  expect(status.stdout).toMatch(/Old Headers/);
+  expect(status.stdout).toMatch(/Nethermind initialization completed/);
   expect(status.stdout).toMatch(/Sync peers/);
-  expect(status.stdout).not.toMatch(/Permission denied/);
-  expect(status.stdout).not.toMatch(/An error occurred while trying to encrypt the provided data/);
+  expect(status.stdout).toMatch(/http:\/\/0\.0\.0\.0:8545 ; http:\/\/0\.0\.0\.0:8546 ; http:\/\/0\.0\.0\.0:8551/);
 });

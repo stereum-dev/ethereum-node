@@ -37,7 +37,6 @@
           <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
         </div>
         <div class="fix-place"><RpcEndpoint /></div>
-        <div class="exit"><div class="close" @click="close">x</div></div>
       </div>
     </div>
     <div v-if="explainModal" class="wrapper-modal">
@@ -45,17 +44,21 @@
         <div class="slider-modal_header">
           <span>{{ message }}</span>
         </div>
-        <div class="slider-container">
-          <div class="arrow"><div class="left" @click="prevSlide"></div></div>
-          <div class="slider"><img :src="slide" alt="" /></div>
-          <div class="arrow"><div class="right" @click="nextSlide"></div></div>
+        <div class="slider-tutorial-container">
+          <div class="slider-arr"><div class="left" @click="prevSlide"></div></div>
+          <div class="slider-tutorial">
+            <transition name="slide" mode="out-in">
+              <img :key="nextStepFlag" :src="slide" alt="" />
+            </transition>
+          </div>
+          <div class="slider-arr"><div class="right" @click="nextSlide"></div></div>
         </div>
         <div class="footer">
           <span>{{ $t("rpcGuide.clickCancel") }}</span>
         </div>
       </div>
-      <div class="x-btn" @click="close"><span>x</span></div>
     </div>
+    <div class="x-btn" @click="close"><span>x</span></div>
   </div>
 </template>
 
@@ -172,6 +175,7 @@ export default {
           this.tutorial = false;
           this.rpcOne = true;
           this.rpcTwo = false;
+          this.thirdPoint = false;
           this.nextStepFlag = 0;
           this.explainModal = false;
           this.fixRPC = false;
@@ -241,15 +245,27 @@ export default {
 
 <style scoped>
 .x-btn {
-  width: 60%;
+  width: 5%;
   height: 8%;
   cursor: pointer;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   font-size: 200%;
-  color: #eeeeee;
+  color: #c1c1c1;
+  position: absolute;
+  bottom: 1.5%;
 }
+.x-btn:hover {
+  border: 2px solid rgb(193, 193, 193);
+  border-radius: 50%;
+}
+.x-btn:active {
+  border: none;
+  border-radius: 50%;
+  background: rgb(193, 193, 193, 0.5);
+}
+
 .footer {
   width: 100%;
   height: 10%;
@@ -258,29 +274,7 @@ export default {
   align-items: flex-end;
   color: red;
 }
-.close {
-  width: 60%;
-  height: 90%;
-  border: 2px solid #eee;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  font-size: 250%;
-  border-radius: 50%;
-  color: rgb(238, 238, 238);
-}
-.close:active {
-  border: none;
-  background: rgba(238, 238, 238, 0.2);
-}
-.exit {
-  width: 10%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 .fix-place {
   width: 25%;
   height: 14%;
@@ -324,29 +318,51 @@ export default {
   font-size: 100%;
   font-weight: 600;
 }
-.slider-container {
+.slider-tutorial-container {
   display: flex;
   width: 100%;
   height: 75%;
-  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
 }
-.arrow {
+.slider-arr {
   display: flex;
   width: 10%;
   height: 100%;
   justify-content: center;
   align-items: center;
 }
-.slider {
+
+.slider-tutorial {
   display: flex;
   width: 80%;
   height: 100%;
   border-radius: 20px;
   border: 5px solid grey;
+  justify-content: center;
+  align-items: center;
 }
-.slider img {
+.slider-tutorial img {
   width: 100%;
+  height: 100%;
   border-radius: 20px;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+.slide-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+.slide-enter-to,
+.slide-leave-from {
+  opacity: 1;
 }
 .left {
   width: 0;
@@ -359,7 +375,7 @@ export default {
 .right {
   width: 0;
   height: 0;
-  border-top: 90px solid transparent;
+  border-top: 80px solid transparent;
   border-bottom: 90px solid transparent;
   border-left: 20px solid grey;
   cursor: pointer;
@@ -540,11 +556,11 @@ export default {
 @keyframes modal {
   from {
     opacity: 0;
-    transform: translateX(100px) scale(0.5);
+    transform: translateX(100%) translateY(-60%) scale(0.5);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateX(0) translateY(-50%) scale(1);
   }
 }
 </style>

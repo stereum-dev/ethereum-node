@@ -28,8 +28,7 @@ export class ErigonService extends NodeService {
         `--authrpc.vhosts=*`,
         `--authrpc.port=8551`,
         `--authrpc.jwtsecret=/engine.jwt`,
-        `--prune=htc`,
-        `--externalcl`,
+        `--prune=default`,
         `--ws`,
         `--http`,
         `--http.vhosts=*`,
@@ -83,9 +82,8 @@ export class ErigonService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id
+      }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }
 

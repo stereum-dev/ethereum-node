@@ -18,10 +18,10 @@
             <div class="switch-network__content">
               <div class="current">
                 <div class="networkIcon">
-                  <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
+                  <img :src="currentNetwork?.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
                 </div>
                 <div class="networkSelect">
-                  <span>{{ currentNetwork.name }}</span>
+                  <span>{{ currentNetwork?.name ?  currentNetwork.name : ""}}</span>
                 </div>
               </div>
             </div>
@@ -54,7 +54,7 @@
         <div class="service">
           <div class="title">{{ $t("theNode.servicePlugin") }}</div>
           <div class="service-parent">
-            <node-service :list="installedServices.filter((service) => service.category === 'service')"> </node-service>
+            <node-service :list="installedServices.filter((service) => service.category === 'service').sort(sortByName)"> </node-service>
           </div>
         </div>
         <div class="node-side">
@@ -168,13 +168,13 @@ export default {
       this.ipAddress = stats.ipAddress;
     },
     async updateServiceLogs() {
-      if (this.installedServices && this.installedServices.length > 0) {
+      if (this.installedServices && this.installedServices.length > 0 && this.refresh) {
         const data = await ControlService.getServiceLogs();
         this.serviceLogs = data;
       }
     },
     async updateServerVitals() {
-      if (this.installedServices && this.installedServices.length > 0) {
+      if (this.installedServices && this.installedServices.length > 0 && this.refresh) {
         const data = await ControlService.getServerVitals();
         this.serverVitals = data;
         this.cpu = this.serverVitals.cpu;

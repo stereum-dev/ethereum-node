@@ -5,6 +5,8 @@ class ControlService extends EventEmitter {
   constructor() {
     super();
     this.promiseIpc = window.promiseIpc;
+    this.addListener = window.promiseIpc.addListener
+    this.removeListener = window.promiseIpc.removeListener
   }
 
   init(store) {
@@ -271,8 +273,16 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("refreshServiceInfos"); // insert existing operator keys
   }
 
-  async addFeeRecipient(args) {
-    return await this.promiseIpc.send("addFeeRecipient", args); //
+  async getFeeRecipient(args) {
+    return await this.promiseIpc.send("getFeeRecipient", args); //
+  }
+
+  async setFeeRecipient(args) {
+    return await this.promiseIpc.send("setFeeRecipient", args); //
+  }
+
+  async deleteFeeRecipient(args) {
+    return await this.promiseIpc.send("deleteFeeRecipient", args); //
   }
 
   async getOperatorPageURL(args) {
@@ -305,6 +315,10 @@ class ControlService extends EventEmitter {
 
   async readKeys() {
     return await this.promiseIpc.send("readKeys");
+  }
+
+  async getValidatorStats(args) {
+    return await this.promiseIpc.send("getValidatorStats", args);
   }
 
   async getValidatorState(args) {
@@ -355,6 +369,10 @@ class ControlService extends EventEmitter {
 
   async exportConfig() {
     return await this.promiseIpc.send("exportConfig");
+  }
+
+  async importConfig(args) {
+    return await this.promiseIpc.send("importConfig", args);
   }
 }
 if (!instance) {

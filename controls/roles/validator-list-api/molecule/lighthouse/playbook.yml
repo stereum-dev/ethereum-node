@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include validator-list-api"
-      include_role:
-        name: "validator-list-api"

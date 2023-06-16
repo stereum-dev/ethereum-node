@@ -1,5 +1,4 @@
-import { TaskManager } from "./TaskManager.js";
-import * as crypto from "crypto";
+const { utils: { generateKeyPairSync } } = require('ssh2');
 const log = require("electron-log");
 const https = require("https");
 
@@ -10,10 +9,25 @@ export class HetznerServer {
     this.serverName = null;
     this.serverIPv4 = null;
     this.serverRootPassword = null;
+    this.sshKeyPair = generateKeyPairSync("ed25519")
   }
 
   async Sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async checkServerConnection(nodeConnection) {
+    let tries = 0;
+    let connected = false
+    while (!connected && tries < 300) {
+      try {
+        tries++
+        log.info(`Trying to connect (${tries})`)
+        connected = await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 5000)
+      } catch (err) {
+        log.info(err)
+      }
+    }
   }
 
   /**
@@ -67,45 +81,6 @@ export class HetznerServer {
   }
 
   /**
-   * Creates a shell session to handle Password Authentication (reset root password)
-   * @param password {string} root password generated on server creation
-   * @param newPassword new root password
-   */
-  async passwordAuthentication(password) {
-    const buf = crypto.randomBytes(20);
-    const newPassword = buf.toString("hex");
-    return new Promise((resolve, reject) => {
-      this.nodeConnection.sshService.conn.shell(function (err, stream) {
-        if (err) throw err;
-        stream.stderr.on("data", (err) => {
-          log.error(err);
-          reject();
-        });
-        stream.stdout.on("data", (data) => {
-          if (/Current password:/.test(data)) {
-            stream.stdin.write(`${password}\r\n`);
-          } else if (/New password:/.test(data)) {
-            stream.stdin.write(`${newPassword}\r\n`);
-          } else if (/Retype new password:/.test(data)) {
-            stream.stdin.write(`${newPassword}\r\n`);
-          } else if (/:~#/.test(data)) {
-            stream.end();
-            resolve();
-          }
-        });
-      });
-    })
-      .then(async () => {
-        await this.nodeConnection.sshService.disconnect();
-        this.serverRootPassword = newPassword;
-        this.nodeConnection.nodeConnectionParams.password = newPassword;
-        await this.nodeConnection.establish(new TaskManager());
-        log.info("Reconnected after password change");
-      })
-      .catch((err) => log.error("Password Authentication failed:\n", err));
-  }
-
-  /**
    * Creates Hetzner Server
    * @param serverSettings object with settings for Server Creation
    */
@@ -152,37 +127,13 @@ export class HetznerServer {
     } while (status[check.counter] == "initializing");
   }
 
-  async connect(nodeConnection) {
-    this.nodeConnection = nodeConnection;
-    const retry = { connected: false, counter: 0, maxTries: 300 };
-    log.info("Connecting via SSH");
-    while (!retry.connected) {
-      try {
-        await this.nodeConnection.establish();
-        retry.connected = true;
-        log.info("Connected!");
-      } catch (e) {
-        if (++retry.counter == retry.maxTries) throw e;
-        log.info(" Could not connect.\n" + (retry.maxTries - retry.counter) + " tries left.");
-        if (typeof e === "string" && new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(e.toLowerCase())) {
-          this.passwordAuthentication(this.serverRootPassword);
-        }
-        await this.Sleep(2000);
-      }
-    }
-  }
-
   /**
    * Destroys Server via API call
    */
   async destroy() {
-    const data = await this.makeRequest(await this.createHTTPOptions("DELETE", "servers", this.serverID));
-    const responseData = JSON.parse(data);
-    if (responseData.action.status == "success" && responseData.action.progress == 100) {
-      log.info("Server with ID " + this.serverID + " was destroyed successfully");
-    } else {
-      log.error("Error deleting Server:\n", responseData);
-    }
+    await this.makeRequest(await this.createHTTPOptions("DELETE", "servers", this.serverID));
+
+    log.info("Server with ID " + this.serverID + " was destroyed successfully");
   }
 
   /**
@@ -224,5 +175,27 @@ export class HetznerServer {
         JSON.stringify(settings)
       )
     );
+  }
+
+  async getAllSSHKeys() {
+    const data = await this.makeRequest(await this.createHTTPOptions("GET", "ssh_keys"));
+    const responseData = JSON.parse(data);
+    return responseData;
+  }
+
+  async deleteSSHKey(keyID) {
+    await this.makeRequest(await this.createHTTPOptions("DELETE", "ssh_keys", keyID))
+
+    log.info("SSH Key with ID " + keyID + " was deleted successfully");
+  }
+
+  async createSSHKey(name) {
+    const response = await this.getAllSSHKeys();
+    const existing = response.ssh_keys.find((key) => key.name === name);
+    if (existing && existing.id) {
+      await this.deleteSSHKey(existing.id);
+    }
+    return JSON.parse(await this.makeRequest(await this.createHTTPOptions("POST", "ssh_keys"),
+      JSON.stringify({ name: name, public_key: this.sshKeyPair.public })));
   }
 }

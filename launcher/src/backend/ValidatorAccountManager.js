@@ -149,7 +149,9 @@ export class ValidatorAccountManager {
           await this.nodeConnection.sshService.exec(
             `echo ${StringUtils.createRandomString()} > ${validator_path}/api-token.txt`
           );
-          await Sleep(180000);
+          await this.serviceManager.manageServiceState(client.id, "stopped");
+          await this.serviceManager.manageServiceState(client.id, "started");
+          await Sleep(30000);
         }
         break;
       }
@@ -177,7 +179,7 @@ export class ValidatorAccountManager {
       const apiToken = await this.getApiToken(client);
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get API Token`, true);
       for (const batch of this.batches) {
-        const returnVal = await this.keystoreAPI(client, "POST", batch, apiToken);
+        const returnVal = await this.keymanagerAPI(client, "POST", '/eth/v1/keystores', batch, [], apiToken);
         if (SSHService.checkExecError(returnVal) && returnVal.stderr) throw SSHService.extractExecError(returnVal);
         const response = JSON.parse(returnVal.stdout);
         if (response.data === undefined) {
@@ -242,7 +244,7 @@ export class ValidatorAccountManager {
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Keys`);
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keystoreAPI(client);
+      const result = await this.keymanagerAPI(client, "GET", "/eth/v1/keystores");
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout);
 
@@ -271,7 +273,7 @@ export class ValidatorAccountManager {
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Keys`);
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keystoreAPI(client, "DELETE", { pubkeys: keys });
+      const result = await this.keymanagerAPI(client, "DELETE", '/eth/v1/keystores', { pubkeys: keys });
 
       //Error handling
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -304,18 +306,19 @@ export class ValidatorAccountManager {
     }
   }
 
-  async keystoreAPI(service, method = "GET", data, apiToken) {
+  async keymanagerAPI(service, method = "GET", path, data, args = [], apiToken) {
+    if (!path.startsWith('/')) path = '/' + path;
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
-      }/eth/v1/keystores`,
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]}${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
       `-H 'Authorization: Bearer ${apiToken}'`,
       `-s`,
     ];
     if (data) command.push(`-d '${JSON.stringify(data)}'`);
+    command = command.concat(args);
     return await this.nodeConnection.sshService.exec(command.join(" "));
   }
 
@@ -356,32 +359,106 @@ export class ValidatorAccountManager {
       return err;
     }
   }
-  // deactivated on the front end side
-  async addFeeRecipient(keys, address) {
-    if (keys && keys.length != 0 && address) {
-      const serviceID = keys[0].validatorID;
-      const validatorKeys = keys.map((key) => {
-        return {
-          pubkey: key.key,
-          recipient: address,
-        };
-      });
 
-      try {
-        let run = await this.nodeConnection.runPlaybook("validator-fee-recipient-api", {
-          stereum_role: "validator-fee-recipient-api",
-          validator_service: serviceID,
-          validator_keys: validatorKeys,
-        });
-        //let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
-        //let result = (JSON.parse(logs[1])).msg
-        return run;
-      } catch (err) {
-        log.error("Changing Fee Recipient Failed:\n", err);
-        return err;
+  //Returns the Fee Recipient for a given PubKey
+  async getFeeRecipient(serviceID, pubKey) {
+    const ref = StringUtils.createRandomString(); //Create a random string to identify the task
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Getting Fee Recipient`);  //Push the task to the task manager
+    try {
+      let client = await this.nodeConnection.readServiceConfiguration(serviceID);
+      const result = await this.keymanagerAPI(client, "GET", `/eth/v1/validator/${pubKey}/feerecipient`);
+
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      log.info(result);
+      const data = JSON.parse(result.stdout);
+      if (data.data === undefined) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
+        }
+        throw data.code + " " + data.message;
       }
+
+      //Push successful task
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Fee Recipient`, true, result.stdout);
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+
+      return data
+    } catch (err) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Getting Fee Recipient Failed`,
+        false,
+        `Getting Fee Recipient for ${pubKey} Failed:\n` + err
+      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+      log.error("Getting Fee Recipient Failed:\n", err);
+      return err;
     }
-    return 0;
+  }
+
+  async setFeeRecipient(serviceID, pubKey, address) {
+    const ref = StringUtils.createRandomString(); //Create a random string to identify the task
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Setting Fee Recipient`);  //Push the task to the task manager
+    try {
+      let client = await this.nodeConnection.readServiceConfiguration(serviceID);
+      const result = await this.keymanagerAPI(client, "POST", `/eth/v1/validator/${pubKey}/feerecipient`, { ethaddress: address }, ["-i"]);
+
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      if (!result.stdout.includes("202 Accepted")) {
+        throw "Undexpected Error: " + result;
+      }
+      const data = result.stdout
+
+      //Push successful task
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Set Fee Recipient`, true, result.stdout);
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+
+      return data
+    } catch (err) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Setting Fee Recipient Failed`,
+        false,
+        `Setting Fee Recipient for ${pubKey} Failed:\n` + err
+      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+      log.error("Setting Fee Recipient Failed:\n", err);
+      return err;
+    }
+  }
+
+  async deleteFeeRecipient(serviceID, pubKey) {
+    const ref = StringUtils.createRandomString(); //Create a random string to identify the task
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Fee Recipient`);  //Push the task to the task manager
+    try {
+      let client = await this.nodeConnection.readServiceConfiguration(serviceID);
+      const result = await this.keymanagerAPI(client, "DELETE", `/eth/v1/validator/${pubKey}/feerecipient`, null, ["-i"]);
+
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      if (!result.stdout.includes("204 No Content")) {
+        throw "Undexpected Error: " + result;
+      }
+      const data = result.stdout
+
+      //Push successful task
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Fee Recipient`, true, result.stdout);
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+
+      return data
+    } catch (err) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Deleting Fee Recipient Failed`,
+        false,
+        `Deleting Fee Recipient for ${pubKey} Failed:\n` + err
+      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+      log.error("Deleting Fee Recipient Failed:\n", err);
+      return err;
+    }
   }
 
   async getOperatorPageURL(pubKey) {

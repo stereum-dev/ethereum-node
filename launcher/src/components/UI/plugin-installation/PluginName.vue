@@ -49,7 +49,7 @@
         </div>
         <div class="option-content">
           <div class="optionHeader">
-            <span>ADDITIONAL OPTIONS</span>
+            <span>{{ $t("pluginName.addOpt") }}</span>
           </div>
           <div class="option-content_box gap-y-2">
             <div class="network-parent">
@@ -86,7 +86,6 @@
 </template>
 <script>
 import ChangeModal from "./ChangeModal.vue";
-import InstallationBox from "./InstallationBox.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
@@ -94,7 +93,7 @@ import { useServices } from "../../../store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
-  components: { ChangeModal, InstallationBox },
+  components: { ChangeModal },
 
   data() {
     return {
@@ -214,8 +213,20 @@ export default {
             return item.category === element.category;
           };
           break;
-        case "obol ssv":
-          //filter = (item) => item.category === element.category
+        case "obol":
+          filter = (item) => {
+            if (element.category === "validator" && element.service !== "CharonService") {
+              return item.service === "TekuValidatorService";
+            } else if (element.category === "validator") {
+              return item.service === "CharonService";
+            }
+            if (element.category === "consensus") {
+              return item.service === "LighthouseBeaconService";
+            }
+            if (element.category === "execution") {
+              return item.service === "GethService";
+            }
+          };
           break;
         case "rocketpool":
           //filter = (item) => item.category === element.category

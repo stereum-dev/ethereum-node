@@ -14,10 +14,10 @@ import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
 const isDevelopment = process.env.NODE_ENV !== "production";
-const storageService = new StorageService();
-const taskManager = new TaskManager();
-const monitoring = new Monitoring();
 const nodeConnection = new NodeConnection();
+const storageService = new StorageService();
+const taskManager = new TaskManager(nodeConnection);
+const monitoring = new Monitoring(nodeConnection);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
@@ -42,37 +42,31 @@ ipcMain.handle("connect", async (event, arg) => {
     });
   }
   nodeConnection.nodeConnectionParams = remoteHost;
-  taskManager.nodeConnection.nodeConnectionParams = remoteHost;
-  monitoring.nodeConnection.nodeConnectionParams = remoteHost;
-  monitoring.nodeConnectionProm.nodeConnectionParams = remoteHost;
   await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
-  await monitoring.nodeConnectionProm.establish();
+  await monitoring.login();
   return 0;
 });
 
 ipcMain.handle("reconnect", async () => {
+  if (nodeConnection.sshService.connectionPool.length > 0)
+    await nodeConnection.sshService.disconnect();
   try {
     await nodeConnection.establish(taskManager);
-    await taskManager.nodeConnection.establish();
-    await monitoring.nodeConnection.establish();
-    await monitoring.nodeConnectionProm.establish();
   } catch (err) {
     log.error("Couldn't reconnect:\n", err);
   }
 });
 
 ipcMain.handle("checkConnection", async () => {
-  try {
-    await nodeConnection.sshService.exec("ls");
-    await taskManager.nodeConnection.sshService.exec("ls");
-    await monitoring.nodeConnection.sshService.exec("ls");
-    await monitoring.nodeConnectionProm.sshService.exec("ls");
-  } catch (err) {
-    return false;
-  }
-  return true;
+  await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 18000)
+    .then((isConnected) => {
+      nodeConnection.sshService.connected = isConnected;
+    })
+    .catch((error) => {
+      console.error('Error checking SSH connection:', error);
+      nodeConnection.sshService.connected = false;
+    });
+  return nodeConnection.sshService.connected;
 });
 
 ipcMain.handle("destroy", async () => {
@@ -93,8 +87,6 @@ ipcMain.handle("closeTunnels", async () => {
 
 ipcMain.handle("logout", async () => {
   await monitoring.logout();
-  await taskManager.nodeConnection.logout();
-  await serviceManager.nodeConnection.logout();
   return await nodeConnection.logout();
 });
 
@@ -323,8 +315,16 @@ ipcMain.handle("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos();
 });
 
-ipcMain.handle("addFeeRecipient", async (event, args) => {
-  return await validatorAccountManager.addFeeRecipient(args.keys, args.address);
+ipcMain.handle("getFeeRecipient", async (event, args) => {
+  return await validatorAccountManager.getFeeRecipient(args.serviceID, args.pubkey);
+});
+
+ipcMain.handle("setFeeRecipient", async (event, args) => {
+  return await validatorAccountManager.setFeeRecipient(args.serviceID, args.pubkey, args.address);
+});
+
+ipcMain.handle("deleteFeeRecipient", async (event, args) => {
+  return await validatorAccountManager.deleteFeeRecipient(args.serviceID, args.pubkey);
 });
 
 ipcMain.handle("getOperatorPageURL", async (event, args) => {
@@ -379,6 +379,10 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getValidatorStats", async (event, args) => {
+  return await monitoring.getValidatorStats(args);
+});
+
 ipcMain.handle("getValidatorState", async (event, args) => {
   return await monitoring.getValidatorState(args);
 });
@@ -404,11 +408,16 @@ ipcMain.handle("exportConfig", async () => {
   return await serviceManager.exportConfig();
 });
 
+ipcMain.handle("importConfig", async (event, args) => {
+  return await serviceManager.importConfig(args.configServices, args.removedServices, args.checkPointSync);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
 async function createWindow() {
   // Create the browser window.
+
 
   const initwin = {
     width: 1044,
@@ -435,6 +444,7 @@ async function createWindow() {
   }
 
   const win = new BrowserWindow(initwin);
+  
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

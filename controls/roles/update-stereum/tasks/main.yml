@@ -24,6 +24,7 @@
     remote: ethereum-node
     dest: "{{ stereum.settings.controls_install_path }}/ansible"
     version: "{{ (update_data.json['stereum'] | last)['commit'] }}"
+    force: true
   when: stereum.override_gitcommit is undefined
 
 - name: Checkout commit of specific version
@@ -32,6 +33,6 @@
     remote: ethereum-node
     dest: "{{ stereum.settings.controls_install_path }}/ansible"
     version: "{{ stereum.override_gitcommit }}"
+    force: true
   when: stereum.override_gitcommit is defined
-
 # EOF

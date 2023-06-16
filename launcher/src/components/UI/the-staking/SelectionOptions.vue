@@ -20,14 +20,15 @@
           <div class="validator-state_status">{{ validatorState === "running" ? "running" : "off" }}</div>
         </div>
         <div class="key-counter">
-          <comming-soon></comming-soon>
-          <div class="key-counter_counter"><span>2</span></div>
+          <div class="key-counter_counter">
+            <span :class="validatorState === 'running' ? 'greenCounter' : 'redCounter'">{{ keyCounter }}</span>
+          </div>
           <div class="key-counter_icon">
-            <img src="../../../../public/img/icon/control/keyEth.svg" alt="validator-key" />
+            <img src="../../../../public/img/icon/the-staking/keyIcon.png" alt="validator-key" />
           </div>
         </div>
       </div>
-      <ul v-if="selector" class="validator-selection">
+      <ul v-if="selector" class="validator-selectionpart">
         <li v-for="validator in validators" :key="validator" @click="vldPicker(validator)">
           <div class="validator-icons"><img :src="validator.icon" :alt="validator.name" /></div>
           <div class="validators-name">
@@ -37,24 +38,27 @@
       </ul>
       <div
         class="buttonRow"
-        :class="{ disabled: disable || validatorName === 'Lodestar' ||  validatorName === 'Nimbus'}"
+        :class="{ disabled: disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' }"
         @click.stop="$emit('clickBtnGraffiti')"
       >
         <div class="btnContent">
           <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
-          <span>graffiti</span>
+          <span>{{ $t("selectionOption.graffiti") }}</span>
         </div>
       </div>
       <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
         <div class="btnContent">
           <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-          <span>Remove all keys</span>
+          <span>{{ $t("selectionOption.removeKeys") }}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
+import { mapState } from "pinia";
+import { useStakingStore } from "@/store/theStaking";
 export default {
   props: {
     validatorIcon: {
@@ -94,7 +98,11 @@ export default {
       multiValidator: false,
     };
   },
-
+  computed: {
+    ...mapState(useStakingStore, {
+      keyCounter: "keyCounter",
+    }),
+  },
   mounted() {
     if (this.validators.length > 1) {
       this.multiValidator = true;
@@ -141,6 +149,9 @@ export default {
   font-size: 80%;
   position: relative;
 }
+.key-counter_counter {
+  font-weight: 700;
+}
 .key-counter_icon {
   display: flex;
   width: 50%;
@@ -149,7 +160,7 @@ export default {
   align-items: center;
 }
 .key-counter_icon img {
-  width: 28%;
+  width: 45%;
 }
 .validator-state_Icon {
   width: 30%;
@@ -171,7 +182,7 @@ export default {
 }
 .validator-state_Icon-icon {
   display: flex;
-  width: 45%;
+  width: 38%;
   height: 95%;
   border-radius: 50%;
   border: #bfbfbf;
@@ -180,11 +191,17 @@ export default {
 .green {
   background-color: #7fff00;
 }
+.greenCounter {
+  color: #7fff00;
+}
 
 .red {
   background-color: #ff5733;
 }
-.validator-selection {
+.redCounter {
+  color: #ff5733;
+}
+.validator-selectionpart {
   width: 90%;
   height: 90%;
   display: flex;
@@ -192,22 +209,26 @@ export default {
   align-items: center;
   flex-direction: column;
   position: absolute;
-  background: #17a2b8;
+  background: #1258a2;
   top: 10%;
   overflow-y: scroll;
+  opacity: 1 !important;
+  border-radius: 0 0 10px 10px;
 }
-.validator-selection li {
+.validator-selectionpart li {
   width: 100%;
-  height: 20%;
+  height: 30%;
   display: flex;
-  border-bottom: 1px solid #242529;
+  border-bottom: 1px solid #dfdfdf;
   color: #eee;
   margin-bottom: 1%;
   cursor: pointer;
+  background: #1258a2;
+  z-index: 100;
 }
-.validator-selection li:hover {
+.validator-selectionpart li:hover {
   background: #dfdfdf;
-  color: #242529;
+  color: #1258a2;
 }
 .validator-icons {
   width: 18%;
@@ -266,7 +287,7 @@ export default {
   height: 100%;
 }
 .validator-icon img {
-  width: 55%;
+  width: 41%;
 }
 .selection-table_validator {
   display: flex;
@@ -282,27 +303,31 @@ export default {
   z-index: 0;
 }
 .disabled {
-  opacity: 0.2;
+  opacity: 0.5;
   pointer-events: none;
   user-select: none;
 }
 .selection-box {
   grid-column: 10/13;
   grid-row: 3/4;
-  width: 90%;
-  height: 95%;
+  width: 96%;
+  height: 77%;
   border: 4px solid #bfbfbf;
   border-radius: 10px;
   background-color: #242529;
   display: flex;
+  margin: 0 auto;
+  margin-top: 35px;
+  flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  margin: 0 auto;
   position: relative;
 }
 .selection-table {
-  width: 98%;
+  width: 100%;
   height: 80%;
+  padding: 0 5px;
+  margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;

@@ -18,7 +18,7 @@
               <span>{{ item.type }}</span>
             </div>
           </div>
-          <div v-else-if="item.type === 'recommended'" class="syncContent">
+          <div v-else-if="item.type === 'custom source'" class="syncContent">
             <div class="syncText">
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
@@ -32,18 +32,25 @@
               />
             </div>
           </div>
-          <div v-else-if="item.type === 'custom source'" class="syncContent">
+          <div v-else-if="item.type === 'recommended'" class="syncContent">
             <div class="syncText">
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
             </div>
-            <div class="inputBox_select">
-              <div class="select">
+
+            <div class="inputBox_select-box">
+              <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="toglDropDown">
                 {{ selectedItem }}
               </div>
-              <div class="triangle" @click="toggleDropDown">
-                <i v-if="dropdown" class="arrow up"></i>
-                <i v-else class="arrow down"></i>
+              <div v-else class="wrapper">
+                <div v-if="selectedIcon !== ''" class="iconbox" @click="toglDropDown">
+                  <img :src="selectedIcon" :alt="selectedItem" />
+                </div>
+                <div v-if="selectedIcon !== ''" class="selected-item" @click="toglDropDown">{{ selectedItem }}</div>
+                <div v-else class="w-selected" @click="toglDropDown">{{ selectedItem }}</div>
+                <div class="openURL" @click="openWindow">
+                  <img src="/img/icon/service-icons/internet.png" alt="Internet" />
+                </div>
               </div>
             </div>
           </div>
@@ -54,10 +61,13 @@
         <navigation />
       </template>
     </carousel>
-    <div v-if="dropdown" class="selection-column">
+    <div v-if="dropdown" class="selection-column" @mouseleave="dropdown = false">
       <ul class="link-wapper">
         <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
-          <span>{{ link }}</span>
+          <div class="icon"><img :src="link.icon" alt="" /></div>
+          <div class="name">
+            <span>{{ link.name }}</span>
+          </div>
         </li>
       </ul>
     </div>
@@ -82,14 +92,20 @@ export default {
       required: true,
       default: () => ({}),
     },
+    configNetwork: {
+      type: Object,
+      required: true,
+      default: () => ({}),
+    },
   },
   data() {
     return {
       dropdown: false,
-      selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
+      selectedItem: "- SELECT A SOURCE -", // selected link to use for resync
       currentSlide: 0,
       selectedLinks: [],
       prevVal: 0,
+      selectedIcon: "",
     };
   },
 
@@ -102,7 +118,6 @@ export default {
       georli: "georli",
       sepolia: "sepolia",
       gnosis: "gnosis",
-      selectedPreset: "selectedPreset",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -110,11 +125,11 @@ export default {
   },
   watch: {
     currentSlide: function (val) {
-      if (this.$route.path === "/sync") {
+      if (this.$route.path === "/sync" || this.$route.path === "/importingSyncing") {
         if (val != this.prevVal) {
           this.prevVal = val;
           this.checkPointSync = "";
-          this.selectedItem = " - SELECT A SOURCE -";
+          this.selectedItem = "- SELECT A SOURCE -";
         }
 
         if (val === 1 && this.checkPointSync === "") {
@@ -126,15 +141,21 @@ export default {
     },
   },
   mounted() {
+    this.currentNetwork = this.currentNetwork.hasOwnProperty("id") ? this.currentNetwork : this.configNetwork;
     this.setSelectedLinks();
   },
   methods: {
-    toggleDropDown() {
+    openWindow() {
+      let url = this.checkPointSync;
+      window.open(url, "_blank");
+    },
+    toglDropDown() {
       this.dropdown = !this.dropdown;
     },
     linkPicker(item) {
-      this.selectedItem = item;
-      this.checkPointSync = item;
+      this.selectedItem = item.name;
+      this.selectedIcon = item.icon;
+      this.checkPointSync = item.url;
       this.dropdown = false;
     },
     setSelectedLinks() {
@@ -154,22 +175,125 @@ export default {
         default:
           break;
       }
-      if (this.selectedLinks && Array.isArray(this.selectedLinks) && this.selectedLinks.length) {
-        for (const config of this.selectedPreset.includedPlugins) {
-          if (config.service.toLowerCase() == "tekubeaconservice") {
-            this.selectedLinks = this.selectedLinks.map(function (element) {
-              return element.trimEnd().replace(/\/+$/, "").trimEnd() + "/eth/v2/debug/beacon/states/finalized";
-            });
-            break;
-          }
-        }
-      }
     },
   },
 };
 </script>
 
 <style scope>
+.icon {
+  width: 25%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5%;
+}
+.name {
+  width: 75%;
+  height: 90%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 130%;
+}
+.icon img {
+  width: 70%;
+}
+.inputBox_select-box {
+  width: 59%;
+  height: 120%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-button {
+  border: none;
+  width: 100%;
+  height: 80%;
+  border-radius: 10px;
+  color: #c1c1c1;
+  background: #151a1e;
+  font-size: 80%;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-button:hover {
+  border: none;
+  color: #c1c1c1;
+  box-sizing: border-box;
+  border: 2px solid #c1c1c1;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.iconbox {
+  width: 20%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid rgb(161, 161, 161);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.iconbox img {
+  width: 90% !important;
+  height: 95% !important;
+}
+.selected-item {
+  width: 58%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #a1a1a1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 80%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.w-selected {
+  width: 80%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #c1c1c1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 100%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.openURL {
+  width: 15%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.openURL img {
+  width: 90% !important;
+  height: 65% !important;
+}
+.openURL:active {
+  transform: scale(0.9);
+}
 .syncRow {
   width: 100%;
   height: 100%;
@@ -181,6 +305,8 @@ export default {
 .plugin-name {
   width: 25%;
   height: 80%;
+  padding: 5px;
+  text-transform: uppercase;
   border: 1px solid #394047;
   border-radius: 5px;
   background-color: #33393e;
@@ -205,6 +331,12 @@ export default {
   width: 72%;
   height: 100%;
 }
+.carousel__viewport {
+  height: 100% !important;
+}
+.carousel__track {
+  height: 100% !important;
+}
 
 .carousel__item {
   min-height: 200px;
@@ -220,6 +352,7 @@ export default {
 
 .carousel__slide {
   padding: 5px 0;
+  height: 100% !important;
 }
 
 .carousel__prev {
@@ -269,14 +402,15 @@ export default {
 }
 .carouselBox {
   width: 90%;
-  height: 80%;
+  height: 85%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .syncBox {
   width: 85%;
-  height: 100%;
+  height: 93%;
+  padding: 5px;
   border: 1px solid #394047;
   border-radius: 5px;
   background-color: #33393e;
@@ -318,17 +452,16 @@ export default {
   width: 100%;
   height: max-content;
   color: #acaeae;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
   text-transform: uppercase;
-  padding: 2px;
 }
 .syncContent .syncText span:last-child {
   height: max-content;
   width: 100%;
   color: #4d8384;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 500;
   text-align: left;
   padding: 2px;
@@ -343,19 +476,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.syncContent .inputBox_select {
-  width: 60%;
-  height: 100%;
-  border-radius: 5px;
-  background-color: #1e2226;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2px;
-}
 
-.inputBox_select .triangle {
-  width: 14%;
+.inputBox_select_icon {
+  width: 10%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -363,81 +486,68 @@ export default {
   cursor: pointer;
   background-color: #151a1e;
 }
-.arrow {
-  border: solid #d5d5d5;
-  border-width: 0 2px 2px 0;
-  display: flex;
-  padding: 10%;
-  margin-right: 15%;
-}
-.down {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-}
-.up {
-  transform: rotate(225deg);
-  -webkit-transform: rotate(225deg);
-}
-
-.syncContent .inputBox_select .select {
-  width: 86%;
+.inputBox_select_name {
+  width: 80%;
   height: 100%;
-  border-radius: 5px;
-  background-color: #151a1e;
-  color: #d5d5d5;
-  font-size: 80%;
-  font-weight: 400;
-  padding: 5px;
-  padding-left: 10px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  overflow-x: auto;
-  white-space: nowrap;
+  cursor: pointer;
+  background-color: #151a1e;
 }
 
 .selection-column {
-  width: 58%;
-  height: 250%;
+  width: 34%;
+  height: 200%;
   display: flex;
-  background: #88a297;
+  background-color: #1258a2;
+  border-radius: 0 0 5px 5px;
   color: #d5d5d5;
   font-weight: 400;
   position: absolute;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 90%;
-  left: 35%;
+  overflow-y: scroll;
+  top: 80%;
+  left: 59.2%;
 }
 .link-wapper {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   overflow-y: scroll;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
+}
+.link-wapper::-webkit-scrollbar {
+  width: none;
+  background: transparent;
+}
+
+.link-wapper::-webkit-scrollbar-thumb {
+  background: #cfdedf;
+  border-radius: 5px;
+  width: none;
 }
 .option-row {
   width: 100%;
-  height: 30%;
+  height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   font-size: 70%;
   font-weight: 600;
-  padding: 1%;
+  padding: 5px;
   margin-bottom: 1%;
   border-bottom: 1px solid #d5d5d5;
-  flex-shrink: 0;
-  flex-grow: 0;
-  overflow-x: auto;
   cursor: pointer;
 }
 .option-row:hover {
-  background-color: #151a1e;
-  color: #d5d5d5;
+  background-color: #d5d5d5;
+  color: #1258a2;
 }
 .option-row span {
   white-space: nowrap;

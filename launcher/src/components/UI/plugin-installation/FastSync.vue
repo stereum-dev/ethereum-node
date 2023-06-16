@@ -11,13 +11,13 @@
         <div class="table-box">
           <div class="table">
             <div class="table-header">
-              <span>Set how the Node clients will synchronize their blockchain data.</span>
+              <span>{{ $t("fastSync.header") }}</span>
             </div>
             <div class="table-content">
               <div class="table-row_1">
                 <div class="clientTitle">
-                  <span>CLIENTs</span>
-                  <span>SYNC SOURCE</span>
+                  <span>{{ $t("fastSync.client") }}</span>
+                  <span>{{ $t("fastSync.syncSrc") }}</span>
                 </div>
               </div>
               <div class="table-row_2">
@@ -33,8 +33,8 @@
                 <div class="syncBox">
                   <div class="syncContent">
                     <div class="syncText">
-                      <span>GENESIS</span>
-                      <span>Syncs your clients</span>
+                      <span>{{ $t("fastSync.gen") }}</span>
+                      <span>{{ $t("fastSync.sync") }}</span>
                     </div>
                   </div>
                 </div>
@@ -44,9 +44,7 @@
               </div>
               <div class="table-row_5">
                 <p>
-                  After installing your node, your clients will start syncing with the synchronization source you
-                  selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first,
-                  followed by the Execution Client.
+                  {{ $t("fastSync.message") }}
                 </p>
               </div>
             </div>
@@ -60,11 +58,9 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
-import InstallationBox from "./InstallationBox.vue";
 import ConsensusSync from "./ConsensusSync.vue";
 export default {
   components: {
-    InstallationBox,
     ConsensusSync,
   },
   data() {
