@@ -467,5 +467,9 @@
     "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "cancel": "CANCEL",
     "confirm": "CONFIRM"
+  },
+  "executionSync": {
+    "gen": "GENESIS",
+    "syncClient": "Syncs your clients"
   }
 }
