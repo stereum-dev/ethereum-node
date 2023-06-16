@@ -411,5 +411,14 @@
     "end": "End",
     "newSync": "New Sync Committee in",
     "hours": "hours"
+  },
+  "theAttes": {
+    "lastAttest": "Last Attestation Slot:",
+    "keyStatus": "Key Status:",
+    "attest": "ATTESTING",
+    "pending": "PENDING",
+    "nxtAttest": "next Attestation Slot:",
+    "slotRem": "Slots remaining",
+    "tillAtest": "till attestation"
   }
 }
