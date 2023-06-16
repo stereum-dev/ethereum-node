@@ -8,35 +8,39 @@
     <div class="status-box_header">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
-          <img src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
+          <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: warning }">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
+          <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: alarm }">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
+          <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: notification }">
-          <img src="../../../../public/img/icon/control/SETTINGS.png" alt="green" />
+          <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
     </div>
     <div class="status-box_messages">
       <div v-if="storageWarning" class="status-message_yellow">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
+          <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>LOW STORAGE SPACE</span></div>
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.lowSpace") }}</span>
+          </div>
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
       </div>
       <div v-if="cpuWarning" class="status-message_yellow">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
+          <img src="/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>CPU USAGE</span></div>
+          <div class="main-message">
+            <span>CPU {{ $t("nodeAlert.use") }}</span>
+          </div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
           </div>
@@ -44,10 +48,12 @@
       </div>
       <div v-if="cpuAlarm" class="status-message_red">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
+          <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>CPU USAGE</span></div>
+          <div class="main-message">
+            <span>CPU {{ $t("nodeAlert.use") }}</span>
+          </div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
           </div>
@@ -55,40 +61,43 @@
       </div>
       <div v-if="missedAttest" class="status-message_red">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/key-rot.png" alt="warn_storage" />
+          <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>MISSED ATTESTATION</span></div>
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.missAttest") }}</span>
+          </div>
         </div>
       </div>
 
-      <!-- test -->
       <div v-for="validator in notSetAddresses" :key="validator" class="status-message_red">
         <div class="message-icon">
           <img :src="validator.icon" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>no fee recipient</span></div>
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.noFee") }}</span>
+          </div>
           <div class="val-message">
             <span> > {{ validator.name }} vc</span>
           </div>
         </div>
       </div>
-      <!-- test -->
       <transition>
         <div v-if="notification" class="status-message_green" @mouseover="iconShow" @mouseleave="iconHide">
           <div class="message-icon" @click="showUpdate">
-            <img src="../../../../public/img/icon/control/logo-icon.png" alt="warn_storage" />
+            <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
           </div>
           <div class="message-text_container" @click="showUpdate">
-            <div class="warning"><span>NOTIFICATION</span></div>
-            <div class="main-message"><span>STEREUM UPDATE</span></div>
+            <div class="main-message">
+              <span>{{ $t("nodeAlert.stereumUpt") }}</span>
+            </div>
             <div class="val-message">
               <span>{{ stereumUpdate.version }}</span>
             </div>
           </div>
           <div v-if="closeNotif" class="close" @click="closeNotification">
-            <img src="../../../../public/img/icon/control/close.png" alt="close" />
+            <img src="/img/icon/control/close.png" alt="close" />
           </div>
         </div>
       </transition>

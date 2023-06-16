@@ -426,5 +426,12 @@
     "turnOn": "turn on",
     "turnOff": "turn off",
     "close": "click outside to close"
+  },
+  "nodeAlert": {
+    "lowSpace": "LOW STORAGE SPACE",
+    "missAttest": "MISSED ATTESTATION",
+    "use": "USAGE",
+    "noFee": "no fee recipient",
+    "stereumUpt": "STEREUM UPDATE"
   }
 }
