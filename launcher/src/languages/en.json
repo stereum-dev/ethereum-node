@@ -484,5 +484,10 @@
     "pluginInst": "Plugins To Install",
     "cat": "category",
     "path": "path"
+  },
+  "uploadConfig": {
+    "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
+    "configFile": "Config file"
   }
 }
