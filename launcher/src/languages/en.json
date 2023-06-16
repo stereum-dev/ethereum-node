@@ -458,5 +458,14 @@
     "stepThree": "Scan the QR Code",
     "stepFour": "Send a test notification",
     "close": "click outside to close"
+  },
+  "replacePanel": {
+    "client": "Client",
+    "sync": "SYNC",
+    "gen": "GENESIS",
+    "chkPoint": "CHECKPOINT",
+    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cancel": "CANCEL",
+    "confirm": "CONFIRM"
   }
 }
