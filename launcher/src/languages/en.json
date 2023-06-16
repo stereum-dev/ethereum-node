@@ -386,6 +386,13 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
+    "test": "testtesttestte"
+  },
+  "blockProduct": {
+    "status": "STATUS",
+    "assignSlot": "Assigned Slot",
+    "noAsign": "Not Assigned",
+    "nxtBlck": "Next Block Proposal in:"
   }
 }
