@@ -24,7 +24,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langSelect: "img/flag/france.png",
           langName: "français",
           label: "fr",
-          enable: false,
+          enable: true,
         },
         {
           langImg: "img/flag/spain.png",
@@ -94,7 +94,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langSelect: "img/flag/china.png",
           langName: "简体中文",
           label: "ch",
-          enable: false,
+          enable: true,
         },
         {
           langImg: "img/flag/bulgaria.png",
