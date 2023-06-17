@@ -1,114 +1,114 @@
 {
   "formsetup": {
-    "login": "login",
-    "server": "Connect to your server",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY"
+    "login": "登录",
+    "server": "连接服务器",
+    "servername": "服务器 名称",
+    "iphost": "IP / 主机名",
+    "username": "用户名称",
+    "password": "密码",
+    "keylocation": "密钥定位",
+    "usessh": "使用 SSH 密钥"
   },
   "comingsoon": {
-    "comingsoon": "COMING SOON"
+    "comingsoon": "即将播出！"
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "NAME",
-    "edit": "to edit node",
-    "loading": "loading new states",
-    "turnOn": "Turn Node on",
-    "turnOff": "Turn Node off",
-    "log": "Open Logs",
-    "restart": "Restart",
-    "start": "start",
-    "stop": "stop"
+    "servername": "名称",
+    "edit": "编辑节点",
+    "loading": "加载新状态",
+    "turnOn": "开启节点",
+    "turnOff": "关闭节点",
+    "log": "打开记录文件",
+    "restart": "重启",
+    "start": "开始",
+    "stop": "停止"
   },
   "pagesnav": {
-    "node": "NODE",
-    "control": "CONTROL",
-    "staking": "STAKING"
+    "node": "节点",
+    "control": "控制器",
+    "staking": "权益质押"
   },
   "supportModal": {
-    "support": "support",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
-    "bugReport": "BUG REPORT",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
-    "emailText": "or write an email to:",
-    "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "support": "客户服务",
+    "supportText": "想最快方式联系技术客服, 请加入Discord服务器!",
+    "bugReport": "漏洞报告",
+    "bugRepText": "请花时间提出您的评价，让Stereum变得更好！",
+    "emailText": "或请发邮件到以下邮箱",
+    "docsTitle": "链码",
+    "docsText": "您所选节点配置网络记录文档的链接。"
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLY",
-    "general": "GENERAL",
-    "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
-    "lane": "Stereum - Testing Lane",
-    "on": "on",
-    "off": "off",
-    "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
-    "manual": "MANUAL",
-    "auto": "AUTO"
+    "stereumName": "设置",
+    "langName": "语言选择",
+    "confirm": "应用",
+    "general": "总体",
+    "credits": "归于",
+    "open": "打开",
+    "update": "更新",
+    "launcherVersion": "启动器版本:",
+    "nodeVersion": "节点版本",
+    "lane": "Stereum - 测试方式",
+    "on": "开",
+    "off": "关闭",
+    "updateConfig": "更新配置",
+    "servicePlugin": "插件/服务更新配置",
+    "manual": "手动更新",
+    "auto": "自动更新"
   },
   "nodeSidebarVideo": {
-    "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "migrate": "Nodes Migration",
-    "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO"
+    "stake": "使用 32 ETH",
+    "ssv": "使用 ssv.网络",
+    "alert": "手机应用上的提醒",
+    "switchC": "切换客户",
+    "migrate": "节点转移",
+    "rpc": "RPC 连接",
+    "gnoStake": "使用 1GNO"
   },
   "pluginZone": {
-    "client": "client"
+    "client": "客户"
   },
   "theNode": {
-    "execution": "execution",
-    "consensus": "consensus",
-    "validator": "validator",
-    "servicePlugin": "SERVICE PLUGIN"
+    "execution": "运行",
+    "consensus": "共识",
+    "validator": "验证者",
+    "servicePlugin": "插入"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
-    "nukeNode": "NUKE NODE"
+    "backNode": "回到节点",
+    "addPreset": "添加单击按钮",
+    "changeNetwork": "更改网络",
+    "nukeNode": "删除节点"
   },
   "sidebarManage": {
-    "filter": "Filter..."
+    "filter": "过滤器..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
-    "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "confirm": "确认",
+    "change": "更改为确认",
+    "delete": "删除"
   },
   "updatePanel": {
-    "launcherTitle": "launcher",
-    "version": "version",
-    "current": "current",
-    "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "Auto Update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "plug-in updates",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all",
-    "osTitle": "server os updates",
-    "availableUpdates": "updates"
+    "launcherTitle": "启动器",
+    "version": "版本",
+    "current": "当前设置",
+    "nodeTitle": "节点更新",
+    "latest": "最新版本",
+    "auto": "自动更新",
+    "available": "可使用",
+    "searching": "正在搜索更新……",
+    "serviceTitle": "插件更新",
+    "serviceDesc": "已安装选择插件的更新",
+    "availablePlugin": "可使用插件更新",
+    "all": "全部更新",
+    "osTitle": "更新服务器",
+    "availableUpdates": "更新"
   },
   "controlPage": {
-    "node": "NODE",
+    "node": "节点",
     "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
+    "write": "编写",
+    "read": "阅读",
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-ENDPOINT",
     "ws": "WS-ENDPOINT",
