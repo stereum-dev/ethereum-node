@@ -110,18 +110,18 @@
     "write": "编写",
     "read": "阅读",
     "inclusionDistance": "INCLUSION DISTANCE",
-    "rpc": "RPC-ENDPOINT",
-    "ws": "WS-ENDPOINT",
-    "syncStatus": "SYNC STATUS",
-    "hard": "STORAGE VOLUME",
-    "free": "FREE",
-    "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
-    "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
+    "rpc": "RPC-端点",
+    "ws": "WS-端点",
+    "syncStatus": "同步状态",
+    "hard": "硬件",
+    "free": "免费",
+    "total": "总计",
+    "network": "网络",
+    "receive": "接收数据",
+    "transmit": "发出数据",
+    "ram": "内存",
+    "used": "已使用",
+    "totalram": "总计",
     "storage": "STORAGE",
     "active": "ACTIVE",
     "rating": "RATING",
@@ -198,23 +198,23 @@
     "slashed": "SLASHED"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIDATOR",
-    "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "date": "日期",
+    "validator": "验证者",
+    "attestRate": "认证比率",
+    "reward": "奖品"
   },
   "installOption": {
-    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
-    "install": "INSTALL",
-    "placeHoldrer": "choose a network"
+    "installText": "选择您的目的和网络。选择并按下开始以后将会给您提供服务",
+    "back": "回去",
+    "install": "安装",
+    "placeHoldrer": "选择网络"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "将删除所有服务。",
+    "sure": "您确定吗？"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
+    "welcome": "欢迎使用",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
     "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
     "osSupported": "IS A SUPPORTED OS"
