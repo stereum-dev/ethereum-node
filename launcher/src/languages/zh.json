@@ -216,12 +216,12 @@
   "installitionMenu": {
     "welcome": "欢迎使用",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
+    "osCheck": "在检查如果您的服务器需要支持",
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "CHOSEN NETWORK",
-    "chosen": "CHOSEN NETWORK",
+    "option": "选择网络",
+    "chosen": "选择网络",
     "path": "INSTALLATION PATH",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "plugin": "INSTALLED SERVICES",
