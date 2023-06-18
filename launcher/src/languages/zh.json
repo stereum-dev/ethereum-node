@@ -142,25 +142,25 @@
     "waitForImport": "正在导入, 请稍候。",
     "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
-    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "I am sure",
-    "cancel": "cancel"
+    "warningQuestion": "您想要导入验证密钥吗？",
+    "sure": "确认",
+    "cancel": "取消"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "输入密码和导入"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confirm"
+    "passMessage": "输入您的验证密码及使用此秘钥退出区块链",
+    "confirm": "确认"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "modalMessage": "您确定要使用已选择的验证密钥退出区块链吗？这将停止您的验证操作且不可撤销。 您的资金也只有在链条允许的情况下才可提款。",
+    "exitApprove": "我已阅读且了解后果",
+    "exitChain": "退出区块链",
+    "clickClose": "点击外部关闭"
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
+    "textPlaceHolder": "输入有效的以太坊地址来将您的奖项发送到... ",
     "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
   },
   "grafitiMultipleValidator": {
