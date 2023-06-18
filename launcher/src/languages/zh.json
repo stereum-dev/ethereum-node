@@ -122,24 +122,24 @@
     "ram": "内存",
     "used": "已使用",
     "totalram": "总计",
-    "storage": "STORAGE",
-    "active": "ACTIVE",
-    "rating": "RATING",
-    "usage": "Usage"
+    "storage": "储存",
+    "active": "激活",
+    "rating": "评分",
+    "usage": "使用"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "点击任务显示"
   },
   "displayValidator": {
-    "pk": "Public Key",
-    "service": "SERVICE",
-    "active": "ACTIVE SINCE",
-    "state": "STATE",
-    "balance": "BALANCE",
-    "option": "OPTIONS",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some time",
-    "waitForImport": "Please wait until the key is imported",
+    "pk": "公开密钥",
+    "service": "服务器",
+    "active": "激活时间",
+    "state": "状态",
+    "balance": "余额",
+    "option": "选项",
+    "importKey": "导入验证器密钥",
+    "waitMessage": "此操作需要一些时间",
+    "waitForImport": "正在导入, 请稍候。",
     "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
