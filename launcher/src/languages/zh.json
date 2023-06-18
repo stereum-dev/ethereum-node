@@ -224,38 +224,38 @@
     "chosen": "选择网络",
     "path": "INSTALLATION PATH",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "INSTALLED SERVICES",
-    "addOpt": "ADDITIONAL OPTIONS",
-    "back": "BACK",
-    "next": "NEXT"
+    "plugin": "安装服务器",
+    "addOpt": "附加选项",
+    "back": "回去",
+    "next": "下一步"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
-    "developers": "DEVELOPERS",
-    "testers": "TESTERS"
+    "creditTitle": "财务贡献者",
+    "fincialTitle": "把您的名字列在名单上！谢谢您支持！",
+    "technicPage": "技术贡献者",
+    "techTitle": "CREDITS - 技术贡献者",
+    "techText": "注意一个GITPOAP！通过查看我们的GITHUB来了解！",
+    "financialPage": "财务贡献者",
+    "gitcoinList": "GITCOIN 完整名单",
+    "developers": "开发队伍",
+    "testers": "测试人员"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
+    "verifyTitle": "验证和安装",
+    "name": "名称",
+    "cat": "类别",
     "path": "PATH"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "建议您稍等直到完成重要安装再应用更多修改"
   },
   "tutorialBox": {
-    "video": "video",
-    "walkthrough": "walkthrough",
-    "textGuide": "written guide"
+    "video": "视频",
+    "walkthrough": "攻略",
+    "textGuide": "编写指南"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionTitle": "注册一个新的操作者",
     "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
     "register": "Register",
     "insertTitle": "insert operator key for existing operator",
