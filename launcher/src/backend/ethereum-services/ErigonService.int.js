@@ -75,7 +75,7 @@ test("erigon installation", async () => {
       /HTTP endpoint opened for Engine API/.test(status.stderr) &&
       /HTTP endpoint opened/.test(status.stderr) &&
       /Started P2P networking/.test(status.stderr) &&
-      /ws=false/.test(status.stderr)
+      !/ws=false/.test(status.stderr)
     ) {
       condition = true;
     }
