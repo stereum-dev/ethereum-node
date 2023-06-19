@@ -195,7 +195,7 @@
     "attention": "证明",
     "missed": "已错过",
     "aggregations": "协议",
-    "slashed": "SLASHED"
+    "slashed": "罚没"
   },
   "validatorsBox": {
     "date": "日期",
@@ -264,9 +264,9 @@
   "registerSSV": {
     "pubKey": "公开操作器密钥",
     "copied": "已复制！",
-    "secKey": "Secret Operator Key",
+    "secKey": "秘密操作密钥",
     "makeSureText": "请确保存储和备份您的操作器密钥在安全地方。不要与任何人共享此密钥。",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "copyMessage": "将您的公共密钥复制到这里，以确认您储存了您的密钥！"
   },
   "ssvDashboard": {
     "operatorPage": "我的操作页面",
@@ -284,21 +284,21 @@
     "RPCTurnOnMessage": "请先打开 RPC 隧道！",
     "RPCCopiedMessage": "RPC-URL 已复制到剪贴板中。",
     "WSTurnOnMessage": "请先打开 WS 隧道！",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "WSCopiedMessage": "WS-URL 已复制到剪贴板中！"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Double Click to Copy Logs",
+    "noLogFound": "在列表中找不到日记",
+    "clickCopy": "双击复制日记",
     "serviceId": "service id"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
+    "localApp": "应用",
+    "localAppText": "在此机器上打开服务",
     "openBrowser": "OPEN IN BROWSER",
     "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
-    "blockRel": "Block relay",
+    "process": "正在处理",
+    "blockRel": "中继区块",
     "blockRelTxt": "Select one or multiple relays to receive blocks from"
   },
   "customInstallation": {
@@ -315,20 +315,20 @@
     "installPath": "INSTALLATION PATH",
     "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "portused": "PORT USED",
-    "cancel": "cancel",
-    "save": "save",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "cancel": "取消",
+    "save": "保存",
+    "add": "添加",
+    "clickAndAdd": "点击ADD"
   },
   "importSlashingModal": {
     "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
     "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
-    "continue": "Continue"
+    "chooseFile": "选择文件",
+    "continue": "继续"
   },
   "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+    "noValidatorInstalled": "没有安装验证器客户端！",
+    "disabledStakingMessage": "安装至少一个验证器客户端来激活导入验证器密钥。"
   },
   "logOutModal": {
     "logOutTitle": "LOG-OUT",
