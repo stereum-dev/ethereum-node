@@ -18,6 +18,7 @@
     </div>
   </div>
 </template>
+<script></script>
 <style scoped>
 .logout-modal-parent {
   width: 100%;

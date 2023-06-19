@@ -13,16 +13,18 @@
           <span>{{ $t("restartModal.confirmMessage") }} {{ mainIcon ? "on" : "off" }}?</span>
         </div>
         <div class="toggle-message">
-          <span>Your node will go off line while you do this!</span>
+          <span>{{ $t("confirmModal.message") }}</span>
         </div>
       </div>
 
-      <div v-if="mainIcon" class="toggle-button_on" @click="$emit('powerToggleOn')">turn on</div>
+      <div v-if="mainIcon" class="toggle-button_on" @click="$emit('powerToggleOn')">
+        {{ $t("confirmModal.turnOn") }}
+      </div>
       <div v-else class="toggle-button_off" @click="$emit('powerToggleOff')">
         <!-- <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" /> -->
-        <span>turn off</span>
+        <span>{{ $t("confirmModal.turnOff") }}</span>
       </div>
-      <span class="clickOut">click outside to close</span>
+      <span class="clickOut">{{ $t("confirmModal.close") }}</span>
     </div>
   </div>
 </template>

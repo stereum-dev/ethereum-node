@@ -281,6 +281,25 @@ export class Monitoring {
     return [];
   }
 
+  // Make sure the "finalized" endpoint of given checkpoint URL (cp_url) is available and responds HTTP status code 200 success.
+  // Note: in further releases the checkpoint may also validated against other checkpoints.
+  // Returns bool true if the given cp_url is ok, false otherwise
+  async isCheckpointValid(cp_url) {
+    let ep = "/eth/v2/debug/beacon/states/finalized";
+    let url = cp_url.trim().endsWith("/") ? cp_url.trim().slice(0, -1) + ep : cp_url + ep;
+    const cmd = `
+      curl -s -o /dev/null --head --max-time 5 -w "%{http_code}" -X GET \
+      -H 'Content-Type: application/json' \
+      -H 'Accept: application/octet-stream' \
+      ${url}
+    `.trim();
+    const result = await this.nodeConnection.sshService.exec(cmd);
+    if (result.stdout != 200) {
+      return false;
+    }
+    return true;
+  }
+
   // Query Prometheus API via CURL on the node
   // https://prometheus.io/docs/prometheus/latest/querying/api/
   // https://prometheus.io/docs/prometheus/latest/querying/basics/

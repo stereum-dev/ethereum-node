@@ -39,7 +39,7 @@ test("buildConfiguration", () => {
   ).buildConfiguration();
 
   expect(prysm.command).toMatch(/--execution-endpoint=http-endpoint-string/);
-  expect(prysm.volumes).toHaveLength(3);
+  expect(prysm.volumes).toHaveLength(4);
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/beacon:/opt/app/beacon");
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/genesis:/opt/app/genesis");
   expect(prysm.ports).toHaveLength(3);
