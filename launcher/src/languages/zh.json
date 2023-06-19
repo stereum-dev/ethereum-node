@@ -1,131 +1,127 @@
 {
   "formsetup": {
-    "login": "login",
-    "server": "Connect to your server",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY"
+    "login": "登录",
+    "server": "连接服务器",
+    "servername": "服务器 名称",
+    "iphost": "IP / 主机名",
+    "username": "用户名称",
+    "password": "密码",
+    "keylocation": "密钥定位",
+    "usessh": "使用 SSH 密钥"
   },
   "comingsoon": {
-    "comingsoon": "COMING SOON"
+    "comingsoon": "即将播出！"
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "NAME",
-    "edit": "to edit node",
-    "loading": "loading new states",
-    "turnOn": "Turn Node on",
-    "turnOff": "Turn Node off",
-    "log": "Open Logs",
-    "restart": "Restart",
-    "start": "start",
-    "stop": "stop"
+    "servername": "名称",
+    "edit": "编辑节点",
+    "loading": "加载新状态",
+    "turnOn": "开启节点",
+    "turnOff": "关闭节点",
+    "log": "打开记录文件",
+    "restart": "重启",
+    "start": "开始",
+    "stop": "停止"
   },
   "pagesnav": {
-    "node": "NODE",
-    "control": "CONTROL",
-    "staking": "STAKING"
+    "node": "节点",
+    "control": "控制器",
+    "staking": "权益质押"
   },
   "supportModal": {
-    "support": "support",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
-    "bugReport": "BUG REPORT",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
-    "emailText": "or write an email to:",
-    "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
-  },
-  "notifModal": {
-    "notification": "Notifications",
-    "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Click outside to cancel"
+    "support": "客户服务",
+    "supportText": "想最快方式联系技术客服, 请加入Discord服务器!",
+    "bugReport": "漏洞报告",
+    "bugRepText": "请花时间提出您的评价，让Stereum变得更好！",
+    "emailText": "或请发邮件到以下邮箱",
+    "docsTitle": "链码",
+    "docsText": "您所选节点配置网络记录文档的链接。"
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLY",
-    "general": "GENERAL",
-    "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
-    "lane": "Stereum - Testing Lane",
-    "on": "on",
-    "off": "off",
-    "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
-    "manual": "MANUAL",
-    "auto": "AUTO"
+    "stereumName": "设置",
+    "langName": "语言选择",
+    "confirm": "应用",
+    "general": "总体",
+    "credits": "归于",
+    "open": "打开",
+    "update": "更新",
+    "launcherVersion": "启动器版本:",
+    "nodeVersion": "节点版本",
+    "lane": "Stereum - 测试方式",
+    "on": "开",
+    "off": "关闭",
+    "updateConfig": "更新配置",
+    "servicePlugin": "插件/服务更新配置",
+    "manual": "手动更新",
+    "auto": "自动更新"
   },
   "nodeSidebarVideo": {
-    "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "migrate": "Nodes Migration",
-    "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO"
+    "stake": "使用 32 ETH",
+    "ssv": "使用 ssv.网络",
+    "alert": "手机应用上的提醒",
+    "switchC": "切换客户",
+    "migrate": "节点转移",
+    "rpc": "RPC 连接",
+    "gnoStake": "使用 1GNO"
   },
   "pluginZone": {
-    "client": "client"
+    "client": "客户"
   },
   "theNode": {
-    "execution": "execution",
-    "consensus": "consensus",
-    "validator": "validator",
-    "servicePlugin": "SERVICE PLUGIN"
+    "execution": "运行",
+    "consensus": "共识",
+    "validator": "验证者",
+    "servicePlugin": "插入"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
-    "nukeNode": "NUKE NODE"
+    "backNode": "回到节点",
+    "addPreset": "添加单击按钮",
+    "changeNetwork": "更改网络",
+    "nukeNode": "删除节点"
   },
   "sidebarManage": {
-    "filter": "Filter..."
+    "filter": "过滤器..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
-    "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "confirm": "确认",
+    "change": "更改为确认",
+    "delete": "删除"
   },
   "updatePanel": {
-    "launcherTitle": "launcher",
-    "current": "current",
-    "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "Auto Update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "plug-in updates",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all",
-    "osTitle": "server os updates",
-    "availableUpdates": "available updates"
+    "launcherTitle": "启动器",
+    "version": "版本",
+    "current": "当前设置",
+    "nodeTitle": "节点更新",
+    "latest": "最新版本",
+    "auto": "自动更新",
+    "available": "可使用",
+    "searching": "正在搜索更新……",
+    "serviceTitle": "插件更新",
+    "serviceDesc": "已安装选择插件的更新",
+    "availablePlugin": "可使用插件更新",
+    "all": "全部更新",
+    "osTitle": "更新服务器",
+    "availableUpdates": "更新"
   },
   "controlPage": {
-    "node": "NODE",
+    "node": "节点",
     "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
+    "write": "编写",
+    "read": "阅读",
     "inclusionDistance": "INCLUSION DISTANCE",
-    "rpc": "RPC-ENDPOINT",
-    "ws": "WS-ENDPOINT",
-    "syncStatus": "SYNC STATUS",
-    "hard": "STORAGE VOLUME",
-    "free": "FREE",
-    "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
-    "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
+    "rpc": "RPC-端点",
+    "ws": "WS-端点",
+    "syncStatus": "同步状态",
+    "hard": "硬件",
+    "free": "免费",
+    "total": "总计",
+    "network": "网络",
+    "receive": "接收数据",
+    "transmit": "发出数据",
+    "ram": "内存",
+    "used": "已使用",
+    "totalram": "总计",
     "storage": "STORAGE",
     "active": "ACTIVE",
     "rating": "RATING",
@@ -202,23 +198,23 @@
     "slashed": "SLASHED"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIDATOR",
-    "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "date": "日期",
+    "validator": "验证者",
+    "attestRate": "认证比率",
+    "reward": "奖品"
   },
   "installOption": {
-    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
-    "install": "INSTALL",
-    "placeHoldrer": "choose a network"
+    "installText": "选择您的目的和网络。选择并按下开始以后将会给您提供服务",
+    "back": "回去",
+    "install": "安装",
+    "placeHoldrer": "选择网络"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "将删除所有服务。",
+    "sure": "您确定吗？"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
+    "welcome": "欢迎使用",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
     "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
     "osSupported": "IS A SUPPORTED OS"
@@ -229,6 +225,7 @@
     "path": "INSTALLATION PATH",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "plugin": "INSTALLED SERVICES",
+    "addOpt": "ADDITIONAL OPTIONS",
     "back": "BACK",
     "next": "NEXT"
   },
@@ -374,5 +371,140 @@
     "seventhSlide": "Type in “ETH” as the currency symbol",
     "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
     "ninethSlide": "Click on “SAVE”"
+  },
+  "stakeGuide": {
+    "syncCheck": "First Check if your Node is synced",
+    "scrollMessage": "Scroll to change slides faster",
+    "stake": "staking",
+    "scrollClick": "Click on Staking",
+    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
+    "clickIcon": "Click on the icon of your validator client",
+    "cong": "Congrats you are done!",
+    "clickPass": "Please click here to enter your password and confirm.",
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
+    "test": "testtesttestte"
+  },
+  "blockProduct": {
+    "status": "STATUS",
+    "assignSlot": "Assigned Slot",
+    "noAsign": "Not Assigned",
+    "nxtBlck": "Next Block Proposal in:"
+  },
+  "disableStake": {
+    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+  },
+  "selectionOption": {
+    "graffiti": "graffiti",
+    "removeKeys": "Remove all keys"
+  },
+  "syncCommitte": {
+    "total": "total",
+    "status": "STATUS",
+    "particip": "PARTICIPATING",
+    "noParticip": "NOT PARTICIPATING",
+    "start": "Start",
+    "end": "End",
+    "newSync": "New Sync Committee in",
+    "hours": "hours"
+  },
+  "theAttes": {
+    "lastAttest": "Last Attestation Slot:",
+    "keyStatus": "Key Status:",
+    "attest": "ATTESTING",
+    "pending": "PENDING",
+    "nxtAttest": "next Attestation Slot:",
+    "slotRem": "Slots remaining",
+    "tillAtest": "till attestation"
+  },
+  "confirmModal": {
+    "message": "Your node will go off line while you do this!",
+    "turnOn": "turn on",
+    "turnOff": "turn off",
+    "close": "click outside to close"
+  },
+  "nodeAlert": {
+    "lowSpace": "LOW STORAGE SPACE",
+    "missAttest": "MISSED ATTESTATION",
+    "use": "USAGE",
+    "noFee": "no fee recipient",
+    "stereumUpt": "STEREUM UPDATE"
+  },
+  "restartModalNode": {
+    "message": "are you sure you want to",
+    "close": "click outside to close"
+  },
+  "resyncModal": {
+    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
+    "sync": "SYNCHRONISATION",
+    "gen": "GENESIS",
+    "chkSync": "CHECKPOINT SYNC",
+    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cont": "CONTINUE",
+    "resync": "RESYNC",
+    "close": "click outside to close"
+  },
+  "resyncSeparateService": {
+    "message": "by initiating resync you will delete the database of",
+    "msgPartTwo": " source will be used for resynchronization",
+    "resync": "resync",
+    "close": "click outside to close"
+  },
+  "notifModal": {
+    "addNotif": "add a notification channel",
+    "chooseNotif": "Choose what kind of Notification Channel you want to configure",
+    "stereumMonitor": "Stereum Node Monitor",
+    "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
+    "stepTwo": "Open the app on your smartphone",
+    "stepThree": "Scan the QR Code",
+    "stepFour": "Send a test notification",
+    "close": "click outside to close"
+  },
+  "replacePanel": {
+    "client": "Client",
+    "sync": "SYNC",
+    "gen": "GENESIS",
+    "chkPoint": "CHECKPOINT",
+    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "cancel": "CANCEL",
+    "confirm": "CONFIRM"
+  },
+  "executionSync": {
+    "gen": "GENESIS",
+    "syncClient": "Syncs your clients"
+  },
+  "importingList": {
+    "nodeConf": "Node Config"
+  },
+  "importingSyncing": {
+    "message": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE"
+  },
+  "importingVerify": {
+    "pluginInst": "Plugins To Install",
+    "cat": "category",
+    "path": "path"
+  },
+  "uploadConfig": {
+    "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
+    "configFile": "Config file"
+  },
+  "fastSync": {
+    "header": "Set how the Node clients will synchronize their blockchain data.",
+    "client": "CLIENTs",
+    "syncSrc": "SYNC SOURCE",
+    "gen": "GENESIS",
+    "sync": "Syncs from genesis",
+    "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
+  },
+  "deleteModal": {
+    "message": "Do you want to remove the saved connection?",
+    "rem": "Remove",
+    "close": "click outside to close"
+  },
+  "errTerminal": {
+    "copy": "copied!",
+    "close": "click outside to close"
   }
 }

@@ -5,8 +5,8 @@ class ControlService extends EventEmitter {
   constructor() {
     super();
     this.promiseIpc = window.promiseIpc;
-    this.addListener = window.promiseIpc.addListener
-    this.removeListener = window.promiseIpc.removeListener
+    this.addListener = window.promiseIpc.addListener;
+    this.removeListener = window.promiseIpc.removeListener;
   }
 
   init(store) {
@@ -74,6 +74,10 @@ class ControlService extends EventEmitter {
   async writeConfig(args) {
     await this.promiseIpc.send("writeConfig", args);
     return args;
+  }
+
+  async isCheckpointValid(cp_url) {
+    return await this.promiseIpc.send("isCheckpointValid", cp_url);
   }
 
   async checkOS() {

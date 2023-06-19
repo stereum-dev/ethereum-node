@@ -3,7 +3,7 @@
     <div class="attestationSlot">
       <div class="attestation_last">
         <div class="attestation_last_title">
-          <span>Last Attestation Slot:</span>
+          <span>{{ $t("theAttes.lastAttest") }}</span>
         </div>
         <div class="attestation_last_value">
           <span v-if="stats.ETA === ''">{{ stats.attestationSlot }}</span>
@@ -12,18 +12,18 @@
       </div>
       <div class="keyStatus">
         <div class="keyStatus_title">
-          <span>Key Status:</span>
+          <span>{{ $t("theAttes.keyStatus") }}</span>
         </div>
         <div class="keyStatus_value">
-          <span v-if="stats.ETA === ' ETA: now!'" class="attesting">ATTESTING</span>
-          <span v-else>PENDING</span>
+          <span v-if="stats.ETA === ' ETA: now!'" class="attesting">{{ $t("theAttes.attest") }}</span>
+          <span v-else>{{ $t("theAttes.pending") }}</span>
         </div>
       </div>
     </div>
     <div class="attestationNext">
       <div class="attestation_next">
         <div class="attestation_next_title">
-          <span>next Attestation Slot:</span>
+          <span>{{ $t("theAttes.nxtAttest") }}</span>
         </div>
         <div class="attestation_next_value">
           <span v-if="stats.ETA === ''">----</span>
@@ -34,9 +34,9 @@
       <div class="remainingStatus">
         <div class="remaining_title">
           <p v-if="attestationIsOnline">
-            <span>{{ stats.remainingSlots }}</span> Slots remaining
+            <span>{{ stats.remainingSlots }}</span> {{ $t("theAttes.slotRem") }}
           </p>
-          <p v-else><span>??</span> Slots remaining</p>
+          <p v-else><span>??</span> {{ $t("theAttes.slotRem") }}</p>
         </div>
         <div class="remaining_time">
           <!-- <p v-if="attestationIsOnline">
@@ -44,7 +44,7 @@
           </p>
           <p v-else><span>??</span> till attestation</p> -->
           <p>
-            <span>{{ getRemainingTime }}</span> till attestation
+            <span>{{ getRemainingTime }}</span> {{ $t("theAttes.tillAtest") }}
           </p>
         </div>
       </div>
@@ -74,7 +74,7 @@ export default {
       } else if (this.stats.ETA === " ETA: now!") {
         return "";
       } else {
-        return `${this.stats.remainingTime ? this.stats.remainingTime : '-'} sec`;
+        return `${this.stats.remainingTime ? this.stats.remainingTime : "-"} sec`;
       }
     },
   },

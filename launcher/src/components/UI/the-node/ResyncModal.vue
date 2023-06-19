@@ -3,13 +3,11 @@
     <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
     <div class="warning-modal-content">
       <div v-if="displayWarningMessage" class="title-box">
-        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div v-if="displayWarningMessage" class="warningMessage">
         <p>
-          YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for
-          your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's
-          CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.
+          {{ $t("resyncModal.message") }}
         </p>
       </div>
       <div v-else class="resyncBox">
@@ -19,17 +17,17 @@
         <div class="fast-sync">
           <div class="sync-header">
             <div class="headerTitle">
-              <span>SYNCHRONISATION</span>
+              <span>{{ $t("resyncModal.sync") }}</span>
             </div>
             <div class="headerContent">
               <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
-              <span v-if="genesisIsActive">GENESIS</span>
-              <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
+              <span v-if="genesisIsActive">{{ $t("resyncModal.gen") }}</span>
+              <span v-if="checkPointIsActive">{{ $t("resyncModal.chkSync") }}</span>
               <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive">SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span>
+            <span v-if="genesisIsActive">{{ $t("resyncModal.syncMsg") }}</span>
             <div v-if="checkPointIsActive" class="inputBox">
               <input v-model="checkPointSync" type="text" />
             </div>
@@ -39,19 +37,19 @@
 
       <div class="btnBox">
         <div v-if="displayWarningMessage" class="confirmBtn" @click="continueToResync">
-          <span>Continue</span>
+          <span>{{ $t("resyncModal.cont") }}</span>
         </div>
         <div v-else class="confirmBtn" @click="$emit('confirmBtn', checkPointSync)">
-          <span>RESYNC</span>
+          <span>{{ $t("resyncModal.resync") }}</span>
         </div>
       </div>
-      <span class="close">Click outside to cancel.</span>
+      <span class="close">{{ $t("resyncModal.close") }}</span>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props:{
+  props: {
     item: {
       type: Object,
       required: true,

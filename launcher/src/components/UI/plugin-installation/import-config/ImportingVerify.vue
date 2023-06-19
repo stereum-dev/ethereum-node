@@ -9,9 +9,9 @@
         <div class="table">
           <div class="table-content">
             <div class="content_header">
-              <span class="install">Plugins To Install</span>
-              <span class="category">category</span>
-              <span class="path">path</span>
+              <span class="install">{{ $t("importingVerify.pluginInst") }}</span>
+              <span class="category">{{ $t("importingVerify.cat") }}</span>
+              <span class="path">{{ $t("importingVerify.path") }}</span>
             </div>
             <TransitionGroup name="fade" class="container">
               <div v-for="(plugin, index) in configServices" :key="index" class="table-row duration-500">

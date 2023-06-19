@@ -5,15 +5,15 @@
       <div class="resync-icon"><img src="/img/icon/plugin-menu-icons/resync.png" alt="" /></div>
       <div class="resync-message">
         <div>
-          <span>by initiating resync you will delete the database of</span>
+          <span>{{ $t("resyncSeparateService.message") }}</span>
         </div>
         <div class="resync-message_nameId">
           <span>{{ item.name }} - [{{ item.config.serviceID }}]</span>
         </div>
         <div>
           <span>
-            {{ item.category === "consensus" ? "choose what" : "genesis" }} source will be used for
-            resynchronization</span
+            {{ item.category === "consensus" ? "choose what" : "genesis" }}
+            {{ $t("resyncSeparateService.msgPartTwo") }}</span
           >
         </div>
       </div>
@@ -92,8 +92,10 @@
       <div class="error">
         <span v-if="error">{{ error }}</span>
       </div>
-      <div class="resync-confirm deactive" :class="{ active: btnActive }" @click="resync(item)">resync</div>
-      <span class="clickOut">click outside to close</span>
+      <div class="resync-confirm deactive" :class="{ active: btnActive }" @click="resync(item)">
+        {{ $t("resyncSeparateService.resync") }}
+      </div>
+      <span class="clickOut">{{ $t("resyncSeparateService.close") }}</span>
     </div>
   </div>
 </template>
