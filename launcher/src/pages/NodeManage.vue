@@ -134,6 +134,7 @@ export default {
       itemToInstall: {},
       itemToModify: {},
       itemToReplace: {},
+      checkedRelays: [],
     };
   },
   computed: {
@@ -221,6 +222,20 @@ export default {
       this.itemToInstall = {};
       this.itemToInstall.addPanel = false;
     },
+    switchService(data) {
+      this.confirmChanges.push(
+        JSON.parse(
+          JSON.stringify(
+            this.getActions("SWITCH CLIENT", this.itemToReplace, {
+              itemToInstall: this.itemToInstall,
+              data: data,
+            })
+          )
+        )
+      );
+      this.itemToReplace = {};
+      this.itemToReplace.replacePanel = false;
+    },
     selectedServiceToRemove(item) {
       if (item.active) {
         this.selectedItemToRemove = this.selectedItemToRemove.concat(
@@ -246,8 +261,7 @@ export default {
         this.itemToModify = item;
         if (item.name === "Nimbus" || item.name === "Teku") {
           let servicePair = this.newConfiguration.filter((s) => s.config.serviceID === item.config.serviceID);
-          if(servicePair.length > 1)
-            this.itemToModify = servicePair.find((s) => s.service.includes("Beacon"));
+          if (servicePair.length > 1) this.itemToModify = servicePair.find((s) => s.service.includes("Beacon"));
         }
       }
     },
@@ -270,9 +284,18 @@ export default {
       this.itemToReplace.replacePanel = false;
       this.itemToReplace = {};
     },
-    confirmReplaceProcess() {
-      this.itemToReplace.replacePanel = false;
-      this.itemToReplace = {};
+    async confirmReplaceProcess(data) {
+      this.itemToInstall = JSON.parse(JSON.stringify(data.plugin));
+      let serviceToAdd = {
+        network: this.configNetwork.network,
+        installDir: this.installationPath ? this.installationPath : "/opt/stereum",
+        port: parseInt(this.port),
+        executionClients: [],
+        beaconServices: [],
+        checkpointURL: data.checkpointURL ? data.checkpointURL : false,
+        relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
+      };
+      this.switchService(serviceToAdd);
     },
   },
 };

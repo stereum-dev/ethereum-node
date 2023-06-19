@@ -13,7 +13,13 @@
       </div>
       <div class="configBox">
         <div
-          v-for="service in allServices.filter((e) => e.category === plugin.category && e.name !== plugin.name)"
+          v-for="service in allServices.filter(
+            (e) =>
+              e.category === plugin.category &&
+              e.name !== plugin.name &&
+              e.name != 'Web3Signer' &&
+              e.name != 'ssv.network'
+          )"
           :key="service.id"
           class="pluginBox"
           @click="replacePluginHandler(service)"
@@ -25,6 +31,14 @@
               {{ service.category }}
               <span v-if="service.category !== 'service'">{{ $t("replacePanel.client") }}</span>
             </p>
+          </div>
+        </div>
+        <div class="change-installation">
+          <div class="change-title">
+            <span>INSTALLATION PATH</span>
+          </div>
+          <div class="change-box">
+            <input v-model="installationPath" type="text" maxlength="255" />
           </div>
         </div>
         <div v-if="plugin.category === 'execution' || plugin.category === 'consensus'" class="fast-sync">
@@ -51,7 +65,7 @@
         <div class="cancelBtn" @click="$emit('cancelReplace')">
           <span>{{ $t("replacePanel.cancel") }}</span>
         </div>
-        <div class="addBtn" @click="$emit('confirmReplace')">
+        <div class="addBtn" @click="saveConfig">
           <span>{{ $t("replacePanel.confirm") }}</span>
         </div>
       </div>
@@ -61,6 +75,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import ControlService from "@/store/ControlService";
 
 export default {
   props: {
@@ -75,6 +90,7 @@ export default {
       selected: {},
       genesisIsActive: false,
       checkPointIsActive: false,
+      installationPath: "",
       checkPointSync: "",
     };
   },
@@ -92,6 +108,7 @@ export default {
     },
   },
   mounted() {
+    this.getInstallPath();
     this.genesisIsActive = true;
   },
   methods: {
@@ -102,11 +119,24 @@ export default {
       } else {
         this.checkPointIsActive = false;
         this.genesisIsActive = true;
+        this.checkPointSync = "";
       }
     },
     replacePluginHandler(item) {
       this.plugin = item;
-      this.$emit("replacePlugin", this.plugin);
+      this.$emit("confirmReplaceProcess", this.plugin, this.checkPointSync);
+    },
+    saveConfig() {
+      this.$emit("confirmReplace", {
+        plugin: this.plugin,
+        checkpointURL: this.checkPointSync,
+      });
+    },
+    getInstallPath: async function () {
+      let largestVolumePath = await ControlService.getLargestVolumePath();
+      if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
+      const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
+      this.installationPath = stereumInstallationPath;
     },
   },
 };
@@ -606,5 +636,66 @@ export default {
   text-align: center;
   align-self: center;
   text-transform: uppercase;
+}
+.configBox .change-installation {
+  width: 100%;
+  height: 12%;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border: 1px solid #22272a;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.change-installation .change-title {
+  width: 90%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.change-title span {
+  color: #c0c0c0;
+  font-size: 0.6rem;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+.change-installation .change-box {
+  width: 96%;
+  height: 45%;
+  box-sizing: border-box;
+  background-color: rgb(171, 171, 171);
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.change-box input {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(171, 171, 171);
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #232323;
+  padding: 0;
+  padding-left: 4px;
+  outline: none !important;
+  outline-style: none !important;
+  box-sizing: border-box;
 }
 </style>
