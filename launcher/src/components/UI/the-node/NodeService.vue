@@ -2,7 +2,7 @@
   <div class="service-container">
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
+      src="/img/icon/manage-node-icons/white-arrow-up.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />

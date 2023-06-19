@@ -29,7 +29,7 @@
             <span class="pluginName">{{ service.name }}</span>
             <p class="category">
               {{ service.category }}
-              <span v-if="service.category !== 'service'">Client</span>
+              <span v-if="service.category !== 'service'">{{ $t("replacePanel.client") }}</span>
             </p>
           </div>
         </div>
@@ -44,17 +44,17 @@
         <div v-if="plugin.category === 'execution' || plugin.category === 'consensus'" class="fast-sync">
           <div class="sync-header">
             <div class="headerTitle">
-              <span>SYNC</span>
+              <span>{{ $t("replacePanel.sync") }}</span>
             </div>
             <div class="headerContent">
               <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
-              <span v-if="genesisIsActive">GENESIS</span>
-              <span v-if="checkPointIsActive">CHECKPOINT</span>
+              <span v-if="genesisIsActive">{{ $t("replacePanel.gen") }}</span>
+              <span v-if="checkPointIsActive">{{ $t("replacePanel.chkPoint") }}</span>
               <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive">SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span>
+            <span v-if="genesisIsActive">{{ $t("replacePanel.genActiv") }}</span>
             <div v-if="checkPointIsActive" class="inputBox">
               <input v-model="checkPointSync" type="text" />
             </div>
@@ -63,10 +63,10 @@
       </div>
       <div class="btnBox">
         <div class="cancelBtn" @click="$emit('cancelReplace')">
-          <span>Cancel</span>
+          <span>{{ $t("replacePanel.cancel") }}</span>
         </div>
         <div class="addBtn" @click="saveConfig">
-          <span>confirm</span>
+          <span>{{ $t("replacePanel.confirm") }}</span>
         </div>
       </div>
     </div>

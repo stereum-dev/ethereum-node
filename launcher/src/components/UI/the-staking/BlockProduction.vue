@@ -11,12 +11,12 @@
     <div class="statusBox">
       <div class="status">
         <div class="statusTitle">
-          <span>STATUS</span>
+          <span>{{ $t("blockProduct.status") }}</span>
         </div>
         <div class="statusValue">
           <div class="assignValue">
-            <span v-if="stats.currentProp !== 0" class="isOnline">Assigned Slot</span>
-            <span v-else>Not Assigned</span>
+            <span v-if="stats.currentProp !== 0" class="isOnline">{{ $t("blockProduct.assignSlot") }}</span>
+            <span v-else>{{ $t("blockProduct.noAsign") }}</span>
           </div>
           <div class="slotValue">
             <span v-if="stats.currentProp !== 0">{{ stats.attestationSlot }}</span>
@@ -27,9 +27,9 @@
     </div>
     <div class="statusTiming">
       <p v-if="stats.currentProp !== 0">
-        Next Block Proposal in: <span>{{ stats.currentProp - stats.currentSlot * 12 }}</span>
+        {{ $t("blockProduct.nxtBlck") }} <span>{{ stats.currentProp - stats.currentSlot * 12 }}</span>
       </p>
-      <p v-else>Next Block Proposal in: <span>??</span></p>
+      <p v-else>{{ $t("blockProduct.nxtBlck") }} <span>??</span></p>
     </div>
   </div>
 </template>

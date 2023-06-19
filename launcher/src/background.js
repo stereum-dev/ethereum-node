@@ -48,8 +48,7 @@ ipcMain.handle("connect", async (event, arg) => {
 });
 
 ipcMain.handle("reconnect", async () => {
-  if (nodeConnection.sshService.connectionPool.length > 0)
-    await nodeConnection.sshService.disconnect();
+  if (nodeConnection.sshService.connectionPool.length > 0) await nodeConnection.sshService.disconnect();
   try {
     await nodeConnection.establish(taskManager);
   } catch (err) {
@@ -58,12 +57,13 @@ ipcMain.handle("reconnect", async () => {
 });
 
 ipcMain.handle("checkConnection", async () => {
-  await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 18000)
+  await nodeConnection.sshService
+    .checkSSHConnection(nodeConnection.nodeConnectionParams, 18000)
     .then((isConnected) => {
       nodeConnection.sshService.connected = isConnected;
     })
     .catch((error) => {
-      console.error('Error checking SSH connection:', error);
+      console.error("Error checking SSH connection:", error);
       nodeConnection.sshService.connected = false;
     });
   return nodeConnection.sshService.connected;
@@ -96,6 +96,10 @@ ipcMain.handle("readConfig", async () => {
 });
 ipcMain.handle("writeConfig", async (event, arg) => {
   return storageService.writeConfig(arg);
+});
+
+ipcMain.handle("isCheckpointValid", async (event, cp_url) => {
+  return await monitoring.isCheckpointValid(cp_url);
 });
 
 ipcMain.handle("checkOS", async () => {
@@ -418,7 +422,6 @@ protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: tru
 async function createWindow() {
   // Create the browser window.
 
-
   const initwin = {
     width: 1044,
     height: 609,
@@ -444,7 +447,7 @@ async function createWindow() {
   }
 
   const win = new BrowserWindow(initwin);
-  
+
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

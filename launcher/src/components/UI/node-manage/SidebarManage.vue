@@ -4,14 +4,14 @@
       <img
         v-if="showSidebar"
         class="hidden-icon"
-        src="../../../../public/img/icon/manage-node-icons/sidebar-in.png"
+        src="/img/icon/manage-node-icons/sidebar-in.png"
         alt=""
         @mousedown.prevent.stop
       />
       <img
         v-else
         class="show-icon"
-        src="../../../../public/img/icon/manage-node-icons/sidebar-out.png"
+        src="/img/icon/manage-node-icons/sidebar-out.png"
         alt=""
         @mousedown.prevent.stop
         @mouseenter="showSidebar = true"
@@ -83,7 +83,7 @@ export default {
           "text-overflow": "ellipsis",
         };
       }
-      return {}
+      return {};
     },
   },
   watch: {

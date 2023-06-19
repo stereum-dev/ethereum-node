@@ -3,29 +3,37 @@
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="notif-modal-content">
       <div v-if="qrPage" class="content">
-        <div class="notif-Title"><span>add a notification channel</span></div>
-        <div class="notif-message"><span>Choose what kind of Notification Channel you want to configure</span></div>
+        <div class="notif-Title">
+          <span>{{ $t("notifModal.addNotif") }}</span>
+        </div>
+        <div class="notif-message">
+          <span>{{ $t("notifModal.chooseNotif") }}</span>
+        </div>
         <ul class="notif-box">
           <li @click="qrPage = !qrPage">
             <div class="notif-row_icon">
               <img src="/img/icon/stereum-logo/stereum_logo_extern.png" alt="notif logo" />
             </div>
-            <div class="notif-row_name"><span>Stereum Node Monitor</span></div>
+            <div class="notif-row_name">
+              <span>{{ $t("notifModal.stereumMonitor") }}</span>
+            </div>
           </li>
         </ul>
-        <span class="close">{{ $t("notifModal.cancelText") }}</span>
+        <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
       <div v-if="!qrPage" class="qrPage_content">
         <div class="banner" @click="qrViewer">
           <div class="banner_icon"><img src="/img/icon/stereum-logo/stereum_logo_extern.png" /></div>
-          <div class="banner_title"><span>Sterum Node Monitor</span></div>
+          <div class="banner_title">
+            <span>{{ $t("notifModal.stereumMonitor") }}</span>
+          </div>
         </div>
         <div class="qrContent">
           <div class="qrCode-boxes">
-            <span>1. Visit the app store or our website to download "STEREUM Node Monitor" </span>
-            <span>2. Open the app on your smartphone</span>
-            <span>3. Scan the QR Code</span>
-            <span>X. Send a test notification</span>
+            <span>1# {{ $t("notifModal.stepOne") }} </span>
+            <span>2# {{ $t("notifModal.stepTwo") }}</span>
+            <span>3# {{ $t("notifModal.stepThree") }}</span>
+            <span>X# {{ $t("notifModal.stepFour") }}</span>
           </div>
           <div class="qrCode-boxes">
             <div class="qrCode-place-holder">
@@ -35,7 +43,7 @@
             </div>
           </div>
         </div>
-        <span class="close">{{ $t("notifModal.cancelText") }}</span>
+        <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
     </div>
   </div>
