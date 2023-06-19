@@ -23,7 +23,7 @@ export class PrysmValidatorService extends NodeService {
     ];
 
     const provider = consensusClients.length > 0 ? consensusClients.map((client) => { return client.buildConsensusClientEndpoint(); }).shift() : "";
-    const providerGateway = consensusClients.length > 0 ? consensusClients.map((client) => { return client.buildConsensusClientGateway(); }).shift() : "";
+    const providerGateway = consensusClients.length > 0 ? consensusClients.map((client) => { return client.buildConsensusClientGateway(); }).shift() : ""
 
     service.init(
       "PrysmValidatorService", //service
