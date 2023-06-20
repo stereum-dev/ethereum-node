@@ -10,7 +10,7 @@
         <div class="status-icon" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: warning }">
+        <div class="status-icon" :class="{ active: warning || rpcState }">
           <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: alarm }">
@@ -43,6 +43,16 @@
           </div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
+          </div>
+        </div>
+      </div>
+      <div v-if="rpcState" class="status-message_yellow">
+        <div class="message-icon">
+          <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
+        </div>
+        <div class="message-text_container">
+          <div class="main-message">
+            <span>RPC Point</span>
           </div>
         </div>
       </div>
@@ -140,6 +150,7 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
+      rpcState: "rpcState",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -181,6 +192,7 @@ export default {
     this.polling = setInterval(() => {
       this.readService();
     }, 10000);
+    console.log(this.rpcState);
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -188,7 +200,6 @@ export default {
   created() {
     this.storageCheck();
     this.cpuMeth();
-    console.log(this.stereumUpdate);
   },
   methods: {
     async readService() {
