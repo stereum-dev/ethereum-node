@@ -54,8 +54,11 @@
           <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message-rpc">
+          <div class="main-message">
             <span>RPC Point</span>
+          </div>
+          <div class="val-message">
+            <span> > STATUS: OPEN</span>
           </div>
         </div>
       </div>

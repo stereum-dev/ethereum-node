@@ -46,8 +46,11 @@
           <div class="icon-box">
             <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
           </div>
-          <div class="message-rpc">
-            <span>RPC Point</span>
+          <div class="message">
+            <div class="main-message"><span>RPC Point</span></div>
+            <div class="val-message">
+              <span> > STATUS: OPEN</span>
+            </div>
           </div>
         </div>
         <div v-if="cpuAlarm" class="alert-message_red">
