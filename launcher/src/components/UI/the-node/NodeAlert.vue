@@ -16,7 +16,10 @@
         <div class="status-icon" :class="{ active: alarm }">
           <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: stereumUpdate.current !== stereumUpdate.version }">
+        <div
+          class="status-icon"
+          :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdates.length > 0 }"
+        >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -107,16 +110,16 @@
           </div>
         </div>
       </div>
-      <div v-if="newUpdates.length > 0" class="status-message_green">
+      <div v-for="item in newUpdates" :key="item" class="status-message_green">
         <div class="message-icon" @click="showUpdate">
-          <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
+          <img :src="item.icon" alt="warn_storage" />
         </div>
         <div class="message-text_container" @click="showUpdate">
           <div class="main-message">
-            <span>{{ $t("nodeAlert.stereumUpt") }}</span>
+            <span>{{ item.name }} UPDATE</span>
           </div>
           <div class="val-message">
-            <span>{{ stereumUpdate.version }}</span>
+            <span>{{ item.version }}</span>
           </div>
         </div>
       </div>
