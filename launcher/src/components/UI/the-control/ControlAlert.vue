@@ -11,7 +11,7 @@
         <div class="icon_alarm" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="icon_alarm" :class="{ active: warning }">
+        <div class="icon_alarm" :class="{ active: warning || rpcState }">
           <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="icon_alarm" :class="{ active: alarm }">
@@ -40,6 +40,14 @@
             <div class="val-message">
               <span> > {{ cpu }}%</span>
             </div>
+          </div>
+        </div>
+        <div v-if="rpcState" class="alert-message_yellow">
+          <div class="icon-box">
+            <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
+          </div>
+          <div class="message-rpc">
+            <span>RPC Point</span>
           </div>
         </div>
         <div v-if="cpuAlarm" class="alert-message_red">
@@ -132,6 +140,7 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
+      rpcState: "rpcState",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -347,6 +356,15 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+.message-rpc {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 600;
+  font-size: 90%;
 }
 .alert-box_messages {
   display: flex;
