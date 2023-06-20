@@ -16,7 +16,7 @@
         <div class="status-icon" :class="{ active: alarm }">
           <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: notification }">
+        <div class="status-icon" :class="{ active: stereumUpdate.current !== stereumUpdate.version }">
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -84,7 +84,7 @@
         </div>
       </div>
       <transition>
-        <div v-if="notification" class="status-message_green" @mouseover="iconShow" @mouseleave="iconHide">
+        <div v-if="stereumUpdate.current !== stereumUpdate.version" class="status-message_green">
           <div class="message-icon" @click="showUpdate">
             <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
           </div>
@@ -95,9 +95,6 @@
             <div class="val-message">
               <span>{{ stereumUpdate.version }}</span>
             </div>
-          </div>
-          <div v-if="closeNotif" class="close" @click="closeNotification">
-            <img src="/img/icon/control/close.png" alt="close" />
           </div>
         </div>
       </transition>
@@ -127,7 +124,6 @@ export default {
       alarm: false,
       newUpdate: false,
       missedAttest: false,
-      closeNotif: false,
       notification: false,
       setFeeReciepent: [],
       setFeeAlarm: false,
@@ -192,8 +188,7 @@ export default {
   created() {
     this.storageCheck();
     this.cpuMeth();
-    this.checkStereumUpdate();
-    this.notifHandler();
+    console.log(this.stereumUpdate);
   },
   methods: {
     async readService() {
@@ -230,9 +225,6 @@ export default {
       }
     },
 
-    closeNotification() {
-      this.notification = false;
-    },
     iconShow() {
       this.closeNotif = true;
     },
@@ -245,21 +237,7 @@ export default {
     removeUpdateModal() {
       this.displayUpdatePanel = false;
     },
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
-      }
-      return false;
-    },
-    notifHandler() {
-      if (this.checkStereumUpdate == true) {
-        this.notification = true;
-      } else {
-        this.notification = false;
-      }
-    },
+
     storageCheck() {
       if (this.usedPercInt > 80) {
         this.storageWarning = true;
@@ -427,6 +405,9 @@ export default {
 .status-message_green {
   background: #5f7e6a;
   cursor: pointer;
+}
+.status-message_green .message-text_container {
+  color: #eee;
 }
 
 .message-icon {
