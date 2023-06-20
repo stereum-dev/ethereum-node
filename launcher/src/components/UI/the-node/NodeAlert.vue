@@ -207,7 +207,6 @@ export default {
     this.polling = setInterval(() => {
       this.readService();
     }, 10000);
-    console.log(this.newUpdates);
   },
   beforeUnmount() {
     clearInterval(this.polling);
