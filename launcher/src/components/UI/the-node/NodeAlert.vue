@@ -51,7 +51,7 @@
           <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message">
+          <div class="main-message-rpc">
             <span>RPC Point</span>
           </div>
         </div>
@@ -192,7 +192,6 @@ export default {
     this.polling = setInterval(() => {
       this.readService();
     }, 10000);
-    console.log(this.rpcState);
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -452,6 +451,16 @@ export default {
   align-items: center;
   font-size: 50%;
   font-weight: 700;
+  text-transform: uppercase;
+}
+.main-message-rpc {
+  display: flex;
+  width: 95%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 80%;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
