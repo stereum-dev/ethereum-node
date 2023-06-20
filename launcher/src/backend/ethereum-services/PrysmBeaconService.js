@@ -20,21 +20,19 @@ export class PrysmBeaconService extends NodeService {
       new ServiceVolume(workingDir + "/genesis", genesisDir),
     ];
 
-    if (executionClients && executionClients.length > 0) {
-      const elJWTDir = executionClients[0].volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
-      volumes.push(new ServiceVolume(elJWTDir, JWTDir));
-    }
-
     let genesisFile = " --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz";
     if (network === "mainnet") {
       genesisFile = "";
     }
 
     //execution endpoint
-    let executionEndpoint =
-      executionClients.length > 0 ? executionClients[0].buildExecutionClientEngineRPCHttpEndpointUrl() : "";
-
-    let checkpointCommand = checkpointURL ? " --checkpoint-sync-url=" + checkpointURL : "";
+    const executionEndpoint = executionClients
+      .map((client) => {
+        const elJWTDir = client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+        volumes.push(new ServiceVolume(elJWTDir, JWTDir));
+        return client.buildExecutionClientEngineRPCHttpEndpointUrl();
+      })
+      .join();
 
     // mevboost endpoint
     const mevboostEndpoint = mevboost
@@ -44,6 +42,7 @@ export class PrysmBeaconService extends NodeService {
       .join();
 
     let builderCommand = mevboostEndpoint ? " --http-mev-relay=" + mevboostEndpoint : "";
+    let checkpointCommand = checkpointURL ? " --checkpoint-sync-url=" + checkpointURL : "";
 
     service.init(
       "PrysmBeaconService", //service

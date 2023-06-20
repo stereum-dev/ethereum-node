@@ -106,7 +106,7 @@
   },
   "controlPage": {
     "node": "节点",
-    "disk": "DISK SPEED",
+    "disk": "磁盘速度",
     "write": "编写",
     "read": "阅读",
     "inclusionDistance": "INCLUSION DISTANCE",
@@ -141,7 +141,7 @@
     "waitMessage": "此操作需要一些时间",
     "waitForImport": "正在导入, 请稍候。",
     "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
-    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
+    "warningAlarm": "警告：您有被削减的高风险！",
     "warningQuestion": "您想要导入验证密钥吗？",
     "sure": "确认",
     "cancel": "取消"
@@ -164,38 +164,38 @@
     "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "输入最多32个字符到区块链中当您新创一个方块！"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "输入最多32个字符来重名验证器！"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "点击或拖动以输入密钥"
   },
   "removeSingleModal": {
     "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "description": "您可以验证器密钥输入来确保安全当您迁移密钥",
+    "btn": "選取路徑"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
+    "sure": "确定要从您的机器中删除此密钥吗？",
     "slashing": "With Slashing Protection Database?",
-    "remove": "Remove",
+    "remove": "删除",
     "path": "choose a path to save exported slashing db ",
     "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "您确定要删除所有验证器密钥吗？"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
+    "totalText": "总余额：",
+    "validators": "验证器",
+    "proposed": "已建议",
     "attestRate": "ATTESTATION RATE",
-    "attention": "ATTESTATION",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
+    "attention": "证明",
+    "missed": "已错过",
+    "aggregations": "协议",
+    "slashed": "罚没"
   },
   "validatorsBox": {
     "date": "日期",
@@ -215,7 +215,7 @@
   },
   "installitionMenu": {
     "welcome": "欢迎使用",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
+    "installText": "在此步骤您可选择怎样安装您的节点。 如果您需要帮，请加入我们的 DISCORD - 我们很乐意帮助。",
     "osCheck": "在检查如果您的服务器需要支持",
     "osSupported": "IS A SUPPORTED OS"
   },
@@ -256,49 +256,49 @@
   },
   "frontPageSsv": {
     "newRegistritionTitle": "注册一个新的操作者",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
+    "newRegistritionText": "使用新建的操作密钥注册新的节点操作到 SSV 网络",
+    "register": "注册",
     "insertTitle": "insert operator key for existing operator",
     "insertText": "Use an existing operator private key to recover your existing node operator's processes"
   },
   "registerSSV": {
-    "pubKey": "Public operator key",
-    "copied": "copied!",
-    "secKey": "Secret Operator Key",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "pubKey": "公开操作器密钥",
+    "copied": "已复制！",
+    "secKey": "秘密操作密钥",
+    "makeSureText": "请确保存储和备份您的操作器密钥在安全地方。不要与任何人共享此密钥。",
+    "copyMessage": "将您的公共密钥复制到这里，以确认您储存了您的密钥！"
   },
   "ssvDashboard": {
-    "operatorPage": "My Operator Page",
+    "operatorPage": "我的操作页面",
     "SSVNodeGrafna": "SSV Node Grafana Dashboard"
   },
   "secretKeyReg": {
-    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "modalLabel": "输入原始私密操作密钥来当您的操作密钥",
+    "apply": "应用"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
-    "closed": "Tunnel closed!",
-    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
-    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "copy": "点击复制",
+    "closed": "隧道已关闭！",
+    "turnOnMessage": "请先打开 DATA-API 隧道！",
+    "copiedMessage": "DATA-API-URL已复制到剪贴板！",
+    "RPCTurnOnMessage": "请先打开 RPC 隧道！",
+    "RPCCopiedMessage": "RPC-URL 已复制到剪贴板中。",
+    "WSTurnOnMessage": "请先打开 WS 隧道！",
+    "WSCopiedMessage": "WS-URL 已复制到剪贴板中！"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Double Click to Copy Logs",
+    "noLogFound": "在列表中找不到日记",
+    "clickCopy": "双击复制日记",
     "serviceId": "service id"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
+    "localApp": "应用",
+    "localAppText": "在此机器上打开服务",
     "openBrowser": "OPEN IN BROWSER",
     "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
-    "blockRel": "Block relay",
+    "process": "正在处理",
+    "blockRel": "中继区块",
     "blockRelTxt": "Select one or multiple relays to receive blocks from"
   },
   "customInstallation": {
@@ -315,66 +315,66 @@
     "installPath": "INSTALLATION PATH",
     "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "portused": "PORT USED",
-    "cancel": "cancel",
-    "save": "save",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "cancel": "取消",
+    "save": "保存",
+    "add": "添加",
+    "clickAndAdd": "点击ADD"
   },
   "importSlashingModal": {
     "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
     "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
-    "continue": "Continue"
+    "chooseFile": "选择文件",
+    "continue": "继续"
   },
   "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+    "noValidatorInstalled": "没有安装验证器客户端！",
+    "disabledStakingMessage": "安装至少一个验证器客户端来激活导入验证器密钥。"
   },
   "logOutModal": {
     "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
-    "logOutBtn": "Log out"
+    "logOutQuestion": "确定想要登出您的服务器节点吗？",
+    "logOutBtn": "登出"
   },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "prunningChecked": "我已阅读且了解后果",
     "prunningStart": "Start Pruning"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
-    "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart",
-    "confirmMessage": "Are you sure you want turn your node"
+    "restarQ": "你确认要重启吗？",
+    "restartMessage": "您的节点可因此操作离线！",
+    "restart": "重启",
+    "confirmMessage": "您确定要转向您的节点"
   },
   "nukeModal": {
     "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
     "nukeTitle": "nuke the node",
-    "backToLogin": "Back to login"
+    "backToLogin": "返回登入"
   },
   "noData": {
-    "noData": "no data",
-    "turnOn": "please turn on"
+    "noData": "没有数据",
+    "turnOn": "请开启"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Click on the “ON/OFF” button to open your port",
-    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Click x to cancel",
+    "clickNav": "点击“控制”进入控制面板",
+    "toggleMessage": "点击“开启/关闭”按钮来打开您的端口",
+    "clickExtention": "点击“执行客户端”按钮复制RPC URL",
+    "clickCancel": "点击X来取消",
     "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
     "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
     "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Click on the Network button",
-    "thirdSlide": "Click on “Add Network”",
-    "fourthSlide": "Type in a name for your network",
+    "secondSlide": "点击网络按钮",
+    "thirdSlide": "点击“添加网络”",
+    "fourthSlide": "输入您网络的名称",
     "fivethSlide": "Paste in the copied URL from Stereum",
     "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "Type in “ETH” as the currency symbol",
-    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
-    "ninethSlide": "Click on “SAVE”"
+    "seventhSlide": "输入“ETH”为货币符号",
+    "eightthSlide": "可选项-您可以粘贴到区块链资源管理器的 URL",
+    "ninethSlide": "点击\"SAVE\""
   },
   "stakeGuide": {
-    "syncCheck": "First Check if your Node is synced",
-    "scrollMessage": "Scroll to change slides faster",
+    "syncCheck": "先检查节点是否已同步",
+    "scrollMessage": "滚动以更快地更改幻灯片",
     "stake": "staking",
     "scrollClick": "Click on Staking",
     "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
@@ -500,11 +500,11 @@
   },
   "deleteModal": {
     "message": "Do you want to remove the saved connection?",
-    "rem": "Remove",
-    "close": "click outside to close"
+    "rem": "删除",
+    "close": "点击外部关闭"
   },
   "errTerminal": {
-    "copy": "copied!",
-    "close": "click outside to close"
+    "copy": "已复制！",
+    "close": "点击外部关闭"
   }
 }
