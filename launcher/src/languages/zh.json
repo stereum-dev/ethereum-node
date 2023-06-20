@@ -287,19 +287,19 @@
     "WSCopiedMessage": "WS-URL 已复制到剪贴板中！"
   },
   "pluginLogs": {
-    "pageTitle": "PLUG-IN LOGS",
+    "pageTitle": "插件日记",
     "noLogFound": "在列表中找不到日记",
     "clickCopy": "双击复制日记",
-    "serviceId": "service id"
+    "serviceId": "服务器账号"
   },
   "serviceModals": {
     "localApp": "应用",
     "localAppText": "在此机器上打开服务",
-    "openBrowser": "OPEN IN BROWSER",
-    "availBlockRel": "AVAILABLE BLOCK RELAYS",
+    "openBrowser": "在浏览器中打开",
+    "availBlockRel": "可用方块中继",
     "process": "正在处理",
     "blockRel": "中继区块",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "blockRelTxt": "选择一个或多个中继接收方块"
   },
   "customInstallation": {
     "customInstallationTitle": "定制安装",
@@ -308,12 +308,12 @@
     "installationPath": "安装路劲"
   },
   "mevboostConfig": {
-    "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "availRelays": "可用方块中继",
+    "usedRelays": "已使用方块中继"
   },
   "addModifyPanel": {
-    "installPath": "INSTALLATION PATH",
-    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "installPath": "安装路劲",
+    "syncMessage": "由原始区块链同步您的客户端",
     "portused": "PORT USED",
     "cancel": "取消",
     "save": "保存",
@@ -321,8 +321,8 @@
     "clickAndAdd": "点击ADD"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
+    "slashModalMessage": "是否使用消减数据保护程式来导入",
+    "importMessage": "导入您的数据消减档案",
     "chooseFile": "选择文件",
     "continue": "继续"
   },
@@ -331,7 +331,7 @@
     "disabledStakingMessage": "安装至少一个验证器客户端来激活导入验证器密钥。"
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
+    "logOutTitle": "登出",
     "logOutQuestion": "确定想要登出您的服务器节点吗？",
     "logOutBtn": "登出"
   },
@@ -411,7 +411,7 @@
     "lastAttest": "Last Attestation Slot:",
     "keyStatus": "Key Status:",
     "attest": "ATTESTING",
-    "pending": "PENDING",
+    "pending": "待定",
     "nxtAttest": "next Attestation Slot:",
     "slotRem": "Slots remaining",
     "tillAtest": "till attestation"
