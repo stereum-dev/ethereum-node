@@ -9,22 +9,22 @@
     <div class="alert-box">
       <div class="alert-box_header">
         <div class="icon_alarm" :class="{ active: perfect }">
-          <img src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
+          <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
         <div class="icon_alarm" :class="{ active: warning }">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
+          <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="icon_alarm" :class="{ active: alarm }">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
+          <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="icon_alarm" :class="{ active: notification }">
-          <img src="../../../../public/img/icon/control/SETTINGS.png" alt="green" />
+        <div class="icon_alarm" :class="{ active: stereumUpdate.current !== stereumUpdate.version }">
+          <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
       <div class="alert-box_messages">
         <div v-if="storageWarning" class="alert-message_yellow">
           <div class="icon-box">
-            <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
+            <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message"><span>LOW STORAGE SPACE</span></div>
@@ -33,7 +33,7 @@
         </div>
         <div v-if="cpuWarning" class="alert-message_yellow">
           <div class="icon-box">
-            <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
+            <img src="/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message"><span>CPU USAGE</span></div>
@@ -44,7 +44,7 @@
         </div>
         <div v-if="cpuAlarm" class="alert-message_red">
           <div class="icon-box">
-            <img src="../../../../public/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
+            <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message"><span>CPU USAGE</span></div>
@@ -55,7 +55,7 @@
         </div>
         <div v-if="missedAttest" class="alert-message_red">
           <div class="icon-box">
-            <img src="../../../../public/img/icon/control/key-rot.png" alt="warn_storage" />
+            <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
           </div>
           <!-- <div class="message-box">
             <div class="warning"><span>CRITICAL WARNING</span></div>
@@ -78,18 +78,15 @@
         </div>
         <transition>
           <transition>
-            <div v-if="notification" class="alert-message_green" @mouseover="iconShow" @mouseleave="iconHide">
+            <div v-if="stereumUpdate.current !== stereumUpdate.version" class="alert-message_green">
               <div class="icon-box" @click="showUpdate">
-                <img src="../../../../public/img/icon/control/logo-icon.png" alt="warn_storage" />
+                <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
               </div>
-              <div class="message-box" @click="showUpdate">
-                <div class="main-message"><span>STEREUM UPDATE</span></div>
+              <div class="message">
+                <div class="main-message" @click="showUpdate"><span>STEREUM UPDATE</span></div>
                 <div class="val-message">
                   <span>{{ stereumUpdate.version }}</span>
                 </div>
-              </div>
-              <div v-if="closeNotif" class="close" @click="closeNotification">
-                <img src="../../../../public/img/icon/control/close.png" alt="close" />
               </div>
             </div>
           </transition>
@@ -122,7 +119,6 @@ export default {
       notification: false,
       newUpdate: false,
       missedAttest: false,
-      closeNotif: false,
       notSetAddresses: [],
     };
   },
@@ -184,8 +180,6 @@ export default {
   created() {
     this.storageCheck();
     this.cpuMeth();
-    this.checkStereumUpdate();
-    this.notifHandler();
   },
   methods: {
     async readService() {
@@ -236,22 +230,7 @@ export default {
     removeUpdateModal() {
       this.displayUpdatePanel = false;
     },
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        if (this.stereumUpdate.commit != this.stereumUpdate.current_commit) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
-    notifHandler() {
-      if (this.checkStereumUpdate == true) {
-        this.notification = true;
-      } else {
-        this.notification = false;
-      }
-    },
+
     storageCheck() {
       if (this.usedPercInt > 80) {
         this.storageWarning = true;
@@ -364,7 +343,7 @@ export default {
 }
 .message {
   width: 70%;
-  height: 85%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -442,11 +421,11 @@ export default {
 
 .main-message {
   display: flex;
-  width: 95%;
-  height: 100%;
+  width: 100%;
+  height: 60%;
   justify-content: center;
   align-items: flex-start;
-  font-size: 48%;
+  font-size: 52%;
   font-weight: 800;
   text-transform: uppercase;
 }
@@ -460,10 +439,10 @@ export default {
 .val-message {
   display: flex;
   width: 95%;
-  height: 35%;
+  height: 50%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 55%;
+  font-size: 60%;
   font-weight: 700;
   text-transform: uppercase;
 }
