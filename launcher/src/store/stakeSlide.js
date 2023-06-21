@@ -11,7 +11,7 @@ export const useStakeSlide = defineStore("stakeSlide", {
         {
           id: 2,
           img: "/img/stake_Guide/2.jpg",
-          text: "Click on “BECOME A VALIDATOR”",
+          text: this.$t("sliderTutorial.becomeValidator"),
         },
         {
           id: 3,

@@ -93,8 +93,8 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
-import { mapState } from "pinia";
-import { useStakeSlide } from "../../../store/stakeSlide";
+// import { mapState } from "pinia";
+// import { useStakeSlide } from "../../../store/stakeSlide";
 import DisplayValidators from "../the-staking/DisplayValidators.vue";
 
 export default {
@@ -105,6 +105,288 @@ export default {
       slide: "",
       message: "",
       nextStep: 0,
+      sliderTutorial: [
+        {
+          id: 1,
+          img: "/img/stake_Guide/1.jpg",
+          text: "Visit the website <a href='https://goerli.launchpad.ethereum.org/en/' target='_blank'>“https://goerli.launchpad.ethereum.org/en/”</a>",
+        },
+        {
+          id: 2,
+          img: "/img/stake_Guide/2.jpg",
+          text: this.$t("sliderTutorial.becomeValidator"),
+        },
+        {
+          id: 3,
+          img: "/img/stake_Guide/3.jpg",
+          text: this.$t("sliderTutorial.proofStake"),
+        },
+        {
+          id: 4,
+          img: "/img/stake_Guide/4.jpg",
+          text: this.$t("sliderTutorial.deposit"),
+        },
+        {
+          id: 5,
+          img: "/img/stake_Guide/5.jpg",
+          text: this.$t("sliderTutorial.usingTerminal"),
+        },
+        {
+          id: 6,
+          img: "/img/stake_Guide/6.jpg",
+          text: this.$t("sliderTutorial.validatorUptime"),
+        },
+        {
+          id: 7,
+          img: "/img/stake_Guide/7.jpg",
+          text: this.$t("sliderTutorial.validatorBahavior"),
+        },
+        {
+          id: 8,
+          img: "/img/stake_Guide/8.jpg",
+          text: this.$t("sliderTutorial.keyManagement"),
+        },
+        {
+          id: 9,
+          img: "/img/stake_Guide/9.jpg",
+          text: this.$t("sliderTutorial.validatingLongterm"),
+        },
+        {
+          id: 10,
+          img: "/img/stake_Guide/10.jpg",
+          text: this.$t("sliderTutorial.earlyAdaptor"),
+        },
+        {
+          id: 11,
+          img: "/img/stake_Guide/11.jpg",
+          text: this.$t("sliderTutorial.stakingChecklist"),
+        },
+        {
+          id: 12,
+          img: "/img/stake_Guide/12.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 13,
+          img: "/img/stake_Guide/13.jpg",
+          text: this.$t("sliderTutorial.executionClient"),
+        },
+        {
+          id: 14,
+          img: "/img/stake_Guide/14.jpg",
+          text: this.$t("sliderTutorial.scrollDown"),
+        },
+        {
+          id: 15,
+          img: "/img/stake_Guide/15.jpg",
+          text: this.$t("sliderTutorial.consensusClient"),
+        },
+        {
+          id: 16,
+          img: "/img/stake_Guide/16.jpg",
+          text: this.$t("sliderTutorial.scrollDown"),
+        },
+        {
+          id: 17,
+          img: "/img/stake_Guide/17.jpg",
+          text: this.$t("sliderTutorial.numValidator"),
+        },
+        {
+          id: 18,
+          img: "/img/stake_Guide/18.jpg",
+          text: this.$t("sliderTutorial.generateKey"),
+        },
+        {
+          id: 19,
+          img: "/img/stake_Guide/19.jpg",
+          text: this.$t("sliderTutorial.keyGUI"),
+        },
+        {
+          id: 20,
+          img: "/img/stake_Guide/20.jpg",
+          text: this.$t("sliderTutorial.dlGithub"),
+        },
+        {
+          id: 21,
+          img: "/img/stake_Guide/21.jpg",
+          text: this.$t("sliderTutorial.clickInstaller"),
+        },
+        {
+          id: 22,
+          img: "/img/stake_Guide/22.jpg",
+          text: this.$t("sliderTutorial.setupPage"),
+        },
+        {
+          id: 23,
+          img: "/img/stake_Guide/23.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 24,
+          img: "/img/stake_Guide/24.jpg",
+          text: this.$t("sliderTutorial.wagueKey"),
+        },
+        {
+          id: 25,
+          img: "/img/stake_Guide/25.jpg",
+          text: this.$t("sliderTutorial.secratePhrase"),
+        },
+        {
+          id: 26,
+          img: "/img/stake_Guide/26.jpg",
+          text: this.$t("sliderTutorial.selectNetwork"),
+        },
+        {
+          id: 27,
+          img: "/img/stake_Guide/27.jpg",
+          text: this.$t("sliderTutorial.clickOk"),
+        },
+        {
+          id: 28,
+          img: "/img/stake_Guide/28.jpg",
+          text: this.$t("sliderTutorial.clickCreate"),
+        },
+        {
+          id: 29,
+          img: "/img/stake_Guide/29.jpg",
+          text: this.$t("sliderTutorial.recoveryPhrase"),
+        },
+        {
+          id: 30,
+          img: "/img/stake_Guide/30.jpg",
+          text: this.$t("sliderTutorial.recoveryPhrase"),
+        },
+        {
+          id: 31,
+          img: "/img/stake_Guide/31.jpg",
+          text: this.$t("sliderTutorial.clickNext"),
+        },
+        {
+          id: 32,
+          img: "/img/stake_Guide/32.jpg",
+          text: this.$t("sliderTutorial.imSure"),
+        },
+        {
+          id: 33,
+          img: "/img/stake_Guide/33.jpg",
+          text: this.$t("sliderTutorial.pasteRecovery"),
+        },
+        {
+          id: 34,
+          img: "/img/stake_Guide/34.jpg",
+          text: this.$t("sliderTutorial.clickCheck"),
+        },
+        {
+          id: 35,
+          img: "/img/stake_Guide/35.jpg",
+          text: this.$t("sliderTutorial.needKey"),
+        },
+        {
+          id: 36,
+          img: "/img/stake_Guide/36.jpg",
+          text: this.$t("sliderTutorial.typPass"),
+        },
+        {
+          id: 37,
+          img: "/img/stake_Guide/37.jpg",
+          text: this.$t("sliderTutorial.retypPass"),
+        },
+        {
+          id: 38,
+          img: "/img/stake_Guide/38.jpg",
+          text: this.$t("sliderTutorial.clickNext"),
+        },
+        {
+          id: 39,
+          img: "/img/stake_Guide/39.jpg",
+          text: this.$t("sliderTutorial.clickBrowse"),
+        },
+        {
+          id: 40,
+          img: "/img/stake_Guide/40.jpg",
+          text: this.$t("sliderTutorial.chooseFolder"),
+        },
+        {
+          id: 41,
+          img: "/img/stake_Guide/41.jpg",
+          text: this.$t("sliderTutorial.clickCreateWait"),
+        },
+        {
+          id: 42,
+          img: "/img/stake_Guide/42.jpg",
+          text: this.$t("sliderTutorial.clickClose"),
+        },
+        {
+          id: 43,
+          img: "/img/stake_Guide/43.jpg",
+          text: this.$t("sliderTutorial.switchSetup"),
+        },
+        {
+          id: 44,
+          img: "/img/stake_Guide/44.jpg",
+          text: this.$t("sliderTutorial.dragFile"),
+        },
+        {
+          id: 45,
+          img: "/img/stake_Guide/45.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 46,
+          img: "/img/stake_Guide/46.jpg",
+          text: this.$t("sliderTutorial.connWalet"),
+        },
+        {
+          id: 47,
+          img: "/img/stake_Guide/47.jpg",
+          text: this.$t("sliderTutorial.connWalet"),
+        },
+        {
+          id: 48,
+          img: "/img/stake_Guide/48.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 49,
+          img: "/img/stake_Guide/49.jpg",
+          text: this.$t("sliderTutorial.understandRisk"),
+        },
+        {
+          id: 50,
+          img: "/img/stake_Guide/50.jpg",
+          text: this.$t("sliderTutorial.readSection"),
+        },
+        {
+          id: 51,
+          img: "/img/stake_Guide/51.jpg",
+          text: this.$t("sliderTutorial.protectYourself"),
+        },
+        {
+          id: 52,
+          img: "/img/stake_Guide/52.jpg",
+          text: this.$t("sliderTutorial.dblCheck"),
+        },
+        {
+          id: 53,
+          img: "/img/stake_Guide/53.jpg",
+          text: this.$t("sliderTutorial.sendDeposit"),
+        },
+        {
+          id: 54,
+          img: "/img/stake_Guide/54.jpg",
+          text: this.$t("sliderTutorial.walletPopup"),
+        },
+        {
+          id: 55,
+          img: "/img/stake_Guide/55.jpg",
+          text: this.$t("sliderTutorial.contCong"),
+        },
+        {
+          id: 56,
+          img: "/img/stake_Guide/56.jpg",
+          text: this.$t("sliderTutorial.contCong"),
+        },
+      ],
     };
   },
   computed: {
@@ -119,9 +401,9 @@ export default {
       stakeCongrats: "stakeCongrats",
     }),
 
-    ...mapState(useStakeSlide, {
-      sliderTutorial: "sliderTutorial",
-    }),
+    // ...mapState(useStakeSlide, {
+    //   sliderTutorial: "sliderTutorial",
+    // }),
     ...mapWritableState(useStakingStore, {
       isDragOver: "isDragOver",
       clickService: "clickService",
