@@ -93,8 +93,6 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
-// import { mapState } from "pinia";
-// import { useStakeSlide } from "../../../store/stakeSlide";
 import DisplayValidators from "../the-staking/DisplayValidators.vue";
 
 export default {
@@ -401,9 +399,6 @@ export default {
       stakeCongrats: "stakeCongrats",
     }),
 
-    // ...mapState(useStakeSlide, {
-    //   sliderTutorial: "sliderTutorial",
-    // }),
     ...mapWritableState(useStakingStore, {
       isDragOver: "isDragOver",
       clickService: "clickService",
