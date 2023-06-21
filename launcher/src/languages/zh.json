@@ -140,7 +140,7 @@
     "importKey": "导入验证器密钥",
     "waitMessage": "此操作需要一些时间",
     "waitForImport": "正在导入, 请稍候。",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
+    "warningMessage": "我们额外的 消减保护检查显示，您即将导入的验证器之一已经在最后的 两个节点 中认证。",
     "warningAlarm": "警告：您有被削减的高风险！",
     "warningQuestion": "您想要导入验证密钥吗？",
     "sure": "确认",
@@ -161,7 +161,7 @@
   },
   "feeRecipient": {
     "textPlaceHolder": "输入有效的以太坊地址来将您的奖项发送到... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "setBlock": "设置方块手续费接收地址"
   },
   "grafitiMultipleValidator": {
     "textPlaceHolder": "输入最多32个字符到区块链中当您新创一个方块！"
@@ -173,16 +173,16 @@
     "insertText": "点击或拖动以输入密钥"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
+    "question": "您是否要下载您的消减数据？",
     "description": "您可以验证器密钥输入来确保安全当您迁移密钥",
     "btn": "選取路徑"
   },
   "removeMultiModal": {
     "sure": "确定要从您的机器中删除此密钥吗？",
-    "slashing": "With Slashing Protection Database?",
+    "slashing": "使用消减保护数据库？",
     "remove": "删除",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "选择一个路径保存导出的消减得币 ",
+    "writePath": "请写下您的路劲"
   },
   "removeMultipleValidators": {
     "sureText": "您确定要删除所有验证器密钥吗？"
@@ -191,7 +191,7 @@
     "totalText": "总余额：",
     "validators": "验证器",
     "proposed": "已建议",
-    "attestRate": "ATTESTATION RATE",
+    "attestRate": "验证率",
     "attention": "证明",
     "missed": "已错过",
     "aggregations": "协议",
