@@ -89,9 +89,7 @@ test("besu installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
-  await nodeConnection.destroyNode();
-  await testServer.destroy();
+  await testServer.finishTestGracefully(nodeConnection, keyResponse)
 
   //check ufw
   expect(ufw.stdout).toMatch(/30303\/tcp/);
