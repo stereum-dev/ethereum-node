@@ -140,7 +140,7 @@
     "importKey": "导入验证器密钥",
     "waitMessage": "此操作需要一些时间",
     "waitForImport": "正在导入, 请稍候。",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
+    "warningMessage": "我们额外的 消减保护检查显示，您即将导入的验证器之一已经在最后的 两个节点 中认证。",
     "warningAlarm": "警告：您有被削减的高风险！",
     "warningQuestion": "您想要导入验证密钥吗？",
     "sure": "确认",
@@ -161,7 +161,7 @@
   },
   "feeRecipient": {
     "textPlaceHolder": "输入有效的以太坊地址来将您的奖项发送到... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "setBlock": "设置方块手续费接收地址"
   },
   "grafitiMultipleValidator": {
     "textPlaceHolder": "输入最多32个字符到区块链中当您新创一个方块！"
@@ -173,16 +173,16 @@
     "insertText": "点击或拖动以输入密钥"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
+    "question": "您是否要下载您的消减数据？",
     "description": "您可以验证器密钥输入来确保安全当您迁移密钥",
     "btn": "選取路徑"
   },
   "removeMultiModal": {
     "sure": "确定要从您的机器中删除此密钥吗？",
-    "slashing": "With Slashing Protection Database?",
+    "slashing": "使用消减保护数据库？",
     "remove": "删除",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "选择一个路径保存导出的消减得币 ",
+    "writePath": "请写下您的路劲"
   },
   "removeMultipleValidators": {
     "sureText": "您确定要删除所有验证器密钥吗？"
@@ -191,7 +191,7 @@
     "totalText": "总余额：",
     "validators": "验证器",
     "proposed": "已建议",
-    "attestRate": "ATTESTATION RATE",
+    "attestRate": "验证率",
     "attention": "证明",
     "missed": "已错过",
     "aggregations": "协议",
@@ -217,13 +217,13 @@
     "welcome": "欢迎使用",
     "installText": "在此步骤您可选择怎样安装您的节点。 如果您需要帮，请加入我们的 DISCORD - 我们很乐意帮助。",
     "osCheck": "在检查如果您的服务器需要支持",
-    "osSupported": "IS A SUPPORTED OS"
+    "osSupported": "支持的操作系统"
   },
   "pluginName": {
     "option": "选择网络",
     "chosen": "选择网络",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "path": "安装路劲",
+    "syncClient": "由原始区块链同步您的客户端",
     "plugin": "安装服务器",
     "addOpt": "附加选项",
     "back": "回去",
@@ -244,7 +244,7 @@
     "verifyTitle": "验证和安装",
     "name": "名称",
     "cat": "类别",
-    "path": "PATH"
+    "path": "路径"
   },
   "warningModal": {
     "warningText": "建议您稍等直到完成重要安装再应用更多修改"
@@ -258,8 +258,8 @@
     "newRegistritionTitle": "注册一个新的操作者",
     "newRegistritionText": "使用新建的操作密钥注册新的节点操作到 SSV 网络",
     "register": "注册",
-    "insertTitle": "insert operator key for existing operator",
-    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+    "insertTitle": "为现有操作器插入操作器密钥",
+    "insertText": "使用现有的操作器密钥来恢复您现有的节点操作器流程"
   },
   "registerSSV": {
     "pubKey": "公开操作器密钥",
@@ -314,7 +314,7 @@
   "addModifyPanel": {
     "installPath": "安装路劲",
     "syncMessage": "由原始区块链同步您的客户端",
-    "portused": "PORT USED",
+    "portused": "已使用端口",
     "cancel": "取消",
     "save": "保存",
     "add": "添加",
@@ -338,7 +338,7 @@
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
     "prunningChecked": "我已阅读且了解后果",
-    "prunningStart": "Start Pruning"
+    "prunningStart": "开始剪枝"
   },
   "restartModal": {
     "restarQ": "你确认要重启吗？",
@@ -347,7 +347,7 @@
     "confirmMessage": "您确定要转向您的节点"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
+    "nukeQ": "是否确认要从系统中删除以太坊和所有服务器？",
     "nukeTitle": "nuke the node",
     "backToLogin": "返回登入"
   },
@@ -394,22 +394,22 @@
     "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
   },
   "selectionOption": {
-    "graffiti": "graffiti",
-    "removeKeys": "Remove all keys"
+    "graffiti": "涂鸦",
+    "removeKeys": "移除所有密钥"
   },
   "syncCommitte": {
-    "total": "total",
-    "status": "STATUS",
-    "particip": "PARTICIPATING",
-    "noParticip": "NOT PARTICIPATING",
-    "start": "Start",
-    "end": "End",
+    "total": "总计",
+    "status": "状态",
+    "particip": "参与",
+    "noParticip": "没参与",
+    "start": "开始",
+    "end": "结束",
     "newSync": "New Sync Committee in",
-    "hours": "hours"
+    "hours": "小时"
   },
   "theAttes": {
-    "lastAttest": "Last Attestation Slot:",
-    "keyStatus": "Key Status:",
+    "lastAttest": "最后一次验证栏位：",
+    "keyStatus": "密钥状态：",
     "attest": "ATTESTING",
     "pending": "待定",
     "nxtAttest": "next Attestation Slot:",
@@ -452,7 +452,7 @@
   "notifModal": {
     "addNotif": "add a notification channel",
     "chooseNotif": "Choose what kind of Notification Channel you want to configure",
-    "stereumMonitor": "Stereum Node Monitor",
+    "stereumMonitor": "以太坊节点监视器",
     "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
     "stepTwo": "Open the app on your smartphone",
     "stepThree": "Scan the QR Code",
