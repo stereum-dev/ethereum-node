@@ -191,8 +191,8 @@
     "totalText": "总余额：",
     "validators": "验证器",
     "proposed": "已建议",
-    "attestRate": "验证率",
-    "attention": "证明",
+    "attestRate": "证明率",
+    "attention": "见证消息",
     "missed": "已错过",
     "aggregations": "协议",
     "slashed": "罚没"
@@ -336,7 +336,7 @@
     "logOutBtn": "登出"
   },
   "prunningModal": {
-    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
+    "prunningText": "GETH 在操作时间内使用的存储空间一直增加。 需要多小时来修剪它数据库，删除不必要的数据并释放一些使用过的储存空间。 必须在GETH不运作的时候完成这项工作。开始修建过程您的节点会下线并停止潜在性见证工作。",
     "prunningChecked": "我已阅读且了解后果",
     "prunningStart": "开始剪枝"
   },
@@ -408,13 +408,13 @@
     "hours": "小时"
   },
   "theAttes": {
-    "lastAttest": "最后一次验证栏位：",
+    "lastAttest": "最后一次证明栏位：",
     "keyStatus": "密钥状态：",
     "attest": "ATTESTING",
     "pending": "待定",
-    "nxtAttest": "next Attestation Slot:",
+    "nxtAttest": "下个证明栏位",
     "slotRem": "Slots remaining",
-    "tillAtest": "till attestation"
+    "tillAtest": "直到认证"
   },
   "confirmModal": {
     "message": "Your node will go off line while you do this!",
@@ -424,7 +424,7 @@
   },
   "nodeAlert": {
     "lowSpace": "LOW STORAGE SPACE",
-    "missAttest": "MISSED ATTESTATION",
+    "missAttest": "错过见证消息",
     "use": "USAGE",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE"
