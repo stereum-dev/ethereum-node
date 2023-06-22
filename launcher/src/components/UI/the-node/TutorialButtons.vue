@@ -57,13 +57,10 @@ export default {
   methods: {
     handleOptionClick(option) {
       if (option.title === "Guided") {
-        // Emit Guided option clicked event
         this.$emit("guided-option-clicked");
       } else if (option.title === "Written") {
-        // Emit Written option clicked event
         this.$emit("written-option-clicked");
       } else if (option.title === "Video") {
-        // Emit Video option clicked event
         this.$emit("video-option-clicked");
       }
     },

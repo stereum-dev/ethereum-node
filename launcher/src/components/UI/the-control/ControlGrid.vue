@@ -6,10 +6,10 @@
           <span>PLUG-INs</span>
         </div>
         <div class="plugins-table-bg">
-          <div class="arrow-up">
-            <img src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png" alt="" />
+          <div class="arrow-up" @click="scrollUp">
+            <img src="/img/icon/manage-node-icons/white-arrow-up.png" alt="" />
           </div>
-          <div class="plugins-table">
+          <div ref="pluginsTable" class="plugins-table">
             <div v-for="(item, index) in installedServices" :key="index" class="plugins-row">
               <div
                 class="plugins-pending-state"
@@ -86,8 +86,8 @@
               ></resync-modal>
             </div>
           </div>
-          <div class="arrow-down">
-            <img src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png" alt="icon" />
+          <div class="arrow-down" @click="scrollDown">
+            <img src="/img/icon/manage-node-icons/white-arrow-down.png" alt="icon" />
           </div>
         </div>
       </control-plugins>
@@ -147,6 +147,12 @@ export default {
     }),
   },
   methods: {
+    scrollUp() {
+      this.$refs.pluginsTable.scrollTop -= 50;
+    },
+    scrollDown() {
+      this.$refs.pluginsTable.scrollTop += 50;
+    },
     updateStates: async function () {
       let serviceInfos = await ControlService.listServices();
       this.installedServices.forEach((s, idx) => {
