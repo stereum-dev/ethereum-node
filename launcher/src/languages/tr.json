@@ -54,7 +54,8 @@
     "updateConfig": "Steum Güncelleme Yapılandırması",
     "servicePlugin": "Eklenti / Hizmet Güncelleme Yapılandırması",
     "manual": "EL İLE",
-    "auto": "OTOMATİK"
+    "auto": "OTOMATİK",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "32 ETH Stake edin",
