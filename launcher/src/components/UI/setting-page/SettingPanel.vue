@@ -47,7 +47,7 @@
           <hr />
           <div class="setting-items export-row">
             <div class="setting-items_title">
-              <span>Export Config</span>
+              <span>{{ $t("settingPanel.sxConf") }}</span>
             </div>
             <div class="setting-items_btn export" @click="exportData">export ...</div>
           </div>
@@ -97,8 +97,6 @@
 <script>
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
-// const yaml = require("js-yaml");
-
 import LanguagePanel from "./LanguagePanel.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";

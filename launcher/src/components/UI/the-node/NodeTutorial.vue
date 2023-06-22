@@ -219,10 +219,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+.back-button:hover {
+  background: rgb(43, 84, 81);
 }
 .back-button:active {
-  box-shadow: none;
-  transform: scale(0.9);
+  background: rgba(43, 84, 81, 0.5);
 }
 .up-arrow {
   border-left: 40px solid transparent;

@@ -144,17 +144,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #336666;
+  background: #264744;
   margin-bottom: 3%;
   border-radius: 5px;
   cursor: pointer;
 }
 .sub:active {
-  transform: scale(0.9);
-  border: none;
+  background: rgba(43, 84, 81, 0.5);
 }
 .sub:hover {
-  border: 2px solid #eee;
+  background: rgb(51, 101, 97);
 }
 .sub-icon {
   width: 25%;
