@@ -391,7 +391,7 @@
     "nxtBlck": "下一个区块提案："
   },
   "disableStake": {
-    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+    "message": "要求在服务器上运行验证其客户端来进入货币质押"
   },
   "selectionOption": {
     "graffiti": "涂鸦",
@@ -425,51 +425,51 @@
   "nodeAlert": {
     "lowSpace": "库存空间减小",
     "missAttest": "错过见证消息",
-    "use": "USAGE",
-    "noFee": "no fee recipient",
-    "stereumUpt": "STEREUM UPDATE"
+    "use": "使用",
+    "noFee": "没有收费收件人",
+    "stereumUpt": "以太坊更新"
   },
   "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
+    "message": "您确定要吗",
+    "close": "点击外部关闭"
   },
   "resyncModal": {
     "message": "您的客户端将区块链数据存储在您的服务器上所以您的节点可为网络服务。 这对于您的节点的币安质押中提升其证明工作是必要的。 通过使用此选项来删除您的客户端数据，并使用该选择同步您的节点。",
-    "sync": "SYNCHRONISATION",
-    "gen": "GENESIS",
-    "chkSync": "CHECKPOINT SYNC",
-    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cont": "CONTINUE",
-    "resync": "RESYNC",
-    "close": "click outside to close"
+    "sync": "同步化",
+    "gen": "创世块",
+    "chkSync": "同步检查点",
+    "syncMsg": "由原始区块链同步您的客户端",
+    "cont": "继续",
+    "resync": "重新同步",
+    "close": "点击外部关闭"
   },
   "resyncSeparateService": {
     "message": "by initiating resync you will delete the database of",
     "msgPartTwo": " source will be used for resynchronization",
-    "resync": "resync",
-    "close": "click outside to close"
+    "resync": "重新同步",
+    "close": "点击外部关闭"
   },
   "notifModal": {
-    "addNotif": "add a notification channel",
+    "addNotif": "加上其他通知通道",
     "chooseNotif": "Choose what kind of Notification Channel you want to configure",
     "stereumMonitor": "以太坊节点监视器",
     "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
-    "stepTwo": "Open the app on your smartphone",
-    "stepThree": "Scan the QR Code",
-    "stepFour": "Send a test notification",
-    "close": "click outside to close"
+    "stepTwo": "在您的智能手机上打开应用程式",
+    "stepThree": "扫描二维码",
+    "stepFour": "发送测试通知",
+    "close": "点击外部关闭"
   },
   "replacePanel": {
-    "client": "Client",
-    "sync": "SYNC",
-    "gen": "GENESIS",
+    "client": "客户",
+    "sync": "同步",
+    "gen": "创世块",
     "chkPoint": "CHECKPOINT",
     "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "cancel": "CANCEL",
-    "confirm": "CONFIRM"
+    "confirm": "确认"
   },
   "executionSync": {
-    "gen": "GENESIS",
+    "gen": "创世块",
     "syncClient": "Syncs your clients"
   },
   "importingList": {
@@ -494,7 +494,7 @@
     "header": "Set how the Node clients will synchronize their blockchain data.",
     "client": "CLIENTs",
     "syncSrc": "SYNC SOURCE",
-    "gen": "GENESIS",
+    "gen": "创世块",
     "sync": "Syncs from genesis",
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
