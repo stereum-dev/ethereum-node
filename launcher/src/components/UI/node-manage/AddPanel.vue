@@ -32,10 +32,7 @@
             </div>
           </div>
         </div>
-        <div
-          v-if="!noInstallPathServices.includes(plugin.service)"
-          class="change-installation"
-        >
+        <div v-if="!noInstallPathServices.includes(plugin.service)" class="change-installation">
           <div class="change-title">
             <span>INSTALLATION PATH</span>
           </div>
@@ -43,10 +40,7 @@
             <input v-model="installationPath" type="text" maxlength="255" />
           </div>
         </div>
-        <div
-          v-if="!noPortServices.includes(plugin.service)"
-          class="portAddBox"
-        >
+        <div v-if="!noPortServices.includes(plugin.service)" class="portAddBox">
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
             <span>{{ $t("addModifyPanel.portused") }}</span>
@@ -144,7 +138,13 @@ export default {
       options: [],
       checkedRelays: [],
       availableBlocks: [],
-      noPortServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService", "NotificationService", "Web3SignerService", "ValidatorEjectorService"],
+      noPortServices: [
+        "FlashbotsMevBoostService",
+        "PrometheusNodeExporterService",
+        "NotificationService",
+        "Web3SignerService",
+        "ValidatorEjectorService",
+      ],
       noInstallPathServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService"],
     };
   },
@@ -238,7 +238,11 @@ export default {
       if (this.items.category === "consensus") {
         this.options = this.newConfiguration.filter((service) => service.category === "execution");
       } else if (this.items.category === "validator") {
-        this.options = this.newConfiguration.filter((service) => service.category === "consensus" || (service.service === "CharonService" && this.items.service !== "CharonService"));
+        this.options = this.newConfiguration.filter(
+          (service) =>
+            service.category === "consensus" ||
+            (service.service === "CharonService" && this.items.service !== "CharonService")
+        );
       } else if (this.items.service === "FlashbotsMevBoostService") {
         this.options = this.newConfiguration.filter((service) => service.category === "consensus");
       } else {
@@ -378,10 +382,21 @@ export default {
   color: #c8c8c8;
   text-transform: uppercase;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: scroll;
+  /*text-overflow: ellipsis;*/
   align-self: center;
   box-sizing: border-box;
+}
+.serviceName ::-webkit-scrollbar {
+  height: 2px;
+}
+.serviceName ::-webkit-scrollbar-track {
+  background: #23282b;
+  height: 2px;
+}
+.serviceName ::-webkit-scrollbar-thumb {
+  background: #42a5de;
+  height: 2px;
 }
 
 .service-details p,

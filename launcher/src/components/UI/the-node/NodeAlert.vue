@@ -353,7 +353,7 @@ export default {
 }
 
 .status-box_header {
-  width: 96%;
+  width: 80%;
   height: 8%;
   display: flex;
   justify-content: center;
