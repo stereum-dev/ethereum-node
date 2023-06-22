@@ -111,29 +111,7 @@ export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
-      stereumConfig: [
-        // {
-        //   filename: "file1.yaml",
-        //   content: {
-        //     name: "John Doe",
-        //     age: 35,
-        //     email: "johndoe@example.com",
-        //   },
-        // },
-        // {
-        //   filename: "file2.yaml",
-        //   content: {
-        //     name: "Jane Smith",
-        //     age: 27,
-        //     email: "janesmith@example.com",
-        //   },
-        // },
-        // {
-        //   filename: "NimbusBeaconService.yaml",
-        //   content:
-        //     "{service: NimbusBeaconService\nid: 11ad3d49-8811-9f…decff970\n  consensusClients: []\n  mevboost: []\n\n}",
-        // },
-      ],
+      stereumConfig: [],
       stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",
       onOff: true,
@@ -323,10 +301,15 @@ export default {
 }
 .export:hover {
   font-weight: 700;
-  border: 1.5px solid #eee;
+  background: #4d9a9a !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 .export:active {
-  transform: scale(0.9);
+  background: rgba(49, 100, 100, 0.5) !important;
+  transform: scale(0.98);
+  border: none;
+  box-shadow: none;
 }
 .setting-items {
   width: 95%;

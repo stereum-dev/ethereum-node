@@ -187,9 +187,12 @@ export default {
 .setting-items_btn:hover,
 .setting-items_btn:focus {
   font-weight: 700;
-  border: 1.5px solid #eee;
+  background: #4d9a9a !important;
 }
 .setting-items_btn:active {
-  transform: scale(0.9);
+  background: rgba(49, 100, 100, 0.5) !important;
+  transform: scale(0.98);
+  border: none;
+  box-shadow: none;
 }
 </style>
