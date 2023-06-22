@@ -233,12 +233,12 @@ export default {
   },
   methods: {
     exportData() {
-      if(this.stereumConfig.length > 0){
+      if (this.stereumConfig.length > 0) {
         const zip = new JSZip();
         this.stereumConfig.forEach((item) => {
           zip.file(item.filename, item.content);
         });
-  
+
         zip.generateAsync({ type: "blob" }).then(function (blob) {
           saveAs(blob, "stereum_config.zip");
         });
@@ -468,7 +468,7 @@ export default {
 .confirm-btn {
   width: max-content;
   height: 65%;
-  background: #48e148;
+  background: #35a835;
   border: 1px solid #707070;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
   display: flex;
@@ -481,14 +481,13 @@ export default {
   border-radius: 20px;
   cursor: pointer;
   margin: 5% 0;
+  padding: 0 2%;
 }
 .confirm-btn:hover {
-  border: 1px solid white;
-  font-weight: 800;
+  background: #54f454;
 }
 .confirm-btn:active {
-  background: #004cff;
-  transform: scale(0.9);
+  background: rgba(53, 168, 53, 0.5);
   border: none;
   box-shadow: none;
 }
@@ -496,6 +495,9 @@ export default {
   width: 95%;
   height: 1%;
   background: #eee;
+}
+.export-row {
+  height: 3rem;
 }
 .general-panel {
   width: 100%;
@@ -507,7 +509,7 @@ export default {
 }
 .update-panel {
   width: 100%;
-  height: 70%;
+  height: 55%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -534,7 +536,7 @@ export default {
 }
 hr {
   width: 95%;
-  margin: 0 0 1% 0;
+  margin-bottom: 2px;
 }
 .footer {
   background-color: rgb(52, 52, 52);
@@ -545,7 +547,7 @@ hr {
 }
 .items-box_general {
   width: 100%;
-  height: 70%;
+  height: 75%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
