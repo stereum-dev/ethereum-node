@@ -3,7 +3,7 @@
     <div class="portlist_box">
       <div class="portlist_icon">
         <div class="portlist_icon_contaniner">
-          <img src="../../../../public/img/icon/control/PORT_LIST_ICON.png" alt="portlist" />
+          <img src="/img/icon/control/PORT_LIST_ICON.png" alt="portlist" />
         </div>
         <span>OPEN PORTS</span>
       </div>

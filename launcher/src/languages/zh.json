@@ -106,10 +106,10 @@
   },
   "controlPage": {
     "node": "节点",
-    "disk": "DISK SPEED",
+    "disk": "磁盘速度",
     "write": "编写",
     "read": "阅读",
-    "inclusionDistance": "INCLUSION DISTANCE",
+    "inclusionDistance": "纳入距离",
     "rpc": "RPC-端点",
     "ws": "WS-端点",
     "syncStatus": "同步状态",
@@ -140,8 +140,8 @@
     "importKey": "导入验证器密钥",
     "waitMessage": "此操作需要一些时间",
     "waitForImport": "正在导入, 请稍候。",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
-    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
+    "warningMessage": "我们额外的 消减保护检查显示，您即将导入的验证器之一已经在最后的 两个节点 中认证。",
+    "warningAlarm": "警告：您有被削减的高风险！",
     "warningQuestion": "您想要导入验证密钥吗？",
     "sure": "确认",
     "cancel": "取消"
@@ -161,41 +161,41 @@
   },
   "feeRecipient": {
     "textPlaceHolder": "输入有效的以太坊地址来将您的奖项发送到... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "setBlock": "设置方块手续费接收地址"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "输入最多32个字符到区块链中当您新创一个方块！"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "输入最多32个字符来重名验证器！"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "点击或拖动以输入密钥"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "您是否要下载您的消减数据？",
+    "description": "您可以验证器密钥输入来确保安全当您迁移密钥",
+    "btn": "選取路徑"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With Slashing Protection Database?",
-    "remove": "Remove",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "sure": "确定要从您的机器中删除此密钥吗？",
+    "slashing": "使用消减保护数据库？",
+    "remove": "删除",
+    "path": "选择一个路径保存导出的消减得币 ",
+    "writePath": "请写下您的路劲"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "您确定要删除所有验证器密钥吗？"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "ATTESTATION",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
+    "totalText": "总余额：",
+    "validators": "验证器",
+    "proposed": "已建议",
+    "attestRate": "证明率",
+    "attention": "见证消息",
+    "missed": "已错过",
+    "aggregations": "协议",
+    "slashed": "罚没"
   },
   "validatorsBox": {
     "date": "日期",
@@ -215,15 +215,15 @@
   },
   "installitionMenu": {
     "welcome": "欢迎使用",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
+    "installText": "在此步骤您可选择怎样安装您的节点。 如果您需要帮，请加入我们的 DISCORD - 我们很乐意帮助。",
     "osCheck": "在检查如果您的服务器需要支持",
-    "osSupported": "IS A SUPPORTED OS"
+    "osSupported": "支持的操作系统"
   },
   "pluginName": {
     "option": "选择网络",
     "chosen": "选择网络",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "path": "安装路劲",
+    "syncClient": "由原始区块链同步您的客户端",
     "plugin": "安装服务器",
     "addOpt": "附加选项",
     "back": "回去",
@@ -244,7 +244,7 @@
     "verifyTitle": "验证和安装",
     "name": "名称",
     "cat": "类别",
-    "path": "PATH"
+    "path": "路径"
   },
   "warningModal": {
     "warningText": "建议您稍等直到完成重要安装再应用更多修改"
@@ -256,125 +256,125 @@
   },
   "frontPageSsv": {
     "newRegistritionTitle": "注册一个新的操作者",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
-    "insertTitle": "insert operator key for existing operator",
-    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+    "newRegistritionText": "使用新建的操作密钥注册新的节点操作到 SSV 网络",
+    "register": "注册",
+    "insertTitle": "为现有操作器插入操作器密钥",
+    "insertText": "使用现有的操作器密钥来恢复您现有的节点操作器流程"
   },
   "registerSSV": {
-    "pubKey": "Public operator key",
-    "copied": "copied!",
-    "secKey": "Secret Operator Key",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "pubKey": "公开操作器密钥",
+    "copied": "已复制！",
+    "secKey": "秘密操作密钥",
+    "makeSureText": "请确保存储和备份您的操作器密钥在安全地方。不要与任何人共享此密钥。",
+    "copyMessage": "将您的公共密钥复制到这里，以确认您储存了您的密钥！"
   },
   "ssvDashboard": {
-    "operatorPage": "My Operator Page",
-    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+    "operatorPage": "我的操作页面",
+    "SSVNodeGrafna": "SSV节点Grafana面板"
   },
   "secretKeyReg": {
-    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "modalLabel": "输入原始私密操作密钥来当您的操作密钥",
+    "apply": "应用"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
-    "closed": "Tunnel closed!",
-    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
-    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "copy": "点击复制",
+    "closed": "隧道已关闭！",
+    "turnOnMessage": "请先打开 DATA-API 隧道！",
+    "copiedMessage": "DATA-API-URL已复制到剪贴板！",
+    "RPCTurnOnMessage": "请先打开 RPC 隧道！",
+    "RPCCopiedMessage": "RPC-URL 已复制到剪贴板中。",
+    "WSTurnOnMessage": "请先打开 WS 隧道！",
+    "WSCopiedMessage": "WS-URL 已复制到剪贴板中！"
   },
   "pluginLogs": {
-    "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Double Click to Copy Logs",
-    "serviceId": "service id"
+    "pageTitle": "插件日记",
+    "noLogFound": "在列表中找不到日记",
+    "clickCopy": "双击复制日记",
+    "serviceId": "服务器账号"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
-    "openBrowser": "OPEN IN BROWSER",
-    "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
-    "blockRel": "Block relay",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "localApp": "应用",
+    "localAppText": "在此机器上打开服务",
+    "openBrowser": "在浏览器中打开",
+    "availBlockRel": "可用方块中继",
+    "process": "正在处理",
+    "blockRel": "中继区块",
+    "blockRelTxt": "选择一个或多个中继接收方块"
   },
   "customInstallation": {
-    "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "customInstallationTitle": "定制安装",
+    "customInstallationText": "此模式是为更高级的用户设计的，要求您了解客户端如何相互作用。 您必须选择、安装和连接您的节点的每个部分到使用介面，然后才能正常运作！",
+    "chooseWhereToInstall": "选择您想要加以太坊到哪里",
+    "installationPath": "安装路劲"
   },
   "mevboostConfig": {
-    "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "availRelays": "可用方块中继",
+    "usedRelays": "已使用方块中继"
   },
   "addModifyPanel": {
-    "installPath": "INSTALLATION PATH",
-    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "portused": "PORT USED",
-    "cancel": "cancel",
-    "save": "save",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "installPath": "安装路劲",
+    "syncMessage": "由原始区块链同步您的客户端",
+    "portused": "已使用端口",
+    "cancel": "取消",
+    "save": "保存",
+    "add": "添加",
+    "clickAndAdd": "点击ADD"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
-    "continue": "Continue"
+    "slashModalMessage": "是否使用消减数据保护程式来导入",
+    "importMessage": "导入您的数据消减档案",
+    "chooseFile": "选择文件",
+    "continue": "继续"
   },
   "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+    "noValidatorInstalled": "没有安装验证器客户端！",
+    "disabledStakingMessage": "安装至少一个验证器客户端来激活导入验证器密钥。"
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
-    "logOutBtn": "Log out"
+    "logOutTitle": "登出",
+    "logOutQuestion": "确定想要登出您的服务器节点吗？",
+    "logOutBtn": "登出"
   },
   "prunningModal": {
-    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Start Pruning"
+    "prunningText": "GETH 在操作时间内使用的存储空间一直增加。 需要多小时来修剪它数据库，删除不必要的数据并释放一些使用过的储存空间。 必须在GETH不运作的时候完成这项工作。开始修建过程您的节点会下线并停止潜在性见证工作。",
+    "prunningChecked": "我已阅读且了解后果",
+    "prunningStart": "开始剪枝"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
-    "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart",
-    "confirmMessage": "Are you sure you want turn your node"
+    "restarQ": "你确认要重启吗？",
+    "restartMessage": "您的节点可因此操作离线！",
+    "restart": "重启",
+    "confirmMessage": "您确定要转向您的节点"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
-    "nukeTitle": "nuke the node",
-    "backToLogin": "Back to login"
+    "nukeQ": "是否确认要从系统中删除以太坊和所有服务器？",
+    "nukeTitle": "毁灭节点",
+    "backToLogin": "返回登入"
   },
   "noData": {
-    "noData": "no data",
-    "turnOn": "please turn on"
+    "noData": "没有数据",
+    "turnOn": "请开启"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Click on the “ON/OFF” button to open your port",
-    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Click x to cancel",
-    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
-    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
-    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Click on the Network button",
-    "thirdSlide": "Click on “Add Network”",
-    "fourthSlide": "Type in a name for your network",
-    "fivethSlide": "Paste in the copied URL from Stereum",
+    "clickNav": "点击“控制”进入控制面板",
+    "toggleMessage": "点击“开启/关闭”按钮来打开您的端口",
+    "clickExtention": "点击“执行客户端”按钮复制RPC URL",
+    "clickCancel": "点击X来取消",
+    "firstMessage": "RPC端点小工具位于控面板中。请点击“ON\"按钮并点击”执行客户端“来继续下一步",
+    "secondMessage": "您现在可以通过小狐狸钱包发送您的交易到您节点中。当您完成发送时，点击”ON“来关闭端口。",
+    "firstSlide": "现在登录您的DAPP或想使用的钱包（在这案子是小狐狸钱包）",
+    "secondSlide": "点击网络按钮",
+    "thirdSlide": "点击“添加网络”",
+    "fourthSlide": "输入您网络的名称",
+    "fivethSlide": "粘贴从以太坊复制的网址",
     "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "Type in “ETH” as the currency symbol",
-    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
-    "ninethSlide": "Click on “SAVE”"
+    "seventhSlide": "输入“ETH”为货币符号",
+    "eightthSlide": "可选项-您可以粘贴到区块链资源管理器的 URL",
+    "ninethSlide": "点击\"SAVE\""
   },
   "stakeGuide": {
-    "syncCheck": "First Check if your Node is synced",
-    "scrollMessage": "Scroll to change slides faster",
+    "syncCheck": "先检查节点是否已同步",
+    "scrollMessage": "滚动以更快地更改幻灯片",
     "stake": "staking",
     "scrollClick": "Click on Staking",
     "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
@@ -382,94 +382,94 @@
     "cong": "Congrats you are done!",
     "clickPass": "Please click here to enter your password and confirm.",
     "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "test": "测试测试"
   },
   "blockProduct": {
-    "status": "STATUS",
-    "assignSlot": "Assigned Slot",
-    "noAsign": "Not Assigned",
-    "nxtBlck": "Next Block Proposal in:"
+    "status": "状态",
+    "assignSlot": "已分配时隙",
+    "noAsign": "未分配",
+    "nxtBlck": "下一个区块提案："
   },
   "disableStake": {
-    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+    "message": "要求在服务器上运行验证其客户端来进入货币质押"
   },
   "selectionOption": {
-    "graffiti": "graffiti",
-    "removeKeys": "Remove all keys"
+    "graffiti": "涂鸦",
+    "removeKeys": "移除所有密钥"
   },
   "syncCommitte": {
-    "total": "total",
-    "status": "STATUS",
-    "particip": "PARTICIPATING",
-    "noParticip": "NOT PARTICIPATING",
-    "start": "Start",
-    "end": "End",
+    "total": "总计",
+    "status": "状态",
+    "particip": "参与",
+    "noParticip": "没参与",
+    "start": "开始",
+    "end": "结束",
     "newSync": "New Sync Committee in",
-    "hours": "hours"
+    "hours": "小时"
   },
   "theAttes": {
-    "lastAttest": "Last Attestation Slot:",
-    "keyStatus": "Key Status:",
-    "attest": "ATTESTING",
-    "pending": "PENDING",
-    "nxtAttest": "next Attestation Slot:",
-    "slotRem": "Slots remaining",
-    "tillAtest": "till attestation"
+    "lastAttest": "最后一次证明栏位：",
+    "keyStatus": "密钥状态：",
+    "attest": "认证中",
+    "pending": "待定",
+    "nxtAttest": "下个证明栏位",
+    "slotRem": "剩余时隙",
+    "tillAtest": "直到认证"
   },
   "confirmModal": {
-    "message": "Your node will go off line while you do this!",
-    "turnOn": "turn on",
-    "turnOff": "turn off",
-    "close": "click outside to close"
+    "message": "您的节点将在此操作时关闭下线",
+    "turnOn": "开启",
+    "turnOff": "关闭",
+    "close": "点击外部关闭"
   },
   "nodeAlert": {
-    "lowSpace": "LOW STORAGE SPACE",
-    "missAttest": "MISSED ATTESTATION",
-    "use": "USAGE",
-    "noFee": "no fee recipient",
-    "stereumUpt": "STEREUM UPDATE"
+    "lowSpace": "库存空间减小",
+    "missAttest": "错过见证消息",
+    "use": "使用",
+    "noFee": "没有收费收件人",
+    "stereumUpt": "以太坊更新"
   },
   "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
+    "message": "您确定要吗",
+    "close": "点击外部关闭"
   },
   "resyncModal": {
-    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
-    "sync": "SYNCHRONISATION",
-    "gen": "GENESIS",
-    "chkSync": "CHECKPOINT SYNC",
-    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cont": "CONTINUE",
-    "resync": "RESYNC",
-    "close": "click outside to close"
+    "message": "您的客户端将区块链数据存储在您的服务器上所以您的节点可为网络服务。 这对于您的节点的币安质押中提升其证明工作是必要的。 通过使用此选项来删除您的客户端数据，并使用该选择同步您的节点。",
+    "sync": "同步化",
+    "gen": "创世块",
+    "chkSync": "同步检查点",
+    "syncMsg": "由原始区块链同步您的客户端",
+    "cont": "继续",
+    "resync": "重新同步",
+    "close": "点击外部关闭"
   },
   "resyncSeparateService": {
     "message": "by initiating resync you will delete the database of",
     "msgPartTwo": " source will be used for resynchronization",
-    "resync": "resync",
-    "close": "click outside to close"
+    "resync": "重新同步",
+    "close": "点击外部关闭"
   },
   "notifModal": {
-    "addNotif": "add a notification channel",
+    "addNotif": "加上其他通知通道",
     "chooseNotif": "Choose what kind of Notification Channel you want to configure",
-    "stereumMonitor": "Stereum Node Monitor",
+    "stereumMonitor": "以太坊节点监视器",
     "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
-    "stepTwo": "Open the app on your smartphone",
-    "stepThree": "Scan the QR Code",
-    "stepFour": "Send a test notification",
-    "close": "click outside to close"
+    "stepTwo": "在您的智能手机上打开应用程式",
+    "stepThree": "扫描二维码",
+    "stepFour": "发送测试通知",
+    "close": "点击外部关闭"
   },
   "replacePanel": {
-    "client": "Client",
-    "sync": "SYNC",
-    "gen": "GENESIS",
+    "client": "客户",
+    "sync": "同步",
+    "gen": "创世块",
     "chkPoint": "CHECKPOINT",
     "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "cancel": "CANCEL",
-    "confirm": "CONFIRM"
+    "confirm": "确认"
   },
   "executionSync": {
-    "gen": "GENESIS",
+    "gen": "创世块",
     "syncClient": "Syncs your clients"
   },
   "importingList": {
@@ -494,17 +494,66 @@
     "header": "Set how the Node clients will synchronize their blockchain data.",
     "client": "CLIENTs",
     "syncSrc": "SYNC SOURCE",
-    "gen": "GENESIS",
+    "gen": "创世块",
     "sync": "Syncs from genesis",
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
     "message": "Do you want to remove the saved connection?",
-    "rem": "Remove",
-    "close": "click outside to close"
+    "rem": "删除",
+    "close": "点击外部关闭"
   },
   "errTerminal": {
-    "copy": "copied!",
-    "close": "click outside to close"
+    "copy": "已复制！",
+    "close": "点击外部关闭"
+  },
+  "sliderTutorial": {
+    "becomeValidator": "Click on “BECOME A VALIDATOR”",
+    "proofStake": "Read through Proof of stake and click on “CONTINUE”",
+    "deposit": "Read through the deposit and click on “I ACCEPT”",
+    "usingTerminal": "Read through Using the terminal and click on “I ACCEPT”",
+    "validatorUptime": "Read through Validator uptime and click on “I ACCEPT”",
+    "validatorBahavior": "Read through Bad validator behaviour and click on “I ACCEPT”",
+    "keyManagement": "Read through Key managment and click on “I ACCEPT”",
+    "validatingLongterm": "Read through Validating is a long-term commitment and click on “I ACCEPT”",
+    "earlyAdaptor": "Read through Early adopter risks and click on “I ACCEPT”",
+    "stakingChecklist": "Read through Staking checklist and click on “I ACCEPT”",
+    "clickCont": "Click on “CONTINUE”",
+    "executionClient": "Select your execution client by clicking on it",
+    "scrollDown": "Scroll down and click on “CONTINUE”",
+    "consensusClient": "Select your consensus client by clicking on it",
+    "numValidator": "Type in the number of validators you want to run",
+    "generateKey": "Select the operating system you’re currently using to generate the key",
+    "keyGUI": "Click on “Download the Key Gen GUI app”",
+    "dlGithub": "Click on “Download from GitHub”",
+    "clickInstaller": "Scroll down and click on the installer you need and download it",
+    "setupPage": "Go back to the setup page and scroll down and click on the checkbox",
+    "wagueKey": "Switch to the WAGYU Key Generator app",
+    "secratePhrase": "Click on “Create New Secret Recovery Phrase”",
+    "selectNetwork": "Select the network in which you want your node to run",
+    "clickOk": "Click on “OK”",
+    "clickCreate": "Click on “CREATE”",
+    "recoveryPhrase": "After your Secret Recovery Phrase is created safe it in a safe place. Click on the copy button.",
+    "clickNext": "Click on “NEXT”",
+    "imSure": "Click on “I’M SURE”",
+    "pasteRecovery": "Paste in your Secret Recovery Phrase",
+    "clickCheck": "Click on “CHECK”",
+    "needKey": "Type in the number of keys you need",
+    "typPass": "Type in a password",
+    "retypPass": "Retype your pasword",
+    "clickBrowse": "Click on “BROWSE”",
+    "chooseFolder": "Choose a folder where you want to save your keys and safe them in a safe place",
+    "clickCreateWait": "Click on “CREATE” and wait for a couple of seconds",
+    "clickClose": "Check if your keys are generated and click on “CLOSE”",
+    "switchSetup": "Switch back to the setup page",
+    "dragFile": "Click on “Drag file to uploud or browse” and drag your deposite file in the field",
+    "connWalet": "Connect your wallet, check the network and your balance",
+    "understandRisk": "Read the section “Understand the risks” and check every box",
+    "readSection": "Read the section “Make sure you aren’t pished” and check the box",
+    "protectYourself": "Read the section “Protect yourself against double deposits” and check the box",
+    "dblCheck": "Double check everything and click on “CONTINUE”",
+    "sendDeposit": "Click on “SEND DEPOSIT”",
+    "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
+    "contCong": "Click on “CONTINUE”, congrats you created a validator key"
   }
 }

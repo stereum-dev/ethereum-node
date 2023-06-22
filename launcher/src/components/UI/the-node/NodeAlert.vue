@@ -10,13 +10,16 @@
         <div class="status-icon" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: warning }">
+        <div class="status-icon" :class="{ active: warning || rpcState }">
           <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: alarm }">
           <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: notification }">
+        <div
+          class="status-icon"
+          :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdates.length > 0 }"
+        >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -43,6 +46,19 @@
           </div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
+          </div>
+        </div>
+      </div>
+      <div v-if="rpcState" class="status-message_yellow">
+        <div class="message-icon">
+          <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
+        </div>
+        <div class="message-text_container">
+          <div class="main-message">
+            <span>RPC Point</span>
+          </div>
+          <div class="val-message">
+            <span> > STATUS: OPEN</span>
           </div>
         </div>
       </div>
@@ -83,24 +99,33 @@
           </div>
         </div>
       </div>
-      <transition>
-        <div v-if="notification" class="status-message_green" @mouseover="iconShow" @mouseleave="iconHide">
-          <div class="message-icon" @click="showUpdate">
-            <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
+
+      <div v-if="stereumUpdate.current !== stereumUpdate.version" class="status-message_green">
+        <div class="message-icon" @click="showUpdate">
+          <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
+        </div>
+        <div class="message-text_container" @click="showUpdate">
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.stereumUpt") }}</span>
           </div>
-          <div class="message-text_container" @click="showUpdate">
-            <div class="main-message">
-              <span>{{ $t("nodeAlert.stereumUpt") }}</span>
-            </div>
-            <div class="val-message">
-              <span>{{ stereumUpdate.version }}</span>
-            </div>
-          </div>
-          <div v-if="closeNotif" class="close" @click="closeNotification">
-            <img src="/img/icon/control/close.png" alt="close" />
+          <div class="val-message">
+            <span>{{ stereumUpdate.version }}</span>
           </div>
         </div>
-      </transition>
+      </div>
+      <div v-for="item in newUpdates" :key="item" class="status-message_green">
+        <div class="message-icon" @click="showUpdate">
+          <img :src="item.icon" alt="warn_storage" />
+        </div>
+        <div class="message-text_container" @click="showUpdate">
+          <div class="main-message">
+            <span>{{ item.name }} UPDATE</span>
+          </div>
+          <div class="val-message">
+            <span>{{ item.version }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -125,9 +150,7 @@ export default {
       perfect: false,
       warning: false,
       alarm: false,
-      newUpdate: false,
       missedAttest: false,
-      closeNotif: false,
       notification: false,
       setFeeReciepent: [],
       setFeeAlarm: false,
@@ -144,9 +167,11 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
+      rpcState: "rpcState",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      newUpdates: "newUpdates",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -192,8 +217,6 @@ export default {
   created() {
     this.storageCheck();
     this.cpuMeth();
-    this.checkStereumUpdate();
-    this.notifHandler();
   },
   methods: {
     async readService() {
@@ -230,9 +253,6 @@ export default {
       }
     },
 
-    closeNotification() {
-      this.notification = false;
-    },
     iconShow() {
       this.closeNotif = true;
     },
@@ -245,21 +265,7 @@ export default {
     removeUpdateModal() {
       this.displayUpdatePanel = false;
     },
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
-      }
-      return false;
-    },
-    notifHandler() {
-      if (this.checkStereumUpdate == true) {
-        this.notification = true;
-      } else {
-        this.notification = false;
-      }
-    },
+
     storageCheck() {
       if (this.usedPercInt > 80) {
         this.storageWarning = true;
@@ -347,7 +353,7 @@ export default {
 }
 
 .status-box_header {
-  width: 96%;
+  width: 80%;
   height: 8%;
   display: flex;
   justify-content: center;
@@ -428,6 +434,9 @@ export default {
   background: #5f7e6a;
   cursor: pointer;
 }
+.status-message_green .message-text_container {
+  color: #eee;
+}
 
 .message-icon {
   width: 24%;
@@ -460,6 +469,16 @@ export default {
   align-items: center;
   font-size: 50%;
   font-weight: 700;
+  text-transform: uppercase;
+}
+.main-message-rpc {
+  display: flex;
+  width: 95%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 80%;
+  font-weight: 800;
   text-transform: uppercase;
 }
 

@@ -21,7 +21,7 @@
                   <img :src="currentNetwork?.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
                 </div>
                 <div class="networkSelect">
-                  <span>{{ currentNetwork?.name ?  currentNetwork.name : ""}}</span>
+                  <span>{{ currentNetwork?.name ? currentNetwork.name : "" }}</span>
                 </div>
               </div>
             </div>
@@ -54,7 +54,10 @@
         <div class="service">
           <div class="title">{{ $t("theNode.servicePlugin") }}</div>
           <div class="service-parent">
-            <node-service :list="installedServices.filter((service) => service.category === 'service').sort(sortByName)"> </node-service>
+            <node-service
+              :list="installedServices.filter((service) => service.category === 'service').sort(sortByName)"
+            >
+            </node-service>
           </div>
         </div>
         <div class="node-side">
@@ -219,9 +222,11 @@ export default {
   cursor: pointer;
   margin: 4% 0;
 }
+.info-button:hover {
+  background: rgb(43, 84, 81);
+}
 .info-button:active {
-  box-shadow: none;
-  transform: scale(0.9);
+  background: rgba(43, 84, 81, 0.5);
 }
 .info-button img {
   max-width: 19%;

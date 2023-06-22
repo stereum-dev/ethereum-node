@@ -136,9 +136,7 @@ test("teku validator import", async () => {
   );
 
   // destroy
-  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
-  await nodeConnection.destroyNode();
-  await testServer.destroy();
+  await testServer.finishTestGracefully(nodeConnection, keyResponse)
 
   //check ufw
   expect(ufw.stdout).toMatch(/9001\/tcp/);
