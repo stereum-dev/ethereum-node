@@ -377,6 +377,9 @@ export default {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(8, 1fr);
+  border: 1px solid #707070;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
 }
 .plugins-table::-webkit-scrollbar {
   width: 0;
