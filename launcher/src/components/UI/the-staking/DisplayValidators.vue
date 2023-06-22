@@ -109,51 +109,54 @@
               <span class="since">{{ item.activeSince }}</span>
               <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
               <span class="balance">{{ item.balance }}</span>
-              <div class="option-box">
-                <div class="grafiti-box">
-                  <img
-                    class="grafiti-icon"
-                    src="../../../../public/img/icon/the-staking/fee-recepient.png"
-                    alt="icon"
-                    @click="feeRecepientDisplayHandler(item)"
-                  />
-                </div>
-                <div class="copy-box">
-                  <img
-                    class="copy-icon"
-                    src="../../../../public/img/icon/the-staking/copy6.png"
-                    alt="icon"
-                    @click="copyHandler(item)"
-                  />
-                </div>
-                <div class="rename-box">
-                  <img
-                    class="rename-icon"
-                    src="../../../../public/img/icon/the-staking/rename.png"
-                    alt="icon"
-                    @click="renameDisplayHandler(item)"
-                  />
-                </div>
-                <div class="remove-box">
-                  <img
-                    class="remove-icon"
-                    src="../../../../public/img/icon/the-staking/option-remove.png"
-                    alt="icon"
-                    @click="removeModalDisplay(item)"
-                  />
-                </div>
-                <div
-                  class="withdraw-box"
-                  :class="{ disabled: ['goerli', 'mainnet', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
-                >
-                  <img
-                    class="exit-icon"
-                    src="../../../../public/img/icon/the-staking/withdraw.png"
-                    alt="icon"
-                    @click="passwordBoxSingleExitChain(item)"
-                  />
+              <div v-if="protection" class="wrapper">
+                <div class="option-box">
+                  <div class="grafiti-box">
+                    <img
+                      class="grafiti-icon"
+                      src="../../../../public/img/icon/the-staking/fee-recepient.png"
+                      alt="icon"
+                      @click="feeRecepientDisplayHandler(item)"
+                    />
+                  </div>
+                  <div class="copy-box">
+                    <img
+                      class="copy-icon"
+                      src="../../../../public/img/icon/the-staking/copy6.png"
+                      alt="icon"
+                      @click="copyHandler(item)"
+                    />
+                  </div>
+                  <div class="rename-box">
+                    <img
+                      class="rename-icon"
+                      src="../../../../public/img/icon/the-staking/rename.png"
+                      alt="icon"
+                      @click="renameDisplayHandler(item)"
+                    />
+                  </div>
+                  <div class="remove-box">
+                    <img
+                      class="remove-icon"
+                      src="../../../../public/img/icon/the-staking/option-remove.png"
+                      alt="icon"
+                      @click="removeModalDisplay(item)"
+                    />
+                  </div>
+                  <div
+                    class="withdraw-box"
+                    :class="{ disabled: ['goerli', 'mainnet', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
+                  >
+                    <img
+                      class="exit-icon"
+                      src="../../../../public/img/icon/the-staking/withdraw.png"
+                      alt="icon"
+                      @click="passwordBoxSingleExitChain(item)"
+                    />
+                  </div>
                 </div>
               </div>
+              <div v-else class="wrapper"><span>Doublegänger Protection...</span></div>
             </div>
             <FeeRecepientValidator
               v-if="item.isFeeRecepientBoxActive"
@@ -391,6 +394,7 @@ export default {
       isActiveRunning: [],
       checkActiveValidatorsResponse: [],
       exitValidatorResponse: {},
+      protection: true, //dobegnär protection flag
     };
   },
   computed: {
@@ -554,10 +558,10 @@ export default {
 
     async feeRecepientConfirmHandler(key, input) {
       key.isFeeRecepientBoxActive = false;
-      if(/0x[a-fA-F0-9]{40}/g.test(input)) {
-        await ControlService.setFeeRecipient({serviceID: key.validatorID, pubkey: key.key, address: input})
+      if (/0x[a-fA-F0-9]{40}/g.test(input)) {
+        await ControlService.setFeeRecipient({ serviceID: key.validatorID, pubkey: key.key, address: input });
       } else {
-        await ControlService.deleteFeeRecipient({serviceID: key.validatorID, pubkey: key.key})
+        await ControlService.deleteFeeRecipient({ serviceID: key.validatorID, pubkey: key.key });
       }
     },
     renameDisplayHandler(el) {
@@ -761,7 +765,7 @@ export default {
                   activeSince: "-",
                   status: "loading",
                   balance: "-",
-                  network: client.config.network
+                  network: client.config.network,
                 };
               })
             );
@@ -1306,8 +1310,8 @@ remove-validator {
 
 .option-box {
   grid-column: 7;
-  width: 90%;
-  height: 95%;
+  width: 100%;
+  height: 100%;
   justify-self: center;
   align-self: center;
   border: 2px solid #bfbfbf;
@@ -1318,6 +1322,18 @@ remove-validator {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
+}
+.wrapper {
+  width: 100%;
+  height: 95%;
+  border: 2px solid #bfbfbf;
+  background-color: black;
+  border-radius: 30px;
+  color: #bfbfbf;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
 }
 
 .option-box img {
