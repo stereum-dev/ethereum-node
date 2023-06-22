@@ -96,7 +96,7 @@ export default {
       return { backgroundColor: "#316464", color: "#c1c1c1" };
     },
     generalStyle() {
-      return { height: "55%" };
+      return { height: "100%" };
     },
     updateStyle() {
       return { height: "2.5rem" };
@@ -116,7 +116,7 @@ export default {
     },
     itemStyle() {
       if (this.heightItem === "general") {
-        return this.generalStyle;
+        return;
       } else if (this.heightItem === "update") {
         return this.updateStyle;
       }
@@ -144,6 +144,7 @@ export default {
   text-decoration: none;
   margin: 0.5% 0;
   border-radius: 20px;
+  height: 2.5rem;
 }
 .setting-items_parent:hover,
 .setting-items_parent:active {
@@ -186,9 +187,12 @@ export default {
 .setting-items_btn:hover,
 .setting-items_btn:focus {
   font-weight: 700;
-  border: 1.5px solid #eee;
+  background: #4d9a9a !important;
 }
 .setting-items_btn:active {
-  transform: scale(0.9);
+  background: rgba(49, 100, 100, 0.5) !important;
+  transform: scale(0.98);
+  border: none;
+  box-shadow: none;
 }
 </style>
