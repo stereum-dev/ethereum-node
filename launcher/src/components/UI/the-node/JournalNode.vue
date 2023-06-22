@@ -424,23 +424,7 @@ export default {
       if (!service.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         service.serviceIsPending = true;
-        let state = "stopped";
-        if (service.state === "exited") {
-          state = "started";
-          this.isServiceOn = true;
-        }
-        try {
-          await ControlService.manageServiceState({
-            id: service.config.serviceID,
-            state: "stopped",
-          });
-          await ControlService.manageServiceState({
-            id: service.config.serviceID,
-            state: "started",
-          });
-        } catch (err) {
-          console.log(state.replace("ed", "ing") + " service failed:\n", err);
-        }
+        await ControlService.restartService(service.config.serviceID);
         service.serviceIsPending = false;
         this.updateStates();
       }

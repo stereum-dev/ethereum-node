@@ -380,6 +380,7 @@ export default {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
+      await ControlService.restartService(el.config.serviceID);
     },
   },
 };
