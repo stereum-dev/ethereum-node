@@ -54,7 +54,8 @@
     "updateConfig": "Конфигурация на Стереум актуализациите",
     "servicePlugin": "Конфигурация за актуализация на плъгини / услуги",
     "manual": "РЪКОВОДСТВО",
-    "auto": "АВТОМАТИЧНО"
+    "auto": "АВТОМАТИЧНО",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "Залог с 32 ETH",

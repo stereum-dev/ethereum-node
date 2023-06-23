@@ -54,7 +54,8 @@
     "updateConfig": "Stereum Update Configuration",
     "servicePlugin": "Plug-in / Service Update Configuration",
     "manual": "MANUAL",
-    "auto": "AUTO"
+    "auto": "AUTO",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "Stake with 32 ETH",
