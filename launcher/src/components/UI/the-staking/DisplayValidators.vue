@@ -114,7 +114,7 @@
                   <div class="grafiti-box">
                     <img
                       class="grafiti-icon"
-                      src="../../../../public/img/icon/the-staking/fee-recepient.png"
+                      src="/img/icon/the-staking/fee-recepient.png"
                       alt="icon"
                       @click="feeRecepientDisplayHandler(item)"
                     />
@@ -122,7 +122,7 @@
                   <div class="copy-box">
                     <img
                       class="copy-icon"
-                      src="../../../../public/img/icon/the-staking/copy6.png"
+                      src="/img/icon/the-staking/copy6.png"
                       alt="icon"
                       @click="copyHandler(item)"
                     />
@@ -130,7 +130,7 @@
                   <div class="rename-box">
                     <img
                       class="rename-icon"
-                      src="../../../../public/img/icon/the-staking/rename.png"
+                      src="/img/icon/the-staking/rename.png"
                       alt="icon"
                       @click="renameDisplayHandler(item)"
                     />
@@ -138,7 +138,7 @@
                   <div class="remove-box">
                     <img
                       class="remove-icon"
-                      src="../../../../public/img/icon/the-staking/option-remove.png"
+                      src="/img/icon/the-staking/option-remove.png"
                       alt="icon"
                       @click="removeModalDisplay(item)"
                     />
@@ -149,7 +149,7 @@
                   >
                     <img
                       class="exit-icon"
-                      src="../../../../public/img/icon/the-staking/withdraw.png"
+                      src="/img/icon/the-staking/withdraw.png"
                       alt="icon"
                       @click="passwordBoxSingleExitChain(item)"
                     />
@@ -215,7 +215,7 @@
               <img :src="selectedService.icon" alt="icon" />
             </div>
             <div class="key-remove-icon" @click="removeKeyHandler(item)">
-              <img src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" />
+              <img src="/img/icon/task-manager-icons/close3.png" alt="icon" />
             </div>
           </div>
         </div>
@@ -321,7 +321,7 @@ import { mapWritableState, mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
-import { useNodeHeader } from "../../../store/nodeHeader";
+import { useNodeHeader } from "@/store/nodeHeader";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
