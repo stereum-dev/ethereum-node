@@ -57,13 +57,10 @@ export default {
   methods: {
     handleOptionClick(option) {
       if (option.title === "Guided") {
-        // Emit Guided option clicked event
         this.$emit("guided-option-clicked");
       } else if (option.title === "Written") {
-        // Emit Written option clicked event
         this.$emit("written-option-clicked");
       } else if (option.title === "Video") {
-        // Emit Video option clicked event
         this.$emit("video-option-clicked");
       }
     },
@@ -144,17 +141,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #336666;
+  background: #264744;
   margin-bottom: 3%;
   border-radius: 5px;
   cursor: pointer;
 }
 .sub:active {
-  transform: scale(0.9);
-  border: none;
+  background: rgba(43, 84, 81, 0.5);
 }
 .sub:hover {
-  border: 2px solid #eee;
+  background: rgb(51, 101, 97);
 }
 .sub-icon {
   width: 25%;

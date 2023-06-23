@@ -54,7 +54,8 @@
     "updateConfig": "پیکربندی به روز رسانی استریوم",
     "servicePlugin": "پیکربندی به روز رسانی پلاگین / سرویس",
     "manual": "دستی",
-    "auto": "اتوماتیک"
+    "auto": "اتوماتیک",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "استیک با ۳۲ اتریوم",
