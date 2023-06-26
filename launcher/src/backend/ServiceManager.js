@@ -1226,6 +1226,7 @@ export class ServiceManager {
       }
     }
     if (jobs.includes("SWITCH CLIENT")) {
+      let before = this.nodeConnection.getTimeStamp();
       try {
         let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
         for (const switchTask of switchTasks) {
@@ -1239,6 +1240,10 @@ export class ServiceManager {
         );
       } catch (err) {
         log.error("Switching Services Failed:", err);
+      }
+      finally{
+        let after = this.nodeConnection.getTimeStamp();
+        await this.nodeConnection.restartServices(after - before);
       }
     }
   }
