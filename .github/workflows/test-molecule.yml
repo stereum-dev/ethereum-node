@@ -32,6 +32,7 @@ jobs:
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
+          pip install ansible-compat < 4
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
