@@ -375,7 +375,7 @@ export class NodeConnection {
   async listServicesConfigurations() {
     let services;
     try {
-      services = await this.sshService.exec("ls -1 /etc/stereum/services");
+      services = await this.sshService.exec("ls -1 /etc/stereum/services 2>/dev/null");
     } catch (err) {
       log.error("Can't read services configurations", err);
       throw new Error("Can't read services configurations: " + err);

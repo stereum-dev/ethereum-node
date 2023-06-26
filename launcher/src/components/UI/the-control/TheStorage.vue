@@ -9,7 +9,7 @@
       </div>
       <div class="storage-data_box">
         <img v-show="isLoading" class="bttnLoading" :src="bttnLoading" />
-        <div v-show="!isLoading" v-for="item in storagestatus" :key="item.id" class="storage-data_row">
+        <div v-for="item in storagestatus" v-show="!isLoading" :key="item.id" class="storage-data_row">
           <div class="storage-data_row_title">
             <span>{{ item.title }}</span>
           </div>

@@ -7,9 +7,8 @@
         </div>
         <span>OPEN PORTS</span>
       </div>
-      <div class="portlist-data_box">
+      <div v-if="portstatus && portstatus.data" class="portlist-data_box">
         <div
-          v-if="portstatus && portstatus.data"
           v-for="item in portstatus.data"
           :key="item.id"
           class="portlist-data_row"
