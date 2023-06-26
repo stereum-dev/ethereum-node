@@ -141,7 +141,13 @@ export default {
       options: [],
       checkedRelays: [],
       availableBlocks: [],
-      noPortServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService", "NotificationService", "Web3SignerService", "ValidatorEjectorService"],
+      noPortServices: [
+        "FlashbotsMevBoostService",
+        "PrometheusNodeExporterService",
+        "NotificationService",
+        "Web3SignerService",
+        "ValidatorEjectorService",
+      ],
     };
   },
   computed: {
@@ -416,10 +422,21 @@ export default {
   color: #c8c8c8;
   text-transform: uppercase;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: scroll;
+  /*text-overflow: ellipsis;*/
   align-self: center;
   box-sizing: border-box;
+}
+.serviceName ::-webkit-scrollbar {
+  height: 2px;
+}
+.serviceName ::-webkit-scrollbar-track {
+  background: #23282b;
+  height: 2px;
+}
+.serviceName ::-webkit-scrollbar-thumb {
+  background: #42a5de;
+  height: 2px;
 }
 .service-details p,
 .service-details p span {

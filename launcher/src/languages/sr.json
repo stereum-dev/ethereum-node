@@ -54,7 +54,8 @@
     "updateConfig": "Stereum Konfiguracija Ažuriranja",
     "servicePlugin": "Plug-in / Stereum Konfiguracija Ažuriranja",
     "manual": "MANUAL",
-    "auto": "AUTO"
+    "auto": "AUTO",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "Stake sa 32 ETH",

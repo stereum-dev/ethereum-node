@@ -202,6 +202,11 @@ export class ServiceManager {
     }
   }
 
+  async restartService(client) {
+    await this.manageServiceState(client, "stopped");
+    await this.manageServiceState(client, "started");
+  }
+
   async resyncService(serviceID, checkpointUrl) {
     let services = await this.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);

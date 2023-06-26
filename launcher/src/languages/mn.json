@@ -54,7 +54,8 @@
     "updateConfig": "Стереум Шинэчлэлт Тохиргоо",
     "servicePlugin": "Плаг-ин / Сервис Шинэчлэлт Тохиргоо",
     "manual": "ГАР АЖИЛЛАГАА",
-    "auto": "АВТОМАТ"
+    "auto": "АВТОМАТ",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "32 ETH - тай стэйк хийх",

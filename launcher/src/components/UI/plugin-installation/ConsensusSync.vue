@@ -185,10 +185,10 @@ export default {
           this.selectedLinks = this.georli;
           break;
         case 3:
-          this.selectedLinks = this.gnosis;
+          this.selectedLinks = this.sepolia;
           break;
         case 4:
-          this.selectedLinks = this.sepolia;
+          this.selectedLinks = this.gnosis;
           break;
         default:
           break;
@@ -552,7 +552,7 @@ export default {
 }
 .option-row {
   width: 100%;
-  height: 100%;
+  height: 30%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
