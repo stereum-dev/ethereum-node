@@ -54,7 +54,8 @@
     "updateConfig": "更新配置",
     "servicePlugin": "插件/服务更新配置",
     "manual": "手动更新",
-    "auto": "自动更新"
+    "auto": "自动更新",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "使用 32 ETH",

@@ -54,7 +54,8 @@
     "updateConfig": "Configuration des mises à jour de Stereum",
     "servicePlugin": "Plug-in / Service Update Configuration",
     "manual": "MANUEL",
-    "auto": "AUTO"
+    "auto": "AUTO",
+    "sxConf": "Export Config"
   },
   "nodeSidebarVideo": {
     "stake": "Stake with 32 ETH",
