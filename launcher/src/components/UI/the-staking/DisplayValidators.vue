@@ -202,7 +202,7 @@
               @delete-key="validatorRemoveConfirm"
             />
           </div>
-          <div v-for="(item, index) in objArray" :key="index" class="tableRow">
+          <div v-for="(item, index) in keyImages" :key="index" class="tableRow">
             <div class="rowContent">
               <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
 
@@ -409,7 +409,6 @@ export default {
       exitValidatorResponse: {},
       protection: true, //dobegnär protection flag
       newArr: [],
-      objArray: [],
     };
   },
   computed: {
@@ -439,6 +438,7 @@ export default {
       selectedValdiatorService: "selectedValdiatorService",
       totalBalance: "totalBalance",
       keys: "keys",
+      keyImages: "keyImages",
       forceRefresh: "forceRefresh",
       insertKeyBoxActive: "insertKeyBoxActive",
       enterPasswordBox: "enterPasswordBox",
@@ -488,26 +488,29 @@ export default {
       });
       this.newArr = keys.filter((key) => key !== "");
 
-      const objArray = this.newArr.map((item) => {
+      const keyImages = this.newArr.map((item) => {
         return {
-          selectedService: this.selectedService.icon,
+          icon: this.selectedService.icon,
           activeSince: "-",
           balance: "-",
           key: item,
         };
       });
 
-      this.objArray = objArray;
-
-      console.log("objArray:", this.objArray);
+      this.keyImages = keyImages;
     },
     keys: {
       deep: true,
       immediate: true,
-      handler(val) {
-        const hasMatchingIcon = val.some((item) => item.icon === this.selectedIcon);
+      handler(newKeys) {
+        const hasMatchingIcon = newKeys.some((item) => item.icon === this.selectedIcon);
 
         this.display = !hasMatchingIcon;
+
+        this.keyImages = this.keyImages.filter((obj) => {
+          const objKey = obj.key.substring(0, 15);
+          return !newKeys.some((keyObj) => keyObj.key.startsWith(objKey));
+        });
       },
     },
 
