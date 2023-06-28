@@ -202,6 +202,19 @@
               @delete-key="validatorRemoveConfirm"
             />
           </div>
+          <div v-for="(item, index) in objArray" :key="index" class="tableRow">
+            <div class="rowContent">
+              <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
+
+              <span class="category" @click="logEvent">{{ item.key }}</span>
+              <img class="service-icon" :src="item.icon" alt="icon" />
+              <span class="since">{{ item.activeSince }}</span>
+              <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
+              <span class="balance">{{ item.balance }}</span>
+
+              <div class="wrapper"><span>Doublegänger Protection...</span></div>
+            </div>
+          </div>
         </div>
         <div v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive" class="table-header">
           <span id="pubkey_name">FILE NAME</span>
@@ -395,6 +408,8 @@ export default {
       checkActiveValidatorsResponse: [],
       exitValidatorResponse: {},
       protection: true, //dobegnär protection flag
+      newArr: [],
+      objArray: [],
     };
   },
   computed: {
@@ -461,6 +476,31 @@ export default {
     },
   },
   watch: {
+    message(newValue) {
+      const lines = newValue.split("\n");
+      const importedLines = lines.filter((line) => line.includes("imported") || line.includes(":\\t imported"));
+      const keys = importedLines.map((line) => {
+        const match = line.match(/^(.*):/);
+        if (match && match[1]) {
+          return "0x" + match[1].trim();
+        }
+        return "";
+      });
+      this.newArr = keys.filter((key) => key !== "");
+
+      const objArray = this.newArr.map((item) => {
+        return {
+          selectedService: this.selectedService.icon,
+          activeSince: "-",
+          balance: "-",
+          key: item,
+        };
+      });
+
+      this.objArray = objArray;
+
+      console.log("objArray:", this.objArray);
+    },
     keys: {
       deep: true,
       immediate: true,
@@ -639,7 +679,9 @@ export default {
         serviceID: this.selectedService.config.serviceID,
         slashingDB: this.slashingDB,
       });
+
       this.keyFiles = [];
+
       if (
         this.checkActiveValidatorsResponse.length === 0 ||
         this.checkActiveValidatorsResponse.includes("Validator check error:\n")
@@ -755,6 +797,7 @@ export default {
               return service;
             });
           }
+
           if (client.config.keys) {
             keyStats = keyStats.concat(
               client.config.keys.map((key) => {
@@ -789,6 +832,7 @@ export default {
     async updateValidatorStats() {
       let totalBalance = 0;
       let data = [];
+
       try {
         data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
         if (!data || data.length == 0) {
@@ -800,6 +844,7 @@ export default {
           });
           var latestEpoch = latestEpochResponse.data.data.epoch;
           let buffer = this.keys.map((key) => key.key);
+
           const chunkSize = 50;
           for (let i = 0; i < buffer.length; i += chunkSize) {
             //split validator accounts into chunks of 50 (api url limit)
@@ -849,7 +894,9 @@ export default {
 
     importKey: async function (val) {
       this.password = val;
+
       this.message = await ControlService.importKey(this.selectedService.config.serviceID);
+
       this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];
@@ -864,6 +911,7 @@ export default {
       //this.feeRecipientBoxActive = true;
     },
     //FEE RECIPIENT
+
     confirmFeeRecipientAddress() {
       this.importValidatorKeyActive = true;
       this.enterPasswordBox = false;
