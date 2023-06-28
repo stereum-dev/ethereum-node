@@ -1,19 +1,18 @@
 <template>
   <div class="balance-parent">
-    <CommingSoon />
     <div class="finalized-box">
       <div class="finalized-value">{{ finalized_epoch }}</div>
-      <div class="title">FINALIZED EPOCH</div>
+      <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
     </div>
     <div class="balance-box">
       <div class="balance-value">{{ balance }} GWei</div>
-      <div class="title">BALANCE CHANGE</div>
+      <div class="title">{{ $t("balWid.bal") }}</div>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 export default {
   data() {
     return {
@@ -26,12 +25,7 @@ export default {
       balancestatus: "balancestatus",
     }),
   },
-  methods: {
-    numberFormat(x) {
-      //return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-      return x.toLocaleString();
-    },
-  },
+
   watch: {
     balancestatus(newbalancestatus) {
       if (
@@ -42,6 +36,12 @@ export default {
         this.finalized_epoch = newbalancestatus.finalized_epoch;
         this.balance = this.numberFormat(newbalancestatus.balance);
       }
+    },
+  },
+  methods: {
+    numberFormat(x) {
+      //return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+      return x.toLocaleString();
     },
   },
 };
