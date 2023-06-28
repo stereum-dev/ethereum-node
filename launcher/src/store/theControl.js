@@ -23,6 +23,7 @@ export const useControlStore = defineStore("theControl", {
       beaconstatus: null,
       portstatus: [],
       storagestatus: [],
+      balancestatus: null,
       consensusClientsData: [
         {
           name: "lighthouse",

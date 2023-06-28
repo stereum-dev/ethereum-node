@@ -10,6 +10,7 @@ export const useStakingStore = defineStore("theStaking", {
       selectedValidatorService: {},
       totalBalance: 0,
       keys: [],
+      keyImages: [],
       forceRefresh: false,
       storedValidatorKeys: [],
       insertKeyBoxActive: true,
