@@ -245,6 +245,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("restartServices", args);
   }
 
+  async restartService(args) {
+    return await this.promiseIpc.send("restartService", args);
+  }
+
   async checkUpdates() {
     return await this.promiseIpc.send("checkUpdates");
   }

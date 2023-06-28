@@ -276,6 +276,10 @@ ipcMain.handle("restartServices", async (event, args) => {
   await nodeConnection.restartServices(args);
 });
 
+ipcMain.handle("restartService", async (event, args) => {
+  await serviceManager.restartService(args);
+});
+
 ipcMain.handle("checkUpdates", async () => {
   return await nodeConnection.checkUpdates();
 });
