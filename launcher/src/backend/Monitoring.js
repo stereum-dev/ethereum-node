@@ -1,5 +1,6 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { ServiceManager } from "./ServiceManager";
+import { ValidatorAccountManager } from "./ValidatorAccountManager";
 import { StringUtils } from "./StringUtils";
 import * as QRCode from "qrcode";
 import * as log from "electron-log";
@@ -22,6 +23,7 @@ export class Monitoring {
     this.nodeConnectionProm = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
+    this.validatorAccountManager = new ValidatorAccountManager(this.nodeConnection, this.serviceManager);
     this.isLoggedIn = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
@@ -845,6 +847,82 @@ export class Monitoring {
     };
   }
 
+  // Find beacon port from FIRST AVAILABLE running consesus client on the local system
+  // If "synced" is set to true, the consensus client also needs to be fully synced
+  async findBeaconPort(synced = false) {
+    const result = await this.getBeaconStatus();
+    if (result.code) {
+      return {
+        code: 1,
+        info: "error: could not find beacon port (" + result.info + ")",
+        data: {
+          port: false,
+          full_result: result,
+        },
+      };
+    }
+    if (!synced) {
+      return {
+        code: 0,
+        info: "success: first available beacon port found",
+        data: {
+          port: result.data[0].beacon.destinationPort,
+          full_result: result,
+        },
+      };
+    }
+    for (const obj of result.data) {
+      if (obj.beacon.is_syncing === "false" || obj.beacon.sync_distance < 1) {
+        return {
+          code: 0,
+          info: "success: first available beacon port where consensus client is fully synced found",
+          data: {
+            port: obj.beacon.destinationPort,
+            full_result: result,
+          },
+        };
+      }
+    }
+    return {
+      code: 2,
+      info: "error: could not find beacon port where consensus client is fully synced",
+      data: {
+        port: false,
+        full_result: result,
+      },
+    };
+  }
+
+  // Get all locally imported public keys from given validator service id
+  async getPublicKeys(serviceID) {
+    try {
+      const client = await this.nodeConnection.readServiceConfiguration(serviceID);
+      if (!client.service.includes("ValidatorService")) {
+        return {
+          code: 1,
+          info: "error: could not get public keys (given service id is not a validator service)",
+          data: "",
+        };
+      }
+      const apikey = await this.validatorAccountManager.getApiToken(client);
+      const resultKeymanagerAPI = await this.validatorAccountManager.keymanagerAPI(client, "GET", "/eth/v1/keystores");
+      const result = JSON.parse(resultKeymanagerAPI.stdout);
+      if (!result.data) result.data = [];
+      const pubKeys = result.data.map((k) => k.validating_pubkey);
+      return {
+        code: 0,
+        info: "success: retrieved public keys",
+        data: pubKeys,
+      };
+    } catch (e) {
+      return {
+        code: 2,
+        info: "error: could not get public keys (" + e + ")",
+        data: "",
+      };
+    }
+  }
+
   // Get RPC data of given query for all or a specific local running execution client(s)
   // Arguments:
   // query=<string> : [REQUIRED] The query to execute on the RPC server, e.g: "web3_clientVersion"
@@ -1635,6 +1713,120 @@ export class Monitoring {
     };
   }
 
+  // Get balance status
+  async getBalanceStatus() {
+    // Get local beacon port from first available consensus client
+    const beaconResult = await this.findBeaconPort();
+    if (beaconResult.code) {
+      return {
+        code: 441,
+        info: "error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")",
+        data: "",
+      };
+    }
+    const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if (serviceInfos.length < 1) {
+      return {
+        code: 442,
+        info: "error: service infos for balancestatus not available",
+        data: "",
+      };
+    }
+
+    // Filter validator service configurations
+    const validatorServiceInfos = serviceInfos.filter((s) => s.service.includes("ValidatorService"));
+    if (validatorServiceInfos.length < 1) {
+      return {
+        code: 443,
+        info: "error: validator service infos for balancestatus not available",
+        data: "",
+      };
+    }
+
+    // Get all imported public keys for each running validator service
+    let arrValidatorPublicKeys = [];
+    for (const obj of validatorServiceInfos) {
+      const result = await this.getPublicKeys(obj.config.serviceID);
+      if (result.code) {
+        result.code = 444;
+        result.info = "error: validator public keys for balancestatus not available -> " + result.info;
+        return result;
+      }
+      arrValidatorPublicKeys = [...arrValidatorPublicKeys, ...result.data];
+    }
+    arrValidatorPublicKeys = [...new Set(arrValidatorPublicKeys)]; // unique values!
+
+    // Get most recent finalized epoch
+    const finalityResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/states/head/finality_checkpoints");
+    if (finalityResult.code) {
+      return {
+        code: 445,
+        info: "error: could not get balancestatus due to failed finality query (" + finalityResult.info + ")",
+        data: baseURL + "/eth/v1/beacon/states/head/finality_checkpoints",
+      };
+    }
+
+    // Define response data and return immediately if no validators imported on the local system
+    const finalizedEpoch = finalityResult.data.api_reponse.data.finalized.epoch;
+    const data = { finalized_epoch: finalizedEpoch, balance: 0 };
+    if (arrValidatorPublicKeys.length < 1) {
+      return {
+        code: 0,
+        info: "success: balancestatus successfully retrieved (but no validators imported)",
+        data: data,
+      };
+    }
+
+    // Get total balance of all validators on the system for most recent finalized epoch
+    const attestationResult = await this.queryBeaconApi(
+      baseURL,
+      `/eth/v1/beacon/rewards/attestations/${finalizedEpoch}`,
+      arrValidatorPublicKeys,
+      "POST",
+      {
+        "Content-Type": "application/json",
+      }
+    );
+    if (attestationResult.code) {
+      return {
+        code: 446,
+        info: "error: could not get balancestatus due to failed attestations query (" + attestationResult.info + ")",
+        data: "",
+      };
+    }
+    try {
+      if (Array.isArray(attestationResult.data.api_reponse.data.total_rewards)) {
+        for (const obj of attestationResult.data.api_reponse.data.total_rewards) {
+          if (!obj.hasOwnProperty("validator_index") || !obj.validator_index) {
+            continue;
+          }
+          // Values for "head", "source" and "target" are in GWei!
+          // head: "1989";
+          // source: "2792";
+          // target: "5294";
+          // validator_index: "216403";
+          data.balance += parseInt(obj.head) + parseInt(obj.source) + parseInt(obj.target);
+        }
+      }
+    } catch (e) {
+      return {
+        code: 447,
+        info: "error: could not get balancestatus due to failed attestations summary",
+        data: "",
+      };
+    }
+
+    // success
+    return {
+      code: 0,
+      info: "success: balancestatus successfully retrieved",
+      data: data,
+    };
+  }
+
   // Open RPC tunnel(s) on request
   async openRpcTunnel(args) {
     // Extract arguments
@@ -1970,7 +2162,6 @@ export class Monitoring {
       let port = ws.destinationPort;
 
       // Check if WS port is enabled
-      // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
       let result = await this.isWsAvailable({ addr: addr, port: port });
       if (result.code) continue;
 
@@ -2232,7 +2423,7 @@ export class Monitoring {
       data.push({
         now: now,
         sid: sid,
-        beacon: beacon,
+        beacon: { ...beacon, ...result.data.api_reponse.data },
         url: this.beaconTunnel[sid] > 0 ? "http://" + addr + ":" + this.beaconTunnel[sid] : "",
         clt: consensus.service.replace(/Beacon|Service/gi, "").toUpperCase(),
       });

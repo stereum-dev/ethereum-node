@@ -184,6 +184,11 @@ ipcMain.handle("getStorageStatus", async () => {
   return await monitoring.getStorageStatus();
 });
 
+// get data for balance comp
+ipcMain.handle("getBalanceStatus", async () => {
+  return await monitoring.getBalanceStatus();
+});
+
 ipcMain.handle("getConnectionStats", async () => {
   const name = await monitoring.getServerName();
   const address = monitoring.getIPAddress();
