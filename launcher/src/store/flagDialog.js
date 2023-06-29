@@ -117,6 +117,20 @@ export const useFlagDialog = defineStore("flagDialog", {
           label: "sr",
           enable: true,
         },
+        {
+          langImg: "img/flag/czech.png",
+          langSelect: "img/flag/czech.png",
+          langName: "Česká",
+          label: "cs",
+          enable: true,
+        },
+        {
+          langImg: "img/flag/vietnam.png",
+          langSelect: "img/flag/vietnam.png",
+          langName: "Việt Nam",
+          label: "vi",
+          enable: true,
+        },
       ],
     };
   },
