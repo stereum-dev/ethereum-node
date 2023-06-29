@@ -1016,7 +1016,6 @@ export class NodeConnection {
     await this.closeTunnels();
   }
 
-  // this is broken due to the way the new ssh service works
   async restartServer() {
     let status = await this.sshService.exec("cat /var/run/reboot-required");
     if (status.rc == 0) {
@@ -1075,6 +1074,4 @@ export class NodeConnection {
       log.error("Error getting CPU Architecture", error)
     }
   }
-
-
 }
