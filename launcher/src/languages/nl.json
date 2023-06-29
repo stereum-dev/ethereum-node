@@ -556,5 +556,9 @@
     "sendDeposit": "Click on “SEND DEPOSIT”",
     "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
     "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+  },
+  "balWid": {
+    "fin": "FINALIZED",
+    "bal": "BALANCE CHANGE"
   }
 }
