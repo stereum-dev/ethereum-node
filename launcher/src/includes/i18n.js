@@ -16,6 +16,8 @@ import ru from "../languages/ru.json";
 import sr from "../languages/sr.json";
 import tr from "../languages/tr.json";
 import zh from "../languages/zh.json";
+import cs from "../languages/cs.json";
+import vi from "../languages/vi.json";
 
 const i18n = createI18n({
   locale: "en", //focus lang
@@ -36,6 +38,8 @@ const i18n = createI18n({
     sr,
     tr,
     zh,
+    cs,
+    vi,
   },
 });
 export default i18n;
