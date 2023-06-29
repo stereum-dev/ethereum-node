@@ -61,6 +61,17 @@ export class ErigonService extends NodeService {
     return service;
   }
 
+  switchImageTag(arch) {
+    const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"] //Possible arm architectures: https://stackoverflow.com/questions/45125516/possible-values-for-uname-m
+    if (armArchs.includes(arch)) {
+      this.imageVersion = this.imageVersion.endsWith("-arm64") ? this.imageVersion : this.imageVersion + "-arm64";
+      this.imageVersion = this.imageVersion.startsWith("v") ? this.imageVersion.slice(1) : this.imageVersion;
+    } else {
+      this.imageVersion = this.imageVersion.endsWith("-arm64") ? this.imageVersion.replace("-arm64", "") : this.imageVersion
+      this.imageVersion = this.imageVersion.startsWith("v") ? this.imageVersion : "v" + this.imageVersion;
+    }
+  }
+
   buildExecutionClientHttpEndpointUrl() {
     return "http://stereum-" + this.id + ":8545";
   }

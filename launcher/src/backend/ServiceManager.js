@@ -649,6 +649,7 @@ export class ServiceManager {
   //args: network, installDir, port, executionClients, checkpointURL, beaconServices, mevboost, relays
   getService(name, args) {
     let ports;
+    let service;
     switch (name) {
       case "GethService":
         ports = [
@@ -684,7 +685,9 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
-        return ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
+        service = ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
+        service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
+        return service;
 
       case "LighthouseBeaconService":
         ports = [
@@ -1087,6 +1090,7 @@ export class ServiceManager {
       } else if (versions["prater"] && versions["prater"][service.service]) {
         service.imageVersion = versions["prater"][service.service].slice(-1).pop();
       }
+      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch)
     });
 
     await Promise.all(
@@ -1241,7 +1245,7 @@ export class ServiceManager {
       } catch (err) {
         log.error("Switching Services Failed:", err);
       }
-      finally{
+      finally {
         let after = this.nodeConnection.getTimeStamp();
         await this.nodeConnection.restartServices(after - before);
       }

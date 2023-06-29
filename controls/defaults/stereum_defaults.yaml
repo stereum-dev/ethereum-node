@@ -7,6 +7,7 @@ stereum_static:
       lane: stable
       unattended:
         install: false
+    arch: x86_64
     versions:
       # consensus clients
       lighthouse: v3.4.0

@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
 import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
@@ -149,13 +150,20 @@ export default {
       confirmChanges: "confirmChanges",
       currentNetwork: "currentNetwork",
       configNetwork: "configNetwork",
+      architecture: "architecture",
     }),
   },
   mounted() {
     this.confirmChanges = [];
     this.configNetwork = this.currentNetwork;
+    if(!this.architecture)
+      this.setArchitecture();
   },
   methods: {
+    async setArchitecture() {
+      let settings = await ControlService.getStereumSettings()
+      this.architecture = settings.stereum?.settings.arch;
+    },
     sortByName(a, b) {
       if (a.service.toLowerCase() < b.service.toLowerCase()) {
         return -1;
