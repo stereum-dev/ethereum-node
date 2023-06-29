@@ -70,6 +70,15 @@
                 <input v-model="installationPath" type="text" />
               </div>
             </div>
+            <div v-if="selectedPreset.name === 'stereum on arm'" class="change-installation gap-y-2">
+              <div class="change-title">
+                <span>MONITORING</span>
+              </div>
+              <div class="change-box">
+                  <span>Install Monitoring?</span>
+                  <input v-model="installMonitoring" class="switch" type="checkbox">
+              </div>
+            </div>  
             <!-- <div class="set-recipient gap-y-2">
               <div class="set-title">
                 <span>SET DEFAULT FEE RECIPIENT</span>
@@ -111,6 +120,7 @@ export default {
       nextPath: "sync",
       backPath: "selectPlugin",
       mevPath: "mevboost",
+      installMonitoring: false,
     };
   },
   computed: {
@@ -128,6 +138,11 @@ export default {
       allPlugins: "allServices",
     }),
   },
+    watch:{
+    installMonitoring(){
+      this.filterMonitoringServices()
+    }
+  },
   mounted() {
     this.selectedPluginsValidation();
     this.pushNewProperthyToPresets();
@@ -135,6 +150,13 @@ export default {
     this.getInstallPath();
   },
   methods: {
+    filterMonitoringServices(){
+      if(this.installMonitoring){
+        this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.concat(this.allPlugins.filter(s => ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service)))
+      } else{
+        this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.filter(s => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service))
+      }
+    },
     selectedPluginsValidation() {
       if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
         this.$router.push("/selectPlugin");
@@ -151,7 +173,7 @@ export default {
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
       this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
-      if (this.selectedPreset.name === "staking" || this.selectedPreset.name === "mev boost") {
+      if (["staking", "mev boost", "stereum on arm"].includes(this.selectedPreset.name)) {
         //if the preset is staking:
         if (item.category === "consensus") {
           //and you just changed the consensus client
@@ -197,12 +219,11 @@ export default {
         case "staking":
           filter = (item) =>
             item.category === element.category &&
-            item.service !== "SSVNetworkService" &&
-            item.service !== "Web3SignerService";
+            !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
           if (this.currentNetwork.network == "gnosis") {
             filter = (item) =>
               item.category === element.category &&
-              /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service);
+              /(Lighthouse|Teku|Nethermind)/.test(item.service);
           }
           break;
         case "ssv.network":
@@ -234,8 +255,17 @@ export default {
         case "mev boost":
           filter = (item) =>
             item.category === element.category &&
-            item.service !== "SSVNetworkService" &&
-            item.service !== "Web3SignerService";
+            !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+          break;
+        case "stereum on arm":
+          filter = (item) =>
+            item.category === element.category &&
+            !/(Prysm|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+          if (this.currentNetwork.network == "gnosis") {
+            filter = (item) =>
+              item.category === element.category &&
+              /(Lighthouse|Teku|Nethermind)/.test(item.service);
+          }
           break;
         default:
           break;
@@ -637,6 +667,7 @@ export default {
   padding: 0;
 }
 .change-box input,
+.change-box span,
 .set-box input {
   width: 100%;
   height: 100%;

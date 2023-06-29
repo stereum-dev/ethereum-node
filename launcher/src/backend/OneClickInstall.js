@@ -13,10 +13,12 @@ export class OneClickInstall {
     this.installDir = installDir;
     this.nodeConnection = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
+    const arch = await this.nodeConnection.getCPUArchitecture();
     const settings = {
       stereum_settings: {
         settings: {
           controls_install_path: this.installDir || "/opt/stereum",
+          arch: arch,
           updates: {
             lane: "stable",
             unattended: {
@@ -77,10 +79,6 @@ export class OneClickInstall {
     this.validatorService = undefined;
     this.installDir = undefined;
     this.executionClient = undefined;
-    this.prometheusNodeExporter = undefined;
-    this.prometheus = undefined;
-    this.grafana = undefined;
-    this.notificationService = undefined;
     this.setup = undefined;
     this.choosenClient = undefined;
     this.network = undefined;
@@ -93,17 +91,16 @@ export class OneClickInstall {
   getConfigurations() {
     let serviceList = [];
     serviceList.push(
-      this.beaconService.buildConfiguration(),
-      this.executionClient.buildConfiguration(),
-      this.prometheusNodeExporter.buildConfiguration(),
-      this.prometheus.buildConfiguration(),
-      this.grafana.buildConfiguration(),
-      this.notificationService.buildConfiguration()
+      this.beaconService,
+      this.executionClient,
     );
-    if (this.mevboost) serviceList.push(this.mevboost.buildConfiguration());
-    if (this.validatorService) serviceList.push(this.validatorService.buildConfiguration());
-    if (this.extraServices) this.extraServices.forEach((service) => serviceList.push(service.buildConfiguration()));
-    return serviceList;
+    if (this.mevboost) serviceList.push(this.mevboost);
+    if (this.validatorService) serviceList.push(this.validatorService);
+    if (this.extraServices) this.extraServices.forEach((service) => serviceList.push(service));
+    serviceList.forEach((service) => {
+      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch)
+    })
+    return serviceList.map(service => service.buildConfiguration());
   }
 
 
@@ -195,7 +192,6 @@ export class OneClickInstall {
       this.needsKeystore.push(this.validatorService)
     }
 
-
     if (constellation.includes("TekuValidatorService")) {
       //TekuBeaconService
       this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
@@ -208,11 +204,25 @@ export class OneClickInstall {
       this.needsKeystore.push(this.validatorService)
     }
 
+    if (constellation.includes("PrometheusNodeExporterService")) {
+      //PrometheusNodeExporterService
+      this.extraServices.push(this.serviceManager.getService("PrometheusNodeExporterService", args))
+    }
 
-    this.prometheusNodeExporter = this.serviceManager.getService("PrometheusNodeExporterService", args)
-    this.prometheus = this.serviceManager.getService("PrometheusService", args)
-    this.grafana = this.serviceManager.getService("GrafanaService", args)
-    this.notificationService = this.serviceManager.getService("NotificationService", args)
+    if (constellation.includes("PrometheusService")) {
+      //PrometheusService
+      this.extraServices.push(this.serviceManager.getService("PrometheusService", args))
+    }
+
+    if (constellation.includes("GrafanaService")) {
+      //GrafanaService
+      this.extraServices.push(this.serviceManager.getService("GrafanaService", args))
+    }
+
+    if (constellation.includes("NotificationService")) {
+      //NotificationService
+      this.extraServices.push(this.serviceManager.getService("NotificationService", args))
+    }
 
     let versions;
     try {
@@ -230,12 +240,14 @@ export class OneClickInstall {
     if (versions) {
       this.executionClient.imageVersion = this.getLatestVersion(versions, this.executionClient);
       this.beaconService.imageVersion = this.getLatestVersion(versions, this.beaconService);
-      this.prometheus.imageVersion = this.getLatestVersion(versions, this.prometheus);
-      this.prometheusNodeExporter.imageVersion = this.getLatestVersion(versions, this.prometheusNodeExporter);
-      this.grafana.imageVersion = this.getLatestVersion(versions, this.grafana);
       if (this.mevboost) this.mevboost.imageVersion = this.getLatestVersion(versions, this.mevboost);
       if (this.validatorService) {
         this.validatorService.imageVersion = this.getLatestVersion(versions, this.validatorService);
+      }
+      if (this.extraServices) {
+        this.extraServices.forEach((service) => {
+          service.imageVersion = this.getLatestVersion(versions, service);
+        });
       }
     }
   }
@@ -317,6 +329,9 @@ export class OneClickInstall {
         break;
       case "rocketpool":
         services.push("ROCKETPOOL");
+        break;
+      case "stereum on arm":
+        services = services.filter(s => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s));
         break;
     }
     return services;
