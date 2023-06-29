@@ -22,6 +22,7 @@
     "log": "打开记录文件",
     "restart": "重启",
     "start": "开始",
+    "resync": "resync",
     "stop": "停止"
   },
   "pagesnav": {
@@ -339,7 +340,8 @@
   "prunningModal": {
     "prunningText": "GETH 在操作时间内使用的存储空间一直增加。 需要多小时来修剪它数据库，删除不必要的数据并释放一些使用过的储存空间。 必须在GETH不运作的时候完成这项工作。开始修建过程您的节点会下线并停止潜在性见证工作。",
     "prunningChecked": "我已阅读且了解后果",
-    "prunningStart": "开始剪枝"
+    "prunningStart": "开始剪枝",
+    "close": "click outside to close"
   },
   "restartModal": {
     "restarQ": "你确认要重启吗？",
