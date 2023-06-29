@@ -22,6 +22,7 @@
     "log": "Open Logs",
     "restart": "Restart",
     "start": "start",
+    "resync": "resync",
     "stop": "stop"
   },
   "pagesnav": {
