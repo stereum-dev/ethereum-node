@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      architecture: "",
       selectedServiceToResync: {},
       resyncSeparateModal: false,
       availableBlocks: [],
