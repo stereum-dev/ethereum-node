@@ -1046,20 +1046,26 @@ export class ServiceManager {
       .flat(1)
       .map((p) => p.destinationPort + "/" + p.servicePortProtocol);
     let changed;
-    do {
-      changed = false;
-      newServices.forEach((service) => {
-        service.ports.forEach((newPort) => {
+    newServices.forEach((service) => {
+      service.ports.forEach((newPort) => {
+        do {
+          changed = false
           if (
             allPorts.includes(newPort.destinationPort + "/" + newPort.servicePortProtocol) &&
             !services.map((s) => s.id).includes(service.id)
           ) {
             newPort.destinationPort++;
             changed = true;
+          } else if (
+            !allPorts.includes(newPort.destinationPort + "/" + newPort.servicePortProtocol) &&
+            !services.map((s) => s.id).includes(service.id)
+          ) {
+            allPorts.push(newPort.destinationPort + "/" + newPort.servicePortProtocol)
           }
-        });
+
+        } while (changed)
       });
-    } while (changed === true);
+    })
 
     await this.createKeystores(
       newServices.filter(
