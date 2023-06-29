@@ -511,6 +511,7 @@
     "close": "click outside to close"
   },
   "sliderTutorial": {
+    "visitUrl": "Visit the website",
     "becomeValidator": "Click on “BECOME A VALIDATOR”",
     "proofStake": "Read through Proof of stake and click on “CONTINUE”",
     "deposit": "Read through the deposit and click on “I ACCEPT”",
