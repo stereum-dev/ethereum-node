@@ -484,27 +484,6 @@ export default {
         this.nextStep = 1;
       }
     },
-    parseText(text, id) {
-      const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/gi;
-      const matches = text.matchAll(anchorRegex);
-      let parsedText = "";
-      let lastIndex = 0;
-
-      for (const match of matches) {
-        const fullMatch = match[0];
-        const href = match[2];
-        const linkText = match[3];
-        const beforeText = text.substring(lastIndex, match.index);
-        const linkClass = id === 1 ? "clickable-link" : "";
-        const link = `<a class="${linkClass}" href="${href}" target="_blank">${linkText}</a>`;
-        parsedText += beforeText + link;
-        lastIndex = match.index + fullMatch.length;
-      }
-
-      parsedText += text.substring(lastIndex);
-
-      return parsedText;
-    },
 
     stakeGuideStep1() {
       this.stakeFirstStep = false;
