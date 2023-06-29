@@ -109,7 +109,7 @@ export default {
         {
           id: 1,
           img: "/img/stake_Guide/1.jpg",
-          text: this.$t("sliderTutorial.becomeValidator") + " “https://goerli.launchpad.ethereum.org/en/”",
+          text: this.$t("sliderTutorial.visitUrl") + " “https://goerli.launchpad.ethereum.org/en/”",
         },
         {
           id: 2,
