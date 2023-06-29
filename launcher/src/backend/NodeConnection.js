@@ -1024,33 +1024,54 @@ export class NodeConnection {
       await new Promise((resolve) => setTimeout(resolve, 10000));
       await this.sshService.exec("/sbin/shutdown -r now");
       this.taskManager.otherTasksHandler(ref, "trigger restart", true);
+      await this.sshService.disconnect();
+
       const retry = { connected: false, counter: 0, maxTries: 300 };
       log.info("Connecting via SSH");
-      while (!retry.connected) {
+
+      while (!retry.connected && retry.counter < retry.maxTries) {
         try {
-          await this.sshService.connect(this.nodeConnectionParams);
-          retry.connected = true;
-          this.taskManager.otherTasksHandler(ref, "Connected", true);
-          log.info("Connected!");
-        } catch (e) {
-          if (++retry.counter == retry.maxTries) {
+          retry.counter++;
+          log.info(`Trying to connect (${retry.counter})`)
+          retry.connected = await this.sshService.checkSSHConnection(this.nodeConnectionParams, 5000)
+        } catch (err) {
+          if (retry.counter == retry.maxTries) {
             this.taskManager.otherTasksHandler(ref, "Could not connect " + (retry.maxTries - retry.counter), false);
             this.taskManager.otherTasksHandler(ref);
-            throw e;
+            throw err;
           }
           this.taskManager.otherTasksHandler(
             ref,
             "Could not connect " + (retry.maxTries - retry.counter),
             true,
-            e + "\n\n" + (retry.maxTries - retry.counter) + " tries left."
+            err + "\n\n" + (retry.maxTries - retry.counter) + " tries left."
           );
           log.info(" Could not connect.\n" + (retry.maxTries - retry.counter) + " tries left.");
-          await new Promise((resolve) => setTimeout(resolve, 5000));
         }
       }
-      this.taskManager.otherTasksHandler(ref);
-      return true;
+      if (retry.connected) {
+        await this.establish(this.taskManager)
+        this.taskManager.otherTasksHandler(ref, "Connected", true);
+        this.taskManager.otherTasksHandler(ref);
+      } else {
+        this.taskManager.otherTasksHandler(ref, "Could not connect not tries left.", false);
+        this.taskManager.otherTasksHandler(ref);
+        throw "Could not connect";
+      }
+      return true
     }
-    return false;
+    return false
+  }
+
+  async getCPUArchitecture() {
+    try {
+      const result = await this.sshService.exec("uname -m")
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed reading uname command: " + SSHService.extractExecError(result));
+      }
+      return result.stdout.trim()
+    } catch (error) {
+      log.error("Error getting CPU Architecture", error)
+    }
   }
 }
