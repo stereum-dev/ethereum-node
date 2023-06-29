@@ -25,7 +25,9 @@
           <div class="stake-modal_header_slideNo">
             <span>{{ slideID }}# </span>
           </div>
-          <div class="stake-modal_header_slide-tex"><span v-html="parseText(message, slideID)"></span></div>
+          <div class="stake-modal_header_slide-tex">
+            <span>{{ message }}</span>
+          </div>
         </div>
         <div ref="modalContainer" class="stake-modal_container" @wheel="handleScroll">
           <div class="stake-modal-arr">
