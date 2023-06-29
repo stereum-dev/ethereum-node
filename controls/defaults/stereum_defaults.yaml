@@ -1,6 +1,8 @@
 stereum_static:
   defaults:
     controls_install_path: /opt/stereum
+    cloud:
+      notifications_api_key: 4cTLZL8gcZ5knP49murPh2qaZSchryfHraHQHFDPuuA8jqJLrSdr7Bd4s4TSSVBW
     updates:
       lane: stable
       unattended:
