@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
     <div class="warning-modal-content">
       <div class="title-box">
-        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="warningMessage">
         <p>
@@ -18,7 +18,7 @@
         <div class="confirmBtn" :class="{ disabled: !isChecked }" @click="$emit('confirmBtn')">
           <span>{{ $t("prunningModal.prunningStart") }}</span>
         </div>
-        <span class="close">{{ $t("notifModal.cancelText") }}</span>
+        <span class="close">{{ $t("prunningModal.close") }}</span>
       </div>
     </div>
   </div>
