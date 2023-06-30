@@ -633,7 +633,7 @@ export default {
 .option-content .change-installation,
 .option-content .set-recipient {
   width: 100%;
-  height: 30%;
+  height: 34%;
   padding: 0 2px 2px 2px;
   border-radius: 10px;
   border: 1px solid rgb(78, 78, 78);
@@ -649,6 +649,7 @@ export default {
   height: 40%;
   border-radius: 50px;
   background-color: #336666;
+  margin-top: 2%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -671,6 +672,7 @@ export default {
   align-items: center;
   padding: 0;
   position: relative;
+  margin-bottom: 2%;
 }
 .switch {
   margin-right: 10%;
