@@ -228,6 +228,8 @@
     "syncClient": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
     "plugin": "INSTALLED SERVICES",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "БУЦАХ",
     "next": "ДАРААГИЙНХ"
   },
