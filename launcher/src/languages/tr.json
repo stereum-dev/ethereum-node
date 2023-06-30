@@ -228,6 +228,8 @@
     "syncClient": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
     "plugin": "KURULAN SERVİSLER",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "GERİ",
     "next": "SONRAKİ"
   },
