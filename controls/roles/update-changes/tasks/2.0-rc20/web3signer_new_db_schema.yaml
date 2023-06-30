@@ -74,12 +74,12 @@
     - name: get schemas file names
       set_fact:
         db_schemas: "{{ (db_schema_files.files | map(attribute='path') | map('split', '/') | map('last')) | sort }}"
-      changed_when: false
 
     - name: apply schemas
       command: "docker exec -u 0 -w /opt/app/schemas slashingdb-{{ service_configuration.id }} psql --echo-all --host=localhost --port=5432 --dbname=web3signer --username=postgres -f {{ item }}"
       register: schema_result
       with_items: "{{ db_schemas }}"
+      changed_when: false
 
     - name: log schema update results
       debug: msg="{{ item.stdout_lines }}"
