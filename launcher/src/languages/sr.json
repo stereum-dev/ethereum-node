@@ -228,6 +228,8 @@
     "syncClient": "SINHRONIZUJE VAŠEG CLIENTA OD POČETKA CHAINa",
     "plugin": "INSTALLED SERVICES",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "NAZAD",
     "next": "SLJEDEĆI"
   },
