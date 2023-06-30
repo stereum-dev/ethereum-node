@@ -67,18 +67,18 @@
                 <span>{{ $t("pluginName.path") }}</span>
               </div>
               <div class="change-box">
-                <input v-model="installationPath" type="text" />
+                <input v-model="installationPath" type="text" class="textInput" />
               </div>
             </div>
             <div v-if="selectedPreset.name === 'stereum on arm'" class="change-installation gap-y-2">
               <div class="change-title">
-                <span>MONITORING</span>
+                <span>{{ $t("pluginName.monitor") }}</span>
               </div>
               <div class="change-box">
-                  <span>Install Monitoring?</span>
-                  <input v-model="installMonitoring" class="switch" type="checkbox">
+                <span>{{ $t("pluginName.instMonit") }}</span>
+                <input v-model="installMonitoring" class="switch" type="checkbox" />
               </div>
-            </div>  
+            </div>
             <!-- <div class="set-recipient gap-y-2">
               <div class="set-title">
                 <span>SET DEFAULT FEE RECIPIENT</span>
@@ -138,10 +138,10 @@ export default {
       allPlugins: "allServices",
     }),
   },
-    watch:{
-    installMonitoring(){
-      this.filterMonitoringServices()
-    }
+  watch: {
+    installMonitoring() {
+      this.filterMonitoringServices();
+    },
   },
   mounted() {
     this.selectedPluginsValidation();
@@ -150,11 +150,17 @@ export default {
     this.getInstallPath();
   },
   methods: {
-    filterMonitoringServices(){
-      if(this.installMonitoring){
-        this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.concat(this.allPlugins.filter(s => ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service)))
-      } else{
-        this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.filter(s => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service))
+    filterMonitoringServices() {
+      if (this.installMonitoring) {
+        this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.concat(
+          this.allPlugins.filter((s) =>
+            ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service)
+          )
+        );
+      } else {
+        this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.filter(
+          (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service)
+        );
       }
     },
     selectedPluginsValidation() {
@@ -217,13 +223,9 @@ export default {
         this.selectedPreset.name //apply filter depending on which preset was chosen
       ) {
         case "staking":
-          filter = (item) =>
-            item.category === element.category &&
-            !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+          filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
           if (this.currentNetwork.network == "gnosis") {
-            filter = (item) =>
-              item.category === element.category &&
-              /(Lighthouse|Teku|Nethermind)/.test(item.service);
+            filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
           }
           break;
         case "ssv.network":
@@ -253,18 +255,13 @@ export default {
           //filter = (item) => item.category === element.category
           break;
         case "mev boost":
-          filter = (item) =>
-            item.category === element.category &&
-            !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+          filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
           break;
         case "stereum on arm":
           filter = (item) =>
-            item.category === element.category &&
-            !/(Prysm|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+            item.category === element.category && !/(Prysm|SSVNetwork|Web3Signer|Charon)/.test(item.service);
           if (this.currentNetwork.network == "gnosis") {
-            filter = (item) =>
-              item.category === element.category &&
-              /(Lighthouse|Teku|Nethermind)/.test(item.service);
+            filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
           }
           break;
         default:
@@ -337,27 +334,30 @@ export default {
   width: 90%;
   height: 25px;
   border: 1px solid rgb(98, 98, 98);
+
+  box-shadow: 1px 1px 8px 1px #171717;
   border-radius: 10px;
   padding: 5px 0;
   display: flex;
   background-color: #33393e;
   justify-content: center;
   align-items: center;
-  margin-top: 5px;
+  margin-top: 1.2%;
 }
 .option-title span,
 .included-title span {
   color: #d3d3d3;
-  font-size: 0.7rem;
+  font-size: 70%;
   font-weight: 400;
 }
 .info-box {
   width: 94%;
-  height: 91%;
-  margin: 10px auto;
+  height: 100%;
+  margin: 3% auto;
   background-color: #080808;
-  border: 1px solid #b4b4b4;
-  padding: 2px 5px;
+  border: 1px solid #343434;
+  box-shadow: 1px 1px 10px 1px #171717;
+  padding: 1% 2%;
   overflow-x: hidden;
   overflow-y: auto;
   border: 2px solid #545454;
@@ -371,8 +371,8 @@ export default {
 }
 .info-row {
   width: 100%;
-  height: 45px;
-  margin-top: 5px;
+  height: 15%;
+  margin-top: 2%;
   border-radius: 10px;
   position: relative;
   display: flex;
@@ -406,17 +406,17 @@ export default {
 .pluginName {
   width: 83%;
   height: 90%;
-  margin-left: 5px;
+  margin-left: 10%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .pluginName span {
-  font-size: 0.85rem;
+  font-size: 90%;
   font-weight: 700;
   text-align: center;
   color: rgb(203, 203, 203);
-  margin-left: 2px;
+  margin-left: 1%;
 }
 .icon-box {
   width: 15%;
@@ -424,7 +424,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 4px;
+  margin-left: 3%;
 }
 
 .plugin-icon {
@@ -436,8 +436,8 @@ export default {
   align-items: center;
 }
 .plugin-icon img {
-  width: 35px;
-  height: 35px;
+  width: 90%;
+  height: 95%;
   border-radius: 50%;
   border: 2px solid rgb(133, 133, 133);
 }
@@ -450,7 +450,7 @@ export default {
   align-items: center;
 }
 .category span {
-  font-size: 0.9rem;
+  font-size: 85%;
   font-weight: 700;
   color: rgb(89, 136, 101);
   border-radius: 100%;
@@ -529,7 +529,9 @@ export default {
   background-color: #33393e;
   justify-content: center;
   align-items: center;
-  margin-top: 5px;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  box-shadow: 1px 1px 10px 1px #171717;
 }
 .optionHeader span {
   font-size: 0.7rem;
@@ -540,7 +542,7 @@ export default {
 .option-content .option-content_box {
   width: 100%;
   height: 100%;
-  margin: 2px auto 10px auto;
+  margin: 2% auto 5% auto;
   background-color: #080808;
   border: 1px solid #b4b4b4;
   padding: 5px;
@@ -552,6 +554,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  box-shadow: 1px 1px 8px 1px #171717;
 }
 .option-content .network-parent {
   width: 100%;
@@ -570,8 +573,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 10px;
-  margin-right: -20px;
+  margin-top: 4%;
+  margin-right: -7%;
 }
 .network-box .choose {
   width: 80%;
@@ -601,6 +604,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid #343434;
+  box-shadow: 1px 1px 7px 1px #171717;
 }
 .none span {
   font-size: 0.8rem;
@@ -628,7 +633,7 @@ export default {
 .option-content .change-installation,
 .option-content .set-recipient {
   width: 100%;
-  height: 30%;
+  height: 34%;
   padding: 0 2px 2px 2px;
   border-radius: 10px;
   border: 1px solid rgb(78, 78, 78);
@@ -644,6 +649,7 @@ export default {
   height: 40%;
   border-radius: 50px;
   background-color: #336666;
+  margin-top: 2%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -665,8 +671,14 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 0;
+  position: relative;
+  margin-bottom: 2%;
 }
-.change-box input,
+.switch {
+  margin-right: 10%;
+}
+
+.change-box .textInput,
 .change-box span,
 .set-box input {
   width: 100%;

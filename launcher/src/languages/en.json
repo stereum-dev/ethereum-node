@@ -228,6 +228,8 @@
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "plugin": "INSTALLED SERVICES",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "BACK",
     "next": "NEXT"
   },
