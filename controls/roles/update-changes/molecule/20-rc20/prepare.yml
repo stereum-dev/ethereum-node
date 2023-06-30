@@ -1,0 +1,139 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: "../"
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    web3signer: 1ecf59c2-e219-4019-aca0-7b588bfba1f0
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # Web3SignerService
+    - block:
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: Web3SignerService
+              id: "{{ web3signer }}"
+              image: consensys/web3signer:23.2.1
+              ports: []
+              entrypoint: ["/opt/web3signer/bin/web3signer"]
+              env: {}
+              command:
+                - --key-store-path=/opt/web3signer/keys
+                - --data-path=/opt/web3signer/data
+                - --logging=INFO
+                - --http-cors-origins=*
+                - --http-listen-host=0.0.0.0
+                - --http-listen-port=9000
+                - --http-host-allowlist=*
+                - --metrics-enabled=true
+                - --metrics-host=0.0.0.0
+                - --metrics-port=9001
+                - --metrics-host-allowlist=*
+                - eth2
+                - --network=goerli
+                - --key-manager-api-enabled=true
+                - --slashing-protection-enabled=false
+              user: "2000"
+              volumes:
+                - "/opt/stereum/web3signer-{{ web3signer }}/data:/opt/web3signer/data"
+                - "/opt/stereum/web3signer-{{ web3signer }}/keys:/opt/web3signer/keys"
+
+    - name: copy db schemas
+      command: "docker cp stereum-{{ web3signer }}:/opt/web3signer/migrations/postgresql /opt/stereum/web3signer-{{ web3signer }}"
+
+    - name: Stop Web3SignerService
+      include_role:
+        name: "manage-service"
+      vars:
+        stereum:
+          manage_service:
+            save: false
+            state: stopped
+            configuration:
+              id: "{{ web3signer }}"
+
+    - name: Remove slashing-protection-enabled=false flag from Web3SignerService
+      lineinfile:
+        path: "/etc/stereum/services/{{ web3signer }}.yaml"
+        regexp: "^\\s*- --slashing-protection-enabled=false"
+        state: absent
+
+    - name: Start PostgreSQL Database
+      command: "docker run --restart=unless-stopped --name=slashingdb-{{ web3signer }} --network=stereum -v /opt/stereum/web3signer-{{ web3signer }}/postgresql:/opt/app/schemas -d -e POSTGRES_PASSWORD=foobar -e POSTGRES_USER=postgres -e POSTGRES_DB=web3signer postgres"
+
+    - name: Find schemas
+      find:
+        paths: "/opt/stereum/web3signer-{{ web3signer }}/postgresql"
+      register: db_schema_files
+
+    - name: get schemas file names
+      set_fact:
+        db_schemas: "{{ (db_schema_files.files | map(attribute='path') | map('split', '/') | map('last')) | sort }}"
+
+    - name: apply schemas
+      command: "docker exec -u 0 -w /opt/app/schemas slashingdb-{{ web3signer }} psql --echo-all --host=localhost --port=5432 --dbname=web3signer --username=postgres -f {{ item }}"
+      register: schema_result
+      with_items: "{{ db_schemas }}"
+
+    - debug: msg="{{ item.stdout_lines }}"
+      with_items: "{{ schema_result.results }}"
+
+    - name: Read service file
+      slurp:
+        src: "/etc/stereum/services/{{ web3signer }}.yaml"
+      register: service_configuration_raw
+
+    - name: Parse service's configuration
+      set_fact:
+        service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+        service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+    - name: Set db credentials
+      set_fact:
+        db_credentials: "[ '--slashing-protection-enabled=true', '--slashing-protection-db-url=jdbc:postgresql://slashingdb-{{ web3signer }}/web3signer', '--slashing-protection-db-username=postgres', '--slashing-protection-db-password=foobar', '--slashing-protection-pruning-enabled=true' ]"
+
+    - name: Add db credentials
+      lineinfile:
+        path: "/etc/stereum/services/{{ web3signer }}.yaml"
+        insertafter: "eth2"
+        regexp: '^\s*- {{ item }}'
+        line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --network=goerli.*') | first | split('-') | first }}- {{ item }}"
+      with_items: "{{ db_credentials }}"
+
+    - name: Replace image
+      replace:
+        path: "/etc/stereum/services/{{ web3signer }}.yaml"
+        regexp: "consensys/web3signer:23.2.1"
+        replace: "consensys/web3signer:23.6.0"
+# EOF

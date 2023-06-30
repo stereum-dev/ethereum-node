@@ -892,7 +892,7 @@ export class ServiceManager {
       const dbUser = "postgres";
       const dbName = "web3signer";
       await this.nodeConnection.sshService.exec(
-        `docker run --name=slashingdb-${web3signer.id} --network=stereum -v ${workingDir}/postgresql:/opt/app/schemas -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
+        `docker run --restart=unless-stopped --name=slashingdb-${web3signer.id} --network=stereum -v ${workingDir}/postgresql:/opt/app/schemas -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
       );
       const schemas = await this.nodeConnection.sshService.exec(`sleep 10s && ls -1 ${workingDir}/postgresql`);
       for (const schema of schemas.stdout.split("\n").filter((s) => s)) {

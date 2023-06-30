@@ -1,0 +1,96 @@
+---
+- name: Update PostgreSQL DB schema
+  block:
+    - name: Read service file
+      slurp:
+        src: "{{ item.path }}"
+      register: service_configuration_raw
+
+    - name: Parse service's configuration
+      set_fact:
+        service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+        service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+    - name: Stop PostgreSQL
+      command: "docker stop slashingdb-{{ service_configuration.id }}"
+      changed_when: false
+
+    - name: Stop Web3SignerService
+      include_role:
+        name: "manage-service"
+      vars:
+        stereum:
+          manage_service:
+            save: false
+            state: stopped
+            configuration:
+              id: "{{ service_configuration.id }}"
+
+    - name: "get working directory"
+      set_fact:
+        working_directory: "{{ service_configuration.volumes | select('search', service_configuration.id) | first | split(':') | first | regex_search('^.*' + service_configuration.id) }}"
+
+    - name: remove old schemas
+      ansible.builtin.file:
+        path: "{{ working_directory }}/postgresql"
+        state: absent
+        force: true
+
+    - name: Start Web3SignerService
+      include_role:
+        name: "manage-service"
+      vars:
+        stereum:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: "{{ service_configuration.id }}"
+
+    - name: copy db schemas
+      command: "docker cp stereum-{{ service_configuration.id }}:/opt/web3signer/migrations/postgresql {{ working_directory }}"
+
+    - name: Stop Web3SignerService
+      include_role:
+        name: "manage-service"
+      vars:
+        stereum:
+          manage_service:
+            save: false
+            state: stopped
+            configuration:
+              id: "{{ service_configuration.id }}"
+
+    - name: Start PostgreSQL
+      command: "docker start slashingdb-{{ service_configuration.id }}"
+      changed_when: false
+
+    - name: Find schemas
+      find:
+        paths: "{{ working_directory }}/postgresql"
+      register: db_schema_files
+
+    - name: get schemas file names
+      set_fact:
+        db_schemas: "{{ (db_schema_files.files | map(attribute='path') | map('split', '/') | map('last')) | sort }}"
+
+    - name: apply schemas
+      command: "docker exec -u 0 -w /opt/app/schemas slashingdb-{{ service_configuration.id }} psql --echo-all --host=localhost --port=5432 --dbname=web3signer --username=postgres -f {{ item }}"
+      register: schema_result
+      with_items: "{{ db_schemas }}"
+
+    - name: log schema update results
+      debug: msg="{{ item.stdout_lines }}"
+      with_items: "{{ schema_result.results }}"
+
+    - name: Start Web3SignerService
+      include_role:
+        name: "manage-service"
+      vars:
+        stereum:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: "{{ service_configuration.id }}"
+  when: service_configuration.service == "Web3SignerService"
