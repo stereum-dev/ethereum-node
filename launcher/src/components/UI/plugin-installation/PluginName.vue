@@ -72,10 +72,10 @@
             </div>
             <div v-if="selectedPreset.name === 'stereum on arm'" class="change-installation gap-y-2">
               <div class="change-title">
-                <span>MONITORING</span>
+                <span>{{ $t("pluginName.monitor") }}</span>
               </div>
               <div class="change-box">
-                <span>Install Monitoring?</span>
+                <span>{{ $t("pluginName.instMonit") }}</span>
                 <input v-model="installMonitoring" class="switch" type="checkbox" />
               </div>
             </div>
