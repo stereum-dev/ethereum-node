@@ -342,22 +342,22 @@ export default {
   background-color: #33393e;
   justify-content: center;
   align-items: center;
-  margin-top: 5px;
+  margin-top: 1.2%;
 }
 .option-title span,
 .included-title span {
   color: #d3d3d3;
-  font-size: 0.7rem;
+  font-size: 70%;
   font-weight: 400;
 }
 .info-box {
   width: 94%;
   height: 100%;
-  margin: 10px auto;
+  margin: 3% auto;
   background-color: #080808;
   border: 1px solid #343434;
   box-shadow: 1px 1px 10px 1px #171717;
-  padding: 2px 5px;
+  padding: 1% 2%;
   overflow-x: hidden;
   overflow-y: auto;
   border: 2px solid #545454;
@@ -406,17 +406,17 @@ export default {
 .pluginName {
   width: 83%;
   height: 90%;
-  margin-left: 5px;
+  margin-left: 10%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .pluginName span {
-  font-size: 0.85rem;
+  font-size: 90%;
   font-weight: 700;
   text-align: center;
   color: rgb(203, 203, 203);
-  margin-left: 2px;
+  margin-left: 1%;
 }
 .icon-box {
   width: 15%;
@@ -424,7 +424,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 4px;
+  margin-left: 3%;
 }
 
 .plugin-icon {
@@ -450,7 +450,7 @@ export default {
   align-items: center;
 }
 .category span {
-  font-size: 0.9rem;
+  font-size: 85%;
   font-weight: 700;
   color: rgb(89, 136, 101);
   border-radius: 100%;
@@ -542,7 +542,7 @@ export default {
 .option-content .option-content_box {
   width: 100%;
   height: 100%;
-  margin: 2px auto 10px auto;
+  margin: 2% auto 5% auto;
   background-color: #080808;
   border: 1px solid #b4b4b4;
   padding: 5px;
@@ -573,8 +573,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 10px;
-  margin-right: -20px;
+  margin-top: 4%;
+  margin-right: -7%;
 }
 .network-box .choose {
   width: 80%;
