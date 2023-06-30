@@ -228,6 +228,8 @@
     "syncClient": "SYNCHRONISIERT IHREN CLIENT VOM BEGINN DER BLOCKCHAIN AN",
     "plugin": "INSTALLIERTE DIENSTE",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "ZURÜCK",
     "next": "WEITER"
   },
