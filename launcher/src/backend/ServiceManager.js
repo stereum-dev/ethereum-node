@@ -649,6 +649,7 @@ export class ServiceManager {
   //args: network, installDir, port, executionClients, checkpointURL, beaconServices, mevboost, relays
   getService(name, args) {
     let ports;
+    let service;
     switch (name) {
       case "GethService":
         ports = [
@@ -684,7 +685,9 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
-        return ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
+        service = ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
+        service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
+        return service;
 
       case "LighthouseBeaconService":
         ports = [
@@ -889,7 +892,7 @@ export class ServiceManager {
       const dbUser = "postgres";
       const dbName = "web3signer";
       await this.nodeConnection.sshService.exec(
-        `docker run --name=slashingdb-${web3signer.id} --network=stereum -v ${workingDir}/postgresql:/opt/app/schemas -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
+        `docker run --restart=unless-stopped --name=slashingdb-${web3signer.id} --network=stereum -v ${workingDir}/postgresql:/opt/app/schemas -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
       );
       const schemas = await this.nodeConnection.sshService.exec(`sleep 10s && ls -1 ${workingDir}/postgresql`);
       for (const schema of schemas.stdout.split("\n").filter((s) => s)) {
@@ -1046,20 +1049,26 @@ export class ServiceManager {
       .flat(1)
       .map((p) => p.destinationPort + "/" + p.servicePortProtocol);
     let changed;
-    do {
-      changed = false;
-      newServices.forEach((service) => {
-        service.ports.forEach((newPort) => {
+    newServices.forEach((service) => {
+      service.ports.forEach((newPort) => {
+        do {
+          changed = false
           if (
             allPorts.includes(newPort.destinationPort + "/" + newPort.servicePortProtocol) &&
             !services.map((s) => s.id).includes(service.id)
           ) {
             newPort.destinationPort++;
             changed = true;
+          } else if (
+            !allPorts.includes(newPort.destinationPort + "/" + newPort.servicePortProtocol) &&
+            !services.map((s) => s.id).includes(service.id)
+          ) {
+            allPorts.push(newPort.destinationPort + "/" + newPort.servicePortProtocol)
           }
-        });
+
+        } while (changed)
       });
-    } while (changed === true);
+    })
 
     await this.createKeystores(
       newServices.filter(
@@ -1087,6 +1096,7 @@ export class ServiceManager {
       } else if (versions["prater"] && versions["prater"][service.service]) {
         service.imageVersion = versions["prater"][service.service].slice(-1).pop();
       }
+      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch)
     });
 
     await Promise.all(
@@ -1226,6 +1236,7 @@ export class ServiceManager {
       }
     }
     if (jobs.includes("SWITCH CLIENT")) {
+      let before = this.nodeConnection.getTimeStamp();
       try {
         let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
         for (const switchTask of switchTasks) {
@@ -1239,6 +1250,10 @@ export class ServiceManager {
         );
       } catch (err) {
         log.error("Switching Services Failed:", err);
+      }
+      finally {
+        let after = this.nodeConnection.getTimeStamp();
+        await this.nodeConnection.restartServices(after - before);
       }
     }
   }

@@ -195,6 +195,10 @@ export default {
             if (!response[service.network] || !response[service.network][service.service]) service.network = "mainnet";
             if (!response[service.network] || !response[service.network][service.service]) service.network = "prater";
             if (response[service.network] && response[service.network][service.service]) {
+              if (service.service === "ErigonService" && !service.imageVersion.startsWith("v")){
+                service.imageVersion = "v" + service.imageVersion;
+                service.imageVersion = service.imageVersion.replace("-arm64", "")
+              }
               if (
                 service.imageVersion !=
                 response[service.network][service.service][response[service.network][service.service].length - 1]

@@ -1,5 +1,6 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { ServiceManager } from "./ServiceManager";
+import { ValidatorAccountManager } from "./ValidatorAccountManager";
 import { StringUtils } from "./StringUtils";
 import * as QRCode from "qrcode";
 import * as log from "electron-log";
@@ -22,6 +23,7 @@ export class Monitoring {
     this.nodeConnectionProm = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
+    this.validatorAccountManager = new ValidatorAccountManager(this.nodeConnection, this.serviceManager);
     this.isLoggedIn = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
@@ -40,7 +42,7 @@ export class Monitoring {
     this.globalMonitoringCache = { ...globalMonitoringCache };
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // Jobs to handle on login
@@ -228,7 +230,7 @@ export class Monitoring {
         }
         //console.log('REQUIRE fresh cache ' + hash, dnow);
       }
-    } catch (e) {}
+    } catch (e) { }
     if (await this.checkStereumInstallation()) {
       var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
       const serviceStates = await this.nodeConnectionProm.listServices();
@@ -406,11 +408,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-            jsonrpc: "2.0",
-            method: rpc_method.trim(),
-            params: rpc_params,
-            id: 1,
-          })
+          jsonrpc: "2.0",
+          method: rpc_method.trim(),
+          params: rpc_params,
+          id: 1,
+        })
         : rpc_method;
 
     // Define default response
@@ -845,6 +847,81 @@ export class Monitoring {
     };
   }
 
+  // Find beacon port from FIRST AVAILABLE running consesus client on the local system
+  // If "synced" is set to true, the consensus client also needs to be fully synced
+  async findBeaconPort(synced = false) {
+    const result = await this.getBeaconStatus();
+    if (result.code) {
+      return {
+        code: 1,
+        info: "error: could not find beacon port (" + result.info + ")",
+        data: {
+          port: false,
+          full_result: result,
+        },
+      };
+    }
+    if (!synced) {
+      return {
+        code: 0,
+        info: "success: first available beacon port found",
+        data: {
+          port: result.data[0].beacon.destinationPort,
+          full_result: result,
+        },
+      };
+    }
+    for (const obj of result.data) {
+      if (obj.beacon.is_syncing === "false" || obj.beacon.sync_distance < 1) {
+        return {
+          code: 0,
+          info: "success: first available beacon port where consensus client is fully synced found",
+          data: {
+            port: obj.beacon.destinationPort,
+            full_result: result,
+          },
+        };
+      }
+    }
+    return {
+      code: 2,
+      info: "error: could not find beacon port where consensus client is fully synced",
+      data: {
+        port: false,
+        full_result: result,
+      },
+    };
+  }
+
+  // Get all locally imported public keys from given validator service id
+  async getPublicKeys(serviceID) {
+    try {
+      const client = await this.nodeConnection.readServiceConfiguration(serviceID);
+      if (!client.service.includes("ValidatorService")) {
+        return {
+          code: 1,
+          info: "error: could not get public keys (given service id is not a validator service)",
+          data: "",
+        };
+      }
+      const resultKeymanagerAPI = await this.validatorAccountManager.keymanagerAPI(client, "GET", "/eth/v1/keystores");
+      const result = JSON.parse(resultKeymanagerAPI.stdout);
+      if (!result.data) result.data = [];
+      const pubKeys = result.data.map((k) => k.validating_pubkey);
+      return {
+        code: 0,
+        info: "success: retrieved public keys",
+        data: pubKeys,
+      };
+    } catch (e) {
+      return {
+        code: 2,
+        info: "error: could not get public keys (" + e + ")",
+        data: "",
+      };
+    }
+  }
+
   // Get RPC data of given query for all or a specific local running execution client(s)
   // Arguments:
   // query=<string> : [REQUIRED] The query to execute on the RPC server, e.g: "web3_clientVersion"
@@ -1141,12 +1218,12 @@ export class Monitoring {
             labels.forEach(function (label, index) {
               try {
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
-              } catch (e) {}
+              } catch (e) { }
             });
             try {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            } catch (e) {}
+            } catch (e) { }
           }
           // Set chain head block for this client from RPC server (if available)
           if (
@@ -1163,7 +1240,7 @@ export class Monitoring {
                 typeof chain_head_block === "string" && chain_head_block.startsWith("0x")
                   ? parseInt(chain_head_block, 16)
                   : 0;
-            } catch (e) {}
+            } catch (e) { }
             let stay_on_hold_till_first_block = false; // true = enabled | false = disabled
             if (stay_on_hold_till_first_block && !chain_head_block) {
               // stay on hold until EC has responded the first block by RPC
@@ -1466,7 +1543,7 @@ export class Monitoring {
                     .value.pop()
                 );
                 details[clientType]["numPeerBy"]["fields"].push(item);
-              } catch (e) {}
+              } catch (e) { }
             });
           }
 
@@ -1635,6 +1712,120 @@ export class Monitoring {
     };
   }
 
+  // Get balance status
+  async getBalanceStatus() {
+    // Get local beacon port from first available consensus client
+    const beaconResult = await this.findBeaconPort();
+    if (beaconResult.code) {
+      return {
+        code: 441,
+        info: "error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")",
+        data: "",
+      };
+    }
+    const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if (serviceInfos.length < 1) {
+      return {
+        code: 442,
+        info: "error: service infos for balancestatus not available",
+        data: "",
+      };
+    }
+
+    // Filter validator service configurations
+    const validatorServiceInfos = serviceInfos.filter((s) => s.service.includes("ValidatorService"));
+    if (validatorServiceInfos.length < 1) {
+      return {
+        code: 443,
+        info: "error: validator service infos for balancestatus not available",
+        data: "",
+      };
+    }
+
+    // Get all imported public keys for each running validator service
+    let arrValidatorPublicKeys = [];
+    for (const obj of validatorServiceInfos) {
+      const result = await this.getPublicKeys(obj.config.serviceID);
+      if (result.code) {
+        result.code = 444;
+        result.info = "error: validator public keys for balancestatus not available -> " + result.info;
+        return result;
+      }
+      arrValidatorPublicKeys = [...arrValidatorPublicKeys, ...result.data];
+    }
+    arrValidatorPublicKeys = [...new Set(arrValidatorPublicKeys)]; // unique values!
+
+    // Get most recent finalized epoch
+    const finalityResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/states/head/finality_checkpoints");
+    if (finalityResult.code) {
+      return {
+        code: 445,
+        info: "error: could not get balancestatus due to failed finality query (" + finalityResult.info + ")",
+        data: baseURL + "/eth/v1/beacon/states/head/finality_checkpoints",
+      };
+    }
+
+    // Define response data and return immediately if no validators imported on the local system
+    const finalizedEpoch = finalityResult.data.api_reponse.data.finalized.epoch;
+    const data = { finalized_epoch: finalizedEpoch, balance: 0 };
+    if (arrValidatorPublicKeys.length < 1) {
+      return {
+        code: 0,
+        info: "success: balancestatus successfully retrieved (but no validators imported)",
+        data: data,
+      };
+    }
+
+    // Get total balance of all validators on the system for most recent finalized epoch
+    const attestationResult = await this.queryBeaconApi(
+      baseURL,
+      `/eth/v1/beacon/rewards/attestations/${finalizedEpoch}`,
+      arrValidatorPublicKeys,
+      "POST",
+      {
+        "Content-Type": "application/json",
+      }
+    );
+    if (attestationResult.code) {
+      return {
+        code: 446,
+        info: "error: could not get balancestatus due to failed attestations query (" + attestationResult.info + ")",
+        data: "",
+      };
+    }
+    try {
+      if (Array.isArray(attestationResult.data.api_reponse.data.total_rewards)) {
+        for (const obj of attestationResult.data.api_reponse.data.total_rewards) {
+          if (!obj.hasOwnProperty("validator_index") || !obj.validator_index) {
+            continue;
+          }
+          // Values for "head", "source" and "target" are in GWei!
+          // head: "1989";
+          // source: "2792";
+          // target: "5294";
+          // validator_index: "216403";
+          data.balance += parseInt(obj.head) + parseInt(obj.source) + parseInt(obj.target);
+        }
+      }
+    } catch (e) {
+      return {
+        code: 447,
+        info: "error: could not get balancestatus due to failed attestations summary",
+        data: "",
+      };
+    }
+
+    // success
+    return {
+      code: 0,
+      info: "success: balancestatus successfully retrieved",
+      data: data,
+    };
+  }
+
   // Open RPC tunnel(s) on request
   async openRpcTunnel(args) {
     // Extract arguments
@@ -1723,7 +1914,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.rpcTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
@@ -1906,7 +2097,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.wsTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh WS status data
     const freshwsstatus = await this.getWsStatus();
@@ -1970,7 +2161,6 @@ export class Monitoring {
       let port = ws.destinationPort;
 
       // Check if WS port is enabled
-      // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
       let result = await this.isWsAvailable({ addr: addr, port: port });
       if (result.code) continue;
 
@@ -2056,7 +2246,7 @@ export class Monitoring {
     try {
       let r = wsResult.stdout.trim().split("\n");
       statuscode = r.length > 0 ? parseInt(r.pop()) : statuscode;
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond true if websocket is available, false otherwise
     if (!wsResult.stdout.toLowerCase().includes("sec-websocket") && statuscode != 200) {
@@ -2163,7 +2353,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.beaconTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
@@ -2232,7 +2422,7 @@ export class Monitoring {
       data.push({
         now: now,
         sid: sid,
-        beacon: beacon,
+        beacon: { ...beacon, ...result.data.api_reponse.data },
         url: this.beaconTunnel[sid] > 0 ? "http://" + addr + ":" + this.beaconTunnel[sid] : "",
         clt: consensus.service.replace(/Beacon|Service/gi, "").toUpperCase(),
       });
@@ -2288,8 +2478,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-      ? "str"
-      : "invalid";
+        ? "str"
+        : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2377,7 +2567,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-        serviceInfos[i].config.dependencies.executionClients.length
+          serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({

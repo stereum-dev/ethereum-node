@@ -22,6 +22,7 @@
     "log": "Open Logs",
     "restart": "Restart",
     "start": "start",
+    "resync": "resync",
     "stop": "stop"
   },
   "pagesnav": {
@@ -227,6 +228,8 @@
     "syncClient": "SINHRONIZUJE VAŠEG CLIENTA OD POČETKA CHAINa",
     "plugin": "INSTALLED SERVICES",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "NAZAD",
     "next": "SLJEDEĆI"
   },
@@ -339,7 +342,8 @@
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
     "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Započnite Pruning"
+    "prunningStart": "Započnite Pruning",
+    "close": "click outside to close"
   },
   "restartModal": {
     "restarQ": "Are you sure you want to restart?",
@@ -509,6 +513,7 @@
     "close": "click outside to close"
   },
   "sliderTutorial": {
+    "visitUrl": "Visit the website",
     "becomeValidator": "Click on “BECOME A VALIDATOR”",
     "proofStake": "Read through Proof of stake and click on “CONTINUE”",
     "deposit": "Read through the deposit and click on “I ACCEPT”",
@@ -556,5 +561,9 @@
     "sendDeposit": "Click on “SEND DEPOSIT”",
     "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
     "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+  },
+  "balWid": {
+    "fin": "FINALIZED",
+    "bal": "BALANCE CHANGE"
   }
 }

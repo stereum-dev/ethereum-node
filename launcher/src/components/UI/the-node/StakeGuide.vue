@@ -25,7 +25,9 @@
           <div class="stake-modal_header_slideNo">
             <span>{{ slideID }}# </span>
           </div>
-          <div class="stake-modal_header_slide-tex"><span v-html="parseText(message, slideID)"></span></div>
+          <div class="stake-modal_header_slide-tex">
+            <span>{{ message }}</span>
+          </div>
         </div>
         <div ref="modalContainer" class="stake-modal_container" @wheel="handleScroll">
           <div class="stake-modal-arr">
@@ -107,7 +109,7 @@ export default {
         {
           id: 1,
           img: "/img/stake_Guide/1.jpg",
-          text: "Visit the website <a href='https://goerli.launchpad.ethereum.org/en/' target='_blank'>“https://goerli.launchpad.ethereum.org/en/”</a>",
+          text: this.$t("sliderTutorial.visitUrl") + " “https://goerli.launchpad.ethereum.org/en/”",
         },
         {
           id: 2,
@@ -481,27 +483,6 @@ export default {
       if (this.nextStep < 1) {
         this.nextStep = 1;
       }
-    },
-    parseText(text, id) {
-      const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/gi;
-      const matches = text.matchAll(anchorRegex);
-      let parsedText = "";
-      let lastIndex = 0;
-
-      for (const match of matches) {
-        const fullMatch = match[0];
-        const href = match[2];
-        const linkText = match[3];
-        const beforeText = text.substring(lastIndex, match.index);
-        const linkClass = id === 1 ? "clickable-link" : "";
-        const link = `<a class="${linkClass}" href="${href}" target="_blank">${linkText}</a>`;
-        parsedText += beforeText + link;
-        lastIndex = match.index + fullMatch.length;
-      }
-
-      parsedText += text.substring(lastIndex);
-
-      return parsedText;
     },
 
     stakeGuideStep1() {

@@ -73,7 +73,7 @@ export default {
         await ControlService.prepareOneClickInstallation(this.installationPath);
         const restarted = await ControlService.restartServer();
         this.refresh = true;
-        if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
+        if (restarted) await new Promise((resolve) => setTimeout(resolve, 5000));
         await ControlService.writeOneClickConfiguration({
           services: this.selectedPreset.includedPlugins,
           checkpointURL: this.checkPointSync,

@@ -97,7 +97,7 @@
         btn-action="resyncToggle"
         grid-row="6/7"
         @btn-action="resyncToggle"
-        >resync<span class="ml-1">. . .</span></the-node-panel-btn
+        >{{ $t("journalnode.resync") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
     </div>
 
@@ -110,7 +110,7 @@
         btn-action="logToggle"
         grid-row="1/2"
         class="btnTitle"
-        >{{ $t("journalnode.log") }}</the-node-panel-btn
+        >{{ $t("journalnode.resync") }}</the-node-panel-btn
       >
       <the-node-panel-btn
         img-path="/img/icon/manage-node-icons/undo1.png"

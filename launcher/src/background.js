@@ -184,6 +184,11 @@ ipcMain.handle("getStorageStatus", async () => {
   return await monitoring.getStorageStatus();
 });
 
+// get data for balance comp
+ipcMain.handle("getBalanceStatus", async () => {
+  return await monitoring.getBalanceStatus();
+});
+
 ipcMain.handle("getConnectionStats", async () => {
   const name = await monitoring.getServerName();
   const address = monitoring.getIPAddress();
@@ -506,6 +511,7 @@ if (!isDevelopment) {
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  nodeConnection.logout()
   if (process.platform !== "darwin") {
     app.quit();
   }

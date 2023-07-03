@@ -22,6 +22,7 @@
     "log": "打开记录文件",
     "restart": "重启",
     "start": "开始",
+    "resync": "resync",
     "stop": "停止"
   },
   "pagesnav": {
@@ -227,6 +228,8 @@
     "syncClient": "由原始区块链同步您的客户端",
     "plugin": "安装服务器",
     "addOpt": "附加选项",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "回去",
     "next": "下一步"
   },
@@ -339,7 +342,8 @@
   "prunningModal": {
     "prunningText": "GETH 在操作时间内使用的存储空间一直增加。 需要多小时来修剪它数据库，删除不必要的数据并释放一些使用过的储存空间。 必须在GETH不运作的时候完成这项工作。开始修建过程您的节点会下线并停止潜在性见证工作。",
     "prunningChecked": "我已阅读且了解后果",
-    "prunningStart": "开始剪枝"
+    "prunningStart": "开始剪枝",
+    "close": "click outside to close"
   },
   "restartModal": {
     "restarQ": "你确认要重启吗？",
@@ -509,6 +513,7 @@
     "close": "点击外部关闭"
   },
   "sliderTutorial": {
+    "visitUrl": "Visit the website",
     "becomeValidator": "Click on “BECOME A VALIDATOR”",
     "proofStake": "Read through Proof of stake and click on “CONTINUE”",
     "deposit": "Read through the deposit and click on “I ACCEPT”",
@@ -556,5 +561,9 @@
     "sendDeposit": "Click on “SEND DEPOSIT”",
     "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
     "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+  },
+  "balWid": {
+    "fin": "FINALIZED",
+    "bal": "BALANCE CHANGE"
   }
 }

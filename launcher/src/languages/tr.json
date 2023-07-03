@@ -22,6 +22,7 @@
     "log": "Günlükleri Aç",
     "restart": "Yeniden Başlat",
     "start": "başlat",
+    "resync": "resync",
     "stop": "durdur"
   },
   "pagesnav": {
@@ -227,6 +228,8 @@
     "syncClient": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
     "plugin": "KURULAN SERVİSLER",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "GERİ",
     "next": "SONRAKİ"
   },
@@ -339,7 +342,8 @@
   "prunningModal": {
     "prunningText": "GETH'in çalışma süresi boyunca kullandığı depolama alanı BÜYÜR. Geth veritabanını budamak, gereksiz verileri kaldırmak ve kullanılan depolama alanının bir kısmını boşaltmak ÇOK UZUN sürer. Bu Geth çalışmıyorken yapılmalıdır. BUDAMA SÜRECİNİ BAŞLATIRSANIZ DÜĞÜMÜNÜZ ÇEVRİMDIŞI OLACAK VE OLASI ONAY/DOĞRULAMA GÖREVLERİNİ DURDURACAKTIR!",
     "prunningChecked": "METİNİ OKUDUM VE SONUÇLARININ FARKINDAYIM",
-    "prunningStart": "Budamayı Başlat"
+    "prunningStart": "Budamayı Başlat",
+    "close": "click outside to close"
   },
   "restartModal": {
     "restarQ": "Yeniden başlatmak istediğinizden emin misiniz?",
@@ -509,6 +513,7 @@
     "close": "click outside to close"
   },
   "sliderTutorial": {
+    "visitUrl": "Visit the website",
     "becomeValidator": "Click on “BECOME A VALIDATOR”",
     "proofStake": "Read through Proof of stake and click on “CONTINUE”",
     "deposit": "Read through the deposit and click on “I ACCEPT”",
@@ -556,5 +561,9 @@
     "sendDeposit": "Click on “SEND DEPOSIT”",
     "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
     "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+  },
+  "balWid": {
+    "fin": "FINALIZED",
+    "bal": "BALANCE CHANGE"
   }
 }

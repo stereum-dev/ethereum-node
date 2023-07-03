@@ -109,51 +109,54 @@
               <span class="since">{{ item.activeSince }}</span>
               <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
               <span class="balance">{{ item.balance }}</span>
-              <div class="option-box">
-                <div class="grafiti-box">
-                  <img
-                    class="grafiti-icon"
-                    src="../../../../public/img/icon/the-staking/fee-recepient.png"
-                    alt="icon"
-                    @click="feeRecepientDisplayHandler(item)"
-                  />
-                </div>
-                <div class="copy-box">
-                  <img
-                    class="copy-icon"
-                    src="../../../../public/img/icon/the-staking/copy6.png"
-                    alt="icon"
-                    @click="copyHandler(item)"
-                  />
-                </div>
-                <div class="rename-box">
-                  <img
-                    class="rename-icon"
-                    src="../../../../public/img/icon/the-staking/rename.png"
-                    alt="icon"
-                    @click="renameDisplayHandler(item)"
-                  />
-                </div>
-                <div class="remove-box">
-                  <img
-                    class="remove-icon"
-                    src="../../../../public/img/icon/the-staking/option-remove.png"
-                    alt="icon"
-                    @click="removeModalDisplay(item)"
-                  />
-                </div>
-                <div
-                  class="withdraw-box"
-                  :class="{ disabled: ['goerli', 'mainnet', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
-                >
-                  <img
-                    class="exit-icon"
-                    src="../../../../public/img/icon/the-staking/withdraw.png"
-                    alt="icon"
-                    @click="passwordBoxSingleExitChain(item)"
-                  />
+              <div v-if="protection" class="wrapper">
+                <div class="option-box">
+                  <div class="grafiti-box">
+                    <img
+                      class="grafiti-icon"
+                      src="/img/icon/the-staking/fee-recepient.png"
+                      alt="icon"
+                      @click="feeRecepientDisplayHandler(item)"
+                    />
+                  </div>
+                  <div class="copy-box">
+                    <img
+                      class="copy-icon"
+                      src="/img/icon/the-staking/copy6.png"
+                      alt="icon"
+                      @click="copyHandler(item)"
+                    />
+                  </div>
+                  <div class="rename-box">
+                    <img
+                      class="rename-icon"
+                      src="/img/icon/the-staking/rename.png"
+                      alt="icon"
+                      @click="renameDisplayHandler(item)"
+                    />
+                  </div>
+                  <div class="remove-box">
+                    <img
+                      class="remove-icon"
+                      src="/img/icon/the-staking/option-remove.png"
+                      alt="icon"
+                      @click="removeModalDisplay(item)"
+                    />
+                  </div>
+                  <div
+                    class="withdraw-box"
+                    :class="{ disabled: ['goerli', 'mainnet', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
+                  >
+                    <img
+                      class="exit-icon"
+                      src="/img/icon/the-staking/withdraw.png"
+                      alt="icon"
+                      @click="passwordBoxSingleExitChain(item)"
+                    />
+                  </div>
                 </div>
               </div>
+              <div v-else class="wrapper"><span>Doublegänger Protection...</span></div>
             </div>
             <FeeRecepientValidator
               v-if="item.isFeeRecepientBoxActive"
@@ -199,6 +202,19 @@
               @delete-key="validatorRemoveConfirm"
             />
           </div>
+          <div v-for="(item, index) in keyImages" :key="index" class="tableRow">
+            <div class="rowContent">
+              <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
+
+              <span class="category" @click="logEvent">{{ item.key }}</span>
+              <img class="service-icon" :src="item.icon" alt="icon" />
+              <span class="since">{{ item.activeSince }}</span>
+              <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
+              <span class="balance">{{ item.balance }}</span>
+
+              <div class="wrapper"><span>Doublegänger Protection...</span></div>
+            </div>
+          </div>
         </div>
         <div v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive" class="table-header">
           <span id="pubkey_name">FILE NAME</span>
@@ -212,7 +228,7 @@
               <img :src="selectedService.icon" alt="icon" />
             </div>
             <div class="key-remove-icon" @click="removeKeyHandler(item)">
-              <img src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" />
+              <img src="/img/icon/task-manager-icons/close3.png" alt="icon" />
             </div>
           </div>
         </div>
@@ -318,7 +334,7 @@ import { mapWritableState, mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
-import { useNodeHeader } from "../../../store/nodeHeader";
+import { useNodeHeader } from "@/store/nodeHeader";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
@@ -391,6 +407,8 @@ export default {
       isActiveRunning: [],
       checkActiveValidatorsResponse: [],
       exitValidatorResponse: {},
+      protection: true, //dobegnär protection flag
+      newArr: [],
     };
   },
   computed: {
@@ -420,6 +438,7 @@ export default {
       selectedValdiatorService: "selectedValdiatorService",
       totalBalance: "totalBalance",
       keys: "keys",
+      keyImages: "keyImages",
       forceRefresh: "forceRefresh",
       insertKeyBoxActive: "insertKeyBoxActive",
       enterPasswordBox: "enterPasswordBox",
@@ -457,13 +476,41 @@ export default {
     },
   },
   watch: {
+    message(newValue) {
+      const lines = newValue.split("\n");
+      const importedLines = lines.filter((line) => line.includes("imported") || line.includes(":\\t imported"));
+      const keys = importedLines.map((line) => {
+        const match = line.match(/^(.*):/);
+        if (match && match[1]) {
+          return "0x" + match[1].trim();
+        }
+        return "";
+      });
+      this.newArr = keys.filter((key) => key !== "");
+
+      const keyImages = this.newArr.map((item) => {
+        return {
+          icon: this.selectedService.icon,
+          activeSince: "-",
+          balance: "-",
+          key: item,
+        };
+      });
+
+      this.keyImages = keyImages;
+    },
     keys: {
       deep: true,
       immediate: true,
-      handler(val) {
-        const hasMatchingIcon = val.some((item) => item.icon === this.selectedIcon);
+      handler(newKeys) {
+        const hasMatchingIcon = newKeys.some((item) => item.icon === this.selectedIcon);
 
         this.display = !hasMatchingIcon;
+
+        this.keyImages = this.keyImages.filter((obj) => {
+          const objKey = obj.key.substring(0, 15);
+          return !newKeys.some((keyObj) => keyObj.key.startsWith(objKey));
+        });
       },
     },
 
@@ -554,10 +601,10 @@ export default {
 
     async feeRecepientConfirmHandler(key, input) {
       key.isFeeRecepientBoxActive = false;
-      if(/0x[a-fA-F0-9]{40}/g.test(input)) {
-        await ControlService.setFeeRecipient({serviceID: key.validatorID, pubkey: key.key, address: input})
+      if (/0x[a-fA-F0-9]{40}/g.test(input)) {
+        await ControlService.setFeeRecipient({ serviceID: key.validatorID, pubkey: key.key, address: input });
       } else {
-        await ControlService.deleteFeeRecipient({serviceID: key.validatorID, pubkey: key.key})
+        await ControlService.deleteFeeRecipient({ serviceID: key.validatorID, pubkey: key.key });
       }
     },
     renameDisplayHandler(el) {
@@ -635,7 +682,9 @@ export default {
         serviceID: this.selectedService.config.serviceID,
         slashingDB: this.slashingDB,
       });
+
       this.keyFiles = [];
+
       if (
         this.checkActiveValidatorsResponse.length === 0 ||
         this.checkActiveValidatorsResponse.includes("Validator check error:\n")
@@ -751,6 +800,7 @@ export default {
               return service;
             });
           }
+
           if (client.config.keys) {
             keyStats = keyStats.concat(
               client.config.keys.map((key) => {
@@ -761,7 +811,7 @@ export default {
                   activeSince: "-",
                   status: "loading",
                   balance: "-",
-                  network: client.config.network
+                  network: client.config.network,
                 };
               })
             );
@@ -785,6 +835,7 @@ export default {
     async updateValidatorStats() {
       let totalBalance = 0;
       let data = [];
+
       try {
         data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
         if (!data || data.length == 0) {
@@ -796,6 +847,7 @@ export default {
           });
           var latestEpoch = latestEpochResponse.data.data.epoch;
           let buffer = this.keys.map((key) => key.key);
+
           const chunkSize = 50;
           for (let i = 0; i < buffer.length; i += chunkSize) {
             //split validator accounts into chunks of 50 (api url limit)
@@ -845,7 +897,9 @@ export default {
 
     importKey: async function (val) {
       this.password = val;
+
       this.message = await ControlService.importKey(this.selectedService.config.serviceID);
+
       this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];
@@ -860,6 +914,7 @@ export default {
       //this.feeRecipientBoxActive = true;
     },
     //FEE RECIPIENT
+
     confirmFeeRecipientAddress() {
       this.importValidatorKeyActive = true;
       this.enterPasswordBox = false;
@@ -1306,8 +1361,8 @@ remove-validator {
 
 .option-box {
   grid-column: 7;
-  width: 90%;
-  height: 95%;
+  width: 100%;
+  height: 100%;
   justify-self: center;
   align-self: center;
   border: 2px solid #bfbfbf;
@@ -1318,6 +1373,18 @@ remove-validator {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
+}
+.wrapper {
+  width: 100%;
+  height: 95%;
+  border: 2px solid #bfbfbf;
+  background-color: black;
+  border-radius: 30px;
+  color: #bfbfbf;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
 }
 
 .option-box img {

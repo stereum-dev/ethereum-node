@@ -22,6 +22,7 @@
     "log": "Log öffnen",
     "restart": "Neustart",
     "start": "Start",
+    "resync": "resync",
     "stop": "Stop"
   },
   "pagesnav": {
@@ -227,6 +228,8 @@
     "syncClient": "SYNCHRONISIERT IHREN CLIENT VOM BEGINN DER BLOCKCHAIN AN",
     "plugin": "INSTALLIERTE DIENSTE",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "ZURÜCK",
     "next": "WEITER"
   },
@@ -339,7 +342,8 @@
   "prunningModal": {
     "prunningText": "GETH verbraucht Speicherplatz, der im Laufe seiner Betriebszeit wächst. Das Löschen unnötiger Daten und das Freigeben von Speicherplatz aus der Geth-Datenbank kann mehrere Stunden dauern. Dies muss durchgeführt werden, wenn Geth nicht ausgeführt wird. WENN DER LÖSCHVORGANG GESTARTET WIRD, WIRD IHR NODE OFFLINE GEHEN UND POTENZIELLE ATTESTATIONSPFLICHTEN NICHT MEHR ERFÜLLEN.",
     "prunningChecked": "ICH HABE DEN TEXT GELESEN UND BIN MIR DEN KONSEQUENZEN BEWUSST",
-    "prunningStart": "Pruning starten"
+    "prunningStart": "Pruning starten",
+    "close": "click outside to close"
   },
   "restartModal": {
     "restarQ": "Sind Sie sich sicher, dass Sie neu starten wollen?",
@@ -509,6 +513,7 @@
     "close": "click outside to close"
   },
   "sliderTutorial": {
+    "visitUrl": "Visit the website",
     "becomeValidator": "Click on “BECOME A VALIDATOR”",
     "proofStake": "Read through Proof of stake and click on “CONTINUE”",
     "deposit": "Read through the deposit and click on “I ACCEPT”",
@@ -556,5 +561,9 @@
     "sendDeposit": "Click on “SEND DEPOSIT”",
     "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
     "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+  },
+  "balWid": {
+    "fin": "FINALIZED",
+    "bal": "BALANCE CHANGE"
   }
 }
