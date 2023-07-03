@@ -228,6 +228,8 @@
     "syncClient": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
     "plugin": "INSTALLED SERVICES",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "НАЗАД",
     "next": "СЛЕДВАЩ"
   },
