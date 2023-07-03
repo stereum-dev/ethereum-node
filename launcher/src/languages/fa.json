@@ -228,6 +228,8 @@
     "syncClient": "کلاینت خود را از ابتدای زنجیره همگام سازی می کند",
     "plugin": "خدمات نصب شده",
     "addOpt": "ADDITIONAL OPTIONS",
+    "monitor": "MONITORING",
+    "instMonit": "Install Monitoring?",
     "back": "بازگشت",
     "next": "بعدی"
   },
