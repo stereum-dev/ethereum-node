@@ -487,7 +487,7 @@ export default {
   height: 50%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 60%;
+  font-size: 50%;
   font-weight: 700;
   text-transform: uppercase;
 }
