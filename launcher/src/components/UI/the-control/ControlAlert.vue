@@ -99,9 +99,9 @@
             </div>
           </div>
         </div>
-        <div v-for="item in newUpdates" :key="item" class="alert-message_green">
-          <div class="icon-box" @click="showUpdate">
-            <img :src="item.icon" alt="warn_storage" />
+        <div v-for="item in updatedNewUpdates" :key="item" class="alert-message_green" @click="showUpdate">
+          <div class="icon-box">
+            <img :src="item.sIcon" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message" @click="showUpdate">
@@ -162,6 +162,19 @@ export default {
       installedServices: "installedServices",
       newUpdates: "newUpdates",
     }),
+    updatedNewUpdates() {
+      const updatedUpdates = this.newUpdates.map((update) => {
+        const matchingService = this.installedServices.find((service) => service.name === update.name);
+        if (matchingService) {
+          return {
+            ...update,
+            sIcon: matchingService.sIcon,
+          };
+        }
+        return update;
+      });
+      return updatedUpdates;
+    },
   },
   watch: {
     usedPercInt() {
@@ -474,7 +487,7 @@ export default {
   height: 50%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 60%;
+  font-size: 50%;
   font-weight: 700;
   text-transform: uppercase;
 }
