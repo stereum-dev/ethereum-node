@@ -488,7 +488,7 @@ export default {
       });
       this.newArr = keys.filter((key) => key !== "");
 
-      const keyImages = this.newArr.map((item) => {
+      const newKeyImages = this.newArr.map((item) => {
         return {
           icon: this.selectedService.icon,
           activeSince: "-",
@@ -497,7 +497,7 @@ export default {
         };
       });
 
-      this.keyImages = keyImages;
+      this.keyImages.push(...newKeyImages);
     },
     keys: {
       deep: true,
