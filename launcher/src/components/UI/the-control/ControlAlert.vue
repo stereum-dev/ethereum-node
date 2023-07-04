@@ -99,8 +99,8 @@
             </div>
           </div>
         </div>
-        <div v-for="item in updatedNewUpdates" :key="item" class="alert-message_green">
-          <div class="icon-box" @click="showUpdate">
+        <div v-for="item in updatedNewUpdates" :key="item" class="alert-message_green" @click="showUpdate">
+          <div class="icon-box">
             <img :src="item.sIcon" alt="warn_storage" />
           </div>
           <div class="message">
