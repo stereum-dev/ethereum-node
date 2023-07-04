@@ -212,7 +212,7 @@
               <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
               <span class="balance">{{ item.balance }}</span>
 
-              <div class="wrapper"><span>Doublegänger Protection...</span></div>
+              <div class="wrapper"><span>Doppelgänger Protection...</span></div>
             </div>
           </div>
         </div>
