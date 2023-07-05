@@ -407,6 +407,24 @@ export default {
   padding-top: 5px;
   border-radius: 5px;
   box-shadow: 0 1px 3px 1px #1c1f22;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.status-box_messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.status-box_messages::-webkit-scrollbar-track {
+  background: #3b4146;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+/* Handle */
+.status-box_messages::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 50%;
 }
 
 .icon-line {

@@ -428,6 +428,24 @@ export default {
   border-radius: 5px;
   box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
   flex-direction: column;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.alert-box_messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.alert-box_messages::-webkit-scrollbar-track {
+  background: #3b4146;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+/* Handle */
+.alert-box_messages::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 50%;
 }
 .alert-message_yellow {
   display: flex;
@@ -467,6 +485,7 @@ export default {
   cursor: pointer;
   position: relative;
 }
+
 .icon-box {
   width: 28%;
   height: 95%;
