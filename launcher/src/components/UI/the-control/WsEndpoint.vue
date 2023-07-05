@@ -377,7 +377,7 @@ export default {
 .btn {
   display: flex;
   width: 30%;
-  font-size: 50%;
+  font-size: 60%;
   font-weight: 800;
   padding: 0 1px;
   border-radius: 5px;
