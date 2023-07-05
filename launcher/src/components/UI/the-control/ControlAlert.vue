@@ -11,13 +11,16 @@
         <div class="icon_alarm" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="icon_alarm" :class="{ active: warning || rpcState }">
+        <div class="icon_alarm" :class="{ active: warning || pointStatus.length !== 0 }">
           <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="icon_alarm" :class="{ active: alarm }">
           <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="icon_alarm" :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdate > 0 }">
+        <div
+          class="icon_alarm"
+          :class="{ active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0 }"
+        >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -42,12 +45,14 @@
             </div>
           </div>
         </div>
-        <div v-if="rpcState" class="alert-message_yellow">
+        <div v-for="point in pointStatus" :key="point" class="alert-message_yellow">
           <div class="icon-box">
             <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="main-message"><span>RPC Point</span></div>
+            <div class="main-message">
+              <span>{{ point }}</span>
+            </div>
             <div class="val-message">
               <span> > STATUS: OPEN</span>
             </div>
@@ -120,7 +125,7 @@
 <script>
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "../node-header/UpdatePanel.vue";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
@@ -154,6 +159,8 @@ export default {
       stereumUpdate: "stereumUpdate",
       updating: "updating",
       rpcState: "rpcState",
+      dataState: "dataState",
+      wsState: "wsState",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -162,6 +169,22 @@ export default {
       installedServices: "installedServices",
       newUpdates: "newUpdates",
     }),
+    pointStatus() {
+      let port = [];
+
+      if (this.rpcState) {
+        port.push("RPC Point");
+      }
+
+      if (this.dataState) {
+        port.push("Data API");
+      }
+
+      if (this.wsState) {
+        port.push("WS Point");
+      }
+      return port;
+    },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
         const matchingService = this.installedServices.find((service) => service.name === update.name);
@@ -182,6 +205,7 @@ export default {
         this.storageCheck();
       }
     },
+
     cpu(newVal) {
       if (newVal >= 80 && newVal < 90) {
         this.cpuWarning = true;
@@ -404,6 +428,24 @@ export default {
   border-radius: 5px;
   box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
   flex-direction: column;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.alert-box_messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.alert-box_messages::-webkit-scrollbar-track {
+  background: #3b4146;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+/* Handle */
+.alert-box_messages::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 50%;
 }
 .alert-message_yellow {
   display: flex;
@@ -443,6 +485,7 @@ export default {
   cursor: pointer;
   position: relative;
 }
+
 .icon-box {
   width: 28%;
   height: 95%;
