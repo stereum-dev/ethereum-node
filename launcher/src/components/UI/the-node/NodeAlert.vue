@@ -18,7 +18,7 @@
         </div>
         <div
           class="status-icon"
-          :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdates.length !== 0 }"
+          :class="{ active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0 }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
@@ -248,7 +248,6 @@ export default {
   created() {
     this.storageCheck();
     this.cpuMeth();
-    console.log(JSON.stringify(this.updatedNewUpdates));
   },
   methods: {
     async readService() {

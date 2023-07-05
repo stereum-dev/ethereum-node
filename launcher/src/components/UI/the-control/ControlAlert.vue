@@ -17,7 +17,10 @@
         <div class="icon_alarm" :class="{ active: alarm }">
           <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="icon_alarm" :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdate !== 0 }">
+        <div
+          class="icon_alarm"
+          :class="{ active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0 }"
+        >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
