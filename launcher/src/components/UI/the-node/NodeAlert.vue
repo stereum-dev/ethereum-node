@@ -10,7 +10,7 @@
         <div class="status-icon" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: warning || rpcState }">
+        <div class="status-icon" :class="{ active: warning || pointStatus.length !== 0 }">
           <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: alarm }">
@@ -18,7 +18,7 @@
         </div>
         <div
           class="status-icon"
-          :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdates.length > 0 }"
+          :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdates.length !== 0 }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
@@ -49,13 +49,13 @@
           </div>
         </div>
       </div>
-      <div v-if="rpcState" class="status-message_yellow">
+      <div v-for="point in pointStatus" :key="point" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
-            <span>RPC Point</span>
+            <span>{{ point }}</span>
           </div>
           <div class="val-message">
             <span> > STATUS: OPEN</span>
@@ -177,6 +177,22 @@ export default {
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
+    },
+    pointStatus() {
+      let port = [];
+
+      if (this.rpcState) {
+        port.push("RPC Point");
+      }
+
+      if (this.dataState) {
+        port.push("Data API");
+      }
+
+      if (this.wsState) {
+        port.push("WS Point");
+      }
+      return port;
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {

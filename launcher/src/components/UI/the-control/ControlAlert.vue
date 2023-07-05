@@ -17,7 +17,7 @@
         <div class="icon_alarm" :class="{ active: alarm }">
           <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="icon_alarm" :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdate > 0 }">
+        <div class="icon_alarm" :class="{ active: stereumUpdate.current !== stereumUpdate.version || newUpdate !== 0 }">
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -167,20 +167,20 @@ export default {
       newUpdates: "newUpdates",
     }),
     pointStatus() {
-      let x = [];
+      let port = [];
 
       if (this.rpcState) {
-        x.push("RPC Point");
+        port.push("RPC Point");
       }
 
       if (this.dataState) {
-        x.push("Data API");
+        port.push("Data API");
       }
 
       if (this.wsState) {
-        x.push("WS Point");
+        port.push("WS Point");
       }
-      return x;
+      return port;
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
