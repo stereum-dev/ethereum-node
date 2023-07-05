@@ -43,7 +43,8 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
+import { useNodeHeader } from "@/store/nodeHeader";
+import { useControlStore } from "@/store/theControl";
 import ControlDialog from "./ControlDialog.vue";
 export default {
   components: { ControlDialog },
@@ -73,9 +74,21 @@ export default {
       code: "code",
       beaconstatus: "beaconstatus",
     }),
+    ...mapWritableState(useNodeHeader, {
+      dataState: "dataState",
+    }),
     onoff() {
       if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
+    },
+  },
+  watch: {
+    isActive(newVal) {
+      if (newVal === true) {
+        this.dataState = true;
+      } else {
+        this.dataState = false;
+      }
     },
   },
   created() {
