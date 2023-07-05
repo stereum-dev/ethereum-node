@@ -11,7 +11,7 @@
         <div class="icon_alarm" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="icon_alarm" :class="{ active: warning || rpcState }">
+        <div class="icon_alarm" :class="{ active: warning || pointStatus.length !== 0 }">
           <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="icon_alarm" :class="{ active: alarm }">
@@ -42,12 +42,14 @@
             </div>
           </div>
         </div>
-        <div v-if="rpcState" class="alert-message_yellow">
+        <div v-for="point in pointStatus" :key="point" class="alert-message_yellow">
           <div class="icon-box">
             <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="main-message"><span>RPC Point</span></div>
+            <div class="main-message">
+              <span>{{ point }}</span>
+            </div>
             <div class="val-message">
               <span> > STATUS: OPEN</span>
             </div>
@@ -120,7 +122,7 @@
 <script>
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "../node-header/UpdatePanel.vue";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
@@ -154,6 +156,8 @@ export default {
       stereumUpdate: "stereumUpdate",
       updating: "updating",
       rpcState: "rpcState",
+      dataState: "dataState",
+      wsState: "wsState",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -162,6 +166,22 @@ export default {
       installedServices: "installedServices",
       newUpdates: "newUpdates",
     }),
+    pointStatus() {
+      let x = [];
+
+      if (this.rpcState) {
+        x.push("RPC Point");
+      }
+
+      if (this.dataState) {
+        x.push("Data API");
+      }
+
+      if (this.wsState) {
+        x.push("WS Point");
+      }
+      return x;
+    },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
         const matchingService = this.installedServices.find((service) => service.name === update.name);
@@ -182,6 +202,7 @@ export default {
         this.storageCheck();
       }
     },
+
     cpu(newVal) {
       if (newVal >= 80 && newVal < 90) {
         this.cpuWarning = true;

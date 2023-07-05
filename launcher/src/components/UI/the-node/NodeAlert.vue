@@ -168,6 +168,8 @@ export default {
       stereumUpdate: "stereumUpdate",
       updating: "updating",
       rpcState: "rpcState",
+      dataState: "dataState",
+      wsState: "wsState",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
