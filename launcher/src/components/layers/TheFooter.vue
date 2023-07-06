@@ -13,9 +13,9 @@ export default {
 <style scoped lang="css">
 .footer-parent {
   width: 99%;
-  height: 4.2%;
+  height: 3.8%;
   left: 0.5%;
-  background-color: rgb(229, 19, 19);
+  background-color: rgb(52, 52, 52);
   border-radius: 0 0 7px 7px;
   position: fixed;
   bottom: 0.8%;
@@ -24,6 +24,7 @@ export default {
   align-items: center;
   z-index: 1;
 }
+
 .footer-status-info {
   width: 50%;
   height: 100%;

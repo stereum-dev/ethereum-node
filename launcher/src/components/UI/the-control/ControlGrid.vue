@@ -98,8 +98,6 @@
     <div class="alerts">
       <control-alert></control-alert>
     </div>
-    <div class="footer"></div>
-    <task-manager></task-manager>
   </div>
 </template>
 
@@ -309,15 +307,6 @@ export default {
   z-index: 0;
 }
 
-.footer {
-  width: 100%;
-  height: 99%;
-  margin: 0 auto;
-  grid-column: 1/4;
-  grid-row: 4;
-  background-color: rgb(52, 52, 52);
-  border-radius: 0 0 7px 7px;
-}
 .plugins-title {
   width: 40%;
   height: 25px;
