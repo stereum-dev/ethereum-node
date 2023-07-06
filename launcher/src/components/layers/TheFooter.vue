@@ -13,14 +13,13 @@ export default {
 <style scoped lang="css">
 .footer-parent {
   width: 99%;
-  height: 5%;
+  height: 4.2%;
   margin: 0 auto;
   grid-column: 1/4;
   grid-row: 4;
   background-color: rgb(229, 19, 19);
   border-radius: 0 0 7px 7px;
   position: fixed;
-
-  bottom: 0.5%;
+  bottom: 0.8%;
 }
 </style>
