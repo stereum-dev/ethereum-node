@@ -143,7 +143,11 @@
     "data": "data",
     "enteredKeys": "The number of entered validation keys",
     "ttlBal": "Total balance",
-    "finEPOCH": "Finalized EPOCH"
+    "finEPOCH": "Finalized EPOCH",
+    "pending": "service is pending",
+    "off": "Switch off the service",
+    "on": "Switch on the service",
+    "settingService": "Setting up the service"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

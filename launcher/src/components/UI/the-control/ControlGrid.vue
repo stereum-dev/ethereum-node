@@ -36,12 +36,16 @@
                         class="pending"
                         src="/img/icon/plugin-menu-icons/turning_circle.gif"
                         alt="icon"
+                        @mouseenter="cursorLocation = `${pending}`"
+                        @mouseleave="cursorLocation = ''"
                       />
                       <img
                         v-else-if="item.state == 'running'"
                         src="/img/icon/plugin-menu-icons/shutdown.png"
                         alt="icon"
                         @click.stop="stateHandler(item)"
+                        @mouseenter="cursorLocation = `${off}`"
+                        @mouseleave="cursorLocation = ''"
                       />
                       <img
                         v-else-if="item.state == 'restarting'"
@@ -54,11 +58,18 @@
                         src="/img/icon/plugin-menu-icons/turn-on.png"
                         alt="icon"
                         @click.stop="stateHandler(item)"
+                        @mouseenter="cursorLocation = `${on}`"
+                        @mouseleave="cursorLocation = ''"
                       />
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div class="seting-icon" @click.stop="expertModeHandler(item)">
+                    <div
+                      class="seting-icon"
+                      @click.stop="expertModeHandler(item)"
+                      @mouseenter="cursorLocation = `${settingService}`"
+                      @mouseleave="cursorLocation = ''"
+                    >
                       <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
                     </div>
                   </div>
@@ -128,6 +139,10 @@ export default {
       gethPrunningWarningModal: false,
       resyncWarningModal: false,
       isPluginLogPageActive: false,
+      pending: this.$t("controlPage.pending"),
+      off: this.$t("controlPage.off"),
+      on: this.$t("controlPage.on"),
+      settingService: this.$t("controlPage.settingService"),
     };
   },
   create() {
@@ -143,6 +158,7 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
+
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
