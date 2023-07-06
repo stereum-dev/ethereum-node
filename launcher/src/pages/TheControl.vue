@@ -1,9 +1,8 @@
 <template>
   <div class="control-parent">
-    <node-bg>
-      <control-grid></control-grid>
-    </node-bg>
+    <node-bg> <control-grid></control-grid><TheFooter /> </node-bg>
     <node-header id="head"> </node-header>
+    <TaskManager />
   </div>
 </template>
 <script>
@@ -11,8 +10,10 @@ import { mapWritableState } from "pinia";
 import ControlService from "@/store/ControlService";
 import ControlGrid from "../components/UI/the-control/ControlGrid.vue";
 import { useControlStore } from "../store/theControl";
+import TheFooter from "../components/layers/TheFooter.vue";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
-  components: { ControlGrid },
+  components: { ControlGrid, TheFooter, TaskManager },
   computed: {
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
