@@ -3,21 +3,29 @@
     <div class="staking-box">
       <div class="staking-ico">
         <div class="staking-ico_container">
-          <img src="../../../../public/img/icon/control/key-eth.svg" alt="Key-icon" />
+          <img src="/img/icon/control/key-eth.svg" alt="Key-icon" />
         </div>
         <span>STAKING</span>
       </div>
       <div class="staking-container">
         <div class="side-top">
-          <div class="top-value">
+          <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
             <span>{{ formattedBalance }}</span>
           </div>
-          <div class="top-icon">
+          <div
+            class="top-icon"
+            @mouseenter="cursorLocation = `${currentNetwork.name}`"
+            @mouseleave="cursorLocation = ''"
+          >
             <img :src="selectedCurrency" alt="coin-icon" />
           </div>
         </div>
         <div class="side-bottom">
-          <div class="number-of-validators">
+          <div
+            class="number-of-validators"
+            @mouseenter="cursorLocation = `${enteredKeys}`"
+            @mouseleave="cursorLocation = ''"
+          >
             <span>{{ formattedValidatorNo }}</span>
           </div>
           <div class="number-of-validators_title">
@@ -33,11 +41,15 @@
 import { mapState } from "pinia";
 import { useStakingStore } from "../../../store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 export default {
   data() {
     return {
       currencyIcon: "",
       selectedCurrency: "",
+      enteredKeys: this.$t("controlPage.enteredKeys"),
+      ttlBal: this.$t("controlPage.ttlBal"),
     };
   },
   computed: {
@@ -47,6 +59,9 @@ export default {
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
@@ -88,6 +103,7 @@ export default {
   align-items: center;
   height: 100%;
   color: #c1c1c1;
+  cursor: default;
 }
 .staking-box {
   width: 100%;

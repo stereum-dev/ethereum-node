@@ -127,7 +127,23 @@
     "storage": "STORAGE",
     "active": "ACTIVE",
     "rating": "RATING",
-    "usage": "Usage"
+    "usage": "Usage",
+    "netSel": "The selected network is",
+    "machineName": "Machine Name",
+    "storVol": "Storage Volume",
+    "stor": "the storage",
+    "diskSpeed": "Disk Speed",
+    "p2p": "peer to peer networks",
+    "cpuUse": "CPU Usage",
+    "syncInfo": "Synchronization status",
+    "ramUse": "RAM Usage",
+    "netSpeed": "Network Speed",
+    "listPort": "list of ports",
+    "endPoint": "endpoint",
+    "data": "data",
+    "enteredKeys": "The number of entered validation keys",
+    "ttlBal": "Total balance",
+    "finEPOCH": "Finalized EPOCH"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

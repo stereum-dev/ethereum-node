@@ -1,54 +1,54 @@
 <template>
   <div class="ctrlParent">
     <div class="machineName_cell">
-      <machine-name @mouseenter="cursorLocation = 'machine name'" @mouseleave="cursorLocation = ''" />
+      <machine-name @mouseenter="cursorLocation = `${machineName}`" @mouseleave="cursorLocation = ''" />
     </div>
     <div class="node-serve">
       <EpochSlot />
     </div>
     <div class="sandFull_cell"><TheBalance /></div>
     <dashboard-card class="hard-disk">
-      <the-hard @mouseenter="cursorLocation = 'storage volume'" @mouseleave="cursorLocation = ''" />
+      <the-hard @mouseenter="cursorLocation = `${storVol}`" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
     <dashboard-card class="storage"
-      ><the-storage @mouseenter="cursorLocation = 'the storage'" @mouseleave="cursorLocation = ''"
+      ><the-storage @mouseenter="cursorLocation = `${stor}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="disk-speed"
-      ><disk-speed @mouseenter="cursorLocation = 'disk speed'" @mouseleave="cursorLocation = ''"
+      ><disk-speed @mouseenter="cursorLocation = `${diskSpeed}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="p2p">
-      <peer-to-peer @mouseenter="cursorLocation = 'peer to peer networks'" @mouseleave="cursorLocation = ''"
+      <peer-to-peer @mouseenter="cursorLocation = `${p2p}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="the-cpu">
-      <the-cpu @mouseenter="cursorLocation = 'CPU usage'" @mouseleave="cursorLocation = ''" />
+      <the-cpu @mouseenter="cursorLocation = `${cpuUse}`" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
     <dashboard-card class="amsterdam">
       <amsterdam-component />
     </dashboard-card>
     <dashboard-card class="sync-status"
-      ><sync-status @mouseenter="cursorLocation = 'Synchronization status'" @mouseleave="cursorLocation = ''"
+      ><sync-status @mouseenter="cursorLocation = `${syncInfo}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="validatorComment_cell">
-      <the-staking></the-staking>
+      <the-staking />
     </dashboard-card>
     <dashboard-card class="the-ram">
-      <the-ram @mouseenter="cursorLocation = 'RAM usage'" @mouseleave="cursorLocation = ''"
+      <the-ram @mouseenter="cursorLocation = `${ramUse}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="the-network"
-      ><the-network @mouseenter="cursorLocation = 'network speed'" @mouseleave="cursorLocation = ''"
+      ><the-network @mouseenter="cursorLocation = `${netSpeed}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="portlist_card"
-      ><port-list @mouseenter="cursorLocation = 'list of ports'" @mouseleave="cursorLocation = ''"
+      ><port-list @mouseenter="cursorLocation = `${listPort}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <div class="half-card">
-      <rpc-endpoint @mouseenter="cursorLocation = 'RPC endpoint'" @mouseleave="cursorLocation = ''" />
+      <rpc-endpoint @mouseenter="cursorLocation = `RPC ${endPoint}`" @mouseleave="cursorLocation = ''" />
     </div>
     <div class="half-card2">
-      <ws-endpoint @mouseenter="cursorLocation = 'WS endpoint'" @mouseleave="cursorLocation = ''" />
+      <ws-endpoint @mouseenter="cursorLocation = `WS ${endPoint}`" @mouseleave="cursorLocation = ''" />
     </div>
 
     <div class="half-card3">
-      <data-api @mouseenter="cursorLocation = 'data API'" @mouseleave="cursorLocation = ''" />
+      <data-api @mouseenter="cursorLocation = `${data} API`" @mouseleave="cursorLocation = ''" />
     </div>
   </div>
 </template>
@@ -94,6 +94,22 @@ export default {
     DiskSpeed,
     TheStaking,
   },
+  data() {
+    return {
+      machineName: this.$t("controlPage.machineName"),
+      storVol: this.$t("controlPage.storVol"),
+      stor: this.$t("controlPage.stor"),
+      diskSpeed: this.$t("controlPage.diskSpeed"),
+      p2p: this.$t("controlPage.p2p"),
+      cpuUse: this.$t("controlPage.cpuUse"),
+      syncInfo: this.$t("controlPage.syncInfo"),
+      ramUse: this.$t("controlPage.ramUse"),
+      netSpeed: this.$t("controlPage.netSpeed"),
+      listPort: this.$t("controlPage.listPort"),
+      endPoint: this.$t("controlPage.endPoint"),
+      data: this.$t("controlPage.data"),
+    };
+  },
   computed: {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -126,6 +142,7 @@ export default {
   gap: 1%;
   margin: 1%;
   box-sizing: border-box;
+  cursor: default;
 }
 .card a {
   width: 100%;

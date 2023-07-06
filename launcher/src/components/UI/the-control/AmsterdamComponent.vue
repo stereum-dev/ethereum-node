@@ -1,6 +1,10 @@
 <template>
   <div class="amsterdam-parent">
-    <div class="icoTitle">
+    <div
+      class="icoTitle"
+      @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
+      @mouseleave="cursorLocation = ''"
+    >
       <div class="icoContainer">
         <img :src="networkIcon" />
       </div>
@@ -22,6 +26,8 @@
 <script>
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 export default {
   data() {
     return {
@@ -32,12 +38,16 @@ export default {
       days: null,
       date: "",
       pattern: [],
+      footerInfo: this.$t("controlPage.netSel"),
     };
   },
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
-    })
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
   },
   created() {
     // Add initial objects to the array
@@ -46,7 +56,7 @@ export default {
     }
   },
   mounted() {
-    this.networkIcon = this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon
+    this.networkIcon = this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     // Call the addObject() function every sec
     setInterval(() => {
       this.epochMonitoring();
