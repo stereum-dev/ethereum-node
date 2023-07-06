@@ -69,12 +69,8 @@
             <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
           </div>
         </div>
-        <div class="footer">
-          <div class="footer-content"></div>
-        </div>
-        <task-manager></task-manager>
-      </div>
-    </node-bg>
+      </div> </node-bg
+    ><task-manager></task-manager><TheFooter />
   </div>
 </template>
 
@@ -94,6 +90,7 @@ import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
 import { useNodeHeader } from "../store/nodeHeader";
+import TheFooter from "../components/layers/TheFooter.vue";
 
 export default {
   components: {
@@ -104,6 +101,7 @@ export default {
     TheVideos,
     NodeAlert,
     NodeTutorial,
+    TheFooter,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 

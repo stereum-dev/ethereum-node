@@ -14,12 +14,25 @@ export default {
 .footer-parent {
   width: 99%;
   height: 4.2%;
-  margin: 0 auto;
-  grid-column: 1/4;
-  grid-row: 4;
+  left: 0.5%;
   background-color: rgb(229, 19, 19);
   border-radius: 0 0 7px 7px;
   position: fixed;
   bottom: 0.8%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 1;
+}
+.footer-status-info {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 3.8%;
+  font-size: 80%;
+  color: #c1c1c1;
+  font-weight: 700;
 }
 </style>
