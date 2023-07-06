@@ -1,40 +1,60 @@
 <template>
   <div class="ctrlParent">
-    <div class="machineName_cell"><machine-name></machine-name></div>
+    <div class="machineName_cell">
+      <machine-name @mouseenter="cursorLocation = 'machine name'" @mouseleave="cursorLocation = ''" />
+    </div>
     <div class="node-serve">
       <EpochSlot />
     </div>
     <div class="sandFull_cell"><TheBalance /></div>
     <dashboard-card class="hard-disk">
-      <the-hard></the-hard>
+      <the-hard @mouseenter="cursorLocation = 'storage volume'" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
-    <dashboard-card class="storage"><the-storage></the-storage></dashboard-card>
-    <dashboard-card class="disk-speed"><disk-speed></disk-speed></dashboard-card>
-    <dashboard-card class="p2p"> <peer-to-peer></peer-to-peer></dashboard-card>
+    <dashboard-card class="storage"
+      ><the-storage @mouseenter="cursorLocation = 'the storage'" @mouseleave="cursorLocation = ''"
+    /></dashboard-card>
+    <dashboard-card class="disk-speed"
+      ><disk-speed @mouseenter="cursorLocation = 'disk speed'" @mouseleave="cursorLocation = ''"
+    /></dashboard-card>
+    <dashboard-card class="p2p">
+      <peer-to-peer @mouseenter="cursorLocation = 'peer to peer networks'" @mouseleave="cursorLocation = ''"
+    /></dashboard-card>
     <dashboard-card class="the-cpu">
-      <the-cpu></the-cpu>
+      <the-cpu @mouseenter="cursorLocation = 'CPU usage'" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
     <dashboard-card class="amsterdam">
-      <amsterdam-component></amsterdam-component>
+      <amsterdam-component />
     </dashboard-card>
-    <dashboard-card class="sync-status"><sync-status></sync-status></dashboard-card>
+    <dashboard-card class="sync-status"
+      ><sync-status @mouseenter="cursorLocation = 'Synchronization status'" @mouseleave="cursorLocation = ''"
+    /></dashboard-card>
     <dashboard-card class="validatorComment_cell">
       <the-staking></the-staking>
     </dashboard-card>
-    <dashboard-card class="the-ram"> <the-ram></the-ram></dashboard-card>
-    <dashboard-card class="the-network"><the-network></the-network></dashboard-card>
-    <dashboard-card class="portlist_card"><port-list></port-list></dashboard-card>
+    <dashboard-card class="the-ram">
+      <the-ram @mouseenter="cursorLocation = 'RAM usage'" @mouseleave="cursorLocation = ''"
+    /></dashboard-card>
+    <dashboard-card class="the-network"
+      ><the-network @mouseenter="cursorLocation = 'network speed'" @mouseleave="cursorLocation = ''"
+    /></dashboard-card>
+    <dashboard-card class="portlist_card"
+      ><port-list @mouseenter="cursorLocation = 'list of ports'" @mouseleave="cursorLocation = ''"
+    /></dashboard-card>
     <div class="half-card">
-      <rpc-endpoint></rpc-endpoint>
+      <rpc-endpoint @mouseenter="cursorLocation = 'RPC endpoint'" @mouseleave="cursorLocation = ''" />
     </div>
     <div class="half-card2">
-      <ws-endpoint></ws-endpoint>
+      <ws-endpoint @mouseenter="cursorLocation = 'WS endpoint'" @mouseleave="cursorLocation = ''" />
     </div>
 
-    <div class="half-card3"><data-api></data-api></div>
+    <div class="half-card3">
+      <data-api @mouseenter="cursorLocation = 'data API'" @mouseleave="cursorLocation = ''" />
+    </div>
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
 import SyncStatus from "./SyncStatus.vue";
@@ -73,6 +93,11 @@ export default {
     WsEndpoint,
     DiskSpeed,
     TheStaking,
+  },
+  computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="footer-parent">
     <div class="footer-status-info">
-      <span>{{ location }}</span>
+      <span>{{ cursorLocation }}</span>
     </div>
   </div>
 </template>
@@ -44,5 +44,6 @@ export default {
   font-size: 80%;
   color: #c1c1c1;
   font-weight: 700;
+  text-transform: capitalize;
 }
 </style>

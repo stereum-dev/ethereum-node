@@ -109,15 +109,15 @@ import ControlAlert from "./ControlAlert.vue";
 import TheExpert from "../the-node/TheExpert.vue";
 import PrunningModal from "../the-node/PrunningModal.vue";
 import ResyncModal from "../the-node/ResyncModal.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useServices } from "../../../store/services";
 export default {
   components: {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-    TaskManager,
+
     TheExpert,
     PrunningModal,
     ResyncModal,
@@ -142,6 +142,9 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
   methods: {
