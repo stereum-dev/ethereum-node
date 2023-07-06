@@ -1,12 +1,21 @@
 <template>
   <div class="footer-parent">
-    <div class="footer-status-info"><span>Lorem, ipsum dolor.</span></div>
+    <div class="footer-status-info">
+      <span>{{ location }}</span>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 export default {
   name: "TheFooter",
+  computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
+  },
 };
 </script>
 

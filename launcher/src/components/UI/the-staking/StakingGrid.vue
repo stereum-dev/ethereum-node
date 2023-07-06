@@ -25,7 +25,7 @@
 
 <script>
 import { mapWritableState } from "pinia";
-import { useServices } from "../../../store/services";
+import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
