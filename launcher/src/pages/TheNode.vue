@@ -70,7 +70,7 @@
           </div>
         </div>
       </div> </node-bg
-    ><task-manager></task-manager><TheFooter />
+    ><task-manager></task-manager><TheFooter class="footer" />
   </div>
 </template>
 
@@ -208,6 +208,9 @@ export default {
 </script>
 
 <style scoped>
+.footer {
+  z-index: 1;
+}
 .info-button {
   width: 90%;
   height: 8%;
@@ -414,15 +417,7 @@ export default {
   border-left: none;
   padding: 1% 0;
 }
-.footer {
-  width: 100%;
-  height: 90%;
-  margin: 0 auto;
-  grid-column: 1/5;
-  grid-row: 4;
-  background-color: #343434;
-  border-radius: 0 0 7px 7px;
-}
+
 .node-task-manager {
   position: fixed;
   left: 4px;

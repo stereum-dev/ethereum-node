@@ -31,7 +31,6 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  z-index: 1;
 }
 
 .footer-status-info {
