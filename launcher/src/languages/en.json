@@ -586,5 +586,13 @@
   "balWid": {
     "fin": "FINALIZED",
     "bal": "BALANCE CHANGE"
+  },
+  "headerBtn": {
+    "help": "help",
+    "notif": "Management of notification channels",
+    "availableUpdt": "New update is available",
+    "updtPan": "update panel",
+    "setting": "Stereum settings",
+    "logOutBtn": "Log out"
   }
 }

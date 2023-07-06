@@ -1,13 +1,29 @@
 <template>
   <div class="icons-box">
-    <div class="icon-btn" @click="supportModalOpen">
+    <div
+      class="icon-btn"
+      @click="supportModalOpen"
+      @mouseenter="cursorLocation = `${help}`"
+      @mouseleave="cursorLocation = ''"
+    >
       <img alt="help" src="/img/icon/header-icons/question-mark.png" />
     </div>
 
-    <div class="icon-btn" @click="notifModalOpen">
+    <div
+      class="icon-btn"
+      @click="notifModalOpen"
+      @mouseenter="cursorLocation = `${notif}`"
+      @mouseleave="cursorLocation = ''"
+    >
       <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
-    <div v-if="isUpdateAvailable || isOsUpdateAvailable" class="icon-btn" @click="updateModalHandler">
+    <div
+      v-if="isUpdateAvailable || isOsUpdateAvailable"
+      class="icon-btn"
+      @click="updateModalHandler"
+      @mouseenter="cursorLocation = `${availableUpdt}`"
+      @mouseleave="cursorLocation = ''"
+    >
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
     <div
@@ -15,18 +31,29 @@
       class="icon-btn"
       @click="updateModalHandler"
       @mouseover="showUpdateText = true"
-      @mouseleave="showUpdateText = false"
+      @mouseenter="cursorLocation = `${updtPan}`"
+      @mouseleave="(showUpdateText = false), (cursorLocation = '')"
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
     </div>
 
-    <router-link to="/setting" class="icon-btn">
+    <router-link
+      to="/setting"
+      class="icon-btn"
+      @mouseenter="cursorLocation = `${setting}`"
+      @mouseleave="cursorLocation = ''"
+    >
       <div>
         <img alt="setting" src="/img/icon/header-icons/setting4.png" />
       </div>
     </router-link>
 
-    <div class="icon-btn" @click="logoutModalHandler">
+    <div
+      class="icon-btn"
+      @click="logoutModalHandler"
+      @mouseenter="cursorLocation = `${logOutBtn}`"
+      @mouseleave="cursorLocation = ''"
+    >
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
@@ -51,6 +78,7 @@
 </template>
 
 <script>
+import { useFooter } from "@/store/theFooter";
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "./UpdatePanel.vue";
 import LogoutModal from "./LogoutModal.vue";
@@ -70,6 +98,12 @@ export default {
       logoutModalIsActive: false,
       supportModalIsActive: false,
       notificationModalIsActive: false,
+      help: this.$t("headerBtn.help"),
+      notif: this.$t("headerBtn.notif"),
+      availableUpdt: this.$t("headerBtn.availableUpdt"),
+      updtPan: this.$t("headerBtn.updtPan"),
+      setting: this.$t("headerBtn.setting"),
+      logOutBtn: this.$t("headerBtn.logOutBtn"),
     };
   },
   computed: {
@@ -88,6 +122,9 @@ export default {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
       versions: "versions",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
   methods: {
