@@ -3,11 +3,37 @@
     <div class="header bg-zinc-900">
       <span>{{ $t("installitionMenu.welcome") }}</span>
     </div>
+
+    <div class="btn-parent">
+      <div class="serverName">
+        Server:
+        <span>{{ ServerName }}</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="serverIp">
+        IP:
+        <span>{{ ipAddress }}</span>
+      </div>
+    </div>
+
+    <div class="logout-parent">
+      <button
+        class="btn-logout"
+        @click="logoutModalHandler"
+        @mouseover="showTooltip = true"
+        @mouseout="showTooltip = false"
+      >
+        <img src="/img/icon/header-icons/exit9.png" alt="logout Icon" />
+      </button>
+      <span v-if="showTooltip" class="logout-tooltip">Log Out</span>
+    </div>
+
     <div class="textBox bg-zinc-900">
       <p>
         {{ $t("installitionMenu.installText") }}
       </p>
     </div>
+
     <div class="item-container">
       <div v-for="(install, index) in installation" :key="index" class="item-column">
         <router-link class="lintTtl" :class="{ disabled: isCompatible(install) }" :to="install.path"
@@ -32,17 +58,23 @@
         {{ message }}
       </span>
     </div>
+    <logout-modal v-if="logoutModalIsActive" @close-me="clickToCancelLogout" @confrim-logout="loggingOut">
+    </logout-modal>
   </div>
 </template>
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
+import { useControlStore } from "../../../store/theControl";
+import LogoutModal from "../node-header/LogoutModal.vue";
 export default {
-  components: { ButtonInstallation },
+  components: { ButtonInstallation, LogoutModal },
   data() {
     return {
+      logoutModalIsActive: false,
+      showTooltip: false,
       active: true,
       running: true,
       message: "",
@@ -55,6 +87,13 @@ export default {
 
   computed: {
     ...mapState(useWelcomeStore, { installation: "installation" }),
+    ...mapWritableState(useControlStore, {
+      ServerName: "ServerName",
+      ipAddress: "ipAddress",
+    }),
+  },
+  mounted() {
+    this.updateConnectionStats();
   },
   created() {
     setTimeout(() => {
@@ -64,6 +103,24 @@ export default {
     this.randomValue();
   },
   methods: {
+    async updateConnectionStats() {
+      const stats = await ControlService.getConnectionStats();
+      this.ServerName = stats.ServerName;
+      this.ipAddress = stats.ipAddress;
+    },
+    clickToCancelLogout() {
+      this.logoutModalIsActive = false;
+    },
+    async loggingOut() {
+      this.refresh = false;
+      await ControlService.logout();
+      this.$router.push("/").then(() => {
+        location.reload();
+      });
+    },
+    logoutModalHandler() {
+      this.logoutModalIsActive = true;
+    },
     isCompatible(item) {
       if (process.env.NODE_ENV == "development") return !item.display;
       return !item.display || this.active;
@@ -138,6 +195,57 @@ export default {
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(10, 1fr);
 }
+.logout-parent {
+  position: relative;
+  grid-column: 6/7;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.btn-logout {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: #1e2429;
+  border: 3px solid #b4b4b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+.btn-logout:hover {
+  background-color: #336666;
+  border: 3px solid #b4b4b4;
+}
+.btn-logout img {
+  width: 20px;
+  height: 20px;
+}
+.logout-tooltip {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  margin-top: 50px;
+  margin-right: 20px;
+  width: 100px;
+  height: 30px;
+  background-color: #1e2429;
+  border: 1px solid #b4b4b4;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #b4b4b4;
+  font-size: 0.8rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: all 0.3s ease-in-out;
+}
 .header {
   grid-column: 2/6;
   grid-row: 2/3;
@@ -165,6 +273,42 @@ export default {
   color: #b4b4b4;
 }
 
+.btn-parent {
+  grid-column: 2/6;
+  grid-row: 3/4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-parent .spacer{
+  width: 10%;
+  height: 40px;
+}
+.btn-parent .serverName,
+.btn-parent .serverIp {
+  width: 35%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1e2429;
+  border: 1px solid white;
+  border-radius: 8px;
+  color: #eee;
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-x: hidden;
+}
+
+.serverName span,
+.serverIp span {
+  width: max-content;
+  font-size: 1rem;
+  font-weight: 500;
+  color: yellow;
+  margin-left: 2px;
+}
+
 .textBox {
   grid-column: 1/7;
   grid-row: 4/6;
@@ -180,6 +324,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-transform: uppercase;
+  margin-top: 5px;
 }
 .textBox p {
   font-size: 1rem;
@@ -309,7 +454,7 @@ export default {
   content: "";
   display: inline-block;
   position: absolute;
-  top:0;
+  top: 0;
 }
 
 .dot-flashing::before {
@@ -333,7 +478,31 @@ export default {
   animation: dotFlashing 1s infinite alternate;
   animation-delay: 1s;
 }
-
+.button-new {
+  background-color: rgb(52, 51, 51);
+  border: none;
+  color: white;
+  padding: 35px 35px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  /* font-size: 16px; */
+  width: 210px;
+  height: 52px;
+  font-size: 15px;
+  border-radius: 10px;
+  padding-top: 10px !important;
+  font-weight: bold;
+}
+.btn-black {
+  border: solid !important;
+  border-color: white !important;
+  border-radius: 10px;
+}
+.btn-font {
+  padding-left: 10px;
+  color: yellow;
+}
 @keyframes dotFlashing {
   0% {
     background-color: #1068a3;
