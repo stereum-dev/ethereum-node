@@ -1,7 +1,12 @@
 <template>
   <div class="switch-network" @mouseleave="(closeDropdownActive = false), (dropdownIsActive = false)">
     <div class="switch-network__content">
-      <div class="current" @click="openDropDown">
+      <div
+        class="current"
+        @click="openDropDown"
+        @mouseenter="cursorLocation = `${message}`"
+        @mouseleave="cursorLocation = ''"
+      >
         <div class="networkIcon">
           <img :src="configNetwork.icon ? configNetwork.icon : loadingGIF" alt="icon" />
         </div>
@@ -31,6 +36,7 @@
   </div>
 </template>
 <script>
+import { useFooter } from "@/store/theFooter";
 import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
@@ -40,6 +46,7 @@ export default {
       closeDropdownActive: false,
       dropdownIsActive: false,
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
+      message: this.$t("switchNetwork.message"),
     };
   },
   computed: {
@@ -53,6 +60,9 @@ export default {
       newConfiguration: "newConfiguration",
       confirmChanges: "confirmChanges",
       actionContents: "actionContents",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
   watch: {
@@ -87,17 +97,11 @@ export default {
           if (this.currentNetwork.network === item.network) {
             this.confirmChanges.splice(index, 1);
           } else {
-            this.confirmChanges[index].data.network = item.network
+            this.confirmChanges[index].data.network = item.network;
             this.confirmChanges[index].service.icon = item.icon;
           }
         } else if (this.newConfiguration.length > 0) {
-          this.confirmChanges.push(
-            this.getActions(
-              "CHANGE NETWORK",
-              { icon: item.icon },
-              { network: item.network }
-            )
-          );
+          this.confirmChanges.push(this.getActions("CHANGE NETWORK", { icon: item.icon }, { network: item.network }));
         }
       }
       this.configNetwork = item;

@@ -595,5 +595,8 @@
     "updtPan": "update panel",
     "setting": "Stereum settings",
     "logOutBtn": "Log out"
+  },
+  "switchNetwork": {
+    "message": "This is the current network, you can click to select another network"
   }
 }
