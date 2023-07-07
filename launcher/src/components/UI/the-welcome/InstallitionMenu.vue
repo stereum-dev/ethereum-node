@@ -6,11 +6,12 @@
 
     <div class="btn-parent">
       <div class="serverName">
-        Server: 
+        Server:
         <span>{{ ServerName }}</span>
       </div>
+      <div class="spacer"></div>
       <div class="serverIp">
-        IP: 
+        IP:
         <span>{{ ipAddress }}</span>
       </div>
     </div>
@@ -279,22 +280,33 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.btn-parent .spacer{
+  width: 10%;
+  height: 40px;
+}
 .btn-parent .serverName,
 .btn-parent .serverIp {
-  width: 100%;
-  height: 30px;
-  border:'2px solid white';
-  background-color: "#33393E !important";
+  width: 35%;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #1e2429;
+  border: 1px solid white;
+  border-radius: 8px;
+  color: #eee;
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-x: hidden;
 }
 
 .serverName span,
 .serverIp span {
-  font-size: "1rem";
+  width: max-content;
+  font-size: 1rem;
   font-weight: 500;
   color: yellow;
+  margin-left: 2px;
 }
 
 .textBox {
