@@ -4,7 +4,9 @@
       <span>{{ $t("installitionMenu.welcome") }}</span>
     </div>
 
+
     <div class="welcomeBtnParent">
+
       <div class="serverName">
         Server:
         <span>{{ ServerName }}</span>
@@ -273,13 +275,16 @@ export default {
   color: #b4b4b4;
 }
 
+
 .welcomeBtnParent {
+
   grid-column: 2/6;
   grid-row: 3/4;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .welcomeBtnParent .spacer{
   width: 10%;
   height: 40px;
