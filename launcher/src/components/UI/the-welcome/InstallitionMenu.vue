@@ -3,11 +3,28 @@
     <div class="header bg-zinc-900">
       <span>{{ $t("installitionMenu.welcome") }}</span>
     </div>
+
+    <div class="btn-parent">
+      <div class="btn-black">
+        <span class="button-new">Name:<span class="btn-font">Machine</span></span>
+      </div>
+      <div class="btn-black">
+        <span class="button-new"><span class="btn-font">IP:</span>10.12.2.199
+        </span>
+      </div>
+      <div>
+        <button class="button-new btn-logout" @click="logoutModalHandler" style="font-size: 20px">
+          Log OUT <img src="/img/icon/header-icons/exit9.png" alt="logout Icon" />
+        </button>
+      </div>
+    </div>
+
     <div class="textBox bg-zinc-900">
       <p>
         {{ $t("installitionMenu.installText") }}
       </p>
     </div>
+
     <div class="item-container">
       <div v-for="(install, index) in installation" :key="index" class="item-column">
         <router-link class="lintTtl" :class="{ disabled: isCompatible(install) }" :to="install.path"
@@ -32,6 +49,8 @@
         {{ message }}
       </span>
     </div>
+    <logout-modal v-if="logoutModalIsActive" @close-me="clickToCancelLogout" @confrim-logout="loggingOut">
+    </logout-modal>
   </div>
 </template>
 <script>
@@ -39,10 +58,12 @@ import ButtonInstallation from "./ButtonInstallation.vue";
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
+import LogoutModal from "../node-header/LogoutModal.vue";
 export default {
-  components: { ButtonInstallation },
+  components: { ButtonInstallation, LogoutModal },
   data() {
     return {
+      logoutModalIsActive: false,
       active: true,
       running: true,
       message: "",
@@ -64,6 +85,19 @@ export default {
     this.randomValue();
   },
   methods: {
+    clickToCancelLogout() {
+      this.logoutModalIsActive = false;
+    },
+    async loggingOut() {
+      this.refresh = false;
+      await ControlService.logout();
+      this.$router.push("/").then(() => {
+        location.reload();
+      });
+    },
+    logoutModalHandler() {
+      this.logoutModalIsActive = true;
+    },
     isCompatible(item) {
       if (process.env.NODE_ENV == "development") return !item.display;
       return !item.display || this.active;
@@ -131,6 +165,21 @@ export default {
 };
 </script>
 <style scope>
+.btn-logout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #336666 !important;
+  border-radius: 12px !important;
+  color: white !important;
+  font-size: 18px !important;
+  border-style: solid !important;
+}
+.btn-logout img {
+  display: inherit;
+  width: 25px;
+  height: 25px;
+}
 .welcome-parent {
   width: 100vw;
   height: 100vh;
@@ -165,6 +214,14 @@ export default {
   color: #b4b4b4;
 }
 
+.btn-parent {
+  grid-column: 1/7;
+  grid-row: 3/4;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .textBox {
   grid-column: 1/7;
   grid-row: 4/6;
@@ -180,6 +237,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-transform: uppercase;
+  margin-top: 5px;
 }
 .textBox p {
   font-size: 1rem;
@@ -309,7 +367,7 @@ export default {
   content: "";
   display: inline-block;
   position: absolute;
-  top:0;
+  top: 0;
 }
 
 .dot-flashing::before {
@@ -333,7 +391,31 @@ export default {
   animation: dotFlashing 1s infinite alternate;
   animation-delay: 1s;
 }
-
+.button-new {
+  background-color: rgb(52, 51, 51);
+  border: none;
+  color: white;
+  padding: 35px 35px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  /* font-size: 16px; */
+  width: 210px;
+  height: 52px;
+  font-size: 15px;
+  border-radius: 10px;
+  padding-top: 10px !important;
+  font-weight: bold;
+}
+.btn-black {
+  border: solid !important;
+  border-color: white !important;
+  border-radius: 10px;
+}
+.btn-font {
+  padding-left: 10px;
+  color: yellow;
+}
 @keyframes dotFlashing {
   0% {
     background-color: #1068a3;
