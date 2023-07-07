@@ -83,9 +83,7 @@
         <div class="sidebar">
           <sidebar-manage :start-drag="startDrag" @add-service="addNewService"> </sidebar-manage>
         </div>
-        <div class="footer" onmousedown="return false">
-          <div class="footer-content"></div>
-        </div>
+        <TheFooter />
         <task-manager></task-manager>
       </div>
     </node-bg>
@@ -93,6 +91,7 @@
 </template>
 
 <script>
+import TheFooter from "../components/layers/TheFooter.vue";
 import ControlService from "@/store/ControlService";
 import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
 import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
@@ -121,6 +120,7 @@ export default {
     ModifyPanel,
     ReplacePanel,
     SwitchNetwork,
+    TheFooter,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -156,12 +156,11 @@ export default {
   mounted() {
     this.confirmChanges = [];
     this.configNetwork = this.currentNetwork;
-    if(!this.architecture)
-      this.setArchitecture();
+    if (!this.architecture) this.setArchitecture();
   },
   methods: {
     async setArchitecture() {
-      let settings = await ControlService.getStereumSettings()
+      let settings = await ControlService.getStereumSettings();
       this.architecture = settings.stereum?.settings.arch;
     },
     sortByName(a, b) {
@@ -449,16 +448,6 @@ export default {
 
 .sidebar {
   z-index: 6;
-}
-
-.footer {
-  width: 100%;
-  height: 88%;
-  margin: 0 auto;
-  grid-column: 1/5;
-  grid-row: 4;
-  background-color: #343434;
-  border-radius: 0 0 7px 7px;
 }
 
 ::-webkit-scrollbar {
