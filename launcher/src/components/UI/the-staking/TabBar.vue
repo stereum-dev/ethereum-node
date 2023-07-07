@@ -6,6 +6,8 @@
       :class="['tabbar-item', { active: index === activeIndex }]"
       class="tab"
       @click="getItem(item, index)"
+      @mouseenter="cursorLocation = `${item.title}`"
+      @mouseleave="cursorLocation = ''"
     >
       <img :src="item.imgPath" alt="icon" :class="{ 'animate-pulse': index === activeIndex }" @mousedown.prevent />
       <div class="title">
@@ -15,6 +17,8 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 export default {
   props: {
     tabs: {
@@ -27,6 +31,11 @@ export default {
       activeIndex: 0, // set the default active index to the first item
       optionsTitle: "ATTESTATION",
     };
+  },
+  computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
   },
   mounted() {},
   methods: {
