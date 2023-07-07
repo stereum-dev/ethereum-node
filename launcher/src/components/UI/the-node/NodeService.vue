@@ -11,6 +11,8 @@
         <img
           :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
+          @mouseenter="cursorLocation = `${item.name}`"
+          @mouseleave="cursorLocation = ''"
           @click="pluginMenuHandler(item)"
           @dblclick="displayPluginLogPage(item)"
         />
@@ -23,17 +25,33 @@
                 src="/img/icon/plugin-menu-icons/turning_circle.gif"
                 alt="icon"
                 @click="stateHandler(item)"
+                @mouseenter="cursorLocation = `${pending}`"
+                @mouseleave="cursorLocation = ''"
               />
               <img
                 v-else-if="item.state == 'running'"
                 src="/img/icon/plugin-menu-icons/shutdown.png"
                 alt="icon"
                 @click.once="stateHandler(item)"
+                @mouseenter="cursorLocation = `${off}`"
+                @mouseleave="cursorLocation = ''"
               />
-              <img v-else src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" @click.stop="stateHandler(item)" />
+              <img
+                v-else
+                src="/img/icon/plugin-menu-icons/turn-on.png"
+                alt="icon"
+                @click.stop="stateHandler(item)"
+                @mouseenter="cursorLocation = `${on}`"
+                @mouseleave="cursorLocation = ''"
+              />
             </div>
             <div class="setting" @click="expertModeHandler(item)">
-              <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
+              <img
+                src="/img/icon/plugin-menu-icons/setting8.png"
+                alt="icon"
+                @mouseenter="cursorLocation = `${settingService}`"
+                @mouseleave="cursorLocation = ''"
+              />
             </div>
           </div>
         </plugin-menu>
@@ -52,7 +70,7 @@
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
+      src="/img/icon/manage-node-icons/white-arrow-down.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
@@ -61,7 +79,8 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
-import { useServices } from "../../../store/services";
+import { useFooter } from "@/store/theFooter";
+import { useServices } from "@/store/services";
 import PluginMenu from "./PluginMenu.vue";
 import PluginLogs from "../the-node/PluginLogs.vue";
 import TheExpert from "./TheExpert.vue";
@@ -82,6 +101,10 @@ export default {
       isServicePending: false,
       isPluginLogPageActive: false,
       itemToLogs: {},
+      off: this.$t("controlPage.off"),
+      on: this.$t("controlPage.on"),
+      settingService: this.$t("controlPage.settingService"),
+      pending: this.$t("controlPage.pending"),
     };
   },
 
@@ -89,6 +112,9 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
   beforeMount() {
