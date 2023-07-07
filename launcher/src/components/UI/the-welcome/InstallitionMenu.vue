@@ -5,18 +5,16 @@
     </div>
 
     <div class="btn-parent">
-      <div class="btn-black">
-        <span class="button-new">Name:<span class="btn-font">Machine</span></span>
-      </div>
-      <div class="btn-black">
-        <span class="button-new"><span class="btn-font">IP:</span>10.12.2.199
-        </span>
-      </div>
-      <div>
-        <button class="button-new btn-logout" @click="logoutModalHandler" style="font-size: 20px">
-          Log OUT <img src="/img/icon/header-icons/exit9.png" alt="logout Icon" />
-        </button>
-      </div>
+      <span class="button-new">Name:<span class="btn-font">Machine</span></span>
+      <span class="button-new"><span class="btn-font">IP:</span>10.12.2.199 </span>
+    </div>
+
+    <div class="logout-parent">
+      <button class="btn-logout" @click="logoutModalHandler" @mouseover="showTooltip = true" @mouseout="showTooltip = false">
+        <img src="/img/icon/header-icons/exit9.png" alt="logout Icon" />
+      </button>
+      <span v-if="showTooltip" class="logout-tooltip" >Log Out</span>
+      
     </div>
 
     <div class="textBox bg-zinc-900">
@@ -64,6 +62,7 @@ export default {
   data() {
     return {
       logoutModalIsActive: false,
+      showTooltip: false,
       active: true,
       running: true,
       message: "",
@@ -165,27 +164,63 @@ export default {
 };
 </script>
 <style scope>
-.btn-logout {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #336666 !important;
-  border-radius: 12px !important;
-  color: white !important;
-  font-size: 18px !important;
-  border-style: solid !important;
-}
-.btn-logout img {
-  display: inherit;
-  width: 25px;
-  height: 25px;
-}
 .welcome-parent {
   width: 100vw;
   height: 100vh;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(10, 1fr);
+}
+.logout-parent {
+  position: relative;
+  grid-column: 6/7;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.btn-logout {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: #1e2429;
+  border: 3px solid #b4b4b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+.btn-logout:hover {
+  background-color: #336666;
+  border: 3px solid #b4b4b4;
+}
+.btn-logout img {
+  width: 20px;
+  height: 20px;
+}
+.logout-tooltip {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  margin-top: 50px;
+  margin-right: 20px;
+  width: 100px;
+  height: 30px;
+  background-color: #1e2429;
+  border: 1px solid #b4b4b4;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #b4b4b4;
+  font-size: 0.8rem;
+  font-weight: 500;
+  z-index: 100;
+  transition: all 0.3s ease-in-out;
 }
 .header {
   grid-column: 2/6;
