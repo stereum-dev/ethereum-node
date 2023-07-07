@@ -75,7 +75,9 @@
     "consensus": "consensus",
     "validator": "validator",
     "servicePlugin": "SERVICE PLUGIN",
-    "message": "The current network is "
+    "message": "The current network is ",
+    "chckTutorial": "Check out the tutorials",
+    "returnStatus": "Return to status box"
   },
   "modifyPanel": {
     "backNode": "back to NODE",

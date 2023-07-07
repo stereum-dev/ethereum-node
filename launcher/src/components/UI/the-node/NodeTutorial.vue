@@ -22,13 +22,21 @@
       @video-option-clicked="handleVideoOptionClick(item)"
     />
 
-    <div class="back-button" @click="infoAlarm = !infoAlarm"><div class="up-arrow"></div></div>
+    <div
+      class="back-button"
+      @click="infoAlarm = !infoAlarm"
+      @mouseenter="cursorLocation = `${returnStatus}`"
+      @mouseleave="cursorLocation = ''"
+    >
+      <div class="up-arrow"></div>
+    </div>
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useNodeStore } from "@/store/theNode";
-import { useNodeHeader } from "../../../store/nodeHeader";
+import { useNodeHeader } from "@/store/nodeHeader";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
@@ -38,6 +46,7 @@ export default {
   components: { TutorialButtons },
   data() {
     return {
+      returnStatus: this.$t("theNode.returnStatus"),
       selectedGuide: "",
       tutorialTitles: [
         {
@@ -136,6 +145,9 @@ export default {
     ...mapWritableState(useNodeHeader, {
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
 

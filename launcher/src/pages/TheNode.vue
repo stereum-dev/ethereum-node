@@ -67,7 +67,12 @@
         <div class="node-side">
           <div class="sidebar-container">
             <NodeAlert v-if="infoAlarm" />
-            <div class="info-button" @click="infoAlarm = !infoAlarm">
+            <div
+              class="info-button"
+              @click="infoAlarm = !infoAlarm"
+              @mouseenter="cursorLocation = infoAlarm ? `${chckTutorial}` : `${returnStatus}`"
+              @mouseleave="cursorLocation = ''"
+            >
               <img src="/img/icon/round-icon.png" alt="information" />
             </div>
             <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
@@ -118,6 +123,8 @@ export default {
       itemToTutorial: [],
       serverVitals: {},
       message: this.$t("theNode.message"),
+      chckTutorial: this.$t("theNode.chckTutorial"),
+      returnStatus: this.$t("theNode.returnStatus"),
     };
   },
   computed: {
