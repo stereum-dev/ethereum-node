@@ -142,7 +142,7 @@
     "listPort": "list of ports",
     "endPoint": "endpoint",
     "data": "data",
-    "enteredKeys": "The number of entered validation keys",
+    "enteredKeys": "The number of entered validator keys",
     "ttlBal": "Total balance",
     "finEPOCH": "Finalized EPOCH",
     "pending": "service is pending",
