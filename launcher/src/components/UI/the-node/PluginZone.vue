@@ -17,6 +17,8 @@
             alt="icon"
             @click="pluginMenuHandler(item)"
             @dblclick.self="displayPluginLogPage(item)"
+            @mouseenter="cursorLocation = `${item.name}`"
+            @mouseleave="cursorLocation = ''"
           />
           <plugin-menu v-if="item.displayPluginMenu">
             <div class="menu-content">
@@ -26,22 +28,40 @@
                   class="pending"
                   src="/img/icon/plugin-menu-icons/turning_circle.gif"
                   alt="icon"
+                  @mouseenter="cursorLocation = `${pending}`"
+                  @mouseleave="cursorLocation = ''"
                 />
                 <img
                   v-else-if="item.state == 'running'"
                   src="/img/icon/plugin-menu-icons/shutdown.png"
                   alt="icon"
                   @click.stop="stateHandler(item)"
+                  @mouseenter="cursorLocation = `${off}`"
+                  @mouseleave="cursorLocation = ''"
                 />
                 <img
                   v-else-if="item.state == 'restarting'"
                   src="/img/icon/plugin-menu-icons/restart.png"
                   alt="icon"
                   @click="stateHandler(item)"
+                  @mouseenter="cursorLocation = `${restart}`"
+                  @mouseleave="cursorLocation = ''"
                 />
-                <img v-else src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" @click.stop="stateHandler(item)" />
+                <img
+                  v-else
+                  src="/img/icon/plugin-menu-icons/turn-on.png"
+                  alt="icon"
+                  @click.stop="stateHandler(item)"
+                  @mouseenter="cursorLocation = `${on}`"
+                  @mouseleave="cursorLocation = ''"
+                />
               </div>
-              <div class="setting" @click="expertModeHandler(item)">
+              <div
+                class="setting"
+                @click="expertModeHandler(item)"
+                @mouseenter="cursorLocation = `${settingService}`"
+                @mouseleave="cursorLocation = ''"
+              >
                 <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
               </div>
             </div>
@@ -88,9 +108,10 @@
   </manage-trapezoid>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { toRaw } from "vue";
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
@@ -135,18 +156,25 @@ export default {
       options: null,
       itemToLogs: {},
       resyncWarningModal: false,
+      pending: this.$t("controlPage.pending"),
+      off: this.$t("controlPage.off"),
+      on: this.$t("controlPage.on"),
+      restart: this.$t("controlPage.restart"),
+      settingService: this.$t("controlPage.settingService"),
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      
     }),
     ...mapWritableState(useNodeManage, {
       selectedServiceToResync: "selectedServiceToResync",
-      resyncSeparateModal: "resyncSeparateModal"
-    })
+      resyncSeparateModal: "resyncSeparateModal",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
   },
   methods: {
     serviceStateStatus(item) {
