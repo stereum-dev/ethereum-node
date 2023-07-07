@@ -5,16 +5,26 @@
     </div>
 
     <div class="btn-parent">
-      <span class="button-new">Name:<span class="btn-font">Machine</span></span>
-      <span class="button-new"><span class="btn-font">IP:</span>10.12.2.199 </span>
+      <div class="serverName">
+        Server: 
+        <span>{{ ServerName }}</span>
+      </div>
+      <div class="serverIp">
+        IP: 
+        <span>{{ ipAddress }}</span>
+      </div>
     </div>
 
     <div class="logout-parent">
-      <button class="btn-logout" @click="logoutModalHandler" @mouseover="showTooltip = true" @mouseout="showTooltip = false">
+      <button
+        class="btn-logout"
+        @click="logoutModalHandler"
+        @mouseover="showTooltip = true"
+        @mouseout="showTooltip = false"
+      >
         <img src="/img/icon/header-icons/exit9.png" alt="logout Icon" />
       </button>
-      <span v-if="showTooltip" class="logout-tooltip" >Log Out</span>
-      
+      <span v-if="showTooltip" class="logout-tooltip">Log Out</span>
     </div>
 
     <div class="textBox bg-zinc-900">
@@ -54,8 +64,9 @@
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
+import { useControlStore } from "../../../store/theControl";
 import LogoutModal from "../node-header/LogoutModal.vue";
 export default {
   components: { ButtonInstallation, LogoutModal },
@@ -75,6 +86,13 @@ export default {
 
   computed: {
     ...mapState(useWelcomeStore, { installation: "installation" }),
+    ...mapWritableState(useControlStore, {
+      ServerName: "ServerName",
+      ipAddress: "ipAddress",
+    }),
+  },
+  mounted() {
+    this.updateConnectionStats();
   },
   created() {
     setTimeout(() => {
@@ -84,6 +102,11 @@ export default {
     this.randomValue();
   },
   methods: {
+    async updateConnectionStats() {
+      const stats = await ControlService.getConnectionStats();
+      this.ServerName = stats.ServerName;
+      this.ipAddress = stats.ipAddress;
+    },
     clickToCancelLogout() {
       this.logoutModalIsActive = false;
     },
@@ -250,11 +273,28 @@ export default {
 }
 
 .btn-parent {
-  grid-column: 1/7;
+  grid-column: 2/6;
   grid-row: 3/4;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
+}
+.btn-parent .serverName,
+.btn-parent .serverIp {
+  width: 100%;
+  height: 30px;
+  border:'2px solid white';
+  background-color: "#33393E !important";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.serverName span,
+.serverIp span {
+  font-size: "1rem";
+  font-weight: 500;
+  color: yellow;
 }
 
 .textBox {
