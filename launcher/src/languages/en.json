@@ -74,7 +74,8 @@
     "execution": "execution",
     "consensus": "consensus",
     "validator": "validator",
-    "servicePlugin": "SERVICE PLUGIN"
+    "servicePlugin": "SERVICE PLUGIN",
+    "message": "The current network is "
   },
   "modifyPanel": {
     "backNode": "back to NODE",

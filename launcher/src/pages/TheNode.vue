@@ -15,7 +15,11 @@
         </div>
         <div class="trapezoid-parent">
           <div class="switch-network">
-            <div class="switch-network__content">
+            <div
+              class="switch-network__content"
+              @mouseenter="cursorLocation = `${message}${currentNetwork.name}`"
+              @mouseleave="cursorLocation = ''"
+            >
               <div class="current">
                 <div class="networkIcon">
                   <img :src="currentNetwork?.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
@@ -85,7 +89,8 @@ import { useServices } from "../store/services";
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
-import { useControlStore } from "../store/theControl";
+import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
@@ -112,12 +117,16 @@ export default {
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       itemToTutorial: [],
       serverVitals: {},
+      message: this.$t("theNode.message"),
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
 
     ...mapWritableState(useNodeStore, {
@@ -250,6 +259,7 @@ export default {
   background-color: rgb(0, 0, 0);
   z-index: 1;
   position: relative;
+  cursor: default;
 }
 .play-box {
   width: 100%;
