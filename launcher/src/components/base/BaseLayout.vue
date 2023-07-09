@@ -13,15 +13,19 @@
     <div class="flex flex-col w-full h-full bg-[#33393E]">
       <slot></slot>
     </div>
-    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]"></div>
+    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]">
+      <TaskManager />
+    </div>
   </div>
 </template>
 <script>
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
+import TaskManager from "../UI/task-manager/TaskManager.vue";
 export default {
   name: "NodeScreen",
   components: {
     MainNavbar,
+    TaskManager,
   },
 };
 </script>

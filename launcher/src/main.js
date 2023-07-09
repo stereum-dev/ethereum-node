@@ -6,6 +6,7 @@ import router from "./router/index.js";
 import "./main.css";
 import i18n from "./includes/i18n";
 import { createPinia } from "pinia";
+import BaseLayout from "./components/base/BaseLayout.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
 import TheTrapezium from "./components/UI/the-node/TheTrapezium.vue";
 import NodeBg from "./components/UI/the-node/NodeBg.vue";
@@ -26,6 +27,7 @@ app.component("NodeHeader", NodeHeader);
 app.component("ServicePlugin", ServicePlugin);
 app.component("NodeService", NodeService);
 app.component("InstallationBox", InstallationBox);
+app.component("BaseLayout", BaseLayout);
 
 app.use(createPinia());
 app.use(router);

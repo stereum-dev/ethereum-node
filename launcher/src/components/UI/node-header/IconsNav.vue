@@ -188,7 +188,7 @@ export default {
 .icons-box {
   width: 25%;
   max-width: 250px;
-  height: 70%;
+  height: 65%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
