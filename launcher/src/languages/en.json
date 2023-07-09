@@ -15,14 +15,15 @@
   "journalnode": {
     "serverip": "IP",
     "servername": "NAME",
-    "edit": "to edit node",
+    "edit": "Manage node",
     "loading": "loading new states",
     "turnOn": "Turn Node on",
     "turnOff": "Turn Node off",
     "log": "Open Logs",
     "restart": "Restart",
     "start": "start",
-    "stop": "stop"
+    "stop": "stop",
+    "resync": "Resync ..."
   },
   "pagesnav": {
     "node": "NODE",
@@ -330,7 +331,6 @@
     "chooseFile": "Choose File",
     "continue": "Continue"
   },
-
   "disabledStaking": {
     "noValidatorInstalled": "There is no validator client installed!",
     "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."

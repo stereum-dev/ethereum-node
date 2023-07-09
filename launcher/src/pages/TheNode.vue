@@ -11,7 +11,7 @@
         </div>
 
         <div class="journal-box" @mousedown.prevent>
-          <JournalNode />
+          <!-- <JournalNode /> -->
         </div>
         <div class="trapezoid-parent">
           <div class="switch-network">
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import JournalNode from "../components/UI/the-node/JournalNode.vue";
+// import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import PluginZone from "../components/UI/the-node/PluginZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
@@ -94,7 +94,7 @@ import { useNodeHeader } from "../store/nodeHeader";
 
 export default {
   components: {
-    JournalNode,
+    // JournalNode,
     PluginZone,
     BaseModal,
     TaskManager,
