@@ -1,5 +1,5 @@
 <template>
-  <div class="icons-box">
+  <div class="icons-box" @mousedown.stop>
     <div class="icon-btn" @click="supportModalOpen">
       <img alt="help" src="/img/icon/header-icons/question-mark.png" />
     </div>
@@ -188,7 +188,7 @@ export default {
 .icons-box {
   width: 25%;
   max-width: 250px;
-  height: 80%;
+  height: 70%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -214,7 +214,7 @@ export default {
 .icon-btn {
   width: 14%;
   height: 85%;
-  border: 2px solid #a5a5a5;
+  /* border: 2px solid #a5a5a5; */
   border-radius: 100%;
   background-color: #336666;
   box-shadow: 1px 1px 5px 1px rgb(33, 58, 53);
@@ -227,24 +227,27 @@ export default {
 }
 .icon-btn:hover {
   background-color: #274f4f;
-  border: 2px solid rgb(141, 141, 141);
+  /* border: 2px solid rgb(141, 141, 141); */
   transition-duration: 200ms;
 }
-.icon-btn:active {
+
+/* .icon-btn:active {
   box-shadow: none;
   background-color: #274f4f;
   transition-duration: 200ms;
   transform: scale(0.92);
+} */
+
+.icon-btn img {
+  width: 67%;
+
+  transform: scale(1);
+}
+.icon-btn:hover img {
+  transform: scale(0.95);
 }
 .icon-btn:active img {
-  /* width: 65%;
-  height: 65%; */
-  box-shadow: none;
-}
-.icon-btn img {
-  width: 70%;
-  height: 70%;
-  transform: scale(1);
+  transform: scale(0.9);
 }
 .help-text {
   width: 20px;
