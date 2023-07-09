@@ -12,6 +12,9 @@ test("buildConfiguration", () => {
       buildConsensusClientGateway: jest.fn(() => {
         return "buildConsensusClientGateway";
       }),
+      buildConsensusClientHttpEndpointUrl: jest.fn(() => {
+        return "buildConsensusClientHttpEndpointUrl";
+      }),
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: "prysm_bc-id",
@@ -44,36 +47,21 @@ test("buildConfiguration", () => {
 
 test("getAvailablePorts", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const prysm = PrysmValidatorService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/prysm",
-    []
-  ).getAvailablePorts();
+  const prysm = PrysmValidatorService.buildByUserInput("prater", ports, "/opt/stereum/prysm", []).getAvailablePorts();
 
   expect(prysm).toHaveLength(1);
 });
 
 test("autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const prysm = PrysmValidatorService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/prysm",
-    []
-  ).buildConfiguration();
+  const prysm = PrysmValidatorService.buildByUserInput("prater", ports, "/opt/stereum/prysm", []).buildConfiguration();
 
   expect(prysm.autoupdate).toBe(true);
 });
 
 test("autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const prysm = PrysmValidatorService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/prysm",
-    []
-  ).buildConfiguration();
+  const prysm = PrysmValidatorService.buildByUserInput("prater", ports, "/opt/stereum/prysm", []).buildConfiguration();
 
   expect(prysm.network).toBe("prater");
 });

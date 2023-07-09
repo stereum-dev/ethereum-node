@@ -1,24 +1,48 @@
 <template>
   <div class="balance-parent">
-    <CommingSoon />
-    <div class="finilized-box">
-      <div class="finilizes-value">{{ final }}</div>
-      <div class="title">FINALIZED SLOT</div>
+    <div class="finalized-box">
+      <div class="finalized-value">{{ finalized_epoch }}</div>
+      <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
     </div>
     <div class="balance-box">
-      <div class="balance-value">{{ balance }}</div>
-      <div class="title">BALANCE CHANGE</div>
+      <div class="balance-value">{{ balance }} GWei</div>
+      <div class="title">{{ $t("balWid.bal") }}</div>
     </div>
   </div>
 </template>
-
 <script>
+import { mapState } from "pinia";
+import { useControlStore } from "@/store/theControl";
 export default {
   data() {
     return {
-      final: "{LAST FINALIZED SLOT}", //dummy
-      balance: 0, //dummy
+      finalized_epoch: "Loading..",
+      balance: 0,
     };
+  },
+  computed: {
+    ...mapState(useControlStore, {
+      balancestatus: "balancestatus",
+    }),
+  },
+
+  watch: {
+    balancestatus(newbalancestatus) {
+      if (
+        typeof newbalancestatus === "object" &&
+        newbalancestatus.hasOwnProperty("finalized_epoch") &&
+        newbalancestatus.hasOwnProperty("balance")
+      ) {
+        this.finalized_epoch = newbalancestatus.finalized_epoch;
+        this.balance = this.numberFormat(newbalancestatus.balance);
+      }
+    },
+  },
+  methods: {
+    numberFormat(x) {
+      //return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+      return x.toLocaleString();
+    },
   },
 };
 </script>
@@ -41,7 +65,7 @@ export default {
   background: #313131;
 }
 .balance-box,
-.finilized-box {
+.finalized-box {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,7 +85,7 @@ export default {
   width: 100%;
   height: 50%;
 }
-.finilizes-value,
+.finalized-value,
 .balance-value {
   display: flex;
   justify-content: center;

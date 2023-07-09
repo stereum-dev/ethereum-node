@@ -6,7 +6,7 @@
         <img :src="icon" alt="restart warning" />
       </div>
       <div class="restart-question">
-        <span>are you sure you want to {{ title }}?</span>
+        <span>{{ $t("restartModalNode.message") }} {{ title }}?</span>
       </div>
       <div class="nameId">
         <span class="service-name">{{ service.name }}</span>
@@ -17,7 +17,7 @@
         <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
         <span v-else>{{ title }}</span>
       </div>
-      <span class="clickOut">click outside to close</span>
+      <span class="clickOut">{{ $t("restartModalNode.close") }}</span>
     </div>
   </div>
 </template>

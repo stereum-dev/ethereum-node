@@ -30,7 +30,7 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="../../../../public/img/icon/control/spinner.gif" alt="loading" />
+      <img src="/img/icon/control/spinner.gif" alt="loading" />
     </div>
   </div>
 </template>
@@ -38,8 +38,8 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
-import { useNodeHeader } from "../../../store/nodeHeader";
-import { useControlStore } from "../../../store/theControl";
+import { useNodeHeader } from "@/store/nodeHeader";
+import { useControlStore } from "@/store/theControl";
 import ControlDialog from "./ControlDialog.vue";
 export default {
   components: { ControlDialog },
@@ -73,6 +73,7 @@ export default {
     ...mapWritableState(useNodeHeader, {
       activeRPC: "activeRPC",
       nextStepFlag: "nextStepFlag",
+      rpcState: "rpcState",
     }),
 
     onoff() {
@@ -84,6 +85,13 @@ export default {
     showData(newVal) {
       if (newVal) {
         this.activeRPC = true;
+      }
+    },
+    isActive(newVal) {
+      if (newVal === true) {
+        this.rpcState = true;
+      } else {
+        this.rpcState = false;
       }
     },
   },

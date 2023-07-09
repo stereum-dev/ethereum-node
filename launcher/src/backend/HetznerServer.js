@@ -13,7 +13,9 @@ export class HetznerServer {
   }
 
   async Sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    let interval
+    await new Promise((resolve) => { interval = setTimeout(resolve, ms) });
+    clearInterval(interval);
   }
 
   async checkServerConnection(nodeConnection) {
@@ -197,5 +199,13 @@ export class HetznerServer {
     }
     return JSON.parse(await this.makeRequest(await this.createHTTPOptions("POST", "ssh_keys"),
       JSON.stringify({ name: name, public_key: this.sshKeyPair.public })));
+  }
+
+  async finishTestGracefully(nodeConnection, keyResponse) {
+    clearInterval(nodeConnection.sshService.checkPoolPolling)
+    await this.Sleep(10000)
+    await nodeConnection.sshService.disconnect();
+    await this.deleteSSHKey(keyResponse.ssh_key.id)
+    await this.destroy();
   }
 }

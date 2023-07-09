@@ -2,7 +2,7 @@
   <div class="exitBox">
     <div class="exitRow">
       <div class="iconBox">
-        <img class="exit-icon" src="../../../../public/img/icon/the-staking/exit2.png" alt="icon" />
+        <img class="exit-icon" src="/img/icon/the-staking/exit2.png" alt="icon" />
       </div>
       <div class="inputBox">
         <input type="text" :placeholder="$t('exitMultipleValidator.passMessage')" />

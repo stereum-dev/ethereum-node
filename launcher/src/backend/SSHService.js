@@ -91,12 +91,14 @@ export class SSHService {
         this.connectionPool.push(conn);
         this.connected = true;
         this.addingConnection = false;
-        let test = await this.exec("ls");
-        if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
-          if (process.env.NODE_ENV === "test") {
-            resolve(conn);
+        if (this.connectionPool.length === 1) {
+          let test = await this.exec("ls");
+          if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
+            if (process.env.NODE_ENV === "test") {
+              resolve(conn);
+            }
+            reject(test.stderr);
           }
-          reject(test.stderr);
         }
         resolve(conn);
       })

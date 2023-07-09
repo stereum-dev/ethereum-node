@@ -58,9 +58,7 @@ test("prepareStereumNode on ubuntu", async () => {
   const ansibleRoles = await nodeConnection.sshService.exec("ls /opt/stereum/ansible/controls");
   const ansibleVersion = await nodeConnection.sshService.exec("ansible --version");
 
-  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
-  await nodeConnection.sshService.disconnect();
-  await testServer.destroy();
+  await testServer.finishTestGracefully(nodeConnection, keyResponse)
 
   const ansible = ansibleVersion.stdout.split("\n")[0].split(" ");
   ansible[2] = ansible[2].split(".");

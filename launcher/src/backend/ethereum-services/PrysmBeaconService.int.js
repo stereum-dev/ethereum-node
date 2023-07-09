@@ -153,9 +153,7 @@ test("prysm validator import", async () => {
   const runningValidator = responseValidator.stdout.replace("\x1B[93m3\x1B[0m", "3"); //remove yellow color coding
 
   // destroy
-  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
-  await nodeConnection.destroyNode();
-  await testServer.destroy();
+  await testServer.finishTestGracefully(nodeConnection, keyResponse)
 
   //check ufw
   expect(ufw.stdout).toMatch(/13001\/tcp/);

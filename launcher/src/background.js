@@ -48,8 +48,7 @@ ipcMain.handle("connect", async (event, arg) => {
 });
 
 ipcMain.handle("reconnect", async () => {
-  if (nodeConnection.sshService.connectionPool.length > 0)
-    await nodeConnection.sshService.disconnect();
+  if (nodeConnection.sshService.connectionPool.length > 0) await nodeConnection.sshService.disconnect();
   try {
     await nodeConnection.establish(taskManager);
   } catch (err) {
@@ -58,12 +57,13 @@ ipcMain.handle("reconnect", async () => {
 });
 
 ipcMain.handle("checkConnection", async () => {
-  await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 18000)
+  await nodeConnection.sshService
+    .checkSSHConnection(nodeConnection.nodeConnectionParams, 18000)
     .then((isConnected) => {
       nodeConnection.sshService.connected = isConnected;
     })
     .catch((error) => {
-      console.error('Error checking SSH connection:', error);
+      console.error("Error checking SSH connection:", error);
       nodeConnection.sshService.connected = false;
     });
   return nodeConnection.sshService.connected;
@@ -96,6 +96,10 @@ ipcMain.handle("readConfig", async () => {
 });
 ipcMain.handle("writeConfig", async (event, arg) => {
   return storageService.writeConfig(arg);
+});
+
+ipcMain.handle("isCheckpointValid", async (event, cp_url) => {
+  return await monitoring.isCheckpointValid(cp_url);
 });
 
 ipcMain.handle("checkOS", async () => {
@@ -178,6 +182,11 @@ ipcMain.handle("getServerVitals", async () => {
 // get data for storage comp
 ipcMain.handle("getStorageStatus", async () => {
   return await monitoring.getStorageStatus();
+});
+
+// get data for balance comp
+ipcMain.handle("getBalanceStatus", async () => {
+  return await monitoring.getBalanceStatus();
 });
 
 ipcMain.handle("getConnectionStats", async () => {
@@ -265,6 +274,10 @@ ipcMain.handle("updateStereum", async (event, args) => {
 
 ipcMain.handle("restartServices", async (event, args) => {
   await nodeConnection.restartServices(args);
+});
+
+ipcMain.handle("restartService", async (event, args) => {
+  await serviceManager.restartService(args);
 });
 
 ipcMain.handle("checkUpdates", async () => {
@@ -418,7 +431,6 @@ protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: tru
 async function createWindow() {
   // Create the browser window.
 
-
   const initwin = {
     width: 1044,
     height: 609,
@@ -444,7 +456,7 @@ async function createWindow() {
   }
 
   const win = new BrowserWindow(initwin);
-  
+
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -499,6 +511,7 @@ if (!isDevelopment) {
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  nodeConnection.logout()
   if (process.platform !== "darwin") {
     app.quit();
   }

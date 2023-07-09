@@ -75,7 +75,7 @@ test("erigon installation", async () => {
       /HTTP endpoint opened for Engine API/.test(status.stderr) &&
       /HTTP endpoint opened/.test(status.stderr) &&
       /Started P2P networking/.test(status.stderr) &&
-      /ws=false/.test(status.stderr)
+      !/ws=false/.test(status.stderr)
     ) {
       condition = true;
     }
@@ -85,9 +85,7 @@ test("erigon installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
-  await nodeConnection.destroyNode();
-  await testServer.destroy();
+  await testServer.finishTestGracefully(nodeConnection, keyResponse)
 
   //check ufw
   expect(ufw.stdout).toMatch(/30303\/tcp/);

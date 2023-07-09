@@ -35,6 +35,7 @@ export default {
       beaconstatus: "beaconstatus",
       portstatus: "portstatus",
       storagestatus: "storagestatus",
+      balancestatus: "balancestatus",
     }),
   },
   mounted() {
@@ -95,6 +96,14 @@ export default {
           if (response) {
             try {
               this.storagestatus = response.data;
+            } catch (e) {}
+          }
+        });
+        // Get Balance Status
+        this.requestQueued("getBalanceStatus").then((response) => {
+          if (response) {
+            try {
+              this.balancestatus = response.data;
             } catch (e) {}
           }
         });

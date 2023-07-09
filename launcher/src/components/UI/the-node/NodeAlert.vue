@@ -8,46 +8,68 @@
     <div class="status-box_header">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
-          <img src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
+          <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: warning }">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
+        <div class="status-icon" :class="{ active: warning || pointStatus.length !== 0 }">
+          <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: alarm }">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
+          <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="status-icon" :class="{ active: notification }">
-          <img src="../../../../public/img/icon/control/SETTINGS.png" alt="green" />
+        <div
+          class="status-icon"
+          :class="{ active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0 }"
+        >
+          <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
     </div>
     <div class="status-box_messages">
       <div v-if="storageWarning" class="status-message_yellow">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
+          <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>LOW STORAGE SPACE</span></div>
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.lowSpace") }}</span>
+          </div>
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
       </div>
       <div v-if="cpuWarning" class="status-message_yellow">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
+          <img src="/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>CPU USAGE</span></div>
+          <div class="main-message">
+            <span>CPU {{ $t("nodeAlert.use") }}</span>
+          </div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
           </div>
         </div>
       </div>
-      <div v-if="cpuAlarm" class="status-message_red">
+      <div v-for="point in pointStatus" :key="point" class="status-message_yellow">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
+          <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>CPU USAGE</span></div>
+          <div class="main-message">
+            <span>{{ point }}</span>
+          </div>
+          <div class="val-message">
+            <span> > STATUS: OPEN</span>
+          </div>
+        </div>
+      </div>
+      <div v-if="cpuAlarm" class="status-message_red">
+        <div class="message-icon">
+          <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
+        </div>
+        <div class="message-text_container">
+          <div class="main-message">
+            <span>CPU {{ $t("nodeAlert.use") }}</span>
+          </div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
           </div>
@@ -55,43 +77,55 @@
       </div>
       <div v-if="missedAttest" class="status-message_red">
         <div class="message-icon">
-          <img src="../../../../public/img/icon/control/key-rot.png" alt="warn_storage" />
+          <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>MISSED ATTESTATION</span></div>
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.missAttest") }}</span>
+          </div>
         </div>
       </div>
 
-      <!-- test -->
       <div v-for="validator in notSetAddresses" :key="validator" class="status-message_red">
         <div class="message-icon">
           <img :src="validator.icon" />
         </div>
         <div class="message-text_container">
-          <div class="main-message"><span>no fee recipient</span></div>
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.noFee") }}</span>
+          </div>
           <div class="val-message">
             <span> > {{ validator.name }} vc</span>
           </div>
         </div>
       </div>
-      <!-- test -->
-      <transition>
-        <div v-if="notification" class="status-message_green" @mouseover="iconShow" @mouseleave="iconHide">
-          <div class="message-icon" @click="showUpdate">
-            <img src="../../../../public/img/icon/control/logo-icon.png" alt="warn_storage" />
+
+      <div v-if="stereumUpdate.current !== stereumUpdate.version" class="status-message_green">
+        <div class="message-icon" @click="showUpdate">
+          <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
+        </div>
+        <div class="message-text_container" @click="showUpdate">
+          <div class="main-message">
+            <span>{{ $t("nodeAlert.stereumUpt") }}</span>
           </div>
-          <div class="message-text_container" @click="showUpdate">
-            <div class="warning"><span>NOTIFICATION</span></div>
-            <div class="main-message"><span>STEREUM UPDATE</span></div>
-            <div class="val-message">
-              <span>{{ stereumUpdate.version }}</span>
-            </div>
-          </div>
-          <div v-if="closeNotif" class="close" @click="closeNotification">
-            <img src="../../../../public/img/icon/control/close.png" alt="close" />
+          <div class="val-message">
+            <span>{{ stereumUpdate.version }}</span>
           </div>
         </div>
-      </transition>
+      </div>
+      <div v-for="item in updatedNewUpdates" :key="item" class="status-message_green">
+        <div class="message-icon" @click="showUpdate">
+          <img :src="item.sIcon" alt="warn_storage" />
+        </div>
+        <div class="message-text_container" @click="showUpdate">
+          <div class="main-message">
+            <span>{{ item.name }} UPDATE</span>
+          </div>
+          <div class="val-message">
+            <span>{{ item.version }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -116,9 +150,7 @@ export default {
       perfect: false,
       warning: false,
       alarm: false,
-      newUpdate: false,
       missedAttest: false,
-      closeNotif: false,
       notification: false,
       setFeeReciepent: [],
       setFeeAlarm: false,
@@ -135,12 +167,45 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
+      rpcState: "rpcState",
+      dataState: "dataState",
+      wsState: "wsState",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      newUpdates: "newUpdates",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
+    },
+    pointStatus() {
+      let port = [];
+
+      if (this.rpcState) {
+        port.push("RPC Point");
+      }
+
+      if (this.dataState) {
+        port.push("Data API");
+      }
+
+      if (this.wsState) {
+        port.push("WS Point");
+      }
+      return port;
+    },
+    updatedNewUpdates() {
+      const updatedUpdates = this.newUpdates.map((update) => {
+        const matchingService = this.installedServices.find((service) => service.name === update.name);
+        if (matchingService) {
+          return {
+            ...update,
+            sIcon: matchingService.sIcon,
+          };
+        }
+        return update;
+      });
+      return updatedUpdates;
     },
   },
   watch: {
@@ -183,8 +248,6 @@ export default {
   created() {
     this.storageCheck();
     this.cpuMeth();
-    this.checkStereumUpdate();
-    this.notifHandler();
   },
   methods: {
     async readService() {
@@ -221,9 +284,6 @@ export default {
       }
     },
 
-    closeNotification() {
-      this.notification = false;
-    },
     iconShow() {
       this.closeNotif = true;
     },
@@ -236,21 +296,7 @@ export default {
     removeUpdateModal() {
       this.displayUpdatePanel = false;
     },
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
-      }
-      return false;
-    },
-    notifHandler() {
-      if (this.checkStereumUpdate == true) {
-        this.notification = true;
-      } else {
-        this.notification = false;
-      }
-    },
+
     storageCheck() {
       if (this.usedPercInt > 80) {
         this.storageWarning = true;
@@ -338,7 +384,7 @@ export default {
 }
 
 .status-box_header {
-  width: 96%;
+  width: 80%;
   height: 8%;
   display: flex;
   justify-content: center;
@@ -361,6 +407,24 @@ export default {
   padding-top: 5px;
   border-radius: 5px;
   box-shadow: 0 1px 3px 1px #1c1f22;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.status-box_messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.status-box_messages::-webkit-scrollbar-track {
+  background: #3b4146;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+/* Handle */
+.status-box_messages::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 50%;
 }
 
 .icon-line {
@@ -419,6 +483,9 @@ export default {
   background: #5f7e6a;
   cursor: pointer;
 }
+.status-message_green .message-text_container {
+  color: #eee;
+}
 
 .message-icon {
   width: 24%;
@@ -451,6 +518,16 @@ export default {
   align-items: center;
   font-size: 50%;
   font-weight: 700;
+  text-transform: uppercase;
+}
+.main-message-rpc {
+  display: flex;
+  width: 95%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 80%;
+  font-weight: 800;
   text-transform: uppercase;
 }
 

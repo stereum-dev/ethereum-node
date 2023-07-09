@@ -2,7 +2,7 @@
   <div class="sync_box divide-y divide-gray-600">
     <div class="totalBox">
       <div class="totalTitle">
-        <span>total</span>
+        <span>{{ $t("syncCommitte.total") }}</span>
       </div>
       <div class="totalValue">
         <span>0/0</span>
@@ -11,16 +11,16 @@
     <div class="statusBox">
       <div class="status">
         <div class="statusTitle">
-          <span>STATUS</span>
+          <span>{{ $t("syncCommitte.status") }}</span>
         </div>
         <div class="statusValue">
-          <span v-if="blockIsOnline">PARTICIPATING</span>
-          <span v-else>NOT PARTICIPATING</span>
+          <span v-if="blockIsOnline">{{ $t("syncCommitte.particip") }}</span>
+          <span v-else>{{ $t("syncCommitte.noParticip") }}</span>
         </div>
       </div>
       <div class="startEpoch">
         <div class="startTitle">
-          <span>Start Epoch</span>
+          <span>{{ $t("syncCommitte.start") }} Epoch</span>
         </div>
         <div class="startValue">
           <span>134345235</span>
@@ -28,7 +28,7 @@
       </div>
       <div class="endEpoch">
         <div class="endTitle">
-          <span>End Epoch</span>
+          <span>{{ $t("syncCommitte.end") }} Epoch</span>
         </div>
         <div class="endValue">
           <span>134345235</span>
@@ -36,9 +36,9 @@
       </div>
     </div>
     <div class="statusTiming">
-      <p v-if="blockIsOnline">New Sync Committee in <span>256</span> Epochs</p>
-      <p v-else>New Sync Committee in <span>??</span> Epochs</p>
-      <p v-if="blockIsOnline"><span>12</span> hours</p>
+      <p v-if="blockIsOnline">{{ $t("syncCommitte.newSync") }} <span>256</span> Epochs</p>
+      <p v-else>{{ $t("syncCommitte.newSync") }} <span>??</span> Epochs</p>
+      <p v-if="blockIsOnline"><span>12</span> {{ $t("syncCommitte.hours") }}</p>
       <p v-else>(?? days ?? hours)</p>
     </div>
   </div>

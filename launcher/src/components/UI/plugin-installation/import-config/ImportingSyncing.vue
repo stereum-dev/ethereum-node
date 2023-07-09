@@ -9,13 +9,13 @@
               <span>{{ configNetwork.name }}</span>
             </div>
             <div class="tableTitle">
-              <span>Set how the Node clients will synchronize their blockchain data.</span>
+              <span>{{ $t("importingSyncing.message") }}</span>
             </div>
             <div class="table-content">
               <div class="table-row_1">
                 <div class="clientTitle">
-                  <span>CLIENTs</span>
-                  <span>SYNC SOURCE</span>
+                  <span>{{ $t("importingSyncing.client") }}</span>
+                  <span>{{ $t("importingSyncing.syncSrc") }}</span>
                 </div>
               </div>
               <div v-if="configServices.some((s) => s.category === 'execution')" class="table-row_2">

@@ -3,10 +3,10 @@
     <div class="modal-opacity"></div>
     <div class="disabledModalContent">
       <div class="title-box">
-        <img src="../../../../public/img/icon/the-staking/Fehlender_validatorenclient.svg" alt="icon" />
+        <img src="/img/icon/the-staking/Fehlender_validatorenclient.svg" alt="icon" />
       </div>
       <div class="disabledMessage">
-        <span>REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING</span>
+        <span>{{ $t("disableStake.message") }}</span>
       </div>
       <div class="validator-icons">
         <div v-for="icon in validatorIcons" :key="icon" class="validator-icons_icon"><img :src="icon" alt="" /></div>

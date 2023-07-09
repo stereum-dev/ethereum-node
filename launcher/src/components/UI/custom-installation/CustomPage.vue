@@ -50,14 +50,21 @@ export default {
   },
   created() {
     this.activeBtn();
+    this.getInstallPath();
   },
   methods: {
+    async getInstallPath () {
+      let largestVolumePath = await ControlService.getLargestVolumePath();
+      if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
+      const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
+      this.installPath = stereumInstallationPath;
+    },
     async prepareStereum() {
       this.refresh = false;
       await ControlService.prepareStereumNode(this.installPath);
       const restarted = await ControlService.restartServer();
       this.refresh = true;
-      if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
+      if (restarted) await new Promise((resolve) => setTimeout(resolve, 5000));
       this.$router.push("/node");
     },
     activeBtn() {

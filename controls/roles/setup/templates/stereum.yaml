@@ -3,6 +3,7 @@
 stereum_settings:
   settings:
     controls_install_path: {{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}
+    arch: {{ stereum.settings.arch | default(stereum.defaults.arch) }}
     updates:
       lane: {{ stereum.settings.updates.lane | default(stereum.defaults.updates.lane) }}
       unattended:

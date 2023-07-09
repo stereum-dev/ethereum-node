@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="closeMe"></div>
     <div v-if="visible" class="remove-modal-content">
       <div class="title-box">
-        <img src="../../../../public/img/icon/manage-node-icons/stop.png" />
+        <img src="/img/icon/manage-node-icons/stop.png" />
       </div>
       <div class="remove-message">
         <span class="warning">{{ $t("nukeModal.nukeQ") }} </span>
@@ -29,7 +29,7 @@
 
         <div class="remove-modal-accepted_footer" :class="{ deactive: loginBtn }">
           <div v-if="loginBtn" class="spinner">
-            <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
+            <img src="/img/icon/control/spinner.gif" alt="" />
           </div>
           <span v-else @click="backToLogin">{{ $t("nukeModal.backToLogin") }}</span>
         </div>

@@ -3,16 +3,16 @@
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
     <div class="remove-modal-content">
       <div class="title-box">
-        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="update-message">
-        <span>Do you want to remove the saved connection?</span>
+        <span>{{ $t("deleteModal.message") }}</span>
       </div>
       <div class="remove-btn">
         <div class="confirm-box" @click="$emit('deleteServer')">
-          <span>Remove</span>
+          <span>{{ $t("deleteModal.rem") }}</span>
         </div>
-        <span class="close">Click outside to close.</span>
+        <span class="close">{{ $t("deleteModal.close") }}</span>
       </div>
     </div>
   </div>

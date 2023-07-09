@@ -12,7 +12,7 @@
             <div class="container_content gap-y-1">
               <TransitionGroup name="fade" class="container">
                 <div v-if="configServices.length" class="configTitle">
-                  <span>Node Config</span>
+                  <span>{{ $t("importingList.nodeConf") }}</span>
                 </div>
                 <div v-for="(plugin, index) in categoryConfig" :key="index" class="table-row duration-500">
                   <div class="plugins">
@@ -125,7 +125,7 @@ export default {
       this.configNetwork = this.networkList.find((network) => network.network === this.configServices[0].network);
     },
     categoryFilter() {
-      this.removedServices = []
+      this.removedServices = [];
       this.configServices.forEach((item) => {
         if (item.category === "service") {
           this.categoryService.push(item);

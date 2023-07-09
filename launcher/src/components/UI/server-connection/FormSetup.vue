@@ -3,7 +3,7 @@
     <div v-if="errorMsgExists" class="error-box"></div>
     <div v-if="errorMsgExists" class="error-modal">
       <div class="title-box">
-        <img src="../../../../public/img/icon/form-setup/form-error.png" alt="icon" />
+        <img src="/img/icon/form-setup/form-error.png" alt="icon" />
       </div>
       <div class="description">
         <span>{{ error }}</span>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div v-if="connectingAnimActive" class="anim">
-      <img src="../../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
+      <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
@@ -33,7 +33,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
+              <img src="/img/icon/PLUS_ICON.png" alt="icon" />
             </div>
             <div
               class="three trash"
@@ -130,7 +130,7 @@
           <div v-if="keyAuth" class="locationPicker">
             <div class="chooseFile" @click="openUploadHandler">
               <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
-              <img src="../../../../public/img/icon/form-setup/plus.png" />
+              <img src="/img/icon/form-setup/plus.png" />
             </div>
             <input
               id="keyInput"

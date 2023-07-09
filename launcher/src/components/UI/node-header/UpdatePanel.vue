@@ -6,7 +6,7 @@
         <div class="stereum-updateBoxesWrapper">
           <div class="stereum-updateBoxWithIcon">
             <div class="icon">
-              <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
+              <img src="/img/icon/control/ubuntuIco.svg" />
             </div>
             <div class="stereum-updateBox">
               <div class="nodeUpdate-title_row">

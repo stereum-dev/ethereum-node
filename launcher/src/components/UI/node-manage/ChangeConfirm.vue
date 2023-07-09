@@ -4,7 +4,7 @@
       <div class="confirm-bg-1">
         <div class="confirm-bg-2">
           <div class="check-icon">
-            <img src="../../../../public/img/icon/manage-node-icons/check-mark.png" alt="icon" />
+            <img src="/img/icon/manage-node-icons/check-mark.png" alt="icon" />
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
       <div class="trash-bg-1">
         <div class="trash-bg-2">
           <div class="trash-icon">
-            <img src="../../../../public/img/icon/manage-node-icons/trash-icon.png" alt="icon" />
+            <img src="/img/icon/manage-node-icons/trash-icon.png" alt="icon" />
           </div>
         </div>
       </div>

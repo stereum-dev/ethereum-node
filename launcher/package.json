@@ -14,7 +14,7 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "test": "jest --forceExit",
+    "test": "jest",
     "test-coverage": "jest --coverage",
     "watch:css": "npx tailwindcss -i ./src/main.css -o ./public/output.css --watch",
     "lint:fix": "eslint --ext .js,.vue --ignore-path ../.gitignore --fix src",

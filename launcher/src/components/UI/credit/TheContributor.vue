@@ -1,7 +1,7 @@
 <template>
   <div class="contributor-parent">
     <div v-if="crown" class="crown">
-      <img src="../../../../public/img/icon/credit/crown.png" alt="crown" />
+      <img src="/img/icon/credit/crown.png" alt="crown" />
     </div>
     <div class="contributor-avatar"><img :src="avatar" /></div>
     <div class="contributor-name">

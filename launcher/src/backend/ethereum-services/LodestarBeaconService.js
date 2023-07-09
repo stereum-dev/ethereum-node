@@ -15,13 +15,12 @@ export class LodestarBeaconService extends NodeService {
 
     // volumes
     const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir)];
-    if (executionClients && executionClients.length > 0) {
-      const elJWTDir = executionClients[0].volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
-      volumes.push(new ServiceVolume(elJWTDir, JWTDir));
-    }
+
     // eth1 nodes
     const eth1Nodes = executionClients
       .map((client) => {
+        const elJWTDir = client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+        volumes.push(new ServiceVolume(elJWTDir, JWTDir));
         return client.buildExecutionClientEngineRPCHttpEndpointUrl();
       })
       .join();

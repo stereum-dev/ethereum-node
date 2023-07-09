@@ -28,6 +28,9 @@ export const useNodeHeader = defineStore("nodeHeader", {
       stakeBtn: false,
       insertVal: false,
       stakeCongrats: false,
+      rpcState: false,
+      dataState: false,
+      wsState: false,
     };
   },
   getters: {},

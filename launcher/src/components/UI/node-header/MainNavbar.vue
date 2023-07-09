@@ -88,7 +88,11 @@ export default {
                 oldService.config = service.config;
               }
               oldService.state = service.state;
-              if ((oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") && oldService.config.configVersion && oldService.config.configVersion < 2) {
+              if (
+                (oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") &&
+                oldService.config.configVersion &&
+                oldService.config.configVersion < 2
+              ) {
                 let existing = this.installedServices.find(
                   (s) =>
                     s.config.serviceID === oldService.config.serviceID &&
@@ -100,12 +104,12 @@ export default {
                 } else {
                   vs = allServices.find((element) => element.service === oldService.name + "ValidatorService");
                 }
-                if(vs.service === "TekuValidatorService"){
-                  vs.icon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-Circle.png")
-                  vs.sIcon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-s.png")
-                }else if(vs.service === "NimbusValidatorService"){
-                  vs.icon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-Circle.png")
-                  vs.sIcon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-s.png")
+                if (vs.service === "TekuValidatorService") {
+                  vs.icon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-Circle.png");
+                  vs.sIcon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-s.png");
+                } else if (vs.service === "NimbusValidatorService") {
+                  vs.icon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-Circle.png");
+                  vs.sIcon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-s.png");
                 }
                 vs.config = oldService.config;
                 vs.state = oldService.state;
@@ -117,7 +121,7 @@ export default {
               e.id = i;
               return e;
             });
-            let network = this.installedServices[0]?.config.network
+            let network = this.installedServices[0]?.config.network;
             this.currentNetwork = this.networkList.find((item) => item.network === network);
 
             if (needForTunnel.length != 0 && this.refresh) {
@@ -191,6 +195,10 @@ export default {
             if (!response[service.network] || !response[service.network][service.service]) service.network = "mainnet";
             if (!response[service.network] || !response[service.network][service.service]) service.network = "prater";
             if (response[service.network] && response[service.network][service.service]) {
+              if (service.service === "ErigonService" && !service.imageVersion.startsWith("v")) {
+                service.imageVersion = "v" + service.imageVersion;
+                service.imageVersion = service.imageVersion.replace("-arm64", "");
+              }
               if (
                 service.imageVersion !=
                 response[service.network][service.service][response[service.network][service.service].length - 1]

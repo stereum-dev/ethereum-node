@@ -1,0 +1,37 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    web3signer: 1ecf59c2-e219-4019-aca0-7b588bfba1f0
+  tasks:
+    - name: postgresql logs
+      command: "docker logs slashingdb-{{ web3signer }}"
+      register: postgresql_logs
+      until:
+        - postgresql_logs.stdout is search('database system is ready to accept connections')
+      retries: 60
+      delay: 10
+
+    - name: web3signer logs
+      command: "docker logs stereum-{{ web3signer }}"
+      register: web3signer_logs
+      until:
+        - web3signer_logs.stdout is not search('Failed to initialize Web3Signer')
+        - web3signer_logs.stdout is search('Web3Signer has started')
+        - web3signer_logs.stdout is search('ready to handle signing requests')
+      retries: 60
+      delay: 10
+
+    - debug:
+        msg: "{{ web3signer_logs }}"
+    - debug:
+        msg: "{{ postgresql_logs }}"
+
+    - assert:
+        that:
+          - web3signer_logs.stdout is not search('Failed to initialize Web3Signer')
+          - web3signer_logs.stdout is search('Web3Signer has started')
+          - web3signer_logs.stdout is search('ready to handle signing requests')
+          - postgresql_logs.stdout is search('database system is ready to accept connections')
+# EOF

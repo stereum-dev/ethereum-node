@@ -13,26 +13,26 @@
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- plugin docs row -->
         <div v-if="!isExpertModeActive && !ssvExpertModeActive" class="docBox">
-          <img class="titleIcon" src="../../../../public/img/icon/plugin-menu-icons/doc.png" alt="icon" />
+          <img class="titleIcon" src="/img/icon/plugin-menu-icons/doc.png" alt="icon" />
           <span class="docTitle">SERVICE DOCS</span>
           <span class="openBtn" @click="openDocs(item.docsUrl)">open</span>
         </div>
         <!-- expert mode row -->
         <div v-if="!ssvExpertModeActive" class="dataTitleBox" @click="openExpertMode">
-          <img class="titleIcon" src="../../../../public/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
+          <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
           <span>Expert Mode</span>
-          <img v-if="isExpertModeActive" src="../../../../public/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="../../../../public/img/icon/task-manager-icons/down.png" alt="" />
+          <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
         <div
           v-if="item.service === 'SSVNetworkService' && !isExpertModeActive"
           class="dataTitleBox"
           @click="openSSVExpertMode"
         >
-          <img class="titleIcon" src="../../../../public/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
+          <img class="titleIcon" src="/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
           <span>SSV Configuration</span>
-          <img v-if="ssvExpertModeActive" src="../../../../public/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="../../../../public/img/icon/task-manager-icons/down.png" alt="" />
+          <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
 
         <!--
@@ -380,6 +380,7 @@ export default {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
+      await ControlService.restartService(el.config.serviceID);
     },
   },
 };

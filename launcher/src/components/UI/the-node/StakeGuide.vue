@@ -5,14 +5,14 @@
         <div class="header-node" @click.prevent="stakeGuideStep1">
           <div class="title">{{ $t("pagesnav.control") }}</div>
         </div>
-        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow" />
         <div class="step-one">
           <span>{{ $t("rpcGuide.clickNav") }}</span>
         </div>
       </div>
     </div>
     <div v-if="stakeSecondStep" class="wrapper">
-      <h1>First Check if your Node is synced</h1>
+      <h1>{{ $t("stakeGuide.syncCheck") }}</h1>
       <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
       <div class="left-slide"></div>
       <div class="top-slide"></div>
@@ -25,17 +25,19 @@
           <div class="stake-modal_header_slideNo">
             <span>{{ slideID }}# </span>
           </div>
-          <div class="stake-modal_header_slide-tex"><span v-html="parseText(message, slideID)"></span></div>
+          <div class="stake-modal_header_slide-tex">
+            <span>{{ message }}</span>
+          </div>
         </div>
         <div ref="modalContainer" class="stake-modal_container" @wheel="handleScroll">
           <div class="stake-modal-arr">
-            <div class="left" data-tooltip="Scroll to change slides faster" @click="prevSlide"></div>
+            <div class="left" :data-tooltip="$t('stakeGuide.scrollMessage')" @click="prevSlide"></div>
           </div>
           <div class="stake-modal_slider-tutorial">
             <img :src="slide" alt="slide" />
           </div>
           <div class="stake-modal-arr">
-            <div class="right" data-tooltip="Scroll to change slides faster" @click="nextSlide"></div>
+            <div class="right" :data-tooltip="$t('stakeGuide.scrollMessage')" @click="nextSlide"></div>
           </div>
         </div>
       </div>
@@ -43,42 +45,42 @@
     <div v-if="goForStake" class="bg-dark">
       <div v-if="stakeBtn" class="wrapper">
         <div class="header-node-staking" @click.prevent="stakeGuideStep2">
-          <div class="title">staking</div>
+          <div class="title">{{ $t("stakeGuide.stake") }}</div>
         </div>
-        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow-staking" />
+        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow-staking" />
         <div class="staking-step-one">
-          <span>Click on Staking</span>
+          <span>{{ $t("stakeGuide.scrollClick") }}</span>
         </div>
       </div>
       <div v-if="insertVal" class="wrapper">
         <div v-if="!isDragOver && dragStep === false" class="message-stake-wrapper">
-          <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
-          <div>
-            <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
+          <img src="/img/icon/arrows/drag.png" class="drag-icon" alt="" />
+          <div class="drag-message">
+            <span>{{ $t("stakeGuide.drag") }}</span>
           </div>
         </div>
         <div v-if="clickService" class="message-stake-wrapper">
           <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
-            <span>Click on the icon of your validator client</span>
+            <span>{{ $t("stakeGuide.clickIcon") }}</span>
           </div>
         </div>
         <div v-if="stakeCongrats" class="message-stake-wrapper-last">
           <div class="staking-step-two">
-            <span>Congrats you are done!</span>
+            <span>{{ $t("stakeGuide.cong") }}</span>
           </div>
         </div>
         <div v-if="passPointer" class="message-stake-wrapper">
           <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
-            <span>Please click here to enter your password and confirm.</span>
+            <span>{{ $t("stakeGuide.clickPass") }}</span>
           </div>
         </div>
         <div v-if="modalGuide" class="modal-guide-wrapper">
-          <img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" class="point-to-modal" />
+          <img src="/img/icon/arrows/Pointer1.png" alt="" class="point-to-modal" />
         </div>
         <div v-if="modalGuide" class="staking-step-three">
-          <span>Choose "No" if you have no Slashing Protection Database from a prior Node</span>
+          <span>{{ $t("stakeGuide.noSlash") }}</span>
         </div>
 
         <div class="DisplayValidators-bg"></div>
@@ -93,8 +95,6 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
-import { mapState } from "pinia";
-import { useStakeSlide } from "../../../store/stakeSlide";
 import DisplayValidators from "../the-staking/DisplayValidators.vue";
 
 export default {
@@ -105,6 +105,288 @@ export default {
       slide: "",
       message: "",
       nextStep: 0,
+      sliderTutorial: [
+        {
+          id: 1,
+          img: "/img/stake_Guide/1.jpg",
+          text: this.$t("sliderTutorial.visitUrl") + " “https://goerli.launchpad.ethereum.org/en/”",
+        },
+        {
+          id: 2,
+          img: "/img/stake_Guide/2.jpg",
+          text: this.$t("sliderTutorial.becomeValidator"),
+        },
+        {
+          id: 3,
+          img: "/img/stake_Guide/3.jpg",
+          text: this.$t("sliderTutorial.proofStake"),
+        },
+        {
+          id: 4,
+          img: "/img/stake_Guide/4.jpg",
+          text: this.$t("sliderTutorial.deposit"),
+        },
+        {
+          id: 5,
+          img: "/img/stake_Guide/5.jpg",
+          text: this.$t("sliderTutorial.usingTerminal"),
+        },
+        {
+          id: 6,
+          img: "/img/stake_Guide/6.jpg",
+          text: this.$t("sliderTutorial.validatorUptime"),
+        },
+        {
+          id: 7,
+          img: "/img/stake_Guide/7.jpg",
+          text: this.$t("sliderTutorial.validatorBahavior"),
+        },
+        {
+          id: 8,
+          img: "/img/stake_Guide/8.jpg",
+          text: this.$t("sliderTutorial.keyManagement"),
+        },
+        {
+          id: 9,
+          img: "/img/stake_Guide/9.jpg",
+          text: this.$t("sliderTutorial.validatingLongterm"),
+        },
+        {
+          id: 10,
+          img: "/img/stake_Guide/10.jpg",
+          text: this.$t("sliderTutorial.earlyAdaptor"),
+        },
+        {
+          id: 11,
+          img: "/img/stake_Guide/11.jpg",
+          text: this.$t("sliderTutorial.stakingChecklist"),
+        },
+        {
+          id: 12,
+          img: "/img/stake_Guide/12.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 13,
+          img: "/img/stake_Guide/13.jpg",
+          text: this.$t("sliderTutorial.executionClient"),
+        },
+        {
+          id: 14,
+          img: "/img/stake_Guide/14.jpg",
+          text: this.$t("sliderTutorial.scrollDown"),
+        },
+        {
+          id: 15,
+          img: "/img/stake_Guide/15.jpg",
+          text: this.$t("sliderTutorial.consensusClient"),
+        },
+        {
+          id: 16,
+          img: "/img/stake_Guide/16.jpg",
+          text: this.$t("sliderTutorial.scrollDown"),
+        },
+        {
+          id: 17,
+          img: "/img/stake_Guide/17.jpg",
+          text: this.$t("sliderTutorial.numValidator"),
+        },
+        {
+          id: 18,
+          img: "/img/stake_Guide/18.jpg",
+          text: this.$t("sliderTutorial.generateKey"),
+        },
+        {
+          id: 19,
+          img: "/img/stake_Guide/19.jpg",
+          text: this.$t("sliderTutorial.keyGUI"),
+        },
+        {
+          id: 20,
+          img: "/img/stake_Guide/20.jpg",
+          text: this.$t("sliderTutorial.dlGithub"),
+        },
+        {
+          id: 21,
+          img: "/img/stake_Guide/21.jpg",
+          text: this.$t("sliderTutorial.clickInstaller"),
+        },
+        {
+          id: 22,
+          img: "/img/stake_Guide/22.jpg",
+          text: this.$t("sliderTutorial.setupPage"),
+        },
+        {
+          id: 23,
+          img: "/img/stake_Guide/23.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 24,
+          img: "/img/stake_Guide/24.jpg",
+          text: this.$t("sliderTutorial.wagueKey"),
+        },
+        {
+          id: 25,
+          img: "/img/stake_Guide/25.jpg",
+          text: this.$t("sliderTutorial.secratePhrase"),
+        },
+        {
+          id: 26,
+          img: "/img/stake_Guide/26.jpg",
+          text: this.$t("sliderTutorial.selectNetwork"),
+        },
+        {
+          id: 27,
+          img: "/img/stake_Guide/27.jpg",
+          text: this.$t("sliderTutorial.clickOk"),
+        },
+        {
+          id: 28,
+          img: "/img/stake_Guide/28.jpg",
+          text: this.$t("sliderTutorial.clickCreate"),
+        },
+        {
+          id: 29,
+          img: "/img/stake_Guide/29.jpg",
+          text: this.$t("sliderTutorial.recoveryPhrase"),
+        },
+        {
+          id: 30,
+          img: "/img/stake_Guide/30.jpg",
+          text: this.$t("sliderTutorial.recoveryPhrase"),
+        },
+        {
+          id: 31,
+          img: "/img/stake_Guide/31.jpg",
+          text: this.$t("sliderTutorial.clickNext"),
+        },
+        {
+          id: 32,
+          img: "/img/stake_Guide/32.jpg",
+          text: this.$t("sliderTutorial.imSure"),
+        },
+        {
+          id: 33,
+          img: "/img/stake_Guide/33.jpg",
+          text: this.$t("sliderTutorial.pasteRecovery"),
+        },
+        {
+          id: 34,
+          img: "/img/stake_Guide/34.jpg",
+          text: this.$t("sliderTutorial.clickCheck"),
+        },
+        {
+          id: 35,
+          img: "/img/stake_Guide/35.jpg",
+          text: this.$t("sliderTutorial.needKey"),
+        },
+        {
+          id: 36,
+          img: "/img/stake_Guide/36.jpg",
+          text: this.$t("sliderTutorial.typPass"),
+        },
+        {
+          id: 37,
+          img: "/img/stake_Guide/37.jpg",
+          text: this.$t("sliderTutorial.retypPass"),
+        },
+        {
+          id: 38,
+          img: "/img/stake_Guide/38.jpg",
+          text: this.$t("sliderTutorial.clickNext"),
+        },
+        {
+          id: 39,
+          img: "/img/stake_Guide/39.jpg",
+          text: this.$t("sliderTutorial.clickBrowse"),
+        },
+        {
+          id: 40,
+          img: "/img/stake_Guide/40.jpg",
+          text: this.$t("sliderTutorial.chooseFolder"),
+        },
+        {
+          id: 41,
+          img: "/img/stake_Guide/41.jpg",
+          text: this.$t("sliderTutorial.clickCreateWait"),
+        },
+        {
+          id: 42,
+          img: "/img/stake_Guide/42.jpg",
+          text: this.$t("sliderTutorial.clickClose"),
+        },
+        {
+          id: 43,
+          img: "/img/stake_Guide/43.jpg",
+          text: this.$t("sliderTutorial.switchSetup"),
+        },
+        {
+          id: 44,
+          img: "/img/stake_Guide/44.jpg",
+          text: this.$t("sliderTutorial.dragFile"),
+        },
+        {
+          id: 45,
+          img: "/img/stake_Guide/45.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 46,
+          img: "/img/stake_Guide/46.jpg",
+          text: this.$t("sliderTutorial.connWalet"),
+        },
+        {
+          id: 47,
+          img: "/img/stake_Guide/47.jpg",
+          text: this.$t("sliderTutorial.connWalet"),
+        },
+        {
+          id: 48,
+          img: "/img/stake_Guide/48.jpg",
+          text: this.$t("sliderTutorial.clickCont"),
+        },
+        {
+          id: 49,
+          img: "/img/stake_Guide/49.jpg",
+          text: this.$t("sliderTutorial.understandRisk"),
+        },
+        {
+          id: 50,
+          img: "/img/stake_Guide/50.jpg",
+          text: this.$t("sliderTutorial.readSection"),
+        },
+        {
+          id: 51,
+          img: "/img/stake_Guide/51.jpg",
+          text: this.$t("sliderTutorial.protectYourself"),
+        },
+        {
+          id: 52,
+          img: "/img/stake_Guide/52.jpg",
+          text: this.$t("sliderTutorial.dblCheck"),
+        },
+        {
+          id: 53,
+          img: "/img/stake_Guide/53.jpg",
+          text: this.$t("sliderTutorial.sendDeposit"),
+        },
+        {
+          id: 54,
+          img: "/img/stake_Guide/54.jpg",
+          text: this.$t("sliderTutorial.walletPopup"),
+        },
+        {
+          id: 55,
+          img: "/img/stake_Guide/55.jpg",
+          text: this.$t("sliderTutorial.contCong"),
+        },
+        {
+          id: 56,
+          img: "/img/stake_Guide/56.jpg",
+          text: this.$t("sliderTutorial.contCong"),
+        },
+      ],
     };
   },
   computed: {
@@ -119,9 +401,6 @@ export default {
       stakeCongrats: "stakeCongrats",
     }),
 
-    ...mapState(useStakeSlide, {
-      sliderTutorial: "sliderTutorial",
-    }),
     ...mapWritableState(useStakingStore, {
       isDragOver: "isDragOver",
       clickService: "clickService",
@@ -191,16 +470,6 @@ export default {
         }, 200);
       }
     },
-    // dropFileHandler(event) {
-    //   let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
-    //   if (validator && validator.map((e) => e.state).includes("running")) {
-    //     let droppedFiles = event.dataTransfer.files;
-    //     if (droppedFiles[0]["type"] === "application/json") {
-    //       this.keyFiles.push(...droppedFiles);
-    //     }
-    //   }
-    //   this.isDragOver = false;
-    // },
     nextSlide() {
       this.nextStep++;
       if (this.nextStep > 56) {
@@ -214,27 +483,6 @@ export default {
       if (this.nextStep < 1) {
         this.nextStep = 1;
       }
-    },
-    parseText(text, id) {
-      const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/gi;
-      const matches = text.matchAll(anchorRegex);
-      let parsedText = "";
-      let lastIndex = 0;
-
-      for (const match of matches) {
-        const fullMatch = match[0];
-        const href = match[2];
-        const linkText = match[3];
-        const beforeText = text.substring(lastIndex, match.index);
-        const linkClass = id === 1 ? "clickable-link" : "";
-        const link = `<a class="${linkClass}" href="${href}" target="_blank">${linkText}</a>`;
-        parsedText += beforeText + link;
-        lastIndex = match.index + fullMatch.length;
-      }
-
-      parsedText += text.substring(lastIndex);
-
-      return parsedText;
     },
 
     stakeGuideStep1() {
@@ -258,6 +506,20 @@ export default {
 };
 </script>
 <style scoped>
+.drag-message {
+  color: #c1c1c1;
+  font-size: 150%;
+  margin-left: 5%;
+  font-weight: 600;
+  width: 100%;
+  height: 10%;
+  top: 40%;
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  z-index: 1;
+}
 [data-tooltip] {
   position: relative;
   cursor: default;
@@ -265,7 +527,6 @@ export default {
 [data-tooltip]::after {
   position: absolute;
   width: max-content;
-  left: -30000%;
   text-align: center;
   content: attr(data-tooltip);
   background: black;
