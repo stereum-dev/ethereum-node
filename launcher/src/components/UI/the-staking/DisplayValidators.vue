@@ -212,7 +212,7 @@
               <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
               <span class="balance">{{ item.balance }}</span>
 
-              <div class="wrapper"><span>Doublegänger Protection...</span></div>
+              <div class="wrapper"><span>Doppelgänger Protection...</span></div>
             </div>
           </div>
         </div>
@@ -488,7 +488,7 @@ export default {
       });
       this.newArr = keys.filter((key) => key !== "");
 
-      const keyImages = this.newArr.map((item) => {
+      const newKeyImages = this.newArr.map((item) => {
         return {
           icon: this.selectedService.icon,
           activeSince: "-",
@@ -497,7 +497,7 @@ export default {
         };
       });
 
-      this.keyImages = keyImages;
+      this.keyImages.push(...newKeyImages);
     },
     keys: {
       deep: true,

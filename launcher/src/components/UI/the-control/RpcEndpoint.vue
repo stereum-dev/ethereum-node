@@ -38,8 +38,8 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
-import { useNodeHeader } from "../../../store/nodeHeader";
-import { useControlStore } from "../../../store/theControl";
+import { useNodeHeader } from "@/store/nodeHeader";
+import { useControlStore } from "@/store/theControl";
 import ControlDialog from "./ControlDialog.vue";
 export default {
   components: { ControlDialog },

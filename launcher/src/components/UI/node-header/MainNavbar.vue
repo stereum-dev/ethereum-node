@@ -195,9 +195,9 @@ export default {
             if (!response[service.network] || !response[service.network][service.service]) service.network = "mainnet";
             if (!response[service.network] || !response[service.network][service.service]) service.network = "prater";
             if (response[service.network] && response[service.network][service.service]) {
-              if (service.service === "ErigonService" && !service.imageVersion.startsWith("v")){
+              if (service.service === "ErigonService" && !service.imageVersion.startsWith("v")) {
                 service.imageVersion = "v" + service.imageVersion;
-                service.imageVersion = service.imageVersion.replace("-arm64", "")
+                service.imageVersion = service.imageVersion.replace("-arm64", "");
               }
               if (
                 service.imageVersion !=
@@ -207,7 +207,6 @@ export default {
                 updates.push({
                   id: service.id,
                   name: service.service.replace(/(Beacon|Validator|Service)/gm, ""),
-                  icon: service.sIcon,
                   version:
                     response[service.network][service.service][response[service.network][service.service].length - 1],
                 });
