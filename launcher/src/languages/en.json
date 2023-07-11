@@ -56,7 +56,12 @@
     "servicePlugin": "Plug-in / Service Update Configuration",
     "manual": "MANUAL",
     "auto": "AUTO",
-    "sxConf": "Export Config"
+    "sxConf": "Export Config",
+    "chngAppr": "Changes to be applied",
+    "creditInfo": "click the button to see the contributors",
+    "langInfo": "click the button to change the language",
+    "exportInfo": "click the button to export the configuration in a yaml file",
+    "stereumUpd": "Click the button to configure the Stereum update"
   },
   "nodeSidebarVideo": {
     "stake": "Stake with 32 ETH",

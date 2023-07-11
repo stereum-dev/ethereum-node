@@ -79,7 +79,7 @@
           </div>
         </div>
       </div> </node-bg
-    ><task-manager></task-manager><TheFooter class="footer" />
+    ><task-manager /><TheFooter class="footer" />
   </div>
 </template>
 
