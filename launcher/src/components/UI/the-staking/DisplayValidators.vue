@@ -101,14 +101,35 @@
           <div v-for="(item, index) in filteredKey" :key="index" class="tableRow">
             <div class="rowContent">
               <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
-              <span v-if="item.displayName" class="category">{{ item.displayName }}</span>
-              <span v-else class="category" @click="logEvent"
+              <span
+                v-if="item.displayName"
+                class="category"
+                @mouseenter="cursorLocation = `${item.key}`"
+                @mouseleave="cursorLocation = ''"
+                >{{ item.displayName }}</span
+              >
+              <span
+                v-else
+                class="category"
+                @click="logEvent"
+                @mouseenter="cursorLocation = `${item.key}`"
+                @mouseleave="cursorLocation = ''"
                 >{{ item.key.substring(0, 20) }}...{{ item.key.substring(item.key.length - 6, item.key.length) }}</span
               >
-              <img class="service-icon" :src="item.icon" alt="icon" />
-              <span class="since">{{ item.activeSince }}</span>
+              <img
+                class="service-icon"
+                :src="item.icon"
+                alt="icon"
+                @mouseenter="cursorLocation = `${serviceExpl}`"
+                @mouseleave="cursorLocation = ''"
+              />
+              <span class="since" @mouseenter="cursorLocation = `${activeExpl}`" @mouseleave="cursorLocation = ''">{{
+                item.activeSince
+              }}</span>
               <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
-              <span class="balance">{{ item.balance }}</span>
+              <span class="balance" @mouseenter="cursorLocation = `${balExpl}`" @mouseleave="cursorLocation = ''">{{
+                item.balance
+              }}</span>
               <div v-if="protection" class="wrapper">
                 <div class="option-box">
                   <div class="grafiti-box">
@@ -117,6 +138,8 @@
                       src="/img/icon/the-staking/fee-recepient.png"
                       alt="icon"
                       @click="feeRecepientDisplayHandler(item)"
+                      @mouseenter="cursorLocation = `${setFee}`"
+                      @mouseleave="cursorLocation = ''"
                     />
                   </div>
                   <div class="copy-box">
@@ -125,6 +148,8 @@
                       src="/img/icon/the-staking/copy6.png"
                       alt="icon"
                       @click="copyHandler(item)"
+                      @mouseenter="cursorLocation = `${copyPub}`"
+                      @mouseleave="cursorLocation = ''"
                     />
                   </div>
                   <div class="rename-box">
@@ -133,6 +158,8 @@
                       src="/img/icon/the-staking/rename.png"
                       alt="icon"
                       @click="renameDisplayHandler(item)"
+                      @mouseenter="cursorLocation = `${renameVal}`"
+                      @mouseleave="cursorLocation = ''"
                     />
                   </div>
                   <div class="remove-box">
@@ -141,6 +168,8 @@
                       src="/img/icon/the-staking/option-remove.png"
                       alt="icon"
                       @click="removeModalDisplay(item)"
+                      @mouseenter="cursorLocation = `${removVal}`"
+                      @mouseleave="cursorLocation = ''"
                     />
                   </div>
                   <div
@@ -152,6 +181,8 @@
                       src="/img/icon/the-staking/withdraw.png"
                       alt="icon"
                       @click="passwordBoxSingleExitChain(item)"
+                      @mouseenter="cursorLocation = `${exitChain}`"
+                      @mouseleave="cursorLocation = ''"
                     />
                   </div>
                 </div>
@@ -212,7 +243,9 @@
               <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
               <span class="balance">{{ item.balance }}</span>
 
-              <div class="wrapper"><span>Doppelgänger Protection...</span></div>
+              <div class="wrapper" @mouseenter="cursorLocation = `${waitEnt}`" @mouseleave="cursorLocation = ''">
+                <span>Doppelgänger Protection...</span>
+              </div>
             </div>
           </div>
         </div>
@@ -335,6 +368,7 @@ import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useFooter } from "@/store/theFooter";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
@@ -409,9 +443,22 @@ export default {
       exitValidatorResponse: {},
       protection: true, //dobegnär protection flag
       newArr: [],
+      serviceExpl: this.$t("displayValidator.serviceExpl"),
+      activeExpl: this.$t("displayValidator.activeExpl"),
+      balExpl: this.$t("displayValidator.balExpl"),
+      copyPub: this.$t("displayValidator.copyPub"),
+      copiedPub: this.$t("displayValidator.copiedPub"),
+      setFee: this.$t("displayValidator.setFee"),
+      renameVal: this.$t("displayValidator.renameVal"),
+      removVal: this.$t("displayValidator.removVal"),
+      exitChain: this.$t("displayValidator.exitChain"),
+      waitEnt: this.$t("displayValidator.waitEnt"),
     };
   },
   computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
     ...mapWritableState(useNodeHeader, {
       stakeGuide: "stakeGuide",
       stakeFirstStep: "stakeFirstStep",
@@ -1053,7 +1100,7 @@ export default {
       navigator.clipboard
         .writeText(toCopy)
         .then(() => {
-          console.log("copied!");
+          this.cursorLocation = this.copiedPub;
         })
         .catch(() => {
           console.log(`can't copy`);
@@ -1188,6 +1235,7 @@ export default {
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 86% 7% 7%;
   z-index: 5;
+  cursor: default;
 }
 
 .keys-table-box {

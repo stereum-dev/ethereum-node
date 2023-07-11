@@ -170,7 +170,17 @@
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
     "sure": "I am sure",
-    "cancel": "cancel"
+    "cancel": "cancel",
+    "serviceExpl": "The service selected for the entered Validator key",
+    "activeExpl": "The time since the validator has been active",
+    "balExpl": "The balance of the validator",
+    "copyPub": "Copy the public key",
+    "copiedPub": "Public key copied",
+    "setFee": "set the block fee recipient for the selected keys",
+    "renameVal": "rename the validator key",
+    "removVal": "remove the validator key",
+    "exitChain": "exit the chain with the selected keys",
+    "waitEnt": "You have to wait for the validator keys to enter"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
