@@ -4,7 +4,7 @@
       <TotalBalance />
     </div>
     <div class="stateBox">
-      <div v-if="checkConsensus && checkKeyExists" class="stateInnerBox">
+      <div v-if="checkConsensus && checkKeyExists && consensusState.state === 'running'" class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
           <div class="indexBox">
@@ -34,6 +34,9 @@
             <TabBar :tabs="tabs" @get-title="getActiveComponent" />
           </div>
         </div>
+      </div>
+      <div v-else-if="checkConsensus && consensusState.state !== 'running'" class="w-full h-full">
+        <img src="/img/icon/the-staking/error.png" class="w-full h-full" alt="consensus" />
       </div>
       <div v-else-if="!checkConsensus" class="w-full h-full">
         <img src="/img/icon/the-staking/noConsensus.png" class="w-full h-full" alt="consensus" />
@@ -100,6 +103,7 @@ export default {
       currentComponent: "ATTESTATION",
       intervalId: null,
       consensusExists: false,
+      consensusState: "",
     };
   },
   computed: {
@@ -122,12 +126,14 @@ export default {
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
-    console.log(this.checkKeyExists);
-    console.log(this.keys);
+    console.log(this.consensusState.state);
+  },
+  beforeUpdate() {
+    this.checkConsensusState();
+    console.log(this.consensusState.state);
   },
   unmounted() {
     clearInterval(this.intervalId);
-    console.log(this.keys);
   },
   methods: {
     async getValidatorStats(item) {
@@ -154,6 +160,9 @@ export default {
     },
     getActiveComponent(item) {
       this.currentComponent = item;
+    },
+    checkConsensusState() {
+      this.consensusState = this.installedServices.find((item) => item.category === "consensus");
     },
   },
 };
