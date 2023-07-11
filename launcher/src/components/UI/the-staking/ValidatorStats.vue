@@ -1,10 +1,10 @@
 <template>
-  <div class="statParent">
+  <div class="statParent" @mousedown.prevent>
     <div class="balanceParent">
       <TotalBalance />
     </div>
     <div class="stateBox">
-      <div v-if="checkConsensus && checkKeyExists && consensusState.state === 'running'" class="stateInnerBox">
+      <div v-if="checkConsensus && checkKeyExists && checkConsensusState.state === 'running'" class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
           <div class="indexBox">
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div v-else-if="checkConsensus && consensusState.state !== 'running'" class="w-full h-full">
+      <div v-else-if="checkConsensus && checkConsensusState.state !== 'running'" class="w-full h-full">
         <img src="/img/icon/the-staking/error.png" class="w-full h-full" alt="consensus" />
       </div>
       <div v-else-if="!checkConsensus" class="w-full h-full">
@@ -103,7 +103,6 @@ export default {
       currentComponent: "ATTESTATION",
       intervalId: null,
       consensusExists: false,
-      consensusState: "",
     };
   },
   computed: {
@@ -122,15 +121,13 @@ export default {
       const keyExistance = this.keys.length ? true : false;
       return keyExistance;
     },
+    checkConsensusState() {
+      return this.installedServices.find((item) => item.category === "consensus");
+    },
   },
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
-    console.log(this.consensusState.state);
-  },
-  beforeUpdate() {
-    this.checkConsensusState();
-    console.log(this.consensusState.state);
   },
   unmounted() {
     clearInterval(this.intervalId);
@@ -161,9 +158,9 @@ export default {
     getActiveComponent(item) {
       this.currentComponent = item;
     },
-    checkConsensusState() {
-      this.consensusState = this.installedServices.find((item) => item.category === "consensus");
-    },
+    // checkConsensusState() {
+    //   this.consensusState = this.installedServices.find((item) => item.category === "consensus");
+    // },
   },
 };
 </script>
