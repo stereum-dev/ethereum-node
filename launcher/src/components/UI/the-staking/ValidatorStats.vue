@@ -4,7 +4,7 @@
       <TotalBalance />
     </div>
     <div class="stateBox">
-      <div class="stateInnerBox">
+      <div v-if="checkConsensus && checkKeyExists" class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
           <div class="indexBox">
@@ -35,6 +35,12 @@
           </div>
         </div>
       </div>
+      <div v-else-if="!checkConsensus" class="w-full h-full">
+        <img src="/img/icon/the-staking/noConsensus.png" class="w-full h-full" alt="consensus" />
+      </div>
+      <div v-else-if="!checkKeyExists" class="w-full h-full">
+        <img src="/img/icon/the-staking/nokey.png" class="w-full h-full" alt="No key Image" />
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +54,7 @@ import BlockProduction from "./BlockProduction.vue";
 import TheAttestation from "./TheAttestation.vue";
 import { mapWritableState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
+import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 
 export default {
@@ -92,6 +99,7 @@ export default {
       withdrawalAddress: "0x12345gbfdbf097df9gb7s9dfg7b9sdfg7b67890",
       currentComponent: "ATTESTATION",
       intervalId: null,
+      consensusExists: false,
     };
   },
   computed: {
@@ -99,30 +107,47 @@ export default {
       keys: "keys",
       stats: "stats",
     }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+    }),
+    checkConsensus() {
+      const consensusItem = this.installedServices.some((item) => item.category === "consensus");
+      return consensusItem;
+    },
+    checkKeyExists() {
+      const keyExistance = this.keys.length ? true : false;
+      return keyExistance;
+    },
   },
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
+    console.log(this.checkKeyExists);
+    console.log(this.keys);
   },
   unmounted() {
     clearInterval(this.intervalId);
+    console.log(this.keys);
   },
   methods: {
     async getValidatorStats(item) {
       clearInterval(this.intervalId);
       if (item) {
-        this.intervalId = setInterval(() => {
-          this.updateValidatorStats();
-        }, item.network === "gnosis" ? 8000 : 12000);
+        this.intervalId = setInterval(
+          () => {
+            this.updateValidatorStats();
+          },
+          item.network === "gnosis" ? 8000 : 12000
+        );
         this.selectedValidator = item;
-        await this.updateValidatorStats()
+        await this.updateValidatorStats();
       }
     },
-    async updateValidatorStats(){
-      if(this.selectedValidator?.key){
+    async updateValidatorStats() {
+      if (this.selectedValidator?.key) {
         const output = await ControlService.getValidatorStats(this.selectedValidator.key);
         this.stats = output;
-      }      
+      }
     },
     toggleDropDown() {
       this.dropDownIsOpen = !this.dropDownIsOpen;
