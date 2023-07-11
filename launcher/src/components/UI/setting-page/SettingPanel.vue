@@ -125,6 +125,7 @@ export default {
       langInfo: this.$t("settingPanel.langInfo"),
       exportInfo: this.$t("settingPanel.exportInfo"),
       stereumUpd: this.$t("settingPanel.stereumUpd"),
+      chngAppr: this.$t("settingPanel.chngAppr"),
       stereumConfig: [],
       stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",

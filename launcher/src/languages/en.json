@@ -112,7 +112,13 @@
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
     "all": "update all",
     "osTitle": "server os updates",
-    "availableUpdates": "updates"
+    "availableUpdates": "updates",
+    "searchVersion": "Search for available version updates",
+    "updtBtn": "click to update",
+    "updtAllPlugin": "update all the plugins",
+    "autoUpt": "the update is automatic",
+    "manualUpt": "the update is manual",
+    "chngAppr": "Changes to be applied"
   },
   "controlPage": {
     "node": "NODE",
