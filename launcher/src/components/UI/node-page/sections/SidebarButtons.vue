@@ -1,6 +1,6 @@
 <template>
-  <aside class="flex h-full flex-col justify-evenly w-full px-2 pt-8 bg-[#33393E]">
-    <article class="rounded-lg border p-2 border-gray-800 bg-[#212629]">
+  <aside class="flex h-full flex-col justify-between w-full px-2 pt-8 bg-[#33393E]">
+    <article class="rounded-lg min-h-[70px] border p-2 border-gray-800 bg-[#212629]">
       <div class="flex items-center justify-between overflow-x-hidden">
         <div>
           <p class="text-xs text-gray-400">Server Name</p>
@@ -9,7 +9,7 @@
         </div>
       </div>
     </article>
-    <article class="rounded-lg border p-2 border-gray-800 bg-[#212629]">
+    <article class="rounded-lg min-h-[70px] border p-2 border-gray-800 bg-[#212629]">
       <div class="flex items-center justify-between">
         <div>
           <p class="text-xs text-gray-400">Server IP</p>
@@ -17,21 +17,21 @@
         </div>
       </div>
     </article>
-    <router-link
-      to="/manage"
-      class="flex items-center bg-[#212629] px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200"
-    >
-      <img class="w-5 rounded-full" src="/img/icon/node-journal-icons/edit-node.png" alt="Manage Icon" />
-      <span class="mx-2 text-xs font-medium">{{ $t("journalnode.edit") }}</span>
-    </router-link>
 
-    <div class="flex flex-col min-h-[250px] justify-center rounded-lg px-2 bg-[#212629]">
+    <div class="flex flex-col min-h-[300px] justify-center rounded-lg px-2 bg-[#212629]">
       <nav class="h-full -mx-1">
+        <router-link
+          to="/manage"
+          class="flex items-center bg-[#212629] px-3 mt-2 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200"
+        >
+          <img class="w-4 rounded-full" src="/img/icon/node-journal-icons/edit-node.png" alt="Manage Icon" />
+          <span class="mx-2 text-xs font-medium">{{ $t("journalnode.edit") }}</span>
+        </router-link>
         <div
           v-if="isloading"
           class="flex items-center mt-2 px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200 cursor-pointer"
         >
-          <img class="w-4 rounded-full" src="/img/icon/plugin-menu-icons/turning_circle.gif" alt="Stop Icon" />
+          <img class="w-3 rounded-full" src="/img/icon/plugin-menu-icons/turning_circle.gif" alt="Stop Icon" />
           <span class="mx-2 text-xs font-medium">{{ $t("journalnode.loading") }}</span>
         </div>
 
@@ -39,7 +39,7 @@
           v-else-if="checkStatus()"
           class="flex items-center mt-2 px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200 cursor-pointer"
         >
-          <img class="w-4 rounded-full" src="/img/icon/node-journal-icons/turn_on.png" alt="Stop Icon" />
+          <img class="w-3 rounded-full" src="/img/icon/node-journal-icons/turn_on.png" alt="Stop Icon" />
           <span class="mx-2 text-xs font-medium">{{ $t("journalnode.turnOn") }}</span>
         </div>
 
@@ -47,46 +47,49 @@
           v-else
           class="flex items-center mt-2 px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200 cursor-pointer"
         >
-          <img class="w-4 rounded-full" src="/img/icon/node-journal-icons/power2.png" alt="Stop Icon" />
+          <img class="w-3 rounded-full" src="/img/icon/node-journal-icons/power2.png" alt="Stop Icon" />
           <span class="mx-2 text-xs font-medium">{{ $t("journalnode.turnOff") }}</span>
         </div>
 
         <div
           class="flex items-center mt-2 px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200 cursor-pointer"
         >
-          <img class="w-5" src="/img/icon/node-journal-icons/log-icon.png" alt="Stop Icon" />
+          <img class="w-3" src="/img/icon/node-journal-icons/log-icon.png" alt="Stop Icon" />
           <span class="mx-2 text-xs font-medium">{{ $t("journalnode.log") }}</span>
         </div>
 
         <div
           class="flex items-center mt-2 px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200 cursor-pointer"
         >
-          <img class="w-6 rounded-full" src="/img/icon/node-journal-icons/start-stop.png" alt="Stop Icon" />
-          <span class="mx-2 text-xs font-medium text-green-500">{{ $t("journalnode.start") }}</span> /
-          <span class="mx-2 text-xs font-semibold text-red-500">{{ $t("journalnode.stop") }}</span>
+          <img class="w-3 rounded-full" src="/img/icon/node-journal-icons/start-stop.png" alt="Stop Icon" />
+          <p class="mx-2 text-xs font-medium text-gray-300">
+            {{ $t("journalnode.start") }} <span class="mx-2 text-xs font-medium text-gray-300">/</span>
+            <span class="mx-2 text-xs font-medium text-gray-300">{{ $t("journalnode.stop") }}</span>
+          </p>
         </div>
 
         <div
           class="flex items-center mt-2 px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200 cursor-pointer"
         >
-          <img class="w-5 rounded-full" src="/img/icon/node-journal-icons/restart.png" alt="Stop Icon" />
+          <img class="w-3 rounded-full" src="/img/icon/node-journal-icons/restart.png" alt="Stop Icon" />
           <span class="mx-2 text-xs font-medium">{{ $t("journalnode.restart") }}</span>
         </div>
 
         <div
           class="flex items-center mt-2 px-3 py-2 transition-colors duration-300 transform rounded-lg text-gray-300 hover:bg-slate-600 hover:text-gray-200 cursor-pointer"
         >
-          <img class="w-5 rounded-full" src="/img/icon/plugin-menu-icons/resync.png" alt="Resync Icon" />
+          <img class="w-3 rounded-full" src="/img/icon/plugin-menu-icons/resync.png" alt="Resync Icon" />
           <span class="mx-2 text-xs font-medium">{{ $t("journalnode.resync") }}</span>
         </div>
       </nav>
     </div>
   </aside>
 </template>
+//
 <script>
-// import ConfirmModal from "../components/ConfirmModal.vue";
-// import RestartModal from "../components/RestartModal.vue";
-// import ServiceLogButton from "../components/ServiceLogButton.vue";
+// // import ConfirmModal from "../components/ConfirmModal.vue";
+// // import RestartModal from "../components/RestartModal.vue";
+// // import ServiceLogButton from "../components/ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 import { mapState, mapWritableState } from "pinia";
