@@ -409,7 +409,8 @@ ipcMain.handle("checkActiveValidators", async (event, args) => {
     args.files,
     args.password,
     args.serviceID,
-    args.slashingDB
+    args.slashingDB,
+    args.isRemote
   );
 });
 
@@ -423,6 +424,22 @@ ipcMain.handle("exportConfig", async () => {
 
 ipcMain.handle("importConfig", async (event, args) => {
   return await serviceManager.importConfig(args.configServices, args.removedServices, args.checkPointSync);
+});
+
+ipcMain.handle("importRemoteKeys", async (event, args) => {
+  return await validatorAccountManager.importRemoteKeys(args.serviceID, args.pubkeys, args.url);
+});
+
+ipcMain.handle("listRemoteKeys", async (event, args) => {
+  return await validatorAccountManager.listRemoteKeys(args);
+});
+
+ipcMain.handle("deleteRemoteKeys", async (event, args) => {
+  return await validatorAccountManager.deleteRemoteKeys(args.serviceID, args.pubkeys);
+});
+
+ipcMain.handle("checkRemoteKeys", async (event, args) => {
+  return await validatorAccountManager.checkRemoteKeys(args.url, args.serviceID);
 });
 
 // Scheme must be registered before the app is ready

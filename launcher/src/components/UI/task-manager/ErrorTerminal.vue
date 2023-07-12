@@ -136,6 +136,7 @@ export default {
   white-space: pre-wrap;
   text-transform: none;
   text-align: left;
+  overflow: scroll;
 }
 
 .error-modal .btn-box {

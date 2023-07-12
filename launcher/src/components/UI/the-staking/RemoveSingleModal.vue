@@ -8,7 +8,7 @@
       <div class="removeMessage">
         <span>{{ $t("removeMultiModal.sure") }}</span>
         <p>{{ item.key }}</p>
-        <span>{{ $t("removeMultiModal.slashing") }}</span>
+        <span v-if="!item.isRemote">{{ $t("removeMultiModal.slashing") }}</span>
       </div>
       <div class="slashingParent">
         <!-- <Transition name="slide-up">
@@ -23,7 +23,7 @@
               />
             </div>
           </div> -->
-        <div class="pickSlashing">
+        <div v-if="!item.isRemote" class="pickSlashing">
           <label for="no" class="inline-flex items-center">
             <input id="no" v-model="picked" class="form-radio" type="radio" value="no" />
             NO
@@ -38,7 +38,7 @@
       </div>
 
       <!-- <div class="remove-box" :class="{ disabled: !disabledBtn }"> -->
-      <div class="remove-box" :class="{ disabled: !disabledBtn }">
+      <div class="remove-box" :class="{ disabled: !disabledBtn && !item.isRemote }">
         <div class="remove-btn" @click.stop="$emit('deleteKey', item, picked)">
           <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>

@@ -1,16 +1,16 @@
 ---
+- name: Read service file
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
 - name: Update PostgreSQL DB schema
   block:
-    - name: Read service file
-      slurp:
-        src: "{{ item.path }}"
-      register: service_configuration_raw
-
-    - name: Parse service's configuration
-      set_fact:
-        service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
-        service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
-
     - name: Stop PostgreSQL
       command: "docker stop slashingdb-{{ service_configuration.id }}"
       changed_when: false
