@@ -105,7 +105,7 @@ export default {
       currentComponent: "ATTESTATION",
       intervalId: null,
       consensusExists: false,
-      timer: 6,
+      timer: 5,
       countDown: null,
       displayCounter: false,
     };
@@ -147,9 +147,9 @@ export default {
           this.updateValidatorStats();
           this.countDown = setInterval(() => {
             this.timer--;
-            if (this.timer === 0) {
+            if (this.timer == -1) {
               clearInterval(this.countDown);
-              this.timer = 6;
+              this.timer = 5;
             }
           }, 1000);
         }, 6000);
@@ -382,7 +382,7 @@ export default {
 .stateBox .countDown {
   position: absolute;
   bottom: 3px;
-  left: 11px;
+  right: 25px;
   font-size: 25px;
   font-weight: 700;
   color: gold;
