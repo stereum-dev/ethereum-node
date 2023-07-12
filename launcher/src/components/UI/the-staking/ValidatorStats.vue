@@ -34,6 +34,9 @@
             <TabBar :tabs="tabs" @get-title="getActiveComponent" />
           </div>
         </div>
+        <div v-if="displayCounter" class="countDown">
+          <span>{{ timer }}</span>
+        </div>
       </div>
       <div v-else-if="checkConsensus && checkConsensusState.state !== 'running'" class="w-full h-full">
         <img src="/img/icon/the-staking/error.png" class="w-full h-full" alt="consensus" />
@@ -97,12 +100,14 @@ export default {
         { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
       ],
       selectedValidator: {},
-
       maxCharacters: 30,
       withdrawalAddress: "0x12345gbfdbf097df9gb7s9dfg7b9sdfg7b67890",
       currentComponent: "ATTESTATION",
       intervalId: null,
       consensusExists: false,
+      timer: 6,
+      countDown: null,
+      displayCounter: false,
     };
   },
   computed: {
@@ -131,17 +136,24 @@ export default {
   },
   unmounted() {
     clearInterval(this.intervalId);
+    clearInterval(this.countDown);
   },
   methods: {
     async getValidatorStats(item) {
+      this.displayCounter = true;
       clearInterval(this.intervalId);
       if (item) {
-        this.intervalId = setInterval(
-          () => {
-            this.updateValidatorStats();
-          },
-          item.network === "gnosis" ? 8000 : 12000
-        );
+        this.intervalId = setInterval(() => {
+          this.updateValidatorStats();
+          this.countDown = setInterval(() => {
+            this.timer--;
+            if (this.timer === 0) {
+              clearInterval(this.countDown);
+              this.timer = 6;
+            }
+          }, 1000);
+        }, 6000);
+
         this.selectedValidator = item;
         await this.updateValidatorStats();
       }
@@ -158,9 +170,6 @@ export default {
     getActiveComponent(item) {
       this.currentComponent = item;
     },
-    // checkConsensusState() {
-    //   this.consensusState = this.installedServices.find((item) => item.category === "consensus");
-    // },
   },
 };
 </script>
@@ -208,7 +217,7 @@ export default {
 
 .indexParent {
   grid-column: 1/7;
-  grid-row: 2/3;
+  grid-row: 5/6;
   width: 100%;
   height: 100%;
 }
@@ -308,7 +317,7 @@ export default {
 
 .tabBarParent {
   grid-column: 1/7;
-  grid-row: 8/11;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   display: flex;
@@ -331,8 +340,8 @@ export default {
 }
 .componentParent {
   grid-column: 1/7;
-  grid-row-start: 2;
-  grid-row-end: 8;
+  grid-row-start: 6;
+  grid-row-end: 11;
   width: 100%;
   height: 95%;
   display: flex;
@@ -340,7 +349,7 @@ export default {
   align-items: flex-start;
 }
 .componentParent .dynamicComponent {
-  width: 70%;
+  width: 75%;
   height: 100%;
   padding: 0 5px;
   display: flex;
@@ -356,17 +365,28 @@ export default {
   align-items: flex-start;
 }
 .componentParent .predicitionIcon {
-  width: 30%;
+  width: 25%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 5px 0;
+  position: relative;
 }
 .componentParent .predicitionIcon img {
-  width: 100%;
+  position: absolute;
+  top: 0;
+  width: 63px;
+  z-index: 0;
 }
-
+.stateBox .countDown {
+  position: absolute;
+  bottom: 3px;
+  left: 11px;
+  font-size: 25px;
+  font-weight: 700;
+  color: gold;
+}
 .blockBox .cubeIcon span {
   color: #cdcdcd;
   font-size: 0.5rem;
