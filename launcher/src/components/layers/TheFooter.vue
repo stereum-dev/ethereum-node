@@ -34,7 +34,7 @@ export default {
 }
 
 .footer-status-info {
-  width: 50%;
+  width: 90%;
   height: 100%;
   display: flex;
   justify-content: flex-start;

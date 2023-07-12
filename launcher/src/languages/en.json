@@ -23,7 +23,16 @@
     "restart": "Restart",
     "start": "start",
     "resync": "resync",
-    "stop": "stop"
+    "stop": "stop",
+    "machineIp": "Machine IP Address",
+    "machineName": "Machine Name",
+    "clkEdit": "click to edit your node",
+    "clkOn": "click to turn on your node",
+    "clkOff": "click to turn off your node",
+    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
+    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
+    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
+    "clkResync": "Click to open the panel so that you can resync clients separately"
   },
   "pagesnav": {
     "node": "NODE",
