@@ -487,7 +487,9 @@
     "missAttest": "MISSED ATTESTATION",
     "use": "USAGE",
     "noFee": "no fee recipient",
-    "stereumUpt": "STEREUM UPDATE"
+    "stereumUpt": "STEREUM UPDATE",
+    "clkFee": "click to set fee recipient",
+    "clkUpdate": "Click to open update panel"
   },
   "restartModalNode": {
     "message": "are you sure you want to",
