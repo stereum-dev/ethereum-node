@@ -46,7 +46,7 @@ export default {
       this.dropDownIsOpen = !this.dropDownIsOpen;
     },
     chooseValidator(key) {
-      if (this.keys === []) return;
+      if (this.keys == []) return;
       this.selectedValidator = key;
       this.dropDownIsOpen = false;
       this.$emit("getValidator", this.selectedValidator);
@@ -58,7 +58,7 @@ export default {
 <style scoped>
 .dropDown_parent {
   grid-column: 1/7;
-  grid-row: 1/2;
+  grid-row: 4/5;
   display: flex;
   justify-content: space-between;
   align-items: center;
