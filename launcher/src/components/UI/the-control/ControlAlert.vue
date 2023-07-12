@@ -81,7 +81,14 @@
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
           </div>
         </div>
-        <div v-for="validator in notSetAddresses" :key="validator" class="alert-message_red">
+        <div
+          v-for="validator in notSetAddresses"
+          :key="validator"
+          class="alert-message_red pointer"
+          @mouseenter="cursorLocation = `${clkFee}`"
+          @mouseleave="cursorLocation = ''"
+          @click="expertHandler(validator.serviceID)"
+        >
           <div class="icon-box">
             <img :src="validator.icon" />
           </div>
@@ -91,9 +98,21 @@
               <span> > {{ validator.name }} vc</span>
             </div>
           </div>
+          <the-expert
+            v-if="validator.expertOptionsModal"
+            :item="validator"
+            position="18.8%"
+            wide="39%"
+            @hide-modal="hideExpertMode(validator)"
+          ></the-expert>
         </div>
 
-        <div v-if="stereumUpdate.current !== stereumUpdate.version" class="alert-message_green">
+        <div
+          v-if="stereumUpdate.current !== stereumUpdate.version"
+          class="alert-message_green"
+          @mouseenter="cursorLocation = `${clkUpdate}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <div class="icon-box" @click="showUpdate">
             <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
           </div>
@@ -104,7 +123,14 @@
             </div>
           </div>
         </div>
-        <div v-for="item in updatedNewUpdates" :key="item" class="alert-message_green" @click="showUpdate">
+        <div
+          v-for="item in updatedNewUpdates"
+          :key="item"
+          class="alert-message_green"
+          @click="showUpdate"
+          @mouseenter="cursorLocation = `${clkUpdate}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <div class="icon-box">
             <img :src="item.sIcon" alt="warn_storage" />
           </div>
@@ -125,13 +151,16 @@
 <script>
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "../node-header/UpdatePanel.vue";
+import TheExpert from "../the-node/TheExpert.vue";
 import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { useFooter } from "@/store/theFooter";
 export default {
   components: {
     UpdatePanel,
+    TheExpert,
   },
   data() {
     return {
@@ -146,6 +175,8 @@ export default {
       newUpdate: false,
       missedAttest: false,
       notSetAddresses: [],
+      clkFee: this.$t("nodeAlert.clkFee"),
+      clkUpdate: this.$t("nodeAlert.clkUpdate"),
     };
   },
   computed: {
@@ -168,6 +199,9 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       newUpdates: "newUpdates",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     pointStatus() {
       let port = [];
@@ -242,6 +276,14 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    expertHandler(el) {
+      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
+      selectedObject.expertOptionsModal = true;
+      return selectedObject;
+    },
+    hideExpertMode(el) {
+      el.expertOptionsModal = false;
+    },
     async readService() {
       const validators = this.installedServices.filter((i) => i.category === "validator");
 
@@ -261,7 +303,12 @@ export default {
           const match = [...validator.yaml.match(new RegExp(pattern))][2];
           if (match) {
             const address = match;
-            addresses.push({ name: validator.name, address: address, icon: validator.sIcon });
+            addresses.push({
+              name: validator.name,
+              address: address,
+              icon: validator.sIcon,
+              serviceID: validator.config.serviceID,
+            });
           } else {
             console.error(
               "Could not find default-fee-recipient address in the service YAML for validator:",
@@ -327,6 +374,9 @@ export default {
 };
 </script>
 <style scoped>
+.pointer {
+  cursor: pointer;
+}
 .v-leave-from {
   opacity: 1;
   transform: translateY(0);
@@ -362,6 +412,7 @@ export default {
   align-items: center;
   position: relative;
   box-shadow: 0px 0px 5px 2px #001717;
+  cursor: default;
 }
 .alert-box {
   display: flex;

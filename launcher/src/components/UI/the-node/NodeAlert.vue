@@ -92,7 +92,7 @@
         class="status-message_red pointer"
         @mouseenter="cursorLocation = `${clkFee}`"
         @mouseleave="cursorLocation = ''"
-        @click="test(validator.serviceID)"
+        @click="expertHandler(validator.serviceID)"
       >
         <div class="message-icon">
           <img :src="validator.icon" />
@@ -283,8 +283,7 @@ export default {
     this.cpuMeth();
   },
   methods: {
-    test(el) {
-      // console.log(this.installedServices.find((obj) => obj.config.serviceID === el));
+    expertHandler(el) {
       let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
       selectedObject.expertOptionsModal = true;
       return selectedObject;
