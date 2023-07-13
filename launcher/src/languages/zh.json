@@ -23,7 +23,16 @@
     "restart": "重启",
     "start": "开始",
     "resync": "resync",
-    "stop": "停止"
+    "stop": "停止",
+    "machineIp": "Machine IP Address",
+    "machineName": "Machine Name",
+    "clkEdit": "click to edit your node",
+    "clkOn": "click to turn on your node",
+    "clkOff": "click to turn off your node",
+    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
+    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
+    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
+    "clkResync": "Click to open the panel so that you can resync clients separately"
   },
   "pagesnav": {
     "node": "节点",
@@ -56,7 +65,12 @@
     "servicePlugin": "插件/服务更新配置",
     "manual": "手动更新",
     "auto": "自动更新",
-    "sxConf": "Export Config"
+    "sxConf": "Export Config",
+    "chngAppr": "Changes to be applied",
+    "creditInfo": "click the button to see the contributors",
+    "langInfo": "click the button to change the language",
+    "exportInfo": "click the button to export the configuration in a yaml file",
+    "stereumUpd": "Click the button to configure the Stereum update"
   },
   "nodeSidebarVideo": {
     "stake": "使用 32 ETH",
@@ -74,7 +88,10 @@
     "execution": "运行",
     "consensus": "共识",
     "validator": "验证者",
-    "servicePlugin": "插入"
+    "servicePlugin": "插入",
+    "message": "The current network is ",
+    "chckTutorial": "Check out the tutorials",
+    "returnStatus": "Return to status box"
   },
   "modifyPanel": {
     "backNode": "回到节点",
@@ -104,7 +121,13 @@
     "availablePlugin": "可使用插件更新",
     "all": "全部更新",
     "osTitle": "更新服务器",
-    "availableUpdates": "更新"
+    "availableUpdates": "更新",
+    "searchVersion": "Search for available version updates",
+    "updtBtn": "click to update",
+    "updtAllPlugin": "update all the plugins",
+    "autoUpt": "the update is automatic",
+    "manualUpt": "the update is manual",
+    "chngAppr": "Changes to be applied"
   },
   "controlPage": {
     "node": "节点",
@@ -127,7 +150,28 @@
     "storage": "储存",
     "active": "激活",
     "rating": "评分",
-    "usage": "使用"
+    "usage": "使用",
+    "netSel": "The selected network is",
+    "machineName": "Machine Name",
+    "storVol": "Storage Volume",
+    "stor": "the storage",
+    "diskSpeed": "Disk Speed",
+    "p2p": "peer to peer networks",
+    "cpuUse": "CPU Usage",
+    "syncInfo": "Synchronization status",
+    "ramUse": "RAM Usage",
+    "netSpeed": "Network Speed",
+    "listPort": "list of ports",
+    "endPoint": "endpoint",
+    "data": "data",
+    "enteredKeys": "The number of entered validator keys",
+    "ttlBal": "Total balance",
+    "finEPOCH": "Finalized EPOCH",
+    "pending": "service is pending",
+    "off": "Switch off the service",
+    "on": "Switch on the service",
+    "settingService": "Setting up the service",
+    "restart": "restart the service"
   },
   "taskManager": {
     "clickDisplay": "点击任务显示"
@@ -146,7 +190,17 @@
     "warningAlarm": "警告：您有被削减的高风险！",
     "warningQuestion": "您想要导入验证密钥吗？",
     "sure": "确认",
-    "cancel": "取消"
+    "cancel": "取消",
+    "serviceExpl": "The service selected for the entered Validator key",
+    "activeExpl": "The time since the validator has been active",
+    "balExpl": "The balance of the validator",
+    "copyPub": "Copy the public key",
+    "copiedPub": "Public key copied",
+    "setFee": "set the block fee recipient for the selected keys",
+    "renameVal": "rename the validator key",
+    "removVal": "remove the validator key",
+    "exitChain": "exit the chain with the selected keys",
+    "waitEnt": "You have to wait for the validator keys to enter"
   },
   "enterPass": {
     "enterPass": "输入密码和导入"
@@ -433,7 +487,9 @@
     "missAttest": "错过见证消息",
     "use": "使用",
     "noFee": "没有收费收件人",
-    "stereumUpt": "以太坊更新"
+    "stereumUpt": "以太坊更新",
+    "clkFee": "click to set fee recipient",
+    "clkUpdate": "Click to open update panel"
   },
   "restartModalNode": {
     "message": "您确定要吗",
@@ -566,5 +622,21 @@
   "balWid": {
     "fin": "FINALIZED",
     "bal": "BALANCE CHANGE"
+  },
+  "headerBtn": {
+    "help": "help",
+    "notif": "Management of notification channels",
+    "availableUpdt": "New update is available",
+    "updtPan": "update panel",
+    "setting": "Stereum settings",
+    "logOutBtn": "Log out"
+  },
+  "switchNetwork": {
+    "message": "This is the current network, you can click to select another network"
+  },
+  "searchOption": {
+    "switchShow": "Switch between showing the public key & your picked custom name",
+    "group": "Group multiple key(s)",
+    "searchFilter": "Search & filters"
   }
 }
