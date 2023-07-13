@@ -23,7 +23,16 @@
     "restart": "Restart",
     "start": "start",
     "resync": "resync",
-    "stop": "stop"
+    "stop": "stop",
+    "machineIp": "Machine IP Address",
+    "machineName": "Machine Name",
+    "clkEdit": "click to edit your node",
+    "clkOn": "click to turn on your node",
+    "clkOff": "click to turn off your node",
+    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
+    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
+    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
+    "clkResync": "Click to open the panel so that you can resync clients separately"
   },
   "pagesnav": {
     "node": "НОД",
@@ -56,7 +65,12 @@
     "servicePlugin": "Конфигурация за актуализация на плъгини / услуги",
     "manual": "РЪКОВОДСТВО",
     "auto": "АВТОМАТИЧНО",
-    "sxConf": "Export Config"
+    "sxConf": "Export Config",
+    "chngAppr": "Changes to be applied",
+    "creditInfo": "click the button to see the contributors",
+    "langInfo": "click the button to change the language",
+    "exportInfo": "click the button to export the configuration in a yaml file",
+    "stereumUpd": "Click the button to configure the Stereum update"
   },
   "nodeSidebarVideo": {
     "stake": "Залог с 32 ETH",
@@ -74,7 +88,10 @@
     "execution": "изпълнение",
     "consensus": "консенсус",
     "validator": "валидатор",
-    "servicePlugin": "СЪРВИС ПЛЪГИН"
+    "servicePlugin": "СЪРВИС ПЛЪГИН",
+    "message": "The current network is ",
+    "chckTutorial": "Check out the tutorials",
+    "returnStatus": "Return to status box"
   },
   "modifyPanel": {
     "backNode": "обратно към НОД-а",
@@ -104,7 +121,13 @@
     "availablePlugin": "НАЛИЧНИ АКТУАЛИЗАЦИИ НА ПЛЪГИНИ",
     "all": "актуализиране на всички",
     "osTitle": "server os updates",
-    "availableUpdates": "updates"
+    "availableUpdates": "updates",
+    "searchVersion": "Search for available version updates",
+    "updtBtn": "click to update",
+    "updtAllPlugin": "update all the plugins",
+    "autoUpt": "the update is automatic",
+    "manualUpt": "the update is manual",
+    "chngAppr": "Changes to be applied"
   },
   "controlPage": {
     "node": "НОД",
@@ -127,7 +150,28 @@
     "storage": "СКЛАД",
     "active": "АКТИВЕН",
     "rating": "РЕЙТИНГ",
-    "usage": "Използване"
+    "usage": "Използване",
+    "netSel": "The selected network is",
+    "machineName": "Machine Name",
+    "storVol": "Storage Volume",
+    "stor": "the storage",
+    "diskSpeed": "Disk Speed",
+    "p2p": "peer to peer networks",
+    "cpuUse": "CPU Usage",
+    "syncInfo": "Synchronization status",
+    "ramUse": "RAM Usage",
+    "netSpeed": "Network Speed",
+    "listPort": "list of ports",
+    "endPoint": "endpoint",
+    "data": "data",
+    "enteredKeys": "The number of entered validator keys",
+    "ttlBal": "Total balance",
+    "finEPOCH": "Finalized EPOCH",
+    "pending": "service is pending",
+    "off": "Switch off the service",
+    "on": "Switch on the service",
+    "settingService": "Setting up the service",
+    "restart": "restart the service"
   },
   "taskManager": {
     "clickDisplay": "Кликнете върху задачите, за да ги покажете"
@@ -146,7 +190,17 @@
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
     "sure": "I am sure",
-    "cancel": "cancel"
+    "cancel": "cancel",
+    "serviceExpl": "The service selected for the entered Validator key",
+    "activeExpl": "The time since the validator has been active",
+    "balExpl": "The balance of the validator",
+    "copyPub": "Copy the public key",
+    "copiedPub": "Public key copied",
+    "setFee": "set the block fee recipient for the selected keys",
+    "renameVal": "rename the validator key",
+    "removVal": "remove the validator key",
+    "exitChain": "exit the chain with the selected keys",
+    "waitEnt": "You have to wait for the validator keys to enter"
   },
   "enterPass": {
     "enterPass": "ВЪВЕДЕТЕ ПАРОЛА & ИМПОРТИРАЙТЕ"
@@ -433,7 +487,9 @@
     "missAttest": "MISSED ATTESTATION",
     "use": "USAGE",
     "noFee": "no fee recipient",
-    "stereumUpt": "STEREUM UPDATE"
+    "stereumUpt": "STEREUM UPDATE",
+    "clkFee": "click to set fee recipient",
+    "clkUpdate": "Click to open update panel"
   },
   "restartModalNode": {
     "message": "are you sure you want to",
@@ -566,5 +622,21 @@
   "balWid": {
     "fin": "FINALIZED",
     "bal": "BALANCE CHANGE"
+  },
+  "headerBtn": {
+    "help": "help",
+    "notif": "Management of notification channels",
+    "availableUpdt": "New update is available",
+    "updtPan": "update panel",
+    "setting": "Stereum settings",
+    "logOutBtn": "Log out"
+  },
+  "switchNetwork": {
+    "message": "This is the current network, you can click to select another network"
+  },
+  "searchOption": {
+    "switchShow": "Switch between showing the public key & your picked custom name",
+    "group": "Group multiple key(s)",
+    "searchFilter": "Search & filters"
   }
 }
