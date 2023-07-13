@@ -15,8 +15,13 @@
           <span>{{ $t("theAttes.keyStatus") }}</span>
         </div>
         <div class="keyStatus_value">
-          <span v-if="stats.ETA === ' ETA: now!'" class="attesting">{{ $t("theAttes.attest") }}</span>
-          <span v-else>{{ $t("theAttes.pending") }}</span>
+          <span v-if="stats.ETA === ' ETA: now!'" class="text-[12px] font-semibold text-green-400">{{
+            $t("theAttes.attest")
+          }}</span>
+          <span v-else-if="stats.ETA == undefined || stats.ETA == null" class="text-[10px] text-yellow-400">{{
+            $t("theAttes.noKey")
+          }}</span>
+          <span v-else class="text-[12px] font-semibold text-red-500">{{ $t("theAttes.pending") }}</span>
         </div>
       </div>
     </div>
@@ -105,7 +110,7 @@ export default {
 .keyStatus,
 .attestation_next {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   width: 100%;
   height: 50%;
@@ -114,7 +119,7 @@ export default {
 .attestationNext .attestation_next_title {
   grid-column: 1/2;
   grid-row: 1;
-  width: 100%;
+  width: max-content;
   height: 100%;
   display: flex;
   justify-content: flex-start;
@@ -165,11 +170,11 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
-.attestationSlot .keyStatus_value span {
+/* .attestationSlot .keyStatus_value span {
   color: #ec3939;
   font-size: 0.6rem;
   font-weight: 600;
-}
+} */
 .attesting {
   color: #35bf35 !important;
 }

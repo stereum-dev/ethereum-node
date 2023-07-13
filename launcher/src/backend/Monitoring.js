@@ -42,7 +42,7 @@ export class Monitoring {
     this.globalMonitoringCache = { ...globalMonitoringCache };
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
-    } catch (e) { }
+    } catch (e) {}
   }
 
   // Jobs to handle on login
@@ -230,7 +230,7 @@ export class Monitoring {
         }
         //console.log('REQUIRE fresh cache ' + hash, dnow);
       }
-    } catch (e) { }
+    } catch (e) {}
     if (await this.checkStereumInstallation()) {
       var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
       const serviceStates = await this.nodeConnectionProm.listServices();
@@ -408,11 +408,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-          jsonrpc: "2.0",
-          method: rpc_method.trim(),
-          params: rpc_params,
-          id: 1,
-        })
+            jsonrpc: "2.0",
+            method: rpc_method.trim(),
+            params: rpc_params,
+            id: 1,
+          })
         : rpc_method;
 
     // Define default response
@@ -1218,12 +1218,12 @@ export class Monitoring {
             labels.forEach(function (label, index) {
               try {
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
-              } catch (e) { }
+              } catch (e) {}
             });
             try {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            } catch (e) { }
+            } catch (e) {}
           }
           // Set chain head block for this client from RPC server (if available)
           if (
@@ -1240,7 +1240,7 @@ export class Monitoring {
                 typeof chain_head_block === "string" && chain_head_block.startsWith("0x")
                   ? parseInt(chain_head_block, 16)
                   : 0;
-            } catch (e) { }
+            } catch (e) {}
             let stay_on_hold_till_first_block = false; // true = enabled | false = disabled
             if (stay_on_hold_till_first_block && !chain_head_block) {
               // stay on hold until EC has responded the first block by RPC
@@ -1543,7 +1543,7 @@ export class Monitoring {
                     .value.pop()
                 );
                 details[clientType]["numPeerBy"]["fields"].push(item);
-              } catch (e) { }
+              } catch (e) {}
             });
           }
 
@@ -1914,7 +1914,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.rpcTunnel = {};
       }
-    } catch (e) { }
+    } catch (e) {}
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
@@ -2097,7 +2097,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.wsTunnel = {};
       }
-    } catch (e) { }
+    } catch (e) {}
 
     // Respond success with fresh WS status data
     const freshwsstatus = await this.getWsStatus();
@@ -2246,7 +2246,7 @@ export class Monitoring {
     try {
       let r = wsResult.stdout.trim().split("\n");
       statuscode = r.length > 0 ? parseInt(r.pop()) : statuscode;
-    } catch (e) { }
+    } catch (e) {}
 
     // Respond true if websocket is available, false otherwise
     if (!wsResult.stdout.toLowerCase().includes("sec-websocket") && statuscode != 200) {
@@ -2353,7 +2353,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.beaconTunnel = {};
       }
-    } catch (e) { }
+    } catch (e) {}
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
@@ -2478,8 +2478,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-        ? "str"
-        : "invalid";
+      ? "str"
+      : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2567,7 +2567,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-          serviceInfos[i].config.dependencies.executionClients.length
+        serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({
@@ -2820,14 +2820,19 @@ rm -rf diskoutput
     const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
     const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
 
+    const beaconAPICmdSpec = `curl -s -X GET '${baseURL}/eth/v1/config/spec' -H 'accept: application/json'`;
+    const specRes = await this.nodeConnection.sshService.exec(beaconAPICmdSpec);
+
+    const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = JSON.parse(specRes.stdout).data;
+
     let output = {};
 
     const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
     const current_time = Math.floor(Date.now() / 1000);
-    const slot_time = 12;
+    const slot_time = secondsPerSlot;
     const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
     const current_slot = Math.floor((current_time - genesis_time) / slot_time);
-    const current_epoch = Math.floor(current_slot / 32);
+    const current_epoch = Math.floor(current_slot / slotsPerEpoch);
 
     output = { currentEpoch: current_epoch, currentSlot: current_slot };
 
@@ -2868,7 +2873,7 @@ rm -rf diskoutput
             } else if (duty_eta > 0 - slot_time) {
               eta_str = " ETA: now!";
             }
-            let slot_idx = slot % 32;
+            let slot_idx = slot % slotsPerEpoch;
             output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
           }
           if (slot > current_slot) {
@@ -2893,7 +2898,7 @@ rm -rf diskoutput
             } else if (duty_eta > 0 - slot_time) {
               eta_str = " ETA: now!";
             }
-            let slot_idx = slot % 32;
+            let slot_idx = slot % slotsPerEpoch;
             output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
           }
           if (slot > current_slot) {
@@ -2929,7 +2934,7 @@ rm -rf diskoutput
       output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
     }
 
-    return { ...output, currentProp: current_prop };
+    return { ...output, currentProp: current_prop, slotsPerEpoch };
   }
 
   // get States of Validators

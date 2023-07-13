@@ -14,9 +14,9 @@
           <span class="epochNumber">{{ stats.currentEpoch }}</span>
         </div>
         <div class="slotBox">
-          <span class="firstNumber">{{ stats.currentSlot ? ((stats.currentSlot % 32) +1 )  : 0}}#</span>
+          <span class="firstNumber">{{ stats.currentSlot ? (stats.currentSlot % stats.slotsPerEpoch) + 1 : 0 }}#</span>
           <span class="outOf">/</span>
-          <span class="secondNumber">32#</span>
+          <span class="secondNumber">{{ stats.slotsPerEpoch }}</span>
           <span class="divider"></span>
           <span class="slotNumber">{{ stats.currentSlot }}</span>
         </div>
@@ -57,7 +57,9 @@ export default {
       deep: true,
     },
   },
-  mounted() {},
+  mounted() {
+
+  },
 };
 </script>
 <style scoped>
