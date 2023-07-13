@@ -83,10 +83,10 @@ export default {
           this.selectedCurrency = "/img/icon/control/goETH_Currency_Symbol.png";
           break;
         case 3:
-          this.selectedCurrency = "/img/icon/control/GNO_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
           break;
         case 4:
-          this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control/GNO_Currency_Symbol.png";
           break;
         default:
           break;
