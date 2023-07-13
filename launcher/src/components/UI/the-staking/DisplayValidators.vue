@@ -891,9 +891,13 @@ export default {
           ) {
             //refresh validaotr list
             let result = await ControlService.listValidators(client.config.serviceID);
-            if (!client.service.includes("Lighthouse") || !client.service.includes("Lodestar")) {
+            if (
+              !client.service.includes("Lighthouse") &&
+              !client.service.includes("Lodestar") &&
+              !client.service.includes("Web3Signer")
+            ) {
               let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
-              let remoteKeys = result.data
+              let remoteKeys = resultRemote.data
                 ? resultRemote.data.map((e) => {
                     return { validating_pubkey: e.pubkey, readonly: true };
                   })
