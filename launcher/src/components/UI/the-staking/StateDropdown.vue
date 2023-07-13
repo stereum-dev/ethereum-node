@@ -12,7 +12,12 @@
         </div>
       </div>
       <div v-if="dropDownIsOpen" class="valueBox" @mouseleave="dropDownIsOpen = false">
-        <div v-for="(key, index) in keys" :key="index" class="options_value" @click="chooseValidator(key)">
+        <div
+          v-for="(key, index) in [...new Map(keys.map((item) => [item['key'], item])).values()]"
+          :key="index"
+          class="options_value"
+          @click="chooseValidator(key)"
+        >
           <span>{{ `${key.key.substring(0, 10)}...${key.key.substring(key.key.length - 15)}` }}</span>
         </div>
       </div>
