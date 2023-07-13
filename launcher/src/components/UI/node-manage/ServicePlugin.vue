@@ -15,6 +15,8 @@
             'chosen-plugin': item.active,
             'modify-plugin': item.modifierPanel,
           }"
+          @mouseenter="cursorLocation = `${item.name}`"
+          @mouseleave="cursorLocation = ''"
           @mouseup.right="selectedItem(item)"
           @click="modifyItem(item)"
         />
@@ -31,6 +33,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { useFooter } from "@/store/theFooter";
 
 export default {
   props: {
@@ -47,6 +50,9 @@ export default {
   computed: {
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
   watch: {

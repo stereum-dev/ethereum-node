@@ -5,15 +5,27 @@
         <div ref="nameParent" class="details">
           <span class="ipTitle">{{ $t("journalnode.serverip") }}</span>
           <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
-          <span class="ip">{{ ipAddress }}</span>
-          <span ref="serverName" :class="{ animateServerName: checkServerNameWidth }" class="name">{{
-            ServerName
+          <span class="ip" @mouseenter="cursorLocation = `${machineIp}`" @mouseleave="cursorLocation = ''">{{
+            ipAddress
           }}</span>
+          <span
+            ref="serverName"
+            :class="{ animateServerName: checkServerNameWidth }"
+            class="name"
+            @mouseenter="cursorLocation = `${machineName}`"
+            @mouseleave="cursorLocation = ''"
+            >{{ ServerName }}</span
+          >
         </div>
       </div>
     </div>
     <div v-if="!openLog" class="configBtn">
-      <router-link to="/manage" class="linkToEdit">
+      <router-link
+        to="/manage"
+        class="linkToEdit"
+        @mouseenter="cursorLocation = `${clkEdit}`"
+        @mouseleave="cursorLocation = ''"
+      >
         <the-node-panel-btn
           img-path="/img/icon/node-journal-icons/edit-node.png"
           is-color="gold"
@@ -45,6 +57,8 @@
         btn-action="logToggle"
         grid-row="2/3"
         @btn-action="toggleModalOn"
+        @mouseenter="cursorLocation = `${clkOn}`"
+        @mouseleave="cursorLocation = ''"
         >{{ $t("journalnode.turnOn") }}</the-node-panel-btn
       >
       <the-node-panel-btn
@@ -56,6 +70,8 @@
         btn-action="logToggle"
         grid-row="2/3"
         @btn-action="toggleModalOn"
+        @mouseenter="cursorLocation = `${clkOff}`"
+        @mouseleave="cursorLocation = ''"
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
@@ -66,6 +82,8 @@
         btn-action="logToggle"
         grid-row="5/6"
         @btn-action="logToggle"
+        @mouseenter="cursorLocation = `${clkLog}`"
+        @mouseleave="cursorLocation = ''"
         >{{ $t("journalnode.log") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
       <the-node-panel-btn
@@ -75,6 +93,8 @@
         margin-right="3"
         grid-row="4/5"
         @btn-action="powerToggl"
+        @mouseenter="cursorLocation = `${clkSwitch}`"
+        @mouseleave="cursorLocation = ''"
         ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
         ><span class="ml-1">. . .</span></the-node-panel-btn
       >
@@ -87,6 +107,8 @@
         btn-action="restartToggle"
         grid-row="3/4"
         @btn-action="restartToggle"
+        @mouseenter="cursorLocation = `${clkRestart}`"
+        @mouseleave="cursorLocation = ''"
         >{{ $t("journalnode.restart") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
       <the-node-panel-btn
@@ -96,6 +118,8 @@
         margin-right="5"
         btn-action="resyncToggle"
         grid-row="6/7"
+        @mouseenter="cursorLocation = `${clkResync}`"
+        @mouseleave="cursorLocation = ''"
         @btn-action="resyncToggle"
         >{{ $t("journalnode.resync") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
@@ -264,6 +288,7 @@ import { useControlStore } from "../../../store/theControl";
 import { mapState, mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useNodeManage } from "../../../store/nodeManage";
+import { useFooter } from "@/store/theFooter";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
@@ -297,6 +322,15 @@ export default {
       openResync: false,
       titlePicker: "",
       iconPicker: "",
+      machineIp: this.$t("journalnode.machineIp"),
+      machineName: this.$t("journalnode.machineName"),
+      clkEdit: this.$t("journalnode.clkEdit"),
+      clkOn: this.$t("journalnode.clkOn"),
+      clkOff: this.$t("journalnode.clkOff"),
+      clkLog: this.$t("journalnode.clkLog"),
+      clkSwitch: this.$t("journalnode.clkSwitch"),
+      clkRestart: this.$t("journalnode.clkRestart"),
+      clkResync: this.$t("journalnode.clkResync"),
     };
   },
 
@@ -314,6 +348,9 @@ export default {
     ...mapWritableState(useNodeManage, {
       resyncSeparateModal: "resyncSeparateModal",
       selectedServiceToResync: "selectedServiceToResync",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     ...mapState(useServices, {
       installedServices: "installedServices",

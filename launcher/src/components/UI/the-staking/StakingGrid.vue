@@ -16,7 +16,7 @@
           @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
         ></selection-options>
-        <div class="footer"></div>
+
         <TaskManager />
       </div>
     </div>
@@ -25,7 +25,7 @@
 
 <script>
 import { mapWritableState } from "pinia";
-import { useServices } from "../../../store/services";
+import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
@@ -129,14 +129,5 @@ export default {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 30% 26% 39% 5%;
-}
-.footer {
-  width: 100%;
-  height: 99.9%;
-  margin: 0 auto;
-  grid-column: 1/13;
-  grid-row: 4;
-  background-color: rgb(52, 52, 52);
-  border-radius: 0 0 7px 7px;
 }
 </style>

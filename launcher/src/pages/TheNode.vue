@@ -15,7 +15,11 @@
         </div>
         <div class="trapezoid-parent">
           <div class="switch-network">
-            <div class="switch-network__content">
+            <div
+              class="switch-network__content"
+              @mouseenter="cursorLocation = `${message}${currentNetwork.name}`"
+              @mouseleave="cursorLocation = ''"
+            >
               <div class="current">
                 <div class="networkIcon">
                   <img :src="currentNetwork?.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
@@ -63,18 +67,19 @@
         <div class="node-side">
           <div class="sidebar-container">
             <NodeAlert v-if="infoAlarm" />
-            <div class="info-button" @click="infoAlarm = !infoAlarm">
+            <div
+              class="info-button"
+              @click="infoAlarm = !infoAlarm"
+              @mouseenter="cursorLocation = infoAlarm ? `${chckTutorial}` : `${returnStatus}`"
+              @mouseleave="cursorLocation = ''"
+            >
               <img src="/img/icon/round-icon.png" alt="information" />
             </div>
             <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
           </div>
         </div>
-        <div class="footer">
-          <div class="footer-content"></div>
-        </div>
-        <task-manager></task-manager>
-      </div>
-    </node-bg>
+      </div> </node-bg
+    ><task-manager /><TheFooter class="footer" />
   </div>
 </template>
 
@@ -89,11 +94,13 @@ import { useServices } from "../store/services";
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
-import { useControlStore } from "../store/theControl";
+import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
 import { useNodeHeader } from "../store/nodeHeader";
+import TheFooter from "../components/layers/TheFooter.vue";
 
 export default {
   components: {
@@ -104,6 +111,7 @@ export default {
     TheVideos,
     NodeAlert,
     NodeTutorial,
+    TheFooter,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -114,12 +122,18 @@ export default {
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       itemToTutorial: [],
       serverVitals: {},
+      message: this.$t("theNode.message"),
+      chckTutorial: this.$t("theNode.chckTutorial"),
+      returnStatus: this.$t("theNode.returnStatus"),
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
 
     ...mapWritableState(useNodeStore, {
@@ -210,6 +224,9 @@ export default {
 </script>
 
 <style scoped>
+.footer {
+  z-index: 1;
+}
 .info-button {
   width: 90%;
   height: 8%;
@@ -249,6 +266,7 @@ export default {
   background-color: rgb(0, 0, 0);
   z-index: 1;
   position: relative;
+  cursor: default;
 }
 .play-box {
   width: 100%;
@@ -416,15 +434,7 @@ export default {
   border-left: none;
   padding: 1% 0;
 }
-.footer {
-  width: 100%;
-  height: 90%;
-  margin: 0 auto;
-  grid-column: 1/5;
-  grid-row: 4;
-  background-color: #343434;
-  border-radius: 0 0 7px 7px;
-}
+
 .node-task-manager {
   position: fixed;
   left: 4px;
