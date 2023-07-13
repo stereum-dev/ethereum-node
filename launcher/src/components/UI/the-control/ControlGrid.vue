@@ -36,12 +36,16 @@
                         class="pending"
                         src="/img/icon/plugin-menu-icons/turning_circle.gif"
                         alt="icon"
+                        @mouseenter="cursorLocation = `${pending}`"
+                        @mouseleave="cursorLocation = ''"
                       />
                       <img
                         v-else-if="item.state == 'running'"
                         src="/img/icon/plugin-menu-icons/shutdown.png"
                         alt="icon"
                         @click.stop="stateHandler(item)"
+                        @mouseenter="cursorLocation = `${off}`"
+                        @mouseleave="cursorLocation = ''"
                       />
                       <img
                         v-else-if="item.state == 'restarting'"
@@ -54,11 +58,18 @@
                         src="/img/icon/plugin-menu-icons/turn-on.png"
                         alt="icon"
                         @click.stop="stateHandler(item)"
+                        @mouseenter="cursorLocation = `${on}`"
+                        @mouseleave="cursorLocation = ''"
                       />
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div class="seting-icon" @click.stop="expertModeHandler(item)">
+                    <div
+                      class="seting-icon"
+                      @click.stop="expertModeHandler(item)"
+                      @mouseenter="cursorLocation = `${settingService}`"
+                      @mouseleave="cursorLocation = ''"
+                    >
                       <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
                     </div>
                   </div>
@@ -98,8 +109,6 @@
     <div class="alerts">
       <control-alert></control-alert>
     </div>
-    <div class="footer"></div>
-    <task-manager></task-manager>
   </div>
 </template>
 
@@ -111,15 +120,15 @@ import ControlAlert from "./ControlAlert.vue";
 import TheExpert from "../the-node/TheExpert.vue";
 import PrunningModal from "../the-node/PrunningModal.vue";
 import ResyncModal from "../the-node/ResyncModal.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useServices } from "../../../store/services";
 export default {
   components: {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-    TaskManager,
+
     TheExpert,
     PrunningModal,
     ResyncModal,
@@ -130,6 +139,10 @@ export default {
       gethPrunningWarningModal: false,
       resyncWarningModal: false,
       isPluginLogPageActive: false,
+      pending: this.$t("controlPage.pending"),
+      off: this.$t("controlPage.off"),
+      on: this.$t("controlPage.on"),
+      settingService: this.$t("controlPage.settingService"),
     };
   },
   create() {
@@ -144,6 +157,10 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+    }),
+
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
   methods: {
@@ -309,15 +326,6 @@ export default {
   z-index: 0;
 }
 
-.footer {
-  width: 100%;
-  height: 99%;
-  margin: 0 auto;
-  grid-column: 1/4;
-  grid-row: 4;
-  background-color: rgb(52, 52, 52);
-  border-radius: 0 0 7px 7px;
-}
 .plugins-title {
   width: 40%;
   height: 25px;

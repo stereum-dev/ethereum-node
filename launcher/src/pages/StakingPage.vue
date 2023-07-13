@@ -2,14 +2,17 @@
   <div class="thestaking-parent">
     <node-header id="head" />
     <StakingGrid />
+    <TheFooter />
   </div>
 </template>
 <script>
 import StakingGrid from "../components/UI/the-staking/StakingGrid.vue";
+import TheFooter from "../components/layers/TheFooter.vue";
 
 export default {
   components: {
     StakingGrid,
+    TheFooter,
   },
 };
 </script>

@@ -8,12 +8,14 @@
             :src="service.hIcon"
             alt="service-icon"
             @click="openServiceBrowser(service.service)"
+            @mouseenter="cursorLocation = `${service.name}`"
+            @mouseleave="cursorLocation = ''"
           />
         </div>
 
         <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
         <ssv-modal v-if="showSsvWindow" @close-window="closeServiceBrowser"></ssv-modal>
-        <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser"></prometheus-modal>
+        <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser" />
         <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser"></mevboost-modal>
       </div>
       <div class="arrow-box">
@@ -29,6 +31,8 @@
 </template>
 <script>
 import { mapState } from "pinia";
+import { useFooter } from "@/store/theFooter";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
@@ -54,6 +58,9 @@ export default {
     }),
     ...mapState(useServices, {
       allServices: "allServices",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
 
