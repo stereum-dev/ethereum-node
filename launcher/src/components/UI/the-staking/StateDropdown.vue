@@ -13,7 +13,7 @@
       </div>
       <div v-if="dropDownIsOpen" class="valueBox" @mouseleave="dropDownIsOpen = false">
         <div
-          v-for="(key, index) in [...new Map(keys.map((item) => [item[key], item])).values()]"
+          v-for="(key, index) in [...new Map(keys.map((item) => [item['key'], item])).values()]"
           :key="index"
           class="options_value"
           @click="chooseValidator(key)"
