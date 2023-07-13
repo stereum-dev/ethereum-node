@@ -483,7 +483,7 @@
     "close": "点击外部关闭"
   },
   "nodeAlert": {
-    "lowSpace": "库存空间减小",
+    "lowSpace": "LOW STORAGE",
     "missAttest": "错过见证消息",
     "use": "使用",
     "noFee": "没有收费收件人",
