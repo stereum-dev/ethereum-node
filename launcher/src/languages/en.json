@@ -330,7 +330,6 @@
     "chooseFile": "Choose File",
     "continue": "Continue"
   },
-
   "disabledStaking": {
     "noValidatorInstalled": "There is no validator client installed!",
     "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
@@ -418,6 +417,7 @@
     "keyStatus": "Key Status:",
     "attest": "ATTESTING",
     "pending": "PENDING",
+    "noKey": "CHOOSE A KEY",
     "nxtAttest": "next Attestation Slot:",
     "slotRem": "Slots remaining",
     "tillAtest": "till attestation"
