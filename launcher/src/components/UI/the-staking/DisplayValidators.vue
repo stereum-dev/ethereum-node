@@ -486,7 +486,8 @@ export default {
       const keys = importedLines.map((line) => {
         const match = line.match(/^(.*):/);
         if (match && match[1]) {
-          return "0x" + match[1].trim();
+          const key = match[1].trim();
+          return key.startsWith("0x") ? key : "0x" + key;
         }
         return "";
       });
