@@ -1007,7 +1007,13 @@ export default {
           key.status = info.status;
           key.balance = info.balance / 1000000000;
           key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";
-          totalBalance += key.balance;
+          if (key.isRemote) {
+            if (!this.keys.some((k) => k.key === key.key && !k.isRemote)) {
+              totalBalance += key.balance;
+            }
+          } else {
+            totalBalance += key.balance;
+          }
         } else {
           key.status = "deposit";
           key.balance = "-";
