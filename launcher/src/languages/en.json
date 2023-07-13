@@ -633,5 +633,10 @@
   },
   "switchNetwork": {
     "message": "This is the current network, you can click to select another network"
+  },
+  "searchOption": {
+    "switchShow": "Switch between showing the public key & your picked custom name",
+    "group": "Group multiple key(s)",
+    "searchFilter": "Search & filters"
   }
 }
