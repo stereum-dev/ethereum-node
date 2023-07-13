@@ -880,6 +880,7 @@ export default {
       return result;
     },
     listKeys: async function () {
+      this.totalBalance = 0;
       let keyStats = [];
       let clients = this.installedServices.filter((s) => s.category == "validator");
       if (clients && clients.length > 0 && this.currentNetwork.network != "") {
