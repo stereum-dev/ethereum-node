@@ -100,7 +100,7 @@
         >
           <div v-for="(item, index) in filteredKey" :key="index" class="tableRow">
             <div class="rowContent">
-              <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
+              <div class="circle"><img :src="keyIconPicker(item)" alt="keyIcon" /></div>
               <span
                 v-if="item.displayName"
                 class="category"
@@ -235,7 +235,7 @@
           </div>
           <div v-for="(item, index) in keyImages" :key="index" class="tableRow">
             <div class="rowContent">
-              <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
+              <div class="circle"><img :src="keyIconPicker(item)" alt="keyIcon" /></div>
 
               <span class="category" @click="logEvent">{{ item.key }}</span>
               <img class="service-icon" :src="item.icon" alt="icon" />
@@ -336,11 +336,20 @@
     <!-- Remove Box for validator keys -->
     <RemoveMultipleValidators
       v-if="removeForMultiValidatorsActive"
+      :keys="keys"
+      :service="selectedValdiatorService"
       @remove-modal="
         removeForMultiValidatorsActive = false;
         keys.filter((key) => key.icon === selectedIcon).forEach((k) => (k.toRemove = false));
       "
       @delete-key="confirmRemoveAllValidators"
+    />
+
+    <!-- Import Remote Keys -->
+    <ImportRemoteKeys
+      v-if="importRemoteKeysActive"
+      @import-remoteKey="confirmImportRemoteKeys"
+      @remove-modal="importRemoteKeysActive = false"
     />
 
     <!-- Exit box for validator keys -->
@@ -376,6 +385,7 @@ import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
 import DisabledStaking from "./DisabledStaking.vue";
 import SearchBox from "./SearchBox.vue";
+import ImportRemoteKeys from "./ImportRemoteKeys.vue";
 
 export default {
   components: {
@@ -397,6 +407,7 @@ export default {
     ImportSlashingModal,
     DisabledStaking,
     SearchBox,
+    ImportRemoteKeys,
   },
 
   data() {
@@ -434,7 +445,6 @@ export default {
         normalKey: "./img/icon/the-staking/normal-key.svg",
         remoteKey: "./img/icon/the-staking/remotekey.svg",
       },
-      keyType: true,
       searchBoxActive: false,
       searchModel: "",
       isPubkeyVisible: false,
@@ -443,6 +453,7 @@ export default {
       exitValidatorResponse: {},
       protection: true, //dobegnär protection flag
       newArr: [],
+      remoteImportArgs: {},
       serviceExpl: this.$t("displayValidator.serviceExpl"),
       activeExpl: this.$t("displayValidator.activeExpl"),
       balExpl: this.$t("displayValidator.balExpl"),
@@ -492,6 +503,7 @@ export default {
       exitChainForMultiValidatorsActive: "exitChainForMultiValidatorsActive",
       removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
       grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
+      importRemoteKeysActive: "importRemoteKeysActive",
       display: "display",
       isDragOver: "isDragOver",
       keyFiles: "keyFiles",
@@ -513,14 +525,6 @@ export default {
       }
       return this.keys;
     },
-
-    keyIconPicker() {
-      if (this.keyType === true) {
-        return this.keyIcon.normalKey;
-      } else {
-        return this.keyIcon.remoteKey;
-      }
-    },
   },
   watch: {
     message(newValue) {
@@ -529,7 +533,8 @@ export default {
       const keys = importedLines.map((line) => {
         const match = line.match(/^(.*):/);
         if (match && match[1]) {
-          return "0x" + match[1].trim();
+          const key = match[1].trim();
+          return key.startsWith("0x") ? key : "0x" + key;
         }
         return "";
       });
@@ -537,7 +542,7 @@ export default {
 
       const newKeyImages = this.newArr.map((item) => {
         return {
-          icon: this.selectedService.icon,
+          icon: this.selectedService?.icon,
           activeSince: "-",
           balance: "-",
           key: item,
@@ -607,6 +612,7 @@ export default {
     });
   },
   mounted() {
+    this.insertKeyBoxActive = true;
     this.keyCounter = this.keys.filter((key) => key.icon === this.selectedIcon).length;
     this.checkValidatorClientsExist();
     this.listKeys();
@@ -620,6 +626,13 @@ export default {
   },
 
   methods: {
+    keyIconPicker(item) {
+      if (item.isRemote) {
+        return this.keyIcon.remoteKey;
+      } else {
+        return this.keyIcon.normalKey;
+      }
+    },
     checkValidatorClientsExist() {
       const clients = this.installedServices.filter(
         (service) => service.category === "validator" && service.state === "running"
@@ -697,7 +710,13 @@ export default {
     async validatorRemoveConfirm(item, picked) {
       item.isRemoveBoxActive = false;
       item.isDownloadModalActive = true;
-      const returnVal = await this.deleteValidators(item.validatorID, [item.key], picked);
+      let returnVal;
+      if (item.isRemote) {
+        returnVal = await this.deleteRemoteKeys(item.validatorID, [item.key]);
+      } else {
+        returnVal = await this.deleteValidators(item.validatorID, [item.key], picked);
+      }
+
       if (picked === "yes") {
         this.downloadFile(returnVal);
       }
@@ -738,15 +757,43 @@ export default {
       ) {
         this.importKey(val);
       } else {
+        this.bDialogVisible = false;
         this.importIsProcessing = false;
-        this.importIsDone = true;
-        this.password = "";
-        this.importValidatorKeyActive = true;
-        this.insertKeyBoxActive = true;
-        this.enterPasswordBox = false;
-        this.passwordInputActive = false;
         this.riskWarning = true;
       }
+    },
+    async confirmImportRemoteKeys(args) {
+      this.importRemoteKeysActive = false;
+      this.importIsProcessing = true;
+      this.bDialogVisible = true;
+      this.importIsDone = false;
+      this.insertKeyBoxActive = false;
+
+      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
+        files: args.pubkeys,
+        serviceID: args.serviceID,
+        isRemote: true,
+      });
+
+      if (
+        this.checkActiveValidatorsResponse.length === 0 ||
+        this.checkActiveValidatorsResponse.includes("Validator check error:\n")
+      ) {
+        await this.importRemoteKeys(args);
+      } else {
+        this.remoteImportArgs = args;
+        this.bDialogVisible = false;
+        this.importIsProcessing = false;
+        this.riskWarning = true;
+      }
+    },
+    async importRemoteKeys(args) {
+      this.remoteImportArgs = {};
+      this.message = await ControlService.importRemoteKeys(structuredClone(args));
+      this.forceRefresh = true;
+      await this.listKeys();
+      this.importIsProcessing = false;
+      this.importIsDone = true;
     },
     confirmPasswordMultiExitChain() {
       this.exitChainForMultiValidatorsActive = false;
@@ -823,6 +870,15 @@ export default {
       await this.listKeys();
       return result;
     },
+    async deleteRemoteKeys(serviceID, keys) {
+      const result = await ControlService.deleteRemoteKeys({
+        serviceID: serviceID,
+        pubkeys: keys,
+      });
+      this.forceRefresh = true;
+      await this.listKeys();
+      return result;
+    },
     listKeys: async function () {
       let keyStats = [];
       let clients = this.installedServices.filter((s) => s.category == "validator");
@@ -835,9 +891,22 @@ export default {
           ) {
             //refresh validaotr list
             let result = await ControlService.listValidators(client.config.serviceID);
+            if (!client.service.includes("Lighthouse") || !client.service.includes("Lodestar")) {
+              let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
+              let remoteKeys = result.data
+                ? resultRemote.data.map((e) => {
+                    return { validating_pubkey: e.pubkey, readonly: true };
+                  })
+                : [];
+              result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
+            }
 
             //update service config (pinia)
-            client.config.keys = result.data ? result.data.map((e) => e.validating_pubkey) : [];
+            client.config.keys = result.data
+              ? result.data.map((e) => {
+                  return { key: e.validating_pubkey, isRemote: e.readonly };
+                })
+              : [];
 
             //update service datasets in Pinia store
             this.installedServices = this.installedServices.map((service) => {
@@ -852,13 +921,14 @@ export default {
             keyStats = keyStats.concat(
               client.config.keys.map((key) => {
                 return {
-                  key: key,
+                  key: key.key,
                   validatorID: client.config.serviceID,
                   icon: client.icon,
                   activeSince: "-",
                   status: "loading",
                   balance: "-",
                   network: client.config.network,
+                  isRemote: key.isRemote,
                 };
               })
             );
@@ -955,9 +1025,9 @@ export default {
       this.importIsDone = true;
       this.password = "";
       this.importValidatorKeyActive = true;
-      this.insertKeyBoxActive = true;
       this.enterPasswordBox = false;
       this.passwordInputActive = false;
+      this.importIsDone = true;
       //this.feeRecipientBoxActive = true;
     },
     //FEE RECIPIENT
@@ -986,7 +1056,7 @@ export default {
       }
     },
     dropFileHandler(event) {
-      let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
+      let validator = this.installedServices.filter((s) => s.category === "validator");
       if (validator && validator.map((e) => e.state).includes("running")) {
         let droppedFiles = event.dataTransfer.files;
 
@@ -1049,10 +1119,15 @@ export default {
       this.riskWarning = false;
       this.insertKeyBoxActive = true;
     },
-    riskAccepted() {
+    async riskAccepted() {
       this.riskWarning = false;
+      this.importIsProcessing = true;
       this.bDialogVisible = true;
-      this.importKey(this.password);
+      if (this.remoteImportArgs.serviceID && this.remoteImportArgs.url) {
+        await this.importRemoteKeys(this.remoteImportArgs);
+      } else {
+        await this.importKey(this.password);
+      }
     },
     async confirmEnteredGrafiti(graffiti) {
       await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
@@ -1062,7 +1137,15 @@ export default {
 
     async confirmRemoveAllValidators(picked) {
       let filteredKey = this.keys.filter((key) => key.icon === this.selectedIcon);
-      let keys = filteredKey.map((key) => key.key);
+      let localKeys = [];
+      let remoteKeys = [];
+      filteredKey.forEach((k) => {
+        if (k.isRemote) {
+          remoteKeys.push(k.key);
+        } else {
+          localKeys.push(k.key);
+        }
+      });
       let id = "";
       let changed = 0;
       filteredKey.forEach((key) => {
@@ -1075,11 +1158,16 @@ export default {
       this.removeForMultiValidatorsActive = false;
 
       if (changed === 1 && id) {
-        const returnVal = await this.deleteValidators(id, keys, picked);
-        if (picked === "yes") {
-          this.downloadFile(returnVal);
-          this.updateValidatorStats();
+        // Remove all Local Keys if selected validator holds some
+        if (localKeys && localKeys.length > 0) {
+          const returnVal = await this.deleteValidators(id, localKeys, picked);
+          if (picked === "yes") {
+            this.downloadFile(returnVal);
+            this.updateValidatorStats();
+          }
         }
+        // Remove all Remote Keys if selected validator holds some
+        if (remoteKeys && remoteKeys.length > 0) await this.deleteRemoteKeys(id, remoteKeys);
       } else if (changed === 0) {
         console.log("Nothing to delete!");
       } else {

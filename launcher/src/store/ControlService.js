@@ -357,17 +357,38 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getQRCode");
   }
 
+  async importRemoteKeys(args) {
+    return await this.promiseIpc.send("importRemoteKeys", args);
+  }
+
+  async listRemoteKeys(args) {
+    return await this.promiseIpc.send("listRemoteKeys", args);
+  }
+
+  async deleteRemoteKeys(args) {
+    return await this.promiseIpc.send("deleteRemoteKeys", args);
+  }
+
+  async checkRemoteKeys(args) {
+    return await this.promiseIpc.send("checkRemoteKeys", args);
+  }
+
   async checkActiveValidators(args) {
     //resolve proxy
     let files = [];
-    args.files.forEach((file) => {
-      files.push({ name: file.name, path: file.path });
-    });
+    if (args.isRemote) {
+      files = args.files
+    } else {
+      args.files.forEach((file) => {
+        files.push({ name: file.name, path: file.path });
+      });
+    }
     return await this.promiseIpc.send("checkActiveValidators", {
       files: files,
       password: args.password,
       serviceID: args.serviceID,
       slashingDB: args.slashingDB,
+      isRemote: args.isRemote,
     });
   }
 

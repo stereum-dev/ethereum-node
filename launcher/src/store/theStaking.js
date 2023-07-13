@@ -15,6 +15,7 @@ export const useStakingStore = defineStore("theStaking", {
       storedValidatorKeys: [],
       insertKeyBoxActive: true,
       enterPasswordBox: false,
+      importRemoteKeysActive: false,
       exitChainForMultiValidatorsActive: false,
       removeForMultiValidatorsActive: false,
       grafitiForMultiValidatorsActive: false,

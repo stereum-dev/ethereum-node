@@ -15,6 +15,7 @@
           @click-btn-graffiti="grafittiHandler"
           @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
+          @import-remote-keys="importRemoteKeysHandler"
         ></selection-options>
 
         <TaskManager />
@@ -62,6 +63,7 @@ export default {
       removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
       grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
       display: "display",
+      importRemoteKeysActive: "importRemoteKeysActive",
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
@@ -76,6 +78,12 @@ export default {
     this.selectedStatus = this.installedValidators[0].state;
   },
   methods: {
+    importRemoteKeysHandler() {
+      this.exitChainForMultiValidatorsActive = false;
+      this.removeForMultiValidatorsActive = false;
+      this.grafitiForMultiValidatorsActive = false;
+      this.importRemoteKeysActive = true
+    },
     grafittiHandler() {
       this.insertKeyBoxActive = false;
       this.enterPasswordBox = false;

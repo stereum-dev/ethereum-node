@@ -7,5 +7,9 @@
   "nuxt.isNuxtApp": false,
   "vue.features.codeActions.enable": false,
   "vue.codeActions.enabled": false,
-  "vetur.format.enable": false
+  "vetur.format.enable": false,
+  "[vue]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
