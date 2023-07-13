@@ -328,27 +328,27 @@
     "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
     "importMessage": "Import your slashing database file.",
     "chooseFile": "Choose File",
-    "continue": "Continue"
+    "continue": "ادامه"
   },
   "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+    "noValidatorInstalled": "ولیدیتور کلاینت نصب نشده است!",
+    "disabledStakingMessage": "حداقل یک ولیدیتور کلاینت نصب کنید که وارد کردن کلیدهای ولیدیتور فعال شود."
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
-    "logOutBtn": "Log out"
+    "logOutTitle": "خروج",
+    "logOutQuestion": "آیا مطمئن هستید که می خواهید از سرور نود خود خارج شوید?",
+    "logOutBtn": "خروج"
   },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Start Pruning",
-    "close": "click outside to close"
+    "prunningChecked": "من متن را خواندم و از عواقب آن آگاهم",
+    "prunningStart": "آغاز پرونینگ",
+    "close": "برای خروج بیرون از کادر کلیک کنید"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
+    "restarQ": "آیا مطمئن هستید که می خواهید راه‌اندازی مجدد کنید?",
     "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart",
+    "restart": "راه اندازی مجدد",
     "confirmMessage": "Are you sure you want turn your node"
   },
   "nukeModal": {
@@ -417,6 +417,7 @@
     "keyStatus": "Key Status:",
     "attest": "ATTESTING",
     "pending": "PENDING",
+    "noKey": "CHOOSE A KEY",
     "nxtAttest": "next Attestation Slot:",
     "slotRem": "Slots remaining",
     "tillAtest": "till attestation"

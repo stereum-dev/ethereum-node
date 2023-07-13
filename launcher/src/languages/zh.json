@@ -417,6 +417,7 @@
     "keyStatus": "密钥状态：",
     "attest": "认证中",
     "pending": "待定",
+    "noKey": "CHOOSE A KEY",
     "nxtAttest": "下个证明栏位",
     "slotRem": "剩余时隙",
     "tillAtest": "直到认证"

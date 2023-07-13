@@ -417,6 +417,7 @@
     "keyStatus": "Key Status:",
     "attest": "ATTESTING",
     "pending": "PENDING",
+    "noKey": "CHOOSE A KEY",
     "nxtAttest": "next Attestation Slot:",
     "slotRem": "Slots remaining",
     "tillAtest": "till attestation"
