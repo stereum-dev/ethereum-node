@@ -844,6 +844,15 @@ export default {
           ) {
             //refresh validaotr list
             let result = await ControlService.listValidators(client.config.serviceID);
+            if (!client.service.includes("Lighthouse") || !client.service.includes("Lodestar")) {
+              let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
+              let remoteKeys = result.data
+                ? resultRemote.data.map((e) => {
+                    return { validating_pubkey: e.pubkey, readonly: true };
+                  })
+                : [];
+              result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
+            }
 
             //update service config (pinia)
             client.config.keys = result.data

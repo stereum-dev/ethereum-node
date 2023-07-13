@@ -10,7 +10,7 @@
           <span>Put in the URL of your Remote Signer or Choose a local one</span>
           <input v-model="urlInput" type="text" placeholder="http://My-Remote-Signer:1324" @focus="clearSelected" />
         </div>
-        <div class="selectBox">
+        <div v-if="installedServices.filter((i) => i.service === 'Web3SignerService').length > 0" class="selectBox">
           <div class="display-service">
             <div
               v-for="service in installedServices.filter((i) => i.service === 'Web3SignerService')"
@@ -70,7 +70,7 @@ export default {
       keyInput: "",
       remoteURLInputActive: true,
       remoteSignerStats: {},
-      btnDisabled: false,
+      btnDisabled: true,
     };
   },
   computed: {
@@ -80,6 +80,22 @@ export default {
     ...mapWritableState(useStakingStore, {
       selectedValdiatorService: "selectedValdiatorService",
     }),
+  },
+  watch: {
+    urlInput(val) {
+      if (val) {
+        this.btnDisabled = false;
+      } else {
+        this.btnDisabled = true;
+      }
+    },
+    picked(val) {
+      if (val.id) {
+        this.btnDisabled = false;
+      } else {
+        this.btnDisabled = true;
+      }
+    },
   },
   methods: {
     async switchhandler() {

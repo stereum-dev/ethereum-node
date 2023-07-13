@@ -727,6 +727,8 @@ export class ValidatorAccountManager {
 
     let client = services.find((service) => service.id === serviceID);
     await this.initWallet(client, ref);
+    await this.addRemoteSignerTags(client, url);
+
 
     try {
       const args = pubkeys.map(key => { return { pubkey: key, url: url } })
@@ -886,6 +888,54 @@ export class ValidatorAccountManager {
     } catch (err) {
       log.error("Error checking remote keys: ", err)
       return { error: err }
+    }
+  }
+
+  async addRemoteSignerTags(client, url) {
+    switch (client.service.replace(/(Beacon|Validator|Service)/gm, "")) {
+      case "Prysm": {
+        let command = structuredClone(client.command)
+        if (!client.command.includes("--validators-external-signer-url=")) {
+          command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+          command.push(`--validators-external-signer-url=${url}`);
+        } else if (client.command.includes("--validators-external-signer-url=") && !client.command.includes(`--validators-external-signer-url=${url}`)) {
+          command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="))
+          command.push(`--validators-external-signer-url=${url}`);
+        }
+        if (Array.isArray(command)) {
+          command = command.join(" ").trim();
+          client.command = command;
+          await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
+          await this.serviceManager.manageServiceState(client.id, "stopped")
+          await this.serviceManager.manageServiceState(client.id, "started")
+          await Sleep(30000)
+        }
+        break;
+      }
+      case "Teku": {
+        let command = structuredClone(client.command)
+        let urlCommand = command.find(arg => arg.includes("--validators-external-signer-url="))
+        let changed = false
+        if (!urlCommand) {
+          command.push(`--validators-external-signer-url=${url}`);
+          changed = true
+        } else if (urlCommand && urlCommand !== `--validators-external-signer-url=${url}`) {
+          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="))
+          command.push(`--validators-external-signer-url=${url}`);
+          changed = true
+        }
+        if (changed) {
+          client.command = command;
+          await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
+          await this.serviceManager.manageServiceState(client.id, "stopped")
+          await this.serviceManager.manageServiceState(client.id, "started")
+          await Sleep(30000)
+        }
+        break;
+      }
+      default:
+        break;
     }
   }
 }
