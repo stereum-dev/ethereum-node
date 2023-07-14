@@ -1,13 +1,13 @@
 /* eslint-disable no-empty, no-prototype-builtins */
-import { ServiceManager } from "./ServiceManager";
-import { ValidatorAccountManager } from "./ValidatorAccountManager";
-import { StringUtils } from "./StringUtils";
-import * as QRCode from "qrcode";
-import * as log from "electron-log";
 import * as crypto from "crypto";
+import * as log from "electron-log";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import * as QRCode from "qrcode";
+import { ServiceManager } from "./ServiceManager";
+import { StringUtils } from "./StringUtils";
+import { ValidatorAccountManager } from "./ValidatorAccountManager";
 
 const globalMonitoringCache = {
   intervalHandler: null,
@@ -2799,142 +2799,151 @@ rm -rf diskoutput
   }
 
   async getValidatorStats(validatorPublicKey) {
-    const verbose = true;
-    const proposer = false;
+    try {
+      const verbose = true;
+      const proposer = false;
 
-    const beaconStatus = await this.getBeaconStatus();
-    const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const beaconStatus = await this.getBeaconStatus();
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
 
-    const baseURL = `http://localhost:${beaconAPIPort}`;
+      const baseURL = `http://localhost:${beaconAPIPort}`;
 
-    const validatorRes = await this.queryBeaconApi(
-      baseURL,
-      `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
-      undefined,
-      "GET"
-    );
-    log.debug(validatorRes);
+      const validatorRes = await this.queryBeaconApi(
+        baseURL,
+        `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
+        undefined,
+        "GET"
+      );
 
-    const validators_arr = [validatorRes.data.api_reponse.data.index];
+      log.debug(validatorRes);
 
-    const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
-    const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
+      const validators_arr = [validatorRes.data.api_reponse.data.index];
 
-    const beaconAPICmdSpec = `curl -s -X GET '${baseURL}/eth/v1/config/spec' -H 'accept: application/json'`;
-    const specRes = await this.nodeConnection.sshService.exec(beaconAPICmdSpec);
+      const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
+      const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
 
-    const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = JSON.parse(specRes.stdout).data;
+      const beaconAPICmdSpec = `curl -s -X GET '${baseURL}/eth/v1/config/spec' -H 'accept: application/json'`;
+      const specRes = await this.nodeConnection.sshService.exec(beaconAPICmdSpec);
 
-    let output = {};
+      const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = JSON.parse(specRes.stdout).data;
 
-    const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
-    const current_time = Math.floor(Date.now() / 1000);
-    const slot_time = secondsPerSlot;
-    const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
-    const current_slot = Math.floor((current_time - genesis_time) / slot_time);
-    const current_epoch = Math.floor(current_slot / slotsPerEpoch);
+      let output = {};
 
-    output = { currentEpoch: current_epoch, currentSlot: current_slot };
+      const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
+      const current_time = Math.floor(Date.now() / 1000);
+      const slot_time = secondsPerSlot;
+      const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
+      const current_slot = Math.floor((current_time - genesis_time) / slot_time);
+      const current_epoch = Math.floor(current_slot / slotsPerEpoch);
 
-    const res = await this.queryBeaconApi(
-      baseURL,
-      `/eth/v1/validator/duties/attester/${Math.trunc(current_epoch)}`,
-      validators_arr,
-      "POST",
-      {
-        "Content-Type": "application/json",
-      }
-    );
+      output = { currentEpoch: current_epoch, currentSlot: current_slot };
 
-    const res_p = await this.queryBeaconApi(
-      baseURL,
-      `/eth/v1/validator/duties/proposer/${Math.trunc(current_epoch)}`,
-      null,
-      "GET",
-      {
-        "Content-Type": "application/json",
-      }
-    );
+      const res = await this.queryBeaconApi(
+        baseURL,
+        `/eth/v1/validator/duties/attester/${Math.trunc(current_epoch)}`,
+        validators_arr,
+        "POST",
+        {
+          "Content-Type": "application/json",
+        }
+      );
 
-    let current_prop = 0;
-    let next_att_slot = 0;
-    let next_prop_slot = 0;
+      const res_p = await this.queryBeaconApi(
+        baseURL,
+        `/eth/v1/validator/duties/proposer/${Math.trunc(current_epoch)}`,
+        null,
+        "GET",
+        {
+          "Content-Type": "application/json",
+        }
+      );
 
-    function handle_attestation_duty(input) {
-      let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
-      if (vidx !== undefined && slot !== undefined) {
-        if (vidx.match(/^[-]?\d+$/) !== null) {
-          if (verbose === true) {
-            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
-            let eta_str = "";
-            if (duty_eta > 0) {
-              eta_str = " ETA: " + duty_eta + " sec";
-            } else if (duty_eta > 0 - slot_time) {
-              eta_str = " ETA: now!";
+      let current_prop = 0;
+      let next_att_slot = 0;
+      let next_prop_slot = 0;
+
+      function handle_attestation_duty(input) {
+        let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
+        let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
+        if (vidx !== undefined && slot !== undefined) {
+          if (vidx.match(/^[-]?\d+$/) !== null) {
+            if (verbose === true) {
+              let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
+              let eta_str = "";
+              if (duty_eta > 0) {
+                eta_str = " ETA: " + duty_eta + " sec";
+              } else if (duty_eta > 0 - slot_time) {
+                eta_str = " ETA: now!";
+              }
+              let slot_idx = slot % slotsPerEpoch;
+              output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
             }
-            let slot_idx = slot % slotsPerEpoch;
-            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
-          }
-          if (slot > current_slot) {
-            if (slot < next_att_slot || next_att_slot === 0) {
-              next_att_slot = slot;
+            if (slot > current_slot) {
+              if (slot < next_att_slot || next_att_slot === 0) {
+                next_att_slot = slot;
+              }
             }
           }
         }
       }
-    }
 
-    function handle_proposer_duty(input) {
-      let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
-      if (vidx !== undefined && slot !== undefined) {
-        if (vidx.match(/^[-]?\d+$/) !== null && validators_arr.includes(vidx) === true) {
-          if (verbose === true) {
-            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
-            let eta_str = "";
-            if (duty_eta >= 0) {
-              eta_str = " ETA: " + duty_eta + " sec";
-            } else if (duty_eta > 0 - slot_time) {
-              eta_str = " ETA: now!";
+      function handle_proposer_duty(input) {
+        let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
+        let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
+        if (vidx !== undefined && slot !== undefined) {
+          if (vidx.match(/^[-]?\d+$/) !== null && validators_arr.includes(vidx) === true) {
+            if (verbose === true) {
+              let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
+              let eta_str = "";
+              if (duty_eta >= 0) {
+                eta_str = " ETA: " + duty_eta + " sec";
+              } else if (duty_eta > 0 - slot_time) {
+                eta_str = " ETA: now!";
+              }
+              let slot_idx = slot % slotsPerEpoch;
+              output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
             }
-            let slot_idx = slot % slotsPerEpoch;
-            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
-          }
-          if (slot > current_slot) {
-            if (slot < next_prop_slot || next_prop_slot === 0) {
-              next_prop_slot = slot;
+            if (slot > current_slot) {
+              if (slot < next_prop_slot || next_prop_slot === 0) {
+                next_prop_slot = slot;
+              }
+            } else if (slot === current_slot) {
+              current_prop = vidx;
             }
-          } else if (slot === current_slot) {
-            current_prop = vidx;
           }
         }
       }
+
+      handle_attestation_duty(JSON.stringify(res.data.api_reponse));
+      handle_proposer_duty(JSON.stringify(res_p.data.api_reponse));
+
+      if (proposer === true) {
+        output = { ...output, nextAttSlot: next_att_slot, nextPropSlot: next_prop_slot };
+      }
+
+      let next_duty_slot;
+      if (next_prop_slot > 0 && next_prop_slot < next_att_slot) {
+        next_duty_slot = next_prop_slot;
+      } else {
+        next_duty_slot = next_att_slot;
+      }
+
+      if (next_duty_slot > 0) {
+        const remaining_slots = next_duty_slot - current_slot - 1;
+
+        const remaining_time = remaining_slots * slot_time + slot_timeout;
+
+        output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
+      }
+
+      return { ...output, currentProp: current_prop, slotsPerEpoch };
+    } catch (error) {
+      if (error instanceof TypeError && error.message.includes("Cannot read properties of null")) {
+        return { error: true, message: "An error occurred. Please try again." };
+      } else {
+        return { error: true, message: "An error occurred. Please try again." };
+      }
     }
-
-    handle_attestation_duty(JSON.stringify(res.data.api_reponse));
-    handle_proposer_duty(JSON.stringify(res_p.data.api_reponse));
-
-    if (proposer === true) {
-      output = { ...output, nextAttSlot: next_att_slot, nextPropSlot: next_prop_slot };
-    }
-
-    let next_duty_slot;
-    if (next_prop_slot > 0 && next_prop_slot < next_att_slot) {
-      next_duty_slot = next_prop_slot;
-    } else {
-      next_duty_slot = next_att_slot;
-    }
-
-    if (next_duty_slot > 0) {
-      const remaining_slots = next_duty_slot - current_slot - 1;
-
-      const remaining_time = remaining_slots * slot_time + slot_timeout;
-
-      output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
-    }
-
-    return { ...output, currentProp: current_prop, slotsPerEpoch };
   }
 
   // get States of Validators
