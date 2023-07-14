@@ -47,8 +47,8 @@ export default {
   align-items: center;
 }
 .iconBox img {
-  width: 20px;
-  height: 20px;
+  width: 50%;
+  height: 65%;
 }
 .inputBox {
   width: 80%;
@@ -99,7 +99,6 @@ export default {
 
 .confirmBtn img {
   width: 45%;
-  opacity: 70%;
 }
 .closeBtn img {
   width: 50%;
