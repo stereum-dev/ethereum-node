@@ -1,10 +1,5 @@
 <template>
   <div class="status-box">
-    <update-panel
-      :click-bg="displayUpdatePanel"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
-      @click-out="removeUpdateModal"
-    ></update-panel>
     <div class="status-box_header">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
@@ -119,11 +114,12 @@
         class="status-message_green"
         @mouseenter="cursorLocation = `${clkUpdate}`"
         @mouseleave="cursorLocation = ''"
+        @click="showUpdate"
       >
-        <div class="message-icon" @click="showUpdate">
+        <div class="message-icon">
           <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
         </div>
-        <div class="message-text_container" @click="showUpdate">
+        <div class="message-text_container">
           <div class="main-message">
             <span>{{ $t("nodeAlert.stereumUpt") }}</span>
           </div>
@@ -138,11 +134,12 @@
         class="status-message_green"
         @mouseenter="cursorLocation = `${clkUpdate}`"
         @mouseleave="cursorLocation = ''"
+        @click="showUpdate"
       >
-        <div class="message-icon" @click="showUpdate">
+        <div class="message-icon">
           <img :src="item.sIcon" alt="warn_storage" />
         </div>
-        <div class="message-text_container" @click="showUpdate">
+        <div class="message-text_container">
           <div class="main-message">
             <span>{{ item.name }} UPDATE</span>
           </div>
@@ -157,7 +154,6 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
@@ -166,12 +162,10 @@ import { useFooter } from "@/store/theFooter";
 import TheExpert from "./TheExpert.vue";
 export default {
   components: {
-    UpdatePanel,
     TheExpert,
   },
   data() {
     return {
-      displayUpdatePanel: false,
       storageWarning: false,
       cpuWarning: false,
       cpuAlarm: false,
@@ -200,6 +194,7 @@ export default {
       rpcState: "rpcState",
       dataState: "dataState",
       wsState: "wsState",
+      displayUpdatePanel: "displayUpdatePanel",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",

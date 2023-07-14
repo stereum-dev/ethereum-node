@@ -94,7 +94,6 @@ export default {
   data() {
     return {
       test: true,
-      displayUpdatePanel: false,
       logoutModalIsActive: false,
       supportModalIsActive: false,
       notificationModalIsActive: false,
@@ -118,6 +117,7 @@ export default {
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
+      displayUpdatePanel: "displayUpdatePanel",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",

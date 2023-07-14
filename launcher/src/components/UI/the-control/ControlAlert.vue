@@ -1,11 +1,5 @@
 <template>
   <div class="alert-box_parent">
-    <!-- <comming-soon></comming-soon> -->
-    <update-panel
-      :click-bg="displayUpdatePanel"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
-      @click-out="removeUpdateModal"
-    ></update-panel>
     <div class="alert-box">
       <div class="alert-box_header">
         <div class="icon_alarm" :class="{ active: perfect }">
@@ -73,10 +67,7 @@
           <div class="icon-box">
             <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
           </div>
-          <!-- <div class="message-box">
-            <div class="warning"><span>CRITICAL WARNING</span></div>
-            <div class="main-message"><span>MISSED ATTESTATION</span></div>
-          </div> -->
+
           <div class="message">
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
           </div>
@@ -150,7 +141,6 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import UpdatePanel from "../node-header/UpdatePanel.vue";
 import TheExpert from "../the-node/TheExpert.vue";
 import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
@@ -159,12 +149,10 @@ import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 export default {
   components: {
-    UpdatePanel,
     TheExpert,
   },
   data() {
     return {
-      displayUpdatePanel: false,
       storageWarning: false,
       cpuWarning: false,
       cpuAlarm: false,
@@ -192,6 +180,7 @@ export default {
       rpcState: "rpcState",
       dataState: "dataState",
       wsState: "wsState",
+      displayUpdatePanel: "displayUpdatePanel",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
