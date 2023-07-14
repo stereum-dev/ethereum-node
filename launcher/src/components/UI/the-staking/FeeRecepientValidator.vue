@@ -32,9 +32,9 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  grid-template-columns: 5% 85% 10%;
-  grid-template-rows: 1fr;
   background-color: #4d56cb;
+  justify-content: center;
+  align-items: center;
   border-radius: 50px;
   position: absolute;
   z-index: 1000;
@@ -65,7 +65,7 @@ export default {
   background-color: #4d56cb;
   border: none;
   color: #eee;
-  font-size: 0.8rem;
+  font-size: 80%;
   font-weight: 500;
 }
 .confirmBox {
@@ -107,6 +107,16 @@ export default {
 .closeBtn:hover,
 .confirmBtn:hover {
   background-color: rgba(57, 65, 181, 0.6);
+}
+.closeBtn img:hover,
+.confirmBtn img:hover {
+  transform: scale(1.2);
+  transition-duration: 0.4s;
+}
+.closeBtn img:active,
+.confirmBtn img:active {
+  transform: scale(1);
+  transition-duration: 0.2s;
 }
 .closeBtn:active,
 .confirmBtn:active {

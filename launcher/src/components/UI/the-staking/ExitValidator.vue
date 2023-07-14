@@ -44,8 +44,15 @@ export default {
   background-color: rgba(134, 5, 5, 0.6);
 }
 
-.back_button img:active {
-  transform: scale(0.8);
+.back_button img:hover,
+.confirmBtn img:hover {
+  transform: scale(1.2);
+  transition-duration: 0.4s;
+}
+.back_button img:active,
+.confirmBtn img:active {
+  transform: scale(1);
+  transition-duration: 0.2s;
 }
 .back_button img {
   width: 50%;
@@ -91,7 +98,7 @@ export default {
   background-color: #b81717;
   border: none;
   color: #eee;
-  font-size: 0.8rem;
+  font-size: 80%;
   font-weight: 500;
 }
 .confirmBox {
