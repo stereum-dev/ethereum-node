@@ -1,5 +1,8 @@
 <template>
   <div class="renameRow">
+    <div class="iconBox">
+      <img class="fee-icon" src="/img/icon/the-staking/rename.png" alt="icon" />
+    </div>
     <div class="inputBox">
       <input v-model="newName" type="text" :placeholder="$t('renameValidator.textPlaceHolder')" />
     </div>
@@ -52,24 +55,34 @@ export default {
   position: absolute;
   z-index: 1000;
 }
+.iconBox {
+  width: 5%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.iconBox img {
+  width: 50%;
+  height: 65%;
+}
 
 .inputBox {
-  width: 85%;
-  height: 100%;
+  width: 80%;
+  height: 98%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .inputBox input {
   width: 100%;
-  height: 100%;
+  height: 95%;
   padding: 0;
-  padding-left: 10px;
-  background-color: #3f4551;
-  border: 1px solid #464b57;
-  border-radius: 35px 0 0 35px;
-  color: #dfdfdf;
-  font-size: 0.8rem;
+  padding-left: 1%;
+  background-color: #424d57;
+  border: none;
+  color: #eee;
+  font-size: 80%;
   font-weight: 500;
 }
 .inputBox input:focus {

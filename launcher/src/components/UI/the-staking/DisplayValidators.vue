@@ -191,6 +191,7 @@
             </div>
             <FeeRecepientValidator
               v-if="item.isFeeRecepientBoxActive"
+              @close-change="item.isFeeRecepientBoxActive = false"
               @confirm-change="
                 (enteredAddress) => {
                   feeRecepientConfirmHandler(item, enteredAddress);
