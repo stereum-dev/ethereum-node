@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 /* eslint-disable no-empty, no-prototype-builtins */
 import * as crypto from "crypto";
 import * as log from "electron-log";
