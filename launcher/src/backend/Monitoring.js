@@ -2799,70 +2799,74 @@ rm -rf diskoutput
   }
 
   async getValidatorStats(validatorPublicKey) {
-    const verbose = true;
-    const proposer = false;
+    try {
+      const verbose = true;
+      const proposer = false;
 
-    const beaconStatus = await this.getBeaconStatus();
-    const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const beaconStatus = await this.getBeaconStatus();
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
 
-    const baseURL = `http://localhost:${beaconAPIPort}`;
+      const baseURL = `http://localhost:${beaconAPIPort}`;
 
-    const validatorRes = await this.queryBeaconApi(
-      baseURL,
-      `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
-      undefined,
-      "GET"
-    );
-    log.debug(validatorRes);
+      const validatorRes = await this.queryBeaconApi(
+        baseURL,
+        `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
+        undefined,
+        "GET"
+      );
+      log.debug(validatorRes);
 
-    const validators_arr = [validatorRes.data.api_reponse.data.index];
+      const validators_arr = [validatorRes.data.api_reponse.data.index];
 
-    const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
-    const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
+      const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
+      const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
 
-    const beaconAPICmdSpec = `curl -s -X GET '${baseURL}/eth/v1/config/spec' -H 'accept: application/json'`;
-    const specRes = await this.nodeConnection.sshService.exec(beaconAPICmdSpec);
+      const beaconAPICmdSpec = `curl -s -X GET '${baseURL}/eth/v1/config/spec' -H 'accept: application/json'`;
+      const specRes = await this.nodeConnection.sshService.exec(beaconAPICmdSpec);
 
-    const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = JSON.parse(specRes.stdout).data;
+      const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = JSON.parse(specRes.stdout).data;
 
-    let output = {};
+      let output = {};
 
-    const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
-    const current_time = Math.floor(Date.now() / 1000);
-    const slot_time = secondsPerSlot;
-    const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
-    const current_slot = Math.floor((current_time - genesis_time) / slot_time);
-    const current_epoch = Math.floor(current_slot / slotsPerEpoch);
+      const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
+      const current_time = Math.floor(Date.now() / 1000);
+      const slot_time = secondsPerSlot;
+      const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
+      const current_slot = Math.floor((current_time - genesis_time) / slot_time);
+      const current_epoch = Math.floor(current_slot / slotsPerEpoch);
 
-    output = { currentEpoch: current_epoch, currentSlot: current_slot };
+      output = { currentEpoch: current_epoch, currentSlot: current_slot };
 
-    const res = await this.queryBeaconApi(
-      baseURL,
-      `/eth/v1/validator/duties/attester/${Math.trunc(current_epoch)}`,
-      validators_arr,
-      "POST",
-      {
-        "Content-Type": "application/json",
-      }
-    );
+      const res = await this.queryBeaconApi(
+        baseURL,
+        `/eth/v1/validator/duties/attester/${Math.trunc(current_epoch)}`,
+        validators_arr,
+        "POST",
+        {
+          "Content-Type": "application/json",
+        }
+      );
 
-    const res_p = await this.queryBeaconApi(
-      baseURL,
-      `/eth/v1/validator/duties/proposer/${Math.trunc(current_epoch)}`,
-      null,
-      "GET",
-      {
-        "Content-Type": "application/json",
-      }
-    );
+      const res_p = await this.queryBeaconApi(
+        baseURL,
+        `/eth/v1/validator/duties/proposer/${Math.trunc(current_epoch)}`,
+        null,
+        "GET",
+        {
+          "Content-Type": "application/json",
+        }
+      );
 
-    let current_prop = 0;
-    let next_att_slot = 0;
-    let next_prop_slot = 0;
+      let current_prop = 0;
+      let next_att_slot = 0;
+      let next_prop_slot = 0;
 
-    function handle_attestation_duty(input) {
-      let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
+      const attestationDuties = JSON.stringify(res.data.api_reponse);
+      const proposerDuties = JSON.stringify(res_p.data.api_reponse);
+
+      // Handle attestation duties
+      let vidx = attestationDuties.match(/.*"validator_index":"?(\d+)"?.*/)[1];
+      let slot = attestationDuties.match(/.*"slot":"?(\d+)"?.*/)[1];
       if (vidx !== undefined && slot !== undefined) {
         if (vidx.match(/^[-]?\d+$/) !== null) {
           if (verbose === true) {
@@ -2883,11 +2887,10 @@ rm -rf diskoutput
           }
         }
       }
-    }
 
-    function handle_proposer_duty(input) {
-      let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
+      // Handle proposer duties
+      vidx = proposerDuties.match(/.*"validator_index":"?(\d+)"?.*/)[1];
+      slot = proposerDuties.match(/.*"slot":"?(\d+)"?.*/)[1];
       if (vidx !== undefined && slot !== undefined) {
         if (vidx.match(/^[-]?\d+$/) !== null && validators_arr.includes(vidx) === true) {
           if (verbose === true) {
@@ -2910,31 +2913,30 @@ rm -rf diskoutput
           }
         }
       }
+
+      if (proposer === true) {
+        output = { ...output, nextAttSlot: next_att_slot, nextPropSlot: next_prop_slot };
+      }
+
+      let next_duty_slot;
+      if (next_prop_slot > 0 && next_prop_slot < next_att_slot) {
+        next_duty_slot = next_prop_slot;
+      } else {
+        next_duty_slot = next_att_slot;
+      }
+
+      if (next_duty_slot > 0) {
+        const remaining_slots = next_duty_slot - current_slot - 1;
+
+        const remaining_time = remaining_slots * slot_time + slot_timeout;
+
+        output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
+      }
+
+      return { ...output, currentProp: current_prop, slotsPerEpoch };
+    } catch (error) {
+      return { error: true, message: "An error occurred in getValidatorStats" };
     }
-
-    handle_attestation_duty(JSON.stringify(res.data.api_reponse));
-    handle_proposer_duty(JSON.stringify(res_p.data.api_reponse));
-
-    if (proposer === true) {
-      output = { ...output, nextAttSlot: next_att_slot, nextPropSlot: next_prop_slot };
-    }
-
-    let next_duty_slot;
-    if (next_prop_slot > 0 && next_prop_slot < next_att_slot) {
-      next_duty_slot = next_prop_slot;
-    } else {
-      next_duty_slot = next_att_slot;
-    }
-
-    if (next_duty_slot > 0) {
-      const remaining_slots = next_duty_slot - current_slot - 1;
-
-      const remaining_time = remaining_slots * slot_time + slot_timeout;
-
-      output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
-    }
-
-    return { ...output, currentProp: current_prop, slotsPerEpoch };
   }
 
   // get States of Validators
