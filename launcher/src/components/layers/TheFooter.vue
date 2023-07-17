@@ -1,8 +1,8 @@
 <template>
   <div class="footer-parent">
-    <div class="stereum-status">
-      <div class="stateIcon" />
-      <div class="status-state"><span>offline</span></div>
+    <div class="stereum-status" @mouseenter="cursorLocation = `Attemting to reconnect...`">
+      <div class="stereum-stateIcon" />
+      <div class="stereum-status-state"><span>offline</span></div>
     </div>
     <div class="footer-status-info">
       <span>{{ cursorLocation }}</span>
@@ -35,6 +35,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  cursor: default;
 }
 
 .footer-status-info {
@@ -43,7 +44,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 1%;
+  margin-left: 0.5%;
   font-size: 80%;
   color: #c1c1c1;
   font-weight: 700;
@@ -53,9 +54,30 @@ export default {
   width: 10%;
   height: 100%;
   background: #1f1f1f;
-  margin-left: 3.1%;
+  margin-left: 3.2%;
   border-radius: 0 30px 30px 0;
   border-right: 1px solid #707070;
-  box-shadow: 0px 0px 5px 0px #001717;
+  /*box-shadow: 0px 0px 5px 0px #001717;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stereum-stateIcon {
+  background: red;
+  width: 10%;
+  height: 50%;
+  border-radius: 50%;
+  margin: 0 5%;
+}
+.stereum-status-state {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-transform: uppercase;
+  color: red;
+  font-weight: 600;
+  font-size: 90%;
 }
 </style>
