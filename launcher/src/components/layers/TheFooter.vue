@@ -1,6 +1,10 @@
 <template>
   <div class="footer-parent">
-    <div class="stereum-status" @mouseenter="cursorLocation = `Attemting to reconnect...`">
+    <div
+      class="stereum-status"
+      @mouseenter="cursorLocation = `Attempting to reconnect...`"
+      @mouseleave="cursorLocation = ''"
+    >
       <div class="stereum-stateIcon" />
       <div class="stereum-status-state"><span>offline</span></div>
     </div>
