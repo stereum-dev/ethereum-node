@@ -1,5 +1,9 @@
 <template>
   <div class="footer-parent">
+    <div class="stereum-status">
+      <div class="stateIcon" />
+      <div class="status-state"><span>offline</span></div>
+    </div>
     <div class="footer-status-info">
       <span>{{ cursorLocation }}</span>
     </div>
@@ -34,15 +38,24 @@ export default {
 }
 
 .footer-status-info {
-  width: 90%;
+  width: 80%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 3.8%;
+  margin-left: 1%;
   font-size: 80%;
   color: #c1c1c1;
   font-weight: 700;
   text-transform: capitalize;
+}
+.stereum-status {
+  width: 10%;
+  height: 100%;
+  background: #1f1f1f;
+  margin-left: 3.1%;
+  border-radius: 0 30px 30px 0;
+  border-right: 1px solid #707070;
+  box-shadow: 0px 0px 5px 0px #001717;
 }
 </style>
