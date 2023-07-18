@@ -6,7 +6,9 @@
       @mouseleave="cursorLocation = ''"
     >
       <div class="stereum-stateIcon" />
-      <div class="stereum-status-state"><span>offline</span></div>
+      <div class="stereum-status-state" :class="{ stereumStatus }">
+        <span>{{ stereumStatus ? "Offline" : "Online" }}</span>
+      </div>
     </div>
     <div class="footer-status-info">
       <span>{{ cursorLocation }}</span>
@@ -19,6 +21,11 @@ import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 export default {
   name: "TheFooter",
+  data() {
+    return {
+      stereumStatus: false,
+    };
+  },
   computed: {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
