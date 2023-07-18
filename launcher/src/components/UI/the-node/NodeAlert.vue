@@ -529,6 +529,8 @@ export default {
 }
 .status-message_green .message-text_container {
   color: #eee;
+
+  height: 100%;
 }
 
 .message-icon {
