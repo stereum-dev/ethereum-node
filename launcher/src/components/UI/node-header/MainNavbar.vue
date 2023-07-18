@@ -14,6 +14,7 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
+import { useFooter } from "@/store/theFooter";
 export default {
   components: { PagesNav, IconsNav, ServiceLinks },
   data() {
@@ -25,6 +26,9 @@ export default {
   },
 
   computed: {
+    ...mapWritableState(useFooter, {
+      stereumStatus: "stereumStatus",
+    }),
     ...mapWritableState(useNodeManage, {
       networkList: "networkList",
       currentNetwork: "currentNetwork",
@@ -241,10 +245,14 @@ export default {
       if (!this.updating) {
         let connected = await ControlService.checkConnection();
         if (!connected) {
+          this.stereumStatus = false;
           console.log("Reconnecting...");
           await ControlService.reconnect();
           this.forceUpdateCheck = true;
+        } else {
+          this.stereumStatus = true;
         }
+
         return connected;
       }
       return false;
