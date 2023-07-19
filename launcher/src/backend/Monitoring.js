@@ -25,6 +25,7 @@ export class Monitoring {
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
     this.validatorAccountManager = new ValidatorAccountManager(this.nodeConnection, this.serviceManager);
     this.isLoggedIn = false;
+    this.triedCurlInstall = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
@@ -36,6 +37,7 @@ export class Monitoring {
   // Cleanup (for example on connect/logout)
   async cleanup() {
     this.isLoggedIn = false;
+    this.triedCurlInstall = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
@@ -289,6 +291,20 @@ export class Monitoring {
   async isCheckpointValid(cp_url) {
     let ep = "/eth/v2/debug/beacon/states/finalized";
     let url = cp_url.trim().endsWith("/") ? cp_url.trim().slice(0, -1) + ep : cp_url + ep;
+    // check if curl is installed
+    let r = await this.nodeConnection.sshService.exec("which curl");
+    if (r.rc) {
+      if (!this.triedCurlInstall) {
+        this.triedCurlInstall = true;
+        r = await this.nodeConnection.sshService.exec("apt-get -y update ; apt-get -y install curl");
+        if (r.rc) {
+          return true; // no curl = we can't check, thus all CP are considered valid..
+        }
+      } else {
+        return true; // no curl = we can't check, thus all CP are considered valid..
+      }
+    }
+    // validate checkpoint
     const cmd = `
       curl -s -o /dev/null --head --max-time 5 -w "%{http_code}" -X GET \
       -H 'Content-Type: application/json' \
