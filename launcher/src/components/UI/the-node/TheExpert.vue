@@ -199,7 +199,7 @@
           <span>Apply</span>
         </div>
         <!-- restart button box -->
-        <div v-if="!nothingsChanged" class="confirmRestartBtn" @click="confirmExpertChanges(item)">
+        <div v-if="!nothingsChanged" class="confirmRestartBtn" @click="confirmRestartChanges(item)">
           <span>Apply & Restart</span>
         </div>
         <div v-else class="disabledRestartBtn">
@@ -388,6 +388,9 @@ export default {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
+    },
+    async confirmRestartChanges(el) {
+      this.confirmExpertChanges(el);
       await ControlService.restartService(el.config.serviceID);
     },
   },
@@ -937,7 +940,7 @@ input:checked + .slider:before {
   font-weight: 700;
 }
 .confirmRestartBtn:hover {
-  background: #335844;
+  background: rgba(78, 136, 105, 0.9);
   color: #e6e6e6;
 }
 .confirmRestartBtn:active {
