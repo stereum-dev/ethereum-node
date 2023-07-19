@@ -193,11 +193,19 @@
         <span class="exit-btn">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
         <div v-if="!nothingsChanged" class="confirmBtn" @click="confirmExpertChanges(item)">
-          <span>Confirm</span>
+          <span>Apply</span>
         </div>
         <div v-else class="disabledBtn">
-          <span>Confirm</span>
+          <span>Apply</span>
         </div>
+        <!-- restart button box -->
+        <div v-if="!nothingsChanged" class="confirmRestartBtn" @click="confirmRestartChanges(item)">
+          <span>Apply & Restart</span>
+        </div>
+        <div v-else class="disabledRestartBtn">
+          <span>Apply & Restart</span>
+        </div>
+        <!-- close box -->
       </div>
     </div>
   </div>
@@ -380,6 +388,9 @@ export default {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
+    },
+    async confirmRestartChanges(el) {
+      this.confirmExpertChanges(el);
       await ControlService.restartService(el.config.serviceID);
     },
   },
@@ -909,13 +920,59 @@ input:checked + .slider:before {
   font-weight: 500;
   align-self: flex-end;
 }
-
-.expert-modal .btn-box .confirmBtn {
+.confirmRestartBtn {
   grid-column: 3/4;
   grid-row: 1;
   margin-right: 20px;
   width: 90%;
-  height: 25px;
+  height: 50%;
+  padding: 3px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  justify-self: flex-end;
+  transition-duration: 150ms;
+  background: #609879;
+  color: #33393e;
+  font-size: 80%;
+  font-weight: 700;
+}
+.confirmRestartBtn:hover {
+  background: rgba(78, 136, 105, 0.9);
+  color: #e6e6e6;
+}
+.confirmRestartBtn:active {
+  transform: scale(0.9);
+  box-shadow: none;
+}
+.disabledRestartBtn {
+  grid-column: 3/4;
+  grid-row: 1;
+  margin-right: 20px;
+  width: 90%;
+  height: 50%;
+  padding: 3px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  justify-self: flex-end;
+  transition-duration: 150ms;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  opacity: 0.7 !important;
+  background: #335844;
+  color: #33393e;
+}
+.expert-modal .btn-box .confirmBtn {
+  grid-column: 2/3;
+  grid-row: 1;
+  margin-right: 20px;
+  width: 90%;
+  height: 50%;
   padding: 3px;
   border: 2px solid #609879;
   border-radius: 50px;
@@ -925,13 +982,12 @@ input:checked + .slider:before {
   cursor: pointer;
   justify-self: flex-end;
   transition-duration: 150ms;
-}
-.expert-modal .btn-box .confirmBtn span {
-  font-size: 0.8rem;
+  font-size: 80%;
   font-weight: 700;
   color: #609879;
   text-align: center;
 }
+
 .expert-modal .btn-box .confirmBtn:hover {
   background-color: #609879;
 }
@@ -968,11 +1024,11 @@ input:checked + .slider:before {
   display: none !important;
 }
 .disabledBtn {
-  grid-column: 3/4;
+  grid-column: 2/3;
   grid-row: 1;
   margin-right: 20px;
   width: 90%;
-  height: 25px;
+  height: 50%;
   padding: 3px;
   border-radius: 50px;
   display: flex;
