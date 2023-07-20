@@ -318,17 +318,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -506,10 +506,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -554,10 +554,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -579,9 +579,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -816,6 +816,7 @@ export class NodeConnection {
   }
 
   async checkUpdates() {
+
     let response = await axios.get("https://stereum.net/downloads/updates.json");
     if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
     return response.data;
@@ -1032,8 +1033,8 @@ export class NodeConnection {
       while (!retry.connected && retry.counter < retry.maxTries) {
         try {
           retry.counter++;
-          log.info(`Trying to connect (${retry.counter})`)
-          retry.connected = await this.sshService.checkSSHConnection(this.nodeConnectionParams, 5000)
+          log.info(`Trying to connect (${retry.counter})`);
+          retry.connected = await this.sshService.checkSSHConnection(this.nodeConnectionParams, 5000);
         } catch (err) {
           if (retry.counter == retry.maxTries) {
             this.taskManager.otherTasksHandler(ref, "Could not connect " + (retry.maxTries - retry.counter), false);
@@ -1050,7 +1051,7 @@ export class NodeConnection {
         }
       }
       if (retry.connected) {
-        await this.establish(this.taskManager)
+        await this.establish(this.taskManager);
         this.taskManager.otherTasksHandler(ref, "Connected", true);
         this.taskManager.otherTasksHandler(ref);
       } else {
@@ -1058,20 +1059,20 @@ export class NodeConnection {
         this.taskManager.otherTasksHandler(ref);
         throw "Could not connect";
       }
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   async getCPUArchitecture() {
     try {
-      const result = await this.sshService.exec("uname -m")
+      const result = await this.sshService.exec("uname -m");
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed reading uname command: " + SSHService.extractExecError(result));
       }
-      return result.stdout.trim()
+      return result.stdout.trim();
     } catch (error) {
-      log.error("Error getting CPU Architecture", error)
+      log.error("Error getting CPU Architecture", error);
     }
   }
 }
