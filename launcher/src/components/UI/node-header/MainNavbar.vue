@@ -249,6 +249,7 @@ export default {
           console.log("Reconnecting...");
           await ControlService.reconnect();
           this.forceUpdateCheck = true;
+          console.log("tring........");
         } else {
           this.stereumStatus = true;
         }
