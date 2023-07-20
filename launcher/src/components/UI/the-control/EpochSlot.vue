@@ -1,18 +1,19 @@
 <template>
   <div class="epockSlot_parent">
-    <commingSoon />
-    <div class="epoch-box">{{ epoch }}</div>
-    <div class="slot-box">{{ slot }}</div>
+    <div class="epoch-box">{{ stats.currentEpoch }}</div>
+    <div class="slot-box">{{ stats.currentSlot }}</div>
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useStakingStore } from "@/store/theStaking";
 export default {
-  data() {
-    return {
-      //this is dummy and these two data has to be number
-      epoch: "{CURRENT EPOCH}",
-      slot: "{CURRENT SLOT}",
-    };
+  computed: {
+    ...mapState(useStakingStore, {
+      keys: "keys",
+      stats: "stats",
+      totalBalance: "totalBalance",
+    }),
   },
 };
 </script>
