@@ -41,7 +41,7 @@
                     :class="{ disabled: osVersionLatest === 0 || osUpdating }"
                     @click="$emit('runOsUpdate')"
                   >
-                    <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+                    <img src="/img/icon/node-icons/download2.png" alt="icon" />
                   </div>
                   <div v-if="searchingForOsUpdates && searchingForOsUpdatesManual && !osUpdating" class="available">
                     <span class="circle pulse"></span>
@@ -106,7 +106,7 @@
                     :class="{ disabled: !checkStereumUpdate() || updating }"
                     @click="$emit('runUpdate', stereumUpdate)"
                   >
-                    <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+                    <img src="/img/icon/node-icons/download2.png" alt="icon" />
                   </div>
 
                   <div v-if="checkStereumUpdate()" class="available">
@@ -148,10 +148,10 @@
             <div class="tableContent">
               <div v-for="(item, index) in newUpdates" :key="index" class="tableRow">
                 <div v-if="item.running || updating" class="downloadBtnDisabled">
-                  <img src="/img/icon/node-journal-icons/download_disabled.png" alt="icon" />
+                  <img src="/img/icon/node-icons/download_disabled.png" alt="icon" />
                 </div>
                 <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
-                  <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+                  <img src="/img/icon/node-icons/download2.png" alt="icon" />
                 </div>
                 <div class="serviceName">
                   <span>{{ item.name }}</span>
@@ -174,7 +174,7 @@
             @click.prevent.stop="$emit('updateConfirm')"
           >
             <span>{{ $t("updatePanel.all") }}</span>
-            <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+            <img src="/img/icon/node-icons/download2.png" alt="icon" />
           </div>
         </div>
         <div class="autoUpdateText">

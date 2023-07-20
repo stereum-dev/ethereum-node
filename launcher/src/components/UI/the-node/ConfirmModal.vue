@@ -4,7 +4,7 @@
     <div class="browser-modal">
       <div class="restart-icon">
         <img
-          :src="mainIcon ? '/img/icon/node-journal-icons/turn_on.png' : '/img/icon/node-journal-icons/power2.png'"
+          :src="mainIcon ? '/img/icon/node-icons/turn_on.png' : '/img/icon/node-icons/power2.png'"
           alt="restart warning"
         />
       </div>

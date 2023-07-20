@@ -15,7 +15,7 @@
             <span>{{ $t("pluginLogs.pageTitle") }}</span>
           </div>
           <div class="title-icon">
-            <img src="/img/icon/node-journal-icons/log-icon.png" alt="icon" />
+            <img src="/img/icon/node-icons/log-icon.png" alt="icon" />
           </div>
         </div>
         <div class="serviceDetails">
