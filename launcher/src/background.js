@@ -481,7 +481,7 @@ async function createWindow() {
         buttons: ["Yes", "No"],
         title: "Confirm",
         message: "Critical tasks are running in the background.\nAre you sure you want to quit?",
-        icon: "./public/img/icon/node-journal-icons/red-warning.png",
+        icon: "./public/img/icon/node-icons/red-warning.png",
       });
       if (response === 0) {
         app.showExitPrompt = false;
@@ -511,7 +511,7 @@ if (!isDevelopment) {
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  nodeConnection.logout()
+  nodeConnection.logout();
   if (process.platform !== "darwin") {
     app.quit();
   }
