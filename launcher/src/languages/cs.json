@@ -454,54 +454,54 @@
   },
   "selectionOption": {
     "graffiti": "graffiti",
-    "removeKeys": "Remove all keys"
+    "removeKeys": "Odstranit všechny klíče"
   },
   "syncCommitte": {
-    "total": "total",
-    "status": "STATUS",
-    "particip": "PARTICIPATING",
-    "noParticip": "NOT PARTICIPATING",
+    "total": "celkem",
+    "status": "STAV",
+    "particip": "ÚČASTNÍCÍ SE",
+    "noParticip": "NEÚČASTNÍCÍ SE",
     "start": "Start",
-    "end": "End",
+    "end": "Konec",
     "newSync": "New Sync Committee in",
-    "hours": "hours"
+    "hours": "hod."
   },
   "theAttes": {
     "lastAttest": "Last Attestation Slot:",
     "keyStatus": "Key Status:",
-    "attest": "ATTESTING",
-    "pending": "PENDING",
-    "noKey": "CHOOSE A KEY",
-    "nxtAttest": "next Attestation Slot:",
-    "slotRem": "Slots remaining",
-    "tillAtest": "till attestation"
+    "attest": "POTVRZUJÍCÍ",
+    "pending": "ČEKAJÍCÍ",
+    "noKey": "ZVOLIT KLÍČ",
+    "nxtAttest": "další potvrzovací slot:",
+    "slotRem": "Zbývající sloty",
+    "tillAtest": "do potvrzení"
   },
   "confirmModal": {
     "message": "Your node will go off line while you do this!",
-    "turnOn": "turn on",
-    "turnOff": "turn off",
+    "turnOn": "zapnout",
+    "turnOff": "vypnout",
     "close": "click outside to close"
   },
   "nodeAlert": {
-    "lowSpace": "LOW STORAGE",
+    "lowSpace": "NÍZKÁ KAPACITA ÚLOŽIŠTĚ",
     "missAttest": "MISSED ATTESTATION",
-    "use": "USAGE",
-    "noFee": "no fee recipient",
-    "stereumUpt": "STEREUM UPDATE",
-    "clkFee": "click to set fee recipient",
-    "clkUpdate": "Click to open update panel"
+    "use": "POUŽITÍ",
+    "noFee": "žádný příjemce poplatku",
+    "stereumUpt": "STEREUM AKTUALIZACE",
+    "clkFee": "klikněte pro nastavení příjemce poplatku",
+    "clkUpdate": "Kliknutím otevřete panel aktualizace"
   },
   "restartModalNode": {
-    "message": "are you sure you want to",
+    "message": "opravdu chcete",
     "close": "click outside to close"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
-    "sync": "SYNCHRONISATION",
-    "gen": "GENESIS",
+    "sync": "SYNCHRONIZACE",
+    "gen": "POČÁTEK",
     "chkSync": "CHECKPOINT SYNC",
     "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cont": "CONTINUE",
+    "cont": "POKRAČOVAT",
     "resync": "RESYNC",
     "close": "click outside to close"
   },
@@ -556,21 +556,21 @@
     "header": "Set how the Node clients will synchronize their blockchain data.",
     "client": "CLIENTs",
     "syncSrc": "SYNC SOURCE",
-    "gen": "GENESIS",
-    "sync": "Syncs from genesis",
+    "gen": "POČÁTEK",
+    "sync": "Synchronizovat od počátku",
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
-    "rem": "Remove",
+    "message": "Chcete odstranit uložené připojení?",
+    "rem": "Odstranit",
     "close": "click outside to close"
   },
   "errTerminal": {
-    "copy": "copied!",
+    "copy": "zkopírováno!",
     "close": "click outside to close"
   },
   "sliderTutorial": {
-    "visitUrl": "Visit the website",
+    "visitUrl": "Navštívit webovou stránku",
     "becomeValidator": "Click on “BECOME A VALIDATOR”",
     "proofStake": "Read through Proof of stake and click on “CONTINUE”",
     "deposit": "Read through the deposit and click on “I ACCEPT”",
@@ -581,7 +581,7 @@
     "validatingLongterm": "Read through Validating is a long-term commitment and click on “I ACCEPT”",
     "earlyAdaptor": "Read through Early adopter risks and click on “I ACCEPT”",
     "stakingChecklist": "Read through Staking checklist and click on “I ACCEPT”",
-    "clickCont": "Click on “CONTINUE”",
+    "clickCont": "Klikněte na \"POKRAČOVAT\"",
     "executionClient": "Select your execution client by clicking on it",
     "scrollDown": "Scroll down and click on “CONTINUE”",
     "consensusClient": "Select your consensus client by clicking on it",
@@ -594,17 +594,17 @@
     "wagueKey": "Switch to the WAGYU Key Generator app",
     "secratePhrase": "Click on “Create New Secret Recovery Phrase”",
     "selectNetwork": "Select the network in which you want your node to run",
-    "clickOk": "Click on “OK”",
-    "clickCreate": "Click on “CREATE”",
+    "clickOk": "Klikněte na \"OK\"",
+    "clickCreate": "Klikněte na \"VYTVOŘIT\"",
     "recoveryPhrase": "After your Secret Recovery Phrase is created safe it in a safe place. Click on the copy button.",
-    "clickNext": "Click on “NEXT”",
-    "imSure": "Click on “I’M SURE”",
+    "clickNext": "Klikněte na \"DALŠÍ\"",
+    "imSure": "Klikněte na \"JSEM SI JISTÝ\"",
     "pasteRecovery": "Paste in your Secret Recovery Phrase",
-    "clickCheck": "Click on “CHECK”",
-    "needKey": "Type in the number of keys you need",
-    "typPass": "Type in a password",
-    "retypPass": "Retype your pasword",
-    "clickBrowse": "Click on “BROWSE”",
+    "clickCheck": "Klikněte na \"ZKONTROLOVAT\"",
+    "needKey": "Zadejte počet klíčů, které potřebujete",
+    "typPass": "Zadejte heslo",
+    "retypPass": "Znovu zadejte heslo",
+    "clickBrowse": "Klikněte na \"PROCHÁZET\"",
     "chooseFolder": "Choose a folder where you want to save your keys and safe them in a safe place",
     "clickCreateWait": "Click on “CREATE” and wait for a couple of seconds",
     "clickClose": "Check if your keys are generated and click on “CLOSE”",
@@ -626,13 +626,13 @@
   "headerBtn": {
     "help": "help",
     "notif": "Management of notification channels",
-    "availableUpdt": "New update is available",
-    "updtPan": "update panel",
-    "setting": "Stereum settings",
-    "logOutBtn": "Log out"
+    "availableUpdt": "K dispozici je nová aktualizace",
+    "updtPan": "panel aktualizace",
+    "setting": "Stereum nastavení",
+    "logOutBtn": "Odhlásit se"
   },
   "switchNetwork": {
-    "message": "This is the current network, you can click to select another network"
+    "message": "Toto je aktuální síť, klikněte pro výběr jiné sítě"
   },
   "searchOption": {
     "switchShow": "Switch between showing the public key & your picked custom name",
