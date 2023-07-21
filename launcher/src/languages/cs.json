@@ -119,11 +119,11 @@
     "serviceTitle": "aktualizace přídavných modulů",
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all",
-    "osTitle": "server os updates",
-    "availableUpdates": "updates",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
+    "all": "aktualizovat vše",
+    "osTitle": "aktualizace operačního systému serveru",
+    "availableUpdates": "aktualizace",
+    "searchVersion": "Vyhledat dostupné aktualizace",
+    "updtBtn": "kliknutím aktualizujete",
     "updtAllPlugin": "update all the plugins",
     "autoUpt": "aktualizace je automatická",
     "manualUpt": "aktualizace je manuální",
@@ -165,8 +165,8 @@
     "endPoint": "koncový bod",
     "data": "data",
     "enteredKeys": "The number of entered validator keys",
-    "ttlBal": "Total balance",
-    "finEPOCH": "Finalized EPOCH",
+    "ttlBal": "Celkový zůstatek",
+    "finEPOCH": "Finalizovaná EPOCHA",
     "pending": "service is pending",
     "off": "Switch off the service",
     "on": "Switch on the service",
@@ -177,20 +177,20 @@
     "clickDisplay": "Click on tasks to display"
   },
   "displayValidator": {
-    "pk": "Public Key",
+    "pk": "Veřejný klíč",
     "service": "SERVICE",
     "active": "ACTIVE SINCE",
     "state": "STATE",
-    "balance": "BALANCE",
-    "option": "OPTIONS",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some time",
+    "balance": "ZŮSTATEK",
+    "option": "MOŽNOSTI",
+    "importKey": "Importování klíč(ů) validátora",
+    "waitMessage": "Může to nějakou dobu trvat",
     "waitForImport": "Please wait until the key is imported",
     "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "I am sure",
-    "cancel": "cancel",
+    "sure": "Jsem si jistý/á",
+    "cancel": "zrušit",
     "serviceExpl": "The service selected for the entered Validator key",
     "activeExpl": "The time since the validator has been active",
     "balExpl": "The balance of the validator",
@@ -207,7 +207,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confirm"
+    "confirm": "Potvrdit"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
@@ -236,7 +236,7 @@
   "removeMultiModal": {
     "sure": "Are you sure you want to remove this key from your machine?",
     "slashing": "With Slashing Protection Database?",
-    "remove": "Remove",
+    "remove": "Odstranit",
     "path": "choose a path to save exported slashing db ",
     "writePath": "Please write down your path"
   },
@@ -244,33 +244,33 @@
     "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
+    "totalText": "CELKOVÝ ZŮSTATEK",
+    "validators": "VALIDÁTOŘI",
+    "proposed": "NAVRŽENÝ",
     "attestRate": "ATTESTATION RATE",
-    "attention": "ATTESTATION",
+    "attention": "POTVRZENÍ",
     "missed": "MISSED",
     "aggregations": "AGGREGATIONS",
     "slashed": "SLASHED"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIDATOR",
+    "date": "DATUM",
+    "validator": "VALIDÁTOR",
     "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "reward": "ODMĚNA"
   },
   "installOption": {
     "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
-    "install": "INSTALL",
-    "placeHoldrer": "choose a network"
+    "back": "ZPĚT",
+    "install": "INSTALOVAT",
+    "placeHoldrer": "vyberte síť"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "Všechny služby budou odstraněny.",
+    "sure": "Jste si jistý/á?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
+    "welcome": "VÍTEJTE",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
     "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
     "osSupported": "IS A SUPPORTED OS"
@@ -284,19 +284,19 @@
     "addOpt": "ADDITIONAL OPTIONS",
     "monitor": "MONITORING",
     "instMonit": "Install Monitoring?",
-    "back": "BACK",
-    "next": "NEXT"
+    "back": "ZPĚT",
+    "next": "DALŠÍ"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
+    "creditTitle": "KREDITY - FINANČNÍ PŘÍSPĚVKY",
     "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
     "technicPage": "TECHNICAL CONTRIBUTION",
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
     "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
     "financialPage": "FINANCIAL CONTRIBUTION",
     "gitcoinList": "GITCOIN COMPLETE LIST",
-    "developers": "DEVELOPERS",
-    "testers": "TESTERS"
+    "developers": "VÝVOJÁŘI",
+    "testers": "TESTEŘI"
   },
   "verifyInstallation": {
     "verifyTitle": "OVĚŘIT A INSTALOVAT",
@@ -315,7 +315,7 @@
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTRUJTE NOVÉHO OPERÁTORA",
     "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
+    "register": "Registrovat",
     "insertTitle": "insert operator key for existing operator",
     "insertText": "Use an existing operator private key to recover your existing node operator's processes"
   },
@@ -342,7 +342,7 @@
     "RPCTurnOnMessage": "Nejprve prosím ZAPNĚTE RPC tunel!",
     "RPCCopiedMessage": "RPC-URL zkopírována do schránky!",
     "WSTurnOnMessage": "Nejprve prosím ZAPNĚTE WS tunel!",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "WSCopiedMessage": "WS-URL zkopírována do schránky!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
@@ -372,26 +372,26 @@
   "addModifyPanel": {
     "installPath": "INSTALLATION PATH",
     "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "portused": "PORT USED",
-    "cancel": "cancel",
-    "save": "save",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "portused": "POUŽITÝ PORT",
+    "cancel": "zrušit",
+    "save": "uložit",
+    "add": "PŘIDAT",
+    "clickAndAdd": "Klikněte na PŘIDAT"
   },
   "importSlashingModal": {
     "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
     "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
-    "continue": "Continue"
+    "chooseFile": "Vybrat soubor",
+    "continue": "Pokračovat"
   },
   "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+    "noValidatorInstalled": "Není nainstalován žádný klient validátora!",
+    "disabledStakingMessage": "Nainstalujte alespoň jednoho klienta validátora pro aktivaci importu ověřovacích klíčů."
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
-    "logOutBtn": "Log out"
+    "logOutTitle": "ODHLÁSIT SE",
+    "logOutQuestion": "OPRAVDU SE CHCE ODHLÁSIT ZE SERVERU UZLU?",
+    "logOutBtn": "Odhlásit se"
   },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
@@ -400,7 +400,7 @@
     "close": "click outside to close"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
+    "restarQ": "Opravdu chcete provést restart?",
     "restartMessage": "your node might go offline while doing so!",
     "restart": "restartovat",
     "confirmMessage": "Are you sure you want turn your node"
@@ -408,28 +408,28 @@
   "nukeModal": {
     "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
     "nukeTitle": "nuke the node",
-    "backToLogin": "Back to login"
+    "backToLogin": "Zpět na přihlášení"
   },
   "noData": {
-    "noData": "no data",
-    "turnOn": "please turn on"
+    "noData": "žádná data",
+    "turnOn": "prosím zapněte"
   },
   "rpcGuide": {
     "clickNav": "Click on “CONTROL” to enter the Control Panel.",
     "toggleMessage": "Click on the “ON/OFF” button to open your port",
     "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Click x to cancel",
+    "clickCancel": "Klikněte na x pro zrušení",
     "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
     "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
     "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Click on the Network button",
-    "thirdSlide": "Click on “Add Network”",
-    "fourthSlide": "Type in a name for your network",
-    "fivethSlide": "Paste in the copied URL from Stereum",
-    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "Type in “ETH” as the currency symbol",
-    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
-    "ninethSlide": "Click on “SAVE”"
+    "secondSlide": "Klikněte na tlačítko Síť",
+    "thirdSlide": "Klikněte na \"Přidat síť\"",
+    "fourthSlide": "Zadejte název pro vaši síť",
+    "fivethSlide": "Vložte zkopírovanou URL ze Stereum",
+    "sixthSlide": "Zadejte CHAIN-ID na kterém váš uzel běží(pro GoerliTestnet je to 5)",
+    "seventhSlide": "Napište „ETH“ jako symbol měny",
+    "eightthSlide": "VOLITELNÉ - můžete vložit URL prohlížeče bloků",
+    "ninethSlide": "Klikněte na \"ULOŽIT\""
   },
   "stakeGuide": {
     "syncCheck": "First Check if your Node is synced",
@@ -444,9 +444,9 @@
     "test": "testtesttestte"
   },
   "blockProduct": {
-    "status": "STATUS",
-    "assignSlot": "Assigned Slot",
-    "noAsign": "Not Assigned",
+    "status": "STAV",
+    "assignSlot": "Přidělený slot",
+    "noAsign": "Nepřidělený",
     "nxtBlck": "Next Block Proposal in:"
   },
   "disableStake": {
@@ -468,7 +468,7 @@
   },
   "theAttes": {
     "lastAttest": "Last Attestation Slot:",
-    "keyStatus": "Key Status:",
+    "keyStatus": "Stav klíče:",
     "attest": "POTVRZUJÍCÍ",
     "pending": "ČEKAJÍCÍ",
     "noKey": "ZVOLIT KLÍČ",
@@ -522,17 +522,17 @@
     "close": "click outside to close"
   },
   "replacePanel": {
-    "client": "Client",
+    "client": "Klient",
     "sync": "SYNC",
-    "gen": "GENESIS",
-    "chkPoint": "CHECKPOINT",
+    "gen": "POČÁTEK",
+    "chkPoint": "KONTROLNÍ BOD",
     "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cancel": "CANCEL",
-    "confirm": "CONFIRM"
+    "cancel": "ZRUŠIT",
+    "confirm": "POTVRDIT"
   },
   "executionSync": {
-    "gen": "GENESIS",
-    "syncClient": "Syncs your clients"
+    "gen": "POČÁTEK",
+    "syncClient": "Synchronizujte vaše klienty"
   },
   "importingList": {
     "nodeConf": "Node Config"
@@ -545,7 +545,7 @@
   "importingVerify": {
     "pluginInst": "Plugins To Install",
     "cat": "category",
-    "path": "path"
+    "path": "cesta"
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
@@ -583,7 +583,7 @@
     "stakingChecklist": "Read through Staking checklist and click on “I ACCEPT”",
     "clickCont": "Klikněte na \"POKRAČOVAT\"",
     "executionClient": "Select your execution client by clicking on it",
-    "scrollDown": "Scroll down and click on “CONTINUE”",
+    "scrollDown": "Posunout dolů a kliknout na \"POKRAČOVAT\"",
     "consensusClient": "Select your consensus client by clicking on it",
     "numValidator": "Type in the number of validators you want to run",
     "generateKey": "Select the operating system you’re currently using to generate the key",
@@ -624,8 +624,8 @@
     "bal": "BALANCE CHANGE"
   },
   "headerBtn": {
-    "help": "help",
-    "notif": "Management of notification channels",
+    "help": "pomoc",
+    "notif": "Správa kanálů oznámení",
     "availableUpdt": "K dispozici je nová aktualizace",
     "updtPan": "panel aktualizace",
     "setting": "Stereum nastavení",
@@ -635,8 +635,8 @@
     "message": "Toto je aktuální síť, klikněte pro výběr jiné sítě"
   },
   "searchOption": {
-    "switchShow": "Switch between showing the public key & your picked custom name",
-    "group": "Group multiple key(s)",
+    "switchShow": "Přepínání mezi zobrazením veřejného klíče a vybraného vlastního jména",
+    "group": "Seskupit více klíčů",
     "searchFilter": "Vyhledávání & filtry"
   }
 }
