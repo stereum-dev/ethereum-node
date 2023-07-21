@@ -305,15 +305,15 @@
     "path": "CESTA"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Před provedením dalších změn doporučujeme počkat, než bude dokončena počáteční instalace"
   },
   "tutorialBox": {
     "video": "video",
-    "walkthrough": "walkthrough",
-    "textGuide": "written guide"
+    "walkthrough": "průvodce",
+    "textGuide": "psaný návod"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionTitle": "REGISTRUJTE NOVÉHO OPERÁTORA",
     "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
     "register": "Register",
     "insertTitle": "insert operator key for existing operator",
@@ -321,7 +321,7 @@
   },
   "registerSSV": {
     "pubKey": "Public operator key",
-    "copied": "copied!",
+    "copied": "zkopírováno!",
     "secKey": "Secret Operator Key",
     "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
     "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
@@ -335,13 +335,13 @@
     "apply": "APPLY"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
+    "copy": "Kliknutím zkopírujete!",
     "closed": "Tunnel closed!",
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
-    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
+    "copiedMessage": "DATA-API-URL zkopírována do schránky!",
+    "RPCTurnOnMessage": "Nejprve prosím ZAPNĚTE RPC tunel!",
+    "RPCCopiedMessage": "RPC-URL zkopírována do schránky!",
+    "WSTurnOnMessage": "Nejprve prosím ZAPNĚTE WS tunel!",
     "WSCopiedMessage": "WS-URL copied to clipboard!"
   },
   "pluginLogs": {
@@ -402,7 +402,7 @@
   "restartModal": {
     "restarQ": "Are you sure you want to restart?",
     "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart",
+    "restart": "restartovat",
     "confirmMessage": "Are you sure you want turn your node"
   },
   "nukeModal": {
