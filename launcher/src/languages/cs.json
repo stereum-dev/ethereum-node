@@ -125,15 +125,15 @@
     "searchVersion": "Search for available version updates",
     "updtBtn": "click to update",
     "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
+    "autoUpt": "aktualizace je automatická",
+    "manualUpt": "aktualizace je manuální",
     "chngAppr": "Changes to be applied"
   },
   "controlPage": {
-    "node": "NODE",
-    "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
+    "node": "UZEL",
+    "disk": "RYCHLOST DISKU",
+    "write": "ZÁPIS",
+    "read": "ČTENÍ",
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-KONCOVÝ BOD",
     "ws": "WS-ENDPOINT",
@@ -299,10 +299,10 @@
     "testers": "TESTERS"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "OVĚŘIT A INSTALOVAT",
+    "name": "JMÉNO",
+    "cat": "KATEGORIE",
+    "path": "CESTA"
   },
   "warningModal": {
     "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
