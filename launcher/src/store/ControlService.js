@@ -407,6 +407,10 @@ class ControlService extends EventEmitter {
   async importConfig(args) {
     return await this.promiseIpc.send("importConfig", args);
   }
+
+  async getCurrentEpochSlot() {
+    return await this.promiseIpc.send("getCurrentEpochSlot");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
