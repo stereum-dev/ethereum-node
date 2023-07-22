@@ -1619,8 +1619,6 @@ export class Monitoring {
 
   // Get storage status of all services
   async getStorageStatus(live = false) {
-    await this.getCurrentEpochSlot();
-    // By default return cached data (if available)
     if (!live) {
       if (
         !this.globalMonitoringCache.hasOwnProperty("storagestatus") ||
