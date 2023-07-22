@@ -3030,6 +3030,13 @@ rm -rf diskoutput
       };
       console.log(currentEpochAndSlot);
       return currentEpochAndSlot;
-    } else if (beaconStatus.code === 2) return currentEpochAndSlot; // empty array will be returned, if there is a no running consensus client
+    } else if (beaconStatus.code === 2) {
+      return (currentEpochAndSlot = {
+        currentSlot: null,
+        currentEpoch: null,
+        finalizedEpoch: null,
+        beaconStatus: 2,
+      });
+    }
   }
 }
