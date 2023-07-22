@@ -3009,4 +3009,33 @@ rm -rf diskoutput
       return validatorBalances;
     } else if (beaconStatus.code === 2) return validatorBalances; // empty array will be returned, if there is a no running consensus client
   }
+
+  async getCurrentEpochSlot() {
+    let currentEpochAndSlot;
+    const beaconStatus = await this.getBeaconStatus();
+    if (beaconStatus.code === 0) {
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const beaconAPISlotCmd = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/headers/head' -H 'accept: application/json'`;
+      let beaconAPISlotRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotCmd);
+
+      const beaconAPIEpochCmd = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`;
+      let beaconAPIEpochRunCmd = await this.nodeConnection.sshService.exec(beaconAPIEpochCmd);
+
+      currentEpochAndSlot = {
+        currentSlot: parseInt(JSON.parse(beaconAPISlotRunCmd.stdout).data.header.message.slot),
+        currentEpoch: parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.current_justified.epoch),
+        finalizedEpoch: parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch),
+        beaconStatus: beaconStatus.code,
+      };
+      return currentEpochAndSlot;
+    } else if (beaconStatus.code === 2) {
+      currentEpochAndSlot = {
+        currentSlot: null,
+        currentEpoch: null,
+        finalizedEpoch: null,
+        beaconStatus: 2,
+      };
+      return currentEpochAndSlot;
+    }
+  }
 }

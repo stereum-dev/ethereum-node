@@ -442,6 +442,10 @@ ipcMain.handle("checkRemoteKeys", async (event, args) => {
   return await validatorAccountManager.checkRemoteKeys(args.url, args.serviceID);
 });
 
+ipcMain.handle("getCurrentEpochSlot", async () => {
+  return await monitoring.getCurrentEpochSlot();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

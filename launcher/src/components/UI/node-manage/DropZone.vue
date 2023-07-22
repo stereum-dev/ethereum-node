@@ -15,6 +15,7 @@
             @mouseleave="cursorLocation = ''"
             @mouseup.right="selectedItem(item)"
             @click="modifyItem(item)"
+            @dblclick="selectedItem(item)"
           />
         </div>
       </div>

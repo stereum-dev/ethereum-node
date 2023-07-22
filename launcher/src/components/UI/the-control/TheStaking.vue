@@ -39,7 +39,7 @@
 </template>
 <script>
 import { mapState } from "pinia";
-import { useStakingStore } from "../../../store/theStaking";
+import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
