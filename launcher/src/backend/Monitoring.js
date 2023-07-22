@@ -1619,6 +1619,7 @@ export class Monitoring {
 
   // Get storage status of all services
   async getStorageStatus(live = false) {
+    await this.getCurrentEpochSlot();
     // By default return cached data (if available)
     if (!live) {
       if (
@@ -3025,6 +3026,7 @@ rm -rf diskoutput
         currentSlot: parseInt(JSON.parse(beaconAPISlotRunCmd.stdout).data.header.message.slot),
         currentEpoch: parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.current_justified.epoch),
         finalizedEpoch: parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch),
+        beaconStatus: beaconStatus.code,
       };
       console.log(currentEpochAndSlot);
       return currentEpochAndSlot;
