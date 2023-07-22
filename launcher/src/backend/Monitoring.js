@@ -3028,15 +3028,15 @@ rm -rf diskoutput
         finalizedEpoch: parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch),
         beaconStatus: beaconStatus.code,
       };
-      console.log(currentEpochAndSlot);
       return currentEpochAndSlot;
     } else if (beaconStatus.code === 2) {
-      return (currentEpochAndSlot = {
+      currentEpochAndSlot = {
         currentSlot: null,
         currentEpoch: null,
         finalizedEpoch: null,
         beaconStatus: 2,
-      });
+      };
+      return currentEpochAndSlot;
     }
   }
 }
