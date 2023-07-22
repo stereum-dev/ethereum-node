@@ -443,7 +443,7 @@ ipcMain.handle("checkRemoteKeys", async (event, args) => {
 });
 
 ipcMain.handle("getCurrentEpochSlot", async () => {
-  return await serviceManager.getCurrentEpochSlot();
+  return await monitoring.getCurrentEpochSlot();
 });
 
 // Scheme must be registered before the app is ready
