@@ -3,10 +3,10 @@
     "login": "přihlásit se",
     "server": "Připojit se ke svému serveru",
     "servername": "NÁZEV SERVERU",
-    "iphost": "IP / HOST NAME",
+    "iphost": "IP/HOST NÁZEV",
     "username": "JMÉNO UŽIVATELE",
     "password": "HESLO",
-    "keylocation": "KEY LOCATION",
+    "keylocation": "LOKALITA KLÍČE",
     "usessh": "POUŽÍT SSH KLÍČ"
   },
   "comingsoon": {
