@@ -231,10 +231,10 @@
   "removeSingleModal": {
     "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
     "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "btn": "vybrat cestu"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
+    "sure": "Určitě chcete odebrat tento klíč z vašeho zařízení?",
     "slashing": "With Slashing Protection Database?",
     "remove": "Odstranit",
     "path": "choose a path to save exported slashing db ",
@@ -332,12 +332,12 @@
   },
   "secretKeyReg": {
     "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "apply": "POUŽÍT"
   },
   "dataAPIAndRPC": {
     "copy": "Kliknutím zkopírujete!",
-    "closed": "Tunnel closed!",
-    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
+    "closed": "Tunel zavřen!",
+    "turnOnMessage": "Nejprve prosím ZAPNĚTE DATA-API tunel!",
     "copiedMessage": "DATA-API-URL zkopírována do schránky!",
     "RPCTurnOnMessage": "Nejprve prosím ZAPNĚTE RPC tunel!",
     "RPCCopiedMessage": "RPC-URL zkopírována do schránky!",
@@ -416,7 +416,7 @@
   },
   "rpcGuide": {
     "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Click on the “ON/OFF” button to open your port",
+    "toggleMessage": "Pro otevření portu klikněte na tlačítko „ZAPNOUT/VYPNOUT“",
     "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
     "clickCancel": "Klikněte na x pro zrušení",
     "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
@@ -436,9 +436,9 @@
     "scrollMessage": "Scroll to change slides faster",
     "stake": "staking",
     "scrollClick": "Click on Staking",
-    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
-    "clickIcon": "Click on the icon of your validator client",
-    "cong": "Congrats you are done!",
+    "drag": "Přetáhněte nebo klikněte na „KLIKNĚTE NEBO PŘETÁHNĚTE PRO VLOŽENÍ KLÍČE“",
+    "clickIcon": "Klikněte na ikonu vašeho klienta validátora",
+    "cong": "Gratulujeme, máte hotovo!",
     "clickPass": "Please click here to enter your password and confirm.",
     "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
     "test": "testtesttestte"
