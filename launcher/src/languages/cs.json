@@ -168,24 +168,24 @@
     "ttlBal": "Celkový zůstatek",
     "finEPOCH": "Finalizovaná EPOCHA",
     "pending": "service is pending",
-    "off": "Switch off the service",
-    "on": "Switch on the service",
-    "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "off": "Vypnout službu",
+    "on": "Zapnout službu",
+    "settingService": "Nastavení služby",
+    "restart": "restartovat službu"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Klikněte na úkoly pro zobrazení"
   },
   "displayValidator": {
     "pk": "Veřejný klíč",
-    "service": "SERVICE",
-    "active": "ACTIVE SINCE",
-    "state": "STATE",
+    "service": "SLUŽBA",
+    "active": "AKTIVNÍ OD",
+    "state": "STAV",
     "balance": "ZŮSTATEK",
     "option": "MOŽNOSTI",
     "importKey": "Importování klíč(ů) validátora",
     "waitMessage": "Může to nějakou dobu trvat",
-    "waitForImport": "Please wait until the key is imported",
+    "waitForImport": "Počkejte prosím, než bude klíč importován",
     "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
@@ -197,13 +197,13 @@
     "copyPub": "Copy the public key",
     "copiedPub": "Public key copied",
     "setFee": "set the block fee recipient for the selected keys",
-    "renameVal": "rename the validator key",
-    "removVal": "remove the validator key",
+    "renameVal": "přejmenovat klíč validátora",
+    "removVal": "odstranit klíč validátora",
     "exitChain": "exit the chain with the selected keys",
     "waitEnt": "You have to wait for the validator keys to enter"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "ZADEJTE HESLO A IMPORTUJTE"
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
