@@ -712,6 +712,10 @@ video {
   grid-column: span 2 / span 2;
 }
 
+.col-span-3{
+  grid-column: span 3 / span 3;
+}
+
 .col-start-1{
   grid-column-start: 1;
 }
@@ -744,6 +748,10 @@ video {
   grid-column-start: 6;
 }
 
+.col-start-7{
+  grid-column-start: 7;
+}
+
 .col-end-18{
   grid-column-end: 18;
 }
@@ -762,6 +770,14 @@ video {
 
 .col-end-3{
   grid-column-end: 3;
+}
+
+.col-end-1{
+  grid-column-end: 1;
+}
+
+.col-end-7{
+  grid-column-end: 7;
 }
 
 .mx-1{
@@ -813,6 +829,10 @@ video {
 
 .mt-1{
   margin-top: 0.25rem;
+}
+
+.mr-1{
+  margin-right: 0.25rem;
 }
 
 .box-border{
@@ -900,6 +920,22 @@ video {
   height: 2.5rem;
 }
 
+.h-\[25px\]{
+  height: 25px;
+}
+
+.h-4{
+  height: 1rem;
+}
+
+.h-2{
+  height: 0.5rem;
+}
+
+.h-\[\]{
+  height: ;
+}
+
 .max-h-\[125px\]{
   max-height: 125px;
 }
@@ -918,6 +954,18 @@ video {
 
 .max-h-\[430px\]{
   max-height: 430px;
+}
+
+.max-h-\[25px\]{
+  max-height: 25px;
+}
+
+.min-h-\[\]{
+  min-height: ;
+}
+
+.min-h-\[25px\]{
+  min-height: 25px;
 }
 
 .w-16{
@@ -1090,6 +1138,14 @@ video {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
+.grid-cols-10{
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.grid-cols-9{
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+
 .flex-col{
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -1106,6 +1162,12 @@ video {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.justify-start{
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
 }
 
 .justify-center{
@@ -1232,6 +1294,10 @@ video {
   overflow-y: scroll;
 }
 
+.whitespace-pre{
+  white-space: pre;
+}
+
 .rounded-full{
   border-radius: 9999px;
 }
@@ -1322,6 +1388,11 @@ video {
 .border-gray-500{
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
+.border-slate-800{
+  --tw-border-opacity: 1;
+  border-color: rgb(30 41 59 / var(--tw-border-opacity));
 }
 
 .bg-\[\#212629\]{
@@ -1524,6 +1595,18 @@ video {
   padding-top: 1rem;
 }
 
+.pl-4{
+  padding-left: 1rem;
+}
+
+.pl-5{
+  padding-left: 1.25rem;
+}
+
+.pl-3{
+  padding-left: 0.75rem;
+}
+
 .text-left{
   text-align: left;
 }
@@ -1545,6 +1628,14 @@ video {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-\[10px\]{
+  font-size: 10px;
+}
+
+.text-\[16px\]{
+  font-size: 16px;
 }
 
 .font-medium{
@@ -1616,6 +1707,20 @@ video {
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-yellow-100{
+  --tw-text-opacity: 1;
+  color: rgb(254 249 195 / var(--tw-text-opacity));
+}
+
+.text-yellow-500{
+  --tw-text-opacity: 1;
+  color: rgb(234 179 8 / var(--tw-text-opacity));
+}
+
+.text-\[\]{
+  color: ;
 }
 
 .placeholder-gray-500::-webkit-input-placeholder{
