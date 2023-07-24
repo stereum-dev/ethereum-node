@@ -1,14 +1,12 @@
 <template>
-  <div class="w-full h-full flex flex-col items-center px-2">
+  <div class="w-full h-full flex flex-col justify-between items-center px-2">
     <NodeHeader />
-    <div class="grow">
-      <NodeBody />
-    </div>
+    <NodeBody />
   </div>
 </template>
 <script>
-import NodeHeader from "../components/NodeHeader.vue";
-import NodeBody from "../components/NodeBody.vue";
+import NodeHeader from "../components/body/NodeHeader.vue";
+import NodeBody from "../components/body/NodeBody.vue";
 export default {
   name: "TheNode",
   components: {

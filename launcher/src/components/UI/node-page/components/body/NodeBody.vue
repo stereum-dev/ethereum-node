@@ -1,21 +1,15 @@
 <template>
   <div
-    class="scrollbar sscrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full max-h-[440px] flex flex-col space-y-4 rounded-md overflow-y-scroll pt-4"
+    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] flex flex-col space-y-4 rounded-md overflow-y-scroll pt-4 mt-1 bg-amber-500"
   >
-    <div class="scrollContent">
-      <ClientsLayout v-for="service in services" :key="service.name" :client="service" />
-    </div>
+    Node Body
   </div>
 </template>
 
 <script>
-import ClientsLayout from "./ClientsLayout.vue";
-
 export default {
   name: "NodeBody",
-  components: {
-    ClientsLayout,
-  },
+  components: {},
   data() {
     return {
       services: [
