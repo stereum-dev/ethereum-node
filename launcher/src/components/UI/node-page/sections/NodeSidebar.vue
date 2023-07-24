@@ -2,25 +2,32 @@
   <aside
     class="flex flex-col items-center w-16 h-full overflow-y-auto border-r rtl:border-l rtl:border-r-0 bg-[#23272a] border-gray-700"
   >
-    <div class="flex flex-col space-y-6">
+    <div class="flex flex-col justify-center items-center space-y-6 mt-10 p-1">
       <router-link
         to="/manage"
-        class="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100"
+        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
       >
-        <img class="w-4 rounded-full" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+        <img class="w-8 hover:scale-90" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+      </router-link>
+      <router-link
+        v-if="isNodeOn"
+        to="#"
+        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
+      >
+        <img class="w-6 hover:scale-90" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+      </router-link>
+      <router-link
+        v-else
+        to="#"
+        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
+      >
+        <img class="w-6 hover:scale-90" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
       </router-link>
       <router-link
         to="#"
-        class="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100"
+        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
       >
-        <img class="w-3 rounded-full" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
-        <img class="w-3 rounded-full" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
-      </router-link>
-      <router-link
-        to="#"
-        class="p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100"
-      >
-        <img class="w-3 rounded-full" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
+        <img class="w-8 hover:scale-90" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
       </router-link>
     </div>
   </aside>
@@ -40,6 +47,7 @@ export default {
   components: {},
   data() {
     return {
+      isNodeOn: true,
       test: true,
       functionCondition: true,
       loading: false,
