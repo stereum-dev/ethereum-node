@@ -11,15 +11,14 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
-      <comming-soon></comming-soon>
-      <div v-for="obj in pattern" :key="obj" class="line-squares no-events" :data-tooltip="'EPOCH: ' + obj.slot">
-        <div
-          v-for="square in obj.bar"
-          :key="square"
-          class="square"
-          :style="{ backgroundColor: getColor(square) }"
-        ></div>
+      <div class="justfied-part">
+        <div class="justfied-rows">
+          <span>justified</span>
+        </div>
+        <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
+        <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
       </div>
+      <div class="finilized-part"></div>
     </div>
   </div>
 </template>
@@ -49,134 +48,14 @@ export default {
       cursorLocation: "cursorLocation",
     }),
   },
-  created() {
-    // Add initial objects to the array
-    for (let i = 0; i < 5; i++) {
-      this.epochMonitoring();
-    }
-  },
+
   mounted() {
     this.networkIcon = this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     // Call the addObject() function every sec
-    setInterval(() => {
-      this.epochMonitoring();
-    }, 1000);
-  },
-  methods: {
-    epochMonitoring() {
-      // Create a new object an it can wire, the stracture has to be like this
-      //stracture started
-      const newObj = {
-        id: 1,
-        title: "epoch",
-        // slot: 12345,
-        // bar: Array(32).fill(0),
-        //the random just for showing the functionality is and tha last comment are the true pattern
-        slot: Math.floor(Math.random() * 100000),
-        bar: Array(32)
-          .fill(0)
-          .map(() => Math.floor(Math.random() * 5)),
-      };
-      // end of stracture
-
-      // Add the new object to the beginning of the array
-      this.pattern.unshift(newObj);
-
-      // If the array has more than 5 objects, remove the last one
-      if (this.pattern.length > 5) {
-        this.pattern.pop();
-      }
-
-      // Update the ids of the remaining objects
-      this.pattern.forEach((obj, index) => {
-        obj.id = index + 1;
-      });
-    },
-    getColor(number) {
-      switch (number) {
-        case 0:
-          return "#707070";
-        case 1:
-          return "#74FA65";
-        case 2:
-          return "#FFD924";
-        case 3:
-          return "#FA831B";
-        case 4:
-          return "#EB5353";
-      }
-    },
   },
 };
 </script>
 <style scoped>
-.no-events {
-  pointer-events: none;
-}
-[data-tooltip] {
-  position: relative;
-  cursor: default;
-}
-[data-tooltip]::after {
-  position: absolute;
-  width: max-content;
-  left: calc(50%-25%);
-
-  text-align: center;
-  content: attr(data-tooltip);
-  color: #eee;
-  background: black;
-  border-radius: 5px;
-  font-size: 70%;
-  padding: 2% 3%;
-  border: 1px solid #929292;
-  text-transform: uppercase;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(20%);
-  transition: opacity 0.3s transform 0.2s;
-}
-[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-  transform: rotateY(0);
-}
-.serviceName {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-}
-.serviceName_val {
-  display: flex;
-  width: 100%;
-  height: 50%;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 80%;
-}
-.serviceName-row {
-  display: flex;
-  width: 25%;
-  justify-items: center;
-  align-items: center;
-}
-.serviceName-greenRow,
-.serviceName-blueRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 70%;
-  font-weight: bold;
-}
-.serviceName-greenRow {
-  color: #5ed966;
-}
-.serviceName-blueRow {
-  color: #4dfff3;
-}
 .amsterdam-parent {
   display: flex;
   width: 100%;
@@ -219,19 +98,41 @@ export default {
   justify-content: center;
   align-items: flex-start;
   border-radius: 0 10px 10px 0;
-  position: relative;
+  background-color: #1e1;
 }
-.line-squares {
+.justfied-part {
   width: 100%;
-  height: 20%;
+  height: 56%;
+  background-color: rgb(238, 17, 172);
+  border-radius: 0 10px 0 0;
+  display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+.justfied-rows {
+  width: 95%;
+  height: 30%;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 80%;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.finilized-part {
+  width: 100%;
+  height: 44%;
+  background-color: rgb(238, 179, 17);
+  border-radius: 0 0 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .square {
-  width: 1.5%;
-  height: 20%;
-  margin: 0 0.7%;
-  display: inline-block;
+  width: 2.5%;
+  height: 60%;
+  margin: 0 0.5%;
+  background: #c1c1c1;
 }
 </style>
