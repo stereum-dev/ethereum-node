@@ -38,7 +38,10 @@
       </ul>
       <div
         class="buttonRow"
-        :class="{ disabled: disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' }"
+        :class="{
+          disabled:
+            disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' || validatorName === 'Web3Signer',
+        }"
         @click.stop="$emit('clickBtnGraffiti')"
       >
         <div class="btnContent">
@@ -50,6 +53,16 @@
         <div class="btnContent">
           <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
           <span>{{ $t("selectionOption.removeKeys") }}</span>
+        </div>
+      </div>
+      <div
+        class="buttonRow"
+        :class="{ disabled: validatorName === 'Web3Signer' }"
+        @click.stop="$emit('importRemoteKeys')"
+      >
+        <div class="btnContent">
+          <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+          <span>Import Remote Keys</span>
         </div>
       </div>
     </div>

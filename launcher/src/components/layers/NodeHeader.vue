@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <div class="logo-box">
-      <img src="/img/icon/LOGO.png" class="main-header__brand" />
+      <img :src="stereumStatus ? '/img/icon/LOGO.png' : '/img/icon/statusOff.png'" class="main-header__brand" />
     </div>
     <header class="main-header">
       <main-navbar></main-navbar>
@@ -10,9 +10,17 @@
 </template>
 <script>
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
+import { mapState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 
 export default {
   components: { MainNavbar },
+  computed: {
+    ...mapState(useFooter, {
+      // stereumStatus is the flag for status
+      stereumStatus: "stereumStatus",
+    }),
+  },
 };
 </script>
 <style scoped>

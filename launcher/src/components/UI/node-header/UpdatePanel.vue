@@ -33,13 +33,20 @@
                   </div>
                 </div>
                 <div class="btnBox">
-                  <div class="searchBtn" @click="searchOsUpdates">
+                  <div
+                    class="searchBtn"
+                    @click="searchOsUpdates"
+                    @mouseenter="cursorLocation = `${searchVersion}`"
+                    @mouseleave="cursorLocation = ''"
+                  >
                     <img src="/img/icon/header-icons/search.png" alt="icon" />
                   </div>
                   <div
                     class="downloadBtn"
                     :class="{ disabled: osVersionLatest === 0 || osUpdating }"
                     @click="$emit('runOsUpdate')"
+                    @mouseenter="cursorLocation = `${updtBtn}`"
+                    @mouseleave="cursorLocation = ''"
                   >
                     <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
                   </div>
@@ -98,13 +105,20 @@
                   </div>
                 </div>
                 <div class="btnBox">
-                  <div class="searchBtn" @click="searchUpdate">
+                  <div
+                    class="searchBtn"
+                    @click="searchUpdate"
+                    @mouseenter="cursorLocation = `${searchVersion}`"
+                    @mouseleave="cursorLocation = ''"
+                  >
                     <img src="/img/icon/header-icons/search.png" alt="icon" />
                   </div>
                   <div
                     class="downloadBtn"
                     :class="{ disabled: !checkStereumUpdate() || updating }"
                     @click="$emit('runUpdate', stereumUpdate)"
+                    @mouseenter="cursorLocation = `${updtBtn}`"
+                    @mouseleave="cursorLocation = ''"
                   >
                     <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
                   </div>
@@ -172,6 +186,8 @@
               disabled: (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) || updating,
             }"
             @click.prevent.stop="$emit('updateConfirm')"
+            @mouseenter="cursorLocation = `${updtAllPlugin}`"
+            @mouseleave="cursorLocation = ''"
           >
             <span>{{ $t("updatePanel.all") }}</span>
             <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
@@ -179,8 +195,16 @@
         </div>
         <div class="autoUpdateText">
           <span
+            @mouseenter="cursorLocation = stereumApp.autoUpdate === 'on' ? `${autoUpt}` : `${manualUpt}`"
+            @mouseleave="cursorLocation = ''"
             >{{ $t("updatePanel.auto") }} :
-            <span class="autoUpdateText_status" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
+            <span
+              class="autoUpdateText_status"
+              :class="onOff"
+              @mouseenter="cursorLocation = stereumApp.autoUpdate === 'on' ? `${autoUpt}` : `${manualUpt}`"
+              @mouseleave="cursorLocation = ''"
+              >{{ stereumApp.autoUpdate }}</span
+            ></span
           >
         </div>
       </div>
@@ -192,6 +216,7 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useFooter } from "@/store/theFooter";
 export default {
   props: {
     clickBg: {
@@ -201,6 +226,11 @@ export default {
   },
   data() {
     return {
+      searchVersion: this.$t("updatePanel.searchVersion"),
+      updtBtn: this.$t("updatePanel.updtBtn"),
+      updtAllPlugin: this.$t("updatePanel.updtAllPlugin"),
+      autoUpt: this.$t("updatePanel.autoUpt"),
+      manualUpt: this.$t("updatePanel.manualUpt"),
       stereumApp: {
         current: "alpha",
         latest: "2.0",
@@ -213,6 +243,9 @@ export default {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
       launcherVersion: "launcherVersion",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
@@ -344,6 +377,7 @@ export default {
   right: -37%;
   z-index: 310;
   transition-duration: 300ms;
+  cursor: default;
 }
 .clickOutside {
   width: 100vw;

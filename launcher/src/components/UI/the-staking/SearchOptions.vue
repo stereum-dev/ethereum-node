@@ -3,27 +3,41 @@
     <img
       v-if="isPubkeyVisible"
       class="pubkeyView"
-      src="../../../../public/img/icon/the-staking/view2.png"
+      src="/img/icon/the-staking/view2.png"
       alt="icon"
       @click="$emit('togglePubkey')"
+      @mouseenter="cursorLocation = `${switchShow}`"
+      @mouseleave="cursorLocation = ''"
     />
     <img
       v-if="!isPubkeyVisible"
       class="pubkeyView"
-      src="../../../../public/img/icon/the-staking/unview2.png"
+      src="/img/icon/the-staking/unview2.png"
       alt="icon"
       @click="$emit('togglePubkey')"
+      @mouseenter="cursorLocation = `${switchShow}`"
+      @mouseleave="cursorLocation = ''"
     />
-    <img class="folder" src="../../../../public/img/icon/the-staking/newfolder-icon.png" alt="icon" />
+    <img
+      class="folder"
+      src="/img/icon/the-staking/newfolder-icon.png"
+      alt="icon"
+      @mouseenter="cursorLocation = `${group}`"
+      @mouseleave="cursorLocation = ''"
+    />
     <img
       class="filter"
-      src="../../../../public/img/icon/the-staking/staking-filter.png"
+      src="/img/icon/the-staking/staking-filter.png"
       alt="icon"
       @click="$emit('openSearch')"
+      @mouseenter="cursorLocation = `${searchFilter}`"
+      @mouseleave="cursorLocation = ''"
     />
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 export default {
   props: {
     isPubkeyVisible: {
@@ -34,7 +48,15 @@ export default {
   data() {
     return {
       hover: false,
+      switchShow: this.$t("searchOption.switchShow"),
+      group: this.$t("searchOption.group"),
+      searchFilter: this.$t("searchOption.searchFilter"),
     };
+  },
+  computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
   },
 };
 </script>
@@ -69,6 +91,6 @@ export default {
 .searchOptions .folder:hover,
 .searchOptions .filter:hover,
 .searchOptions .pubkeyView:hover {
- transform: scale(1.1 );
+  transform: scale(1.1);
 }
 </style>

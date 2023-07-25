@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     openUploadHandler() {
-      let validator = this.services.filter((s) => s.service.includes("Validator"));
+      let validator = this.services.filter((s) => s.category === "validator");
       if (validator && validator.map((e) => e.state).includes("running")) this.$refs.fileInput.click();
     },
     signalChangeHandler(event) {

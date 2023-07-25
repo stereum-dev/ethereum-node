@@ -12,7 +12,12 @@
         </div>
       </div>
       <div v-if="dropDownIsOpen" class="valueBox" @mouseleave="dropDownIsOpen = false">
-        <div v-for="(key, index) in keys" :key="index" class="options_value" @click="chooseValidator(key)">
+        <div
+          v-for="(key, index) in [...new Map(keys.map((item) => [item['key'], item])).values()]"
+          :key="index"
+          class="options_value"
+          @click="chooseValidator(key)"
+        >
           <span>{{ `${key.key.substring(0, 10)}...${key.key.substring(key.key.length - 15)}` }}</span>
         </div>
       </div>
@@ -46,7 +51,7 @@ export default {
       this.dropDownIsOpen = !this.dropDownIsOpen;
     },
     chooseValidator(key) {
-      if (this.keys === []) return;
+      if (this.keys == []) return;
       this.selectedValidator = key;
       this.dropDownIsOpen = false;
       this.$emit("getValidator", this.selectedValidator);
@@ -58,7 +63,7 @@ export default {
 <style scoped>
 .dropDown_parent {
   grid-column: 1/7;
-  grid-row: 1/2;
+  grid-row: 4/5;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -151,6 +151,10 @@ export default {
       window.open(url, "_blank");
     },
     toglDropDown() {
+      if (this.selectedItem == "Validating...") {
+        this.dropdown = false;
+        return false;
+      }
       this.dropdown = !this.dropdown;
     },
     async linkPicker(item) {

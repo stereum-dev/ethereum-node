@@ -1,7 +1,9 @@
 <template>
   <div class="balance-parent">
     <div class="finalized-box">
-      <div class="finalized-value">{{ finalized_epoch }}</div>
+      <div class="finalized-value" @mouseenter="cursorLocation = `${finEPOCH} `" @mouseleave="cursorLocation = ''">
+        {{ finalized_epoch }}
+      </div>
       <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
     </div>
     <div class="balance-box">
@@ -11,6 +13,8 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { mapState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 export default {
@@ -18,11 +22,15 @@ export default {
     return {
       finalized_epoch: "Loading..",
       balance: 0,
+      finEPOCH: this.$t("controlPage.finEPOCH"),
     };
   },
   computed: {
     ...mapState(useControlStore, {
       balancestatus: "balancestatus",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
 
@@ -91,7 +99,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-weight: 700;
-  font-size: 100%;
+  font-size: 180%;
   width: 100%;
   height: 50%;
 }

@@ -1,10 +1,5 @@
 <template>
   <div class="status-box">
-    <update-panel
-      :click-bg="displayUpdatePanel"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
-      @click-out="removeUpdateModal"
-    ></update-panel>
     <div class="status-box_header">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
@@ -86,7 +81,14 @@
         </div>
       </div>
 
-      <div v-for="validator in notSetAddresses" :key="validator" class="status-message_red">
+      <div
+        v-for="validator in notSetAddresses"
+        :key="validator"
+        class="status-message_red pointer"
+        @mouseenter="cursorLocation = `${clkFee}`"
+        @mouseleave="cursorLocation = ''"
+        @click="expertHandler(validator.serviceID)"
+      >
         <div class="message-icon">
           <img :src="validator.icon" />
         </div>
@@ -98,13 +100,26 @@
             <span> > {{ validator.name }} vc</span>
           </div>
         </div>
+        <the-expert
+          v-if="validator.expertOptionsModal"
+          :item="validator"
+          position="18.8%"
+          wide="39%"
+          @hide-modal="hideExpertMode(validator)"
+        ></the-expert>
       </div>
 
-      <div v-if="stereumUpdate.current !== stereumUpdate.version" class="status-message_green">
-        <div class="message-icon" @click="showUpdate">
+      <div
+        v-if="stereumUpdate.current !== stereumUpdate.version"
+        class="status-message_green"
+        @mouseenter="cursorLocation = `${clkUpdate}`"
+        @mouseleave="cursorLocation = ''"
+        @click="showUpdate"
+      >
+        <div class="message-icon">
           <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
         </div>
-        <div class="message-text_container" @click="showUpdate">
+        <div class="message-text_container">
           <div class="main-message">
             <span>{{ $t("nodeAlert.stereumUpt") }}</span>
           </div>
@@ -113,11 +128,18 @@
           </div>
         </div>
       </div>
-      <div v-for="item in updatedNewUpdates" :key="item" class="status-message_green">
-        <div class="message-icon" @click="showUpdate">
+      <div
+        v-for="item in updatedNewUpdates"
+        :key="item"
+        class="status-message_green"
+        @mouseenter="cursorLocation = `${clkUpdate}`"
+        @mouseleave="cursorLocation = ''"
+        @click="showUpdate"
+      >
+        <div class="message-icon">
           <img :src="item.sIcon" alt="warn_storage" />
         </div>
-        <div class="message-text_container" @click="showUpdate">
+        <div class="message-text_container">
           <div class="main-message">
             <span>{{ item.name }} UPDATE</span>
           </div>
@@ -132,18 +154,18 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { useFooter } from "@/store/theFooter";
+import TheExpert from "./TheExpert.vue";
 export default {
   components: {
-    UpdatePanel,
+    TheExpert,
   },
   data() {
     return {
-      displayUpdatePanel: false,
       storageWarning: false,
       cpuWarning: false,
       cpuAlarm: false,
@@ -155,6 +177,8 @@ export default {
       setFeeReciepent: [],
       setFeeAlarm: false,
       notSetAddresses: [],
+      clkFee: this.$t("nodeAlert.clkFee"),
+      clkUpdate: this.$t("nodeAlert.clkUpdate"),
     };
   },
   computed: {
@@ -170,10 +194,14 @@ export default {
       rpcState: "rpcState",
       dataState: "dataState",
       wsState: "wsState",
+      displayUpdatePanel: "displayUpdatePanel",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       newUpdates: "newUpdates",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -250,6 +278,14 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    expertHandler(el) {
+      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
+      selectedObject.expertOptionsModal = true;
+      return selectedObject;
+    },
+    hideExpertMode(el) {
+      el.expertOptionsModal = false;
+    },
     async readService() {
       const validators = this.installedServices.filter((i) => i.category === "validator");
 
@@ -269,7 +305,12 @@ export default {
           const match = [...validator.yaml.match(new RegExp(pattern))][2];
           if (match) {
             const address = match;
-            addresses.push({ name: validator.name, address: address, icon: validator.sIcon });
+            addresses.push({
+              name: validator.name,
+              address: address,
+              icon: validator.sIcon,
+              serviceID: validator.config.serviceID,
+            });
           } else {
             console.error(
               "Could not find default-fee-recipient address in the service YAML for validator:",
@@ -334,6 +375,9 @@ export default {
 </script>
 
 <style scoped>
+.pointer {
+  cursor: pointer;
+}
 .no-fee-message {
   font-size: 60%;
   display: flex;
@@ -485,6 +529,8 @@ export default {
 }
 .status-message_green .message-text_container {
   color: #eee;
+
+  height: 100%;
 }
 
 .message-icon {

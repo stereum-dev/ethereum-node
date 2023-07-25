@@ -6,7 +6,7 @@
           <span>{{ $t("timeReward.totalText") }} {{ keys.length }} {{ $t("timeReward.validators") }}</span>
         </div>
         <div class="balance-value">
-          <span>{{ getTotalBalance }}</span>
+          <span>{{ totalBalance }}</span>
         </div>
       </div>
       <div class="epochBox">
@@ -14,9 +14,9 @@
           <span class="epochNumber">{{ stats.currentEpoch }}</span>
         </div>
         <div class="slotBox">
-          <span class="firstNumber">{{ stats.currentSlot ? ((stats.currentSlot % 32) +1 )  : 0}}#</span>
+          <span class="firstNumber">{{ stats.currentSlot ? (stats.currentSlot % stats.slotsPerEpoch) + 1 : 0 }}#</span>
           <span class="outOf">/</span>
-          <span class="secondNumber">32#</span>
+          <span class="secondNumber">{{ stats.slotsPerEpoch }}</span>
           <span class="divider"></span>
           <span class="slotNumber">{{ stats.currentSlot }}</span>
         </div>
@@ -37,16 +37,8 @@ export default {
     ...mapState(useStakingStore, {
       keys: "keys",
       stats: "stats",
+      totalBalance: "totalBalance",
     }),
-    getTotalBalance() {
-      let total = 0;
-      total = this.keys.reduce((acc, cur) => {
-        if (cur.balance === "-") return acc;
-        return acc + cur.balance;
-      }, 0);
-
-      return total;
-    },
   },
   watch: {
     total: {

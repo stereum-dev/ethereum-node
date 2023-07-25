@@ -10,7 +10,12 @@
             <span>{{ pageName }}</span>
           </div>
         </div>
-        <div class="confirm-btn" @click="confirm">
+        <div
+          class="confirm-btn"
+          @click="confirm"
+          @mouseenter="cursorLocation = `${chngAppr}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <span>{{ $t("settingPanel.confirm") }}</span>
         </div>
       </div>
@@ -38,6 +43,8 @@
                 :is-language="item.isLanguage"
                 :link-value="item.linkValue"
                 @lang-action="langActiveBox"
+                @mouseenter="cursorLocation = item.isLanguage ? `${langInfo}` : `${creditInfo}`"
+                @mouseleave="cursorLocation = ''"
               ></setting-items>
             </div>
           </div>
@@ -45,7 +52,11 @@
             <span>NODE</span>
           </div>
           <hr />
-          <div class="setting-items export-row">
+          <div
+            class="setting-items export-row"
+            @mouseenter="cursorLocation = `${exportInfo}`"
+            @mouseleave="cursorLocation = ''"
+          >
             <div class="setting-items_title">
               <span>{{ $t("settingPanel.sxConf") }}</span>
             </div>
@@ -63,15 +74,19 @@
                 :btn-value="launcherVersion"
                 is-color="alpha"
                 item-type="update"
-              ></setting-items>
+              />
               <setting-items
                 id="version"
                 :title="nodeVersion"
                 :btn-value="stereumUpdate.current"
                 is-color="alpha"
                 item-type="update"
-              ></setting-items>
-              <div class="setting-items">
+              />
+              <div
+                class="setting-items"
+                @mouseenter="cursorLocation = `${stereumUpd}`"
+                @mouseleave="cursorLocation = ''"
+              >
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>
                 </div>
@@ -89,26 +104,28 @@
         </div>
       </transition>
     </div>
-
-    <div class="footer"></div>
-    <task-manager></task-manager>
   </div>
 </template>
 <script>
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
 import LanguagePanel from "./LanguagePanel.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
 import { mapWritableState, mapState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { toRaw } from "vue";
 export default {
-  components: { TaskManager, SettingItems, LanguagePanel },
+  components: { SettingItems, LanguagePanel },
   data() {
     return {
+      creditInfo: this.$t("settingPanel.creditInfo"),
+      langInfo: this.$t("settingPanel.langInfo"),
+      exportInfo: this.$t("settingPanel.exportInfo"),
+      stereumUpd: this.$t("settingPanel.stereumUpd"),
+      chngAppr: this.$t("settingPanel.chngAppr"),
       stereumConfig: [],
       stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",
@@ -157,6 +174,9 @@ export default {
   },
 
   computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
     ...mapState(useServices, {
       launcherVersion: "launcherVersion",
     }),
@@ -519,13 +539,7 @@ hr {
   width: 95%;
   margin-bottom: 2px;
 }
-.footer {
-  background-color: rgb(52, 52, 52);
-  border-radius: 0 0 7px 7px;
-  width: 100%;
-  height: 5%;
-  display: flex;
-}
+
 .items-box_general {
   width: 100%;
   height: 75%;
