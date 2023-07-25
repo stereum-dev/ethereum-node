@@ -62,6 +62,7 @@ import { mapWritableState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
+import { shallowRef } from "vue";
 
 export default {
   components: {
@@ -77,18 +78,18 @@ export default {
       optionsType: [
         {
           title: "ATTESTATION",
-          comp: TheAttestation,
+          comp: shallowRef(TheAttestation),
           props: {
             remainingTime: this.remainingTime,
           },
         },
         {
           title: "SYNC COMMITTEE",
-          comp: SyncCommitte,
+          comp: shallowRef(SyncCommitte),
         },
         {
           title: "BLOCK PRODUCTION",
-          comp: BlockProduction,
+          comp: shallowRef(BlockProduction),
           props: {
             remainingTime: this.remainingTime,
           },
