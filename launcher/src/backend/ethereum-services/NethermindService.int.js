@@ -72,7 +72,7 @@ test("nethermind installationm", async () => {
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
     if (
       /Nethermind initialization completed/.test(status.stdout) &&
-      /Sync peers/.test(status.stdout) &&
+      /Peers/.test(status.stdout) &&
       /http:\/\/0\.0\.0\.0:8545 ; http:\/\/0\.0\.0\.0:8546 ; http:\/\/0\.0\.0\.0:8551/.test(status.stdout)
     ) {
       condition = true;
@@ -98,6 +98,6 @@ test("nethermind installationm", async () => {
   }
 
   expect(status.stdout).toMatch(/Nethermind initialization completed/);
-  expect(status.stdout).toMatch(/Sync peers/);
+  expect(status.stdout).toMatch(/Peers/);
   expect(status.stdout).toMatch(/http:\/\/0\.0\.0\.0:8545 ; http:\/\/0\.0\.0\.0:8546 ; http:\/\/0\.0\.0\.0:8551/);
 });
