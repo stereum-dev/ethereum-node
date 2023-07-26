@@ -944,6 +944,7 @@ export class Monitoring {
     // Service definitions with their associated rpc api (service) port
     const services = {
       GethService: 8545,
+      RethService: 8545,
       BesuService: 8545,
       NethermindService: 8545,
       ErigonService: 8545,
@@ -1089,6 +1090,7 @@ export class Monitoring {
       },
       execution: {
         GethService: ["chain_head_header", "chain_head_block"], // OK - query for job="geth"
+        RethService: ["reth_sync_checkpoint", "reth_sync_checkpoint"], // OK - query for job="geth"
         BesuService: ["ethereum_best_known_block_number", "ethereum_blockchain_height"], // OK - query for job="besu"
         NethermindService: ["nethermind_blocks", "nethermind_blocks"], // OK [there is only one label] - query for job="nethermind"
         // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not availble thru Prometheus!
@@ -1104,6 +1106,7 @@ export class Monitoring {
       NimbusBeaconService: "nimbus_beacon",
       LodestarBeaconService: "lodestar_beacon",
       GethService: "geth",
+      RethService: "reth",
       BesuService: "besu",
       NethermindService: "nethermind",
       ErigonService: "erigon",
@@ -1112,6 +1115,7 @@ export class Monitoring {
     // Execution clients that should be queried by RPC for chain head block
     const get_chain_head_by_rpc = [
       "GethService",
+      // "RethService",
       // 'BesuService',
       "NethermindService",
       "ErigonService",
@@ -1302,6 +1306,7 @@ export class Monitoring {
       },
       execution: {
         GethService: ["p2p_peers"],
+        RethService: ["reth_network_connected_peers"],
         BesuService: ["ethereum_peer_count"],
         NethermindService: ["nethermind_sync_peers"],
         ErigonService: ["p2p_peers"],
@@ -1316,6 +1321,7 @@ export class Monitoring {
       NimbusBeaconService: "nimbus_beacon",
       LodestarBeaconService: "lodestar_beacon",
       GethService: "geth",
+      RethService: "reth",
       BesuService: "besu",
       NethermindService: "nethermind",
       ErigonService: "erigon",
@@ -1443,6 +1449,10 @@ export class Monitoring {
           // [MAXVAL: --maxpeers (Default: 50)]
           optnam = "--maxpeers";
           defval = 50;
+        } else if (clt.service == "RethService") {
+          // [MAXVAL: --maxpeers (Default: 50)]
+          optnam = "--maxpeers";
+          defval = 100;
         } else if (clt.service == "BesuService") {
           // --max-peers (Default: 25)
           optnam = "--max-peers";
@@ -1931,6 +1941,7 @@ export class Monitoring {
     // Service definitions with their associated rpc api (service) port
     const services = {
       GethService: 8545,
+      RethService: 8545,
       BesuService: 8545,
       NethermindService: 8545,
       ErigonService: 8545,
@@ -2114,6 +2125,7 @@ export class Monitoring {
     // Service definitions with their associated ws api (service) port
     const services = {
       GethService: 8546,
+      RethService: 8546,
       BesuService: 8546,
       NethermindService: 8546,
       ErigonService: 8545,

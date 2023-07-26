@@ -94,7 +94,7 @@ export default {
   components: { ControlDialog },
   props: {
     item: {
-      type: String,
+      type: Object,
       required: true,
     },
   },

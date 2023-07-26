@@ -56,6 +56,10 @@ export const useControlStore = defineStore("theControl", {
           img: "/img/icon/plugin-icons/execution/Geth.png",
         },
         {
+          name: "reth",
+          img: "/img/icon/plugin-icons/execution/Reth.png",
+        },
+        {
           name: "besu",
           img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
         },
