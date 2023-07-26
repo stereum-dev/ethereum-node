@@ -577,7 +577,7 @@ app.on("ready", async () => {
 });
 
 autoUpdater.on("error", (error) => {
-  dialog.showErrorBox("Error: ", error == null ? "unknown" : (error.stack || error).toString());
+  log.error("Error: ", error == null ? "unknown" : (error.stack || error).toString());
 });
 
 autoUpdater.on("update-downloaded", () => {
