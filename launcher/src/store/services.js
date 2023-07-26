@@ -977,7 +977,7 @@ export const useServices = defineStore("services", {
           addPanel: false,
           path: "/reth",
           linkUrl: "",
-          docsUrl: "https://reth.ethereum.org/docs/",
+          docsUrl: "https://paradigmxyz.github.io/reth/",
           icon: require("../..//public/img/icon/plugin-icons/execution/Reth.png"),
           sIcon: require("../../public/img/icon/plugin-icons/execution/Reth-s.png"),
           headerOption: false,

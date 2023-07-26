@@ -6,7 +6,7 @@ export class RethService extends NodeService {
     const service = new RethService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
-    const dataDir = "/opt/app/reth";
+    const dataDir = "/opt/data/reth";
     const JWTDir = "/engine.jwt";
     const volumes = [
       new ServiceVolume(workingDir + "/data", dataDir),
@@ -18,36 +18,31 @@ export class RethService extends NodeService {
       service.id, // id
       1, // configVersion
       "ghcr.io/paradigmxyz/reth", // image
-      "v0.1.0-alpha.3", // imageVersion
+      "v0.1.0-alpha.4", // imageVersion
       [
-        `--network=${network}`,
-        `--data-path=${dataDir}`,
-        //"--db.engine=pebble",
+        `node`,
+        `--chain=${network}`,
+        `--datadir=${dataDir}`,
         "--http",
         "--http.port=8545",
         "--http.addr=0.0.0.0",
-        //"--http.vhosts=*",
-        '--http.api="engine,eth,web3,net,debug"',
+        '--http.api=web3,eth,net',
         "--http.corsdomain=*",
         "--ws",
         "--ws.port=8546",
         "--ws.addr=0.0.0.0",
-        '--ws.api="debug,eth,net,web3"',
+        '--ws.api=web3,eth,net',
         "--ws.origins=*",
         "--authrpc.port=8551",
         "--authrpc.addr=0.0.0.0",
-        //"--authrpc.vhosts=*",
         "--authrpc.jwtsecret=/engine.jwt",
-        "--metrics",
-        "--metrics.expensive",
-        "--metrics.port=6060",
-        "--metrics.addr=0.0.0.0",
+        "--metrics=0.0.0.0:6060",
       ], // command
-      ["reth"], // entrypoint
-      { JAVA_OPTS: "-Xmx4g" }, // env
+      ["/usr/local/bin/reth"], // entrypoint
+      {}, // env
       ports, // ports
       volumes, // volumes
-      null, // user
+      "root", // user
       network // network
       // executionClients
       // consensusClients
