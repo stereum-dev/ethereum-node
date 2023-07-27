@@ -1,7 +1,6 @@
 import { readFileSync } from "fs";
 import { StringUtils } from "./StringUtils.js";
 import YAML from "yaml";
-import * as crypto from "crypto";
 import { SSHService } from "./SSHService.js";
 import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume.js";
@@ -457,11 +456,6 @@ export class ValidatorAccountManager {
       log.error("Deleting Fee Recipient Failed:\n", err);
       return err;
     }
-  }
-
-  async getOperatorPageURL(pubKey) {
-    const pubKeyHash = crypto.createHash("sha256").update(pubKey).digest("hex");
-    return pubKeyHash;
   }
 
   async setGraffitis(id, graffiti) {

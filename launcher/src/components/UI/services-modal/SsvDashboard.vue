@@ -28,9 +28,12 @@
 import { mapState, mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
-import ControlService from "@/store/ControlService";
 export default {
   props: {
+    operatorData: {
+      type: Object,
+      required: false,
+    },
     pubkey: {
       type: String,
       required: true,
@@ -69,9 +72,9 @@ export default {
     async getURL() {
       const grafana = this.installedServices.find((service) => service.service === "GrafanaService");
       this.ssvNetworkUrl.operatorUrl =
-        "https://explorer.ssv.network/operators/" + (await ControlService.getOperatorPageURL(this.localpubkey));
+        "https://explorer.ssv.network/operators/" + (this.operatorData?.id ? this.operatorData?.id : "");
       this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl
-        ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1"
+        ? grafana.linkUrl + "/d/QNiMrdoVz/node-dashboard?orgId=1"
         : "";
     },
   },

@@ -297,10 +297,6 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("deleteFeeRecipient", args); //
   }
 
-  async getOperatorPageURL(args) {
-    return await this.promiseIpc.send("getOperatorPageURL", args); // insert existing operator keys
-  }
-
   async setGraffitis(args) {
     return await this.promiseIpc.send("setGraffitis", args);
   }
