@@ -340,10 +340,6 @@ ipcMain.handle("deleteFeeRecipient", async (event, args) => {
   return await validatorAccountManager.deleteFeeRecipient(args.serviceID, args.pubkey);
 });
 
-ipcMain.handle("getOperatorPageURL", async (event, args) => {
-  return await validatorAccountManager.getOperatorPageURL(args);
-});
-
 ipcMain.handle("setGraffitis", async (event, args) => {
   return await validatorAccountManager.setGraffitis(args.id, args.graffiti);
 });
