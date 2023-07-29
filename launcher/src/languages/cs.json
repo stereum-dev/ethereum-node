@@ -346,12 +346,12 @@
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN ZÁZNAMY",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Double Click to Copy Logs",
-    "serviceId": "service id"
+    "noLogFound": "Ve výpisu nebyl nalezen žádný záznam",
+    "clickCopy": "Dvojklikem zkopírujete záznamy",
+    "serviceId": "id služby"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
+    "localApp": "MÍSTNÍ APLIKACE",
     "localAppText": "Open up the service on your local machine",
     "openBrowser": "OPEN IN BROWSER",
     "availBlockRel": "AVAILABLE BLOCK RELAYS",
