@@ -50,6 +50,7 @@
     "@vue/cli-plugin-babel": "~5.0.4",
     "@vue/test-utils": "^2.3.1",
     "@vue/vue3-jest": "^29.2.3",
+    "@vueuse/core": "^10.2.1",
     "autoprefixer": "^10.4.14",
     "concurrently": "^8.2.0",
     "electron": "^24.2.0",
