@@ -141,12 +141,11 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      
     }),
     ...mapWritableState(useNodeManage, {
       selectedServiceToResync: "selectedServiceToResync",
-      resyncSeparateModal: "resyncSeparateModal"
-    })
+      resyncSeparateModal: "resyncSeparateModal",
+    }),
   },
   methods: {
     serviceStateStatus(item) {

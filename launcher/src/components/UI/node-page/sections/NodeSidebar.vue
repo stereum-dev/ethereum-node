@@ -1,6 +1,8 @@
 <template>
   <aside
     class="flex flex-col items-center w-16 h-full overflow-y-auto border-r rtl:border-l rtl:border-r-0 bg-[#33393E] border-gray-700"
+    @pointerdown.prevent.stop
+    @mousedown.prevent.stop
   >
     <div class="flex flex-col justify-center items-center space-y-6 mt-10 p-1">
       <router-link

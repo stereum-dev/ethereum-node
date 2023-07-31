@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import NodeHeader from "../components/body/NodeHeader.vue";
+import NodeHeader from "../components/body/BodyHeader.vue";
 import NodeBody from "../components/body/NodeBody.vue";
 export default {
   name: "TheNode",
