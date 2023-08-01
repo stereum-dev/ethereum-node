@@ -53,7 +53,7 @@
     "langName": "Výběr jazyka",
     "confirm": "POUŽÍT",
     "general": "OBECNÉ",
-    "credits": "Credits",
+    "credits": "Kredity",
     "open": "otevřít",
     "update": "AKTUALIZOVAT",
     "launcherVersion": "Verze spouštěče",
@@ -168,24 +168,24 @@
     "ttlBal": "Celkový zůstatek",
     "finEPOCH": "Finalizovaná EPOCHA",
     "pending": "service is pending",
-    "off": "Switch off the service",
-    "on": "Switch on the service",
-    "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "off": "Vypnout službu",
+    "on": "Zapnout službu",
+    "settingService": "Nastavení služby",
+    "restart": "restartovat službu"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Klikněte na úkoly pro zobrazení"
   },
   "displayValidator": {
     "pk": "Veřejný klíč",
-    "service": "SERVICE",
-    "active": "ACTIVE SINCE",
-    "state": "STATE",
+    "service": "SLUŽBA",
+    "active": "AKTIVNÍ OD",
+    "state": "STAV",
     "balance": "ZŮSTATEK",
     "option": "MOŽNOSTI",
     "importKey": "Importování klíč(ů) validátora",
     "waitMessage": "Může to nějakou dobu trvat",
-    "waitForImport": "Please wait until the key is imported",
+    "waitForImport": "Počkejte prosím, než bude klíč importován",
     "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
@@ -197,13 +197,13 @@
     "copyPub": "Copy the public key",
     "copiedPub": "Public key copied",
     "setFee": "set the block fee recipient for the selected keys",
-    "renameVal": "rename the validator key",
-    "removVal": "remove the validator key",
+    "renameVal": "přejmenovat klíč validátora",
+    "removVal": "odstranit klíč validátora",
     "exitChain": "exit the chain with the selected keys",
     "waitEnt": "You have to wait for the validator keys to enter"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "ZADEJTE HESLO A IMPORTUJTE"
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
@@ -291,10 +291,10 @@
     "creditTitle": "KREDITY - FINANČNÍ PŘÍSPĚVKY",
     "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
     "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "techTitle": "KREDITY - TECHNIČTÍ PŘÍSPĚVATELÉ",
+    "techText": "ZÍSKEJTE GITPOAP! NAVŠTIVTE NÁŠ GITHUB, KDE SE DOZVÍTE, JAK SE ZAPOJIT!",
+    "financialPage": "FINANČNÍ PŘÍSPĚVEK",
+    "gitcoinList": "GITCOIN ÚPLNÝ SEZNAM",
     "developers": "VÝVOJÁŘI",
     "testers": "TESTEŘI"
   },
@@ -314,24 +314,24 @@
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTRUJTE NOVÉHO OPERÁTORA",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
+    "newRegistritionText": "Použijte nově vygenerovaný klíč operátora k zaregistrování nového operátora uzlu do SSV sítě",
     "register": "Registrovat",
-    "insertTitle": "insert operator key for existing operator",
-    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+    "insertTitle": "vložte klíč operátora pro stávajícího operátora",
+    "insertText": "Použijte existující privátní klíč operátora k obnovení procesů vašeho stávajícího operátora uzlu"
   },
   "registerSSV": {
-    "pubKey": "Public operator key",
+    "pubKey": "Veřejný klíč operátora",
     "copied": "zkopírováno!",
-    "secKey": "Secret Operator Key",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "secKey": "Privátní klíč operátora",
+    "makeSureText": "Prosím ujistěte se, že uložíte a zálohujete váš tajný klíč operátora na bezpečném místě. Tento klíč s nikým nesdílejte.",
+    "copyMessage": "Zkopírujte váš veřejný klíč operátora do tohoto pole, abyste potvrdili, že jste své klíče uložili!"
   },
   "ssvDashboard": {
-    "operatorPage": "My Operator Page",
-    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+    "operatorPage": "Stránka Můj operátor",
+    "SSVNodeGrafna": "Grafana panel uzlu SSV"
   },
   "secretKeyReg": {
-    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
+    "modalLabel": "Vložte stávající privátní klíč operátora, abyste jej použili jako váš klíč operátora",
     "apply": "POUŽÍT"
   },
   "dataAPIAndRPC": {
@@ -345,13 +345,13 @@
     "WSCopiedMessage": "WS-URL zkopírována do schránky!"
   },
   "pluginLogs": {
-    "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Double Click to Copy Logs",
-    "serviceId": "service id"
+    "pageTitle": "PLUG-IN ZÁZNAMY",
+    "noLogFound": "Ve výpisu nebyl nalezen žádný záznam",
+    "clickCopy": "Dvojklikem zkopírujete záznamy",
+    "serviceId": "id služby"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
+    "localApp": "MÍSTNÍ APLIKACE",
     "localAppText": "Open up the service on your local machine",
     "openBrowser": "OPEN IN BROWSER",
     "availBlockRel": "AVAILABLE BLOCK RELAYS",
