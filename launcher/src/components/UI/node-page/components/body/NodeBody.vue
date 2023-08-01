@@ -1,7 +1,7 @@
 import { mapState } from 'pinia';
 <template>
   <div
-    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-scroll mt-1 bg-[#151618]"
+    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto mt-1 bg-[#151618] relative"
   >
     <div class="w-full h-full grid grid-cols-3 p-2">
       <div ref="execution" class="col-start-1 col-span-1 gap-2 p-2 space-y-8">
@@ -11,7 +11,16 @@ import { mapState } from 'pinia';
           class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
         >
           <ClientLayout :client="item" />
-          <ClientButtons :client="item" />
+          <ClientButtons :client="item" @open-expert="openExpertWindow" />
+          <ExpertWindow
+            v-if="item.expertOptionsModal"
+            :item="item"
+            position="18.8%"
+            long="54%"
+            @hide-modal="clickOutside(item)"
+            @prunning-warning="runGethPrunningWarning"
+            @resync-warning="runResyncWarning"
+          />
         </div>
       </div>
       <div ref="consensus" class="col-start-2 col-end-3 gap-2 p-2">
@@ -44,18 +53,21 @@ import { useServices } from "@/store/services";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons";
 import { useMouseInElement } from "@vueuse/core";
+import ExpertWindow from "../../sections/ExpertWindow.vue";
 
 export default {
   name: "NodeBody",
   components: {
     ClientLayout,
     ClientButtons,
+    ExpertWindow,
   },
   data() {
     return {
       execution: null,
       consensus: null,
       validator: null,
+      isExpertWindowOpen: false,
     };
   },
   computed: {
@@ -105,6 +117,9 @@ export default {
     });
   },
   methods: {
+    openExpertWindow(item) {
+      item.expertOptionsModal = true;
+    },
     getPosition() {
       const { elementPositionX, elementPositionY } = useMouseInElement(this.$refs.execution);
       this.execution = {
@@ -126,6 +141,9 @@ export default {
       }
       console.log(this.consensus);
     },
+    clickOutside(item) {
+      item.expertOptionsModal = false;
+    },
     // drawLine() {
     //   const canvas = document.getElementById("canvas");
     //   const ctx = canvas.getContext("2d");
@@ -140,6 +158,6 @@ export default {
 
 <style scoped>
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 </style>
