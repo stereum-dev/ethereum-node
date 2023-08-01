@@ -1,7 +1,6 @@
 "use strict";
 
 import { app, protocol, BrowserWindow, shell, dialog, Menu, ipcMain } from "electron";
-import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
@@ -10,6 +9,7 @@ import { ServiceManager } from "./backend/ServiceManager.js";
 import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
+import { StereumUpdater } from "./StereumUpdater.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -23,10 +23,10 @@ const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
+const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
+stereumUpdater.initUpdater();
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = "debug";
 
 let remoteHost = {};
 
@@ -445,7 +445,7 @@ ipcMain.handle("getCurrentEpochSlot", async () => {
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
-async function createWindow() {
+async function createWindow(type = "main") {
   // Create the browser window.
 
   const initwin = {
@@ -478,34 +478,72 @@ async function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+    if (type === "update") {
+      await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL + "#/update");
+    } else {
+      await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
+    }
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     // Load the index.html when not in developmen
-    win.loadURL("app://./index.html");
+    if (type === "update") {
+      win.loadURL("app://./index.html#/update");
+    } else {
+      win.loadURL("app://./index.html");
+    }
   }
 
   win.on("ready-to-show", async () => {
     await nodeConnection.closeTunnels();
   });
-
-  win.on("close", (e) => {
-    if (app.showExitPrompt) {
-      e.preventDefault(); // Prevents the window from closing
-      const response = dialog.showMessageBoxSync({
-        type: "question",
-        buttons: ["Yes", "No"],
-        title: "Confirm",
-        message: "Critical tasks are running in the background.\nAre you sure you want to quit?",
-        icon: "./public/img/icon/node-journal-icons/red-warning.png",
-      });
-      if (response === 0) {
-        app.showExitPrompt = false;
-        win.close();
+  let closeHandler
+  switch (type) {
+    case "main": {
+      closeHandler = (e) => {
+        if (app.showExitPrompt) {
+          e.preventDefault(); // Prevents the window from closing
+          const response = dialog.showMessageBoxSync({
+            type: "question",
+            buttons: ["Yes", "No"],
+            title: "Confirm",
+            message: "Critical tasks are running in the background.\nAre you sure you want to quit?",
+            icon: "./public/img/icon/node-journal-icons/red-warning.png",
+          });
+          if (response === 0) {
+            app.showExitPrompt = false;
+            win.close();
+          }
+        }
       }
+      break;
     }
-  });
+    case "update": {
+      closeHandler = (e) => {
+        if (app.showExitPrompt) {
+          e.preventDefault(); // Prevents the window from closing
+          const response = dialog.showMessageBoxSync({
+            type: "question",
+            buttons: ["Yes", "No"],
+            title: "Confirm",
+            message: "Stereum is updating.\nAre you sure you want to quit?",
+            icon: "./public/img/icon/node-journal-icons/red-warning.png",
+          });
+          if (response === 0) {
+            app.showExitPrompt = false;
+            stereumUpdater.updateWindow = null
+            win.close();
+          }
+        }
+      }
+      break;
+    }
+
+  }
+
+  win.on("close", closeHandler);
+
+  return win
 }
 
 // Disable CTRL+R and F5 in build
@@ -567,28 +605,12 @@ app.on("ready", async () => {
     var menu = Menu.getApplicationMenu();
     menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => (item.visible = false));
     Menu.setApplicationMenu(menu);
+    stereumUpdater.checkForUpdates()
+  } else {
+    // remove the comment if you try to debug the updater in dev mode
+    // await stereumUpdater.runDebug()
+    createWindow();
   }
-  createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
-});
-
-autoUpdater.on("error", (error) => {
-  log.error("Error: ", error == null ? "unknown" : (error.stack || error).toString());
-});
-
-autoUpdater.on("update-downloaded", () => {
-  dialog
-    .showMessageBox({
-      type: "question",
-      buttons: ["Yes", "No"],
-      title: "Install Update",
-      message: "Update downloaded!\n Do you want to restart and apply updates now?",
-    })
-    .then((result) => {
-      if (result.response == 0) {
-        autoUpdater.quitAndInstall();
-      }
-    });
 });
 
 // Exit cleanly on request from parent process in development mode.
