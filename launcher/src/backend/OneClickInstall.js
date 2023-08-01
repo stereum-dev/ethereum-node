@@ -117,6 +117,11 @@ export class OneClickInstall {
       this.executionClient = this.serviceManager.getService("GethService", args)
     }
 
+    if (constellation.includes("RethService")) {
+      //RethService
+      this.executionClient = this.serviceManager.getService("RethService", args)
+    }
+
     if (constellation.includes("BesuService")) {
       //BesuService
       this.executionClient = this.serviceManager.getService("BesuService", args)

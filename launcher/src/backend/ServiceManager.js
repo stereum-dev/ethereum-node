@@ -3,6 +3,7 @@ import { LighthouseValidatorService } from "./ethereum-services/LighthouseValida
 import { LodestarBeaconService } from "./ethereum-services/LodestarBeaconService";
 import { LodestarValidatorService } from "./ethereum-services/LodestarValidatorService";
 import { GethService } from "./ethereum-services/GethService";
+import { RethService } from "./ethereum-services/RethService";
 import { ErigonService } from "./ethereum-services/ErigonService";
 import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
@@ -105,6 +106,8 @@ export class ServiceManager {
               services.push(LodestarValidatorService.buildByConfiguration(config));
             } else if (config.service == "GethService") {
               services.push(GethService.buildByConfiguration(config));
+            } else if (config.service == "RethService") {
+              services.push(RethService.buildByConfiguration(config));
             } else if (config.service == "ErigonService") {
               services.push(ErigonService.buildByConfiguration(config));
             } else if (config.service == "BesuService") {
@@ -216,6 +219,7 @@ export class ServiceManager {
         vol.servicePath === "/opt/app/beacon" ||
         vol.servicePath === "/opt/app/data" ||
         vol.servicePath === "/opt/data/geth" ||
+        vol.servicePath === "/opt/data/reth" ||
         vol.servicePath === "/opt/data/erigon"
     ).destinationPath;
     await this.manageServiceState(client.id, "stopped");
@@ -659,6 +663,15 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
+
+      case "RethService":
+        ports = [
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+        ];
+        return RethService.buildByUserInput(args.network, ports, args.installDir + "/reth");
 
       case "BesuService":
         ports = [
