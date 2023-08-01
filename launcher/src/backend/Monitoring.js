@@ -2237,8 +2237,7 @@ export class Monitoring {
     }
 
     // Build curl command
-    const rnd = StringUtils.createRandomString();
-    const key = crypto.createHash("md5").update(rnd).digest("hex");
+    const key = "x3JJHMbDL1EzLkh9GBhXDw==";
     const cmd = `
       curl -i -N \
       -H "Connection: Upgrade" \
