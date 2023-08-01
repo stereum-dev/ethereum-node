@@ -11,6 +11,13 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
+      <div class="proposed-part">
+        <div class="justfied-rows">
+          <span>proposed</span>
+        </div>
+        <!-- <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div> -->
+        <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
+      </div>
       <div class="justfied-part">
         <div class="justfied-rows">
           <span>justified</span>
@@ -18,7 +25,10 @@
         <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
         <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
       </div>
-      <div class="finilized-part"></div>
+      <div class="finilized-part">
+        <div class="finilized-row-title"><span>finalized</span></div>
+        <div class="finilized-row"><div v-for="n in 32" :key="n" class="finilized-square"></div></div>
+      </div>
     </div>
   </div>
 </template>
@@ -98,12 +108,11 @@ export default {
   justify-content: center;
   align-items: flex-start;
   border-radius: 0 10px 10px 0;
-  background-color: #1e1;
 }
 .justfied-part {
   width: 100%;
-  height: 56%;
-  background-color: rgb(238, 17, 172);
+  height: 58%;
+
   border-radius: 0 10px 0 0;
   display: flex;
   justify-content: center;
@@ -116,22 +125,50 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 80%;
-  font-weight: 600;
+  font-size: 55%;
+  font-weight: 700;
   text-transform: uppercase;
 }
 .finilized-part {
   width: 100%;
-  height: 44%;
-  background-color: rgb(238, 179, 17);
+  height: 42%;
+  border-top: 1px solid #c1c1c1;
   border-radius: 0 0 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+.finilized-row-title {
+  width: 95%;
+  height: 40%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 55%;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2%;
+}
+.finilized-row {
+  width: 95%;
+  height: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 60%;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.finilized-square {
+  width: 3%;
+  height: 35%;
+  margin: 0 0.5%;
+  background: blue;
 }
 .square {
-  width: 2.5%;
-  height: 60%;
+  width: 3%;
+  height: 50%;
   margin: 0 0.5%;
   background: #c1c1c1;
 }
