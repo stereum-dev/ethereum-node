@@ -1,7 +1,7 @@
 <template>
   <div class="dropDown_parent">
     <div class="dropDown_box">
-      <div class="dropDown" :class="{ disabled: currentNetwork.network === 'gnosis' }" @click="toggleDropDown">
+      <div class="dropDown" @click="toggleDropDown">
         <div v-if="!selectedValidator.key" class="options">Choose a validator</div>
         <div v-else class="options">
           {{ selectedValidator.key }}
