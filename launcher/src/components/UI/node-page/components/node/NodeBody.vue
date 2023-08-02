@@ -11,12 +11,10 @@ import { mapState } from 'pinia';
           class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
         >
           <ClientLayout :client="item" />
-          <ClientButtons :client="item" @open-expert="openExpertWindow" />
+          <ClientButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
           <ExpertWindow
             v-if="item.expertOptionsModal"
             :item="item"
-            position="18.8%"
-            long="54%"
             @hide-modal="clickOutside(item)"
             @prunning-warning="runGethPrunningWarning"
             @resync-warning="runResyncWarning"
@@ -30,7 +28,14 @@ import { mapState } from 'pinia';
           class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
         >
           <ClientLayout :client="item" />
-          <ClientButtons :client="item" />
+          <ClientButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
+          <ExpertWindow
+            v-if="item.expertOptionsModal"
+            :item="item"
+            @hide-modal="clickOutside(item)"
+            @prunning-warning="runGethPrunningWarning"
+            @resync-warning="runResyncWarning"
+          />
         </div>
       </div>
       <div class="col-start-3 col-end-4 gap-2 p-2">
@@ -40,10 +45,30 @@ import { mapState } from 'pinia';
           class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
         >
           <ClientLayout :client="item" />
-          <ClientButtons :client="item" />
+          <ClientButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
+          <ExpertWindow
+            v-if="item.expertOptionsModal"
+            :item="item"
+            @hide-modal="clickOutside(item)"
+            @open-pruning="runGethPrunningWarning"
+            @open-resync="runResyncWarning"
+          />
         </div>
       </div>
     </div>
+    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
+    <PruingModal
+      v-if="gethPrunningWarningModal"
+      :item="item"
+      @cancel-warning="hidePrunningWarningsModal"
+      @confirm-btn="confirmRunningGethPrunning(item)"
+    />
+    <ResyncModal
+      v-if="resyncWarningModal"
+      :item="item"
+      @cancel-warning="hideResyncWarningsModal"
+      @confirm-btn="confirmRunningResync($event, item)"
+    />
   </div>
 </template>
 
@@ -54,6 +79,10 @@ import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons";
 import { useMouseInElement } from "@vueuse/core";
 import ExpertWindow from "../../sections/ExpertWindow.vue";
+import PluginLogs from "../../sections/PluginLogs.vue";
+import ControlService from "@/store/ControlService";
+import PruingModal from "./PrunningModal.vue";
+import ResyncModal from "./ResyncModal.vue";
 
 export default {
   name: "NodeBody",
@@ -61,13 +90,24 @@ export default {
     ClientLayout,
     ClientButtons,
     ExpertWindow,
+    PluginLogs,
+    PruingModal,
+    ResyncModal,
   },
   data() {
     return {
       execution: null,
       consensus: null,
       validator: null,
-      isExpertWindowOpen: false,
+      itemsList: [],
+      isPluginMenuActive: false,
+      isServiceOn: false,
+      isServicePending: false,
+      gethPrunningWarningModal: false,
+      isPluginLogPageActive: false,
+      options: null,
+      itemToLogs: {},
+      resyncWarningModal: false,
     };
   },
   computed: {
@@ -117,6 +157,91 @@ export default {
     });
   },
   methods: {
+    // Check if service is Geth
+    runGethPrunningWarning(option) {
+      if (option.changeValue && option.displayWarningModal) {
+        this.gethPrunningWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.gethPrunningWarningModal = false;
+      }
+    },
+    //Double check & run Resync modal
+    runResyncWarning(option) {
+      if (option.changeValue && option.displayResyncModal) {
+        this.resyncWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.resyncWarningModal = false;
+      }
+    },
+
+    // Prunning Functions
+    hidePrunningWarningsModal(el) {
+      this.gethPrunningWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Prunning";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+    },
+    async confirmRunningGethPrunning(service) {
+      this.gethPrunningWarningModal = false;
+      service.expertOptions
+        .filter((item) => {
+          return item.title === "Prunning";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+      await ControlService.chooseServiceAction({
+        action: "pruneGeth",
+        service: service,
+        data: {},
+      });
+    },
+
+    // Resync Functions
+    hideResyncWarningsModal(el) {
+      this.resyncWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Resync";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+    },
+    async confirmRunningResync(data, service) {
+      this.resyncWarningModal = false;
+      service.expertOptions
+        .filter((item) => {
+          return item.title === "Resync";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+      await ControlService.chooseServiceAction({
+        action: "reSync",
+        service: service,
+        data: { checkpointURL: data },
+      });
+    },
+    openLogsPage(item) {
+      this.itemToLogs = item;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
+    },
     openExpertWindow(item) {
       item.expertOptionsModal = true;
     },

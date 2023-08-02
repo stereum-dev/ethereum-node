@@ -5,8 +5,8 @@
   </div>
 </template>
 <script>
-import NodeHeader from "../components/body/BodyHeader.vue";
-import NodeBody from "../components/body/NodeBody.vue";
+import NodeHeader from "../components/node/BodyHeader.vue";
+import NodeBody from "../components/node/NodeBody.vue";
 export default {
   name: "TheNode",
   components: {

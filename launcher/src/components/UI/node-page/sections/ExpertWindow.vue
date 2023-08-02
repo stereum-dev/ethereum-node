@@ -12,7 +12,6 @@
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
-      :style="{ left: `${position}% important` }"
     >
       <div class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600">
         <span class="text-xl text-gray-200 font-bold uppercase">{{ item.name }}</span>
@@ -64,7 +63,7 @@
           :class="{ invisible: isExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
-          <span>{{ option.title }}</span>
+          <span class="text-center">{{ option.title }}</span>
           <div class="spaceParent">
             <select id="value" v-model="option.changeValue" @change="somethingIsChanged(option)">
               <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
@@ -72,32 +71,7 @@
           </div>
         </div>
 
-        <!--
-        option needs: {
-          title: string,
-          type: "text",
-          changeValue: string,
-          icon: string (path)
-          }
-        -->
-        <!-- <div
-          class="actionBox"
-          v-if="!isExpertModeActive && !ssvExpertModeActive"
-        >
-          <img src="/img/icon/plugin-menu-icons/ServiceAutoUpdate.png" alt="" />
-          <span class="actionBoxTitle">Services Update Configuration</span>
-          <div class="updateService">
-            <select
-              name="update"
-              id="updateService"
-              v-model="updateSelect"
-              @change="somethingIsChanged()"
-            >
-              <option value="auto">AUTO</option>
-              <option value="manual">MANUAL</option>
-            </select>
-          </div>
-        </div> -->
+        <!-- Fee recipient -->
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
@@ -143,7 +117,7 @@
           icon: string (path)
           }
         -->
-
+        <!-- toggle btn -->
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
           :key="index"
@@ -169,6 +143,7 @@
             </label>
           </div>
         </div>
+        <!-- toggle btn -->
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
           :key="index"
@@ -201,7 +176,6 @@
           <textarea
             v-model="item.yaml"
             class="w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
-            autofocus
             @input="somethingIsChanged"
           ></textarea>
         </div>
@@ -209,7 +183,6 @@
           <textarea
             v-model="item.ssvConfig"
             class="w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
-            autofocus
             @input="somethingIsChanged"
           ></textarea>
         </div>

@@ -6,9 +6,11 @@
         <NodeSidebar />
       </div>
       <div class="col-start-2 col-end-18 w-full h-full relative">
-        <TheNode />
+        <NodeSection />
       </div>
-      <div class="col-start-18 col-end-22 bg-cyan-300">service</div>
+      <div class="col-start-18 col-end-22">
+        <ServiceSection />
+      </div>
       <div class="col-start-22 col-end-25 bg-violet-400">alerting</div>
     </div>
     <!-- End Node main layout -->
@@ -16,12 +18,14 @@
 </template>
 <script>
 import NodeSidebar from "./sections/NodeSidebar.vue";
-import TheNode from "./sections/TheNode.vue";
+import NodeSection from "./sections/NodeSection.vue";
+import ServiceSection from "./sections/ServiceSection.vue";
 export default {
   name: "NodeScreen",
   components: {
     NodeSidebar,
-    TheNode,
+    NodeSection,
+    ServiceSection,
   },
   props: {},
   data() {

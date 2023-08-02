@@ -5,7 +5,7 @@
     @mousedown.prevent.stop
   >
     <div
-      class="w-[150px] h-5 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 z-10 flex justify-between items-center text-white text-xs capitalize"
+      class="w-[150px] h-5 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-xs capitalize"
     >
       {{ client.category }}
       <span v-if="client.category !== 'validator'" class="-ml-4">client</span>
