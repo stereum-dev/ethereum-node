@@ -3,7 +3,7 @@
     class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto bg-[#151618] relative p-2"
   >
     <div ref="service" class="col-start-1 col-span-1 space-y-2 py-2">
-      <div v-for="item in getServices" :key="item" class="max-h-[85px] grid grid-cols-2 py-2">
+      <div v-for="item in getServices" :key="item" class="max-h-[85px] grid grid-cols-3 py-2">
         <ServiceLayout :client="item" />
         <ServiceButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
         <ExpertWindow

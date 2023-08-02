@@ -11,7 +11,7 @@
       <span class="w-5 h-5 bg-green-500 border border-green-500 rounded-r-full"></span>
     </div>
     <div class="flex ">
-      <img class="w-10" :src="client.sIcon" alt="icon" />
+      <img class="w-full" :src="client.sIcon" alt="icon" />
     </div>
   </div>
 </template>

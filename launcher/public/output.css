@@ -740,6 +740,10 @@ video {
   grid-column: span 3 / span 3;
 }
 
+.col-span-2{
+  grid-column: span 2 / span 2;
+}
+
 .col-start-1{
   grid-column-start: 1;
 }
@@ -1164,6 +1168,15 @@ video {
 
 .resize{
   resize: both;
+}
+
+.grid-flow-row{
+  grid-auto-flow: row;
+}
+
+.auto-rows-max{
+  grid-auto-rows: -webkit-max-content;
+  grid-auto-rows: max-content;
 }
 
 .grid-cols-2{

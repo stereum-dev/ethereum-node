@@ -1,9 +1,9 @@
 import ClientButtons from 'launcher/src/components/UI/node-page/components/body/ClientButtons';
 <template>
-  <div class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-2 gap-1 p-1" @pointerdown.prevent.stop>
+  <div class="col-start-2 col-span-2 grid grid-cols-3 grid-flow-row auto-rows-max gap-1 p-1" @pointerdown.prevent.stop>
     <button
       v-if="client.service === 'PrometheusService' || client.service === 'GrafanaService'"
-      class="col-start-1 row-start-1 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="docWindow"
     >
       <img
@@ -19,7 +19,7 @@ import ClientButtons from 'launcher/src/components/UI/node-page/components/body/
         class="w-5 active:scale-95"
       />
     </button>
-    <div class="p-1 col-start-2 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md">
+    <div class="p-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md">
       <button v-if="client.serviceIsPending" class="w-full h-full transition-colors duration-200 rounded-md disabled">
         <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24"></svg>
       </button>
@@ -46,25 +46,25 @@ import ClientButtons from 'launcher/src/components/UI/node-page/components/body/
       </button>
     </div>
     <button
-      class="col-start-3 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="button.action"
     >
       <img src="/img/icon/plugin-menu-icons/restart.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
-      class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
+      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
       @click="expertWindow"
     >
       <img src="/img/icon/plugin-menu-icons/setting2.png" alt="icon" class="w-8 active:scale-95" />
     </button>
     <button
-      class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="logWindow"
     >
       <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
-      class="col-start-3 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="docWindow"
     >
       <img src="/img/icon/plugin-menu-icons/doc.png" alt="icon" class="w-5 active:scale-95" />
