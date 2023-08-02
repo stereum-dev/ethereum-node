@@ -29,27 +29,27 @@
     "clkEdit": "klikněte pro úpravu vašeho uzlu",
     "clkOn": "klikněte pro zapnutí vašeho uzlu",
     "clkOff": "klikněte pro vypnutí vašeho uzlu",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "clkLog": "Klikněte pro otevření panelu, abyste měli přístup k záznamům pro klienty a služby zvlášť",
+    "clkSwitch": "Klikněte pro otevření panelu, aby bylo možné přepínat klienty a služby zvlášť",
+    "clkRestart": "Klikněte pro otevření panelu, abyste mohli restartovat klienty a služby zvlášť",
+    "clkResync": "Klikněte pro otevření panelu, abyste mohl(a) synchronizovat klienty zvlášť"
   },
   "pagesnav": {
     "node": "UZEL",
     "control": "OVLÁDÁNÍ",
-    "staking": "STAKING"
+    "staking": "STAKOVÁNÍ"
   },
   "supportModal": {
     "support": "podpora",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
+    "supportText": "Nejrychlejší způsob, jak kontaktovat podporu, je připojení se k našemu Discord serveru!",
     "bugReport": "NAHLÁSIT CHYBU",
-    "bugRepText": "Udělejte si prosím čas na sepsání problému a pomozte tak ke zlepšení Stereum!",
+    "bugRepText": "Prosím, věnujte čas sepsání problému a pomozte nám vylepšit Stereum!",
     "emailText": "nebo napište e-mail na:",
-    "docsTitle": "dokumentace",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "docsTitle": "dokumentace řetězce",
+    "docsText": "Užitečný odkaz na dokumentaci síťových záznamů pro vámi vybranou konfiguraci uzlu."
   },
   "settingPanel": {
-    "stereumName": "stereum nastavení",
+    "stereumName": "nastavení stereum",
     "langName": "Výběr jazyka",
     "confirm": "POUŽÍT",
     "general": "OBECNÉ",
@@ -58,44 +58,44 @@
     "update": "AKTUALIZOVAT",
     "launcherVersion": "Verze spouštěče",
     "nodeVersion": "Verze uzlu",
-    "lane": "Stereum - Testing Lane",
+    "lane": "Stereum - Testovací cesta",
     "on": "zapnuto",
     "off": "vypnuto",
-    "updateConfig": "Nastavení aktualizace Stereum",
-    "servicePlugin": "Nastavení aktualizace plug-inů / službeb",
+    "updateConfig": "Konfigurace aktualizace Stereum",
+    "servicePlugin": "Konfigurace aktualizace plug-inů / služeb",
     "manual": "MANUÁLNÍ",
     "auto": "AUTOMATICKÉ",
     "sxConf": "Exportovat konfiguraci",
-    "chngAppr": "Changes to be applied",
+    "chngAppr": "Změny, které budou aplikovány",
     "creditInfo": "klikněte na tlačítko pro zobrazení přispěvatelů",
     "langInfo": "klikněte na tlačítko pro změnu jazyka",
     "exportInfo": "klikněte na tlačítko pro export konfigurace do souboru yaml",
     "stereumUpd": "Klikněte na tlačítko pro nastavení aktualizace Stereum"
   },
   "nodeSidebarVideo": {
-    "stake": "Stake with 32 ETH",
-    "ssv": "Použít ssv.network",
+    "stake": "Stakujte s 32 ETH",
+    "ssv": "Použit ssv.network",
     "alert": "Upozornění v mobilní aplikaci",
     "switchC": "Přepnout klienty",
     "migrate": "Migrace uzlů",
     "rpc": "RPC připojení",
-    "gnoStake": "STAKE S 1 GNO"
+    "gnoStake": "STAKUJTE S 1 GNO"
   },
   "pluginZone": {
     "client": "klient"
   },
   "theNode": {
-    "execution": "exekuce",
+    "execution": "provedení",
     "consensus": "shoda",
     "validator": "validátor",
-    "servicePlugin": "SERVICE PLUGIN",
+    "servicePlugin": "PLUGIN SLUŽBY",
     "message": "Aktuální síť je ",
     "chckTutorial": "Podívejte se na výukové kurzy",
     "returnStatus": "Zpět do stavového pole"
   },
   "modifyPanel": {
     "backNode": "zpět k UZLU",
-    "addPreset": "ADD 1 CLICK PRESET",
+    "addPreset": "PŘIDAT PŘEDNASTAVENÍ NA JEDEN KLIK",
     "changeNetwork": "ZMĚNIT SÍŤ",
     "nukeNode": "ZNÍČIT UZEL"
   },
@@ -108,7 +108,7 @@
     "delete": "ODSTRANIT"
   },
   "updatePanel": {
-    "launcherTitle": "launcher",
+    "launcherTitle": "spouštěč",
     "version": "verze",
     "current": "aktuální",
     "nodeTitle": "aktualizace uzlu",
@@ -116,29 +116,29 @@
     "auto": "Automatická aktualizace",
     "available": "k dispozici",
     "searching": "vyhledávání nových aktualizací",
-    "serviceTitle": "aktualizace přídavných modulů",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
+    "serviceTitle": "aktualizace pluginů",
+    "serviceDesc": "Aktualizace pro nainstalovaný výběr PLUGINů",
+    "availablePlugin": "DOSTUPNÉ AKTUALIZACE PLUGINŮ",
     "all": "aktualizovat vše",
     "osTitle": "aktualizace operačního systému serveru",
     "availableUpdates": "aktualizace",
     "searchVersion": "Vyhledat dostupné aktualizace",
-    "updtBtn": "kliknutím aktualizujete",
-    "updtAllPlugin": "update all the plugins",
+    "updtBtn": "klikněte pro aktualizaci",
+    "updtAllPlugin": "aktualizovat všechny pluginy",
     "autoUpt": "aktualizace je automatická",
     "manualUpt": "aktualizace je manuální",
-    "chngAppr": "Changes to be applied"
+    "chngAppr": "Změny, které budou aplikovány"
   },
   "controlPage": {
     "node": "UZEL",
     "disk": "RYCHLOST DISKU",
     "write": "ZÁPIS",
     "read": "ČTENÍ",
-    "inclusionDistance": "INCLUSION DISTANCE",
-    "rpc": "RPC-KONCOVÝ BOD",
+    "inclusionDistance": "VZDÁLENOST ZÁVĚRU",
+    "rpc": "RPC-ENDPOINT",
     "ws": "WS-ENDPOINT",
     "syncStatus": "STAV SYNCHRONIZACE",
-    "hard": "OBJEM ÚLOŽIŠTĚ",
+    "hard": "KAPACITA ÚLOŽIŠTĚ",
     "free": "ZDARMA",
     "total": "CELKEM",
     "network": "SÍŤ",
@@ -164,10 +164,10 @@
     "listPort": "seznam portů",
     "endPoint": "koncový bod",
     "data": "data",
-    "enteredKeys": "The number of entered validator keys",
+    "enteredKeys": "Počet zadaných klíčů validátorů",
     "ttlBal": "Celkový zůstatek",
-    "finEPOCH": "Finalizovaná EPOCHA",
-    "pending": "service is pending",
+    "finEPOCH": "Dokončená EPOCHA",
+    "pending": "služba čeká",
     "off": "Vypnout službu",
     "on": "Zapnout službu",
     "settingService": "Nastavení služby",
@@ -183,61 +183,61 @@
     "state": "STAV",
     "balance": "ZŮSTATEK",
     "option": "MOŽNOSTI",
-    "importKey": "Importování klíč(ů) validátora",
+    "importKey": "Importování klíč(ů) validátoru",
     "waitMessage": "Může to nějakou dobu trvat",
     "waitForImport": "Počkejte prosím, než bude klíč importován",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
-    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
-    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "Jsem si jistý/á",
+    "warningMessage": "Naše dodatečné kontrolní mechanismy ochrany proti slashingu ukázaly, že jeden z validátorů, který se chystáte importovat, atestoval transakce v posledních 2 epochách.",
+    "warningAlarm": "VAROVÁNÍ: Nacházíte se ve vysokém riziku slashingu!",
+    "warningQuestion": "JSTE SI JISTÝ(Á), ŽE CHCETE IMPORTOVAT KLÍČE VALIDÁTORŮ?",
+    "sure": "Jsem si jistý(á)",
     "cancel": "zrušit",
-    "serviceExpl": "The service selected for the entered Validator key",
-    "activeExpl": "The time since the validator has been active",
-    "balExpl": "The balance of the validator",
-    "copyPub": "Copy the public key",
-    "copiedPub": "Public key copied",
-    "setFee": "set the block fee recipient for the selected keys",
+    "serviceExpl": "Služba vybraná pro zadaný klíč validátoru",
+    "activeExpl": "Čas od doby, kdy byl validátor aktivní",
+    "balExpl": "Zůstatek validátora",
+    "copyPub": "Zkopírujte veřejný klíč",
+    "copiedPub": "Veřejný klíč zkopírován",
+    "setFee": "nastavte příjemce poplatků za blok pro vybrané klíče",
     "renameVal": "přejmenovat klíč validátora",
     "removVal": "odstranit klíč validátora",
-    "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter"
+    "exitChain": "opustit řetězec s vybranými klíči",
+    "waitEnt": "Pro zadání ověřovacích klíčů musíte počkat"
   },
   "enterPass": {
     "enterPass": "ZADEJTE HESLO A IMPORTUJTE"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
+    "passMessage": "ZADEJTE HESLO VAŠEHO VALIDÁTORU PRO OPUŠTĚNÍ ŘETĚZCE S TÍMTO KLÍČEM...",
     "confirm": "Potvrdit"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "modalMessage": "Jste si jistý(á), že chcete opustit řetězec S VYBRANÝMI KLÍČI validátora? Tímto zastavíte své povinnosti validátora a tento krok NELZE vrátit zpět. Vaše finanční prostředky budou vybratelné pouze, pokud to řetězec umožňí.",
+    "exitApprove": "PŘEČETL(A) JSEM TEXT A JSEM SI VĚDOM(Á) NÁSLEDKŮ",
+    "exitChain": "OPUSTIT ŘETĚZEC",
+    "clickClose": "Klikněte mimo pro zavření."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "textPlaceHolder": "Zadejte platnou Ethereum adresu, kam chcete poslat své odměny za bloky... ",
+    "setBlock": "NASTAVTE ADRESU PŘÍJEMCE POPLATKŮ ZA BLOKY"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Zadejte až 32 znaků, které se mají přidat do řetězce při vytváření bloku!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "Zadejte až 32 znaků pro přejmenování validátora!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "PRO VLOŽENÍ KLIKNĚTE NEBO PŘETÁHNĚTE KLÍČ"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
+    "question": "CHCETE SI STÁHNOUT VAŠI DATABÁZI SLASHING UDÁLOSTÍ?",
+    "description": "Můžete to IMPORTOVAT S VAŠIMI KLÍČI VALIDÁTORŮ, ABYSTE ZAJISTILI DODATEČNOU BEZPEČNOST PŘI MIGRACI VAŠICH KLÍČŮ",
     "btn": "vybrat cestu"
   },
   "removeMultiModal": {
-    "sure": "Určitě chcete odebrat tento klíč z vašeho zařízení?",
-    "slashing": "With Slashing Protection Database?",
+    "sure": "Jste si jistý(á), že chcete odstranit tento klíč z vašeho zařízení?",
+    "slashing": "S databází pro ochranu proti slashingu?",
     "remove": "Odstranit",
-    "path": "choose a path to save exported slashing db ",
+    "path": "vyberte cestu, kam chcete uložit exportovanou databázi pro ochranu proti slashingu ",
     "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
