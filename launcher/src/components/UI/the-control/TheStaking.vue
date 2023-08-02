@@ -86,7 +86,7 @@ export default {
           this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
           break;
         case 4:
-          this.selectedCurrency = "/img/icon/control/GNO_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control/gno_currency_symbol.png";
           break;
         default:
           break;
