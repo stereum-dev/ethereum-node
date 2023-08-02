@@ -1,5 +1,5 @@
 <template>
-  <div class="parent">
+  <div class="update-parent">
     <div class="loading-icon">
       <img src="/img/icon/update-loading.gif" />
     </div>
@@ -39,15 +39,13 @@ export default {
 };
 </script>
 <style>
-.parent {
-  background-color: grey;
-}
-.parent {
+.update-parent {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: grey;
 }
 .loading-icon {
   display: flex;
