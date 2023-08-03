@@ -12,11 +12,11 @@
     </div>
     <div class="docBox">
       <div class="proposed-part">
-        <div class="justfied-rows">
+        <div class="proposed-rows-title">
           <span>proposed</span>
         </div>
         <!-- <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div> -->
-        <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
+        <div class="proposed-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
       </div>
       <div class="justfied-part">
         <div class="justfied-rows">
@@ -109,11 +109,11 @@ export default {
   align-items: flex-start;
   border-radius: 0 10px 10px 0;
 }
+
 .justfied-part {
   width: 100%;
-  height: 58%;
+  height: 50%;
 
-  border-radius: 0 10px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,30 +129,37 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
 }
-.finilized-part {
-  width: 100%;
-  height: 42%;
-  border-top: 1px solid #c1c1c1;
+.finilized-part,
+.proposed-part {
+  width: 95%;
+  height: 25%;
+
   border-radius: 0 0 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding-top: 1%;
 }
-.finilized-row-title {
+.finilized-part {
+  border-top: 1px solid #c1c1c1;
+}
+.finilized-row-title,
+.proposed-rows-title {
   width: 95%;
   height: 40%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 55%;
+  font-size: 50%;
   font-weight: 700;
   text-transform: uppercase;
-  margin-bottom: 2%;
+  margin: 1% 0;
 }
-.finilized-row {
-  width: 95%;
-  height: 50%;
+.finilized-row,
+.proposed-rows {
+  width: 100%;
+  height: 60%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -162,7 +169,7 @@ export default {
 }
 .finilized-square {
   width: 3%;
-  height: 35%;
+  height: 60%;
   margin: 0 0.5%;
   background: blue;
 }

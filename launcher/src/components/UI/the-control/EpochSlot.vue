@@ -68,7 +68,7 @@ export default {
       } else {
         setInterval(() => {
           this.currentEpochSlot();
-        }, 100);
+        }, 1000);
       }
     },
   },
