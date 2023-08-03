@@ -16,7 +16,7 @@
           <span>proposed</span>
         </div>
         <!-- <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div> -->
-        <div class="proposed-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
+        <div class="proposed-rows"><div v-for="n in 32" :key="n" class="proposed-square"></div></div>
       </div>
       <div class="justfied-part">
         <div class="justfied-rows">
@@ -61,7 +61,6 @@ export default {
 
   mounted() {
     this.networkIcon = this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
-    // Call the addObject() function every sec
   },
 };
 </script>
@@ -111,21 +110,24 @@ export default {
 }
 
 .justfied-part {
-  width: 100%;
-  height: 50%;
-
+  width: 95%;
+  height: 45%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border-top: 1px solid #c1c1c1;
 }
 .justfied-rows {
-  width: 95%;
+  width: 100%;
   height: 30%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 55%;
+}
+.justfied-rows span {
+  margin-left: 2.5%;
+  font-size: 45%;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -140,6 +142,9 @@ export default {
   align-items: center;
   flex-direction: column;
   padding-top: 1%;
+}
+.proposed-part {
+  margin-bottom: 1%;
 }
 .finilized-part {
   border-top: 1px solid #c1c1c1;
@@ -166,16 +171,23 @@ export default {
   font-size: 60%;
   font-weight: 600;
   text-transform: uppercase;
+  margin-top: 1.5%;
 }
 .finilized-square {
   width: 3%;
-  height: 60%;
+  height: 90%;
+  margin: 0 0.5%;
+  background: blue;
+}
+.proposed-square {
+  width: 3%;
+  height: 90%;
   margin: 0 0.5%;
   background: blue;
 }
 .square {
-  width: 3%;
-  height: 50%;
+  width: 23%;
+  height: 40%;
   margin: 0 0.5%;
   background: #c1c1c1;
 }
