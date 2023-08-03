@@ -29,27 +29,27 @@
     "clkEdit": "klikněte pro úpravu vašeho uzlu",
     "clkOn": "klikněte pro zapnutí vašeho uzlu",
     "clkOff": "klikněte pro vypnutí vašeho uzlu",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "clkLog": "Klikněte pro otevření panelu, abyste měli přístup k záznamům pro klienty a služby zvlášť",
+    "clkSwitch": "Klikněte pro otevření panelu, aby bylo možné přepínat klienty a služby zvlášť",
+    "clkRestart": "Klikněte pro otevření panelu, abyste mohli restartovat klienty a služby zvlášť",
+    "clkResync": "Klikněte pro otevření panelu, abyste mohl(a) synchronizovat klienty zvlášť"
   },
   "pagesnav": {
     "node": "UZEL",
     "control": "OVLÁDÁNÍ",
-    "staking": "STAKING"
+    "staking": "STAKOVÁNÍ"
   },
   "supportModal": {
     "support": "podpora",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
+    "supportText": "Nejrychlejší způsob, jak kontaktovat podporu, je připojení se k našemu Discord serveru!",
     "bugReport": "NAHLÁSIT CHYBU",
-    "bugRepText": "Udělejte si prosím čas na sepsání problému a pomozte tak ke zlepšení Stereum!",
+    "bugRepText": "Prosím, věnujte čas sepsání problému a pomozte nám vylepšit Stereum!",
     "emailText": "nebo napište e-mail na:",
-    "docsTitle": "dokumentace",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "docsTitle": "dokumentace řetězce",
+    "docsText": "Užitečný odkaz na dokumentaci síťových záznamů pro vámi vybranou konfiguraci uzlu."
   },
   "settingPanel": {
-    "stereumName": "stereum nastavení",
+    "stereumName": "nastavení stereum",
     "langName": "Výběr jazyka",
     "confirm": "POUŽÍT",
     "general": "OBECNÉ",
@@ -58,46 +58,46 @@
     "update": "AKTUALIZOVAT",
     "launcherVersion": "Verze spouštěče",
     "nodeVersion": "Verze uzlu",
-    "lane": "Stereum - Testing Lane",
+    "lane": "Stereum - Testovací cesta",
     "on": "zapnuto",
     "off": "vypnuto",
-    "updateConfig": "Nastavení aktualizace Stereum",
-    "servicePlugin": "Nastavení aktualizace plug-inů / službeb",
+    "updateConfig": "Konfigurace aktualizace Stereum",
+    "servicePlugin": "Konfigurace aktualizace plug-inů / služeb",
     "manual": "MANUÁLNÍ",
     "auto": "AUTOMATICKÉ",
     "sxConf": "Exportovat konfiguraci",
-    "chngAppr": "Changes to be applied",
+    "chngAppr": "Změny, které budou aplikovány",
     "creditInfo": "klikněte na tlačítko pro zobrazení přispěvatelů",
     "langInfo": "klikněte na tlačítko pro změnu jazyka",
     "exportInfo": "klikněte na tlačítko pro export konfigurace do souboru yaml",
     "stereumUpd": "Klikněte na tlačítko pro nastavení aktualizace Stereum"
   },
   "nodeSidebarVideo": {
-    "stake": "Stake with 32 ETH",
-    "ssv": "Použít ssv.network",
+    "stake": "Stakujte s 32 ETH",
+    "ssv": "Použit ssv.network",
     "alert": "Upozornění v mobilní aplikaci",
     "switchC": "Přepnout klienty",
     "migrate": "Migrace uzlů",
     "rpc": "RPC připojení",
-    "gnoStake": "STAKE S 1 GNO"
+    "gnoStake": "STAKUJTE S 1 GNO"
   },
   "pluginZone": {
     "client": "klient"
   },
   "theNode": {
-    "execution": "exekuce",
+    "execution": "provedení",
     "consensus": "shoda",
     "validator": "validátor",
-    "servicePlugin": "SERVICE PLUGIN",
+    "servicePlugin": "PLUGIN SLUŽBY",
     "message": "Aktuální síť je ",
     "chckTutorial": "Podívejte se na výukové kurzy",
     "returnStatus": "Zpět do stavového pole"
   },
   "modifyPanel": {
     "backNode": "zpět k UZLU",
-    "addPreset": "ADD 1 CLICK PRESET",
+    "addPreset": "PŘIDAT PŘEDNASTAVENÍ NA JEDEN KLIK",
     "changeNetwork": "ZMĚNIT SÍŤ",
-    "nukeNode": "ZNÍČIT UZEL"
+    "nukeNode": "ODSTRANIT UZEL"
   },
   "sidebarManage": {
     "filter": "Filtrovat..."
@@ -108,7 +108,7 @@
     "delete": "ODSTRANIT"
   },
   "updatePanel": {
-    "launcherTitle": "launcher",
+    "launcherTitle": "spouštěč",
     "version": "verze",
     "current": "aktuální",
     "nodeTitle": "aktualizace uzlu",
@@ -116,29 +116,29 @@
     "auto": "Automatická aktualizace",
     "available": "k dispozici",
     "searching": "vyhledávání nových aktualizací",
-    "serviceTitle": "aktualizace přídavných modulů",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
+    "serviceTitle": "aktualizace pluginů",
+    "serviceDesc": "Aktualizace pro nainstalovaný výběr PLUGINů",
+    "availablePlugin": "DOSTUPNÉ AKTUALIZACE PLUGINŮ",
     "all": "aktualizovat vše",
     "osTitle": "aktualizace operačního systému serveru",
     "availableUpdates": "aktualizace",
     "searchVersion": "Vyhledat dostupné aktualizace",
-    "updtBtn": "kliknutím aktualizujete",
-    "updtAllPlugin": "update all the plugins",
+    "updtBtn": "klikněte pro aktualizaci",
+    "updtAllPlugin": "aktualizovat všechny pluginy",
     "autoUpt": "aktualizace je automatická",
     "manualUpt": "aktualizace je manuální",
-    "chngAppr": "Changes to be applied"
+    "chngAppr": "Změny, které budou aplikovány"
   },
   "controlPage": {
     "node": "UZEL",
     "disk": "RYCHLOST DISKU",
     "write": "ZÁPIS",
     "read": "ČTENÍ",
-    "inclusionDistance": "INCLUSION DISTANCE",
-    "rpc": "RPC-KONCOVÝ BOD",
+    "inclusionDistance": "VZDÁLENOST ZÁVĚRU",
+    "rpc": "RPC-ENDPOINT",
     "ws": "WS-ENDPOINT",
     "syncStatus": "STAV SYNCHRONIZACE",
-    "hard": "OBJEM ÚLOŽIŠTĚ",
+    "hard": "KAPACITA ÚLOŽIŠTĚ",
     "free": "ZDARMA",
     "total": "CELKEM",
     "network": "SÍŤ",
@@ -164,10 +164,10 @@
     "listPort": "seznam portů",
     "endPoint": "koncový bod",
     "data": "data",
-    "enteredKeys": "The number of entered validator keys",
+    "enteredKeys": "Počet zadaných klíčů validátorů",
     "ttlBal": "Celkový zůstatek",
-    "finEPOCH": "Finalizovaná EPOCHA",
-    "pending": "service is pending",
+    "finEPOCH": "Dokončená EPOCHA",
+    "pending": "služba čeká",
     "off": "Vypnout službu",
     "on": "Zapnout službu",
     "settingService": "Nastavení služby",
@@ -183,114 +183,114 @@
     "state": "STAV",
     "balance": "ZŮSTATEK",
     "option": "MOŽNOSTI",
-    "importKey": "Importování klíč(ů) validátora",
+    "importKey": "Importování klíč(ů) validátoru",
     "waitMessage": "Může to nějakou dobu trvat",
     "waitForImport": "Počkejte prosím, než bude klíč importován",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
-    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
-    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "Jsem si jistý/á",
+    "warningMessage": "Naše dodatečné kontrolní mechanismy ochrany proti slashingu ukázaly, že jeden z validátorů, který se chystáte importovat, atestoval transakce v posledních 2 epochách.",
+    "warningAlarm": "VAROVÁNÍ: Nacházíte se ve vysokém riziku slashingu!",
+    "warningQuestion": "JSTE SI JISTÝ(Á), ŽE CHCETE IMPORTOVAT KLÍČE VALIDÁTORŮ?",
+    "sure": "Jsem si jistý(á)",
     "cancel": "zrušit",
-    "serviceExpl": "The service selected for the entered Validator key",
-    "activeExpl": "The time since the validator has been active",
-    "balExpl": "The balance of the validator",
-    "copyPub": "Copy the public key",
-    "copiedPub": "Public key copied",
-    "setFee": "set the block fee recipient for the selected keys",
+    "serviceExpl": "Služba vybraná pro zadaný klíč validátoru",
+    "activeExpl": "Čas od doby, kdy byl validátor aktivní",
+    "balExpl": "Zůstatek validátora",
+    "copyPub": "Zkopírujte veřejný klíč",
+    "copiedPub": "Veřejný klíč zkopírován",
+    "setFee": "nastavte příjemce poplatků za blok pro vybrané klíče",
     "renameVal": "přejmenovat klíč validátora",
     "removVal": "odstranit klíč validátora",
-    "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter"
+    "exitChain": "opustit řetězec s vybranými klíči",
+    "waitEnt": "Pro zadání ověřovacích klíčů musíte počkat"
   },
   "enterPass": {
     "enterPass": "ZADEJTE HESLO A IMPORTUJTE"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
+    "passMessage": "ZADEJTE HESLO VAŠEHO VALIDÁTORU PRO OPUŠTĚNÍ ŘETĚZCE S TÍMTO KLÍČEM...",
     "confirm": "Potvrdit"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "modalMessage": "Jste si jistý(á), že chcete opustit řetězec S VYBRANÝMI KLÍČI validátora? Tímto zastavíte své povinnosti validátora a tento krok NELZE vrátit zpět. Vaše finanční prostředky budou vybratelné pouze, pokud to řetězec umožňí.",
+    "exitApprove": "PŘEČETL(A) JSEM TEXT A JSEM SI VĚDOM(Á) NÁSLEDKŮ",
+    "exitChain": "OPUSTIT ŘETĚZEC",
+    "clickClose": "Klikněte mimo pro zavření."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "textPlaceHolder": "Zadejte platnou Ethereum adresu, kam chcete poslat své odměny za bloky... ",
+    "setBlock": "NASTAVTE ADRESU PŘÍJEMCE POPLATKŮ ZA BLOKY"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Zadejte až 32 znaků, které se mají přidat do řetězce při vytváření bloku!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "Zadejte až 32 znaků pro přejmenování validátora!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "PRO VLOŽENÍ KLIKNĚTE NEBO PŘETÁHNĚTE KLÍČ"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
+    "question": "CHCETE SI STÁHNOUT VAŠI DATABÁZI SLASHING UDÁLOSTÍ?",
+    "description": "Můžete to IMPORTOVAT S VAŠIMI KLÍČI VALIDÁTORŮ, ABYSTE ZAJISTILI DODATEČNOU BEZPEČNOST PŘI MIGRACI VAŠICH KLÍČŮ",
     "btn": "vybrat cestu"
   },
   "removeMultiModal": {
-    "sure": "Určitě chcete odebrat tento klíč z vašeho zařízení?",
-    "slashing": "With Slashing Protection Database?",
+    "sure": "Jste si jistý(á), že chcete odstranit tento klíč z vašeho zařízení?",
+    "slashing": "S databází pro ochranu proti slashingu?",
     "remove": "Odstranit",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "vyberte cestu, kam chcete uložit exportovanou databázi pro ochranu proti slashingu ",
+    "writePath": "Napište prosím cestu, kam chcete uložit soubor"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "Jste si jistý(á), že chcete odstranit všechny klíče validátora Z TOHOTO ZAŘÍZENÍ?"
   },
   "timeReward": {
     "totalText": "CELKOVÝ ZŮSTATEK",
     "validators": "VALIDÁTOŘI",
-    "proposed": "NAVRŽENÝ",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "POTVRZENÍ",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
+    "proposed": "NAVRHOVANÉ",
+    "attestRate": "MÍRA ATESTACE",
+    "attention": "ATESTACE",
+    "missed": "NEPLNĚNÉ",
+    "aggregations": "AGREGACE",
+    "slashed": "SLASHNUT"
   },
   "validatorsBox": {
     "date": "DATUM",
     "validator": "VALIDÁTOR",
-    "attestRate": "ATTEST.RATE",
+    "attestRate": "MÍRA ATESTACÍ",
     "reward": "ODMĚNA"
   },
   "installOption": {
-    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "installText": "VYBERTE VÁŠ PŘÍPAD POUŽITÍ A SÍŤ. PO VÝBĚRU A STISKNUTÍ TLAČÍTKA \"START\" BUDE NÁHODNĚ VYBRÁN KLIENT, KTERÝ BUDE SLUŽIT VAŠEMU PŘÍPADU POUŽITÍ",
     "back": "ZPĚT",
     "install": "INSTALOVAT",
     "placeHoldrer": "vyberte síť"
   },
   "removeModal": {
     "removeText": "Všechny služby budou odstraněny.",
-    "sure": "Jste si jistý/á?"
+    "sure": "Jste si jistý(á)?"
   },
   "installitionMenu": {
     "welcome": "VÍTEJTE",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
-    "osSupported": "IS A SUPPORTED OS"
+    "installText": "V TÉTO FÁZI SI VYBERETE, JAK CHCETE NAINSTALOVAT VÁŠ UZEL. POKUD POTŘEBUJETE POMOC S NASTAVENÍM, PŘIPOJTE SE K NAŠEMU DISCORDU - RÁDI VÁM POMOŽEME",
+    "osCheck": "KONTROLA, ZDA JE OPERAČNÍ SYSTÉM VAŠEHO SERVERU PODPOROVÁN",
+    "osSupported": "JE PODPOROVANÝM OPERAČNÍM SYSTÉMEM"
   },
   "pluginName": {
-    "option": "CHOSEN NETWORK",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "INSTALLED SERVICES",
-    "addOpt": "ADDITIONAL OPTIONS",
-    "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
+    "option": "VYBRANÁ SÍŤ",
+    "chosen": "VYBRANÁ SÍŤ",
+    "path": "CESTA INSTALACE",
+    "syncClient": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
+    "plugin": "NAINSTALOVANÉ SLUŽBY",
+    "addOpt": "DALŠÍ MOŽNOSTI",
+    "monitor": "MONITOROVÁNÍ",
+    "instMonit": "Instalovat monitorování?",
     "back": "ZPĚT",
     "next": "DALŠÍ"
   },
   "creditPanel": {
-    "creditTitle": "KREDITY - FINANČNÍ PŘÍSPĚVKY",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
+    "creditTitle": "KREDITY - FINANČNÍ PŘISPĚVATELÉ",
+    "fincialTitle": "DOSTAŇTE SVÉ JMÉNO NA SEZNAM! DĚKUJEME ZA PODPORU VÝVOJE!",
+    "technicPage": "TECHNICKÝ PŘÍSPĚVEK",
     "techTitle": "KREDITY - TECHNIČTÍ PŘÍSPĚVATELÉ",
     "techText": "ZÍSKEJTE GITPOAP! NAVŠTIVTE NÁŠ GITHUB, KDE SE DOZVÍTE, JAK SE ZAPOJIT!",
     "financialPage": "FINANČNÍ PŘÍSPĚVEK",
@@ -310,33 +310,33 @@
   "tutorialBox": {
     "video": "video",
     "walkthrough": "průvodce",
-    "textGuide": "psaný návod"
+    "textGuide": "psaný průvodce"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTRUJTE NOVÉHO OPERÁTORA",
-    "newRegistritionText": "Použijte nově vygenerovaný klíč operátora k zaregistrování nového operátora uzlu do SSV sítě",
+    "newRegistritionText": "Použijte nově vygenerovaný klíč operátora k registraci nového operátora uzlu do sítě SSV",
     "register": "Registrovat",
     "insertTitle": "vložte klíč operátora pro stávajícího operátora",
-    "insertText": "Použijte existující privátní klíč operátora k obnovení procesů vašeho stávajícího operátora uzlu"
+    "insertText": "Použijte existující soukromý klíč operátora k obnovení procesů vašeho stávajícího operátora uzlu"
   },
   "registerSSV": {
     "pubKey": "Veřejný klíč operátora",
     "copied": "zkopírováno!",
-    "secKey": "Privátní klíč operátora",
-    "makeSureText": "Prosím ujistěte se, že uložíte a zálohujete váš tajný klíč operátora na bezpečném místě. Tento klíč s nikým nesdílejte.",
+    "secKey": "Soukromý klíč operátora",
+    "makeSureText": "Ujistěte se, že svůj tajný klíč operátora uložíte a zálohujete na bezpečném místě. Tento klíč s nikým nesdílejte.",
     "copyMessage": "Zkopírujte váš veřejný klíč operátora do tohoto pole, abyste potvrdili, že jste své klíče uložili!"
   },
   "ssvDashboard": {
     "operatorPage": "Stránka Můj operátor",
-    "SSVNodeGrafna": "Grafana panel uzlu SSV"
+    "SSVNodeGrafna": "Grafana přehled uzlu SSV"
   },
   "secretKeyReg": {
-    "modalLabel": "Vložte stávající privátní klíč operátora, abyste jej použili jako váš klíč operátora",
+    "modalLabel": "VLOŽTE EXISTUJÍCÍ SOUKROMÝ KÍČ OPERÁTORA, KTERÝ CHCETE POUŽÍT JAKO VÁŠ KLÍČ OPERÁTORA",
     "apply": "POUŽÍT"
   },
   "dataAPIAndRPC": {
-    "copy": "Kliknutím zkopírujete!",
-    "closed": "Tunel zavřen!",
+    "copy": "Klikněte pro zkopírování!",
+    "closed": "Tunel uzavřen!",
     "turnOnMessage": "Nejprve prosím ZAPNĚTE DATA-API tunel!",
     "copiedMessage": "DATA-API-URL zkopírována do schránky!",
     "RPCTurnOnMessage": "Nejprve prosím ZAPNĚTE RPC tunel!",
@@ -346,32 +346,32 @@
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN ZÁZNAMY",
-    "noLogFound": "Ve výpisu nebyl nalezen žádný záznam",
-    "clickCopy": "Dvojklikem zkopírujete záznamy",
+    "noLogFound": "V seznamu nebyl nalezen žádný záznam",
+    "clickCopy": "Dvakrát klikněte pro zkopírování záznamů",
     "serviceId": "id služby"
   },
   "serviceModals": {
     "localApp": "MÍSTNÍ APLIKACE",
-    "localAppText": "Open up the service on your local machine",
-    "openBrowser": "OPEN IN BROWSER",
-    "availBlockRel": "AVAILABLE BLOCK RELAYS",
+    "localAppText": "Otevřete službu na svém lokálním zařízení",
+    "openBrowser": "OTEVŘÍT V PROHLÍŽEČI",
+    "availBlockRel": "DOSTUPNÉ BLOKOVÉ RELAYE",
     "process": "Zpracovávání",
-    "blockRel": "Block relay",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "blockRel": "Relay bloku",
+    "blockRelTxt": "Vyberte jedno nebo více relayí, která mají přijímat bloky"
   },
   "customInstallation": {
-    "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "customInstallationTitle": "VLASTNÍ INSTALACE",
+    "customInstallationText": "Tento režim je určen pro pokročilejší uživatele a vyžaduje znalost toho, jak mezi sebou klienti vzájemně interagují. Budete muset vybírat, instalovat a propojovat každou část svého uzlu s uživatelským rozhraním sami!",
+    "chooseWhereToInstall": "VYBERTE, KDE CHCETE STEREUM NAINSTALOVAT",
+    "installationPath": "CESTA INSTALACE"
   },
   "mevboostConfig": {
-    "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "availRelays": "DOSTUPNÉ BLOKOVÉ RELAYE",
+    "usedRelays": "POUŽITÉ RELAYE BLOKU"
   },
   "addModifyPanel": {
-    "installPath": "INSTALLATION PATH",
-    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "installPath": "CESTA INSTALACE",
+    "syncMessage": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
     "portused": "POUŽITÝ PORT",
     "cancel": "zrušit",
     "save": "uložit",
@@ -379,35 +379,35 @@
     "clickAndAdd": "Klikněte na PŘIDAT"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
+    "slashModalMessage": "Chcete importovat s databází pro ochranu proti slashingu?",
+    "importMessage": "Importujte váš soubor s databází pro ochranu proti slashingu.",
     "chooseFile": "Vybrat soubor",
     "continue": "Pokračovat"
   },
   "disabledStaking": {
     "noValidatorInstalled": "Není nainstalován žádný klient validátora!",
-    "disabledStakingMessage": "Nainstalujte alespoň jednoho klienta validátora pro aktivaci importu ověřovacích klíčů."
+    "disabledStakingMessage": "Nainstalujte alespoň jednoho klienta validátora pro aktivaci importu klíčů validátora."
   },
   "logOutModal": {
     "logOutTitle": "ODHLÁSIT SE",
-    "logOutQuestion": "OPRAVDU SE CHCE ODHLÁSIT ZE SERVERU UZLU?",
+    "logOutQuestion": "JSTE SI JISTÝ(Á), ŽE SE CHCETE ODHLÁSIT ZE SVÉHO SERVERU S UZLEM?",
     "logOutBtn": "Odhlásit se"
   },
   "prunningModal": {
-    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Start Pruning",
-    "close": "click outside to close"
+    "prunningText": "GETH během svého provozu zvětšuje používaný úložný prostor. Vyčištění GETH databáze, odstranění nepotřebných dat a uvolnění části využívaného úložného prostoru, trvá NĚKOLIK HODIN. Tento úkon musí být proveden, když Geth není spuštěný. BĚHEM ČIŠTĚNÍ PROSTORU BUDE VÁŠ UZEL ODPOJEN OD SÍTĚ A NEBUDE MOCI PLNIT POTENCIÁLNÍ POKYNY K ATESTACI.",
+    "prunningChecked": "PŘEČETL(A) JSEM TEXT A JSEM SI VĚDOM(Á) NÁSLEDKŮ",
+    "prunningStart": "Začít odstraňování záznamů",
+    "close": "klikněte mimo pro zavření"
   },
   "restartModal": {
-    "restarQ": "Opravdu chcete provést restart?",
-    "restartMessage": "your node might go offline while doing so!",
+    "restarQ": "Jste si jistý(á), že chcete provést restart?",
+    "restartMessage": "váš uzel se může během tohoto procesu odpojit!",
     "restart": "restartovat",
-    "confirmMessage": "Are you sure you want turn your node"
+    "confirmMessage": "Jste si jistý(á), že chcete vypnout váš uzel"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
-    "nukeTitle": "nuke the node",
+    "nukeQ": "JSTE SI JISTÝ(Á), ŽE CHCETE ODSTRANIT STEREUM A VŠECHNY JEHO SLUŽBY ZE SERVERU?",
+    "nukeTitle": "odstranit uzel",
     "backToLogin": "Zpět na přihlášení"
   },
   "noData": {
@@ -415,42 +415,42 @@
     "turnOn": "prosím zapněte"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Pro otevření portu klikněte na tlačítko „ZAPNOUT/VYPNOUT“",
-    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Klikněte na x pro zrušení",
-    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
-    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
-    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Klikněte na tlačítko Síť",
+    "clickNav": "Klikněte na \"OVLÁDÁNÍ\", abyste vstoupil(a) do Ovládacího panelu.",
+    "toggleMessage": "Klikněte na tlačítko „ZAPNOUT/VYPNOUT“ pro otevření vašeho portu",
+    "clickExtention": "Klikněte na tlačítko \"vaš exekuční klient \" pro zkopírování RPC URL",
+    "clickCancel": "Klikněte na křížek pro zrušení",
+    "firstMessage": "Widget pro RPC-Endpoint je umístěn na přehledové desce. Prosím, \"ZAPNĚTE\" tlačítko a klikněte na \"Exekuční Klient\" pro pokračování na další krok.",
+    "secondMessage": "Nyní můžete odeslat svou transakci PŘES VÁŠ UZEL POMOCÍ METAMASK. Až budete hotovi s odesíláním transakcí, klikněte na tlačítko \"ZAPNOUT\", aby se uzavřel váš port",
+    "firstSlide": "Nyní se přihlaste do vaší dApp nebo peněženky, kterou chcete použít (v našem případě MetaMask)",
+    "secondSlide": "Klikněte na tlačítko \"Síť\"",
     "thirdSlide": "Klikněte na \"Přidat síť\"",
     "fourthSlide": "Zadejte název pro vaši síť",
     "fivethSlide": "Vložte zkopírovanou URL ze Stereum",
-    "sixthSlide": "Zadejte CHAIN-ID na kterém váš uzel běží(pro GoerliTestnet je to 5)",
+    "sixthSlide": "Zadejte CHAIN-ID na kterém váš uzel běží (pro GoerliTestnet je to 5)",
     "seventhSlide": "Napište „ETH“ jako symbol měny",
     "eightthSlide": "VOLITELNÉ - můžete vložit URL prohlížeče bloků",
     "ninethSlide": "Klikněte na \"ULOŽIT\""
   },
   "stakeGuide": {
-    "syncCheck": "First Check if your Node is synced",
-    "scrollMessage": "Scroll to change slides faster",
-    "stake": "staking",
-    "scrollClick": "Click on Staking",
-    "drag": "Přetáhněte nebo klikněte na „KLIKNĚTE NEBO PŘETÁHNĚTE PRO VLOŽENÍ KLÍČE“",
+    "syncCheck": "Nejprve zkontrolujte, zda je váš uzel synchronizován",
+    "scrollMessage": "Skrolujte pro rychlejší změnu snímků",
+    "stake": "stakování",
+    "scrollClick": "Klikněte na tlačítko \"Stakování\"",
+    "drag": "Přetáhněte nebo klikněte na „PRO VLOŽENÍ KLIKNĚTE NEBO PŘETÁHNĚTE KLÍČ“",
     "clickIcon": "Klikněte na ikonu vašeho klienta validátora",
-    "cong": "Gratulujeme, máte hotovo!",
-    "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
+    "cong": "Blahopřejeme, hotovo!",
+    "clickPass": "Prosím, klikněte zde pro zadání vašeho hesla a potvrzení.",
+    "noSlash": "Vyberte \"Ne\" pokud nemáte žádnou databázi pro ochranu proti slashingu z předchozího uzlu",
     "test": "testtesttestte"
   },
   "blockProduct": {
     "status": "STAV",
     "assignSlot": "Přidělený slot",
     "noAsign": "Nepřidělený",
-    "nxtBlck": "Next Block Proposal in:"
+    "nxtBlck": "Další návrh bloku za:"
   },
   "disableStake": {
-    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+    "message": "PRO PŘÍSTUP K STAKOVÁNÍ JE VYŽADOVÁN BĚŽÍCÍ KLIENT VALIDÁTORA NA SERVERU"
   },
   "selectionOption": {
     "graffiti": "graffiti",
@@ -463,172 +463,172 @@
     "noParticip": "NEÚČASTNÍCÍ SE",
     "start": "Start",
     "end": "Konec",
-    "newSync": "New Sync Committee in",
+    "newSync": "Nový synchronizační výbor za",
     "hours": "hod."
   },
   "theAttes": {
-    "lastAttest": "Last Attestation Slot:",
+    "lastAttest": "Poslední atestační slot:",
     "keyStatus": "Stav klíče:",
-    "attest": "POTVRZUJÍCÍ",
+    "attest": "ATESTUJÍCÍ",
     "pending": "ČEKAJÍCÍ",
-    "noKey": "ZVOLIT KLÍČ",
-    "nxtAttest": "další potvrzovací slot:",
+    "noKey": "VYBERTE KLÍČ",
+    "nxtAttest": "další atestační slot:",
     "slotRem": "Zbývající sloty",
-    "tillAtest": "do potvrzení"
+    "tillAtest": "do atestace"
   },
   "confirmModal": {
-    "message": "Your node will go off line while you do this!",
+    "message": "Váš uzel se během tohoto procesu odpojí!",
     "turnOn": "zapnout",
     "turnOff": "vypnout",
-    "close": "click outside to close"
+    "close": "klikněte mimo pro zavření"
   },
   "nodeAlert": {
     "lowSpace": "NÍZKÁ KAPACITA ÚLOŽIŠTĚ",
-    "missAttest": "MISSED ATTESTATION",
+    "missAttest": "ZMEŠKANÁ ATESTACE",
     "use": "POUŽITÍ",
     "noFee": "žádný příjemce poplatku",
-    "stereumUpt": "STEREUM AKTUALIZACE",
+    "stereumUpt": "AKTUALIZACE STEREUM",
     "clkFee": "klikněte pro nastavení příjemce poplatku",
-    "clkUpdate": "Kliknutím otevřete panel aktualizace"
+    "clkUpdate": "Klikněte pro otevření panelu aktualizace"
   },
   "restartModalNode": {
-    "message": "opravdu chcete",
-    "close": "click outside to close"
+    "message": "jste si jistý(á), že chcete",
+    "close": "klikněte mimo pro zavření"
   },
   "resyncModal": {
-    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
+    "message": "VÁŠ KLIENT UCHOVÁVÁ DATA BLOKCHAINU NA VAŠEM SERVERU. DÍKY TOMU VÁŠ UZEL MŮŽE PLNIT POVINOSTI V SÍTI. Je to nezbytné pro to, aby váš uzel PLNIL SVOU ÚLOHU ATESTOVÁNÍ V STAKINGU. POUŽITÍ TÉTO VOLBY BUDE ZNAMENAT VYMAZÁNÍ AKTUÁLNÍCH DAT BLOKCHAINU VÁŠEHO KLIENTA A POUŽITÍ VYBRANÉ VOLBY JAKO ZDROJE PRO \n OPĚTOVNÉ ZSYNCHRONIZACI VAŠEHO UZLU.",
     "sync": "SYNCHRONIZACE",
     "gen": "POČÁTEK",
-    "chkSync": "CHECKPOINT SYNC",
-    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "chkSync": "SYNCHRONIZACE KONTROLNÍHO BODU",
+    "syncMsg": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
     "cont": "POKRAČOVAT",
-    "resync": "RESYNC",
-    "close": "click outside to close"
+    "resync": "OPAKOVANĚ SYNCHRONIZOVAT",
+    "close": "klikněte mimo pro zavření"
   },
   "resyncSeparateService": {
-    "message": "by initiating resync you will delete the database of",
-    "msgPartTwo": " source will be used for resynchronization",
-    "resync": "resync",
-    "close": "click outside to close"
+    "message": "spuštěním opakované synchronizace vymažete databázi",
+    "msgPartTwo": " zdroj bude použit pro opětovné synchronizaci",
+    "resync": "opakovaně synchronizovat",
+    "close": "klikněte mimo pro zavření"
   },
   "notifModal": {
-    "addNotif": "add a notification channel",
-    "chooseNotif": "Choose what kind of Notification Channel you want to configure",
-    "stereumMonitor": "Stereum Node Monitor",
-    "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
-    "stepTwo": "Open the app on your smartphone",
-    "stepThree": "Scan the QR Code",
-    "stepFour": "Send a test notification",
-    "close": "click outside to close"
+    "addNotif": "přidejte kanál pro oznámení",
+    "chooseNotif": "Vyberte, jaký typ kanálu pro oznámení chcete nastavit",
+    "stereumMonitor": "Monitor Stereum uzlu",
+    "stepOne": "Pro stažení \"Monitoru Stereum uzlu\" navštivte App Store nebo naše webové stránky",
+    "stepTwo": "Otevřete aplikaci na svém chytrém telefonu",
+    "stepThree": "Naskenujte QR kód",
+    "stepFour": "Odešlete zkušební oznámení",
+    "close": "klikněte mimo pro zavření"
   },
   "replacePanel": {
     "client": "Klient",
-    "sync": "SYNC",
+    "sync": "SYNCHRONIZOVAT",
     "gen": "POČÁTEK",
     "chkPoint": "KONTROLNÍ BOD",
-    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "genActiv": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
     "cancel": "ZRUŠIT",
     "confirm": "POTVRDIT"
   },
   "executionSync": {
     "gen": "POČÁTEK",
-    "syncClient": "Synchronizujte vaše klienty"
+    "syncClient": "Synchronizuje vaše klienty"
   },
   "importingList": {
-    "nodeConf": "Node Config"
+    "nodeConf": "Konfigurace uzlu"
   },
   "importingSyncing": {
-    "message": "Set how the Node clients will synchronize their blockchain data.",
-    "client": "CLIENTs",
-    "syncSrc": "SYNC SOURCE"
+    "message": "Nastavte, jak budou klienti uzlu synchronizovat svá data blockchainu.",
+    "client": "KLIENTi",
+    "syncSrc": "SYNCHRONIZOVAT ZDROJ"
   },
   "importingVerify": {
-    "pluginInst": "Plugins To Install",
-    "cat": "category",
+    "pluginInst": "Pluginy k instalaci",
+    "cat": "kategorie",
     "path": "cesta"
   },
   "uploadConfig": {
-    "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "message": "S touto možností instalace můžete importovat použitý konfigurační soubor Stereum pro zkopírování nastavení vašeho uzlu.",
+    "selectConfig": "VYBERTE KONFIGURAČNÍ SOUBOR STEREUM, ABYSTE HO NAHRÁLI",
+    "configFile": "Konfigurační soubor"
   },
   "fastSync": {
-    "header": "Set how the Node clients will synchronize their blockchain data.",
-    "client": "CLIENTs",
-    "syncSrc": "SYNC SOURCE",
+    "header": "Nastavte, jak budou klienti uzlu synchronizovat svá data blockchainu.",
+    "client": "KLIENTi",
+    "syncSrc": "SYNCHRONIZOVAT ZDROJ",
     "gen": "POČÁTEK",
     "sync": "Synchronizovat od počátku",
-    "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
+    "message": "Po nainstalování vašeho uzlu se vaši klienti začnou synchronizovat se zvoleným zdrojem synchronizace. Tento proces může trvat několik hodin nebo dní. Obvykle se nejprve synchronizuje klient pro konsensus a poté klient pro exekuci."
   },
   "deleteModal": {
     "message": "Chcete odstranit uložené připojení?",
     "rem": "Odstranit",
-    "close": "click outside to close"
+    "close": "klikněte mimo pro zavření"
   },
   "errTerminal": {
     "copy": "zkopírováno!",
-    "close": "click outside to close"
+    "close": "klikněte mimo pro zavření"
   },
   "sliderTutorial": {
     "visitUrl": "Navštívit webovou stránku",
-    "becomeValidator": "Click on “BECOME A VALIDATOR”",
-    "proofStake": "Read through Proof of stake and click on “CONTINUE”",
-    "deposit": "Read through the deposit and click on “I ACCEPT”",
-    "usingTerminal": "Read through Using the terminal and click on “I ACCEPT”",
-    "validatorUptime": "Read through Validator uptime and click on “I ACCEPT”",
-    "validatorBahavior": "Read through Bad validator behaviour and click on “I ACCEPT”",
-    "keyManagement": "Read through Key managment and click on “I ACCEPT”",
-    "validatingLongterm": "Read through Validating is a long-term commitment and click on “I ACCEPT”",
-    "earlyAdaptor": "Read through Early adopter risks and click on “I ACCEPT”",
-    "stakingChecklist": "Read through Staking checklist and click on “I ACCEPT”",
+    "becomeValidator": "Klikněte na \"STÁT SE VALIDÁTOREM\"",
+    "proofStake": "Přečtěte si o \"Proof of Stake\" (důkazu o podílu) a klikněte na \"POKRAČOVAT\"",
+    "deposit": "Přečtěte si o \"vkladu\" (deposit) a klikněte na \"PŘIJMÁM\"",
+    "usingTerminal": "Přečtěte si o \"používání terminálu\" (Using the terminal) a klikněte na \"PŘIJMÁM\"",
+    "validatorUptime": "Přečtěte si o \"dostupnosti validátoru\" (Validator uptime) a klikněte na \"PŘIJMÁM\"",
+    "validatorBahavior": "Přečtěte si o \"špatném chování validátora\" (Bad validator behaviour) a klikněte na \"PŘIJMÁM\"",
+    "keyManagement": "Přečtěte si o \"správě klíčů\" (Key management) a klikněte na \"PŘIJMÁM\"",
+    "validatingLongterm": "Přečtěte si o \"validaci jako dlouhodobém závazku\" (Validating is a long-term commitment) a klikněte na \"PŘIJMÁM\"",
+    "earlyAdaptor": "Přečtěte si o \"rizicích pro brzké uživatele\" (Early adopter risks) a klikněte na \"PŘIJMÁM\"",
+    "stakingChecklist": "Přečtěte si \"kontrolní seznam stakování\" (Staking checklist) a klikněte na \"PŘIJMÁM\"",
     "clickCont": "Klikněte na \"POKRAČOVAT\"",
-    "executionClient": "Select your execution client by clicking on it",
-    "scrollDown": "Posunout dolů a kliknout na \"POKRAČOVAT\"",
-    "consensusClient": "Select your consensus client by clicking on it",
-    "numValidator": "Type in the number of validators you want to run",
-    "generateKey": "Select the operating system you’re currently using to generate the key",
-    "keyGUI": "Click on “Download the Key Gen GUI app”",
-    "dlGithub": "Click on “Download from GitHub”",
-    "clickInstaller": "Scroll down and click on the installer you need and download it",
-    "setupPage": "Go back to the setup page and scroll down and click on the checkbox",
-    "wagueKey": "Switch to the WAGYU Key Generator app",
-    "secratePhrase": "Click on “Create New Secret Recovery Phrase”",
-    "selectNetwork": "Select the network in which you want your node to run",
+    "executionClient": "Vyberte váš klient exekuce kliknutím na něj",
+    "scrollDown": "Skrolujte dolů a klikněte na \"POKRAČOVAT\"",
+    "consensusClient": "Vyberte váš klient konsensu kliknutím na něj",
+    "numValidator": "Zadejte počet validátorů, které chcete provozovat",
+    "generateKey": "Vyberte operační systém, který v současné době používáte, pro generování klíče",
+    "keyGUI": "Klikněte na „Stáhnout aplikaci Key Gen GUI“",
+    "dlGithub": "Klikněte na \"Stáhnout z GitHub\"",
+    "clickInstaller": "Přejděte dolů a klikněte na instalátor, který potřebujete, a stáhněte ho",
+    "setupPage": "Vraťte se na stránku s nastavením, přejděte dolů a zaškrtněte políčko",
+    "wagueKey": "Přepněte se do aplikace WAGYU Key Generator",
+    "secratePhrase": "Klikněte na \"Vytvořit novou tajnou obnovovací frázi\"",
+    "selectNetwork": "Vyberte síť, ve které chcete spustit váš uzel",
     "clickOk": "Klikněte na \"OK\"",
     "clickCreate": "Klikněte na \"VYTVOŘIT\"",
-    "recoveryPhrase": "After your Secret Recovery Phrase is created safe it in a safe place. Click on the copy button.",
+    "recoveryPhrase": "Po vytvoření vaší tajné obnovovací fráze ji uložte na bezpečné místo. Klikněte na tlačítko \"Kopírovat\".",
     "clickNext": "Klikněte na \"DALŠÍ\"",
-    "imSure": "Klikněte na \"JSEM SI JISTÝ\"",
-    "pasteRecovery": "Paste in your Secret Recovery Phrase",
+    "imSure": "Klikněte na \"JSEM SI JISTÝ(Á)\"",
+    "pasteRecovery": "Zadejte vaši tajnou obnovovací frázi",
     "clickCheck": "Klikněte na \"ZKONTROLOVAT\"",
     "needKey": "Zadejte počet klíčů, které potřebujete",
     "typPass": "Zadejte heslo",
     "retypPass": "Znovu zadejte heslo",
     "clickBrowse": "Klikněte na \"PROCHÁZET\"",
-    "chooseFolder": "Choose a folder where you want to save your keys and safe them in a safe place",
-    "clickCreateWait": "Click on “CREATE” and wait for a couple of seconds",
-    "clickClose": "Check if your keys are generated and click on “CLOSE”",
+    "chooseFolder": "Vyberte složku, kam chcete uložit své klíče, a uložte je na bezpečné místo",
+    "clickCreateWait": "Klikněte na \"VYTVOŘIT\" a počkejte pár sekund",
+    "clickClose": "Zkontrolujte, zda jsou vaše klíče generovány a klikněte na \"ZAVŘÍT\"",
     "switchSetup": "Přepnout zpět na stránku nastavení",
-    "dragFile": "Click on “Drag file to uploud or browse” and drag your deposite file in the field",
+    "dragFile": "Klikněte na \"Přetáhnout soubor k nahrání nebo procházet\" a přetáhněte váš soubor do pole",
     "connWalet": "Připojte peněženku, zkontrolujte síť a zůstatek",
-    "understandRisk": "Read the section “Understand the risks” and check every box",
-    "readSection": "Read the section “Make sure you aren’t pished” and check the box",
-    "protectYourself": "Read the section “Protect yourself against double deposits” and check the box",
-    "dblCheck": "Double check everything and click on “CONTINUE”",
+    "understandRisk": "Přečtěte si sekci \"Rozumějte rizikům\" (Understand the risks) a zaškrtněte každé políčko",
+    "readSection": "Přečtěte si sekci \"Ujistěte se, že nejste oklamáni phisingem\" (Make sure you aren't phished) a zaškrtněte políčko",
+    "protectYourself": "Přečtěte si sekci \"Ochrana proti dvojitému vkladu\" (Protect yourself against double deposits) a zaškrtněte políčko",
+    "dblCheck": "Dvakrát vše zkontrolujte a klikněte na \"POKRAČOVAT\"",
     "sendDeposit": "Klikněte na “ODESLAT ZÁLOHU”",
-    "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
-    "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+    "walletPopup": "Vyskočí vaše peněženka, klikněte na \"Potvrdit\" (Confirm) pro odeslání transakce",
+    "contCong": "Klikněte na \"POKRAČOVAT\", blahopřejeme, vytvořili jste klíč validátora"
   },
   "balWid": {
-    "fin": "FINALIZED",
-    "bal": "BALANCE CHANGE"
+    "fin": "DOKONČENO",
+    "bal": "ZMĚNA ZŮSTATKU"
   },
   "headerBtn": {
     "help": "pomoc",
     "notif": "Správa kanálů oznámení",
     "availableUpdt": "K dispozici je nová aktualizace",
     "updtPan": "panel aktualizace",
-    "setting": "Stereum nastavení",
+    "setting": "Nastavení Stereum",
     "logOutBtn": "Odhlásit se"
   },
   "switchNetwork": {
