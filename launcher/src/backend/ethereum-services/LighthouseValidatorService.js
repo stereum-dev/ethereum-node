@@ -48,6 +48,7 @@ export class LighthouseValidatorService extends NodeService {
         "--http-port=5062",
         "--unencrypted-http-transport",
         "--builder-proposals",
+        "--enable-doppelganger-protection",
       ], //command
       null, // entrypoint
       null, // env
