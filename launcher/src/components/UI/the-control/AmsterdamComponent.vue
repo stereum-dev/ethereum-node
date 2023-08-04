@@ -145,8 +145,6 @@ export default {
     },
   },
   mounted() {
-    // this.currentEpochSlot();
-    console.log(this.proposed);
     setInterval(() => {
       this.currentEpochSlot();
     }, 12000);
