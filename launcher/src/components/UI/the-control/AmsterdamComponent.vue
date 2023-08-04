@@ -11,24 +11,37 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
-      <div class="proposed-part">
-        <div class="proposed-rows-title">
-          <span>current justified </span>
-        </div>
-        <div class="proposed-rows">
-          <div
-            v-for="n in proposed"
-            :key="n"
-            class="proposed-square"
-            :class="{ white: n == 0, blue: n != 0 }"
-            @mouseenter="
-              cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${n != 0 ? n : 'null'}`
-            "
-            @mouseleave="cursorLocation = ''"
-          ></div>
+      <div v-if="proposed.length === 0" class="box-wrapper">
+        <div class="spinner-square">
+          <div class="square-1 square"></div>
+          <div class="square-2 square"></div>
+          <div class="square-3 square"></div>
         </div>
       </div>
-      <!-- <div class="justfied-part">
+      <div v-else class="box-wrapper">
+        <div class="proposed-part">
+          <div class="proposed-rows-title">
+            <span>current justified </span>
+          </div>
+
+          <div class="wrapper">
+            <div class="proposed-rows">
+              <div
+                v-for="n in proposed"
+                :key="n"
+                class="proposed-square"
+                :class="{ white: n == 0, blue: n != 0 }"
+                @mouseenter="
+                  cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${
+                    n != 0 ? n : 'null'
+                  }`
+                "
+                @mouseleave="cursorLocation = ''"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="justfied-part">
         <div class="justfied-rows">
           <span>justified</span>
         </div>
@@ -51,16 +64,21 @@
           ></div>
         </div>
       </div> -->
-      <div class="finilized-part">
-        <div class="finilized-row-title"><span>finalized</span></div>
-        <div class="finilized-row">
-          <div
-            v-for="n in justified"
-            :key="n"
-            class="finilized-square"
-            @mouseenter="cursorLocation = `the finilized epoch: ${currentEpochData - 2} and the slot number is ${n}`"
-            @mouseleave="cursorLocation = ''"
-          ></div>
+        <div class="finilized-part">
+          <div class="finilized-row-title"><span>finalized</span></div>
+          <div class="wrapper">
+            <div class="finilized-row">
+              <div
+                v-for="n in justified"
+                :key="n"
+                class="finilized-square"
+                @mouseenter="
+                  cursorLocation = `the finilized epoch: ${currentEpochData - 2} and the slot number is ${n}`
+                "
+                @mouseleave="cursorLocation = ''"
+              ></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -127,10 +145,11 @@ export default {
     },
   },
   mounted() {
-    this.currentEpochSlot();
+    // this.currentEpochSlot();
+    console.log(this.proposed);
     setInterval(() => {
       this.currentEpochSlot();
-    }, 10000);
+    }, 12000);
   },
   methods: {
     async currentEpochSlot() {
@@ -162,6 +181,18 @@ export default {
 };
 </script>
 <style scoped>
+.wrapper {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.box-wrapper {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
 .amsterdam-parent {
   display: flex;
   width: 100%;
@@ -269,6 +300,7 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   margin-top: 1.5%;
+  color: red;
 }
 .finilized-square {
   width: 3%;
@@ -298,4 +330,51 @@ export default {
 
   background: #94deff;
 }
+/*test the load Bar*/
+.spinner-square {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.square {
+  width: 5%;
+  height: 40%;
+  border-radius: 4px;
+}
+
+.square-1 {
+  animation: square-anim 1200ms 0s infinite;
+}
+
+.square-2 {
+  animation: square-anim 1200ms 200ms infinite;
+}
+
+.square-3 {
+  animation: square-anim 1200ms 400ms infinite;
+}
+
+@keyframes square-anim {
+  0% {
+    height: 40%;
+    background-color: rgb(111, 163, 240);
+  }
+  20% {
+    height: 40%;
+  }
+  40% {
+    height: 80%;
+    background-color: rgb(111, 200, 240);
+  }
+  80% {
+    height: 40%;
+  }
+  100% {
+    height: 40%;
+    background-color: rgb(111, 163, 240);
+  }
+}
+/*end of the test*/
 </style>
