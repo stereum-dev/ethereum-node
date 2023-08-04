@@ -15,15 +15,39 @@
         <div class="proposed-rows-title">
           <span>proposed</span>
         </div>
-        <!-- <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div> -->
-        <div class="proposed-rows"><div v-for="n in 32" :key="n" class="proposed-square"></div></div>
+        <div class="proposed-rows">
+          <div
+            v-for="n in proposed"
+            :key="n"
+            class="proposed-square"
+            :class="{ white: n == 0, blue: n != 0 }"
+            @mouseenter="cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${n}`"
+            @mouseleave="cursorLocation = ''"
+          ></div>
+        </div>
       </div>
       <div class="justfied-part">
         <div class="justfied-rows">
           <span>justified</span>
         </div>
-        <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
-        <div class="justfied-rows"><div v-for="n in 32" :key="n" class="square"></div></div>
+        <div class="justfied-rows">
+          <div
+            v-for="n in justified"
+            :key="n"
+            class="square"
+            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData} and the slot number is ${n}`"
+            @mouseleave="cursorLocation = ''"
+          ></div>
+        </div>
+        <div class="justfied-rows">
+          <div
+            v-for="n in justified"
+            :key="n"
+            class="square"
+            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData} and the slot number is ${n}`"
+            @mouseleave="cursorLocation = ''"
+          ></div>
+        </div>
       </div>
       <div class="finilized-part">
         <div class="finilized-row-title"><span>finalized</span></div>
@@ -37,17 +61,24 @@ import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
       showSyncInfo: false,
       counter: null,
-      networkIcon: "",
+
       defaultIcon: "/img/icon/control/spinner.gif",
       days: null,
       date: "",
       pattern: [],
       footerInfo: this.$t("controlPage.netSel"),
+
+      currentSlotData: null,
+      currentEpochData: null,
+      proposed: [],
+      justifiedStart: 0,
+      justified: [],
     };
   },
   computed: {
@@ -57,10 +88,47 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
+    networkIcon() {
+      return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
+    },
   },
-
+  watch: {
+    currentSlotData: "updateResultArray",
+    currentEpochData: "updateResultArray",
+    justifiedStart: {
+      handler(justifiedBegin) {
+        this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
+      },
+      immediate: true,
+    },
+  },
   mounted() {
-    this.networkIcon = this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
+    this.currentEpochSlot();
+    setInterval(() => {
+      this.currentEpochSlot();
+    }, 10000);
+  },
+  methods: {
+    async currentEpochSlot() {
+      let res = await ControlService.getCurrentEpochSlot();
+      this.currentSlotData = res.currentSlot;
+      this.currentEpochData = res.currentEpoch;
+    },
+    updateResultArray() {
+      const arraySize = 32;
+      const resultArray = new Array(arraySize).fill(0);
+      this.proposed = [];
+
+      if (this.currentSlotData !== null && this.currentEpochData !== null) {
+        const index = (((this.currentSlotData - this.currentEpochData * 32) % arraySize) + arraySize) % arraySize;
+
+        for (let i = 0; i <= index; i++) {
+          resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
+        }
+      }
+      this.justifiedStart = resultArray[0] - 32;
+      this.proposed.push(...resultArray);
+    },
   },
 };
 </script>
@@ -175,20 +243,26 @@ export default {
 }
 .finilized-square {
   width: 3%;
-  height: 90%;
+  height: 95%;
   margin: 0 0.5%;
-  background: blue;
+  background: #94deff;
 }
 .proposed-square {
   width: 3%;
   height: 90%;
   margin: 0 0.5%;
-  background: blue;
+}
+.white {
+  background: #c1c1c1;
+}
+.blue {
+  background: #94deff;
 }
 .square {
   width: 23%;
   height: 40%;
   margin: 0 0.5%;
-  background: #c1c1c1;
+
+  background: #94deff;
 }
 </style>
