@@ -13,7 +13,7 @@
     <div class="docBox">
       <div class="proposed-part">
         <div class="proposed-rows-title">
-          <span>proposed</span>
+          <span>current justified </span>
         </div>
         <div class="proposed-rows">
           <div
@@ -21,12 +21,14 @@
             :key="n"
             class="proposed-square"
             :class="{ white: n == 0, blue: n != 0 }"
-            @mouseenter="cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${n}`"
+            @mouseenter="
+              cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${n != 0 ? n : 'null'}`
+            "
             @mouseleave="cursorLocation = ''"
           ></div>
         </div>
       </div>
-      <div class="justfied-part">
+      <!-- <div class="justfied-part">
         <div class="justfied-rows">
           <span>justified</span>
         </div>
@@ -44,14 +46,22 @@
             v-for="n in justified"
             :key="n"
             class="square"
-            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData} and the slot number is ${n}`"
+            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData - 1} and the slot number is ${n}`"
             @mouseleave="cursorLocation = ''"
           ></div>
         </div>
-      </div>
+      </div> -->
       <div class="finilized-part">
         <div class="finilized-row-title"><span>finalized</span></div>
-        <div class="finilized-row"><div v-for="n in 32" :key="n" class="finilized-square"></div></div>
+        <div class="finilized-row">
+          <div
+            v-for="n in justified"
+            :key="n"
+            class="finilized-square"
+            @mouseenter="cursorLocation = `the finilized epoch: ${currentEpochData - 2} and the slot number is ${n}`"
+            @mouseleave="cursorLocation = ''"
+          ></div>
+        </div>
       </div>
     </div>
   </div>
@@ -79,6 +89,8 @@ export default {
       proposed: [],
       justifiedStart: 0,
       justified: [],
+      finalizedStart: [],
+      finalized: [],
     };
   },
   computed: {
@@ -95,9 +107,21 @@ export default {
   watch: {
     currentSlotData: "updateResultArray",
     currentEpochData: "updateResultArray",
+    // justifiedStart: {
+    //   handler(justifiedBegin) {
+    //     this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
+    //   },
+    //   immediate: true,
+    // },
     justifiedStart: {
       handler(justifiedBegin) {
-        this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
+        this.epochUpdater(justifiedBegin, "justified");
+      },
+      immediate: true,
+    },
+    finalizedStart: {
+      handler(finalizedBegin) {
+        this.epochUpdater(finalizedBegin, "finalized");
       },
       immediate: true,
     },
@@ -127,7 +151,12 @@ export default {
         }
       }
       this.justifiedStart = resultArray[0] - 32;
+      this.finalizedStart = resultArray[0] - 64;
       this.proposed.push(...resultArray);
+    },
+    epochUpdater(newValue, arrayName) {
+      const newArray = new Array(32).fill(0).map((_, index) => newValue + index + 1);
+      this[arrayName] = newArray;
     },
   },
 };
@@ -202,7 +231,7 @@ export default {
 .finilized-part,
 .proposed-part {
   width: 95%;
-  height: 25%;
+  height: 48%;
 
   border-radius: 0 0 10px 0;
   display: flex;
@@ -220,14 +249,14 @@ export default {
 .finilized-row-title,
 .proposed-rows-title {
   width: 95%;
-  height: 40%;
+  height: 20%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   font-size: 50%;
   font-weight: 700;
   text-transform: uppercase;
-  margin: 1% 0;
+  margin: 0.5% 0;
 }
 .finilized-row,
 .proposed-rows {
@@ -251,6 +280,10 @@ export default {
   width: 3%;
   height: 90%;
   margin: 0 0.5%;
+}
+.finilized-square:hover,
+.proposed-square:hover {
+  transform: scale(1.3);
 }
 .white {
   background: #c1c1c1;
