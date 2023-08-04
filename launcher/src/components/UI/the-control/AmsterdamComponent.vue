@@ -11,14 +11,75 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
-      <comming-soon></comming-soon>
-      <div v-for="obj in pattern" :key="obj" class="line-squares no-events" :data-tooltip="'EPOCH: ' + obj.slot">
-        <div
-          v-for="square in obj.bar"
-          :key="square"
-          class="square"
-          :style="{ backgroundColor: getColor(square) }"
-        ></div>
+      <div v-if="proposed.length === 0" class="box-wrapper">
+        <div class="spinner-square">
+          <div class="square-1 square"></div>
+          <div class="square-2 square"></div>
+          <div class="square-3 square"></div>
+        </div>
+      </div>
+      <div v-else class="box-wrapper">
+        <div class="proposed-part">
+          <div class="proposed-rows-title">
+            <span>current justified </span>
+          </div>
+
+          <div class="wrapper">
+            <div class="proposed-rows">
+              <div
+                v-for="n in proposed"
+                :key="n"
+                class="proposed-square"
+                :class="{ white: n == 0, blue: n != 0 }"
+                @mouseenter="
+                  cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${
+                    n != 0 ? n : 'null'
+                  }`
+                "
+                @mouseleave="cursorLocation = ''"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="justfied-part">
+        <div class="justfied-rows">
+          <span>justified</span>
+        </div>
+        <div class="justfied-rows">
+          <div
+            v-for="n in justified"
+            :key="n"
+            class="square"
+            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData} and the slot number is ${n}`"
+            @mouseleave="cursorLocation = ''"
+          ></div>
+        </div>
+        <div class="justfied-rows">
+          <div
+            v-for="n in justified"
+            :key="n"
+            class="square"
+            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData - 1} and the slot number is ${n}`"
+            @mouseleave="cursorLocation = ''"
+          ></div>
+        </div>
+      </div> -->
+        <div class="finilized-part">
+          <div class="finilized-row-title"><span>finalized</span></div>
+          <div class="wrapper">
+            <div class="finilized-row">
+              <div
+                v-for="n in justified"
+                :key="n"
+                class="finilized-square"
+                @mouseenter="
+                  cursorLocation = `the finilized epoch: ${currentEpochData - 2} and the slot number is ${n}`
+                "
+                @mouseleave="cursorLocation = ''"
+              ></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -28,17 +89,26 @@ import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
       showSyncInfo: false,
       counter: null,
-      networkIcon: "",
+
       defaultIcon: "/img/icon/control/spinner.gif",
       days: null,
       date: "",
       pattern: [],
       footerInfo: this.$t("controlPage.netSel"),
+
+      currentSlotData: null,
+      currentEpochData: null,
+      proposed: [],
+      justifiedStart: 0,
+      justified: [],
+      finalizedStart: [],
+      finalized: [],
     };
   },
   computed: {
@@ -48,134 +118,78 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
+    networkIcon() {
+      return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
+    },
   },
-  created() {
-    // Add initial objects to the array
-    for (let i = 0; i < 5; i++) {
-      this.epochMonitoring();
-    }
+  watch: {
+    currentSlotData: "updateResultArray",
+    currentEpochData: "updateResultArray",
+    // justifiedStart: {
+    //   handler(justifiedBegin) {
+    //     this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
+    //   },
+    //   immediate: true,
+    // },
+    justifiedStart: {
+      handler(justifiedBegin) {
+        this.epochUpdater(justifiedBegin, "justified");
+      },
+      immediate: true,
+    },
+    finalizedStart: {
+      handler(finalizedBegin) {
+        this.epochUpdater(finalizedBegin, "finalized");
+      },
+      immediate: true,
+    },
   },
   mounted() {
-    this.networkIcon = this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
-    // Call the addObject() function every sec
     setInterval(() => {
-      this.epochMonitoring();
-    }, 1000);
+      this.currentEpochSlot();
+    }, 12000);
   },
   methods: {
-    epochMonitoring() {
-      // Create a new object an it can wire, the stracture has to be like this
-      //stracture started
-      const newObj = {
-        id: 1,
-        title: "epoch",
-        // slot: 12345,
-        // bar: Array(32).fill(0),
-        //the random just for showing the functionality is and tha last comment are the true pattern
-        slot: Math.floor(Math.random() * 100000),
-        bar: Array(32)
-          .fill(0)
-          .map(() => Math.floor(Math.random() * 5)),
-      };
-      // end of stracture
-
-      // Add the new object to the beginning of the array
-      this.pattern.unshift(newObj);
-
-      // If the array has more than 5 objects, remove the last one
-      if (this.pattern.length > 5) {
-        this.pattern.pop();
-      }
-
-      // Update the ids of the remaining objects
-      this.pattern.forEach((obj, index) => {
-        obj.id = index + 1;
-      });
+    async currentEpochSlot() {
+      let res = await ControlService.getCurrentEpochSlot();
+      this.currentSlotData = res.currentSlot;
+      this.currentEpochData = res.currentEpoch;
     },
-    getColor(number) {
-      switch (number) {
-        case 0:
-          return "#707070";
-        case 1:
-          return "#74FA65";
-        case 2:
-          return "#FFD924";
-        case 3:
-          return "#FA831B";
-        case 4:
-          return "#EB5353";
+    updateResultArray() {
+      const arraySize = 32;
+      const resultArray = new Array(arraySize).fill(0);
+      this.proposed = [];
+
+      if (this.currentSlotData !== null && this.currentEpochData !== null) {
+        const index = (((this.currentSlotData - this.currentEpochData * 32) % arraySize) + arraySize) % arraySize;
+
+        for (let i = 0; i <= index; i++) {
+          resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
+        }
       }
+      this.justifiedStart = resultArray[0] - 33;
+      this.finalizedStart = resultArray[0] - 64;
+      this.proposed.push(...resultArray);
+    },
+    epochUpdater(newValue, arrayName) {
+      const newArray = new Array(32).fill(0).map((_, index) => newValue + index + 1);
+      this[arrayName] = newArray;
     },
   },
 };
 </script>
 <style scoped>
-.no-events {
-  pointer-events: none;
-}
-[data-tooltip] {
-  position: relative;
-  cursor: default;
-}
-[data-tooltip]::after {
-  position: absolute;
-  width: max-content;
-  left: calc(50%-25%);
-
-  text-align: center;
-  content: attr(data-tooltip);
-  color: #eee;
-  background: black;
-  border-radius: 5px;
-  font-size: 70%;
-  padding: 2% 3%;
-  border: 1px solid #929292;
-  text-transform: uppercase;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(20%);
-  transition: opacity 0.3s transform 0.2s;
-}
-[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-  transform: rotateY(0);
-}
-.serviceName {
+.wrapper {
+  width: 100%;
+  height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.box-wrapper {
   width: 100%;
   height: 100%;
-  flex-direction: column;
-}
-.serviceName_val {
-  display: flex;
-  width: 100%;
-  height: 50%;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 80%;
-}
-.serviceName-row {
-  display: flex;
-  width: 25%;
-  justify-items: center;
-  align-items: center;
-}
-.serviceName-greenRow,
-.serviceName-blueRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 70%;
-  font-weight: bold;
-}
-.serviceName-greenRow {
-  color: #5ed966;
-}
-.serviceName-blueRow {
-  color: #4dfff3;
+  box-sizing: border-box;
 }
 .amsterdam-parent {
   display: flex;
@@ -219,19 +233,146 @@ export default {
   justify-content: center;
   align-items: flex-start;
   border-radius: 0 10px 10px 0;
-  position: relative;
 }
-.line-squares {
-  width: 100%;
-  height: 20%;
+
+.justfied-part {
+  width: 95%;
+  height: 45%;
+  display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  border-top: 1px solid #c1c1c1;
+}
+.justfied-rows {
+  width: 100%;
+  height: 30%;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.justfied-rows span {
+  margin-left: 2.5%;
+  font-size: 45%;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.finilized-part,
+.proposed-part {
+  width: 95%;
+  height: 48%;
+
+  border-radius: 0 0 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 1%;
+}
+.proposed-part {
+  margin-bottom: 1%;
+}
+.finilized-part {
+  border-top: 1px solid #c1c1c1;
+}
+.finilized-row-title,
+.proposed-rows-title {
+  width: 95%;
+  height: 20%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 50%;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0.5% 0;
+}
+.finilized-row,
+.proposed-rows {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 60%;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 1.5%;
+  color: red;
+}
+.finilized-square {
+  width: 3%;
+  height: 95%;
+  margin: 0 0.5%;
+  background: #94deff;
+}
+.proposed-square {
+  width: 3%;
+  height: 90%;
+  margin: 0 0.5%;
+}
+.finilized-square:hover,
+.proposed-square:hover {
+  transform: scale(1.3);
+}
+.white {
+  background: #c1c1c1;
+}
+.blue {
+  background: #94deff;
 }
 .square {
-  width: 1.5%;
-  height: 20%;
-  margin: 0 0.7%;
-  display: inline-block;
+  width: 23%;
+  height: 40%;
+  margin: 0 0.5%;
+
+  background: #94deff;
 }
+/*test the load Bar*/
+.spinner-square {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.square {
+  width: 5%;
+  height: 40%;
+  border-radius: 4px;
+}
+
+.square-1 {
+  animation: square-anim 1200ms 0s infinite;
+}
+
+.square-2 {
+  animation: square-anim 1200ms 200ms infinite;
+}
+
+.square-3 {
+  animation: square-anim 1200ms 400ms infinite;
+}
+
+@keyframes square-anim {
+  0% {
+    height: 40%;
+    background-color: rgb(111, 163, 240);
+  }
+  20% {
+    height: 40%;
+  }
+  40% {
+    height: 80%;
+    background-color: rgb(111, 200, 240);
+  }
+  80% {
+    height: 40%;
+  }
+  100% {
+    height: 40%;
+    background-color: rgb(111, 163, 240);
+  }
+}
+/*end of the test*/
 </style>
