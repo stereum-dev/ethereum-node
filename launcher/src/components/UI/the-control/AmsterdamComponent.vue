@@ -150,7 +150,7 @@ export default {
           resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
         }
       }
-      this.justifiedStart = resultArray[0] - 32;
+      this.justifiedStart = resultArray[0] - 33;
       this.finalizedStart = resultArray[0] - 64;
       this.proposed.push(...resultArray);
     },
