@@ -10,7 +10,7 @@
           <span id="balance">{{ $t("displayValidator.balance") }}</span>
           <span id="option">{{ $t("displayValidator.option") }}</span>
         </div>
-        <key-modal v-if="riskWarning" @hide-modal="hideWDialog">
+        <KeyModal v-if="riskWarning" @hide-modal="hideWDialog">
           <div class="warning-container">
             <div class="icon-part">
               <img src="/img/icon/the-staking/stereum-error.png" alt="warning" />
@@ -35,8 +35,8 @@
               </div>
             </div>
           </div>
-        </key-modal>
-        <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
+        </KeyModal>
+        <KeyModal v-if="bDialogVisible" @hide-modal="hideBDialog">
           <div :class="{ 'bg-blue': exitInfo }" class="title-box">
             <span>{{
               importIsProcessing === true || importIsDone === true ? $t("displayValidator.importKey") : ""
@@ -80,7 +80,7 @@
               <span>Close</span>
             </div>
           </div>
-        </key-modal>
+        </KeyModal>
         <ImportSlashingModal
           v-if="ImportSlashingActive"
           @remove-modal="removeImportSlashingHandler"
@@ -172,10 +172,7 @@
                       @mouseleave="cursorLocation = ''"
                     />
                   </div>
-                  <div
-                    class="withdraw-box"
-                    :class="{ disabled: ['goerli', 'mainnet', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
-                  >
+                  <div class="withdraw-box">
                     <img
                       class="exit-icon"
                       src="/img/icon/the-staking/withdraw.png"

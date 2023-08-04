@@ -4,7 +4,6 @@
       <div v-for="(service, idx) in runningServices" :key="idx" class="service-icon">
         <div class="icon-box" onmousedown="return false">
           <img
-            v-show="isImgExists"
             :src="service.hIcon"
             alt="service-icon"
             @click="openServiceBrowser(service.service)"
@@ -12,12 +11,11 @@
             @mouseleave="cursorLocation = ''"
           />
         </div>
-
-        <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
-        <ssv-modal v-if="showSsvWindow" @close-window="closeServiceBrowser"></ssv-modal>
-        <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser" />
-        <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser"></mevboost-modal>
       </div>
+      <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
+      <ssv-modal v-if="showSsvWindow" @close-window="closeServiceBrowser"></ssv-modal>
+      <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser" />
+      <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser"></mevboost-modal>
       <div class="arrow-box">
         <div class="right-arrow left-paddle paddle" @click="scrollRight">
           <img alt="update-icon" src="/img/icon/header-icons/right.png" />
@@ -44,7 +42,6 @@ export default {
   data() {
     return {
       isServiceAvailable: true,
-      isImgExists: true,
       showGrafanaWindow: false,
       showSsvWindow: false,
       showPrometheusWindow: false,
@@ -75,20 +72,17 @@ export default {
     },
     //open & close modal for each service
     openServiceBrowser(serviceName) {
-      this.runningServices.filter((item) => {
-        item.service == serviceName;
-        if (serviceName == "GrafanaService") {
-          this.showGrafanaWindow = true;
-        } else if (serviceName == "SSVNetworkService") {
-          this.showSsvWindow = true;
-        } else if (serviceName == "PrometheusService") {
-          this.showPrometheusWindow = true;
-        } else if (serviceName == "FlashbotsMevBoostService") {
-          this.showMevboostWindow = true;
-        } else {
-          return;
-        }
-      });
+      if (serviceName == "GrafanaService") {
+        this.showGrafanaWindow = true;
+      } else if (serviceName == "SSVNetworkService") {
+        this.showSsvWindow = true;
+      } else if (serviceName == "PrometheusService") {
+        this.showPrometheusWindow = true;
+      } else if (serviceName == "FlashbotsMevBoostService") {
+        this.showMevboostWindow = true;
+      } else {
+        return;
+      }
     },
     closeServiceBrowser() {
       this.showGrafanaWindow = false;

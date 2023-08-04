@@ -18,7 +18,7 @@
           <router-link v-else-if="next !== 'disabled' && next" :to="{ path: next }" class="install">
             <span>{{ $t("pluginName.next") }}</span>
           </router-link>
-          <router-link v-else to="{ path:'' }" class="install" @click="$emit('runInstall')">
+          <router-link v-else to="play" class="install" @click="$emit('runInstall')">
             <span>{{ $t("pluginName.next") }}</span>
           </router-link>
         </div>

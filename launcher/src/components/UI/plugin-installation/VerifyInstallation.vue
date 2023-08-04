@@ -68,7 +68,6 @@ export default {
   methods: {
     runInstalltion: async function () {
       try {
-        this.$router.push("/play");
         this.refresh = false;
         await ControlService.prepareOneClickInstallation(this.installationPath);
         const restarted = await ControlService.restartServer();

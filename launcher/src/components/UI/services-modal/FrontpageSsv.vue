@@ -21,14 +21,7 @@
   </div>
 </template>
 <script>
-export default {
-  props : {
-    pubkey: {
-      type: String,
-      required: true,
-    },
-  },
-};
+export default {};
 </script>
 <style scoped>
 .pubkey-parent {
