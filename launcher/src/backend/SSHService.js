@@ -1,4 +1,4 @@
-const { Client } = require("ssh2");
+const { Client, utils: { generateKeyPairSync } } = require("ssh2");
 import { createTunnel } from "./SSHServiceTunnel";
 const log = require("electron-log");
 
@@ -64,6 +64,16 @@ export class SSHService {
       this.removeConnectionCount = 0;
       this.connectionPool.pop().end();
     }
+  }
+
+  getConnectionFromPool() {
+    let conn
+    let maxVal = 5
+    while (!conn && maxVal < 10) {
+      conn = (this.connectionPool.find(c => c._chanMgr._count < maxVal))
+      maxVal++
+    }
+    return conn
   }
 
   async connect(connectionInfo) {
@@ -137,12 +147,8 @@ export class SSHService {
 
   async execCommand(command) {
     return new Promise((resolve, reject) => {
-      let conn
-      let maxVal = 5
-      while (!conn && maxVal < 10) {
-        conn = (this.connectionPool.find(c => c._chanMgr._count < maxVal))
-        maxVal++
-      }
+      let conn = this.getConnectionFromPool()
+
       const data = {
         rc: -1,
         stdout: "",
@@ -236,5 +242,40 @@ export class SSHService {
         reject("No Tunnels to Close!");
       }
     });
+  }
+
+  async changePassword(password) {
+    try {
+      const result = await this.exec(`echo -e "${this.connectionInfo.user}:${password}" | chpasswd`)
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed changing password: " + SSHService.extractExecError(result));
+      }
+      return "Password changed successfully!"
+    } catch (error) {
+      log.error("Failed changing password: ", error)
+    }
+  }
+
+  generateKeyPair(keyType, opts) {
+    try {
+      switch (keyType) {
+        case "rsa": {
+          opts.bits = 4096
+          break;
+        }
+        case "ecdsa": {
+          opts.bits = 521
+          break;
+        }
+        case "ed25519": {
+          break;
+        }
+      }
+      if (opts.passphrase && !opts.cypher)
+        opts = { ...opts, ...{ cypher: "aes256-cbc" } }
+      return generateKeyPairSync(keyType, opts)
+    } catch (err) {
+      log.error("Failed generating key pair: ", err)
+    }
   }
 }
