@@ -324,7 +324,7 @@ export default {
 .square {
   width: 23%;
   height: 40%;
-  margin: 0 0.5%;
+  margin: 0 2.5%;
 
   background: #94deff;
 }
@@ -357,21 +357,21 @@ export default {
 @keyframes square-anim {
   0% {
     height: 40%;
-    background-color: rgb(111, 163, 240);
+    background-color: #336666;
   }
   20% {
     height: 40%;
   }
   40% {
     height: 80%;
-    background-color: rgb(111, 200, 240);
+    background-color: #478e8e;
   }
   80% {
     height: 40%;
   }
   100% {
     height: 40%;
-    background-color: rgb(111, 163, 240);
+    background-color: #336666;
   }
 }
 /*end of the test*/
