@@ -69,11 +69,11 @@
           <div class="wrapper">
             <div class="finilized-row">
               <div
-                v-for="n in justified"
+                v-for="n in finalized"
                 :key="n"
                 class="finilized-square"
                 @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentEpochData - 2} and the slot number is ${n}`
+                  cursorLocation = `the finilized epoch: ${currentEpochData - 1} and the slot number is ${n}`
                 "
                 @mouseleave="cursorLocation = ''"
               ></div>
@@ -131,12 +131,12 @@ export default {
     //   },
     //   immediate: true,
     // },
-    justifiedStart: {
-      handler(justifiedBegin) {
-        this.epochUpdater(justifiedBegin, "justified");
-      },
-      immediate: true,
-    },
+    // justifiedStart: {
+    //   handler(justifiedBegin) {
+    //     this.epochUpdater(justifiedBegin, "justified");
+    //   },
+    //   immediate: true,
+    // },
     finalizedStart: {
       handler(finalizedBegin) {
         this.epochUpdater(finalizedBegin, "finalized");
@@ -167,8 +167,8 @@ export default {
           resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
         }
       }
-      this.justifiedStart = resultArray[0] - 33;
-      this.finalizedStart = resultArray[0] - 64;
+      // this.justifiedStart = resultArray[0] - 33;
+      this.finalizedStart = resultArray[0] - 33;
       this.proposed.push(...resultArray);
     },
     epochUpdater(newValue, arrayName) {
@@ -305,11 +305,13 @@ export default {
   height: 95%;
   margin: 0 0.5%;
   background: #94deff;
+  border-radius: 5px;
 }
 .proposed-square {
   width: 3%;
   height: 90%;
   margin: 0 0.5%;
+  border-radius: 5px;
 }
 .finilized-square:hover,
 .proposed-square:hover {
@@ -324,7 +326,7 @@ export default {
 .square {
   width: 23%;
   height: 40%;
-  margin: 0 0.5%;
+  margin: 0 2.5%;
 
   background: #94deff;
 }
@@ -357,21 +359,21 @@ export default {
 @keyframes square-anim {
   0% {
     height: 40%;
-    background-color: rgb(111, 163, 240);
+    background-color: #336666;
   }
   20% {
     height: 40%;
   }
   40% {
     height: 80%;
-    background-color: rgb(111, 200, 240);
+    background-color: #478e8e;
   }
   80% {
     height: 40%;
   }
   100% {
     height: 40%;
-    background-color: rgb(111, 163, 240);
+    background-color: #336666;
   }
 }
 /*end of the test*/
