@@ -284,7 +284,11 @@ export default {
           option.disabled = false;
         }
         if (option.type === "select" || option.type === "text" || option.type === "toggle") {
-          option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
+          if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+            option.changeValue = this.item.yaml.indexOf(option.pattern) === -1 ? false : true;
+          } else {
+            option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
+          }
         }
         return {
           ...option,
@@ -298,14 +302,41 @@ export default {
         new RegExp("(autoupdate: )(.*)(\\n)"),
         "$1" + this.checkAutoUpdate() + "$3"
       );
-      this.item.expertOptions.forEach((option) => {
-        if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
-          if (option.changed) {
-            this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
+
+      if (this.item.service === "LighthouseValidatorService") {
+        this.item.expertOptions.forEach((option) => {
+          if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
+            if (option.changed) {
+              if (option.title === "Doppelganger") {
+                let doppelgangerEnabled = this.item.yaml.indexOf(option.pattern) === -1 ? false : true;
+                if (option.changeValue && !doppelgangerEnabled) {
+                  this.item.yaml = this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern}\n`);
+                } else {
+                  this.item.yaml = this.item.yaml
+                    .split("\n")
+                    .filter(function (line) {
+                      return line.indexOf(option.pattern) == -1;
+                    })
+                    .join("\n");
+                }
+              } else {
+                this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
+              }
+            }
+            option.changed = false;
           }
-          option.changed = false;
-        }
-      });
+        });
+      } else {
+        this.item.expertOptions.forEach((option) => {
+          if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
+            if (option.changed) {
+              this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
+            }
+            option.changed = false;
+          }
+        });
+      }
+
       if (this.item.service === "SSVNetworkService")
         await ControlService.writeSSVNetworkConfig({
           serviceID: this.item.config.serviceID,
