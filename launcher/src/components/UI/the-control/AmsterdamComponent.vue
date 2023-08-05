@@ -305,11 +305,13 @@ export default {
   height: 95%;
   margin: 0 0.5%;
   background: #94deff;
+  border-radius: 5px;
 }
 .proposed-square {
   width: 3%;
   height: 90%;
   margin: 0 0.5%;
+  border-radius: 5px;
 }
 .finilized-square:hover,
 .proposed-square:hover {
