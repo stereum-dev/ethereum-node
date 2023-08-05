@@ -324,7 +324,7 @@ export default {
 .square {
   width: 23%;
   height: 40%;
-  margin: 0 0.5%;
+  margin: 0 2.5%;
 
   background: #94deff;
 }
