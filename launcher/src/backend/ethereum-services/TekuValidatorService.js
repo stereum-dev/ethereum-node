@@ -62,7 +62,7 @@ export class TekuValidatorService extends NodeService {
       null, // user
       network, // network
       null, // executionClients
-      consensusClients, //consensusClients
+      consensusClients //consensusClients
     );
     return service;
   }
@@ -76,9 +76,7 @@ export class TekuValidatorService extends NodeService {
   }
 
   getAvailablePorts() {
-    return [
-      new ServicePortDefinition(5052, "tcp", "Validator API Port"),
-    ];
+    return [new ServicePortDefinition(5052, "tcp", "Validator API Port")];
   }
 }
 

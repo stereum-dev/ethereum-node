@@ -34,6 +34,7 @@ export class LighthouseValidatorService extends NodeService {
       [
         "lighthouse",
         "vc",
+        "--enable-doppelganger-protection",
         "--debug-level=debug",
         `--network=${network}`,
         `--beacon-nodes=${eth2Nodes}`,
