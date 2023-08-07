@@ -163,12 +163,10 @@ export default {
     async currentEpochSlot() {
       try {
         let res = await ControlService.getCurrentEpochSlot();
+
         if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
           this.currentSlotData = res.currentSlot;
-
           this.currentEpochData = res.currentEpoch;
-        } else {
-          console.error("Invalid response structure from ControlService.getCurrentEpochSlot()");
         }
       } catch (error) {
         console.error("An error occurred:", error);
