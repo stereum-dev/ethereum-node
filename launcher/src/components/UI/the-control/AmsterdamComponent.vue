@@ -147,19 +147,32 @@ export default {
   mounted() {
     if (this.currentNetwork.id === 4) {
       setInterval(() => {
-        this.currentEpochSlot();
+        if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
+          this.currentEpochSlot();
+        }
       }, 5000);
     } else {
       setInterval(() => {
-        this.currentEpochSlot();
+        if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
+          this.currentEpochSlot();
+        }
       }, 12000);
     }
   },
   methods: {
     async currentEpochSlot() {
-      let res = await ControlService.getCurrentEpochSlot();
-      this.currentSlotData = res.currentSlot;
-      this.currentEpochData = res.currentEpoch;
+      try {
+        let res = await ControlService.getCurrentEpochSlot();
+        if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
+          this.currentSlotData = res.currentSlot;
+
+          this.currentEpochData = res.currentEpoch;
+        } else {
+          console.error("Invalid response structure from ControlService.getCurrentEpochSlot()");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
     },
     updateEpoch() {
       const arraySize = this.currentNetwork.id === 4 ? 16 : 32;
@@ -169,7 +182,6 @@ export default {
       if (this.currentSlotData !== null && this.currentEpochData !== null) {
         const index =
           (((this.currentSlotData - this.currentEpochData * arraySize) % arraySize) + arraySize) % arraySize;
-
         for (let i = 0; i <= index; i++) {
           resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
         }
