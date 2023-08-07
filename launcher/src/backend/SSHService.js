@@ -1,5 +1,6 @@
 const { Client, utils: { generateKeyPairSync } } = require("ssh2");
 import { createTunnel } from "./SSHServiceTunnel";
+import { StringUtils } from "./StringUtils";
 const log = require("electron-log");
 
 export class SSHService {
@@ -256,7 +257,7 @@ export class SSHService {
     }
   }
 
-  generateKeyPair(keyType, opts) {
+  generateKeyPair(keyType = "ed25519", opts = {}) {
     try {
       switch (keyType) {
         case "rsa": {
@@ -271,11 +272,42 @@ export class SSHService {
           break;
         }
       }
-      if (opts.passphrase && !opts.cypher)
-        opts = { ...opts, ...{ cypher: "aes256-cbc" } }
+      if (opts.passphrase && !opts.cipher)
+        opts = { ...opts, ...{ cipher: "aes256-cbc" } }
       return generateKeyPairSync(keyType, opts)
     } catch (err) {
       log.error("Failed generating key pair: ", err)
     }
+  }
+
+  async readSSHKeyFile(path = `/home/${this.connectionInfo.user}/.ssh`) {
+    let authorizedKeys = []
+    try {
+      if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
+      let result = await this.exec(`cat ${path}/authorized_keys`);
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+      }
+      authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
+    } catch (err) {
+      log.error("Can't read authorized keys ", err);
+      return []
+    }
+    return authorizedKeys;
+  }
+
+  async writeSSHKeyFile(keys = [], path = `/home/${this.connectionInfo.user}/.ssh`) {
+    try {
+      if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
+      let newKeys = keys.join("\n")
+      let result = await this.exec(`echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${path}/authorized_keys`);
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));
+      }
+    } catch (err) {
+      log.error("Can't write authorized keys ", err);
+      return []
+    }
+    return keys;
   }
 }
