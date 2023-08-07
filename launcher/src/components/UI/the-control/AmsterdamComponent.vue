@@ -123,8 +123,8 @@ export default {
     },
   },
   watch: {
-    currentSlotData: "updateResultArray",
-    currentEpochData: "updateResultArray",
+    currentSlotData: "updateEpoch",
+    currentEpochData: "updateEpoch",
     // justifiedStart: {
     //   handler(justifiedBegin) {
     //     this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
@@ -145,9 +145,15 @@ export default {
     },
   },
   mounted() {
-    setInterval(() => {
-      this.currentEpochSlot();
-    }, 12000);
+    if (this.currentNetwork.id === 4) {
+      setInterval(() => {
+        this.currentEpochSlot();
+      }, 5000);
+    } else {
+      setInterval(() => {
+        this.currentEpochSlot();
+      }, 12000);
+    }
   },
   methods: {
     async currentEpochSlot() {
@@ -155,24 +161,26 @@ export default {
       this.currentSlotData = res.currentSlot;
       this.currentEpochData = res.currentEpoch;
     },
-    updateResultArray() {
-      const arraySize = 32;
+    updateEpoch() {
+      const arraySize = this.currentNetwork.id === 4 ? 16 : 32;
       const resultArray = new Array(arraySize).fill(0);
       this.proposed = [];
 
       if (this.currentSlotData !== null && this.currentEpochData !== null) {
-        const index = (((this.currentSlotData - this.currentEpochData * 32) % arraySize) + arraySize) % arraySize;
+        const index =
+          (((this.currentSlotData - this.currentEpochData * arraySize) % arraySize) + arraySize) % arraySize;
 
         for (let i = 0; i <= index; i++) {
           resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
         }
       }
       // this.justifiedStart = resultArray[0] - 33;
-      this.finalizedStart = resultArray[0] - 33;
+      this.finalizedStart = resultArray[0] - (arraySize + 1);
       this.proposed.push(...resultArray);
     },
     epochUpdater(newValue, arrayName) {
-      const newArray = new Array(32).fill(0).map((_, index) => newValue + index + 1);
+      const arraySize = this.currentNetwork.id === 4 ? 16 : 32;
+      const newArray = new Array(arraySize).fill(0).map((_, index) => newValue + index + 1);
       this[arrayName] = newArray;
     },
   },
