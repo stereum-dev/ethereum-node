@@ -59,7 +59,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
           :key="index"
           class="selectBox"
-          :class="{ unvisible: isExpertModeActive && prometheusExpertModeActive }"
+          :class="{ unvisible: isExpertModeActive}"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
