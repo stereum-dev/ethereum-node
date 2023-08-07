@@ -494,6 +494,70 @@ export class NodeConnection {
     return;
   }
 
+  async readPrometheusConfig(serviceID) {
+    let prometheusConfig;
+    try {
+      const service = await this.readServiceConfiguration(serviceID);
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/etc/prometheus")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+
+      prometheusConfig = await this.sshService.exec(`cat ${configPath}/prometheus.yml`);
+    } catch (err) {
+      log.error("Can't read Prometheus config " + serviceID, err);
+      throw new Error("Can't read Prometheus config " + serviceID + ": " + err);
+    }
+
+    if (SSHService.checkExecError(prometheusConfig)) {
+      throw new Error("Failed reading Prometheus config " + serviceID + ": " + SSHService.extractExecError(prometheusConfig));
+    }
+
+    return prometheusConfig.stdout;
+  }
+
+  async writePrometheusConfig(serviceID, config) {
+    let configStatus;
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "write Prometheus config", otherRunRef: ref });
+    const service = await this.readServiceConfiguration(serviceID);
+    try {
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/etc/prometheus")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+      configStatus = await this.sshService.exec(
+        "echo -e " + StringUtils.escapeStringForShell(config.trim()) + ` > ${configPath}/prometheus.yml`
+      );
+    } catch (err) {
+      this.taskManager.otherSubTasks.push({
+        name: "write Prometheus config yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      log.error("Can't write Prometheus config", err);
+      throw new Error("Can't write Prometheus config: " + err);
+    }
+
+    if (SSHService.checkExecError(configStatus)) {
+      this.taskManager.otherSubTasks.push({
+        name: "write Prometheus config yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("Can't write Prometheus config: " + SSHService.extractExecError(configStatus));
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "write Prometheus config yaml",
+      otherRunRef: ref,
+      status: true,
+    });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    return;
+  }
+
   /**
    * write a specific service YAML
    *

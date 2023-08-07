@@ -12,13 +12,13 @@
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- plugin docs row -->
-        <div v-if="!isExpertModeActive && !ssvExpertModeActive" class="docBox">
+        <div v-if="!isExpertModeActive && !ssvExpertModeActive && !prometheusExpertModeActive" class="docBox">
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/doc.png" alt="icon" />
           <span class="docTitle">SERVICE DOCS</span>
           <span class="openBtn" @click="openDocs(item.docsUrl)">open</span>
         </div>
         <!-- expert mode row -->
-        <div v-if="!ssvExpertModeActive" class="dataTitleBox" @click="openExpertMode">
+        <div v-if="!ssvExpertModeActive && !prometheusExpertModeActive" class="dataTitleBox" @click="openExpertMode">
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
           <span>Expert Mode</span>
           <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
@@ -32,6 +32,16 @@
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
           <span>SSV Configuration</span>
           <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+        </div>
+        <div
+          v-if="item.service === 'PrometheusService' && !isExpertModeActive"
+          class="dataTitleBox"
+          @click="openPrometheusExpertMode"
+        >
+          <span></span>
+          <span>Prometheus Configuration</span>
+          <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
 
@@ -49,7 +59,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
           :key="index"
           class="selectBox"
-          :class="{ unvisible: isExpertModeActive }"
+          :class="{ unvisible: isExpertModeActive || prometheusExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
@@ -90,7 +100,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
           class="toggleTextBox"
-          :class="{ unvisible: isExpertModeActive }"
+          :class="{ unvisible: isExpertModeActive || prometheusExpertModeActive}"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
@@ -183,6 +193,9 @@
         <div v-if="ssvExpertModeActive" class="expertMode">
           <textarea v-model="item.ssvConfig" class="editContent" @input="somethingIsChanged"></textarea>
         </div>
+        <div v-if="prometheusExpertModeActive" class="expertMode">
+          <textarea v-model="item.prometheusConfig" class="editContent" @input="somethingIsChanged"></textarea>
+        </div>
       </div>
       <div class="btn-box">
         <!-- service version -->
@@ -231,6 +244,8 @@ export default {
       enterPortIsEnabled: false,
       isExpertModeActive: false,
       ssvExpertModeActive: false,
+      prometheusExpertModeActive: false,
+      prometheusConfig: null,
       ramUsage: null,
       isRamUsageActive: false,
       bindingIsOn: false,
@@ -273,8 +288,13 @@ export default {
       //   [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
       // );
 
-      if (this.item.service === "SSVNetworkService")
+      if (this.item.service === "SSVNetworkService"){
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
+      }
+      if (this.item.service === "PrometheusService"){
+        this.item.prometheusConfig = await ControlService.readPrometheusConfig(this.item.config.serviceID);
+        this.prometheusConfig = this.item.prometheusConfig;
+      }
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         if (this.item.yaml.includes("isPruning: true")) {
           option.disabled = true;
@@ -342,6 +362,15 @@ export default {
           serviceID: this.item.config.serviceID,
           config: this.item.ssvConfig,
         });
+      if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig){
+        if (!this.item.yaml.includes("overwrite: false")) {
+          this.item.yaml = this.item.yaml.trim() + "\noverwrite: false";
+        }
+        await ControlService.writePrometheusConfig({
+          serviceID: this.item.config.serviceID,
+          config: this.item.prometheusConfig,
+        });
+      }
       await ControlService.writeServiceYAML({
         id: this.item.config.serviceID,
         data: this.item.yaml,
@@ -360,6 +389,9 @@ export default {
     },
     openSSVExpertMode() {
       this.ssvExpertModeActive = !this.ssvExpertModeActive;
+    },
+    openPrometheusExpertMode() {
+      this.prometheusExpertModeActive = !this.prometheusExpertModeActive;
     },
     endpointPortTrunOff() {
       this.enterPortIsEnabled = false;

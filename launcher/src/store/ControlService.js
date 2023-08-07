@@ -349,6 +349,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
 
+  async readPrometheusConfig(args) {
+    return await this.promiseIpc.send("readPrometheusConfig", args);
+  }
+
+  async writePrometheusConfig(args) {
+    return await this.promiseIpc.send("writePrometheusConfig", args);
+  }
+
   async getQRCode() {
     return await this.promiseIpc.send("getQRCode");
   }
