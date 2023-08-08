@@ -409,8 +409,8 @@ export default {
 }
 
 .item-box .items img {
-  width: 48px;
-  height: 48px;
+  width: 50%;
+  height: 65%;
   border-radius: 5px;
   align-self: center;
   cursor: pointer;
