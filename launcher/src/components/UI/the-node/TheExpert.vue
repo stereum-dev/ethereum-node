@@ -100,7 +100,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
           class="toggleTextBox"
-          :class="{ unvisible: isExpertModeActive || prometheusExpertModeActive}"
+          :class="{ unvisible: isExpertModeActive || prometheusExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
@@ -157,7 +157,7 @@
                 :disabled="option.disabled"
                 type="checkbox"
                 name="check-button"
-                @change="somethingIsChanged()"
+                @change="somethingIsChanged(option)"
               />
               <span class="slider round"></span>
             </label>
@@ -255,6 +255,7 @@ export default {
       editableData: null,
       changed: false,
       nothingsChanged: true,
+      i: 0,
     };
   },
   computed: {
@@ -279,6 +280,10 @@ export default {
     somethingIsChanged(item) {
       if (item && item.title) item.changed = true;
       this.nothingsChanged = false;
+      if ((item && item.title === "Doppelganger") || item.title === "Pruning") {
+        this.i++;
+        this.nothingsChanged = this.i % 2 === 0;
+      }
     },
 
     async readService() {
@@ -288,10 +293,10 @@ export default {
       //   [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
       // );
 
-      if (this.item.service === "SSVNetworkService"){
+      if (this.item.service === "SSVNetworkService") {
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
       }
-      if (this.item.service === "PrometheusService"){
+      if (this.item.service === "PrometheusService") {
         this.item.prometheusConfig = await ControlService.readPrometheusConfig(this.item.config.serviceID);
         this.prometheusConfig = this.item.prometheusConfig;
       }
@@ -362,7 +367,7 @@ export default {
           serviceID: this.item.config.serviceID,
           config: this.item.ssvConfig,
         });
-      if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig){
+      if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig) {
         if (!this.item.yaml.includes("overwrite: false")) {
           this.item.yaml = this.item.yaml.trim() + "\noverwrite: false";
         }
@@ -451,6 +456,7 @@ export default {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
+      this.i = 0;
     },
     async confirmRestartChanges(el) {
       this.confirmExpertChanges(el);

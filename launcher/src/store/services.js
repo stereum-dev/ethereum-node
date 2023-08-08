@@ -886,7 +886,7 @@ export const useServices = defineStore("services", {
           category: "service",
           path: "/notifications",
           icon: "/img/icon/plugin-icons/Other/NotifierService.svg",
-          sIcon: "/img/icon/plugin-icons/Other/NotifierService-s.svg",
+          sIcon: "/img/icon/plugin-icons/Other/NotifierService-s.png",
           linkUrl: "",
           docsUrl: "https://stereum.net/",
           headerOption: false,
