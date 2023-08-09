@@ -8,7 +8,7 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data v-if="noDataLayerShow"></no-data>
+        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
         <div v-show="p2pItemsShow" class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">

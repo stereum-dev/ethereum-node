@@ -18,7 +18,7 @@
           <div class="square-3 square"></div>
         </div>
       </div>
-      <box-wrapper v-else-if="shouldDisplaySecondBlock">test</box-wrapper>
+      <no-data v-else-if="shouldDisplaySecondBlock"></no-data>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows-title">
@@ -92,7 +92,11 @@ import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
+import NoData from "./NoData.vue";
 export default {
+  components: {
+    NoData,
+  },
   data() {
     return {
       showSyncInfo: false,
@@ -224,6 +228,7 @@ export default {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 .amsterdam-parent {
   display: flex;
@@ -263,10 +268,10 @@ export default {
   width: 70%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  position: relative;
   justify-content: center;
-  align-items: flex-start;
-  border-radius: 0 10px 10px 0;
+  align-items: center;
+  flex-direction: column;
 }
 
 .justfied-part {

@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <no-data v-if="noDataLayerShow"></no-data>
+        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
