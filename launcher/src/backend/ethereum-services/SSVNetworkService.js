@@ -16,7 +16,7 @@ global:
 MetricsAPIPort: 15000
         */
     return `eth2:
-  Network: "prater"
+  Network: "${network === "goerli" ? "prater" : network}"
   BeaconNodeAddr: "${consensusClients.map((client) => client.buildConsensusClientHttpEndpointUrl())[0]}"
 eth1:
   ETH1Addr: "${executionClients.map((client) => client.buildExecutionClientWsEndpointUrl())[0]}"
