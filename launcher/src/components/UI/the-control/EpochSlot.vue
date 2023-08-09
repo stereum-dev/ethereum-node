@@ -1,6 +1,5 @@
 <template>
   <div class="epockSlot_parent">
-    <!-- <commingSoon /> -->
     <div v-if="flag" class="wrapper">
       {{ beaconControler }}
     </div>
@@ -17,19 +16,24 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
+import { useControlStore } from "@/store/theControl";
 import { useNodeManage } from "@/store/nodeManage";
-import ControlService from "@/store/ControlService";
+
 export default {
   data() {
     return {
-      currentResult: {},
       message: false,
     };
   },
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
+    }),
+    ...mapWritableState(useControlStore, {
+      currentSlotData: "currentSlotData",
+      currentEpochData: "currentEpochData",
+      currentResult: "currentResult",
     }),
     beaconControler() {
       if (this.currentResult === undefined) {
@@ -50,26 +54,6 @@ export default {
         return true;
       }
       return false;
-    },
-  },
-  mounted() {
-    this.timeCalc();
-  },
-  methods: {
-    async currentEpochSlot() {
-      let res = await ControlService.getCurrentEpochSlot();
-      this.currentResult = res;
-    },
-    timeCalc() {
-      if (this.currentNetwork.id === 4) {
-        setInterval(() => {
-          this.currentEpochSlot();
-        }, 5000);
-      } else {
-        setInterval(() => {
-          this.currentEpochSlot();
-        }, 12000);
-      }
     },
   },
 };
