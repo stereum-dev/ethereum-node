@@ -107,6 +107,7 @@ export default {
       justified: [],
       finalizedStart: [],
       finalized: [],
+      polling: {},
     };
   },
   computed: {
@@ -156,25 +157,24 @@ export default {
     },
   },
   mounted() {
-    console.log("pppp", this.proposed.length);
     if (this.currentNetwork.id === 4) {
-      setInterval(() => {
+      this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
       }, 5000);
     } else {
-      setInterval(() => {
+      this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
       }, 12000);
     }
   },
+  beforeUnmount() {
+    clearInterval(this.polling);
+  },
   methods: {
-    test1() {
-      console.log(this.shouldDisplayFirstBlock);
-    },
     async currentEpochSlot() {
       try {
         let res = await ControlService.getCurrentEpochSlot();

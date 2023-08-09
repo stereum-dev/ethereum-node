@@ -175,7 +175,6 @@ export default {
   watch: {
     isAnyConsensusRunning(newValue) {
       this.isConsensusRunning = newValue;
-      console.log("isAnyConsensusRunning", newValue);
     },
   },
   methods: {
