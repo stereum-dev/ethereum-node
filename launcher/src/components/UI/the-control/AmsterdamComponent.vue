@@ -89,21 +89,18 @@ import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
+import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
       showSyncInfo: false,
       counter: null,
-
       defaultIcon: "/img/icon/control/spinner.gif",
       days: null,
       date: "",
       pattern: [],
       footerInfo: this.$t("controlPage.netSel"),
-
-      currentSlotData: null,
-      currentEpochData: null,
       proposed: [],
       justifiedStart: 0,
       justified: [],
@@ -117,6 +114,11 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+    }),
+    ...mapWritableState(useControlStore, {
+      currentSlotData: "currentSlotData",
+      currentEpochData: "currentEpochData",
+      currentResult: "currentResult",
     }),
     networkIcon() {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
@@ -167,6 +169,7 @@ export default {
         if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
           this.currentSlotData = res.currentSlot;
           this.currentEpochData = res.currentEpoch;
+          this.currentResult = res;
         }
       } catch (error) {
         console.error("An error occurred:", error);
