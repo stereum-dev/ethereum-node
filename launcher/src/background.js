@@ -388,6 +388,14 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("readPrometheusConfig", async (event, args) => {
+  return await nodeConnection.readPrometheusConfig(args);
+});
+
+ipcMain.handle("writePrometheusConfig", async (event, args) => {
+  return await nodeConnection.writePrometheusConfig(args.serviceID, args.config);
+});
+
 ipcMain.handle("getValidatorStats", async (event, args) => {
   return await monitoring.getValidatorStats(args);
 });
