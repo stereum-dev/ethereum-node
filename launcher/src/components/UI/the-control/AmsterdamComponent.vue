@@ -27,8 +27,8 @@
           <div class="wrapper">
             <div class="proposed-rows">
               <div
-                v-for="n in proposed"
-                :key="n"
+                v-for="(n, index) in proposed"
+                :key="index"
                 class="proposed-square"
                 :class="{ white: n == 0, blue: n != 0 }"
                 @mouseenter="

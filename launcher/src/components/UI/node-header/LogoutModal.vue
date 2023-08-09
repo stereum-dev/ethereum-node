@@ -14,7 +14,7 @@
           <span>{{ $t("logOutModal.logOutBtn") }}</span>
         </div>
       </div>
-      <span class="close">{{ $t("notifModal.cancelText") }}</span>
+      <span class="close">{{ $t("notifModal.close") }}</span>
     </div>
   </div>
 </template>
