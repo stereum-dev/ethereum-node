@@ -11,13 +11,14 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
-      <div v-if="proposed.length === 0" class="box-wrapper">
+      <div v-if="shouldDisplayFirstBlock" class="box-wrapper">
         <div class="spinner-square">
           <div class="square-1 square"></div>
           <div class="square-2 square"></div>
           <div class="square-3 square"></div>
         </div>
       </div>
+      <box-wrapper v-else-if="shouldDisplaySecondBlock">test</box-wrapper>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows-title">
@@ -117,14 +118,22 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
     }),
     networkIcon() {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
+    },
+    shouldDisplayFirstBlock() {
+      return this.proposed.length === 0 && this.isConsensusRunning;
+    },
+    shouldDisplaySecondBlock() {
+      return !this.isConsensusRunning;
     },
   },
   watch: {
     currentSlotData: "updateEpoch",
     currentEpochData: "updateEpoch",
+
     // justifiedStart: {
     //   handler(justifiedBegin) {
     //     this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
@@ -145,6 +154,7 @@ export default {
     },
   },
   mounted() {
+    console.log("pppp", this.proposed.length);
     if (this.currentNetwork.id === 4) {
       setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
@@ -160,6 +170,9 @@ export default {
     }
   },
   methods: {
+    test1() {
+      console.log(this.shouldDisplayFirstBlock);
+    },
     async currentEpochSlot() {
       try {
         let res = await ControlService.getCurrentEpochSlot();

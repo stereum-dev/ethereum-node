@@ -128,7 +128,6 @@ export default {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-
     TheExpert,
     PrunningModal,
     ResyncModal,
@@ -161,7 +160,23 @@ export default {
 
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
     }),
+    isAnyConsensusRunning() {
+      const consensusServices = this.installedServices.filter((item) => item.category === "consensus");
+
+      if (consensusServices.length === 0) {
+        return false;
+      }
+
+      return consensusServices.some((item) => item.state === "running");
+    },
+  },
+  watch: {
+    isAnyConsensusRunning(newValue) {
+      this.isConsensusRunning = newValue;
+      console.log("isAnyConsensusRunning", newValue);
+    },
   },
   methods: {
     scrollUp() {
