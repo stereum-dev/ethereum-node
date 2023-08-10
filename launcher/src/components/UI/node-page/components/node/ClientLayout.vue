@@ -9,7 +9,7 @@
     >
       {{ client.category }}
       <span v-if="client.category !== 'validator'" class="-ml-4">client</span>
-      <span class="w-5 h-5 bg-green-500 border border-green-500 rounded-r-full"></span>
+      <span :class="clientStatus"></span>
     </div>
     <div class="flex flex-col gap-2">
       <img class="w-10" :src="client.sIcon" alt="icon" />
@@ -21,6 +21,7 @@
         <img class="w-4" src="/img/icon/node-icons/key.png" alt="icon" />
       </div>
     </div>
+
   </div>
 </template>
 <script>
@@ -63,7 +64,17 @@ export default {
       ],
     };
   },
+  computed: {
+    clientStatus() {
+      if (this.client.state === "running") {
+        return "w-5 h-5 bg-green-500 border border-green-500 rounded-r-full";
+      } else if (this.client.state === "restarting") {
+        return "w-5 h-5 bg-orange-500 border border-orange-500 rounded-r-full";
+      }
+      return "w-5 h-5 bg-red-600 border border-red-600 rounded-r-full";
+    },
 
+  },
   mounted() {},
   methods: {},
 };
