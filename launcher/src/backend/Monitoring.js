@@ -3071,6 +3071,7 @@ rm -rf diskoutput
         const currentSlotStatusArray = [];
         const justifiedSlotStatusArray = [];
         const finalizedSlotStatusArray = [];
+        let notFound = `"code":404`;
 
         // Get Current-Epoch's slot(s)-status (most latest epoch)
         let slotsInCurrentEpoch = (currentSlot % epochLength) + 1;
@@ -3083,7 +3084,7 @@ rm -rf diskoutput
 
           currentSlotStatusArray.push({
             slotNumber: firstSlotInCurrentEpoch + i,
-            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes("NOT_FOUND") ? "missed" : "proposed",
+            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
           });
         }
 
@@ -3097,7 +3098,7 @@ rm -rf diskoutput
 
           justifiedSlotStatusArray.push({
             slotNumber: firstSlotInJustifiedEpoch + i,
-            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes("NOT_FOUND") ? "missed" : "proposed",
+            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
           });
         }
 
@@ -3111,7 +3112,7 @@ rm -rf diskoutput
 
           finalizedSlotStatusArray.push({
             slotNumber: firstSlotInFinalizedEpoch + i,
-            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes("NOT_FOUND") ? "missed" : "proposed",
+            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
           });
         }
 
