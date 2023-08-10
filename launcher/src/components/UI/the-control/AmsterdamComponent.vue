@@ -180,7 +180,6 @@ export default {
         }
       }, 12000);
     }
-    console.log(this.currentResult);
   },
   beforeUnmount() {
     clearInterval(this.polling);
