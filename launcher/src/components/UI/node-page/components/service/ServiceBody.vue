@@ -35,7 +35,9 @@ export default {
   },
   computed: {
     getServices() {
-      return this.installedServices.filter((e) => e.category === "service");
+      return this.installedServices
+        .filter((e) => e.category === "service")
+        .sort((a, b) => a.name.localeCompare(b.name));
     },
 
     ...mapState(useServices, {
