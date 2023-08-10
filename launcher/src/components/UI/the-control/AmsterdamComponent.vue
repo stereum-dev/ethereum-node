@@ -20,14 +20,15 @@
       </div>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
-          <div class="proposed-rows-title">
-            <span>current justified </span>
+          <div class="rows-title">
+            <span>proposed</span>
+            <span class="epoch">{{ currentResult.currentEpoch }}</span>
           </div>
 
           <div class="wrapper">
             <div class="proposed-rows">
               <div
-                v-for="n in dynamicArray"
+                v-for="n in proposedBlock"
                 :key="n"
                 class="proposed-square"
                 :class="{
@@ -36,7 +37,7 @@
                   red: n.slotStatus == 'missed',
                 }"
                 @mouseenter="
-                  cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${n.slotNumber}`
+                  cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${n.slotNumber}`
                 "
                 @mouseleave="cursorLocation = ''"
               ></div>
@@ -44,7 +45,34 @@
           </div>
         </div>
         <div class="finilized-part">
-          <div class="finilized-row-title"><span>finalized</span></div>
+          <div class="rows-title">
+            <span>justified</span>
+            <span class="epoch">{{ currentResult.currentJustifiedEpoch }}</span>
+          </div>
+          <div class="wrapper">
+            <div class="finilized-row">
+              <div
+                v-for="n in currentResult.justifiedEpochStatus[0]"
+                :key="n"
+                class="finilized-square"
+                :class="{
+                  white: n.slotStatus == 'pending',
+                  green: n.slotStatus == 'proposed',
+                  red: n.slotStatus == 'missed',
+                }"
+                @mouseenter="
+                  cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                "
+                @mouseleave="cursorLocation = ''"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="finilized-part">
+          <div class="rows-title">
+            <span>finalized</span>
+            <span class="epoch">{{ currentResult.finalizedEpoch }}</span>
+          </div>
           <div class="wrapper">
             <div class="finilized-row">
               <div
@@ -57,7 +85,7 @@
                   red: n.slotStatus == 'missed',
                 }"
                 @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentResultfinalizedEpoch} and the slot number is ${n.slotNumber}`
+                  cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
                 "
                 @mouseleave="cursorLocation = ''"
               ></div>
@@ -90,7 +118,7 @@ export default {
       justified: [],
       finalizedStart: [],
       finalized: [],
-      dynamicArray: Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" })),
+      proposedBlock: Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" })),
       polling: {},
     };
   },
@@ -132,7 +160,7 @@ export default {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
           }
 
-          this.dynamicArray = newArray;
+          this.proposedBlock = newArray;
         }
       },
       deep: true,
@@ -152,6 +180,7 @@ export default {
         }
       }, 12000);
     }
+    console.log(this.currentResult);
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -233,8 +262,7 @@ export default {
 .finilized-part,
 .proposed-part {
   width: 95%;
-  height: 48%;
-
+  height: 32%;
   border-radius: 0 0 10px 0;
   display: flex;
   justify-content: center;
@@ -248,12 +276,12 @@ export default {
 .finilized-part {
   border-top: 1px solid #c1c1c1;
 }
-.finilized-row-title,
-.proposed-rows-title {
+
+.rows-title {
   width: 95%;
   height: 20%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   font-size: 50%;
   font-weight: 700;
