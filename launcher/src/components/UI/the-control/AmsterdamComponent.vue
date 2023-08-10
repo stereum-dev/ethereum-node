@@ -91,6 +91,7 @@ export default {
       finalizedStart: [],
       finalized: [],
       dynamicArray: Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" })),
+      polling: {},
     };
   },
   computed: {
@@ -139,18 +140,21 @@ export default {
   },
   mounted() {
     if (this.currentNetwork.id === 4) {
-      setInterval(() => {
+      this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
       }, 5000);
     } else {
-      setInterval(() => {
+      this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
       }, 12000);
     }
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   },
   methods: {
     async currentEpochSlot() {
