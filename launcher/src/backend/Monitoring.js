@@ -3027,13 +3027,7 @@ rm -rf diskoutput
   async getCurrentEpochSlot() {
     try {
       const beaconStatus = await this.getBeaconStatus();
-
       let currentEpochSlotStatus = {};
-      let currentSlot;
-      let currentEpoch;
-      let currentJustifiedEpoch;
-      let finalizedEpoch;
-
       if (beaconStatus.code === 0) {
         // retrive current network & define epoch length (ethereum -> 32 | gnosis -> 16)
         let serviceName = beaconStatus.data[0].clt.toLowerCase();
@@ -3042,19 +3036,22 @@ rm -rf diskoutput
         const currentNetwork = serviceInfo[0].config.network;
         const epochLength = currentNetwork === "gnosis" ? 16 : 32;
 
-        // retrive current Epoch, Slot & justified Epoch + finalized Epoch
+        // retrive current-Slot also current, justified and finalized-Epochs
         const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+        let APIBegin = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/`;
+        let cmdBegin = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/blocks/`;
+        let cmdEnd = "' -H 'accept: application/json'";
+        let notFound = ":404";
 
-        const beaconAPISlotCmd = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/headers/head' -H 'accept: application/json'`;
-        let beaconAPISlotRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotCmd);
+        let beaconAPISlotRunCmd = await this.nodeConnection.sshService.exec(`${APIBegin}headers/head${cmdEnd}`);
+        let beaconAPIEpochRunCmd = await this.nodeConnection.sshService.exec(
+          `${APIBegin}states/head/finality_checkpoints${cmdEnd}`
+        );
 
-        const beaconAPIEpochCmd = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`;
-        let beaconAPIEpochRunCmd = await this.nodeConnection.sshService.exec(beaconAPIEpochCmd);
-
-        currentSlot = parseInt(JSON.parse(beaconAPISlotRunCmd.stdout).data.header.message.slot);
-        currentEpoch = Math.floor(currentSlot / epochLength);
-        currentJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.current_justified.epoch);
-        finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch);
+        let currentSlot = parseInt(JSON.parse(beaconAPISlotRunCmd.stdout).data.header.message.slot);
+        let currentEpoch = Math.floor(currentSlot / epochLength);
+        let currentJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.current_justified.epoch);
+        let finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch);
 
         // create return data
         currentEpochSlotStatus = {
@@ -3068,58 +3065,55 @@ rm -rf diskoutput
           finalizedEpochStatus: [],
         };
 
+        // create sub arrays
         const currentSlotStatusArray = [];
         const justifiedSlotStatusArray = [];
         const finalizedSlotStatusArray = [];
-        let notFound = `"code":404`;
 
-        // Get Current-Epoch's slot(s)-status (most latest epoch)
-        let slotsInCurrentEpoch = (currentSlot % epochLength) + 1;
-        let firstSlotInCurrentEpoch = currentEpoch * epochLength;
-        for (let i = 0; i < slotsInCurrentEpoch - 1; i++) {
-          const beaconAPISlotStatusCmd = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/blocks/${
-            firstSlotInCurrentEpoch + i
-          }/root' -H 'accept: application/json'`;
-          let beaconAPISlotStatusRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotStatusCmd);
+        // retrive corresponding Slots' status
+        let firstSlots = {
+          firstSlotInCurrentEpoch: currentEpoch * epochLength,
+          firstSlotInJustifiedEpoch: currentJustifiedEpoch * epochLength,
+          firstSlotInFinalizedEpoch: finalizedEpoch * epochLength,
+        };
 
-          currentSlotStatusArray.push({
-            slotNumber: firstSlotInCurrentEpoch + i,
-            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
-          });
-        }
-
-        // Get Justified-Epoch's slot(s)-status
-        let firstSlotInJustifiedEpoch = currentJustifiedEpoch * epochLength;
-        for (let i = 0; i < epochLength; i++) {
-          const beaconAPISlotStatusCmd = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/blocks/${
-            firstSlotInJustifiedEpoch + i
-          }/root' -H 'accept: application/json'`;
-          let beaconAPISlotStatusRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotStatusCmd);
-
-          justifiedSlotStatusArray.push({
-            slotNumber: firstSlotInJustifiedEpoch + i,
-            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
-          });
-        }
-
-        // Get Finalized-Epoch's slot(s)-status
-        let firstSlotInFinalizedEpoch = finalizedEpoch * epochLength;
-        for (let i = 0; i < epochLength; i++) {
-          const beaconAPISlotStatusCmd = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/blocks/${
-            firstSlotInFinalizedEpoch + i
-          }/root' -H 'accept: application/json'`;
-          let beaconAPISlotStatusRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotStatusCmd);
-
-          finalizedSlotStatusArray.push({
-            slotNumber: firstSlotInFinalizedEpoch + i,
-            slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
-          });
+        for (const slots in firstSlots) {
+          let slotsNumberInEpoch = 0;
+          if (`${slots}` === "firstSlotInCurrentEpoch") {
+            slotsNumberInEpoch = (currentSlot % epochLength) + 1;
+          } else {
+            slotsNumberInEpoch = epochLength;
+          }
+          for (let i = 0; i < slotsNumberInEpoch; i++) {
+            let beaconAPISlotStatusCmd = "";
+            if (serviceNameConverted === "Lodestar") {
+              beaconAPISlotStatusCmd = `${cmdBegin}${firstSlots[slots] + i}${cmdEnd}`;
+            } else {
+              beaconAPISlotStatusCmd = `${cmdBegin}${firstSlots[slots] + i}/root${cmdEnd}`;
+            }
+            let beaconAPISlotStatusRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotStatusCmd);
+            if (`${slots}` === "firstSlotInJustifiedEpoch") {
+              justifiedSlotStatusArray.push({
+                slotNumber: firstSlots[slots] + i,
+                slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
+              });
+            } else if (`${slots}` === "firstSlotInFinalizedEpoch") {
+              finalizedSlotStatusArray.push({
+                slotNumber: firstSlots[slots] + i,
+                slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
+              });
+            } else {
+              currentSlotStatusArray.push({
+                slotNumber: firstSlots[slots] + i,
+                slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
+              });
+            }
+          }
         }
 
         currentEpochSlotStatus["currentEpochStatus"].push(currentSlotStatusArray);
         currentEpochSlotStatus["justifiedEpochStatus"].push(justifiedSlotStatusArray);
         currentEpochSlotStatus["finalizedEpochStatus"].push(finalizedSlotStatusArray);
-
         return currentEpochSlotStatus;
       } else if (beaconStatus.code === 2) {
         return (currentEpochSlotStatus = {
