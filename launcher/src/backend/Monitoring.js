@@ -3054,11 +3054,6 @@ rm -rf diskoutput
         let previousJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.previous_justified.epoch);
         let finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch);
 
-        console.log("currentEpoch", currentEpoch);
-        console.log("currentJustifiedEpoch", currentJustifiedEpoch);
-        console.log("previousJustifiedEpoch", previousJustifiedEpoch);
-        console.log("finalizedEpoch", finalizedEpoch);
-
         // create return data
         currentEpochSlotStatus = {
           currentSlot: currentSlot,
@@ -3126,7 +3121,6 @@ rm -rf diskoutput
         currentEpochSlotStatus["justifiedEpochStatus"].push(justifiedSlotStatusArray);
         currentEpochSlotStatus["preJustifiedEpochStatus"].push(preJustifiedSlotStatusArray);
         currentEpochSlotStatus["finalizedEpochStatus"].push(finalizedSlotStatusArray);
-        console.log("currentEpochSlotStatus", currentEpochSlotStatus);
         return currentEpochSlotStatus;
       } else if (beaconStatus.code === 2) {
         return (currentEpochSlotStatus = {
