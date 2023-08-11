@@ -28,8 +28,8 @@
           <div class="wrapper">
             <div class="proposed-rows">
               <div
-                v-for="n in proposedBlock"
-                :key="n"
+                v-for="(n, index) in proposedBlock"
+                :key="index"
                 class="proposed-square"
                 :class="{
                   white: n.slotStatus == 'pending',
