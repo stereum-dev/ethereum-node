@@ -3078,12 +3078,9 @@ rm -rf diskoutput
         };
 
         for (const slots in firstSlots) {
-          let slotsNumberInEpoch = 0;
-          if (`${slots}` === "firstSlotInCurrentEpoch") {
-            slotsNumberInEpoch = (currentSlot % epochLength) + 1;
-          } else {
-            slotsNumberInEpoch = epochLength;
-          }
+          let slotsNumberInEpoch =
+            `${slots}` === "firstSlotInCurrentEpoch" ? (currentSlot % epochLength) + 1 : epochLength;
+
           for (let i = 0; i < slotsNumberInEpoch; i++) {
             let beaconAPISlotStatusCmd = "";
             if (serviceNameConverted === "Lodestar") {
