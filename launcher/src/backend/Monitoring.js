@@ -3087,12 +3087,11 @@ rm -rf diskoutput
             `${slots}` === "firstSlotInCurrentEpoch" ? (currentSlot % epochLength) + 1 : epochLength;
 
           for (let i = 0; i < slotsNumberInEpoch; i++) {
-            let beaconAPISlotStatusCmd = "";
-            if (serviceNameConverted === "Lodestar") {
-              beaconAPISlotStatusCmd = `${cmdBegin}${firstSlots[slots] + i}${cmdEnd}`;
-            } else {
-              beaconAPISlotStatusCmd = `${cmdBegin}${firstSlots[slots] + i}/root${cmdEnd}`;
-            }
+            let beaconAPISlotStatusCmd =
+              serviceNameConverted === "Lodestar"
+                ? `${cmdBegin}${firstSlots[slots] + i}${cmdEnd}`
+                : `${cmdBegin}${firstSlots[slots] + i}/root${cmdEnd}`;
+
             let beaconAPISlotStatusRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotStatusCmd);
             if (`${slots}` === "firstSlotInCurrentEpoch") {
               currentSlotStatusArray.push({
