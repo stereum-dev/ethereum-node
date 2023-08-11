@@ -37,7 +37,9 @@
                   red: n.slotStatus == 'missed',
                 }"
                 @mouseenter="
-                  cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${n.slotNumber}`
+                  cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                    n.slotNumber === 0 ? 'null' : n.slotNumber
+                  }`
                 "
                 @mouseleave="cursorLocation = ''"
               ></div>
@@ -114,11 +116,6 @@ export default {
       pattern: [],
       footerInfo: this.$t("controlPage.netSel"),
       proposed: [],
-      justifiedStart: 0,
-      justified: [],
-      finalizedStart: [],
-      finalized: [],
-      proposedBlock: Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" })),
       polling: {},
     };
   },
@@ -134,6 +131,14 @@ export default {
       currentEpochData: "currentEpochData",
       currentResult: "currentResult",
     }),
+    proposedBlock() {
+      if (this.currentNetwork.id === 4) {
+        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      } else {
+        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      }
+    },
+
     networkIcon() {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     },
@@ -153,14 +158,15 @@ export default {
       handler(newResult) {
         if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
           const newArray = newResult.currentEpochStatus[0]
-            .slice(0, 32)
+            .slice(0, this.proposedBlock.length)
             .map((slot) => ({ slotNumber: slot.slotNumber, slotStatus: slot.slotStatus }));
 
-          while (newArray.length < 32) {
+          while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
           }
 
-          this.proposedBlock = newArray;
+          // Update the proposedBlock array
+          this.proposedBlock.splice(0, this.proposedBlock.length, ...newArray);
         }
       },
       deep: true,
@@ -185,6 +191,13 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    initializeProposedBlock() {
+      if (this.currentNetwork.id === 4) {
+        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      } else {
+        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      }
+    },
     async currentEpochSlot() {
       try {
         let res = await ControlService.getCurrentEpochSlot();
