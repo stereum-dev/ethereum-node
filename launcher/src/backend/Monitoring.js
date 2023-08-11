@@ -3122,7 +3122,6 @@ rm -rf diskoutput
         currentEpochSlotStatus["justifiedEpochStatus"].push(justifiedSlotStatusArray);
         currentEpochSlotStatus["preJustifiedEpochStatus"].push(preJustifiedSlotStatusArray);
         currentEpochSlotStatus["finalizedEpochStatus"].push(finalizedSlotStatusArray);
-        console.log(currentEpochSlotStatus);
         return currentEpochSlotStatus;
       } else if (beaconStatus.code === 2) {
         return (currentEpochSlotStatus = {
