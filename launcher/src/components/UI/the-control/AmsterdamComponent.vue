@@ -11,7 +11,7 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
-      <div v-if="shouldDisplayFirstBlock" class="box-wrapper">
+      <div v-if="flag" class="box-wrapper">
         <div class="spinner-square">
           <div class="square-1 square"></div>
           <div class="square-2 square"></div>
@@ -21,20 +21,25 @@
       <no-data v-else-if="shouldDisplaySecondBlock"></no-data>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
-          <div class="proposed-rows-title">
-            <span>current justified </span>
+          <div class="rows-title">
+            <span>proposed</span>
+            <span class="epoch">{{ currentResult.currentEpoch }}</span>
           </div>
 
           <div class="wrapper">
             <div class="proposed-rows">
               <div
-                v-for="n in proposed"
+                v-for="n in proposedBlock"
                 :key="n"
                 class="proposed-square"
-                :class="{ white: n == 0, blue: n != 0 }"
+                :class="{
+                  white: n.slotStatus == 'pending',
+                  green: n.slotStatus == 'proposed',
+                  red: n.slotStatus == 'missed',
+                }"
                 @mouseenter="
-                  cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${
-                    n != 0 ? n : 'null'
+                  cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                    n.slotNumber === 0 ? 'null' : n.slotNumber
                   }`
                 "
                 @mouseleave="cursorLocation = ''"
@@ -42,39 +47,48 @@
             </div>
           </div>
         </div>
-        <!-- <div class="justfied-part">
-        <div class="justfied-rows">
-          <span>justified</span>
-        </div>
-        <div class="justfied-rows">
-          <div
-            v-for="n in justified"
-            :key="n"
-            class="square"
-            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData} and the slot number is ${n}`"
-            @mouseleave="cursorLocation = ''"
-          ></div>
-        </div>
-        <div class="justfied-rows">
-          <div
-            v-for="n in justified"
-            :key="n"
-            class="square"
-            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData - 1} and the slot number is ${n}`"
-            @mouseleave="cursorLocation = ''"
-          ></div>
-        </div>
-      </div> -->
         <div class="finilized-part">
-          <div class="finilized-row-title"><span>finalized</span></div>
+          <div class="rows-title">
+            <span>justified</span>
+            <span class="epoch">{{ currentResult.currentJustifiedEpoch }}</span>
+          </div>
           <div class="wrapper">
             <div class="finilized-row">
               <div
-                v-for="n in finalized"
+                v-for="n in currentResult.justifiedEpochStatus[0]"
                 :key="n"
                 class="finilized-square"
+                :class="{
+                  white: n.slotStatus == 'pending',
+                  green: n.slotStatus == 'proposed',
+                  red: n.slotStatus == 'missed',
+                }"
                 @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentEpochData - 1} and the slot number is ${n}`
+                  cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                "
+                @mouseleave="cursorLocation = ''"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="finilized-part">
+          <div class="rows-title">
+            <span>finalized</span>
+            <span class="epoch">{{ currentResult.finalizedEpoch }}</span>
+          </div>
+          <div class="wrapper">
+            <div class="finilized-row">
+              <div
+                v-for="n in currentResult.finalizedEpochStatus[0]"
+                :key="n"
+                class="finilized-square"
+                :class="{
+                  white: n.slotStatus == 'pending',
+                  green: n.slotStatus == 'proposed',
+                  red: n.slotStatus == 'missed',
+                }"
+                @mouseenter="
+                  cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
                 "
                 @mouseleave="cursorLocation = ''"
               ></div>
@@ -107,10 +121,6 @@ export default {
       pattern: [],
       footerInfo: this.$t("controlPage.netSel"),
       proposed: [],
-      justifiedStart: 0,
-      justified: [],
-      finalizedStart: [],
-      finalized: [],
       polling: {},
     };
   },
@@ -127,37 +137,52 @@ export default {
       currentEpochData: "currentEpochData",
       currentResult: "currentResult",
     }),
+    proposedBlock() {
+      if (this.currentNetwork.id === 4) {
+        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      } else {
+        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      }
+    },
+
     networkIcon() {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     },
-    shouldDisplayFirstBlock() {
-      return this.proposed.length === 0 && this.isConsensusRunning;
-    },
-    shouldDisplaySecondBlock() {
-      return !this.isConsensusRunning;
+    // shouldDisplayFirstBlock() {
+    //   return this.proposed.length === 0 && this.isConsensusRunning;
+    // },
+    // shouldDisplaySecondBlock() {
+    //   return !this.isConsensusRunning;
+    // },
+
+    flag() {
+      if (this.currentResult === undefined) {
+        return true;
+      } else if (this.currentResult.beaconStatus === undefined) {
+        return true;
+      } else if (this.currentResult.beaconStatus !== 0) {
+        return true;
+      }
+      return false;
     },
   },
   watch: {
-    currentSlotData: "updateEpoch",
-    currentEpochData: "updateEpoch",
+    currentResult: {
+      handler(newResult) {
+        if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
+          const newArray = newResult.currentEpochStatus[0]
+            .slice(0, this.proposedBlock.length)
+            .map((slot) => ({ slotNumber: slot.slotNumber, slotStatus: slot.slotStatus }));
 
-    // justifiedStart: {
-    //   handler(justifiedBegin) {
-    //     this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
-    //   },
-    //   immediate: true,
-    // },
-    // justifiedStart: {
-    //   handler(justifiedBegin) {
-    //     this.epochUpdater(justifiedBegin, "justified");
-    //   },
-    //   immediate: true,
-    // },
-    finalizedStart: {
-      handler(finalizedBegin) {
-        this.epochUpdater(finalizedBegin, "finalized");
+          while (newArray.length < this.proposedBlock.length) {
+            newArray.push({ slotNumber: 0, slotStatus: "pending" });
+          }
+
+          // Update the proposedBlock array
+          this.proposedBlock.splice(0, this.proposedBlock.length, ...newArray);
+        }
       },
-      immediate: true,
+      deep: true,
     },
   },
   mounted() {
@@ -179,6 +204,13 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    initializeProposedBlock() {
+      if (this.currentNetwork.id === 4) {
+        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      } else {
+        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      }
+    },
     async currentEpochSlot() {
       try {
         let res = await ControlService.getCurrentEpochSlot();
@@ -191,27 +223,6 @@ export default {
       } catch (error) {
         console.error("An error occurred:", error);
       }
-    },
-    updateEpoch() {
-      const arraySize = this.currentNetwork.id === 4 ? 16 : 32;
-      const resultArray = new Array(arraySize).fill(0);
-      this.proposed = [];
-
-      if (this.currentSlotData !== null && this.currentEpochData !== null) {
-        const index =
-          (((this.currentSlotData - this.currentEpochData * arraySize) % arraySize) + arraySize) % arraySize;
-        for (let i = 0; i <= index; i++) {
-          resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
-        }
-      }
-      // this.justifiedStart = resultArray[0] - 33;
-      this.finalizedStart = resultArray[0] - (arraySize + 1);
-      this.proposed.push(...resultArray);
-    },
-    epochUpdater(newValue, arrayName) {
-      const arraySize = this.currentNetwork.id === 4 ? 16 : 32;
-      const newArray = new Array(arraySize).fill(0).map((_, index) => newValue + index + 1);
-      this[arrayName] = newArray;
     },
   },
 };
@@ -274,33 +285,10 @@ export default {
   flex-direction: column;
 }
 
-.justfied-part {
-  width: 95%;
-  height: 45%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border-top: 1px solid #c1c1c1;
-}
-.justfied-rows {
-  width: 100%;
-  height: 30%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.justfied-rows span {
-  margin-left: 2.5%;
-  font-size: 45%;
-  font-weight: 700;
-  text-transform: uppercase;
-}
 .finilized-part,
 .proposed-part {
   width: 95%;
-  height: 48%;
-
+  height: 32%;
   border-radius: 0 0 10px 0;
   display: flex;
   justify-content: center;
@@ -314,12 +302,12 @@ export default {
 .finilized-part {
   border-top: 1px solid #c1c1c1;
 }
-.finilized-row-title,
-.proposed-rows-title {
+
+.rows-title {
   width: 95%;
   height: 20%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   font-size: 50%;
   font-weight: 700;
@@ -343,7 +331,6 @@ export default {
   width: 3%;
   height: 95%;
   margin: 0 0.5%;
-  background: #94deff;
   border-radius: 5px;
 }
 .proposed-square {
@@ -359,17 +346,13 @@ export default {
 .white {
   background: #c1c1c1;
 }
-.blue {
-  background: #94deff;
+.green {
+  background: #568d50;
 }
-.square {
-  width: 23%;
-  height: 40%;
-  margin: 0 2.5%;
+.red {
+  background: #ff0000;
+}
 
-  background: #94deff;
-}
-/*test the load Bar*/
 .spinner-square {
   display: flex;
   width: 100%;
@@ -381,6 +364,7 @@ export default {
   width: 5%;
   height: 40%;
   border-radius: 4px;
+  margin-right: 5%;
 }
 
 .square-1 {
@@ -415,5 +399,4 @@ export default {
     background-color: #336666;
   }
 }
-/*end of the test*/
 </style>
