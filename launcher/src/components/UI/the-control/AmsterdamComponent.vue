@@ -20,78 +20,90 @@
       </div>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
-          <div class="rows-title">
+          <!-- <div class="rows-title">
             <span>proposed</span>
             <span class="epoch">{{ currentResult.currentEpoch }}</span>
-          </div>
+          </div> -->
 
-          <div class="wrapper">
-            <div class="proposed-rows">
-              <div
-                v-for="(n, index) in proposedBlock"
-                :key="index"
-                class="proposed-square"
-                :class="{
-                  white: n.slotStatus == 'pending',
-                  green: n.slotStatus == 'proposed',
-                  red: n.slotStatus == 'missed',
-                }"
-                @mouseenter="
-                  cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
-                    n.slotNumber === 0 ? 'null' : n.slotNumber
-                  }`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
+          <div class="proposed-rows">
+            <div
+              v-for="(n, index) in proposedBlock"
+              :key="index"
+              class="proposed-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                  n.slotNumber === 0 ? 'null' : n.slotNumber
+                }`
+              "
+              @mouseleave="cursorLocation = ''"
+            ></div>
           </div>
         </div>
-        <div class="finilized-part">
-          <div class="rows-title">
+        <div class="justified-part">
+          <!-- <div class="rows-title">
             <span>justified</span>
             <span class="epoch">{{ currentResult.currentJustifiedEpoch }}</span>
+          </div> -->
+
+          <div class="finilized-row">
+            <div
+              v-for="n in currentResult.justifiedEpochStatus[0]"
+              :key="n"
+              class="finilized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+              "
+              @mouseleave="cursorLocation = ''"
+            ></div>
           </div>
-          <div class="wrapper">
-            <div class="finilized-row">
-              <div
-                v-for="n in currentResult.justifiedEpochStatus[0]"
-                :key="n"
-                class="finilized-square"
-                :class="{
-                  white: n.slotStatus == 'pending',
-                  green: n.slotStatus == 'proposed',
-                  red: n.slotStatus == 'missed',
-                }"
-                @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
+          <div class="finilized-row">
+            <div
+              v-for="n in currentResult.justifiedEpochStatus[0]"
+              :key="n"
+              class="finilized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+              "
+              @mouseleave="cursorLocation = ''"
+            ></div>
           </div>
         </div>
         <div class="finilized-part">
-          <div class="rows-title">
+          <!-- <div class="rows-title">
             <span>finalized</span>
             <span class="epoch">{{ currentResult.finalizedEpoch }}</span>
-          </div>
-          <div class="wrapper">
-            <div class="finilized-row">
-              <div
-                v-for="n in currentResult.finalizedEpochStatus[0]"
-                :key="n"
-                class="finilized-square"
-                :class="{
-                  white: n.slotStatus == 'pending',
-                  green: n.slotStatus == 'proposed',
-                  red: n.slotStatus == 'missed',
-                }"
-                @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
+          </div> -->
+
+          <div class="finilized-row">
+            <div
+              v-for="n in currentResult.finalizedEpochStatus[0]"
+              :key="n"
+              class="finilized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
+              "
+              @mouseleave="cursorLocation = ''"
+            ></div>
           </div>
         </div>
       </div>
@@ -184,6 +196,7 @@ export default {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
+        console.log(this.currentResult);
       }, 12000);
     }
   },
@@ -215,16 +228,9 @@ export default {
 };
 </script>
 <style scoped>
-.wrapper {
-  width: 100%;
-  height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .box-wrapper {
   width: 100%;
-  height: 100%;
+  height: 95%;
   box-sizing: border-box;
 }
 .amsterdam-parent {
@@ -267,29 +273,37 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 0 10px 10px 0;
 }
 
 .finilized-part,
 .proposed-part {
   width: 95%;
-  height: 32%;
+  height: 25%;
   border-radius: 0 0 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 1%;
 }
-.proposed-part {
+.justified-part {
+  width: 95%;
+  height: 50%;
+  border-radius: 0 0 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+/*.proposed-part {
   margin-bottom: 1%;
-}
-.finilized-part {
+}*/
+/*.finilized-part {
   border-top: 1px solid #c1c1c1;
-}
+}*/
 
-.rows-title {
+/*.rows-title {
   width: 95%;
   height: 20%;
   display: flex;
@@ -299,11 +313,11 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
   margin: 0.5% 0;
-}
+}*/
 .finilized-row,
 .proposed-rows {
   width: 100%;
-  height: 60%;
+  height: 80%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -315,7 +329,7 @@ export default {
 }
 .finilized-square {
   width: 3%;
-  height: 95%;
+  height: 90%;
   margin: 0 0.5%;
   border-radius: 5px;
 }
