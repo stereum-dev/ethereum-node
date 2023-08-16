@@ -1,5 +1,7 @@
 <template>
   <div class="amsterdam-parent">
+    <tooltip-dialog open="test"></tooltip-dialog>
+
     <div
       class="icoTitle"
       @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
@@ -20,78 +22,88 @@
       </div>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
-          <div class="rows-title">
-            <span>proposed</span>
-            <span class="epoch">{{ currentResult.currentEpoch }}</span>
+          <div class="proposed-rows">
+            <div
+              v-for="(n, index) in proposedBlock"
+              :key="index"
+              class="proposed-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                  n.slotNumber === 0 ? 'null' : n.slotNumber
+                }`),
+                  dialogOpen(currentResult.currentEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'proposed ')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
           </div>
-
-          <div class="wrapper">
-            <div class="proposed-rows">
-              <div
-                v-for="(n, index) in proposedBlock"
-                :key="index"
-                class="proposed-square"
-                :class="{
-                  white: n.slotStatus == 'pending',
-                  green: n.slotStatus == 'proposed',
-                  red: n.slotStatus == 'missed',
-                }"
-                @mouseenter="
-                  cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
-                    n.slotNumber === 0 ? 'null' : n.slotNumber
-                  }`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
+        </div>
+        <div class="justified-part">
+          <div class="finilized-row">
+            <div
+              v-for="n in currentResult.justifiedEpochStatus[0]"
+              :key="n"
+              class="finilized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.currentJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'justified ')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
+          </div>
+          <div class="finilized-row">
+            <div
+              v-for="n in currentResult.preJustifiedEpochStatus[0]"
+              :key="n"
+              class="finilized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.previousJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'previous justified ')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
           </div>
         </div>
         <div class="finilized-part">
-          <div class="rows-title">
-            <span>justified</span>
-            <span class="epoch">{{ currentResult.currentJustifiedEpoch }}</span>
-          </div>
-          <div class="wrapper">
-            <div class="finilized-row">
-              <div
-                v-for="n in currentResult.justifiedEpochStatus[0]"
-                :key="n"
-                class="finilized-square"
-                :class="{
-                  white: n.slotStatus == 'pending',
-                  green: n.slotStatus == 'proposed',
-                  red: n.slotStatus == 'missed',
-                }"
-                @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="finilized-part">
-          <div class="rows-title">
+          <!-- <div class="rows-title">
             <span>finalized</span>
             <span class="epoch">{{ currentResult.finalizedEpoch }}</span>
-          </div>
-          <div class="wrapper">
-            <div class="finilized-row">
-              <div
-                v-for="n in currentResult.finalizedEpochStatus[0]"
-                :key="n"
-                class="finilized-square"
-                :class="{
-                  white: n.slotStatus == 'pending',
-                  green: n.slotStatus == 'proposed',
-                  red: n.slotStatus == 'missed',
-                }"
-                @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
+          </div> -->
+
+          <div class="finilized-row">
+            <div
+              v-for="n in currentResult.finalizedEpochStatus[0]"
+              :key="n"
+              class="finilized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.finalizedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'finilized')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
           </div>
         </div>
       </div>
@@ -99,13 +111,17 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
+// import TooltipDialog from "./TooltipDialog.vue";
+
 export default {
+  components: {
+    // TooltipDialog,
+  },
   data() {
     return {
       showSyncInfo: false,
@@ -125,6 +141,11 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      dialog: "dialog",
+      epochType: "epochType",
+      epoch: "epoch",
+      slot: "slot",
+      status: "status",
     }),
     ...mapWritableState(useControlStore, {
       currentSlotData: "currentSlotData",
@@ -165,7 +186,6 @@ export default {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
           }
 
-          // Update the proposedBlock array
           this.proposedBlock.splice(0, this.proposedBlock.length, ...newArray);
         }
       },
@@ -191,6 +211,20 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    dialogOpen(arg1, arg2, arg3) {
+      this.dialog = true;
+      this.epoch = arg1;
+      this.slot = arg2;
+      this.status = arg3;
+    },
+    dialogClose() {
+      this.epoch = "";
+      this.slot = "";
+      this.status = "";
+      this.dialog = false;
+      this.epochType = "";
+    },
+
     initializeProposedBlock() {
       if (this.currentNetwork.id === 4) {
         return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
@@ -215,16 +249,9 @@ export default {
 };
 </script>
 <style scoped>
-.wrapper {
-  width: 100%;
-  height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .box-wrapper {
   width: 100%;
-  height: 100%;
+  height: 95%;
   box-sizing: border-box;
 }
 .amsterdam-parent {
@@ -234,6 +261,7 @@ export default {
   justify-content: center;
   align-content: center;
   color: #c1c1c1;
+  position: relative;
 }
 .icoTitle {
   display: flex;
@@ -267,29 +295,37 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   border-radius: 0 10px 10px 0;
 }
 
 .finilized-part,
 .proposed-part {
   width: 95%;
-  height: 32%;
+  height: 25%;
   border-radius: 0 0 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 1%;
 }
-.proposed-part {
+.justified-part {
+  width: 95%;
+  height: 50%;
+  border-radius: 0 0 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+/*.proposed-part {
   margin-bottom: 1%;
-}
-.finilized-part {
+}*/
+/*.finilized-part {
   border-top: 1px solid #c1c1c1;
-}
+}*/
 
-.rows-title {
+/*.rows-title {
   width: 95%;
   height: 20%;
   display: flex;
@@ -299,11 +335,11 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
   margin: 0.5% 0;
-}
+}*/
 .finilized-row,
 .proposed-rows {
   width: 100%;
-  height: 60%;
+  height: 80%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -315,7 +351,7 @@ export default {
 }
 .finilized-square {
   width: 3%;
-  height: 95%;
+  height: 90%;
   margin: 0 0.5%;
   border-radius: 5px;
 }
