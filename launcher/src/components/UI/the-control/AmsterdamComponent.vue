@@ -61,14 +61,14 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
           </div>
           <div class="finilized-row">
             <div
-              v-for="n in currentResult.justifiedEpochStatus[0]"
+              v-for="n in currentResult.preJustifiedEpochStatus[0]"
               :key="n"
               class="finilized-square"
               :class="{
@@ -77,7 +77,7 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the finilized epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
