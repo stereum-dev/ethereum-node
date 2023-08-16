@@ -317,7 +317,7 @@ export const useServices = defineStore("services", {
             {
               title: "RAM Usage Limit",
               type: "select",
-              value: [2, 4, 8, 16],
+              value: [2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 48, 64],
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
@@ -367,7 +367,7 @@ export const useServices = defineStore("services", {
             {
               title: "RAM Usage Limit",
               type: "select",
-              value: [2, 4, 8, 16],
+              value: [2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 48, 64],
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
@@ -386,6 +386,14 @@ export const useServices = defineStore("services", {
               changeValue: true,
               icon: "/img/icon/plugin-menu-icons/doppelganger.png",
               pattern: "(- --doppelganger-detection-enabled=)(.*)(\\n)",
+            },
+            {
+              title: "Remove Lockfiles",
+              type: "action",
+              action: "removeLockfiles",
+              changeValue: null,
+              displayWarningModal: false,
+              icon: "/img/icon/plugin-menu-icons/prunning.png",
             },
           ],
           drag: true,

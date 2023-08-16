@@ -200,6 +200,9 @@ export class ServiceManager {
         await this.resyncService(service, data);
         break;
 
+      case "removeLockfiles":
+        await this.removeTekuLockFiles(service.config.serviceID)
+        break;
       default:
         break;
     }
@@ -1435,5 +1438,15 @@ export class ServiceManager {
       );
     }
     return runRefs;
+  }
+
+  async removeTekuLockFiles(serviceID) {
+    let services = await this.readServiceConfigurations();
+    let service = services.find((s) => s.id === serviceID);
+    let workingDir = this.getWorkindDir(service);
+    if (!workingDir.endsWith("/")) {
+      workingDir += "/";
+    }
+    await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`)
   }
 }
