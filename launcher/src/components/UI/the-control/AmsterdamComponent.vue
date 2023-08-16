@@ -22,11 +22,6 @@
       </div>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
-          <!-- <div class="rows-title">
-            <span>proposed</span>
-            <span class="epoch">{{ currentResult.currentEpoch }}</span>
-          </div> -->
-
           <div class="proposed-rows">
             <div
               v-for="(n, index) in proposedBlock"
@@ -41,18 +36,14 @@
                 (cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
                   n.slotNumber === 0 ? 'null' : n.slotNumber
                 }`),
-                  dialogOpen()
+                  dialogOpen(currentResult.currentEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'proposed ')
               "
               @mouseleave="(cursorLocation = ''), dialogClose()"
             ></div>
           </div>
         </div>
         <div class="justified-part">
-          <!-- <div class="rows-title">
-            <span>justified</span>
-            <span class="epoch">{{ currentResult.currentJustifiedEpoch }}</span>
-          </div> -->
-
           <div class="finilized-row">
             <div
               v-for="n in currentResult.justifiedEpochStatus[0]"
@@ -64,9 +55,11 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                (cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.currentJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'justified ')
               "
-              @mouseleave="cursorLocation = ''"
+              @mouseleave="(cursorLocation = ''), dialogClose()"
             ></div>
           </div>
           <div class="finilized-row">
@@ -80,9 +73,11 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                (cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.previousJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'previous justified ')
               "
-              @mouseleave="cursorLocation = ''"
+              @mouseleave="(cursorLocation = ''), dialogClose()"
             ></div>
           </div>
         </div>
@@ -103,9 +98,11 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
+                (cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.finalizedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'finilized')
               "
-              @mouseleave="cursorLocation = ''"
+              @mouseleave="(cursorLocation = ''), dialogClose()"
             ></div>
           </div>
         </div>
@@ -114,9 +111,8 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
@@ -146,6 +142,10 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
       dialog: "dialog",
+      epochType: "epochType",
+      epoch: "epoch",
+      slot: "slot",
+      status: "status",
     }),
     ...mapWritableState(useControlStore, {
       currentSlotData: "currentSlotData",
@@ -186,7 +186,6 @@ export default {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
           }
 
-          // Update the proposedBlock array
           this.proposedBlock.splice(0, this.proposedBlock.length, ...newArray);
         }
       },
@@ -205,7 +204,6 @@ export default {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
-        console.log(this.currentResult);
       }, 12000);
     }
   },
@@ -213,12 +211,18 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
-    dialogOpen() {
+    dialogOpen(arg1, arg2, arg3) {
       this.dialog = true;
-      console.log(this.dialog);
+      this.epoch = arg1;
+      this.slot = arg2;
+      this.status = arg3;
     },
     dialogClose() {
+      this.epoch = "";
+      this.slot = "";
+      this.status = "";
       this.dialog = false;
+      this.epochType = "";
     },
 
     initializeProposedBlock() {

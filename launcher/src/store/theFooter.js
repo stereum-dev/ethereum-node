@@ -6,6 +6,13 @@ export const useFooter = defineStore("theFooter", {
       cursorLocation: "",
       stereumStatus: true,
       dialog: false,
+      epochType: "",
+      epoch: null,
+      slot: null,
+      status: "",
+      title: "",
+      first: "",
+      second: "",
     };
   },
   getters: {},
