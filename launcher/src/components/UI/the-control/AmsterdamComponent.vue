@@ -1,5 +1,7 @@
 <template>
   <div class="amsterdam-parent">
+    <tooltip-dialog open="test"></tooltip-dialog>
+
     <div
       class="icoTitle"
       @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
@@ -36,11 +38,12 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                (cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
                   n.slotNumber === 0 ? 'null' : n.slotNumber
-                }`
+                }`),
+                  dialogOpen()
               "
-              @mouseleave="cursorLocation = ''"
+              @mouseleave="(cursorLocation = ''), dialogClose()"
             ></div>
           </div>
         </div>
@@ -117,7 +120,12 @@ import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
+// import TooltipDialog from "./TooltipDialog.vue";
+
 export default {
+  components: {
+    // TooltipDialog,
+  },
   data() {
     return {
       showSyncInfo: false,
@@ -137,6 +145,7 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      dialog: "dialog",
     }),
     ...mapWritableState(useControlStore, {
       currentSlotData: "currentSlotData",
@@ -204,6 +213,14 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    dialogOpen() {
+      this.dialog = true;
+      console.log(this.dialog);
+    },
+    dialogClose() {
+      this.dialog = false;
+    },
+
     initializeProposedBlock() {
       if (this.currentNetwork.id === 4) {
         return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
@@ -240,6 +257,7 @@ export default {
   justify-content: center;
   align-content: center;
   color: #c1c1c1;
+  position: relative;
 }
 .icoTitle {
   display: flex;
