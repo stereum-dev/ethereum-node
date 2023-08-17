@@ -19,9 +19,9 @@
       </div>
       <div v-else class="h-1/3 flex justify-center items-center">
         <img class="w-4" src="/img/icon/node-icons/key.png" alt="icon" />
+        <span>{{ keyCounter }}</span>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -31,6 +31,10 @@ export default {
   props: {
     client: {
       type: Object,
+      required: true,
+    },
+    keyCounter: {
+      type: Number,
       required: true,
     },
   },
@@ -73,7 +77,6 @@ export default {
       }
       return "w-5 h-5 bg-red-600 border border-red-600 rounded-r-full";
     },
-
   },
   mounted() {},
   methods: {},
