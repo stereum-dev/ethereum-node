@@ -1,5 +1,5 @@
 <template>
-  <div v-if="open" :class="['parent-dialog', animateClass]">
+  <div v-if="open" :class="['parent-dialog', animateClass, flag ? 'amsterdam' : 'syncstatus']">
     <div v-if="flag" class="wrapper">
       <div class="title">{{ epochType }}</div>
       <div class="top-epoch">
@@ -84,8 +84,7 @@ export default {
   border-radius: 10px;
   z-index: 100;
   position: fixed;
-  top: 15%;
-  left: 40%;
+
   height: 20%;
   width: 25%;
   border: 3px solid #929292;
@@ -95,6 +94,14 @@ export default {
   justify-content: center;
   align-items: center;
   animation-duration: 0.5s;
+}
+.amsterdam {
+  top: 16%;
+  left: 48.8%;
+}
+.syncstatus {
+  top: 30%;
+  left: 48.8%;
 }
 .wrapper {
   width: 100%;

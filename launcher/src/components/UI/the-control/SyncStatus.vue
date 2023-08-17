@@ -459,14 +459,14 @@ export default {
 .executionIconCons {
   position: absolute;
   width: 54%;
-  left: 23%;
-  top: 31.5%;
+  left: 22.7%;
+  top: 24.6%;
 }
 .consensusIconCons {
   position: absolute;
   width: 54%;
-  left: 23%;
-  top: 31.5%;
+  left: 22.9%;
+  top: 24.6%;
 }
 .consensusPer {
   position: absolute;
@@ -484,7 +484,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 7%;
 }
 .syncStatusStatus {
   width: 100%;
@@ -498,34 +497,6 @@ export default {
   position: absolute;
   bottom: 0;
 }
-[data-tooltip] {
-  position: relative;
-  cursor: default;
-}
-[data-tooltip]::after {
-  position: absolute;
-  width: max-content;
-  left: -300%;
-  text-align: center;
-  content: attr(data-tooltip);
-  background: black;
-  border-radius: 5px;
-  font-size: 70%;
-  padding: 8% 20%;
-  border: 1px solid #929292;
-  text-transform: uppercase;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(-320%);
-  transition: opacity 0.3s transform 0.2s;
-  font-weight: 600;
-}
-[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-  transform: rotateY(50%);
-}
-
 .pageNumber {
   display: flex;
   justify-content: center;
