@@ -22,7 +22,7 @@ This repository contains the code and scripts for Stereum 2.0
 
 ## Get Started
 
-After installing the launcher start it up and connect to a server of your choice. Take a look at the [guide](https://stereum.net/ethereum-node-setup/) to find out what server operating systems are supported and what you can do with Stereum!
+After installing the launcher start it up and connect to a server of your choice. Take a look at the [guide](https://stereum.net/content/guides) to find out what server operating systems are supported and what you can do with Stereum!
 
 ## Contribute
 
