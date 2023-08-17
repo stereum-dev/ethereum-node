@@ -18,23 +18,24 @@
         <span class="text-xs text-gray-100">99%</span>
       </div>
       <div v-else class="h-1/3 flex justify-center items-center">
-        <img class="w-4" src="/img/icon/node-icons/key.png" alt="icon" />
-        <span>{{ keyCounter }}</span>
+        <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
+        <span class="text-md font-semibold" :class="client.state === 'running' ? 'text-green-500' : 'text-red-600 '">{{
+          getKeyNumbers
+        }}</span>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useStakingStore } from "@/store/theStaking";
+
 export default {
   name: "ClientsLayout",
   components: {},
   props: {
     client: {
       type: Object,
-      required: true,
-    },
-    keyCounter: {
-      type: Number,
       required: true,
     },
   },
@@ -69,6 +70,9 @@ export default {
     };
   },
   computed: {
+    ...mapWritableState(useStakingStore, {
+      keys: "keys",
+    }),
     clientStatus() {
       if (this.client.state === "running") {
         return "w-5 h-5 bg-green-500 border border-green-500 rounded-r-full";
@@ -76,6 +80,9 @@ export default {
         return "w-5 h-5 bg-orange-500 border border-orange-500 rounded-r-full";
       }
       return "w-5 h-5 bg-red-600 border border-red-600 rounded-r-full";
+    },
+    getKeyNumbers() {
+      return this.keys.length;
     },
   },
   mounted() {},

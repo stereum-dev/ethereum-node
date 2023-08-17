@@ -6,7 +6,7 @@
       ref="validatorRefs"
       class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
     >
-      <ClientLayout :client="item" :key-counter="keyCounter" />
+      <ClientLayout :client="item" />
       <ClientButtons
         :client="item"
         @open-expert="$emit('openExpert', item)"

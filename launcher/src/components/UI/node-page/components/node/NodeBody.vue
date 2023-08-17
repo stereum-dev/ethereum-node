@@ -344,7 +344,7 @@ export default {
 
       this.lineOne = new LeaderLine(start, middle, { dash: { animation: true } });
       this.lineOne.setOptions({
-        path: "straight",
+        path: "fluid",
         startPlugSize: 1,
         endPlugSize: 2,
         size: 4,
@@ -353,7 +353,7 @@ export default {
       });
       this.lineTwo = new LeaderLine(middle, end, { dash: { animation: true } });
       this.lineTwo.setOptions({
-        path: "straight",
+        path: "fluid",
         startPlugSize: 1,
         endPlugSize: 2,
         size: 4,
