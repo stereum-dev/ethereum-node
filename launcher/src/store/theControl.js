@@ -6,6 +6,7 @@ export const useControlStore = defineStore("theControl", {
       currentSlotData: null,
       currentEpochData: null,
       currentResult: {},
+      noDataFlag: false,
       ServerName: null,
       ipAddress: null,
       totalRam: null,

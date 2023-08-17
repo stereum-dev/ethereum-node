@@ -20,7 +20,7 @@
           <div class="square-3 square"></div>
         </div>
       </div>
-      <no-data v-else-if="currentResult.beaconStatus !== 0 ? true : false"></no-data>
+      <no-data v-else-if="nodataFlagControl"></no-data>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows">
@@ -113,7 +113,6 @@ import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 import NoData from "./NoData.vue";
-// import TooltipDialog from "./TooltipDialog.vue";
 
 export default {
   components: {
@@ -149,6 +148,7 @@ export default {
       currentSlotData: "currentSlotData",
       currentEpochData: "currentEpochData",
       currentResult: "currentResult",
+      noDataFlag: "noDataFlag",
     }),
     proposedBlock() {
       if (this.currentNetwork.id === 4) {
@@ -170,6 +170,9 @@ export default {
         return false;
       }
       return false;
+    },
+    nodataFlagControl() {
+      return this.flagController();
     },
   },
 
@@ -202,7 +205,6 @@ export default {
       this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
-          console.log(this.currentResult);
         }
       }, 12000);
     }
@@ -211,6 +213,15 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    flagController() {
+      if (this.flag === false && this.currentResult.beaconStatus !== 0) {
+        this.noDataFlag = true;
+        return true;
+      } else if (this.currentResult.beaconStatus === 0) {
+        this.noDataFlag = false;
+        return false;
+      }
+    },
     dialogOpen(arg1, arg2, arg3) {
       this.dialog = true;
       this.epoch = arg1;
