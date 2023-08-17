@@ -20,7 +20,7 @@
           <div class="square-3 square"></div>
         </div>
       </div>
-      <no-data v-else-if="shouldDisplaySecondBlock"></no-data>
+      <no-data v-else-if="currentResult.beaconStatus !== 0 ? true : false"></no-data>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows">
@@ -83,11 +83,6 @@
           </div>
         </div>
         <div class="finilized-part">
-          <!-- <div class="rows-title">
-            <span>finalized</span>
-            <span class="epoch">{{ currentResult.finalizedEpoch }}</span>
-          </div> -->
-
           <div class="finilized-row">
             <div
               v-for="n in currentResult.finalizedEpochStatus[0]"
@@ -166,24 +161,18 @@ export default {
     networkIcon() {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     },
-    // shouldDisplayFirstBlock() {
-    //   return this.proposed.length === 0 && this.isConsensusRunning;
-    // },
-    // shouldDisplaySecondBlock() {
-    //   return !this.isConsensusRunning;
-    // },
-
     flag() {
       if (this.currentResult === undefined) {
         return true;
       } else if (this.currentResult.beaconStatus === undefined) {
         return true;
       } else if (this.currentResult.beaconStatus !== 0) {
-        return true;
+        return false;
       }
       return false;
     },
   },
+
   watch: {
     currentResult: {
       handler(newResult) {
@@ -213,6 +202,7 @@ export default {
       this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
+          console.log(this.currentResult);
         }
       }, 12000);
     }
