@@ -1,5 +1,5 @@
 <template>
-  <div v-if="open" :class="['parent-dialog', animateClass, flag == true ? 'amsterdam' : 'syncstatus']">
+  <div v-if="open" :class="['parent-dialog', animateClass, flag ? 'amsterdam' : 'syncstatus']">
     <div v-if="flag" class="wrapper">
       <div class="title">{{ epochType }}</div>
       <div class="top-epoch">
