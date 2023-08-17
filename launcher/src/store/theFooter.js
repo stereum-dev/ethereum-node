@@ -5,6 +5,7 @@ export const useFooter = defineStore("theFooter", {
     return {
       cursorLocation: "",
       stereumStatus: true,
+      isConsensusRunning: false,
       dialog: false,
       epochType: "",
       epoch: null,

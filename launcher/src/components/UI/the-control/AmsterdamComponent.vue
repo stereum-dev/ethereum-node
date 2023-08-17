@@ -1,7 +1,5 @@
 <template>
   <div class="amsterdam-parent">
-    <tooltip-dialog open="test"></tooltip-dialog>
-
     <div
       class="icoTitle"
       @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
@@ -20,6 +18,7 @@
           <div class="square-3 square"></div>
         </div>
       </div>
+      <no-data v-else-if="nodataFlagControl"></no-data>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows">
@@ -82,11 +81,6 @@
           </div>
         </div>
         <div class="finilized-part">
-          <!-- <div class="rows-title">
-            <span>finalized</span>
-            <span class="epoch">{{ currentResult.finalizedEpoch }}</span>
-          </div> -->
-
           <div class="finilized-row">
             <div
               v-for="n in currentResult.finalizedEpochStatus[0]"
@@ -116,11 +110,11 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
-// import TooltipDialog from "./TooltipDialog.vue";
+import NoData from "./NoData.vue";
 
 export default {
   components: {
-    // TooltipDialog,
+    NoData,
   },
   data() {
     return {
@@ -141,6 +135,7 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
       dialog: "dialog",
       epochType: "epochType",
       epoch: "epoch",
@@ -151,6 +146,7 @@ export default {
       currentSlotData: "currentSlotData",
       currentEpochData: "currentEpochData",
       currentResult: "currentResult",
+      noDataFlag: "noDataFlag",
     }),
     proposedBlock() {
       if (this.currentNetwork.id === 4) {
@@ -169,11 +165,15 @@ export default {
       } else if (this.currentResult.beaconStatus === undefined) {
         return true;
       } else if (this.currentResult.beaconStatus !== 0) {
-        return true;
+        return false;
       }
       return false;
     },
+    nodataFlagControl() {
+      return this.flagController();
+    },
   },
+
   watch: {
     currentResult: {
       handler(newResult) {
@@ -211,6 +211,15 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    flagController() {
+      if (this.flag === false && this.currentResult.beaconStatus !== 0) {
+        this.noDataFlag = true;
+        return true;
+      } else if (this.currentResult.beaconStatus === 0) {
+        this.noDataFlag = false;
+        return false;
+      }
+    },
     dialogOpen(arg1, arg2, arg3) {
       this.dialog = true;
       this.epoch = arg1;
@@ -253,6 +262,7 @@ export default {
   width: 100%;
   height: 95%;
   box-sizing: border-box;
+  position: relative;
 }
 .amsterdam-parent {
   display: flex;
@@ -293,10 +303,10 @@ export default {
   width: 70%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  position: relative;
   justify-content: center;
   align-items: center;
-  border-radius: 0 10px 10px 0;
+  flex-direction: column;
 }
 
 .finilized-part,

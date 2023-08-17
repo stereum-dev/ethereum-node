@@ -2,7 +2,7 @@
   <div class="no-data_parent">
     <div class="no-data_box">
       <span class="big-sign"> &gt; {{ $t("noData.noData") }} &lt; </span>
-      <div class="bottom-part">
+      <div v-if="serviceCat === 'prometheus' ? true : false" class="bottom-part">
         <div class="comment-part">
           <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
           <span class="comment-row2">Prometheus</span>
@@ -11,11 +11,23 @@
           <img src="/img/icon/control/PrometheusServiceCircle.png" alt="Prometheus" />
         </div>
       </div>
+      <div v-else class="bottom-part">
+        <div class="comment-part">
+          <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
+          <span class="comment-row2">consensus client</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
+  props: {
+    serviceCat: {
+      type: String,
+      default: "Prometheus",
+    },
+  },
   data() {
     return {
       serviceName: "Prometheus",
@@ -25,9 +37,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
 [data-tooltip] {
   position: relative;
   cursor: default;
@@ -84,13 +93,15 @@ export default {
   font-weight: 800;
   animation: blink 1s linear infinite;
   text-shadow: rgb(86, 202, 234) 1px 0 4px;
+  text-transform: uppercase;
 }
 .bottom-part {
   width: 100%;
   height: 60%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  text-transform: uppercase;
 }
 .comment-part {
   display: flex;
@@ -107,7 +118,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 60%;
+  font-size: 55%;
   font-weight: 500;
 }
 .comment-row2 {
@@ -116,8 +127,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 80%;
-  font-weight: 600;
+  font-size: 70%;
+  font-weight: 700;
 }
 .icon-part {
   display: flex;

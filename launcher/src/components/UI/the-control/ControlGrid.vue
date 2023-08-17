@@ -163,8 +163,23 @@ export default {
 
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
       dialog: "dialog",
     }),
+    isAnyConsensusRunning() {
+      const consensusServices = this.installedServices.filter((item) => item.category === "consensus");
+
+      if (consensusServices.length === 0) {
+        return false;
+      }
+
+      return consensusServices.some((item) => item.state === "running");
+    },
+  },
+  watch: {
+    isAnyConsensusRunning(newValue) {
+      this.isConsensusRunning = newValue;
+    },
   },
   methods: {
     scrollUp() {

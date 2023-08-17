@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <no-data v-if="noDataLayerShow"></no-data>
+        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
@@ -143,7 +143,7 @@ export default {
         {
           id: 4,
           name: "unknown",
-          icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
+          icon: "/img/icon/control/spinner.gif",
         },
       ],
     };
@@ -555,7 +555,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 43%;
+  font-size: 50%;
   color: #c1c1c1;
   font-weight: bold;
 }
@@ -567,7 +567,8 @@ export default {
   height: 75%;
 }
 .sync-icon_container img {
-  width: 60%;
+  width: 70%;
+  height: 90%;
 }
 .sync-box_value {
   display: flex;
