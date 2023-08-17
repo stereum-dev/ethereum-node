@@ -3051,6 +3051,7 @@ rm -rf diskoutput
         let currentSlot = parseInt(JSON.parse(beaconAPISlotRunCmd.stdout).data.header.message.slot);
         let currentEpoch = Math.floor(currentSlot / epochLength);
         let currentJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.current_justified.epoch);
+        let previousJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.previous_justified.epoch);
         let finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch);
 
         // create return data
@@ -3058,52 +3059,57 @@ rm -rf diskoutput
           currentSlot: currentSlot,
           currentEpoch: currentEpoch,
           currentJustifiedEpoch: currentJustifiedEpoch,
+          previousJustifiedEpoch: previousJustifiedEpoch,
           finalizedEpoch: finalizedEpoch,
           beaconStatus: beaconStatus.code,
           currentEpochStatus: [],
           justifiedEpochStatus: [],
+          preJustifiedEpochStatus: [],
           finalizedEpochStatus: [],
         };
 
         // create sub arrays
         const currentSlotStatusArray = [];
         const justifiedSlotStatusArray = [];
+        const preJustifiedSlotStatusArray = [];
         const finalizedSlotStatusArray = [];
 
         // retrive corresponding Slots' status
         let firstSlots = {
           firstSlotInCurrentEpoch: currentEpoch * epochLength,
           firstSlotInJustifiedEpoch: currentJustifiedEpoch * epochLength,
+          firstSlotInPreviousJustifiedEpoch: previousJustifiedEpoch * epochLength,
           firstSlotInFinalizedEpoch: finalizedEpoch * epochLength,
         };
 
         for (const slots in firstSlots) {
-          let slotsNumberInEpoch = 0;
-          if (`${slots}` === "firstSlotInCurrentEpoch") {
-            slotsNumberInEpoch = (currentSlot % epochLength) + 1;
-          } else {
-            slotsNumberInEpoch = epochLength;
-          }
+          let slotsNumberInEpoch =
+            `${slots}` === "firstSlotInCurrentEpoch" ? (currentSlot % epochLength) + 1 : epochLength;
+
           for (let i = 0; i < slotsNumberInEpoch; i++) {
-            let beaconAPISlotStatusCmd = "";
-            if (serviceNameConverted === "Lodestar") {
-              beaconAPISlotStatusCmd = `${cmdBegin}${firstSlots[slots] + i}${cmdEnd}`;
-            } else {
-              beaconAPISlotStatusCmd = `${cmdBegin}${firstSlots[slots] + i}/root${cmdEnd}`;
-            }
+            let beaconAPISlotStatusCmd =
+              serviceNameConverted === "Lodestar"
+                ? `${cmdBegin}${firstSlots[slots] + i}${cmdEnd}`
+                : `${cmdBegin}${firstSlots[slots] + i}/root${cmdEnd}`;
+
             let beaconAPISlotStatusRunCmd = await this.nodeConnection.sshService.exec(beaconAPISlotStatusCmd);
-            if (`${slots}` === "firstSlotInJustifiedEpoch") {
+            if (`${slots}` === "firstSlotInCurrentEpoch") {
+              currentSlotStatusArray.push({
+                slotNumber: firstSlots[slots] + i,
+                slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
+              });
+            } else if (`${slots}` === "firstSlotInJustifiedEpoch") {
               justifiedSlotStatusArray.push({
                 slotNumber: firstSlots[slots] + i,
                 slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
               });
-            } else if (`${slots}` === "firstSlotInFinalizedEpoch") {
-              finalizedSlotStatusArray.push({
+            } else if (`${slots}` === "firstSlotInPreviousJustifiedEpoch") {
+              preJustifiedSlotStatusArray.push({
                 slotNumber: firstSlots[slots] + i,
                 slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
               });
             } else {
-              currentSlotStatusArray.push({
+              finalizedSlotStatusArray.push({
                 slotNumber: firstSlots[slots] + i,
                 slotStatus: beaconAPISlotStatusRunCmd.stdout.includes(notFound) ? "missed" : "proposed",
               });
@@ -3113,6 +3119,7 @@ rm -rf diskoutput
 
         currentEpochSlotStatus["currentEpochStatus"].push(currentSlotStatusArray);
         currentEpochSlotStatus["justifiedEpochStatus"].push(justifiedSlotStatusArray);
+        currentEpochSlotStatus["preJustifiedEpochStatus"].push(preJustifiedSlotStatusArray);
         currentEpochSlotStatus["finalizedEpochStatus"].push(finalizedSlotStatusArray);
         return currentEpochSlotStatus;
       } else if (beaconStatus.code === 2) {
@@ -3120,10 +3127,12 @@ rm -rf diskoutput
           currentSlot: null,
           currentEpoch: null,
           currentJustifiedEpoch: null,
+          previousJustifiedEpoch: null,
           finalizedEpoch: null,
           beaconStatus: 2,
           currentEpochStatus: [],
           justifiedEpochStatus: [],
+          preJustifiedEpochStatus: [],
           finalizedEpochStatus: [],
         });
       }

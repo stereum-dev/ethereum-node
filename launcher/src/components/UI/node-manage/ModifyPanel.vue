@@ -70,7 +70,7 @@
         </div>
         <template v-for="service in options">
           <div
-            v-if="!switchHandler(service)"
+            v-if="!switchHandler(service) && service.service !== 'FlashbotsMevBoostService'"
             :key="service.id"
             class="optionsBox"
             :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
@@ -80,21 +80,23 @@
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
               <div class="optionsName">
-                <span>{{ service.name }}</span>
+                <span class="notSelected">{{ service.name }}</span>
               </div>
             </div>
           </div>
           <div
-            v-if="switchHandler(service)"
+            v-if="switchHandler(service) && service.service !== 'FlashbotsMevBoostService'"
             :key="service.id"
-            class="clientAddBox"
+            class="optionsBox"
             :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
           >
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
-            <div class="connectionConfig">
+            <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
-              <span class="name">{{ service.name }}</span>
+              <div class="optionsName">
+                <span class="selected">{{ service.name }}</span>
+              </div>
             </div>
           </div>
         </template>
@@ -230,8 +232,14 @@ export default {
     optionsToConnect() {
       if (this.items.category === "consensus") {
         this.options = this.newConfiguration.filter((service) => service.category === "execution");
+      } else if (this.items.service === "SSVNetworkService") {
+        this.options = this.newConfiguration.filter((service) => /execution|consensus/.test(service.category));
       } else if (this.items.category === "validator") {
-        this.options = this.newConfiguration.filter((service) => service.category === "consensus" && this.items.service !== "Web3SignerService" || (service.service === "CharonService" && this.items.service !== "CharonService"));
+        this.options = this.newConfiguration.filter(
+          (service) =>
+            (service.category === "consensus" && this.items.service !== "Web3SignerService") ||
+            (service.service === "CharonService" && this.items.service !== "CharonService")
+        );
       } else if (this.items.service === "FlashbotsMevBoostService") {
         this.options = this.newConfiguration.filter((service) => service.category === "consensus");
       } else {
@@ -344,10 +352,6 @@ export default {
   box-sizing: border-box;
 }
 
-.activeAddPanel {
-  position: relative !important;
-  transition-duration: 2s !important;
-}
 .addBox {
   width: 98%;
   height: 99%;
@@ -658,35 +662,13 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
-.clientAddBox {
-  width: 99%;
-  height: 12%;
-  background-color: #23282b;
-  border-radius: 3px;
-  margin-top: 10px;
-  padding: 1px 3px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-}
-.clientAddBox:hover {
-  background-color: #2d3336;
-  box-shadow: 0 1px 5px 1px #111111;
-  transition-duration: 0.2s;
-}
 .portAddBox img {
   padding: 1px;
   width: 18%;
   height: 80%;
   opacity: 0.5;
 }
-.clientAddBox img {
-  padding: 1px;
-  width: 16%;
-  height: 80%;
-  opacity: 0.5;
-}
+
 .portConfig {
   width: 80%;
   height: 95%;
@@ -717,42 +699,6 @@ export default {
   color: #b0b0b0;
   padding: 0;
   margin-top: 3%;
-  box-sizing: border-box;
-}
-.connectionConfig {
-  width: 80%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 2px;
-  box-sizing: border-box;
-}
-
-.connectionConfig .category {
-  width: max-content;
-  height: 30%;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #b3b3b3;
-  text-align: center;
-  text-transform: uppercase;
-  box-sizing: border-box;
-}
-.connectionConfig .name {
-  width: 99%;
-  height: 60%;
-  background-color: rgb(14, 14, 14);
-  border: 1px solid rgb(53, 53, 53);
-  border-radius: 30px;
-  margin-top: 3%;
-  padding: 2px;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #34a061;
-  text-align: center;
-  text-transform: uppercase;
   box-sizing: border-box;
 }
 .btnBox {
@@ -875,11 +821,23 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
-.optionsName span {
+.optionsName .notSelected {
   padding: 2px;
+  margin-top: 2%;
   font-size: 0.6rem;
   font-weight: 700;
   color: #9a9a9a;
+  text-align: center;
+  align-self: center;
+  text-transform: uppercase;
+  box-sizing: border-box;
+}
+.optionsName .selected {
+  padding: 2px;
+  margin-top: 2%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #34a061;
   text-align: center;
   align-self: center;
   text-transform: uppercase;

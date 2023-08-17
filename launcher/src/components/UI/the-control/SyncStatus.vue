@@ -23,9 +23,11 @@
             </div>
             <div
               class="consensusIconCons"
-              :data-tooltip="
-                consensusName + ': ' + formatValues(consensusFirstVal) + ' / ' + formatValues(consensusSecondVal)
+              @mouseenter="
+                dialogOpen(consensusName, consensusFirstVal, consensusSecondVal),
+                  (cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`)
               "
+              @mouseleave="dialogClose(), (cursorLocation = '')"
             >
               <img :src="clientImage(consensusName)" alt="consensus" />
             </div>
@@ -43,9 +45,11 @@
             </div>
             <div
               class="executionIconCons"
-              :data-tooltip="
-                executionName + ': ' + formatValues(executionFirstVal) + ' / ' + formatValues(executionSecondVal)
+              @mouseenter="
+                dialogOpen(executionName, executionFirstVal, executionSecondVal),
+                  (cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`)
               "
+              @mouseleave="dialogClose(), (cursorLocation = '')"
             >
               <img :src="clientImage(executionName)" alt="execution" />
             </div>
@@ -69,9 +73,11 @@
 </template>
 <script>
 import SyncCircularProgress from "./SyncCircularProgress.vue";
-import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
+import { mapState, mapWritableState } from "pinia";
+import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
 import NoData from "./NoData.vue";
+
 export default {
   components: { NoData, SyncCircularProgress },
   data() {
@@ -144,6 +150,17 @@ export default {
   },
 
   computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+      dialog: "dialog",
+      epochType: "epochType",
+      epoch: "epoch",
+      slot: "slot",
+      status: "status",
+      title: "title",
+      first: "first",
+      second: "second",
+    }),
     ...mapState(useControlStore, {
       code: "code",
       syncstatus: "syncstatus",
@@ -182,6 +199,18 @@ export default {
     if (this.refresher) clearTimeout(this.refresher);
   },
   methods: {
+    dialogOpen(arg1, arg2, arg3) {
+      this.dialog = true;
+      this.title = arg1;
+      this.first = arg2;
+      this.second = arg3;
+    },
+    dialogClose() {
+      this.dialog = false;
+      this.title = "";
+      this.first = "";
+      this.second = "";
+    },
     clientImage(name) {
       if (!name) {
         return "";
@@ -427,12 +456,17 @@ export default {
   align-items: center;
   text-transform: uppercase;
 }
-.consensusIconCons,
 .executionIconCons {
   position: absolute;
-  width: 52%;
-  left: 0;
-  top: -53%;
+  width: 54%;
+  left: 23%;
+  top: 31.5%;
+}
+.consensusIconCons {
+  position: absolute;
+  width: 54%;
+  left: 23%;
+  top: 31.5%;
 }
 .consensusPer {
   position: absolute;

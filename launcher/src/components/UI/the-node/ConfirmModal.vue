@@ -21,7 +21,6 @@
         {{ $t("confirmModal.turnOn") }}
       </div>
       <div v-else class="toggle-button_off" @click="$emit('powerToggleOff')">
-        <!-- <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" /> -->
         <span>{{ $t("confirmModal.turnOff") }}</span>
       </div>
       <span class="clickOut">{{ $t("confirmModal.close") }}</span>
@@ -31,14 +30,6 @@
 <script>
 export default {
   props: {
-    service: {
-      type: Object,
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      required: true,
-    },
     mainIcon: {
       type: Boolean,
       required: true,
