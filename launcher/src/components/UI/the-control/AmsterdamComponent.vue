@@ -1,7 +1,5 @@
 <template>
   <div class="amsterdam-parent">
-    <tooltip-dialog open="test"></tooltip-dialog>
-
     <div
       class="icoTitle"
       @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
