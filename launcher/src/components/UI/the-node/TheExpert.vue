@@ -143,7 +143,9 @@
         -->
 
         <div
-          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'action' && option.action === 'pruning'
+          )"
           :key="index"
           class="actionBox"
           :class="{ unvisible: isExpertModeActive }"
@@ -162,6 +164,18 @@
               <span class="slider round"></span>
             </label>
           </div>
+        </div>
+        <div
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'action' && option.action === 'removeLockfiles'
+          )"
+          :key="index"
+          class="actionBox"
+          :class="{ unvisible: isExpertModeActive }"
+        >
+          <img :src="option.icon" alt="icon" />
+          <span class="actionBoxTitle">{{ option.title }}</span>
+          <span class="actionBtn" @click="executeAction(option.action, item)">Execute</span>
         </div>
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
@@ -462,6 +476,9 @@ export default {
       this.confirmExpertChanges(el);
       await ControlService.restartService(el.config.serviceID);
     },
+    async executeAction(action, service) {
+      await ControlService.chooseServiceAction({ action: action, service: structuredClone(service) });
+    },
   },
 };
 </script>
@@ -617,6 +634,26 @@ export default {
   background-color: #1a2e2a;
 }
 .expertRow .docBox .openBtn:active {
+  transform: scale(0.95);
+}
+.actionBtn {
+  grid-row: 1/2;
+  /* width: 100%;
+  height: 100%; */
+  padding-top: 2px;
+  background-color: #264744;
+  border-radius: 35px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #dbdbdb;
+  cursor: pointer;
+}
+.actionBtn:hover {
+  background-color: #1a2e2a;
+}
+.actionBtn:active {
   transform: scale(0.95);
 }
 .expertRow .selectBox {

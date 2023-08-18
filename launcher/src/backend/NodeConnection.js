@@ -568,6 +568,9 @@ export class NodeConnection {
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write yaml", otherRunRef: ref });
     try {
+      if (!this.checkServiceYamlFormat(service.data.trim())) {
+        throw new Error("Config is not in the right format!");
+      }
       configStatus = await this.sshService.exec(
         "echo -e " +
         StringUtils.escapeStringForShell(service.data.trim()) +
@@ -580,6 +583,7 @@ export class NodeConnection {
         name: "write " + service.service + " yaml",
         otherRunRef: ref,
         status: false,
+        data: err,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write service yaml of " + service.id, err);
@@ -1136,6 +1140,22 @@ export class NodeConnection {
       return result.stdout.trim()
     } catch (error) {
       log.error("Error getting CPU Architecture", error)
+    }
+  }
+
+  checkServiceYamlFormat(string) {
+    try {
+      const properties = ["id", "service", "configVersion", "command", "entrypoint", "env", "image", "ports", "volumes", "user", "network", "dependencies"]
+      const service = YAML.parse(string)
+      for (const propertiesKey of properties) {
+        if (!service[propertiesKey]) {
+          throw new Error(service[propertiesKey] + " property is missing, empty or invalid")
+        }
+      }
+      return true
+    } catch (err) {
+      log.error(err)
+      return false
     }
   }
 }
