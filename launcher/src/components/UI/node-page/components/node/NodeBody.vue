@@ -1,60 +1,31 @@
-import { mapState } from 'pinia';
+<!-- eslint-disable vue/return-in-computed-property -->
+import { mapState, map } from 'pinia';
 <template>
   <div
     class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto mt-1 bg-[#151618] relative"
   >
     <div class="w-full h-full grid grid-cols-3 p-2">
-      <div ref="execution" class="col-start-1 col-span-1 gap-2 p-2 space-y-8">
-        <div
-          v-for="item in getExecutionServices"
-          :key="item"
-          class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
-        >
-          <ClientLayout :client="item" />
-          <ClientButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
-          <ExpertWindow
-            v-if="item.expertOptionsModal"
-            :item="item"
-            @hide-modal="clickOutside(item)"
-            @prunning-warning="runGethPrunningWarning"
-            @resync-warning="runResyncWarning"
-          />
-        </div>
-      </div>
-      <div ref="consensus" class="col-start-2 col-end-3 gap-2 p-2">
-        <div
-          v-for="item in getConsensusServices"
-          :key="item"
-          class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
-        >
-          <ClientLayout :client="item" />
-          <ClientButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
-          <ExpertWindow
-            v-if="item.expertOptionsModal"
-            :item="item"
-            @hide-modal="clickOutside(item)"
-            @prunning-warning="runGethPrunningWarning"
-            @resync-warning="runResyncWarning"
-          />
-        </div>
-      </div>
-      <div class="col-start-3 col-end-4 gap-2 p-2">
-        <div
-          v-for="item in getValidatorServices"
-          :key="item"
-          class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
-        >
-          <ClientLayout :client="item" />
-          <ClientButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
-          <ExpertWindow
-            v-if="item.expertOptionsModal"
-            :item="item"
-            @hide-modal="clickOutside(item)"
-            @open-pruning="runGethPrunningWarning"
-            @open-resync="runResyncWarning"
-          />
-        </div>
-      </div>
+      <ExecutionClients
+        @open-expert="openExpertWindow"
+        @open-log="openLogsPage"
+        @hide-modal="clickOutside"
+        @state-handler="stateHandler"
+        @restart-handler="restartService"
+      />
+      <ConsensusClients
+        @open-expert="openExpertWindow"
+        @open-log="openLogsPage"
+        @hide-modal="clickOutside"
+        @state-handler="stateHandler"
+        @restart-handler="restartService"
+      />
+      <ValidatorClients
+        @open-expert="openExpertWindow"
+        @open-log="openLogsPage"
+        @hide-modal="clickOutside"
+        @state-handler="stateHandler"
+        @restart-handler="restartService"
+      />
     </div>
     <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
     <PruingModal
@@ -73,34 +44,36 @@ import { mapState } from 'pinia';
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
+import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
-import ClientLayout from "./ClientLayout.vue";
-import ClientButtons from "./ClientButtons";
-import { useMouseInElement } from "@vueuse/core";
-import ExpertWindow from "../../sections/ExpertWindow.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
 import ControlService from "@/store/ControlService";
 import PruingModal from "./PrunningModal.vue";
 import ResyncModal from "./ResyncModal.vue";
+import LeaderLine from "leader-line-new";
+import ExecutionClients from "./ExecutionClients";
+import ConsensusClients from "./ConsensusClients";
+import ValidatorClients from "./ValidatorClients";
 
 export default {
   name: "NodeBody",
   components: {
-    ClientLayout,
-    ClientButtons,
-    ExpertWindow,
     PluginLogs,
     PruingModal,
     ResyncModal,
+    ExecutionClients,
+    ConsensusClients,
+    ValidatorClients,
   },
   data() {
     return {
-      execution: null,
-      consensus: null,
-      validator: null,
       itemsList: [],
       isPluginMenuActive: false,
+      lineOne: null,
+      lineTwo: null,
+      lineThree: null,
       isServiceOn: false,
       isServicePending: false,
       gethPrunningWarningModal: false,
@@ -108,55 +81,163 @@ export default {
       options: null,
       itemToLogs: {},
       resyncWarningModal: false,
+      isClientLinkedToMev: false,
+      restartModalShow: false,
+      executionItems: [],
+      consensusItems: [],
+      validatorItems: [],
     };
   },
+
   computed: {
-    getExecutionServices() {
-      return this.installedServices.filter((e) => e.category === "execution");
-    },
-    getConsensusServices() {
-      return this.installedServices.filter((e) => e.category === "consensus");
-    },
-    getValidatorServices() {
-      return this.installedServices.filter((e) => e.category === "validator");
-    },
-    ...mapState(useServices, {
-      runningServices: "runningServices",
+    ...mapWritableState(useNodeStore, {
+      connectedServices: "connectedServices",
+      selectedExecutionRef: "selectedExecutionRef",
+      selectedConsensusRef: "selectedConsensusRef",
+      selectedValidatorRef: "selectedValidatorRef",
+      validatorRef: "validatorRef",
+      consensusRef: "consensusRef",
+      executionRef: "executionRef",
+      finalExecutionRef: "finalExecutionRef",
+      max: "max",
+    }),
+    ...mapWritableState(useServices, {
       installedServices: "installedServices",
     }),
-    executionPositionX() {
-      return this.execution ? this.execution.elementPositionX : 0;
+    ...mapWritableState(useStakingStore, {
+      keyCounter: "keyCounter",
+    }),
+
+    getConnectedValidator() {
+      const connectedVal = this.installedServices.find(
+        (item) => item.category === "validator" && item.config.dependencies?.consensusClients
+      );
+      return connectedVal;
     },
-    executionPositionY() {
-      return this.execution ? this.execution.elementPositionY : 0;
+    getConnectedConsensus() {
+      const connectedCons = this.getConnectedValidator.config.dependencies.consensusClients[0];
+      return connectedCons;
     },
-    executionWidth() {
-      return this.execution ? this.execution.width : 0;
+    getConnectedExecution() {
+      return this.getConnectedConsensus?.dependencies.executionClients[0];
     },
-    executionHeight() {
-      return this.execution ? this.execution.height : 0;
-    },
-    consensusPositionX() {
-      return this.consensus ? this.consensus.elementPositionX : 0;
-    },
-    consensusPositionY() {
-      return this.consensus ? this.consensus.elementPositionY : 0;
-    },
-    consensusWidth() {
-      return this.consensus ? this.consensus.width : 0;
-    },
-    consensusHeight() {
-      return this.consensus ? this.consensus.height : 0;
+  },
+  watch: {
+    watchDrawLine() {
+      this.drawConnectingline(this.selectedValidatorRef, this.selectedConsensusRef, this.selectedExecutionRef);
     },
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.getPosition();
-      // this.drawLine();
-    });
+    this.getRefOfConnectedClients();
+    this.drawConnectingline(this.selectedValidatorRef, this.selectedConsensusRef, this.selectedExecutionRef);
+  },
+
+  beforeUnmount() {
+    if (this.lineOne) {
+      this.lineOne.remove(); // Remove the LeaderLine instance
+    }
+    if (this.lineTwo) {
+      this.lineTwo.remove(); // Remove the LeaderLine instance
+    }
   },
   methods: {
+    getRefOfConnectedClients() {
+      const connectedVal = this.getConnectedValidator;
+      const connectedCons = this.getConnectedConsensus;
+      const connectedExec = this.getConnectedExecution;
+
+      if (connectedVal) {
+        const refService = this.validatorRef.find((item) => {
+          return item.refId === connectedVal.config.serviceID;
+        });
+
+        if (refService) {
+          this.selectedValidatorRef = refService.ref;
+        }
+      }
+
+      if (connectedCons) {
+        const refService = this.consensusRef.find((item) => {
+          return item.refId === connectedCons.id;
+        });
+
+        if (refService) {
+          this.selectedConsensusRef = refService.ref;
+        }
+      }
+
+      if (connectedExec) {
+        const refService = this.executionRef.find((item) => {
+          return item.refId === connectedExec.id;
+        });
+
+        if (refService) {
+          this.selectedExecutionRef = refService.ref;
+        }
+      }
+    },
+
+    restartService(el) {
+      this.itemToRestart = el;
+      this.restartModalShow = true;
+      this.titlePicker = this.restartTitle;
+      this.iconPicker = this.restartIcon;
+      this.functionCondition = true;
+    },
+    async restartConfirmed(service) {
+      this.restartLoad = true;
+      service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
+      if (!service.yaml.includes("isPruning: true")) {
+        this.isServiceOn = false;
+        service.serviceIsPending = true;
+        await ControlService.restartService(service.config.serviceID);
+        service.serviceIsPending = false;
+        this.updateStates();
+      }
+    },
+    updateStates: async function () {
+      let serviceInfos = await ControlService.listServices();
+      this.installedServices.forEach((s, idx) => {
+        let updated = false;
+        serviceInfos.forEach((i) => {
+          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+            this.installedServices[idx].state = i.State;
+            updated = true;
+            this.restartModalClose();
+            this.restartLoad = false;
+          }
+        });
+        if (!updated) {
+          this.installedServices[idx].state = "exited";
+        }
+      });
+    },
+    stateHandler: async function (item) {
+      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
+      if (!item.yaml.includes("isPruning: true")) {
+        this.isServiceOn = false;
+        item.serviceIsPending = true;
+        let state = "stopped";
+        if (item.state === "exited") {
+          state = "started";
+          this.isServiceOn = true;
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: item.config.serviceID,
+            state: state,
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        item.serviceIsPending = false;
+        this.updateStates();
+      }
+    },
+    restartModalClose() {
+      this.restartModalShow = false;
+    },
     // Check if service is Geth
     runGethPrunningWarning(option) {
       if (option.changeValue && option.displayWarningModal) {
@@ -245,38 +326,47 @@ export default {
     openExpertWindow(item) {
       item.expertOptionsModal = true;
     },
-    getPosition() {
-      const { elementPositionX, elementPositionY } = useMouseInElement(this.$refs.execution);
-      this.execution = {
-        elementPositionX: elementPositionX.value,
-        elementPositionY: elementPositionY.value,
-        width: this.$refs.execution.clientWidth,
-        height: this.$refs.execution.clientHeight,
-      };
 
-      const consensusRef = this.$refs.consensus;
-      if (consensusRef) {
-        const { elementPositionX, elementPositionY } = useMouseInElement(consensusRef);
-        this.consensus = {
-          elementPositionX: elementPositionX.value,
-          elementPositionY: elementPositionY.value,
-          width: consensusRef.clientWidth,
-          height: consensusRef.clientHeight,
-        };
-      }
-      console.log(this.consensus);
-    },
     clickOutside(item) {
       item.expertOptionsModal = false;
     },
-    // drawLine() {
-    //   const canvas = document.getElementById("canvas");
-    //   const ctx = canvas.getContext("2d");
-    //   ctx.beginPath();
-    //   ctx.moveTo(this.executionPositionX, this.executionPositionY);
-    //   ctx.lineTo(this.consensusPositionX, this.consensusPositionY);
-    //   ctx.stroke();
-    // },
+
+    drawConnectingline(start, middle, end) {
+      if (!start || !end || !middle) {
+        return;
+      }
+      if (this.lineOne) {
+        this.lineOne.remove();
+      }
+      if (this.lineTwo) {
+        this.lineTwo.remove();
+      }
+
+      this.lineOne = new LeaderLine(start, middle, { dash: { animation: true } });
+      this.lineOne.setOptions({
+        path: "fluid",
+        startPlugSize: 1,
+        endPlugSize: 2,
+        size: 4,
+        color: "#58BDA2",
+        endPlug: "behind",
+      });
+      this.lineTwo = new LeaderLine(middle, end, { dash: { animation: true } });
+      this.lineTwo.setOptions({
+        path: "fluid",
+        startPlugSize: 1,
+        endPlugSize: 2,
+        size: 4,
+        color: "#58BDA2",
+        endPlug: "behind",
+      });
+      LeaderLine.mouseHoverAnchor({ start, middle, end, style: { color: "#E9CE1F" } });
+    },
+
+    async getLogs(item) {
+      const logs = await ControlService.getLogs(item);
+      this.logs = logs;
+    },
   },
 };
 </script>

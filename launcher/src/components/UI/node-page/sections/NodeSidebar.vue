@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="flex flex-col items-center w-16 h-full overflow-y-auto border-r rtl:border-l rtl:border-r-0 bg-[#33393E] border-gray-700"
+    class="flex flex-col items-center w-16 h-full overflow-y-auto bg-[#33393E]"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
