@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full h-full flex flex-col justify-between items-center px-2">
+  <div class="w-full h-full flex flex-col justify-between items-center">
     <div class="w-full h-[30px] flex justify-center items-center">
       <span class="text-md font-normal text-gray-200 uppercase">Service</span>
     </div>
-    <ServiceBody /> 
+    <ServiceBody />
   </div>
 </template>
 <script>
