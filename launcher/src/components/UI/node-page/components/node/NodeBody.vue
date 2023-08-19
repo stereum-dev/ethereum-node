@@ -4,7 +4,7 @@ import { mapState, map } from 'pinia';
   <div
     class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto mt-1 bg-[#151618] relative"
   >
-    <div class="w-full h-full grid grid-cols-3 p-2">
+    <div class="w-full h-full grid grid-cols-3 py-2">
       <ExecutionClients
         @open-expert="openExpertWindow"
         @open-log="openLogsPage"
