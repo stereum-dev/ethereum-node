@@ -4,16 +4,22 @@
     <div class="management-info">
       <div class="management-info_box">
         <div class="management-info_box_row">
-          <span>SERVER NAME</span><span>{{ ServerName }}</span>
+          <span>SERVER NAME</span><span>{{ selectedConnection.name }}</span>
         </div>
         <div class="management-info_box_row">
           <span>IP or HOSTNAME</span><span>{{ ipAddress }}</span>
         </div>
-        <div class="management-info_box_row"><span>USERNAME</span><span>b</span></div>
+        <div class="management-info_box_row">
+          <span>USERNAME</span><span>{{ selectedConnection.user }}</span>
+        </div>
       </div>
       <div class="management-info_box">
-        <div class="management-info_box_row"><span>MACHINENAME</span><span>b</span></div>
-        <div class="management-info_box_row"><span>PORT</span><span>b</span></div>
+        <div class="management-info_box_row">
+          <span>MACHINENAME</span><span>{{ ServerName }}</span>
+        </div>
+        <div class="management-info_box_row">
+          <span>PORT</span><span>{{ selectedConnection.port }}</span>
+        </div>
         <div class="management-info_box_row" />
       </div>
     </div>
@@ -23,12 +29,28 @@
 <script>
 import { mapState } from "pinia";
 import { useControlStore } from "@/store/theControl";
+import ControlService from "@/store/ControlService";
 export default {
+  data() {
+    return {
+      selectedConnection: {},
+    };
+  },
   computed: {
     ...mapState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+  },
+  mounted() {
+    this.loadStoredConnections();
+  },
+  methods: {
+    loadStoredConnections: async function () {
+      const savedConnections = await ControlService.readConfig();
+      let selectedConnection = savedConnections.savedConnections.find((item) => item.host === this.ipAddress);
+      this.selectedConnection = selectedConnection;
+    },
   },
 };
 </script>
