@@ -4,9 +4,7 @@
       <span>{{ $t("installitionMenu.welcome") }}</span>
     </div>
 
-
     <div class="welcomeBtnParent">
-
       <div class="serverName">
         Server:
         <span>{{ ServerName }}</span>
@@ -69,7 +67,7 @@ import ButtonInstallation from "./ButtonInstallation.vue";
 import ControlService from "@/store/ControlService";
 import { mapState, mapWritableState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 import LogoutModal from "../node-header/LogoutModal.vue";
 export default {
   components: { ButtonInstallation, LogoutModal },
@@ -275,9 +273,7 @@ export default {
   color: #b4b4b4;
 }
 
-
 .welcomeBtnParent {
-
   grid-column: 2/6;
   grid-row: 3/4;
   display: flex;
@@ -285,7 +281,7 @@ export default {
   align-items: center;
 }
 
-.welcomeBtnParent .spacer{
+.welcomeBtnParent .spacer {
   width: 10%;
   height: 40px;
 }
