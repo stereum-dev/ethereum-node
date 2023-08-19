@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col justify-between items-center px-2">
+  <div class="w-full h-full flex flex-col justify-between items-center">
     <NodeHeader />
     <NodeBody />
   </div>

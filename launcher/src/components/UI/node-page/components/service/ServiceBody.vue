@@ -1,7 +1,8 @@
 <template>
   <div
-    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto bg-[#151618] relative pt-1"
+    class="scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto bg-[#151618] relative pt-1 hover:scroll-auto"
   >
+
     <div ref="service" class="flex flex-col space-y-4 items-center pt-2">
       <div
         v-for="item in getServices"
