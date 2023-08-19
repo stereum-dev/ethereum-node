@@ -1,5 +1,5 @@
 <template>
-  <div class="tutorial-box">
+  <div class="tutorial-box bg-[#151618] border border-gray-500 rounded-md">
     <TutorialButtons
       v-for="(button, key) in tutorialBtns"
       :key="key"
@@ -28,7 +28,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
-import { useNodeHeader } from "../../../store/nodeHeader";
+import { useNodeHeader } from "@/store/nodeHeader";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
@@ -192,8 +192,8 @@ export default {
   user-select: none;
 }
 .tutorial-box {
-  width: 90%;
-  height: 89%;
+  width: 100%;
+  height: 430px;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -201,12 +201,7 @@ export default {
   align-items: center;
   overflow: hidden;
   position: relative;
-  background: #23272a;
-  border: 1px solid #4c4848;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px 1px #1c1f22;
-  margin-bottom: 9px;
-  padding: 5% 0;
+  padding-top: 2px;
 }
 .back-button {
   width: 92%;

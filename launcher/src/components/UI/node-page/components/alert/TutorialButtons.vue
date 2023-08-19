@@ -1,6 +1,6 @@
 <template>
   <div class="button-container" :style="{ height: arrow ? '26%' : '10%' }">
-    <div class="button-parent" @click="arrow = !arrow">
+    <div class="button-parent p-1 border border-gray-500" @click="arrow = !arrow">
       <div class="icon">
         <img :src="tutorialIcons" alt="" />
       </div>
@@ -79,10 +79,8 @@ export default {
 }
 
 .button-parent {
-  height: 88%;
   display: flex;
   color: #eee;
-  border: 2px solid #eee;
   border-radius: 5px;
   margin-bottom: 1%;
   justify-content: space-around;

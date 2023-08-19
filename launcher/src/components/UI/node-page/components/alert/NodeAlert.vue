@@ -1,11 +1,6 @@
 <template>
-  <div class="status-box">
-    <update-panel
-      :click-bg="displayUpdatePanel"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
-      @click-out="removeUpdateModal"
-    ></update-panel>
-    <div class="status-box_header">
+  <div class="status-box flex flex-col justify-between items-center">
+    <div class="status-box_header bg-[#151618] border border-gray-500 rounded-md">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
@@ -24,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="status-box_messages">
+    <div class="status-box_messages bg-[#151618] border border-gray-500 rounded-md">
       <div v-if="storageWarning" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
@@ -119,7 +114,7 @@
         </div>
         <div class="message-text_container" @click="showUpdate">
           <div class="main-message">
-            <span>{{ item.name }} UPDATE</span>
+            <span class="overflow-hidden truncate text-md">{{ item.name }} UPDATE</span>
           </div>
           <div class="val-message">
             <span>{{ item.version }}</span>
@@ -132,15 +127,12 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import UpdatePanel from "../node-header/UpdatePanel.vue";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 export default {
-  components: {
-    UpdatePanel,
-  },
+  components: {},
   data() {
     return {
       displayUpdatePanel: false,
@@ -374,25 +366,20 @@ export default {
 
 .status-box {
   width: 100%;
-  height: 92%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 5% 5%;
 }
 
 .status-box_header {
-  width: 80%;
+  width: 100%;
   height: 8%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #23272a;
-  border: 1px solid #4c4848;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px 1px #1c1f22;
 }
 
 .status-box_messages {
@@ -402,16 +389,13 @@ export default {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  background: #23272a;
-  border: 1px solid #4c4848;
   padding-top: 5px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px 1px #1c1f22;
   overflow: hidden;
   overflow-y: scroll;
 }
-.status-box_messages::-webkit-scrollbar {
-  width: 4px;
+::-webkit-scrollbar {
+  width: 2px;
+  background-color: transparent;
 }
 
 /* Track */
@@ -429,7 +413,7 @@ export default {
 
 .icon-line {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   padding-top: 4px;
   width: 100%;
   height: 30px;
@@ -459,8 +443,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 9%;
-  border: 1px solid #707070;
+  height: 36px;
   border-radius: 5px;
   margin: 2px 0;
   color: #eee;

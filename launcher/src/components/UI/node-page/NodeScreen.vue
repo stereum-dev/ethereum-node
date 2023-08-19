@@ -2,59 +2,72 @@
   <base-layout>
     <!-- Start Node main layouts -->
     <div class="w-full h-full grid grid-cols-24">
+      <UpdatePanel
+        :click-bg="displayUpdatePanel"
+        :class="{ 'updatePanel-show': displayUpdatePanel }"
+        @click-out="removeUpdateModal"
+      />
       <div class="col-start-1 col-span-1 bg-green-500 flex justify-center items-center">
-        <NodeSidebar />
+        <SidebarSection />
       </div>
-      <div class="col-start-2 col-end-18 w-full h-full relative">
+      <div class="col-start-2 col-end-17 w-full h-full relative">
         <NodeSection />
       </div>
-      <div class="col-start-18 col-end-22">
+      <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection />
       </div>
-      <div class="col-start-22 col-end-25">
-        <NodeAlert v-if="infoAlarm"/>
+      <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <div
           class="info-button"
-          @click="infoAlarm = !infoAlarm"
+          @click="alarmToggle"
           @mouseenter="cursorLocation = infoAlarm ? `${chckTutorial}` : `${returnStatus}`"
           @mouseleave="cursorLocation = ''"
         >
           <img src="/img/icon/round-icon.png" alt="information" />
         </div>
-        <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
+        <AlertSection :info-aralm="infoAlarm" />
       </div>
     </div>
     <!-- End Node main layout -->
   </base-layout>
 </template>
 <script>
-import NodeAlert from "../the-node/NodeAlert.vue";
-import NodeSidebar from "./sections/NodeSidebar.vue";
+import SidebarSection from "./sections/SidebarSection.vue";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
-import NodeTutorial from "../the-node/NodeTutorial.vue";
-// import NodeAlerting from "./sections/NodeAlerting.vue";
+import UpdatePanel from "../node-header/UpdatePanel.vue";
+import AlertSection from "./sections/AlertSection.vue";
+import { mapWritableState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
   name: "NodeScreen",
   components: {
-    NodeSidebar,
+    SidebarSection,
     NodeSection,
     ServiceSection,
-    NodeAlert,
-    NodeTutorial,
+    UpdatePanel,
+    AlertSection,
   },
   props: {},
   data() {
     return {
-      infoAlarm: true,
       cursorLocation: "",
       chckTutorial: "/img/icon/round-icon.png",
       returnStatus: "/img/icon/round-icon.png",
+      displayUpdatePanel: false,
     };
   },
-  computed: {},
+  computed: {
+    ...mapWritableState(useNodeStore, {
+      infoAlarm: "infoAlarm",
+    }),
+  },
   mounted() {},
-  methods: {},
+  methods: {
+    alarmToggle() {
+      this.infoAlarm = !this.infoAlarm;
+    },
+  },
 };
 </script>
 <style scoped>

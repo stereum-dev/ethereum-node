@@ -3,8 +3,7 @@ import { defineStore } from "pinia";
 export const useNodeStore = defineStore("theNode", {
   state: () => {
     return {
-      finalExecutionRef: "",
-      max: {},
+      infoAlarm: true,
       connectedServices: {},
       selectedValidatorRef: "",
       selectedExecutionRef: "",
@@ -15,7 +14,6 @@ export const useNodeStore = defineStore("theNode", {
       consensusRefItem: [],
       executionRef: [],
       executionRefItem: [],
-      infoAlarm: true,
       serviceLogs: [],
       consensusItems: [],
       executionItems: [],
