@@ -1,13 +1,14 @@
 <template>
   <div class="securBtn-parent">
-    <div class="securBtn-box" @click="test">
+    <div class="securBtn-box" @click="accessSwitch">
       <img :src="stereumStatus ? '/img/icon/LOGO.png' : '/img/icon/statusOff.png'" class="main-header__brand" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
 export default {
   data() {
@@ -19,10 +20,13 @@ export default {
     ...mapState(useFooter, {
       stereumStatus: "stereumStatus",
     }),
+    ...mapWritableState(useNodeHeader, {
+      serverAccessManagement: "serverAccessManagement",
+    }),
   },
   methods: {
-    testM() {
-      this.test = !this.test;
+    accessSwitch() {
+      this.serverAccessManagement = !this.serverAccessManagement;
     },
   },
 };

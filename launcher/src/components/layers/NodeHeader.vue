@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <SecurityButton />
-    <ServerAccessManagement />
+    <ServerAccessManagement v-if="serverAccessManagement" />
     <header class="main-header">
       <main-navbar></main-navbar>
     </header>
@@ -13,12 +13,16 @@ import MainNavbar from "../UI/node-header/MainNavbar.vue";
 import SecurityButton from "../UI/node-header/SecurityButton.vue";
 import { mapState } from "pinia";
 import { useFooter } from "@/store/theFooter";
+import { useNodeHeader } from "@/store/nodeHeader";
 
 export default {
   components: { MainNavbar, SecurityButton, ServerAccessManagement },
   computed: {
     ...mapState(useFooter, {
       stereumStatus: "stereumStatus",
+    }),
+    ...mapState(useNodeHeader, {
+      serverAccessManagement: "serverAccessManagement",
     }),
   },
 };

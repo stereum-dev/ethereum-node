@@ -9,13 +9,12 @@ export default {};
 <style scoped>
 .dashboard-parent {
   width: 100vw;
-  height: 95vh;
-  background-color: #472630;
+  height: 94.5vh;
+  background-color: #383838;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 49;
-  opacity: 0.5;
   border-radius: 10px;
   border: 5px solid #c1c1c1;
 }
