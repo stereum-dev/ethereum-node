@@ -1,33 +1,34 @@
 <template>
-  <div class="exchange-box">
-    <div class="exchange-plugins">
+  <div class="tableParent">
+    <div class="tableContent">
       <slot></slot>
     </div>
   </div>
 </template>
+
 <script>
 export default {};
 </script>
 <style scoped>
-.exchange-box {
+.tableParent {
   width: 100%;
-  height: 43px;
-  border-radius: 10px 10px 0 0;
+  height: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  left: 0;
+  padding: 5px 3px;
 }
-.exchange-plugins {
+.tableContent {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  overflow-y: hidden;
-  overflow-x: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.tableContent::-webkit-scrollbar {
+  width: 1px;
 }
 </style>
