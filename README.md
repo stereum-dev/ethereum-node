@@ -1,6 +1,5 @@
 ![GitHub_Stereum_Banner](https://github.com/stereum-dev/ethereum-node/assets/82385103/cf94018a-b926-4fbe-aec8-ceef587053ff)
 
-
 ---
 
 [![IE](https://img.shields.io/badge/Website-0076D6?style=for-the-badge&logo=Internet%20Explorer&logoColor=white)](https://stereum.net) [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/8Znj8K6GjN)
