@@ -100,6 +100,7 @@ export default {
       executionRef: "executionRef",
       finalExecutionRef: "finalExecutionRef",
       max: "max",
+      hideConnectedLines: "hideConnectedLines",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -123,25 +124,49 @@ export default {
     },
   },
   watch: {
-    watchDrawLine() {
-      this.drawConnectingline(this.selectedValidatorRef, this.selectedConsensusRef, this.selectedExecutionRef);
+    hideConnectedLines: {
+      handler(val) {
+        if (val) {
+          this.hideConnectedLinesHandler();
+        } else {
+          this.drawLinesHandler();
+        }
+      },
+      immediate: true,
     },
   },
 
   mounted() {
     this.getRefOfConnectedClients();
-    this.drawConnectingline(this.selectedValidatorRef, this.selectedConsensusRef, this.selectedExecutionRef);
+    this.$nextTick(() => {
+      if (!this.lineOne && !this.lineTwo) {
+        this.drawConnectingline(this.selectedValidatorRef, this.selectedConsensusRef, this.selectedExecutionRef);
+      }
+    });
+  },
+  updated() {
+    console.log("updated", this.hideConnectedLines);
   },
 
   beforeUnmount() {
-    if (this.lineOne) {
-      this.lineOne.remove(); // Remove the LeaderLine instance
-    }
-    if (this.lineTwo) {
-      this.lineTwo.remove(); // Remove the LeaderLine instance
-    }
+    this.hideConnectedLinesHandler();
   },
+
   methods: {
+    drawLinesHandler() {
+      if (!this.hideConnectedLines && this.$route.path === "/node") {
+        if (this.lineOne && this.lineTwo) {
+          this.lineOne.show();
+          this.lineTwo.show();
+        }
+      }
+    },
+    hideConnectedLinesHandler() {
+      if (this.hideConnectedLines || this.$route.path !== "/node") {
+        this.lineOne.hide();
+        this.lineTwo.hide();
+      }
+    },
     getRefOfConnectedClients() {
       const connectedVal = this.getConnectedValidator;
       const connectedCons = this.getConnectedConsensus;
@@ -328,39 +353,45 @@ export default {
     },
 
     clickOutside(item) {
+      this.hideConnectedLines = false;
       item.expertOptionsModal = false;
     },
 
     drawConnectingline(start, middle, end) {
       if (!start || !end || !middle) {
+        this.hideConnectedLines = true;
         return;
       }
-      if (this.lineOne) {
+
+      if (this.lineOne || this.lineTwo) {
         this.lineOne.remove();
-      }
-      if (this.lineTwo) {
         this.lineTwo.remove();
       }
 
-      this.lineOne = new LeaderLine(start, middle, { dash: { animation: true } });
-      this.lineOne.setOptions({
-        path: "fluid",
-        startPlugSize: 1,
-        endPlugSize: 2,
-        size: 4,
-        color: "#58BDA2",
-        endPlug: "behind",
-      });
-      this.lineTwo = new LeaderLine(middle, end, { dash: { animation: true } });
-      this.lineTwo.setOptions({
-        path: "fluid",
-        startPlugSize: 1,
-        endPlugSize: 2,
-        size: 4,
-        color: "#58BDA2",
-        endPlug: "behind",
-      });
-      LeaderLine.mouseHoverAnchor({ start, middle, end, style: { color: "#E9CE1F" } });
+      if (!this.hideConnectedLines) {
+        // Only create lines if hideConnectedLines is not true
+        if (this.$route.path === "/node") {
+          this.lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+          this.lineOne.setOptions({
+            path: "fluid",
+            startPlugSize: 1,
+            endPlugSize: 2,
+            size: 2,
+            color: "#58BDA2",
+            endPlug: "behind",
+          });
+          this.lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+          this.lineTwo.setOptions({
+            path: "fluid",
+            startPlugSize: 1,
+            endPlugSize: 2,
+            size: 2,
+            color: "#58BDA2",
+            endPlug: "behind",
+          });
+          LeaderLine.mouseHoverAnchor({ start, middle, end, style: { color: "#E9CE1F" } });
+        }
+      }
     },
 
     async getLogs(item) {

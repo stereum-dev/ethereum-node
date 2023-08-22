@@ -28,13 +28,14 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
 import MevboostModal from "../services-modal//MevboostModal.vue";
+import { useNodeStore } from "@/store/theNode";
 export default {
   components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal },
   data() {
@@ -55,6 +56,9 @@ export default {
     ...mapState(useServices, {
       allServices: "allServices",
     }),
+    ...mapWritableState(useNodeStore, {
+      hideConnectedLines: "hideConnectedLines",
+    }),
   },
 
   methods: {
@@ -68,6 +72,7 @@ export default {
     },
     //open & close modal for each service
     openServiceBrowser(serviceName) {
+      this.hideConnectedLines = true;
       this.runningServices.filter((item) => {
         item.service == serviceName;
         if (serviceName == "GrafanaService") {
@@ -84,6 +89,7 @@ export default {
       });
     },
     closeServiceBrowser() {
+      this.hideConnectedLines = false;
       this.showGrafanaWindow = false;
       this.showSsvWindow = false;
       this.showPrometheusWindow = false;
