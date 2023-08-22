@@ -104,8 +104,7 @@ ipcMain.handle("isCheckpointValid", async (event, cp_url) => {
 
 ipcMain.handle("checkOS", async () => {
   await nodeConnection.findStereumSettings();
-  await nodeConnection.findOS();
-  return nodeConnection.os;
+  return nodeConnection.findOS();
 });
 
 ipcMain.handle("checkSudo", async () => {
@@ -505,7 +504,7 @@ async function createWindow(type = "main") {
   win.on("ready-to-show", async () => {
     await nodeConnection.closeTunnels();
   });
-  let closeHandler
+  let closeHandler;
   switch (type) {
     case "main": {
       closeHandler = (e) => {
@@ -523,7 +522,7 @@ async function createWindow(type = "main") {
             win.close();
           }
         }
-      }
+      };
       break;
     }
     case "update": {
@@ -539,19 +538,18 @@ async function createWindow(type = "main") {
           });
           if (response === 0) {
             app.showExitPrompt = false;
-            stereumUpdater.updateWindow = null
+            stereumUpdater.updateWindow = null;
             win.close();
           }
         }
-      }
+      };
       break;
     }
-
   }
 
   win.on("close", closeHandler);
 
-  return win
+  return win;
 }
 
 // Disable CTRL+R and F5 in build
@@ -574,7 +572,7 @@ if (!isDevelopment) {
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  nodeConnection.logout()
+  nodeConnection.logout();
   if (process.platform !== "darwin") {
     app.quit();
   }
@@ -613,7 +611,7 @@ app.on("ready", async () => {
     var menu = Menu.getApplicationMenu();
     menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => (item.visible = false));
     Menu.setApplicationMenu(menu);
-    stereumUpdater.checkForUpdates()
+    stereumUpdater.checkForUpdates();
   } else {
     // remove the comment if you try to debug the updater in dev mode
     // await stereumUpdater.runDebug()
