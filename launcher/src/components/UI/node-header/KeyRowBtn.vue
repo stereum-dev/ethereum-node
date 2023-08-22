@@ -38,7 +38,7 @@ export default {
 <style scoped>
 .btn-box-parent {
   width: 100%;
-  height: 100%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,7 +52,7 @@ export default {
   flex-direction: row-reverse;
 }
 .btn-del {
-  width: 45%;
+  width: 42%;
   height: 100%;
   display: flex;
   justify-content: center;

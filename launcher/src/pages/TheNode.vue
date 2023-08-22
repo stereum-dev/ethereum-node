@@ -1,6 +1,6 @@
 <template>
   <div class="router-view">
-    <node-header id="head" @mousedown.prevent></node-header>
+    <node-header id="head"></node-header>
     <node-bg>
       <div class="node-parent">
         <div v-if="playYoutubeVideo" class="play-box">

@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard-parent">
+    <GenerateKeyModal v-if="generateModalShow" />
     <div class="management-title">server access management</div>
     <div class="management-info">
       <div class="management-info_box">
@@ -25,11 +26,6 @@
     </div>
     <div class="login-info-box">
       <div class="login-info-box_info-part">
-        <!-- <div class="helf-part">
-          <div class="half-part_row">
-            <span>LOGIN TYPE</span><span>{{ !selectedConnection.useAuthKey ? "SSH KEY" : "PASSWORD and SSH" }}</span>
-          </div>
-        </div> -->
         <div class="helf-part left">
           <div class="half-part_row">
             <span>PASSWORD</span>
@@ -38,20 +34,11 @@
           <div class="half-part_row">
             <span>SSH Key</span>
             <div class="btn-part">
-              <div class="login-info-btn">create a new key</div>
+              <div class="login-info-btn" @click="generateModal">create a new key</div>
               <div class="login-info-btn">add an existing key</div>
             </div>
           </div>
         </div>
-        <!-- <div class="helf-part left">
-          <div class="half-part_row">
-            <span>CONVERT TO SSH</span>
-            <div class="btn-part">
-              <div class="login-info-btn">create a new key</div>
-              <div class="login-info-btn">add an existing key</div>
-            </div>
-          </div>
-        </div> -->
       </div>
       <div class="key-info-part">
         <div v-for="(key, index) in keys" :key="index" class="key-row">
@@ -66,12 +53,13 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 import KeyRowBtn from "./KeyRowBtn.vue";
+import GenerateKeyModal from "./GenerateKeyModal";
 export default {
-  components: { KeyRowBtn },
+  components: { KeyRowBtn, GenerateKeyModal },
   data() {
     return {
       selectedConnection: {},
@@ -79,9 +67,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(useControlStore, {
+    ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
+      generateModalShow: "generateModalShow",
     }),
     passSSHRow() {
       return !this.selectedConnection.useAuthKey ? "pass" : "ssh";
@@ -95,10 +84,12 @@ export default {
       const savedConnections = await ControlService.readConfig();
       let selectedConnection = savedConnections.savedConnections.find((item) => item.host === this.ipAddress);
       this.selectedConnection = selectedConnection;
-      console.log(this.selectedConnection);
     },
     confirmDelete(key) {
       console.log(key);
+    },
+    generateModal() {
+      this.generateModalShow = !this.generateModalShow;
     },
   },
 };
@@ -108,7 +99,7 @@ export default {
 .dashboard-parent {
   width: 100vw;
   height: 94.5vh;
-  background-color: #383838;
+  background-color: #33393e;
   position: absolute;
   top: 0;
   left: 0;
@@ -229,7 +220,7 @@ export default {
   align-items: center;
   cursor: pointer;
   border-radius: 15px;
-  background: #35a83580;
+  background: #336666;
   text-transform: uppercase;
   box-shadow: 1px 1px 5px 1px rgb(45, 44, 44);
 }
@@ -237,7 +228,7 @@ export default {
   background: #35a835;
 }
 .login-info-btn:active {
-  background: #35a83580;
+  background: rgba(51, 102, 102, 0.6);
   border: none;
   box-shadow: none;
   transform: scale(0.98);
@@ -249,7 +240,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  background: #23272a;
+  background: #242529;
   border: 1px solid grey;
   box-shadow: 1px 1px 6px 1px #001717;
   border-radius: 10px;
@@ -262,10 +253,10 @@ export default {
   align-items: center;
   padding-left: 2%;
   color: #eee;
-  background: #383838;
+  background: #33393e;
   margin-top: 1%;
   border-radius: 5px;
-  border: 1px solid #39393d;
+  border: 1px solid #707070;
   box-shadow: 1px 1px 6px 1px #1d2525;
 }
 .btn-box {

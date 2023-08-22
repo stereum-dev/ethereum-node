@@ -4,7 +4,6 @@
       class="stereum-status"
       @mouseenter="cursorLocation = stereumStatus ? `` : `Attempting to reconnect...`"
       @mouseleave="cursorLocation = ''"
-      @click="switchstereumStatus"
     >
       <div class="stereum-stateIcon" :class="stereumStatus ? 'onlineState' : 'offlineState'" />
       <div class="stereum-status-state">
@@ -25,7 +24,6 @@ export default {
   computed: {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
-      // stereumStatus is the flag for status
       stereumStatus: "stereumStatus",
     }),
   },
