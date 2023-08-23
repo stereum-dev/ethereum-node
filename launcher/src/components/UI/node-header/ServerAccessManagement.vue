@@ -38,7 +38,7 @@
                 <div class="pass-btn accept" @click="acceptChangePass">
                   <img src="/img/icon/access-management/done.png" alt="" />
                 </div>
-                <div class="pass-btn deny" @click="chngPassword = false">
+                <div class="pass-btn deny" @click="(chngPassword = false), (newPass = '')">
                   <img src="/img/icon/access-management/close.png" alt="" />
                 </div>
               </div>
