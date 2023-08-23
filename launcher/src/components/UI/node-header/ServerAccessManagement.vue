@@ -42,9 +42,13 @@
       </div>
       <div class="key-info-part">
         <div v-for="(key, index) in keys" :key="index" class="key-row">
-          <div class="name">{{ confirmIndex === index ? onAreYouSure : key }}</div>
+          <div class="name">{{ confirmIndexDelete[index] ? onAreYouSure : key }}</div>
           <div class="btn-box">
-            <KeyRowBtn @delete-key="confirmDelete(key)" @are-you-sure="confirmKeyIndex(index)" />
+            <KeyRowBtn
+              @delete-key="confirmDelete(key)"
+              @are-you-sure="confirmKeyIndex(index)"
+              @cancel-delete="cancelKeyIndex(index)"
+            />
           </div>
         </div>
       </div>
@@ -65,7 +69,7 @@ export default {
       selectedConnection: {},
       confirmIndex: null,
       keys: ["key 1", "key 2", "key 3"], //dummy keys
-      confirmIndexDelete: false,
+      confirmIndexDelete: [],
       onAreYouSure: "Are you sure you want to remove this SSH Key?",
     };
   },
@@ -89,12 +93,18 @@ export default {
       let selectedConnection = savedConnections.savedConnections.find((item) => item.host === this.ipAddress);
       this.selectedConnection = selectedConnection;
     },
+    //confirm delete key method
     confirmDelete(key) {
       console.log(key);
     },
+    // end confirm delete key method
     confirmKeyIndex(index) {
-      this.confirmIndexDelete = !this.confirmIndexDelete;
-      this.confirmIndexDelete ? (this.confirmIndex = index) : (this.confirmIndex = null);
+      this.confirmIndexDelete[index] = true;
+      this.confirmIndex = index;
+    },
+    cancelKeyIndex(index) {
+      this.confirmIndexDelete[index] = false;
+      this.confirmIndex = null;
     },
     generateModal() {
       this.generateModalShow = !this.generateModalShow;

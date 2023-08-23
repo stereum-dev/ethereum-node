@@ -6,7 +6,7 @@
       </div>
     </div>
     <div v-else class="wrapper">
-      <div class="btn-del close" @click="deleteKeySwitch">
+      <div class="btn-del close" @click="cancelDelete">
         <img src="/img/icon/access-management/close.png" alt="" />
       </div>
       <div class="btn-del done" @click="confirmDelete">
@@ -17,24 +17,22 @@
 </template>
 
 <script>
-import { mapWritableState } from "pinia";
-import { useControlStore } from "@/store/theControl";
 export default {
-  emit: ["delete-key", "are-you-sure"],
+  emit: ["delete-key", "are-you-sure", "cancel-delete"],
   data() {
     return {
       deleteKey: false,
     };
   },
-  computed: {
-    ...mapWritableState(useControlStore, {
-      deleteKey: "deleteKey",
-    }),
-  },
+
   methods: {
     deleteKeySwitch() {
-      this.deleteKey = !this.deleteKey;
+      this.deleteKey = true;
       this.$emit("are-you-sure");
+    },
+    cancelDelete() {
+      this.deleteKey = false;
+      this.$emit("cancel-delete");
     },
     confirmDelete() {
       this.$emit("delete-key");
