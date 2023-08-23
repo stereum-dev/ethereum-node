@@ -1,5 +1,8 @@
 <template>
   <div class="welcome-parent">
+    <SecurityButton />
+    <ServerAccessManagement v-if="serverAccessManagement" />
+    <div class="server-access-tooltip">server access management</div>
     <div class="header bg-zinc-900">
       <span>{{ $t("installitionMenu.welcome") }}</span>
     </div>
@@ -63,14 +66,17 @@
   </div>
 </template>
 <script>
+import ServerAccessManagement from "../../UI/node-header/ServerAccessManagement.vue";
+import SecurityButton from "../../UI/node-header/SecurityButton.vue";
 import ButtonInstallation from "./ButtonInstallation.vue";
 import ControlService from "@/store/ControlService";
 import { mapState, mapWritableState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
 import { useControlStore } from "@/store/theControl";
 import LogoutModal from "../node-header/LogoutModal.vue";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
-  components: { ButtonInstallation, LogoutModal },
+  components: { ButtonInstallation, LogoutModal, SecurityButton, ServerAccessManagement },
   data() {
     return {
       logoutModalIsActive: false,
@@ -82,6 +88,7 @@ export default {
       value: 1,
       max: 100,
       supportMessage: this.$t("installitionMenu.osSupported"),
+      serverAccessManagementTooltip: false,
     };
   },
 
@@ -90,6 +97,9 @@ export default {
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
+    }),
+    ...mapState(useNodeHeader, {
+      serverAccessManagement: "serverAccessManagement",
     }),
   },
   mounted() {
@@ -103,6 +113,14 @@ export default {
     this.randomValue();
   },
   methods: {
+    tooltipServerAccess() {
+      // if (!this.serverAccessManagement) {
+      //   this.serverAccessManagementTooltip = true;
+      // } else {
+      //   this.serverAccessManagementTooltip = false;
+      // }
+      console.log(this.serverAccessManagementTooltip);
+    },
     async updateConnectionStats() {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
@@ -503,6 +521,23 @@ export default {
 .btn-font {
   padding-left: 10px;
   color: yellow;
+}
+.server-access-tooltip {
+  width: 100%;
+  height: 50%;
+  background-color: #1e2429;
+  border: 1px solid #b4b4b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 140%;
+  left: 10%;
+  border-radius: 10px;
+  color: #eee;
+  font-size: 65%;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 @keyframes dotFlashing {
   0% {
