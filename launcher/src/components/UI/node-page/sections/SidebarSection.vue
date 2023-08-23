@@ -1,37 +1,78 @@
 <template>
-  <aside
-    class="flex flex-col items-center w-18 h-full overflow-y-auto bg-[#33393E]"
-    @pointerdown.prevent.stop
-    @mousedown.prevent.stop
-  >
-    <div class="flex flex-col justify-center items-center space-y-6 mt-10 p-1">
+  <aside class="flex flex-col items-center w-18 h-full bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
+    <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-5">
       <router-link
+        v-if="!routerHovered"
         to="/manage"
-        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
+        class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
+        @mouseover="routerHovered = true"
       >
-        <img class="w-8 hover:scale-90" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+        <img class="w-8" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
       </router-link>
-      <router-link
-        v-if="isNodeOn"
-        to="#"
-        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
-      >
-        <img class="w-6 hover:scale-90" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+      <router-link v-else to="/manage" class="showManageBtn" @mouseleave="routerHovered = false">
+        <img class="w-7 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+        <span class="text-sm text-gray-200 font-semibold">To Edit Node</span>
       </router-link>
-      <router-link
-        v-else
-        to="#"
-        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
+      <button v-if="isloading" class="row-start-2 row-end-3 p-1 rounded-md relative">
+        <img v-if="loading" src="/img/icon/task-manager-icons/turning_circle_blue.gif" alt="loading" />
+      </button>
+      <button
+        v-else-if="checkStatus && !powerHovered"
+        class="row-start-2 row-end-3 p-1 rounded-md"
+        @mouseenter="powerHovered = true"
+        @click="showPowerModal"
       >
-        <img class="w-6 hover:scale-90" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
+        <img class="w-6" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+      </button>
+
+      <button
+        v-else-if="checkStatus && powerHovered"
+        class="showPowerBtn"
+        @mouseleave="powerHovered = false"
+        @click="showPowerModal"
+      >
+        <img class="w-7 mr-1" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+        <span class="text-sm text-gray-200 font-semibold">Turn Node On</span>
+      </button>
+      <button
+        v-else-if="!checkStatus && !powerHovered"
+        class="row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
+        @mouseenter="powerHovered = true"
+        @click="showPowerModal"
+      >
+        <img class="w-6" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
+      </button>
+
+      <button
+        v-else-if="!checkStatus && powerHovered"
+        class="showPowerBtn"
+        @mouseleave="powerHovered = false"
+        @click="showPowerModal"
+      >
+        <img class="w-6 mr-1" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
+        <span class="text-sm text-gray-200 font-semibold">Turn Node Off</span>
+      </button>
+
+      <router-link
+        v-if="!exportHovered"
+        to="#"
+        class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
+        @mouseenter="exportHovered = true"
+      >
+        <img class="w-8" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
       </router-link>
-      <router-link
-        to="#"
-        class="p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
-      >
-        <img class="w-8 hover:scale-90" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
+      <router-link v-else to="#" class="showExportBtn" @mouseleave="exportHovered = false">
+        <img class="w-7 mr-1" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
+        <span class="text-sm text-gray-200 font-semibold">Export Node</span>
       </router-link>
     </div>
+    <StateModal
+      v-if="runNodePowerModal"
+      :main-icon="checkStatus"
+      @close-window="closeUpdatePowerStateModal"
+      @turn-on="stateButtonHandler('started')"
+      @turn-off="stateButtonHandler('stopped')"
+    />
   </aside>
 </template>
 <script>
@@ -44,12 +85,20 @@ import { mapState, mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 // import PluginLogs from "../components/PluginLogs.vue";
+import { useNodeStore } from "@/store/theNode";
+import StateModal from "../components/modals/StateModal.vue";
 
 export default {
-  components: {},
+
+  components: {
+    StateModal,
+  },
   data() {
     return {
-      isNodeOn: true,
+      routerHovered: false,
+      powerHovered: false,
+      exportHovered: false,
+      isNodeOff: false,
       test: true,
       functionCondition: true,
       loading: false,
@@ -93,10 +142,19 @@ export default {
     ...mapState(useServices, {
       installedServices: "installedServices",
     }),
+    ...mapWritableState(useNodeStore, {
+      runNodePowerModal: "runNodePowerModal",
+      hideConnectedLines: "hideConnectedLines",
+    }),
     ...mapState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+    checkStatus() {
+      let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
+
+      return !servicesToManage.some((s) => s.state == "running");
+    },
 
     sortedServices() {
       const copyOfInstalledServices = [...this.installedServices];
@@ -187,11 +245,16 @@ export default {
     restartModalClose() {
       this.restartModalShow = false;
     },
-    toggleModalClose() {
-      this.confirmModal = false;
+    openUpdatePowerStateModal() {
+      this.updatePowerState = true;
     },
-    toggleModalOn() {
-      this.confirmModal = true;
+    closeUpdatePowerStateModal() {
+      this.hideConnectedLines = false;
+      this.runNodePowerModal = false;
+    },
+    showPowerModal() {
+      this.hideConnectedLines = true;
+      this.runNodePowerModal = true;
     },
     async restartConfirmed(service) {
       this.restartLoad = true;
@@ -238,14 +301,10 @@ export default {
       });
       this.restartModalShow = false;
     },
-    checkStatus() {
-      let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
 
-      return !servicesToManage.some((s) => s.state == "running");
-    },
     async stateButtonHandler(state) {
       this.loading = true;
-      this.toggleModalClose();
+      this.closeUpdatePowerStateModal();
       try {
         //this is the temporary solution until notification service is exiting correctly
         let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
@@ -294,3 +353,76 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.showManageBtn {
+  grid-column: 1;
+  grid-row: 1/2;
+  position: absolute;
+  border: 1px solid rgb(71, 75, 80);
+  padding: 5px;
+  border-radius: 5px;
+  width: max-content;
+  min-height: 35px;
+  display: flex;
+  background: #374151;
+  box-shadow: 0 1px 3px 1px rgb(33, 34, 34);
+  align-items: center;
+  justify-content: space-evenly;
+  transform: translateX(0);
+  animation: fadeIn 0.5s ease-in-out;
+  z-index: 100;
+}
+.showPowerBtn {
+  grid-column: 1;
+  grid-row: 2/3;
+  position: absolute;
+  border: 1px solid rgb(58, 61, 65);
+  padding: 5px;
+  border-radius: 5px;
+  width: max-content;
+  min-height: 35px;
+  display: flex;
+  background: #374151;
+  box-shadow: 0 1px 3px 1px rgb(33, 34, 34);
+  align-items: center;
+  justify-content: space-evenly;
+  transform: translateX(0);
+  animation: fadeIn 0.5s ease-in-out;
+  z-index: 100;
+}
+.showExportBtn {
+  grid-column: 1;
+  grid-row: 3/4;
+  position: absolute;
+  border: 1px solid rgb(58, 61, 65);
+  padding: 5px;
+  border-radius: 5px;
+  width: max-content;
+  min-height: 35px;
+  display: flex;
+  background: #374151;
+  box-shadow: 0 1px 3px 1px rgb(33, 34, 34);
+  align-items: center;
+  justify-content: space-evenly;
+  transform: translateX(0);
+  animation: fadeIn 0.5s ease-in-out;
+  z-index: 100;
+}
+.showManageBtn:active,
+.showPowerBtn:active,
+.showExportBtn:active {
+  transform: scale(0.95);
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  100% {
+    opacitx: 1;
+    transform: translateX(0);
+  }
+}
+</style>

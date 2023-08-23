@@ -1,13 +1,8 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
-    <div class="w-full h-full grid grid-cols-24">
-      <UpdatePanel
-        :click-bg="displayUpdatePanel"
-        :class="{ 'updatePanel-show': displayUpdatePanel }"
-        @click-out="removeUpdateModal"
-      />
-      <div class="col-start-1 col-span-1 bg-green-500 flex justify-center items-center">
+    <div class="w-full h-full grid grid-cols-24 relative">
+      <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
@@ -27,7 +22,9 @@
         </div>
         <AlertSection :info-aralm="infoAlarm" />
       </div>
+
     </div>
+
     <!-- End Node main layout -->
   </base-layout>
 </template>
@@ -35,7 +32,6 @@
 import SidebarSection from "./sections/SidebarSection.vue";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
-import UpdatePanel from "../node-header/UpdatePanel.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
@@ -45,12 +41,12 @@ export default {
     SidebarSection,
     NodeSection,
     ServiceSection,
-    UpdatePanel,
     AlertSection,
   },
   props: {},
   data() {
     return {
+      updatePowerState: false,
       cursorLocation: "",
       chckTutorial: "/img/icon/round-icon.png",
       returnStatus: "/img/icon/round-icon.png",
@@ -60,6 +56,8 @@ export default {
   computed: {
     ...mapWritableState(useNodeStore, {
       infoAlarm: "infoAlarm",
+      hideConnectedLines: "hideConnectedLines",
+      runNodePowerModal: "runNodePowerModal",
     }),
   },
   mounted() {},
@@ -67,6 +65,8 @@ export default {
     alarmToggle() {
       this.infoAlarm = !this.infoAlarm;
     },
+
+
   },
 };
 </script>
