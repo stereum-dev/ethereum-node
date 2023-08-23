@@ -44,7 +44,7 @@
             v-model="specifyCypher"
             type="text"
             placeholder="USE A CUSTOM CYPER"
-            :disabled="!expert"
+            :disabled="cypherControl"
           />
         </div>
       </div>
@@ -76,6 +76,13 @@ export default {
     ...mapWritableState(useControlStore, {
       generateModalShow: "generateModalShow",
     }),
+    cypherControl() {
+      if (this.sshPass !== "" && this.expert === true) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   watch: {
     expert() {
