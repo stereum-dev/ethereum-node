@@ -15,11 +15,11 @@
           </div>
         </div>
         <div class="generate-key-modal_rows">
-          <label for="pickPath">Pick a save path</label><input id="pickPath" type="text" />
+          <label for="pickPath">Pick a save path</label><input id="pickPath" v-model="pickPath" type="text" />
         </div>
         <div class="generate-key-modal_rows">
           <label for="sshPass">ssh password</label
-          ><input type="password" placeholder="DEFINE AN OPTIONAL SSH PASSWORD" />
+          ><input id="sshPass" v-model="sshPass" type="password" placeholder="DEFINE AN OPTIONAL SSH PASSWORD" />
         </div>
         <div class="generate-key-modal_rows">
           <label for="unlockExpert">unlock expert options</label>
@@ -29,11 +29,23 @@
         </div>
         <div class="generate-key-modal_rows">
           <label for="bitAmount">bit amount</label
-          ><input type="text" placeholder="SPECIFY SSH BIT AMOUNT" :disabled="!expert" />
+          ><input
+            id="bitAmount"
+            v-model="bitAmount"
+            type="text"
+            placeholder="SPECIFY SSH BIT AMOUNT"
+            :disabled="!expert"
+          />
         </div>
         <div class="generate-key-modal_rows">
           <label for="specifyCypher">specify cypher</label>
-          <input type="text" placeholder="USE A CUSTOM CYPER" :disabled="!expert" />
+          <input
+            id="specifyCypher"
+            v-model="specifyCypher"
+            type="text"
+            placeholder="USE A CUSTOM CYPER"
+            :disabled="!expert"
+          />
         </div>
       </div>
       <div class="generate-btn" @click="generateKey">generate</div>
@@ -53,12 +65,25 @@ export default {
       keyTypeDropdown: false,
       keyTypeCollection: ["RSA", "EDCSA", "ED25519"],
       expert: false,
+      pickPath: "",
+      sshPass: "",
+      bitAmount: "",
+      specifyCypher: "",
+      generatedKey: {},
     };
   },
   computed: {
     ...mapWritableState(useControlStore, {
       generateModalShow: "generateModalShow",
     }),
+  },
+  watch: {
+    expert() {
+      if (!this.expert) {
+        this.bitAmount = "";
+        this.specifyCypher = "";
+      }
+    },
   },
   methods: {
     expertUnlock() {
@@ -69,6 +94,15 @@ export default {
       this.keyTypeDropdown = false;
     },
     generateKey() {
+      const data = {
+        keyType: this.keyType,
+        pickPath: this.pickPath,
+        sshPass: this.sshPass,
+        bitAmount: this.bitAmount,
+        specifyCypher: this.specifyCypher,
+      };
+      this.generatedKey = data;
+      console.log(this.generatedKey);
       this.generateModalShow = false;
     },
   },
@@ -195,12 +229,11 @@ export default {
 .toggle {
   width: 10%;
   height: 60%;
-
   border-radius: 20px;
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
-  padding: 0 0.8%;
+  padding: 0 0.7%;
 }
 .toggle-circle {
   width: 50%;
@@ -211,7 +244,7 @@ export default {
   transition: transform 0.3s ease;
 }
 .animate {
-  transform: translateX(95%);
+  transform: translateX(99%);
 }
 .generate-btn {
   width: 30%;
