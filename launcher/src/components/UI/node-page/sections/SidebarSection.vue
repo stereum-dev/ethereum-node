@@ -53,18 +53,18 @@
         <span class="text-sm text-gray-200 font-semibold">Turn Node Off</span>
       </button>
 
-      <router-link
+      <button
         v-if="!exportHovered"
-        to="#"
         class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
         @mouseenter="exportHovered = true"
+        @click="exportConfig"
       >
         <img class="w-8" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
-      </router-link>
-      <router-link v-else to="#" class="showExportBtn" @mouseleave="exportHovered = false">
+      </button>
+      <button v-else class="showExportBtn" @mouseleave="exportHovered = false" @click="exportData">
         <img class="w-7 mr-1" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
         <span class="text-sm text-gray-200 font-semibold">Export Node</span>
-      </router-link>
+      </button>
     </div>
     <StateModal
       v-if="runNodePowerModal"
@@ -84,17 +84,19 @@ import { useControlStore } from "@/store/theControl";
 import { mapState, mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
+const JSZip = require("jszip");
+const saveAs = require("file-saver");
 // import PluginLogs from "../components/PluginLogs.vue";
 import { useNodeStore } from "@/store/theNode";
 import StateModal from "../components/modals/StateModal.vue";
 
 export default {
-
   components: {
     StateModal,
   },
   data() {
     return {
+      stereumConfig: [],
       routerHovered: false,
       powerHovered: false,
       exportHovered: false,
@@ -190,6 +192,9 @@ export default {
         return false;
       }
     },
+  },
+  beforeMount() {
+    this.exportConfig();
   },
   mounted() {
     // this.serverNameWidth = this.$refs.serverName.clientWidth;
@@ -349,6 +354,26 @@ export default {
         }
         item.serviceIsPending = false;
       }
+    },
+    exportData() {
+      this.exportHovered = false;
+      if (this.stereumConfig.length > 0) {
+        const zip = new JSZip();
+        const randomNumber = Math.floor(Math.random() * 10000);
+
+        this.stereumConfig.forEach((item) => {
+          const filenameWithRandomNumber = `stereum_config_${randomNumber}.json`;
+          zip.file(filenameWithRandomNumber, item.content);
+        });
+
+        zip.generateAsync({ type: "blob" }).then(function (blob) {
+          saveAs(blob, `stereum_config_${randomNumber}.zip`);
+        });
+      }
+    },
+
+    async exportConfig() {
+      this.stereumConfig = await ControlService.exportConfig();
     },
   },
 };
