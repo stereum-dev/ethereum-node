@@ -34,8 +34,14 @@
             v-model="bitAmount"
             type="text"
             placeholder="SPECIFY SSH BIT AMOUNT"
-            :disabled="!expert"
+            :disabled="bitAmountControl"
+            @click="bitAmountDropdown = !bitAmountDropdown"
           />
+          <div v-if="bitAmountDropdown" class="dropdown bit-amount-dropdown">
+            <div v-for="bit in bitAmountCollection" :key="bit" class="dropdown-row" @click="bitPicker(bit)">
+              <span>{{ bit }}</span>
+            </div>
+          </div>
         </div>
         <div class="generate-key-modal_rows">
           <label for="specifyCypher">specify cypher</label>
@@ -70,6 +76,8 @@ export default {
       bitAmount: "",
       specifyCypher: "",
       generatedKey: {},
+      bitAmountCollection: ["1024", "2048", "4096", "8192", "16384", "32768", "65536", "131072"], //dummy data
+      bitAmountDropdown: false,
     };
   },
   computed: {
@@ -83,22 +91,37 @@ export default {
         return true;
       }
     },
+    bitAmountControl() {
+      if ((this.keyType === "RSA" || this.keyType === "EDCSA") && this.expert === true) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   watch: {
     expert() {
       if (!this.expert) {
         this.bitAmount = "";
         this.specifyCypher = "";
+        this.bitAmountDropdown = false;
       }
     },
   },
   methods: {
     expertUnlock() {
+      if (!this.bitAmountControl && !this.cypherControl) {
+        this.expert = false;
+      }
       this.expert = !this.expert;
     },
-    keyPicker(key) {
-      this.keyType = key;
+    keyPicker(arg) {
+      this.keyType = arg;
       this.keyTypeDropdown = false;
+    },
+    bitPicker(arg) {
+      this.bitAmount = arg;
+      this.bitAmountDropdown = false;
     },
     generateKey() {
       const data = {
@@ -187,6 +210,7 @@ export default {
   font-size: 80%;
   padding-left: 2%;
   font-weight: 500;
+  border: none;
 }
 .key-type-selection {
   width: 65%;
@@ -216,9 +240,13 @@ export default {
   top: 26%;
   left: 38%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+}
+.bit-amount-dropdown {
+  top: 66.3%;
+  overflow-y: scroll;
 }
 .dropdown-row {
   width: 100%;
