@@ -175,7 +175,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/mainnet-icon.png",
           currencyIcon: "/img/icon/control/mainnet-currency-symbol.png",
           dataEndpoint: "https://mainnet.beaconcha.in/api/v1",
-          support: ["staking", "mev boost", "stereum on arm", "ssv.network"],
+          support: ["staking", "mev boost", "stereum on arm", "ssv.network", "obol"],
         },
         {
           id: 2,

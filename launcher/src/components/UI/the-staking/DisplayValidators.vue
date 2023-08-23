@@ -880,7 +880,7 @@ export default {
     listKeys: async function () {
       this.totalBalance = 0;
       let keyStats = [];
-      let clients = this.installedServices.filter((s) => s.category == "validator");
+      let clients = this.installedServices.filter((s) => s.category == "validator" && s.service !== "CharonService");
       if (clients && clients.length > 0 && this.currentNetwork.network != "") {
         for (let client of clients) {
           //if there is already a list of keys ()
