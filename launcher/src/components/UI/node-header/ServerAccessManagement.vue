@@ -263,6 +263,10 @@ export default {
   box-shadow: 1px 1px 6px 1px #001717;
   border-radius: 10px;
 }
+.name {
+  font-size: 100%;
+  font-weight: 500;
+}
 .key-row {
   width: 95%;
   height: 12%;
