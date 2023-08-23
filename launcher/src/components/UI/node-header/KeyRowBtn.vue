@@ -17,16 +17,24 @@
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useControlStore } from "@/store/theControl";
 export default {
-  emit: ["delete-key"],
+  emit: ["delete-key", "are-you-sure"],
   data() {
     return {
       deleteKey: false,
     };
   },
+  computed: {
+    ...mapWritableState(useControlStore, {
+      deleteKey: "deleteKey",
+    }),
+  },
   methods: {
     deleteKeySwitch() {
       this.deleteKey = !this.deleteKey;
+      this.$emit("are-you-sure");
     },
     confirmDelete() {
       this.$emit("delete-key");

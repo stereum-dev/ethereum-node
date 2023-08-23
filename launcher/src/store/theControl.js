@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useControlStore = defineStore("theControl", {
   state: () => {
     return {
+      deleteKey: false,
       generateModalShow: false,
       currentSlotData: null,
       currentEpochData: null,

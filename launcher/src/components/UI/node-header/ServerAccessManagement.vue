@@ -42,9 +42,9 @@
       </div>
       <div class="key-info-part">
         <div v-for="(key, index) in keys" :key="index" class="key-row">
-          <div class="name">{{ key }}</div>
+          <div class="name">{{ confirmIndex === index ? onAreYouSure : key }}</div>
           <div class="btn-box">
-            <KeyRowBtn @delete-key="confirmDelete(key)" />
+            <KeyRowBtn @delete-key="confirmDelete(key)" @are-you-sure="confirmKeyIndex(index)" />
           </div>
         </div>
       </div>
@@ -63,7 +63,10 @@ export default {
   data() {
     return {
       selectedConnection: {},
-      keys: ["key 1", "key 2", "key 3"],
+      confirmIndex: null,
+      keys: ["key 1", "key 2", "key 3"], //dummy keys
+      confirmIndexDelete: false,
+      onAreYouSure: "Are you sure you want to remove this SSH Key?",
     };
   },
   computed: {
@@ -71,6 +74,7 @@ export default {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
       generateModalShow: "generateModalShow",
+      deleteKey: "deleteKey",
     }),
     passSSHRow() {
       return !this.selectedConnection.useAuthKey ? "pass" : "ssh";
@@ -87,6 +91,10 @@ export default {
     },
     confirmDelete(key) {
       console.log(key);
+    },
+    confirmKeyIndex(index) {
+      this.confirmIndexDelete = !this.confirmIndexDelete;
+      this.confirmIndexDelete ? (this.confirmIndex = index) : (this.confirmIndex = null);
     },
     generateModal() {
       this.generateModalShow = !this.generateModalShow;

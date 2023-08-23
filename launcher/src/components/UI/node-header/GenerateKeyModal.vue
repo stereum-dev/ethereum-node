@@ -36,7 +36,7 @@
           <input type="text" placeholder="USE A CUSTOM CYPER" :disabled="!expert" />
         </div>
       </div>
-      <div class="generate-btn">generate</div>
+      <div class="generate-btn" @click="generateKey">generate</div>
       <span class="click-close">click out site to close</span>
     </div>
     <div class="bg-modal" @click="generateModalShow = false" />
@@ -61,15 +61,15 @@ export default {
     }),
   },
   methods: {
-    handleFocus() {
-      console.log("Input focused!");
-    },
     expertUnlock() {
       this.expert = !this.expert;
     },
     keyPicker(key) {
       this.keyType = key;
       this.keyTypeDropdown = false;
+    },
+    generateKey() {
+      this.generateModalShow = false;
     },
   },
 };
