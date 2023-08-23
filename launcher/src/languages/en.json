@@ -422,7 +422,10 @@
     "tillAtest": "till attestation"
   },
   "confirmModal": {
-    "message": "Your node will go off line while you do this!",
+    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
+    "messageOff": "Your node will go offline!",
+    "messageOn": "Your node will go online!",
     "turnOn": "turn on",
     "turnOff": "turn off",
     "close": "click outside to close"

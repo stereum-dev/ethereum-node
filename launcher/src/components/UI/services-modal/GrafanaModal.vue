@@ -30,8 +30,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useNodeStore } from "@/store/theNode";
 export default {
   data() {
     return {
@@ -43,6 +44,9 @@ export default {
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
+    }),
+    ...mapWritableState(useNodeStore, {
+      hideConnectedLines: "hideConnectedLines",
     }),
   },
   mounted() {

@@ -4,6 +4,7 @@ export const useNodeStore = defineStore("theNode", {
   state: () => {
     return {
       infoAlarm: true,
+      runNodePowerModal:false,
       hideConnectedLines: false,
       connectedServices: {},
       selectedValidatorRef: "",

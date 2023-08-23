@@ -211,8 +211,10 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { useNodeStore } from "@/store/theNode";
+
 export default {
   props: {
     item: {
@@ -244,6 +246,9 @@ export default {
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
+    }),
+    ...mapWritableState(useNodeStore, {
+      hideConnectedLines: "hideConnectedLines",
     }),
   },
   mounted() {
@@ -384,6 +389,7 @@ export default {
     //   }
     // },
     async confirmExpertChanges(el) {
+      this.hideConnectedLines = false;
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);

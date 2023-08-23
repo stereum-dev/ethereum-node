@@ -1,4 +1,5 @@
-import ClientButtons from 'launcher/src/components/UI/node-page/components/body/ClientButtons';
+import ClientButtons from 'launcher/src/components/UI/node-page/components/body/ClientButtons'; import { import {
+mapWritableState } from 'pinia'; import { useNodeStore } from '@/store/theNode'; mapWritableState } from 'pinia';
 <template>
   <div class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-3 gap-1 p-1 relative" @pointerdown.prevent.stop>
     <div class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md">
@@ -69,6 +70,8 @@ import ClientButtons from 'launcher/src/components/UI/node-page/components/body/
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
   name: "ClientsLayout",
   components: {},
@@ -81,22 +84,31 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    ...mapWritableState(useNodeStore, {
+      hideConnectedLines: "hideConnectedLines",
+    }),
+  },
 
   mounted() {},
   methods: {
     expertWindow() {
+      this.hideConnectedLines = true;
       this.$emit("openExpert", this.client);
     },
     logWindow() {
+      this.hideConnectedLines = true;
       this.$emit("openLog", this.client);
     },
     docWindow() {
       this.$emit("openDoc", this.client);
     },
     pruningWindow() {
+      this.hideConnectedLines = true;
       this.$emit("openPruning", this.client);
     },
     resyncWindow() {
+      this.hideConnectedLines = true;
       this.$emit("openResync", this.client);
     },
   },
