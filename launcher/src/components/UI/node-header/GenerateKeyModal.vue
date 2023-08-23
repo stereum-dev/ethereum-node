@@ -15,7 +15,8 @@
           </div>
         </div>
         <div class="generate-key-modal_rows">
-          <label for="pickPath">Pick a save path</label><input id="pickPath" v-model="pickPath" type="text" />
+          <label for="pickPath">Pick a save path</label
+          ><input id="pickPath" v-model="pickPath" type="text" @click="openDirectoryPicker" />
         </div>
         <div class="generate-key-modal_rows">
           <label for="sshPass">ssh password</label
@@ -134,6 +135,19 @@ export default {
       this.generatedKey = data;
       console.log(this.generatedKey);
       this.generateModalShow = false;
+    },
+    async openDirectoryPicker() {
+      try {
+        const handle = await window.showDirectoryPicker();
+        this.pickPath = handle.name;
+      } catch (error) {
+        // Handle case when user cancels directory picker
+        if (error.name === "AbortError") {
+          this.pickPath = "";
+        } else {
+          console.error("Error picking directory:", error);
+        }
+      }
     },
   },
 };
