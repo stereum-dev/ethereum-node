@@ -234,7 +234,7 @@ export default {
         }
         return update;
       });
-      console.log("updatedUpdates", updatedUpdates);
+
       return updatedUpdates;
     },
   },
