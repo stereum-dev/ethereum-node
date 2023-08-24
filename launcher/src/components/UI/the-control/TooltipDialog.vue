@@ -13,7 +13,7 @@
             green: status == 'proposed',
             red: status == 'missed',
           }"
-          >{{ slot == 0 ? "null" : formatValues(slot) }}</span
+          >{{ slot == 0 ? "N/A" : formatValues(slot) }}</span
         >
       </div>
     </div>
