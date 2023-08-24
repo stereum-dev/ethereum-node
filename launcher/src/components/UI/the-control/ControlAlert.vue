@@ -123,11 +123,11 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img :src="item.sIcon" alt="warn_storage" />
+            <img :src="iconFilter(item)" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message" @click="showUpdate">
-              <span>{{ item.name }} UPDATE</span>
+              <span>{{ nameFilter(item) }} UPDATE</span>
             </div>
             <div class="val-message">
               <span>{{ item.version }}</span>
@@ -265,6 +265,22 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    nameFilter(arg) {
+      if (arg.name === "PrometheusNodeExporter") {
+        return "Node Exporter";
+      } else {
+        return arg.name;
+      }
+    },
+    iconFilter(arg) {
+      if (arg.name === "PrometheusNodeExporter") {
+        return "/img/icon/plugin-icons/Other/PrometheusNodeExporter-s.png";
+      } else if (arg.name === "Notification") {
+        return "/img/icon/plugin-icons/Other/NotifierService-s.png";
+      } else {
+        return arg.sIcon;
+      }
+    },
     expertHandler(el) {
       let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
       selectedObject.expertOptionsModal = true;
