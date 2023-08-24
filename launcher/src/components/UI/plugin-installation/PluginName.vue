@@ -76,7 +76,9 @@
               </div>
               <div class="change-box">
                 <span>{{ $t("pluginName.instMonit") }}</span>
-                <input v-model="installMonitoring" class="switch" type="checkbox" />
+                <div class="checkItem"><img src="" alt="" /></div>
+
+                <!-- <input v-model="installMonitoring" class="switch" type="checkbox" /> -->
               </div>
             </div>
             <!-- <div class="set-recipient gap-y-2">
@@ -673,6 +675,15 @@ export default {
   padding: 0;
   position: relative;
   margin-bottom: 2%;
+  background: red;
+}
+.checkItem {
+  width: 8%;
+  height: 70%;
+  border-radius: 5px;
+  background-color: #fff;
+  position: absolute;
+  right: 5%;
 }
 .switch {
   margin-right: 10%;
