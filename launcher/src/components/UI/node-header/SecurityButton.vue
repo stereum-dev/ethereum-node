@@ -1,8 +1,9 @@
 <template>
   <div class="securBtn-parent">
-    <div class="securBtn-box" @click="accessSwitch">
+    <div class="securBtn-box" @click="accessSwitch" @mouseenter="tooltip = true" @mouseleave="tooltip = false">
       <img :src="stereumStatus ? '/img/icon/LOGO.png' : '/img/icon/statusOff.png'" class="main-header__brand" />
     </div>
+    <div v-if="tooltip" class="server-access-tooltip">server access management</div>
   </div>
 </template>
 
@@ -13,7 +14,7 @@ import { useFooter } from "@/store/theFooter";
 export default {
   data() {
     return {
-      test: false,
+      tooltip: false,
     };
   },
   computed: {
@@ -33,6 +34,23 @@ export default {
 </script>
 
 <style scoped>
+.server-access-tooltip {
+  width: 220%;
+  height: 50%;
+  background-color: #1e2429;
+  border: 1px solid #b4b4b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 5%;
+  left: 15%;
+  border-radius: 10px;
+  color: #eee;
+  font-size: 65%;
+  font-weight: 600;
+  text-transform: uppercase;
+}
 .securBtn-parent {
   position: fixed;
   top: 0;
@@ -52,16 +70,5 @@ export default {
 }
 .securBtn-box img:active {
   transform: scale(0.98);
-}
-.test-page {
-  width: 100vw;
-  height: 100vh;
-  background-color: #472630;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 49;
-  opacity: 0.5;
-  display: none;
 }
 </style>
