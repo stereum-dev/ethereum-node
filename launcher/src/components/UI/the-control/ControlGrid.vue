@@ -1,5 +1,6 @@
 <template>
   <div class="ctrGridParent">
+    <TooltipDialog :open="dialog" />
     <div class="plugins-container">
       <control-plugins>
         <div class="plugins-title">
@@ -113,6 +114,7 @@
 </template>
 
 <script>
+import TooltipDialog from "./TooltipDialog.vue";
 import ControlService from "@/store/ControlService";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
@@ -128,7 +130,7 @@ export default {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-
+    TooltipDialog,
     TheExpert,
     PrunningModal,
     ResyncModal,
@@ -161,7 +163,23 @@ export default {
 
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
+      dialog: "dialog",
     }),
+    isAnyConsensusRunning() {
+      const consensusServices = this.installedServices.filter((item) => item.category === "consensus");
+
+      if (consensusServices.length === 0) {
+        return false;
+      }
+
+      return consensusServices.some((item) => item.state === "running");
+    },
+  },
+  watch: {
+    isAnyConsensusRunning(newValue) {
+      this.isConsensusRunning = newValue;
+    },
   },
   methods: {
     scrollUp() {
@@ -280,6 +298,7 @@ export default {
   grid-template-rows: 32% 31% 32% 5%;
   z-index: 0;
   text-align: center;
+  position: relative;
 }
 
 .plugins-container {

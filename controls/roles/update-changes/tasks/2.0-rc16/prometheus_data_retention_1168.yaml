@@ -14,12 +14,12 @@
       - path: service_configuration.command
         value: "sh -c '/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --web.enable-lifecycle --storage.tsdb.retention.time=15d'"
   register: updated
-  when: service_configuration.service == "PrometheusService"
+  when: service_configuration.service == "PrometheusService" and service_configuration.command is not search('storage.tsdb.retention.time')
 
 - name: update config
   set_fact:
     service_configuration: "{{ updated.service_configuration }}"
-  when: service_configuration.service == "PrometheusService"
+  when: service_configuration.service == "PrometheusService" and service_configuration.command is not search('storage.tsdb.retention.time')
 
 - name: Write Config
   copy:
@@ -28,4 +28,4 @@
     owner: "root"
     group: "root"
     mode: 0644
-  when: service_configuration.service == "PrometheusService"
+  when: service_configuration.service == "PrometheusService" and service_configuration.command is not search('storage.tsdb.retention.time')

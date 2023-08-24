@@ -11,73 +11,93 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
-      <div v-if="proposed.length === 0" class="box-wrapper">
+      <div v-if="flag" class="box-wrapper">
         <div class="spinner-square">
           <div class="square-1 square"></div>
           <div class="square-2 square"></div>
           <div class="square-3 square"></div>
         </div>
       </div>
+      <no-data v-else-if="nodataFlagControl"></no-data>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
-          <div class="proposed-rows-title">
-            <span>current justified </span>
+          <div class="proposed-rows">
+            <div
+              v-for="(n, index) in proposedBlock"
+              :key="index"
+              class="proposed-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
+                }`),
+                  dialogOpen(currentResult.currentEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'proposed ')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
           </div>
-
-          <div class="wrapper">
-            <div class="proposed-rows">
-              <div
-                v-for="n in proposed"
-                :key="n"
-                class="proposed-square"
-                :class="{ white: n == 0, blue: n != 0 }"
-                @mouseenter="
-                  cursorLocation = `the current epoch: ${currentEpochData} and the slot number is ${
-                    n != 0 ? n : 'null'
-                  }`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
+        </div>
+        <div class="justified-part">
+          <div class="Finalized-row">
+            <div
+              v-for="n in currentResult.justifiedEpochStatus[0]"
+              :key="n"
+              class="Finalized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.currentJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'justified ')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
+          </div>
+          <div class="Finalized-row">
+            <div
+              v-for="n in currentResult.preJustifiedEpochStatus[0]"
+              :key="n"
+              class="Finalized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.previousJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'previous justified ')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
           </div>
         </div>
-        <!-- <div class="justfied-part">
-        <div class="justfied-rows">
-          <span>justified</span>
-        </div>
-        <div class="justfied-rows">
-          <div
-            v-for="n in justified"
-            :key="n"
-            class="square"
-            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData} and the slot number is ${n}`"
-            @mouseleave="cursorLocation = ''"
-          ></div>
-        </div>
-        <div class="justfied-rows">
-          <div
-            v-for="n in justified"
-            :key="n"
-            class="square"
-            @mouseenter="cursorLocation = `the justfied epoch: ${currentEpochData - 1} and the slot number is ${n}`"
-            @mouseleave="cursorLocation = ''"
-          ></div>
-        </div>
-      </div> -->
-        <div class="finilized-part">
-          <div class="finilized-row-title"><span>finalized</span></div>
-          <div class="wrapper">
-            <div class="finilized-row">
-              <div
-                v-for="n in finalized"
-                :key="n"
-                class="finilized-square"
-                @mouseenter="
-                  cursorLocation = `the finilized epoch: ${currentEpochData - 1} and the slot number is ${n}`
-                "
-                @mouseleave="cursorLocation = ''"
-              ></div>
-            </div>
+        <div class="Finalized-part">
+          <div class="Finalized-row">
+            <div
+              v-for="n in currentResult.finalizedEpochStatus[0]"
+              :key="n"
+              class="Finalized-square"
+              :class="{
+                white: n.slotStatus == 'pending',
+                green: n.slotStatus == 'proposed',
+                red: n.slotStatus == 'missed',
+              }"
+              @mouseenter="
+                (cursorLocation = `the Finalized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`),
+                  dialogOpen(currentResult.finalizedEpoch, n.slotNumber, n.slotStatus),
+                  (epochType = 'Finalized')
+              "
+              @mouseleave="(cursorLocation = ''), dialogClose()"
+            ></div>
           </div>
         </div>
       </div>
@@ -85,30 +105,28 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
+import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
+import NoData from "./NoData.vue";
+
 export default {
+  components: {
+    NoData,
+  },
   data() {
     return {
       showSyncInfo: false,
       counter: null,
-
       defaultIcon: "/img/icon/control/spinner.gif",
       days: null,
       date: "",
       pattern: [],
       footerInfo: this.$t("controlPage.netSel"),
-
-      currentSlotData: null,
-      currentEpochData: null,
       proposed: [],
-      justifiedStart: 0,
-      justified: [],
-      finalizedStart: [],
-      finalized: [],
+      polling: {},
     };
   },
   computed: {
@@ -117,49 +135,112 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
+      dialog: "dialog",
+      epochType: "epochType",
+      epoch: "epoch",
+      slot: "slot",
+      status: "status",
     }),
+    ...mapWritableState(useControlStore, {
+      currentSlotData: "currentSlotData",
+      currentEpochData: "currentEpochData",
+      currentResult: "currentResult",
+      noDataFlag: "noDataFlag",
+    }),
+    proposedBlock() {
+      if (this.currentNetwork.id === 4) {
+        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      } else {
+        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      }
+    },
+
     networkIcon() {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     },
+    flag() {
+      if (this.currentResult === undefined) {
+        return true;
+      } else if (this.currentResult.beaconStatus === undefined) {
+        return true;
+      } else if (this.currentResult.beaconStatus !== 0) {
+        return false;
+      }
+      return false;
+    },
+    nodataFlagControl() {
+      return this.flagController();
+    },
   },
+
   watch: {
-    currentSlotData: "updateEpoch",
-    currentEpochData: "updateEpoch",
-    // justifiedStart: {
-    //   handler(justifiedBegin) {
-    //     this.justified = new Array(32).fill(0).map((_, index) => justifiedBegin + index);
-    //   },
-    //   immediate: true,
-    // },
-    // justifiedStart: {
-    //   handler(justifiedBegin) {
-    //     this.epochUpdater(justifiedBegin, "justified");
-    //   },
-    //   immediate: true,
-    // },
-    finalizedStart: {
-      handler(finalizedBegin) {
-        this.epochUpdater(finalizedBegin, "finalized");
+    currentResult: {
+      handler(newResult) {
+        if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
+          const newArray = newResult.currentEpochStatus[0]
+            .slice(0, this.proposedBlock.length)
+            .map((slot) => ({ slotNumber: slot.slotNumber, slotStatus: slot.slotStatus }));
+
+          while (newArray.length < this.proposedBlock.length) {
+            newArray.push({ slotNumber: 0, slotStatus: "pending" });
+          }
+
+          this.proposedBlock.splice(0, this.proposedBlock.length, ...newArray);
+        }
       },
-      immediate: true,
+      deep: true,
     },
   },
   mounted() {
     if (this.currentNetwork.id === 4) {
-      setInterval(() => {
+      this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
       }, 5000);
     } else {
-      setInterval(() => {
+      this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
           this.currentEpochSlot();
         }
       }, 12000);
     }
   },
+  beforeUnmount() {
+    clearInterval(this.polling);
+  },
   methods: {
+    flagController() {
+      if (this.flag === false && this.currentResult.beaconStatus !== 0) {
+        this.noDataFlag = true;
+        return true;
+      } else if (this.currentResult.beaconStatus === 0) {
+        this.noDataFlag = false;
+        return false;
+      }
+    },
+    dialogOpen(arg1, arg2, arg3) {
+      this.dialog = true;
+      this.epoch = arg1;
+      this.slot = arg2;
+      this.status = arg3;
+    },
+    dialogClose() {
+      this.epoch = "";
+      this.slot = "";
+      this.status = "";
+      this.dialog = false;
+      this.epochType = "";
+    },
+
+    initializeProposedBlock() {
+      if (this.currentNetwork.id === 4) {
+        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      } else {
+        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+      }
+    },
     async currentEpochSlot() {
       try {
         let res = await ControlService.getCurrentEpochSlot();
@@ -167,47 +248,21 @@ export default {
         if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
           this.currentSlotData = res.currentSlot;
           this.currentEpochData = res.currentEpoch;
+          this.currentResult = res;
         }
       } catch (error) {
         console.error("An error occurred:", error);
       }
     },
-    updateEpoch() {
-      const arraySize = this.currentNetwork.id === 4 ? 16 : 32;
-      const resultArray = new Array(arraySize).fill(0);
-      this.proposed = [];
-
-      if (this.currentSlotData !== null && this.currentEpochData !== null) {
-        const index =
-          (((this.currentSlotData - this.currentEpochData * arraySize) % arraySize) + arraySize) % arraySize;
-        for (let i = 0; i <= index; i++) {
-          resultArray[(index - i + arraySize) % arraySize] = this.currentSlotData - i;
-        }
-      }
-      // this.justifiedStart = resultArray[0] - 33;
-      this.finalizedStart = resultArray[0] - (arraySize + 1);
-      this.proposed.push(...resultArray);
-    },
-    epochUpdater(newValue, arrayName) {
-      const arraySize = this.currentNetwork.id === 4 ? 16 : 32;
-      const newArray = new Array(arraySize).fill(0).map((_, index) => newValue + index + 1);
-      this[arrayName] = newArray;
-    },
   },
 };
 </script>
 <style scoped>
-.wrapper {
-  width: 100%;
-  height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .box-wrapper {
   width: 100%;
-  height: 100%;
+  height: 95%;
   box-sizing: border-box;
+  position: relative;
 }
 .amsterdam-parent {
   display: flex;
@@ -216,6 +271,7 @@ export default {
   justify-content: center;
   align-content: center;
   color: #c1c1c1;
+  position: relative;
 }
 .icoTitle {
   display: flex;
@@ -247,68 +303,53 @@ export default {
   width: 70%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  position: relative;
   justify-content: center;
-  align-items: flex-start;
-  border-radius: 0 10px 10px 0;
+  align-items: center;
+  flex-direction: column;
 }
 
-.justfied-part {
-  width: 95%;
-  height: 45%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border-top: 1px solid #c1c1c1;
-}
-.justfied-rows {
-  width: 100%;
-  height: 30%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.justfied-rows span {
-  margin-left: 2.5%;
-  font-size: 45%;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.finilized-part,
+.Finalized-part,
 .proposed-part {
   width: 95%;
-  height: 48%;
-
+  height: 25%;
   border-radius: 0 0 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 1%;
 }
-.proposed-part {
+.justified-part {
+  width: 95%;
+  height: 50%;
+  border-radius: 0 0 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+/*.proposed-part {
   margin-bottom: 1%;
-}
-.finilized-part {
+}*/
+/*.finilized-part {
   border-top: 1px solid #c1c1c1;
-}
-.finilized-row-title,
-.proposed-rows-title {
+}*/
+
+/*.rows-title {
   width: 95%;
   height: 20%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   font-size: 50%;
   font-weight: 700;
   text-transform: uppercase;
   margin: 0.5% 0;
-}
-.finilized-row,
+}*/
+.Finalized-row,
 .proposed-rows {
   width: 100%;
-  height: 60%;
+  height: 80%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -318,11 +359,10 @@ export default {
   margin-top: 1.5%;
   color: red;
 }
-.finilized-square {
+.Finalized-square {
   width: 3%;
-  height: 95%;
+  height: 90%;
   margin: 0 0.5%;
-  background: #94deff;
   border-radius: 5px;
 }
 .proposed-square {
@@ -331,24 +371,20 @@ export default {
   margin: 0 0.5%;
   border-radius: 5px;
 }
-.finilized-square:hover,
+.Finalized-square:hover,
 .proposed-square:hover {
   transform: scale(1.3);
 }
 .white {
   background: #c1c1c1;
 }
-.blue {
-  background: #94deff;
+.green {
+  background: #568d50;
 }
-.square {
-  width: 23%;
-  height: 40%;
-  margin: 0 2.5%;
+.red {
+  background: #ff0000;
+}
 
-  background: #94deff;
-}
-/*test the load Bar*/
 .spinner-square {
   display: flex;
   width: 100%;
@@ -360,6 +396,7 @@ export default {
   width: 5%;
   height: 40%;
   border-radius: 4px;
+  margin-right: 5%;
 }
 
 .square-1 {
@@ -394,5 +431,4 @@ export default {
     background-color: #336666;
   }
 }
-/*end of the test*/
 </style>

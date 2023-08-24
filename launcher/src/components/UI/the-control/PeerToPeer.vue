@@ -8,7 +8,7 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data v-if="noDataLayerShow"></no-data>
+        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
         <div v-show="p2pItemsShow" class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
@@ -37,20 +37,20 @@
     </div>
     <div v-if="isMultiService" v-show="p2pItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img src="../../../../public/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img src="../../../../public/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 import NoData from "./NoData.vue";
 export default {
   components: { NoData },

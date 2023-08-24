@@ -105,21 +105,24 @@ export default {
   },
   methods: {
     getFilterbyNetwork() {
-      
       switch (this.configNetwork.network) {
         case "mainnet":
-        case "sepolia":
         case "goerli":
+          return (item) => this.archFilter(item.service);
+        case "sepolia":
           return (item) => item.service != "SSVNetworkService" && this.archFilter(item.service);
         case "gnosis":
-          return (item) => /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service) && this.archFilter(item.service);
+          return (item) =>
+            /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service) && this.archFilter(item.service);
         default:
           return (item) => item.service != "SSVNetworkService" && this.archFilter(item.service);
       }
     },
-    archFilter(service){
-        const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"]
-        return armArchs.includes(this.architecture) ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service) : true;
+    archFilter(service) {
+      const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"];
+      return armArchs.includes(this.architecture)
+        ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service)
+        : true;
     },
     selectCategoryTitle(direction) {
       if (direction == null) {
