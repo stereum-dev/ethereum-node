@@ -104,7 +104,7 @@ export class OneClickInstall {
   }
 
 
-  async createServices(constellation, checkpointURL, relayURL) {
+  async createServices(constellation, checkpointURL, relayURL, selectedPreset) {
     this.needsKeystore = [];
     let args = {
       network: this.network,
@@ -229,6 +229,29 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args))
     }
 
+    if(selectedPreset == "archive"){
+      switch (this.executionClient.service) {
+        case "GethService":
+          this.executionClient.command.push("--syncmode full");
+          this.executionClient.command.push("--gcmode archive");
+          break;
+        case "RethService":
+          //can only be archive
+          break;
+        case "ErigonService":
+          //archive by default
+          break;
+        case "BesuService":
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))] = "--sync-mode=FULL";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--pruning-enabled=true"))] = "--pruning-enabled=false";
+          break;
+        case "NethermindService":
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] += "_archive";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode=Hybrid"))] = "--Pruning.Mode=None";
+          break;
+      }
+    }
+
     let versions;
     try {
       versions = await this.nodeConnection.checkUpdates();
@@ -337,6 +360,8 @@ export class OneClickInstall {
         break;
       case "stereum on arm":
         services = services.filter(s => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s));
+        break;
+      case "archive":
         break;
     }
     return services;

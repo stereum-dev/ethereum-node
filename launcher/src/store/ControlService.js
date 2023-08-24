@@ -114,6 +114,7 @@ class ControlService extends EventEmitter {
       array: buffer,
       checkpointURL: args.checkpointURL,
       relayURL: args.relayURL,
+      selectedPreset: args.selectedPreset,
     });
   }
 
