@@ -60,7 +60,7 @@ export default {
         this.animateClass = "animate__animated animate__flipInX";
         setTimeout(() => {
           this.animateClass = "";
-        }, 600); // Adjust this delay to match your animation-duration
+        }, 600);
       }
     },
     epochType(newVal) {

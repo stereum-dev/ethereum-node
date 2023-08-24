@@ -74,9 +74,13 @@
               <div class="change-title">
                 <span>{{ $t("pluginName.monitor") }}</span>
               </div>
-              <div class="change-box">
+              <div class="monitoring">
                 <span>{{ $t("pluginName.instMonit") }}</span>
-                <input v-model="installMonitoring" class="switch" type="checkbox" />
+                <div :class="[checkBox, 'checkItem']" @click="installMonitoring = !installMonitoring">
+                  <img v-if="installMonitoring" src="/img/icon/access-management/done.png" alt="" />
+                </div>
+
+                <!-- <input v-model="installMonitoring" class="switch" type="checkbox" /> -->
               </div>
             </div>
             <!-- <div class="set-recipient gap-y-2">
@@ -98,8 +102,8 @@ import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
-import { useServices } from "../../../store/services";
-import { useNodeManage } from "../../../store/nodeManage";
+import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 
 export default {
   components: { ChangeModal },
@@ -137,6 +141,9 @@ export default {
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
     }),
+    checkBox() {
+      return this.installMonitoring ? "done " : "empty";
+    },
   },
   watch: {
     installMonitoring() {
@@ -673,6 +680,55 @@ export default {
   padding: 0;
   position: relative;
   margin-bottom: 2%;
+}
+.monitoring {
+  width: 96%;
+  height: 50%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  margin-bottom: 2%;
+}
+.monitoring span {
+  width: 100%;
+  height: 100%;
+
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #eee;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
+}
+.checkItem {
+  width: 8%;
+  height: 70%;
+  border-radius: 5px;
+  background-color: #fff;
+  position: absolute;
+  right: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.checkItem img {
+  width: 80%;
+}
+.empty {
+  border: 1px solid #ff002a;
+  background: rgba(96, 22, 22, 0.5);
+}
+.done {
+  border: 1px solid #3ac4c4;
+  background: #336666;
 }
 .switch {
   margin-right: 10%;

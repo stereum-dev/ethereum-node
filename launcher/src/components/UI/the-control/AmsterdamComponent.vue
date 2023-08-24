@@ -43,11 +43,11 @@
           </div>
         </div>
         <div class="justified-part">
-          <div class="finilized-row">
+          <div class="Finalized-row">
             <div
               v-for="n in currentResult.justifiedEpochStatus[0]"
               :key="n"
-              class="finilized-square"
+              class="Finalized-square"
               :class="{
                 white: n.slotStatus == 'pending',
                 green: n.slotStatus == 'proposed',
@@ -61,11 +61,11 @@
               @mouseleave="(cursorLocation = ''), dialogClose()"
             ></div>
           </div>
-          <div class="finilized-row">
+          <div class="Finalized-row">
             <div
               v-for="n in currentResult.preJustifiedEpochStatus[0]"
               :key="n"
-              class="finilized-square"
+              class="Finalized-square"
               :class="{
                 white: n.slotStatus == 'pending',
                 green: n.slotStatus == 'proposed',
@@ -80,21 +80,21 @@
             ></div>
           </div>
         </div>
-        <div class="finilized-part">
-          <div class="finilized-row">
+        <div class="Finalized-part">
+          <div class="Finalized-row">
             <div
               v-for="n in currentResult.finalizedEpochStatus[0]"
               :key="n"
-              class="finilized-square"
+              class="Finalized-square"
               :class="{
                 white: n.slotStatus == 'pending',
                 green: n.slotStatus == 'proposed',
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                (cursorLocation = `the finilized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`),
+                (cursorLocation = `the Finalized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`),
                   dialogOpen(currentResult.finalizedEpoch, n.slotNumber, n.slotStatus),
-                  (epochType = 'finilized')
+                  (epochType = 'Finalized')
               "
               @mouseleave="(cursorLocation = ''), dialogClose()"
             ></div>
@@ -309,7 +309,7 @@ export default {
   flex-direction: column;
 }
 
-.finilized-part,
+.Finalized-part,
 .proposed-part {
   width: 95%;
   height: 25%;
@@ -346,7 +346,7 @@ export default {
   text-transform: uppercase;
   margin: 0.5% 0;
 }*/
-.finilized-row,
+.Finalized-row,
 .proposed-rows {
   width: 100%;
   height: 80%;
@@ -359,7 +359,7 @@ export default {
   margin-top: 1.5%;
   color: red;
 }
-.finilized-square {
+.Finalized-square {
   width: 3%;
   height: 90%;
   margin: 0 0.5%;
@@ -371,7 +371,7 @@ export default {
   margin: 0 0.5%;
   border-radius: 5px;
 }
-.finilized-square:hover,
+.Finalized-square:hover,
 .proposed-square:hover {
   transform: scale(1.3);
 }
