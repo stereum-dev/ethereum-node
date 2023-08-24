@@ -33,7 +33,7 @@
               }"
               @mouseenter="
                 (cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
-                  n.slotNumber === 0 ? 'null' : n.slotNumber
+                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
                 }`),
                   dialogOpen(currentResult.currentEpoch, n.slotNumber, n.slotStatus),
                   (epochType = 'proposed ')
