@@ -3,15 +3,15 @@
     <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-5">
       <router-link
         v-if="!routerHovered"
-        to="/edit"
+        to="/node"
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
         @mouseover="routerHovered = true"
       >
-        <img class="w-8" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+        <img class="w-7" src="/img/icon/arrows/left-1.png" alt="Manage Icon" />
       </router-link>
-      <router-link v-else to="/edit" class="showManageBtn" @mouseleave="routerHovered = false">
-        <img class="w-7 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
-        <span class="text-sm text-gray-200 font-semibold">To Edit Node</span>
+      <router-link v-else to="/node" class="showManageBtn" @mouseleave="routerHovered = false">
+        <img class="w-7 mr-1" src="/img/icon/arrows/left-1.png" alt="Manage Icon" />
+        <span class="text-sm text-gray-200 font-semibold">Back to Node</span>
       </router-link>
       <button v-if="isloading" class="row-start-2 row-end-3 p-1 rounded-md relative">
         <img v-if="loading" src="/img/icon/task-manager-icons/turning_circle_blue.gif" alt="loading" />
