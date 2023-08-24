@@ -137,11 +137,11 @@
         @click="showUpdate"
       >
         <div class="message-icon">
-          <img :src="item.sIcon" alt="warn_storage" />
+          <img :src="iconFilter(item)" alt="warn_storage" />
         </div>
-        <div class="message-text_container">
+        <div class="message-text_container update-items">
           <div class="main-message">
-            <span>{{ item.name }} UPDATE</span>
+            <span>{{ nameFilter(item) }} UPDATE</span>
           </div>
           <div class="val-message">
             <span>{{ item.version }}</span>
@@ -154,7 +154,7 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
@@ -203,6 +203,7 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
+
     usedPercInt() {
       return parseInt(this.usedPerc);
     },
@@ -233,6 +234,7 @@ export default {
         }
         return update;
       });
+      console.log("updatedUpdates", updatedUpdates);
       return updatedUpdates;
     },
   },
@@ -278,6 +280,22 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    nameFilter(arg) {
+      if (arg.name === "PrometheusNodeExporter") {
+        return "Node Exporter";
+      } else {
+        return arg.name;
+      }
+    },
+    iconFilter(arg) {
+      if (arg.name === "PrometheusNodeExporter") {
+        return "/img/icon/plugin-icons/Other/PrometheusNodeExporter-s.png";
+      } else if (arg.name === "Notification") {
+        return "/img/icon/plugin-icons/Other/NotifierService-s.png";
+      } else {
+        return arg.sIcon;
+      }
+    },
     expertHandler(el) {
       let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
       selectedObject.expertOptionsModal = true;
@@ -375,6 +393,10 @@ export default {
 </script>
 
 <style scoped>
+.update-items {
+  height: 90% !important;
+  justify-content: center !important;
+}
 .pointer {
   cursor: pointer;
 }
