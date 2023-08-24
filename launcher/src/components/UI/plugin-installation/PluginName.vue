@@ -74,9 +74,9 @@
               <div class="change-title">
                 <span>{{ $t("pluginName.monitor") }}</span>
               </div>
-              <div class="change-box">
+              <div class="monitoring">
                 <span>{{ $t("pluginName.instMonit") }}</span>
-                <div class="checkItem" :class="[checkBox]" @click="installMonitoring = !installMonitoring">
+                <div :class="[checkBox, 'checkItem']" @click="installMonitoring = !installMonitoring">
                   <img v-if="installMonitoring" src="/img/icon/access-management/done.png" alt="" />
                 </div>
 
@@ -680,7 +680,33 @@ export default {
   padding: 0;
   position: relative;
   margin-bottom: 2%;
-  background: red;
+}
+.monitoring {
+  width: 96%;
+  height: 50%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  margin-bottom: 2%;
+}
+.monitoring span {
+  width: 100%;
+  height: 100%;
+
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #eee;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
 }
 .checkItem {
   width: 8%;
