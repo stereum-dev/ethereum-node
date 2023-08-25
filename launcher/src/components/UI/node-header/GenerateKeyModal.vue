@@ -20,7 +20,13 @@
         </div>
         <div class="generate-key-modal_rows">
           <label for="sshPass">ssh password</label
-          ><input id="sshPass" v-model="sshPass" type="password" placeholder="DEFINE AN OPTIONAL SSH PASSWORD" />
+          ><input
+            id="sshPass"
+            v-model="sshPass"
+            :class="[controlPass, checkedPass]"
+            type="password"
+            :placeholder="passControl ? alertMessage : 'DEFINE AN OPTIONAL SSH PASSWORD'"
+          />
         </div>
         <div class="generate-key-modal_rows">
           <label for="sshPass">re-enter password</label
@@ -28,7 +34,8 @@
             id="sshPass"
             v-model="reEnterSshPass"
             type="password"
-            placeholder="RE-ENTER THE CHOOSEN SSH PASSWORD"
+            :placeholder="passControl ? alertMessage : 'RE-ENTER THE CHOOSEN SSH PASSWORD'"
+            :class="[controlPass, checkedPass]"
           />
         </div>
         <div class="generate-key-modal_rows">
@@ -90,6 +97,8 @@ export default {
       bitAmountCollection: ["1024", "2048", "4096", "8192", "16384", "32768", "65536", "131072"], //dummy data
       bitAmountDropdown: false,
       reEnterSshPass: "",
+      passControl: false,
+      alertMessage: "The passwords do not match",
     };
   },
   computed: {
@@ -109,6 +118,12 @@ export default {
       } else {
         return true;
       }
+    },
+    controlPass() {
+      return this.passControl ? "again" : "";
+    },
+    checkedPass() {
+      return this.sshPass === this.reEnterSshPass ? "check" : "again";
     },
   },
   watch: {
@@ -140,6 +155,7 @@ export default {
         alert("The passwords do not match");
         this.sshPass = "";
         this.reEnterSshPass = "";
+        this.passControl = true;
       } else {
         const data = {
           keyType: this.keyType,
@@ -172,6 +188,12 @@ export default {
 </script>
 
 <style scoped>
+.again {
+  border: 1px solid #b9110b !important;
+}
+.check {
+  border: 2px solid #0bb92b !important;
+}
 .generate-key-modal-parent {
   width: 100%;
   height: 100vh;

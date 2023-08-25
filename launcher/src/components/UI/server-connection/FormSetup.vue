@@ -303,18 +303,15 @@ export default {
     addModel() {
       const newConnection = this.createConnection();
       if (newConnection.name !== "" && newConnection.host !== "" && newConnection.user !== "") {
-        console.log("newConnection", newConnection);
         if (!this.connections.find((connection) => connection.name == this.model.name.value)) {
           this.connections.push(newConnection);
           this.selectedConnection = newConnection;
-          console.log("first", this.selectedConnection);
           this.selectedName = this.selectedConnection.name;
           this.writeSettings();
         } else if (this.connections.find((connection) => connection.name == this.model.name.value)) {
           const index = this.connections.findIndex((connection) => connection.name == this.model.name.value);
           this.connections[index] = newConnection;
           this.selectedConnection = newConnection;
-          console.log("second", this.selectedConnection);
           this.selectedName = this.selectedConnection.name;
           this.writeSettings();
         }
