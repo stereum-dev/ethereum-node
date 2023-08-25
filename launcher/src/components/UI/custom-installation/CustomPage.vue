@@ -23,6 +23,20 @@
             </div>
           </div>
         </div>
+        <div class="select-network">
+          <div class="path-title network">
+            <span>choose a network</span>
+          </div>
+          <div class="network-selector" @click="networkListDropdown = true">
+            {{ selectedNetwork }}
+          </div>
+          <div v-if="networkListDropdown" class="network-dropdown" @mouseleave="networkListDropdown = false">
+            <div v-for="network in networkList" :key="network" class="networks">
+              <div class="icon-networks"><img :src="network.icon" alt="" /></div>
+              <div class="networks-title">{{ network.name }}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <router-link class="back" to="/welcome">{{ $t("installOption.back") }} </router-link>
@@ -36,10 +50,14 @@
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useNodeManage } from "@/store/nodeManage";
+
 export default {
   data() {
     return {
       installPath: "/opt/stereum",
+      networkListDropdown: false,
+      selectedNetwork: "click to select a network",
     };
   },
 
@@ -47,13 +65,18 @@ export default {
     ...mapWritableState(useNodeHeader, {
       refresh: "refresh",
     }),
+
+    ...mapWritableState(useNodeManage, {
+      networkList: "networkList",
+    }),
   },
   created() {
     this.activeBtn();
     this.getInstallPath();
   },
+
   methods: {
-    async getInstallPath () {
+    async getInstallPath() {
       let largestVolumePath = await ControlService.getLargestVolumePath();
       if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
       const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
@@ -79,11 +102,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-  outline: none;
-}
-
 .custom-layer_parent {
   display: flex;
   justify-content: flex-start;
@@ -120,7 +138,7 @@ export default {
 .container-box {
   display: flex;
   width: 100%;
-  height: 85%;
+  height: 75%;
   position: absolute;
   top: 15%;
   justify-content: center;
@@ -131,19 +149,19 @@ export default {
   display: flex;
   flex-direction: column;
   width: 60%;
-  height: 70%;
+  height: 85%;
   background-color: #2d3134;
   border: 3px solid #b4b4b4;
   box-shadow: 0 1px 3px 1px #1f3737;
   color: #cecece;
   border-radius: 30px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .text-container {
   width: 100%;
-  height: 50%;
+  height: 35%;
   padding: 3% 4%;
   display: flex;
   justify-content: center;
@@ -157,17 +175,86 @@ export default {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  height: 50%;
+  height: 35%;
   width: 100%;
+}
+.select-network {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+.network-selector {
+  width: 95%;
+  height: 35%;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #1258a2;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.network-selector:hover {
+  background-color: #1258a2;
+  transition-duration: 0.3s;
+  color: #cecece;
+}
+.network-dropdown {
+  width: 55%;
+  height: 33%;
+  top: 79%;
+  background: #1258a2;
+  position: absolute;
+}
+.networks {
+  width: 100%;
+  height: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.networks:hover {
+  background-color: #cecece;
+  transition-duration: 0.2s;
+  color: #1258a2;
+}
+.icon-networks {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon-networks img {
+  width: 25%;
+}
+.networks-title {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 5%;
 }
 
 .path-title {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   font-weight: 600;
   margin-bottom: 2%;
+  margin-left: 8%;
+  text-transform: uppercase;
+}
+.network {
+  margin-top: 2%;
 }
 
 .textbox-cont {
