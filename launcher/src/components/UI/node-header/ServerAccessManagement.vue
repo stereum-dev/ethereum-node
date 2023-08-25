@@ -33,12 +33,17 @@
               <div class="login-info-btn" @click="chngPassword = true">CHANGE PASSWORD</div>
             </div>
             <div v-else class="btn-part">
-              <input v-model="newPass" class="chng-password" type="password" placeholder="Enter a new Password" />
+              <input
+                v-model="newPass"
+                :class="['chng-password', controlPass]"
+                type="password"
+                :placeholder="passmessage"
+              />
               <div class="pass-btn-part">
                 <div class="pass-btn accept" @click="acceptChangePass">
                   <img src="/img/icon/access-management/done.png" alt="" />
                 </div>
-                <div class="pass-btn deny" @click="(chngPassword = false), (newPass = '')">
+                <div class="pass-btn deny" @click="denyPassChange">
                   <img src="/img/icon/access-management/close.png" alt="" />
                 </div>
               </div>
@@ -89,7 +94,11 @@ export default {
       onAreYouSure: "Are you sure you want to remove this SSH Key?",
       chngPassword: false,
       newPass: "",
+      comparePass: [],
       keyLocation: "",
+      passmessage: "Please enter a password",
+      acceptedPass: "",
+      passChk: false,
     };
   },
   computed: {
@@ -101,6 +110,9 @@ export default {
     }),
     passSSHRow() {
       return !this.selectedConnection.useAuthKey ? "pass" : "ssh";
+    },
+    controlPass() {
+      return this.passChk ? "denyPass" : "";
     },
   },
   mounted() {
@@ -128,12 +140,37 @@ export default {
     generateModal() {
       this.generateModalShow = !this.generateModalShow;
     },
+    denyPassChange() {
+      this.chngPassword = false;
+      this.newPass = "";
+      this.comparePass = [];
+    },
     acceptChangePass() {
-      if (this.newPass == "") {
-        console.log("new pass is empty");
+      if (this.newPass === "") {
+        this.passmessage = "Please enter a password";
       } else {
-        console.log(this.newPass);
-        this.chngPassword = false;
+        if (this.comparePass.length < 1) {
+          this.comparePass.push(this.newPass);
+          this.newPass = "";
+          this.passmessage = "please enter the password again";
+          this.passChk = false;
+        } else {
+          const passwordEqual = this.comparePass.every((item) => item === this.newPass);
+
+          if (passwordEqual) {
+            this.acceptedPass = this.newPass;
+            this.chngPassword = false;
+            this.newPass = "";
+            this.comparePass = [];
+            this.passChk = false;
+            console.log(this.acceptedPass);
+          } else {
+            this.newPass = "";
+            this.passmessage = "The passwords do not match";
+            this.comparePass = [];
+            this.passChk = true;
+          }
+        }
       }
     },
     previewFiles(event) {
@@ -151,6 +188,10 @@ export default {
 </script>
 
 <style scoped>
+.denyPass {
+  border: 2px solid #ff002a !important;
+  background: rgba(255, 0, 42, 0.4);
+}
 .dashboard-parent {
   width: 100vw;
   height: 94.5vh;
