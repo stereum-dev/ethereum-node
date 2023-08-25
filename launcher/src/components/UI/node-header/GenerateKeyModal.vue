@@ -69,7 +69,14 @@
             type="text"
             placeholder="USE A CUSTOM CYPER"
             :disabled="cypherControl"
+            @mousedown.prevent.stop
+            @click="cypherDropdown = !cypherDropdown"
           />
+          <div v-if="cypherDropdown" class="dropdown cypher-dropdown">
+            <div v-for="cypher in specifyCypherItems" :key="cypher" class="dropdown-row" @click="bitPicker(bit)">
+              <span>{{ cypher }}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="generate-btn" @click="generateKey">generate</div>
@@ -99,6 +106,8 @@ export default {
       reEnterSshPass: "",
       passControl: false,
       alertMessage: "The passwords do not match",
+      cypherDropdown: false,
+      specifyCypherItems: ["aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-gcm"],
     };
   },
   computed: {
@@ -297,6 +306,10 @@ export default {
 }
 .bit-amount-dropdown {
   top: 66.3%;
+  overflow-y: scroll;
+}
+.cypher-dropdown {
+  top: 77%;
   overflow-y: scroll;
 }
 .dropdown-row {
