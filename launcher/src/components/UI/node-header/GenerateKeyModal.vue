@@ -23,6 +23,15 @@
           ><input id="sshPass" v-model="sshPass" type="password" placeholder="DEFINE AN OPTIONAL SSH PASSWORD" />
         </div>
         <div class="generate-key-modal_rows">
+          <label for="sshPass">re-enter password</label
+          ><input
+            id="sshPass"
+            v-model="reEnterSshPass"
+            type="password"
+            placeholder="RE-ENTER THE CHOOSEN SSH PASSWORD"
+          />
+        </div>
+        <div class="generate-key-modal_rows">
           <label for="unlockExpert">unlock expert options</label>
           <div class="toggle" :style="{ backgroundColor: expert ? '#0BB910' : '#808080' }" @click="expertUnlock">
             <div class="toggle-circle" :class="{ animate: expert }" />
@@ -80,6 +89,7 @@ export default {
       generatedKey: {},
       bitAmountCollection: ["1024", "2048", "4096", "8192", "16384", "32768", "65536", "131072"], //dummy data
       bitAmountDropdown: false,
+      reEnterSshPass: "",
     };
   },
   computed: {
@@ -126,16 +136,23 @@ export default {
       this.bitAmountDropdown = false;
     },
     generateKey() {
-      const data = {
-        keyType: this.keyType,
-        pickPath: this.pickPath,
-        sshPass: this.sshPass,
-        bitAmount: this.bitAmount,
-        specifyCypher: this.specifyCypher,
-      };
-      this.generatedKey = data;
-      console.log(this.generatedKey);
-      this.generateModalShow = false;
+      if (this.sshPass !== this.reEnterSshPass) {
+        alert("The passwords do not match");
+        this.sshPass = "";
+        this.reEnterSshPass = "";
+      } else {
+        const data = {
+          keyType: this.keyType,
+          pickPath: this.pickPath,
+          sshPass: this.sshPass,
+          bitAmount: this.bitAmount,
+          specifyCypher: this.specifyCypher,
+        };
+
+        this.generatedKey = data;
+        console.log(this.generatedKey);
+        this.generateModalShow = false;
+      }
     },
     async openDirectoryPicker() {
       try {
@@ -175,10 +192,10 @@ export default {
 }
 .generate-key-modal {
   width: 50%;
-  height: 60%;
+  height: 75%;
   background-color: #33393e;
   position: absolute;
-  top: 25%;
+  top: 5%;
   left: 25%;
   z-index: 54;
   border-radius: 50px;
@@ -215,7 +232,7 @@ export default {
 }
 .generate-key-modal_rows label {
   color: #eee;
-  font-size: 100%;
+  font-size: 85%;
   font-weight: 600;
   text-transform: uppercase;
 }
