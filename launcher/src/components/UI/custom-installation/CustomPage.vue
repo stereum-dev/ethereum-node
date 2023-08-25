@@ -28,10 +28,14 @@
             <span>choose a network</span>
           </div>
           <div class="network-selector" @click="networkListDropdown = true">
-            {{ selectedNetwork }}
+            <div v-if="selectedNetworkIcon !== ''" class="network-selector-icon">
+              <img :src="selectedNetworkIcon" alt="" />
+            </div>
+            <div v-if="selectedNetworkName !== ''" class="network-selector-title">{{ selectedNetworkName }}</div>
+            <span v-else>{{ selectedNetwork }}</span>
           </div>
           <div v-if="networkListDropdown" class="network-dropdown" @mouseleave="networkListDropdown = false">
-            <div v-for="network in networkList" :key="network" class="networks">
+            <div v-for="network in networkList" :key="network" class="networks" @click="selectNetwork(network)">
               <div class="icon-networks"><img :src="network.icon" alt="" /></div>
               <div class="networks-title">{{ network.name }}</div>
             </div>
@@ -58,6 +62,8 @@ export default {
       installPath: "/opt/stereum",
       networkListDropdown: false,
       selectedNetwork: "click to select a network",
+      selectedNetworkIcon: "",
+      selectedNetworkName: "",
     };
   },
 
@@ -76,6 +82,11 @@ export default {
   },
 
   methods: {
+    selectNetwork(network) {
+      this.selectedNetworkIcon = network.icon;
+      this.selectedNetworkName = network.name;
+      this.networkListDropdown = false;
+    },
     async getInstallPath() {
       let largestVolumePath = await ControlService.getLargestVolumePath();
       if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
@@ -201,6 +212,27 @@ export default {
   background-color: #1258a2;
   transition-duration: 0.3s;
   color: #cecece;
+}
+.network-selector-icon {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.network-selector-icon img {
+  width: 50%;
+}
+.network-selector-title {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-left: 5%;
 }
 .network-dropdown {
   width: 55%;
