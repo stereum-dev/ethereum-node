@@ -106,7 +106,7 @@ export default {
       generateModalShow: "generateModalShow",
     }),
     cypherControl() {
-      if (this.sshPass !== "" && this.expert === true) {
+      if (this.reEnterSshPass === this.sshPass && this.sshPass !== "" && this.expert === true) {
         return false;
       } else {
         return true;
@@ -137,9 +137,6 @@ export default {
   },
   methods: {
     expertUnlock() {
-      if (!this.bitAmountControl && !this.cypherControl) {
-        this.expert = false;
-      }
       this.expert = !this.expert;
     },
     keyPicker(arg) {
