@@ -36,6 +36,7 @@
             type="text"
             placeholder="SPECIFY SSH BIT AMOUNT"
             :disabled="bitAmountControl"
+            @mousedown.prevent.stop
             @click="bitAmountDropdown = !bitAmountDropdown"
           />
           <div v-if="bitAmountDropdown" class="dropdown bit-amount-dropdown">
