@@ -175,7 +175,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/mainnet-icon.png",
           currencyIcon: "/img/icon/control/mainnet-currency-symbol.png",
           dataEndpoint: "https://mainnet.beaconcha.in/api/v1",
-          support: ["staking", "mev boost", "stereum on arm", "ssv.network", "obol"],
+          support: ["staking", "mev boost", "stereum on arm", "ssv.network", "obol", "archive"],
         },
         {
           id: 2,
@@ -184,7 +184,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/testnet-icon.png",
           currencyIcon: "/img/icon/control/goETH_Currency_Symbol.png",
           dataEndpoint: "https://goerli.beaconcha.in/api/v1",
-          support: ["staking", "ssv.network", "mev boost", "obol", "stereum on arm"],
+          support: ["staking", "ssv.network", "mev boost", "obol", "stereum on arm", "archive"],
         },
 
         {
