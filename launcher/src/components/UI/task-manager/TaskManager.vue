@@ -83,9 +83,6 @@ export default {
   },
   created() {
     this.checkNewTasks = this.displayingTasks;
-    if (this.$route.name === "TheNode") {
-      this.displayTasksTemprory();
-    }
   },
 
   mounted() {
@@ -115,12 +112,6 @@ export default {
       } else {
         this.isTaskModalActive = true;
       }
-    },
-    displayTasksTemprory() {
-      this.isTaskModalActive = true;
-      setTimeout(() => {
-        this.isTaskModalActive = false;
-      }, 10000);
     },
 
     openDropDown(item) {

@@ -20,6 +20,7 @@ export class NodeConnection {
     this.sshService = new SSHService();
     this.nodeConnectionParams = nodeConnectionParams;
     this.os = null;
+    this.osv = null;
   }
 
   async establish(taskManager) {
@@ -33,16 +34,27 @@ export class NodeConnection {
    */
   async findOS() {
     // Run the command without sudo wrapper
+    let osName = null;
+    let osVersion = null;
     const uname = await this.sshService.exec("cat /etc/*-release", null, false);
     log.debug("result uname: ", uname);
-    if (uname.rc == 0) {
-      if (uname.stdout && uname.stdout.toLowerCase().search("centos") >= 0) {
-        this.os = nodeOS.centos;
-      } else if (uname.stdout && uname.stdout.toLowerCase().search("ubuntu") >= 0) {
-        log.debug("setting ubuntu");
-        this.os = nodeOS.ubuntu;
+    if (uname.rc == 0 && uname.stdout) {
+      const regex = /VERSION_ID="([^"]+)"/;
+      const match = uname.stdout.match(regex);
+      const versionId = match ? match[1] : null;
+      if (uname.stdout.toLowerCase().search("centos") >= 0) {
+        log.debug(`setting centos, version ${versionId}`);
+        osName = nodeOS.centos;
+        osVersion = versionId;
+      } else if (uname.stdout.toLowerCase().search("ubuntu") >= 0) {
+        log.debug(`setting ubuntu, version ${versionId}`);
+        osName = nodeOS.ubuntu;
+        osVersion = versionId;
       }
     }
+    this.os = osName;
+    this.osv = osVersion;
+    return { name: osName, version: osVersion };
   }
 
   /**
@@ -318,17 +330,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -510,7 +522,9 @@ export class NodeConnection {
     }
 
     if (SSHService.checkExecError(prometheusConfig)) {
-      throw new Error("Failed reading Prometheus config " + serviceID + ": " + SSHService.extractExecError(prometheusConfig));
+      throw new Error(
+        "Failed reading Prometheus config " + serviceID + ": " + SSHService.extractExecError(prometheusConfig)
+      );
     }
 
     return prometheusConfig.stdout;
@@ -568,18 +582,22 @@ export class NodeConnection {
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write yaml", otherRunRef: ref });
     try {
+      if (!this.checkServiceYamlFormat(service.data.trim())) {
+        throw new Error("Config is not in the right format!");
+      }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + service.service + " yaml",
         otherRunRef: ref,
         status: false,
+        data: err,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write service yaml of " + service.id, err);
@@ -618,10 +636,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -643,9 +661,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -1078,6 +1096,8 @@ export class NodeConnection {
     this.sshService.disconnect();
     this.settings = undefined;
     await this.closeTunnels();
+    this.os = null;
+    this.osv = null;
   }
 
   async restartServer() {
@@ -1096,8 +1116,8 @@ export class NodeConnection {
       while (!retry.connected && retry.counter < retry.maxTries) {
         try {
           retry.counter++;
-          log.info(`Trying to connect (${retry.counter})`)
-          retry.connected = await this.sshService.checkSSHConnection(this.nodeConnectionParams, 5000)
+          log.info(`Trying to connect (${retry.counter})`);
+          retry.connected = await this.sshService.checkSSHConnection(this.nodeConnectionParams, 5000);
         } catch (err) {
           if (retry.counter == retry.maxTries) {
             this.taskManager.otherTasksHandler(ref, "Could not connect " + (retry.maxTries - retry.counter), false);
@@ -1114,7 +1134,7 @@ export class NodeConnection {
         }
       }
       if (retry.connected) {
-        await this.establish(this.taskManager)
+        await this.establish(this.taskManager);
         this.taskManager.otherTasksHandler(ref, "Connected", true);
         this.taskManager.otherTasksHandler(ref);
       } else {
@@ -1122,20 +1142,49 @@ export class NodeConnection {
         this.taskManager.otherTasksHandler(ref);
         throw "Could not connect";
       }
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   async getCPUArchitecture() {
     try {
-      const result = await this.sshService.exec("uname -m")
+      const result = await this.sshService.exec("uname -m");
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed reading uname command: " + SSHService.extractExecError(result));
       }
-      return result.stdout.trim()
+      return result.stdout.trim();
     } catch (error) {
-      log.error("Error getting CPU Architecture", error)
+      log.error("Error getting CPU Architecture", error);
+    }
+  }
+
+  checkServiceYamlFormat(string) {
+    try {
+      const properties = [
+        "id",
+        "service",
+        "configVersion",
+        "command",
+        "entrypoint",
+        "env",
+        "image",
+        "ports",
+        "volumes",
+        "user",
+        "network",
+        "dependencies",
+      ];
+      const service = YAML.parse(string);
+      for (const propertiesKey of properties) {
+        if (!service[propertiesKey]) {
+          throw new Error(service[propertiesKey] + " property is missing, empty or invalid");
+        }
+      }
+      return true;
+    } catch (err) {
+      log.error(err);
+      return false;
     }
   }
 }

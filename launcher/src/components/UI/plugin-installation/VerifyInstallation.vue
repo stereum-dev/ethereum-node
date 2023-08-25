@@ -77,6 +77,7 @@ export default {
           services: this.selectedPreset.includedPlugins,
           checkpointURL: this.checkPointSync,
           relayURL: this.relayURL,
+          selectedPreset: this.selectedPreset.name,
         });
 
         await ControlService.startOneClickServices();

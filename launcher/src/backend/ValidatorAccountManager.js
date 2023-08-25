@@ -325,7 +325,7 @@ export class ValidatorAccountManager {
       let ssvConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout;
       if (ssvConfig) {
         const escapedConfigFile = StringUtils.escapeStringForShell(
-          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: "' + sk + '"')
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: ' + sk)
         );
         await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
 

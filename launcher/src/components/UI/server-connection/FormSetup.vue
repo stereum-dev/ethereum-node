@@ -1,5 +1,6 @@
 <template>
   <div class="server-parent">
+    <div v-if="alertBox" class="alert animate__animated animate__flipInX">Please fill in the missing fields!</div>
     <div v-if="errorMsgExists" class="error-box"></div>
     <div v-if="errorMsgExists" class="error-modal">
       <div class="title-box">
@@ -211,6 +212,7 @@ export default {
   emits: ["page"],
   data() {
     return {
+      alertBox: false,
       sshPort: null,
       keyAuth: false,
       link: "stereumLogoExtern.png",
@@ -300,17 +302,27 @@ export default {
     },
     addModel() {
       const newConnection = this.createConnection();
-      if (!this.connections.find((connection) => connection.name == this.model.name.value)) {
-        this.connections.push(newConnection);
-        this.selectedConnection = newConnection;
-        this.selectedName = this.selectedConnection.name;
-        this.writeSettings();
-      } else if (this.connections.find((connection) => connection.name == this.model.name.value)) {
-        const index = this.connections.findIndex((connection) => connection.name == this.model.name.value);
-        this.connections[index] = newConnection;
-        this.selectedConnection = newConnection;
-        this.selectedName = this.selectedConnection.name;
-        this.writeSettings();
+      if (newConnection.name !== "" && newConnection.host !== "" && newConnection.user !== "") {
+        console.log("newConnection", newConnection);
+        if (!this.connections.find((connection) => connection.name == this.model.name.value)) {
+          this.connections.push(newConnection);
+          this.selectedConnection = newConnection;
+          console.log("first", this.selectedConnection);
+          this.selectedName = this.selectedConnection.name;
+          this.writeSettings();
+        } else if (this.connections.find((connection) => connection.name == this.model.name.value)) {
+          const index = this.connections.findIndex((connection) => connection.name == this.model.name.value);
+          this.connections[index] = newConnection;
+          this.selectedConnection = newConnection;
+          console.log("second", this.selectedConnection);
+          this.selectedName = this.selectedConnection.name;
+          this.writeSettings();
+        }
+      } else {
+        this.alertBox = true;
+        setTimeout(() => {
+          this.alertBox = false;
+        }, 1500);
       }
     },
     getstorableConnections() {
@@ -438,8 +450,21 @@ export default {
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
+.alert {
+  width: 40%;
+  height: 20%;
+  background-color: #1e2429;
+  border-radius: 20px;
+  position: absolute;
+  z-index: 7;
+  top: 30%;
+  border: 3px solid #bb1010;
+  color: #ddbfbf;
+  font-size: 135%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
 }
 .passwordShow {
   display: flex;

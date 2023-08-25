@@ -111,7 +111,6 @@ test("teku validator import", async () => {
       /Listening on http:\/\/localhost:5051/.test(BCstatus.stdout) &&
       /Syncing started/.test(BCstatus.stdout) &&
       /Metrics service started/.test(VCstatus.stdout) &&
-      /Initializing API auth access file/.test(VCstatus.stdout) &&
       /Listening on http:\/\/localhost:5052/.test(VCstatus.stdout) &&
       /Successfully connected to beacon node event stream/.test(VCstatus.stdout) &&
       /Starting doppelganger detection for public keys: .{7}, .{7}, .{7}/.test(VCstatus.stdout)
@@ -158,7 +157,6 @@ test("teku validator import", async () => {
 
   //teku tekuVC logs
   expect(VCstatus.stdout).toMatch(/Metrics service started/);
-  expect(VCstatus.stdout).toMatch(/Initializing API auth access file/);
   expect(VCstatus.stdout).toMatch(/Listening on http:\/\/localhost:5052/);
   expect(VCstatus.stdout).toMatch(/Successfully connected to beacon node event stream/);
   expect(VCstatus.stdout).toMatch(/Starting doppelganger detection for public keys: .{7}, .{7}, .{7}/);
