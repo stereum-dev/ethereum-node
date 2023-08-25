@@ -15,73 +15,49 @@
         <ChangesSection />
       </div>
     </div>
-    <DrawerSection v-if="drawerIsOpen" />
+
+    <img
+      class="w-10 absolute top-50 -right-5 cursor-pointer"
+      src="/img/icon/manage-node-icons/sidebar-out.png"
+      alt="Arrow Icon"
+      @mousedown.prevent.stop
+      @mouseenter="openDrawer"
+      @click="openDrawer"
+    />
+    <transition name="slide-fade" mode="out-in">
+      <DrawerSection v-if="store.isDrawerOpen" />
+    </transition>
     <!-- End Node main layout -->
   </base-layout>
 </template>
-<script>
+<script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
 import EditSection from "./sections/EditSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import DrawerSection from "./sections/DrawerSection.vue";
-import { mapWritableState } from "pinia";
-import { useNodeStore } from "@/store/theNode";
-export default {
-  name: "NodeScreen",
-  components: {
-    SidebarSection,
-    EditSection,
-    ServiceSection,
-    ChangesSection,
-    DrawerSection,
-  },
-  props: {},
-  data() {
-    return {
-      updatePowerState: false,
-      cursorLocation: "",
-      chckTutorial: "/img/icon/round-icon.png",
-      returnStatus: "/img/icon/round-icon.png",
-      displayUpdatePanel: false,
-    };
-  },
-  computed: {
-    ...mapWritableState(useNodeStore, {
-      infoAlarm: "infoAlarm",
-      hideConnectedLines: "hideConnectedLines",
-      runNodePowerModal: "runNodePowerModal",
-    }),
-  },
-  mounted() {},
-  methods: {
-    alarmToggle() {
-      this.infoAlarm = !this.infoAlarm;
-    },
-  },
+import { useNodeManage } from "@/store/nodeManage";
+
+const store = useNodeManage();
+
+const openDrawer = () => {
+  store.isDrawerOpen = true;
 };
 </script>
+
 <style scoped>
-.info-button {
-  width: 98%;
-  height: 7%;
-  background: #264744;
-  border-radius: 20px;
-  box-shadow: 0 1px 3px 0px #1c1f22;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  margin-top: 3px;
-  margin-bottom: 15px;
+/* trasnsition styles */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
 }
-.info-button:hover {
-  background: rgb(43, 84, 81);
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
 }
-.info-button:active {
-  background: rgba(43, 84, 81, 0.5);
-}
-.info-button img {
-  max-width: 19%;
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
 }
 </style>
