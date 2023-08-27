@@ -1,0 +1,46 @@
+name: 🪳 Service Integration
+description: Make a suggestion for a new service integration
+title: "[FR]: "
+labels: ["service integration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new service that is missing in Stereum!
+
+  - type: input
+    id: github-link-service
+    attributes:
+      label: Github Link for Service
+      description: Could you provide a github link to the service you want to see integrated?
+      placeholder: f.e.:https://github.com/stereum-dev/ethereum-node
+    validations:
+      required: false
+
+  - type: textarea
+    id: about-service
+    attributes:
+      label: Tell us something about the service!
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what you see or what issue / error / problem you ran into
+      value: "Here is a description!"
+    validations:
+      required: true
+
+  - type: input
+    id: documentation-link-service
+    attributes:
+      label: Documentation Link for Service
+      description: Could you provide a documentation link to the service you want to see integrated?
+      placeholder: f.e.:https://geth.ethereum.org/docs
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acknowledgment
+      description: Please make sure to look through [our existing service integration requests](https://github.com/stereum-dev/ethereum-node/labels/service%20integration) before submitting a service integration request!
+      options:
+        - label: I looked through the existing requests of this project
+          required: true
