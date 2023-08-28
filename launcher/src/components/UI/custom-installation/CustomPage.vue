@@ -74,6 +74,7 @@ export default {
 
     ...mapWritableState(useNodeManage, {
       networkList: "networkList",
+      currentNetwork: "currentNetwork",
     }),
   },
   created() {
@@ -85,6 +86,7 @@ export default {
     selectNetwork(network) {
       this.selectedNetworkIcon = network.icon;
       this.selectedNetworkName = network.name;
+      this.currentNetwork = network;
       this.networkListDropdown = false;
     },
     async getInstallPath() {
@@ -207,6 +209,7 @@ export default {
   border: 3px solid #1258a2;
   cursor: pointer;
   text-transform: uppercase;
+  overflow: hidden;
 }
 .network-selector:hover {
   background-color: #1258a2;
