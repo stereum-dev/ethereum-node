@@ -127,7 +127,8 @@ ipcMain.handle("writeOneClickConfiguration", async (event, args) => {
       return service.service;
     }),
     args.checkpointURL,
-    args.relayURL
+    args.relayURL,
+    args.selectedPreset
   );
   return await oneClickInstall.writeConfig();
 });

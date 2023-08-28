@@ -230,7 +230,7 @@ export default {
         this.selectedPreset.name //apply filter depending on which preset was chosen
       ) {
         case "staking":
-          filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+          filter = (item) => item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
           if (this.currentNetwork.network == "gnosis") {
             filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
           }
@@ -240,7 +240,7 @@ export default {
             if (element.category === "validator") {
               return item.service === "SSVNetworkService";
             }
-            return item.category === element.category;
+            return item.category === element.category && !/Reth/.test(item.service);
           };
           break;
         case "obol":
@@ -262,11 +262,17 @@ export default {
           //filter = (item) => item.category === element.category
           break;
         case "mev boost":
-          filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+          filter = (item) => item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
           break;
         case "stereum on arm":
           filter = (item) =>
-            item.category === element.category && !/(Prysm|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+            item.category === element.category && !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+          if (this.currentNetwork.network == "gnosis") {
+            filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
+          }
+          break;
+        case "archive":
+          filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
           if (this.currentNetwork.network == "gnosis") {
             filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
           }
