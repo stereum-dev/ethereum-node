@@ -1,24 +1,10 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between items-center">
-    <NodeHeader />
+    <EditHeader />
     <NodeBody />
   </div>
 </template>
-<script>
-import NodeHeader from "../components/node/BodyHeader.vue";
+<script setup>
+import EditHeader from "../../edit-page/components/edit/EditHeader.vue";
 import NodeBody from "../components/node/NodeBody.vue";
-export default {
-  name: "TheNode",
-  components: {
-    NodeHeader,
-    NodeBody,
-  },
-  props: {},
-  data() {
-    return {};
-  },
-  computed: {},
-  mounted() {},
-  methods: {},
-};
 </script>
