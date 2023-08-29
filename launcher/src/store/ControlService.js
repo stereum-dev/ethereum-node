@@ -416,6 +416,30 @@ class ControlService extends EventEmitter {
   async getCurrentEpochSlot() {
     return await this.promiseIpc.send("getCurrentEpochSlot");
   }
+
+  async changePassword(args) {
+    return await this.promiseIpc.send("changePassword", args);
+  }
+
+  async readSSHKeyFile(args) {
+    return await this.promiseIpc.send("readSSHKeyFile", args);
+  }
+
+  async writeSSHKeyFile(args) {
+    return await this.promiseIpc.send("writeSSHKeyFile", args);
+  }
+
+  async generateSSHKeyPair(args) {
+    return await this.promiseIpc.send("generateSSHKeyPair", args);
+  }
+
+  async openDirectoryDialog(args) {
+    return await this.promiseIpc.send("openDirectoryDialog", args);
+  }
+
+  async AddExistingSSHKey(args) {
+    return await this.promiseIpc.send("AddExistingSSHKey", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

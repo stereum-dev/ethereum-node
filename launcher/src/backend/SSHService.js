@@ -1,6 +1,7 @@
 const { Client, utils: { generateKeyPairSync } } = require("ssh2");
 import { createTunnel } from "./SSHServiceTunnel";
 import { StringUtils } from "./StringUtils";
+import { writeFile } from "fs/promises";
 const log = require("electron-log");
 
 export class SSHService {
@@ -251,30 +252,55 @@ export class SSHService {
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed changing password: " + SSHService.extractExecError(result));
       }
+      this.connectionInfo.password = password
       return "Password changed successfully!"
     } catch (error) {
       log.error("Failed changing password: ", error)
     }
   }
 
-  generateKeyPair(keyType = "ed25519", opts = {}) {
+  async generateSSHKeyPair(opts = {}) {
+    if (opts.pickPath.endsWith("/")) opts.pickPath = opts.pickPath.slice(0, -1, ""); //if path ends with '/' remove it
     try {
-      switch (keyType) {
-        case "rsa": {
-          opts.bits = 4096
-          break;
-        }
-        case "ecdsa": {
-          opts.bits = 521
-          break;
-        }
-        case "ed25519": {
-          break;
+
+      //default bit values for keys
+      if (!opts.bits) {
+        switch (opts.keyType.toLowerCase()) {
+          case "rsa": {
+            opts.bits = 4096
+            break;
+          }
+          case "ecdsa": {
+            opts.bits = 521
+            break;
+          }
+          case "ed25519": {
+            break;
+          }
         }
       }
+
+      //Make sure opts.bits is an integer
+      opts.bits = parseInt(opts.bits)
+
+      //if passphrase is set but cipher is not, set cipher to aes256-cbc
       if (opts.passphrase && !opts.cipher)
         opts = { ...opts, ...{ cipher: "aes256-cbc" } }
-      return generateKeyPairSync(keyType, opts)
+
+      //Set SSH Key Comment
+      opts.comment = 'StereumSSHKey'
+
+      //generate Keypair read exiting ones and write to file
+      const keyPair = generateKeyPairSync(opts.keyType, opts)
+      let exitingKeys = await this.readSSHKeyFile()
+      if (keyPair.public) {
+        let allKeys = [...exitingKeys, keyPair.public]
+        await this.writeSSHKeyFile(allKeys)
+        await writeFile(`${opts.pickPath}/${opts.keyType.toLowerCase()}`, keyPair.private)
+        await writeFile(`${opts.pickPath}/${opts.keyType.toLowerCase()}.pub`, keyPair.public)
+        return allKeys
+      }
+      return exitingKeys
     } catch (err) {
       log.error("Failed generating key pair: ", err)
     }
