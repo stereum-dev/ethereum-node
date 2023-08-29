@@ -10,7 +10,7 @@
         <div class="text-center p-5 flex-auto justify-center">
           <img class="w-10 -m-1 flex items-center text-red-500 mx-auto" :src="icon" :alt="altText" />
           <div class="text-md font-bold py-4">
-            <span>{{ mainText }}</span>
+            <span>{{ mainTitle }}</span>
           </div>
           <div class="text-md font-bold py-4">
             <span class="uppercase">{{ messageText }}</span>
@@ -35,7 +35,7 @@ export default {
   props: {
     icon: String,
     altText: String,
-    mainText: String,
+    mainTitle: String,
     messageText: String,
     confirmText: String,
     clickOutsideText: String,
