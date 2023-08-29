@@ -1,13 +1,11 @@
 <template>
   <div
     class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-50"
-    @pointerdown.prevent.stop
-    @mousedown.prevent.stop
   >
     <div
       class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634]"
     >
-      <div class="absolute left-1 top-1 w-20 rounded-tl-lg z-50">
+      <div class="absolute left-1 top-1 w-20 rounded-tl-lg z-50" @pointerdown.prevent.stop @mousedown.prevent.stop>
         <img src="/img/icon/LOGO.png" class="rounded-tl-lg" />
       </div>
       <MainNavbar />
@@ -15,7 +13,7 @@
     <div class="flex justify-center items-center w-full h-full bg-[#33393E]">
       <slot></slot>
     </div>
-    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]">
+    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
       <TaskManager />
     </div>
   </div>

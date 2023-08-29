@@ -1,37 +1,73 @@
 import { useServices } from '@/store/services';
 <template>
   <div
-    class="flex flex-col w-full h-full px-2 py-4 overflow-y-auto overflow-x-hidden border-l border-gray-500 rounded-l-xl bg-[#2e5151]"
+    class="grid grid-cols-1 grid-rows-12 w-full h-full px-2 py-4 overflow-hidden border-l border-gray-500 rounded-l-xl bg-[#2e5151]"
   >
+    <DrawerFilter />
+    <div class="col-span-1 row-start-2 row-span-1"></div>
+
     <div
-      class="w-full h-full flex flex-col items-center space-y-6 bg-[#151618] border border-gray-500 rounded-md overflow-y-auto relative py-3"
+      class="col-span-1 row-start-3 row-end-12 w-full h-[430px] flex flex-col items-center space-y-6 bg-[#151618] border border-gray-500 rounded-md overflow-y-scroll py-3 overflow-x-hidden mt-3"
     >
-      <transition-group>
-        <div v-for="service in store.allServices" :key="service.serviceID" ref="el" class="w-full relative">
-          <img
-            :src="service.sIcon"
-            alt="Client Icon"
-            class="w-14 cursor-grab mx-auto"
-            @mouseenter="service.displayTooltip = true"
-            @mouseleave="service.displayTooltip = false"
-          />
-          <div
-            v-if="service.displayTooltip"
-            class="absolute -top-[20px] left-1 h-5 bg-slate-100 border border-yellow-600 text-xs font-semibold rounded-sm flex justify-center items-center px-1 justify-self-center truncate overflow-x-clip"
+      <div
+        v-for="service in store.filteredServices"
+        :key="service.serviceID"
+        ref="el"
+        class="w-full relative inline-block cursor-pointer"
+      >
+        <img
+          :src="service.sIcon"
+          alt="Client Icon"
+          class="w-14 mx-auto"
+          draggable="true"
+          @mouseenter="service.displayTooltip = true"
+          @mouseleave="service.displayTooltip = false"
+          @dragstart="startDrag($event, service)"
+          @dblclick="$emit('addService', service)"
+        />
+        <p
+          v-if="service.displayTooltip"
+          class="min-w-[50px] h-[20px] absolute flex items-center justify-center p-1 text-gray-800 bg-white rounded-sm border border-gray-950 shadow-lg z-20"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 absolute rotate-45 right-4 -top-1 transform text-white fill-current"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <span>{{ service.name }}</span>
-          </div>
-        </div>
-      </transition-group>
+            <path d="M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"></path>
+          </svg>
+          <span class="text-xs truncate z-10">{{ service.name }}</span>
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import DrawerFilter from "./DrawerFilter.vue";
 import { useServices } from "@/store/services";
 
 import { ref } from "vue";
 
+defineProps({
+  startDrag: {
+    type: Function,
+    required: true,
+  },
+});
+
 const store = useServices();
 const el = ref(null);
 </script>
+<style scoped>
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #85cac4;
+  border-radius: 20px;
+}
+</style>
