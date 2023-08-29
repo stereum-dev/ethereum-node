@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-parent">
-    <GenerateKeyModal v-if="generateModalShow" />
+    <GenerateKeyModal v-if="generateModalShow" @generateKey="addKey" />
     <div class="management-title">server access management</div>
     <div class="management-info">
       <div class="management-info_box">
@@ -19,7 +19,7 @@
           <span>MACHINENAME</span><span>{{ ServerName }}</span>
         </div>
         <div class="management-info_box_row">
-          <span>PORT</span><span>{{ selectedConnection.port }}</span>
+          <span>PORT</span><span>{{ selectedConnection.port ? selectedConnection.port : 22 }}</span>
         </div>
         <div class="management-info_box_row" />
       </div>
@@ -63,7 +63,7 @@
       </div>
       <div class="key-info-part">
         <div v-for="(key, index) in keys" :key="index" class="key-row">
-          <div class="name">{{ confirmIndexDelete[index] ? onAreYouSure : key }}</div>
+          <div class="name">{{ confirmIndexDelete[index] ? onAreYouSure : formatKey(key) }}</div>
           <div class="btn-box">
             <KeyRowBtn
               @delete-key="confirmDelete(key)"
@@ -81,7 +81,7 @@
 import { mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
-import KeyRowBtn from "./KeyRowBtn.vue";
+import KeyRowBtn from "./KeyRowBtn";
 import GenerateKeyModal from "./GenerateKeyModal";
 export default {
   components: { KeyRowBtn, GenerateKeyModal },
@@ -89,7 +89,7 @@ export default {
     return {
       selectedConnection: {},
       confirmIndex: null,
-      keys: ["key 1", "key 2", "key 3"], //dummy keys
+      keys: [],
       confirmIndexDelete: [],
       onAreYouSure: "Are you sure you want to remove this SSH Key?",
       chngPassword: false,
@@ -117,16 +117,29 @@ export default {
   },
   mounted() {
     this.loadStoredConnections();
+    this.readSSHKeyFile();
   },
   methods: {
+    async readSSHKeyFile() {
+      const keys = await ControlService.readSSHKeyFile();
+      this.keys = keys;
+    },
+    formatKey(key) {
+      let keyArray = key.split(" ");
+      return `${keyArray[0]} ... ${keyArray.pop()}`;
+    },
     loadStoredConnections: async function () {
       const savedConnections = await ControlService.readConfig();
       let selectedConnection = savedConnections.savedConnections.find((item) => item.host === this.ipAddress);
       this.selectedConnection = selectedConnection;
     },
+    addKey(keys) {
+      this.keys = keys;
+    },
     //confirm delete key method
-    confirmDelete(key) {
-      console.log(key);
+    async confirmDelete(key) {
+      await ControlService.writeSSHKeyFile(this.keys.filter((item) => item !== key));
+      this.readSSHKeyFile();
     },
     // end confirm delete key method
     confirmKeyIndex(index) {
@@ -145,7 +158,7 @@ export default {
       this.newPass = "";
       this.comparePass = [];
     },
-    acceptChangePass() {
+    async acceptChangePass() {
       if (this.newPass === "") {
         this.passmessage = "Please enter a password";
       } else {
@@ -163,7 +176,7 @@ export default {
             this.newPass = "";
             this.comparePass = [];
             this.passChk = false;
-            console.log(this.acceptedPass);
+            await ControlService.changePassword(this.acceptedPass);
           } else {
             this.newPass = "";
             this.passmessage = "The passwords do not match";
@@ -173,12 +186,13 @@ export default {
         }
       }
     },
-    previewFiles(event) {
+    async previewFiles(event) {
       const Path = event.target.files[0].path;
       let pathString = new String(Path);
       let result = pathString.toString();
       this.keyLocation = result;
-      console.log(this.keyLocation);
+      await ControlService.AddExistingSSHKey(this.keyLocation);
+      this.readSSHKeyFile();
     },
     openUploadHandler() {
       this.$refs.fileInput.click();
@@ -385,10 +399,14 @@ export default {
   border: 1px solid grey;
   box-shadow: 1px 1px 6px 1px #001717;
   border-radius: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .name {
   font-size: 100%;
   font-weight: 500;
+  overflow-x: scroll;
+  white-space: nowrap;
 }
 .key-row {
   width: 95%;

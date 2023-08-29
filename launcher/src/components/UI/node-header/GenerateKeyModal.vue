@@ -16,25 +16,31 @@
         </div>
         <div class="generate-key-modal_rows">
           <label for="pickPath">Pick a save path</label
-          ><input id="pickPath" v-model="pickPath" type="text" @click="openDirectoryPicker" />
+          ><input
+            id="pickPath"
+            v-model="pickPath"
+            type="text"
+            placeholder="CLICK HERE TO SELECT PATH"
+            @click="openDirectoryPicker"
+          />
         </div>
         <div class="generate-key-modal_rows">
-          <label for="sshPass">ssh password</label
+          <label for="sshPass">ssh passphrase</label
           ><input
             id="sshPass"
             v-model="sshPass"
             :class="[controlPass, checkedPass]"
             type="password"
-            :placeholder="passControl ? alertMessage : 'DEFINE AN OPTIONAL SSH PASSWORD'"
+            :placeholder="passControl ? alertMessage : 'DEFINE AN OPTIONAL SSH PASSPHRASE'"
           />
         </div>
         <div class="generate-key-modal_rows">
-          <label for="sshPass">re-enter password</label
+          <label for="sshPass">re-enter passphrase</label
           ><input
             id="sshPass"
             v-model="reEnterSshPass"
             type="password"
-            :placeholder="passControl ? alertMessage : 'RE-ENTER THE CHOOSEN SSH PASSWORD'"
+            :placeholder="passControl ? alertMessage : 'RE-ENTER THE CHOOSEN SSH PASSPHRASE'"
             :class="[controlPass, checkedPass]"
           />
         </div>
@@ -56,25 +62,25 @@
             @click="bitAmountDropdown = !bitAmountDropdown"
           />
           <div v-if="bitAmountDropdown" class="dropdown bit-amount-dropdown">
-            <div v-for="bit in bitAmountCollection" :key="bit" class="dropdown-row" @click="bitPicker(bit)">
+            <div v-for="bit in bitArrayControl" :key="bit" class="dropdown-row" @click="bitPicker(bit)">
               <span>{{ bit }}</span>
             </div>
           </div>
         </div>
         <div class="generate-key-modal_rows">
-          <label for="specifyCypher">specify cypher</label>
+          <label for="specifyCipher">specify cipher</label>
           <input
-            id="specifyCypher"
-            v-model="specifyCypher"
+            id="specifyCipher"
+            v-model="specifyCipher"
             type="text"
             placeholder="USE A CUSTOM CYPER"
-            :disabled="cypherControl"
+            :disabled="cipherControl"
             @mousedown.prevent.stop
-            @click="cypherDropdown = !cypherDropdown"
+            @click="cipherDropdown = !cipherDropdown"
           />
-          <div v-if="cypherDropdown" class="dropdown cypher-dropdown">
-            <div v-for="cypher in specifyCypherItems" :key="cypher" class="dropdown-row" @click="bitPicker(bit)">
-              <span>{{ cypher }}</span>
+          <div v-if="cipherDropdown" class="dropdown cipher-dropdown">
+            <div v-for="cipher in specifyCipherItems" :key="cipher" class="dropdown-row" @click="cipherPicker(cipher)">
+              <span>{{ cipher }}</span>
             </div>
           </div>
         </div>
@@ -89,32 +95,42 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
       keyType: "RSA",
       keyTypeDropdown: false,
-      keyTypeCollection: ["RSA", "EDCSA", "ED25519"],
+      keyTypeCollection: ["RSA", "ECDSA", "ED25519"],
       expert: false,
       pickPath: "",
       sshPass: "",
       bitAmount: "",
-      specifyCypher: "",
-      generatedKey: {},
-      bitAmountCollection: ["1024", "2048", "4096", "8192", "16384", "32768", "65536", "131072"], //dummy data
+      specifyCipher: "",
+      bitAmountCollection: [], //dummy data
       bitAmountDropdown: false,
       reEnterSshPass: "",
       passControl: false,
       alertMessage: "The passwords do not match",
-      cypherDropdown: false,
-      specifyCypherItems: ["aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-gcm"],
+      cipherDropdown: false,
+      specifyCipherItems: [
+        "3des-cbc",
+        "aes128-cbc",
+        "aes192-cbc",
+        "aes256-cbc",
+        "aes128-ctr",
+        "aes192-ctr",
+        "aes256-ctr",
+        "aes128-gcm@openssh.com",
+        "aes256-gcm@openssh.com",
+      ],
     };
   },
   computed: {
     ...mapWritableState(useControlStore, {
       generateModalShow: "generateModalShow",
     }),
-    cypherControl() {
+    cipherControl() {
       if (this.reEnterSshPass === this.sshPass && this.sshPass !== "" && this.expert === true) {
         return false;
       } else {
@@ -122,11 +138,19 @@ export default {
       }
     },
     bitAmountControl() {
-      if ((this.keyType === "RSA" || this.keyType === "EDCSA") && this.expert === true) {
+      if ((this.keyType === "RSA" || this.keyType === "ECDSA") && this.expert === true) {
         return false;
       } else {
         return true;
       }
+    },
+    bitArrayControl() {
+      if (this.keyType === "RSA") {
+        return ["1024", "2048", "3072", "4096", "8192", "16384"];
+      } else if (this.keyType === "ECDSA") {
+        return ["256", "384", "521"];
+      }
+      return [];
     },
     controlPass() {
       return this.passControl ? "again" : "";
@@ -139,7 +163,7 @@ export default {
     expert() {
       if (!this.expert) {
         this.bitAmount = "";
-        this.specifyCypher = "";
+        this.specifyCipher = "";
         this.bitAmountDropdown = false;
       }
     },
@@ -156,7 +180,11 @@ export default {
       this.bitAmount = arg;
       this.bitAmountDropdown = false;
     },
-    generateKey() {
+    cipherPicker(arg) {
+      this.specifyCipher = arg;
+      this.cipherDropdown = false;
+    },
+    async generateKey() {
       if (this.sshPass !== this.reEnterSshPass) {
         alert("The passwords do not match");
         this.sshPass = "";
@@ -166,20 +194,21 @@ export default {
         const data = {
           keyType: this.keyType,
           pickPath: this.pickPath,
-          sshPass: this.sshPass,
-          bitAmount: this.bitAmount,
-          specifyCypher: this.specifyCypher,
+          passphrase: this.sshPass,
+          bits: this.bitAmount,
+          cipher: this.specifyCipher,
         };
-
-        this.generatedKey = data;
-        console.log(this.generatedKey);
+        const keys = await ControlService.generateSSHKeyPair(data);
+        this.$emit("generate-key", keys);
         this.generateModalShow = false;
       }
     },
     async openDirectoryPicker() {
       try {
-        const handle = await window.showDirectoryPicker();
-        this.pickPath = handle.name;
+        const paths = await ControlService.openDirectoryDialog(
+          structuredClone({ properties: ["openDirectory", "createDirectory"] })
+        );
+        this.pickPath = paths[0];
       } catch (error) {
         // Handle case when user cancels directory picker
         if (error.name === "AbortError") {
@@ -308,7 +337,7 @@ export default {
   top: 66.3%;
   overflow-y: scroll;
 }
-.cypher-dropdown {
+.cipher-dropdown {
   top: 77%;
   overflow-y: scroll;
 }

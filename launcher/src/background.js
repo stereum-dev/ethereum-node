@@ -450,6 +450,30 @@ ipcMain.handle("getCurrentEpochSlot", async () => {
   return await monitoring.getCurrentEpochSlot();
 });
 
+ipcMain.handle("changePassword", async (event, args) => {
+  return await nodeConnection.sshService.changePassword(args)
+});
+
+ipcMain.handle("readSSHKeyFile", async (event, args) => {
+  return await nodeConnection.sshService.readSSHKeyFile(args)
+});
+
+ipcMain.handle("writeSSHKeyFile", async (event, args) => {
+  return await nodeConnection.sshService.writeSSHKeyFile(args)
+});
+
+ipcMain.handle("generateSSHKeyPair", async (event, args) => {
+  return await nodeConnection.sshService.generateSSHKeyPair(args)
+});
+
+ipcMain.handle("AddExistingSSHKey", async (event, args) => {
+  const publicKey = readFileSync(args, {
+    encoding: "utf8",
+  })
+  const existingSSHKeys = await nodeConnection.sshService.readSSHKeyFile()
+  return await nodeConnection.sshService.writeSSHKeyFile([...existingSSHKeys, publicKey])
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
@@ -549,6 +573,14 @@ async function createWindow(type = "main") {
   }
 
   win.on("close", closeHandler);
+
+  //
+  ipcMain.handle("openDirectoryDialog", async (event, args) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, args)
+    if (canceled)
+      return []
+    return filePaths
+  })
 
   return win;
 }
