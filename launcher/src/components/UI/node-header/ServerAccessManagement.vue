@@ -140,6 +140,8 @@ export default {
     async confirmDelete(key) {
       await ControlService.writeSSHKeyFile(this.keys.filter((item) => item !== key));
       this.readSSHKeyFile();
+      this.confirmIndexDelete = [];
+      this.confirmIndex = null;
     },
     // end confirm delete key method
     confirmKeyIndex(index) {
