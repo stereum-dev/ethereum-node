@@ -12,7 +12,7 @@
         <ServiceSection />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <ChangesSection />
+        <ChangesSection @add-services="addServices" />
       </div>
     </div>
 
@@ -25,7 +25,7 @@
       @click="openDrawer"
     />
     <transition name="slide-fade" mode="out-in">
-      <DrawerSection v-if="store.isDrawerOpen" />
+      <DrawerSection v-if="store.isDrawerOpen" :start-drag="startDrag" @add-services="addServices" />
     </transition>
     <!-- End Node main layout -->
   </base-layout>
@@ -37,11 +37,49 @@ import ServiceSection from "./sections/ServiceSection.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import DrawerSection from "./sections/DrawerSection.vue";
 import { useNodeManage } from "@/store/nodeManage";
+import { ref } from "vue";
 
 const store = useNodeManage();
+const list = ref([""]);
+
+const addServices = (item) => {
+  list.value.push(item);
+  console.log(list.value);
+};
 
 const openDrawer = () => {
   store.isDrawerOpen = true;
+};
+const startDrag = (event, item) => {
+  console.log("startDrag", event, item);
+  if (event.type === "dragstart") {
+    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("itemId", item.id);
+  }
+};
+
+const onDrop = (event, allServices, newConfiguration, itemToInstall, displayCustomAddPanel, cancelAddProcess) => {
+  const allServicesCopy = JSON.parse(JSON.stringify(allServices));
+  const itemId = event.dataTransfer.getData("itemId");
+  let item = allServicesCopy.find((item) => item.id == itemId);
+
+  if (item.category === "service" && newConfiguration.map((s) => s.service).includes(item.service)) {
+    return;
+  } else {
+    if (itemToInstall.addPanel === true) {
+      cancelAddProcess();
+    }
+    item.id = newConfiguration.length;
+    newConfiguration.push(item);
+    item.addPanel = true;
+    itemToInstall.value = item;
+    displayCustomAddPanel.value = item.modifierPanel;
+  }
+};
+
+const logDouble = (item) => {
+  console.log("logDouble", item);
 };
 </script>
 
