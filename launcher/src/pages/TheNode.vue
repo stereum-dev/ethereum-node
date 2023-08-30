@@ -7,7 +7,6 @@
           <div class="close-video" @click="hideVideoDisplay">
             <span>Close</span>
           </div>
-          <the-videos :video-url="chosenVideo"></the-videos>
         </div>
 
         <div class="journal-box" @mousedown.prevent>
@@ -96,7 +95,6 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
-import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
 import { useNodeHeader } from "../store/nodeHeader";
@@ -108,7 +106,7 @@ export default {
     PluginZone,
     BaseModal,
     TaskManager,
-    TheVideos,
+
     NodeAlert,
     NodeTutorial,
     TheFooter,
@@ -293,7 +291,7 @@ export default {
   z-index: 302;
   cursor: pointer;
   position: fixed;
-  bottom: 15px;
+  bottom: 5%;
   right: 45%;
 }
 .close-video span {

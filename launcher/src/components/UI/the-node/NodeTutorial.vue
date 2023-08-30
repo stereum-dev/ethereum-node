@@ -1,6 +1,14 @@
 <template>
   <div class="tutorial-box">
-    <TutorialButtons
+    <!-- <TutorialButtons
+      tutorial-btn-ttl="written cuides"
+      tutorial-icons="/img/icon/tutorial-icons/manual-icon.png"
+      current-data="button"
+      @guided-option-clicked="handleGuidedOptionClick(button)"
+      @written-option-clicked="handleWrittenOptionClick(button)"
+      @video-option-clicked="handleVideoOptionClick(button)"
+    /> -->
+    <!-- <TutorialButtons
       v-for="(button, key) in tutorialBtns"
       :key="key"
       :tutorial-btn-ttl="button.title"
@@ -9,9 +17,9 @@
       @guided-option-clicked="handleGuidedOptionClick(button)"
       @written-option-clicked="handleWrittenOptionClick(button)"
       @video-option-clicked="handleVideoOptionClick(button)"
-    />
+    /> -->
 
-    <TutorialButtons
+    <!-- <TutorialButtons
       v-for="item in tutorialTitles"
       :key="item"
       :tutorial-btn-ttl="item.name"
@@ -20,7 +28,19 @@
       @guided-option-clicked="handleGuidedOptionClick(item)"
       @written-option-clicked="handleWrittenOptionClick(item)"
       @video-option-clicked="handleVideoOptionClick(item)"
-    />
+    /> -->
+    <div class="tutorial-btn" @click="handleWrittenOptionClick">
+      <div class="icon-box"><img src="/img/icon/tutorial-icons/manual-icon.png" alt="" /></div>
+      <div class="name-span"><span>written guides</span></div>
+    </div>
+    <div class="tutorial-btn" @click="handleCameraOptionClick">
+      <div class="icon-box camera"><img src="/img/icon/tutorial-icons/big-camera.png" alt="" /></div>
+      <div class="name-span"><span>written guides</span></div>
+    </div>
+    <div class="tutorial-btn" @click="handleCameraOptionClick">
+      <div class="icon-box camera"><img src="/img/icon/tutorial-icons/big-camera.png" alt="" /></div>
+      <div class="name-span"><span>written guides</span></div>
+    </div>
 
     <div
       class="back-button"
@@ -40,10 +60,10 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import TutorialButtons from "./TutorialButtons.vue";
+// import TutorialButtons from "./TutorialButtons.vue";
 
 export default {
-  components: { TutorialButtons },
+  // components: { TutorialButtons },
   data() {
     return {
       returnStatus: this.$t("theNode.returnStatus"),
@@ -164,8 +184,12 @@ export default {
         this.stakeGuide = true;
       }
     },
-    handleWrittenOptionClick(item) {
-      let url = item.written;
+    handleWrittenOptionClick() {
+      let url = "https://stereum.net/content/guides";
+      window.open(url, "_blank");
+    },
+    handleCameraOptionClick() {
+      let url = "https://www.youtube.com/@Stereum";
       window.open(url, "_blank");
     },
     handleVideoOptionClick(item) {
@@ -195,8 +219,54 @@ export default {
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
+.tutorial-btn {
+  width: 95%;
+  display: flex;
+  height: 9%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  border: 2px solid #c1c1c1;
+  border-radius: 5px;
+  margin-bottom: 3%;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 55%;
+  font-weight: 700;
+  cursor: pointer;
+  color: #eee;
+}
+.tutorial-btn:hover {
+  background: #264744;
+  border: none;
+}
+.tutorial-btn:active {
+  background: #264744;
+  border: none;
+  transform: scale(0.92);
+}
+.icon-box {
+  width: 25%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.icon-box img {
+  width: 100%;
+}
+.camera img {
+  width: 80%;
+}
+.name-span {
+  width: 75%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  text-transform: capitalize;
+  font-size: 115%;
+  font-weight: 700;
 }
 .disabled {
   opacity: 0.5;
