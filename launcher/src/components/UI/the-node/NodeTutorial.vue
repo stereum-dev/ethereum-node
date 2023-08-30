@@ -117,6 +117,15 @@ export default {
             icon: "/img/icon/click-installation/testnet-icon.png",
           },
         ],
+        holesky: [
+          {
+            title: this.$t("nodeSidebarVideo.stake"),
+            guide: "",
+            video: "https://www.youtube.com/embed/Cbu58ee_Wj4",
+            written: "https://stereum.net/ethereum-node-setup/eth-solo-staking-step-by-step-guide/",
+            icon: "/img/icon/click-installation/testnet-icon.png",
+          },
+        ],
         gnosis: [
           {
             title: this.$t("nodeSidebarVideo.gnoStake"),
