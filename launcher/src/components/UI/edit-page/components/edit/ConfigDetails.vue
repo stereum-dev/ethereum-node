@@ -11,25 +11,23 @@
     >
       Add Config
     </button>
-    <TransitionGroup tag="ul" name="fade" class="container">
-      <div
-        v-for="config in list"
-        :key="config.id"
-        class="col-span-1 row-span-1 w-full h-full border border-gray-600 rounded-md flex justify-evenly items-center bg-[#151618] cursor-pointer"
+    <div
+      v-for="config in list"
+      :key="config.id"
+      class="col-span-1 row-span-1 w-full h-full border border-gray-600 rounded-md flex justify-evenly items-center bg-[#151618] cursor-pointer"
+    >
+      <p
+        class="text-[12px] text-left text-gray-100 overflow-hidden whitespace-pre"
+        :class="{ 'text-gray-500 cursor-not-allowed': !config.status }"
       >
-        <p
-          class="text-[12px] text-left text-gray-100 overflow-hidden whitespace-pre"
-          :class="{ 'text-gray-500': !config.status }"
-        >
-          {{ config.configName }}<span class="text-[12px] font-semibold">{{ config.id }}#</span>
-        </p>
-      </div>
-    </TransitionGroup>
+        {{ config.configName }}<span class="text-[12px] font-semibold ml-1">{{ config.id }}</span>
+      </p>
+    </div>
   </div>
 </template>
 <script setup>
 import { useRoute } from "vue-router";
-import { defineProps,watchEffect, ref } from "vue";
+import { defineProps, watchEffect, ref } from "vue";
 const { list } = defineProps({
   list: {
     type: Array,

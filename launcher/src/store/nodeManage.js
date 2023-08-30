@@ -2,6 +2,15 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      addConfigButton: false,
+      nodeConfigs: [
+        { id: 1, configName: "config", status: true },
+        { id: 2, configName: "config", status: false },
+        { id: 3, configName: "config", status: false },
+        { id: 4, configName: "config", status: false },
+        { id: 5, configName: "config", status: false },
+        { id: 6, configName: "config", status: false },
+      ],
       isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
@@ -168,6 +177,7 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       confirmChanges: [],
+      displayNetworkList: false,
       networkList: [
         {
           id: 1,
