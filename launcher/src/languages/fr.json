@@ -79,7 +79,9 @@
     "switchC": "Changer de client",
     "migrate": "Migration de nœuds",
     "rpc": "Connexion RPC",
-    "gnoStake": "STAKE WITH 1 GNO"
+    "gnoStake": "STAKE WITH 1 GNO",
+    "written": "Written Guides",
+    "video": "Video Guides"
   },
   "pluginZone": {
     "client": "client"

@@ -79,7 +79,9 @@
     "switchC": "Přepnout klienty",
     "migrate": "Migrace uzlů",
     "rpc": "RPC připojení",
-    "gnoStake": "STAKUJTE S 1 GNO"
+    "gnoStake": "STAKUJTE S 1 GNO",
+    "written": "Written Guides",
+    "video": "Video Guides"
   },
   "pluginZone": {
     "client": "klient"

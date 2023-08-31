@@ -79,7 +79,9 @@
     "switchC": "İstemci Değiştir",
     "migrate": "Düğüm Geçişi",
     "rpc": "RPC Bağlantısı",
-    "gnoStake": "1 GNO STAKE EDİN"
+    "gnoStake": "1 GNO STAKE EDİN",
+    "written": "Written Guides",
+    "video": "Video Guides"
   },
   "pluginZone": {
     "client": "istemci"

@@ -79,7 +79,9 @@
     "switchC": "Switch Clients",
     "migrate": "Nodes Migration",
     "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO"
+    "gnoStake": "STAKE WITH 1 GNO",
+    "written": "Written Guides",
+    "video": "Video Guides"
   },
   "pluginZone": {
     "client": "client"
