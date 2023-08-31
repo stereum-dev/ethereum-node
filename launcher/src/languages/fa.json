@@ -79,7 +79,9 @@
     "switchC": "انتخاب کاربر",
     "migrate": "انتقال Node ها",
     "rpc": "اتصال RPC",
-    "gnoStake": "استیک با 1 GNOSIS"
+    "gnoStake": "استیک با 1 GNOSIS",
+    "written": "Written Guides",
+    "video": "Video Guides"
   },
   "pluginZone": {
     "client": "کننده"
