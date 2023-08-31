@@ -36,16 +36,6 @@ export const useNodeManage = defineStore("nodeManage", {
         },
         {
           icon: "/img/icon/click-installation/bloxRoute-icon.png",
-          name: "BloXroute ETHICAL",
-          mainnet:
-            "https://0xad0a8bb54565c2211cee576363f3a347089d2f07cf72679d16911d740262694cadb62d7fd7483f27afd714ca0f1b9118@bloxroute.ethical.blxrbdn.com",
-          id: 3,
-          isSelected: false,
-          isRemoved: false,
-          freeCensorship: false,
-        },
-        {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
           name: "BloXroute REGULATED",
           mainnet:
             "https://0xb0b07cd0abef743db4260b0ed50619cf6ad4d82064cb4fbec9d3ec530f7c5e6793d9f286c4e082c0244ffb9f2658fe88@bloxroute.regulated.blxrbdn.com",
