@@ -79,7 +79,9 @@
     "switchC": "切换客户",
     "migrate": "节点转移",
     "rpc": "RPC 连接",
-    "gnoStake": "使用 1GNO"
+    "gnoStake": "使用 1GNO",
+    "written": "Written Guides",
+    "video": "Video Guides"
   },
   "pluginZone": {
     "client": "客户"
