@@ -33,6 +33,8 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import TheContributor from "./TheContributor.vue";
 import TestContributor from "./TestContributor.vue";
 export default {
@@ -50,6 +52,9 @@ export default {
     filterTesters() {
       return [...new Map(this.issuesVal.map((item) => [item.name, item])).values()];
     },
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
   },
   updated() {
     this.toggleHandler();
@@ -138,6 +143,7 @@ export default {
 }
 .techToggl {
   height: 4%;
+  width: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,7 +151,7 @@ export default {
   text-align-last: center;
   line-height: inherit;
   border-radius: 10px;
-  font-weight: 500;
+  font-weight: 700;
   box-sizing: border-box;
   box-shadow: 1px 1px 7px 1px rgb(6, 6, 6);
   position: fixed;

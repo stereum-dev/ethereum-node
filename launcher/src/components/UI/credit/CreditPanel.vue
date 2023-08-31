@@ -1,30 +1,7 @@
 <template>
   <div class="credit-panel_parent">
     <transition name="fade-box" mode="out-in">
-      <div v-if="financial" class="credit-panel_box">
-        <div class="credit-panel_title">
-          <div class="ttl-box">
-            <div class="credit-panel_title_ico">
-              <img :src="financialIco" />
-            </div>
-            <div class="credit-panel_title_ttl">
-              <span>{{ $t("creditPanel.creditTitle") }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="division-line"></div>
-        <div class="desc-line">
-          <small>{{ $t("creditPanel.fincialTitle") }} </small>
-          <div class="desc-line-button" @click="creditToggle">
-            <div class="desc-line-button_ico">
-              <img :src="technikalIco" />
-            </div>
-            <span>{{ $t("creditPanel.technicPage") }}</span>
-          </div>
-        </div>
-        <financial-box></financial-box>
-      </div>
-      <div v-else class="credit-panel_box">
+      <div class="credit-panel_box">
         <div class="credit-panel_title">
           <div class="ttl-box">
             <div class="credit-panel_title_ico">
@@ -38,37 +15,48 @@
         <div class="division-line"></div>
         <div class="desc-line">
           <small>{{ $t("creditPanel.techText") }} </small>
-          <div class="desc-line-button" @click="creditToggle">
+          <div
+            class="desc-line-button"
+            @click="creditToggle"
+            @mouseenter="cursorLocation = 'Click to open the Stereum donation page'"
+            @mouseleave="cursorLocation = ''"
+          >
             <div class="desc-line-button_ico">
               <img :src="financialIco" alt="" />
             </div>
             <span>{{ $t("creditPanel.financialPage") }}</span>
           </div>
         </div>
-        <technical-box></technical-box>
+        <TechnicalBox />
       </div>
     </transition>
-    <div class="footer"></div>
+    <TheFooter />
     <task-manager></task-manager>
   </div>
 </template>
 <script>
-import FinancialBox from "./FinancialBox";
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
+import TheFooter from "../../layers/TheFooter.vue";
 import TechnicalBox from "./TechnicalBox.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
-  components: { TaskManager, TechnicalBox, FinancialBox },
+  components: { TaskManager, TechnicalBox, TheFooter },
   data() {
     return {
-      financial: false,
       financialIco: "./img/icon/credit/creditFinancial.png",
       technikalIco: "./img/icon/credit/creditTechnik.png",
     };
   },
-
+  computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
+  },
   methods: {
     creditToggle() {
-      this.financial = !this.financial;
+      let url = "https://stereum.net/donate";
+      window.open(url, "_blank");
     },
   },
 };
@@ -87,7 +75,7 @@ export default {
   display: flex;
   width: 25%;
   font-size: 80%;
-  height: 1.7rem;
+  height: 4%;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -101,6 +89,16 @@ export default {
   left: 70%;
   top: 11%;
 }
+.desc-line-button span {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 100%;
+  font-weight: 700;
+}
 
 .desc-line-button:hover,
 .desc-line-button:focus {
@@ -109,13 +107,13 @@ export default {
 }
 .desc-line-button_ico {
   display: flex;
-  height: 90%;
-  width: 30%;
+  height: 100%;
+  width: 20%;
   justify-content: center;
   align-items: center;
 }
 .desc-line-button_ico img {
-  width: 30%;
+  width: 50%;
 }
 .credit-panel_parent {
   display: flex;
