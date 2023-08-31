@@ -22,14 +22,6 @@
             <img class="w-8" src="/img/icon/round-icon.png" alt="information" />
           </button>
         </div>
-        <!-- <div
-          class="info-button"
-          @click="alarmToggle"
-          @mouseenter="cursorLocation = infoAlarm ? `${chckTutorial}` : `${returnStatus}`"
-          @mouseleave="cursorLocation = ''"
-        >
-          <img src="/img/icon/round-icon.png" alt="information" />
-        </div> -->
         <AlertSection :info-aralm="infoAlarm" />
       </div>
     </div>

@@ -2,6 +2,9 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        drop: "url('/img/icon/manage-node-icons/drag.png')",
+      },
       gridTemplateRows: {
         12: "repeat(12 , minmax(0,1fr))",
       },

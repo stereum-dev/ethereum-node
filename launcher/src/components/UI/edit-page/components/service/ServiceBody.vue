@@ -2,7 +2,6 @@
   <div
     class="scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto bg-[#151618] relative pt-1 pl-1 hover:scroll-auto"
   >
-
     <div ref="service" class="flex flex-col space-y-4 items-center pt-2">
       <div
         v-for="item in getServices"
@@ -10,51 +9,69 @@
         class="max-h-[80px] max-w-[160px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md pr-1"
       >
         <ServiceLayout :client="item" />
-        <ServiceButtons :client="item" @open-expert="openExpertWindow" @open-log="openLogsPage" />
-        <ExpertWindow
-          v-if="item.expertOptionsModal"
-          :item="item"
-          @hide-modal="clickOutside(item)"
-          @prunning-warning="runGethPrunningWarning"
-          @resync-warning="runResyncWarning"
-        />
+        <div class="w-full h-full grid grid-cols-2">
+          <div
+            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-200 bg-gray-200 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200"
+            :class="{ 'border-red-500': item.displayTooltip }"
+            @mouseenter="item.displayTooltip = true"
+            @mouseleave="item.displayTooltip = false"
+            @click="removeService(item)"
+          >
+            <img
+              class="w-6 z-10"
+              :class="trashAnimated"
+              src="/img/icon/manage-node-icons/trash.png"
+              alt=""
+              @mousedown.prevent.stop
+              @click="animIsActive = true"
+              @mouseleave="animIsActive = false"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { mapState } from "pinia";
+<script setup>
 import { useServices } from "@/store/services";
 import ServiceLayout from "./ServiceLayout.vue";
-import ServiceButtons from "./ServiceButtons.vue";
-export default {
-  name: "ServiceBody",
-  components: {
-    ServiceLayout,
-    ServiceButtons,
-  },
-  props: {},
-  data() {
-    return {};
-  },
-  computed: {
-    getServices() {
-      return this.installedServices
-        .filter((e) => e.category === "service")
-        .sort((a, b) => a.name.localeCompare(b.name));
-    },
+import { ref, computed, watch } from "vue";
 
-    ...mapState(useServices, {
-      installedServices: "installedServices",
-    }),
-  },
-  mounted() {},
-  methods: {},
+const serviceStore = useServices();
+const installedServices = serviceStore.installedServices;
+
+const animIsActive = ref(false);
+
+const getServices = computed(() =>
+  installedServices.filter((e) => e.category === "service").sort((a, b) => a.name.localeCompare(b.name))
+);
+
+const trashAnimated = computed(() => (animIsActive.value ? "trash" : ""));
+
+const removeService = (item) => {
+  item.displayTooltip = false;
 };
+
+watch(animIsActive, (newVal) => {
+  if (newVal) {
+    setTimeout(() => {
+      animIsActive.value = false;
+    }, 200);
+  }
+});
 </script>
+
 <style scoped>
 ::-webkit-scrollbar {
   width: 3px;
+}
+
+.trash:active {
+  transform: rotateY(180deg);
+}
+
+.btn:active {
+  transform: scale(0.9);
 }
 </style>

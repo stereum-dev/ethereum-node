@@ -5,13 +5,13 @@
     @mousedown.prevent.stop
   >
     <div
-      class="w-[136px] h-5 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
+      class="w-[136px] h-4 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
     >
       {{ client.name }}
-      <span class="w-5 h-5 bg-green-500 border border-green-500 rounded-r-full"></span>
+      <span class="w-5 h-4 bg-green-500 border border-green-500 rounded-r-full"></span>
     </div>
-    <div class="flex justify-center items-center mt-2">
-      <img class="w-3/5" :src="client.sIcon" alt="icon" />
+    <div class="w-full flex justify-center items-center mt-2">
+      <img class="w-7/12" :src="client.sIcon" alt="icon" />
     </div>
   </div>
 </template>
