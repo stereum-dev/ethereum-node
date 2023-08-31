@@ -2,7 +2,7 @@
   <div class="footer-parent">
     <div
       class="stereum-status"
-      @mouseenter="cursorLocation = stereumStatus ? `` : `Attempting to reconnect...`"
+      @mouseenter="cursorLocation = stereumStatus ? `stereum status` : `Attempting to reconnect...`"
       @mouseleave="cursorLocation = ''"
     >
       <div class="stereum-stateIcon" :class="stereumStatus ? 'onlineState' : 'offlineState'" />

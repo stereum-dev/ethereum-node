@@ -660,5 +660,8 @@
     "clckCreateKey": "click to generate a new key",
     "addKey": "add an existing key",
     "clckAddKey": "click to add an existing key"
+  },
+  "taskMang": {
+    "taskMng": "Task Manager"
   }
 }
