@@ -230,7 +230,7 @@ export default {
         this.selectedPreset.name //apply filter depending on which preset was chosen
       ) {
         case "staking":
-          filter = (item) => item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
+          filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
           if (this.currentNetwork.network == "gnosis") {
             filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
           }
