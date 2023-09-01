@@ -1,6 +1,11 @@
 <template>
   <div class="task-parent">
-    <div class="task-icon" @click="taskModalHandler">
+    <div
+      class="task-icon"
+      @click="taskModalHandler"
+      @mouseenter="cursorLocation = taskMng"
+      @mouseleave="cursorLocation = ''"
+    >
       <img :src="mainTaskIcon" alt="icon" />
       <span class="notification">{{ displayingTasks.length }}</span>
     </div>
@@ -45,6 +50,7 @@
 import SubTasks from "./SubTasks.vue";
 import DropTasks from "./DropTasks.vue";
 import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useTaskManager } from "@/store/taskManager";
 import ControlService from "@/store/ControlService";
 export default {
@@ -60,6 +66,7 @@ export default {
       Tasks: [],
       displayingTasks: [],
       checkNewTasks: [],
+      taskMng: this.$t("taskMang.taskMng"),
     };
   },
   computed: {
@@ -67,6 +74,9 @@ export default {
       playbookTasks: "playbookTasks",
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     mainTaskIcon() {
       if (this.Tasks.some((task) => task.status === null)) {

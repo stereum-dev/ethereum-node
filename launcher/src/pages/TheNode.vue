@@ -106,7 +106,6 @@ export default {
     PluginZone,
     BaseModal,
     TaskManager,
-
     NodeAlert,
     NodeTutorial,
     TheFooter,
