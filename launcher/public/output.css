@@ -2280,6 +2280,11 @@ video {
   color: ;
 }
 
+.text-yellow-200{
+  --tw-text-opacity: 1;
+  color: rgb(254 240 138 / var(--tw-text-opacity));
+}
+
 .placeholder-gray-500::-webkit-input-placeholder{
   --tw-placeholder-opacity: 1;
   color: rgb(107 114 128 / var(--tw-placeholder-opacity));

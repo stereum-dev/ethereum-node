@@ -15,16 +15,16 @@
               <img class="w-10" src="/img/icon/manage-node-icons/drag.png" alt="Drop Icon" />
             </div>
           </Transition>
-          <div
-            class="w-full h-full flex justify-center items-center"
-            :class="getDropImage"
-            @drop="onDrop($event)"
-            @dragover.prevent
-            @dragleave.prevent="isDropLayerActive = false"
-            @dragenter.prevent="isDropLayerActive = true"
-          >
-    
-          </div>
+          <template #drop>
+            <div
+              class="w-full h-full flex justify-center items-center"
+              :class="getDropImage"
+              @drop="onDrop($event)"
+              @dragover.prevent
+              @dragleave.prevent="isDropLayerActive = false"
+              @dragenter.prevent="isDropLayerActive = true"
+            ></div>
+          </template>
         </edit-body>
       </div>
       <div class="col-start-17 col-end-21 ml-1">

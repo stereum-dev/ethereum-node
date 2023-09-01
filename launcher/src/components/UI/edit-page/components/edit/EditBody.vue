@@ -37,6 +37,8 @@
           @state-handler="stateHandler"
           @restart-handler="restartService"
         />
+
+        <slot name="drop"></slot>
       </div>
     </div>
   </div>
