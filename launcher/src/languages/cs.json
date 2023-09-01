@@ -640,5 +640,28 @@
     "switchShow": "Přepínání mezi zobrazením veřejného klíče a vybraného vlastního jména",
     "group": "Seskupit více klíčů",
     "searchFilter": "Vyhledávání & filtry"
+  },
+  "serverManagement": {
+    "serverAccMange": "Server Access Management",
+    "serverNam": "Server Name",
+    "ipHOST": "IP or HOST NAME",
+    "userNam": "User Name",
+    "machineNam": "Machine Name",
+    "port": "Port",
+    "pass": "Password",
+    "chngPass": "Change Password",
+    "passmessage": "Please enter a password to change it",
+    "confirmPass": "please enter the password again",
+    "confirmPassMessage": "confirm your password",
+    "cancel": "CANCEL",
+    "clckChngPass": "click to change your password",
+    "key": "Key",
+    "createKey": "create a new key",
+    "clckCreateKey": "click to generate a new key",
+    "addKey": "add an existing key",
+    "clckAddKey": "click to add an existing key"
+  },
+  "taskMang": {
+    "taskMng": "Task Manager"
   }
 }
