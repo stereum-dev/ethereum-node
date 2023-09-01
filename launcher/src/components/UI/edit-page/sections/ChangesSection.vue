@@ -3,37 +3,36 @@
     <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
       <button
         class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase"
+        :class="{ disabled: disableBtn }"
+        @click="confirmHandler"
       >
-        Confirm
+        {{ $t("changeConfirm.confirm") }}
       </button>
     </div>
     <ChangesBox />
   </div>
 </template>
-<script>
-import { mapWritableState } from "pinia";
-import { useNodeStore } from "@/store/theNode";
+
+<script setup>
+import { toRaw, ref } from "vue";
+import ControlService from "@/store/ControlService";
+import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services";
 import ChangesBox from "../components/changes/ChangesBox";
-export default {
-  name: "ChangesSection",
-  components: {
-    ChangesBox,
-  },
-  props: {
-    infoAralm: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapWritableState(useNodeStore, {
-      infoAlarm: "infoAlarm",
-    }),
-  },
-  mounted() {},
-  methods: {},
+
+const disableBtn = ref(false);
+
+const editStore = useNodeManage();
+const serviceStore = useServices();
+
+const confirmHandler = async () => {
+  disableBtn.value = true;
+  await ControlService.handleServiceChanges(toRaw(editStore.confirmChanges));
+  setTimeout(() => {
+    editStore.newConfiguration = serviceStore.installedServices;
+  }, 4000);
+
+  editStore.confirmChanges = [];
+  disableBtn.value = false;
 };
 </script>

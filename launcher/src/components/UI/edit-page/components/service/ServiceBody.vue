@@ -15,7 +15,7 @@
             :class="{ 'border-red-500': item.displayTooltip }"
             @mouseenter="item.displayTooltip = true"
             @mouseleave="item.displayTooltip = false"
-            @click="removeService(item)"
+            @click="selectedServiceToRemove(item)"
           >
             <img
               class="w-6 z-10"
@@ -35,10 +35,12 @@
 
 <script setup>
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 import ServiceLayout from "./ServiceLayout.vue";
 import { ref, computed, watch } from "vue";
 
 const serviceStore = useServices();
+const editStore = useNodeManage();
 const installedServices = serviceStore.installedServices;
 
 const animIsActive = ref(false);
@@ -49,8 +51,44 @@ const getServices = computed(() =>
 
 const trashAnimated = computed(() => (animIsActive.value ? "trash" : ""));
 
-const removeService = (item) => {
+// const removeService = (item) => {
+//   item.displayTooltip = false;
+//   if (item) {
+//     editStore.selectedItemToRemove = editStore.selectedItemToRemove.concat(
+//       editStore.newConfiguration.filter((el) => el.config.serviceID === item.config.serviceID)
+//     );
+//   } else {
+//     if (!item.config.serviceID) {
+//       editStore.newConfiguration = editStore.newConfiguration.filter((el) => el.id !== item.id);
+//       editStore.confirmChanges = editStore.confirmChanges.filter((el) => el.service.id !== item.id);
+//     }
+//     editStore.selectedItemToRemove = editStore.selectedItemToRemove.filter(
+//       (el) => el.config.serviceID !== item.config.serviceID
+//     );
+//   }
+// };
+const selectedServiceToRemove = (item) => {
   item.displayTooltip = false;
+  getServices.value = getServices.value.filter((el) => el.id !== item.id);
+  editStore.selectedItemToRemove.push(item);
+  editStore.confirmChanges.push({
+    content: "DELETE",
+    contentIcon: "/img/icon/manage-node-icons/delete.png",
+    service: item,
+  });
+
+  // if (item.config.serviceID) {
+  //   editStore.selectedItemToRemove = editStore.selectedItemToRemove.concat(
+  //     editStore.newConfiguration.filter((el) => el.config.serviceID === item.config.serviceID)
+  //   );
+  // } else if (!item.config.serviceID) {
+  //   editStore.newConfiguration = editStore.newConfiguration.filter((el) => el.id !== item.id);
+  //   editStore.confirmChanges = editStore.confirmChanges.filter((el) => el.service.id !== item.id);
+  // }
+  // editStore.selectedItemToRemove = editStore.selectedItemToRemove.filter(
+  //   (el) => el.config.serviceID !== item.config.serviceID
+  // );
+  console.log("4", editStore.confirmChanges);
 };
 
 watch(animIsActive, (newVal) => {
