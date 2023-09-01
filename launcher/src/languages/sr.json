@@ -79,7 +79,9 @@
     "switchC": "Promijenite Client",
     "migrate": "Node Migracija",
     "rpc": "RPC Connection",
-    "gnoStake": "STAKE SA 1 GNO"
+    "gnoStake": "STAKE SA 1 GNO",
+    "written": "Written Guides",
+    "video": "Video Guides"
   },
   "pluginZone": {
     "client": "client"
