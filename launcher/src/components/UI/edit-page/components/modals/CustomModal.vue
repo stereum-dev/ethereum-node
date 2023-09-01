@@ -4,7 +4,7 @@
   >
     <div class="absolute bg-black opacity-80 inset-0 z-0" @click="closeModal"></div>
     <div
-      class="w-full max-w-lg py-1 px-2 relative mx-auto my-auto rounded-[35px] shadow-lg bg-white border-4 border-gray-400"
+      class="w-2/3 min-h-[400px] py-1 px-2 relative mx-auto my-auto rounded-[35px] shadow-lg bg-white border-4 border-gray-400"
     >
       <div class="">
         <div class="text-center p-2 flex-auto justify-center">

@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-3 col-end-4 gap-4 p-2 space-y-8 flex flex-col items-end">
+  <div class="col-start-3 col-end-4 gap-2 p-2 space-y-6 flex flex-col items-end relative">
     <div
       v-for="item in getValidatorServices"
       :key="item"
@@ -63,15 +63,23 @@ export default {
     ...mapState(useStakingStore, {
       keyCounter: "keyCounter",
     }),
+    getValidatorRef() {
+      let ref;
+      ref = this.$refs.validatorRefs.map((el, index) => {
+        return {
+          ref: el,
+          refId: this.getValidatorServices[index].config.serviceID,
+        };
+      });
+      return ref;
+    },
+  },
+  watch: {
+    watchValidatorRef() {
+      this.validatorRef = this.getValidatorRef;
+    },
   },
 
-  mounted() {
-    this.validatorRef = this.$refs.validatorRefs.map((el, index) => {
-      return {
-        ref: el,
-        refId: this.getValidatorServices[index].config.serviceID,
-      };
-    });
-  },
+  mounted() {},
 };
 </script>

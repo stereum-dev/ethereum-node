@@ -11,7 +11,7 @@
         <ServiceLayout :client="item" />
         <div class="w-full h-full grid grid-cols-2">
           <div
-            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-200 bg-gray-200 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200"
+            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-200 bg-gray-200 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-2"
             :class="{ 'border-red-500': item.displayTooltip }"
             @mouseenter="item.displayTooltip = true"
             @mouseleave="item.displayTooltip = false"

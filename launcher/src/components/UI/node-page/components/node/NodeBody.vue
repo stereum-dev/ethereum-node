@@ -4,7 +4,15 @@ import { mapState, map } from 'pinia';
   <div
     class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-500 overflow-y-auto mt-1 bg-[#151618] relative"
   >
-    <div class="w-full h-full grid grid-cols-3 py-2">
+    <div class="w-full h-full grid grid-cols-3 pb-2 pt-8">
+      <div
+        id="clientTitle"
+        class="absolute top-0 w-full mx-auto flex justify-between items-center h-6 bg-[#264744] border border-gray-950 rounded-t-sm text-gray-200 text-sm pr-16 pl-8"
+      >
+        <span>Execution Clients</span>
+        <span class="mr-4">Consensus Clients</span>
+        <span>Validator </span>
+      </div>
       <ExecutionClients
         @open-expert="openExpertWindow"
         @open-log="openLogsPage"
@@ -86,6 +94,9 @@ export default {
       executionItems: [],
       consensusItems: [],
       validatorItems: [],
+      connectedVal: {},
+      connectedCons: {},
+      connectedExec: {},
     };
   },
 
@@ -108,48 +119,75 @@ export default {
     ...mapWritableState(useStakingStore, {
       keyCounter: "keyCounter",
     }),
-
-    getConnectedValidator() {
-      const connectedVal = this.installedServices.find(
-        (item) => item.category === "validator" && item.config.dependencies?.consensusClients
-      );
-      return connectedVal;
-    },
-    getConnectedConsensus() {
-      const connectedCons = this.getConnectedValidator.config.dependencies.consensusClients[0];
-      return connectedCons;
-    },
-    getConnectedExecution() {
-      return this.getConnectedConsensus?.dependencies.executionClients[0];
-    },
   },
   watch: {
+    installedServices: {
+      deep: true,
+      handler(newServices) {
+        const connectedVal = newServices
+          .filter((item) => {
+            return item.category === "validator";
+          })
+          .find((item) => {
+            return item.config.dependencies.consensusClients[0];
+          });
+        this.connectedVal = connectedVal;
+        this.connectedCons = connectedVal.config.dependencies.consensusClients[0];
+        this.connectedExec = this.connectedCons.dependencies.executionClients[0];
+      },
+    },
+    getRefOfConnectedClients() {
+      const connectedVal = this.connectedVal;
+      const connectedCons = this.connectedCons;
+      const connectedExec = this.connectedExec;
+      console.log(connectedVal, connectedCons, connectedExec);
+      console.log(this.validatorRef, this.consensusRef, this.executionRef);
+      if (connectedVal) {
+        const refService = this.validatorRef.find((item) => {
+          return item.refId === connectedVal.config.serviceID;
+        });
+
+        if (refService) {
+          this.selectedValidatorRef = refService.ref;
+        }
+      }
+
+      if (connectedCons) {
+        const refService = this.consensusRef.find((item) => {
+          return item.refId === connectedCons.id;
+        });
+
+        if (refService) {
+          this.selectedConsensusRef = refService.ref;
+        }
+      }
+
+      if (connectedExec) {
+        const refService = this.executionRef.find((item) => {
+          return item.refId === connectedExec.id;
+        });
+
+        if (refService) {
+          this.selectedExecutionRef = refService.ref;
+        }
+      }
+    },
     hideConnectedLines: {
       handler(val) {
-        if (val) {
+        if (val == true && this.lineOne && this.lineTwo) {
           this.hideConnectedLinesHandler();
-        } else {
+        } else if (!val && this.$route.path === "/node") {
           this.drawLinesHandler();
         }
       },
       immediate: true,
     },
   },
-
   mounted() {
-    this.getRefOfConnectedClients();
-    this.$nextTick(() => {
-      if (!this.lineOne && !this.lineTwo) {
-        this.drawConnectingline(this.selectedValidatorRef, this.selectedConsensusRef, this.selectedExecutionRef);
-      }
-    });
+    console.log(this.validatorRef, this.consensusRef, this.executionRef);
   },
-  updated() {
-    console.log("updated", this.hideConnectedLines);
-  },
-
-  beforeUnmount() {
-    this.hideConnectedLinesHandler();
+  beforeUpdate() {
+    console.log(this.validatorRef, this.consensusRef, this.executionRef);
   },
 
   methods: {
@@ -163,14 +201,16 @@ export default {
     },
     hideConnectedLinesHandler() {
       if (this.hideConnectedLines || this.$route.path !== "/node") {
-        this.lineOne.hide();
-        this.lineTwo.hide();
+        if (this.lineOne && this.lineTwo) {
+          this.lineOne.hide();
+          this.lineTwo.hide();
+        }
       }
     },
     getRefOfConnectedClients() {
-      const connectedVal = this.getConnectedValidator;
-      const connectedCons = this.getConnectedConsensus;
-      const connectedExec = this.getConnectedExecution;
+      const connectedVal = this.connectedVal;
+      const connectedCons = this.connectedCons;
+      const connectedExec = this.connectedExec;
 
       if (connectedVal) {
         const refService = this.validatorRef.find((item) => {

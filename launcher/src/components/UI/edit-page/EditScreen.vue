@@ -22,7 +22,9 @@
             @dragover.prevent
             @dragleave.prevent="isDropLayerActive = false"
             @dragenter.prevent="isDropLayerActive = true"
-          ></div>
+          >
+    
+          </div>
         </edit-body>
       </div>
       <div class="col-start-17 col-end-21 ml-1">
@@ -94,12 +96,18 @@
                 <Transition name="slide">
                   <ul
                     v-show="networkDropdownOpen"
-                    class="transition-all duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg py-1 w-full z-10 mt-1 divide-y"
+                    class="transition-all max-h-[180px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg py-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
                     @mouseleave="networkDropdownOpen = false"
                   >
-                    <li v-for="network in store.networkList" :key="network.name" @click="switchNetworkHandler(network)">
+                    <li
+                      v-for="network in store.networkList"
+                      :key="network.name"
+                      class="w-full grid grid-cols-6 px-4"
+                      @click="switchNetworkHandler(network)"
+                    >
+                      <img class="col-start-1 col-end-2 w-10 p-1" :src="network.icon" alt="Network Icon" />
                       <span
-                        class="px-4 py-2 flex gap-2 items-center outline-0 hover:bg-blue-400 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
+                        class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 hover:bg-blue-400 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
                         >{{ network.name }}</span
                       >
                     </li>
@@ -209,6 +217,11 @@ const switchNetworkHandler = (network) => {
 const switchNetworkConfirm = () => {
   store.displayNetworkList = false;
   store.currentNetwork = store.networkList.find((network) => network.name === selectedNetwrok.value);
+  store.confirmChanges.push({
+    content: "SWITCH NETWORK",
+    contentIcon: "/img/icon/manage-node-icons/switch-client.png",
+    service: store.currentNetwork,
+  });
 };
 </script>
 

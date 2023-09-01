@@ -5,10 +5,11 @@
     @mousedown.prevent.stop
   >
     <div
-      class="w-[150px] h-5 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-xs capitalize"
+      class="w-[150px] h-5 absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-xs capitalize bg-[#264744]"
     >
-      {{ client.category }}
-      <span v-if="client.category !== 'validator'" class="-ml-4">client</span>
+      <span> {{ client.name }}</span>
+
+      <span class="uppercase text-xs text-yellow-400 self-end justify-self-end">{{ client.category.slice(0, 3) }}</span>
       <span :class="clientStatus"></span>
     </div>
     <div class="flex flex-col gap-2">
