@@ -22,9 +22,7 @@
             @dragover.prevent
             @dragleave.prevent="isDropLayerActive = false"
             @dragenter.prevent="isDropLayerActive = true"
-          >
-            Drop Here
-          </div>
+          ></div>
         </edit-body>
       </div>
       <div class="col-start-17 col-end-21 ml-1">
@@ -65,25 +63,51 @@
         @confirm-action="switchNetworkConfirm"
       >
         <template #content>
-          <fieldset class="space-y-2">
-            <div v-for="network in store.networkList" :key="network.name" class="w-2/3 mx-auto">
-              <input
-                :id="network.name"
-                v-model="selectedNetwrok"
-                :value="network.name"
-                type="radio"
-                class="peer hidden"
-              />
-
-              <label
-                :for="network.name"
-                class="flex cursor-pointer items-center justify-between rounded-lg border border-gray-100 bg-white p-2 text-sm font-medium shadow-sm hover:border-gray-200 hover:shadow-gray-600 peer-checked:border-blue-500 peer-checked:ring-1 peer-checked:ring-blue-500"
+          <div class="flex flex-col justify-between items-center py-2 px-4 space-y-4">
+            <div class="w-full flex flex-col justify-between items-center space-y-1">
+              <span class="w-full text-left text-teal-700 font-semibold">Current Network</span>
+              <div
+                class="flex justify-center items-center w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md py-1 px-2 font-semibold text-lg"
               >
-                <p class="text-gray-700">{{ network.name }}</p>
-                <img class="w-6" :src="network.icon" alt="Network Icon" />
-              </label>
+                <span>{{ store.currentNetwork.name }}</span>
+              </div>
             </div>
-          </fieldset>
+            <div class="w-full flex flex-col justify-between items-center space-y-1">
+              <span class="w-full text-left text-teal-700 font-semibold">Switch To</span>
+              <div class="w-full relative">
+                <button
+                  aria-expanded="false"
+                  class="w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-blue-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-between"
+                  @click="networkDropdownOpen = !networkDropdownOpen"
+                >
+                  <span>{{ selectedNetwrok ? selectedNetwrok : "Select Network From List" }}</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 inline ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-width="2" d="M5 10l7 7 7-7"></path>
+                  </svg>
+                </button>
+                <Transition name="slide">
+                  <ul
+                    v-show="networkDropdownOpen"
+                    class="transition-all duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg py-1 w-full z-10 mt-1 divide-y"
+                    @mouseleave="networkDropdownOpen = false"
+                  >
+                    <li v-for="network in store.networkList" :key="network.name" @click="switchNetworkHandler(network)">
+                      <span
+                        class="px-4 py-2 flex gap-2 items-center outline-0 hover:bg-blue-400 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
+                        >{{ network.name }}</span
+                      >
+                    </li>
+                  </ul>
+                </Transition>
+              </div>
+            </div>
+          </div>
         </template>
       </custom-modal>
     </transition>
@@ -100,14 +124,15 @@ import DrawerBox from "./components/drawer/DrawerBox.vue";
 import CustomModal from "./components/modals/CustomModal.vue";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed } from "vue";
 
 const store = useNodeManage();
 const serviceStore = useServices();
-const selectedNetwrok = ref("");
+const selectedNetwrok = ref(null);
 
 const list = ref([]);
 const isDropLayerActive = ref(false);
+const networkDropdownOpen = ref(false);
 
 const addServices = (event, item) => {
   console.log(item);
@@ -177,6 +202,10 @@ const onDrop = (Files) => {
 const displaySwitchNetwork = () => {
   store.displayNetworkList = true;
 };
+const switchNetworkHandler = (network) => {
+  selectedNetwrok.value = network.name;
+  networkDropdownOpen.value = false;
+};
 const switchNetworkConfirm = () => {
   store.displayNetworkList = false;
   store.currentNetwork = store.networkList.find((network) => network.name === selectedNetwrok.value);
@@ -215,5 +244,14 @@ const switchNetworkConfirm = () => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.slide-enter {
+  transform: scaleY(0);
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-leave-to {
+  transform: scaleY(0);
+  transition: opacity 0.5s ease-in-out;
 }
 </style>

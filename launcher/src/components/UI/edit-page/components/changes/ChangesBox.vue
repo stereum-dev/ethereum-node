@@ -11,7 +11,7 @@
       <div class="w-1/6 flex justify-center items-center">
         <img class="w-6" :src="item.contentIcon" alt="icon" />
       </div>
-      <div class="text-sm font-semibold text-gray-800">
+      <div class="text-sm font-semibold">
         <span>{{ item.content }}</span>
       </div>
       <div class="w-1/6 flex justify-center items-center">
@@ -33,15 +33,13 @@ const contentBgColor = (item) => {
   if (item) {
     const content = item.content;
     if (content === "INSTALL") {
-      bg = "bg-green-500";
+      bg = "bg-green-500 text-gray-800";
     } else if (content === "DELETE") {
-      bg = "bg-red-500";
+      bg = "bg-red-500 text-gray-300";
     } else if (content === "UPDATE") {
-      bg = "bg-yellow-500";
+      bg = "bg-yellow-500 text-gray-950";
     }
   }
   return bg;
 };
-
-console.log(getChanges.value);
 </script>
