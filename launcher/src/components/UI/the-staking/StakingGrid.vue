@@ -76,13 +76,22 @@ export default {
     this.selectedIcon = this.installedValidators[0].icon;
     this.selectedName = this.installedValidators[0].name;
     this.selectedStatus = this.installedValidators[0].state;
+
+    if (typeof this.selectedValdiatorService === "object") {
+      const doppelgangerOption = Object.values(this.selectedValdiatorService.expertOptions).find(
+        (option) => option.title === "Doppelganger"
+      );
+      if (doppelgangerOption) {
+        console.log(doppelgangerOption);
+      }
+    }
   },
   methods: {
     importRemoteKeysHandler() {
       this.exitChainForMultiValidatorsActive = false;
       this.removeForMultiValidatorsActive = false;
       this.grafitiForMultiValidatorsActive = false;
-      this.importRemoteKeysActive = true
+      this.importRemoteKeysActive = true;
     },
     grafittiHandler() {
       this.insertKeyBoxActive = false;

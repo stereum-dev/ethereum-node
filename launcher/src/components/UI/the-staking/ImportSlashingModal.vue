@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
     <div v-if="!importSlashingFile" class="remove-modal-content">
       <div class="title-box">
-        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("importSlashingModal.slashModalMessage") }}</span>
@@ -36,7 +36,7 @@
     </div>
     <div v-if="importSlashingFile" class="remove-modal-content">
       <div class="title-box">
-        <img class="folder-icon" src="../../../../public/img/icon/the-staking/folder.png" alt="icon" />
+        <img class="folder-icon" src="/img/icon/the-staking/folder.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("importSlashingModal.importMessage") }}</span>
@@ -97,6 +97,7 @@ export default {
       }
     },
   },
+
   methods: {
     openFileUpload() {
       this.$refs.fileInput.click();
