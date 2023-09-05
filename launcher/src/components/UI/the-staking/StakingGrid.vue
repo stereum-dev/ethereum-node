@@ -64,6 +64,7 @@ export default {
       grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
       display: "display",
       importRemoteKeysActive: "importRemoteKeysActive",
+      doppelganger: "doppelganger",
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
@@ -82,7 +83,7 @@ export default {
         (option) => option.title === "Doppelganger"
       );
       if (doppelgangerOption) {
-        console.log(doppelgangerOption);
+        this.doppelganger = doppelgangerOption.changeValue;
       }
     }
   },
