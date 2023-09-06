@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useStakingStore = defineStore("theStaking", {
   state: () => {
     return {
+      doppelganger: true,
       selectedIcon: "",
       importValidatorKeyActive: true,
       passwordInputActive: false,
