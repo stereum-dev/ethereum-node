@@ -8,7 +8,7 @@
       <div class="removeMessage">
         <span
           ><div :class="['status', doppelganger ? 'green' : 'red']" />
-          Doppelgänger Protection is {{ doppelganger ? "enabled" : "Disabled" }}</span
+          Doppelgänger Protection is {{ doppelganger ? "Enabled" : "Disabled" }}.</span
         >
         <span>{{ $t("importSlashingModal.slashModalMessage") }}</span>
       </div>
@@ -121,8 +121,8 @@ export default {
 </script>
 <style scoped>
 .status {
-  width: 3%;
-  height: 90%;
+  width: 2.5%;
+  height: 63%;
   border-radius: 100%;
   box-shadow: 0 1px 3px 1px rgb(48, 91, 80);
   margin-right: 1%;

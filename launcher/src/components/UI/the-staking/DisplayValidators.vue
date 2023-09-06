@@ -81,7 +81,11 @@
             </div>
           </div>
         </KeyModal>
-        <ImportSlashingModal v-if="true" @remove-modal="removeImportSlashingHandler" @import-slashing="setSlashingDB" />
+        <ImportSlashingModal
+          v-if="ImportSlashingActive"
+          @remove-modal="removeImportSlashingHandler"
+          @import-slashing="setSlashingDB"
+        />
         <div
           v-if="importValidatorKeyActive"
           class="table-content"
