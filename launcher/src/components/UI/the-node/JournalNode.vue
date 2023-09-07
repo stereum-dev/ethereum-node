@@ -461,7 +461,7 @@ export default {
       if (!service.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         service.serviceIsPending = true;
-        await ControlService.restartService(service.config.serviceID);
+        await ControlService.restartService({serviceID: service.config.serviceID, state: service.state});
         service.serviceIsPending = false;
         this.updateStates();
       }
