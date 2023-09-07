@@ -164,6 +164,8 @@ export default {
         return true;
       } else if (this.currentResult.beaconStatus === undefined) {
         return true;
+      } else if (this.proposedBlock.every((item) => item.slotNumber === 0)) {
+        return true;
       } else if (this.currentResult.beaconStatus !== 0) {
         return false;
       }
