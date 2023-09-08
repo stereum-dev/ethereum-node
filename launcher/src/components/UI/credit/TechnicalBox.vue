@@ -21,20 +21,14 @@
       ></TheContributor>
     </div>
     <div v-else class="wrapper">
-      <TheContributor
-        v-for="(result, index) in testerResults"
-        :key="result.id"
-        :class="{
-          'gold-border': index === 0,
-          'silver-border': index === 1,
-          'bronze-border': index === 2,
-        }"
-        :name="result.name"
-        :avatar="result.avatar"
-        :crown="index == 0"
-        :rank="index + 1"
-        :score="result.score"
-      ></TheContributor>
+      <div class="testers-container">
+        <TestContributor
+          v-for="result in filterTesters"
+          :key="result.id"
+          :name="result.name"
+          :avatar="result.avatar"
+        ></TestContributor>
+      </div>
     </div>
   </div>
 </template>
@@ -43,7 +37,7 @@ import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import TheContributor from "./TheContributor.vue";
 import TestContributor from "./TestContributor.vue";
-
+import axios from "axios";
 export default {
   components: { TheContributor, TestContributor },
   data() {
@@ -52,8 +46,8 @@ export default {
       issuesVal: [],
       techToggl: "developers",
       compToggl: true,
-      isLoading: true,
-      testerResults: [],
+      testers: [],
+      loading: false,
     };
   },
 
@@ -65,12 +59,6 @@ export default {
       cursorLocation: "cursorLocation",
     }),
   },
-  watch: {
-    testerResults() {
-      console.log(this.testerResults);
-    },
-  },
-
   updated() {
     this.toggleHandler();
   },
@@ -80,30 +68,46 @@ export default {
   },
   mounted() {
     this.fetchData();
+    console.log(this.testers);
   },
   methods: {
     async fetchData() {
+      this.loading = true;
       try {
-        const response = await fetch("/api");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+        const response = await axios.get("https://api.github.com/repos/stereum-dev/ethereum-node/issues", {
+          params: {
+            state: "closed",
+            per_page: 100,
+          },
+        });
 
-        const responseData = await response.json();
-        const testersData = responseData.data.testers;
+        const filteredData = response.data.filter((doc) => !doc.pull_request);
 
-        const results = testersData.map((tester) => ({
-          username: tester.username,
-          avatar: tester.avatarUrl,
-          score: tester.testsCount,
-        }));
+        const groupedIssues = {};
+        filteredData.forEach((issue) => {
+          const key = issue.user?.login;
+          if (key) {
+            if (!groupedIssues[key]) {
+              groupedIssues[key] = {
+                username: key,
+                avatarUrl: issue.user?.avatar_url,
+                testsCount: 0,
+              };
+            }
+            groupedIssues[key].testsCount++;
+          }
+        });
 
-        this.testerResults = results;
+        const testers = Object.values(groupedIssues);
+        console.log(testers);
+
+        testers.sort((a, b) => b.testsCount - a.testsCount);
+
+        this.testers = testers;
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        // Set isLoading to false when the data fetching is complete
-        this.isLoading = false;
+        this.loading = false;
       }
     },
 
