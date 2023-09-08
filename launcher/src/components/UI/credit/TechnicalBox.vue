@@ -5,7 +5,7 @@
       <option value="testers">{{ $t("creditPanel.testers") }}</option>
     </select>
     <div v-if="compToggl" class="wrapper">
-      <TheContributor
+      <the-contributor
         v-for="(result, index) in results"
         :key="result.id"
         :class="{
@@ -18,16 +18,16 @@
         :crown="index == 0"
         :rank="index + 1"
         :score="result.score"
-      ></TheContributor>
+      ></the-contributor>
     </div>
     <div v-else class="wrapper">
       <div class="testers-container">
-        <TestContributor
+        <test-contributor
           v-for="result in filterTesters"
           :key="result.id"
           :name="result.name"
           :avatar="result.avatar"
-        ></TestContributor>
+        ></test-contributor>
       </div>
     </div>
   </div>
@@ -37,7 +37,6 @@ import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import TheContributor from "./TheContributor.vue";
 import TestContributor from "./TestContributor.vue";
-import axios from "axios";
 export default {
   components: { TheContributor, TestContributor },
   data() {
@@ -46,8 +45,6 @@ export default {
       issuesVal: [],
       techToggl: "developers",
       compToggl: true,
-      testers: [],
-      loading: false,
     };
   },
 
@@ -66,51 +63,7 @@ export default {
     this.github();
     this.issues();
   },
-  mounted() {
-    this.fetchData();
-    console.log(this.testers);
-  },
   methods: {
-    async fetchData() {
-      this.loading = true;
-      try {
-        const response = await axios.get("https://api.github.com/repos/stereum-dev/ethereum-node/issues", {
-          params: {
-            state: "closed",
-            per_page: 100,
-          },
-        });
-
-        const filteredData = response.data.filter((doc) => !doc.pull_request);
-
-        const groupedIssues = {};
-        filteredData.forEach((issue) => {
-          const key = issue.user?.login;
-          if (key) {
-            if (!groupedIssues[key]) {
-              groupedIssues[key] = {
-                username: key,
-                avatarUrl: issue.user?.avatar_url,
-                testsCount: 0,
-              };
-            }
-            groupedIssues[key].testsCount++;
-          }
-        });
-
-        const testers = Object.values(groupedIssues);
-        console.log(testers);
-
-        testers.sort((a, b) => b.testsCount - a.testsCount);
-
-        this.testers = testers;
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        this.loading = false;
-      }
-    },
-
     github() {
       fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors")
         .then((response) => {
