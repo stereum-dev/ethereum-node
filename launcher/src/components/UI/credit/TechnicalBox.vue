@@ -18,17 +18,23 @@
         :crown="index == 0"
         :rank="index + 1"
         :score="result.score"
-      ></the-contributor>
+      />
     </div>
     <div v-else class="wrapper">
-      <div class="testers-container">
-        <test-contributor
-          v-for="result in filterTesters"
-          :key="result.id"
-          :name="result.name"
-          :avatar="result.avatar"
-        ></test-contributor>
-      </div>
+      <the-contributor
+        v-for="(result, index) in testerResults"
+        :key="result.score"
+        :class="{
+          'gold-border': index === 0,
+          'silver-border': index === 1,
+          'bronze-border': index === 2,
+        }"
+        :name="result.username"
+        :avatar="result.avatar"
+        :crown="index == 0"
+        :rank="index + 1"
+        :score="result.score"
+      />
     </div>
   </div>
 </template>
@@ -36,15 +42,16 @@
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import TheContributor from "./TheContributor.vue";
-import TestContributor from "./TestContributor.vue";
 export default {
-  components: { TheContributor, TestContributor },
+  components: { TheContributor },
   data() {
     return {
       results: [],
       issuesVal: [],
       techToggl: "developers",
       compToggl: true,
+      isLoading: true,
+      testerResults: [],
     };
   },
 
@@ -61,9 +68,35 @@ export default {
   },
   created() {
     this.github();
-    this.issues();
+  },
+  mounted() {
+    this.stereumTesters();
   },
   methods: {
+    async stereumTesters() {
+      try {
+        const response = await fetch("/api");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const responseData = await response.json();
+        const testersData = responseData.data.testers;
+
+        const results = testersData.map((tester) => ({
+          username: tester.username,
+          avatar: tester.avatarUrl,
+          score: tester.testsCount,
+        }));
+
+        this.testerResults = results;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
     github() {
       fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors")
         .then((response) => {
@@ -82,25 +115,6 @@ export default {
             });
           }
           this.results = results;
-        });
-    },
-    issues() {
-      fetch("https://api.github.com/repos/stereum-dev/ethereum-node/issues")
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          const results = [];
-          for (const id in data) {
-            results.push({
-              id: id,
-              name: data[id].user.login,
-              avatar: data[id].user.avatar_url,
-            });
-          }
-          this.issuesVal = results;
         });
     },
     toggleHandler() {
