@@ -5,7 +5,7 @@
       <option value="testers">{{ $t("creditPanel.testers") }}</option>
     </select>
     <div v-if="compToggl" class="wrapper">
-      <the-contributor
+      <TheContributor
         v-for="(result, index) in results"
         :key="result.id"
         :class="{
@@ -18,17 +18,31 @@
         :crown="index == 0"
         :rank="index + 1"
         :score="result.score"
-      ></the-contributor>
+      />
     </div>
     <div v-else class="wrapper">
-      <div class="testers-container">
-        <test-contributor
-          v-for="result in filterTesters"
-          :key="result.id"
-          :name="result.name"
-          :avatar="result.avatar"
-        ></test-contributor>
+      <div v-if="flag" class="loader">
+        <div class="spinner-square">
+          <div class="square-1 square"></div>
+          <div class="square-2 square"></div>
+          <div class="square-3 square"></div>
+        </div>
       </div>
+      <TheContributor
+        v-for="(result, index) in testerResults"
+        v-else
+        :key="result.score"
+        :class="{
+          'gold-border': index === 0,
+          'silver-border': index === 1,
+          'bronze-border': index === 2,
+        }"
+        :name="result.username"
+        :avatar="result.avatar"
+        :crown="index == 0"
+        :rank="index + 1"
+        :score="result.score"
+      />
     </div>
   </div>
 </template>
@@ -36,15 +50,16 @@
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import TheContributor from "./TheContributor.vue";
-import TestContributor from "./TestContributor.vue";
 export default {
-  components: { TheContributor, TestContributor },
+  components: { TheContributor },
   data() {
     return {
       results: [],
       issuesVal: [],
       techToggl: "developers",
       compToggl: true,
+      isLoading: true,
+      testerResults: [],
     };
   },
 
@@ -55,15 +70,45 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
+    flag() {
+      return this.testerResults.length == [] ? true : false;
+    },
   },
+
   updated() {
     this.toggleHandler();
   },
   created() {
     this.github();
-    this.issues();
+  },
+  mounted() {
+    this.stereumTesters();
   },
   methods: {
+    async stereumTesters() {
+      try {
+        const response = await fetch("/api");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const responseData = await response.json();
+        const testersData = responseData.data.testers;
+
+        const results = testersData.map((tester) => ({
+          username: tester.username,
+          avatar: tester.avatarUrl,
+          score: tester.testsCount,
+        }));
+
+        this.testerResults = results;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
     github() {
       fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors")
         .then((response) => {
@@ -82,25 +127,6 @@ export default {
             });
           }
           this.results = results;
-        });
-    },
-    issues() {
-      fetch("https://api.github.com/repos/stereum-dev/ethereum-node/issues")
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          const results = [];
-          for (const id in data) {
-            results.push({
-              id: id,
-              name: data[id].user.login,
-              avatar: data[id].user.avatar_url,
-            });
-          }
-          this.issuesVal = results;
         });
     },
     toggleHandler() {
@@ -163,7 +189,7 @@ export default {
   display: flex;
   width: 100%;
   height: 70vh;
-  gap: 2.2%;
+
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -197,5 +223,59 @@ export default {
 ::-webkit-scrollbar-thumb {
   background: #324b3f;
   border-radius: 10px;
+}
+.loader {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+.spinner-square {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.square {
+  width: 5%;
+  height: 40%;
+  border-radius: 20px;
+  margin-right: 5%;
+}
+
+.square-1 {
+  animation: square-anim 1200ms 0s infinite;
+}
+
+.square-2 {
+  animation: square-anim 1200ms 200ms infinite;
+}
+
+.square-3 {
+  animation: square-anim 1200ms 400ms infinite;
+}
+
+@keyframes square-anim {
+  0% {
+    height: 40%;
+    background-color: #336666;
+  }
+  20% {
+    height: 40%;
+  }
+  40% {
+    height: 80%;
+    background-color: #478e8e;
+  }
+  80% {
+    height: 40%;
+  }
+  100% {
+    height: 40%;
+    background-color: #336666;
+  }
 }
 </style>

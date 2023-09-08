@@ -330,24 +330,6 @@ export default {
   align-items: center;
   flex-direction: column;
 }
-/*.proposed-part {
-  margin-bottom: 1%;
-}*/
-/*.finilized-part {
-  border-top: 1px solid #c1c1c1;
-}*/
-
-/*.rows-title {
-  width: 95%;
-  height: 20%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 50%;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin: 0.5% 0;
-}*/
 .Finalized-row,
 .proposed-rows {
   width: 100%;
