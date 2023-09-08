@@ -5,7 +5,7 @@
       <option value="testers">{{ $t("creditPanel.testers") }}</option>
     </select>
     <div v-if="compToggl" class="wrapper">
-      <the-contributor
+      <TheContributor
         v-for="(result, index) in results"
         :key="result.id"
         :class="{
@@ -21,8 +21,16 @@
       />
     </div>
     <div v-else class="wrapper">
-      <the-contributor
+      <div v-if="flag" class="loader">
+        <div class="spinner-square">
+          <div class="square-1 square"></div>
+          <div class="square-2 square"></div>
+          <div class="square-3 square"></div>
+        </div>
+      </div>
+      <TheContributor
         v-for="(result, index) in testerResults"
+        v-else
         :key="result.score"
         :class="{
           'gold-border': index === 0,
@@ -62,7 +70,11 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
+    flag() {
+      return this.testerResults.length == [] ? true : false;
+    },
   },
+
   updated() {
     this.toggleHandler();
   },
@@ -177,7 +189,7 @@ export default {
   display: flex;
   width: 100%;
   height: 70vh;
-  gap: 2.2%;
+
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -211,5 +223,59 @@ export default {
 ::-webkit-scrollbar-thumb {
   background: #324b3f;
   border-radius: 10px;
+}
+.loader {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+.spinner-square {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.square {
+  width: 5%;
+  height: 40%;
+  border-radius: 20px;
+  margin-right: 5%;
+}
+
+.square-1 {
+  animation: square-anim 1200ms 0s infinite;
+}
+
+.square-2 {
+  animation: square-anim 1200ms 200ms infinite;
+}
+
+.square-3 {
+  animation: square-anim 1200ms 400ms infinite;
+}
+
+@keyframes square-anim {
+  0% {
+    height: 40%;
+    background-color: #336666;
+  }
+  20% {
+    height: 40%;
+  }
+  40% {
+    height: 80%;
+    background-color: #478e8e;
+  }
+  80% {
+    height: 40%;
+  }
+  100% {
+    height: 40%;
+    background-color: #336666;
+  }
 }
 </style>
