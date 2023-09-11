@@ -18,13 +18,7 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
-
-export default {
-  name: "NodeScreen",
-  components: {
-    MainNavbar,
-  },
-};
+import TaskManager from "../UI/task-manager/TaskManager.vue";
 </script>

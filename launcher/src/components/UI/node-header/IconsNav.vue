@@ -59,6 +59,7 @@ import NotifModal from "./NotifModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useUpdateCheck } from "../../../store/composables/version";
 import TutorialGuide from "../the-node/TutorialGuide.vue";
 import StakeGuide from "../the-node/StakeGuide.vue";
 export default {
@@ -74,7 +75,6 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
       isOsUpdateAvailable: "isOsUpdateAvailable",
@@ -101,11 +101,11 @@ export default {
       } catch (err) {
         console.log("Running All Updates Failed: ", err);
       } finally {
-        this.forceUpdateCheck = true;
         this.updating = false;
         this.versions = {};
         this.newUpdates = [];
         this.refresh = true;
+        // search for updates afterwards
         await ControlService.restartServices(seconds);
       }
     },
@@ -123,7 +123,6 @@ export default {
       } catch (err) {
         console.log(JSON.stringify(item) + "\nUpdate Failed", err);
       } finally {
-        this.forceUpdateCheck = true;
         this.refresh = true;
         this.newUpdates = this.newUpdates.filter((u) => {
           if (item && item.id) {
@@ -132,8 +131,9 @@ export default {
             return u.commit != item.commit;
           }
         });
-        await ControlService.restartServices(seconds);
         this.updating = false;
+        // Search for updates afterwards
+        await ControlService.restartServices(seconds);
       }
     },
     async runOsUpdate() {
@@ -163,7 +163,7 @@ export default {
       });
     },
     updateModalHandler() {
-      if (!this.updating) this.forceUpdateCheck = true;
+      useUpdateCheck();
       this.displayUpdatePanel = !this.displayUpdatePanel;
     },
     removeUpdateModal() {

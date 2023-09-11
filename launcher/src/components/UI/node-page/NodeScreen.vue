@@ -30,7 +30,7 @@
   </base-layout>
 </template>
 <script>
-import SidebarSection from "./sections/SidebarSection.vue";
+import SidebarSection from "./sections/SidebarSection";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
