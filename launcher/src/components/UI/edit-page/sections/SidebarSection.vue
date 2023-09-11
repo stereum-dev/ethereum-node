@@ -21,7 +21,7 @@
         <img src="/img/icon/manage-node-icons/change-network.png" alt="Network" />
       </button>
 
-      <button v-else class="showNetworkBtn" @mouseleave="networkHovered = false" @click="$emit('networkModal')">
+      <button v-else class="showNetworkBtn" @mouseleave="networkHovered = false" @click="emit('networkModal')">
         <img class="w-7 mr-1" src="/img/icon/manage-node-icons/change-network.png" alt="Network Icon" />
         <span class="text-sm text-gray-200 font-semibold">Switch Network</span>
       </button>
@@ -33,7 +33,7 @@
       >
         <img class="w-8" src="/img/icon/manage-node-icons/nuke.png" alt="Export Icon" />
       </button>
-      <button v-else class="showExportBtn" @mouseleave="nukeHovered = false">
+      <button v-else class="showExportBtn" @mouseleave="nukeHovered = false" @click="nukeNode">
         <img class="w-7 mr-1" src="/img/icon/manage-node-icons/nuke.png" alt="Export Icon" />
         <span class="text-sm text-gray-200 font-semibold">Nuke Node</span>
       </button>
@@ -41,11 +41,17 @@
   </aside>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 
 const routerHovered = ref(false);
 const networkHovered = ref(false);
 const nukeHovered = ref(false);
+const emit = defineEmits(["nuke-node", "network-modal"]);
+
+const nukeNode = () => {
+  console.log("nuking");
+  emit("nuke-node");
+};
 </script>
 
 <style scoped>

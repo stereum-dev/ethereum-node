@@ -155,7 +155,6 @@ export default {
       cpu: "cpu",
     }),
     ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
       rpcState: "rpcState",

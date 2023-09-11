@@ -194,7 +194,6 @@ export default {
   },
   mounted() {
     this.getSettings();
-    this.forceUpdateCheck = true;
   },
   updated() {
     this.checkSettings();

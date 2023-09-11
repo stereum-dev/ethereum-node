@@ -20,6 +20,8 @@ export const useServices = defineStore("services", {
           display: true,
         },
       ],
+      backendServicesTimestamp: null,
+      backendServices: [],
       installedServices: [],
       runningServices: [],
       allServices: [

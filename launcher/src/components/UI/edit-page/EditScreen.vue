@@ -3,7 +3,7 @@
     <!-- Start Node main layouts -->
     <div class="w-full h-full grid grid-cols-24 relative">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
-        <SidebarSection @network-modal="displaySwitchNetwork" />
+        <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="nukeNode" />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <edit-body>
@@ -130,13 +130,16 @@ import ServiceSection from "./sections/ServiceSection.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import DrawerBox from "./components/drawer/DrawerBox.vue";
 import CustomModal from "./components/modals/CustomModal.vue";
+import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 
 const store = useNodeManage();
 const serviceStore = useServices();
 const selectedNetwrok = ref(null);
+const router = useRouter();
 
 const list = ref([]);
 const isDropLayerActive = ref(false);
@@ -222,6 +225,13 @@ const switchNetworkConfirm = () => {
     contentIcon: "/img/icon/manage-node-icons/switch-client.png",
     service: store.currentNetwork,
   });
+};
+
+const nukeNode = async () => {
+  //missing nuke component implement later
+  await ControlService.destroy();
+  await ControlService.logout();
+  router.push("/");
 };
 </script>
 

@@ -8,17 +8,8 @@
   "vue.features.codeActions.enable": false,
   "vue.codeActions.enabled": false,
   "vetur.format.enable": false,
-  "workbench.colorCustomizations": {
-    "sideBar.background": "#292828",
-    "badge.background": "#202020",
-    "breadcrumb.background": "#202020",
-    "editor.background": "#202020",
-    "minimap.background": "#202020",
-    "lineNumbers.background": "#202020",
-    "editorLineNumber.foreground": "#494949",
-    "editor.lineDecorationsWidth": 20,
-    "activityBar.background": "#382C09",
-    "titleBar.activeBackground": "#4E3E0C",
-    "titleBar.activeForeground": "#FDFAF2"
+  "[vue]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

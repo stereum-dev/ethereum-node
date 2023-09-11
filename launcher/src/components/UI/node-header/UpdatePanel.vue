@@ -1,6 +1,6 @@
 <template>
   <div class="panelParent">
-    <div v-if="clickBg" class="clickOutside" @click="$emit('clickOut')"></div>
+    <div v-if="props.clickBg" class="clickOutside" @click="$emit('clickOut')"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="stereum-updateBoxesWrapper">
@@ -24,9 +24,11 @@
                     <span>{{ osVersionCurrent }}</span>
                   </div>
                   <div id="latestValue">
-                    <span v-if="!searchingForOsUpdates || osUpdating" class="red-circle">{{ osVersionLatest }} </span>
+                    <span v-if="!nodeHeaderStore.searchingForOsUpdates || nodeHeaderStore.osUpdating" class="red-circle"
+                      >{{ nodeHeaderStore.osVersionLatest }}
+                    </span>
                     <img
-                      v-if="searchingForOsUpdates && !osUpdating"
+                      v-if="nodeHeaderStore.searchingForOsUpdates && !nodeHeaderStore.osUpdating"
                       class="red-circle spinner"
                       src="/img/icon/control/loading_circle.gif"
                     />
@@ -38,12 +40,19 @@
                   </div>
                   <div
                     class="downloadBtn"
-                    :class="{ disabled: osVersionLatest === 0 || osUpdating }"
+                    :class="{ disabled: nodeHeaderStore.osVersionLatest === 0 || nodeHeaderStore.osUpdating }"
                     @click="$emit('runOsUpdate')"
                   >
                     <img src="/img/icon/node-icons/download2.png" alt="icon" />
                   </div>
-                  <div v-if="searchingForOsUpdates && searchingForOsUpdatesManual && !osUpdating" class="available">
+                  <div
+                    v-if="
+                      nodeHeaderStore.searchingForOsUpdates &&
+                      nodeHeaderStore.searchingForOsUpdatesManual &&
+                      !nodeHeaderStore.osUpdating
+                    "
+                    class="available"
+                  >
                     <span class="circle pulse"></span>
                     <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
                   </div>
@@ -66,7 +75,7 @@
                     <span>{{ $t("updatePanel.current") }}:</span>
                   </div>
                   <div id="currentValue">
-                    <span>{{ launcherVersion }}</span>
+                    <span>{{ serviceStore?.launcherVersion }}</span>
                   </div>
                 </div>
               </div>
@@ -91,10 +100,10 @@
                   </div>
 
                   <div id="currentValue">
-                    <span>{{ stereumUpdate.current }}</span>
+                    <span>{{ nodeHeaderStore.stereumUpdate.current }}</span>
                   </div>
                   <div id="latestValue">
-                    <span>{{ stereumUpdate.version }}</span>
+                    <span>{{ nodeHeaderStore.stereumUpdate?.version }}</span>
                   </div>
                 </div>
                 <div class="btnBox">
@@ -103,8 +112,8 @@
                   </div>
                   <div
                     class="downloadBtn"
-                    :class="{ disabled: !checkStereumUpdate() || updating }"
-                    @click="$emit('runUpdate', stereumUpdate)"
+                    :class="{ disabled: !checkStereumUpdate() || nodeHeaderStore.updating }"
+                    @click="$emit('runUpdate', nodeHeaderStore.stereumUpdate)"
                   >
                     <img src="/img/icon/node-icons/download2.png" alt="icon" />
                   </div>
@@ -113,9 +122,11 @@
                     <div class="updateIcon">
                       <img src="/img/icon/header-icons/update-green.png" alt="icon" />
                     </div>
-                    <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
+                    <span class="availableText"
+                      >{{ nodeHeaderStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
+                    >
                   </div>
-                  <div v-if="forceUpdateCheck && !checkStereumUpdate()" class="available">
+                  <div v-if="nodeHeaderStore.searchingForUpdates && !checkStereumUpdate()" class="available">
                     <span class="circle pulse"></span>
                     <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
                   </div>
@@ -146,8 +157,8 @@
               <span>{{ $t("updatePanel.availablePlugin") }}</span>
             </div>
             <div class="tableContent">
-              <div v-for="(item, index) in newUpdates" :key="index" class="tableRow">
-                <div v-if="item.running || updating" class="downloadBtnDisabled">
+              <div v-for="(item, index) in serviceStore.newUpdates" :key="index" class="tableRow">
+                <div v-if="item.running || nodeHeaderStore.updating" class="downloadBtnDisabled">
                   <img src="/img/icon/node-icons/download_disabled.png" alt="icon" />
                 </div>
                 <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
@@ -169,7 +180,7 @@
           <div
             class="confirmUpdate"
             :class="{
-              disabled: (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) || updating,
+              disabled: (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) || nodeHeaderStore.updating,
             }"
             @click.prevent.stop="$emit('updateConfirm')"
           >
@@ -187,124 +198,114 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
-export default {
-  props: {
-    clickBg: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      stereumApp: {
-        current: "alpha",
-        latest: "2.0",
-        autoUpdate: "",
-      },
-      osVersionCurrent: "-",
-    };
-  },
-  computed: {
-    ...mapWritableState(useServices, {
-      newUpdates: "newUpdates",
-      launcherVersion: "launcherVersion",
-    }),
-    ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
-      stereumUpdate: "stereumUpdate",
-      updating: "updating",
-      searchingForOsUpdates: "searchingForOsUpdates",
-      searchingForOsUpdatesManual: "searchingForOsUpdatesManual",
-      isOsUpdateAvailable: "isOsUpdateAvailable",
-      osUpdating: "osUpdating",
-      osVersionLatest: "osVersionLatest",
-    }),
-    onOff() {
-      return {
-        green: this.stereumApp.autoUpdate === "on",
-        red: this.stereumApp.autoUpdate === "off",
-      };
-    },
-  },
-  async mounted() {
-    this.getSettings();
-    await this.getOsVersion();
-    await this.searchOsUpdates();
-  },
-  methods: {
-    searchUpdate() {
-      this.forceUpdateCheck = true;
-    },
-    testData() {
-      console.log(this.updating);
-    },
-    async getSettings() {
-      this.settings = await ControlService.getStereumSettings();
-      if (this.settings.stereum?.settings.updates.unattended.install) {
-        this.stereumApp.autoUpdate = "on";
-      } else {
-        this.stereumApp.autoUpdate = "off";
-      }
-    },
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
-      }
-      return false;
-    },
-    checkAvailableServicesNewUpdate() {
-      if (this.newUpdates.length <= 0) {
-        return false;
-      }
-      return true;
-    },
-    async searchOsUpdates(manual = false) {
-      if (this.osUpdating) {
-        this.searchingForOsUpdates = false;
-        this.searchingForOsUpdatesManual = false;
-        return;
-      }
-      if (this.searchingForOsUpdates) {
-        return;
-      }
-      this.searchingForOsUpdates = true;
-      if (manual) {
-        this.searchingForOsUpdatesManual = true;
-      }
-      await this.getUpdatablePackagesCount();
-      this.searchingForOsUpdates = false;
-      this.searchingForOsUpdatesManual = false;
-    },
-    async getUpdatablePackagesCount() {
-      try {
-        const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
-        const numPackages = Number(packagesCount);
-        this.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-        this.isOsUpdateAvailable = this.osVersionLatest ? true : false;
-        return this.osVersionLatest;
-      } catch (error) {
-        this.osVersionLatest = 0;
-        this.isOsUpdateAvailable = false;
-        console.log(error);
-      }
-    },
-    async getOsVersion() {
-      try {
-        const osVersion = await ControlService.getCurrentOsVersion();
+import { onMounted, computed } from "vue";
+import { useUpdateCheck } from "@/store/composables/version.js";
 
-        this.osVersionCurrent = osVersion;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+//Props
+const props = defineProps({
+  clickBg: {
+    type: Boolean,
+    default: false,
   },
+});
+
+//Stores
+const serviceStore = useServices();
+const nodeHeaderStore = useNodeHeader();
+
+//Data
+let stereumApp = {
+  current: "alpha",
+  latest: "2.0",
+  autoUpdate: "",
+};
+let osVersionCurrent = "-";
+
+//Computed
+const onOff = computed(() => {
+  return {
+    green: stereumApp.autoUpdate === "on",
+    red: stereumApp.autoUpdate === "off",
+  };
+});
+
+//on Mounted
+onMounted(async () => {
+  useUpdateCheck();
+  getSettings();
+  await getOsVersion();
+  await searchOsUpdates();
+});
+
+//Methods
+const searchUpdate = () => {
+  useUpdateCheck();
+};
+
+const checkStereumUpdate = () => {
+  if (nodeHeaderStore.stereumUpdate && nodeHeaderStore.stereumUpdate.version)
+    return nodeHeaderStore.stereumUpdate.commit != nodeHeaderStore.stereumUpdate.current_commit ? true : false;
+  return false;
+};
+
+const checkAvailableServicesNewUpdate = () => {
+  if (serviceStore.newUpdates.length <= 0) return false;
+  return true;
+};
+
+const getSettings = async () => {
+  let settings = await ControlService.getStereumSettings();
+  if (settings.stereum?.settings.updates.unattended.install) {
+    stereumApp.autoUpdate = "on";
+  } else {
+    stereumApp.autoUpdate = "off";
+  }
+};
+
+const searchOsUpdates = async (manual = false) => {
+  if (nodeHeaderStore.osUpdating) {
+    nodeHeaderStore.searchingForOsUpdates = false;
+    nodeHeaderStore.searchingForOsUpdatesManual = false;
+    return;
+  }
+  if (nodeHeaderStore.searchingForOsUpdates) {
+    return;
+  }
+  nodeHeaderStore.searchingForOsUpdates = true;
+  if (manual) {
+    nodeHeaderStore.searchingForOsUpdatesManual = true;
+  }
+  await getUpdatablePackagesCount();
+  nodeHeaderStore.searchingForOsUpdates = false;
+  nodeHeaderStore.searchingForOsUpdatesManual = false;
+};
+
+const getUpdatablePackagesCount = async () => {
+  try {
+    const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
+    const numPackages = Number(packagesCount);
+    nodeHeaderStore.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
+    nodeHeaderStore.isOsUpdateAvailable = nodeHeaderStore.osVersionLatest ? true : false;
+    return nodeHeaderStore.osVersionLatest;
+  } catch (error) {
+    nodeHeaderStore.osVersionLatest = 0;
+    nodeHeaderStore.isOsUpdateAvailable = false;
+    console.log(error);
+  }
+};
+
+const getOsVersion = async () => {
+  try {
+    const osVersion = await ControlService.getCurrentOsVersion();
+
+    osVersionCurrent = osVersion;
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 <style scoped>
