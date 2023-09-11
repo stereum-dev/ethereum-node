@@ -27,13 +27,13 @@
           <img src="../../../../public/img/icon/manage-node-icons/nuke.png" alt="icon" />
         </div>
       </div>
-      <remove-modal
+      <RemoveModal
         v-if="removeServicesModal"
         ref="removeServicesModalComponent"
         @close-me="closeRemoveModal"
         @remove-items="removeConfirmation"
         @back-to-login="backToLogin"
-      ></remove-modal>
+      />
     </div>
   </div>
 </template>
