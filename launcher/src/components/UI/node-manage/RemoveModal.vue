@@ -1,7 +1,7 @@
 <template>
   <div class="remove-modal-parent">
     <div class="modal-opacity" @click="closeMe">
-      <span v-if="test !== 0">your click record: {{ test }}</span>
+      <span v-if="test !== 0">your click record is {{ test }}</span>
     </div>
     <div v-if="visible" class="remove-modal-content">
       <div class="title-box">
