@@ -209,8 +209,10 @@ export class ServiceManager {
   }
 
   async restartService(client) {
-    await this.manageServiceState(client, "stopped");
-    await this.manageServiceState(client, "started");
+    if (client.state == "running") {
+      await this.manageServiceState(client.serviceID, "stopped");
+    }
+    await this.manageServiceState(client.serviceID, "started");
   }
 
   async resyncService(serviceID, checkpointUrl) {
@@ -225,16 +227,18 @@ export class ServiceManager {
         vol.servicePath === "/opt/data/reth" ||
         vol.servicePath === "/opt/data/erigon"
     ).destinationPath;
-    await this.manageServiceState(client.id, "stopped");
 
-    if (dataDir.length > 0) {
+    let result = await this.nodeConnection.sshService.exec(`test -d ${dataDir}/ `);
+
+    if (dataDir.length > 0 && result.rc == 0) {
+      await this.manageServiceState(serviceID, "stopped");
       await this.deleteDataVolume(dataDir);
     }
 
     this.updateSyncCommand(client, checkpointUrl);
 
     await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-    await this.manageServiceState(client.id, "started");
+    await this.manageServiceState(serviceID, "started");
   }
 
   updateSyncCommand(client, checkpointUrl) {

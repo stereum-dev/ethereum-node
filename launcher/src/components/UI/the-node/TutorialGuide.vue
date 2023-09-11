@@ -4,7 +4,7 @@
       <div class="header-node" @click.prevent="rpcStepOne">
         <div class="title">{{ $t("pagesnav.control") }}</div>
       </div>
-      <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+      <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow" />
       <div class="step-one">
         <span>{{ $t("rpcGuide.clickNav") }}</span>
       </div>
@@ -16,7 +16,7 @@
       <div v-if="secondPoint" class="point-wrapper">
         <div class="first-point">
           <div class="first-point_icon">
-            <img src="../../../../public/img/icon/arrows/Pointer1.png" alt="pointer" />
+            <img src="/img/icon/arrows/Pointer1.png" alt="pointer" />
           </div>
           <div class="first-point_title">{{ $t("rpcGuide.toggleMessage") }}</div>
         </div>
