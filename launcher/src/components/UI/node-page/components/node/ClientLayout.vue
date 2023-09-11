@@ -9,7 +9,6 @@
     >
       <span> {{ client.name }}</span>
 
-      <span class="uppercase text-xs text-yellow-400 self-end justify-self-end">{{ client.category.slice(0, 3) }}</span>
       <span :class="clientStatus"></span>
     </div>
     <div class="flex flex-col gap-2">
