@@ -766,6 +766,10 @@ video {
   z-index: 50;
 }
 
+.z-30{
+  z-index: 30;
+}
+
 .col-span-1{
   grid-column: span 1 / span 1;
 }
@@ -1172,16 +1176,16 @@ video {
   width: 100px;
 }
 
-.w-\[136px\]{
-  width: 136px;
-}
-
-.w-\[150px\]{
-  width: 150px;
+.w-\[156px\]{
+  width: 156px;
 }
 
 .w-\[158px\]{
   width: 158px;
+}
+
+.w-\[178px\]{
+  width: 178px;
 }
 
 .w-\[49\%\]{
@@ -2278,6 +2282,18 @@ video {
 
 .opacity-80{
   opacity: 0.8;
+}
+
+.opacity-20{
+  opacity: 0.2;
+}
+
+.opacity-25{
+  opacity: 0.25;
+}
+
+.opacity-50{
+  opacity: 0.5;
 }
 
 .shadow-lg{

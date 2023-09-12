@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-1 col-span-1 gap-2 p-2 space-y-6 flex flex-col items-start relative">
+  <div class="col-start-1 col-span-1 gap-2 p-2 space-y-6 flex flex-col items-start">
     <div
       v-for="item in getExecutionServices"
       :key="item"
@@ -17,7 +17,7 @@
       <ExpertWindow
         v-if="item.expertOptionsModal"
         :item="item"
-        @hide-modal="$emit('hide-modal', item)"
+        @hide-modal="hideModal(item)"
         @prunning-warning="$emit('prunning-warning', item)"
         @resync-warning="$emit('resync-warning', item)"
       />
@@ -38,6 +38,7 @@ const executionRefs = ref([]);
 const nodeStore = useNodeStore();
 
 const serviceStore = useServices();
+const emit = defineEmits(["openExpert", "openLog", "stateHandler", "restartHandler"]);
 
 const getExecutionServices = computed(() => {
   return serviceStore.installedServices
@@ -57,4 +58,8 @@ const getExecutionRef = computed(() => {
 watch(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
+
+const hideModal = (item) => {
+  emit("hide-modal", item);
+};
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-2 col-end-3 gap-2 p-2 space-y-6 flex flex-col items-center relative">
+  <div class="col-start-2 col-end-3 gap-2 p-2 space-y-6 flex flex-col items-center">
     <div
       v-for="item in getConsensusServices"
       :key="item"
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
@@ -50,5 +50,11 @@ const getConsensusRef = computed(() =>
 
 watch(getConsensusRef, () => {
   nodeStore.consensusRef.value = getConsensusRef.value;
+});
+
+onMounted(() => {
+  if (getConsensusRef.value.length > 0) {
+    nodeStore.consensusRef.value = getConsensusRef.value;
+  }
 });
 </script>

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center">
-    <div class="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-10" @click="$emit('hideModal')"></div>
+  <div class="flex justify-center z-10">
+    <div class="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-20" @click="$emit('hideModal')"></div>
     <div
       x-transition:enter="transition duration-500 ease-out"
       x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
@@ -8,7 +8,7 @@
       x-transition:leave="transition duration-150 ease-in"
       x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100"
       x-transition:leave-end="translate-y-8 opacity-0 sm:translate-y-0 sm:scale-95"
-      class="w-full h-full absolute top-0 left-0 z-20 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      class="w-full h-full absolute top-0 left-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -399,29 +399,6 @@ export default {
 };
 </script>
 <style scoped>
-.expert-parent {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-}
-.opacityBackground {
-  width: 100vw;
-  height: 100%;
-  border-radius: 0 35px 0 0;
-  background-color: rgb(8, 8, 8);
-  opacity: 0.4;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1001;
-  cursor: default;
-}
 .expert-modal {
   width: 64%;
   height: 84%;

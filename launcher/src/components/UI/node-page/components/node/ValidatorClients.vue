@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-3 col-end-4 gap-2 p-2 space-y-6 flex flex-col items-end relative">
+  <div class="col-start-3 col-end-4 gap-2 p-2 space-y-6 flex flex-col items-end">
     <div
       v-for="item in getValidatorServices"
       :key="item"
