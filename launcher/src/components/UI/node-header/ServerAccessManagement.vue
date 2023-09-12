@@ -1,25 +1,36 @@
 <template>
   <div class="dashboard-parent">
     <GenerateKeyModal v-if="generateModalShow" @generateKey="addKey" />
-    <div class="management-title">server access management</div>
+    <div class="management-title">{{ $t("serverManagement.serverAccMange") }}</div>
     <div class="management-info">
       <div class="management-info_box">
         <div class="management-info_box_row">
-          <span>SERVER NAME</span><span>{{ selectedConnection.name }}</span>
+          <span>{{ serverNam }}</span
+          ><span @mouseenter="cursorLocation = serverNam" @mouseleave="cursorLocation = ''">{{
+            selectedConnection.name
+          }}</span>
         </div>
         <div class="management-info_box_row">
-          <span>IP or HOSTNAME</span><span>{{ ipAddress }}</span>
+          <span>{{ ipHOST }}</span
+          ><span @mouseenter="cursorLocation = ipHOST" @mouseleave="cursorLocation = ''">{{ ipAddress }}</span>
         </div>
         <div class="management-info_box_row">
-          <span>USERNAME</span><span>{{ selectedConnection.user }}</span>
+          <span>{{ userNam }}</span
+          ><span @mouseenter="cursorLocation = userNam" @mouseleave="cursorLocation = ''">{{
+            selectedConnection.user
+          }}</span>
         </div>
       </div>
       <div class="management-info_box">
         <div class="management-info_box_row">
-          <span>MACHINENAME</span><span>{{ ServerName }}</span>
+          <span>{{ machineNam }}</span
+          ><span @mouseenter="cursorLocation = machineNam" @mouseleave="cursorLocation = ''">{{ ServerName }}</span>
         </div>
         <div class="management-info_box_row">
-          <span>PORT</span><span>{{ selectedConnection.port ? selectedConnection.port : 22 }}</span>
+          <span>{{ port }}</span
+          ><span @mouseenter="cursorLocation = port" @mouseleave="cursorLocation = ''">{{
+            selectedConnection.port ? selectedConnection.port : 22
+          }}</span>
         </div>
         <div class="management-info_box_row" />
       </div>
@@ -28,9 +39,16 @@
       <div class="login-info-box_info-part">
         <div class="helf-part">
           <div class="half-part_row">
-            <span>PASSWORD</span>
+            <span>{{ $t("serverManagement.pass") }}</span>
             <div v-if="!chngPassword" class="btn-part">
-              <div class="login-info-btn" @click="chngPassword = true">CHANGE PASSWORD</div>
+              <div
+                class="login-info-btn"
+                @click="(chngPassword = true), (cursorLocation = '')"
+                @mouseenter="cursorLocation = clckChngPass"
+                @mouseleave="cursorLocation = ''"
+              >
+                {{ $t("serverManagement.chngPass") }}
+              </div>
             </div>
             <div v-else class="btn-part">
               <input
@@ -40,21 +58,43 @@
                 :placeholder="passmessage"
               />
               <div class="pass-btn-part">
-                <div class="pass-btn accept" @click="acceptChangePass">
+                <div
+                  class="pass-btn accept"
+                  @click="acceptChangePass"
+                  @mouseenter="cursorLocation = confirmPassMessage"
+                  @mouseleave="cursorLocation = ''"
+                >
                   <img src="/img/icon/access-management/done.png" alt="" />
                 </div>
-                <div class="pass-btn deny" @click="denyPassChange">
+                <div
+                  class="pass-btn deny"
+                  @click="denyPassChange"
+                  @mouseenter="cursorLocation = cancel"
+                  @mouseleave="cursorLocation = ''"
+                >
                   <img src="/img/icon/access-management/close.png" alt="" />
                 </div>
               </div>
             </div>
           </div>
           <div class="half-part_row">
-            <span>SSH Key</span>
+            <span>SSH {{ $t("serverManagement.key") }}</span>
             <div class="btn-part">
-              <div class="login-info-btn" @click="generateModal">create a new key</div>
-              <div class="login-info-btn" @click="openUploadHandler">
-                add an existing key
+              <div
+                class="login-info-btn"
+                @click="generateModal"
+                @mouseenter="cursorLocation = clckCreateKey"
+                @mouseleave="cursorLocation = ''"
+              >
+                {{ $t("serverManagement.createKey") }}
+              </div>
+              <div
+                class="login-info-btn"
+                @click="openUploadHandler"
+                @mouseenter="cursorLocation = clckAddKey"
+                @mouseleave="cursorLocation = ''"
+              >
+                {{ $t("serverManagement.addKey") }}
                 <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
               </div>
             </div>
@@ -79,6 +119,7 @@
 
 <script>
 import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 import KeyRowBtn from "./KeyRowBtn";
@@ -96,9 +137,19 @@ export default {
       newPass: "",
       comparePass: [],
       keyLocation: "",
-      passmessage: "Please enter a password",
+      passmessage: this.$t("serverManagement.passmessage"),
       acceptedPass: "",
       passChk: false,
+      serverNam: this.$t("serverManagement.serverNam"),
+      ipHOST: this.$t("serverManagement.ipHOST"),
+      userNam: this.$t("serverManagement.userNam"),
+      machineNam: this.$t("serverManagement.machineNam"),
+      port: this.$t("serverManagement.port"),
+      confirmPassMessage: this.$t("serverManagement.confirmPassMessage"),
+      cancel: this.$t("serverManagement.cancel"),
+      clckChngPass: this.$t("serverManagement.clckChngPass"),
+      clckCreateKey: this.$t("serverManagement.clckCreateKey"),
+      clckAddKey: this.$t("serverManagement.clckAddKey"),
     };
   },
   computed: {
@@ -107,6 +158,9 @@ export default {
       ipAddress: "ipAddress",
       generateModalShow: "generateModalShow",
       deleteKey: "deleteKey",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     passSSHRow() {
       return !this.selectedConnection.useAuthKey ? "pass" : "ssh";
@@ -159,15 +213,16 @@ export default {
       this.chngPassword = false;
       this.newPass = "";
       this.comparePass = [];
+      this.cursorLocation = "";
     },
     async acceptChangePass() {
       if (this.newPass === "") {
-        this.passmessage = "Please enter a password";
+        this.passmessage = this.$t("serverManagement.passmessage");
       } else {
         if (this.comparePass.length < 1) {
           this.comparePass.push(this.newPass);
           this.newPass = "";
-          this.passmessage = "please enter the password again";
+          this.passmessage = this.$t("serverManagement.confirmPass");
           this.passChk = false;
         } else {
           const passwordEqual = this.comparePass.every((item) => item === this.newPass);
@@ -222,6 +277,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  cursor: default;
 }
 .management-title {
   width: 85%;

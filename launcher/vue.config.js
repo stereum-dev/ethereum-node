@@ -1,5 +1,16 @@
 const path = require("path");
 module.exports = {
+  devServer: {
+    proxy: {
+      "/api": {
+        target: "https://stereum.net",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/api": "/api/github/testers",
+        },
+      },
+    },
+  },
   parallel: false,
   pluginOptions: {
     electronBuilder: {

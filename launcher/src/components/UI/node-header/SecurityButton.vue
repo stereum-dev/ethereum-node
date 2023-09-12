@@ -1,25 +1,32 @@
 <template>
   <div class="securBtn-parent">
-    <div class="securBtn-box" @click="accessSwitch" @mouseenter="tooltip = true" @mouseleave="tooltip = false">
+    <div
+      class="securBtn-box"
+      @click="accessSwitch"
+      @mouseenter="(tooltip = true), (cursorLocation = serverAccMange)"
+      @mouseleave="(tooltip = false), (cursorLocation = '')"
+    >
       <img :src="stereumStatus ? '/img/icon/LOGO.png' : '/img/icon/statusOff.png'" class="main-header__brand" />
     </div>
-    <div v-if="tooltip" class="server-access-tooltip">server access management</div>
+    <div v-if="tooltip" class="server-access-tooltip">{{ serverAccMange }}</div>
   </div>
 </template>
 
 <script>
-import { mapState, mapWritableState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
 export default {
   data() {
     return {
       tooltip: false,
+      serverAccMange: this.$t("serverManagement.serverAccMange"),
     };
   },
   computed: {
-    ...mapState(useFooter, {
+    ...mapWritableState(useFooter, {
       stereumStatus: "stereumStatus",
+      cursorLocation: "cursorLocation",
     }),
     ...mapWritableState(useNodeHeader, {
       serverAccessManagement: "serverAccessManagement",

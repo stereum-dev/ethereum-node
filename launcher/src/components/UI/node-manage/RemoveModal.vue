@@ -1,12 +1,14 @@
 <template>
   <div class="remove-modal-parent">
-    <div class="modal-opacity" @click="closeMe"></div>
+    <div class="modal-opacity" @click="closeMe">
+      <span v-if="test !== 0">your click record is {{ test }}</span>
+    </div>
     <div v-if="visible" class="remove-modal-content">
       <div class="title-box">
         <img src="/img/icon/manage-node-icons/stop.png" />
       </div>
       <div class="remove-message">
-        <span class="warning">{{ $t("nukeModal.nukeQ") }} </span>
+        <span class="warning">{{ $t("nukeModal.nukeQ") }}</span>
       </div>
       <div class="remove-btn">
         <div class="yes-box" @click="removeItems">
@@ -28,7 +30,7 @@
         </div>
 
         <div class="remove-modal-accepted_footer" :class="{ deactive: loginBtn }">
-          <div v-if="loginBtn" class="spinner">
+          <div v-if="loginBtn" class="spinner" @click="test++">
             <img src="/img/icon/control/spinner.gif" alt="" />
           </div>
           <span v-else @click="backToLogin">{{ $t("nukeModal.backToLogin") }}</span>
@@ -42,6 +44,7 @@ export default {
   emit: ["remove-items", "close-me", "back-to-login"],
   data() {
     return {
+      test: 0,
       visible: true,
       //demoData is dummy
       demoData: [
@@ -148,12 +151,26 @@ export default {
 .modal-opacity {
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
   left: 0;
   top: 0;
-  opacity: 0.7;
+
   z-index: 311;
+}
+.modal-opacity span {
+  text-transform: uppercase;
+  color: yellow;
+  position: absolute;
+  top: 10%;
+  left: 75%;
+  width: 20%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 700;
 }
 .remove-modal-content {
   width: 55%;

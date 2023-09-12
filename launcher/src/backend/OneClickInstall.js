@@ -29,7 +29,7 @@ export class OneClickInstall {
       }
     }
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
-    mkdir /etc/stereum &&\
+    mkdir -p /etc/stereum/services &&\
     echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
     await this.nodeConnection.findStereumSettings();
     return await this.nodeConnection.prepareStereumNode(
@@ -229,14 +229,21 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args))
     }
 
-    if(selectedPreset == "archive"){
+    if(selectedPreset == "stacking"){
+      switch (this.executionClient.service) {
+        case "RethService":
+          this.executionClient.command.push("--full");
+          break;
+      }
+    }
+    else if (selectedPreset == "archive") {
       switch (this.executionClient.service) {
         case "GethService":
           this.executionClient.command.push("--syncmode full");
           this.executionClient.command.push("--gcmode archive");
           break;
         case "RethService":
-          //can only be archive
+          //archvie by default
           break;
         case "ErigonService":
           //archive by default
