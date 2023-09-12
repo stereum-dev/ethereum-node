@@ -260,6 +260,7 @@ export class SSHService {
   }
 
   async generateSSHKeyPair(opts = {}) {
+    const path = require("path");
     if (opts.pickPath.endsWith("/")) opts.pickPath = opts.pickPath.slice(0, -1, ""); //if path ends with '/' remove it
     try {
 
@@ -296,8 +297,9 @@ export class SSHService {
       if (keyPair.public) {
         let allKeys = [...exitingKeys, keyPair.public]
         await this.writeSSHKeyFile(allKeys)
-        await writeFile(`${opts.pickPath}/${opts.keyType.toLowerCase()}`, keyPair.private)
-        await writeFile(`${opts.pickPath}/${opts.keyType.toLowerCase()}.pub`, keyPair.public)
+        const savePath = path.join(opts.pickPath, opts.keyType.toLowerCase())
+        await writeFile(savePath, keyPair.private)
+        await writeFile(savePath + ".pub", keyPair.public)
         return allKeys
       }
       return exitingKeys
@@ -306,7 +308,7 @@ export class SSHService {
     }
   }
 
-  async readSSHKeyFile(path = `/home/${this.connectionInfo.user}/.ssh`) {
+  async readSSHKeyFile(path = `~/.ssh`) {
     let authorizedKeys = []
     try {
       if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
@@ -322,7 +324,7 @@ export class SSHService {
     return authorizedKeys;
   }
 
-  async writeSSHKeyFile(keys = [], path = `/home/${this.connectionInfo.user}/.ssh`) {
+  async writeSSHKeyFile(keys = [], path = `~/.ssh`) {
     try {
       if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
       let newKeys = keys.join("\n")
