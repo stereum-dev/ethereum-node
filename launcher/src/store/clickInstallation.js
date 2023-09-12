@@ -88,15 +88,9 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/click-installation/STEREUM_on_ARM.png",
           includedPlugins: [],
         },
+
         {
           id: 5,
-          name: "rocketpool",
-          defaultPath: "/opt/stereum",
-          icon: "/img/icon/click-installation/rocketpool.png",
-          includedPlugins: [],
-        },
-        {
-          id: 6,
           name: "archive",
           defaultPath: "/opt/stereum",
           icon: "/img/icon/click-installation/archive.png",
