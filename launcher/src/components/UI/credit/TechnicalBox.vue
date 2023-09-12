@@ -141,6 +141,7 @@ export default {
 </script>
 <style scoped>
 .testers-container {
+  cursor: default;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(7, 1fr);

@@ -57,6 +57,7 @@ export default {
   width: 70%;
 }
 .contributor-parent {
+  cursor: default;
   display: flex;
   width: 16%;
   height: 59%;

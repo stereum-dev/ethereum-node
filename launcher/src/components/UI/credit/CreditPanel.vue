@@ -127,6 +127,7 @@ export default {
   border-radius: 10px 35px 10px 10px;
   z-index: 0;
   box-sizing: border-box;
+  cursor: default;
 }
 .credit-panel_box {
   display: flex;
