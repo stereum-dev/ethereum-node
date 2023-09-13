@@ -48,6 +48,8 @@ const getConsensusRef = computed(() =>
   }))
 );
 
+
+
 watch(getConsensusRef, () => {
   nodeStore.consensusRef.value = getConsensusRef.value;
 });
