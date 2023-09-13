@@ -649,7 +649,7 @@ export class ValidatorAccountManager {
           await this.nodeConnection.sshService.exec(
             `chown 2000:2000 ${validatorsDir}/${pubkey}/exit_password.txt && chmod 700 ${validatorsDir}/${pubkey}/exit_password.txt`
           );
-          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=goerli --beacon-node=${client.dependencies.consensusClients[0] ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http:stereum-" + client.id + ":5052"} --no-confirmation`;
+          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=${client.network} --beacon-node=${client.dependencies.consensusClients[0] ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http:stereum-" + client.id + ":5052"} --no-confirmation`;
           result = await this.nodeConnection.sshService.exec(exitNimbusCmd);
           await this.nodeConnection.sshService.exec(
             `rm ${validatorsDir}/${pubkey}/exit_password.txt`

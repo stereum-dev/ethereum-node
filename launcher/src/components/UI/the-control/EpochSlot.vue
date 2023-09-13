@@ -1,8 +1,10 @@
 <template>
   <div class="epockSlot_parent">
-    <div v-if="flag" class="wrapper">
+    <NoData v-if="noDataFlag" />
+    <div v-else-if="flag" class="wrapper">
       {{ beaconControler }}
     </div>
+
     <div v-else class="wrapper">
       <div class="epoch-box">
         <div class="box_value">{{ currentResult.currentEpoch }}</div>
@@ -16,11 +18,15 @@
   </div>
 </template>
 <script>
+import NoData from "./NoData.vue";
 import { mapState, mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import { useNodeManage } from "@/store/nodeManage";
 
 export default {
+  components: {
+    NoData,
+  },
   data() {
     return {
       message: false,
@@ -34,7 +40,10 @@ export default {
       currentSlotData: "currentSlotData",
       currentEpochData: "currentEpochData",
       currentResult: "currentResult",
+      balancestatus: "balancestatus",
+      noDataFlag: "noDataFlag",
     }),
+
     beaconControler() {
       if (this.currentResult === undefined) {
         return "Checking Beacon Status...";
@@ -52,7 +61,15 @@ export default {
         return true;
       } else if (this.currentResult.beaconStatus !== 0) {
         return true;
+      } else if (
+        this.currentResult === undefined ||
+        this.noDataFlag == true ||
+        this.currentResult.beaconStatus === undefined ||
+        this.currentResult.beaconStatus !== 0
+      ) {
+        return false;
       }
+
       return false;
     },
   },

@@ -325,14 +325,18 @@ export default {
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-.rpc-data:hover,
+.rpc-data:hover {
+  background: #707070;
+  color: #eee;
+  border: none;
+}
 .rpc-data:active {
-  /* color: rgb(246, 250, 141);
-  font-weight: 800;
-  background: #313131; */
+  background: rgba(112, 112, 112, 0.6);
+  color: #eee;
+  border: none;
 }
 
 /* width */
