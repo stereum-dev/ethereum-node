@@ -229,7 +229,7 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args))
     }
 
-    if(selectedPreset == "stacking"){
+    if (selectedPreset == "staking") {
       switch (this.executionClient.service) {
         case "RethService":
           this.executionClient.command.push("--full");
