@@ -6,26 +6,7 @@
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="nukeNode" />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
-        <edit-body>
-          <Transition name="fade">
-            <div
-              v-if="isDropLayerActive"
-              class="absolute top-[45%] left-[48%] w-10 h-10 border border-dashed border-gray-200 rounded-md flex justify-center items-center"
-            >
-              <img class="w-10" src="/img/icon/manage-node-icons/drag.png" alt="Drop Icon" />
-            </div>
-          </Transition>
-          <template #drop>
-            <div
-              class="w-full h-full flex justify-center items-center"
-              :class="getDropImage"
-              @drop="onDrop($event)"
-              @dragover.prevent
-              @dragleave.prevent="isDropLayerActive = false"
-              @dragenter.prevent="isDropLayerActive = true"
-            ></div>
-          </template>
-        </edit-body>
+        <EditBody :drop-zone="isOverDropZone" @on-drop="onDrop" />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection />
@@ -46,22 +27,22 @@
     />
     <transition name="drawerSlide" mode="out-in">
       <DrawerBox
-        v-if="store.isDrawerOpen"
+        v-if="manageStore.isDrawerOpen"
         :dragging="startDrag"
         @add-service="addServices"
-        @mouseleave="store.isDrawerOpen = false"
+        @mouseleave="manageStore.isDrawerOpen = false"
       />
     </transition>
     <!-- End drawer layout -->
     <!-- Start network modal layout -->
     <transition name="fadeModal">
       <custom-modal
-        v-if="store.displayNetworkList"
+        v-if="manageStore.displayNetworkList"
         main-title="Switch Network"
         message-text="Are you sure you want to switch network?"
         confirm-text="Confirm"
         click-outside-text="Click outside to cancel"
-        @close-window="store.displayNetworkList = false"
+        @close-window="manageStore.displayNetworkList = false"
         @confirm-action="switchNetworkConfirm"
       >
         <template #content>
@@ -71,7 +52,7 @@
               <div
                 class="flex justify-center items-center w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md py-1 px-2 font-semibold text-lg"
               >
-                <span>{{ store.currentNetwork.name }}</span>
+                <span>{{ manageStore.currentNetwork.name }}</span>
               </div>
             </div>
             <div class="w-full flex flex-col justify-between items-center space-y-1">
@@ -100,7 +81,7 @@
                     @mouseleave="networkDropdownOpen = false"
                   >
                     <li
-                      v-for="network in store.networkList"
+                      v-for="network in manageStore.networkList"
                       :key="network.name"
                       class="w-full grid grid-cols-6 px-4"
                       @click="switchNetworkHandler(network)"
@@ -133,33 +114,40 @@ import CustomModal from "./components/modals/CustomModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-const store = useNodeManage();
+const manageStore = useNodeManage();
 const serviceStore = useServices();
 const selectedNetwrok = ref(null);
 const router = useRouter();
-
+const isOverDropZone = ref(false);
 const list = ref([]);
-const isDropLayerActive = ref(false);
+
 const networkDropdownOpen = ref(false);
 
 const addServices = (event, item) => {
-  console.log(item);
   if (item.category === "service" && serviceStore.customServiceToInstall.map((s) => s.service).includes(item.service)) {
     return;
   } else {
     item.id = serviceStore.customServiceToInstall.length;
-    serviceStore.customServiceToInstall.push(item);
-    console.log(serviceStore.customServiceToInstall);
+    const existsService = serviceStore.customServiceToInstall.some((s) => s.service === item.service);
+    if (!existsService) {
+      serviceStore.customServiceToInstall.push(item);
+      manageStore.confirmChanges.push({
+        content: "INSTALL",
+        contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
+        service: item,
+      });
+    } else {
+      return;
+    }
   }
-  // serviceStore.customServiceToInstall.push(item);
-  // console.log(serviceStore.customServiceToInstall);
+  console.log(serviceStore.customServiceToInstall);
 };
 
 const openDrawer = () => {
-  store.isDrawerOpen = true;
+  manageStore.isDrawerOpen = true;
 };
 const startDrag = (event, item) => {
   if (event.type === "dragstart") {
@@ -168,62 +156,40 @@ const startDrag = (event, item) => {
     event.dataTransfer.setData("itemId", item.id);
   }
 };
-const getDropImage = computed(() => {
-  return isDropLayerActive.value ? "border-dashed border-2 border-blue-500" : null;
-});
 
-const onDrop = (Files) => {
-  isDropLayerActive.value = false;
+const onDrop = (event) => {
+  const itemID = event.dataTransfer.getData("itemId");
+  isOverDropZone.value = false;
   const copyAllServices = JSON.parse(JSON.stringify(serviceStore.allServices));
-  const item = copyAllServices.find((item) => item.id == Files.dataTransfer.getData("itemId"));
+  const item = copyAllServices.find((item) => item.id == itemID);
   if (item.category === "service" && list.value.map((s) => s.service).includes(item.service)) {
     return;
   } else {
     item.id = list.value.length;
     serviceStore.customServiceToInstall.push(item);
-    console.log(serviceStore.customServiceToInstall);
+
+    manageStore.confirmChanges.push({
+      content: "INSTALL",
+      contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
+      service: item,
+    });
   }
 };
 
-// const dropHandler = (Files) => {
-//   console.log("dropHandler", Files);
-// };
-
-// const onDrop = (event) => {
-//   console.log("onDrop", event);
-//   // const allServicesCopy = JSON.parse(JSON.stringify(allServices));
-//   // const item = event.dataTransfer.getData("item");
-//   // console.log(item);
-//   // let item = allServicesCopy.find((item) => item.id == itemId);
-
-//   // if (item.category === "service" && newConfiguration.map((s) => s.service).includes(item.service)) {
-//   //   return;
-//   // } else {
-//   //   if (itemToInstall.addPanel === true) {
-//   //     cancelAddProcess();
-//   //   }
-//   //   item.id = newConfiguration.length;
-//   //   newConfiguration.push(item);
-//   //   item.addPanel = true;
-//   //   itemToInstall.value = item;
-//   //   displayCustomAddPanel.value = item.modifierPanel;
-//   // }
-// };
-
 const displaySwitchNetwork = () => {
-  store.displayNetworkList = true;
+  manageStore.displayNetworkList = true;
 };
 const switchNetworkHandler = (network) => {
   selectedNetwrok.value = network.name;
   networkDropdownOpen.value = false;
 };
 const switchNetworkConfirm = () => {
-  store.displayNetworkList = false;
-  store.currentNetwork = store.networkList.find((network) => network.name === selectedNetwrok.value);
-  store.confirmChanges.push({
+  manageStore.displayNetworkList = false;
+  manageStore.currentNetwork = manageStore.networkList.find((network) => network.name === selectedNetwrok.value);
+  manageStore.confirmChanges.push({
     content: "SWITCH NETWORK",
     contentIcon: "/img/icon/manage-node-icons/switch-client.png",
-    service: store.currentNetwork,
+    service: manageStore.currentNetwork,
   });
 };
 
@@ -262,19 +228,5 @@ const nukeNode = async () => {
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.slide-enter {
-  transform: scaleY(0);
-  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-leave-to {
-  transform: scaleY(0);
-  transition: opacity 0.5s ease-in-out;
 }
 </style>
