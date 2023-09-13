@@ -2,9 +2,11 @@ import { createApp } from "vue"; // CHANGE
 
 import App from "./App.vue";
 import router from "./router/index.js";
+import { createPinia } from "pinia";
+
 import "./main.css";
 import i18n from "./includes/i18n";
-import { createPinia } from "pinia";
+
 import BaseLayout from "./components/base/BaseLayout.vue";
 import TaskManager from "./components/UI/task-manager/TaskManager.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
@@ -18,6 +20,7 @@ import TheNodePanelBtn from "./components/UI/the-node/TheNodePanelBtn.vue";
 import InstallationBox from "./components/UI/plugin-installation/InstallationBox.vue";
 
 const app = createApp(App);
+const pinia = createPinia();
 app.component("CommingSoon", CommingSoon);
 app.component("TheNodePanelBtn", TheNodePanelBtn);
 app.component("BackgroundPage", BackgroundPage);
@@ -30,7 +33,8 @@ app.component("InstallationBox", InstallationBox);
 app.component("BaseLayout", BaseLayout);
 app.component("TaskManager", TaskManager);
 
-app.use(createPinia());
+
 app.use(router);
+app.use(pinia);
 app.use(i18n);
 app.mount("#app");

@@ -5,7 +5,7 @@
     @mousedown.prevent.stop
   >
     <div
-      class="w-[150px] h-5 absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-xs capitalize bg-[#264744]"
+      class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-[10px] font-mono font-medium capitalize bg-[#264744]"
     >
       <span> {{ client.name }}</span>
 
@@ -24,68 +24,72 @@
         }}</span>
       </div>
     </div>
+
+    <div
+      v-if="getConnectedMevboost.config.serviceID === client.config.serviceID"
+      class="h-1/3 flex justify-evenly items-center absolute -start-3 -bottom-3"
+    >
+      <img class="w-8" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
+    </div>
   </div>
 </template>
-<script>
-import { mapWritableState } from "pinia";
+<script setup>
 import { useStakingStore } from "@/store/theStaking";
+import { computed } from "vue";
+import { useServices } from "@/store/services";
 
-export default {
-  name: "ClientsLayout",
-  components: {},
-  props: {
-    client: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      syncItemsShow: false,
-      syncIcoUnknown: true,
-      syncIcoSituation: false,
-      syncIcoError: false,
-      syncIco: [
-        {
-          id: 1,
-          name: "error",
-          icon: "/img/icon/arrows/SynchronisationIconError.gif",
-        },
-        {
-          id: 2,
-          name: "active",
-          icon: "/img/icon/arrows/SynchronisationIconActive.gif",
-        },
-        {
-          id: 3,
-          name: "synched",
-          icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
-        },
-        {
-          id: 4,
-          name: "unknown",
-          icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
-        },
-      ],
-    };
-  },
-  computed: {
-    ...mapWritableState(useStakingStore, {
-      keys: "keys",
-    }),
-    clientStatus() {
-      if (this.client.state === "running") {
-        return "w-5 h-5 bg-green-500 border border-green-500 rounded-r-full";
-      } else if (this.client.state === "restarting") {
-        return "w-5 h-5 bg-orange-500 border border-orange-500 rounded-r-full";
-      }
-      return "w-5 h-5 bg-red-600 border border-red-600 rounded-r-full";
-    },
-    getKeyNumbers() {
-      return this.keys.length;
-    },
-  },
-  mounted() {},
-  methods: {},
-};
+const { client } = defineProps({
+  client: Object,
+});
+
+// const syncItemsShow = ref(false);
+// const syncIcoUnknown = ref(true);
+// const syncIcoSituation = ref(false);
+// const syncIcoError = ref(false);
+// const syncIco = ref([
+//   {
+//     id: 1,
+//     name: "error",
+//     icon: "/img/icon/arrows/SynchronisationIconError.gif",
+//   },
+//   {
+//     id: 2,
+//     name: "active",
+//     icon: "/img/icon/arrows/SynchronisationIconActive.gif",
+//   },
+//   {
+//     id: 3,
+//     name: "synched",
+//     icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
+//   },
+//   {
+//     id: 4,
+//     name: "unknown",
+//     icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
+//   },
+// ]);
+
+const stakingStore = useStakingStore();
+const serviceStore = useServices();
+
+const clientStatus = computed(() => {
+  if (client.state === "running") {
+    return "w-5 h-[16px] bg-green-500 border border-green-500 rounded-r-full";
+  } else if (client.state === "restarting") {
+    return "w-5 h-[16px] bg-orange-500 border border-orange-500 rounded-r-full";
+  }
+  return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
+});
+
+const getKeyNumbers = computed(() => {
+  return stakingStore.keys.length;
+});
+
+const getConnectedMevboost = computed(() => {
+  let connectedMevboost;
+  connectedMevboost = serviceStore.installedServices
+    .filter((e) => e.category == "consensus")
+    .find((e) => e.config.dependencies.mevboost[0]);
+  return connectedMevboost;
+});
 </script>

@@ -1,6 +1,6 @@
 import ClientButtons from 'launcher/src/components/UI/node-page/components/body/ClientButtons';
 <template>
-  <div class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-2 gap-1 relative mt-2" @pointerdown.prevent.stop>
+  <div class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-2 gap-1 relative mt-1" @pointerdown.prevent.stop>
     <button
       v-if="client.service === 'PrometheusService' || client.service === 'GrafanaService'"
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"

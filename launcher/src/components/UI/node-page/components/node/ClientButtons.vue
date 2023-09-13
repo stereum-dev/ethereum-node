@@ -69,48 +69,38 @@ mapWritableState } from 'pinia'; import { useNodeStore } from '@/store/theNode';
     <slot></slot>
   </div>
 </template>
-<script>
-import { mapWritableState } from "pinia";
+<script setup>
 import { useNodeStore } from "@/store/theNode";
-export default {
-  name: "ClientsLayout",
-  components: {},
-  props: {
-    client: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapWritableState(useNodeStore, {
-      hideConnectedLines: "hideConnectedLines",
-    }),
-  },
 
-  mounted() {},
-  methods: {
-    expertWindow() {
-      this.hideConnectedLines = true;
-      this.$emit("openExpert", this.client);
-    },
-    logWindow() {
-      this.hideConnectedLines = true;
-      this.$emit("openLog", this.client);
-    },
-    docWindow() {
-      this.$emit("openDoc", this.client);
-    },
-    pruningWindow() {
-      this.hideConnectedLines = true;
-      this.$emit("openPruning", this.client);
-    },
-    resyncWindow() {
-      this.hideConnectedLines = true;
-      this.$emit("openResync", this.client);
-    },
-  },
+const { client } = defineProps({
+  client: Object,
+});
+
+const nodeStore = useNodeStore();
+
+const emit = defineEmits(["openExpert", "openLog", "stateHandler", "restartHandler"]);
+
+const expertWindow = () => {
+  nodeStore.hideConnectedLines = true;
+  emit("openExpert", client);
+};
+
+const logWindow = () => {
+  nodeStore.hideConnectedLines = true;
+  emit("openLog", client);
+};
+
+const docWindow = () => {
+  emit("openDoc", client);
+};
+
+const pruningWindow = () => {
+  nodeStore.hideConnectedLines = true;
+  emit("openPruning", client);
+};
+
+const resyncWindow = () => {
+  nodeStore.hideConnectedLines = true;
+  emit("openResync", client);
 };
 </script>

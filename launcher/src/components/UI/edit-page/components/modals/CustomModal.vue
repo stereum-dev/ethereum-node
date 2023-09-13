@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+
 
 const emit = defineEmits(["closeWindow", "confirmAction"]);
 

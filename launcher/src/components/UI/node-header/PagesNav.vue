@@ -3,7 +3,7 @@
     <router-link
       to="/node"
       class="transition-colors duration-300 min-w-[100px] transform text-gray-200 rounded-full px-4 py-1 hover:bg-[#336666] mx-4 text-center"
-      :class="checkRoute === '/node' ? 'bg-[#224141]' : 'bg-[#387272] '"
+      :class="checkRoute === '/node' || checkRoute === '/edit' ? 'bg-[#224141]' : 'bg-[#387272] '"
       >Node</router-link
     >
     <router-link
