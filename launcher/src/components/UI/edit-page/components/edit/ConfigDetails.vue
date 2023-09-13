@@ -27,7 +27,7 @@
 </template>
 <script setup>
 import { useRoute } from "vue-router";
-import { defineProps, watchEffect, ref } from "vue";
+import { watchEffect, ref } from "vue";
 const { list } = defineProps({
   list: {
     type: Array,

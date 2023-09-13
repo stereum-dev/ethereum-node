@@ -30,11 +30,11 @@ const contentBgColor = (item) => {
   if (item) {
     const content = item.content;
     if (content === "INSTALL") {
-      bg = "bg-green-500 text-gray-800 text-sm font-semibold";
+      bg = "bg-green-800 text-gray-100 text-sm font-semibold";
     } else if (content === "DELETE") {
-      bg = "bg-red-500 text-gray-300 text-sm font-semibold";
+      bg = "bg-red-800 text-gray-300 text-sm font-semibold";
     } else if (content === "UPDATE") {
-      bg = "bg-yellow-500 text-gray-950 text-sm font-semibold";
+      bg = "bg-yellow-800 text-gray-950 text-sm font-semibold";
     } else if (content === "SWITCH NETWORK") {
       bg = "bg-gray-500 text-gray-900 text-[12px] font-semibold min-w-[100px]";
     }
