@@ -245,6 +245,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://checkpoint.gnosischain.com/",
         },
       ],
+      holesky: [],
     };
   },
   actions: {},
