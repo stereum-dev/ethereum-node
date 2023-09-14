@@ -1,19 +1,28 @@
 <template>
   <div
-    class="w-full h-[430px] flex flex-col justify-start items-center px-1 py-2 overflow-y-scroll rounded-md border border-gray-600 bg-[#151618] space-y-1"
+    class="w-full h-[430px] flex flex-col justify-start items-center px-1 py-2 overflow-y-scroll rounded-md border border-gray-600 bg-[#151618] space-y-2"
   >
-    <div
-      v-for="item in getChanges"
-      :key="item.id"
-      class="w-full h-10 border border-gray-500 shadow-md shadow-black p-1 rounded-md grid grid-cols-6"
-      :class="contentBgColor(item)"
-    >
-      <div class="col-start-1 col-span-1 w-full self-center flex justify-center items-center">
-        <img class="w-6" :src="item.contentIcon" alt="icon" />
+    <TransitionGroup v-if="editStore.confirmChanges.length" name="list">
+      <div
+        v-for="item in getChanges"
+        :key="item.id"
+        class="w-full h-10 border border-gray-500 shadow-md shadow-black p-1 rounded-md grid grid-cols-6 hover:border-gray-300 cursor-pointer"
+        :class="contentBgColor(item)"
+        @click="removeChange(item)"
+      >
+        <div class="col-start-1 col-span-1 w-full self-center flex justify-center items-center">
+          <img class="w-6" :src="item.contentIcon" alt="icon" />
+        </div>
+        <div class="col-start-2 col-span-4 text-center flex justify-center items-center overflow-hidden">
+          <span>{{ item.content }}</span>
+        </div>
+        <div class="col-start-6 col-span-1 w-full self-center flex justify-center items-center">
+          <img class="w-6" :src="item.service.sIcon" alt="icon" />
+        </div>
       </div>
-      <div class="col-start-2 col-span-5 flex justify-center items-center overflow-hidden">
-        <span>{{ item.content }}</span>
-      </div>
+    </TransitionGroup>
+    <div v-else>
+      <span class="text-center text-gray-200 text-md font-semibold">No changes</span>
     </div>
   </div>
 </template>
@@ -24,6 +33,10 @@ import { computed } from "vue";
 const editStore = useNodeManage();
 
 const getChanges = computed(() => editStore.confirmChanges);
+
+const removeChange = (item) => {
+  editStore.confirmChanges = editStore.confirmChanges.filter((e) => e.id !== item.id);
+};
 
 const contentBgColor = (item) => {
   let bg;
@@ -42,3 +55,14 @@ const contentBgColor = (item) => {
   return bg;
 };
 </script>
+<style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>
