@@ -10,7 +10,7 @@
 
 - name: Generate SSV network keys
   command:
-    bash -c "docker run -d --name=ssv_node_op_key -it '{{ ssv_config.image }}' /go/bin/ssvnode generate-operator-keys &&
+    bash -c "docker run -d --name=ssv_node_op_key -it bloxstaking/ssv-node:v0.5.4 /go/bin/ssvnode generate-operator-keys &&
     docker logs ssv_node_op_key --follow &&
     docker stop ssv_node_op_key &&
     docker rm ssv_node_op_key"
