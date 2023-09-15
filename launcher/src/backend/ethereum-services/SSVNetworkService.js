@@ -4,25 +4,40 @@ import { ServiceVolume } from "./ServiceVolume.js";
 
 export class SSVNetworkService extends NodeService {
   getServiceConfiguration(network, executionClients, consensusClients) {
-    /*
+    return `global:
+  # Console output log level 
+  LogLevel: info
+  
+  # Debug logs file path
+  #LogFilePath: ./data/debug.log
+
+#db:
+  # Path to a persistent directory to store the node's database.
+  #Path: ./data/db
+
+ssv:
+  # The SSV network to join to
+  # Mainnet = Network: mainnet (default)
+  # Testnet = Network: jato-v2
+  Network: ${network === "goerli" ? "jato-v2" : network}
+  
+  ValidatorOptions:
+    # Whether to enable MEV block production. Requires the connected Beacon node to be MEV-enabled.
+    BuilderProposals: false
+
 eth2:
-  Network: "prater"
-  BeaconNodeAddr: "http://beacon:5052"
-eth1:
-  ETH1Addr: ""
-OperatorPrivateKey: ""
-global:
-  LogLevel: "debug"
-MetricsAPIPort: 15000
-        */
-    return `eth2:
-  Network: ${network === "goerli" ? "prater" : network}
   BeaconNodeAddr: ${consensusClients.map((client) => client.buildConsensusClientHttpEndpointUrl())[0]}
+
 eth1:
   ETH1Addr: ${executionClients.map((client) => client.buildExecutionClientWsEndpointUrl())[0]}
+
+p2p:
+  # HostAddress: 192.168.1.1
+  TcpPort: 13001
+  UdpPort: 12001
+
 OperatorPrivateKey: ""
-global:
-  LogLevel: info
+
 MetricsAPIPort: 15000`;
   }
 

@@ -35,13 +35,13 @@
               <span>{{ item.name }}</span>
               <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <sub-tasks v-if="item.showDropDown" :sub-tasks="item.subTasks"></sub-tasks>
+            <SubTasks v-if="item.showDropDown" />
           </div>
         </div>
       </div>
       <div class="list-cleaner">
         <span class="footer-text">{{ $t("taskManager.clickDisplay") }}</span>
-        <img src="../../../../public/img/icon/task-manager-icons/remove-tasks.png" alt="" @click="listCleanerHandler" />
+        <img src="/img/icon/task-manager-icons/remove-tasks.png" alt="" @click="listCleanerHandler" />
       </div>
     </div>
   </div>
@@ -74,6 +74,7 @@ export default {
       playbookTasks: "playbookTasks",
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
+      taskShow: "taskShow",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -91,6 +92,7 @@ export default {
       return this.taskManagerIcons.progressIcon;
     },
   },
+
   created() {
     this.checkNewTasks = this.displayingTasks;
   },
@@ -113,6 +115,7 @@ export default {
         //if DropDown is open only update what the user sees so the menue doesn't close
         this.displayingTasks[0].subTasks = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).subTasks;
         this.displayingTasks[0].status = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).status;
+        this.taskShow = this.displayingTasks[0].subTasks;
       }
     },
     taskModalHandler() {

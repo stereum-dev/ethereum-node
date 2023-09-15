@@ -110,6 +110,7 @@ export default {
         case "goerli":
           return (item) => this.archFilter(item.service);
         case "sepolia":
+        case "holesky":
           return (item) => item.service != "SSVNetworkService" && this.archFilter(item.service);
         case "gnosis":
           return (item) =>
