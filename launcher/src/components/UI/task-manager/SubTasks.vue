@@ -3,7 +3,7 @@
     <div class="subTask-table">
       <div class="subTask-content">
         <div
-          v-for="(item, index) in modifiedSubTasks"
+          v-for="(item, index) in taskShow"
           :key="index"
           class="subTask-row"
           :class="{
@@ -22,7 +22,7 @@
             <span v-if="displayTaskResult" class="itemAction">{{ item.action }}</span>
             <span v-else class="itemName">{{ item.name }}</span>
             <div class="loading-box">
-              <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
+              <img src="/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
             <div v-if="item.showTooltip" class="success-tooltip">
               <span>{{ item.action }}</span>
@@ -32,7 +32,7 @@
             <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
             <span v-else class="noError">{{ item.name }}</span>
             <div class="error-icon">
-              <img src="../../../../public/img/icon/task-manager-icons/cancel.png" alt="" />
+              <img src="/img/icon/task-manager-icons/cancel.png" alt="" />
               <div v-if="item.showTooltip" class="failed-tooltip">
                 <span>{{ item.name }}</span>
               </div>
@@ -42,7 +42,7 @@
             <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
             <span v-else class="noError">{{ item.name }}</span>
             <div class="loading-box">
-              <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
+              <img src="/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
             <div v-if="item.showTooltip" class="skipped-tooltip">
               <span>{{ item.name }}</span>
@@ -55,24 +55,25 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useTaskManager } from "@/store/taskManager";
 import ErrorTerminal from "./ErrorTerminal.vue";
 export default {
   components: { ErrorTerminal },
-  props: {
-    subTasks: {
-      type: Array,
-      required: true,
-    },
-  },
+
   data() {
     return {
       displayTaskResult: false,
-      modifiedSubTasks: this.subTasks,
       terminalModal: false,
     };
   },
+  computed: {
+    ...mapState(useTaskManager, {
+      taskShow: "taskShow",
+    }),
+  },
   created() {
-    this.modifiedSubTasks = this.modifiedSubTasks.map((item) => {
+    this.taskShow = this.taskShow.map((item) => {
       return {
         showErrorterminal: false,
         ...item,
@@ -99,19 +100,19 @@ export default {
         });
     },
     tooltipShowHandler(el) {
-      this.modifiedSubTasks.filter((item) => {
+      this.taskShow.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = true;
       });
     },
     tooltipHideHandler(el) {
-      this.modifiedSubTasks.filter((item) => {
+      this.taskShow.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = false;
       });
     },
     openTerminalHandler(el) {
-      this.modifiedSubTasks.forEach(() => {
+      this.taskShow.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
         }
@@ -119,7 +120,7 @@ export default {
           el.showErrorterminal = false;
         }
       });
-      this.modifiedSubTasks.filter((item) => {
+      this.taskShow.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showErrorterminal = true;
       });
