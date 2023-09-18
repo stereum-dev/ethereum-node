@@ -270,10 +270,18 @@ export default {
     this.loadStoredConnections();
   },
   mounted() {
-    this.helloWorld();
+    this.IpScanLan1();
     // this.scanDevices();
   },
   methods: {
+    async IpScanLan1() {
+      try {
+        let res = await ControlService.IpScanLan();
+        console.log("res: -------", res);
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    },
     // async scanDevices() {
     //   try {
     //     const results = await arpscan();
@@ -283,9 +291,9 @@ export default {
     //     console.error("Error scanning devices:", error);
     //   }
     // },
-    helloWorld() {
-      this.ipTest = "Hello World";
-    },
+    // helloWorld() {
+    //   this.ipTest = "Hello World";
+    // },
     toggleShowPassword() {
       this.showPassword = !this.showPassword;
     },
