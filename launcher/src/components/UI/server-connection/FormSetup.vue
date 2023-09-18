@@ -1,5 +1,6 @@
 <template>
   <div class="server-parent">
+    <div class="ip-detected">{{ ipTest }}</div>
     <div v-if="alertBox" class="alert animate__animated animate__flipInX">Please fill in the missing fields!</div>
     <div v-if="errorMsgExists" class="error-box"></div>
     <div v-if="errorMsgExists" class="error-modal">
@@ -199,6 +200,7 @@
 </template>
 
 <script>
+// import arpscan from "arpscan";
 import DeleteModal from "./DeleteModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
@@ -212,6 +214,8 @@ export default {
   emits: ["page"],
   data() {
     return {
+      devices: [],
+      ipTest: "",
       alertBox: false,
       sshPort: null,
       keyAuth: false,
@@ -265,7 +269,23 @@ export default {
   created() {
     this.loadStoredConnections();
   },
+  mounted() {
+    this.helloWorld();
+    // this.scanDevices();
+  },
   methods: {
+    // async scanDevices() {
+    //   try {
+    //     const results = await arpscan();
+    //     this.devices = results;
+    //     console.log("Devices:", results);
+    //   } catch (error) {
+    //     console.error("Error scanning devices:", error);
+    //   }
+    // },
+    helloWorld() {
+      this.ipTest = "Hello World";
+    },
     toggleShowPassword() {
       this.showPassword = !this.showPassword;
     },
@@ -447,6 +467,27 @@ export default {
 };
 </script>
 <style scoped>
+/*testing the ip controlling*/
+.ip-detected {
+  position: absolute;
+  top: 14%;
+  left: 5%;
+  z-index: 100;
+  color: #c1c1c1;
+  font-size: 100%;
+  font-weight: 600;
+  background-color: #194747;
+  border-radius: 1rem;
+  width: 20%;
+  border: 3px solid #929292;
+  box-shadow: 0 1px 3px 1px #1f3737;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+/*testing the ip controlling*/
 .alert {
   width: 40%;
   height: 20%;
