@@ -6,7 +6,12 @@
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="nukeNode" />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
-        <EditBody :drop-zone="isOverDropZone" @on-drop="onDrop" @confirm-connection="confirmConnection" />
+        <EditBody
+          :drop-zone="isOverDropZone"
+          @on-drop="onDrop"
+          @confirm-connection="confirmConnection"
+          @switch-client="switchClientModalhandler"
+        />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection @change-connection="changeMevboostConnection" />
@@ -36,7 +41,7 @@
     <!-- Custom Modals -->
     <TransitionGroup name="fadeModal">
       <!-- Switch Network Modal -->
-      <custom-modal
+      <!-- <custom-modal
         v-if="manageStore.displayNetworkList"
         main-title="Switch Network"
         message-text="Are you sure you want to switch network?"
@@ -98,22 +103,26 @@
             </div>
           </div>
         </template>
-      </custom-modal>
-      <!-- Mevboost Connection Modal -->
-      <!-- <template v-for="item in serviceConnectionState">
-        <ConnectionModal
-          v-if="item.if"
-          :key="item.id"
-          :main-title="item.mainTitle"
-          :message-text="item.messageText"
-          :options-array="item.optionsArray"
-          :number-of-options="item.numberOfOptions"
-          :new-connection="item.newConnection"
-          @get-item="item.getItem"
-          @close-window="item.closeWindow"
-          @confirm-action="item.confirmAction"
-        />
-      </template> -->
+      </custom-modal> -->
+
+      <NetworkModal
+        v-if="manageStore.displayNetworkList"
+        @close-window="manageStore.displayNetworkList = false"
+        @switch-confirm="switchNetworkConfirm"
+      />
+      <!-- End Switch Network Modal -->
+      <!-- Start Switch Client Modal -->
+      <SwitchModal
+        v-if="isSwitchPanelnOpen"
+        main-title="Switch Client"
+        icon="/img/icon/manage-node-icons/switch.png"
+        confirm-text="Confirm"
+        click-outside-text="Click outside to cancel"
+        @close-window="isSwitchPanelnOpen = false"
+        @confirm-action="switchClientConfirm"
+      />
+
+      <!-- End Switch Client Modal -->
     </TransitionGroup>
   </base-layout>
 </template>
@@ -123,53 +132,22 @@ import EditBody from "./components/edit/EditBody";
 import ServiceSection from "./sections/ServiceSection.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import DrawerBox from "./components/drawer/DrawerBox.vue";
-import CustomModal from "./components/modals/CustomModal.vue";
+import NetworkModal from "./components/modals/NetworkModal.vue";
+import SwitchModal from "./components/modals/SwitchModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { useConnectClients } from "@/store/connectClients";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import ConnectionModal from "./components/modals/ConnectionModal.vue";
 
-const manageStore = useNodeManage();
 const serviceStore = useServices();
-const connectStore = useConnectClients();
-const selectedNetwrok = ref(null);
+const manageStore = useNodeManage();
 const router = useRouter();
 const isOverDropZone = ref(false);
 const list = ref([]);
+const isConfirmLoading = ref(false);
 
-// const serviceConnectionState = ref([
-//   {
-//     id: 1,
-//     name: "mevboost",
-//     if: isMevboostConnectionOpen.value,
-//     mainTitle: "Mevboost Connection",
-//     messageText: "Select a service you want to connect to mevboost",
-//     optionsArray: mevboostOptions.value,
-//     numberOfOptions: numberOfOptions.value,
-//     newConnection: mevboostNewConnection.value,
-//     getItem: getConnectionItem,
-//     confirmAction: changeMevboostConnection,
-//     closeWindow: (isMevboostConnectionOpen.value = false),
-//   },
-//   // {
-//   //   id: 2,
-//   //   name: "consensus",
-//   //   if: isConsensusConnectionOpen,
-//   //   mainTitle: "Consensus Connection",
-//   //   messageText: "Select the execution service you want to connect to consensus",
-//   //   optionsArray: consensusCennectionOptions.value,
-//   //   numberOfOptions: numberOfOptions.value,
-//   //   newConnection: consensusNewConnection.value,
-//   //   getItem: getConnectionItem,
-//   //   confirmAction: changeConsensusConnection.apply,
-//   //   closeWindow: (isConsensusConnectionOpen.value = false),
-//   // },
-// ]);
-
-const networkDropdownOpen = ref(false);
+const isSwitchPanelnOpen = ref(false);
 
 onMounted(() => {
   serviceStore.installedServices = serviceStore.installedServices
@@ -204,6 +182,22 @@ onMounted(() => {
 });
 
 // Methods
+
+// Switch Clients methods
+const switchClientModalhandler = (item) => {
+  console.log(item);
+  item.replacePanel = true;
+  if (item.replacePanel) {
+    isSwitchPanelnOpen.value = true;
+  }
+};
+
+const switchClientConfirm = (item) => {
+  console.log(item);
+  const itemIndex = serviceStore.installedServices.findIndex((el) => el.config.serviceID === item.config.serviceID);
+
+  console.log(itemIndex);
+};
 
 // Service connection methods
 
@@ -298,19 +292,18 @@ const onDrop = (event) => {
 const displaySwitchNetwork = () => {
   manageStore.displayNetworkList = true;
 };
-const switchNetworkHandler = (network) => {
-  selectedNetwrok.value = network.name;
-  networkDropdownOpen.value = false;
-};
+
 const switchNetworkConfirm = () => {
   manageStore.displayNetworkList = false;
-  manageStore.currentNetwork = manageStore.networkList.find((network) => network.name === selectedNetwrok.value);
+  manageStore.currentNetwork = {}
+  manageStore.currentNetwork = manageStore.selectedNetwork;
   manageStore.confirmChanges.push({
     id: "switch-network",
     content: "SWITCH NETWORK",
     contentIcon: "/img/icon/manage-node-icons/switch-client.png",
     service: manageStore.currentNetwork,
   });
+  manageStore.displayNetworkList = false;
 };
 
 // Nuke node method

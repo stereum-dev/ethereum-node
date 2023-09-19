@@ -6,8 +6,8 @@
     <div
       class="w-2/3 min-h-[400px] py-1 px-2 relative mx-auto my-auto rounded-[35px] shadow-lg bg-white border-4 border-gray-400"
     >
-      <div class="">
-        <div class="text-center p-2 flex-auto justify-center">
+      <div class="flex flex-col justify-between gap-5">
+        <div class="text-center p-2 flex-auto justify-center space-y-4">
           <div v-if="icon !== ''">
             <img class="w-10 -m-1 flex items-center text-red-500 mx-auto" :src="icon" :alt="altText" />
           </div>
@@ -35,8 +35,6 @@
 </template>
 
 <script setup>
-
-
 const emit = defineEmits(["closeWindow", "confirmAction"]);
 
 const closeModal = () => {
@@ -57,5 +55,3 @@ const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText } =
   clickOutsideText: String,
 });
 </script>
-
-
