@@ -116,6 +116,9 @@ export default {
         case 4:
           this.selectedCurrency = "/img/icon/control/gno_currency_symbol.png";
           break;
+        case 5:
+          this.selectedCurrency = "/img/icon/control/ho_currency_symbol.png";
+          break;
         default:
           break;
       }
