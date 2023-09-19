@@ -28,13 +28,22 @@
           class="col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center text-xl text-blue-400"
           >+</span
         >
-        <ValidatorClients v-if="!isOverDropZone" @delete-service="removeInstalledService" />
+        <ValidatorClients
+          v-if="!isOverDropZone"
+          @delete-service="removeInstalledService"
+          @switch-client="switchClient"
+        />
         <ConsensusClients
           v-if="!isOverDropZone"
           @delete-service="removeInstalledService"
           @confirm-connection="confirmConnection"
+          @switch-client="switchClient"
         />
-        <ExecutionClients v-if="!isOverDropZone" @delete-service="removeInstalledService" />
+        <ExecutionClients
+          v-if="!isOverDropZone"
+          @delete-service="removeInstalledService"
+          @switch-client="switchClient"
+        />
       </div>
     </div>
   </div>
@@ -49,7 +58,7 @@ import { computed, ref, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 
-const emit = defineEmits(["onDrop", "confirmConnection"]);
+const emit = defineEmits(["onDrop", "confirmConnection", "switchClient"]);
 
 //Pinia stores
 const manageStore = useNodeManage();
@@ -103,6 +112,10 @@ const removeInstalledService = (item) => {
 
 const confirmConnection = (item) => {
   emit("confirmConnection", item);
+};
+
+const switchClient = (item) => {
+  emit("switchClient", item);
 };
 </script>
 

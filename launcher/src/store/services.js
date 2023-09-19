@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useServices = defineStore("services", {
   state: () => {
     return {
+      selectedServiceToSwitch: null,
       customServiceToInstall: [],
       filteredServices: [],
       buttonState: [

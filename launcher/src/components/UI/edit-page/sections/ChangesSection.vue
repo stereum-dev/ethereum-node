@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { toRaw, ref } from "vue";
+import { ref } from "vue";
 import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
@@ -27,7 +27,7 @@ const serviceStore = useServices();
 
 const confirmHandler = async () => {
   disableBtn.value = true;
-  await ControlService.handleServiceChanges(toRaw(editStore.confirmChanges));
+  await ControlService.handleServiceChanges(editStore.confirmChanges);
   setTimeout(() => {
     editStore.newConfiguration = serviceStore.installedServices;
   }, 4000);

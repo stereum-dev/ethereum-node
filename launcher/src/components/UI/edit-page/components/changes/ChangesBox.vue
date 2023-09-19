@@ -54,7 +54,9 @@ const contentBgColor = (item) => {
     } else if (content === "UPDATE") {
       bg = "bg-yellow-800 text-gray-950 text-sm font-semibold";
     } else if (content === "SWITCH NETWORK") {
-      bg = "bg-gray-500 text-gray-900 text-[12px] font-semibold min-w-[100px]";
+      bg = "bg-gray-500 text-gray-900 text-[10px] font-semibold min-w-[100px]";
+    } else if (content === "SWITCH CLIENT") {
+      bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
     }
   }
   return bg;

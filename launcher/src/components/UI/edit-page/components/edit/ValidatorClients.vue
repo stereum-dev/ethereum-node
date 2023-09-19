@@ -25,6 +25,7 @@
               class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
               src="/img/icon/manage-node-icons/replace.png"
               alt="Trash Icon"
+              @click="switchClient(item)"
             />
             <img
               class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
@@ -40,12 +41,12 @@
 </template>
 
 <script setup>
-import { computed, reactive, watchEffect } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
+import { computed, reactive, watchEffect } from "vue";
 
-const emit = defineEmits(["deleteService"]);
+const emit = defineEmits(["deleteService", "switchClient"]);
 const validatorRefs = reactive([]);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
@@ -94,6 +95,10 @@ const displayMenu = (item) => {
 
 const deleteService = (item) => {
   emit("deleteService", item);
+};
+
+const switchClient = (item) => {
+  emit("switchClient", item);
 };
 </script>
 <style scoped>

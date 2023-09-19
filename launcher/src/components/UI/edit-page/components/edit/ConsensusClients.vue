@@ -2,12 +2,12 @@
   <div class="col-start-2 col-end-3 gap-1 py-2 space-y-2 flex flex-col justify-start items-center relative">
     <div
       v-for="item in getConsensus"
-      :key="item"
+      :key="item.config.serviceID"
       ref="consensusRefs"
       class="h-[120px] w-[120px] flex justify-center items-center py-2 rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045]"
       :class="getConnectionClasses(item)"
-      @mouseenter="displayMenu(item)"
-      @mouseleave="hideMenu(item)"
+      @mouseover="mouseOverHandler(item)"
+      @mouseleave="mouseLeaveHandler(item)"
     >
       <ClientLayout :client="item" />
       <TransitionGroup name="slide-fade">
@@ -26,6 +26,7 @@
               class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
               src="/img/icon/manage-node-icons/replace.png"
               alt="Trash Icon"
+              @click="switchClient(item)"
             />
             <img
               class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
@@ -66,11 +67,12 @@ import ClientLayout from "./ClientLayout.vue";
 
 import { computed, ref, watchEffect } from "vue";
 
-const emit = defineEmits(["deleteService"]);
+const emit = defineEmits(["deleteService", "switchClient"]);
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 const isConfirmLoading = ref(false);
+const isMouseOverClient = ref(false);
 
 const getConsensus = computed(() => {
   let service;
@@ -111,7 +113,26 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
+watchEffect(isMouseOverClient, () => {
+  if (isMouseOverClient.value) {
+    mouseOverHandler();
+  } else {
+    mouseLeaveHandler();
+  }
+});
+
 // methods
+
+const mouseOverHandler = (item) => {
+  if (isMouseOverClient.value) {
+    displayMenu(item);
+  }
+};
+const mouseLeaveHandler = (item) => {
+  if (!isMouseOverClient.value) {
+    hideMenu(item);
+  }
+};
 
 const displayMenu = (item) => {
   serviceStore.installedServices.map((service) => {
@@ -136,6 +157,10 @@ const confirmConnection = (item) => {
     item.isNotConnectedToMevboost = false;
     item.isConnectedToMevboost = true;
   }, 5000);
+};
+
+const switchClient = (item) => {
+  emit("switchClient", item);
 };
 </script>
 <style scoped>
