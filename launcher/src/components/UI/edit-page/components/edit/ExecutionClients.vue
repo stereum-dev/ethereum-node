@@ -1,7 +1,7 @@
 <template>
-  <div class="col-start-3 col-span-1 pt-2 gap-1 space-y-2 flex flex-col justify-start items-center relative">
+  <div class="col-start-3 col-end-4 py-2 gap-1 space-y-2 flex flex-col justify-start items-center relative">
     <div
-      v-for="item in getExecutionServices"
+      v-for="item in getExecutions"
       :key="item"
       ref="executionRefs"
       class="h-[120px] w-[120px] flex justify-center items-center py-1 rounded-md border border-gray-700 bg-[#212629] shadow-md hover:bg-[#374045]"
@@ -9,26 +9,27 @@
       @mouseleave="item.displayPluginMenu = false"
     >
       <ClientLayout :client="item" />
-      <div v-if="item.displayPluginMenu" class="absolute w-full h-full flex justify-center items-center z-50">
-        <div class="flex justify-center items-center mx-auto bg-gray-800 p-2 rounded-md space-x-1">
-          <img
-            class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-            src="/img/icon/manage-node-icons/stop.png"
-            alt="Trash Icon"
-          />
-          <img
-            class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-            src="/img/icon/manage-node-icons/delete.png"
-            alt="Trash Icon"
-          />
-          <img
-            class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-            src="/img/icon/manage-node-icons/trash.png"
-            alt="Trash Icon"
-            @click="deleteService(item)"
-          />
+      <Transition name="slide-fade">
+        <div
+          v-if="item.displayPluginMenu"
+          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-50"
+          @mousedown.prevent
+        >
+          <div class="flex justify-center items-center bg-gray-800 z-20 p-2 rounded-md space-x-2">
+            <img
+              class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
+              src="/img/icon/manage-node-icons/replace.png"
+              alt="Trash Icon"
+            />
+            <img
+              class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
+              src="/img/icon/manage-node-icons/trash.png"
+              alt="Trash Icon"
+              @click="deleteService(item)"
+            />
+          </div>
         </div>
-      </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -38,37 +39,69 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 
-import { computed, ref, watch } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
 const emit = defineEmits(["deleteService"]);
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
-const getExecutionServices = computed(() => {
-  return serviceStore.installedServices
-    .filter((e) => e.category === "execution")
-    .sort((a, b) => a.name.localeCompare(b.name));
+const getExecutions = computed(() => {
+  let service;
+  service = serviceStore.installedServices.filter((e) => e?.category == "execution");
+  return service;
+});
+watchEffect(() => {
+  getExecutions.value.sort((a, b) => {
+    let fa = a.name.toLowerCase(),
+      fb = b.name.toLowerCase();
+
+    if (fa < fb) {
+      return -1;
+    }
+    if (fa > fb) {
+      return 1;
+    }
+    return 0;
+  });
 });
 
 const getExecutionRef = computed(() => {
   return executionRefs.value.map((el, index) => {
     return {
       ref: el,
-      refId: getExecutionServices.value[index].config.serviceID,
+      refId: getExecutions.value[index]?.config.serviceID,
     };
   });
 });
 
-watch(() => {
+watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
 const displayMenu = (item) => {
+  serviceStore.installedServices.map((service) => {
+    service.displayPluginMenu = false;
+    service.isConnectedToMevboost = false;
+  });
   item.displayPluginMenu = true;
 };
-
 const deleteService = (item) => {
   emit("deleteService", item);
 };
 </script>
+<style scoped>
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+</style>
