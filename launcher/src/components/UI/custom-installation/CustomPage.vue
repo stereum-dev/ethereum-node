@@ -8,21 +8,6 @@
         <div class="text-container">
           <span>{{ $t("customInstallation.customInstallationText") }}</span>
         </div>
-        <div class="path-container">
-          <div class="path-title">
-            <span>{{ $t("customInstallation.chooseWhereToInstall") }}:</span>
-          </div>
-          <div class="textbox-cont">
-            <div class="textbox-cont_front">
-              <div class="textbox-title">
-                <span>{{ $t("customInstallation.installationPath") }}</span>
-              </div>
-              <div class="textbox">
-                <input v-model="installPath" type="text" placeholder="/opt/stereum" />
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="select-network">
           <div class="path-title network">
             <span>choose a network</span>
@@ -38,6 +23,21 @@
             <div v-for="network in networkList" :key="network" class="networks" @click="selectNetwork(network)">
               <div class="icon-networks"><img :src="network.icon" alt="" /></div>
               <div class="networks-title">{{ network.name }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="path-container">
+          <div class="path-title">
+            <span>{{ $t("customInstallation.chooseWhereToInstall") }}:</span>
+          </div>
+          <div class="textbox-cont">
+            <div class="textbox-cont_front">
+              <div class="textbox-title">
+                <span>{{ $t("customInstallation.installationPath") }}</span>
+              </div>
+              <div class="textbox">
+                <input v-model="installPath" type="text" placeholder="/opt/stereum" />
+              </div>
             </div>
           </div>
         </div>
@@ -123,6 +123,7 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
+  cursor: default;
 }
 
 .customInstall_header {
@@ -174,7 +175,7 @@ export default {
 
 .text-container {
   width: 100%;
-  height: 35%;
+  height: 33%;
   padding: 3% 4%;
   display: flex;
   justify-content: center;
@@ -193,7 +194,7 @@ export default {
 }
 .select-network {
   width: 100%;
-  height: 30%;
+  height: 28%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -239,14 +240,16 @@ export default {
 }
 .network-dropdown {
   width: 55%;
-  height: 33%;
-  top: 79%;
+  height: 40%;
+  top: 55%;
   background: #1258a2;
   position: absolute;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
 }
 .networks {
   width: 100%;
-  height: 25%;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
