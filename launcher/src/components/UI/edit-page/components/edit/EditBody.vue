@@ -69,6 +69,7 @@ const isOverDropZone = ref(false);
 const scrollBox = ref(false);
 
 // computed & watchers properties
+// eslint-disable-next-line no-unused-vars
 const displayDropZone = computed(() => {
   let dropClass;
   if (isOverDropZone.value) {

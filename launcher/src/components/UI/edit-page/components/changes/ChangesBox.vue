@@ -40,7 +40,9 @@ const editStore = useNodeManage();
 const getChanges = computed(() => editStore.confirmChanges);
 
 const removeChange = (item) => {
-  editStore.confirmChanges = editStore.confirmChanges.filter((e) => e.id !== item.id);
+  const event = editStore.confirmChanges.find((e) => e.id === item.id);
+  const eventIdx = editStore.confirmChanges.indexOf(event);
+  editStore.confirmChanges.splice(eventIdx, 1);
 };
 
 const contentBgColor = (item) => {
