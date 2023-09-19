@@ -9,6 +9,10 @@ const log = require("electron-log");
 const electron = require("electron");
 const Evilscan = require("evilscan");
 
+async function Sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
   log.info("pulling from main branch");
@@ -1190,7 +1194,8 @@ export class NodeConnection {
   }
 
   async IpScanLan() {
-    let target = ["192.168.0.0/28", "10.0.0.0/29"];
+    let avadoIPs = [];
+    let target = ["192.168.0.0/20"];
 
     for (let i = 0; i < target.length; i++) {
       const options = {
@@ -1199,27 +1204,21 @@ export class NodeConnection {
         status: "O", // Timeout, Refused, Open, Unreachable
         banner: true,
       };
-
       const evilscan = new Evilscan(options);
-
       evilscan.on("result", (data) => {
-        // fired when item is matching options
-        console.log(typeof data);
+        if (data.status.includes("open")) {
+          avadoIPs.push({ ip: data.ip });
+        }
       });
-
       evilscan.on("error", (err) => {
         throw new Error(err.toString());
       });
-
       evilscan.on("done", () => {
-        // finished !
+        console.log("DONE!");
       });
-
       evilscan.run();
     }
-
-    let hello = "Hello World!";
-    console.log("hello", hello);
-    return hello;
+    await Sleep(15 * 1000);
+    return avadoIPs;
   }
 }
