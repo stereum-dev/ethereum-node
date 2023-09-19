@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <ServiceBody />
+    <ServiceBody @change-connection="changeConnection" />
   </div>
 </template>
 
@@ -16,7 +16,13 @@ import ServiceBody from "../components/service/ServiceBody.vue";
 import { useServices } from "@/store/services";
 import { computed } from "vue";
 
+const emit = defineEmits(["changeConnection"]);
+
 const { installedServices } = useServices();
 
 const getServices = computed(() => installedServices.filter((el) => el.category === "service"));
+
+const changeConnection = () => {
+  emit("changeConnection");
+};
 </script>
