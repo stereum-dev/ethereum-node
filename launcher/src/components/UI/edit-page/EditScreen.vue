@@ -48,12 +48,12 @@
       <!-- End Switch Network Modal -->
       <!-- Start Switch Client Modal -->
       <SwitchModal
-        v-if="isSwitchPanelnOpen"
+        v-if="isSwitchPanelOpen"
         :client="clientToSwitch"
         main-title="Switch Client"
         confirm-text="Confirm"
         click-outside-text="Click outside to cancel"
-        @close-window="isSwitchPanelnOpen = false"
+        @close-window="isSwitchPanelOpen = false"
         @switch-confirm="switchClientConfirm"
       />
 
@@ -83,7 +83,7 @@ const list = ref([]);
 const clientToSwitch = ref(null);
 const isConfirmLoading = ref(false);
 
-const isSwitchPanelnOpen = ref(false);
+const isSwitchPanelOpen = ref(false);
 
 onMounted(() => {
   serviceStore.installedServices = serviceStore.installedServices
@@ -119,19 +119,28 @@ onMounted(() => {
 
 // Methods
 
+// Random ID generator
+function generateRandomId() {
+  const timestamp = new Date().getTime().toString(16); // Convert timestamp to hexadecimal
+  const randomPart = Math.random().toString(16).substring(2, 8); // Generate a random hexadecimal string
+  return timestamp + randomPart;
+}
+
+const randomId = generateRandomId();
+
 // Switch Clients methods
 const switchClientModalhandler = (item) => {
   item.replacePanel = true;
   clientToSwitch.value = item;
   if (item.replacePanel) {
-    isSwitchPanelnOpen.value = true;
+    isSwitchPanelOpen.value = true;
   } else {
-    isSwitchPanelnOpen.value = false;
+    isSwitchPanelOpen.value = false;
   }
 };
 
 const switchClientConfirm = (item) => {
-  isSwitchPanelnOpen.value = false;
+  isSwitchPanelOpen.value = false;
   const current = serviceStore.installedServices.find(
     (e) => e?.config.serviceID === clientToSwitch.value?.config.serviceID
   );
@@ -142,11 +151,13 @@ const switchClientConfirm = (item) => {
 
   serviceStore.installedServices.push(item);
   manageStore.confirmChanges.push({
-    id: "switch-client",
+    id: randomId,
     content: "SWITCH CLIENT",
     contentIcon: "/img/icon/manage-node-icons/switch.png",
     service: item,
   });
+
+  serviceStore.selectedServiceToSwitch = "";
 };
 
 // Service connection methods
@@ -154,7 +165,6 @@ const switchClientConfirm = (item) => {
 // Mevboost connection methods
 
 const changeMevboostConnection = () => {
-  console.log("CLICKED MEVBOOST");
   serviceStore.installedServices = serviceStore.installedServices
     .filter((e) => e.category == "consensus")
     .map((e) => {
@@ -230,7 +240,7 @@ const onDrop = (event) => {
     serviceStore.customServiceToInstall.push(item);
 
     manageStore.confirmChanges.push({
-      id: item.config.serviceID,
+      id: randomId,
       content: "INSTALL",
       contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
       service: item,
@@ -248,7 +258,7 @@ const switchNetworkConfirm = () => {
   manageStore.currentNetwork = {};
   manageStore.currentNetwork = manageStore.selectedNetwork;
   manageStore.confirmChanges.push({
-    id: "switch-network",
+    id: randomId,
     content: "SWITCH NETWORK",
     contentIcon: "/img/icon/manage-node-icons/switch-client.png",
     service: manageStore.currentNetwork,

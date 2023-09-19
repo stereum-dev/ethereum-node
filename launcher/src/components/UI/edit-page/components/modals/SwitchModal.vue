@@ -112,7 +112,9 @@ const switchConfirm = () => {
 const closeWindow = () => {
   emit("closeWindow");
 };
+
 </script>
+
 <style scoped>
 .slide-enter-from,
 .slide-leave-to {

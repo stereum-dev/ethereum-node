@@ -113,21 +113,14 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
-watchEffect(isMouseOverClient, () => {
-  if (isMouseOverClient.value) {
-    mouseOverHandler();
-  } else {
-    mouseLeaveHandler();
-  }
-});
-
 // methods
 
 const mouseOverHandler = (item) => {
-  if (isMouseOverClient.value) {
+  if (!isMouseOverClient.value) {
     displayMenu(item);
   }
 };
+
 const mouseLeaveHandler = (item) => {
   if (!isMouseOverClient.value) {
     hideMenu(item);
@@ -135,11 +128,13 @@ const mouseLeaveHandler = (item) => {
 };
 
 const displayMenu = (item) => {
-  serviceStore.installedServices.map((service) => {
+  serviceStore.installedServices.forEach((service) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
-  if (!item.isNotConnectedToMevboost) item.displayPluginMenu = true;
+  if (!item.isNotConnectedToMevboost) {
+    item.displayPluginMenu = true;
+  }
 };
 
 const hideMenu = (item) => {
