@@ -7,7 +7,7 @@ import net from "net";
 import YAML from "yaml";
 const log = require("electron-log");
 const electron = require("electron");
-const nmap = require("libnmap");
+const Evilscan = require("evilscan");
 
 if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
@@ -1190,23 +1190,36 @@ export class NodeConnection {
   }
 
   async IpScanLan() {
-    const scanOptions = {
-      range: "192.168.1.0/24", // Adjust the IP range as needed
-      flags: ["-p 54321"], // Specify the port you want to check
-    };
+    let target = ["192.168.0.0/28", "10.0.0.0/29"];
 
-    var test = await nmap.scan(scanOptions, (err, report) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
+    for (let i = 0; i < target.length; i++) {
+      const options = {
+        target: target[i],
+        port: "54321",
+        status: "O", // Timeout, Refused, Open, Unreachable
+        banner: true,
+      };
 
-      console.log(report);
-      // Process and display the scan results as needed
-    });
+      const evilscan = new Evilscan(options);
+
+      evilscan.on("result", (data) => {
+        // fired when item is matching options
+        console.log(typeof data);
+      });
+
+      evilscan.on("error", (err) => {
+        throw new Error(err.toString());
+      });
+
+      evilscan.on("done", () => {
+        // finished !
+      });
+
+      evilscan.run();
+    }
 
     let hello = "Hello World!";
     console.log("hello", hello);
-    return test;
+    return hello;
   }
 }
