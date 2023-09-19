@@ -5,7 +5,7 @@
     @mousedown.prevent.stop
   >
     <div
-      class="w-[158px] h-4 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
+      class="w-[159px] h-4 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
     >
       {{ client.name }}
       <span class="w-5 h-4 bg-green-500 border border-green-500 rounded-r-full"></span>
@@ -15,14 +15,11 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    client: {
-      type: Object,
-      required: true,
-    },
+<script setup>
+const { client } = defineProps({
+  client: {
+    type: Object,
+    required: true,
   },
-  computed: {},
-};
+});
 </script>

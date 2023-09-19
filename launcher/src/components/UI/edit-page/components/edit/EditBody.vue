@@ -29,7 +29,11 @@
           >+</span
         >
         <ValidatorClients v-if="!isOverDropZone" @delete-service="removeInstalledService" />
-        <ConsensusClients v-if="!isOverDropZone" @delete-service="removeInstalledService" />
+        <ConsensusClients
+          v-if="!isOverDropZone"
+          @delete-service="removeInstalledService"
+          @confirm-connection="confirmConnection"
+        />
         <ExecutionClients v-if="!isOverDropZone" @delete-service="removeInstalledService" />
       </div>
     </div>
@@ -41,11 +45,11 @@ import EditHeader from "./EditHeader.vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
-import { computed, watch, ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 
-const emit = defineEmits(["onDrop"]);
+const emit = defineEmits(["onDrop", "confirmConnection"]);
 
 //Pinia stores
 const manageStore = useNodeManage();
@@ -66,7 +70,7 @@ const displayDropZone = computed(() => {
   return dropClass;
 });
 
-watch(serviceStore.installedServices, () => {
+watchEffect(serviceStore.installedServices, () => {
   const validators = serviceStore.installedServices.filter((service) => service.category === "validator");
 
   const consensus = serviceStore.installedServices.filter((service) => service.category === "consensus");
@@ -90,31 +94,16 @@ const onDrop = (event) => {
 const removeInstalledService = (item) => {
   console.log(item);
   manageStore.confirmChanges.push({
+    id: item.config.serviceID,
     content: "DELETE",
     contentIcon: "/img/icon/manage-node-icons/trash.png",
     service: manageStore.currentNetwork,
   });
 };
 
-function openExpertWindow(client) {
-  // Implement your logic to open the expert window here
-}
-
-function openLogsPage(client) {
-  // Implement your logic to open the logs page here
-}
-
-function clickOutside(client) {
-  // Implement your logic for clicking outside the client here
-}
-
-function stateHandler(client) {
-  // Implement your state handling logic here
-}
-
-function restartService(client) {
-  // Implement your restart service logic here
-}
+const confirmConnection = (item) => {
+  emit("confirmConnection", item);
+};
 </script>
 
 <style scoped>

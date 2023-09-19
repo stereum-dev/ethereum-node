@@ -6,10 +6,10 @@
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="nukeNode" />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
-        <EditBody :drop-zone="isOverDropZone" @on-drop="onDrop" />
+        <EditBody :drop-zone="isOverDropZone" @on-drop="onDrop" @confirm-connection="confirmConnection" />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection />
+        <ServiceSection @change-connection="changeMevboostConnection" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <ChangesSection />
@@ -22,7 +22,6 @@
       src="/img/icon/manage-node-icons/sidebar-out.png"
       alt="Arrow Icon"
       @mousedown.prevent.stop
-      @mouseenter="openDrawer"
       @click="openDrawer"
     />
     <transition name="drawerSlide" mode="out-in">
@@ -34,8 +33,9 @@
       />
     </transition>
     <!-- End drawer layout -->
-    <!-- Start network modal layout -->
-    <transition name="fadeModal">
+    <!-- Custom Modals -->
+    <TransitionGroup name="fadeModal">
+      <!-- Switch Network Modal -->
       <custom-modal
         v-if="manageStore.displayNetworkList"
         main-title="Switch Network"
@@ -99,9 +99,22 @@
           </div>
         </template>
       </custom-modal>
-    </transition>
-
-    <!-- End network modal layout -->
+      <!-- Mevboost Connection Modal -->
+      <!-- <template v-for="item in serviceConnectionState">
+        <ConnectionModal
+          v-if="item.if"
+          :key="item.id"
+          :main-title="item.mainTitle"
+          :message-text="item.messageText"
+          :options-array="item.optionsArray"
+          :number-of-options="item.numberOfOptions"
+          :new-connection="item.newConnection"
+          @get-item="item.getItem"
+          @close-window="item.closeWindow"
+          @confirm-action="item.confirmAction"
+        />
+      </template> -->
+    </TransitionGroup>
   </base-layout>
 </template>
 <script setup>
@@ -114,17 +127,122 @@ import CustomModal from "./components/modals/CustomModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref } from "vue";
+import { useConnectClients } from "@/store/connectClients";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import ConnectionModal from "./components/modals/ConnectionModal.vue";
 
 const manageStore = useNodeManage();
 const serviceStore = useServices();
+const connectStore = useConnectClients();
 const selectedNetwrok = ref(null);
 const router = useRouter();
 const isOverDropZone = ref(false);
 const list = ref([]);
 
+// const serviceConnectionState = ref([
+//   {
+//     id: 1,
+//     name: "mevboost",
+//     if: isMevboostConnectionOpen.value,
+//     mainTitle: "Mevboost Connection",
+//     messageText: "Select a service you want to connect to mevboost",
+//     optionsArray: mevboostOptions.value,
+//     numberOfOptions: numberOfOptions.value,
+//     newConnection: mevboostNewConnection.value,
+//     getItem: getConnectionItem,
+//     confirmAction: changeMevboostConnection,
+//     closeWindow: (isMevboostConnectionOpen.value = false),
+//   },
+//   // {
+//   //   id: 2,
+//   //   name: "consensus",
+//   //   if: isConsensusConnectionOpen,
+//   //   mainTitle: "Consensus Connection",
+//   //   messageText: "Select the execution service you want to connect to consensus",
+//   //   optionsArray: consensusCennectionOptions.value,
+//   //   numberOfOptions: numberOfOptions.value,
+//   //   newConnection: consensusNewConnection.value,
+//   //   getItem: getConnectionItem,
+//   //   confirmAction: changeConsensusConnection.apply,
+//   //   closeWindow: (isConsensusConnectionOpen.value = false),
+//   // },
+// ]);
+
 const networkDropdownOpen = ref(false);
+
+onMounted(() => {
+  serviceStore.installedServices = serviceStore.installedServices
+    .filter((service) => service.category === "consensus")
+    .map((el) => {
+      return {
+        ...el,
+        connectedToExecution: false,
+        connectedToValidator: false,
+      };
+    });
+});
+onMounted(() => {
+  serviceStore.installedServices = serviceStore.installedServices
+    .filter((service) => service.category === "execution")
+    .map((el) => {
+      return {
+        ...el,
+        connectedToConsensus: false,
+      };
+    });
+});
+onMounted(() => {
+  serviceStore.installedServices = serviceStore.installedServices
+    .filter((service) => service.category === "validator")
+    .map((el) => {
+      return {
+        ...el,
+        connectedToConsensus: false,
+      };
+    });
+});
+
+// Methods
+
+// Service connection methods
+
+// Mevboost connection methods
+
+const changeMevboostConnection = () => {
+  console.log("CLICKED MEVBOOST");
+  serviceStore.installedServices = serviceStore.installedServices
+    .filter((e) => e.category == "consensus")
+    .map((e) => {
+      if (e?.config.dependencies.mevboost[0]) {
+        return {
+          ...e,
+          isConnectedToMevboost: true,
+        };
+      } else if (!e.config.dependencies.mevboost[0]) {
+        return {
+          ...e,
+          isNotConnectedToMevboost: true,
+        };
+      }
+    });
+};
+const confirmConnection = (item) => {
+  isConfirmLoading.value = true;
+  setTimeout(() => {
+    isConfirmLoading.value = false;
+    item.isNotConnectedToMevboost = false;
+    item.isConnectedToMevboost = true;
+  }, 5000);
+};
+
+// Drawer methods
+
+const openDrawer = () => {
+  manageStore.isDrawerOpen = true;
+};
+
+// Add service with double click
 
 const addServices = (event, item) => {
   if (item.category === "service" && serviceStore.customServiceToInstall.map((s) => s.service).includes(item.service)) {
@@ -135,6 +253,7 @@ const addServices = (event, item) => {
     if (!existsService) {
       serviceStore.customServiceToInstall.push(item);
       manageStore.confirmChanges.push({
+        id: item.config.serviceID,
         content: "INSTALL",
         contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
         service: item,
@@ -146,9 +265,7 @@ const addServices = (event, item) => {
   console.log(serviceStore.customServiceToInstall);
 };
 
-const openDrawer = () => {
-  manageStore.isDrawerOpen = true;
-};
+// Drag and Drop methods
 const startDrag = (event, item) => {
   if (event.type === "dragstart") {
     event.dataTransfer.dropEffect = "move";
@@ -169,6 +286,7 @@ const onDrop = (event) => {
     serviceStore.customServiceToInstall.push(item);
 
     manageStore.confirmChanges.push({
+      id: item.config.serviceID,
       content: "INSTALL",
       contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
       service: item,
@@ -176,6 +294,7 @@ const onDrop = (event) => {
   }
 };
 
+// Network switch methods
 const displaySwitchNetwork = () => {
   manageStore.displayNetworkList = true;
 };
@@ -187,11 +306,14 @@ const switchNetworkConfirm = () => {
   manageStore.displayNetworkList = false;
   manageStore.currentNetwork = manageStore.networkList.find((network) => network.name === selectedNetwrok.value);
   manageStore.confirmChanges.push({
+    id: "switch-network",
     content: "SWITCH NETWORK",
     contentIcon: "/img/icon/manage-node-icons/switch-client.png",
     service: manageStore.currentNetwork,
   });
 };
+
+// Nuke node method
 
 const nukeNode = async () => {
   //missing nuke component implement later
