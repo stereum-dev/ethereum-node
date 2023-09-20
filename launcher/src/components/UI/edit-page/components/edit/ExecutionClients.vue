@@ -1,10 +1,10 @@
 <template>
-  <div class="col-start-3 col-end-4 py-2 gap-1 space-y-2 flex flex-col justify-start items-center relative">
+  <div class="w-full col-start-3 col-end-4 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative">
     <div
       v-for="item in getExecutions"
       :key="item"
       ref="executionRefs"
-      class="h-[120px] w-[120px] flex justify-center items-center py-1 rounded-md border border-gray-700 bg-[#212629] shadow-md hover:bg-[#374045]"
+      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md border border-gray-700 bg-[#212629] shadow-md hover:bg-[#374045] self-center justify-self-center"
       @mouseenter="displayMenu(item)"
       @mouseleave="item.displayPluginMenu = false"
     >
@@ -94,8 +94,6 @@ const deleteService = (item) => {
 const switchClient = (item) => {
   emit("switchClient", item);
 };
-
-
 </script>
 <style scoped>
 .slide-fade-enter-active {

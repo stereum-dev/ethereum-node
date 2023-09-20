@@ -1,10 +1,10 @@
 <template>
-  <div class="col-start-1 col-end-2 gap-1 py-2 space-y-2 flex flex-col justify-start items-center relative">
+  <div class="col-start-1 col-end-2 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative">
     <div
       v-for="item in getValidators"
       :key="item"
       ref="validatorRefs"
-      class="h-[120px] w-[120px] relative flex justify-center items-center py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#374045]"
+      class="h-[110px] w-[110px] relative flex justify-center items-center py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#374045] self-center justify-self-center"
       @mouseenter="displayMenu(item)"
     >
       <ClientLayout :client="item" />

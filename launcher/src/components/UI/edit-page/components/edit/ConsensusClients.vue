@@ -1,10 +1,10 @@
 <template>
-  <div class="col-start-2 col-end-3 gap-1 py-2 space-y-2 flex flex-col justify-start items-center relative">
+  <div class="col-start-2 col-end-3 gap-y-5 pt-4 pb-2 grid grid-flow-row auto-rows-max relative">
     <div
       v-for="item in getConsensus"
       :key="item.config.serviceID"
       ref="consensusRefs"
-      class="h-[120px] w-[120px] flex justify-center items-center py-2 rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045]"
+      class="h-[110px] w-[110px] flex justify-center items-center py-2 rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045] justify-self-center self-center"
       :class="getConnectionClasses(item)"
       @mouseover="mouseOverHandler(item)"
       @mouseleave="mouseLeaveHandler(item)"
@@ -21,6 +21,7 @@
               class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
               src="/img/icon/manage-node-icons/not-connected.png"
               alt="Trash Icon"
+              @click="connectClient(item)"
             />
             <img
               class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
@@ -42,17 +43,23 @@
           @mousedown.prevent
         >
           <div class="flex justify-center items-center bg-gray-900 z-20 p-2 rounded-md space-x-2">
-            <img class="w-8 rounded-sm" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="Trash Icon" />
+            <img class="w-6 rounded-sm" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="Trash Icon" />
             <img
               v-if="!isConfirmLoading"
-              class="w-8 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200"
+              class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
               src="/img/icon/manage-node-icons/not-connected.png"
               alt="Trash Icon"
-              @click="confirmConnection(item)"
+              @click="confirmMevboostConnection(item)"
             />
-            <div v-else-if="isConfirmLoading" class="w-8 h-8 py-2 px-1 bg-gray-500 rounded-md border border-gray-700">
-              <svg class="animate-spin rounded-full border-t-2 border-r-2 border-blue-300 h-4 w-4 mx-auto"></svg>
+            <div v-else-if="isConfirmLoading" class="w-6 h-6 pt-1 bg-gray-500 rounded-md border border-gray-700">
+              <svg class="animate-spin rounded-full border-t-2 border-r-2 border-blue-100 h-4 w-4 mx-auto"></svg>
             </div>
+            <img
+              class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
+              src="/img/icon/the-staking/close.png"
+              alt="CIcon"
+              @click="item.isNotConnectedToMevboost = false"
+            />
           </div>
         </div>
       </TransitionGroup>
@@ -145,7 +152,7 @@ const deleteService = (item) => {
   emit("deleteService", item);
 };
 
-const confirmConnection = (item) => {
+const confirmMevboostConnection = (item) => {
   isConfirmLoading.value = true;
   setTimeout(() => {
     isConfirmLoading.value = false;

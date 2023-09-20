@@ -8,9 +8,9 @@ import { computed } from 'vue';
   >
     <div class="flex flex-col justify-center items-center gap-2">
       <span class="text-xs text-gray-200 font-semibold">{{ client.name }}</span>
-      <img class="w-14" :src="client.sIcon" alt="icon" />
+      <img class="w-10" :src="client.sIcon" alt="icon" />
       <p class="text-[10px] text-gray-400">
-        ID:<span class="text-[12px] text-gray-200 ml-1">{{ serviceId }}</span>
+        ID:<span class="text-[10px] text-gray-200 ml-1">{{ serviceId }}</span>
       </p>
     </div>
 
