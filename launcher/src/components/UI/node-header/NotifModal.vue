@@ -55,12 +55,25 @@
       </div>
       <div v-if="beaconchaDashboard" class="qrPage_content">
         <div class="banner" @click="beaconchaDashboard = false">
-          <div class="banner_icon"><img src="/img/icon/stereum-logo/stereum_logo_extern.png" /></div>
+          <div class="banner_icon"><img src="/img/icon/service-icons/beaconchain.png" /></div>
           <div class="banner_title">
             <span>Beaconchain Dashboard</span>
           </div>
         </div>
-        <div class="qrContent"></div>
+        <div class="qrContent">
+          <div class="beaconcha-dash-container">
+            <div class="choose-validator-title">CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO</div>
+            <div class="choose-validator_validators">
+              <div
+                v-for="validator in installedValidators"
+                :key="validator"
+                class="choose-validator_validators_validator-box"
+              >
+                <img :src="validator.icon" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
         <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
     </div>
@@ -68,6 +81,8 @@
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
@@ -79,8 +94,18 @@ export default {
       ErrorQRCode: "/img/icon/header-icons/dummyQR.png",
     };
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+    }),
+    installedValidators() {
+      const copyOfInstalledServices = [...this.installedServices];
+      return copyOfInstalledServices.filter((obj) => obj.category === "validator");
+    },
+  },
   mounted() {
     this.getqrcode();
+    console.log(this.installedValidators[0].icon);
   },
   methods: {
     qrViewer() {
@@ -211,6 +236,47 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+.beaconcha-dash-container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+.choose-validator-title {
+  color: #c3c3c3;
+  font-size: 70%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 2%;
+  width: 95%;
+  height: 3%;
+  letter-spacing: 0.8px;
+}
+.choose-validator_validators {
+  width: 95%;
+  height: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.choose-validator_validators_validator-box {
+  width: 12%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2%;
+}
+.choose-validator_validators_validator-box img {
+  width: 70%;
+  height: 70%;
 }
 .qrPage_content {
   width: 100%;
