@@ -19,7 +19,7 @@
           <div class="flex justify-center items-center bg-gray-800 z-20 p-2 rounded-md space-x-2">
             <img
               class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/not-connected.png"
+              src="/img/icon/manage-node-icons/connection.png"
               alt="Trash Icon"
               @click="connectClient(item)"
             />
@@ -47,7 +47,7 @@
             <img
               v-if="!isConfirmLoading"
               class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
-              src="/img/icon/manage-node-icons/not-connected.png"
+              src="/img/icon/manage-node-icons/connection.png"
               alt="Trash Icon"
               @click="confirmMevboostConnection(item)"
             />
@@ -90,6 +90,7 @@ const getConsensus = computed(() => {
   service = serviceStore.installedServices.filter((e) => e?.category == "consensus");
   return service;
 });
+
 watchEffect(() => {
   getConsensus.value.sort((a, b) => {
     let fa = a.name.toLowerCase(),
@@ -118,7 +119,21 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
+watchEffect(() => {
+  let connsectedConsensus;
+  connsectedConsensus = serviceStore.installedServices
+    .filter((e) => e.category === "consensus")
+    .find((e) => e.config?.dependencies.executionClients[0]);
+  serviceStore.installedServices.map((service) => {
+    if (service.service === connsectedConsensus.service) {
+      service.serviceIsConnected = true;
+      service.connectedToExecution = true;
+    }
+  });
+});
+
 // methods
+
 const getConnectionClasses = (item) => {
   if (item.hasOwnProperty("isNotConnectedToMevboost") && item.isNotConnectedToMevboost) {
     return "border  border-blue-400 bg-blue-600 hover:bg-blue-600";

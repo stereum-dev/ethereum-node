@@ -11,6 +11,7 @@
           @on-drop="onDrop"
           @confirm-connection="confirmConnection"
           @switch-client="switchClientModalhandler"
+          @connect-client="clientConnectionHandler"
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
@@ -87,10 +88,11 @@ const isSwitchPanelOpen = ref(false);
 
 onMounted(() => {
   serviceStore.installedServices = serviceStore.installedServices
-    .filter((service) => service.category === "consensus")
+    .filter((service) => service?.category === "consensus")
     .map((el) => {
       return {
         ...el,
+        serviceIsConnected: false,
         connectedToExecution: false,
         connectedToValidator: false,
       };
@@ -98,20 +100,22 @@ onMounted(() => {
 });
 onMounted(() => {
   serviceStore.installedServices = serviceStore.installedServices
-    .filter((service) => service.category === "execution")
+    .filter((service) => service?.category === "execution")
     .map((el) => {
       return {
         ...el,
+        serviceIsConnected: false,
         connectedToConsensus: false,
       };
     });
 });
 onMounted(() => {
   serviceStore.installedServices = serviceStore.installedServices
-    .filter((service) => service.category === "validator")
+    .filter((service) => service?.category === "validator")
     .map((el) => {
       return {
         ...el,
+        serviceIsConnected: false,
         connectedToConsensus: false,
       };
     });
@@ -160,7 +164,18 @@ const switchClientConfirm = (item) => {
   serviceStore.selectedServiceToSwitch = "";
 };
 
-// Service connection methods
+// Clients Connection methods
+
+const clientConnectionHandler = (item) => {
+  item.isConnectedToMevboost = true;
+  item.isNotConnectedToMevboost = false;
+  manageStore.confirmChanges.push({
+    id: randomId,
+    content: "CLIENT CONNECT",
+    contentIcon: "/img/icon/manage-node-icons/CONNECT.png",
+    service: item,
+  });
+};
 
 // Mevboost connection methods
 

@@ -18,8 +18,9 @@
           <div class="flex justify-center items-center bg-gray-800 z-20 p-2 rounded-md space-x-2">
             <img
               class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/not-connected.png"
+              src="/img/icon/manage-node-icons/connection.png"
               alt="Trash Icon"
+              @click="connectClient(item)"
             />
             <img
               class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
@@ -46,10 +47,14 @@ import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import { computed, reactive, watchEffect } from "vue";
 
-const emit = defineEmits(["deleteService", "switchClient"]);
+// Variables & Constants
+
+const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
 const validatorRefs = reactive([]);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
+
+// Computed & Watchers
 
 const installedServices = computed(() => serviceStore.installedServices);
 
@@ -85,6 +90,22 @@ watchEffect(getValidatorRef, () => {
   nodeStore.validatorRef.value = getValidatorRef.value;
 });
 
+watchEffect(() => {
+  let connectedValidator;
+  connectedValidator = serviceStore.installedServices
+    .filter((e) => e.category === "validator")
+    .find((e) => e.config.dependencies.consensusClients.length > 0);
+
+  serviceStore.installedServices.map((service) => {
+    if (service.service === connectedValidator.service) {
+      service.serviceIsConnected = true;
+      service.connectedToConsensus = true;
+    }
+  });
+});
+
+// Methods
+
 const displayMenu = (item) => {
   serviceStore.installedServices.map((service) => {
     service.displayPluginMenu = false;
@@ -99,6 +120,10 @@ const deleteService = (item) => {
 
 const switchClient = (item) => {
   emit("switchClient", item);
+};
+
+const connectClient = (item) => {
+  emit("connectClient", item);
 };
 </script>
 <style scoped>

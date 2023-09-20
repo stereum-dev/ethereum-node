@@ -45,7 +45,6 @@
           v-if="!isOverDropZone"
           @delete-service="removeInstalledService"
           @switch-client="switchClient"
-          @connect-client="connectClient"
         />
       </div>
     </div>

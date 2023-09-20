@@ -20,14 +20,17 @@ import { computed, ref } from 'vue';
     >
       <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
-    <div v-if="clientIsConnected" class="flex justify-evenly items-center absolute end-1 top-0">
-      <img class="w-3" src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+    <div v-if="client.serviceIsConnected" class="flex justify-evenly items-center absolute end-1 top-0">
+      <img class="w-3" src="/img/icon/manage-node-icons/connected.png" alt="icon" />
+    </div>
+    <div v-else-if="!client.serviceIsConnected" class="flex justify-evenly items-center absolute end-1 top-0">
+      <img class="w-3" src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useServices } from "@/store/services";
 const { client } = defineProps({
   client: {
@@ -36,7 +39,6 @@ const { client } = defineProps({
   },
 });
 const serviceStore = useServices();
-const clientIsConnected = ref(false);
 
 const serviceId = computed(() => formattedServiceID(client?.config.serviceID));
 

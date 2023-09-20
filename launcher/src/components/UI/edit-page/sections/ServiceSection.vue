@@ -18,9 +18,13 @@ import { computed } from "vue";
 
 const emit = defineEmits(["changeConnection"]);
 
-const { installedServices } = useServices();
+const serviceStore = useServices();
 
-const getServices = computed(() => installedServices.filter((el) => el.category === "service"));
+const getServices = computed(() => {
+  let service;
+  service = serviceStore.installedServices.filter((el) => el?.category == "service");
+  return service;
+});
 
 const changeConnection = () => {
   emit("changeConnection");

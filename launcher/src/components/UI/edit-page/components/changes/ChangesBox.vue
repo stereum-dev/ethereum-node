@@ -59,6 +59,8 @@ const contentBgColor = (item) => {
       bg = "bg-gray-500 text-gray-900 text-[10px] font-semibold min-w-[100px]";
     } else if (content === "SWITCH CLIENT") {
       bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
+    } else if (content === "CLIENT CONNECT") {
+      bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
     }
   }
   return bg;

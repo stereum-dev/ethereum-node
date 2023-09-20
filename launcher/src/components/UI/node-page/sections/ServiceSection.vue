@@ -10,29 +10,16 @@
     <ServiceBody />
   </div>
 </template>
-<script>
+<script setup>
 import ServiceBody from "../components/service/ServiceBody.vue";
-import { mapState } from "pinia";
 import { useServices } from "@/store/services";
+import { computed } from "vue";
 
-export default {
-  name: "ServiceSection",
-  components: {
-    ServiceBody,
-  },
-  props: {},
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapState(useServices, {
-      installedServices: "installedServices",
-    }),
-    getServices() {
-      return this.installedServices.filter((el) => el.category === "service");
-    },
-  },
-  mounted() {},
-  methods: {},
-};
+const serviceStore = useServices();
+
+const getServices = computed(() => {
+  let service;
+  service = serviceStore.installedServices.filter((el) => el?.category === "service");
+  return service;
+});
 </script>

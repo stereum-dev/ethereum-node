@@ -52,6 +52,7 @@ const getExecutions = computed(() => {
   service = serviceStore.installedServices.filter((e) => e?.category == "execution");
   return service;
 });
+
 watchEffect(() => {
   getExecutions.value.sort((a, b) => {
     let fa = a.name.toLowerCase(),
@@ -79,6 +80,25 @@ const getExecutionRef = computed(() => {
 watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
+
+watchEffect(() => {
+  let connsectedConsensus;
+  let connectedExecution;
+  connsectedConsensus = serviceStore.installedServices
+    .filter((e) => e.category === "consensus")
+    .find((e) => e.config.dependencies.executionClients.length > 0);
+
+  connectedExecution = connsectedConsensus?.config.dependencies.executionClients[0];
+
+  serviceStore.installedServices.map((service) => {
+    if (service.service === connectedExecution.service) {
+      service.serviceIsConnected = true;
+      service.connectedToConsensus = true;
+    }
+  });
+});
+
+// Methods
 
 const displayMenu = (item) => {
   serviceStore.installedServices.map((service) => {

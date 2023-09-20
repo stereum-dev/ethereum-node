@@ -3,30 +3,30 @@
     class="w-full h-[430px] rounded-md border border-gray-500 bg-[#151618] relative hover:scroll-auto overflow-y-auto"
   >
     <div
-      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold z-10"
+      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-300 text-[10px] font-semibold z-10"
     >
       <span>Services </span>
     </div>
     <div
       ref="service"
-      class="h-full flex flex-col space-y-4 items-center pt-2 overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
+      class="h-full max-h-[430px] flex flex-col space-y-4 items-center pt-10 px-1 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
     >
       <div
         v-for="item in getServices"
         :key="item"
-        class="max-h-[80px] max-w-[160px] grid grid-cols-2 py-2 rounded-md border border-gray-600 shadow-md mx-auto mt-8"
+        class="w-full max-h-[78px] grid grid-cols-2 py-2 rounded-md border border-gray-600 shadow-md mx-auto"
       >
         <ServiceLayout :client="item" />
         <div class="w-full h-full grid grid-cols-2">
           <div
             v-if="item.service === 'FlashbotsMevBoostService'"
-            class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-2 hover:border-gray-300"
+            class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1 hover:border-gray-300"
             @click="changeConnection"
           >
             <img
               class="w-5 z-10"
               :class="trashAnimated"
-              src="/img/icon/manage-node-icons/not-connected.png"
+              src="/img/icon/manage-node-icons/connection.png"
               alt=""
               @mousedown.prevent.stop
               @click="animIsActive = true"
@@ -34,7 +34,7 @@
             />
           </div>
           <div
-            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-2"
+            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1"
             :class="{ 'border-red-500': item.displayTooltip }"
             @mouseenter="item.displayTooltip = true"
             @mouseleave="item.displayTooltip = false"
