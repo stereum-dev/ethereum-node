@@ -2,7 +2,7 @@
   <div class="notif-modal-parent">
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="notif-modal-content">
-      <div v-if="qrPage" class="content">
+      <div v-if="qrPage && !beaconchaDashboard" class="content">
         <div class="notif-Title">
           <span>{{ $t("notifModal.addNotif") }}</span>
         </div>
@@ -10,7 +10,7 @@
           <span>{{ $t("notifModal.chooseNotif") }}</span>
         </div>
         <ul class="notif-box">
-          <li @click="qrPage = !qrPage">
+          <li @click="qrPage = false">
             <div class="notif-row_icon">
               <img src="/img/icon/stereum-logo/stereum_logo_extern.png" alt="notif logo" />
             </div>
@@ -18,10 +18,18 @@
               <span>{{ $t("notifModal.stereumMonitor") }}</span>
             </div>
           </li>
+          <li @click="(beaconchaDashboard = true), (qrPage = true)">
+            <div class="notif-row_icon">
+              <img src="/img/icon/service-icons/beaconchain.png" alt="notif logo" />
+            </div>
+            <div class="notif-row_name">
+              <span>Beaconchain Dashboard (Mobile App)</span>
+            </div>
+          </li>
         </ul>
         <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
-      <div v-if="!qrPage" class="qrPage_content">
+      <div v-if="!qrPage && !beaconchaDashboard" class="qrPage_content">
         <div class="banner" @click="qrViewer">
           <div class="banner_icon"><img src="/img/icon/stereum-logo/stereum_logo_extern.png" /></div>
           <div class="banner_title">
@@ -45,6 +53,16 @@
         </div>
         <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
+      <div v-if="beaconchaDashboard" class="qrPage_content">
+        <div class="banner" @click="beaconchaDashboard = false">
+          <div class="banner_icon"><img src="/img/icon/stereum-logo/stereum_logo_extern.png" /></div>
+          <div class="banner_title">
+            <span>Beaconchain Dashboard</span>
+          </div>
+        </div>
+        <div class="qrContent"></div>
+        <span class="close">{{ $t("notifModal.close") }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -55,9 +73,8 @@ export default {
   data() {
     return {
       qrPage: true,
+      beaconchaDashboard: false,
       banner: "/img/icon/header-icons/monitor2.png",
-      //BACKEND
-      //qrCode is a dummy data
       qrCode: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       ErrorQRCode: "/img/icon/header-icons/dummyQR.png",
     };
@@ -128,6 +145,7 @@ export default {
   box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 10px;
   cursor: pointer;
+  margin-bottom: 1.5%;
 }
 .notif-box li:hover {
   background: #313131;
@@ -204,7 +222,7 @@ export default {
 }
 .banner {
   width: 90%;
-  height: 20%;
+  height: 15%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -230,7 +248,7 @@ export default {
 }
 
 .banner_icon img {
-  width: 60%;
+  width: 50%;
 }
 .banner_title {
   width: 80%;
