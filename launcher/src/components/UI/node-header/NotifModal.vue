@@ -73,6 +73,8 @@
               </div>
             </div>
             <div class="go-to-link">Go to <span @click="openBeaconcha()">https://beaconcha.in/login#app</span></div>
+            <div class="enter-box"></div>
+            <div class="apply-btn">apply</div>
           </div>
         </div>
         <span class="close">{{ $t("notifModal.close") }}</span>
@@ -170,8 +172,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   border: 1px solid #3e3d3d;
-  width: 90%;
-  height: 25%;
+  width: 95%;
+  height: 20%;
   box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 10px;
   cursor: pointer;
@@ -259,14 +261,14 @@ export default {
   align-items: center;
   font-weight: 600;
   text-transform: uppercase;
-  margin-top: 2%;
+  margin-top: 1.3%;
   width: 95%;
-  height: 3%;
-  letter-spacing: 0.8px;
+  height: 7%;
+  letter-spacing: 0.7px;
 }
 .choose-validator_validators {
   width: 90%;
-  height: 30%;
+  height: 25%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -285,7 +287,7 @@ export default {
 }
 .go-to-link {
   width: 90%;
-  height: 10%;
+  height: 7%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -304,6 +306,28 @@ export default {
 .go-to-link span:hover {
   color: green;
 }
+.enter-box {
+  width: 90%;
+  height: 45%;
+  border: 1px dotted red;
+}
+.apply-btn {
+  width: 30%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #c3c3c3;
+  font-size: 150%;
+  text-transform: uppercase;
+  font-weight: 700;
+
+  border: 1px solid #3e3d3d;
+  background: #2a9937;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top: 0.5%;
+}
 .qrPage_content {
   width: 100%;
   height: 100%;
@@ -314,7 +338,7 @@ export default {
 }
 .banner {
   width: 90%;
-  height: 15%;
+  height: 12%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -375,14 +399,14 @@ export default {
 }
 .notif-modal-content {
   width: 55%;
-  height: 55%;
+  height: 70%;
   border-radius: 1rem;
   background-color: #343434;
   border: 4px solid rgb(171, 170, 170);
   z-index: 312;
   opacity: 1;
   position: absolute;
-  top: 13%;
+  top: 5%;
   left: 18%;
   display: flex;
   flex-direction: column;
