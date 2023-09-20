@@ -72,6 +72,7 @@
                 <img :src="validator.icon" alt="" />
               </div>
             </div>
+            <div class="go-to-link">Go to <span @click="openBeaconcha()">https://beaconcha.in/login#app</span></div>
           </div>
         </div>
         <span class="close">{{ $t("notifModal.close") }}</span>
@@ -105,7 +106,6 @@ export default {
   },
   mounted() {
     this.getqrcode();
-    console.log(this.installedValidators[0].icon);
   },
   methods: {
     qrViewer() {
@@ -119,6 +119,11 @@ export default {
       } else {
         this.qrCode = response;
       }
+    },
+    openBeaconcha() {
+      let url = "https://beaconcha.in/login#app/";
+      window.open(url, "_blank");
+      console.log("test");
     },
   },
 };
@@ -260,23 +265,44 @@ export default {
   letter-spacing: 0.8px;
 }
 .choose-validator_validators {
-  width: 95%;
+  width: 90%;
   height: 30%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .choose-validator_validators_validator-box {
-  width: 12%;
+  width: 12.5%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 2%;
 }
 .choose-validator_validators_validator-box img {
   width: 70%;
   height: 70%;
+  cursor: pointer;
+}
+.go-to-link {
+  width: 90%;
+  height: 10%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #c3c3c3;
+  font-size: 70%;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+.go-to-link span {
+  margin-left: 1%;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  cursor: pointer;
+  font-size: 110%;
+}
+.go-to-link span:hover {
+  color: green;
 }
 .qrPage_content {
   width: 100%;
@@ -329,6 +355,7 @@ export default {
   font-weight: 600;
 }
 .notif-modal-parent {
+  cursor: default;
   width: 100%;
   height: 100%;
   position: fixed;
