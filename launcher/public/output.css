@@ -763,6 +763,42 @@ video {
   top: -18px;
 }
 
+.-start-1{
+  inset-inline-start: -0.25rem;
+}
+
+.-top-4{
+  top: -1rem;
+}
+
+.-start-0{
+  inset-inline-start: -0px;
+}
+
+.start-0{
+  inset-inline-start: 0px;
+}
+
+.-top-3{
+  top: -0.75rem;
+}
+
+.start-1{
+  inset-inline-start: 0.25rem;
+}
+
+.end-1{
+  inset-inline-end: 0.25rem;
+}
+
+.-top-0{
+  top: -0px;
+}
+
+.-top-2{
+  top: -0.5rem;
+}
+
 .z-0{
   z-index: 0;
 }

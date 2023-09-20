@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 <template>
   <div
     class="grid-col-1 col-span-1 relative w-full h-full flex justify-center items-center box-border"
@@ -16,15 +16,18 @@ import { computed } from 'vue';
 
     <div
       v-if="getConnectedMevboost === client.config.serviceID"
-      class="h-1/3 flex justify-evenly items-center absolute -start-2 -top-5"
+      class="h-1/3 flex justify-evenly items-center absolute -start-2 -top-4"
     >
-      <img class="w-6" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
+      <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
+    </div>
+    <div v-if="clientIsConnected" class="flex justify-evenly items-center absolute end-1 top-0">
+      <img class="w-3" src="/img/icon/manage-node-icons/connect.png" alt="icon" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useServices } from "@/store/services";
 const { client } = defineProps({
   client: {
@@ -33,12 +36,9 @@ const { client } = defineProps({
   },
 });
 const serviceStore = useServices();
+const clientIsConnected = ref(false);
 
 const serviceId = computed(() => formattedServiceID(client?.config.serviceID));
-
-const formattedServiceID = (item) => {
-  return item.slice(0, 6) + "..." + item.slice(-6);
-};
 
 const getConnectedMevboost = computed(() => {
   let connectedMevboost;
@@ -47,4 +47,9 @@ const getConnectedMevboost = computed(() => {
     .find((e) => e?.config.dependencies.mevboost[0]);
   return connectedMevboost?.config.serviceID;
 });
+
+// Methods
+const formattedServiceID = (item) => {
+  return item.slice(0, 6) + "..." + item.slice(-6);
+};
 </script>

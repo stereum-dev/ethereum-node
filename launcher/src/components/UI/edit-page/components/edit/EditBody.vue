@@ -6,11 +6,11 @@
       :class="isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-500'"
     >
       <div
-        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-sm"
+        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
       >
-        <span class="col-start-1 justify-self-center">Validator </span>
-        <span class="col-start-2 justify-self-center">Consensus Clients</span>
-        <span class="col-start-3 justify-self-center">Execution Clients</span>
+        <span class="col-start-1 justify-self-center self-center">Validator </span>
+        <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>
+        <span class="col-start-3 justify-self-center self-center">Execution Clients</span>
       </div>
       <div
         ref="dropZoneRef"
@@ -32,17 +32,20 @@
           v-if="!isOverDropZone"
           @delete-service="removeInstalledService"
           @switch-client="switchClient"
+          @connect-client="connectClient"
         />
         <ConsensusClients
           v-if="!isOverDropZone"
           @delete-service="removeInstalledService"
           @confirm-connection="confirmConnection"
           @switch-client="switchClient"
+          @connect-client="connectClient"
         />
         <ExecutionClients
           v-if="!isOverDropZone"
           @delete-service="removeInstalledService"
           @switch-client="switchClient"
+          @connect-client="connectClient"
         />
       </div>
     </div>
@@ -117,6 +120,10 @@ const confirmConnection = (item) => {
 
 const switchClient = (item) => {
   emit("switchClient", item);
+};
+
+const connectClient = (item) => {
+  emit("connectClient", item);
 };
 </script>
 

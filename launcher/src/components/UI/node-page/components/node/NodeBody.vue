@@ -4,14 +4,14 @@ import { mapState, map } from 'pinia';
   <div
     class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-y-auto mt-1 bg-[#151618] relative"
   >
+    <div
+      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
+    >
+      <span class="col-start-1 justify-self-center self-center">Execution Clients</span>
+      <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>
+      <span class="col-start-3 justify-self-center self-center">Validator </span>
+    </div>
     <div class="w-full h-full grid grid-cols-3 pt-8">
-      <div
-        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-sm"
-      >
-        <span class="col-start-1 justify-self-center">Validator </span>
-        <span class="col-start-2 justify-self-center">Consensus Clients</span>
-        <span class="col-start-3 justify-self-center">Execution Clients</span>
-      </div>
       <ExecutionClients
         @open-expert="openExpertWindow"
         @open-log="openLogsPage"
@@ -51,7 +51,7 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, reactive } from "vue";
+import { ref, computed, onMounted, reactive, watchEffect } from "vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import PluginLogs from "../../sections/PluginLogs.vue";
@@ -63,6 +63,8 @@ import ExecutionClients from "./ExecutionClients";
 import ConsensusClients from "./ConsensusClients";
 import ValidatorClients from "./ValidatorClients";
 import { useRouter } from "vue-router";
+
+//Refs
 
 const lineOne = ref(null);
 const lineTwo = ref(null);
@@ -95,12 +97,11 @@ let {
 const serviceStore = useServices();
 const router = useRouter();
 
-// Computed properties
+// Computed & Watchers properties
 
 const installedServices = computed(() => serviceStore.installedServices);
 
-// Watchers
-watch(installedServices, (newServices) => {
+watchEffect(installedServices, (newServices) => {
   const connectedVal = newServices
     .filter((item) => item.category === "validator")
     .find((item) => item.config.dependencies.consensusClients[0]);
@@ -114,7 +115,6 @@ watch(installedServices, (newServices) => {
   }
 });
 
-watch(() => {});
 onMounted(() => {
   if (!hideConnectedLines || router.path == "/node") {
     getRefOfConnectedClients();
@@ -163,25 +163,25 @@ const getRefOfConnectedClients = () => {
   }
 };
 
-const restartService = (el) => {
-  itemToRestart.value = el;
-  restartModalShow.value = true;
-  titlePicker.value = restartTitle;
-  iconPicker.value = restartIcon;
-  functionCondition.value = true;
-};
+// const restartService = (el) => {
+//   itemToRestart.value = el;
+//   restartModalShow.value = true;
+//   titlePicker.value = restartTitle;
+//   iconPicker.value = restartIcon;
+//   functionCondition.value = true;
+// };
 
-const restartConfirmed = async (service) => {
-  restartLoad.value = true;
-  service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
-  if (!service.yaml.includes("isPruning: true")) {
-    isServiceOn.value = false;
-    service.serviceIsPending = true;
-    await ControlService.restartService(service.config.serviceID);
-    service.serviceIsPending = false;
-    updateStates();
-  }
-};
+// const restartConfirmed = async (service) => {
+//   restartLoad.value = true;
+//   service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
+//   if (!service.yaml.includes("isPruning: true")) {
+//     isServiceOn.value = false;
+//     service.serviceIsPending = true;
+//     await ControlService.restartService(service.config.serviceID);
+//     service.serviceIsPending = false;
+//     updateStates();
+//   }
+// };
 
 const updateStates = async () => {
   const serviceInfos = await ControlService.listServices();
@@ -228,21 +228,21 @@ const restartModalClose = () => {
   restartModalShow.value = false;
 };
 
-const runGethPrunningWarning = (option) => {
-  if (option.changeValue && option.displayWarningModal) {
-    gethPrunningWarningModal.value = true;
-  } else if (!option.changeValue || !option.displayWarningModal) {
-    gethPrunningWarningModal.value = false;
-  }
-};
+// const runGethPrunningWarning = (option) => {
+//   if (option.changeValue && option.displayWarningModal) {
+//     gethPrunningWarningModal.value = true;
+//   } else if (!option.changeValue || !option.displayWarningModal) {
+//     gethPrunningWarningModal.value = false;
+//   }
+// };
 
-const runResyncWarning = (option) => {
-  if (option.changeValue && option.displayResyncModal) {
-    resyncWarningModal.value = true;
-  } else if (!option.changeValue || !option.displayWarningModal) {
-    resyncWarningModal.value = false;
-  }
-};
+// const runResyncWarning = (option) => {
+//   if (option.changeValue && option.displayResyncModal) {
+//     resyncWarningModal.value = true;
+//   } else if (!option.changeValue || !option.displayWarningModal) {
+//     resyncWarningModal.value = false;
+//   }
+// };
 
 const hidePrunningWarningsModal = (el) => {
   gethPrunningWarningModal.value = false;

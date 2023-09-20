@@ -4,7 +4,7 @@
       v-for="item in getValidators"
       :key="item"
       ref="validatorRefs"
-      class="h-[110px] w-[110px] relative flex justify-center items-center py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#374045] self-center justify-self-center"
+      class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#374045] self-center justify-self-center"
       @mouseenter="displayMenu(item)"
     >
       <ClientLayout :client="item" />

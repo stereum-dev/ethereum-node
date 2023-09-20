@@ -4,7 +4,7 @@
       v-for="item in getConsensus"
       :key="item.config.serviceID"
       ref="consensusRefs"
-      class="h-[110px] w-[110px] flex justify-center items-center py-2 rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045] justify-self-center self-center"
+      class="h-[110px] w-[110px] flex justify-center py-1 items-center rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045] justify-self-center self-center"
       :class="getConnectionClasses(item)"
       @mouseover="mouseOverHandler(item)"
       @mouseleave="mouseLeaveHandler(item)"
@@ -74,13 +74,17 @@ import ClientLayout from "./ClientLayout.vue";
 
 import { computed, ref, watchEffect } from "vue";
 
-const emit = defineEmits(["deleteService", "switchClient"]);
+//Props & Emits
+const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
+
+//Refs
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 const isConfirmLoading = ref(false);
 const isMouseOverClient = ref(false);
 
+// computed & watchers properties
 const getConsensus = computed(() => {
   let service;
   service = serviceStore.installedServices.filter((e) => e?.category == "consensus");
@@ -110,17 +114,16 @@ const getExecutionRef = computed(() => {
   });
 });
 
-const getConnectionClasses = (item) => {
-  if (item.hasOwnProperty("isNotConnectedToMevboost") && item.isNotConnectedToMevboost) {
-    return "border  border-blue-400 bg-blue-600 hover:bg-blue-600";
-  }
-};
-
 watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
 // methods
+const getConnectionClasses = (item) => {
+  if (item.hasOwnProperty("isNotConnectedToMevboost") && item.isNotConnectedToMevboost) {
+    return "border  border-blue-400 bg-blue-600 hover:bg-blue-600";
+  }
+};
 
 const mouseOverHandler = (item) => {
   if (!isMouseOverClient.value) {
@@ -163,6 +166,10 @@ const confirmMevboostConnection = (item) => {
 
 const switchClient = (item) => {
   emit("switchClient", item);
+};
+
+const connectClient = (item) => {
+  emit("connectClient", item);
 };
 </script>
 <style scoped>
