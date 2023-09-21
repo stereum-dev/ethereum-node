@@ -95,7 +95,7 @@ export async function useFrontendServices() {
             amount: needForTunnel.filter((s) => s?.headerOption && s.tunnelLink).length,
           });
 
-          nodeHeaderStore.headerServices = serviceStore.installedServices
+          nodeHeaderStore.runningServices = serviceStore.installedServices
             .filter((service) => service?.headerOption)
             .map((service) => {
               if (service.tunnelLink) {
@@ -104,7 +104,7 @@ export async function useFrontendServices() {
               return service;
             });
 
-          let ports = nodeHeaderStore.headerServices
+          let ports = nodeHeaderStore.runningServices
             .filter((service) => service.tunnelLink)
             .map((service) => {
               return {
@@ -115,12 +115,12 @@ export async function useFrontendServices() {
 
           await ControlService.openTunnels(ports);
         } else if (nodeHeaderStore.refresh) {
-          nodeHeaderStore.headerServices = serviceStore.installedServices.filter((service) => service?.headerOption);
+          nodeHeaderStore.runningServices = serviceStore.installedServices.filter((service) => service?.headerOption);
         }
       } else {
         if (!nodeHeaderStore.updating) {
           serviceStore.installedServices = [];
-          nodeHeaderStore.headerServices = [];
+          nodeHeaderStore.runningServices = [];
         }
       }
       if (!nodeManageStore.currentNetwork) {
