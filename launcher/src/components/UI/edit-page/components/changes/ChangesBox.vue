@@ -2,7 +2,7 @@
   <div
     class="w-full h-[430px] flex flex-col justify-start items-center px-1 py-2 overflow-y-scroll rounded-md border border-gray-600 bg-[#151618] space-y-2"
   >
-    <template v-if="editStore.confirmChanges.length">
+    <template v-if="manageStore.confirmChanges.length">
       <TransitionGroup name="list">
         <div
           v-for="item in getChanges"
@@ -35,14 +35,15 @@
 import { useNodeManage } from "@/store/nodeManage";
 import { computed } from "vue";
 
-const editStore = useNodeManage();
+const manageStore = useNodeManage();
 
-const getChanges = computed(() => editStore.confirmChanges);
+const getChanges = computed(() => manageStore.confirmChanges);
 
 const removeChange = (item) => {
-  const event = editStore.confirmChanges.find((e) => e.id === item.id);
-  const eventIdx = editStore.confirmChanges.indexOf(event);
-  editStore.confirmChanges.splice(eventIdx, 1);
+  item.service.isRemoveProcessing = false;
+  const event = manageStore.confirmChanges.find((e) => e.id === item.id);
+  const eventIdx = manageStore.confirmChanges.indexOf(event);
+  manageStore.confirmChanges.splice(eventIdx, 1);
 };
 
 const contentBgColor = (item) => {

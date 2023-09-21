@@ -15,6 +15,7 @@
         v-for="item in getServices"
         :key="item"
         class="w-full max-h-[78px] grid grid-cols-2 py-2 rounded-md border border-gray-600 shadow-md mx-auto"
+        :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
       >
         <ServiceLayout :client="item" />
         <div class="w-full h-full grid grid-cols-2">
@@ -36,9 +37,7 @@
           <div
             class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1"
             :class="{ 'border-red-500': item.displayTooltip }"
-            @mouseenter="item.displayTooltip = true"
-            @mouseleave="item.displayTooltip = false"
-            @click="selectedServiceToRemove(item)"
+            @click="deleteService(item)"
           >
             <img
               class="w-5 z-10"
@@ -46,8 +45,6 @@
               src="/img/icon/manage-node-icons/trash.png"
               alt=""
               @mousedown.prevent.stop
-              @click="animIsActive = true"
-              @mouseleave="animIsActive = false"
             />
           </div>
         </div>
@@ -57,85 +54,38 @@
 </template>
 
 <script setup>
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import ServiceLayout from "./ServiceLayout.vue";
-import { ref, computed, watchEffect } from "vue";
+import { computed } from "vue";
 
-const emit = defineEmits(["changeConnection"]);
-const serviceStore = useServices();
-const editStore = useNodeManage();
+const emit = defineEmits(["changeConnection", "deleteService"]);
 
-const animIsActive = ref(false);
+const manageStore = useNodeManage();
 
-const getServices = computed(() => serviceStore.installedServices.filter((e) => e?.category === "service"));
-watchEffect(() => {
-  getServices.value.sort((a, b) => {
-    let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
+const getServices = computed(() =>
+  manageStore.newConfiguration
+    .filter((e) => e?.category === "service")
+    .sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
 
-    if (fa < fb) {
-      return -1;
-    }
-    if (fa > fb) {
-      return 1;
-    }
-    return 0;
-  });
-});
-
-const trashAnimated = computed(() => (animIsActive.value ? "trash" : ""));
-
-watchEffect(animIsActive, (newVal) => {
-  if (newVal) {
-    setTimeout(() => {
-      animIsActive.value = false;
-    }, 200);
-  }
-});
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    })
+);
 
 // Methods
 const changeConnection = () => {
   emit("changeConnection");
 };
-// const removeService = (item) => {
-//   item.displayTooltip = false;
-//   if (item) {
-//     editStore.selectedItemToRemove = editStore.selectedItemToRemove.concat(
-//       editStore.newConfiguration.filter((el) => el.config.serviceID === item.config.serviceID)
-//     );
-//   } else {
-//     if (!item.config.serviceID) {
-//       editStore.newConfiguration = editStore.newConfiguration.filter((el) => el.id !== item.id);
-//       editStore.confirmChanges = editStore.confirmChanges.filter((el) => el.service.id !== item.id);
-//     }
-//     editStore.selectedItemToRemove = editStore.selectedItemToRemove.filter(
-//       (el) => el.config.serviceID !== item.config.serviceID
-//     );
-//   }
-// };
-const selectedServiceToRemove = (item) => {
-  item.displayTooltip = false;
-  getServices.value = getServices.value.filter((el) => el.id !== item.id);
-  editStore.selectedItemToRemove.push(item);
-  editStore.confirmChanges.push({
-    id: item.config.serviceID,
-    content: "DELETE",
-    contentIcon: "/img/icon/manage-node-icons/delete.png",
-    service: item,
-  });
 
-  // if (item.config.serviceID) {
-  //   editStore.selectedItemToRemove = editStore.selectedItemToRemove.concat(
-  //     editStore.newConfiguration.filter((el) => el.config.serviceID === item.config.serviceID)
-  //   );
-  // } else if (!item.config.serviceID) {
-  //   editStore.newConfiguration = editStore.newConfiguration.filter((el) => el.id !== item.id);
-  //   editStore.confirmChanges = editStore.confirmChanges.filter((el) => el.service.id !== item.id);
-  // }
-  // editStore.selectedItemToRemove = editStore.selectedItemToRemove.filter(
-  //   (el) => el.config.serviceID !== item.config.serviceID
-  // );
+const deleteService = (item) => {
+  emit("deleteService", item);
 };
 </script>
 

@@ -12,10 +12,11 @@
           @confirm-connection="confirmConnection"
           @switch-client="switchClientModalhandler"
           @connect-client="clientConnectionHandler"
+          @delete-service="selectedServiceToRemove"
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection @change-connection="changeMevboostConnection" />
+        <ServiceSection @change-connection="changeMevboostConnection" @delete-service="selectedServiceToRemove" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <ChangesSection />
@@ -49,12 +50,12 @@
       <!-- End Switch Network Modal -->
       <!-- Start Switch Client Modal -->
       <SwitchModal
-        v-if="isSwitchPanelOpen"
+        v-if="isSwitchModalOpen"
         :client="clientToSwitch"
         main-title="Switch Client"
         confirm-text="Confirm"
         click-outside-text="Click outside to cancel"
-        @close-window="isSwitchPanelOpen = false"
+        @close-window="isSwitchModalOpen = false"
         @switch-confirm="switchClientConfirm"
       />
 
@@ -81,44 +82,25 @@ const manageStore = useNodeManage();
 const router = useRouter();
 const isOverDropZone = ref(false);
 const list = ref([]);
+const clientToRemove = ref(null);
 const clientToSwitch = ref(null);
 const isConfirmLoading = ref(false);
-
-const isSwitchPanelOpen = ref(false);
+const isSwitchModalOpen = ref(false);
 
 onMounted(() => {
-  serviceStore.installedServices = serviceStore.installedServices
-    .filter((service) => service?.category === "consensus")
-    .map((el) => {
-      return {
-        ...el,
-        serviceIsConnected: false,
-        connectedToExecution: false,
-        connectedToValidator: false,
-      };
-    });
+  manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
 });
 onMounted(() => {
-  serviceStore.installedServices = serviceStore.installedServices
-    .filter((service) => service?.category === "execution")
-    .map((el) => {
-      return {
-        ...el,
-        serviceIsConnected: false,
-        connectedToConsensus: false,
-      };
-    });
-});
-onMounted(() => {
-  serviceStore.installedServices = serviceStore.installedServices
-    .filter((service) => service?.category === "validator")
-    .map((el) => {
-      return {
-        ...el,
-        serviceIsConnected: false,
-        connectedToConsensus: false,
-      };
-    });
+  manageStore.newConfiguration.forEach((el) => {
+    return {
+      ...el,
+      serviceIsConnected: false,
+      connectedToExecution: false,
+      connectedToValidator: false,
+      connectedToConsensus: false,
+      isRemoveProcessing: false,
+    };
+  });
 });
 
 // Methods
@@ -137,14 +119,14 @@ const switchClientModalhandler = (item) => {
   item.replacePanel = true;
   clientToSwitch.value = item;
   if (item.replacePanel) {
-    isSwitchPanelOpen.value = true;
+    isSwitchModalOpen.value = true;
   } else {
-    isSwitchPanelOpen.value = false;
+    isSwitchModalOpen.value = false;
   }
 };
 
 const switchClientConfirm = (item) => {
-  isSwitchPanelOpen.value = false;
+  isSwitchModalOpen.value = false;
   const current = serviceStore.installedServices.find(
     (e) => e?.config.serviceID === clientToSwitch.value?.config.serviceID
   );
@@ -180,10 +162,13 @@ const clientConnectionHandler = (item) => {
 // Mevboost connection methods
 
 const changeMevboostConnection = () => {
-  serviceStore.installedServices = serviceStore.installedServices
-    .filter((e) => e.category == "consensus")
-    .map((e) => {
-      if (e?.config.dependencies.mevboost[0]) {
+  const hasConsensusWithMevboost = manageStore.newConfiguration.some((e) => {
+    return e.category === "consensus" && !e.config.dependencies.mevboost[0];
+  });
+  console.log(hasConsensusWithMevboost);
+  if (hasConsensusWithMevboost) {
+    manageStore.newConfiguration = manageStore.newConfiguration.map((e) => {
+      if (e.config.dependencies.mevboost[0]) {
         return {
           ...e,
           isConnectedToMevboost: true,
@@ -195,6 +180,9 @@ const changeMevboostConnection = () => {
         };
       }
     });
+  } else {
+    return;
+  }
 };
 const confirmConnection = (item) => {
   isConfirmLoading.value = true;
@@ -202,7 +190,7 @@ const confirmConnection = (item) => {
     isConfirmLoading.value = false;
     item.isNotConnectedToMevboost = false;
     item.isConnectedToMevboost = true;
-  }, 5000);
+  }, 2000);
 };
 
 // Drawer methods
@@ -231,7 +219,6 @@ const addServices = (event, item) => {
       return;
     }
   }
-  console.log(serviceStore.customServiceToInstall);
 };
 
 // Drag and Drop methods
@@ -288,6 +275,28 @@ const nukeNode = async () => {
   await ControlService.destroy();
   await ControlService.logout();
   router.push("/");
+};
+
+const selectedServiceToRemove = (item) => {
+  manageStore.newConfiguration.forEach((service) => {
+    service.displayPluginMenu = false;
+    service.isConnectedToMevboost = false;
+  });
+  clientToRemove.value = item;
+  item.isRemoveProcessing = true;
+  item.displayTooltip = false;
+  manageStore.selectedItemToRemove.push(item);
+  const confirmDelete = {
+    id: item.config.serviceID,
+    content: "DELETE",
+    contentIcon: "/img/icon/manage-node-icons/delete.png",
+    service: item,
+  };
+  if (!manageStore.confirmChanges.some((e) => e.id === confirmDelete.id)) {
+    manageStore.confirmChanges.push(confirmDelete);
+  } else {
+    return;
+  }
 };
 </script>
 

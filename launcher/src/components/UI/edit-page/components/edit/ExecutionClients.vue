@@ -4,9 +4,10 @@
       v-for="item in getExecutions"
       :key="item"
       ref="executionRefs"
-      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md border border-gray-700 bg-[#212629] shadow-md hover:bg-[#374045] self-center justify-self-center"
-      @mouseenter="displayMenu(item)"
-      @mouseleave="item.displayPluginMenu = false"
+      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md border border-gray-700 bg-[#212629] shadow-md hover:bg-[#374045] self-center justify-self-center cursor-pointer relative"
+      :class="getDynamicClasses(item)"
+      @click="displayMenu(item)"
+      @mouseleave="hideMenu(item)"
     >
       <ClientLayout :client="item" />
       <Transition name="slide-fade">
@@ -38,6 +39,7 @@
 <script setup>
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 
 import { computed, ref, watchEffect } from "vue";
@@ -45,27 +47,24 @@ import { computed, ref, watchEffect } from "vue";
 const emit = defineEmits(["deleteService", "switchClient"]);
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
+const manageStore = useNodeManage();
 const serviceStore = useServices();
 
 const getExecutions = computed(() => {
-  let service;
-  service = serviceStore.installedServices.filter((e) => e?.category == "execution");
-  return service;
-});
+  return manageStore.newConfiguration
+    .filter((e) => e?.category == "execution")
+    .sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
 
-watchEffect(() => {
-  getExecutions.value.sort((a, b) => {
-    let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
-
-    if (fa < fb) {
-      return -1;
-    }
-    if (fa > fb) {
-      return 1;
-    }
-    return 0;
-  });
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
 });
 
 const getExecutionRef = computed(() => {
@@ -100,6 +99,12 @@ watchEffect(() => {
 
 // Methods
 
+const getDynamicClasses = (item) => {
+  if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
+    return "bg-red-600 ";
+  }
+};
+
 const displayMenu = (item) => {
   serviceStore.installedServices.map((service) => {
     service.displayPluginMenu = false;
@@ -107,6 +112,11 @@ const displayMenu = (item) => {
   });
   item.displayPluginMenu = true;
 };
+
+const hideMenu = (item) => {
+  item.displayPluginMenu = false;
+};
+
 const deleteService = (item) => {
   emit("deleteService", item);
 };

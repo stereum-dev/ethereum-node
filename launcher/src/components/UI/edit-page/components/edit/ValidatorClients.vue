@@ -1,19 +1,22 @@
 <template>
-  <div class="col-start-1 col-end-2 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative">
+  <div
+    class="col-start-1 col-end-2 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative"
+    @mousedown.prevent
+  >
     <div
       v-for="item in getValidators"
       :key="item"
       ref="validatorRefs"
-      class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#374045] self-center justify-self-center"
-      @mouseenter="displayMenu(item)"
+      class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#374045] self-center justify-self-center cursor-pointer"
+      :class="getDynamicClasses(item)"
+      @click="displayMenu(item)"
+      @mouseleave="hideMenu(item)"
     >
       <ClientLayout :client="item" />
       <Transition name="slide-fade">
         <div
           v-if="item.displayPluginMenu"
           class="absolute inset-x-0 w-full h-full flex justify-center items-center z-50"
-          @mouseleave="item.displayPluginMenu = false"
-          @mousedown.prevent
         >
           <div class="flex justify-center items-center bg-gray-800 z-20 p-2 rounded-md space-x-2">
             <img
@@ -42,41 +45,37 @@
 </template>
 
 <script setup>
-import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
-import { computed, reactive, watchEffect } from "vue";
+import { computed, reactive, watch, watchEffect } from "vue";
 
 // Variables & Constants
 
 const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
 const validatorRefs = reactive([]);
 const nodeStore = useNodeStore();
-const serviceStore = useServices();
+const manageStore = useNodeManage();
 
 // Computed & Watchers
 
-const installedServices = computed(() => serviceStore.installedServices);
-
 const getValidators = computed(() => {
   let service;
-  service = installedServices.value.filter((e) => e?.category == "validator");
+  service = manageStore.newConfiguration
+    .filter((e) => e.category == "validator")
+    .sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
+
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
   return service;
-});
-
-watchEffect(() => {
-  getValidators.value.sort((a, b) => {
-    let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
-
-    if (fa < fb) {
-      return -1;
-    }
-    if (fa > fb) {
-      return 1;
-    }
-    return 0;
-  });
 });
 
 const getValidatorRef = computed(() =>
@@ -86,17 +85,17 @@ const getValidatorRef = computed(() =>
   }))
 );
 
-watchEffect(getValidatorRef, () => {
+watch(getValidatorRef, () => {
   nodeStore.validatorRef.value = getValidatorRef.value;
 });
 
 watchEffect(() => {
   let connectedValidator;
-  connectedValidator = serviceStore.installedServices
+  connectedValidator = manageStore.newConfiguration
     .filter((e) => e.category === "validator")
     .find((e) => e.config.dependencies.consensusClients.length > 0);
 
-  serviceStore.installedServices.map((service) => {
+  manageStore.newConfiguration.map((service) => {
     if (service.service === connectedValidator.service) {
       service.serviceIsConnected = true;
       service.connectedToConsensus = true;
@@ -104,14 +103,23 @@ watchEffect(() => {
   });
 });
 
+const getDynamicClasses = (item) => {
+  if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
+    return "bg-red-600 ";
+  }
+};
+
 // Methods
 
 const displayMenu = (item) => {
-  serviceStore.installedServices.map((service) => {
+  manageStore.newConfiguration.forEach((service) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
   item.displayPluginMenu = true;
+};
+const hideMenu = (item) => {
+  item.displayPluginMenu = false;
 };
 
 const deleteService = (item) => {

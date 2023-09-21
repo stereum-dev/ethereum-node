@@ -30,21 +30,22 @@
         >
         <ValidatorClients
           v-if="!isOverDropZone"
-          @delete-service="removeInstalledService"
+          @delete-service="deleteService"
           @switch-client="switchClient"
           @connect-client="connectClient"
         />
         <ConsensusClients
           v-if="!isOverDropZone"
-          @delete-service="removeInstalledService"
+          @delete-service="deleteService"
           @confirm-connection="confirmConnection"
           @switch-client="switchClient"
           @connect-client="connectClient"
         />
         <ExecutionClients
           v-if="!isOverDropZone"
-          @delete-service="removeInstalledService"
+          @delete-service="deleteService"
           @switch-client="switchClient"
+          @connect-client="connectClient"
         />
       </div>
     </div>
@@ -60,7 +61,7 @@ import { computed, ref, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 
-const emit = defineEmits(["onDrop", "confirmConnection", "switchClient"]);
+const emit = defineEmits(["onDrop", "confirmConnection", "switchClient", "connectClient", "deleteService"]);
 
 //Pinia stores
 const manageStore = useNodeManage();
@@ -103,15 +104,7 @@ const onDrop = (event) => {
   emit("onDrop", event);
 };
 
-const removeInstalledService = (item) => {
-  console.log(item);
-  manageStore.confirmChanges.push({
-    id: item.config.serviceID,
-    content: "DELETE",
-    contentIcon: "/img/icon/manage-node-icons/trash.png",
-    service: manageStore.currentNetwork,
-  });
-};
+
 
 const confirmConnection = (item) => {
   emit("confirmConnection", item);
@@ -123,6 +116,9 @@ const switchClient = (item) => {
 
 const connectClient = (item) => {
   emit("connectClient", item);
+};
+const deleteService = (item) => {
+  emit("deleteService", item);
 };
 </script>
 

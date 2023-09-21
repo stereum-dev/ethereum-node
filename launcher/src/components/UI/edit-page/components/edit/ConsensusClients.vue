@@ -4,16 +4,16 @@
       v-for="item in getConsensus"
       :key="item.config.serviceID"
       ref="consensusRefs"
-      class="h-[110px] w-[110px] flex justify-center py-1 items-center rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045] justify-self-center self-center"
-      :class="getConnectionClasses(item)"
-      @mouseover="mouseOverHandler(item)"
-      @mouseleave="mouseLeaveHandler(item)"
+      class="h-[110px] w-[110px] flex justify-center py-1 items-center rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045] justify-self-center self-center cursor-pointer relative"
+      :class="getDynamicClasses(item)"
+      @click="displayMenu(item)"
+      @mouseleave="hideMenu(item)"
     >
       <ClientLayout :client="item" />
       <TransitionGroup name="slide-fade">
         <div
           v-if="item.displayPluginMenu"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-50"
+          class="absolute inset-x-0 w-full h-full flex justify-center items-center"
           @mousedown.prevent
         >
           <div class="flex justify-center items-center bg-gray-800 z-20 p-2 rounded-md space-x-2">
@@ -39,7 +39,7 @@
         </div>
         <div
           v-else-if="item.isNotConnectedToMevboost"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-50"
+          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
           @mousedown.prevent
         >
           <div class="flex justify-center items-center bg-gray-900 z-20 p-2 rounded-md space-x-2">
@@ -68,42 +68,40 @@
 </template>
 
 <script setup>
-import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect, watch } from "vue";
 
 //Props & Emits
 const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
 
 //Refs
+
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
-const serviceStore = useServices();
+const manageStore = useNodeManage();
 const isConfirmLoading = ref(false);
 const isMouseOverClient = ref(false);
+const isMousePassedClient = ref(false);
 
 // computed & watchers properties
 const getConsensus = computed(() => {
-  let service;
-  service = serviceStore.installedServices.filter((e) => e?.category == "consensus");
-  return service;
-});
+  return manageStore.newConfiguration
+    .filter((e) => e.category == "consensus")
+    .sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
 
-watchEffect(() => {
-  getConsensus.value.sort((a, b) => {
-    let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
-
-    if (fa < fb) {
-      return -1;
-    }
-    if (fa > fb) {
-      return 1;
-    }
-    return 0;
-  });
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
 });
 
 const getExecutionRef = computed(() => {
@@ -114,18 +112,25 @@ const getExecutionRef = computed(() => {
     };
   });
 });
+watch(isMouseOverClient, () => {
+  if (isMouseOverClient.value) {
+    isMousePassedClient.value = true;
+  } else {
+    isMousePassedClient.value = false;
+  }
+});
 
 watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
 watchEffect(() => {
-  let connsectedConsensus;
-  connsectedConsensus = serviceStore.installedServices
+  let connectedConsensus;
+  connectedConsensus = manageStore.newConfiguration
     .filter((e) => e.category === "consensus")
     .find((e) => e.config?.dependencies.executionClients[0]);
-  serviceStore.installedServices.map((service) => {
-    if (service.service === connsectedConsensus.service) {
+  manageStore.newConfiguration.map((service) => {
+    if (service.service === connectedConsensus.service) {
       service.serviceIsConnected = true;
       service.connectedToExecution = true;
     }
@@ -134,26 +139,16 @@ watchEffect(() => {
 
 // methods
 
-const getConnectionClasses = (item) => {
+const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isNotConnectedToMevboost") && item.isNotConnectedToMevboost) {
     return "border  border-blue-400 bg-blue-600 hover:bg-blue-600";
-  }
-};
-
-const mouseOverHandler = (item) => {
-  if (!isMouseOverClient.value) {
-    displayMenu(item);
-  }
-};
-
-const mouseLeaveHandler = (item) => {
-  if (!isMouseOverClient.value) {
-    hideMenu(item);
+  } else if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
+    return "bg-red-600 ";
   }
 };
 
 const displayMenu = (item) => {
-  serviceStore.installedServices.forEach((service) => {
+  manageStore.newConfiguration.forEach((service) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
