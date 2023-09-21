@@ -57,13 +57,13 @@
         v-if="!exportHovered"
         class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
         @mouseenter="exportHovered = true"
-        @click="exportConfig"
+        @click="exportData"
       >
         <img class="w-8" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
       </button>
       <button v-else class="showExportBtn" @mouseleave="exportHovered = false" @click="exportData">
         <img class="w-7 mr-1" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
-        <span class="text-sm text-gray-200 font-semibold">Export Node</span>
+        <span class="text-sm text-gray-200 font-semibold">Export Node Config</span>
       </button>
     </div>
     <StateModal
@@ -75,307 +75,102 @@
     />
   </aside>
 </template>
-<script>
-// // import ConfirmModal from "../components/ConfirmModal.vue";
-// // import RestartModal from "../components/RestartModal.vue";
-// // import ServiceLogButton from "../components/ServiceLogButton.vue";
+<script setup>
+import StateModal from "../components/modals/StateModal";
 import ControlService from "@/store/ControlService";
-import { useControlStore } from "@/store/theControl";
-import { mapState, mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
-import { useNodeManage } from "@/store/nodeManage";
+import { useNodeStore } from "@/store/theNode";
+import { computed, ref } from "vue";
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
-// import PluginLogs from "../components/PluginLogs.vue";
-import { useNodeStore } from "@/store/theNode";
-import StateModal from "../components/modals/StateModal.vue";
 
-export default {
-  components: {
-    StateModal,
+let routerHovered = ref(false);
+let powerHovered = ref(false);
+let exportHovered = ref(false);
+let loading = ref(false);
+let isExporting = ref(false);
+
+//stores
+const serviceStore = useServices();
+const nodeStore = useNodeStore();
+
+const isloading = computed({
+  // getter
+  get: function () {
+    return loading.value ? true : false;
   },
-  data() {
-    return {
-      stereumConfig: [],
-      routerHovered: false,
-      powerHovered: false,
-      exportHovered: false,
-      isNodeOff: false,
-      test: true,
-      functionCondition: true,
-      loading: false,
-      updateTableIsOpen: false,
-      openLog: false,
-      openRestart: false,
-      itemToLogs: {},
-      isPluginLogPageActive: false,
-      restartModalShow: false,
-      restartTitle: "restart",
-      restartIcon: "/img/icon/node-icons/restart.png",
-      switchIcon: "/img/icon/node-icons/start-stop.png",
-      startTitle: "start / stop",
-      itemToRestart: {},
-      restartLoad: false,
-      openPower: false,
-      serverNameWidth: null,
-      nameParentWidth: null,
-      confirmModal: false,
-      openResync: false,
-      titlePicker: "",
-      iconPicker: "",
-    };
+  // setter
+  set: function (newValue) {
+    loading.value = newValue;
   },
+});
 
-  computed: {
-    isloading: {
-      // getter
-      get: function () {
-        return this.loading ? true : false;
-      },
-      // setter
-      set: function (newValue) {
-        this.loading = newValue;
-      },
-    },
-    ...mapWritableState(useNodeManage, {
-      resyncSeparateModal: "resyncSeparateModal",
-      selectedServiceToResync: "selectedServiceToResync",
-    }),
-    ...mapState(useServices, {
-      installedServices: "installedServices",
-    }),
-    ...mapWritableState(useNodeStore, {
-      runNodePowerModal: "runNodePowerModal",
-      hideConnectedLines: "hideConnectedLines",
-    }),
-    ...mapState(useControlStore, {
-      ServerName: "ServerName",
-      ipAddress: "ipAddress",
-    }),
-    checkStatus() {
-      let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
+const checkStatus = computed(() => {
+  let servicesToManage = serviceStore.installedServices.filter((service) => service.name !== "Notifications");
+  return !servicesToManage.some((s) => s.state == "running");
+});
 
-      return !servicesToManage.some((s) => s.state == "running");
-    },
+const closeUpdatePowerStateModal = () => {
+  nodeStore.hideConnectedLines = false;
+  nodeStore.runNodePowerModal = false;
+};
 
-    sortedServices() {
-      const copyOfInstalledServices = [...this.installedServices];
+const showPowerModal = () => {
+  nodeStore.hideConnectedLines = true;
+  nodeStore.runNodePowerModal = true;
+};
 
-      return copyOfInstalledServices.sort((a, b) => {
-        if (a.category === "execution") return -1;
-        if (b.category === "execution") return 1;
-        if (a.category === "consensus") return -1;
-        if (b.category === "consensus") return 1;
-        if (a.category === "validator") return -1;
-        if (b.category === "validator") return 1;
-        return 0;
+const stateButtonHandler = async (state) => {
+  loading.value = true;
+  closeUpdatePowerStateModal();
+  try {
+    //this is the temporary solution until notification service is exiting correctly
+    let servicesToManage = serviceStore.installedServices.filter((service) => service.name !== "Notifications");
+
+    let promises = servicesToManage.map(async (service, index) => {
+      new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
+        ControlService.manageServiceState({
+          id: service.config.serviceID,
+          state: state,
+        });
       });
-    },
-    resyncServices() {
-      const copyOfInstalledServices = [...this.installedServices];
-      return copyOfInstalledServices
-        .filter((obj) => ["execution", "consensus"].includes(obj.category))
-        .sort((a, b) => {
-          if (a.category === "execution") return -1;
-          if (b.category === "execution") return 1;
-          if (a.category === "consensus") return -1;
-          if (b.category === "consensus") return 1;
+    });
+    promises.push(
+      new Promise((resolve) =>
+        setTimeout(() => {
+          loading.value = false;
+          resolve();
+        }, promises.length * (state == "running" ? 8000 : 4000))
+      )
+    );
+    Promise.all(promises);
+  } catch (err) {
+    console.log(state.replace("ed", "ing") + " services failed:\n", err);
+  }
+};
 
-          return 0;
-        });
-    },
-
-    checkServerNameWidth() {
-      if (this.serverNameWidth > this.nameParentWidth) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-  },
-  beforeMount() {
-    this.exportConfig();
-  },
-  mounted() {
-    // this.serverNameWidth = this.$refs.serverName.clientWidth;
-    // this.nameParentWidth = this.$refs.serverName.parentElement.clientWidth;
-  },
-  methods: {
-    serviceStateStatus(item) {
-      return item.serviceIsPending ? true : false;
-    },
-    displayPluginLogPage(el) {
-      this.itemToLogs = el;
-      this.isPluginLogPageActive = true;
-    },
-
-    restartService(el) {
-      this.itemToRestart = el;
-      this.restartModalShow = true;
-      this.titlePicker = this.restartTitle;
-      this.iconPicker = this.restartIcon;
-      this.functionCondition = true;
-    },
-    switchService(el) {
-      this.itemToRestart = el;
-      this.restartModalShow = true;
-      this.titlePicker = this.startTitle;
-      this.iconPicker = this.switchIcon;
-      this.functionCondition = false;
-    },
-    modalClickHandler(el) {
-      return this.functionCondition ? this.restartConfirmed(el) : this.stateHandler(el);
-    },
-    resyncToggleModal(el) {
-      this.resyncSeparateModal = true;
-      this.selectedServiceToResync = el;
-    },
-    closePluginLogsPage(el) {
-      this.itemToLogs = el;
-      this.isPluginLogPageActive = true;
-      this.isPluginLogPageActive = false;
-    },
-    logToggle() {
-      this.openLog = !this.openLog;
-    },
-    powerToggl() {
-      this.openPower = !this.openPower;
-    },
-    restartToggle() {
-      this.openRestart = !this.openRestart;
-    },
-    resyncToggle() {
-      this.openResync = !this.openResync;
-    },
-    restartModalClose() {
-      this.restartModalShow = false;
-    },
-    openUpdatePowerStateModal() {
-      this.updatePowerState = true;
-    },
-    closeUpdatePowerStateModal() {
-      this.hideConnectedLines = false;
-      this.runNodePowerModal = false;
-    },
-    showPowerModal() {
-      this.hideConnectedLines = true;
-      this.runNodePowerModal = true;
-    },
-    async restartConfirmed(service) {
-      this.restartLoad = true;
-      service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
-      if (!service.yaml.includes("isPruning: true")) {
-        this.isServiceOn = false;
-        service.serviceIsPending = true;
-        let state = "stopped";
-        if (service.state === "exited") {
-          state = "started";
-          this.isServiceOn = true;
-        }
-        try {
-          await ControlService.manageServiceState({
-            id: service.config.serviceID,
-            state: "stopped",
-          });
-          await ControlService.manageServiceState({
-            id: service.config.serviceID,
-            state: "started",
-          });
-        } catch (err) {
-          console.log(state.replace("ed", "ing") + " service failed:\n", err);
-        }
-        service.serviceIsPending = false;
-        this.updateStates();
-      }
-    },
-    updateStates: async function () {
-      let serviceInfos = await ControlService.listServices();
-      this.installedServices.forEach((s, idx) => {
-        let updated = false;
-        serviceInfos.forEach((i) => {
-          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
-            this.installedServices[idx].state = i.State;
-            updated = true;
-            this.restartModalClose();
-            this.restartLoad = false;
-          }
-        });
-        if (!updated) {
-          this.installedServices[idx].state = "exited";
-        }
-      });
-      this.restartModalShow = false;
-    },
-
-    async stateButtonHandler(state) {
-      this.loading = true;
-      this.closeUpdatePowerStateModal();
-      try {
-        //this is the temporary solution until notification service is exiting correctly
-        let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
-
-        let promises = servicesToManage.map(async (service, index) => {
-          new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
-            ControlService.manageServiceState({
-              id: service.config.serviceID,
-              state: state,
-            });
-          });
-        });
-        promises.push(
-          new Promise((resolve) =>
-            setTimeout(() => {
-              this.loading = false;
-              resolve();
-            }, promises.length * (state == "running" ? 8000 : 4000))
-          )
-        );
-        Promise.all(promises);
-      } catch (err) {
-        console.log(state.replace("ed", "ing") + " services failed:\n", err);
-      }
-    },
-    stateHandler: async function (item) {
-      this.restartModalShow = false;
-      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
-      if (!item.yaml.includes("isPruning: true")) {
-        item.serviceIsPending = true;
-        let state = "stopped";
-        if (item.state === "exited") {
-          state = "started";
-        }
-        try {
-          await ControlService.manageServiceState({
-            id: item.config.serviceID,
-            state: state,
-          });
-        } catch (err) {
-          console.log(state.replace("ed", "ing") + " service failed:\n", err);
-        }
-        item.serviceIsPending = false;
-      }
-    },
-    exportData() {
-      this.exportHovered = false;
-      if (this.stereumConfig.length > 0) {
+const exportData = async () => {
+  if (!isExporting.value) {
+    try {
+      isExporting.value = true;
+      const stereumConfig = await ControlService.exportConfig();
+      if (stereumConfig.length > 0) {
         const zip = new JSZip();
-        const randomNumber = Math.floor(Math.random() * 10000);
 
-        this.stereumConfig.forEach((item) => {
-          const filenameWithRandomNumber = `stereum_config_${randomNumber}.json`;
-          zip.file(filenameWithRandomNumber, item.content);
+        stereumConfig.forEach((item) => {
+          zip.file(item.filename, item.content);
         });
 
         zip.generateAsync({ type: "blob" }).then(function (blob) {
-          saveAs(blob, `stereum_config_${randomNumber}.zip`);
+          saveAs(blob, "stereum_config.zip");
         });
       }
-    },
-
-    async exportConfig() {
-      this.stereumConfig = await ControlService.exportConfig();
-    },
-  },
+    } catch (err) {
+      console.log("Failed exporting config: ", err);
+    } finally {
+      isExporting.value = false;
+    }
+  }
 };
 </script>
 

@@ -202,8 +202,8 @@
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
-import { onMounted, computed } from "vue";
-import { useUpdateCheck } from "@/store/composables/version.js";
+import { onMounted, computed, ref } from "vue";
+import { useUpdateCheck } from "@/composables/version.js";
 
 //Props
 const props = defineProps({
@@ -218,18 +218,18 @@ const serviceStore = useServices();
 const nodeHeaderStore = useNodeHeader();
 
 //Data
-let stereumApp = {
+const stereumApp = ref({
   current: "alpha",
   latest: "2.0",
   autoUpdate: "",
-};
-let osVersionCurrent = "-";
+});
+const osVersionCurrent = ref("-");
 
 //Computed
 const onOff = computed(() => {
   return {
-    green: stereumApp.autoUpdate === "on",
-    red: stereumApp.autoUpdate === "off",
+    green: stereumApp.value.autoUpdate === "on",
+    red: stereumApp.value.autoUpdate === "off",
   };
 });
 
@@ -260,9 +260,9 @@ const checkAvailableServicesNewUpdate = () => {
 const getSettings = async () => {
   let settings = await ControlService.getStereumSettings();
   if (settings.stereum?.settings.updates.unattended.install) {
-    stereumApp.autoUpdate = "on";
+    stereumApp.value.autoUpdate = "on";
   } else {
-    stereumApp.autoUpdate = "off";
+    stereumApp.value.autoUpdate = "off";
   }
 };
 
@@ -302,7 +302,7 @@ const getOsVersion = async () => {
   try {
     const osVersion = await ControlService.getCurrentOsVersion();
 
-    osVersionCurrent = osVersion;
+    osVersionCurrent.value = osVersion;
   } catch (error) {
     console.log(error);
   }

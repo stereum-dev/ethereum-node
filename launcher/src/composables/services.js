@@ -143,3 +143,51 @@ async function useConnectionCheck() {
   }
   return false;
 }
+
+async function updateStates() {
+  const serviceStore = useServices();
+  let serviceInfos = await ControlService.listServices();
+  serviceStore.installedServices.forEach((s, idx) => {
+    let updated = false;
+    serviceInfos.forEach((i) => {
+      if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+        serviceStore.installedServices[idx].state = i.State;
+        updated = true;
+      }
+    });
+    if (!updated) {
+      serviceStore.installedServices[idx].state = "exited";
+    }
+  });
+}
+
+export async function stateHandler(client) {
+  client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
+  if (!client.yaml.includes("isPruning: true")) {
+    client.serviceIsPending = true;
+    let state = "stopped";
+    if (client.state === "exited") {
+      state = "started";
+    }
+    try {
+      await ControlService.manageServiceState({
+        id: client.config.serviceID,
+        state: state,
+      });
+    } catch (err) {
+      console.log(state.replace("ed", "ing") + " service failed:\n", err);
+    }
+    client.serviceIsPending = false;
+    updateStates();
+  }
+}
+
+export async function restartService(client) {
+  client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
+  if (!client.yaml.includes("isPruning: true")) {
+    client.serviceIsPending = true;
+    await ControlService.restartService(client.config.serviceID);
+    client.serviceIsPending = false;
+    updateStates();
+  }
+}

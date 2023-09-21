@@ -18,6 +18,7 @@ import { mapState, map } from 'pinia';
         @hide-modal="clickOutside"
         @state-handler="stateHandler"
         @restart-handler="restartService"
+        @open-doc="openDocs"
       />
       <ConsensusClients
         @open-expert="openExpertWindow"
@@ -25,6 +26,7 @@ import { mapState, map } from 'pinia';
         @hide-modal="clickOutside"
         @state-handler="stateHandler"
         @restart-handler="restartService"
+        @open-doc="openDocs"
       />
       <ValidatorClients
         @open-expert="openExpertWindow"
@@ -32,9 +34,9 @@ import { mapState, map } from 'pinia';
         @hide-modal="clickOutside"
         @state-handler="stateHandler"
         @restart-handler="restartService"
+        @open-doc="openDocs"
       />
     </div>
-    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
     <PruingModal
       v-if="gethPrunningWarningModal"
       :item="item"
@@ -68,7 +70,6 @@ import { useRouter } from "vue-router";
 
 const lineOne = ref(null);
 const lineTwo = ref(null);
-const isServiceOn = ref(false);
 const gethPrunningWarningModal = ref(false);
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
@@ -163,26 +164,6 @@ const getRefOfConnectedClients = () => {
   }
 };
 
-// const restartService = (el) => {
-//   itemToRestart.value = el;
-//   restartModalShow.value = true;
-//   titlePicker.value = restartTitle;
-//   iconPicker.value = restartIcon;
-//   functionCondition.value = true;
-// };
-
-// const restartConfirmed = async (service) => {
-//   restartLoad.value = true;
-//   service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
-//   if (!service.yaml.includes("isPruning: true")) {
-//     isServiceOn.value = false;
-//     service.serviceIsPending = true;
-//     await ControlService.restartService(service.config.serviceID);
-//     service.serviceIsPending = false;
-//     updateStates();
-//   }
-// };
-
 const updateStates = async () => {
   const serviceInfos = await ControlService.listServices();
   installedServices.value.forEach((s, idx) => {
@@ -204,12 +185,10 @@ const updateStates = async () => {
 const stateHandler = async (item) => {
   item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
   if (!item.yaml.includes("isPruning: true")) {
-    isServiceOn.value = false;
     item.serviceIsPending = true;
     let state = "stopped";
     if (item.state === "exited") {
       state = "started";
-      isServiceOn.value = true;
     }
     try {
       await ControlService.manageServiceState({
@@ -352,10 +331,8 @@ const drawConnectingline = (start, middle, end) => {
     }
   }
 };
-
-const getLogs = async (item) => {
-  const logs = await ControlService.getLogs(item);
-  logs.value = logs;
+const openDocs = (item) => {
+  window.open(item.docsUrl, "_blank");
 };
 </script>
 

@@ -1,7 +1,7 @@
 import ControlService from '@/store/ControlService'
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
-import { useBackendServices } from '@/store/composables/services';
+import { useBackendServices } from '@/composables/services';
 
 export async function useUpdateCheck() {
     const serviceStore = useServices();

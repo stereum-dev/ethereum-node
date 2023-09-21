@@ -17,40 +17,60 @@
         class="max-h-[70px] max-w-[160px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md mx-auto mt-8"
       >
         <ServiceLayout :client="item" />
-        <ServiceButtons :client="item" />
+        <ServiceButtons
+          :client="item"
+          @handle-state="stateHandler"
+          @restart-service="restartService"
+          @open-expert-mode="openExpertMode"
+          @open-logs="openLogs"
+          @open-docs="openDocs"
+        />
+        <ExpertWindow v-if="item.expertOptionsModal" :item="item" @hide-modal="closeExpertMode(item)" />
+        <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closeLogs" />
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { mapState } from "pinia";
+<script setup>
+import { stateHandler, restartService } from "@/composables/services";
 import { useServices } from "@/store/services";
 import ServiceLayout from "./ServiceLayout.vue";
 import ServiceButtons from "./ServiceButtons.vue";
-export default {
-  name: "ServiceBody",
-  components: {
-    ServiceLayout,
-    ServiceButtons,
-  },
-  props: {},
-  data() {
-    return {};
-  },
-  computed: {
-    getServices() {
-      return this.installedServices
-        .filter((e) => e.category === "service")
-        .sort((a, b) => a.name.localeCompare(b.name));
-    },
+import PluginLogs from "../../sections/PluginLogs.vue";
+import { computed, ref } from "vue";
+import ExpertWindow from "../../sections/ExpertWindow.vue";
 
-    ...mapState(useServices, {
-      installedServices: "installedServices",
-    }),
-  },
-  mounted() {},
-  methods: {},
+const isPluginLogPageActive = ref(false);
+const itemToLogs = ref({});
+
+const serviceStore = useServices();
+
+const getServices = computed(() => {
+  return serviceStore.installedServices
+    .filter((e) => e.category === "service")
+    .sort((a, b) => a.name.localeCompare(b.name));
+});
+
+const openExpertMode = (item) => {
+  item.expertOptionsModal = true;
+};
+
+const closeExpertMode = (item) => {
+  item.expertOptionsModal = false;
+};
+
+const openDocs = (item) => {
+  window.open(item.docsUrl, "_blank");
+};
+
+const openLogs = (item) => {
+  isPluginLogPageActive.value = true;
+  itemToLogs.value = item;
+};
+
+const closeLogs = () => {
+  isPluginLogPageActive.value = false;
 };
 </script>
 <style scoped>

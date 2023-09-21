@@ -7,22 +7,26 @@
     <div
       class="w-[156px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
     >
-      {{ client.name }}
-      <span class="w-5 h-[16px] bg-green-500 border border-green-500 rounded-r-full"></span>
+      {{ props.client.name }}
+      <span :class="clientStatus"></span>
     </div>
     <div class="flex justify-center items-center">
-      <img class="w-3/5" :src="client.sIcon" alt="icon" />
+      <img class="w-3/5" :src="props.client.sIcon" alt="icon" />
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    client: {
-      type: Object,
-      required: true,
-    },
-  },
-  computed: {},
-};
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps({
+  client: { type: Object, required: true },
+});
+const clientStatus = computed(() => {
+  if (props.client.state === "running") {
+    return "w-5 h-[16px] bg-green-500 border border-green-500 rounded-r-full";
+  } else if (props.client.state === "restarting") {
+    return "w-5 h-[16px] bg-orange-500 border border-orange-500 rounded-r-full";
+  }
+  return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
+});
 </script>

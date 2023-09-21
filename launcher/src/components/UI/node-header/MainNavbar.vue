@@ -9,7 +9,7 @@
 import PagesNav from "./PagesNav.vue";
 import IconsNav from "./IconsNav.vue";
 import ServiceLinks from "./ServiceLinks.vue";
-import { useFrontendServices } from "@/store/composables/services";
+import { useFrontendServices } from "@/composables/services";
 import { onBeforeUnmount, onMounted } from "vue";
 let intervalID;
 

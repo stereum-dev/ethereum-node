@@ -13,6 +13,7 @@
         @open-log="$emit('openLog', item)"
         @state-handler="$emit('stateHandler', item)"
         @restart-handler="$emit('restartHandler', item)"
+        @open-doc="$emit('openDoc', item)"
       />
       <ExpertWindow
         v-if="item.expertOptionsModal"

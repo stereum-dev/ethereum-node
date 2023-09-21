@@ -22,12 +22,6 @@
         <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
       </div>
       <div class="w-full h-[30px] space-y-4 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
-        <!-- plugin docs row -->
-        <div v-if="!isExpertModeActive && !ssvExpertModeActive" class="docBox">
-          <img class="titleIcon" src="/img/icon/plugin-menu-icons/doc.png" alt="icon" />
-          <span class="docTitle">SERVICE DOCS</span>
-          <span class="openBtn" @click="openDocs(item.docsUrl)">open</span>
-        </div>
         <!-- expert mode row -->
         <div v-if="!ssvExpertModeActive" class="z-10 dataTitleBox" @click="openExpertMode">
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
@@ -175,14 +169,14 @@
         <div v-if="isExpertModeActive" class="expertMode">
           <textarea
             v-model="item.yaml"
-            class="w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
+            class="font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
             @input="somethingIsChanged"
           ></textarea>
         </div>
         <div v-if="ssvExpertModeActive" class="expertMode">
           <textarea
             v-model="item.ssvConfig"
-            class="w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
+            class="font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
             @input="somethingIsChanged"
           ></textarea>
         </div>

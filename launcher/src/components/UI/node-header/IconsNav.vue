@@ -59,7 +59,7 @@ import NotifModal from "./NotifModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
-import { useUpdateCheck } from "../../../store/composables/version";
+import { useUpdateCheck } from "@/composables/version";
 import TutorialGuide from "../the-node/TutorialGuide.vue";
 import StakeGuide from "../the-node/StakeGuide.vue";
 export default {
