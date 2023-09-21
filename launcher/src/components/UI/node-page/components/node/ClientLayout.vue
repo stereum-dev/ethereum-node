@@ -26,7 +26,7 @@
     </div>
 
     <div
-      v-if="getConnectedMevboost.config.serviceID === client.config.serviceID"
+      v-if="getConnectedMevboost?.config.serviceID === client.config.serviceID"
       class="h-1/3 flex justify-evenly items-center absolute -start-3 -bottom-3"
     >
       <img class="w-8" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
