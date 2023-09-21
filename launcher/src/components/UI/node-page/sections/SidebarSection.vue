@@ -153,9 +153,9 @@ export default {
       ipAddress: "ipAddress",
     }),
     checkStatus() {
-      let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
+      let servicesToManage = this.installedServices.filter((service) => service?.name !== "Notifications");
 
-      return !servicesToManage.some((s) => s.state == "running");
+      return !servicesToManage.some((s) => s?.state == "running");
     },
 
     sortedServices() {

@@ -68,11 +68,12 @@
 </template>
 
 <script setup>
-import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services";
 import ClientLayout from "./ClientLayout.vue";
 
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect, watch } from "vue";
 
 //Props & Emits
 const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
@@ -80,30 +81,27 @@ const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
 //Refs
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
+const manageStore = useNodeManage();
 const serviceStore = useServices();
 const isConfirmLoading = ref(false);
 const isMouseOverClient = ref(false);
 
 // computed & watchers properties
 const getConsensus = computed(() => {
-  let service;
-  service = serviceStore.installedServices.filter((e) => e?.category == "consensus");
-  return service;
-});
+  return manageStore.newConfiguration
+    .filter((e) => e && e?.category == "consensus")
+    .sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
 
-watchEffect(() => {
-  getConsensus.value.sort((a, b) => {
-    let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
-
-    if (fa < fb) {
-      return -1;
-    }
-    if (fa > fb) {
-      return 1;
-    }
-    return 0;
-  });
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
 });
 
 const getExecutionRef = computed(() => {
@@ -115,17 +113,25 @@ const getExecutionRef = computed(() => {
   });
 });
 
-watchEffect(() => {
+watch(nodeStore.executionRef, () => {
   nodeStore.executionRef = getExecutionRef.value;
+});
+watch(manageStore.newConfiguration, () => {
+  if (!manageStore.newConfiguration.length > 0) {
+    serviceStore.installedServices.forEach((service) => {
+      manageStore.newConfiguration.push(service);
+    });
+    console.log(manageStore.newConfiguration);
+  }
 });
 
 watchEffect(() => {
   let connsectedConsensus;
-  connsectedConsensus = serviceStore.installedServices
-    .filter((e) => e.category === "consensus")
-    .find((e) => e.config?.dependencies.executionClients[0]);
-  serviceStore.installedServices.map((service) => {
-    if (service.service === connsectedConsensus.service) {
+  connsectedConsensus = manageStore.newConfiguration
+    .filter((e) => e?.category === "consensus")
+    .find((e) => e.config.dependencies.executionClients[0]);
+  manageStore.newConfiguration = manageStore.newConfiguration.map((service) => {
+    if (connsectedConsensus && service.service === connsectedConsensus.service) {
       service.serviceIsConnected = true;
       service.connectedToExecution = true;
     }
@@ -153,7 +159,7 @@ const mouseLeaveHandler = (item) => {
 };
 
 const displayMenu = (item) => {
-  serviceStore.installedServices.forEach((service) => {
+  manageStore.newConfiguration.forEach((service) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });

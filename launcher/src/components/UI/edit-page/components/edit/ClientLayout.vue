@@ -15,7 +15,7 @@ import { computed, ref } from 'vue';
     </div>
 
     <div
-      v-if="getConnectedMevboost === client.config.serviceID"
+      v-if="getConnectedMevboost?.config.serviceID === client.config.serviceID"
       class="h-1/3 flex justify-evenly items-center absolute -start-2 -top-4"
     >
       <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
@@ -47,7 +47,7 @@ const getConnectedMevboost = computed(() => {
   connectedMevboost = serviceStore.installedServices
     .filter((e) => e?.category === "consensus")
     .find((e) => e?.config.dependencies.mevboost[0]);
-  return connectedMevboost?.config.serviceID;
+  return connectedMevboost;
 });
 
 // Methods

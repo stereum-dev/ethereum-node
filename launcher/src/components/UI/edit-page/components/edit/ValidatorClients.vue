@@ -1,5 +1,8 @@
 <template>
-  <div class="col-start-1 col-end-2 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative">
+  <div
+    v-if="getValidators.length > 0"
+    class="col-start-1 col-end-2 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative"
+  >
     <div
       v-for="item in getValidators"
       :key="item"
@@ -42,62 +45,56 @@
 </template>
 
 <script setup>
-import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
-import { computed, reactive, watchEffect } from "vue";
+import { computed, watchEffect, ref, watch } from "vue";
 
 // Variables & Constants
 
 const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
-const validatorRefs = reactive([]);
+const validatorRefs = ref([]);
 const nodeStore = useNodeStore();
-const serviceStore = useServices();
+const manageStore = useNodeManage();
 
 // Computed & Watchers
 
-const installedServices = computed(() => serviceStore.installedServices);
-
 const getValidators = computed(() => {
-  let service;
-  service = installedServices.value.filter((e) => e?.category == "validator");
-  return service;
-});
+  return manageStore.newConfiguration
+    .filter((e) => e && e.category == "validator")
+    .sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+        fb = b.name.toLowerCase();
 
-watchEffect(() => {
-  getValidators.value.sort((a, b) => {
-    let fa = a.name.toLowerCase(),
-      fb = b.name.toLowerCase();
-
-    if (fa < fb) {
-      return -1;
-    }
-    if (fa > fb) {
-      return 1;
-    }
-    return 0;
-  });
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
 });
 
 const getValidatorRef = computed(() =>
-  validatorRefs.map((el, index) => ({
+  validatorRefs.value.map((el, index) => ({
     ref: el,
     refId: getValidators.value[index]?.config.serviceID,
   }))
 );
 
-watchEffect(getValidatorRef, () => {
+watch(getValidatorRef, () => {
   nodeStore.validatorRef.value = getValidatorRef.value;
 });
 
 watchEffect(() => {
   let connectedValidator;
-  connectedValidator = serviceStore.installedServices
-    .filter((e) => e.category === "validator")
-    .find((e) => e.config.dependencies.consensusClients.length > 0);
+  connectedValidator = manageStore.newConfiguration
+    .filter((e) => e?.category === "validator")
+    .find((e) => e.config.dependencies.consensusClients[0]);
 
-  serviceStore.installedServices.map((service) => {
-    if (service.service === connectedValidator.service) {
+  manageStore.newConfiguration = manageStore.newConfiguration.map((service) => {
+    if (connectedValidator && service.service === connectedValidator.service) {
       service.serviceIsConnected = true;
       service.connectedToConsensus = true;
     }
@@ -107,7 +104,7 @@ watchEffect(() => {
 // Methods
 
 const displayMenu = (item) => {
-  serviceStore.installedServices.map((service) => {
+  manageStore.newConfiguration.map((service) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });

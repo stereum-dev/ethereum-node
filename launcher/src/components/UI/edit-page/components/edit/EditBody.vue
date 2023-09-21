@@ -56,7 +56,7 @@ import EditHeader from "./EditHeader.vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect, watch } from 'vue';
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 
@@ -82,7 +82,7 @@ const displayDropZone = computed(() => {
   return dropClass;
 });
 
-watchEffect(serviceStore.installedServices, () => {
+watch(serviceStore.installedServices, () => {
   const validators = serviceStore.installedServices.filter((service) => service.category === "validator");
 
   const consensus = serviceStore.installedServices.filter((service) => service.category === "consensus");
@@ -104,13 +104,8 @@ const onDrop = (event) => {
 };
 
 const removeInstalledService = (item) => {
-  console.log(item);
-  manageStore.confirmChanges.push({
-    id: item.config.serviceID,
-    content: "DELETE",
-    contentIcon: "/img/icon/manage-node-icons/trash.png",
-    service: manageStore.currentNetwork,
-  });
+  emit("deleteService", item);
+
 };
 
 const confirmConnection = (item) => {

@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, onMounted, watchEffect } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
@@ -48,9 +48,7 @@ const getConsensusRef = computed(() =>
   }))
 );
 
-
-
-watch(getConsensusRef, () => {
+watchEffect(getConsensusRef, () => {
   nodeStore.consensusRef.value = getConsensusRef.value;
 });
 
