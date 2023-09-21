@@ -36,33 +36,36 @@
 </template>
 
 <script setup>
+import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
+
 import { computed, ref, watchEffect } from "vue";
-import { useNodeManage } from "@/store/nodeManage";
 
 const emit = defineEmits(["deleteService", "switchClient"]);
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
-const manageStore = useNodeManage();
+const serviceStore = useServices();
 
 const getExecutions = computed(() => {
   let service;
-  service = manageStore.newConfiguration
-    .filter((e) => e && e.category == "execution")
-    .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
-
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
-    });
+  service = serviceStore.installedServices.filter((e) => e?.category == "execution");
   return service;
+});
+
+watchEffect(() => {
+  getExecutions.value.sort((a, b) => {
+    let fa = a.name.toLowerCase(),
+      fb = b.name.toLowerCase();
+
+    if (fa < fb) {
+      return -1;
+    }
+    if (fa > fb) {
+      return 1;
+    }
+    return 0;
+  });
 });
 
 const getExecutionRef = computed(() => {
@@ -81,14 +84,14 @@ watchEffect(() => {
 watchEffect(() => {
   let connsectedConsensus;
   let connectedExecution;
-  connsectedConsensus = manageStore.newConfiguration
-    .filter((e) => e?.category === "consensus")
-    .find((e) => e.config.dependencies.executionClients[0]);
+  connsectedConsensus = serviceStore.installedServices
+    .filter((e) => e.category === "consensus")
+    .find((e) => e.config.dependencies.executionClients.length > 0);
 
   connectedExecution = connsectedConsensus?.config.dependencies.executionClients[0];
 
-  manageStore.newConfiguration = manageStore.newConfiguration.map((service) => {
-    if (connectedExecution && service.service === connectedExecution.service) {
+  serviceStore.installedServices.map((service) => {
+    if (service.service === connectedExecution.service) {
       service.serviceIsConnected = true;
       service.connectedToConsensus = true;
     }
@@ -98,7 +101,7 @@ watchEffect(() => {
 // Methods
 
 const displayMenu = (item) => {
-  manageStore.newConfiguration.map((service) => {
+  serviceStore.installedServices.map((service) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });

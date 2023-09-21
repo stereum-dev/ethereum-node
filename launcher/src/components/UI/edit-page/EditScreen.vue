@@ -12,7 +12,6 @@
           @confirm-connection="confirmConnection"
           @switch-client="switchClientModalhandler"
           @connect-client="clientConnectionHandler"
-          @delete-sercive="deleteService"
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
@@ -74,7 +73,7 @@ import SwitchModal from "./components/modals/SwitchModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, watch, watchEffect } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const serviceStore = useServices();
@@ -84,59 +83,45 @@ const isOverDropZone = ref(false);
 const list = ref([]);
 const clientToSwitch = ref(null);
 const isConfirmLoading = ref(false);
+
 const isSwitchPanelOpen = ref(false);
 
-watchEffect(() => {
-  manageStore.newConfiguration = serviceStore.installedServices.forEach((service) => {
-    if (service === undefined) {
-      manageStore.newConfiguration.push(service);
-    }
-  });
-});
-console.log(manageStore.newConfiguration);
-
-// Lifecycle hooks
-
 onMounted(() => {
-  changeClinetOnMounted();
+  serviceStore.installedServices = serviceStore.installedServices
+    .filter((service) => service?.category === "consensus")
+    .map((el) => {
+      return {
+        ...el,
+        serviceIsConnected: false,
+        connectedToExecution: false,
+        connectedToValidator: false,
+      };
+    });
+});
+onMounted(() => {
+  serviceStore.installedServices = serviceStore.installedServices
+    .filter((service) => service?.category === "execution")
+    .map((el) => {
+      return {
+        ...el,
+        serviceIsConnected: false,
+        connectedToConsensus: false,
+      };
+    });
+});
+onMounted(() => {
+  serviceStore.installedServices = serviceStore.installedServices
+    .filter((service) => service?.category === "validator")
+    .map((el) => {
+      return {
+        ...el,
+        serviceIsConnected: false,
+        connectedToConsensus: false,
+      };
+    });
 });
 
-// ******** Methods ********
-
-const changeClinetOnMounted = () => {
-  if (manageStore.newConfiguration.length > 0 && manageStore.newConfiguration[0] !== undefined) {
-    manageStore.newConfiguration = manageStore.newConfiguration
-      .filter((service) => service?.category === "consensus")
-      .map((el) => {
-        return {
-          ...el,
-          serviceIsConnected: false,
-          connectedToExecution: false,
-          connectedToValidator: false,
-        };
-      });
-
-    manageStore.newConfiguration = manageStore.newConfiguration
-      .filter((service) => service?.category === "execution")
-      .map((el) => {
-        return {
-          ...el,
-          serviceIsConnected: false,
-          connectedToConsensus: false,
-        };
-      });
-
-    manageStore.newConfiguration = manageStore.newConfiguration
-      .filter((service) => service?.category === "validator")
-      .map((el) => {
-        return {
-          ...el,
-          serviceIsConnected: false,
-          connectedToConsensus: false,
-        };
-      });
-  }
-};
+// Methods
 
 // Random ID generator
 function generateRandomId() {
@@ -146,8 +131,6 @@ function generateRandomId() {
 }
 
 const randomId = generateRandomId();
-
-console.log("ONCE", manageStore.newConfiguration);
 
 // Switch Clients methods
 const switchClientModalhandler = (item) => {
@@ -162,15 +145,15 @@ const switchClientModalhandler = (item) => {
 
 const switchClientConfirm = (item) => {
   isSwitchPanelOpen.value = false;
-  const current = manageStore.newConfiguration.find(
+  const current = serviceStore.installedServices.find(
     (e) => e?.config.serviceID === clientToSwitch.value?.config.serviceID
   );
 
-  const currentClientIndex = manageStore.newConfiguration.indexOf(current);
+  const currentClientIndex = serviceStore.installedServices.indexOf(current);
 
-  manageStore.newConfiguration.splice(currentClientIndex, 1);
+  serviceStore.installedServices.splice(currentClientIndex, 1);
 
-  manageStore.newConfiguration.push(item);
+  serviceStore.installedServices.push(item);
   manageStore.confirmChanges.push({
     id: randomId,
     content: "SWITCH CLIENT",
@@ -197,7 +180,7 @@ const clientConnectionHandler = (item) => {
 // Mevboost connection methods
 
 const changeMevboostConnection = () => {
-  manageStore.newConfiguration = manageStore.newConfiguration
+  serviceStore.installedServices = serviceStore.installedServices
     .filter((e) => e.category == "consensus")
     .map((e) => {
       if (e?.config.dependencies.mevboost[0]) {
@@ -305,18 +288,6 @@ const nukeNode = async () => {
   await ControlService.destroy();
   await ControlService.logout();
   router.push("/");
-};
-
-const deleteService = (item) => {
-  const currentClientIndex = manageStore.newConfiguration.indexOf(item);
-  console.log(currentClientIndex);
-  manageStore.newConfiguration.splice(currentClientIndex, 1);
-  manageStore.confirmChanges.push({
-    id: item.config.serviceID,
-    content: "DELETE",
-    contentIcon: "/img/icon/manage-node-icons/trash.png",
-    service: item,
-  });
 };
 </script>
 

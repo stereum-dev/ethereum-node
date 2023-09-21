@@ -51,7 +51,7 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watchEffect } from "vue";
+import { ref, computed, onMounted, reactive, watchEffect } from "vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import PluginLogs from "../../sections/PluginLogs.vue";
@@ -72,12 +72,12 @@ const isServiceOn = ref(false);
 const gethPrunningWarningModal = ref(false);
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
-// const itemToRestart = ref({});
+const itemToRestart = ref({});
 const resyncWarningModal = ref(false);
 const isClientLinkedToMev = ref(false);
 const restartModalShow = ref(false);
 
-const connected = ref({
+const connected = reactive({
   val: null,
   con: null,
   exe: null,
@@ -107,10 +107,10 @@ watchEffect(installedServices, (newServices) => {
     .find((item) => item.config.dependencies.consensusClients[0]);
 
   if (connectedVal) {
-    connected.value.con = connectedVal.config.dependencies.consensusClients[0];
-    connected.value.exe = connected.value.con.dependencies.executionClients[0];
+    connected.con = connectedVal.config.dependencies.consensusClients[0];
+    connected.exe = connected.con.dependencies.executionClients[0];
   }
-  if (connected.value.con.dependencies.mevboost) {
+  if (connected.con.dependencies.mevboost) {
     isClientLinkedToMev.value = true;
   }
 });
@@ -142,8 +142,9 @@ const hideConnectedLinesHandler = () => {
 
 const getRefOfConnectedClients = () => {
   const connectedVal = connectedVal;
-  const connectedCons = connected.value.con;
-  const connectedExec = connected.value.exe;
+  const connectedCons = connected.con;
+  const connectedExec = connected.exe;
+  console.log(connected.val);
 
   if (connectedVal) {
     console.log(connectedVal.config.serviceID);

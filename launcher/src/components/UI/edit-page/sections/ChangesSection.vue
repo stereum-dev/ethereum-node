@@ -22,17 +22,17 @@ import ChangesBox from "../components/changes/ChangesBox";
 
 const disableBtn = ref(false);
 
-const manageStore = useNodeManage();
+const editStore = useNodeManage();
 const serviceStore = useServices();
 
 const confirmHandler = async () => {
   disableBtn.value = true;
-  await ControlService.handleServiceChanges(manageStore.confirmChanges);
+  await ControlService.handleServiceChanges(editStore.confirmChanges);
   setTimeout(() => {
-    manageStore.newConfiguration = serviceStore.installedServices;
+    editStore.newConfiguration = serviceStore.installedServices;
   }, 4000);
 
-  manageStore.confirmChanges = [];
+  editStore.confirmChanges = [];
   disableBtn.value = false;
 };
 </script>

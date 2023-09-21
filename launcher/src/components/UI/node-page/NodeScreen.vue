@@ -36,9 +36,6 @@ import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
-import { useServices } from "@/store/services";
-import { useNodeManage } from "@/store/nodeManage";
-
 export default {
   name: "NodeScreen",
   components: {
@@ -63,18 +60,8 @@ export default {
       hideConnectedLines: "hideConnectedLines",
       runNodePowerModal: "runNodePowerModal",
     }),
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-    }),
-
-    ...mapWritableState(useNodeManage, {
-      newConfiguration: "newConfiguration",
-    }),
   },
   mounted() {},
-  unmounted() {
-    this.newConfiguration = [...this.installedServices];
-  },
   methods: {
     alarmToggle() {
       this.infoAlarm = !this.infoAlarm;
