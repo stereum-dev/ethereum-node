@@ -26,12 +26,9 @@
           >
             <img
               class="w-5 z-10"
-              :class="trashAnimated"
               src="/img/icon/manage-node-icons/connection.png"
               alt=""
               @mousedown.prevent.stop
-              @click="animIsActive = true"
-              @mouseleave="animIsActive = false"
             />
           </div>
           <div

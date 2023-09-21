@@ -99,6 +99,8 @@ onMounted(() => {
       connectedToValidator: false,
       connectedToConsensus: false,
       isRemoveProcessing: false,
+      isConnectedToMevboost: false,
+      isNotConnectedToMevboost: false,
     };
   });
 });
@@ -127,15 +129,15 @@ const switchClientModalhandler = (item) => {
 
 const switchClientConfirm = (item) => {
   isSwitchModalOpen.value = false;
-  const current = serviceStore.installedServices.find(
+  const current = manageStore.newConfiguration.find(
     (e) => e?.config.serviceID === clientToSwitch.value?.config.serviceID
   );
 
-  const currentClientIndex = serviceStore.installedServices.indexOf(current);
+  const currentClientIndex = manageStore.newConfiguration.indexOf(current);
 
-  serviceStore.installedServices.splice(currentClientIndex, 1);
+  manageStore.newConfiguration.splice(currentClientIndex, 1);
 
-  serviceStore.installedServices.push(item);
+  manageStore.newConfiguration.push(item);
   manageStore.confirmChanges.push({
     id: randomId,
     content: "SWITCH CLIENT",
@@ -154,7 +156,7 @@ const clientConnectionHandler = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "CLIENT CONNECT",
-    contentIcon: "/img/icon/manage-node-icons/CONNECT.png",
+    contentIcon: "/img/icon/manage-node-icons/connection.png",
     service: item,
   });
 };
@@ -165,19 +167,12 @@ const changeMevboostConnection = () => {
   const hasConsensusWithMevboost = manageStore.newConfiguration.some((e) => {
     return e.category === "consensus" && !e.config.dependencies.mevboost[0];
   });
-  console.log(hasConsensusWithMevboost);
   if (hasConsensusWithMevboost) {
-    manageStore.newConfiguration = manageStore.newConfiguration.map((e) => {
+    manageStore.newConfiguration.forEach((e) => {
       if (e.config.dependencies.mevboost[0]) {
-        return {
-          ...e,
-          isConnectedToMevboost: true,
-        };
+        e.isConnectedToMevboost = true;
       } else if (!e.config.dependencies.mevboost[0]) {
-        return {
-          ...e,
-          isNotConnectedToMevboost: true,
-        };
+        e.isNotConnectedToMevboost = true;
       }
     });
   } else {
@@ -233,7 +228,7 @@ const startDrag = (event, item) => {
 const onDrop = (event) => {
   const itemID = event.dataTransfer.getData("itemId");
   isOverDropZone.value = false;
-  const copyAllServices = JSON.parse(JSON.stringify(serviceStore.allServices));
+  const copyAllServices = structuredClone(serviceStore.allServices);
   const item = copyAllServices.find((item) => item.id == itemID);
   if (item.category === "service" && list.value.map((s) => s.service).includes(item.service)) {
     return;

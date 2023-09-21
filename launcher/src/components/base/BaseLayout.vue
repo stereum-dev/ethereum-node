@@ -5,7 +5,7 @@
     <div
       class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634]"
     >
-      <div class="absolute left-1 top-1 w-20 rounded-tl-lg z-50" @pointerdown.prevent.stop @mousedown.prevent.stop>
+      <div class="absolute left-1 top-1 w-[72px] rounded-tl-lg z-50" @pointerdown.prevent.stop @mousedown.prevent.stop>
         <img src="/img/icon/LOGO.png" class="rounded-tl-lg" />
       </div>
       <MainNavbar />

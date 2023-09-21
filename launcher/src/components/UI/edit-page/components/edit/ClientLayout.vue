@@ -15,8 +15,8 @@ import { computed, ref } from 'vue';
     </div>
 
     <div
-      v-if="getConnectedMevboost?.config.serviceID === client.config?.serviceID"
-      class="h-1/3 flex justify-evenly items-center absolute -start-2 -top-4"
+      v-if="client.category === 'consensus' && getConnectedMevboost?.config.serviceID === client.config?.serviceID"
+      class="flex justify-evenly items-center absolute left-[1px] -top-[1px]"
     >
       <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
@@ -31,7 +31,6 @@ import { computed, ref } from 'vue';
 
 <script setup>
 import { computed } from "vue";
-import { useNodeManage } from "@/store/nodeManage";
 
 // Props
 const { client } = defineProps({
@@ -41,15 +40,12 @@ const { client } = defineProps({
   },
 });
 
-const manageStore = useNodeManage();
-
 const serviceId = computed(() => formattedServiceID(client?.config.serviceID));
 
 const getConnectedMevboost = computed(() => {
   let connectedMevboost;
-  connectedMevboost = manageStore.newConfiguration
-    .filter((e) => e.category == "consensus")
-    .find((e) => e.config.dependencies.mevboost[0]);
+  if (client?.config.dependencies.mevboost[0]) connectedMevboost = client;
+
   return connectedMevboost;
 });
 
