@@ -49,6 +49,7 @@ import { mapState, map } from 'pinia';
       @cancel-warning="hideResyncWarningsModal"
       @confirm-btn="confirmRunningResync($event, item)"
     />
+    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
   </div>
 </template>
 
@@ -232,6 +233,7 @@ const confirmRunningResync = async (event, service) => {
 };
 
 const openLogsPage = (item) => {
+  console.log("hello");
   itemToLogs.value = item;
   isPluginLogPageActive.value = true;
 };

@@ -16,13 +16,13 @@
           <button
             class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
             @click="alarmToggle"
-            @mouseenter="cursorLocation = infoAlarm ? `${chckTutorial}` : `${returnStatus}`"
+            @mouseenter="cursorLocation = nodeStore.infoAlarm ? `${chckTutorial}` : `${returnStatus}`"
             @mouseleave="cursorLocation = ''"
           >
             <img class="w-8" src="/img/icon/round-icon.png" alt="information" />
           </button>
         </div>
-        <AlertSection :info-aralm="infoAlarm" />
+        <AlertSection :info-aralm="nodeStore.infoAlarm" />
       </div>
     </div>
 
@@ -34,20 +34,59 @@ import SidebarSection from "./sections/SidebarSection";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useNodeStore } from "@/store/theNode";
+import ControlService from "@/store/ControlService";
+import { useServices } from "@/store/services";
+import { useNodeHeader } from "@/store/nodeHeader";
+import { useControlStore } from "@/store/theControl";
 
-const expertModeClient = ref(null);
-const updatePowerState = ref(false);
 const cursorLocation = ref("");
 const chckTutorial = "/img/icon/round-icon.png";
 const returnStatus = "/img/icon/round-icon.png";
-const displayUpdatePanel = ref(false);
 
-const { infoAlarm, hideConnectedLines, runNodePowerModal } = useNodeStore();
+let polling = null;
+let pollingVitals = null;
+
+const nodeStore = useNodeStore();
+const headerStore = useNodeHeader();
+const serviceStore = useServices();
+const controlStore = useControlStore();
 
 const alarmToggle = () => {
-  infoAlarm.value = !infoAlarm.value;
+  nodeStore.infoAlarm = !nodeStore.infoAlarm;
+};
+
+onMounted(() => {
+  updateConnectionStats();
+  updateServiceLogs();
+  polling = setInterval(updateServiceLogs, 10000); // refresh logs
+  pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
+});
+
+onUnmounted(() => {
+  clearInterval(polling);
+  clearInterval(pollingVitals);
+});
+
+const updateConnectionStats = async () => {
+  const stats = await ControlService.getConnectionStats();
+  controlStore.ServerName = stats.ServerName;
+  controlStore.ipAddress = stats.ipAddress;
+};
+const updateServiceLogs = async () => {
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+    const data = await ControlService.getServiceLogs();
+    nodeStore.serviceLogs = data;
+  }
+};
+const updateServerVitals = async () => {
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+    const data = await ControlService.getServerVitals();
+    controlStore.cpu = data.cpu;
+    controlStore.availDisk = data.availDisk;
+    controlStore.usedPerc = data.usedPerc;
+  }
 };
 </script>
 
