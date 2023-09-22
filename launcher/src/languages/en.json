@@ -521,7 +521,10 @@
     "stepTwo": "Open the app on your smartphone",
     "stepThree": "Scan the QR Code",
     "stepFour": "Send a test notification",
-    "close": "click outside to close"
+    "close": "click outside to close",
+    "dash": "Dashboard",
+    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
+    "goTo": "Go to"
   },
   "replacePanel": {
     "client": "Client",

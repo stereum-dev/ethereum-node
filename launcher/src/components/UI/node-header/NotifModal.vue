@@ -57,12 +57,12 @@
         <div class="banner" @click="beaconchaDashboard = false">
           <div class="banner_icon"><img src="/img/icon/service-icons/beaconchain.png" /></div>
           <div class="banner_title">
-            <span>Beaconchain Dashboard</span>
+            <span>Beaconchain {{ $t("notifModal.dash") }}</span>
           </div>
         </div>
         <div class="qrContent">
           <div class="beaconcha-dash-container">
-            <div class="choose-validator-title">CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO</div>
+            <div class="choose-validator-title">{{ $t("notifModal.chooseVal") }}</div>
             <div class="choose-validator_validators">
               <div
                 v-for="validator in installedValidators"
@@ -77,7 +77,9 @@
                 />
               </div>
             </div>
-            <div class="go-to-link">Go to <span @click="openBeaconcha()">https://beaconcha.in/login#app</span></div>
+            <div class="go-to-link">
+              {{ $t("notifModal.goTo") }}<span @click="openBeaconcha()">https://beaconcha.in/login#app</span>
+            </div>
             <div class="enter-box">
               <div class="enter-input">
                 <div class="enter-input_title">MACHINE NAME</div>
