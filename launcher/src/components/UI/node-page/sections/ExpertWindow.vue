@@ -821,8 +821,8 @@ input:checked + .slider:before {
 }
 .expertTable {
   width: 100%;
-  height: 80%;
-  max-height: 260px;
+  height: 100%;
+  max-height: 320px;
   justify-content: center;
   align-items: center;
   display: none;

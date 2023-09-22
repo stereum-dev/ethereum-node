@@ -51,7 +51,6 @@ import { useControlStore } from "@/store/theControl";
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
-const updatePowerState = ref(false);
 const cursorLocation = ref("");
 const chckTutorial = "/img/icon/round-icon.png";
 const returnStatus = "/img/icon/round-icon.png";
