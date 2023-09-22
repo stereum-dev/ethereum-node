@@ -141,7 +141,7 @@
         </div>
         <div class="message-text_container update-items">
           <div class="main-message">
-            <span>{{ nameFilter(item) }} UPDATE</span>
+            <span>UPDATE available</span>
           </div>
           <div class="val-message">
             <span>{{ item.version }}</span>
@@ -280,13 +280,6 @@ export default {
     this.cpuMeth();
   },
   methods: {
-    nameFilter(arg) {
-      if (arg.name === "PrometheusNodeExporter") {
-        return "Node Exporter";
-      } else {
-        return arg.name;
-      }
-    },
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
         return "/img/icon/plugin-icons/Other/PrometheusNodeExporter-s.png";
