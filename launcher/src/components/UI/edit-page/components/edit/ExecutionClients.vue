@@ -4,13 +4,13 @@
       v-for="item in getExecutions"
       :key="item"
       ref="executionRefs"
-      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md border border-gray-700 bg-[#212629] shadow-md hover:bg-[#374045] self-center justify-self-center cursor-pointer relative"
+      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md hover:bg-[#374045] self-center justify-self-center cursor-pointer border bg-[#212629] border-gray-700 relative"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
     >
       <ClientLayout :client="item" />
-      <Transition name="slide-fade">
+      <TransitionGroup name="slide-fade">
         <div
           v-if="item.displayPluginMenu"
           class="absolute inset-x-0 w-full h-full flex justify-center items-center z-50"
@@ -31,7 +31,34 @@
             />
           </div>
         </div>
-      </Transition>
+        <div
+          v-if="item.isNotConnectedToConsensus"
+          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
+          @mousedown.prevent
+        >
+          <div class="flex justify-center items-center bg-gray-900 z-20 p-2 rounded-md space-x-2">
+            <img
+              v-if="!item.isConfirmProcessing"
+              class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
+              src="/img/icon/manage-node-icons/connection.png"
+              alt="Trash Icon"
+              @click="confirmConsensus(item)"
+            />
+            <div
+              v-else-if="item.isConfirmProcessing"
+              class="w-6 h-6 pt-1 bg-gray-500 rounded-md border border-gray-700"
+            >
+              <svg class="animate-spin rounded-full border-t-2 border-r-2 border-blue-100 h-4 w-4 mx-auto"></svg>
+            </div>
+            <img
+              class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
+              src="/img/icon/the-staking/close.png"
+              alt="CIcon"
+              @click="item.isNotConnectedToConsensus = false"
+            />
+          </div>
+        </div>
+      </TransitionGroup>
     </div>
   </div>
 </template>
@@ -52,7 +79,7 @@ const serviceStore = useServices();
 
 const getExecutions = computed(() => {
   return manageStore.newConfiguration
-    .filter((e) => e?.category == "execution")
+    .filter((e) => e.category == "execution")
     .sort((a, b) => {
       let fa = a.name.toLowerCase(),
         fb = b.name.toLowerCase();
@@ -98,15 +125,18 @@ watchEffect(() => {
 });
 
 // Methods
-
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
-    return "bg-red-600 ";
+    return "bg-red-600 hover:red-600";
+  }
+  if (item.hasOwnProperty("isNotConnectedToConsensus") && item.isNotConnectedToConsensus) {
+    return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
   }
 };
 
 const displayMenu = (item) => {
-  serviceStore.installedServices.map((service) => {
+  serviceStore.installedServices.forEach((service) => {
+    service.isNotConnectedToConsensus = false;
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
@@ -115,6 +145,10 @@ const displayMenu = (item) => {
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+};
+
+const confirmConsensus = (item) => {
+  emit("confirmConsensus", item);
 };
 
 const deleteService = (item) => {

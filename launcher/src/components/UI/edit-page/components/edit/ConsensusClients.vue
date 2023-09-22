@@ -38,7 +38,7 @@
           </div>
         </div>
         <div
-          v-else-if="item.isNotConnectedToMevboost"
+          v-if="item.isNotConnectedToMevboost"
           class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
           @mousedown.prevent
         >
@@ -59,6 +59,33 @@
               src="/img/icon/the-staking/close.png"
               alt="CIcon"
               @click="item.isNotConnectedToMevboost = false"
+            />
+          </div>
+        </div>
+        <div
+          v-if="item.isNotConnectedToValidator"
+          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
+          @mousedown.prevent
+        >
+          <div class="flex justify-center items-center bg-gray-900 z-20 p-2 rounded-md space-x-2">
+            <img
+              v-if="!item.isConfirmProcessing"
+              class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
+              src="/img/icon/manage-node-icons/connection.png"
+              alt="Trash Icon"
+              @click="confirmConsensus(item)"
+            />
+            <div
+              v-else-if="item.isConfirmProcessing"
+              class="w-6 h-6 pt-1 bg-gray-500 rounded-md border border-gray-700"
+            >
+              <svg class="animate-spin rounded-full border-t-2 border-r-2 border-blue-100 h-4 w-4 mx-auto"></svg>
+            </div>
+            <img
+              class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
+              src="/img/icon/the-staking/close.png"
+              alt="CIcon"
+              @click="hideConnectionMenu(item)"
             />
           </div>
         </div>
@@ -141,9 +168,13 @@ watchEffect(() => {
 
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isNotConnectedToMevboost") && item.isNotConnectedToMevboost) {
-    return "border  border-blue-400 bg-blue-600 hover:bg-blue-600";
+    return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
   } else if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "bg-red-600 ";
+  } else if (item.hasOwnProperty("isNotConnectedToValidator") && item.isNotConnectedToValidator) {
+    return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
+  } else if (item.hasOwnProperty("connectedToValidator") && item.connectedToValidator) {
+    return "border border-green-500 bg-green-500 hover:bg-green-500 ";
   }
 };
 
@@ -159,6 +190,25 @@ const displayMenu = (item) => {
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+};
+const hideConnectionMenu = (item) => {
+  item.displayPluginMenu = false;
+  const length = manageStore.newConfiguration.filter((service) => {
+    service.isNotConnectedToConsensus === true || service.isNotConnectedToValidator === true;
+  });
+  if (length.length > 0) {
+    return;
+  } else {
+    manageStore.newConfiguration.forEach((service) => {
+      service.connectedToValidator = false;
+      service.connectedToConsensus = false;
+    });
+  }
+  item.isConnectedToMevboost = false;
+  item.isNotConnectedToConsensus = false;
+  item.isNotConnectedToValidator = false;
+
+  hideMenu(item);
 };
 
 const deleteService = (item) => {

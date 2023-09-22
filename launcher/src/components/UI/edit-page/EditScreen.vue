@@ -13,14 +13,11 @@
           @switch-client="switchClientModalhandler"
           @connect-client="clientConnectionHandler"
           @delete-service="selectedServiceToRemove"
+          @confirm-consensus="confirmConsensusConnection"
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection
-          @change-connection="changeMevboostConnection"
-          @delete-service="selectedServiceToRemove"
-   
-        />
+        <ServiceSection @change-connection="changeMevboostConnection" @delete-service="selectedServiceToRemove" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <ChangesSection />
@@ -90,6 +87,7 @@ const clientToRemove = ref(null);
 const clientToSwitch = ref(null);
 const isConfirmLoading = ref(false);
 const isSwitchModalOpen = ref(false);
+const clientToConnect = ref(null);
 
 onMounted(() => {
   manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
@@ -101,10 +99,13 @@ onMounted(() => {
       serviceIsConnected: false,
       connectedToExecution: false,
       connectedToValidator: false,
+      isNotConnectedToValidator: false,
       connectedToConsensus: false,
+      isNotConnectedToConsensus: false,
       isRemoveProcessing: false,
       isConnectedToMevboost: false,
       isNotConnectedToMevboost: false,
+      isConfirmProcessing: false,
     };
   });
 });
@@ -155,8 +156,35 @@ const switchClientConfirm = (item) => {
 // Clients Connection methods
 
 const clientConnectionHandler = (item) => {
-  item.isConnectedToMevboost = true;
-  item.isNotConnectedToMevboost = false;
+  console.log("CLICKED");
+  manageStore.newConfiguration.forEach((e) => {
+    e.isNotConnectedToConsensus = false;
+    e.isNotConnectedToValidator = false;
+  });
+  if (item.category === "consensus") {
+    const connectedExecutionId = item.config?.dependencies.executionClients[0].id;
+    manageStore.newConfiguration.forEach((e) => {
+      if (e.category === "execution" && e.config.serviceID !== connectedExecutionId) {
+        clientToConnect.value = e;
+        e.isNotConnectedToConsensus = true;
+      } else if (e.category === "execution" && e.config.serviceID === connectedExecutionId) {
+        e.connectedToConsensus = true;
+      }
+    });
+  } else if (item.category === "validator") {
+    const connectedConsensusId = item.config?.dependencies.consensusClients[0].id;
+    manageStore.newConfiguration.forEach((e) => {
+      if (e.category === "consensus" && e.config.serviceID !== connectedConsensusId) {
+        clientToConnect.value = e;
+        e.isNotConnectedToValidator = true;
+      } else if (e.category === "consensus" && e.config.serviceID === connectedConsensusId) {
+        e.connectedToValidator = true;
+      }
+    });
+  }
+};
+const confirmConsensusConnection = (item) => {
+  clientToConnect.value.isNotConnectedToConsensus = false;
   manageStore.confirmChanges.push({
     id: randomId,
     content: "CLIENT CONNECT",
@@ -297,8 +325,6 @@ const selectedServiceToRemove = (item) => {
     return;
   }
 };
-
-
 </script>
 
 <style scoped>

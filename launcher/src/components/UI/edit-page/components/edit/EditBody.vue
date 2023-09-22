@@ -33,6 +33,7 @@
           @delete-service="deleteService"
           @switch-client="switchClient"
           @connect-client="connectClient"
+          @confirm-consensus="confirmConsensus"
         />
         <ConsensusClients
           v-if="!isOverDropZone"
@@ -46,6 +47,7 @@
           @delete-service="deleteService"
           @switch-client="switchClient"
           @connect-client="connectClient"
+          @confirm-consensus="confirmConsensus"
         />
       </div>
     </div>
@@ -61,7 +63,14 @@ import { computed, ref, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 
-const emit = defineEmits(["onDrop", "confirmConnection", "switchClient", "connectClient", "deleteService"]);
+const emit = defineEmits([
+  "onDrop",
+  "confirmConnection",
+  "switchClient",
+  "connectClient",
+  "deleteService",
+  "confirmConsensus",
+]);
 
 //Pinia stores
 const manageStore = useNodeManage();
@@ -104,8 +113,6 @@ const onDrop = (event) => {
   emit("onDrop", event);
 };
 
-
-
 const confirmConnection = (item) => {
   emit("confirmConnection", item);
 };
@@ -119,6 +126,10 @@ const connectClient = (item) => {
 };
 const deleteService = (item) => {
   emit("deleteService", item);
+};
+
+const confirmConsensus = (item) => {
+  emit("confirmConsensus", item);
 };
 </script>
 
