@@ -68,19 +68,24 @@
                 v-for="validator in installedValidators"
                 :key="validator"
                 class="choose-validator_validators_validator-box"
+                @click="selectedValidator(validator)"
               >
-                <img :src="validator.icon" alt="" />
+                <img
+                  :src="validator.icon"
+                  alt=""
+                  :class="{ 'selected-val': validator.name == selectedVal ? true : false }"
+                />
               </div>
             </div>
             <div class="go-to-link">Go to <span @click="openBeaconcha()">https://beaconcha.in/login#app</span></div>
             <div class="enter-box">
               <div class="enter-input">
-                <!-- <div class="enter-input_title">agar David ok bede niaz nist</div> -->
-                <div class="enter-input_input"><input type="text" placeholder="ENTER THE MACHINE YOU PICKED" /></div>
+                <div class="enter-input_title">MACHINE NAME</div>
+                <div class="enter-input_input"><input type="text" /></div>
               </div>
               <div class="enter-input">
-                <!-- <div class="enter-input_title">agar David ok bede niaz nist</div> -->
-                <div class="enter-input_input"><input type="text" placeholder="ENTER THE RECEIVED API KEY" /></div>
+                <div class="enter-input_title">API KEY</div>
+                <div class="enter-input_input"><input type="text" /></div>
               </div>
             </div>
             <div class="apply-btn">apply</div>
@@ -104,6 +109,7 @@ export default {
       banner: "/img/icon/header-icons/monitor2.png",
       qrCode: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       ErrorQRCode: "/img/icon/header-icons/dummyQR.png",
+      selectedVal: "",
     };
   },
   computed: {
@@ -119,6 +125,10 @@ export default {
     this.getqrcode();
   },
   methods: {
+    selectedValidator(arg) {
+      this.selectedVal = arg.name;
+      console.log(this.selectedVal);
+    },
     qrViewer() {
       this.qrPage = !this.qrPage;
     },
@@ -140,6 +150,10 @@ export default {
 };
 </script>
 <style scoped>
+.selected-val {
+  border: 5px solid #3e8f8f;
+  border-radius: 50%;
+}
 .notif-Title {
   display: flex;
   width: 90%;
@@ -301,7 +315,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   color: #c3c3c3;
-  font-size: 70%;
+  font-size: 90%;
   font-weight: 600;
   letter-spacing: 0.8px;
 }
@@ -313,7 +327,7 @@ export default {
   font-size: 110%;
 }
 .go-to-link span:hover {
-  color: green;
+  color: #3e8f8f;
 }
 .enter-box {
   width: 90%;
@@ -326,8 +340,18 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.enter-input_title {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #c3c3c3;
+  font-size: 90%;
+  font-weight: 600;
+}
 .enter-input_input {
-  width: 100%;
+  width: 75%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -346,16 +370,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #c3c3c3;
+  color: #eee;
   font-size: 150%;
   text-transform: uppercase;
   font-weight: 700;
-
-  border: 1px solid #3e3d3d;
-  background: #2a9937;
+  background: #316464;
   border-radius: 30px;
   cursor: pointer;
   margin-top: 0.5%;
+}
+.apply-btn:hover {
+  background: rgba(49, 100, 100, 0.8);
+}
+.apply-btn:active {
+  background: #316464;
+  transform: scale(0.95);
 }
 .qrPage_content {
   width: 100%;
