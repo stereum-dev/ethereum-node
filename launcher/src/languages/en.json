@@ -524,7 +524,10 @@
     "close": "click outside to close",
     "dash": "Dashboard",
     "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
-    "goTo": "Go to"
+    "goTo": "Go to",
+    "machinename": "Machine Name",
+    "apikey": "API Key",
+    "apply": "APPLY"
   },
   "replacePanel": {
     "client": "Client",

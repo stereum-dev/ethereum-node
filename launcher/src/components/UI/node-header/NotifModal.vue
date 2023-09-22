@@ -15,7 +15,7 @@
               <img src="/img/icon/stereum-logo/stereum_logo_extern.png" alt="notif logo" />
             </div>
             <div class="notif-row_name">
-              <span>{{ $t("notifModal.stereumMonitor") }}</span>
+              <span>{{ $t("notifModal.stereumMonitor") }} (Mobile App)</span>
             </div>
           </li>
           <li @click="(beaconchaDashboard = true), (qrPage = true)">
@@ -23,7 +23,7 @@
               <img src="/img/icon/service-icons/beaconchain.png" alt="notif logo" />
             </div>
             <div class="notif-row_name">
-              <span>Beaconchain Dashboard (Mobile App)</span>
+              <span>Beaconchain {{ $t("notifModal.dash") }} (Mobile App)</span>
             </div>
           </li>
         </ul>
@@ -82,15 +82,15 @@
             </div>
             <div class="enter-box">
               <div class="enter-input">
-                <div class="enter-input_title">MACHINE NAME</div>
-                <div class="enter-input_input"><input type="text" /></div>
+                <div class="enter-input_title">{{ $t("notifModal.machinename") }}</div>
+                <div class="enter-input_input"><input v-model="machineName" type="text" /></div>
               </div>
               <div class="enter-input">
-                <div class="enter-input_title">API KEY</div>
-                <div class="enter-input_input"><input type="text" /></div>
+                <div class="enter-input_title">{{ $t("notifModal.apikey") }}</div>
+                <div class="enter-input_input"><input v-model="apiKey" type="text" /></div>
               </div>
             </div>
-            <div class="apply-btn">apply</div>
+            <div class="apply-btn" @click="applyBeaconChain">{{ $t("notifModal.apply") }}</div>
           </div>
         </div>
         <span class="close">{{ $t("notifModal.close") }}</span>
@@ -112,6 +112,8 @@ export default {
       qrCode: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       ErrorQRCode: "/img/icon/header-icons/dummyQR.png",
       selectedVal: "",
+      machineName: "",
+      apiKey: "",
     };
   },
   computed: {
@@ -128,8 +130,13 @@ export default {
   },
   methods: {
     selectedValidator(arg) {
+      //to select the validator
       this.selectedVal = arg.name;
       console.log(this.selectedVal);
+    },
+    applyBeaconChain() {
+      //to apply the beaconchain dashboard
+      console.log(this.machineName, this.apiKey);
     },
     qrViewer() {
       this.qrPage = !this.qrPage;
@@ -284,10 +291,10 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   margin-top: 1.3%;
-  width: 95%;
+  width: 90%;
   height: 7%;
   letter-spacing: 0.7px;
 }
@@ -351,6 +358,7 @@ export default {
   color: #c3c3c3;
   font-size: 90%;
   font-weight: 600;
+  text-transform: uppercase;
 }
 .enter-input_input {
   width: 75%;
