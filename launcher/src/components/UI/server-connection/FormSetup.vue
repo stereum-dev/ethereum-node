@@ -1,7 +1,8 @@
 <template>
   <div class="server-parent">
-    <div class="ip-detected">{{ ipTest }}</div>
-    <div v-if="alertBox" class="alert animate__animated animate__flipInX">Please fill in the missing fields!</div>
+    <IpScanModal v-if="ipScanModal" @close-ipscan="ipScanModal = false" />
+    <!-- <div class="ip-detected">{{ ipTest }}</div> -->
+    <div v-if="alertBox" class="alert animate__animated animate__flipInX">{{ $t("formsetup.fillFields") }}</div>
     <div v-if="errorMsgExists" class="error-box"></div>
     <div v-if="errorMsgExists" class="error-modal">
       <div class="title-box">
@@ -14,6 +15,7 @@
         <button @click="closeErrorDialog">OK</button>
       </div>
     </div>
+
     <div v-if="connectingAnimActive" class="anim">
       <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
@@ -69,6 +71,9 @@
               <label for="host">{{ $t("formsetup.iphost") }}</label>
             </div>
             <div class="server-group_input">
+              <div class="ip-scaner" @click="ipScanModal = true">
+                <img src="/img/icon/form-setup/local-lan.png" alt="" />
+              </div>
               <input
                 id="iporhostname"
                 v-model="model.host.value"
@@ -195,12 +200,12 @@
         </button>
       </form>
     </div>
-    <!-- test dovom -->
   </div>
 </template>
 
 <script>
 // import arpscan from "arpscan";
+import IpScanModal from "./IpScanModal.vue";
 import DeleteModal from "./DeleteModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
@@ -210,10 +215,11 @@ import { useServices } from "@/store/services";
 
 export default {
   name: "FormSetup",
-  components: { DeleteModal },
+  components: { DeleteModal, IpScanModal },
   emits: ["page"],
   data() {
     return {
+      ipScanModal: false,
       devices: [],
       ipTest: "",
       alertBox: false,
@@ -475,27 +481,6 @@ export default {
 };
 </script>
 <style scoped>
-/*testing the ip controlling*/
-.ip-detected {
-  position: absolute;
-  top: 14%;
-  left: 5%;
-  z-index: 100;
-  color: #c1c1c1;
-  font-size: 100%;
-  font-weight: 600;
-  background-color: #194747;
-  border-radius: 1rem;
-  width: 20%;
-  border: 3px solid #929292;
-  box-shadow: 0 1px 3px 1px #1f3737;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-}
-
-/*testing the ip controlling*/
 .alert {
   width: 40%;
   height: 20%;
@@ -544,6 +529,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: default;
 }
 .server-box {
   width: 100%;
@@ -762,8 +748,27 @@ select {
   border: 2px solid rgb(54, 54, 54);
 }
 #iporhostname {
-  width: 70%;
+  width: 60%;
   border-radius: 30px 0 0 30px;
+}
+.ip-scaner {
+  width: 7.5%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eaeaea;
+  margin-right: 2%;
+  border: 2px solid #979797;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.ip-scaner img {
+  width: 80%;
+  opacity: 90%;
+}
+.ip-scaner:active {
+  transform: scale(0.95);
 }
 .ipPort {
   width: 16% !important;
