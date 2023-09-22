@@ -29,46 +29,28 @@
     <!-- End Node main layout -->
   </base-layout>
 </template>
-<script>
+<script setup>
 import SidebarSection from "./sections/SidebarSection";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
-import { mapWritableState } from "pinia";
+import { ref } from "vue";
 import { useNodeStore } from "@/store/theNode";
-export default {
-  name: "NodeScreen",
-  components: {
-    SidebarSection,
-    NodeSection,
-    ServiceSection,
-    AlertSection,
-  },
-  props: {},
-  data() {
-    return {
-      updatePowerState: false,
-      cursorLocation: "",
-      chckTutorial: "/img/icon/round-icon.png",
-      returnStatus: "/img/icon/round-icon.png",
-      displayUpdatePanel: false,
-    };
-  },
-  computed: {
-    ...mapWritableState(useNodeStore, {
-      infoAlarm: "infoAlarm",
-      hideConnectedLines: "hideConnectedLines",
-      runNodePowerModal: "runNodePowerModal",
-    }),
-  },
-  mounted() {},
-  methods: {
-    alarmToggle() {
-      this.infoAlarm = !this.infoAlarm;
-    },
-  },
+
+const expertModeClient = ref(null);
+const updatePowerState = ref(false);
+const cursorLocation = ref("");
+const chckTutorial = "/img/icon/round-icon.png";
+const returnStatus = "/img/icon/round-icon.png";
+const displayUpdatePanel = ref(false);
+
+const { infoAlarm, hideConnectedLines, runNodePowerModal } = useNodeStore();
+
+const alarmToggle = () => {
+  infoAlarm.value = !infoAlarm.value;
 };
 </script>
+
 <style scoped>
 .info-button {
   width: 98%;
