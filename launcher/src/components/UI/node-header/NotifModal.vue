@@ -73,7 +73,16 @@
               </div>
             </div>
             <div class="go-to-link">Go to <span @click="openBeaconcha()">https://beaconcha.in/login#app</span></div>
-            <div class="enter-box"></div>
+            <div class="enter-box">
+              <div class="enter-input">
+                <!-- <div class="enter-input_title">agar David ok bede niaz nist</div> -->
+                <div class="enter-input_input"><input type="text" placeholder="ENTER THE MACHINE YOU PICKED" /></div>
+              </div>
+              <div class="enter-input">
+                <!-- <div class="enter-input_title">agar David ok bede niaz nist</div> -->
+                <div class="enter-input_input"><input type="text" placeholder="ENTER THE RECEIVED API KEY" /></div>
+              </div>
+            </div>
             <div class="apply-btn">apply</div>
           </div>
         </div>
@@ -309,7 +318,27 @@ export default {
 .enter-box {
   width: 90%;
   height: 45%;
-  border: 1px dotted red;
+}
+.enter-input {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.enter-input_input {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.enter-input_input input {
+  width: 100%;
+  height: 60%;
+  border-radius: 10px;
+  border: none;
+  padding-left: 1%;
 }
 .apply-btn {
   width: 30%;
