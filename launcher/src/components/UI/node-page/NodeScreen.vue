@@ -48,6 +48,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
+import { useRefreshNodeStats } from "../../../composables/monitoring";
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
@@ -57,6 +58,7 @@ const returnStatus = "/img/icon/round-icon.png";
 
 let polling = null;
 let pollingVitals = null;
+let pollingNodeStats = null;
 
 const nodeStore = useNodeStore();
 const headerStore = useNodeHeader();
@@ -72,11 +74,13 @@ onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
+  pollingNodeStats = setInterval(updateNodeStats, 1000); // refresh server vitals
 });
 
 onUnmounted(() => {
   clearInterval(polling);
   clearInterval(pollingVitals);
+  clearInterval(pollingNodeStats);
 });
 
 const updateConnectionStats = async () => {
@@ -102,6 +106,9 @@ const openExpertModal = (item) => {
   expertModeClient.value = item;
   expertModeClient.value.expertOptionsModal = true;
   isExpertModeOpen.value = true;
+};
+const updateNodeStats = async () => {
+  await useRefreshNodeStats();
 };
 </script>
 
