@@ -38,7 +38,6 @@
           >
             <img
               class="w-5 z-10"
-              :class="trashAnimated"
               src="/img/icon/manage-node-icons/trash.png"
               alt=""
               @mousedown.prevent.stop

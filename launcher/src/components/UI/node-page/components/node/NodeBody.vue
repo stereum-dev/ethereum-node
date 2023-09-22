@@ -145,7 +145,6 @@ const getRefOfConnectedClients = () => {
   const connectedVal = connectedVal;
   const connectedCons = connected.con;
   const connectedExec = connected.exe;
-  console.log(connected.val);
 
   if (connectedVal) {
     console.log(connectedVal.config.serviceID);
@@ -284,6 +283,10 @@ const openLogsPage = (item) => {
 
 const closePluginLogsPage = () => {
   isPluginLogPageActive.value = false;
+};
+
+const restartService = (item) => {
+  console.log(item);
 };
 
 const openExpertWindow = (item) => {

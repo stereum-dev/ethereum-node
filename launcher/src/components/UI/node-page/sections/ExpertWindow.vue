@@ -217,7 +217,7 @@ export default {
     },
     position: {
       type: [Number, String],
-      required: true,
+      required: false,
     },
   },
   data() {

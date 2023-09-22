@@ -32,7 +32,7 @@ import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import ExpertWindow from "../../sections/ExpertWindow.vue";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 
 const executionRefs = ref([]);
 
@@ -56,7 +56,7 @@ const getExecutionRef = computed(() => {
   });
 });
 
-watch(() => {
+watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
