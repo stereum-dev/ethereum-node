@@ -33,7 +33,7 @@
     </button>
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
-      @click="$emit('openExpertMode', props.client)"
+      @click="expertMode(props.client)"
     >
       <img src="/img/icon/plugin-menu-icons/setting2.png" alt="icon" class="w-8 active:scale-95" />
     </button>
@@ -58,4 +58,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(["expertMode"]);
+
+const expertMode = (item) => {
+  emit("expertMode", item);
+};
 </script>
