@@ -24,7 +24,7 @@
             <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="main-message"><span>LOW STORAGE SPACE</span></div>
+            <div class="main-message"><span>LOW STORAGE </span></div>
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </div>
@@ -127,7 +127,7 @@
           </div>
           <div class="message">
             <div class="main-message" @click="showUpdate">
-              <span>{{ nameFilter(item) }} UPDATE</span>
+              <span>UPDATE available</span>
             </div>
             <div class="val-message">
               <span>{{ item.version }}</span>
@@ -265,13 +265,6 @@ export default {
     this.cpuMeth();
   },
   methods: {
-    nameFilter(arg) {
-      if (arg.name === "PrometheusNodeExporter") {
-        return "Node Exporter";
-      } else {
-        return arg.name;
-      }
-    },
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
         return "/img/icon/plugin-icons/Other/PrometheusNodeExporter-s.png";

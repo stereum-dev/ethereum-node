@@ -8,6 +8,7 @@ import YAML from "yaml";
 const log = require("electron-log");
 const electron = require("electron");
 const Evilscan = require("evilscan");
+const os = require("os");
 
 async function Sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1194,8 +1195,19 @@ export class NodeConnection {
   }
 
   async IpScanLan() {
+    let localIpAddresses = "";
+    const networkInterfaces = os.networkInterfaces();
+    for (const interfaceName in networkInterfaces) {
+      const interfaces = networkInterfaces[interfaceName];
+      for (const iface of interfaces) {
+        if (iface.family === "IPv4" && !iface.internal && iface.address.includes("192.168.")) {
+          localIpAddresses = iface.address.substring(0, iface.address.lastIndexOf(".") + 1);
+        }
+      }
+    }
+
     let avadoIPs = [];
-    let target = ["192.168.0.0/20"];
+    let target = [`${localIpAddresses}0/24`];
 
     for (let i = 0; i < target.length; i++) {
       const options = {
@@ -1218,7 +1230,7 @@ export class NodeConnection {
       });
       evilscan.run();
     }
-    await Sleep(15 * 1000);
+    await Sleep(6 * 1000);
     return avadoIPs;
   }
 }
