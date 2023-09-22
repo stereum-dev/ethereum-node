@@ -67,7 +67,7 @@
       </button>
     </div>
     <StateModal
-      v-if="runNodePowerModal"
+      v-if="nodeStore.runNodePowerModal"
       :main-icon="checkStatus"
       @close-window="closeUpdatePowerStateModal"
       @turn-on="stateButtonHandler('started')"
