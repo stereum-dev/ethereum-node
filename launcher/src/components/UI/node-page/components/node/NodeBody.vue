@@ -16,24 +16,24 @@ import { mapState, map } from 'pinia';
         @open-expert="openExpertWindow"
         @open-log="openLogsPage"
         @hide-modal="clickOutside"
-        @state-handler="stateHandler"
-        @restart-handler="restartService"
+        @state-handler="useStateHandler"
+        @restart-handler="useRestartService"
         @open-doc="openDocs"
       />
       <ConsensusClients
         @open-expert="openExpertWindow"
         @open-log="openLogsPage"
         @hide-modal="clickOutside"
-        @state-handler="stateHandler"
-        @restart-handler="restartService"
+        @state-handler="useStateHandler"
+        @restart-handler="useRestartService"
         @open-doc="openDocs"
       />
       <ValidatorClients
         @open-expert="openExpertWindow"
         @open-log="openLogsPage"
         @hide-modal="clickOutside"
-        @state-handler="stateHandler"
-        @restart-handler="restartService"
+        @state-handler="useStateHandler"
+        @restart-handler="useRestartService"
         @open-doc="openDocs"
       />
     </div>
@@ -65,6 +65,7 @@ import ExecutionClients from "./ExecutionClients";
 import ConsensusClients from "./ConsensusClients";
 import ValidatorClients from "./ValidatorClients";
 import { useRouter } from "vue-router";
+import { useStateHandler, useRestartService } from "@/composables/services";
 
 //Refs
 
@@ -73,17 +74,14 @@ const lineTwo = ref(null);
 const gethPrunningWarningModal = ref(false);
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
-const itemToRestart = ref({});
 const resyncWarningModal = ref(false);
 const isClientLinkedToMev = ref(false);
-const restartModalShow = ref(false);
 
 const connected = reactive({
   val: null,
   con: null,
   exe: null,
 });
-const restartLoad = ref(false);
 
 let {
   selectedExecutionRef,
@@ -163,49 +161,6 @@ const getRefOfConnectedClients = () => {
   }
 };
 
-const updateStates = async () => {
-  const serviceInfos = await ControlService.listServices();
-  installedServices.value.forEach((s, idx) => {
-    let updated = false;
-    serviceInfos.forEach((i) => {
-      if (i.Names.replace("stereum-", "") === s.config.serviceID) {
-        installedServices.value[idx].state = i.State;
-        updated = true;
-        restartModalClose();
-        restartLoad.value = false;
-      }
-    });
-    if (!updated) {
-      installedServices.value[idx].state = "exited";
-    }
-  });
-};
-
-const stateHandler = async (item) => {
-  item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
-  if (!item.yaml.includes("isPruning: true")) {
-    item.serviceIsPending = true;
-    let state = "stopped";
-    if (item.state === "exited") {
-      state = "started";
-    }
-    try {
-      await ControlService.manageServiceState({
-        id: item.config.serviceID,
-        state: state,
-      });
-    } catch (err) {
-      console.log(state.replace("ed", "ing") + " service failed:\n", err);
-    }
-    item.serviceIsPending = false;
-    updateStates();
-  }
-};
-
-const restartModalClose = () => {
-  restartModalShow.value = false;
-};
-
 // const runGethPrunningWarning = (option) => {
 //   if (option.changeValue && option.displayWarningModal) {
 //     gethPrunningWarningModal.value = true;
@@ -283,10 +238,6 @@ const openLogsPage = (item) => {
 
 const closePluginLogsPage = () => {
   isPluginLogPageActive.value = false;
-};
-
-const restartService = (item) => {
-  console.log(item);
 };
 
 const openExpertWindow = (item) => {

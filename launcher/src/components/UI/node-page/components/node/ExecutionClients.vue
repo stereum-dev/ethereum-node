@@ -18,7 +18,7 @@
       <ExpertWindow
         v-if="item.expertOptionsModal"
         :item="item"
-        @hide-modal="hideModal(item)"
+        @hide-modal="$emit('hide-modal', item)"
         @prunning-warning="$emit('prunning-warning', item)"
         @resync-warning="$emit('resync-warning', item)"
       />
@@ -32,14 +32,13 @@ import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import ExpertWindow from "../../sections/ExpertWindow.vue";
-import { computed, ref, watch, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
 const executionRefs = ref([]);
 
 const nodeStore = useNodeStore();
 
 const serviceStore = useServices();
-const emit = defineEmits(["openExpert", "openLog", "stateHandler", "restartHandler"]);
 
 const getExecutionServices = computed(() => {
   return serviceStore.installedServices
@@ -59,8 +58,4 @@ const getExecutionRef = computed(() => {
 watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
-
-const hideModal = (item) => {
-  emit("hide-modal", item);
-};
 </script>

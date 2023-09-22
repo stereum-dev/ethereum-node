@@ -19,8 +19,8 @@
         <ServiceLayout :client="item" />
         <ServiceButtons
           :client="item"
-          @handle-state="stateHandler"
-          @restart-service="restartService"
+          @handle-state="useStateHandler"
+          @restart-service="useRestartService"
           @open-expert-mode="openExpertMode"
           @open-logs="openLogs"
           @open-docs="openDocs"
@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { stateHandler, restartService } from "@/composables/services";
+import { useStateHandler, useRestartService } from "@/composables/services";
 import { useServices } from "@/store/services";
 import ServiceLayout from "./ServiceLayout.vue";
 import ServiceButtons from "./ServiceButtons.vue";

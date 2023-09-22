@@ -161,7 +161,7 @@ async function updateStates() {
   });
 }
 
-export async function stateHandler(client) {
+export async function useStateHandler(client) {
   client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
   if (!client.yaml.includes("isPruning: true")) {
     client.serviceIsPending = true;
@@ -182,7 +182,7 @@ export async function stateHandler(client) {
   }
 }
 
-export async function restartService(client) {
+export async function useRestartService(client) {
   client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
   if (!client.yaml.includes("isPruning: true")) {
     client.serviceIsPending = true;

@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import ControlService from "@/store/ControlService";
+import { useStateHandler } from "@/composables/services";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
@@ -152,43 +152,6 @@ export default {
     },
     scrollDown() {
       this.$refs.pluginsTable.scrollTop += 50;
-    },
-    updateStates: async function () {
-      let serviceInfos = await ControlService.listServices();
-      this.installedServices.forEach((s, idx) => {
-        let updated = false;
-        serviceInfos.forEach((i) => {
-          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
-            this.installedServices[idx].state = i.State;
-            updated = true;
-          }
-        });
-        if (!updated) {
-          this.installedServices[idx].state = "exited";
-        }
-      });
-    },
-    stateHandler: async function (item) {
-      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
-      if (!item.yaml.includes("isPruning: true")) {
-        this.isServiceOn = false;
-        item.serviceIsPending = true;
-        let state = "stopped";
-        if (item.state === "exited") {
-          state = "started";
-          this.isServiceOn = true;
-        }
-        try {
-          await ControlService.manageServiceState({
-            id: item.config.serviceID,
-            state: state,
-          });
-        } catch (err) {
-          console.log(state.replace("ed", "ing") + " service failed:\n", err);
-        }
-        item.serviceIsPending = false;
-        this.updateStates();
-      }
     },
     hideExpertMode(el) {
       el.expertOptionsModal = false;
@@ -246,6 +209,9 @@ export default {
     },
     confirmRunningResync() {
       this.resyncWarningModal = false;
+    },
+    stateHandler(item) {
+      useStateHandler(item);
     },
   },
 };
