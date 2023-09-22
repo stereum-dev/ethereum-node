@@ -9,78 +9,46 @@
       <ClientLayout :client="item" />
       <ClientButtons
         :client="item"
-        @open-expert="$emit('openExpert', item)"
+        @open-expert="openExpert"
         @open-log="$emit('openLog', item)"
         @state-handler="$emit('stateHandler', item)"
         @restart-handler="$emit('restartHandler', item)"
         @open-doc="$emit('openDoc', item)"
       />
-      <ExpertWindow
-        v-if="item.expertOptionsModal"
-        :item="item"
-        @hide-modal="$emit('hide-modal', item)"
-        @prunning-warning="$emit('prunning-warning', item)"
-        @resync-warning="$emit('resync-warning', item)"
-      />
     </div>
   </div>
 </template>
 
-<script>
-import { mapState, mapWritableState } from "pinia";
+<script setup>
 import { useServices } from "@/store/services";
-import { useStakingStore } from "@/store/theStaking";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
-import ExpertWindow from "../../sections/ExpertWindow.vue";
-export default {
-  components: {
-    ClientLayout,
-    ClientButtons,
-    ExpertWindow,
-  },
+import { computed, watch, ref } from "vue";
 
-  data() {
-    return {
-      validatorRefs: [],
-    };
-  },
-  computed: {
-    getValidatorServices() {
-      return this.installedServices
-        .filter((e) => e.category === "validator")
-        .sort((a, b) => a.name.localeCompare(b.name));
-    },
+const emit = defineEmits(["openExpert"]);
 
-    ...mapWritableState(useNodeStore, {
-      selectedValidatorRef: "selectedValidatorRef",
-      validatorRef: "validatorRef",
-      validatorRefItem: "validatorRefItem",
-    }),
-    ...mapState(useServices, {
-      installedServices: "installedServices",
-    }),
-    ...mapState(useStakingStore, {
-      keyCounter: "keyCounter",
-    }),
-    getValidatorRef() {
-      let ref;
-      ref = this.$refs.validatorRefs.map((el, index) => {
-        return {
-          ref: el,
-          refId: this.getValidatorServices[index].config.serviceID,
-        };
-      });
-      return ref;
-    },
-  },
-  watch: {
-    watchValidatorRef() {
-      this.validatorRef = this.getValidatorRef;
-    },
-  },
+const validatorRefs = ref([]);
 
-  mounted() {},
+const nodeStore = useNodeStore();
+const serviceStore = useServices();
+
+const getValidatorServices = computed(() =>
+  serviceStore.installedServices.filter((e) => e.category === "validator").sort((a, b) => a.name.localeCompare(b.name))
+);
+
+const getValidatorRef = computed(() => {
+  return validatorRefs.value.map((el, index) => ({
+    ref: el,
+    refId: getValidatorServices.value[index].config.serviceID,
+  }));
+});
+
+watch(getValidatorRef, (newValue) => {
+  nodeStore.validatorRef = newValue;
+});
+
+const openExpert = (item) => {
+  emit("openExpert", item);
 };
 </script>

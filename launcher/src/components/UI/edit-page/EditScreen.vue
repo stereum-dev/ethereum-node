@@ -16,7 +16,11 @@
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection @change-connection="changeMevboostConnection" @delete-service="selectedServiceToRemove" />
+        <ServiceSection
+          @change-connection="changeMevboostConnection"
+          @delete-service="selectedServiceToRemove"
+   
+        />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <ChangesSection />
@@ -293,6 +297,8 @@ const selectedServiceToRemove = (item) => {
     return;
   }
 };
+
+
 </script>
 
 <style scoped>

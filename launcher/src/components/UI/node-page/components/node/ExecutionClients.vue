@@ -9,18 +9,11 @@
       <ClientLayout :client="item" />
       <ClientButtons
         :client="item"
-        @open-expert="$emit('openExpert', item)"
+        @open-expert="openExpert"
         @open-log="$emit('openLog', item)"
         @state-handler="$emit('stateHandler', item)"
         @restart-handler="$emit('restartHandler', item)"
         @open-doc="$emit('openDoc', item)"
-      />
-      <ExpertWindow
-        v-if="item.expertOptionsModal"
-        :item="item"
-        @hide-modal="$emit('hide-modal', item)"
-        @prunning-warning="$emit('prunning-warning', item)"
-        @resync-warning="$emit('resync-warning', item)"
       />
     </div>
   </div>
@@ -31,8 +24,9 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
-import ExpertWindow from "../../sections/ExpertWindow.vue";
 import { computed, ref, watchEffect } from "vue";
+
+const emit = defineEmits(["openExpert"]);
 
 const executionRefs = ref([]);
 
@@ -58,4 +52,8 @@ const getExecutionRef = computed(() => {
 watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
+
+const openExpert = (item) => {
+  emit("openExpert", item);
+};
 </script>

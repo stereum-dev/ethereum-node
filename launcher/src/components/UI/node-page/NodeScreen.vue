@@ -6,10 +6,17 @@
         <SidebarSection />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
-        <NodeSection />
+        <NodeSection @open-expert="openExpertModal" />
+        <ExpertWindow
+          v-if="isExpertModeOpen"
+          :item="expertModeClient"
+          @hide-modal="isExpertModeOpen = false"
+          @prunning-warning="$emit('prunning-warning', item)"
+          @resync-warning="$emit('resync-warning', item)"
+        />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection />
+        <ServiceSection @open-expert="openExpertModal" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
@@ -35,12 +42,16 @@ import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import { ref, onMounted, onUnmounted } from "vue";
+import ExpertWindow from "./sections/ExpertWindow.vue";
 import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
 
+const expertModeClient = ref(null);
+const isExpertModeOpen = ref(false);
+const updatePowerState = ref(false);
 const cursorLocation = ref("");
 const chckTutorial = "/img/icon/round-icon.png";
 const returnStatus = "/img/icon/round-icon.png";
@@ -87,6 +98,11 @@ const updateServerVitals = async () => {
     controlStore.availDisk = data.availDisk;
     controlStore.usedPerc = data.usedPerc;
   }
+};
+const openExpertModal = (item) => {
+  expertModeClient.value = item;
+  expertModeClient.value.expertOptionsModal = true;
+  isExpertModeOpen.value = true;
 };
 </script>
 

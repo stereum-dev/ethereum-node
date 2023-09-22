@@ -13,7 +13,7 @@ import { mapState, map } from 'pinia';
     </div>
     <div class="w-full h-full grid grid-cols-3 pt-8">
       <ExecutionClients
-        @open-expert="openExpertWindow"
+        @open-expert="openExpert"
         @open-log="openLogsPage"
         @hide-modal="clickOutside"
         @state-handler="useStateHandler"
@@ -21,7 +21,7 @@ import { mapState, map } from 'pinia';
         @open-doc="openDocs"
       />
       <ConsensusClients
-        @open-expert="openExpertWindow"
+        @open-expert="openExpert"
         @open-log="openLogsPage"
         @hide-modal="clickOutside"
         @state-handler="useStateHandler"
@@ -29,7 +29,7 @@ import { mapState, map } from 'pinia';
         @open-doc="openDocs"
       />
       <ValidatorClients
-        @open-expert="openExpertWindow"
+        @open-expert="openExpert"
         @open-log="openLogsPage"
         @hide-modal="clickOutside"
         @state-handler="useStateHandler"
@@ -68,6 +68,7 @@ import ValidatorClients from "./ValidatorClients";
 import { useRouter } from "vue-router";
 import { useStateHandler, useRestartService } from "@/composables/services";
 
+const emit = defineEmits(["openExpert"]);
 //Refs
 
 const lineOne = ref(null);
@@ -289,6 +290,10 @@ const drawConnectingline = (start, middle, end) => {
 };
 const openDocs = (item) => {
   window.open(item.docsUrl, "_blank");
+};
+
+const openExpert = (item) => {
+  emit("openExpert", item);
 };
 </script>
 

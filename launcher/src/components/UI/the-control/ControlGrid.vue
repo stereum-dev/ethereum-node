@@ -65,8 +65,8 @@
                 </div>
               </div>
               <the-expert
-                v-if="item.expertOptionsModal"
-                :item="item"
+                v-if="isExpertWindowOpen"
+                :item="expertModeClient"
                 position="23.4"
                 @hide-modal="hideExpertMode(item)"
                 @prunning-warning="runGethPrunningWarning"
@@ -130,6 +130,8 @@ export default {
       gethPrunningWarningModal: false,
       resyncWarningModal: false,
       isPluginLogPageActive: false,
+      isExpertWindowOpen: false,
+      expertModeClient: null,
     };
   },
   create() {
@@ -154,12 +156,12 @@ export default {
       this.$refs.pluginsTable.scrollTop += 50;
     },
     hideExpertMode(el) {
-      el.expertOptionsModal = false;
+      this.expertModeClient = el;
+      this.isExpertWindowOpen = false;
     },
     expertModeHandler(el) {
-      this.installedServices.map((item) => {
-        if (item.category === el.category && item?.id === el.id) el.expertOptionsModal = true;
-      });
+      this.expertModeClient = el;
+      this.isExpertWindowOpen = true;
     },
     // Check if service is Geth
     runGethPrunningWarning(option) {

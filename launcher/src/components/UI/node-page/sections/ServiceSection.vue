@@ -7,13 +7,15 @@
       </div>
     </div>
 
-    <ServiceBody />
+    <ServiceBody @open-expert="openExpert" />
   </div>
 </template>
 <script setup>
 import ServiceBody from "../components/service/ServiceBody.vue";
 import { useServices } from "@/store/services";
 import { computed } from "vue";
+
+const emit = defineEmits(["openExpert"]);
 
 const serviceStore = useServices();
 
@@ -22,4 +24,8 @@ const getServices = computed(() => {
   service = serviceStore.installedServices.filter((el) => el?.category === "service");
   return service;
 });
+
+const openExpert = (item) => {
+  emit("openExpert", item);
+};
 </script>

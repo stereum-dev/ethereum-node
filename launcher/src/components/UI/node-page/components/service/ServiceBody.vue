@@ -21,11 +21,11 @@
           :client="item"
           @handle-state="useStateHandler"
           @restart-service="useRestartService"
-          @open-expert-mode="openExpertMode"
+          @open-expert="openExpert(item)"
           @open-logs="openLogs"
           @open-docs="openDocs"
         />
-        <ExpertWindow v-if="item.expertOptionsModal" :item="item" @hide-modal="closeExpertMode(item)" />
+
         <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closeLogs" />
       </div>
     </div>
@@ -39,7 +39,8 @@ import ServiceLayout from "./ServiceLayout.vue";
 import ServiceButtons from "./ServiceButtons.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
 import { computed, ref } from "vue";
-import ExpertWindow from "../../sections/ExpertWindow.vue";
+
+const emit = defineEmits(["openExpert"]);
 
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
@@ -52,12 +53,8 @@ const getServices = computed(() => {
     .sort((a, b) => a.name.localeCompare(b.name));
 });
 
-const openExpertMode = (item) => {
-  item.expertOptionsModal = true;
-};
-
-const closeExpertMode = (item) => {
-  item.expertOptionsModal = false;
+const openExpert = (item) => {
+  emit("openExpert", item);
 };
 
 const openDocs = (item) => {
