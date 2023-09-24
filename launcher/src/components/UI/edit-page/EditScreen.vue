@@ -75,7 +75,7 @@ import SwitchModal from "./components/modals/SwitchModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 
 const serviceStore = useServices();
@@ -119,7 +119,7 @@ function generateRandomId() {
   return timestamp + randomPart;
 }
 
-const randomId = generateRandomId();
+const randomId = computed(() => generateRandomId());
 
 // Switch Clients methods
 const switchClientModalhandler = (item) => {
@@ -309,8 +309,10 @@ const selectedServiceToRemove = (item) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
-  clientToRemove.value = item;
-  item.isRemoveProcessing = true;
+  setTimeout(() => {
+    clientToRemove.value = item;
+    item.isRemoveProcessing = false;
+  });
   item.displayTooltip = false;
   manageStore.selectedItemToRemove.push(item);
   const confirmDelete = {
@@ -319,11 +321,10 @@ const selectedServiceToRemove = (item) => {
     contentIcon: "/img/icon/manage-node-icons/delete.png",
     service: item,
   };
-  if (!manageStore.confirmChanges.some((e) => e.id === confirmDelete.id)) {
-    manageStore.confirmChanges.push(confirmDelete);
-  } else {
-    return;
-  }
+  console.log(confirmDelete);
+  manageStore.confirmChanges.some((e) => e.id === confirmDelete.id)
+    ? null
+    : manageStore.confirmChanges.push(confirmDelete);
 };
 </script>
 

@@ -4,91 +4,33 @@
       v-for="item in getConsensus"
       :key="item.config.serviceID"
       ref="consensusRefs"
-      class="h-[110px] w-[110px] flex justify-center py-1 items-center rounded-md shadow-md border border-gray-700 bg-[#212629] hover:bg-[#374045] justify-self-center self-center cursor-pointer relative"
+      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md hover:bg-[#374045] self-center justify-self-center cursor-pointer border bg-[#212629] border-gray-700 relative"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
     >
       <ClientLayout :client="item" />
       <TransitionGroup name="slide-fade">
-        <div
+        <GeneralMenu
           v-if="item.displayPluginMenu"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center"
-          @mousedown.prevent
-        >
-          <div class="flex justify-center items-center bg-gray-800 z-20 p-2 rounded-md space-x-2">
-            <img
-              class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/connection.png"
-              alt="Trash Icon"
-              @click="connectClient(item)"
-            />
-            <img
-              class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/replace.png"
-              alt="Trash Icon"
-              @click="switchClient(item)"
-            />
-            <img
-              class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/trash.png"
-              alt="Trash Icon"
-              @click="deleteService(item)"
-            />
-          </div>
-        </div>
-        <div
-          v-if="item.isNotConnectedToMevboost"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
-          @mousedown.prevent
-        >
-          <div class="flex justify-center items-center bg-gray-900 z-20 p-2 rounded-md space-x-2">
-            <img class="w-6 rounded-sm" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="Trash Icon" />
-            <img
-              v-if="!isConfirmLoading"
-              class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
-              src="/img/icon/manage-node-icons/connection.png"
-              alt="Trash Icon"
-              @click="confirmMevboostConnection(item)"
-            />
-            <div v-else-if="isConfirmLoading" class="w-6 h-6 pt-1 bg-gray-500 rounded-md border border-gray-700">
-              <svg class="animate-spin rounded-full border-t-2 border-r-2 border-blue-100 h-4 w-4 mx-auto"></svg>
-            </div>
-            <img
-              class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
-              src="/img/icon/the-staking/close.png"
-              alt="CIcon"
-              @click="item.isNotConnectedToMevboost = false"
-            />
-          </div>
-        </div>
-        <div
-          v-if="item.isNotConnectedToValidator"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
-          @mousedown.prevent
-        >
-          <div class="flex justify-center items-center bg-gray-900 z-20 p-2 rounded-md space-x-2">
-            <img
-              v-if="!item.isConfirmProcessing"
-              class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
-              src="/img/icon/manage-node-icons/connection.png"
-              alt="Trash Icon"
-              @click="confirmConsensus(item)"
-            />
-            <div
-              v-else-if="item.isConfirmProcessing"
-              class="w-6 h-6 pt-1 bg-gray-500 rounded-md border border-gray-700"
-            >
-              <svg class="animate-spin rounded-full border-t-2 border-r-2 border-blue-100 h-4 w-4 mx-auto"></svg>
-            </div>
-            <img
-              class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
-              src="/img/icon/the-staking/close.png"
-              alt="CIcon"
-              @click="hideConnectionMenu(item)"
-            />
-          </div>
-        </div>
+          :item="item"
+          @switch-client="switchClient"
+          @connect-client="connectClient"
+          @delete-service="deleteService"
+        />
+        <MevboostMenu
+          v-else-if="item.isNotConnectedToMevboost"
+          :item="item"
+          @hide-mevboost="hideMevboostMenu"
+          @confirm-mevboost="confirmMevboostConnection"
+        />
+
+        <ConsensusMenu
+          v-else-if="item.isNotConnectedToValidator"
+          :item="item"
+          @hide-connection="hideConnectionMenu"
+          @confirm-consensus="confirmConsensusConnection"
+        />
       </TransitionGroup>
     </div>
   </div>
@@ -98,6 +40,9 @@
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
+import MevboostMenu from "./MevboostMenu.vue";
+import ConsensusMenu from "./ConsensusMenu.vue";
+import GeneralMenu from "./GeneralMenu.vue";
 
 import { computed, ref, watchEffect, watch } from "vue";
 
@@ -151,18 +96,22 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
-watchEffect(() => {
-  let connectedConsensus;
-  connectedConsensus = manageStore.newConfiguration
-    .filter((e) => e.category === "consensus")
-    .find((e) => e.config?.dependencies.executionClients[0]);
-  manageStore.newConfiguration.map((service) => {
-    if (service.service === connectedConsensus.service) {
-      service.serviceIsConnected = true;
-      service.connectedToExecution = true;
-    }
-  });
-});
+// watchEffect(() => {
+//   let connectedConsensus;
+//   manageStore.newConfiguration
+//     .filter((e) => e.category === "consensus")
+//     .forEach((e) => {
+//       if (e.config.dependencies.executionClients.length > 0) {
+//         connectedExecution = e.config.dependencies.executionClients[0];
+//         manageStore.newConfiguration.map((service) => {
+//           if (service.service === connectedExecution.service) {
+//             service.serviceIsConnected = true;
+//             service.connectedToExecution = true;
+//           }
+//         });
+//       }
+//     });
+// });
 
 // methods
 
@@ -173,7 +122,13 @@ const getDynamicClasses = (item) => {
     return "bg-red-600 ";
   } else if (item.hasOwnProperty("isNotConnectedToValidator") && item.isNotConnectedToValidator) {
     return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
-  } else if (item.hasOwnProperty("connectedToValidator") && item.connectedToValidator) {
+  } else if (
+    item.hasOwnProperty("connectedToValidator") &&
+    item.connectedToValidator &&
+    manageStore.newConfiguration.filter((e) => e.category === "consensus").length > 1
+  ) {
+    return "border border-green-500 bg-green-500 hover:bg-green-500 ";
+  } else if (item.hasOwnProperty("isConnectedToMevboost") && item.isConnectedToMevboost) {
     return "border border-green-500 bg-green-500 hover:bg-green-500 ";
   }
 };
@@ -183,7 +138,7 @@ const displayMenu = (item) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
-  if (!item.isNotConnectedToMevboost) {
+  if (!item.isNotConnectedToMevboost && !item.isNotConnectedToValidator) {
     item.displayPluginMenu = true;
   }
 };
@@ -191,24 +146,29 @@ const displayMenu = (item) => {
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
 };
+
 const hideConnectionMenu = (item) => {
   item.displayPluginMenu = false;
-  const length = manageStore.newConfiguration.filter((service) => {
-    service.isNotConnectedToConsensus === true || service.isNotConnectedToValidator === true;
-  });
-  if (length.length > 0) {
-    return;
-  } else {
-    manageStore.newConfiguration.forEach((service) => {
+  manageStore.newConfiguration.forEach((service) => {
+    if (service.connectedToValidator) {
       service.connectedToValidator = false;
-      service.connectedToConsensus = false;
-    });
-  }
-  item.isConnectedToMevboost = false;
-  item.isNotConnectedToConsensus = false;
-  item.isNotConnectedToValidator = false;
+    }
+  });
+  setTimeout(() => {
+    item.isNotConnectedToValidator = false;
+  });
+};
 
-  hideMenu(item);
+const hideMevboostMenu = (item) => {
+  item.displayPluginMenu = false;
+  manageStore.newConfiguration.forEach((service) => {
+    if (service.isConnectedToMevboost) {
+      service.isConnectedToMevboost = false;
+    }
+  });
+  setTimeout(() => {
+    item.isNotConnectedToMevboost = false;
+  });
 };
 
 const deleteService = (item) => {
@@ -230,6 +190,9 @@ const switchClient = (item) => {
 
 const connectClient = (item) => {
   emit("connectClient", item);
+};
+const confirmConsensusConnection = (item) => {
+  console.log("Connection confirmed", item);
 };
 </script>
 <style scoped>
