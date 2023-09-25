@@ -7,7 +7,8 @@
     "username": "NOM D’UTILISATEUR",
     "password": "MOT DE PASSE",
     "keylocation": "LOCALISATION DE LA CLÉ",
-    "usessh": "UTILISER UNE CLÉ SSH"
+    "usessh": "UTILISER UNE CLÉ SSH",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "COMING SOON"
