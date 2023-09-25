@@ -36,17 +36,6 @@ export default {
   },
   emits: ["closeIpscan", "searchingIp", "copyIp", "btnFunction"],
   computed: {
-    // btnFunction() {
-    //   if (this.btnState === "search") {
-    //     return this.searchingIp();
-    //   } else if (this.btnState === "pending") {
-    //     return "";
-    //   } else if (this.btnState === "copy") {
-    //     return this.copyIp();
-    //   }
-    //   return "";
-    // },
-
     btnColor() {
       if (this.btnState === "search") {
         return "#70E763";
