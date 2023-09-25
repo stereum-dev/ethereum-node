@@ -7,7 +7,8 @@
     "username": "JMÉNO UŽIVATELE",
     "password": "HESLO",
     "keylocation": "LOKALITA KLÍČE",
-    "usessh": "POUŽÍT SSH KLÍČ"
+    "usessh": "POUŽÍT SSH KLÍČ",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "JIŽ BRZY"
