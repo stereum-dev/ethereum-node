@@ -7,7 +7,8 @@
     "username": "ПОТРЕБИТЕЛСКО ИМЕ",
     "password": "ПАРОЛА",
     "keylocation": "КЛЮЧОВО МЕСТОПОЛОЖЕНИЕ",
-    "usessh": "ИЗПОЛЗВАЙТЕ SSH КЛЮЧ"
+    "usessh": "ИЗПОЛЗВАЙТЕ SSH КЛЮЧ",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "ОЧАКВАЙТЕ СКОРО"
