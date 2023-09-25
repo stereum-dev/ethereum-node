@@ -327,11 +327,8 @@ const selectedServiceToRemove = (item) => {
     service: item,
   };
   const itemExists = manageStore.confirmChanges.some((e) => e.id === item.config.serviceID && e.content === "DELETE");
-  console.log("ITEM EXISTS", itemExists);
   if (!itemExists) {
-    console.log("BEFORE PUSH", confirmDelete);
     manageStore.confirmChanges.push(confirmDelete);
-    console.log("AFTER PUSH", manageStore.confirmChanges);
   }
 };
 </script>
