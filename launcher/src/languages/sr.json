@@ -7,7 +7,8 @@
     "username": "USER IME",
     "password": "LOZINKA",
     "keylocation": "KEY LOKACIJA",
-    "usessh": "KORISTITI SSH KEY"
+    "usessh": "KORISTITI SSH KEY",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "DOLAZI USKORO"
