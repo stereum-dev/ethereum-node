@@ -124,7 +124,7 @@ const getDynamicClasses = (item) => {
     item.connectedToConsensus &&
     manageStore.newConfiguration.filter((e) => e.category === "consensus").length > 1
   ) {
-    return "border border-green-500 bg-green-500 hover:bg-green-500 ";
+    return "border border-green-500 bg-green-500 hover:bg-green-500 pointer-events-none";
   } else {
     return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }

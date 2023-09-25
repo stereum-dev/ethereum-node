@@ -1363,6 +1363,14 @@ video {
   cursor: pointer;
 }
 
+.cursor-progress{
+  cursor: progress;
+}
+
+.cursor-none{
+  cursor: none;
+}
+
 .select-none{
   -webkit-user-select: none;
      -moz-user-select: none;
