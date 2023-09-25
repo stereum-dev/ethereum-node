@@ -2,6 +2,7 @@
   <div class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10" @mousedown.prevent>
     <div class="flex justify-center items-center bg-gray-800 p-2 rounded-md space-x-2">
       <img
+        v-if="item.category !== 'execution'"
         class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
         src="/img/icon/manage-node-icons/connection.png"
         alt="Trash Icon"

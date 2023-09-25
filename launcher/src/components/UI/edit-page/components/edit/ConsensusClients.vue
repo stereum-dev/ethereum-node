@@ -4,7 +4,7 @@
       v-for="item in getConsensus"
       :key="item.config.serviceID"
       ref="consensusRefs"
-      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md hover:bg-[#374045] self-center justify-self-center cursor-pointer border bg-[#212629] border-gray-700 relative"
+      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md self-center justify-self-center cursor-pointer relative"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
@@ -119,7 +119,7 @@ const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isNotConnectedToMevboost") && item.isNotConnectedToMevboost) {
     return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
   } else if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
-    return "bg-red-600 ";
+    return "border bg-red-600 border-white hover:bg-red-600";
   } else if (item.hasOwnProperty("isNotConnectedToValidator") && item.isNotConnectedToValidator) {
     return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
   } else if (
@@ -130,6 +130,8 @@ const getDynamicClasses = (item) => {
     return "border border-green-500 bg-green-500 hover:bg-green-500 ";
   } else if (item.hasOwnProperty("isConnectedToMevboost") && item.isConnectedToMevboost) {
     return "border border-green-500 bg-green-500 hover:bg-green-500 ";
+  } else {
+    return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
 };
 
@@ -138,7 +140,12 @@ const displayMenu = (item) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
-  if (!item.isNotConnectedToMevboost && !item.isNotConnectedToValidator) {
+  if (
+    !item.isNotConnectedToMevboost &&
+    !item.isNotConnectedToValidator &&
+    !item.isRemoveProcessing &&
+    !item.isRemoveProcessing
+  ) {
     item.displayPluginMenu = true;
   }
 };

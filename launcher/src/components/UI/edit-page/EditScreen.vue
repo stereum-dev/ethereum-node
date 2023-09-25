@@ -305,14 +305,19 @@ const nukeNode = async () => {
 };
 
 const selectedServiceToRemove = (item) => {
-  manageStore.newConfiguration.forEach((service) => {
-    service.displayPluginMenu = false;
-    service.isConnectedToMevboost = false;
-  });
-  setTimeout(() => {
+  item.displayPluginMenu = false;
+  if (
+    item.isNotConnectedToConsensus ||
+    item.isNotConnectedToValidator ||
+    item.isNotConnectedToMevboost ||
+    item.isDisplayPluginMenu
+  ) {
+    return;
+  } else {
     clientToRemove.value = item;
-    item.isRemoveProcessing = false;
-  });
+    item.isRemoveProcessing = true;
+  }
+
   item.displayTooltip = false;
   manageStore.selectedItemToRemove.push(item);
   const confirmDelete = {
@@ -321,10 +326,13 @@ const selectedServiceToRemove = (item) => {
     contentIcon: "/img/icon/manage-node-icons/delete.png",
     service: item,
   };
-  console.log(confirmDelete);
-  manageStore.confirmChanges.some((e) => e.id === confirmDelete.id)
-    ? null
-    : manageStore.confirmChanges.push(confirmDelete);
+  const itemExists = manageStore.confirmChanges.some((e) => e.id === item.config.serviceID && e.content === "DELETE");
+  console.log("ITEM EXISTS", itemExists);
+  if (!itemExists) {
+    console.log("BEFORE PUSH", confirmDelete);
+    manageStore.confirmChanges.push(confirmDelete);
+    console.log("AFTER PUSH", manageStore.confirmChanges);
+  }
 };
 </script>
 

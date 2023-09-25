@@ -7,38 +7,20 @@
       v-for="item in getValidators"
       :key="item"
       ref="validatorRefs"
-      class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#374045] self-center justify-self-center cursor-pointer"
+      class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md shadow-md divide-x divide-gray-700 self-center justify-self-center cursor-pointer"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
     >
       <ClientLayout :client="item" />
       <Transition name="slide-fade">
-        <div
+        <GeneralMenu
           v-if="item.displayPluginMenu"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-50"
-        >
-          <div class="flex justify-center items-center bg-gray-800 z-20 p-2 rounded-md space-x-2">
-            <img
-              class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/connection.png"
-              alt="Trash Icon"
-              @click="connectClient(item)"
-            />
-            <img
-              class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/replace.png"
-              alt="Trash Icon"
-              @click="switchClient(item)"
-            />
-            <img
-              class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/trash.png"
-              alt="Trash Icon"
-              @click="deleteService(item)"
-            />
-          </div>
-        </div>
+          :item="item"
+          @switch-client="switchClient"
+          @connect-client="connectClient"
+          @delete-service="deleteService"
+        />
       </Transition>
     </div>
   </div>
@@ -48,6 +30,8 @@
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
+
+import GeneralMenu from "./GeneralMenu.vue";
 import { computed, reactive, watch, watchEffect } from "vue";
 
 // Variables & Constants
@@ -105,7 +89,9 @@ watchEffect(() => {
 
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
-    return "bg-red-600 ";
+    return "border bg-red-600 border-white hover:bg-red-600";
+  } else {
+    return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
 };
 
@@ -114,9 +100,17 @@ const getDynamicClasses = (item) => {
 const displayMenu = (item) => {
   manageStore.newConfiguration.forEach((service) => {
     service.displayPluginMenu = false;
-    service.isConnectedToMevboost = false;
   });
-  item.displayPluginMenu = true;
+  if (
+    item.isNotConnectedToConsensus ||
+    item.isNotConnectedToValidator ||
+    item.isNotConnectedToMevboost ||
+    item.isRemoveProcessing
+  ) {
+    return;
+  } else {
+    item.displayPluginMenu = true;
+  }
 };
 const hideMenu = (item) => {
   item.displayPluginMenu = false;

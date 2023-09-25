@@ -4,33 +4,20 @@
       v-for="item in getExecutions"
       :key="item"
       ref="executionRefs"
-      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md hover:bg-[#374045] self-center justify-self-center cursor-pointer border bg-[#212629] border-gray-700 relative"
+      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md self-center justify-self-center cursor-pointer relative"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
     >
       <ClientLayout :client="item" />
       <TransitionGroup name="slide-fade">
-        <div
+        <GeneralMenu
           v-if="item.displayPluginMenu"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
-          @mousedown.prevent
-        >
-          <div class="flex justify-center items-center bg-gray-800 p-2 rounded-md space-x-2">
-            <img
-              class="w-7 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/replace.png"
-              alt="Trash Icon"
-              @click="switchClient(item)"
-            />
-            <img
-              class="w-6 rounded-sm hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-              src="/img/icon/manage-node-icons/trash.png"
-              alt="Trash Icon"
-              @click="deleteService(item)"
-            />
-          </div>
-        </div>
+          :item="item"
+          @switch-client="switchClient"
+          @connect-client="connectClient"
+          @delete-service="deleteService"
+        />
         <div
           v-else-if="item.isNotConnectedToConsensus"
           class="absolute inset-x-0 w-full h-full flex justify-center items-center z-20"
@@ -68,6 +55,7 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
+import GeneralMenu from "./GeneralMenu.vue";
 
 import { computed, ref, watchEffect } from "vue";
 
@@ -127,7 +115,7 @@ watchEffect(() => {
 // Methods
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
-    return "bg-red-600 hover:red-600";
+    return "border bg-red-600 border-white hover:bg-red-600";
   }
   if (item.hasOwnProperty("isNotConnectedToConsensus") && item.isNotConnectedToConsensus) {
     return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
@@ -137,6 +125,8 @@ const getDynamicClasses = (item) => {
     manageStore.newConfiguration.filter((e) => e.category === "consensus").length > 1
   ) {
     return "border border-green-500 bg-green-500 hover:bg-green-500 ";
+  } else {
+    return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
 };
 
@@ -144,7 +134,12 @@ const displayMenu = (item) => {
   serviceStore.installedServices.forEach((service) => {
     service.displayPluginMenu = false;
   });
-  if (item.isNotConnectedToConsensus || item.isNotConnectedToValidator || item.isNotConnectedToMevboost) {
+  if (
+    item.isNotConnectedToConsensus ||
+    item.isNotConnectedToValidator ||
+    item.isNotConnectedToMevboost ||
+    item.isRemoveProcessing
+  ) {
     return;
   } else {
     item.displayPluginMenu = true;
