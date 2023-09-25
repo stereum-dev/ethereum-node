@@ -7,7 +7,8 @@
     "username": "نام کاربری",
     "password": "کلمه عبور",
     "keylocation": "مکان کلید",
-    "usessh": "SSH استفاده از"
+    "usessh": "SSH استفاده از",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "به زودی"
