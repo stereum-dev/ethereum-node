@@ -140,12 +140,7 @@ const displayMenu = (item) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
-  if (
-    !item.isNotConnectedToMevboost &&
-    !item.isNotConnectedToValidator &&
-    !item.isRemoveProcessing &&
-    !item.isRemoveProcessing
-  ) {
+  if (!item.isNotConnectedToMevboost && !item.isNotConnectedToValidator && !item.isRemoveProcessing) {
     item.displayPluginMenu = true;
   }
 };

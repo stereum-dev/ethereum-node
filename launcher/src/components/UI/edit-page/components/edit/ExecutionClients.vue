@@ -15,7 +15,7 @@
           v-if="item.displayPluginMenu"
           :item="item"
           @switch-client="switchClient"
-          @connect-client="connectClient"
+          @connect-client="confirmConsensus"
           @delete-service="deleteService"
         />
         <div
@@ -134,14 +134,7 @@ const displayMenu = (item) => {
   serviceStore.installedServices.forEach((service) => {
     service.displayPluginMenu = false;
   });
-  if (
-    item.isNotConnectedToConsensus ||
-    item.isNotConnectedToValidator ||
-    item.isNotConnectedToMevboost ||
-    item.isRemoveProcessing
-  ) {
-    return;
-  } else {
+  if (!item.isNotConnectedToConsensus && !item.isNotConnectedToValidator && !item.isRemoveProcessing) {
     item.displayPluginMenu = true;
   }
 };
