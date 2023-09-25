@@ -7,7 +7,8 @@
     "username": "Хэрэглэгчийн нэр",
     "password": "Нууц үг",
     "keylocation": "ТҮЛХҮҮРИЙН БАЙРШИЛ",
-    "usessh": "SSH түлхүүрийг ашиглана уу"
+    "usessh": "SSH түлхүүрийг ашиглана уу",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "ТУН УДАХГҮЙ"
