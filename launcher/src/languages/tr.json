@@ -7,7 +7,8 @@
     "username": "KULLANICI ADI",
     "password": "ŞİFRE",
     "keylocation": "ANAHTAR KONUMU",
-    "usessh": "SSH ANAHTARI KULLAN"
+    "usessh": "SSH ANAHTARI KULLAN",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "YAKINDA"
