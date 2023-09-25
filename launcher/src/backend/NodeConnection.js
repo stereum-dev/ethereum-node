@@ -1230,7 +1230,7 @@ export class NodeConnection {
       });
       evilscan.run();
     }
-    await Sleep(6 * 1000);
+    await Sleep(5 * 1000);
     return avadoIPs;
   }
 }
