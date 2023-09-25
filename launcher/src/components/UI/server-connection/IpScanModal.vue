@@ -12,8 +12,10 @@
         </p>
       </div>
       <div class="ipscan-search-container">
-        <div class="ipscan-search-ip-place">Click [search] to start</div>
-        <div class="ipscan-search-btn">search</div>
+        <div class="ipscan-search-ip-place">{{ scannedIp }}</div>
+        <div class="ipscan-search-btn" :style="{ backgroundColor: btnColor }" @click="btnFunction">
+          {{ btnState }}
+        </div>
       </div>
       <div class="click-close">Click outside to close</div>
     </div>
@@ -22,10 +24,52 @@
 
 <script>
 export default {
-  emits: ["closeIpscan"],
+  props: {
+    scannedIp: {
+      type: String,
+      required: true,
+    },
+    btnState: {
+      type: String,
+      required: true,
+    },
+  },
+  emits: ["closeIpscan", "searchingIp", "copyIp", "btnFunction"],
+  computed: {
+    // btnFunction() {
+    //   if (this.btnState === "search") {
+    //     return this.searchingIp();
+    //   } else if (this.btnState === "pending") {
+    //     return "";
+    //   } else if (this.btnState === "copy") {
+    //     return this.copyIp();
+    //   }
+    //   return "";
+    // },
+
+    btnColor() {
+      if (this.btnState === "search") {
+        return "#70E763";
+      } else if (this.btnState === "pending") {
+        return "#7EB5E6";
+      } else if (this.btnState === "copy") {
+        return "#70E763";
+      }
+      return "#70E763";
+    },
+  },
   methods: {
     closeIpscan() {
       this.$emit("closeIpscan");
+    },
+    searchingIp() {
+      this.$emit("searchingIp");
+    },
+    copyIp() {
+      this.$emit("copyIp");
+    },
+    btnFunction() {
+      this.$emit("btnFunction");
     },
   },
 };
@@ -129,6 +173,9 @@ export default {
   font-weight: 700;
   cursor: pointer;
   text-transform: uppercase;
+}
+.ipscan-search-btn:active {
+  transform: scale(0.95);
 }
 .click-close {
   margin-top: 2%;

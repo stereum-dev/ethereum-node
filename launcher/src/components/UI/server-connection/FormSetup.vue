@@ -1,6 +1,12 @@
 <template>
   <div class="server-parent">
-    <IpScanModal v-if="ipScanModal" @close-ipscan="ipScanModal = false" />
+    <IpScanModal
+      v-if="ipScanModal"
+      :btn-state="btnSearchState"
+      :scanned-ip="foundIp"
+      @close-ipscan="ipScanModal = false"
+      @btn-function="scanFunction"
+    />
     <!-- <div class="ip-detected">{{ ipTest }}</div> -->
     <div v-if="alertBox" class="alert animate__animated animate__flipInX">{{ $t("formsetup.fillFields") }}</div>
     <div v-if="errorMsgExists" class="error-box"></div>
@@ -204,7 +210,6 @@
 </template>
 
 <script>
-// import arpscan from "arpscan";
 import IpScanModal from "./IpScanModal.vue";
 import DeleteModal from "./DeleteModal.vue";
 import ControlService from "@/store/ControlService";
@@ -219,9 +224,11 @@ export default {
   emits: ["page"],
   data() {
     return {
+      scannedCounter: 0,
+      btnSearchState: "search",
       ipScanModal: false,
       devices: [],
-      ipTest: "",
+      foundIp: "Click [search] to start",
       alertBox: false,
       sshPort: null,
       keyAuth: false,
@@ -272,34 +279,52 @@ export default {
       }
     },
   },
+
+  watch: {
+    devices() {
+      if (this.devices.length < 1) {
+        this.foundIp = "No IP found";
+        this.btnSearchState = "search";
+      } else if (this.devices.length == 1) {
+        this.foundIp = this.devices[0].ip;
+        this.btnSearchState = "copy";
+      }
+    },
+  },
   created() {
     this.loadStoredConnections();
   },
-  mounted() {
-    this.IpScanLan1();
-    // this.scanDevices();
-  },
   methods: {
+    scanFunction() {
+      if (this.scannedCounter == 0 && this.btnSearchState === "search") {
+        this.scannedCounter++;
+        this.startScaning();
+      } else if (this.btnSearchState === "search") {
+        this.startScaning();
+      } else if (this.btnSearchState === "pending") {
+        return "";
+      } else if (this.btnSearchState === "copy") {
+        this.copyIp(this.foundIp);
+      }
+      return "";
+    },
+    async copyIp(arg) {
+      await navigator.clipboard.writeText(arg);
+    },
+    startScaning() {
+      this.btnSearchState = "pending";
+      this.foundIp = "Searching...";
+      this.IpScanLan1();
+    },
     async IpScanLan1() {
       try {
         let res = await ControlService.IpScanLan();
-        console.log("res: -------", res);
+        this.devices = res;
       } catch (error) {
         console.error("An error occurred:", error);
       }
     },
-    // async scanDevices() {
-    //   try {
-    //     const results = await arpscan();
-    //     this.devices = results;
-    //     console.log("Devices:", results);
-    //   } catch (error) {
-    //     console.error("Error scanning devices:", error);
-    //   }
-    // },
-    // helloWorld() {
-    //   this.ipTest = "Hello World";
-    // },
+
     toggleShowPassword() {
       this.showPassword = !this.showPassword;
     },
