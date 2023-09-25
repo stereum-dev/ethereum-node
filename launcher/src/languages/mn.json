@@ -174,7 +174,7 @@
     "off": "Сервисийг унтраа",
     "on": "Сервисийг асаа",
     "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "restart": "сервисийг дахин эхлүүлнэ үү"
   },
   "taskManager": {
     "clickDisplay": "Харуулын тулд таск дээр товшино уу"
@@ -192,13 +192,13 @@
     "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "I am sure",
-    "cancel": "cancel",
+    "sure": "Би итгэлтэй байна",
+    "cancel": "цуцлах",
     "serviceExpl": "The service selected for the entered Validator key",
     "activeExpl": "The time since the validator has been active",
     "balExpl": "The balance of the validator",
-    "copyPub": "Copy the public key",
-    "copiedPub": "Public key copied",
+    "copyPub": "Нийтийн түлхүүрийг хуулна уу",
+    "copiedPub": "Нийтийн түлхүүрийг хуулсан",
     "setFee": "set the block fee recipient for the selected keys",
     "renameVal": "rename the validator key",
     "removVal": "remove the validator key",
@@ -210,7 +210,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ЭНЭ ТҮЛХҮҮРИЙГ ГИНЖНЭЭС ГАРГАХЫН ТУЛД ВАЛИДАТОРИЙН НУУЦ ҮГИЙГ ОРУУЛНА УУ...",
-    "confirm": "Confirm"
+    "confirm": "Баталгаажуулах"
   },
   "exitValidatorModal": {
     "modalMessage": "Та СОНГОГДСОН валидатор ТҮЛХҮҮРҮҮД-ийг гинжнээс гаргахдаа итгэлтэй байна уу?\nЭнэ нь таны валидаторын ажилгааг зогсоох ба энэ үйлдлийг БУЦААХ БОЛОМЖГҮЙ. Зөвхөн сүлжээ зөвшөөрсөн тохиолдолд л та өөрийн хөрөнгө оруулалтыг татан авах боломжтой.",
@@ -266,7 +266,7 @@
     "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "БУЦАХ",
     "install": "СУУЛГАХ",
-    "placeHoldrer": "choose a network"
+    "placeHoldrer": "сүлжээ сонгох"
   },
   "removeModal": {
     "removeText": "Бүх сервисүүд устгагдах болно.",
@@ -283,10 +283,10 @@
     "chosen": "СОНГОГДСОН СҮЛЖЭЭ",
     "path": "СУУЛГАХ ЗАМ",
     "syncClient": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
-    "plugin": "INSTALLED SERVICES",
+    "plugin": "СУУЛГАСАН СЕРВИСҮҮД",
     "addOpt": "ADDITIONAL OPTIONS",
-    "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
+    "monitor": "MОНИТОРИНГ",
+    "instMonit": "Мониторинг суулгах уу?",
     "back": "БУЦАХ",
     "next": "ДАРААГИЙНХ"
   },
@@ -375,16 +375,16 @@
   "addModifyPanel": {
     "installPath": "INSTALLATION PATH",
     "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "portused": "PORT USED",
-    "cancel": "cancel",
-    "save": "save",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "portused": "АШИГЛАСАН ПОРТ",
+    "cancel": "цуцлах",
+    "save": "хадгалах",
+    "add": "НЭМЭХ",
+    "clickAndAdd": "НЭМЭХ дээр дарна уу"
   },
   "importSlashingModal": {
     "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
     "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
+    "chooseFile": "Файлаа сонгоно уу",
     "continue": "Үргэлжлүүлэх"
   },
   "disabledStaking": {
