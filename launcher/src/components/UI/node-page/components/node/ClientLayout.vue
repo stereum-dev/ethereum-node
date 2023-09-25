@@ -15,7 +15,7 @@
       <img class="w-10" :src="props.client.sIcon" alt="icon" />
       <div v-if="props.client.category !== 'validator'" class="h-1/3 flex justify-evenly items-center">
         <img class="w-4" :src="syncIcon" alt="icon" />
-        <span class="text-xs text-gray-100">{{ getPercent() }}</span>
+        <span class="text-xs text-gray-100">{{ syncPercent }}</span>
       </div>
       <div v-else class="h-1/3 flex justify-center items-center">
         <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
@@ -37,7 +37,7 @@
 </template>
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 import { useServices } from "@/store/services";
 import { useControlStore } from "@/store/theControl";
 import { ref } from "vue";
@@ -49,6 +49,9 @@ const props = defineProps({
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
 const controlStore = useControlStore();
+
+const syncPercent = ref("-");
+const refreshSync = ref(null);
 
 const syncIcons = ref([
   {
@@ -72,36 +75,64 @@ const syncIcons = ref([
     icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
   },
 ]);
+
 const syncIcon = ref(syncIcons.value[3].icon);
 
-const getPercent = () => {
-  if (controlStore.syncstatus.code === 0) {
-    let data;
-    for (const k of controlStore.syncstatus.data) {
-      data = k.find((d) => d.title.toLowerCase() === props.client.name.toLowerCase());
-    }
-    const lo = data.frstVal;
-    const hi = data.scndVal;
-    // console.log(data.title, lo, hi);
-    if (lo > hi) {
-      //fonts.orange.push(k);
-      syncIcon.value = syncIcons.value[0].icon;
-    }
-    if (lo < 1 && hi < 1) {
-      //fonts.grey.push(k);
-      syncIcon.value = syncIcons.value[3].icon;
-    }
-    if (lo < hi) {
-      //fonts.blue.push(k);
-      syncIcon.value = syncIcons.value[1].icon;
-    }
-    if (lo == hi) {
-      //fonts.green.push(k);
-      syncIcon.value = syncIcons.value[2].icon;
-    }
-    return Math.floor((parseInt(data.frstVal) / parseInt(data.scndVal)) * 100) + "%";
+onMounted(() => {
+  if (props.client.category !== "validator") {
+    getPercent();
+    refreshSync.value = setInterval(() => {
+      getPercent();
+    }, 10000);
   }
-  return "-";
+});
+
+onUnmounted(() => {
+  if (props?.client?.category !== "validator") {
+    clearInterval(refreshSync.value);
+  }
+});
+
+const getPercent = () => {
+  const syncResult = structuredClone(controlStore.syncstatus);
+  if (syncResult.code === 0) {
+    const flatArray = syncResult.data.flat();
+    let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());
+
+    if (data) {
+      const lo = data.frstVal;
+      const hi = data.scndVal;
+      const percent = Math.floor((parseInt(lo) / parseInt(hi)) * 100);
+
+      if (isNaN(percent)) {
+        syncPercent.value = "-";
+      } else {
+        syncPercent.value = percent + "%";
+      }
+      // console.log(data.title, lo, hi);
+      if (lo > hi) {
+        //fonts.orange.push(k);
+        syncIcon.value = syncIcons.value[0].icon;
+        return;
+      }
+      if (lo < 1 && hi < 1) {
+        //fonts.grey.push(k);
+        syncIcon.value = syncIcons.value[3].icon;
+        return;
+      }
+      if (lo < hi) {
+        //fonts.blue.push(k);
+        syncIcon.value = syncIcons.value[1].icon;
+        return;
+      }
+      if (lo == hi) {
+        //fonts.green.push(k);
+        syncIcon.value = syncIcons.value[2].icon;
+        return;
+      }
+    }
+  }
+  syncPercent.value = "-";
 };
 
 const clientStatus = computed(() => {
