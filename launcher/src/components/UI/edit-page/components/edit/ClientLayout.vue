@@ -16,7 +16,7 @@ import { computed, ref } from 'vue';
 
     <div
       v-if="client.category === 'consensus' && getConnectedMevboost?.config.serviceID === client.config?.serviceID"
-      class="flex justify-evenly items-center absolute left-[1px] -top-[1px]"
+      class="flex justify-evenly items-center absolute -right-2 -bottom-3"
     >
       <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
     </div>

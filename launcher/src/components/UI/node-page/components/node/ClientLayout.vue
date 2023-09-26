@@ -5,7 +5,7 @@
     @mousedown.prevent.stop
   >
     <div
-      class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-[10px] font-mono font-medium capitalize bg-[#264744]"
+      class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-[10px] font-semibold capitalize bg-[#264744]"
     >
       <span> {{ props.client.name }}</span>
 
@@ -29,7 +29,7 @@
 
     <div
       v-if="getConnectedMevboost?.config.serviceID === props.client.config.serviceID"
-      class="flex justify-evenly items-center absolute bottom-0 left-[1px]"
+      class="flex justify-evenly items-center absolute -bottom-2 -right-24"
     >
       <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
     </div>

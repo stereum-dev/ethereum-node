@@ -775,6 +775,54 @@ video {
   top: -18px;
 }
 
+.-bottom-0{
+  bottom: -0px;
+}
+
+.-bottom-2{
+  bottom: -0.5rem;
+}
+
+.-left-1{
+  left: -0.25rem;
+}
+
+.-left-2{
+  left: -0.5rem;
+}
+
+.-right-2{
+  right: -0.5rem;
+}
+
+.-right-20{
+  right: -5rem;
+}
+
+.-right-24{
+  right: -6rem;
+}
+
+.-right-\[5\.5rem\]{
+  right: -5.5rem;
+}
+
+.-right-\[5\.9rem\]{
+  right: -5.9rem;
+}
+
+.right-\[1px\]{
+  right: 1px;
+}
+
+.right-2{
+  right: 0.5rem;
+}
+
+.-bottom-3{
+  bottom: -0.75rem;
+}
+
 .z-0{
   z-index: 0;
 }
