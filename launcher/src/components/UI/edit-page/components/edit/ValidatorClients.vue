@@ -20,6 +20,7 @@
           @switch-client="switchClient"
           @connect-client="connectClient"
           @delete-service="deleteService"
+          @info-modal="infoModal"
         />
       </Transition>
     </div>
@@ -36,7 +37,7 @@ import { computed, reactive, watch, watchEffect } from "vue";
 
 // Variables & Constants
 
-const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
+const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal"]);
 const validatorRefs = reactive([]);
 const nodeStore = useNodeStore();
 const manageStore = useNodeManage();
@@ -126,6 +127,10 @@ const switchClient = (item) => {
 
 const connectClient = (item) => {
   emit("connectClient", item);
+};
+
+const infoModal = (item) => {
+  emit("infoModal", item);
 };
 </script>
 <style scoped>

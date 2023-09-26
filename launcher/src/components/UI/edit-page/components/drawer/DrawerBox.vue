@@ -11,12 +11,12 @@ import { useServices } from '@/store/services';
         class="col-span-1 row-start-3 row-end-12 w-full h-[430px] flex flex-col items-center space-y-6 bg-[#151618] border border-gray-500 rounded-md overflow-y-scroll py-3 overflow-x-hidden mt-3"
       >
         <div
-          v-for="service in store.filteredServices"
+          v-for="service in serviceStore.filteredServices"
           :key="service.serviceID"
           class="w-full relative inline-block cursor-pointer"
           draggable="true"
           @dragstart="dragStart($event, service)"
-          @dblclick="emitAddService($event, service)"
+          @dblclick="addService(service)"
         >
           <img :src="service.sIcon" alt="Client Icon" class="w-14 mx-auto" />
           <p
@@ -47,13 +47,13 @@ const props = defineProps({
   dragging: Function,
 });
 const dragStart = props.dragging;
-  
+
 const emit = defineEmits(["add-service", "start-drag"]);
 
-const store = useServices();
+const serviceStore = useServices();
 
-function emitAddService($event, service) {
-  emit("addService", $event, service);
+function addService(service) {
+  emit("addService", service);
 }
 </script>
 <style scoped>

@@ -57,15 +57,15 @@ const filters = [
   { name: "Service" },
 ];
 
-const store = useServices();
+const serviceStore = useServices();
 
 const selectedfilter = ref(filters[0]);
 
-store.filteredServices = computed(() => {
+serviceStore.filteredServices = computed(() => {
   if (selectedfilter.value.name.toLowerCase() === "all") {
-    return store.allServices;
+    return serviceStore.allServices;
   } else {
-    return store.allServices.filter((item) => item.category.toLowerCase() === selectedfilter.value.name.toLowerCase());
+    return serviceStore.allServices.filter((item) => item.category.toLowerCase() === selectedfilter.value.name.toLowerCase());
   }
 });
 </script>

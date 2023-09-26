@@ -40,11 +40,16 @@ const { client } = defineProps({
   },
 });
 
-const serviceId = computed(() => formattedServiceID(client?.config.serviceID));
+const serviceId = computed(() => formattedServiceID(client.config ? client?.config.serviceID : null));
 
 const getConnectedMevboost = computed(() => {
   let connectedMevboost;
-  if (client?.config.dependencies.mevboost[0]) connectedMevboost = client;
+
+  if (client.config && client?.config.dependencies.mevboost[0]) {
+    connectedMevboost = client;
+  } else {
+    connectedMevboost = null;
+  }
 
   return connectedMevboost;
 });

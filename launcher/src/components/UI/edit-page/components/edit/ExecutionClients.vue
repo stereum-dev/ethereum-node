@@ -15,36 +15,16 @@
           v-if="item.displayPluginMenu"
           :item="item"
           @switch-client="switchClient"
-          @connect-client="confirmConsensus"
+          @connect-client="connectClient"
           @delete-service="deleteService"
+          @info-modal="infoModal"
         />
-        <div
+        <ConnectionMenu
           v-else-if="item.isNotConnectedToConsensus"
-          class="absolute inset-x-0 w-full h-full flex justify-center items-center z-20"
-          @mousedown.prevent
-        >
-          <div class="flex justify-center items-center bg-gray-900 p-2 rounded-md space-x-2">
-            <img
-              v-if="!item.isConfirmProcessing"
-              class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
-              src="/img/icon/manage-node-icons/connection.png"
-              alt="Trash Icon"
-              @click="confirmConsensus(item)"
-            />
-            <div
-              v-else-if="item.isConfirmProcessing"
-              class="w-6 h-6 pt-1 bg-gray-500 rounded-md border border-gray-700"
-            >
-              <svg class="animate-spin rounded-full border-t-2 border-r-2 border-blue-100 h-4 w-4 mx-auto"></svg>
-            </div>
-            <img
-              class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
-              src="/img/icon/the-staking/close.png"
-              alt="CIcon"
-              @click="hideConnectionMenu(item)"
-            />
-          </div>
-        </div>
+          :item="item"
+          @hide-connection="hideConnection"
+          @confirm-connection="confirmConnection"
+        />
       </TransitionGroup>
     </div>
   </div>
@@ -56,10 +36,11 @@ import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
+import ConnectionMenu from "./ConnectionMenu.vue";
 
 import { computed, ref, watchEffect } from "vue";
 
-const emit = defineEmits(["deleteService", "switchClient"]);
+const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal"]);
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
 const manageStore = useNodeManage();
@@ -95,22 +76,22 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
-watchEffect(() => {
-  let connectedExecution;
-  manageStore.newConfiguration
-    .filter((e) => e.category === "consensus")
-    .forEach((e) => {
-      if (e.config.dependencies.executionClients.length > 0) {
-        connectedExecution = e.config.dependencies.executionClients[0];
-        manageStore.newConfiguration.map((service) => {
-          if (service.service === connectedExecution.service) {
-            service.serviceIsConnected = true;
-            service.connectedToExecution = true;
-          }
-        });
-      }
-    });
-});
+// watchEffect(() => {
+//   let connectedExecution;
+//   manageStore.newConfiguration
+//     .filter((e) => e.category === "consensus")
+//     .forEach((e) => {
+//       if (e.config.dependencies.executionClients.length > 0) {
+//         connectedExecution = e.config.dependencies.executionClients[0];
+//         manageStore.newConfiguration.map((service) => {
+//           if (service.service === connectedExecution.service) {
+//             service.serviceIsConnected = true;
+//             service.connectedToExecution = true;
+//           }
+//         });
+//       }
+//     });
+// });
 
 // Methods
 const getDynamicClasses = (item) => {
@@ -143,7 +124,7 @@ const hideMenu = (item) => {
   item.displayPluginMenu = false;
 };
 
-const hideConnectionMenu = (item) => {
+const hideConnection = (item) => {
   item.displayPluginMenu = false;
   manageStore.newConfiguration.forEach((service) => {
     if (service.connectedToConsensus) {
@@ -155,8 +136,12 @@ const hideConnectionMenu = (item) => {
   });
 };
 
-const confirmConsensus = (item) => {
-  emit("confirmConsensus", item);
+const connectClient = (item) => {
+  emit("connectClient", item);
+};
+
+const confirmConnection = (item) => {
+  emit("confirmConnection", item);
 };
 
 const deleteService = (item) => {
@@ -165,6 +150,10 @@ const deleteService = (item) => {
 
 const switchClient = (item) => {
   emit("switchClient", item);
+};
+
+const infoModal = (item) => {
+  emit("infoModal", item);
 };
 </script>
 <style scoped>

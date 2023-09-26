@@ -14,6 +14,7 @@
           @connect-client="clientConnectionHandler"
           @delete-service="selectedServiceToRemove"
           @confirm-consensus="confirmConsensusConnection"
+          @info-modal="openInfoModal"
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
@@ -59,6 +60,12 @@
         @close-window="isSwitchModalOpen = false"
         @switch-confirm="switchClientConfirm"
       />
+      <InfoModal
+        v-if="isInfoModalOpen"
+        :client="clientForInfo"
+        @close-window="isInfoModalOpen = false"
+        @ok-button="isInfoModalOpen = false"
+      />
 
       <!-- End Switch Client Modal -->
     </TransitionGroup>
@@ -72,6 +79,7 @@ import ChangesSection from "./sections/ChangesSection.vue";
 import DrawerBox from "./components/drawer/DrawerBox.vue";
 import NetworkModal from "./components/modals/NetworkModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
+import InfoModal from "./components/modals/InfoModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
@@ -82,11 +90,12 @@ const serviceStore = useServices();
 const manageStore = useNodeManage();
 const router = useRouter();
 const isOverDropZone = ref(false);
-const list = ref([]);
 const clientToRemove = ref(null);
 const clientToSwitch = ref(null);
+const clientForInfo = ref(null);
 const isConfirmLoading = ref(false);
 const isSwitchModalOpen = ref(false);
+const isInfoModalOpen = ref(false);
 const clientToConnect = ref(null);
 
 onMounted(() => {
@@ -106,6 +115,7 @@ onMounted(() => {
       isConnectedToMevboost: false,
       isNotConnectedToMevboost: false,
       isConfirmProcessing: false,
+      isServiceConnecting: false,
     };
   });
 });
@@ -228,23 +238,18 @@ const openDrawer = () => {
 
 // Add service with double click
 
-const addServices = (event, item) => {
-  if (item.category === "service" && serviceStore.customServiceToInstall.map((s) => s.service).includes(item.service)) {
-    return;
-  } else {
-    item.id = serviceStore.customServiceToInstall.length;
-    const existsService = serviceStore.customServiceToInstall.some((s) => s.service === item.service);
-    if (!existsService) {
-      serviceStore.customServiceToInstall.push(item);
-      manageStore.confirmChanges.push({
-        id: item.config.serviceID,
-        content: "INSTALL",
-        contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
-        service: item,
-      });
-    } else {
-      return;
-    }
+const addServices = (item) => {
+  let element = JSON.parse(JSON.stringify(item));
+  if (element.category !== "service") {
+    // Change item.id to a unique id
+    element.id = manageStore.newConfiguration.length + 1;
+    manageStore.newConfiguration.push(element);
+    manageStore.confirmChanges.push({
+      id: element.id,
+      content: "INSTALL",
+      contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
+      service: element,
+    });
   }
 };
 
@@ -261,20 +266,18 @@ const onDrop = (event) => {
   const itemID = event.dataTransfer.getData("itemId");
   isOverDropZone.value = false;
   const copyAllServices = structuredClone(serviceStore.allServices);
-  const item = copyAllServices.find((item) => item.id == itemID);
-  if (item.category === "service" && list.value.map((s) => s.service).includes(item.service)) {
-    return;
-  } else {
-    item.id = list.value.length;
-    serviceStore.customServiceToInstall.push(item);
+  const allServices = JSON.parse(JSON.stringify(copyAllServices));
+  const item = allServices.find((item) => item.id == itemID);
 
-    manageStore.confirmChanges.push({
-      id: randomId,
-      content: "INSTALL",
-      contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
-      service: item,
-    });
-  }
+  item.id = manageStore.newConfiguration.length + 1;
+  manageStore.newConfiguration.push(item);
+
+  manageStore.confirmChanges.push({
+    id: randomId,
+    content: "INSTALL",
+    contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
+    service: item,
+  });
 };
 
 // Network switch methods
@@ -330,6 +333,11 @@ const selectedServiceToRemove = (item) => {
   if (!itemExists) {
     manageStore.confirmChanges.push(confirmDelete);
   }
+};
+
+const openInfoModal = (item) => {
+  clientForInfo.value = item;
+  isInfoModalOpen.value = true;
 };
 </script>
 

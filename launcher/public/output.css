@@ -515,7 +515,7 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
-::-webkit-backdrop{
+::-ms-backdrop{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
   --tw-translate-x: 0;
@@ -1037,6 +1037,10 @@ video {
   height: 4rem;
 }
 
+.h-2\/3{
+  height: 66.666667%;
+}
+
 .h-3{
   height: 0.75rem;
 }
@@ -1099,6 +1103,10 @@ video {
 
 .h-screen{
   height: 100vh;
+}
+
+.h-\[50px\]{
+  height: 50px;
 }
 
 .max-h-60{
@@ -1361,14 +1369,6 @@ video {
 
 .cursor-pointer{
   cursor: pointer;
-}
-
-.cursor-progress{
-  cursor: progress;
-}
-
-.cursor-none{
-  cursor: none;
 }
 
 .select-none{

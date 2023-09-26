@@ -34,6 +34,7 @@
           @switch-client="switchClient"
           @connect-client="connectClient"
           @confirm-consensus="confirmConsensus"
+          @info-modal="infoModal"
         />
         <ConsensusClients
           v-if="!isOverDropZone"
@@ -41,6 +42,7 @@
           @confirm-connection="confirmConnection"
           @switch-client="switchClient"
           @connect-client="connectClient"
+          @info-modal="infoModal"
         />
         <ExecutionClients
           v-if="!isOverDropZone"
@@ -48,6 +50,7 @@
           @switch-client="switchClient"
           @connect-client="connectClient"
           @confirm-consensus="confirmConsensus"
+          @info-modal="infoModal"
         />
       </div>
     </div>
@@ -60,7 +63,6 @@ import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
 import { computed, ref, watchEffect } from "vue";
-import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 
 const emit = defineEmits([
@@ -70,10 +72,11 @@ const emit = defineEmits([
   "connectClient",
   "deleteService",
   "confirmConsensus",
+  "infoModal",
 ]);
 
 //Pinia stores
-const manageStore = useNodeManage();
+
 const serviceStore = useServices();
 
 // refs
@@ -130,6 +133,10 @@ const deleteService = (item) => {
 
 const confirmConsensus = (item) => {
   emit("confirmConsensus", item);
+};
+
+const infoModal = (item) => {
+  emit("infoModal", item);
 };
 </script>
 

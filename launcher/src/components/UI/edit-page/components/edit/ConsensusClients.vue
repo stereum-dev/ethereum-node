@@ -17,6 +17,7 @@
           @switch-client="switchClient"
           @connect-client="connectClient"
           @delete-service="deleteService"
+          @info-modal="infoModal"
         />
         <MevboostMenu
           v-else-if="item.isNotConnectedToMevboost"
@@ -25,11 +26,11 @@
           @confirm-mevboost="confirmMevboostConnection"
         />
 
-        <ConsensusMenu
+        <ConnectionMenu
           v-else-if="item.isNotConnectedToValidator"
           :item="item"
-          @hide-connection="hideConnectionMenu"
-          @confirm-consensus="confirmConsensusConnection"
+          @hide-connection="hideConnection"
+          @confirm-consensus="confirmConnection"
         />
       </TransitionGroup>
     </div>
@@ -41,7 +42,7 @@ import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import MevboostMenu from "./MevboostMenu.vue";
-import ConsensusMenu from "./ConsensusMenu.vue";
+import ConnectionMenu from "./ConnectionMenu.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
 import { computed, ref, watchEffect, watch } from "vue";
@@ -149,7 +150,7 @@ const hideMenu = (item) => {
   item.displayPluginMenu = false;
 };
 
-const hideConnectionMenu = (item) => {
+const hideConnection = (item) => {
   item.displayPluginMenu = false;
   manageStore.newConfiguration.forEach((service) => {
     if (service.connectedToValidator) {
@@ -193,7 +194,10 @@ const switchClient = (item) => {
 const connectClient = (item) => {
   emit("connectClient", item);
 };
-const confirmConsensusConnection = (item) => {
+const infoModal = (item) => {
+  emit("infoModal", item);
+};
+const confirmConnection = (item) => {
   console.log("Connection confirmed", item);
 };
 </script>
