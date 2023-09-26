@@ -14,15 +14,17 @@
         @state-handler="$emit('stateHandler', item)"
         @restart-handler="$emit('restartHandler', item)"
         @open-doc="$emit('openDoc', item)"
-        @open-resync="openResync"
+        @open-resync="openResync(item)"
       />
-      <ResyncModal v-if="showResyncModal" :item="item" @close-window="closeResync" />
+      <TransitionGroup name="fadeModal">
+        <ResyncModal v-if="item.isResyncModalOpen" :item="item" @close-window="item.isResyncModalOpen = false" />
+      </TransitionGroup>
     </div>
   </div>
 </template>
 
 <script setup>
-import ResyncModal from "./ResyncModal.vue";
+import ResyncModal from "../modals/ResyncModal.vue";
 import { ref, computed, watch, onMounted } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
@@ -31,11 +33,14 @@ import ClientButtons from "./ClientButtons.vue";
 
 const emit = defineEmits(["openExpert"]);
 
+
+//Refs
 const consensusRefs = ref([]);
-const showResyncModal = ref(false);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
+
+//Computed & Watchers
 const getConsensusServices = computed(() =>
   serviceStore.installedServices.filter((e) => e.category === "consensus").sort((a, b) => a.name.localeCompare(b.name))
 );
@@ -59,15 +64,23 @@ onMounted(() => {
 
 //Methods
 
-const openResync = () => {
-  showResyncModal.value = true;
-};
-
-const closeResync = () => {
-  showResyncModal.value = false;
+const openResync = (item) => {
+  item.isResyncModalOpen = true;
 };
 
 const openExport = (item) => {
   emit("openExpert", item);
 };
 </script>
+
+<style scoped>
+.fadeModal-enter-active,
+.fadeModal-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fadeModal-enter-from,
+.fadeModal-leave-to {
+  opacity: 0;
+}
+</style>

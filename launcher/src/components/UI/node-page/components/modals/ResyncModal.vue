@@ -1,22 +1,26 @@
 <template>
-  <div class="resync-modal_parent">
-    <div class="bg-dark" @click="$emit('closeWindow')"></div>
-    <div class="browser-modal">
-      <div class="resync-icon"><img src="/img/icon/plugin-menu-icons/resync.png" alt="" /></div>
-      <div class="resync-message">
-        <div>
-          <span>{{ $t("resyncSeparateService.message") }}</span>
-        </div>
-        <div class="resync-message_nameId">
-          <span>{{ item.name }} - [{{ item.config.serviceID }}]</span>
-        </div>
-        <div>
-          <span>
-            {{ item.category === "consensus" ? "choose what" : "genesis" }}
-            {{ $t("resyncSeparateService.msgPartTwo") }}</span
-          >
-        </div>
+  <custom-modal
+    :client="props.item"
+    icon="/img/icon/plugin-menu-icons/resync.png"
+    bg-color="bg-[#151a1e]"
+    :main-title="$t('resyncSeparateService.message')"
+    :confirm-text="$t('resyncSeparateService.resync')"
+    click-outside-text="Click outside to cancel"
+    @close-window="closeWindow"
+    @confirm-action="resync(item)"
+  >
+    <template #content>
+      <div class="text-sm text-teal-500 font-semibold">
+        <div class="uppercase text-lg">{{ item.name }}</div>
+        <div>" {{ item.config.serviceID }} "</div>
       </div>
+      <div>
+        <span class="text-lg text-gray-200 font-semibold">
+          {{ item.category === "consensus" ? "choose what" : "genesis" }}
+          {{ $t("resyncSeparateService.msgPartTwo") }}</span
+        >
+      </div>
+
       <div class="resync-box">
         <carousel
           ref="carousel"
@@ -39,11 +43,14 @@
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
                 </div>
-                <div class="inputBox">
+                <div
+                  class="inputBox_select-box min-h-[37px] bg-[#23272c] text-gray-100 rounded-sm flex justify-center items-center text-sm"
+                >
                   <input
                     id="url-input"
                     v-model="checkPointSync"
                     type="text"
+                    class="w-full h-full min-h-[37px] bg-[#23272c] text-gray-100 rounded-sm flex justify-center items-center text-sm px-2 overflow-hidden"
                     placeholder="https://example.cc/"
                     @input="validateUrl"
                   />
@@ -54,18 +61,32 @@
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
                 </div>
-                <div class="inputBox_select-box">
-                  <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="tglDropdown">
+                <div class="inputBox_select-box min-h-[37px]">
+                  <div
+                    v-if="selectedItem == '- SELECT A SOURCE -'"
+                    class="w-full h-full min-h-[37px] bg-[#23272c] text-gray-200 rounded-sm flex justify-center items-center text-sm cursor-pointer"
+                    @click="tglDropdown"
+                  >
                     {{ selectedItem }}
                   </div>
-                  <div v-else class="wrapper">
-                    <div v-if="selectedIcon !== ''" class="icon-box" @click="tglDropdown">
-                      <img :src="selectedIcon" :alt="selectedItem" />
+                  <div
+                    v-else
+                    class="w-full min-h-[37px] flex justify-between items-center px-1 bg-[#23272c]"
+                    @click="tglDropdown"
+                  >
+                    <div v-if="selectedIcon !== ''" class="w-1/6 h-[37px] flex justify-center items-center">
+                      <img class="w-[25px]" :src="selectedIcon" :alt="selectedItem" />
                     </div>
-                    <div v-if="selectedIcon !== ''" class="selected-item" @click="tglDropdown">{{ selectedItem }}</div>
-                    <div v-else class="w-selected" @click="tglDropdown">{{ selectedItem }}</div>
-                    <div class="openURL" @click="handleOpenWindow">
-                      <img src="/img/icon/service-icons/internet.png" alt="Internet" />
+                    <div v-if="selectedIcon !== ''" class="text-sm text-center text-gray-200">
+                      {{ selectedItem }}
+                    </div>
+                    <div v-else class="text-sm text-center text-gray-200">{{ selectedItem }}</div>
+                    <div @click="handleOpenWindow">
+                      <img
+                        class="w-6 cursor-pointer hover:scale-95"
+                        src="/img/icon/service-icons/internet.png"
+                        alt="Internet"
+                      />
                     </div>
                   </div>
                 </div>
@@ -77,41 +98,50 @@
             <navigation />
           </template>
         </carousel>
-        <div v-if="drpDown" class="selection-column-modal">
-          <ul class="link-wapper">
-            <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
-              <div class="iconSelector"><img :src="link.icon" alt="" /></div>
-              <div class="nameSelector">
-                <span>{{ link.name }}</span>
-              </div>
-            </li>
-          </ul>
+        <div
+          v-if="drpDown"
+          class="absolute right-[10.5rem] bottom-2 z-10 mt-2 w-56 h-32 origin-top-right divide-y divide-gray-300 rounded-md bg-gray-100 shadow-lg focus:outline-none overflow-y-scroll"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="menu-button"
+          tabindex="-1"
+          @mouseleave="drpDown = false"
+        >
+          <div
+            v-for="link in selectedLinks"
+            :key="link"
+            class="py-2 flex justify-start items-center px-2 bg-gray-200 hover:bg-blue-500 cursor-pointer"
+            role="none"
+            @click="linkPicker(link)"
+          >
+            <img class="w-6" :src="link.icon" alt="" />
+            <span class="text-gray-700 text-sm font-semibold ml-3" role="menuitem" tabindex="-1">{{ link.name }}</span>
+          </div>
         </div>
       </div>
       <div class="error">
         <span v-if="error">{{ error }}</span>
       </div>
-      <div class="resync-confirm deactive" :class="{ active: btnActive }" @click="resync(item)">
-        {{ $t("resyncSeparateService.resync") }}
-      </div>
-      <span class="clickOut">{{ $t("resyncSeparateService.close") }}</span>
-    </div>
-  </div>
+    </template>
+  </custom-modal>
 </template>
 <script setup>
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "@/store/nodeManage";
+import CustomModal from "./CustomModal.vue";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 import ControlService from "@/store/ControlService";
 import { watch, ref, onMounted } from "vue";
 
+//Props and Emits
 const props = defineProps({
   item: Object,
 });
 
 const emit = defineEmits(["closeWindow"]);
 
+//Refs
 const currentSlide = ref(0);
 const btnActive = ref(true);
 const checkPointSync = ref("");
@@ -124,6 +154,8 @@ const selectedIcon = ref("");
 
 const clickInstallStore = useClickInstall();
 const nodeManageStore = useNodeManage();
+
+//Watchers
 
 watch(currentSlide, (newVal) => {
   if (newVal != prevVal.value) {
@@ -142,11 +174,17 @@ watch(checkPointSync, (newVal) => {
   btnActive.value = newVal !== "" || currentSlide.value === 0;
 });
 
+//Lifecycle Hooks
 onMounted(() => {
   if (props.item.category === "execution") currentSlide.value = 2;
   setSelectedLinks();
 });
 
+//Methods
+
+const closeWindow = () => {
+  emit("closeWindow");
+};
 const handleOpenWindow = () => {
   let url = checkPointSync.value;
   window.open(url, "_blank");
@@ -202,8 +240,7 @@ const setSelectedLinks = () => {
 
 <style scoped>
 .inputBox_select-box {
-  width: 59%;
-  height: 120%;
+  width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -277,7 +314,7 @@ const setSelectedLinks = () => {
 .select-button {
   border: none;
   width: 100%;
-  height: 80%;
+  height: 100%;
   border-radius: 10px;
   color: #c1c1c1;
   background: #151a1e;
@@ -462,9 +499,7 @@ const setSelectedLinks = () => {
   width: 95%;
   height: 25%;
 }
-.resync-icon img {
-  width: 11%;
-}
+
 .resync-message {
   display: flex;
   justify-content: space-around;

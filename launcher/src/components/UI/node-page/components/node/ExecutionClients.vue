@@ -14,34 +14,38 @@
         @state-handler="$emit('stateHandler', item)"
         @restart-handler="$emit('restartHandler', item)"
         @open-doc="$emit('openDoc', item)"
-        @open-resync="openResync"
+        @open-resync="openResync(item)"
         @open-pruning="openPruning"
       />
-      <ResyncModal v-if="showResyncModal" :item="item" @close-window="closeResync" />
-      <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
+      <TransitionGroup name="fadeModal">
+        <ResyncModal v-if="item.isResyncModalOpen" :item="item" @close-window="item.isResyncModalOpen = false" />
+        <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
+      </TransitionGroup>
     </div>
   </div>
 </template>
 
 <script setup>
 import PrunningModal from "./PrunningModal.vue";
-import ResyncModal from "./ResyncModal.vue";
+import ResyncModal from "../modals/ResyncModal.vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed, ref, watchEffect } from "vue";
 
+//Emits
 const emit = defineEmits(["openExpert"]);
 
+//Refs
 const executionRefs = ref([]);
-const showResyncModal = ref(false);
 const showPruningModal = ref(false);
 
+//Stores
 const nodeStore = useNodeStore();
-
 const serviceStore = useServices();
 
+//Computed & Watchers
 const getExecutionServices = computed(() => {
   return serviceStore.installedServices
     .filter((e) => e.category === "execution")
@@ -61,13 +65,12 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
-const openResync = () => {
-  showResyncModal.value = true;
+//Methods
+
+const openResync = (item) => {
+  item.isResyncModalOpen = true;
 };
 
-const closeResync = () => {
-  showResyncModal.value = false;
-};
 const openPruning = () => {
   showPruningModal.value = true;
 };
@@ -80,3 +83,15 @@ const openExpert = (item) => {
   emit("openExpert", item);
 };
 </script>
+
+<style scoped>
+.fadeModal-enter-active,
+.fadeModal-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fadeModal-enter-from,
+.fadeModal-leave-to {
+  opacity: 0;
+}
+</style>

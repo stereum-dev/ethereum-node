@@ -116,6 +116,7 @@ onMounted(() => {
       isNotConnectedToMevboost: false,
       isConfirmProcessing: false,
       isServiceConnecting: false,
+      isResyncModalOpen: false,
     };
   });
 });
