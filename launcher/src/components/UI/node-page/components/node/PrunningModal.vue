@@ -1,6 +1,6 @@
 <template>
   <div class="warning-modal-paren">
-    <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
+    <div class="modal-opacity" @click="$emit('cancelWarning')"></div>
     <div class="warning-modal-content">
       <div class="title-box">
         <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
@@ -15,7 +15,7 @@
           <input id="checkbox" v-model="isChecked" type="checkbox" />
           {{ $t("prunningModal.prunningChecked") }}
         </label>
-        <div class="confirmBtn" :class="{ disabled: !isChecked }" @click="$emit('confirmBtn')">
+        <div class="confirmBtn" :class="{ disabled: !isChecked }" @click="startPruning">
           <span>{{ $t("prunningModal.prunningStart") }}</span>
         </div>
         <span class="close">{{ $t("prunningModal.close") }}</span>
@@ -24,6 +24,7 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   props: {
     item: {
@@ -47,6 +48,16 @@ export default {
       set: function (newValue) {
         this.checked = newValue;
       },
+    },
+  },
+  methods: {
+    startPruning() {
+      this.$emit("cancelWarning");
+      ControlService.chooseServiceAction({
+        action: "pruneGeth",
+        service: structuredClone(this.item),
+        data: {},
+      });
     },
   },
 };

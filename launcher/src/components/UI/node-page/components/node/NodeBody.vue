@@ -37,18 +37,6 @@ import { mapState, map } from 'pinia';
         @open-doc="openDocs"
       />
     </div>
-    <PruingModal
-      v-if="gethPrunningWarningModal"
-      :item="item"
-      @cancel-warning="hidePrunningWarningsModal"
-      @confirm-btn="confirmRunningGethPrunning(item)"
-    />
-    <ResyncModal
-      v-if="resyncWarningModal"
-      :item="item"
-      @cancel-warning="hideResyncWarningsModal"
-      @confirm-btn="confirmRunningResync($event, item)"
-    />
     <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
   </div>
 </template>
@@ -58,9 +46,6 @@ import { ref, computed, onMounted, reactive, watchEffect } from "vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import PluginLogs from "../../sections/PluginLogs.vue";
-import ControlService from "@/store/ControlService";
-import PruingModal from "./PrunningModal.vue";
-import ResyncModal from "./ResyncModal.vue";
 import LeaderLine from "leader-line-new";
 import ExecutionClients from "./ExecutionClients";
 import ConsensusClients from "./ConsensusClients";
@@ -73,10 +58,8 @@ const emit = defineEmits(["openExpert"]);
 
 const lineOne = ref(null);
 const lineTwo = ref(null);
-const gethPrunningWarningModal = ref(false);
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
-const resyncWarningModal = ref(false);
 const isClientLinkedToMev = ref(false);
 
 const connected = reactive({
@@ -163,76 +146,6 @@ const getRefOfConnectedClients = () => {
   }
 };
 
-// const runGethPrunningWarning = (option) => {
-//   if (option.changeValue && option.displayWarningModal) {
-//     gethPrunningWarningModal.value = true;
-//   } else if (!option.changeValue || !option.displayWarningModal) {
-//     gethPrunningWarningModal.value = false;
-//   }
-// };
-
-// const runResyncWarning = (option) => {
-//   if (option.changeValue && option.displayResyncModal) {
-//     resyncWarningModal.value = true;
-//   } else if (!option.changeValue || !option.displayWarningModal) {
-//     resyncWarningModal.value = false;
-//   }
-// };
-
-const hidePrunningWarningsModal = (el) => {
-  gethPrunningWarningModal.value = false;
-  el.expertOptions
-    .filter((item) => item.title === "Prunning")
-    .forEach((item) => {
-      if (item.changeValue) {
-        item.changeValue = false;
-      }
-    });
-};
-
-const confirmRunningGethPrunning = async (service) => {
-  gethPrunningWarningModal.value = false;
-  service.expertOptions
-    .filter((item) => item.title === "Prunning")
-    .forEach((item) => {
-      if (item.changeValue) {
-        item.changeValue = false;
-      }
-    });
-  await ControlService.chooseServiceAction({
-    action: "pruneGeth",
-    service: service,
-    data: {},
-  });
-};
-
-const hideResyncWarningsModal = (el) => {
-  resyncWarningModal.value = false;
-  el.expertOptions
-    .filter((item) => item.title === "Resync")
-    .forEach((item) => {
-      if (item.changeValue) {
-        item.changeValue = false;
-      }
-    });
-};
-
-const confirmRunningResync = async (event, service) => {
-  resyncWarningModal.value = false;
-  service.expertOptions
-    .filter((item) => item.title === "Resync")
-    .forEach((item) => {
-      if (item.changeValue) {
-        item.changeValue = false;
-      }
-    });
-  await ControlService.chooseServiceAction({
-    action: "reSync",
-    service: service,
-    data: { checkpointURL: event },
-  });
-};
-
 const openLogsPage = (item) => {
   console.log("hello");
   itemToLogs.value = item;
@@ -241,10 +154,6 @@ const openLogsPage = (item) => {
 
 const closePluginLogsPage = () => {
   isPluginLogPageActive.value = false;
-};
-
-const openExpertWindow = (item) => {
-  item.expertOptionsModal = true;
 };
 
 const clickOutside = (item) => {

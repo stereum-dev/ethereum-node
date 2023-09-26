@@ -502,14 +502,6 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
-            {
-              title: "Pruning",
-              type: "action",
-              action: "pruning",
-              changeValue: null,
-              displayWarningModal: false,
-              icon: "/img/icon/plugin-menu-icons/prunning.png",
-            },
             // {
             //   title: "Resync",
             //   type: "action",

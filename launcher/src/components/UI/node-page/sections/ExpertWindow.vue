@@ -383,6 +383,7 @@ export default {
     //   }
     // },
     async confirmExpertChanges(el) {
+      this.$emit("hideModal");
       this.hideConnectedLines = false;
       await this.writeService();
       el.expertOptionsModal = false;

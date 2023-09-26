@@ -15,13 +15,16 @@
         @restart-handler="$emit('restartHandler', item)"
         @open-doc="$emit('openDoc', item)"
         @open-resync="openResync"
+        @open-pruning="openPruning"
       />
       <ResyncModal v-if="showResyncModal" :item="item" @close-window="closeResync" />
+      <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
     </div>
   </div>
 </template>
 
 <script setup>
+import PrunningModal from "./PrunningModal.vue";
 import ResyncModal from "./ResyncModal.vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
@@ -33,6 +36,7 @@ const emit = defineEmits(["openExpert"]);
 
 const executionRefs = ref([]);
 const showResyncModal = ref(false);
+const showPruningModal = ref(false);
 
 const nodeStore = useNodeStore();
 
@@ -63,6 +67,13 @@ const openResync = () => {
 
 const closeResync = () => {
   showResyncModal.value = false;
+};
+const openPruning = () => {
+  showPruningModal.value = true;
+};
+
+const closePruning = () => {
+  showPruningModal.value = false;
 };
 
 const openExpert = (item) => {

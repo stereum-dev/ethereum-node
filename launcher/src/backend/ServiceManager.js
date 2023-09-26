@@ -180,6 +180,7 @@ export class ServiceManager {
     switch (action) {
       case "pruneGeth":
         if (service.service === "GethService") {
+          service.yaml = await this.nodeConnection.readServiceYAML(service.config.serviceID);
           let data = service.yaml + "\nisPruning: true";
           await this.nodeConnection.writeServiceYAML({
             id: service.config.serviceID,
