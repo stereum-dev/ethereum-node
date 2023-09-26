@@ -7,8 +7,7 @@
       </div>
       <div class="ipscan-text-container">
         <p class="text">
-          Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted
-          by Stereum's Ubuntu ISO? This might take a while...
+          {{ $t("ipScanModal.message") }}
         </p>
       </div>
       <div class="ipscan-search-container">
@@ -17,7 +16,7 @@
           {{ btnState }}
         </div>
       </div>
-      <div class="click-close">Click outside to close</div>
+      <div class="click-close">{{ $t("ipScanModal.clockClose") }}</div>
     </div>
   </div>
 </template>

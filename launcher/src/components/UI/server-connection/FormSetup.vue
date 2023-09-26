@@ -7,7 +7,6 @@
       @close-ipscan="ipScanModal = false"
       @btn-function="scanFunction"
     />
-    <!-- <div class="ip-detected">{{ ipTest }}</div> -->
     <div v-if="alertBox" class="alert animate__animated animate__flipInX">{{ $t("formsetup.fillFields") }}</div>
     <div v-if="errorMsgExists" class="error-box"></div>
     <div v-if="errorMsgExists" class="error-modal">
@@ -228,7 +227,7 @@ export default {
       btnSearchState: "search",
       ipScanModal: false,
       devices: [],
-      foundIp: "Click [search] to start",
+      foundIp: this.$t("ipScanModal.clickSearch"),
       alertBox: false,
       sshPort: null,
       keyAuth: false,
@@ -241,6 +240,7 @@ export default {
       selectedName: "",
       bDialogVisible: false,
       showPassword: false,
+      noIpFound: this.$t("ipScanModal.noIpFound"),
       model: {
         name: { value: "", isFilled: true },
         host: { value: "", isFilled: true },
@@ -283,7 +283,7 @@ export default {
   watch: {
     devices() {
       if (this.devices.length < 1) {
-        this.foundIp = "No IP found";
+        this.foundIp = this.noIpFound;
         this.btnSearchState = "search";
       } else if (this.devices.length == 1) {
         this.foundIp = this.devices[0].ip;
