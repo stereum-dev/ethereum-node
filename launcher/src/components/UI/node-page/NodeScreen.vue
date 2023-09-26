@@ -49,6 +49,7 @@ import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
+import { useListKeys } from "../../../composables/validators";
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
@@ -59,6 +60,7 @@ const returnStatus = "/img/icon/round-icon.png";
 let polling = null;
 let pollingVitals = null;
 let pollingNodeStats = null;
+let pollingListingKeys = null;
 
 const nodeStore = useNodeStore();
 const headerStore = useNodeHeader();
@@ -75,13 +77,29 @@ onMounted(() => {
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
   pollingNodeStats = setInterval(updateNodeStats, 1000); // refresh server vitals
+  pollingListingKeys = setInterval(checkForListingKeys, 1000); // check for validators which need validator listing
 });
 
 onUnmounted(() => {
   clearInterval(polling);
   clearInterval(pollingVitals);
   clearInterval(pollingNodeStats);
+  clearInterval(pollingListingKeys);
 });
+
+const checkForListingKeys = async () => {
+  //is true when there is at least one validator service running without keys
+  if (
+    serviceStore.installedServices &&
+    serviceStore.installedServices.length > 0 &&
+    serviceStore.installedServices.some(
+      (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
+    )
+  ) {
+    clearInterval(pollingListingKeys);
+    useListKeys();
+  }
+};
 
 const updateConnectionStats = async () => {
   const stats = await ControlService.getConnectionStats();
