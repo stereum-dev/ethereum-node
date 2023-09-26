@@ -1,331 +1,516 @@
 <template>
-  <div class="warning-modal-paren">
-    <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
-    <div class="warning-modal-content">
-      <div v-if="displayWarningMessage" class="title-box">
-        <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
-      </div>
-      <div v-if="displayWarningMessage" class="warningMessage">
-        <p>
-          {{ $t("resyncModal.message") }}
-        </p>
-      </div>
-      <div v-else class="resyncBox">
-        <div class="titleBox">
-          <img src="/img/icon/plugin-menu-icons/resync.png" alt="icon" />
+  <div class="resync-modal_parent">
+    <div class="bg-dark" @click="$emit('closeWindow')"></div>
+    <div class="browser-modal">
+      <div class="resync-icon"><img src="/img/icon/plugin-menu-icons/resync.png" alt="" /></div>
+      <div class="resync-message">
+        <div>
+          <span>{{ $t("resyncSeparateService.message") }}</span>
         </div>
-        <div class="fast-sync">
-          <div class="sync-header">
-            <div class="headerTitle">
-              <span>{{ $t("resyncModal.sync") }}</span>
-            </div>
-            <div class="headerContent">
-              <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
-              <span v-if="genesisIsActive">{{ $t("resyncModal.gen") }}</span>
-              <span v-if="checkPointIsActive">{{ $t("resyncModal.chkSync") }}</span>
-              <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
-            </div>
-          </div>
-          <div class="content">
-            <span v-if="genesisIsActive">{{ $t("resyncModal.syncMsg") }}</span>
-            <div v-if="checkPointIsActive" class="inputBox">
-              <input v-model="checkPointSync" type="text" />
-            </div>
-          </div>
+        <div class="resync-message_nameId">
+          <span>{{ item.name }} - [{{ item.config.serviceID }}]</span>
+        </div>
+        <div>
+          <span>
+            {{ item.category === "consensus" ? "choose what" : "genesis" }}
+            {{ $t("resyncSeparateService.msgPartTwo") }}</span
+          >
         </div>
       </div>
+      <div class="resync-box">
+        <carousel
+          ref="carousel"
+          v-model="currentSlide"
+          :items-to-show="1"
+          :wrap-around="true"
+          :transition="500"
+          :class="{ disabled: item.category === 'execution' }"
+        >
+          <slide v-for="(Stype, index) in clickInstallStore.syncType" :key="index">
+            <div class="syncBox">
+              <div v-if="Stype.type === 'Syncs from genesis' || item.category === 'execution'" class="syncContent">
+                <div class="syncText">
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
+                </div>
+              </div>
+              <div v-else-if="Stype.type === 'custom source' && item.category === 'consensus'" class="syncContent">
+                <div class="syncText">
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
+                </div>
+                <div class="inputBox">
+                  <input
+                    id="url-input"
+                    v-model="checkPointSync"
+                    type="text"
+                    placeholder="https://example.cc/"
+                    @input="validateUrl"
+                  />
+                </div>
+              </div>
+              <div v-else-if="Stype.type === 'recommended' && item.category === 'consensus'" class="syncContent">
+                <div class="syncText">
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
+                </div>
+                <div class="inputBox_select-box">
+                  <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="tglDropdown">
+                    {{ selectedItem }}
+                  </div>
+                  <div v-else class="wrapper">
+                    <div v-if="selectedIcon !== ''" class="icon-box" @click="tglDropdown">
+                      <img :src="selectedIcon" :alt="selectedItem" />
+                    </div>
+                    <div v-if="selectedIcon !== ''" class="selected-item" @click="tglDropdown">{{ selectedItem }}</div>
+                    <div v-else class="w-selected" @click="tglDropdown">{{ selectedItem }}</div>
+                    <div class="openURL" @click="handleOpenWindow">
+                      <img src="/img/icon/service-icons/internet.png" alt="Internet" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </slide>
 
-      <div class="btnBox">
-        <div v-if="displayWarningMessage" class="confirmBtn" @click="continueToResync">
-          <span>{{ $t("resyncModal.cont") }}</span>
-        </div>
-        <div v-else class="confirmBtn" @click="$emit('confirmBtn', checkPointSync)">
-          <span>{{ $t("resyncModal.resync") }}</span>
+          <template v-if="item.category === 'consensus'" #addons>
+            <navigation />
+          </template>
+        </carousel>
+        <div v-if="drpDown" class="selection-column-modal">
+          <ul class="link-wapper">
+            <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
+              <div class="iconSelector"><img :src="link.icon" alt="" /></div>
+              <div class="nameSelector">
+                <span>{{ link.name }}</span>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-      <span class="close">{{ $t("resyncModal.close") }}</span>
+      <div class="error">
+        <span v-if="error">{{ error }}</span>
+      </div>
+      <div class="resync-confirm deactive" :class="{ active: btnActive }" @click="resync(item)">
+        {{ $t("resyncSeparateService.resync") }}
+      </div>
+      <span class="clickOut">{{ $t("resyncSeparateService.close") }}</span>
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    item: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      checked: null,
-      isButtonDisabled: false,
-      genesisIsActive: true,
-      checkPointIsActive: false,
-      displayWarningMessage: true,
-      checkPointSync: "",
-    };
-  },
-  computed: {
-    isChecked: {
-      // getter
-      get: function () {
-        return this.checked ? true : false;
-      },
-      // setter
-      set: function (newValue) {
-        this.checked = newValue;
-      },
-    },
-  },
-  methods: {
-    changeTheOption() {
-      if (this.genesisIsActive) {
-        this.genesisIsActive = false;
-        this.checkPointIsActive = true;
-      } else {
-        this.genesisIsActive = true;
-        this.checkPointIsActive = false;
-      }
-    },
-    continueToResync() {
-      this.displayWarningMessage = false;
-    },
-  },
+<script setup>
+import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeManage } from "@/store/nodeManage";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide, Navigation } from "vue3-carousel";
+import ControlService from "@/store/ControlService";
+import { watch, ref, onMounted } from "vue";
+
+const props = defineProps({
+  item: Object,
+});
+
+const emit = defineEmits(["closeWindow"]);
+
+const currentSlide = ref(0);
+const btnActive = ref(true);
+const checkPointSync = ref("");
+const error = ref("");
+const drpDown = ref(false);
+const selectedLinks = ref([]);
+const selectedItem = ref("- SELECT A SOURCE -"); // selected link to use for resync
+const prevVal = ref(0);
+const selectedIcon = ref("");
+
+const clickInstallStore = useClickInstall();
+const nodeManageStore = useNodeManage();
+
+watch(currentSlide, (newVal) => {
+  if (newVal != prevVal.value) {
+    prevVal.value = newVal;
+    checkPointSync.value = "";
+    selectedItem.value = "- SELECT A SOURCE -";
+    selectedIcon.value = "";
+  }
+  btnActive.value = newVal === 0 || checkPointSync.value !== "";
+  if (newVal === 2) {
+    btnActive.value = true;
+  }
+});
+
+watch(checkPointSync, (newVal) => {
+  btnActive.value = newVal !== "" || currentSlide.value === 0;
+});
+
+onMounted(() => {
+  if (props.item.category === "execution") currentSlide.value = 2;
+  setSelectedLinks();
+});
+
+const handleOpenWindow = () => {
+  let url = checkPointSync.value;
+  window.open(url, "_blank");
+};
+const resync = async (el) => {
+  emit("closeWindow");
+  await ControlService.chooseServiceAction({
+    action: "reSync",
+    service: el.config.serviceID,
+    data: checkPointSync.value,
+  });
+};
+const validateUrl = () => {
+  const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+  if (!checkPointSync.value) {
+    error.value = "";
+  } else if (!regex.test(checkPointSync.value)) {
+    error.value = "Please enter a valid URL without spaces";
+    btnActive.value = false;
+  } else {
+    error.value = "";
+  }
+};
+const tglDropdown = () => {
+  drpDown.value = !drpDown.value;
+};
+const linkPicker = (item) => {
+  selectedItem.value = item.name;
+  selectedIcon.value = item.icon;
+  checkPointSync.value = item.url;
+  drpDown.value = false;
+  btnActive.value = true;
+};
+const setSelectedLinks = () => {
+  switch (nodeManageStore.currentNetwork.id) {
+    case 1:
+      selectedLinks.value = clickInstallStore.mainnet;
+      break;
+    case 2:
+      selectedLinks.value = clickInstallStore.georli;
+      break;
+    case 3:
+      selectedLinks.value = clickInstallStore.sepolia;
+      break;
+    case 4:
+      selectedLinks.value = clickInstallStore.gnosis;
+      break;
+    default:
+      break;
+  }
 };
 </script>
-<style scoped>
-.warning-modal-paren {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 10%;
-  left: 0;
-  z-index: 500;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.modal-opacity {
-  width: 100%;
-  height: 91%;
-  background-color: rgba(3, 3, 3, 0.745);
-  border-radius: 0 35px 0 0;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  opacity: 0.5;
-  z-index: 501;
-}
-.warning-modal-content {
-  width: 55%;
-  height: 60%;
-  border-radius: 65px;
-  border: 3px solid #bfbfbf;
-  position: absolute;
-  top: 10%;
-  left: 22%;
-  background-color: #33393e;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
-  z-index: 502;
-}
-.title-box {
-  width: 100%;
-  height: 30%;
-  margin-top: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.title-box img {
-  width: 20%;
-  height: 100%;
-}
-.warningMessage {
-  width: 95%;
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.warningMessage p {
-  width: 90%;
-  color: rgb(156, 156, 156);
-  font-size: 0.9rem;
-  font-weight: 600;
-  word-wrap: break-word;
-  text-align: justify;
-  text-transform: uppercase;
-}
-.btnBox {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 502;
-}
 
-.btnBox .confirmBtn {
-  width: 40%;
+<style scoped>
+.inputBox_select-box {
+  width: 59%;
+  height: 120%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.icon-box {
+  width: 20%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid rgb(161, 161, 161);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.icon-box img {
+  width: 92%;
+  height: 95%;
+}
+.selected-item {
+  width: 58%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #a1a1a1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 80%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.w-selected {
+  width: 80%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #c1c1c1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 100%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.openURL {
+  width: 15%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.openURL img {
+  width: 90%;
+  height: 65%;
+}
+.openURL:active {
+  transform: scale(0.9);
+}
+.select-button {
+  border: none;
+  width: 100%;
   height: 80%;
   border-radius: 10px;
-  border: 1px solid #8f8f8f;
-  background-color: #127a65;
-  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #c1c1c1;
+  background: #151a1e;
+  font-size: 80%;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 700;
-  color: rgb(210, 210, 210);
-  text-transform: uppercase;
-}
-.disabled {
-  opacity: 0.7;
-  pointer-events: none;
-}
-.confirmBtn:hover {
-  transform: scale(1.08);
-  transition-duration: 150ms;
-  box-shadow: 0 1px 5px 1px rgb(35, 59, 53);
-}
-.confirmBtn:active {
-  transform: scale(1);
-  box-shadow: none;
-}
-.resyncBox {
-  width: 100%;
-  height: 85%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.resyncBox .titleBox {
-  width: 100%;
-  height: 30%;
-  margin-top: 10px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.resyncBox .titleBox img {
-  width: 13%;
-  height: 90%;
+.select-button:hover {
+  border: none;
+  color: #c1c1c1;
+  box-sizing: border-box;
+  border: 2px solid #c1c1c1;
 }
-.resyncBox .fast-sync {
-  width: 90%;
-  height: 40%;
-  background-color: #2a2e30;
-  border-radius: 10px;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.fast-sync .sync-header {
-  width: 100%;
-  height: 34%;
 
-  border-radius: 5px;
+.select span {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-.fast-sync .sync-header .headerTitle {
-  width: 45%;
-  height: 100%;
-  border-radius: 15px 0 0 15px;
-  background-color: #127a65;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-.headerTitle span {
-  width: 86%;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #c4c4c4;
-  text-align: center;
-  margin-right: 3px;
-}
-.fast-sync .sync-header .headerContent {
   width: 55%;
   height: 100%;
-  border-radius: 0;
-  padding: 0 5px;
-  background-color: #232427;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-.headerContent span {
-  width: 86%;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #c4c4c4;
-  text-align: center;
-  margin-right: 3px;
-}
-.headerContent img {
-  width: 5%;
-  height: 50%;
-  cursor: pointer;
-}
-.fast-sync .content {
-  width: 100%;
-  height: 64%;
-  display: flex;
   justify-content: center;
   align-items: center;
-}
-.fast-sync .content span {
-  font-size: 0.9rem;
+  font-size: 100%;
   font-weight: 600;
-  color: #c4c4c4;
 }
-.fast-sync .content .inputBox {
-  width: 96%;
-  height: 60%;
-  background-color: rgb(209, 209, 209);
-  border: 5px solid rgb(104, 104, 104);
-  border-radius: 10px;
+.selected-icon {
+  width: 40%;
+  height: 120%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
-.fast-sync .content input {
+.selected-icon img {
   width: 100%;
   height: 100%;
-  background-color: rgb(209, 209, 209);
-  border: none;
-  border-radius: 6px;
+  object-fit: contain;
+}
+.selection-column-modal {
+  width: 32%;
+  height: 50%;
+  display: flex;
+  background: #1258a2;
+  color: #d5d5d5;
+  font-weight: 400;
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 75%;
+  left: 46%;
+  z-index: 500;
+  border-radius: 0 0 10px 10px;
+}
+.link-wapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 0 0 10px 10px;
+}
+.option-row {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 600;
+  padding: 1%;
+  margin-bottom: 1%;
+  border-bottom: 1px solid #d5d5d5;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow-x: auto;
+  cursor: pointer;
+  color: #c1c1c1;
+}
+.iconSelector {
+  width: 25%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2%;
+}
+.nameSelector {
+  width: 75%;
+  height: 90%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 7px;
-  padding-bottom: 3px;
+  font-size: 85%;
 }
-.close {
-  color: rgba(186, 71, 71, 0.826);
-  font-size: 0.6rem;
+.iconSelector img {
+  width: 70%;
+}
+.option-row:hover {
+  background-color: #c1c1c1;
+  color: #1258a2;
+}
+.option-row span {
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: none;
+}
+.error {
+  color: red;
+  width: 90%;
+  height: 4%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50%;
+}
+.disabled {
+  pointer-events: none;
+}
+.clickOut {
+  font-size: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 6%;
+  color: red;
+  position: absolute;
+  bottom: 0;
+}
+.resync-modal_parent {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 300;
+}
+.bg-dark {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.3;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 202;
+  cursor: default;
+}
+.browser-modal {
+  width: 60%;
+  height: 55%;
+  background-color: #212122;
+  border: 5px solid rgb(161, 161, 161);
+  border-radius: 70px;
+  position: absolute;
+  top: 24%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  cursor: default;
+}
+
+.resync-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 25%;
+}
+.resync-icon img {
+  width: 11%;
+}
+.resync-message {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 30%;
+  flex-direction: column;
+  font-size: 80%;
   font-weight: 500;
-  align-self: center;
+  text-transform: uppercase;
+  color: #eee;
+}
+.resync-message_nameId {
+  font-size: 130%;
+  font-weight: 800;
+}
+.resync-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 18%;
+}
+.resync-confirm {
+  width: 40%;
+  height: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: red;
+  font-size: 100%;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 15px;
+  color: #eee;
+  cursor: pointer;
+}
+.resync-confirm:active {
+  transform: scale(0.9);
+}
+.deactive {
+  opacity: 50%;
+  pointer-events: none;
+}
+.active {
+  opacity: 1;
+  pointer-events: visible;
 }
 </style>

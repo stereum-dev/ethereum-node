@@ -14,7 +14,6 @@ export const useNodeManage = defineStore("nodeManage", {
       isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
-      resyncSeparateModal: false,
       availableBlocks: [],
       usedBlocks: [],
       relaysList: [

@@ -14,12 +14,15 @@
         @state-handler="$emit('stateHandler', item)"
         @restart-handler="$emit('restartHandler', item)"
         @open-doc="$emit('openDoc', item)"
+        @open-resync="openResync"
       />
+      <ResyncModal v-if="showResyncModal" :item="item" @close-window="closeResync" />
     </div>
   </div>
 </template>
 
 <script setup>
+import ResyncModal from "./ResyncModal.vue";
 import { ref, computed, watch, onMounted } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
@@ -29,6 +32,7 @@ import ClientButtons from "./ClientButtons.vue";
 const emit = defineEmits(["openExpert"]);
 
 const consensusRefs = ref([]);
+const showResyncModal = ref(false);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
@@ -54,6 +58,14 @@ onMounted(() => {
 });
 
 //Methods
+
+const openResync = () => {
+  showResyncModal.value = true;
+};
+
+const closeResync = () => {
+  showResyncModal.value = false;
+};
 
 const openExport = (item) => {
   emit("openExpert", item);
