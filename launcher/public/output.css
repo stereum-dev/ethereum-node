@@ -515,7 +515,7 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
-::-ms-backdrop{
+::-webkit-backdrop{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
   --tw-translate-x: 0;
@@ -1141,6 +1141,10 @@ video {
   height: 430px;
 }
 
+.h-\[475px\]{
+  height: 475px;
+}
+
 .h-\[60px\]{
   height: 60px;
 }
@@ -1151,14 +1155,6 @@ video {
 
 .h-screen{
   height: 100vh;
-}
-
-.h-\[\]{
-  height: ;
-}
-
-.h-\[475px\]{
-  height: 475px;
 }
 
 .max-h-60{

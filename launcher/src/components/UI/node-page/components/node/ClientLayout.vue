@@ -145,7 +145,7 @@ const clientStatus = computed(() => {
 });
 
 const getKeyNumbers = computed(() => {
-  return stakingStore.keys.length;
+  return props.client?.config?.keys?.length ? props.client.config.keys.length : 0;
 });
 
 const getConnectedMevboost = computed(() => {
