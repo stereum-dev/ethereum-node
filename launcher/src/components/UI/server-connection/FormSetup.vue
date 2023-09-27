@@ -224,6 +224,7 @@ export default {
   emits: ["page"],
   data() {
     return {
+      abortController: new AbortController(),
       scannedCounter: 0,
       btnSearchState: "search",
       ipScanModal: false,
@@ -477,6 +478,7 @@ export default {
     //   }
     // },
     login: async function () {
+      this.abortController = new AbortController();
       this.connectingAnimActive = true;
       try {
         await ControlService.connect({
@@ -487,7 +489,9 @@ export default {
           sshKeyAuth: this.model.useAuthKey,
           keyfileLocation: this.model.keylocation.value,
           passphrase: this.model.passphrase.value,
+          signal: this.abortController.signal,
         });
+        if (this.abortController.signal.aborted) return;
       } catch (err) {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
@@ -504,6 +508,9 @@ export default {
       this.$emit("page", "welcome-page");
     },
     cancelLogin() {
+      if (this.abortController) {
+        this.abortController.abort();
+      }
       this.connectingAnimActive = false;
       this.errorMsgExists = false;
       this.model.pass.value = "";
