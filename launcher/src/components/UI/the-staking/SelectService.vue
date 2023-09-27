@@ -8,7 +8,7 @@
         @click="$emit('selectService', service)"
       >
         <div class="service-icon">
-          <img :src="service.icon" alt="icon" />
+          <img :src="service.sIcon" alt="icon" />
         </div>
         <div class="serviceDetails">
           <span class="name">{{ service.name }}</span>
@@ -33,19 +33,22 @@ export default {
 </script>
 <style scoped>
 .selectBox {
-  grid-column: 3/11;
-  grid-row: 2/4;
+  grid-column: 2/10;
+  grid-row: 3/4;
   width: 100%;
-  height: 60%;
-  margin-top: 4%;
+  height: 40px;
+  margin-top: 21px;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
+  align-self: flex-end;
+  margin-bottom: -9px;
 }
 .selectBox .display-service {
   width: 100%;
   height: 95%;
-  background-color: #3b3b3b;
+  background-color: #d9dbdc;
   border-radius: 5px;
   padding: 2px 0;
   display: flex;
@@ -55,35 +58,38 @@ export default {
 }
 
 .selectBox .display-service .serviceBox {
-  width: 19%;
+  min-width: 100px;
+  width: max-content;
   height: 90%;
   background-color: #1c2023;
   border: 1px solid #1c2023;
   box-sizing: border-box;
-  margin-left: 4px;
+  margin-left: 2px;
   padding: 2px;
   border-radius: 3px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   cursor: pointer;
 }
 
 .display-service .serviceBox .service-icon {
-  width: 30%;
+  width: 25px;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .display-service .serviceBox .service-con img {
-  width: 100%;
-  height: 100%;
+  width: 20px !important;
 }
 .selectBox .display-service .serviceBox:hover {
-  background-color: #272c30;
-  border: 1px solid #98bfdf;
+  background-color: #94cefd;
+  border: 1px solid #3c464e;
   transition-duration: 0.1s;
+}
+.selectBox .display-service .serviceBox:hover .name {
+  color: #1c2023;
 }
 
 .selectBox .display-service .serviceBox:active {

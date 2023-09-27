@@ -39,7 +39,6 @@ export default {
   grid-row: 3/4;
   width: 100%;
   height: 40px;
-  margin-top: 21px;
   display: flex;
   justify-content: center;
   align-items: center;
