@@ -23,6 +23,7 @@
 
     <div v-if="connectingAnimActive" class="anim">
       <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
+      <div class="cancl-btn" @click="cancelLogin">cancel</div>
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
@@ -501,6 +502,11 @@ export default {
         this.$router.push("/node");
       }
       this.$emit("page", "welcome-page");
+    },
+    cancelLogin() {
+      this.connectingAnimActive = false;
+      this.errorMsgExists = false;
+      this.model.pass.value = "";
     },
   },
 };
@@ -1083,11 +1089,10 @@ input:checked + .slider:before {
 .anim {
   width: 100%;
   height: 100%;
-  background-color: rgb(8, 8, 8);
+  background-color: rgba(8, 8, 8, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.9;
   position: fixed;
   top: 0;
   left: 0;
@@ -1097,7 +1102,28 @@ input:checked + .slider:before {
   width: 35%;
   height: 45%;
 }
-
+.cancl-btn {
+  width: 20%;
+  height: 10%;
+  position: absolute;
+  top: 80%;
+  right: 40%;
+  background-color: #eb5353;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 120%;
+  font-weight: 800;
+  color: #eae9e9;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.cancl-btn:active {
+  transform: scale(0.95);
+}
 .error {
   color: #e43e3e;
   border-color: #e43e3e !important;
