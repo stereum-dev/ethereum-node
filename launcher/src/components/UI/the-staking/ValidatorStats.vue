@@ -1,8 +1,7 @@
 <template>
-  <div class="statParent">
-    <div class="balanceParent">
-      <TotalBalance />
-    </div>
+  <div class="w-full col-start-1 col-end-5 row-start-1 row-end-7 grid grid-cols-1 grid-flow-row gap-y-1">
+    <TotalBalance />
+
     <div class="stateBox">
       <div class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
@@ -49,6 +48,7 @@ import TheAttestation from "./TheAttestation.vue";
 import { mapWritableState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
 import ControlService from "@/store/ControlService";
+import { markRaw } from "vue";
 
 export default {
   components: {
@@ -61,7 +61,7 @@ export default {
   },
   data() {
     return {
-      optionsType: [
+      optionsType: markRaw([
         {
           title: "ATTESTATION",
           comp: TheAttestation,
@@ -80,7 +80,7 @@ export default {
             remainingTime: this.remainingTime,
           },
         },
-      ],
+      ]),
       tabs: [
         { id: 1, title: "ATTESTATION", imgPath: "/img/icon/the-staking/eye.png", display: false },
         // { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
@@ -111,18 +111,21 @@ export default {
     async getValidatorStats(item) {
       clearInterval(this.intervalId);
       if (item) {
-        this.intervalId = setInterval(() => {
-          this.updateValidatorStats();
-        }, item.network === "gnosis" ? 8000 : 12000);
+        this.intervalId = setInterval(
+          () => {
+            this.updateValidatorStats();
+          },
+          item.network === "gnosis" ? 8000 : 12000
+        );
         this.selectedValidator = item;
-        await this.updateValidatorStats()
+        await this.updateValidatorStats();
       }
     },
-    async updateValidatorStats(){
-      if(this.selectedValidator?.key){
+    async updateValidatorStats() {
+      if (this.selectedValidator?.key) {
         const output = await ControlService.getValidatorStats(this.selectedValidator.key);
         this.stats = output;
-      }      
+      }
     },
     toggleDropDown() {
       this.dropDownIsOpen = !this.dropDownIsOpen;
@@ -136,16 +139,12 @@ export default {
 
 <style scoped>
 .statParent {
-  grid-column: 10/13;
-  grid-row: 1/3;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 320px;
   height: 100%;
-  padding: 10px 5px 10px 5px;
 }
 .balanceParent {
   width: 100%;
@@ -155,24 +154,16 @@ export default {
   align-items: center;
 }
 .stateBox {
-  width: 100%;
-  height: 74%;
-  background-color: #bfbfbf;
+  border: 4px solid #bfbfbf;
   border-radius: 10px;
-  padding: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
 .stateInnerBox {
-  width: 100%;
-  height: 100%;
   background-color: #242529;
   border-radius: 10px;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(10, 1fr);
 }
 
 .indexParent {
@@ -277,7 +268,7 @@ export default {
 
 .tabBarParent {
   grid-column: 1/7;
-  grid-row: 8/11;
+  grid-row: 8/9;
   width: 100%;
   height: 100%;
   display: flex;

@@ -14,7 +14,7 @@
           <span class="epochNumber">{{ stats.currentEpoch }}</span>
         </div>
         <div class="slotBox">
-          <span class="firstNumber">{{ stats.currentSlot ? ((stats.currentSlot % 32) +1 )  : 0}}#</span>
+          <span class="firstNumber">{{ stats.currentSlot ? (stats.currentSlot % 32) + 1 : 0 }}#</span>
           <span class="outOf">/</span>
           <span class="secondNumber">32#</span>
           <span class="divider"></span>
@@ -64,11 +64,10 @@ export default {
 .balance_box {
   width: 100%;
   height: 100%;
-  grid-column: 10/13;
-  grid-row: 1;
-  background-color: #bfbfbf;
-  padding: 3px;
+  grid-column: 1/2 !important;
+  grid-row: 1/3 !important;
   border-radius: 10px;
+  border: 4px solid #bfbfbf;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -77,7 +76,7 @@ export default {
 .balanceInnerBox {
   width: 100%;
   height: 100%;
-  background-color: #464a44;
+  background-color: #53595e;
   border-radius: 10px;
   display: flex;
   flex-direction: column;

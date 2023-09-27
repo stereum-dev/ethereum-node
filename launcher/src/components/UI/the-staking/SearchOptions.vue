@@ -44,13 +44,14 @@ export default {
 }
 .searchOptions {
   position: relative;
-  grid-column: 1/3;
-  grid-row: 2/3;
+  grid-column: 10/13;
+  grid-row: 3/4;
   width: 100%;
-  height: 100%;
+  height: max-content;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  align-self: flex-end;
 }
 .searchOptions .pubkeyView {
   margin-top: 50px;
@@ -69,6 +70,6 @@ export default {
 .searchOptions .folder:hover,
 .searchOptions .filter:hover,
 .searchOptions .pubkeyView:hover {
- transform: scale(1.1 );
+  transform: scale(1.1);
 }
 </style>

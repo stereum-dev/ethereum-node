@@ -1,6 +1,8 @@
 <template>
-  <div class="keys-parent">
-    <div class="keys-table-box">
+  <div class="col-start-1 col-end-13 row-start-1 row-end-7 relative grid grid-cols-12 grid-rows-3">
+    <div
+      class="h-[475px] border-4 border-gray-300 rounded-xl col-start-1 col-end-13 row-start-1 row-end-4 justify-center items-center bg-[#151618] text-gray-300"
+    >
       <div class="keys-table">
         <div v-if="importValidatorKeyActive" class="table-header">
           <span id="name">{{ $t("displayValidator.pk") }}</span>
@@ -1067,11 +1069,8 @@ export default {
   align-items: center;
 }
 .keys-parent {
-  width: 100%;
-  height: 100%;
-  margin-left: 5px;
-  grid-column: 1/10;
-  grid-row: 1/4;
+  grid-column: 1/13;
+  grid-row: 1/7;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 86% 7% 7%;
@@ -1083,7 +1082,6 @@ export default {
   grid-row: 1/3;
   width: 99%;
   height: 100%;
-  margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
   border-radius: 20px;
   display: flex;
@@ -1362,8 +1360,8 @@ remove-validator {
 
 .table-header {
   width: 100%;
-  height: 30px;
-  border-bottom: 7px solid #bfbfbf;
+  height: 25px;
+  border-bottom: 4px solid #bfbfbf;
   display: grid;
   grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
 }
@@ -1375,7 +1373,7 @@ remove-validator {
   justify-self: flex-start;
 }
 .table-header span {
-  color: #fff;
+  color: #dddddd;
   font-size: 10px;
   font-weight: 700;
   display: flex;

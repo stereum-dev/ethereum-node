@@ -1,42 +1,33 @@
 <template>
-  <div class="staking-parent">
-    <div class="staking-green-bg">
-      <div class="staking-black-bg">
-        <display-validators :button="button"></display-validators>
-        <ValidatorStats />
-        <selection-options
-          :key="refresh"
-          :button-state="buttonState"
-          :validator-icon="selectedIcon"
-          :validator-name="selectedName"
-          :validator-state="selectedStatus"
-          :validators="installedValidators"
-          :disable="display"
-          @click-btn-graffiti="grafittiHandler"
-          @click-btn-remove="removeHandler"
-          @vld-picker="selectedValidator"
-        ></selection-options>
-        <div class="footer"></div>
-        <TaskManager />
-      </div>
-    </div>
+  <div class="w-full grid grid-cols-6">
+    <DisplayValidators :button="button" />
+    <ValidatorStats />
+    <SelectionOptions
+      :key="refresh"
+      :button-state="buttonState"
+      :validator-icon="selectedIcon"
+      :validator-name="selectedName"
+      :validator-state="selectedStatus"
+      :validators="installedValidators"
+      :disable="display"
+      @click-btn-graffiti="grafittiHandler"
+      @click-btn-remove="removeHandler"
+      @vld-picker="selectedValidator"
+    />
   </div>
 </template>
 
 <script>
-import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorStats from "./ValidatorStats.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
     DisplayValidators,
     SelectionOptions,
     ValidatorStats,
-    TaskManager,
   },
   data() {
     return {
