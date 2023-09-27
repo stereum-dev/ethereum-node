@@ -1,5 +1,5 @@
 <template>
-  <div class="selection-box">
+  <div class="selection-box border-4 border-gray-400">
     <div class="selection-table">
       <div class="selection-table_validator">
         <div class="validator-icon"><img :src="validatorIcon" :alt="validatorName" /></div>
@@ -310,7 +310,6 @@ export default {
   grid-row: 8/13;
   width: 100%;
   height: 44%;
-  border: 4px solid #bfbfbf;
   border-radius: 10px;
   background-color: #242529;
   display: flex;

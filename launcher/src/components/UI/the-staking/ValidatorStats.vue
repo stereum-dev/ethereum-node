@@ -2,7 +2,7 @@
   <div class="w-full col-start-1 col-end-5 row-start-1 row-end-7 grid grid-cols-1 grid-flow-row gap-y-1">
     <TotalBalance />
 
-    <div class="stateBox">
+    <div class="stateBox border-4 border-gray-400">
       <div class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
@@ -154,7 +154,6 @@ export default {
   align-items: center;
 }
 .stateBox {
-  border: 4px solid #bfbfbf;
   border-radius: 10px;
   display: flex;
   justify-content: center;

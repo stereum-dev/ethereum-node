@@ -1,7 +1,7 @@
 <template>
   <div class="col-start-1 col-end-13 row-start-1 row-end-7 relative grid grid-cols-12 grid-rows-3">
     <div
-      class="h-[475px] border-4 border-gray-300 rounded-xl col-start-1 col-end-13 row-start-1 row-end-4 justify-center items-center bg-[#151618] text-gray-300"
+      class="h-[475px] border-4 border-gray-400 rounded-xl col-start-1 col-end-13 row-start-1 row-end-4 justify-center items-center bg-[#151618] text-gray-300"
     >
       <div class="keys-table">
         <div v-if="importValidatorKeyActive" class="table-header">

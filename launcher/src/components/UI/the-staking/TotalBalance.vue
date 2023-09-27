@@ -1,5 +1,5 @@
 <template>
-  <div class="balance_box">
+  <div class="balance_box border-4 border-gray-400">
     <div class="balanceInnerBox">
       <div class="balance">
         <div class="balance-title">
@@ -67,7 +67,6 @@ export default {
   grid-column: 1/2 !important;
   grid-row: 1/3 !important;
   border-radius: 10px;
-  border: 4px solid #bfbfbf;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -77,7 +76,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #53595e;
-  border-radius: 10px;
+  border-radius: 7px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

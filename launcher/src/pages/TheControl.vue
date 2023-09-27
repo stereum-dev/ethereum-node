@@ -1,17 +1,12 @@
 <template>
-  <div class="control-parent">
-    <node-bg>
-      <control-grid></control-grid>
-    </node-bg>
-    <node-header id="head"> </node-header>
-  </div>
+  <ControlScreen />
 </template>
 <script>
 import { useRefreshMetrics } from "@/composables/monitoring";
-import ControlGrid from "../components/UI/the-control/ControlGrid.vue";
+import ControlScreen from "../components/UI/the-control/ControlScreen.vue";
 
 export default {
-  components: { ControlGrid },
+  components: { ControlScreen },
 
   mounted() {
     this.polling = setInterval(this.refresh, 100); //refresh services
@@ -26,10 +21,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-#head {
-  position: fixed;
-  top: 0;
-}
-</style>
