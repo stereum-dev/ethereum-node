@@ -18,7 +18,7 @@
           v-if="item.displayPluginMenu"
           :item="item"
           @switch-client="switchClient"
-          @connect-client="connectClient"
+          @modify-service="modifyService"
           @delete-service="deleteService"
           @info-modal="infoModal"
         />
@@ -125,8 +125,8 @@ const switchClient = (item) => {
   emit("switchClient", item);
 };
 
-const connectClient = (item) => {
-  emit("connectClient", item);
+const modifyService = (item) => {
+  emit("modifyService", item);
 };
 
 const infoModal = (item) => {

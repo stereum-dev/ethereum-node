@@ -3,6 +3,7 @@ export const useServices = defineStore("services", {
   state: () => {
     return {
       selectedServiceToSwitch: null,
+      selectedServiceToConnect: [],
       customServiceToInstall: [],
       filteredServices: [],
       buttonState: [

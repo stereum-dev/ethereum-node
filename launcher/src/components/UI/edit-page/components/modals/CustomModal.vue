@@ -4,31 +4,33 @@
   >
     <div class="absolute bg-black opacity-80 inset-0 z-0" @click="closeModal"></div>
     <div
-      class="w-2/3 min-h-[400px] py-1 px-2 relative mx-auto my-auto rounded-[35px] shadow-lg bg-white border-4 border-gray-400"
+      class="w-2/3 min-h-[400px] py-1 px-2 relative mx-auto my-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-400"
     >
       <div class="flex flex-col justify-between gap-5">
         <div class="text-center p-2 flex-auto justify-center space-y-4">
           <div v-if="icon !== ''">
             <img class="w-10 -m-1 flex items-center text-red-500 mx-auto" :src="icon" :alt="altText" />
           </div>
-          <div v-if="mainTitle !== ''" class="text-xl font-bold py-2 text-teal-800">
+          <div v-if="mainTitle !== ''" class="text-xl font-bold py-2 text-teal-600 uppercase">
             <p>{{ mainTitle }}</p>
           </div>
-          <div v-if="messageText !== ''" class="text-md font-bold py-2">
+          <div v-if="messageText" class="text-md font-bold py-2">
             <p>{{ messageText }}</p>
           </div>
           <slot name="content"></slot>
         </div>
-        <div class="text-md font-bold py-3 mt-2 text-center space-y-4">
+        <div class="flex justify-end text-md font-bold py-3 mt-2 space-y-4">
           <button
             v-if="confirmText !== ''"
-            class="mb-2 md:mb-0 bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-green-600"
+            class="mr-4 bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full hover:bg-green-600 uppercase active:scale-95 transition duration-200"
             @click="emitConfirmAction"
           >
             {{ confirmText }}
           </button>
-          <span class="text-xs flex justify-center items-center text-red-500 mx-auto">{{ clickOutsideText }}</span>
         </div>
+        <span class="absolute bottom-1 left-[40%] text-xs flex justify-center items-center text-red-500 mx-auto">{{
+          clickOutsideText
+        }}</span>
       </div>
     </div>
   </div>

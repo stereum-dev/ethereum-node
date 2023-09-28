@@ -24,7 +24,7 @@
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
-      <div class="alert-box_messages">
+      <div class="alert-box_messages overflow-x-hidden overflow-y-auto">
         <div v-if="storageWarning" class="alert-message_yellow">
           <div class="icon-box">
             <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
@@ -424,25 +424,9 @@ export default {
   border: 1px solid #707070;
   border-radius: 5px;
   flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
-.alert-box_messages::-webkit-scrollbar {
-  width: 4px;
+  margin-top: 5px;
 }
 
-/* Track */
-.alert-box_messages::-webkit-scrollbar-track {
-  background: #3b4146;
-  box-sizing: border-box;
-  border-radius: 50%;
-}
-
-/* Handle */
-.alert-box_messages::-webkit-scrollbar-thumb {
-  background: #324b3f;
-  border-radius: 50%;
-}
 .alert-message_yellow {
   display: flex;
   justify-content: space-between;

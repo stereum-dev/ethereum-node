@@ -6,7 +6,7 @@
       class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634]"
     >
       <div
-        class="absolute left-1 top-1 w-[72px] rounded-tl-lg z-50 p-1 bg-[#1E3428] rounded-tr-[33px] rounded-br-[33px] rounded-bl-[33px] shadow-md shadow-[#252525]"
+        class="absolute left-1 top-1 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[37px] rounded-br-[37px] rounded-bl-[37px] shadow-md shadow-[#252525]"
         @pointerdown.prevent.stop
         @mousedown.prevent.stop
       >

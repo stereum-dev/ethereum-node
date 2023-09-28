@@ -33,7 +33,7 @@
           @delete-service="deleteService"
           @switch-client="switchClient"
           @connect-client="connectClient"
-          @confirm-consensus="confirmConsensus"
+          @modify-service="modifyService"
           @info-modal="infoModal"
         />
         <ConsensusClients
@@ -41,7 +41,7 @@
           @delete-service="deleteService"
           @confirm-connection="confirmConnection"
           @switch-client="switchClient"
-          @connect-client="connectClient"
+          @modify-service="modifyService"
           @info-modal="infoModal"
         />
         <ExecutionClients
@@ -124,8 +124,8 @@ const switchClient = (item) => {
   emit("switchClient", item);
 };
 
-const connectClient = (item) => {
-  emit("connectClient", item);
+const modifyService = (item) => {
+  emit("modifyService", item);
 };
 const deleteService = (item) => {
   emit("deleteService", item);

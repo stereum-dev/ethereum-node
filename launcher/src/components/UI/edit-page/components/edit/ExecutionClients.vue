@@ -19,12 +19,6 @@
           @delete-service="deleteService"
           @info-modal="infoModal"
         />
-        <ConnectionMenu
-          v-else-if="item.isNotConnectedToConsensus"
-          :item="item"
-          @hide-connection="hideConnection"
-          @confirm-connection="confirmConnection"
-        />
       </TransitionGroup>
     </div>
   </div>
@@ -36,7 +30,6 @@ import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
-import ConnectionMenu from "./ConnectionMenu.vue";
 
 import { computed, ref, watchEffect } from "vue";
 
@@ -124,25 +117,13 @@ const hideMenu = (item) => {
   item.displayPluginMenu = false;
 };
 
-const hideConnection = (item) => {
-  item.displayPluginMenu = false;
-  manageStore.newConfiguration.forEach((service) => {
-    if (service.connectedToConsensus) {
-      service.connectedToConsensus = false;
-    }
-  });
-  setTimeout(() => {
-    item.isNotConnectedToConsensus = false;
-  });
-};
-
 const connectClient = (item) => {
   emit("connectClient", item);
 };
 
-const confirmConnection = (item) => {
-  emit("confirmConnection", item);
-};
+// const confirmConnection = (item) => {
+//   emit("confirmConnection", item);
+// };
 
 const deleteService = (item) => {
   emit("deleteService", item);

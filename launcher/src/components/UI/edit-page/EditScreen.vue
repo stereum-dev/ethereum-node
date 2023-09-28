@@ -11,7 +11,7 @@
           @on-drop="onDrop"
           @confirm-connection="confirmConnection"
           @switch-client="switchClientModalhandler"
-          @connect-client="clientConnectionHandler"
+          @modify-service="serviceModifyHandler"
           @delete-service="selectedServiceToRemove"
           @confirm-consensus="confirmConsensusConnection"
           @info-modal="openInfoModal"
@@ -44,6 +44,7 @@
     <!-- End drawer layout -->
     <!-- Custom Modals -->
     <TransitionGroup name="fadeModal">
+      <!-- Start Network Switch Modal -->
       <NetworkModal
         v-if="manageStore.displayNetworkList"
         @close-window="manageStore.displayNetworkList = false"
@@ -60,14 +61,31 @@
         @close-window="isSwitchModalOpen = false"
         @switch-confirm="switchClientConfirm"
       />
+      <!-- End Switch Client Modal -->
+      <!-- Start Info Modal -->
       <InfoModal
         v-if="isInfoModalOpen"
         :client="clientForInfo"
         @close-window="isInfoModalOpen = false"
         @ok-button="isInfoModalOpen = false"
       />
-
-      <!-- End Switch Client Modal -->
+      <!-- End Info Modal -->
+      <!-- Start Modify Services Modal -->
+      <ModifyModal
+        v-if="isModifyModalOpen"
+        :client="clientToModify"
+        @close-window="hideModifyModal"
+        @confirm-modify="confirmModifyingService"
+      />
+      <!-- End Modify Services Modal -->
+      <!-- Start Add New Service Modal -->
+      <AddModal
+        v-if="isAddModalOpen"
+        :client="clientToAdd"
+        @close-window="isAddModalOpen = false"
+        @confirm-modify="confirmAddingService"
+      />
+      <!-- End Add New Service Modal -->
     </TransitionGroup>
   </base-layout>
 </template>
@@ -80,6 +98,8 @@ import DrawerBox from "./components/drawer/DrawerBox.vue";
 import NetworkModal from "./components/modals/NetworkModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
+import ModifyModal from "./components/modals/ModifyModal.vue";
+import AddModal from "./components/modals/AddModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
@@ -93,9 +113,13 @@ const isOverDropZone = ref(false);
 const clientToRemove = ref(null);
 const clientToSwitch = ref(null);
 const clientForInfo = ref(null);
+const clientToModify = ref(null);
+const clientToAdd = ref(null);
 const isConfirmLoading = ref(false);
 const isSwitchModalOpen = ref(false);
 const isInfoModalOpen = ref(false);
+const isModifyModalOpen = ref(false);
+const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
 
 onMounted(() => {
@@ -117,6 +141,8 @@ onMounted(() => {
       isConfirmProcessing: false,
       isServiceConnecting: false,
       isResyncModalOpen: false,
+      isModifyPanelOpen: false,
+      isAddPanelOpen: false,
     };
   });
 });
@@ -164,35 +190,60 @@ const switchClientConfirm = (item) => {
   serviceStore.selectedServiceToSwitch = "";
 };
 
-// Clients Connection methods
-
-const clientConnectionHandler = (item) => {
-  console.log("CLICKED");
-  manageStore.newConfiguration.forEach((e) => {
-    e.isNotConnectedToConsensus = false;
-    e.isNotConnectedToValidator = false;
-  });
+const hideOptions = (item) => {
   if (item.category === "consensus") {
-    const connectedExecutionId = item.config?.dependencies.executionClients[0].id;
-    manageStore.newConfiguration.forEach((e) => {
-      if (e.category === "execution" && e.config.serviceID !== connectedExecutionId) {
-        clientToConnect.value = e;
-        e.isNotConnectedToConsensus = true;
-      } else if (e.category === "execution" && e.config.serviceID === connectedExecutionId) {
-        e.connectedToConsensus = true;
-      }
-    });
+    manageStore.newConfiguration
+      .filter((e) => {
+        e.category === "execution";
+      })
+      .forEach((e) => {
+        e.isNotConnectedToConsensus = false;
+        e.connectedToConsensus = false;
+      });
   } else if (item.category === "validator") {
-    const connectedConsensusId = item.config?.dependencies.consensusClients[0].id;
-    manageStore.newConfiguration.forEach((e) => {
-      if (e.category === "consensus" && e.config.serviceID !== connectedConsensusId) {
-        clientToConnect.value = e;
-        e.isNotConnectedToValidator = true;
-      } else if (e.category === "consensus" && e.config.serviceID === connectedConsensusId) {
-        e.connectedToValidator = true;
-      }
-    });
+    manageStore.newConfiguration
+      .filter((e) => {
+        e.category === "consensus";
+      })
+      .forEach((e) => {
+        e.isNotConnectedToValidator = false;
+        e.connectedToValidator = false;
+      });
   }
+};
+// Clients Modifying methods
+const serviceModifyHandler = (item) => {
+  // console.log("CLICKED");
+  // manageStore.newConfiguration.forEach((e) => {
+  //   e.isNotConnectedToConsensus = false;
+  //   e.isNotConnectedToValidator = false;
+  // });
+  // if (item.category === "consensus") {
+  //   manageStore.newConfiguration.forEach((e) => {
+  //     if (e.category === "execution" && e.config.serviceID !== item.config.dependencies.executionClients[0].id) {
+  //       clientToModify.value = e;
+  //       e.isNotConnectedToConsensus = true;
+  //     } else if (e.category === "execution" && e.config.serviceID === item.config.dependencies.executionClients[0].id) {
+  //       e.connectedToConsensus = true;
+  //     }
+  //   });
+  // } else if (item.category === "validator") {
+  //   const connectedConsensusId = item.config?.dependencies.consensusClients[0].id;
+  //   manageStore.newConfiguration.forEach((e) => {
+  //     if (e.category === "consensus" && e.config.serviceID !== connectedConsensusId) {
+  //       clientToConnect.value = e;
+  //       e.isNotConnectedToValidator = true;
+  //     } else if (e.category === "consensus" && e.config.serviceID === connectedConsensusId) {
+  //       e.connectedToValidator = true;
+  //     }
+  //   });
+  // }
+  clientToModify.value = item;
+  isModifyModalOpen.value = true;
+};
+
+const hideModifyModal = () => {
+  isModifyModalOpen.value = false;
 };
 const confirmConsensusConnection = (item) => {
   clientToConnect.value.isNotConnectedToConsensus = false;

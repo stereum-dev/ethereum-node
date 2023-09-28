@@ -6,7 +6,7 @@
         class="w-7 bg-gray-900 hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200 border border-gray-700 rounded-md"
         src="/img/icon/manage-node-icons/connection.png"
         alt="Trash Icon"
-        @click="connectClient"
+        @click="modifyService"
       />
       <img
         class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
@@ -48,8 +48,8 @@ const switchClient = () => {
   emit("switchClient", item);
 };
 
-const connectClient = () => {
-  emit("connectClient", item);
+const modifyService = () => {
+  emit("modifyService", item);
 };
 
 const infoModal = () => {

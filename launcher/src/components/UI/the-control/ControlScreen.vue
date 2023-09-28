@@ -97,7 +97,7 @@
       <div class="dashboard-container border-4 border-gray-400 bg-black">
         <control-dashboard></control-dashboard>
       </div>
-      <div class="absolute bottom-[5px] right-[5px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
+      <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
         <control-alert></control-alert>
       </div>
     </div>
