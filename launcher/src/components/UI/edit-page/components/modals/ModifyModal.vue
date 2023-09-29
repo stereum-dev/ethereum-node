@@ -43,7 +43,17 @@ const options = computed(() => {
       if (i.category === "execution") {
         options.push({
           ...i,
+          isConnected: false,
           clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
+        });
+      }
+      if (options.length > 0) {
+        connectedConsensus.value = client.config.dependencies.consensusClients[0]?.id;
+        connectedExecution.value = client.config.dependencies.executionClients[0]?.id;
+        options.forEach((e) => {
+          if (connectedConsensus.value === e.config.serviceID || connectedExecution.value === e.config.serviceID) {
+            e.isConnected = true;
+          }
         });
       }
     });
@@ -55,6 +65,15 @@ const options = computed(() => {
           isConnectedToSSVNetwork: false,
           clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
         });
+        if (options.length > 0) {
+          connectedConsensus.value = client.config.dependencies.consensusClients[0]?.id;
+          connectedExecution.value = client.config.dependencies.executionClients[0]?.id;
+          options.forEach((e) => {
+            if (connectedConsensus.value === e.config.serviceID || connectedExecution.value === e.config.serviceID) {
+              e.isConnectedToSSVNetwork = true;
+            }
+          });
+        }
       }
     });
   } else if (client.category === "validator") {
@@ -62,7 +81,34 @@ const options = computed(() => {
       if (i.category === "consensus") {
         options.push({
           ...i,
+          isConnected: false,
           clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
+        });
+      }
+      if (options.length > 0) {
+        connectedConsensus.value = client.config.dependencies.consensusClients[0]?.id;
+        connectedExecution.value = client.config.dependencies.executionClients[0]?.id;
+        options.forEach((e) => {
+          if (connectedConsensus.value === e.config.serviceID || connectedExecution.value === e.config.serviceID) {
+            e.isConnected = true;
+          }
+        });
+      }
+    });
+  } else if (client.service === "FlashbotsMevBoostService") {
+    manageStore.newConfiguration.forEach((i) => {
+      if (i.category === "consensus") {
+        options.push({
+          ...i,
+          clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
+        });
+      }
+      if (options.length > 0) {
+        options.forEach((e) => {
+          if (e.category === "consensus" && e.config.dependencies.mevboost[0]) {
+            console.log(e);
+            e.isConnectedToMevBoost = true;
+          }
         });
       }
     });
@@ -73,32 +119,23 @@ const options = computed(() => {
 //life cycle hooks
 
 onMounted(() => {
-  getDynamicClasses();
+  getConnectedClient();
   getConnectedServicesToSSV();
 });
 
 //Methods
 
-const getDynamicClasses = () => {
+const getConnectedClient = () => {
   if (client.category === "consensus") {
     manageStore.newConfiguration.forEach((e) => {
       if (e.category === "execution" && e.config.dependencies.executionClients[0]) {
-        e.isConnectedToConsensus = true;
+        e.isConnected = true;
       }
     });
   } else if (client.category === "validator" && client.service !== "SSVNetworkService") {
     manageStore.newConfiguration.forEach((e) => {
       if (e.category === "consensus" && e.config.dependencies.consensusClients[0]) {
-        e.isConnectedToValidator = true;
-      }
-    });
-  } else if (client.service === "SSVNetworkService") {
-    manageStore.newConfiguration.forEach((e) => {
-      if (e.category === "consensus" && e.config.dependencies.consensusClients[0]) {
-        e.isConnectedToSSVNetwork = true;
-      }
-      if (e.category === "execution" && e.config.dependencies.executionClients[0]) {
-        e.isConnectedToSSVNetwork = true;
+        e.isConnected = true;
       }
     });
   }
@@ -134,6 +171,6 @@ const closeWindow = () => {
 
 const selectService = (option) => {
   serviceStore.selectedServiceToConnect.push(option);
-  emit("selectService", option);
+  console.log(serviceStore.selectedServiceToConnect);
 };
 </script>

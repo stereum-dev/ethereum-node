@@ -29,8 +29,8 @@ const getServices = computed(() => {
   return service;
 });
 
-const changeConnection = () => {
-  emit("changeConnection");
+const changeConnection = (item) => {
+  emit("changeConnection", item);
 };
 
 const deleteService = (item) => {

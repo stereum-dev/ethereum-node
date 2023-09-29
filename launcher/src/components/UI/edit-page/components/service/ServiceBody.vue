@@ -22,26 +22,16 @@
           <div
             v-if="item.service === 'FlashbotsMevBoostService'"
             class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1 hover:border-gray-300"
-            @click="changeConnection"
+            @click="changeConnection(item)"
           >
-            <img
-              class="w-5 z-10"
-              src="/img/icon/manage-node-icons/connection.png"
-              alt=""
-              @mousedown.prevent.stop
-            />
+            <img class="w-5 z-10" src="/img/icon/manage-node-icons/connection.png" alt="" @mousedown.prevent.stop />
           </div>
           <div
             class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1"
             :class="{ 'border-red-500': item.displayTooltip }"
             @click="deleteService(item)"
           >
-            <img
-              class="w-5 z-10"
-              src="/img/icon/manage-node-icons/trash.png"
-              alt=""
-              @mousedown.prevent.stop
-            />
+            <img class="w-5 z-10" src="/img/icon/manage-node-icons/trash.png" alt="" @mousedown.prevent.stop />
           </div>
         </div>
       </div>
@@ -76,8 +66,8 @@ const getServices = computed(() =>
 );
 
 // Methods
-const changeConnection = () => {
-  emit("changeConnection");
+const changeConnection = (item) => {
+  emit("changeConnection", item);
 };
 
 const deleteService = (item) => {
