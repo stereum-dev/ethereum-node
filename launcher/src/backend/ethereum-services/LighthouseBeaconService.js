@@ -58,6 +58,10 @@ export class LighthouseBeaconService extends NodeService {
         "--validator-monitor-auto",
         "--slasher",
         `--slasher-dir=${slasherDir}`,
+        "--port=9000",
+        "--enr-tcp-port=9000",
+        "--enr-udp-port=9000",
+        "--disable-enr-auto-update=false",
       ], //command
       null, //entrypoint
       null, //env
