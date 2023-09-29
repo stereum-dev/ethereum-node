@@ -38,7 +38,7 @@ const { item } = defineProps({
   },
 });
 
-const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
 
 const deleteService = () => {
   emit("deleteService", item);

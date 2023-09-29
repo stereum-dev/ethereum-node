@@ -40,7 +40,7 @@ import GeneralMenu from "./GeneralMenu.vue";
 import { computed, ref, watchEffect, watch } from "vue";
 
 //Props & Emits
-const emit = defineEmits(["deleteService", "switchClient", "connectClient"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
 
 //Refs
 
@@ -141,8 +141,6 @@ const displayMenu = (item) => {
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
 };
-
-
 
 const hideMevboostMenu = (item) => {
   item.displayPluginMenu = false;

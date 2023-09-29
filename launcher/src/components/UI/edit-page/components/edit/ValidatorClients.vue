@@ -37,7 +37,7 @@ import { computed, reactive, watch, watchEffect } from "vue";
 
 // Variables & Constants
 
-const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
 const validatorRefs = reactive([]);
 const nodeStore = useNodeStore();
 const manageStore = useNodeManage();

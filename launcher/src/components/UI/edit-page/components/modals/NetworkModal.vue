@@ -12,7 +12,7 @@
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Current Network</span>
           <div
-            class="flex justify-center items-center w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md py-1 px-2 font-semibold text-lg"
+            class="flex justify-center items-center w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md py-1 px-2 font-semibold text-lg text-gray-200"
           >
             <span>{{ manageStore.currentNetwork.name }}</span>
           </div>
@@ -41,18 +41,18 @@
             <Transition name="slide">
               <ul
                 v-show="networkDropdownOpen"
-                class="transition-all max-h-[180px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg py-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
+                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-20 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
                 @mouseleave="networkDropdownOpen = false"
               >
                 <li
                   v-for="network in manageStore.networkList"
                   :key="network.name"
-                  class="w-full grid grid-cols-6 px-4"
+                  class="w-full grid grid-cols-6 px-4 hover:bg-blue-400"
                   @click="switchNetwork(network)"
                 >
                   <img class="col-start-1 col-end-2 w-10 p-1" :src="network.icon" alt="Network Icon" />
                   <span
-                    class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 hover:bg-blue-400 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
+                    class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
                     >{{ network.name }}</span
                   >
                 </li>

@@ -1,6 +1,7 @@
 <template>
   <custom-modal
     main-title="Switch Client"
+    sub-title="Replace Service"
     icon="/img/icon/manage-node-icons/switch.png"
     confirm-text="Confirm"
     click-outside-text="Click outside to cancel"
@@ -8,14 +9,14 @@
     @confirm-action="switchConfirm"
   >
     <template #content>
-      <div class="flex flex-col justify-between items-center py-2 px-4 space-y-4">
+      <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto">
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Current Client</span>
           <div
             class="flex justify-center items-center w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md py-1 px-2 font-semibold text-lg"
           >
-            <img class="w-6 h-6 mr-2" :src="client.icon" alt="Client Icon" />
-            <span>{{ client.name }}</span>
+            <img class="w-6 h-6 mr-2" :src="client.sIcon" alt="Client Icon" />
+            <span class="text-gray-200">{{ client.name }}</span>
           </div>
         </div>
         <div class="w-full flex flex-col justify-between items-center space-y-1">
@@ -23,13 +24,13 @@
           <div class="w-full relative py-2">
             <button
               aria-expanded="false"
-              class="w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-blue-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-between"
+              class="w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-blue-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-2 justify-center relative"
               @click="switchDropdownOpen = !switchDropdownOpen"
             >
               <img
                 v-if="serviceStore.selectedServiceToSwitch?.icon"
                 class="w-6 h-6 mr-2"
-                :src="serviceStore.selectedServiceToSwitch?.icon"
+                :src="serviceStore.selectedServiceToSwitch?.sIcon"
                 alt="Client Icon"
               />
               <span>{{
@@ -39,7 +40,7 @@
               }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 inline ml-1"
+                class="w-5 h-5 inline ml-1 absolute right-1"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -50,7 +51,7 @@
             <Transition name="slide">
               <ul
                 v-show="switchDropdownOpen"
-                class="transition-all max-h-[180px] duration-400 ease-in-out absolute bg-gray-800 rounded-lg shadow-lg pt-3 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
+                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-800 rounded-lg shadow-lg pt-14 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
                 @mouseleave="switchDropdownOpen = false"
               >
                 <li
@@ -61,7 +62,7 @@
                 >
                   <img
                     class="h-[30px] col-start-1 col-end-2 self-center justify-self-center"
-                    :src="service.icon"
+                    :src="service.sIcon"
                     alt="service Icon"
                   />
                   <span
@@ -112,7 +113,6 @@ const switchConfirm = () => {
 const closeWindow = () => {
   emit("closeWindow");
 };
-
 </script>
 
 <style scoped>

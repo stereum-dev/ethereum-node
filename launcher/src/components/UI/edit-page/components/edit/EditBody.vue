@@ -32,7 +32,6 @@
           v-if="!isOverDropZone"
           @delete-service="deleteService"
           @switch-client="switchClient"
-          @connect-client="connectClient"
           @modify-service="modifyService"
           @info-modal="infoModal"
         />
@@ -48,7 +47,6 @@
           v-if="!isOverDropZone"
           @delete-service="deleteService"
           @switch-client="switchClient"
-          @connect-client="connectClient"
           @confirm-consensus="confirmConsensus"
           @info-modal="infoModal"
         />
@@ -69,10 +67,10 @@ const emit = defineEmits([
   "onDrop",
   "confirmConnection",
   "switchClient",
-  "connectClient",
   "deleteService",
   "confirmConsensus",
   "infoModal",
+  "modifyService",
 ]);
 
 //Pinia stores

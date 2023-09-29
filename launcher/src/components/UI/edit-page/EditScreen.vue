@@ -212,32 +212,12 @@ const hideOptions = (item) => {
   }
 };
 // Clients Modifying methods
+
+const confirmModifyingService = () => {
+  console.log("CONFIRM MODIFYING");
+};
+
 const serviceModifyHandler = (item) => {
-  // console.log("CLICKED");
-  // manageStore.newConfiguration.forEach((e) => {
-  //   e.isNotConnectedToConsensus = false;
-  //   e.isNotConnectedToValidator = false;
-  // });
-  // if (item.category === "consensus") {
-  //   manageStore.newConfiguration.forEach((e) => {
-  //     if (e.category === "execution" && e.config.serviceID !== item.config.dependencies.executionClients[0].id) {
-  //       clientToModify.value = e;
-  //       e.isNotConnectedToConsensus = true;
-  //     } else if (e.category === "execution" && e.config.serviceID === item.config.dependencies.executionClients[0].id) {
-  //       e.connectedToConsensus = true;
-  //     }
-  //   });
-  // } else if (item.category === "validator") {
-  //   const connectedConsensusId = item.config?.dependencies.consensusClients[0].id;
-  //   manageStore.newConfiguration.forEach((e) => {
-  //     if (e.category === "consensus" && e.config.serviceID !== connectedConsensusId) {
-  //       clientToConnect.value = e;
-  //       e.isNotConnectedToValidator = true;
-  //     } else if (e.category === "consensus" && e.config.serviceID === connectedConsensusId) {
-  //       e.connectedToValidator = true;
-  //     }
-  //   });
-  // }
   clientToModify.value = item;
   isModifyModalOpen.value = true;
 };

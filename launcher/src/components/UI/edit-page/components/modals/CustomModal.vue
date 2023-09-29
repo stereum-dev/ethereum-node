@@ -8,13 +8,15 @@
     >
       <div class="flex flex-col justify-between gap-5">
         <div class="text-center p-2 flex-auto justify-center space-y-4">
-          <div v-if="icon !== ''">
-            <img class="w-10 -m-1 flex items-center text-red-500 mx-auto" :src="icon" :alt="altText" />
+          <div class="flex justify-center items-center py-2 px-4 mx-auto">
+            <img v-if="icon" class="w-[70px] h-[70px] mr-2" :src="icon" :alt="altText" />
+            <div v-if="mainTitle || subTitle" class="flex flex-col justify-between items-start">
+              <p class="text-[32px] font-bold text-teal-600 uppercase">{{ mainTitle }}</p>
+              <p class="text-[24px] font-bold text-amber-600 uppercase">{{ subTitle }}</p>
+            </div>
           </div>
-          <div v-if="mainTitle !== ''" class="text-xl font-bold py-2 text-teal-600 uppercase">
-            <p>{{ mainTitle }}</p>
-          </div>
-          <div v-if="messageText" class="text-md font-bold py-2">
+
+          <div v-if="messageText" class="text-md font-bold py-2 text-amber-600">
             <p>{{ messageText }}</p>
           </div>
           <slot name="content"></slot>
@@ -47,13 +49,14 @@ const emitConfirmAction = () => {
   emit("confirmAction");
 };
 
-const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText } = defineProps({
+const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, subTitle } = defineProps({
   icon: String,
   altText: String,
   mainTitle: String,
   messageText: String,
   confirmText: String,
   confirmBtn: Boolean,
+  subTitle: String,
   clickOutsideText: String,
 });
 </script>
