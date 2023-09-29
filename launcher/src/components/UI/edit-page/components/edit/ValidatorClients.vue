@@ -33,7 +33,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 
 import GeneralMenu from "./GeneralMenu.vue";
-import { computed, reactive, watch, watchEffect } from "vue";
+import { computed, reactive, watch } from "vue";
 
 // Variables & Constants
 
@@ -72,20 +72,6 @@ const getValidatorRef = computed(() =>
 
 watch(getValidatorRef, () => {
   nodeStore.validatorRef.value = getValidatorRef.value;
-});
-
-watchEffect(() => {
-  let connectedValidator;
-  connectedValidator = manageStore.newConfiguration
-    .filter((e) => e.category === "validator")
-    .find((e) => e.config.dependencies.consensusClients.length > 0);
-
-  manageStore.newConfiguration.map((service) => {
-    if (service.service === connectedValidator.service) {
-      service.serviceIsConnected = true;
-      service.connectedToConsensus = true;
-    }
-  });
 });
 
 const getDynamicClasses = (item) => {

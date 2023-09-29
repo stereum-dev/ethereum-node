@@ -46,11 +46,11 @@ import { ref } from "vue";
 const routerHovered = ref(false);
 const networkHovered = ref(false);
 const nukeHovered = ref(false);
-const emit = defineEmits(["nuke-node", "network-modal"]);
+const emit = defineEmits(["nukeNode", "network-modal"]);
 
 const nukeNode = () => {
   console.log("nuking");
-  emit("nuke-node");
+  emit("nukeNode");
 };
 </script>
 
