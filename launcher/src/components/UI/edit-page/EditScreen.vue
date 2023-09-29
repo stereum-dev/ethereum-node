@@ -126,6 +126,7 @@ onMounted(() => {
   manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
 });
 onMounted(() => {
+  manageStore.confirmChanges = [];
   manageStore.newConfiguration.forEach((el) => {
     return {
       ...el,
@@ -184,32 +185,14 @@ const switchClientConfirm = (item) => {
     id: randomId,
     content: "SWITCH CLIENT",
     contentIcon: "/img/icon/manage-node-icons/switch.png",
-    service: item,
+    service: current,
+    data: {
+      itemToInstall: item,
+      data: {},
+    },
   });
 
   serviceStore.selectedServiceToSwitch = "";
-};
-
-const hideOptions = (item) => {
-  if (item.category === "consensus") {
-    manageStore.newConfiguration
-      .filter((e) => {
-        e.category === "execution";
-      })
-      .forEach((e) => {
-        e.isNotConnectedToConsensus = false;
-        e.connectedToConsensus = false;
-      });
-  } else if (item.category === "validator") {
-    manageStore.newConfiguration
-      .filter((e) => {
-        e.category === "consensus";
-      })
-      .forEach((e) => {
-        e.isNotConnectedToValidator = false;
-        e.connectedToValidator = false;
-      });
-  }
 };
 // Clients Modifying methods
 

@@ -89,23 +89,6 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
-// watchEffect(() => {
-//   let connectedConsensus;
-//   manageStore.newConfiguration
-//     .filter((e) => e.category === "consensus")
-//     .forEach((e) => {
-//       if (e.config.dependencies.executionClients.length > 0) {
-//         connectedExecution = e.config.dependencies.executionClients[0];
-//         manageStore.newConfiguration.map((service) => {
-//           if (service.service === connectedExecution.service) {
-//             service.serviceIsConnected = true;
-//             service.connectedToExecution = true;
-//           }
-//         });
-//       }
-//     });
-// });
-
 // methods
 
 const getDynamicClasses = (item) => {

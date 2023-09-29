@@ -27,9 +27,9 @@ const serviceStore = useServices();
 
 const confirmHandler = async () => {
   disableBtn.value = true;
-  await ControlService.handleServiceChanges(editStore.confirmChanges);
+  await ControlService.handleServiceChanges(structuredClone(editStore.confirmChanges));
   setTimeout(() => {
-    editStore.newConfiguration = serviceStore.installedServices;
+    editStore.newConfiguration = structuredClone(serviceStore.installedServices);
   }, 4000);
 
   editStore.confirmChanges = [];

@@ -20,10 +20,10 @@ import { computed, ref } from 'vue';
     >
       <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
-    <div v-if="client.serviceIsConnected" class="flex justify-evenly items-center absolute end-1 top-0">
+    <div v-if="checkClientConnection()" class="flex justify-evenly items-center absolute end-1 top-0">
       <img class="w-3" src="/img/icon/manage-node-icons/connected.png" alt="icon" />
     </div>
-    <div v-else-if="!client.serviceIsConnected" class="flex justify-evenly items-center absolute end-1 top-0">
+    <div v-else class="flex justify-evenly items-center absolute end-1 top-0">
       <img class="w-3" src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />
     </div>
   </div>
@@ -33,26 +33,35 @@ import { computed, ref } from 'vue';
 import { computed } from "vue";
 
 // Props
-const { client } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     required: true,
   },
 });
 
-const serviceId = computed(() => formattedServiceID(client.config ? client?.config.serviceID : null));
+const serviceId = computed(() => formattedServiceID(props.client.config ? props.client?.config.serviceID : null));
 
 const getConnectedMevboost = computed(() => {
   let connectedMevboost;
 
-  if (client.config && client?.config.dependencies.mevboost[0]) {
-    connectedMevboost = client;
+  if (props.client.config && props.client?.config.dependencies.mevboost[0]) {
+    connectedMevboost = props.client;
   } else {
     connectedMevboost = null;
   }
 
   return connectedMevboost;
 });
+
+const checkClientConnection = () => {
+  let allDependencies = [
+    props.client?.config.dependencies.consensusClients,
+    props.client?.config.dependencies.executionClients,
+  ].flat();
+  if (allDependencies.length > 0) return true;
+  return false;
+};
 
 // Methods
 const formattedServiceID = (item) => {

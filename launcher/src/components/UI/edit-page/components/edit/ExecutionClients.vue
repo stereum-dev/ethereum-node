@@ -69,23 +69,6 @@ watchEffect(() => {
   nodeStore.executionRef = getExecutionRef.value;
 });
 
-// watchEffect(() => {
-//   let connectedExecution;
-//   manageStore.newConfiguration
-//     .filter((e) => e.category === "consensus")
-//     .forEach((e) => {
-//       if (e.config.dependencies.executionClients.length > 0) {
-//         connectedExecution = e.config.dependencies.executionClients[0];
-//         manageStore.newConfiguration.map((service) => {
-//           if (service.service === connectedExecution.service) {
-//             service.serviceIsConnected = true;
-//             service.connectedToExecution = true;
-//           }
-//         });
-//       }
-//     });
-// });
-
 // Methods
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {

@@ -51,7 +51,7 @@
             <Transition name="slide">
               <ul
                 v-show="switchDropdownOpen"
-                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-800 rounded-lg shadow-lg pt-14 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
+                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-800 rounded-lg shadow-lg pt-32 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
                 @mouseleave="switchDropdownOpen = false"
               >
                 <li
