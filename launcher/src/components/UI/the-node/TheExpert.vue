@@ -159,7 +159,7 @@
                 :disabled="option.disabled"
                 type="checkbox"
                 name="check-button"
-                @change="somethingIsChanged(option)"
+                @change="somethingIsChanged()"
               />
               <span class="slider round"></span>
             </label>
@@ -269,7 +269,6 @@ export default {
       editableData: null,
       changed: false,
       nothingsChanged: true,
-      i: 0,
     };
   },
   computed: {
@@ -294,10 +293,6 @@ export default {
     somethingIsChanged(item) {
       if (item && item.title) item.changed = true;
       this.nothingsChanged = false;
-      if ((item && item.title === "Doppelganger") || item.title === "Pruning") {
-        this.i++;
-        this.nothingsChanged = this.i % 2 === 0;
-      }
     },
 
     async readService() {
@@ -470,7 +465,6 @@ export default {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
-      this.i = 0;
     },
     async confirmRestartChanges(el) {
       this.confirmExpertChanges(el);

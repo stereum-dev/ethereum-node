@@ -3,7 +3,7 @@
     <div class="subTask-table">
       <div class="subTask-content">
         <div
-          v-for="(item, index) in taskShow"
+          v-for="(item, index) in modifiedSubTasks"
           :key="index"
           class="subTask-row"
           :class="{
@@ -55,25 +55,24 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
-import { useTaskManager } from "@/store/taskManager";
 import ErrorTerminal from "./ErrorTerminal.vue";
 export default {
   components: { ErrorTerminal },
-
+  props: {
+    subTasks: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       displayTaskResult: false,
+      modifiedSubTasks: this.subTasks,
       terminalModal: false,
     };
   },
-  computed: {
-    ...mapState(useTaskManager, {
-      taskShow: "taskShow",
-    }),
-  },
   created() {
-    this.taskShow = this.taskShow.map((item) => {
+    this.modifiedSubTasks = this.modifiedSubTasks.map((item) => {
       return {
         showErrorterminal: false,
         ...item,
@@ -100,19 +99,19 @@ export default {
         });
     },
     tooltipShowHandler(el) {
-      this.taskShow.filter((item) => {
+      this.modifiedSubTasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = true;
       });
     },
     tooltipHideHandler(el) {
-      this.taskShow.filter((item) => {
+      this.modifiedSubTasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = false;
       });
     },
     openTerminalHandler(el) {
-      this.taskShow.forEach(() => {
+      this.modifiedSubTasks.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
         }
@@ -120,7 +119,7 @@ export default {
           el.showErrorterminal = false;
         }
       });
-      this.taskShow.filter((item) => {
+      this.modifiedSubTasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showErrorterminal = true;
       });
