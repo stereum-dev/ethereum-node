@@ -35,7 +35,7 @@
               <span>{{ item.name }}</span>
               <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <SubTasks v-if="item.showDropDown" />
+            <sub-tasks v-if="item.showDropDown" :sub-tasks="item.subTasks"></sub-tasks>
           </div>
         </div>
       </div>
@@ -74,7 +74,6 @@ export default {
       playbookTasks: "playbookTasks",
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
-      taskShow: "taskShow",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -115,7 +114,6 @@ export default {
         //if DropDown is open only update what the user sees so the menue doesn't close
         this.displayingTasks[0].subTasks = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).subTasks;
         this.displayingTasks[0].status = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).status;
-        this.taskShow = this.displayingTasks[0].subTasks;
       }
     },
     taskModalHandler() {
