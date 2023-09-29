@@ -143,6 +143,7 @@ onMounted(() => {
       isResyncModalOpen: false,
       isModifyPanelOpen: false,
       isAddPanelOpen: false,
+      isConnected: false,
     };
   });
 });

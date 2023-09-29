@@ -9,115 +9,13 @@
     @confirm-action="confirmModify"
   >
     <template #content>
-      <div
-        v-if="client.category === 'consensus' && client.service !== 'SSVNetworkService'"
-        class="w-2/3 h-5 text-left pl-8 text-md font-semibold text-gray-500 mx-auto"
-      >
-        Execution Clients
-      </div>
-      <div
-        v-if="client.category === 'validator' && client.service !== 'SSVNetworkService'"
-        class="w-2/3 h-5 text-left pl-8 text-md font-semibold text-gray-500 mx-auto"
-      >
-        Consensus Clients
-      </div>
-      <div
-        v-if="client.service !== 'SSVNetworkService'"
-        class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
-      >
-        <div
-          v-for="option in options"
-          :key="option.service"
-          class="mx-auto w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
-          :class="{
-            'bg-green-200': option.isConnectedToConsensus,
-            'bg-green-200': option.isConnectedToValidator,
-            'bg-stone-200': !option.isConnectedToConsensus,
-            'bg-stone-200': !option.isConnectedToValidator,
-          }"
-          @click="selectService(option)"
-        >
-          <div class="flex justify-startitems-center">
-            <div class="p-1 flex justify-center items-center">
-              <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
-            </div>
-            <div class="flex flex-col justify-center items-start">
-              <div class="text-sm font-semibold text-teal-800 capitalize">
-                <span> {{ option.name }}</span>
-              </div>
-              <div class="text-xs text-gray-800 capitalize">
-                <span> {{ option.clientID }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        v-if="client.service === 'SSVNetworkService'"
-        class="w-2/3 h-5 flex justify-around items-center text-md font-semibold text-gray-500 mx-auto"
-      >
-        <span class="mr-2">Consensus Clients</span>
-        <span class="mr-2">Execution Clients</span>
-      </div>
-      <div
-        v-if="client.service === 'SSVNetworkService'"
-        class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
-      >
-        <div class="col-start-1 col-span-1 space-y-2 flex flex-col justify-center items-center">
-          <div
-            v-for="option in options.filter((e) => e.category === 'consensus')"
-            :key="option.config.serviceID"
-            class="mx-auto w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none border border-gray-500"
-            :class="{
-              'bg-green-200': option.isConnectedToSSVNetwork,
-              'bg-stone-200': !option.isConnectedToSSVNetwork,
-            }"
-            @click="selectService(option)"
-          >
-            <div class="flex justify-start items-center">
-              <div class="p-1 flex justify-center items-center">
-                <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
-              </div>
-              <div class="flex flex-col justify-center items-start">
-                <div class="text-sm font-semibold text-teal-800 capitalize">
-                  <span> {{ option.name }}</span>
-                </div>
-                <div class="text-xs text-gray-800 capitalize">
-                  <span> {{ option.clientID }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-start-2 col-span-1 space-y-2 flex flex-col justify-center items-center">
-          <div
-            v-for="option in options.filter((e) => e.category === 'execution')"
-            :key="option.config.serviceID"
-            class="justify-self-center w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
-            :class="{ 'bg-green-200': option.isConnectedToSSVNetwork, 'bg-stone-200': !option.isConnectedToSSVNetwork }"
-            @click="selectService(option)"
-          >
-            <div class="flex justify-start items-center">
-              <div class="p-1 flex justify-center items-center">
-                <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
-              </div>
-              <div class="flex flex-col justify-center items-start">
-                <div class="text-sm font-semibold text-teal-800 capitalize">
-                  <span> {{ option.name }}</span>
-                </div>
-                <div class="text-xs text-gray-800 capitalize">
-                  <span> {{ option.clientID }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ModifyContent :client="client" :list="options" @select-service="selectService" />
     </template>
   </custom-modal>
 </template>
 <script setup>
 import CustomModal from "./CustomModal.vue";
+import ModifyContent from "./ModifyContent.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 

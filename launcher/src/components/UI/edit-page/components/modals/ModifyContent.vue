@@ -1,0 +1,188 @@
+import { onMounted } from 'vue';
+<template>
+  <div>
+    <div
+      v-if="list.every((e) => e.category === 'consensus')"
+      class="w-2/3 h-5 text-left pl-8 text-md font-semibold text-gray-500 mx-auto grid grid-cols-2 grid-flow-row"
+    >
+      <span class="col-start-1 col-span-1">Consensus Clients</span>
+    </div>
+    <div
+      v-if="list.every((e) => e.category === 'consensus')"
+      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
+    >
+      <div
+        v-for="option in list"
+        :key="option.service"
+        class="group mx-auto w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
+        :class="option.isConnected ? 'bg-green-200' : 'bg-[#282a2c]'"
+        @click="selectService(option)"
+      >
+        <div class="flex justify-startitems-center">
+          <div class="p-1 flex justify-center items-center">
+            <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
+          </div>
+          <div class="flex flex-col justify-center items-start">
+            <div class="text-sm font-semibold text-teal-600 capitalize">
+              <span> {{ option.name }}</span>
+            </div>
+            <div class="text-xs text-gray-200 group-hover:text-gray-800 capitalize">
+              <span> {{ option.clientID }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="list.every((e) => e.category === 'execution')"
+      class="w-2/3 h-5 text-left pl-8 text-md font-semibold text-gray-500 mx-auto grid grid-cols-2 grid-flow-row"
+    >
+      <span class="col-start-1 col-span-1">Execution Clients</span>
+    </div>
+    <div
+      v-if="list.every((e) => e.category === 'execution')"
+      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
+    >
+      <div
+        v-for="option in list"
+        :key="option.service"
+        class="group mx-auto w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
+        :class="option.isConnected ? 'bg-green-200' : 'bg-[#282a2c]'"
+        @click="selectService(option)"
+      >
+        <div class="flex justify-startitems-center">
+          <div class="p-1 flex justify-center items-center">
+            <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
+          </div>
+          <div class="flex flex-col justify-center items-start">
+            <div class="text-sm font-semibold text-teal-600 capitalize">
+              <span> {{ option.name }}</span>
+            </div>
+            <div class="text-xs font-semibold text-gray-200 group-hover:text-gray-800 capitalize">
+              <span> {{ option.clientID }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="list.every((e) => e.category === 'validator')"
+      class="w-2/3 h-5 text-left pl-8 text-md font-semibold text-gray-500 mx-auto grid grid-cols-2 grid-flow-row"
+    >
+      <span class="col-start-1 col-span-1">Validator Clients</span>
+    </div>
+    <div
+      v-if="list.every((e) => e.category === 'validator')"
+      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
+    >
+      <div
+        v-for="option in list"
+        :key="option.service"
+        class="group mx-auto w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
+        :class="option.isConnected ? 'bg-green-200' : 'bg-[#282a2c]'"
+        @click="selectService(option)"
+      >
+        <div class="flex justify-startitems-center">
+          <div class="p-1 flex justify-center items-center">
+            <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
+          </div>
+          <div class="flex flex-col justify-center items-start">
+            <div class="text-sm font-semibold text-teal-600 capitalize">
+              <span> {{ option.name }}</span>
+            </div>
+            <div class="text-xs font-semibold text-gray-200 group-hover:text-gray-800 capitalize">
+              <span> {{ option.clientID }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="list.some((e) => e.category === 'execution' && e.category === 'consensus')"
+      class="w-2/3 h-5 text-left pl-8 text-md font-semibold text-gray-500 mx-auto grid grid-cols-2 grid-flow-row"
+    >
+      <span class="col-start-1 col-span-1">Execution Clients</span>
+      <span class="col-start-2 col-span-1">Consensus Clients</span>
+    </div>
+    <div
+      v-if="list.some((e) => e.category === 'execution') && list.some((e) => e.category === 'consensus')"
+      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
+    >
+      <div
+        v-for="option in list.filter((e) => e.category === 'execution')"
+        :key="option.service"
+        class="group col-start-1 col-span-1 mx-auto w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
+        :class="option.isConnected ? 'bg-green-200' : 'bg-[#282a2c]'"
+        @click="selectService(option)"
+      >
+        <div class="flex justify-startitems-center">
+          <div class="p-1 flex justify-center items-center">
+            <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
+          </div>
+          <div class="flex flex-col justify-center items-start">
+            <div class="text-sm font-semibold text-teal-600 capitalize">
+              <span> {{ option.name }}</span>
+            </div>
+            <div class="text-xs font-semibold text-gray-200 group-hover:text-gray-800 capitalize">
+              <span> {{ option.clientID }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        v-for="(option, idx) in list.filter((e) => e.category === 'consensus')"
+        :key="option.service"
+        class="group col-start-2 col-span-1 mx-auto w-[170px] h-[52px] rounded-md p-1 cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
+        :class="[option.isConnected ? 'bg-green-200' : 'bg-[#282a2c]', 'row-start-' + (idx + 1)]"
+        @click="selectService(option)"
+      >
+        <div class="flex justify-startitems-center">
+          <div class="p-1 flex justify-center items-center">
+            <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
+          </div>
+          <div class="flex flex-col justify-center items-start">
+            <div class="text-sm font-semibold text-teal-600 capitalize">
+              <span> {{ option.name }}</span>
+            </div>
+            <div class="text-xs font-semibold text-gray-200 group-hover:text-gray-800 capitalize">
+              <span> {{ option.clientID }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script setup>
+import { onMounted } from "vue";
+const { list, client } = defineProps({
+  list: {
+    type: Array,
+    default: null,
+  },
+  client: {
+    type: Object,
+    default: null,
+  },
+});
+onMounted(() => {
+  response();
+});
+
+const response = () => {
+  console.log("SOME", list.some((e) => e.category === "execution") && list.some((e) => e.category === "consensus"));
+  console.log(
+    "EVERY",
+    list.every((e) => e.category === "execution")
+  );
+  console.log(
+    "EVERY 2",
+    list.every((e) => e.category === "consensus")
+  );
+};
+const emit = defineEmits(["selectService"]);
+
+const selectService = (option) => {
+  emit("selectService", option);
+};
+</script>
