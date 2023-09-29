@@ -154,8 +154,7 @@ import { onMounted } from 'vue';
   </div>
 </template>
 <script setup>
-import { onMounted } from "vue";
-const { list, client } = defineProps({
+const { list } = defineProps({
   list: {
     type: Array,
     default: null,
@@ -165,21 +164,7 @@ const { list, client } = defineProps({
     default: null,
   },
 });
-onMounted(() => {
-  response();
-});
 
-const response = () => {
-  console.log("SOME", list.some((e) => e.category === "execution") && list.some((e) => e.category === "consensus"));
-  console.log(
-    "EVERY",
-    list.every((e) => e.category === "execution")
-  );
-  console.log(
-    "EVERY 2",
-    list.every((e) => e.category === "consensus")
-  );
-};
 const emit = defineEmits(["selectService"]);
 
 const selectService = (option) => {
