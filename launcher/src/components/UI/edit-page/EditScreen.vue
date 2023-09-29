@@ -3,7 +3,7 @@
     <!-- Start Node main layouts -->
     <div class="w-full h-full grid grid-cols-24 relative">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
-        <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="nukeNode" />
+        <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <EditBody
@@ -86,6 +86,15 @@
         @confirm-modify="confirmAddingService"
       />
       <!-- End Add New Service Modal -->
+      <!-- Start Nuke Modal -->
+      <NukeModal
+        v-if="isNukeModalOpen"
+        ref="nukeModalComponent"
+        @close-me="isNukeModalOpen = false"
+        @remove-items="nukeConfirmation"
+        @back-to-login="backToLogin"
+      />
+      <!-- End Nuke Modal -->
     </TransitionGroup>
   </base-layout>
 </template>
@@ -105,9 +114,14 @@ import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useNodeHeader } from "@/store/nodeHeader";
+import NukeModal from "./components/modals/NukeModal.vue";
+import { useStakingStore } from "@/store/theStaking";
 
 const serviceStore = useServices();
 const manageStore = useNodeManage();
+const headerStore = useNodeHeader();
+const stakingStore = useStakingStore();
 const router = useRouter();
 const isOverDropZone = ref(false);
 const clientToRemove = ref(null);
@@ -121,6 +135,8 @@ const isInfoModalOpen = ref(false);
 const isModifyModalOpen = ref(false);
 const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
+const isNukeModalOpen = ref(false);
+const nukeModalComponent = ref();
 
 onMounted(() => {
   manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
@@ -315,11 +331,8 @@ const switchNetworkConfirm = () => {
 
 // Nuke node method
 
-const nukeNode = async () => {
-  //missing nuke component implement later
-  await ControlService.destroy();
-  await ControlService.logout();
-  router.push("/");
+const openNukeNodeModal = async () => {
+  isNukeModalOpen.value = true;
 };
 
 const selectedServiceToRemove = (item) => {
@@ -353,6 +366,73 @@ const selectedServiceToRemove = (item) => {
 const openInfoModal = (item) => {
   clientForInfo.value = item;
   isInfoModalOpen.value = true;
+};
+
+const destroyNode = async () => {
+  let condition = true;
+  await ControlService.clearTasks();
+  ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
+  var uxtStart = Math.floor(Date.now() / 1000);
+  var secMax = 30; // wait max X seconds to finish destroy process
+  while (condition) {
+    var secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
+    if (secElapsed >= secMax) {
+      console.log("abort -> timeout -> secElapsed", secElapsed);
+      await ControlService.clearTasks();
+      break;
+    }
+    var tasks = await ControlService.getTasks();
+    var task = tasks.findLast((t) => t.name.includes("Delete Node"));
+    var subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
+    var status = task && task.hasOwnProperty("status") ? task.status : null;
+    // console.log("tasks => ", tasks);
+    // console.log("task => ", task);
+    // console.log("subtasks => ", subtasks);
+    // console.log("status => ", status);
+    var myresult = [];
+    myresult.push("nuke node executed (ok)");
+    if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
+      myresult.push("gathering facts (ok)");
+      for (var i = 0; i < subtasks.length; i++) {
+        var subtask = subtasks[i];
+        myresult.push(subtask.name + " (" + subtask.status + ")");
+      }
+    } else {
+      if (secElapsed >= 2) {
+        myresult.push("gathering facts (ok)");
+      }
+      // console.log("waiting for subtasks");
+    }
+    nukeModalComponent.value.nukeData = myresult;
+    // Intentionally as last check since last subtask could be retrieved at exact same frame
+    if (status != null) {
+      status = status === "success" ? "ok" : status;
+      myresult.push("node nuked (" + status + ")");
+      nukeModalComponent.value.nukeData = myresult;
+      await ControlService.clearTasks();
+      condition = false;
+      break;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100)); // sleep 100ms between attempts
+  }
+  headerStore.refresh = true;
+  stakingStore.forceRefresh = true;
+  stakingStore.keys = [];
+  serviceStore.versions = {};
+  headerStore.runningServices = [];
+  serviceStore.runningServices = [];
+  serviceStore.installedServices = [];
+  manageStore.newConfiguration = [];
+  nukeModalComponent.value.loginBtn = false;
+};
+
+const nukeConfirmation = () => {
+  headerStore.refresh = false;
+  destroyNode();
+};
+const backToLogin = async () => {
+  await ControlService.logout();
+  router.push("/");
 };
 </script>
 
