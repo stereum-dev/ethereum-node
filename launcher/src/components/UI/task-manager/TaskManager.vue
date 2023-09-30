@@ -35,7 +35,7 @@
               <span>{{ item.name }}</span>
               <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <sub-tasks v-if="item.showDropDown" :sub-tasks="item.subTasks"></sub-tasks>
+            <sub-tasks v-if="item.showDropDown"></sub-tasks>
           </div>
         </div>
       </div>
@@ -57,6 +57,8 @@ export default {
   components: { SubTasks, DropTasks },
   data() {
     return {
+      // test: [],
+      intervalId: null,
       isTaskModalActive: false,
       showDropDownList: false,
       isTaskFailed: false,
@@ -74,6 +76,7 @@ export default {
       playbookTasks: "playbookTasks",
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
+      test: "test",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -89,6 +92,19 @@ export default {
         return this.taskManagerIcons.successIcon;
       }
       return this.taskManagerIcons.progressIcon;
+    },
+  },
+  watch: {
+    showDropDownList(newValue) {
+      if (newValue == true) {
+        this.intervalId = setInterval(() => {
+          this.getTasks();
+          this.test = this.displayingTasks[0].subTasks;
+          console.log("testttt", this.test);
+        }, 1000);
+      } else {
+        clearInterval(this.intervalId);
+      }
     },
   },
 

@@ -3,7 +3,7 @@
     <div class="subTask-table">
       <div class="subTask-content">
         <div
-          v-for="(item, index) in modifiedSubTasks"
+          v-for="(item, index) in test"
           :key="index"
           class="subTask-row"
           :class="{
@@ -55,6 +55,8 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useTaskManager } from "@/store/taskManager";
 import ErrorTerminal from "./ErrorTerminal.vue";
 export default {
   components: { ErrorTerminal },
@@ -67,12 +69,17 @@ export default {
   data() {
     return {
       displayTaskResult: false,
-      modifiedSubTasks: this.subTasks,
+      // modifiedSubTasks: this.subTasks,
       terminalModal: false,
     };
   },
+  computed: {
+    ...mapWritableState(useTaskManager, {
+      test: "test",
+    }),
+  },
   created() {
-    this.modifiedSubTasks = this.modifiedSubTasks.map((item) => {
+    this.test = this.test.map((item) => {
       return {
         showErrorterminal: false,
         ...item,
@@ -82,7 +89,6 @@ export default {
   mounted() {
     const el = this.$refs.task;
     if (el) {
-      //scroll to bottom when opening subtasks
       el.scrollIntoView({ behavior: "smooth" });
     }
   },
@@ -99,19 +105,19 @@ export default {
         });
     },
     tooltipShowHandler(el) {
-      this.modifiedSubTasks.filter((item) => {
+      this.test.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = true;
       });
     },
     tooltipHideHandler(el) {
-      this.modifiedSubTasks.filter((item) => {
+      this.test.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = false;
       });
     },
     openTerminalHandler(el) {
-      this.modifiedSubTasks.forEach(() => {
+      this.test.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
         }
@@ -119,7 +125,7 @@ export default {
           el.showErrorterminal = false;
         }
       });
-      this.modifiedSubTasks.filter((item) => {
+      this.test.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showErrorterminal = true;
       });
