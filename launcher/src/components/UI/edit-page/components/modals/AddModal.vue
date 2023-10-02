@@ -1,7 +1,9 @@
 <template>
   <custom-modal
-    main-title="Service Informations"
-    confirm-text="OK"
+    :main-title="`${client.name} - ${client.category}`"
+    :icon="client.sIcon"
+    sub-title="Add Service"
+    confirm-text="INSTALL"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmAdd"

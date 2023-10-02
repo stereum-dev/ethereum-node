@@ -288,20 +288,19 @@ const removeChangeHandler = (item) => {
 
 const addServices = (item) => {
   let element = JSON.parse(JSON.stringify(item));
-  if (element.category !== "service") {
-    // Change item.id to a unique id
-    element.id = manageStore.newConfiguration.length + 1;
-    clientToInstall.value = element;
-    isAddModalOpen.value = true;
-    manageStore.newConfiguration.push(element);
 
-    manageStore.confirmChanges.push({
-      id: element.id,
-      content: "INSTALL",
-      contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
-      service: element,
-    });
-  }
+  // Change item.id to a unique id
+  element.id = manageStore.newConfiguration.length + 1;
+  clientToInstall.value = element;
+  isAddModalOpen.value = true;
+  manageStore.newConfiguration.push(element);
+
+  manageStore.confirmChanges.push({
+    id: element.id,
+    content: "INSTALL",
+    contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
+    service: element,
+  });
 };
 
 // Add service with drag and drop
