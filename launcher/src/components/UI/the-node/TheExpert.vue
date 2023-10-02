@@ -320,12 +320,10 @@ export default {
         if (option.type === "select" || option.type === "text" || option.type === "toggle") {
           if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
             option.changeValue = this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
-          } else if (option.title === "External IP Address") {
+          } else {
             option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
               ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
               : "";
-          } else {
-            option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern[0]))][2];
           }
         }
         return {
@@ -343,10 +341,16 @@ export default {
 
       const ipReg = /^(\d{1,3}\.){3}\d{1,3}$/;
       this.item.expertOptions.forEach((option) => {
+        let validValue = false;
+        if (option.type === "select" && option.value.length > 0) {
+          for (const el of option.value) {
+            validValue = el === option.changeValue ? true : validValue;
+          }
+        }
         if (
           option.changeValue != undefined &&
           option.changeValue != null &&
-          (!isNaN(option.changeValue) || option.changeValue.match(ipReg))
+          (!isNaN(option.changeValue) || option.changeValue.match(ipReg) || validValue)
         ) {
           if (option.changed) {
             for (let i = 0; i < option.pattern.length; i++) {
@@ -356,16 +360,51 @@ export default {
                     ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
                     : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
               } else if (option.title === "External IP Address") {
+                let reg = "";
+                let replacement = "";
+                const extIPCmd = [
+                  {
+                    name: "Lighthouse",
+                    reg: "  - bn\n",
+                    replacement: `  - bn\n  - --enr-address=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Lodestar",
+                    reg: "  - beacon\n",
+                    replacement: `  - beacon\n  - --enr.ip=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Nimbus",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --nat:extip:${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Prysm",
+                    reg: "--accept-terms-of-use=true",
+                    replacement: `--accept-terms-of-use=true --p2p-host-ip=${option.changeValue}`,
+                  },
+                  {
+                    name: "Teku",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --p2p-advertised-ip=${option.changeValue}\n`,
+                  },
+                ];
+                for (const el of extIPCmd) {
+                  if (el.name === this.item.name) {
+                    reg = el.reg;
+                    replacement = el.replacement;
+                  }
+                }
                 this.item.yaml =
                   option.changeValue === "" && this.item.yaml.match(new RegExp(option.pattern[i]))
                     ? this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "")
                     : option.changeValue !== "" && this.item.yaml.match(new RegExp(option.pattern[i]))
                     ? this.item.yaml.replace(new RegExp(option.pattern[i]), "$1" + option.changeValue + "$3")
                     : option.changeValue !== "" && !this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace("  - bn\n", `  - bn\n  - --enr-address=${option.changeValue}\n`)
+                    ? this.item.yaml.replace(new RegExp(reg), replacement)
                     : this.item.yaml;
-              } else if (option.title === "External TCP/UDP port" && (i === 3 || i === 4)) {
-                let tcp_udp = i === 3 ? "/tcp" : "/udp";
+              } else if (option.title === "External TCP/UDP port" && (i === 2 || i === 3)) {
+                let tcp_udp = i === 2 ? "/tcp" : "/udp";
                 this.item.yaml = this.item.yaml.replace(
                   new RegExp(option.pattern[i], "m"),
                   "$1" + ":" + option.changeValue + ":" + option.changeValue + tcp_udp

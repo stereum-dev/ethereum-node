@@ -13,9 +13,7 @@ export class NimbusBeaconService extends NodeService {
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/beacon";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/beacon", dataDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir)];
 
     const executionLayer = executionClients
       .map((client) => {
@@ -42,8 +40,6 @@ export class NimbusBeaconService extends NodeService {
         `--network=${network}`,
         `--data-dir=${dataDir}`,
         `--web3-url=${executionLayer}`,
-        "--tcp-port=9000",
-        "--udp-port=9000",
         "--metrics",
         "--metrics-port=8008",
         "--metrics-address=0.0.0.0",
@@ -52,6 +48,9 @@ export class NimbusBeaconService extends NodeService {
         "--rest-port=5052",
         "--jwt-secret=/engine.jwt",
         "--history=prune",
+        "--tcp-port=9000",
+        "--udp-port=9000",
+        "--enr-auto-update=false",
       ], // command,
       ["/home/user/nimbus_beacon_node"], // entrypoint,
       null, // env,
