@@ -319,9 +319,13 @@ export default {
         }
         if (option.type === "select" || option.type === "text" || option.type === "toggle") {
           if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
-            option.changeValue = this.item.yaml.indexOf(option.pattern) === -1 ? false : true;
+            option.changeValue = this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
+          } else if (option.title === "External IP Address") {
+            option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
+              ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
+              : "";
           } else {
-            option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
+            option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern[0]))][2];
           }
         }
         return {
@@ -337,39 +341,46 @@ export default {
         "$1" + this.checkAutoUpdate() + "$3"
       );
 
-      if (this.item.service === "LighthouseValidatorService") {
-        this.item.expertOptions.forEach((option) => {
-          if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
-            if (option.changed) {
-              if (option.title === "Doppelganger") {
-                let doppelgangerEnabled = this.item.yaml.indexOf(option.pattern) === -1 ? false : true;
-                if (option.changeValue && !doppelgangerEnabled) {
-                  this.item.yaml = this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern}\n`);
-                } else {
-                  this.item.yaml = this.item.yaml
-                    .split("\n")
-                    .filter(function (line) {
-                      return line.indexOf(option.pattern) == -1;
-                    })
-                    .join("\n");
-                }
+      const ipReg = /^(\d{1,3}\.){3}\d{1,3}$/;
+      this.item.expertOptions.forEach((option) => {
+        if (
+          option.changeValue != undefined &&
+          option.changeValue != null &&
+          (!isNaN(option.changeValue) || option.changeValue.match(ipReg))
+        ) {
+          if (option.changed) {
+            for (let i = 0; i < option.pattern.length; i++) {
+              if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+                this.item.yaml =
+                  option.changeValue && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
+                    : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
+              } else if (option.title === "External IP Address") {
+                this.item.yaml =
+                  option.changeValue === "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "")
+                    : option.changeValue !== "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "$1" + option.changeValue + "$3")
+                    : option.changeValue !== "" && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace("  - bn\n", `  - bn\n  - --enr-address=${option.changeValue}\n`)
+                    : this.item.yaml;
+              } else if (option.title === "External TCP/UDP port" && (i === 3 || i === 4)) {
+                let tcp_udp = i === 3 ? "/tcp" : "/udp";
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i], "m"),
+                  "$1" + ":" + option.changeValue + ":" + option.changeValue + tcp_udp
+                );
               } else {
-                this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i]),
+                  "$1" + option.changeValue + "$3"
+                );
               }
             }
-            option.changed = false;
           }
-        });
-      } else {
-        this.item.expertOptions.forEach((option) => {
-          if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
-            if (option.changed) {
-              this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
-            }
-            option.changed = false;
-          }
-        });
-      }
+          option.changed = false;
+        }
+      });
 
       if (this.item.service === "SSVNetworkService")
         await ControlService.writeSSVNetworkConfig({
