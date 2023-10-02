@@ -3,10 +3,10 @@
     <EditHeader />
     <div
       class="w-full h-full max-h-[430px] rounded-md border overflow-hidden mt-1 bg-[#151618] relative"
-      :class="isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-500'"
+      :class="isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-600'"
     >
       <div
-        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
+        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold z-20"
       >
         <span class="col-start-1 justify-self-center self-center">Validator </span>
         <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>
@@ -14,10 +14,10 @@
       </div>
       <div
         ref="dropZoneRef"
-        class="w-full h-full max-h-[428px] grid grid-cols-3 pt-5"
+        class="w-full h-full max-h-[428px] grid grid-cols-3 pt-5 z-10"
         :class="{
           'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto':
-            scrollBox,
+            activateScrollBar,
         }"
         @drop="onDrop($event)"
         @dragover.prevent="isOverDropZone = true"
@@ -60,8 +60,8 @@ import EditHeader from "./EditHeader.vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
-import { computed, ref, watchEffect } from "vue";
-import { useServices } from "@/store/services";
+import { computed, ref } from "vue";
+import { useNodeManage } from "@/store/nodeManage";
 
 const emit = defineEmits([
   "onDrop",
@@ -74,12 +74,10 @@ const emit = defineEmits([
 ]);
 
 //Pinia stores
-
-const serviceStore = useServices();
+const manageStore = useNodeManage();
 
 // refs
 const isOverDropZone = ref(false);
-const scrollBox = ref(false);
 
 // computed & watchers properties
 // eslint-disable-next-line no-unused-vars
@@ -93,17 +91,14 @@ const displayDropZone = computed(() => {
   return dropClass;
 });
 
-watchEffect(serviceStore.installedServices, () => {
-  const validators = serviceStore.installedServices.filter((service) => service.category === "validator");
-
-  const consensus = serviceStore.installedServices.filter((service) => service.category === "consensus");
-
-  const execution = serviceStore.installedServices.filter((service) => service.category === "execution");
-
+const activateScrollBar = computed(() => {
+  const validators = manageStore.newConfiguration.filter((service) => service.category === "validator");
+  const consensus = manageStore.newConfiguration.filter((service) => service.category === "consensus");
+  const execution = manageStore.newConfiguration.filter((service) => service.category === "execution");
   if (validators.length > 3 || consensus.length > 3 || execution.length > 3) {
-    scrollBox.value = true;
+    return true;
   } else {
-    scrollBox.value = false;
+    return false;
   }
 });
 
