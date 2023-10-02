@@ -3,7 +3,7 @@
     <div class="subTask-table">
       <div class="subTask-content">
         <div
-          v-for="(item, index) in test"
+          v-for="(item, index) in UpdatedSubtasks"
           :key="index"
           class="subTask-row"
           :class="{
@@ -75,11 +75,11 @@ export default {
   },
   computed: {
     ...mapWritableState(useTaskManager, {
-      test: "test",
+      UpdatedSubtasks: "UpdatedSubtasks",
     }),
   },
   created() {
-    this.test = this.test.map((item) => {
+    this.UpdatedSubtasks = this.UpdatedSubtasks.map((item) => {
       return {
         showErrorterminal: false,
         ...item,
@@ -105,19 +105,19 @@ export default {
         });
     },
     tooltipShowHandler(el) {
-      this.test.filter((item) => {
+      this.UpdatedSubtasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = true;
       });
     },
     tooltipHideHandler(el) {
-      this.test.filter((item) => {
+      this.UpdatedSubtasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = false;
       });
     },
     openTerminalHandler(el) {
-      this.test.forEach(() => {
+      this.UpdatedSubtasks.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
         }
@@ -125,7 +125,7 @@ export default {
           el.showErrorterminal = false;
         }
       });
-      this.test.filter((item) => {
+      this.UpdatedSubtasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showErrorterminal = true;
       });
