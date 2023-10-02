@@ -35,15 +35,14 @@
 import { useNodeManage } from "@/store/nodeManage";
 import { computed } from "vue";
 
+const emit = defineEmits(["remove-change"]);
+
 const manageStore = useNodeManage();
 
 const getChanges = computed(() => manageStore.confirmChanges);
 
 const removeChange = (item) => {
-  item.service.isRemoveProcessing = false;
-  const event = manageStore.confirmChanges.find((e) => e.id === item.id);
-  const eventIdx = manageStore.confirmChanges.indexOf(event);
-  manageStore.confirmChanges.splice(eventIdx, 1);
+  emit("remove-change", item);
 };
 
 const contentBgColor = (item) => {
