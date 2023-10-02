@@ -42,14 +42,14 @@
                 class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md"
               >
                 <div v-if="selectedIcon !== ''" class="w-1/6" @click="toglDropDown">
-                  <img class="w-5 ml-2" :src="selectedIcon" :alt="selectedItem" />
+                  <img class="w-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
                 </div>
                 <div v-if="selectedIcon !== ''" class="w-4/6 text-md text-gray-300 font-semibold" @click="toglDropDown">
                   {{ selectedItem }}
                 </div>
                 <div v-else class="w-4/6 text-gray-500 text-sm" @click="toglDropDown">{{ selectedItem }}</div>
                 <div class="w-1/6" @click="openWindow">
-                  <img class="w-5" src="/img/icon/service-icons/internet.png" alt="Internet" />
+                  <img class="w-6" src="/img/icon/service-icons/internet.png" alt="Internet" />
                 </div>
               </div>
             </div>
@@ -65,7 +65,7 @@
     <Transition name="slide">
       <ul
         v-show="dropdown"
-        class="w-64 transition-all max-h-[100px] duration-400 ease-in-out absolute right-1 bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-40 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
+        class="w-60 transition-all max-h-[100px] duration-400 ease-in-out absolute right-[112px] -bottom-24 bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-40 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
         @mouseleave="dropdown = false"
       >
         <li
