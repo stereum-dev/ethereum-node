@@ -13,10 +13,13 @@
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Current Client</span>
           <div
-            class="flex justify-center items-center w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md py-1 px-2 font-semibold text-lg"
+            class="flex justify-center items-center w-full bg-[#131617] shadow-sm shadow-[#0e0f0f] rounded-md py-1 px-2 font-semibold text-lg"
           >
-            <img class="w-6 h-6 mr-2" :src="client.sIcon" alt="Client Icon" />
-            <span class="text-gray-200">{{ client.name }}</span>
+            <img class="w-12 mr-2" :src="client.sIcon" alt="Client Icon" />
+            <div class="w-full flex flex-col justify-evenly items-start text-left font-normal capitalize">
+              <p class="text-gray-200">{{ client.name }}</p>
+              <p class="text-gray-400">{{ client.category }}</p>
+            </div>
           </div>
         </div>
         <div class="w-full flex flex-col justify-between items-center space-y-1">
@@ -51,13 +54,13 @@
             <Transition name="slide">
               <ul
                 v-show="switchDropdownOpen"
-                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-800 rounded-lg shadow-lg pt-32 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
+                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-800 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
                 @mouseleave="switchDropdownOpen = false"
               >
                 <li
                   v-for="service in getServices"
                   :key="service.name"
-                  class="w-full h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+                  class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
                   @click="switchService(service)"
                 >
                   <img

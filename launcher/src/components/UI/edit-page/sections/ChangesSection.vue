@@ -9,7 +9,7 @@
         {{ $t("changeConfirm.confirm") }}
       </button>
     </div>
-    <ChangesBox />
+    <ChangesBox @remove-change="removeChange" />
   </div>
 </template>
 
@@ -20,6 +20,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 import ChangesBox from "../components/changes/ChangesBox";
 
+const emit = defineEmits(["remove-change"]);
 const disableBtn = ref(false);
 
 const editStore = useNodeManage();
@@ -34,5 +35,9 @@ const confirmHandler = async () => {
 
   editStore.confirmChanges = [];
   disableBtn.value = false;
+};
+
+const removeChange = (item) => {
+  emit("remove-change", item);
 };
 </script>
