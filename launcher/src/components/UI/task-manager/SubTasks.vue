@@ -87,12 +87,18 @@ export default {
     });
   },
   mounted() {
-    const el = this.$refs.task;
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    this.scrollToTask();
   },
   methods: {
+    scrollToTask() {
+      const el = this.$refs.task;
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    },
+
     copyErrorText(item) {
       let errorToCopy = item.data;
       navigator.clipboard
@@ -149,6 +155,7 @@ export default {
 .subTask-table {
   width: 100%;
   height: max-content;
+  overflow: auto;
 }
 
 .subTask-content {
