@@ -529,7 +529,7 @@
     "sync": "SYNC",
     "gen": "GENESIS",
     "chkPoint": "CHECKPOINT",
-    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "genActiv": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
     "cancel": "ЦУЦЛАХ",
     "confirm": "БАТЛАХ"
   },
@@ -667,7 +667,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
+    "clockClose": "Хаахын тулд гадна талд товшино уу",
     "noIpFound": "No IP found",
     "clickSearch": "Click [search] to start"
   }
