@@ -7,13 +7,13 @@
     @confirm-action="confirmAdd"
   >
     <template #content>
-<!-- Add New Service Content -->
+      <AddContent :client="client" />
     </template>
   </custom-modal>
 </template>
 <script setup>
 import CustomModal from "./CustomModal.vue";
-import { computed } from "vue";
+import AddContent from "./AddContent.vue";
 
 const { client } = defineProps({
   client: {
@@ -24,8 +24,6 @@ const { client } = defineProps({
 
 const emit = defineEmits(["closeWindow", "confirmAdd"]);
 
-
-
 //Methods
 
 const confirmAdd = () => {
@@ -33,7 +31,7 @@ const confirmAdd = () => {
 };
 
 const closeWindow = () => {
-  emit("closeWindow");
+  emit("closeWindow", client);
 };
 </script>
 

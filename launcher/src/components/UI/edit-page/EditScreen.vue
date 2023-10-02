@@ -21,7 +21,7 @@
         <ServiceSection @change-connection="serviceModifyHandler" @delete-service="selectedServiceToRemove" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <ChangesSection />
+        <ChangesSection @remove-change="removeChangeHandler" />
       </div>
     </div>
     <!-- End Node main layout -->
@@ -81,9 +81,9 @@
       <!-- Start Add New Service Modal -->
       <AddModal
         v-if="isAddModalOpen"
-        :client="clientToAdd"
-        @close-window="isAddModalOpen = false"
-        @confirm-modify="confirmAddingService"
+        :client="clientToInstall"
+        @close-window="cancelInstallation"
+        @confirm-add="confirmAddingService"
       />
       <!-- End Add New Service Modal -->
       <!-- Start Nuke Modal -->
@@ -128,7 +128,7 @@ const clientToRemove = ref(null);
 const clientToSwitch = ref(null);
 const clientForInfo = ref(null);
 const clientToModify = ref(null);
-const clientToAdd = ref(null);
+const clientToInstall = ref(null);
 const isConfirmLoading = ref(false);
 const isSwitchModalOpen = ref(false);
 const isInfoModalOpen = ref(false);
@@ -267,6 +267,23 @@ const openDrawer = () => {
   manageStore.isDrawerOpen = true;
 };
 
+//Change Box methods
+
+const removeChangeHandler = (item) => {
+  if (item.content === "INSTALL") {
+    item.service.isRemoveProcessing = false;
+    const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
+    const eventIdx = manageStore.newConfiguration.indexOf(event);
+    manageStore.newConfiguration.splice(eventIdx, 1);
+  }
+  item.service.isRemoveProcessing = false;
+  const event = manageStore.confirmChanges.find((e) => e.id === item.id);
+  const eventIdx = manageStore.confirmChanges.indexOf(event);
+  manageStore.confirmChanges.splice(eventIdx, 1);
+  item.service.addPanel = true;
+};
+/*******Add service with drag and drop methods *********/
+
 // Add service with double click
 
 const addServices = (item) => {
@@ -274,7 +291,10 @@ const addServices = (item) => {
   if (element.category !== "service") {
     // Change item.id to a unique id
     element.id = manageStore.newConfiguration.length + 1;
+    clientToInstall.value = element;
+    isAddModalOpen.value = true;
     manageStore.newConfiguration.push(element);
+
     manageStore.confirmChanges.push({
       id: element.id,
       content: "INSTALL",
@@ -284,7 +304,8 @@ const addServices = (item) => {
   }
 };
 
-// Drag and Drop methods
+// Add service with drag and drop
+
 const startDrag = (event, item) => {
   if (event.type === "dragstart") {
     event.dataTransfer.dropEffect = "move";
@@ -299,8 +320,9 @@ const onDrop = (event) => {
   const copyAllServices = structuredClone(serviceStore.allServices);
   const allServices = JSON.parse(JSON.stringify(copyAllServices));
   const item = allServices.find((item) => item.id == itemID);
-
   item.id = manageStore.newConfiguration.length + 1;
+  clientToInstall.value = item;
+  isAddModalOpen.value = true;
   manageStore.newConfiguration.push(item);
 
   manageStore.confirmChanges.push({
@@ -309,6 +331,15 @@ const onDrop = (event) => {
     contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
     service: item,
   });
+};
+
+// Cancel Adding service
+
+const cancelInstallation = (item) => {
+  isAddModalOpen.value = false;
+  console.log("item", item);
+  const element = manageStore.confirmChanges.find((e) => e.service.id === item.id);
+  removeChangeHandler(element);
 };
 
 // Network switch methods
