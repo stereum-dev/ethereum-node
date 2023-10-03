@@ -109,13 +109,13 @@ import SwitchModal from "./components/modals/SwitchModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
 import AddModal from "./components/modals/AddModal.vue";
+import NukeModal from "./components/modals/NukeModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
-import NukeModal from "./components/modals/NukeModal.vue";
 import { useStakingStore } from "@/store/theStaking";
 
 const serviceStore = useServices();

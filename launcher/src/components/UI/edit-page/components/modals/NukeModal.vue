@@ -121,8 +121,8 @@ export default {
   text-transform: uppercase;
 }
 .state {
-  width: 5%;
-  height: 100%;
+  width: 25px;
+  height: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -156,14 +156,14 @@ export default {
   z-index: 311;
 }
 .remove-modal-content {
-  width: 55%;
-  height: 60%;
-  border-radius: 75px;
+  width: 60%;
+  height: 70%;
+  border-radius: 55px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 10%;
-  left: 17%;
-  background-color: #33393e;
+  top: 4%;
+  left: 15%;
+  background-color: #1c1d1d;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -172,13 +172,13 @@ export default {
   z-index: 502;
 }
 .remove-modal-accepted {
-  width: 55%;
-  height: 60%;
-  border-radius: 75px;
+  width: 60%;
+  height: 70%;
+  border-radius: 55px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 10%;
-  left: 17%;
+  top: 4%;
+  left: 15%;
   position: relative;
   background: repeating-linear-gradient(45deg, #fcd100, #fcd100 2%, #181b1d 2%, #181b1d 4%);
   display: flex;
@@ -194,7 +194,7 @@ export default {
 
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: 75px;
+  border-radius: 55px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -253,6 +253,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
+  user-select: none;
 }
 .spinner img {
   width: 28%;
@@ -306,7 +307,7 @@ export default {
   align-items: center;
 }
 .yes-box {
-  width: 30%;
+  width: 35%;
   height: 35px;
   border-radius: 10px;
   box-shadow: 0 1px 10px 1px rgb(16, 16, 16);
@@ -326,13 +327,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80%;
   border-radius: 10px;
+  padding: 5px 10px;
 }
 
 .yes-box:hover {
   transform: scale(1.05);
-  transition: all 100ms;
+  transition: all 200ms ease-in-out;
   color: #d6d6d6;
 }
 
