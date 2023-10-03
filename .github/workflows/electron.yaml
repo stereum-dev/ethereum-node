@@ -149,7 +149,7 @@ jobs:
       - name: Download macos binary from build into dist
         uses: actions/download-artifact@master
         with:
-          name: app-darwin-latest
+          name: app-macos-latest
           path: dist
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
 
