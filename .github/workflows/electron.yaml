@@ -72,9 +72,9 @@ jobs:
 
       - name: Signing using Signtool on windows-latest
         run: |
-          dir D:\a\ethereum-node-digicert\ethereum-node-digicert\launcher\dist\win32\
-          signtool.exe sign /debug /tr http://timestamp.digicert.com /td SHA256 /fd  SHA256 /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} "D:\a\ethereum-node-digicert\ethereum-node-digicert\launcher\dist\win32\Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe"          
-          signtool.exe verify /v /pa "D:\a\ethereum-node-digicert\ethereum-node-digicert\launcher\dist\win32\Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe"
+          dir D:\a\ethereum-node\ethereum-node\launcher\dist\win32\
+          signtool.exe sign /debug /tr http://timestamp.digicert.com /td SHA256 /fd  SHA256 /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} "D:\a\ethereum-node\ethereum-node\launcher\dist\win32\Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe"          
+          signtool.exe verify /v /pa "D:\a\ethereum-node\ethereum-node\launcher\dist\win32\Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe"
         shell: cmd
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
       - name: Signtool logs on windows-latest
