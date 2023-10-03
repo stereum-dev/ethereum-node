@@ -9,7 +9,7 @@ import { onMounted } from 'vue';
     </div>
     <div
       v-if="list.every((e) => e.category === 'consensus')"
-      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
+      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2 mt-4"
     >
       <div
         v-for="option in list"
@@ -17,7 +17,7 @@ import { onMounted } from 'vue';
         class="group mx-auto w-[170px] h-[45px] rounded-md cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
         :class="{
           'bg-teal-600 hover:bg-teal-600 text-gray-200': option.isConnected || option.isConnectedToMevBoost,
-          'bg-[#282a2c]': !option.isConnected,
+          'bg-[#282a2c] text-teal-600 border border-gray-700': !option.isConnected,
           'border-2 border-blue-500': option.isSelected,
         }"
         @click="selectService(option)"
@@ -31,7 +31,7 @@ import { onMounted } from 'vue';
               <span> {{ option.name }}</span>
             </div>
             <div
-              class="text-xs group-hover:text-gray-800 capitalize"
+              class="text-xs font-normal group-hover:text-gray-800"
               :class="option.isConnected || option.isConnectedToMevBoost ? 'text-gray-800' : 'text-gray-200'"
             >
               <span> {{ option.clientID }}</span>
@@ -48,7 +48,7 @@ import { onMounted } from 'vue';
     </div>
     <div
       v-if="list.every((e) => e.category === 'execution')"
-      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
+      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2 mt-4"
     >
       <div
         v-for="option in list"
@@ -56,7 +56,7 @@ import { onMounted } from 'vue';
         class="group mx-auto w-[170px] h-[45px] rounded-md cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
         :class="{
           'bg-teal-600 hover:bg-teal-600 text-gray-200': option.isConnected,
-          'bg-[#282a2c] text-teal-600': !option.isConnected,
+          'bg-[#282a2c] text-teal-600 border border-gray-700': !option.isConnected,
           'border-2 border-blue-500': option.isSelected,
         }"
         @click="selectService(option)"
@@ -70,7 +70,7 @@ import { onMounted } from 'vue';
               <span> {{ option.name }}</span>
             </div>
             <div
-              class="text-xs font-semibold group-hover:text-gray-800 capitalize"
+              class="text-xs group-hover:text-gray-800 font-normal"
               :class="option.isConnected ? 'text-gray-800' : 'text-gray-200'"
             >
               <span> {{ option.clientID }}</span>
@@ -95,7 +95,7 @@ import { onMounted } from 'vue';
         class="group mx-auto w-[170px] h-[45px] rounded-md cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
         :class="{
           'bg-teal-600 hover:bg-teal-600 text-gray-200': option.isConnected,
-          'bg-[#282a2c] text-teal-600': !option.isConnected,
+          'bg-[#282a2c] text-teal-600 border border-gray-700': !option.isConnected,
           'border-2 border-blue-500': option.isSelected,
         }"
         @click="selectService(option)"
@@ -109,7 +109,7 @@ import { onMounted } from 'vue';
               <span> {{ option.name }}</span>
             </div>
             <div
-              class="text-xs font-semibold text-gray-200 group-hover:text-gray-800 capitalize"
+              class="text-xs group-hover:text-gray-800"
               :class="option.isConnected ? 'text-gray-800' : 'text-gray-200'"
             >
               <span> {{ option.clientID }}</span>
@@ -127,14 +127,16 @@ import { onMounted } from 'vue';
     </div>
     <div
       v-if="list.some((e) => e.category === 'execution') && list.some((e) => e.category === 'consensus')"
-      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2"
+      class="container w-2/3 grid grid-cols-2 grid-flow-row p-2 mx-auto rounded-lg gap-2 mt-4"
     >
       <div
         v-for="(option, idx) in list.filter((e) => e.category === 'execution')"
         :key="option.service"
         class="group col-start-1 col-span-1 mx-auto w-[170px] h-[45px] rounded-md cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
         :class="[
-          option.isConnectedToSSVNetwork ? 'bg-teal-600 hover:bg-teal-600 text-gray-200' : 'bg-[#282a2c] text-teal-600',
+          option.isConnectedToSSVNetwork
+            ? 'bg-teal-600 hover:bg-teal-600 text-gray-200'
+            : 'bg-[#282a2c] text-teal-600 border border-gray-700',
           'row-start-' + (idx + 1),
           option.isSelected ? 'border-2 border-blue-500' : '',
         ]"
@@ -149,7 +151,7 @@ import { onMounted } from 'vue';
               <span> {{ option.name }}</span>
             </div>
             <div
-              class="text-xs font-semibold group-hover:text-gray-800 capitalize"
+              class="text-xs group-hover:text-gray-800"
               :class="option.isConnectedToSSVNetwork ? 'text-gray-800' : 'text-gray-200'"
             >
               <span> {{ option.clientID }}</span>
@@ -162,7 +164,9 @@ import { onMounted } from 'vue';
         :key="option.service"
         class="group col-start-2 col-span-1 mx-auto w-[170px] h-[45px] rounded-md cursor-pointer hover:bg-blue-300 m-0 active:scale-95 transition duration-200 shadow-xl shadow-[#141516] active:shadow-none"
         :class="[
-          option.isConnectedToSSVNetwork ? 'bg-teal-600 hover:bg-teal-600 text-gray-200' : 'bg-[#282a2c] text-teal-600',
+          option.isConnectedToSSVNetwork
+            ? 'bg-teal-600 hover:bg-teal-600 text-gray-200'
+            : 'bg-[#282a2c] text-teal-600 border border-gray-700',
           'row-start-' + (idx + 1),
           option.isSelected ? 'border-2 border-blue-500' : '',
         ]"
@@ -177,7 +181,7 @@ import { onMounted } from 'vue';
               <span> {{ option.name }}</span>
             </div>
             <div
-              class="text-xs font-semibold capitalize"
+              class="text-xs"
               :class="option.isConnectedToSSVNetwork ? 'text-gray-800' : 'text-gray-200 group-hover:text-gray-800'"
             >
               <span> {{ option.clientID }}</span>

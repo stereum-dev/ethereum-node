@@ -1080,6 +1080,10 @@ video {
   margin-top: 2rem;
 }
 
+.mt-10{
+  margin-top: 2.5rem;
+}
+
 .box-border{
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -1273,6 +1277,10 @@ video {
   max-height: 78px;
 }
 
+.max-h-\[150px\]{
+  max-height: 150px;
+}
+
 .min-h-\[37px\]{
   min-height: 37px;
 }
@@ -1291,6 +1299,10 @@ video {
 
 .min-h-\[30px\]{
   min-height: 30px;
+}
+
+.min-h-\[450px\]{
+  min-height: 450px;
 }
 
 .w-1\/3{

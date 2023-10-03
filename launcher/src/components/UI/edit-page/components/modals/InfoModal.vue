@@ -9,7 +9,7 @@
     @confirm-action="OkButton"
   >
     <template #content>
-      <div class="flex flex-col justify-between items-center py-2 px-4 space-y-2">
+      <div class="flex flex-col justify-between items-center py-2 px-4 space-y-2 mt-10">
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
             <img class="col-start-1 w-7 h-7" src="/img/icon/manage-node-icons/plugin-item-icon.png" alt="Client Icon" />

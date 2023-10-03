@@ -8,7 +8,7 @@
     @confirm-action="switchConfirm"
   >
     <template #content>
-      <div class="flex flex-col justify-between items-center pb-4 px-4 space-y-4">
+      <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto -mt-2">
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Current Network</span>
           <div
@@ -28,8 +28,15 @@
               class="w-full h-[40px] border border-gray-400 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-400 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-between"
               @click="networkDropdownOpen = !networkDropdownOpen"
             >
-              <img v-if="network.icon" :src="network.icon" alt="Network Icon" class="w-7" />
-              <span>{{ network ? network.name : "Select Network From List" }}</span>
+              <img
+                v-if="manageStore.selectedNetwrok"
+                :src="manageStore.selectedNetwrok.icon"
+                alt="Network Icon"
+                class="w-7"
+              />
+              <span>{{
+                manageStore.selectedNetwrok ? manageStore.selectedNetwrok.name : "Select Network From List"
+              }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-5 h-5 inline ml-1 text-gray-200"
@@ -43,7 +50,7 @@
             <Transition name="slide">
               <ul
                 v-show="networkDropdownOpen"
-                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-20 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
+                class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-10 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-evenly items-center"
                 @mouseleave="networkDropdownOpen = false"
               >
                 <li
