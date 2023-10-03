@@ -9,7 +9,7 @@
     @confirm-action="switchConfirm"
   >
     <template #content>
-      <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto">
+      <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto -mt-2">
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Current Client</span>
           <div
@@ -27,7 +27,7 @@
           <div class="w-full relative py-2">
             <button
               aria-expanded="false"
-              class="w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-blue-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-2 justify-center relative"
+              class="w-full h-[40px] border border-gray-500 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-2 justify-center relative"
               @click="switchDropdownOpen = !switchDropdownOpen"
             >
               <img
@@ -43,7 +43,7 @@
               }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 inline ml-1 absolute right-1"
+                class="w-5 h-5 inline ml-1 absolute right-1 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -54,7 +54,7 @@
             <Transition name="slide">
               <ul
                 v-show="switchDropdownOpen"
-                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-800 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
+                class="transition-all max-h-[100px] duration-400 ease-in-out absolute bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
                 @mouseleave="switchDropdownOpen = false"
               >
                 <li

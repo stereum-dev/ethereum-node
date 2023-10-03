@@ -8,13 +8,16 @@
     @confirm-action="switchConfirm"
   >
     <template #content>
-      <div class="flex flex-col justify-between items-center py-2 px-4 space-y-4">
+      <div class="flex flex-col justify-between items-center pb-4 px-4 space-y-4">
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Current Network</span>
           <div
-            class="flex justify-center items-center w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md py-1 px-2 font-semibold text-lg text-gray-200"
+            class="flex justify-center items-center w-full bg-[#131617] shadow-sm shadow-[#0e0f0f] rounded-md py-1 px-2 font-semibold text-lg"
           >
-            <span>{{ manageStore.currentNetwork.name }}</span>
+            <img class="w-12 mr-2" :src="network.icon" alt="Client Icon" />
+            <div class="w-full flex flex-col justify-evenly items-start text-left font-normal capitalize">
+              <p class="text-gray-200">{{ network.name }}</p>
+            </div>
           </div>
         </div>
         <div class="w-full flex flex-col justify-between items-center space-y-1">
@@ -22,15 +25,14 @@
           <div class="w-full relative">
             <button
               aria-expanded="false"
-              class="w-full h-[40px] border border-gray-300 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-blue-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-between"
+              class="w-full h-[40px] border border-gray-400 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-400 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-between"
               @click="networkDropdownOpen = !networkDropdownOpen"
             >
-              <span>{{
-                manageStore.selectedNetwrok ? manageStore.selectedNetwrok.name : "Select Network From List"
-              }}</span>
+              <img v-if="network.icon" :src="network.icon" alt="Network Icon" class="w-7" />
+              <span>{{ network ? network.name : "Select Network From List" }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 inline ml-1"
+                class="w-5 h-5 inline ml-1 text-gray-200"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -45,15 +47,15 @@
                 @mouseleave="networkDropdownOpen = false"
               >
                 <li
-                  v-for="network in manageStore.networkList"
-                  :key="network.name"
+                  v-for="item in manageStore.networkList"
+                  :key="item.name"
                   class="w-full grid grid-cols-6 px-4 hover:bg-blue-400"
-                  @click="switchNetwork(network)"
+                  @click="switchNetwork(item)"
                 >
-                  <img class="col-start-1 col-end-2 w-10 p-1" :src="network.icon" alt="Network Icon" />
+                  <img class="col-start-1 col-end-2 w-10 p-1" :src="item.icon" alt="Network Icon" />
                   <span
                     class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
-                    >{{ network.name }}</span
+                    >{{ item.name }}</span
                   >
                 </li>
               </ul>
@@ -67,13 +69,17 @@
 <script setup>
 import CustomModal from "./CustomModal.vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 
 const emit = defineEmits(["closeWindow", "switchConfirm"]);
 
 const networkDropdownOpen = ref(false);
 const manageStore = useNodeManage();
+const network = ref({});
 
+watchEffect(() => {
+  network.value = manageStore.currentNetwork;
+});
 const switchNetwork = (network) => {
   manageStore.selectedNetwrok = network;
   networkDropdownOpen.value = false;
