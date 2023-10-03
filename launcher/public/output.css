@@ -743,6 +743,10 @@ video {
   bottom: 0.5rem;
 }
 
+.bottom-4{
+  bottom: 1rem;
+}
+
 .bottom-\[8px\]{
   bottom: 8px;
 }
@@ -773,6 +777,10 @@ video {
 
 .right-1{
   right: 0.25rem;
+}
+
+.right-2{
+  right: 0.5rem;
 }
 
 .right-4{
@@ -865,6 +873,10 @@ video {
 
 .col-start-4{
   grid-column-start: 4;
+}
+
+.col-start-5{
+  grid-column-start: 5;
 }
 
 .col-start-6{
@@ -1143,6 +1155,10 @@ video {
 
 .h-6{
   height: 1.5rem;
+}
+
+.h-7{
+  height: 1.75rem;
 }
 
 .h-8{
@@ -2207,6 +2223,11 @@ video {
 .bg-slate-600{
   --tw-bg-opacity: 1;
   background-color: rgb(71 85 105 / var(--tw-bg-opacity));
+}
+
+.bg-teal-600{
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 148 136 / var(--tw-bg-opacity));
 }
 
 .bg-teal-700{

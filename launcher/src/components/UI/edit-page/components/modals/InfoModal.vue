@@ -1,6 +1,8 @@
 <template>
   <custom-modal
-    main-title="Service Informations"
+    :main-title="client.name"
+    :icon="client.sIcon"
+    sub-title="Service Informaton"
     confirm-text="OK"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
@@ -8,28 +10,68 @@
   >
     <template #content>
       <div class="flex flex-col justify-between items-center py-2 px-4 space-y-2">
-        <div class="flex justify-start items-center w-full py-1 px-2 font-semibold text-xl uppercase">
-          <img class="w-10 h-10 mr-2" :src="client.sIcon" alt="Client Icon" />
-          <span>{{ client.name }}</span>
+        <div class="w-full flex justify-center items-center">
+          <div class="w-full grid grid-cols-12 items-center text-md">
+            <img class="col-start-1 w-7 h-7" src="/img/icon/manage-node-icons/plugin-item-icon.png" alt="Client Icon" />
+            <span class="col-start-2 col-span-3 text-gray-400 text-left">Service ID</span>
+            <span class="col-start-6 col-end-13 text-amber-600 text-center">{{ client.config.serviceID }}</span>
+          </div>
         </div>
-        <div class="flex justify-start items-center w-full py-1 px-2 font-semibold text-xl uppercase">
-          <span v-if="client.category !== 'service'">{{ client.category }} client</span>
-          <span v-else>{{ client.category }}</span>
+        <div class="w-full flex justify-center items-center">
+          <div class="w-full grid grid-cols-12 items-center text-md">
+            <img class="col-start-1 w-7 h-7" src="/img/icon/manage-node-icons/category.png" alt="Client Icon" />
+            <span class="col-start-2 col-span-3 text-gray-400 text-left">Service Category</span>
+            <span
+              v-if="client.category !== 'service'"
+              class="col-start-6 col-end-13 text-lg text-gray-400 font-semibold text-center capitalize"
+              >{{ `${client.category} client` }}</span
+            >
+            <span v-else class="col-start-6 col-end-13 text-lg text-gray-400 font-semibold text-center capitalize">{{
+              client.category
+            }}</span>
+          </div>
         </div>
-        <div class="flex justify-start items-center w-full py-1 px-2 font-semibold text-xl">
-          <span class="uppercase">Service ID:</span>
-          <span class="ml-2">{{ client.config.serviceID }}</span>
-        </div>
-        <div v-if="activateConnectionInfo" class="w-full flex flex-col justify-between items-start space-y-1 py-1 px-2">
-          <span v-if="getConnectedExecution" class="w-full text-left text-teal-700 font-semibold">{{
-            `${client.name} is connected to ${getConnectedExecution}`
-          }}</span>
-          <span v-if="getConnectedConsensus" class="w-full text-left text-teal-700 font-semibold">{{
-            `${client.name} is connected to ${getConnectedConsensus}`
-          }}</span>
-          <span v-if="getConnectedMevboost" class="w-full text-left text-teal-700 font-semibold">{{
-            `${client.name} is connected to MEV-Boost`
-          }}</span>
+
+        <div v-if="activateConnectionInfo" class="w-full flex flex-col justify-between items-start space-y-1 py-1">
+          <div v-if="getConnectedExecution" class="w-full flex justify-center items-center">
+            <div class="w-full grid grid-cols-12 items-center text-md">
+              <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
+              <span class="col-start-2 col-span-3 text-gray-400 text-left">Execution Client</span>
+              <div
+                class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
+              >
+                <img class="w-5" :src="getConnectedExecution.icon" alt="Service Icon" />
+                <span class="text-gray-800 text-left font-semibold text-sm">{{ getConnectedExecution.name }}</span>
+                <span class="text-gray-800 text-left text-sm">{{ getConnectedExecution.config.serviceID }}</span>
+              </div>
+            </div>
+          </div>
+          <div v-if="getConnectedConsensus" class="w-full flex justify-center items-center">
+            <div class="w-full grid grid-cols-12 items-center text-md">
+              <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
+              <span class="col-start-2 col-span-3 text-gray-400 text-left">Consensus Client</span>
+              <div
+                class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
+              >
+                <img class="w-5" :src="getConnectedConsensus.icon" alt="Service Icon" />
+                <span class="text-gray-800 text-left font-semibold text-sm">{{ getConnectedConsensus.name }}</span>
+                <span class="text-gray-800 text-left text-sm">{{ getConnectedConsensus.config.serviceID }}</span>
+              </div>
+            </div>
+          </div>
+          <div v-if="getConnectedMevboost" class="w-full flex justify-center items-center">
+            <div class="w-full grid grid-cols-12 items-center text-md">
+              <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
+              <span class="col-start-2 col-span-3 text-gray-400 text-left">Mevboost</span>
+              <div
+                class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
+              >
+                <img class="w-5" :src="getConnectedMevboost.icon" alt="Service Icon" />
+                <span class="text-gray-800 text-left font-semibold text-sm">MEVBOOST</span>
+                <span class="text-gray-800 text-left text-sm">{{ getConnectedMevboost.config.serviceID }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </template>
@@ -37,6 +79,7 @@
 </template>
 <script setup>
 import CustomModal from "./CustomModal.vue";
+import { useNodeManage } from "@/store/nodeManage";
 import { computed } from "vue";
 
 const { client } = defineProps({
@@ -48,19 +91,25 @@ const { client } = defineProps({
 
 const emit = defineEmits(["closeWindow", "okButton"]);
 
+const manageStore = useNodeManage();
+
 const getConnectedExecution = computed(() => {
-  let { executionClients } = client.config.dependencies;
-  return executionClients.length ? executionClients[0].service : null;
+  let { executionClients } = client.config ? client.config.dependencies : {};
+  let service = manageStore.newConfiguration.find((i) => i.config.serviceID === executionClients[0]?.id);
+  return executionClients.length ? service : null;
 });
+console.log(getConnectedExecution.value);
 
 const getConnectedConsensus = computed(() => {
-  let { consensusClients } = client.config.dependencies;
-  return consensusClients.length ? consensusClients[0].service : null;
+  let { consensusClients } = client.config ? client.config.dependencies : {};
+  let service = manageStore.newConfiguration.find((i) => i.config.serviceID === consensusClients[0]?.id);
+  return consensusClients.length ? service : null;
 });
 
 const getConnectedMevboost = computed(() => {
-  let { mevboost } = client.config.dependencies;
-  return mevboost.length ? mevboost[0] : null;
+  let { mevboost } = client.config ? client.config.dependencies : {};
+  let service = manageStore.newConfiguration.find((i) => i.config.serviceID === mevboost[0]?.id);
+  return mevboost.length ? service : null;
 });
 
 const activateConnectionInfo = computed(() => {

@@ -21,10 +21,10 @@
           </div>
           <slot name="content"></slot>
         </div>
-        <div class="flex justify-end text-md font-bold py-3 mt-2 space-y-4">
+        <div class="w-full flex justify-end text-md font-bold py-3 mt-2 space-y-4 absolute bottom-4 right-2">
           <button
             v-if="confirmText !== ''"
-            class="mr-4 bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full hover:bg-green-600 uppercase active:scale-95 transition duration-200"
+            class="mr-4 min-w-[100px] bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full hover:bg-green-600 uppercase active:scale-95 transition duration-200"
             @click="emitConfirmAction"
           >
             {{ confirmText }}
