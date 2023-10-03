@@ -126,7 +126,6 @@ watch(currentSlide, (val) => {
 });
 
 onMounted(() => {
-  console.log(manageStore.currentNetwork);
   manageStore.currentNetwork = manageStore.currentNetwork.hasOwnProperty("id") ? manageStore.currentNetwork : null;
   setSelectedLinks();
 });

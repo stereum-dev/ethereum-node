@@ -83,7 +83,7 @@
         v-if="isAddModalOpen"
         :client="clientToInstall"
         @close-window="cancelInstallation"
-        @confirm-add="confirmAddingService"
+        @confirm-install="serviceInstallHandler"
       />
       <!-- End Add New Service Modal -->
       <!-- Start Nuke Modal -->
@@ -270,37 +270,26 @@ const openDrawer = () => {
 //Change Box methods
 
 const removeChangeHandler = (item) => {
-  if (item.content === "INSTALL") {
-    item.service.isRemoveProcessing = false;
-    const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
-    const eventIdx = manageStore.newConfiguration.indexOf(event);
-    manageStore.newConfiguration.splice(eventIdx, 1);
+  isAddModalOpen.value = false;
+  if (item) {
+    if (item.content === "INSTALL") {
+      const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
+      const eventIdx = manageStore.newConfiguration.indexOf(event);
+      manageStore.newConfiguration.splice(eventIdx, 1);
+    }
+    const event = manageStore.confirmChanges.find((e) => e.id === item.id);
+    const eventIdx = manageStore.confirmChanges.indexOf(event);
+    manageStore.confirmChanges.splice(eventIdx, 1);
   }
-  item.service.isRemoveProcessing = false;
-  const event = manageStore.confirmChanges.find((e) => e.id === item.id);
-  const eventIdx = manageStore.confirmChanges.indexOf(event);
-  manageStore.confirmChanges.splice(eventIdx, 1);
-  item.service.addPanel = true;
 };
-/*******Add service with drag and drop methods *********/
-
 // Add service with double click
 
 const addServices = (item) => {
   let element = JSON.parse(JSON.stringify(item));
-
   // Change item.id to a unique id
   element.id = manageStore.newConfiguration.length + 1;
   clientToInstall.value = element;
   isAddModalOpen.value = true;
-  manageStore.newConfiguration.push(element);
-
-  manageStore.confirmChanges.push({
-    id: element.id,
-    content: "INSTALL",
-    contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
-    service: element,
-  });
 };
 
 // Add service with drag and drop
@@ -322,23 +311,31 @@ const onDrop = (event) => {
   item.id = manageStore.newConfiguration.length + 1;
   clientToInstall.value = item;
   isAddModalOpen.value = true;
-  manageStore.newConfiguration.push(item);
+};
 
+//Confirm Adding service
+
+const serviceInstallHandler = (item) => {
+  isAddModalOpen.value = false;
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
-    contentIcon: "/img/icon/manage-node-icons/ADD_PLUGIN.png",
-    service: item,
+    contentIcon: "/img/icon/manage-node-icons/install.png",
+    service: clientToInstall.value,
   });
+  manageStore.newConfiguration.push(item);
 };
 
 // Cancel Adding service
 
 const cancelInstallation = (item) => {
   isAddModalOpen.value = false;
-  console.log("item", item);
-  const element = manageStore.confirmChanges.find((e) => e.service.id === item.id);
-  removeChangeHandler(element);
+  const element = manageStore.confirmChanges.find((e) => e.id === item.id);
+  const eventIdx = manageStore.confirmChanges.indexOf(element);
+  manageStore.confirmChanges.splice(eventIdx, 1);
+  const event = manageStore.newConfiguration.find((e) => e.id === item.id);
+  const eventIdx2 = manageStore.newConfiguration.indexOf(event);
+  manageStore.newConfiguration.splice(eventIdx2, 1);
 };
 
 // Network switch methods

@@ -6,7 +6,7 @@
     confirm-text="INSTALL"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
-    @confirm-action="confirmAdd"
+    @confirm-action="confirmInstall"
   >
     <template #content>
       <AddContent :client="client" />
@@ -24,12 +24,12 @@ const { client } = defineProps({
   },
 });
 
-const emit = defineEmits(["closeWindow", "confirmAdd"]);
+const emit = defineEmits(["closeWindow", "confirmInstall"]);
 
 //Methods
 
-const confirmAdd = () => {
-  emit("confirmAdd");
+const confirmInstall = () => {
+  emit("confirmInstall", client);
 };
 
 const closeWindow = () => {
