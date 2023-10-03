@@ -65,7 +65,7 @@
     <Transition name="slide">
       <ul
         v-show="dropdown"
-        class="w-60 transition-all max-h-[100px] duration-400 ease-in-out absolute right-[112px] -bottom-24 bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-40 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
+        class="w-64 transition-all max-h-[100px] duration-400 ease-in-out absolute right-[111px] -bottom-24 bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-40 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
         @mouseleave="dropdown = false"
       >
         <li

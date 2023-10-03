@@ -7,7 +7,7 @@ import { onMounted } from 'vue';
         <span class="col-start-2 col-span-3 text-gray-400 text-left">Installation Path</span>
         <input
           v-model="client.path"
-          class="col-start-6 col-span-7 border px-2 py-1 text-left text-gray-800 text-sm rounded bg-gray-400 focus:border-blue-500 focus:shadow-outline outline-none"
+          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
           type="text"
           autofocus
         />
@@ -19,8 +19,9 @@ import { onMounted } from 'vue';
         <span class="col-start-2 col-span-3 text-gray-400 text-left">Port</span>
         <input
           v-model="client.port"
-          class="col-start-6 col-span-7 border px-2 py-1 text-left text-gray-800 text-sm rounded bg-gray-400 focus:border-blue-500 focus:shadow-outline outline-none"
+          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500 placeholder:text-gray-700"
           type="text"
+          placeholder="9000"
           autofocus
         />
       </div>
