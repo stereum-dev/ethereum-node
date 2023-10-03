@@ -19,12 +19,6 @@
           @delete-service="deleteService"
           @info-modal="infoModal"
         />
-        <MevboostMenu
-          v-else-if="item.isNotConnectedToMevboost"
-          :item="item"
-          @hide-mevboost="hideMevboostMenu"
-          @confirm-mevboost="confirmMevboostConnection"
-        />
       </TransitionGroup>
     </div>
   </div>
@@ -34,7 +28,6 @@
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
-import MevboostMenu from "./MevboostMenu.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
 import { computed, ref, watchEffect, watch } from "vue";
@@ -47,7 +40,6 @@ const emit = defineEmits(["deleteService", "switchClient", "modifyService", "inf
 const executionRefs = ref([]);
 const nodeStore = useNodeStore();
 const manageStore = useNodeManage();
-const isConfirmLoading = ref(false);
 const isMouseOverClient = ref(false);
 const isMousePassedClient = ref(false);
 
@@ -92,9 +84,7 @@ watchEffect(() => {
 // methods
 
 const getDynamicClasses = (item) => {
-  if (item.hasOwnProperty("isNotConnectedToMevboost") && item.isNotConnectedToMevboost) {
-    return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
-  } else if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
+  if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "border bg-red-600 border-white hover:bg-red-600";
   } else if (item.hasOwnProperty("isNotConnectedToValidator") && item.isNotConnectedToValidator) {
     return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
@@ -103,8 +93,6 @@ const getDynamicClasses = (item) => {
     item.connectedToValidator &&
     manageStore.newConfiguration.filter((e) => e.category === "consensus").length > 1
   ) {
-    return "border border-green-500 bg-green-500 hover:bg-green-500 pointer-events-none";
-  } else if (item.hasOwnProperty("isConnectedToMevboost") && item.isConnectedToMevboost) {
     return "border border-green-500 bg-green-500 hover:bg-green-500 pointer-events-none";
   } else {
     return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
@@ -125,29 +113,8 @@ const hideMenu = (item) => {
   item.displayPluginMenu = false;
 };
 
-const hideMevboostMenu = (item) => {
-  item.displayPluginMenu = false;
-  manageStore.newConfiguration.forEach((service) => {
-    if (service.isConnectedToMevboost) {
-      service.isConnectedToMevboost = false;
-    }
-  });
-  setTimeout(() => {
-    item.isNotConnectedToMevboost = false;
-  });
-};
-
 const deleteService = (item) => {
   emit("deleteService", item);
-};
-
-const confirmMevboostConnection = (item) => {
-  isConfirmLoading.value = true;
-  setTimeout(() => {
-    isConfirmLoading.value = false;
-    item.isNotConnectedToMevboost = false;
-    item.isConnectedToMevboost = true;
-  }, 5000);
 };
 
 const switchClient = (item) => {

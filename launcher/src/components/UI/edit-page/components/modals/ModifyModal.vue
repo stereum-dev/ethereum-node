@@ -162,7 +162,7 @@ const getConnectedServicesToSSV = () => {
 // };
 
 const confirmModify = () => {
-  emit("confirmModify");
+  emit("confirmModify", client);
 };
 
 const closeWindow = () => {

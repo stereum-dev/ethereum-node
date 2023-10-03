@@ -212,8 +212,19 @@ const switchClientConfirm = (item) => {
 };
 // Clients Modifying methods
 
-const confirmModifyingService = () => {
-  console.log("CONFIRM MODIFYING");
+const confirmModifyingService = (item) => {
+  isModifyModalOpen.value = false;
+  console.log(item);
+  if (item.service === "FlashbotsMevBoostService") {
+    changeMevboostConnection();
+    console.log("MEVBOOST CONNECTION CHANGED");
+  }
+  manageStore.confirmChanges.push({
+    id: randomId,
+    content: "MODIFY",
+    contentIcon: "/img/icon/manage-node-icons/connected.png",
+    service: item,
+  });
 };
 
 const serviceModifyHandler = (item) => {
