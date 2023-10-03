@@ -333,7 +333,7 @@ const serviceInstallHandler = (item) => {
     id: randomId,
     content: "INSTALL",
     contentIcon: "/img/icon/manage-node-icons/install.png",
-    service: clientToInstall.value,
+    service: item,
   });
   manageStore.newConfiguration.push(item);
 };
@@ -341,6 +341,7 @@ const serviceInstallHandler = (item) => {
 // Cancel Adding service
 
 const cancelInstallation = (item) => {
+  clientToInstall.value = null;
   isAddModalOpen.value = false;
   const element = manageStore.confirmChanges.find((e) => e.id === item.id);
   const eventIdx = manageStore.confirmChanges.indexOf(element);

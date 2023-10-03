@@ -64,8 +64,8 @@ const getConnectedMevboost = computed(() => {
 
 const checkClientConnection = computed(() => {
   let allDependencies = [
-    props.client.config?.dependencies.consensusClients,
-    props.client.config?.dependencies.executionClients,
+    props.client.config.dependencies?.consensusClients,
+    props.client.config.dependencies?.executionClients,
   ].flat();
   if (allDependencies.length > 0) return true;
   return false;
