@@ -27,13 +27,11 @@ module.exports = {
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
-        linux: {          
-          //executableName: "Stereum-Launcher-${version}.${ext}",
+        linux: {                    
           target: "AppImage",
           artifactName: "Stereum-Launcher-${version}.${ext}"
         },
-        mac: {
-          //executableName: "Stereum-Launcher-Setup-${version}.${ext}",
+        mac: {          
           hardenedRuntime: true,
           entitlements:
             "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",

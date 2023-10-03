@@ -105,7 +105,7 @@ jobs:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
-        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
 
   release:
     runs-on: ubuntu-latest
