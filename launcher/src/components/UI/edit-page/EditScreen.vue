@@ -282,12 +282,14 @@ const openDrawer = () => {
 
 const removeChangeHandler = (item) => {
   isAddModalOpen.value = false;
+  item.service.isRemoveProcessing = false;
   if (item) {
     if (item.content === "INSTALL") {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
     }
+
     const event = manageStore.confirmChanges.find((e) => e.id === item.id);
     const eventIdx = manageStore.confirmChanges.indexOf(event);
     manageStore.confirmChanges.splice(eventIdx, 1);
