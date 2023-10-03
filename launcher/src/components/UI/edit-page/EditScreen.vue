@@ -214,7 +214,6 @@ const switchClientConfirm = (item) => {
 
 const confirmModifyingService = (item) => {
   isModifyModalOpen.value = false;
-  console.log(item);
   if (item.service === "FlashbotsMevBoostService") {
     changeMevboostConnection();
     console.log("MEVBOOST CONNECTION CHANGED");
