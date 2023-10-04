@@ -83,13 +83,17 @@ jobs:
         shell: bash
         if: always() && matrix.os == 'windows-latest'
 
+      - name: Rename rc-linux.yml to latest-linux.yml
+        run: |
+          mv launcher/dist/linux/rc-linux.yml launcher/dist/linux/latest-linux.yml
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
       - name: Upload artifacts for ubuntu-latest
         uses: actions/upload-artifact@v2
         with:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
-            launcher/dist/latest-linux.yml
+            launcher/dist/linux/latest-linux.yml
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
 
       - name: Upload artifacts for windows-latest
@@ -98,16 +102,21 @@ jobs:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/win32/Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe
-            launcher/dist/latest.yml
+            launcher/dist/win32/latest.yml
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
 
+      - name: Rename rc-mac.yml to latest-mac.yml
+        run: |
+          ls -la launcher/dist/darwin/
+          #mv launcher/dist/linux/rc-linux.yml launcher/dist/linux/latest-linux.yml
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
       - name: Upload artifacts for macos-latest
         uses: actions/upload-artifact@v2
         with:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
-            launcher/dist/latest-mac.yml
+            launcher/dist/darwin/latest-mac.yml
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
 
   release:
