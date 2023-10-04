@@ -127,7 +127,9 @@
             :class="{
               disabled:
                 !option.buttonState &&
-                (option.changeValue === null || option.changeValue === '0x0000000000000000000000000000000000000000'),
+                (option.changeValue === null ||
+                  option.changeValue === '0x0000000000000000000000000000000000000000' ||
+                  (option.title == 'External IP Address' && isExternalIPAddressEmpty)),
             }"
             @input="somethingIsChanged(option)"
           />
@@ -275,9 +277,16 @@ export default {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
+    isExternalIPAddressEmpty() {
+      const externalIPAddressSetting = this.item.expertOptions.find(
+        (setting) => setting.title === "External IP Address"
+      );
+      return externalIPAddressSetting.changeValue.trim() === "";
+    },
   },
   mounted() {
     this.readService();
+    console.log(JSON.stringify(this.item.expertOptions));
   },
   // watch: {
   //   changed: function (newValue, oldValue) {
