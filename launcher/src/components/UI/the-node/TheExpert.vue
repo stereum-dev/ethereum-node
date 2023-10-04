@@ -385,7 +385,7 @@ export default {
                   option.changeValue && !this.item.yaml.match(new RegExp(option.pattern[i]))
                     ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
                     : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
-              } else if (option.title === "External IP Address") {
+              } else if (option.title === "External IP Address" && option.changeValue.match(ipReg)) {
                 let reg = "";
                 let replacement = "";
                 const extIPCmd = [
