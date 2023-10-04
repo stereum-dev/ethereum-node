@@ -76,6 +76,7 @@ export default {
   computed: {
     ...mapWritableState(useTaskManager, {
       UpdatedSubtasks: "UpdatedSubtasks",
+      stopIntervalForModal: "stopIntervalForModal",
     }),
   },
   created() {
@@ -123,6 +124,7 @@ export default {
       });
     },
     openTerminalHandler(el) {
+      this.stopIntervalForModal = true;
       this.UpdatedSubtasks.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
@@ -139,6 +141,7 @@ export default {
     hideTerminalHandler(el) {
       el.showTooltip = false;
       el.showErrorterminal = false;
+      this.stopIntervalForModal = false;
     },
   },
 };

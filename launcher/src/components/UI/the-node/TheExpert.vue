@@ -106,7 +106,6 @@
           <span>{{ option.title }}</span>
           <Transition name="slide-up">
             <img
-              v-show="option.title !== 'External TCP/UDP port'"
               v-if="option.buttonState"
               class="buttonOff"
               src="/img/icon/plugin-menu-icons/confirm.png"
@@ -114,7 +113,6 @@
               @click="buttonOff(option)"
             />
             <img
-              v-show="option.title !== 'External TCP/UDP port'"
               v-else
               class="buttonOn"
               src="/img/icon/plugin-menu-icons/edit2.png"
@@ -128,11 +126,7 @@
             :class="[
               'toggleTextInput',
               {
-                disabled:
-                  !option.buttonState &&
-                  (option.changeValue === null ||
-                    option.changeValue === '0x0000000000000000000000000000000000000000' ||
-                    (option.title == 'External IP Address' && isExternalIPAddressEmpty)),
+                disabled: !option.buttonState,
               },
               { emptyIP: option.title == 'External TCP/UDP port' && isTcpUdpPortEmpty },
             ]"
@@ -226,7 +220,11 @@
         <!-- close text -->
         <span class="exit-btn">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
-        <div v-if="!nothingsChanged && !isTcpUdpPortEmpty" class="confirmBtn" @click="confirmExpertChanges(item)">
+        <div
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
+          class="confirmBtn"
+          @click="confirmExpertChanges(item)"
+        >
           <span>Apply</span>
         </div>
         <div v-else class="disabledBtn">
@@ -234,7 +232,7 @@
         </div>
         <!-- restart button box -->
         <div
-          v-if="!nothingsChanged && !isTcpUdpPortEmpty"
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
           class="confirmRestartBtn"
           @click="confirmRestartChanges(item)"
         >
@@ -287,12 +285,6 @@ export default {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
-    isExternalIPAddressEmpty() {
-      const externalIPAddressSetting = this.item.expertOptions.find(
-        (setting) => setting.title === "External IP Address"
-      );
-      return externalIPAddressSetting.changeValue.trim() === "";
-    },
   },
   watch: {
     "item.expertOptions": {
@@ -302,6 +294,13 @@ export default {
           this.isTcpUdpPortEmpty = externalTcpUdpPortSetting.changeValue.trim() === "";
         } else {
           this.isTcpUdpPortEmpty = false;
+        }
+
+        const feeRecepient = newSettings.find((setting) => setting.title === "Default Fee Recipient");
+        if (feeRecepient) {
+          this.feeRecepient = feeRecepient.changeValue.trim() === "";
+        } else {
+          this.feeRecepient = false;
         }
       },
       deep: true,
@@ -538,9 +537,16 @@ export default {
     //   }
     // },
     async confirmExpertChanges(el) {
+      // console.log(el);
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
+
+      // if (el.expertOptions.title == "Default Fee Recipient") {
+      //   if (el.expertOptions.changeValue == "") {
+      //     el.expertOptions.changeValue = "0x0000000000000000000000000000000000000000";
+      //   }
+      // }
     },
     async confirmRestartChanges(el) {
       this.confirmExpertChanges(el);
