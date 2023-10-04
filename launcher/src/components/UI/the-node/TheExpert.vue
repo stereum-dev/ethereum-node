@@ -106,6 +106,7 @@
           <span>{{ option.title }}</span>
           <Transition name="slide-up">
             <img
+              v-show="option.title !== 'External TCP/UDP port'"
               v-if="option.buttonState"
               class="buttonOff"
               src="/img/icon/plugin-menu-icons/confirm.png"
@@ -113,6 +114,7 @@
               @click="buttonOff(option)"
             />
             <img
+              v-show="option.title !== 'External TCP/UDP port'"
               v-else
               class="buttonOn"
               src="/img/icon/plugin-menu-icons/edit2.png"
@@ -122,13 +124,18 @@
           </Transition>
           <input
             v-model="option.changeValue"
-            class="toggleTextInput"
             type="text"
-            :class="{
-              disabled:
-                !option.buttonState &&
-                (option.changeValue === null || option.changeValue === '0x0000000000000000000000000000000000000000'),
-            }"
+            :class="[
+              'toggleTextInput',
+              {
+                disabled:
+                  !option.buttonState &&
+                  (option.changeValue === null ||
+                    option.changeValue === '0x0000000000000000000000000000000000000000' ||
+                    (option.title == 'External IP Address' && isExternalIPAddressEmpty)),
+              },
+              { emptyIP: option.title == 'External TCP/UDP port' && isTcpUdpPortEmpty },
+            ]"
             @input="somethingIsChanged(option)"
           />
         </div>
@@ -219,14 +226,18 @@
         <!-- close text -->
         <span class="exit-btn">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
-        <div v-if="!nothingsChanged" class="confirmBtn" @click="confirmExpertChanges(item)">
+        <div v-if="!nothingsChanged && !isTcpUdpPortEmpty" class="confirmBtn" @click="confirmExpertChanges(item)">
           <span>Apply</span>
         </div>
         <div v-else class="disabledBtn">
           <span>Apply</span>
         </div>
         <!-- restart button box -->
-        <div v-if="!nothingsChanged" class="confirmRestartBtn" @click="confirmRestartChanges(item)">
+        <div
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty"
+          class="confirmRestartBtn"
+          @click="confirmRestartChanges(item)"
+        >
           <span>Apply & Restart</span>
         </div>
         <div v-else class="disabledRestartBtn">
@@ -269,21 +280,36 @@ export default {
       editableData: null,
       changed: false,
       nothingsChanged: true,
+      isTcpUdpPortEmpty: true,
     };
   },
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
+    isExternalIPAddressEmpty() {
+      const externalIPAddressSetting = this.item.expertOptions.find(
+        (setting) => setting.title === "External IP Address"
+      );
+      return externalIPAddressSetting.changeValue.trim() === "";
+    },
+  },
+  watch: {
+    "item.expertOptions": {
+      handler(newSettings) {
+        const externalTcpUdpPortSetting = newSettings.find((setting) => setting.title === "External TCP/UDP port");
+        if (externalTcpUdpPortSetting) {
+          this.isTcpUdpPortEmpty = externalTcpUdpPortSetting.changeValue.trim() === "";
+        } else {
+          this.isTcpUdpPortEmpty = false;
+        }
+      },
+      deep: true,
+    },
   },
   mounted() {
     this.readService();
   },
-  // watch: {
-  //   changed: function (newValue, oldValue) {
-
-  //   },
-  // },
   methods: {
     openDocs(docsUrl) {
       window.open(docsUrl, "_blank");
@@ -963,6 +989,10 @@ input:checked + .slider:before {
   font-weight: 600;
   color: rgb(44, 44, 44);
   justify-self: end;
+}
+.emptyIP {
+  border: 2px solid #bd1414;
+  background-color: rgba(189, 20, 20, 0.3);
 }
 .disabled {
   opacity: 0.6 !important;
