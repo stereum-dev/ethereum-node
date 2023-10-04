@@ -296,12 +296,16 @@ const removeChangeHandler = (item) => {
 };
 // Add service with double click
 
-const addServices = (item) => {
-  let element = JSON.parse(JSON.stringify(item));
-  // Change item.id to a unique id
-  element.id = manageStore.newConfiguration.length + 1;
-  clientToInstall.value = element;
-  isAddModalOpen.value = true;
+const addServices = (service) => {
+  let item = structuredClone(service);
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.servce).includes(item.service)) {
+    return;
+  } else {
+    item.id = manageStore.newConfiguration.length;
+    manageStore.newConfiguration.push(item);
+    isAddModalOpen.value = true;
+    clientToInstall.value = item;
+  }
 };
 
 // Add service with drag and drop
@@ -315,27 +319,32 @@ const startDrag = (event, item) => {
 };
 
 const onDrop = (event) => {
-  const itemID = event.dataTransfer.getData("itemId");
-  isOverDropZone.value = false;
-  const copyAllServices = structuredClone(serviceStore.allServices);
-  const allServices = JSON.parse(JSON.stringify(copyAllServices));
-  const item = allServices.find((item) => item.id == itemID);
-  item.id = manageStore.newConfiguration.length + 1;
-  clientToInstall.value = item;
-  isAddModalOpen.value = true;
+  const allServices = structuredClone(this.allServices);
+  const itemId = event.dataTransfer.getData("itemId");
+  let item = allServices.find((item) => item.id == itemId);
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+    return;
+  } else {
+    item.id = manageStore.newConfiguration.length;
+    manageStore.newConfiguration.push(item);
+    isAddModalOpen.value = true;
+    clientToInstall.value = item;
+  }
 };
 
 //Confirm Adding service
 
-const serviceInstallHandler = (item) => {
+const serviceInstallHandler = (data) => {
   isAddModalOpen.value = false;
-  manageStore.confirmChanges.push({
-    id: randomId,
-    content: "INSTALL",
-    contentIcon: "/img/icon/manage-node-icons/install.png",
-    service: item,
-  });
-  manageStore.newConfiguration.push(item);
+  console.log(data);
+  console.log(manageStore.newConfiguration.map((s) => s.id));
+  // manageStore.confirmChanges.push({
+  //   id: randomId,
+  //   content: "INSTALL",
+  //   contentIcon: "/img/icon/manage-node-icons/install.png",
+  //   service: item,
+  // });
+  // manageStore.newConfiguration.push(item);
 };
 
 // Cancel Adding service
