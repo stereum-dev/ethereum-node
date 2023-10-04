@@ -482,6 +482,9 @@ export default {
     },
     buttonOff(option) {
       option.buttonState = false;
+      if (option.title == "Default Fee Recipient" && option.changeValue == "") {
+        option.changeValue = "0x0000000000000000000000000000000000000000";
+      }
     },
     //Prunning & Resync Handler
     actionHandler(el) {
