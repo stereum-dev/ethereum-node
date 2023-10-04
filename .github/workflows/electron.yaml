@@ -88,8 +88,8 @@ jobs:
         with:
           name: app-${{ matrix.os }}
           path: |
-            launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
-            launcher/dist/linux/latest-linux.yml
+            #launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
+            launcher/dist/linux
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
 
       - name: Upload artifacts for windows-latest
@@ -97,8 +97,8 @@ jobs:
         with:
           name: app-${{ matrix.os }}
           path: |
-            launcher/dist/win32/Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe
-            launcher/dist/win32/latest.yml
+            #launcher/dist/win32/Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe
+            launcher/dist/win32
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
 
       - name: Upload artifacts for macos-latest
@@ -106,8 +106,8 @@ jobs:
         with:
           name: app-${{ matrix.os }}
           path: |
-            launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
-            launcher/dist/darwin/latest-mac.yml
+            #launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
+            launcher/dist/darwin
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
 
   release:
