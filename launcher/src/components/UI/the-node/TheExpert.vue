@@ -220,7 +220,11 @@
         <!-- close text -->
         <span class="exit-btn">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
-        <div v-if="!nothingsChanged && !isTcpUdpPortEmpty" class="confirmBtn" @click="confirmExpertChanges(item)">
+        <div
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
+          class="confirmBtn"
+          @click="confirmExpertChanges(item)"
+        >
           <span>Apply</span>
         </div>
         <div v-else class="disabledBtn">
@@ -228,7 +232,7 @@
         </div>
         <!-- restart button box -->
         <div
-          v-if="!nothingsChanged && !isTcpUdpPortEmpty"
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
           class="confirmRestartBtn"
           @click="confirmRestartChanges(item)"
         >
@@ -290,6 +294,13 @@ export default {
           this.isTcpUdpPortEmpty = externalTcpUdpPortSetting.changeValue.trim() === "";
         } else {
           this.isTcpUdpPortEmpty = false;
+        }
+
+        const feeRecepient = newSettings.find((setting) => setting.title === "Default Fee Recipient");
+        if (feeRecepient) {
+          this.feeRecepient = feeRecepient.changeValue.trim() === "";
+        } else {
+          this.feeRecepient = false;
         }
       },
       deep: true,
@@ -482,9 +493,6 @@ export default {
     },
     buttonOff(option) {
       option.buttonState = false;
-      if (option.title == "Default Fee Recipient" && option.changeValue == "") {
-        option.changeValue = "0x0000000000000000000000000000000000000000";
-      }
     },
     //Prunning & Resync Handler
     actionHandler(el) {
@@ -529,9 +537,16 @@ export default {
     //   }
     // },
     async confirmExpertChanges(el) {
+      // console.log(el);
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
+
+      // if (el.expertOptions.title == "Default Fee Recipient") {
+      //   if (el.expertOptions.changeValue == "") {
+      //     el.expertOptions.changeValue = "0x0000000000000000000000000000000000000000";
+      //   }
+      // }
     },
     async confirmRestartChanges(el) {
       this.confirmExpertChanges(el);
