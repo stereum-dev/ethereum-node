@@ -83,10 +83,6 @@ jobs:
         shell: bash
         if: always() && matrix.os == 'windows-latest'
 
-      - name: Rename rc-linux.yml to latest-linux.yml
-        run: |
-          ls -la launcher/dist/linux/
-        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
       - name: Upload artifacts for ubuntu-latest
         uses: actions/upload-artifact@v2
         with:
@@ -182,5 +178,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload --clobber "${{ steps.variables.outputs.version }}" dist/*
+          gh release upload --clobber "${{ steps.variables.outputs.version }}-draft" dist/*
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && !contains(github.event.head_commit.message, '[DRAFT]') }}
