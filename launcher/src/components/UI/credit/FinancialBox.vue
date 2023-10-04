@@ -16,7 +16,7 @@
     <div class="search">
       <input v-model="searchPayload" type="search" placeholder="Search Contributor" />
     </div>
-    <div class="itemWrapper">
+    <div class="itemWrapper space-y-2">
       <!-- <div
         class="financial-contributor"
         v-for="item in roundAdresses"
@@ -185,6 +185,7 @@ export default {
 .itemWrapper {
   width: 100%;
   height: 99%;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -212,7 +213,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   width: 99%;
-  height: 80%;
+  height: 430px;
 }
 .financial-contributor {
   display: flex;
@@ -230,14 +231,13 @@ export default {
 .ethAddresses {
   display: flex;
   width: 95%;
-  height: 2.2rem;
+  height: 25px;
   justify-content: center;
   align-items: center;
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
-  margin: 1%;
   border-radius: 10px;
 }
 .ethAddresses span {
