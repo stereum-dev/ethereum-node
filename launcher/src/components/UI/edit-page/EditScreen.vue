@@ -319,7 +319,7 @@ const startDrag = (event, item) => {
 };
 
 const onDrop = (event) => {
-  const allServices = structuredClone(this.allServices);
+  const allServices = structuredClone(serviceStore.allServices);
   const itemId = event.dataTransfer.getData("itemId");
   let item = allServices.find((item) => item.id == itemId);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
