@@ -1,19 +1,5 @@
 ---
-- include_tasks: "2.0-rc10/updates-20-rc10.yaml"
-  ignore_errors: yes
-
-- include_tasks: "2.0-rc12/updates-20-rc12.yaml"
-  ignore_errors: yes
-
-- include_tasks: "2.0-rc13/updates-20-rc13.yaml"
-  ignore_errors: yes
-
-- include_tasks: "2.0-rc16/updates-20-rc16.yaml"
-  ignore_errors: yes
-
-- include_tasks: "2.0-rc18/updates-20-rc18.yaml"
-  ignore_errors: yes
-
-- include_tasks: "2.0-rc20/updates-20-rc20.yaml"
+- name: Include RC23 Update Scripts
+  include_tasks: "2.0-rc23/updates-20-rc23.yaml"
   ignore_errors: yes
 # EOF
