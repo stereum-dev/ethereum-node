@@ -76,6 +76,7 @@ export default {
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
       UpdatedSubtasks: "UpdatedSubtasks",
+      stopIntervalForModal: "stopIntervalForModal",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -95,13 +96,23 @@ export default {
   },
   watch: {
     showDropDownList(newValue) {
-      if (newValue == true) {
+      if (newValue == true && !this.stopIntervalForModal) {
         this.intervalId = setInterval(() => {
           this.getTasks();
           this.UpdatedSubtasks = this.displayingTasks[0].subTasks;
         }, 1000);
       } else {
         clearInterval(this.intervalId);
+      }
+    },
+    stopIntervalForModal(newValue) {
+      if (newValue === true) {
+        clearInterval(this.intervalId);
+      } else if (this.showDropDownList === true) {
+        this.intervalId = setInterval(() => {
+          this.getTasks();
+          this.UpdatedSubtasks = this.displayingTasks[0].subTasks;
+        }, 1000);
       }
     },
   },
