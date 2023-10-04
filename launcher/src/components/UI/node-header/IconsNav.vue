@@ -212,9 +212,9 @@ export default {
   align-items: center;
 }
 .icon-btn {
-  width: 15%;
-  height: 85%;
-  border: 1px solid #6b9090;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #597777;
   border-radius: 100%;
   background-color: #336666;
   box-shadow: 1px 1px 5px 1px rgb(33, 58, 53);

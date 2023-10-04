@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col justify-between items-center pt-1">
+  <div class="w-full h-full flex flex-col justify-between items-center pt-1" @mousedown.prevent>
     <div class="w-full flex flex-col justify-between items-center px-4 rounded-t-lg">
       <span class="text-md font-semibold text-gray-200 uppercase">Services</span>
 
