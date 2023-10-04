@@ -83,31 +83,49 @@ jobs:
         shell: bash
         if: always() && matrix.os == 'windows-latest'
 
+      - name: Debug
+        run: |
+          ls -la launcher/dist/linux
+        shell: bash
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
       - name: Upload artifacts for ubuntu-latest
         uses: actions/upload-artifact@v2
         with:
           name: app-${{ matrix.os }}
           path: |
-            #launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
-            launcher/dist/linux
+            launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
+            launcher/dist/linux/*.yml
+            launcher/dist/linux/*.blockmap
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
 
+      - name: Debug
+        run: |
+          ls -la launcher/dist/win32
+        shell: bash
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
       - name: Upload artifacts for windows-latest
         uses: actions/upload-artifact@v2
         with:
           name: app-${{ matrix.os }}
           path: |
-            #launcher/dist/win32/Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe
-            launcher/dist/win32
+            launcher/dist/win32/Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe
+            launcher/dist/win32/*.yml
+            launcher/dist/win32/*.blockmap
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
 
+      - name: Debug
+        run: |
+          ls -la launcher/dist/darwin
+        shell: bash
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
       - name: Upload artifacts for macos-latest
         uses: actions/upload-artifact@v2
         with:
           name: app-${{ matrix.os }}
           path: |
-            #launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
-            launcher/dist/darwin
+            launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
+            launcher/dist/darwin/*.yml
+            launcher/dist/darwin/*.blockmap
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
 
   release:
