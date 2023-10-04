@@ -1,11 +1,6 @@
 <template>
   <NodeScreen />
 </template>
-<script>
+<script setup>
 import NodeScreen from "../components/UI/node-page/NodeScreen.vue";
-export default {
-  components: {
-    NodeScreen,
-  },
-};
 </script>

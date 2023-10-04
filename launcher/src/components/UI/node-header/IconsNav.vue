@@ -1,5 +1,5 @@
 <template>
-  <div class="icons-box" @mousedown.stop>
+  <div class="icons-box" @mousedown.prevent>
     <div class="icon-btn" @click="supportModalOpen">
       <img alt="help" src="/img/icon/header-icons/question-mark.png" />
     </div>
@@ -212,9 +212,9 @@ export default {
   align-items: center;
 }
 .icon-btn {
-  width: 14%;
+  width: 15%;
   height: 85%;
-  /* border: 2px solid #a5a5a5; */
+  border: 1px solid #6b9090;
   border-radius: 100%;
   background-color: #336666;
   box-shadow: 1px 1px 5px 1px rgb(33, 58, 53);
@@ -227,28 +227,20 @@ export default {
 }
 .icon-btn:hover {
   background-color: #274f4f;
-  /* border: 2px solid rgb(141, 141, 141); */
-  transition-duration: 200ms;
+  border: 1px solid #84abab;
+  transition-duration: 100ms;
 }
 
-/* .icon-btn:active {
+.icon-btn:active {
   box-shadow: none;
-  background-color: #274f4f;
-  transition-duration: 200ms;
-  transform: scale(0.92);
-} */
+  transition-duration: 100ms;
+  transform: scale(0.95);
+}
 
 .icon-btn img {
   width: 67%;
+}
 
-  transform: scale(1);
-}
-.icon-btn:hover img {
-  transform: scale(0.95);
-}
-.icon-btn:active img {
-  transform: scale(0.9);
-}
 .help-text {
   width: 20px;
   height: 5px;

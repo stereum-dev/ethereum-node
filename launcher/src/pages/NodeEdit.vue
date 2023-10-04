@@ -1,11 +1,6 @@
 <template>
   <EditScreen />
 </template>
-<script>
+<script setup>
 import EditScreen from "../components/UI/edit-page/EditScreen.vue";
-export default {
-  components: {
-    EditScreen,
-  },
-};
 </script>
