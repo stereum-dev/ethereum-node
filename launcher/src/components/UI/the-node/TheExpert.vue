@@ -106,7 +106,6 @@
           <span>{{ option.title }}</span>
           <Transition name="slide-up">
             <img
-              v-show="option.title !== 'External TCP/UDP port'"
               v-if="option.buttonState"
               class="buttonOff"
               src="/img/icon/plugin-menu-icons/confirm.png"
@@ -114,7 +113,6 @@
               @click="buttonOff(option)"
             />
             <img
-              v-show="option.title !== 'External TCP/UDP port'"
               v-else
               class="buttonOn"
               src="/img/icon/plugin-menu-icons/edit2.png"
@@ -132,7 +130,8 @@
                   !option.buttonState &&
                   (option.changeValue === null ||
                     option.changeValue === '0x0000000000000000000000000000000000000000' ||
-                    (option.title == 'External IP Address' && isExternalIPAddressEmpty)),
+                    option.title == 'External IP Address' ||
+                    option.title == 'External TCP/UDP port'),
               },
               { emptyIP: option.title == 'External TCP/UDP port' && isTcpUdpPortEmpty },
             ]"
@@ -287,12 +286,6 @@ export default {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
-    isExternalIPAddressEmpty() {
-      const externalIPAddressSetting = this.item.expertOptions.find(
-        (setting) => setting.title === "External IP Address"
-      );
-      return externalIPAddressSetting.changeValue.trim() === "";
-    },
   },
   watch: {
     "item.expertOptions": {
