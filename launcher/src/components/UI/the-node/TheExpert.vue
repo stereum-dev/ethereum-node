@@ -126,12 +126,7 @@
             :class="[
               'toggleTextInput',
               {
-                disabled:
-                  !option.buttonState &&
-                  (option.changeValue === null ||
-                    option.changeValue === '0x0000000000000000000000000000000000000000' ||
-                    option.title == 'External IP Address' ||
-                    option.title == 'External TCP/UDP port'),
+                disabled: !option.buttonState,
               },
               { emptyIP: option.title == 'External TCP/UDP port' && isTcpUdpPortEmpty },
             ]"
