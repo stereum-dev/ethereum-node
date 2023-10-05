@@ -16,6 +16,7 @@ export const useNodeManage = defineStore("nodeManage", {
       selectedServiceToResync: {},
 
       availableBlocks: [],
+      checkedRelays: [],
       usedBlocks: [],
       relaysList: [
         {
@@ -223,5 +224,12 @@ export const useNodeManage = defineStore("nodeManage", {
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    addRelay(relay) {
+      this.checkedRelays.push(relay);
+    },
+    removeRelay(relay) {
+      this.checkedRelays.splice(this.checkedRelays.indexOf(relay), 1);
+    },
+  },
 });

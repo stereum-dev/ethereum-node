@@ -197,7 +197,7 @@ import { onMounted, computed } from 'vue';
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 //Props
 const { client } = defineProps({
@@ -208,10 +208,6 @@ const { client } = defineProps({
 });
 //Emits
 const emit = defineEmits(["selectService"]);
-
-//Refs
-const connectedConsensus = ref(null);
-const connectedExecution = ref(null);
 
 //Stores
 const manageStore = useNodeManage();
@@ -228,21 +224,6 @@ const list = computed(() => {
           clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
         });
       }
-      if (options.length > 0) {
-        connectedConsensus.value =
-          client && client.config.dependencies.consensusClients[0]
-            ? client.config.dependencies.consensusClients[0]?.id
-            : null;
-        connectedExecution.value =
-          client && client.config.dependencies.executionClients[0]
-            ? client.config.dependencies.executionClients[0]?.id
-            : null;
-        options.forEach((e) => {
-          if (connectedConsensus?.value === e.config.serviceID || connectedExecution?.value === e.config.serviceID) {
-            e.isConnected = true;
-          }
-        });
-      }
     });
   } else if (client.service === "SSVNetworkService") {
     manageStore.newConfiguration.forEach((i) => {
@@ -252,15 +233,6 @@ const list = computed(() => {
           isConnectedToSSVNetwork: false,
           clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
         });
-        if (options.length > 0) {
-          connectedConsensus.value = client.config.dependencies.consensusClients[0]?.id;
-          connectedExecution.value = client.config.dependencies.executionClients[0]?.id;
-          options.forEach((e) => {
-            if (connectedConsensus.value === e.config.serviceID || connectedExecution.value === e.config.serviceID) {
-              e.isConnectedToSSVNetwork = true;
-            }
-          });
-        }
       }
     });
   } else if (client.category === "validator") {
@@ -272,15 +244,6 @@ const list = computed(() => {
           clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
         });
       }
-      if (options.length > 0) {
-        connectedConsensus.value = client.config.dependencies.consensusClients[0]?.id;
-        connectedExecution.value = client.config.dependencies.executionClients[0]?.id;
-        options.forEach((e) => {
-          if (connectedConsensus.value === e.config.serviceID || connectedExecution.value === e.config.serviceID) {
-            e.isConnected = true;
-          }
-        });
-      }
     });
   } else if (client.service === "FlashbotsMevBoostService") {
     manageStore.newConfiguration.forEach((i) => {
@@ -288,14 +251,6 @@ const list = computed(() => {
         options.push({
           ...i,
           clientID: i.config?.serviceID.slice(0, 6) + "..." + i.config?.serviceID.slice(-6),
-        });
-      }
-      if (options.length > 0) {
-        options.forEach((e) => {
-          if (e.category === "consensus" && e.config.dependencies.mevboost[0]) {
-            console.log(e);
-            e.isConnectedToMevBoost = true;
-          }
         });
       }
     });

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="col-start-1 col-span-3 flex flex-col justify-between items-center border border-gray-600 rounded-md bg-[#151618]"
+    class="col-start-1 col-span-3 h-[55px] flex flex-col justify-between items-center border border-gray-600 rounded-md bg-[#151618]"
   >
     <div class="w-full flex justify-center items-center px-2 h-[25px]">
       <span class="text-md font-semibold ml-1 text-yellow-500 overflow-hidden whitespace-pre text-center">{{

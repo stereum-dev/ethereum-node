@@ -11,8 +11,8 @@
           <div class="flex justify-center items-center px-4 mx-auto">
             <img v-if="client" class="w-[60px] h-[60px] mr-2" :src="client.icon" :alt="altText" />
             <div v-if="mainTitle || subTitle" class="flex flex-col justify-between items-start">
-              <p class="text-[28px] font-bold text-teal-600 uppercase">{{ mainTitle }}</p>
-              <p class="text-[20px] font-bold text-amber-600 uppercase">{{ subTitle }}</p>
+              <span class="text-[28px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
+              <span class="text-[20px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
             </div>
           </div>
 

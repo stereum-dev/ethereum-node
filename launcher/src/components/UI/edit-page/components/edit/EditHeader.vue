@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-h-[55px] grid grid-cols-9 gap-1 py-1">
+  <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
     <ServerDetails :server-name="controlStore.ServerName" :server-ip="controlStore.ipAddress" />
 
     <ConfigDetails :list="configsToDisplay" />

@@ -38,37 +38,10 @@ const isModifyActivated = ref(false);
 let confirmText = ref("");
 let subTitle = ref("");
 
-//Watchers
-
-watchEffect(() => {
-  if (client) {
-    if (client.category === "execution") {
-      confirmText.value = "Confirm";
-      subTitle.value = "Add Service";
-    } else if (client.category === "consensus" || client.category === "validator") {
-      confirmText.value = "Next";
-      subTitle.value = "Add Service";
-    } else if (client.category === "service" && client.service !== "FlashbotsMevBoostService") {
-      confirmText.value = "Confirm";
-      subTitle.value = "Add Service";
-    } else if (client.category === "service" && client.service === "FlashbotsMevBoostService") {
-      confirmText.value = "Next";
-      subTitle.value = "Add Service";
-    } else if (isRelaysActivated.value && client.service === "FlashbotsMevBoostService") {
-      console.log("isRelaysActivated", isRelaysActivated.value);
-      confirmText.value = "Next";
-      subTitle.value = "Mevboost Relays";
-      console.log("Next", confirmText.value);
-      console.log("SubTitle", subTitle.value);
-      console.log("isRelaysActivated", isRelaysActivated.value);
-    } else if (isModifyActivated.value) {
-    }
-  }
-});
-
 //Lifecycle Hooks
 onMounted(() => {
   isAddPanelActivated.value = true;
+  confirmText.value = "Next";
 });
 
 //Methods
@@ -77,19 +50,17 @@ const confirmInstall = (item) => {
   if (item.category === "execution") {
     confirmText.value = "Confirm";
     subTitle.value = "Add Service";
-    item.AddPanel = false;
     emit("confirmInstall", item);
   } else if (item.category === "consensus" || item.category === "validator") {
-    confirmText.value = "Next";
-    subTitle.value = "Add Service";
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;
+    confirmText.value = "Confirm";
+    subTitle.value = "Add Connection";
     emit("confirmInstall", item);
   } else if (item.category === "service" && item.service !== "FlashbotsMevBoostService") {
     confirmText.value = "Confirm";
     subTitle.value = "Add Service";
     isAddPanelActivated.value = false;
-    item.AddPanel = false;
     emit("confirmInstall", item);
   } else if (item.category === "service" && item.service === "FlashbotsMevBoostService") {
     isAddPanelActivated.value = false;
@@ -105,10 +76,9 @@ const confirmInstall = (item) => {
     subTitle.value = "Add Connection";
     emit("confirmInstall", item);
   } else if (isModifyActivated.value) {
-    isAddPanelActivated.value = false;
-    isRelaysActivated.value = false;
-    isModifyActivated.value = false;
-    item.AddPanel = false;
+    confirmText.value = "Confirm";
+    subTitle.value = "Add Connection";
+    item.addPanel = false;
     emit("confirmInstall", item);
   }
 };

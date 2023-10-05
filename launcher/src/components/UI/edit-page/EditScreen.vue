@@ -83,7 +83,7 @@
         v-if="clientToInstall?.addPanel"
         :client="clientToInstall"
         @close-window="cancelInstallation"
-        @confirm-install="serviceInstallHandler"
+        @confirm-install="addServiceHandler"
       />
       <!-- End Add New Service Modal -->
       <!-- Start Nuke Modal -->
@@ -334,8 +334,7 @@ const onDrop = (event) => {
 
 //Confirm Adding service
 
-const serviceInstallHandler = (item) => {
-  isAddModalOpen.value = false;
+const addServiceHandler = (item) => {
   console.log(item);
   console.log(manageStore.newConfiguration.map((s) => s.id));
   // manageStore.confirmChanges.push({
