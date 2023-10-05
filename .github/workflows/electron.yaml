@@ -1,58 +1,204 @@
-name: Build/release
+name: Sign with Software Trust Manager KSP
 
 on: push
 
 jobs:
-  release_launcher:
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
+  build:
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: launcher
 
     strategy:
       matrix:
-      # os: [macos-latest, ubuntu-latest, windows-latest]
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
       fail-fast: false
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
-      - name: Build and Sign
+      - name: Set Version from package.json
+        id: variables
+        run: |
+          PACKAGE_VERSION=$(cat launcher/package.json \
+          | grep version \
+          | head -1 \
+          | awk -F: '{ print $2 }' \
+          | sed 's/[ ",]//g')
+          echo "Found Version: $PACKAGE_VERSION in package.json"
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+        shell: bash
+
+      - name: Set Certificates and Variables for windows-latest
+        id: win-variables
+        run: |
+          # windows
+          echo "${{secrets.SM_CLIENT_CERT_FILE_B64 }}" | base64 --decode > /d/Certificate_pkcs12.p12
+          echo "SM_CLIENT_CERT_FILE=D:\Certificate_pkcs12.p12" >> "$GITHUB_ENV"           
+          echo "SM_CLIENT_CERT_PASSWORD=${{ secrets.SM_CLIENT_CERT_PASSWORD }}" >> "$GITHUB_ENV" 
+          echo "SM_API_KEY=${{ secrets.SM_API_KEY }}" >> "$GITHUB_ENV"           
+          echo "SM_HOST=${{ vars.SM_HOST }}" >> "$GITHUB_ENV"          
+          echo "C:\Program Files (x86)\Windows Kits\10\App Certification Kit" >> $GITHUB_PATH 
+          echo "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools" >> $GITHUB_PATH          
+          echo "C:\Program Files\DigiCert\DigiCert Keylocker Tools" >> $GITHUB_PATH
+        shell: bash
+        if: matrix.os == 'windows-latest'
+      - name: Setup SSM KSP on windows-latest
+        run: |
+          curl -s -X GET  https://one.digicert.com/signingmanager/api-ui/v1/releases/Keylockertools-windows-x64.msi/download -H "x-api-key:%SM_API_KEY%" -o Keylockertools-windows-x64.msi
+          msiexec /i Keylockertools-windows-x64.msi /quiet /qn                    
+          smksp_registrar.exe list 
+          smctl.exe keypair ls 
+          C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user
+          smctl healthcheck --all                    
+          smctl windows certsync --keypair-alias=key_520088982
+        shell: cmd
+        if: matrix.os == 'windows-latest'
+
+      - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          args: "--publish onTag"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.github_token }}
           package_root: launcher
           use_vue_cli: true
-          mac_certs: ${{ secrets.mac_certs }}
-          mac_certs_password: ${{ secrets.mac_certs_password }}
-          windows_certs: ${{ secrets.win_certs }}
-          windows_certs_password: ${{ secrets.win_certs_password }}
-
-          # release the app after building - never in this step
           release: never
-        if: "!startsWith(github.ref, 'refs/tags/v')"
-
-      - name: Build, Sign, Notarize and Release
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          args: "--publish onTag"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          package_root: launcher
-          use_vue_cli: true        
+          build_script_name: dist
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          windows_certs: ${{ secrets.win_certs }}
-          windows_certs_password: ${{ secrets.win_certs_password }}
-
-          # release the app after building - in case of a tag starting with v (in this case always)
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:
           APPLE_ID: ${{ secrets.apple_id }}
           APPLE_ID_PASSWORD: ${{ secrets.apple_id_password }}
           TEAM_SHORT_NAME: ${{ secrets.team_short_name }}
           APP_ID: "com.stereum.launcher"
-        if: "startsWith(github.ref, 'refs/tags/v')"
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+
+      - name: Signing using Signtool on windows-latest
+        run: |
+          dir D:\a\ethereum-node\ethereum-node\launcher\dist\win32\
+          signtool.exe sign /debug /tr http://timestamp.digicert.com /td SHA256 /fd  SHA256 /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} "D:\a\ethereum-node\ethereum-node\launcher\dist\win32\Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe"          
+          signtool.exe verify /v /pa "D:\a\ethereum-node\ethereum-node\launcher\dist\win32\Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe"
+        shell: cmd
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
+      - name: Signtool logs on windows-latest
+        run: |
+          cat /c/Users/runneradmin/.signingmanager/logs/smksp.log
+        shell: bash
+        if: always() && matrix.os == 'windows-latest'
+
+      - name: Debug
+        run: |
+          ls -la launcher/dist/linux
+        shell: bash
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
+      - name: Upload artifacts for ubuntu-latest
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-${{ matrix.os }}
+          path: |
+            launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
+            launcher/dist/linux/latest*.yml
+            launcher/dist/linux/*.blockmap
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
+
+      - name: Debug
+        run: |
+          ls -la launcher/dist/win32
+        shell: bash
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
+      - name: Upload artifacts for windows-latest
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-${{ matrix.os }}
+          path: |
+            launcher/dist/win32/Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe
+            launcher/dist/win32/latest*.yml
+            launcher/dist/win32/*.blockmap
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
+
+      - name: Debug
+        run: |
+          ls -la launcher/dist/darwin
+          mv launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.zip launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}-mac.zip
+          mv launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.zip.blockmap launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}-mac.zip.blockmap
+        shell: bash
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
+      - name: Upload artifacts for macos-latest
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-${{ matrix.os }}
+          path: |
+            launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
+            launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}-mac.zip
+            launcher/dist/darwin/latest*.yml
+            launcher/dist/darwin/*.blockmap
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Set Versions
+        id: variables
+        run: |
+          echo "release=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+          APP_VERSION=$(cat launcher/package.json \
+          | grep version \
+          | head -1 \
+          | awk -F: '{ print $2 }' \
+          | sed 's/[ ",]//g')          
+          echo "version=$APP_VERSION" >> "$GITHUB_OUTPUT"
+        shell: bash
+
+      # download artifacts from build
+      - name: create dist folder
+        run: |
+          mkdir dist
+        shell: bash
+
+      - name: Download ubuntu binary from build into dist
+        uses: actions/download-artifact@master
+        with:
+          name: app-ubuntu-latest
+          path: dist
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+      - name: Download windows binary from build into dist
+        uses: actions/download-artifact@master
+        with:
+          name: app-windows-latest
+          path: dist
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+      - name: Download macos binary from build into dist
+        uses: actions/download-artifact@master
+        with:
+          name: app-macos-latest
+          path: dist
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+
+      # create release if [DRAFT] is in commit using the version from package.json.
+      # during creation, upload all the downloaded build artifacts
+      - name: Create Draft Release
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: "${{ steps.variables.outputs.version }}-draft"
+          name: "${{ steps.variables.outputs.version }}"
+          skipIfReleaseExists: true
+          updateOnlyUnreleased: true
+          artifacts: dist/*
+          draft: true
+          allowUpdates: true
+          replacesArtifacts: true
+          prerelease: true
+        if: ${{ contains(github.event.head_commit.message, '[DRAFT]') }}
+      # if no release was created, just update the artifacts
+      - name: "Upload artifacts to existing draft release ${{ steps.variables.outputs.version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload --clobber "${{ steps.variables.outputs.version }}-draft" dist/*
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && !contains(github.event.head_commit.message, '[DRAFT]') }}
