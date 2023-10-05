@@ -122,13 +122,14 @@
           </Transition>
           <input
             v-model="option.changeValue"
-            class="toggleTextInput"
             type="text"
-            :class="{
-              disabled:
-                !option.buttonState &&
-                (option.changeValue === null || option.changeValue === '0x0000000000000000000000000000000000000000'),
-            }"
+            :class="[
+              'toggleTextInput',
+              {
+                disabled: !option.buttonState,
+              },
+              { emptyIP: option.title == 'External TCP/UDP port' && isTcpUdpPortEmpty },
+            ]"
             @input="somethingIsChanged(option)"
           />
         </div>
@@ -159,7 +160,7 @@
                 :disabled="option.disabled"
                 type="checkbox"
                 name="check-button"
-                @change="somethingIsChanged(option)"
+                @change="somethingIsChanged()"
               />
               <span class="slider round"></span>
             </label>
@@ -219,14 +220,22 @@
         <!-- close text -->
         <span class="exit-btn">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
-        <div v-if="!nothingsChanged" class="confirmBtn" @click="confirmExpertChanges(item)">
+        <div
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
+          class="confirmBtn"
+          @click="confirmExpertChanges(item)"
+        >
           <span>Apply</span>
         </div>
         <div v-else class="disabledBtn">
           <span>Apply</span>
         </div>
         <!-- restart button box -->
-        <div v-if="!nothingsChanged" class="confirmRestartBtn" @click="confirmRestartChanges(item)">
+        <div
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
+          class="confirmRestartBtn"
+          @click="confirmRestartChanges(item)"
+        >
           <span>Apply & Restart</span>
         </div>
         <div v-else class="disabledRestartBtn">
@@ -269,7 +278,7 @@ export default {
       editableData: null,
       changed: false,
       nothingsChanged: true,
-      i: 0,
+      isTcpUdpPortEmpty: true,
     };
   },
   computed: {
@@ -277,14 +286,29 @@ export default {
       currentNetwork: "currentNetwork",
     }),
   },
+  watch: {
+    "item.expertOptions": {
+      handler(newSettings) {
+        const externalTcpUdpPortSetting = newSettings.find((setting) => setting.title === "External TCP/UDP port");
+        if (externalTcpUdpPortSetting) {
+          this.isTcpUdpPortEmpty = externalTcpUdpPortSetting.changeValue.trim() === "";
+        } else {
+          this.isTcpUdpPortEmpty = false;
+        }
+
+        const feeRecepient = newSettings.find((setting) => setting.title === "Default Fee Recipient");
+        if (feeRecepient) {
+          this.feeRecepient = feeRecepient.changeValue.trim() === "";
+        } else {
+          this.feeRecepient = false;
+        }
+      },
+      deep: true,
+    },
+  },
   mounted() {
     this.readService();
   },
-  // watch: {
-  //   changed: function (newValue, oldValue) {
-
-  //   },
-  // },
   methods: {
     openDocs(docsUrl) {
       window.open(docsUrl, "_blank");
@@ -294,10 +318,6 @@ export default {
     somethingIsChanged(item) {
       if (item && item.title) item.changed = true;
       this.nothingsChanged = false;
-      if ((item && item.title === "Doppelganger") || item.title === "Pruning") {
-        this.i++;
-        this.nothingsChanged = this.i % 2 === 0;
-      }
     },
 
     async readService() {
@@ -324,9 +344,11 @@ export default {
         }
         if (option.type === "select" || option.type === "text" || option.type === "toggle") {
           if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
-            option.changeValue = this.item.yaml.indexOf(option.pattern) === -1 ? false : true;
+            option.changeValue = this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
           } else {
-            option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
+            option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
+              ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
+              : "";
           }
         }
         return {
@@ -342,39 +364,87 @@ export default {
         "$1" + this.checkAutoUpdate() + "$3"
       );
 
-      if (this.item.service === "LighthouseValidatorService") {
-        this.item.expertOptions.forEach((option) => {
-          if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
-            if (option.changed) {
-              if (option.title === "Doppelganger") {
-                let doppelgangerEnabled = this.item.yaml.indexOf(option.pattern) === -1 ? false : true;
-                if (option.changeValue && !doppelgangerEnabled) {
-                  this.item.yaml = this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern}\n`);
-                } else {
-                  this.item.yaml = this.item.yaml
-                    .split("\n")
-                    .filter(function (line) {
-                      return line.indexOf(option.pattern) == -1;
-                    })
-                    .join("\n");
+      const ipReg = /^(\d{1,3}\.){3}\d{1,3}$/;
+      this.item.expertOptions.forEach((option) => {
+        let validValue = false;
+        if (option.type === "select" && option.value.length > 0) {
+          for (const el of option.value) {
+            validValue = el === option.changeValue ? true : validValue;
+          }
+        }
+        if (
+          option.changeValue != undefined &&
+          option.changeValue != null &&
+          (!isNaN(option.changeValue) || option.changeValue.match(ipReg) || validValue)
+        ) {
+          if (option.changed) {
+            for (let i = 0; i < option.pattern.length; i++) {
+              if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+                this.item.yaml =
+                  option.changeValue && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
+                    : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
+              } else if (option.title === "External IP Address") {
+                let reg = "";
+                let replacement = "";
+                const extIPCmd = [
+                  {
+                    name: "Lighthouse",
+                    reg: "  - bn\n",
+                    replacement: `  - bn\n  - --enr-address=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Lodestar",
+                    reg: "  - beacon\n",
+                    replacement: `  - beacon\n  - --enr.ip=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Nimbus",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --nat:extip:${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Prysm",
+                    reg: "--accept-terms-of-use=true",
+                    replacement: `--accept-terms-of-use=true --p2p-host-ip=${option.changeValue}`,
+                  },
+                  {
+                    name: "Teku",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --p2p-advertised-ip=${option.changeValue}\n`,
+                  },
+                ];
+                for (const el of extIPCmd) {
+                  if (el.name === this.item.name) {
+                    reg = el.reg;
+                    replacement = el.replacement;
+                  }
                 }
+                this.item.yaml =
+                  option.changeValue === "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "")
+                    : option.changeValue !== "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "$1" + option.changeValue + "$3")
+                    : option.changeValue !== "" && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(reg), replacement)
+                    : this.item.yaml;
+              } else if (option.title === "External TCP/UDP port" && (i === 2 || i === 3)) {
+                let tcp_udp = i === 2 ? "/tcp" : "/udp";
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i], "m"),
+                  "$1" + ":" + option.changeValue + ":" + option.changeValue + tcp_udp
+                );
               } else {
-                this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i]),
+                  "$1" + option.changeValue + "$3"
+                );
               }
             }
-            option.changed = false;
           }
-        });
-      } else {
-        this.item.expertOptions.forEach((option) => {
-          if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
-            if (option.changed) {
-              this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
-            }
-            option.changed = false;
-          }
-        });
-      }
+          option.changed = false;
+        }
+      });
 
       if (this.item.service === "SSVNetworkService")
         await ControlService.writeSSVNetworkConfig({
@@ -467,14 +537,20 @@ export default {
     //   }
     // },
     async confirmExpertChanges(el) {
+      // console.log(el);
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
-      this.i = 0;
+
+      // if (el.expertOptions.title == "Default Fee Recipient") {
+      //   if (el.expertOptions.changeValue == "") {
+      //     el.expertOptions.changeValue = "0x0000000000000000000000000000000000000000";
+      //   }
+      // }
     },
     async confirmRestartChanges(el) {
       this.confirmExpertChanges(el);
-      await ControlService.restartService(el.config.serviceID);
+      await ControlService.restartService({ serviceID: el.config.serviceID, state: el.state });
     },
     async executeAction(action, service) {
       await ControlService.chooseServiceAction({ action: action, service: structuredClone(service) });
@@ -919,6 +995,10 @@ input:checked + .slider:before {
   font-weight: 600;
   color: rgb(44, 44, 44);
   justify-self: end;
+}
+.emptyIP {
+  border: 2px solid #bd1414;
+  background-color: rgba(189, 20, 20, 0.3);
 }
 .disabled {
   opacity: 0.6 !important;

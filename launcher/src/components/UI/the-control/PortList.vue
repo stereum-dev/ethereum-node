@@ -7,20 +7,18 @@
         </div>
         <span>OPEN PORTS</span>
       </div>
-      <div v-if="portstatus && portstatus.data" class="portlist-data_box">
-        <div
-          v-for="item in portstatus.data"
-          :key="item.id"
-          class="portlist-data_row"
-        >
-          <div class="rowName">
-            <span>{{ item.name }}</span>
-          </div>
-          <div class="portNo">
-            <span>{{ item.port }}</span>
-          </div>
-          <div class="protocol">
-            <span>{{ item.prot }}</span>
+      <div class="wrapper">
+        <div v-if="portstatus && portstatus.data" class="portlist-data_box">
+          <div v-for="item in portstatus.data" :key="item.id" class="portlist-data_row">
+            <div class="rowName">
+              <span>{{ item.name }}</span>
+            </div>
+            <div class="portNo">
+              <span>{{ item.port }}</span>
+            </div>
+            <div class="protocol">
+              <span>{{ item.prot }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -86,11 +84,18 @@ export default {
   width: 72%;
   height: 90%;
 }
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 65%;
+  height: 100%;
+}
 .portlist-data_box {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 70%;
+  width: 100%;
   height: 100%;
   flex-direction: column;
   overflow-y: auto;

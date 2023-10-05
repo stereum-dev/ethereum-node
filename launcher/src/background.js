@@ -451,27 +451,31 @@ ipcMain.handle("getCurrentEpochSlot", async () => {
 });
 
 ipcMain.handle("changePassword", async (event, args) => {
-  return await nodeConnection.sshService.changePassword(args)
+  return await nodeConnection.sshService.changePassword(args);
 });
 
 ipcMain.handle("readSSHKeyFile", async (event, args) => {
-  return await nodeConnection.sshService.readSSHKeyFile(args)
+  return await nodeConnection.sshService.readSSHKeyFile(args);
 });
 
 ipcMain.handle("writeSSHKeyFile", async (event, args) => {
-  return await nodeConnection.sshService.writeSSHKeyFile(args)
+  return await nodeConnection.sshService.writeSSHKeyFile(args);
 });
 
 ipcMain.handle("generateSSHKeyPair", async (event, args) => {
-  return await nodeConnection.sshService.generateSSHKeyPair(args)
+  return await nodeConnection.sshService.generateSSHKeyPair(args);
 });
 
 ipcMain.handle("AddExistingSSHKey", async (event, args) => {
   const publicKey = readFileSync(args, {
     encoding: "utf8",
-  })
-  const existingSSHKeys = await nodeConnection.sshService.readSSHKeyFile()
-  return await nodeConnection.sshService.writeSSHKeyFile([...existingSSHKeys, publicKey])
+  });
+  const existingSSHKeys = await nodeConnection.sshService.readSSHKeyFile();
+  return await nodeConnection.sshService.writeSSHKeyFile([...existingSSHKeys, publicKey]);
+});
+
+ipcMain.handle("IpScanLan", async () => {
+  return await nodeConnection.IpScanLan();
 });
 
 // Scheme must be registered before the app is ready
@@ -576,11 +580,10 @@ async function createWindow(type = "main") {
 
   //
   ipcMain.handle("openDirectoryDialog", async (event, args) => {
-    const { canceled, filePaths } = await dialog.showOpenDialog(win, args)
-    if (canceled)
-      return []
-    return filePaths
-  })
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, args);
+    if (canceled) return [];
+    return filePaths;
+  });
 
   return win;
 }

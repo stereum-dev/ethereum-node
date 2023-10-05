@@ -186,7 +186,7 @@ export default {
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
       this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
-      if (["staking", "mev boost", "stereum on arm"].includes(this.selectedPreset.name)) {
+      if (["staking", "mev boost", "stereum on arm", "archive"].includes(this.selectedPreset.name)) {
         //if the preset is staking:
         if (item.category === "consensus") {
           //and you just changed the consensus client
@@ -262,7 +262,8 @@ export default {
           //filter = (item) => item.category === element.category
           break;
         case "mev boost":
-          filter = (item) => item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
+          filter = (item) =>
+            item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
           break;
         case "stereum on arm":
           filter = (item) =>

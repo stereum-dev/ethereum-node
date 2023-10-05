@@ -179,7 +179,7 @@
             - --HealthChecks.Enabled=true
             - --Pruning.Mode=Hybrid
           entrypoint:
-            - ./Nethermind.Runner
+            - ./nethermind
           env: {}
           image: nethermind/nethermind:1.18.0
           ports:

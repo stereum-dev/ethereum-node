@@ -460,10 +460,25 @@ export default {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+.name::-webkit-scrollbar {
+  height: 2px;
+  background: transparent;
+  padding: 0 20px;
+}
+.name::-webkit-scrollbar-thumb {
+  background-color: #3c6283;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 0 20px;
+}
+.name::-webkit-scrollbar-thumb:hover {
+  background-color: #3e78ab;
+}
 .name {
   font-size: 100%;
   font-weight: 500;
-  overflow-x: scroll;
+  overflow-x: auto;
+  overflow-y: hidden;
   white-space: nowrap;
 }
 .key-row {

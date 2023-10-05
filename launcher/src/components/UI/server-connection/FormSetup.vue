@@ -1,6 +1,13 @@
 <template>
   <div class="server-parent">
-    <div v-if="alertBox" class="alert animate__animated animate__flipInX">Please fill in the missing fields!</div>
+    <IpScanModal
+      v-if="ipScanModal"
+      :btn-state="btnSearchState"
+      :scanned-ip="foundIp"
+      @close-ipscan="ipScanModal = false"
+      @btn-function="scanFunction"
+    />
+    <div v-if="alertBox" class="alert animate__animated animate__flipInX">{{ $t("formsetup.fillFields") }}</div>
     <div v-if="errorMsgExists" class="error-box"></div>
     <div v-if="errorMsgExists" class="error-modal">
       <div class="title-box">
@@ -13,8 +20,10 @@
         <button @click="closeErrorDialog">OK</button>
       </div>
     </div>
+
     <div v-if="connectingAnimActive" class="anim">
       <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
+      <div class="cancl-btn" @click="cancelLogin">cancel</div>
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
@@ -68,6 +77,9 @@
               <label for="host">{{ $t("formsetup.iphost") }}</label>
             </div>
             <div class="server-group_input">
+              <div class="ip-scaner" @click="ipScanModal = true">
+                <img src="/img/icon/form-setup/local-lan.png" alt="" />
+              </div>
               <input
                 id="iporhostname"
                 v-model="model.host.value"
@@ -194,11 +206,11 @@
         </button>
       </form>
     </div>
-    <!-- test dovom -->
   </div>
 </template>
 
 <script>
+import IpScanModal from "./IpScanModal.vue";
 import DeleteModal from "./DeleteModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
@@ -208,10 +220,16 @@ import { useServices } from "@/store/services";
 
 export default {
   name: "FormSetup",
-  components: { DeleteModal },
+  components: { DeleteModal, IpScanModal },
   emits: ["page"],
   data() {
     return {
+      abortController: new AbortController(),
+      scannedCounter: 0,
+      btnSearchState: "search",
+      ipScanModal: false,
+      devices: [],
+      foundIp: this.$t("ipScanModal.clickSearch"),
       alertBox: false,
       sshPort: null,
       keyAuth: false,
@@ -224,6 +242,7 @@ export default {
       selectedName: "",
       bDialogVisible: false,
       showPassword: false,
+      noIpFound: this.$t("ipScanModal.noIpFound"),
       model: {
         name: { value: "", isFilled: true },
         host: { value: "", isFilled: true },
@@ -262,10 +281,52 @@ export default {
       }
     },
   },
+
+  watch: {
+    devices() {
+      if (this.devices.length < 1) {
+        this.foundIp = this.noIpFound;
+        this.btnSearchState = "search";
+      } else if (this.devices.length == 1) {
+        this.foundIp = this.devices[0].ip;
+        this.btnSearchState = "copy";
+      }
+    },
+  },
   created() {
     this.loadStoredConnections();
   },
   methods: {
+    scanFunction() {
+      if (this.scannedCounter == 0 && this.btnSearchState === "search") {
+        this.scannedCounter++;
+        this.startScaning();
+      } else if (this.btnSearchState === "search") {
+        this.startScaning();
+      } else if (this.btnSearchState === "pending") {
+        return "";
+      } else if (this.btnSearchState === "copy") {
+        this.copyIp(this.foundIp);
+      }
+      return "";
+    },
+    async copyIp(arg) {
+      await navigator.clipboard.writeText(arg);
+    },
+    startScaning() {
+      this.btnSearchState = "pending";
+      this.foundIp = "Searching...";
+      this.IpScanLan1();
+    },
+    async IpScanLan1() {
+      try {
+        let res = await ControlService.IpScanLan();
+        this.devices = res;
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    },
+
     toggleShowPassword() {
       this.showPassword = !this.showPassword;
     },
@@ -417,6 +478,7 @@ export default {
     //   }
     // },
     login: async function () {
+      this.abortController = new AbortController();
       this.connectingAnimActive = true;
       try {
         await ControlService.connect({
@@ -427,7 +489,9 @@ export default {
           sshKeyAuth: this.model.useAuthKey,
           keyfileLocation: this.model.keylocation.value,
           passphrase: this.model.passphrase.value,
+          signal: this.abortController.signal,
         });
+        if (this.abortController.signal.aborted) return;
       } catch (err) {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
@@ -442,6 +506,14 @@ export default {
         this.$router.push("/node");
       }
       this.$emit("page", "welcome-page");
+    },
+    cancelLogin() {
+      if (this.abortController) {
+        this.abortController.abort();
+      }
+      this.connectingAnimActive = false;
+      this.errorMsgExists = false;
+      this.model.pass.value = "";
     },
   },
 };
@@ -495,6 +567,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: default;
 }
 .server-box {
   width: 100%;
@@ -713,8 +786,27 @@ select {
   border: 2px solid rgb(54, 54, 54);
 }
 #iporhostname {
-  width: 70%;
+  width: 60%;
   border-radius: 30px 0 0 30px;
+}
+.ip-scaner {
+  width: 7.5%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eaeaea;
+  margin-right: 2%;
+  border: 2px solid #979797;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.ip-scaner img {
+  width: 80%;
+  opacity: 90%;
+}
+.ip-scaner:active {
+  transform: scale(0.95);
 }
 .ipPort {
   width: 16% !important;
@@ -1004,11 +1096,10 @@ input:checked + .slider:before {
 .anim {
   width: 100%;
   height: 100%;
-  background-color: rgb(8, 8, 8);
+  background-color: rgba(8, 8, 8, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.9;
   position: fixed;
   top: 0;
   left: 0;
@@ -1018,7 +1109,28 @@ input:checked + .slider:before {
   width: 35%;
   height: 45%;
 }
-
+.cancl-btn {
+  width: 20%;
+  height: 10%;
+  position: absolute;
+  top: 80%;
+  right: 40%;
+  background-color: #eb5353;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 120%;
+  font-weight: 800;
+  color: #eae9e9;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.cancl-btn:active {
+  transform: scale(0.95);
+}
 .error {
   color: #e43e3e;
   border-color: #e43e3e !important;
