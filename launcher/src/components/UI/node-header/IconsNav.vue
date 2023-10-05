@@ -29,15 +29,16 @@
     <div class="icon-btn" @click="logoutModalHandler">
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
+
     <update-panel
+      v-if="displayUpdatePanel"
       ref="UpdatePanelComp"
-      :click-bg="displayUpdatePanel"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
       @update-confirm="updateConfirmationHandler"
       @run-update="runUpdate"
       @run-os-update="runOsUpdate"
-      @click-out="removeUpdateModal"
+      @click-outside="removeUpdateModal"
     ></update-panel>
+
     <logout-modal
       v-if="logoutModalIsActive"
       @close-me="clickToCancelLogout"
@@ -67,7 +68,6 @@ export default {
   data() {
     return {
       test: true,
-      displayUpdatePanel: false,
       logoutModalIsActive: false,
       supportModalIsActive: false,
       notificationModalIsActive: false,
@@ -75,6 +75,7 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
+      displayUpdatePanel: "displayUpdatePanel",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
       isOsUpdateAvailable: "isOsUpdateAvailable",
@@ -90,6 +91,7 @@ export default {
       versions: "versions",
     }),
   },
+
   methods: {
     updateConfirmationHandler: async function () {
       let seconds = 0;
@@ -163,8 +165,8 @@ export default {
       });
     },
     updateModalHandler() {
+      this.displayUpdatePanel = true;
       useUpdateCheck();
-      this.displayUpdatePanel = !this.displayUpdatePanel;
     },
     removeUpdateModal() {
       this.displayUpdatePanel = false;
@@ -185,6 +187,22 @@ export default {
 };
 </script>
 <style scoped>
+.slide-fade-enter-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from {
+  transform: translateX(405px);
+  opacity: 0;
+}
+.slide-fade-leave-to {
+  transform: translateX(405px);
+  opacity: 0;
+}
 .icons-box {
   width: 25%;
   max-width: 250px;
