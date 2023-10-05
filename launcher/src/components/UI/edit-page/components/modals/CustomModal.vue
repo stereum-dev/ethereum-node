@@ -9,7 +9,7 @@
       <div class="h-full flex flex-col justify-between gap-4">
         <div class="text-center p-2 flex-auto justify-center space-y-2">
           <div class="flex justify-center items-center px-4 mx-auto">
-            <img v-if="icon" class="w-[60px] h-[60px] mr-2" :src="icon" :alt="altText" />
+            <img v-if="client" class="w-[60px] h-[60px] mr-2" :src="client.icon" :alt="altText" />
             <div v-if="mainTitle || subTitle" class="flex flex-col justify-between items-start">
               <p class="text-[28px] font-bold text-teal-600 uppercase">{{ mainTitle }}</p>
               <p class="text-[20px] font-bold text-amber-600 uppercase">{{ subTitle }}</p>
@@ -23,7 +23,6 @@
         <slot name="content"></slot>
         <div class="w-full flex justify-end text-md font-bold py-3 mt-2 space-y-4 absolute bottom-4 right-2">
           <button
-            v-if="confirmText !== ''"
             class="mr-4 min-w-[100px] bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full hover:bg-green-600 uppercase active:scale-95 transition duration-200"
             @click="emitConfirmAction"
           >
@@ -46,11 +45,14 @@ const closeModal = () => {
 };
 
 const emitConfirmAction = () => {
-  emit("confirmAction");
+  emit("confirmAction", client);
 };
 
-const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, subTitle } = defineProps({
-  icon: String,
+const { client, altText, mainTitle, messageText, confirmText, clickOutsideText, subTitle } = defineProps({
+  client: {
+    type: Object,
+    default: null,
+  },
   altText: String,
   mainTitle: String,
   messageText: String,

@@ -1,21 +1,26 @@
 <template>
   <custom-modal
     :main-title="`${client.name} - ${client.category}`"
-    :icon="client.sIcon"
-    sub-title="Add Service"
-    confirm-text="INSTALL"
+    :client="client"
+    :sub-title="subTitle"
+    :confirm-text="confirmText"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmInstall"
   >
     <template #content>
-      <AddContent :client="client" />
+      <AddPanel v-if="isAddPanelActivated" :client="client" />
+      <MevboostRelays v-if="isRelaysActivated" :client="client" />
+      <AddConnection v-if="isModifyActivated" :client="client" @select-service="selectService" />
     </template>
   </custom-modal>
 </template>
 <script setup>
 import CustomModal from "./CustomModal.vue";
-import AddContent from "./AddContent.vue";
+import AddPanel from "./AddPanel.vue";
+import AddConnection from "./AddConnection.vue";
+import MevboostRelays from "./MevboostRelays.vue";
+import { ref, onMounted, watchEffect } from "vue";
 
 const { client } = defineProps({
   client: {
@@ -24,16 +29,96 @@ const { client } = defineProps({
   },
 });
 
-const emit = defineEmits(["closeWindow", "confirmInstall"]);
+const emit = defineEmits(["closeWindow", "confirmInstall", "selectService"]);
+
+//Refs
+const isAddPanelActivated = ref(false);
+const isRelaysActivated = ref(false);
+const isModifyActivated = ref(false);
+let confirmText = ref("");
+let subTitle = ref("");
+
+//Watchers
+
+watchEffect(() => {
+  if (client) {
+    if (client.category === "execution") {
+      confirmText.value = "Confirm";
+      subTitle.value = "Add Service";
+    } else if (client.category === "consensus" || client.category === "validator") {
+      confirmText.value = "Next";
+      subTitle.value = "Add Service";
+    } else if (client.category === "service" && client.service !== "FlashbotsMevBoostService") {
+      confirmText.value = "Confirm";
+      subTitle.value = "Add Service";
+    } else if (client.category === "service" && client.service === "FlashbotsMevBoostService") {
+      confirmText.value = "Next";
+      subTitle.value = "Add Service";
+    } else if (isRelaysActivated.value && client.service === "FlashbotsMevBoostService") {
+      console.log("isRelaysActivated", isRelaysActivated.value);
+      confirmText.value = "Next";
+      subTitle.value = "Mevboost Relays";
+      console.log("Next", confirmText.value);
+      console.log("SubTitle", subTitle.value);
+      console.log("isRelaysActivated", isRelaysActivated.value);
+    } else if (isModifyActivated.value) {
+    }
+  }
+});
+
+//Lifecycle Hooks
+onMounted(() => {
+  isAddPanelActivated.value = true;
+});
 
 //Methods
 
-const confirmInstall = () => {
-  emit("confirmInstall", client);
+const confirmInstall = (item) => {
+  if (item.category === "execution") {
+    confirmText.value = "Confirm";
+    subTitle.value = "Add Service";
+    item.AddPanel = false;
+    emit("confirmInstall", item);
+  } else if (item.category === "consensus" || item.category === "validator") {
+    confirmText.value = "Next";
+    subTitle.value = "Add Service";
+    isAddPanelActivated.value = false;
+    isModifyActivated.value = true;
+    emit("confirmInstall", item);
+  } else if (item.category === "service" && item.service !== "FlashbotsMevBoostService") {
+    confirmText.value = "Confirm";
+    subTitle.value = "Add Service";
+    isAddPanelActivated.value = false;
+    item.AddPanel = false;
+    emit("confirmInstall", item);
+  } else if (item.category === "service" && item.service === "FlashbotsMevBoostService") {
+    isAddPanelActivated.value = false;
+    isRelaysActivated.value = true;
+    confirmText.value = "Next";
+    subTitle.value = "Mevboost Relays";
+    emit("confirmInstall", item);
+  } else if (isRelaysActivated.value) {
+    isAddPanelActivated.value = false;
+    isRelaysActivated.value = false;
+    isModifyActivated.value = true;
+    confirmText.value = "Confirm";
+    subTitle.value = "Add Connection";
+    emit("confirmInstall", item);
+  } else if (isModifyActivated.value) {
+    isAddPanelActivated.value = false;
+    isRelaysActivated.value = false;
+    isModifyActivated.value = false;
+    item.AddPanel = false;
+    emit("confirmInstall", item);
+  }
 };
 
 const closeWindow = () => {
   emit("closeWindow", client);
+};
+
+const selectService = (item) => {
+  emit("selectService", item);
 };
 </script>
 

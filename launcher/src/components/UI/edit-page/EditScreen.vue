@@ -80,7 +80,7 @@
       <!-- End Modify Services Modal -->
       <!-- Start Add New Service Modal -->
       <AddModal
-        v-if="isAddModalOpen"
+        v-if="clientToInstall?.addPanel"
         :client="clientToInstall"
         @close-window="cancelInstallation"
         @confirm-install="serviceInstallHandler"
@@ -303,8 +303,8 @@ const addServices = (service) => {
   } else {
     item.id = manageStore.newConfiguration.length;
     manageStore.newConfiguration.push(item);
-    isAddModalOpen.value = true;
     clientToInstall.value = item;
+    clientToInstall.value.addPanel = true;
   }
 };
 
@@ -327,16 +327,16 @@ const onDrop = (event) => {
   } else {
     item.id = manageStore.newConfiguration.length;
     manageStore.newConfiguration.push(item);
-    isAddModalOpen.value = true;
     clientToInstall.value = item;
+    clientToInstall.value.addPanel = true;
   }
 };
 
 //Confirm Adding service
 
-const serviceInstallHandler = (data) => {
+const serviceInstallHandler = (item) => {
   isAddModalOpen.value = false;
-  console.log(data);
+  console.log(item);
   console.log(manageStore.newConfiguration.map((s) => s.id));
   // manageStore.confirmChanges.push({
   //   id: randomId,

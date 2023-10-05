@@ -1,7 +1,7 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
-    <div class="w-full h-full grid grid-cols-24 relative" @mousedown.prevent>
+    <div class="w-full h-full grid grid-cols-24 relative">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection />
       </div>
