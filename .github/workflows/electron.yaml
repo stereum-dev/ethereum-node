@@ -192,12 +192,6 @@ jobs:
           name: app-macos-latest
           path: dist
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
-      - name: Download sourcecode into dist
-        uses: actions/download-artifact@master
-        with:
-          name: sourcecode
-          path: dist
-        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
 
       # create release if [DRAFT] is in commit using the version from package.json.
       # during creation, upload all the downloaded build artifacts
