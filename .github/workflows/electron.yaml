@@ -159,21 +159,6 @@ jobs:
           mkdir dist
         shell: bash
 
-      - name: Archive Release in zip format
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: "zip"
-          filename: "dist/SourceCode.zip"
-          exclusions: "dist build *.git* /*node_modules/* .editorconfig"
-        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
-      - name: Archive Release in tar.gz format
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: "tar"
-          filename: "dist/SourceCode.tar.gz"
-          exclusions: "dist build *.git* /*node_modules/* .editorconfig"
-        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
-
       - name: Download ubuntu binary from build into dist
         uses: actions/download-artifact@master
         with:
