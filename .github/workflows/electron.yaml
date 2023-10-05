@@ -54,19 +54,19 @@ jobs:
         if: matrix.os == 'windows-latest'
 
       - name: Archive Release in zip format
-      uses: thedoctor0/zip-release@0.7.1
-      with:
-        type: 'zip'
-        filename: 'SourceCode.zip'
-        exclusions: '*.git* /*node_modules/* .editorconfig'
-      if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: "zip"
+          filename: "SourceCode.zip"
+          exclusions: "*.git* /*node_modules/* .editorconfig"
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
       - name: Archive Release in tar.gz format
-      uses: thedoctor0/zip-release@0.7.1
-      with:
-        type: 'tar'
-        filename: 'SourceCode.tar.gz'
-        exclusions: '*.git* /*node_modules/* .editorconfig'
-      if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: "tar"
+          filename: "SourceCode.tar.gz"
+          exclusions: "*.git* /*node_modules/* .editorconfig"
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
       - name: Upload SourceCode Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -74,7 +74,7 @@ jobs:
           path: |
             Sourcecode.zip
             Sourcecode.tar.gz
-      if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}                    
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
 
       - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1
