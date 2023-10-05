@@ -53,6 +53,29 @@ jobs:
         shell: cmd
         if: matrix.os == 'windows-latest'
 
+      - name: Archive Release in zip format
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        filename: 'SourceCode.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+      if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+      - name: Archive Release in tar.gz format
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'tar'
+        filename: 'SourceCode.tar.gz'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+      if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+      - name: Upload SourceCode Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: sourcecode
+          path: |
+            Sourcecode.zip
+            Sourcecode.tar.gz
+      if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}                    
+
       - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -94,7 +117,7 @@ jobs:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
-            launcher/dist/linux/*.yml
+            launcher/dist/linux/latest*.yml
             launcher/dist/linux/*.blockmap
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
 
@@ -109,13 +132,15 @@ jobs:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/win32/Stereum-Launcher-Setup-${{ steps.variables.outputs.version }}.exe
-            launcher/dist/win32/*.yml
+            launcher/dist/win32/latest*.yml
             launcher/dist/win32/*.blockmap
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'windows-latest' }}
 
       - name: Debug
         run: |
           ls -la launcher/dist/darwin
+          mv launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.zip launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}-mac.zip
+          mv launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.zip.blockmap launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}-mac.zip.blockmap
         shell: bash
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
       - name: Upload artifacts for macos-latest
@@ -124,7 +149,8 @@ jobs:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}.dmg
-            launcher/dist/darwin/*.yml
+            launcher/dist/darwin/Stereum-Launcher-${{ steps.variables.outputs.version }}-mac.zip
+            launcher/dist/darwin/latest*.yml
             launcher/dist/darwin/*.blockmap
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest' }}
 
@@ -171,6 +197,12 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: app-macos-latest
+          path: dist
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+      - name: Download sourcecode into dist
+        uses: actions/download-artifact@master
+        with:
+          name: sourcecode
           path: dist
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
 
