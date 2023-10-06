@@ -1,6 +1,6 @@
 import { onMounted } from 'vue';
 <template>
-  <div class="w-full flex flex-col justify-evenly items-center mx-auto px-4 py-2 space-y-2">
+  <div class="w-full flex flex-col justify-evenly items-center mx-auto px-4 py-2 space-y-2 mt-6">
     <div class="w-full flex justify-center items-center">
       <div class="w-full grid grid-cols-12 items-center text-md">
         <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/folder.png" alt="Path Icon" />

@@ -4,6 +4,7 @@
     :client="client"
     :sub-title="getSubTitles"
     :confirm-text="getConfirmText"
+    :disabled-button="disabledButton"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmInstall"
@@ -20,7 +21,8 @@ import CustomModal from "./CustomModal.vue";
 import AddPanel from "./AddPanel.vue";
 import AddConnection from "./AddConnection.vue";
 import MevboostRelays from "./MevboostRelays.vue";
-import { ref, onMounted, watch, watchEffect, computed } from "vue";
+import { useNodeManage } from "@/store/nodeManage";
+import { ref, onMounted, watchEffect, computed } from "vue";
 
 const { client } = defineProps({
   client: {
@@ -32,11 +34,15 @@ const { client } = defineProps({
 const emit = defineEmits(["closeWindow", "confirmInstall", "selectService"]);
 
 //Refs
-const isAddPanelActivated = ref();
+const isAddPanelActivated = ref(false);
 const isRelaysActivated = ref(false);
 const isModifyActivated = ref(false);
+const disabledButton = ref(false);
 
-//Watchers
+//Store
+const manageStore = useNodeManage();
+
+//Computed & Watcher
 
 const getConfirmText = computed(() => {
   let text = "";
@@ -70,42 +76,14 @@ const getSubTitles = computed(() => {
   return text;
 });
 
-watch(client, () => {
-  // if (val) {
-  //   if (val.category === "execution") {
-  //     isAddPanelActivated.value = true;
-  //     confirmText.value = "Confirm";
-  //     subTitle.value = "Add Service";
-  //   } else if (val.category === "consensus" || val.category === "validator") {
-  //     isAddPanelActivated.value = false;
-  //     isModifyActivated.value = true;
-  //     confirmText.value = "Confirm";
-  //     subTitle.value = "Add Connection";
-  //   } else if (val.category === "service" && val.service !== "FlashbotsMevBoostService") {
-  //     confirmText.value = "Confirm";
-  //     subTitle.value = "Add Service";
-  //     isAddPanelActivated.value = false;
-  //   } else if (val.category === "service" && val.service === "FlashbotsMevBoostService") {
-  //     isAddPanelActivated.value = false;
-  //     isRelaysActivated.value = true;
-  //     confirmText.value = "Next";
-  //     subTitle.value = "Mevboost Relays";
-  //   } else if (isRelaysActivated.value) {
-  //     isAddPanelActivated.value = false;
-  //     isRelaysActivated.value = false;
-  //     isModifyActivated.value = true;
-  //     confirmText.value = "Confirm";
-  //     subTitle.value = "Add Connection";
-  //   } else if (isModifyActivated.value) {
-  //     confirmText.value = "Confirm";
-  //     subTitle.value = "Add Connection";
-  //     val.addPanel = false;
-  //     isAddPanelActivated.value = false;
-  //   }
-  // }
+//Watch the button state for relays
+watchEffect(() => {
+  if (isRelaysActivated.value && !manageStore.checkedRelays.length) {
+    disabledButton.value = true;
+  } else {
+    disabledButton.value = false;
+  }
 });
-
-watchEffect(() => {});
 
 //Lifecycle Hooks
 onMounted(() => {
@@ -135,16 +113,24 @@ const confirmInstall = () => {
   } else if (
     client.category === "service" &&
     client.service === "FlashbotsMevBoostService" &&
+    !isRelaysActivated.value &&
     getConfirmText.value === "next"
   ) {
     isAddPanelActivated.value = false;
     isRelaysActivated.value = true;
-  } else if (isRelaysActivated.value && getConfirmText.value === "next") {
-    isRelaysActivated.value = false;
-    isModifyActivated.value = true;
   } else if (isModifyActivated.value && getConfirmText.value === "confirm") {
     client.addPanel = false;
     emit("confirmInstall", client);
+  } else if (
+    isRelaysActivated.value &&
+    client.category === "service" &&
+    client.service === "FlashbotsMevBoostService" &&
+    getConfirmText.value === "next"
+  ) {
+    console.log("Next Clicked");
+    isAddPanelActivated.value = false;
+    isRelaysActivated.value = false;
+    isModifyActivated.value = true;
   }
 };
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-10/12 h-full grid grid-cols-2 grid-flow-row p-2 mx-auto -mt-6 trasnform duration-200">
+  <div class="w-10/12 h-full grid grid-cols-2 grid-flow-row p-2 mx-auto trasnform duration-200 mt-6">
     <RelaysCheckbox
       v-for="relay in manageStore.relaysList"
       :key="relay.id"
@@ -14,18 +14,20 @@
 <script setup>
 import RelaysCheckbox from "./RelaysCheckbox.vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref } from "vue";
+import { watch } from "vue";
 
-const checkedRelays = ref([]);
 const manageStore = useNodeManage();
+
+watch(manageStore.checkedRelays, () => {
+  console.log(manageStore.checkedRelays);
+});
 
 const getRelays = (relay) => {
   if (relay.isSelected) {
-    checkedRelays.value.push(relay);
+    manageStore.checkedRelays.push(relay);
   } else {
-    const element = checkedRelays.value.find((item) => item.id === relay.id);
-    checkedRelays.value.splice(checkedRelays.value.indexOf(element), 1);
+    const element = manageStore.checkedRelays.find((item) => item.id === relay.id);
+    manageStore.checkedRelays.splice(manageStore.checkedRelays.indexOf(element), 1);
   }
-  console.log(checkedRelays.value);
 };
 </script>

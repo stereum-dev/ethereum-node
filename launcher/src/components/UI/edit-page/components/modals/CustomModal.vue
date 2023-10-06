@@ -1,3 +1,4 @@
+import { useNodeManage } from '@/store/nodeManage';
 <template>
   <div
     class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
@@ -7,12 +8,12 @@
       class="w-2/3 min-h-[450px] py-1 px-2 relative mx-auto my-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-400"
     >
       <div class="h-full flex flex-col justify-between gap-4">
-        <div class="text-center p-2 flex-auto justify-center space-y-2">
+        <div class="text-center pt-4 flex-auto justify-center space-y-2">
           <div class="flex justify-center items-center px-4 mx-auto">
-            <img v-if="client" class="w-[60px] h-[60px] mr-2" :src="client.sIcon" alt="Service Icon" />
+            <img v-if="client" class="w-[55px] h-[55px] mr-2" :src="client.sIcon" alt="Service Icon" />
             <div v-if="mainTitle || subTitle" class="flex flex-col justify-between items-start">
               <span class="text-[28px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
-              <span class="text-[20px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
+              <span class="text-[24px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
             </div>
           </div>
 
@@ -23,7 +24,12 @@
         <slot name="content"></slot>
         <div class="w-full flex justify-end text-md font-bold py-3 mt-2 space-y-4 absolute bottom-4 right-2">
           <button
-            class="mr-4 min-w-[100px] bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full hover:bg-green-600 uppercase active:scale-95 transition duration-200"
+            class="mr-4 min-w-[100px] bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full uppercase"
+            :class="
+              disabledButton
+                ? 'opacity-40 cursor-not-allowed'
+                : 'hover:bg-green-600  active:scale-95 transition duration-200'
+            "
             @click="emitConfirmAction"
           >
             {{ confirmText }}
@@ -38,17 +44,8 @@
 </template>
 
 <script setup>
-const emit = defineEmits(["closeWindow", "confirmAction"]);
-
-const closeModal = () => {
-  emit("closeWindow");
-};
-
-const emitConfirmAction = () => {
-  emit("confirmAction", client);
-};
-
-const { client, mainTitle, messageText, confirmText, clickOutsideText, subTitle } = defineProps({
+//Props
+const { client, mainTitle, messageText, confirmText, clickOutsideText, subTitle, disabledButton } = defineProps({
   client: {
     type: Object,
     default: () => {},
@@ -57,7 +54,24 @@ const { client, mainTitle, messageText, confirmText, clickOutsideText, subTitle 
   messageText: String,
   confirmText: String,
   confirmBtn: Boolean,
+  disabledButton: Boolean,
   subTitle: String,
   clickOutsideText: String,
 });
+
+//Emits
+const emit = defineEmits(["closeWindow", "confirmAction"]);
+
+//Refs
+
+//Watchers
+
+//Methods
+const closeModal = () => {
+  emit("closeWindow");
+};
+
+const emitConfirmAction = () => {
+  emit("confirmAction", client);
+};
 </script>
