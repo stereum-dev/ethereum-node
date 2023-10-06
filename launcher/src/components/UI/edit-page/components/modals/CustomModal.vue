@@ -9,7 +9,7 @@
       <div class="h-full flex flex-col justify-between gap-4">
         <div class="text-center p-2 flex-auto justify-center space-y-2">
           <div class="flex justify-center items-center px-4 mx-auto">
-            <img v-if="client" class="w-[60px] h-[60px] mr-2" :src="client.icon" :alt="altText" />
+            <img v-if="client" class="w-[60px] h-[60px] mr-2" :src="client.sIcon" alt="Service Icon" />
             <div v-if="mainTitle || subTitle" class="flex flex-col justify-between items-start">
               <span class="text-[28px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
               <span class="text-[20px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
@@ -17,7 +17,7 @@
           </div>
 
           <div v-if="messageText" class="text-md font-bold text-amber-600">
-            <p>{{ messageText }}</p>
+            <span>{{ messageText }}</span>
           </div>
         </div>
         <slot name="content"></slot>
@@ -48,12 +48,11 @@ const emitConfirmAction = () => {
   emit("confirmAction", client);
 };
 
-const { client, altText, mainTitle, messageText, confirmText, clickOutsideText, subTitle } = defineProps({
+const { client, mainTitle, messageText, confirmText, clickOutsideText, subTitle } = defineProps({
   client: {
     type: Object,
-    default: null,
+    default: () => {},
   },
-  altText: String,
   mainTitle: String,
   messageText: String,
   confirmText: String,

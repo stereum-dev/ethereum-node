@@ -336,14 +336,6 @@ const onDrop = (event) => {
 
 const addServiceHandler = (item) => {
   console.log(item);
-  console.log(manageStore.newConfiguration.map((s) => s.id));
-  // manageStore.confirmChanges.push({
-  //   id: randomId,
-  //   content: "INSTALL",
-  //   contentIcon: "/img/icon/manage-node-icons/install.png",
-  //   service: item,
-  // });
-  // manageStore.newConfiguration.push(item);
 };
 
 // Cancel Adding service
