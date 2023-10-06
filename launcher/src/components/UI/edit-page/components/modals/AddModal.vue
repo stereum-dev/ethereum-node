@@ -10,7 +10,7 @@
     @confirm-action="confirmInstall"
   >
     <template #content>
-      <AddPanel v-if="isAddPanelActivated" :client="client" />
+      <AddPanel v-if="isAddPanelActivated" ref="addPanelComponent" :client="client" />
       <MevboostRelays v-else-if="isRelaysActivated" :client="client" />
       <AddConnection v-else-if="isModifyActivated" :client="client" @select-service="selectService" />
     </template>

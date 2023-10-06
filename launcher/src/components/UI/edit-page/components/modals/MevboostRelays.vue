@@ -14,12 +14,19 @@
 <script setup>
 import RelaysCheckbox from "./RelaysCheckbox.vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { watch } from "vue";
+import { onMounted, watch } from "vue";
 
 const manageStore = useNodeManage();
 
 watch(manageStore.checkedRelays, () => {
   console.log(manageStore.checkedRelays);
+});
+
+onMounted(() => {
+  manageStore.checkedRelays = [];
+  manageStore.relaysList.map((relay) => {
+    relay.isSelected = false;
+  });
 });
 
 const getRelays = (relay) => {
