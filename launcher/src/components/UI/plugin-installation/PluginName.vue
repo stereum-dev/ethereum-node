@@ -83,6 +83,19 @@
                 <!-- <input v-model="installMonitoring" class="switch" type="checkbox" /> -->
               </div>
             </div>
+            <div v-if="selectedPreset.name === 'staking'" class="change-installation gap-y-2">
+              <div class="change-title">
+                <span>INSTALLATION OPTION</span>
+              </div>
+              <div class="monitoring">
+                <span>Start up client after installation?</span>
+                <div :class="[autoChckBox, 'checkItem']" @click="autoStartToggl">
+                  <img v-if="autoStart" src="/img/icon/access-management/done.png" alt="" />
+                </div>
+
+                <!-- <input v-model="installMonitoring" class="switch" type="checkbox" /> -->
+              </div>
+            </div>
             <!-- <div class="set-recipient gap-y-2">
               <div class="set-title">
                 <span>SET DEFAULT FEE RECIPIENT</span>
@@ -125,6 +138,7 @@ export default {
       backPath: "selectPlugin",
       mevPath: "mevboost",
       installMonitoring: false,
+      autoStart: true,
     };
   },
   computed: {
@@ -144,6 +158,9 @@ export default {
     checkBox() {
       return this.installMonitoring ? "done " : "empty";
     },
+    autoChckBox() {
+      return this.autoStart ? "done " : "empty";
+    },
   },
   watch: {
     installMonitoring() {
@@ -157,6 +174,9 @@ export default {
     this.getInstallPath();
   },
   methods: {
+    autoStartToggl() {
+      this.autoStart = !this.autoStart;
+    },
     filterMonitoringServices() {
       if (this.installMonitoring) {
         this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.concat(
@@ -725,6 +745,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .checkItem img {
   width: 80%;
