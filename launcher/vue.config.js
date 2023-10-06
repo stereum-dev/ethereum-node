@@ -39,6 +39,7 @@ module.exports = {
           artifactName: "Stereum-Launcher-${version}.${ext}"
         },
         win: {
+          sign: "./customsign.js", // use custom sign hook on windows
           artifactName: "Stereum-Launcher-Setup-${version}.${ext}"
         },
       },
