@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-[430px] flex flex-col justify-start items-center px-1 py-2 overflow-y-scroll rounded-md border border-gray-600 bg-[#151618] space-y-2"
+    class="w-full h-[430px] flex flex-col justify-start items-center px-1 py-2 overflow-y-hidden hover:overflow-y-auto rounded-md border border-gray-600 bg-[#151618] space-y-2"
   >
     <template v-if="manageStore.confirmChanges.length">
       <TransitionGroup name="list">

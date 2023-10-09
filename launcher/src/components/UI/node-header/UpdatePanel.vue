@@ -145,12 +145,12 @@
 
                   <div
                     v-if="checkStereumUpdate"
-                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
+                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
                   >
-                    <div class="updateIcon">
-                      <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+                    <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1 ">
+                      <img class="w-2 h-2" src="/img/icon/header-icons/update-green.png" alt="icon" />
                     </div>
-                    <span class="availableText"
+                    <span class="text-[8px] text-gray-200 font-semibold ml-2"
                       >{{ nodeHeaderStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
                     >
                   </div>

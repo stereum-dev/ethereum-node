@@ -1,6 +1,4 @@
 import { createApp } from "vue"; // CHANGE
-import Antd from "ant-design-vue";
-import "ant-design-vue/dist/reset.css";
 import App from "./App.vue";
 import router from "./router/index.js";
 import { createPinia } from "pinia";
@@ -36,6 +34,5 @@ app.component("TaskManager", TaskManager);
 
 app.use(router);
 app.use(pinia);
-app.use(Antd);
 app.use(i18n);
 app.mount("#app");

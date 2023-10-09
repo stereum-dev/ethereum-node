@@ -16,7 +16,7 @@ import { useServices } from '@/store/services';
           class="w-full relative inline-block cursor-pointer"
           draggable="true"
           @dragstart="dragStart($event, service)"
-          @dblclick="addService(service)"
+          @dblclick="addServices(service)"
         >
           <img :src="service.sIcon" alt="Client Icon" class="w-14 mx-auto" />
           <p
@@ -48,22 +48,11 @@ const props = defineProps({
 });
 const dragStart = props.dragging;
 
-const emit = defineEmits(["add-service", "start-drag"]);
+const emit = defineEmits(["addServices", "startDrag"]);
 
 const serviceStore = useServices();
 
-function addService(service) {
-  emit("addService", service);
+function addServices(service) {
+  emit("addServices", service);
 }
 </script>
-<style scoped>
-::-webkit-scrollbar {
-  background-color: transparent;
-  width: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #85cac4;
-  border-radius: 20px;
-}
-</style>
