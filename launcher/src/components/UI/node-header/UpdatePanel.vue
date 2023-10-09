@@ -9,10 +9,10 @@
       >
         <div class="max-h-full bg-[#171a1c] rounded-md grid grid-cols-2 grid-rows-12 py-2">
           <div class="col-start-1 col-span-3 row-start-1 row-span-6">
-            <div class="w-full h-full grid grid-cols-3 grid-rows-4 p-1">
+            <div class="w-full h-full grid grid-cols-3 grid-rows-4 p-1 gap-y-2">
               <div class="w-full col-start-1 col-end-4 row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
                 <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
-                  <img class="w-2/3" src="/img/icon/control/ubuntuIco.svg" />
+                  <img class="w-full" src="/img/icon/manage-node-icons/server.png" />
                 </div>
                 <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
                   <span
@@ -81,7 +81,7 @@
               </div>
               <div class="w-full col-start-1 col-end-4 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
                 <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
-                  <img class="w-2/3" src="/img/icon/stereum-logo/stereum_logo_extern.png" />
+                  <img class="w-full" src="/img/icon/manage-node-icons/launcher.png" />
                 </div>
                 <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
                   <span
@@ -102,7 +102,7 @@
               </div>
               <div class="w-full col-start-1 col-end-4 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
                 <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
-                  <img class="w-2/3" src="/img/icon/stereum-logo/stereum_logo_extern.png" />
+                  <img class="w-full" src="/img/icon/manage-node-icons/launcher.png" />
                 </div>
                 <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
                   <span
@@ -147,7 +147,7 @@
                     v-if="checkStereumUpdate"
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
                   >
-                    <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1 ">
+                    <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1">
                       <img class="w-2 h-2" src="/img/icon/header-icons/update-green.png" alt="icon" />
                     </div>
                     <span class="text-[8px] text-gray-200 font-semibold ml-2"
@@ -165,7 +165,7 @@
               </div>
               <div class="w-full col-start-1 col-end-4 row-start-4 row-span-1 grid grid-cols-12 grid-rows-2">
                 <div class="col-start-1 col-end-3 row-start-1 row-end-3 flex justify-center items-center p-1">
-                  <img class="w-2/3" src="/img/icon/click-installation/mainnet-icon.png" />
+                  <img class="w-full" src="/img/icon/manage-node-icons/plugin.png" />
                 </div>
                 <div class="col-start-3 col-end-13 row-start-1 row-end-3 grid grid-cols-12 grid-rows-2 p-1">
                   <span
