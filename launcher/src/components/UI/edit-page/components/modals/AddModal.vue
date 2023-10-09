@@ -11,8 +11,8 @@
   >
     <template #content>
       <AddPanel v-if="isAddPanelActivated" ref="addPanelComponent" :client="client" />
-      <MevboostRelays v-else-if="isRelaysActivated" :client="client" />
-      <AddConnection v-else-if="isModifyActivated" :client="client" @select-service="selectService" />
+      <MevboostRelays v-if="isRelaysActivated" :client="client" />
+      <AddConnection v-if="isModifyActivated" :client="client" @select-service="selectService" />
     </template>
   </custom-modal>
 </template>

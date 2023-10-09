@@ -37,7 +37,7 @@
       <DrawerBox
         v-if="manageStore.isDrawerOpen"
         :dragging="startDrag"
-        @add-service="addServices"
+        @add-services="addServices"
         @mouseleave="manageStore.isDrawerOpen = false"
       />
     </transition>

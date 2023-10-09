@@ -1,7 +1,7 @@
 <template>
   <custom-modal
-    :main-title="client.name"
-    :icon="client.sIcon"
+    :main-title="`${client.name}`"
+    :client="client"
     sub-title="Service Informaton"
     confirm-text="OK"
     click-outside-text="Click outside to cancel"
