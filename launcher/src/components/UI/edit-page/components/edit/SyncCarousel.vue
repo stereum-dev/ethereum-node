@@ -16,7 +16,7 @@
             </div>
             <div class="w-2/3 h-full cursor-pointer">
               <input
-                v-model="installStore.checkPointSync"
+                v-model="props.properties.checkPointSyncUrl"
                 type="text"
                 placeholder="https://example.cc/"
                 class="w-full h-full flex justify-center items-center bg-[#111315] rounded-md text-gray-400 placeholder:text-gray-500 pl-2 text-sm"
@@ -98,6 +98,13 @@ import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 import { useRoute } from "vue-router";
 
+const props = defineProps({
+  properties: {
+    type: Object,
+    default: null,
+  },
+});
+
 const dropdown = ref(false);
 const selectedItem = ref("- SELECT A SOURCE -");
 const currentSlide = ref(0);
@@ -113,11 +120,11 @@ watch(currentSlide, (val) => {
   if (route.path === "/sync" || route.path === "/importingSyncing") {
     if (val != prevVal.value) {
       prevVal.value = val;
-      installStore.checkPointSync = "";
+      props.properties.checkPointSyncUrl = "";
       selectedItem.value = "- SELECT A SOURCE -";
     }
 
-    if (val === 1 && installStore.checkPointSync === "") {
+    if (val === 1 && props.properties.checkPointSyncUrl === "") {
       installStore.btnActive = false;
     } else {
       installStore.btnActive = true;
@@ -131,7 +138,7 @@ onMounted(() => {
 });
 
 const openWindow = () => {
-  let url = installStore.checkPointSync;
+  let url = props.properties.checkPointSyncUrl;
   window.open(url, "_blank");
 };
 
@@ -142,7 +149,7 @@ const toglDropDown = () => {
 const linkPicker = async (item) => {
   selectedItem.value = "Validating...";
   selectedIcon.value = "/img/icon/control/spinner.gif";
-  installStore.checkPointSync = "";
+  props.properties.checkPointSyncUrl = "";
   dropdown.value = false;
   const isCheckpointValid = await ControlService.isCheckpointValid(item.url);
   if (!isCheckpointValid) {
@@ -156,7 +163,7 @@ const linkPicker = async (item) => {
   }
   selectedItem.value = item.name;
   selectedIcon.value = item.icon;
-  installStore.checkPointSync = item.url;
+  props.properties.checkPointSyncUrl = item.url;
 };
 
 const setSelectedLinks = () => {

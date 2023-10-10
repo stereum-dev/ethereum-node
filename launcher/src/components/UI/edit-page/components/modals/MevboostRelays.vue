@@ -18,12 +18,19 @@ import { onMounted, watch } from "vue";
 
 const manageStore = useNodeManage();
 
-watch(manageStore.checkedRelays, () => {
-  console.log(manageStore.checkedRelays);
+const props = defineProps({
+  client: {
+    type: Object,
+    default: null,
+  },
+  properties: {
+    type: Object,
+    default: null,
+  },
 });
 
 onMounted(() => {
-  manageStore.checkedRelays = [];
+  props.properties.relays = [];
   manageStore.relaysList.map((relay) => {
     relay.isSelected = false;
   });
@@ -31,10 +38,10 @@ onMounted(() => {
 
 const getRelays = (relay) => {
   if (relay.isSelected) {
-    manageStore.checkedRelays.push(relay);
+    props.properties.relays.push(relay);
   } else {
     const element = manageStore.checkedRelays.find((item) => item.id === relay.id);
-    manageStore.checkedRelays.splice(manageStore.checkedRelays.indexOf(element), 1);
+    props.properties.relays.splice(props.properties.relays.indexOf(element), 1);
   }
 };
 </script>

@@ -6,7 +6,7 @@ import { onMounted } from 'vue';
         <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/folder.png" alt="Path Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-left">Installation Path</span>
         <input
-          v-model="client.path"
+          v-model="props.properties.installDir"
           class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
           type="text"
           autofocus
@@ -17,7 +17,7 @@ import { onMounted } from 'vue';
       <div class="w-full grid grid-cols-12 items-center text-md">
         <img class="w-8 col-start-1" src="/img/icon/manage-node-icons/sync.gif" alt="Sync Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-md text-left">Sync Mode</span>
-        <SyncCarousel />
+        <SyncCarousel :properties="props.properties" />
       </div>
     </div>
   </div>
@@ -32,10 +32,14 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  properties: {
+    type: Object,
+    default: null,
+  },
 });
 
 onMounted(() => {
-  props.client.path = "/opt/stereum";
+  props.properties.installDir = "";
   getInstallPath();
 });
 
@@ -43,6 +47,6 @@ const getInstallPath = async () => {
   let largestVolumePath = await ControlService.getLargestVolumePath();
   if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
   const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
-  props.client.path = stereumInstallationPath;
+  props.properties.installDir = stereumInstallationPath;
 };
 </script>

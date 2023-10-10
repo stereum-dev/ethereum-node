@@ -137,15 +137,20 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  properties: {
+    type: Object,
+    default: null,
+  },
 });
-
-//Refs
 
 //Stores
 const manageStore = useNodeManage();
 
 //Lifecycle Hooks
 onMounted(() => {
+  manageStore.newConfiguration.forEach((e) => {
+    e.isConnected = false;
+  });
   list.value = getConnectionOptions();
 });
 //Methods
@@ -157,6 +162,8 @@ const toggleConnection = (option) => {
   } else {
     option.isConnected = false;
   }
+  props.properties.executionClients = list.value.filter((e) => e.category === "execution" && e.isConnected);
+  props.properties.consensusClients = list.value.filter((e) => e.category === "consensus" && e.isConnected);
 };
 
 const getConnectionOptions = () => {
