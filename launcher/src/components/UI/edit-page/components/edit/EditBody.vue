@@ -6,7 +6,7 @@
       :class="isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-600'"
     >
       <div
-        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#4f585f] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold z-20"
+        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold z-20"
       >
         <span class="col-start-1 justify-self-center self-center">Validator </span>
         <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>

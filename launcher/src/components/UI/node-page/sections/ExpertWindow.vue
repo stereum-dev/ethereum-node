@@ -169,14 +169,14 @@
         <div v-if="isExpertModeActive" class="expertMode">
           <textarea
             v-model="item.yaml"
-            class="font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
+            class="font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4 overflow-x-scroll overflow-y-scroll"
             @input="somethingIsChanged"
           ></textarea>
         </div>
         <div v-if="ssvExpertModeActive" class="expertMode">
           <textarea
             v-model="item.ssvConfig"
-            class="font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
+            class="overflow-x-scroll overflow-y-scroll font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
             @input="somethingIsChanged"
           ></textarea>
         </div>
@@ -394,6 +394,20 @@ export default {
 };
 </script>
 <style scoped>
+::-webkit-scrollbar-corner:vertical {
+  background: black !important;
+  border-color: #232323;
+}
+::-webkit-scrollbar-corner:horizontal {
+  background: black !important;
+  border-color: #232323;
+}
+::-webkit-scrollbar-track:vertical {
+  background-color: transparent;
+}
+::-webkit-scrollbar-track:horizontal {
+  background-color: transparent;
+}
 .expert-modal {
   width: 64%;
   height: 84%;
@@ -920,24 +934,6 @@ input:checked + .slider:before {
 .expertMode::-webkit-scrollbar {
   width: 5px;
   margin: 5px 0;
-}
-
-/* Track */
-.expertMode::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 20px 0;
-  cursor: pointer;
-}
-
-/* Handle */
-.expertMode::-webkit-scrollbar-thumb {
-  background: rgb(112, 199, 249);
-  border-radius: 3px;
-}
-
-/* Handle on hover */
-.expertMode::-webkit-scrollbar-thumb:hover {
-  background: rgb(24, 161, 241);
 }
 
 .invisible {

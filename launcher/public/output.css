@@ -618,11 +618,18 @@ video {
 ::-webkit-scrollbar {
   background-color: transparent;
   width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #85cac4;
   border-radius: 20px;
+}
+
+::-webkit-scrollbar-corner {
+  width: 0;
+  height: 0;
+  background-color: transparent;
 }
 
 .container{
@@ -717,10 +724,6 @@ video {
   bottom: -0.5rem;
 }
 
-.-bottom-24{
-  bottom: -6rem;
-}
-
 .-bottom-3{
   bottom: -0.75rem;
 }
@@ -801,8 +804,8 @@ video {
   right: 10.5rem;
 }
 
-.right-\[111px\]{
-  right: 111px;
+.right-\[5px\]{
+  right: 5px;
 }
 
 .right-\[8px\]{
@@ -819,14 +822,6 @@ video {
 
 .top-\[-18px\]{
   top: -18px;
-}
-
-.right-\[10px\]{
-  right: 10px;
-}
-
-.right-\[5px\]{
-  right: 5px;
 }
 
 .z-0{
@@ -1351,12 +1346,20 @@ video {
   max-height: 100px;
 }
 
+.max-h-\[110px\]{
+  max-height: 110px;
+}
+
 .max-h-\[150px\]{
   max-height: 150px;
 }
 
 .max-h-\[170px\]{
   max-height: 170px;
+}
+
+.max-h-\[200px\]{
+  max-height: 200px;
 }
 
 .max-h-\[40px\]{
@@ -1381,18 +1384,6 @@ video {
 
 .max-h-full{
   max-height: 100%;
-}
-
-.max-h-\[200px\]{
-  max-height: 200px;
-}
-
-.max-h-\[105px\]{
-  max-height: 105px;
-}
-
-.max-h-\[110px\]{
-  max-height: 110px;
 }
 
 .min-h-\[18px\]{
@@ -2010,6 +2001,10 @@ video {
   overflow: hidden;
 }
 
+.overflow-x-auto{
+  overflow-x: auto;
+}
+
 .overflow-y-auto{
   overflow-y: auto;
 }
@@ -2020,6 +2015,10 @@ video {
 
 .overflow-y-hidden{
   overflow-y: hidden;
+}
+
+.overflow-x-scroll{
+  overflow-x: scroll;
 }
 
 .overflow-y-scroll{
@@ -2560,6 +2559,10 @@ video {
 .bg-zinc-900{
   --tw-bg-opacity: 1;
   background-color: rgb(24 24 27 / var(--tw-bg-opacity));
+}
+
+.bg-\[33393E\]{
+  background-color: 33393E;
 }
 
 .bg-gradient-to-b{
@@ -3278,6 +3281,18 @@ video {
 
 .scrollbar-thumb-teal-800{
   --scrollbar-thumb: #115e59 !important;
+}
+
+.scrollbar-corner-\[\#171a1b\]{
+  --scrollbar-corner: #171a1b !important;
+}
+
+.scrollbar-corner-\[\#060606\]{
+  --scrollbar-corner: #060606 !important;
+}
+
+.scrollbar-corner-\[\#090909\]{
+  --scrollbar-corner: #090909 !important;
 }
 
 html body {
