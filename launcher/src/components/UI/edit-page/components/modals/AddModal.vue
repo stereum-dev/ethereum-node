@@ -10,9 +10,14 @@
     @confirm-action="confirmInstall"
   >
     <template #content>
-      <AddPanel v-if="isAddPanelActivated" ref="addPanelComponent" :client="client" />
-      <MevboostRelays v-if="isRelaysActivated" :client="client" />
-      <AddConnection v-if="isModifyActivated" :client="client" @select-service="selectService" />
+      <AddPanel v-if="isAddPanelActivated" ref="addPanelComponent" :client="client" :properties="properties" />
+      <MevboostRelays v-if="isRelaysActivated" :client="client" :properties="properties" />
+      <AddConnection
+        v-if="isModifyActivated"
+        :client="client"
+        :properties="properties"
+        @select-service="selectService"
+      />
     </template>
   </custom-modal>
 </template>
@@ -21,10 +26,10 @@ import CustomModal from "./CustomModal.vue";
 import AddPanel from "./AddPanel.vue";
 import AddConnection from "./AddConnection.vue";
 import MevboostRelays from "./MevboostRelays.vue";
+import { ref, onMounted, computed } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, watchEffect, computed } from "vue";
 
-const { client } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     default: null,
@@ -33,27 +38,35 @@ const { client } = defineProps({
 
 const emit = defineEmits(["closeWindow", "confirmInstall", "selectService"]);
 
+const manageStore = useNodeManage();
+
 //Refs
 const isAddPanelActivated = ref(false);
 const isRelaysActivated = ref(false);
 const isModifyActivated = ref(false);
 const disabledButton = ref(false);
-
-//Store
-const manageStore = useNodeManage();
+// eslint-disable-next-line vue/no-setup-props-destructure
+const properties = ref({
+  client: props.client,
+  network: manageStore.configNetwork.network,
+  installDir: "/opt/stereum",
+  executionClients: [],
+  consensusClients: [],
+  relays: [],
+});
 
 //Computed & Watcher
 
 const getConfirmText = computed(() => {
   let text = "";
   if (isAddPanelActivated.value) {
-    if (client.category === "execution") {
+    if (props.client.category === "execution") {
       text = "confirm";
-    } else if (client.category === "consensus" || client.category === "validator") {
+    } else if (props.client.category === "consensus" || props.client.category === "validator") {
       text = "next";
-    } else if (client.category === "service" && client.service !== "FlashbotsMevBoostService") {
+    } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
       text = "confirm";
-    } else if (client.category === "service" && client.service === "FlashbotsMevBoostService") {
+    } else if (props.client.category === "service" && props.client.service === "FlashbotsMevBoostService") {
       text = "next";
     }
   } else if (isRelaysActivated.value) {
@@ -76,15 +89,6 @@ const getSubTitles = computed(() => {
   return text;
 });
 
-//Watch the button state for relays
-watchEffect(() => {
-  if (isRelaysActivated.value && !manageStore.checkedRelays.length) {
-    disabledButton.value = true;
-  } else {
-    disabledButton.value = false;
-  }
-});
-
 //Lifecycle Hooks
 onMounted(() => {
   isAddPanelActivated.value = true;
@@ -93,41 +97,39 @@ onMounted(() => {
 //Methods
 
 const confirmInstall = () => {
-  if (client.category === "execution" && getConfirmText.value === "confirm") {
-    client.addPanel = false;
-    emit("confirmInstall", client);
+  if (props.client.category === "execution" && getConfirmText.value === "confirm") {
+    props.client.addPanel = false;
+    emit("confirmInstall", properties.value);
   } else if (
-    (client.category === "consensus" && getConfirmText.value === "next") ||
-    (client.category === "validator" && getConfirmText.value === "next")
+    (props.client.category === "consensus" && getConfirmText.value === "next") ||
+    (props.client.category === "validator" && getConfirmText.value === "next")
   ) {
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;
-    emit("confirmInstall", client);
   } else if (
-    client.category === "service" &&
-    client.service !== "FlashbotsMevBoostService" &&
+    props.client.category === "service" &&
+    props.client.service !== "FlashbotsMevBoostService" &&
     getConfirmText.value === "confirm"
   ) {
-    client.addPanel = false;
-    emit("confirmInstall", client);
+    props.client.addPanel = false;
+    emit("confirmInstall", properties.value);
   } else if (
-    client.category === "service" &&
-    client.service === "FlashbotsMevBoostService" &&
+    props.client.category === "service" &&
+    props.client.service === "FlashbotsMevBoostService" &&
     !isRelaysActivated.value &&
     getConfirmText.value === "next"
   ) {
     isAddPanelActivated.value = false;
     isRelaysActivated.value = true;
   } else if (isModifyActivated.value && getConfirmText.value === "confirm") {
-    client.addPanel = false;
-    emit("confirmInstall", client);
+    props.client.addPanel = false;
+    emit("confirmInstall", properties.value);
   } else if (
     isRelaysActivated.value &&
-    client.category === "service" &&
-    client.service === "FlashbotsMevBoostService" &&
+    props.client.category === "service" &&
+    props.client.service === "FlashbotsMevBoostService" &&
     getConfirmText.value === "next"
   ) {
-    console.log("Next Clicked");
     isAddPanelActivated.value = false;
     isRelaysActivated.value = false;
     isModifyActivated.value = true;
@@ -135,7 +137,7 @@ const confirmInstall = () => {
 };
 
 const closeWindow = () => {
-  emit("closeWindow", client);
+  emit("closeWindow", props.client);
 };
 
 const selectService = (item) => {

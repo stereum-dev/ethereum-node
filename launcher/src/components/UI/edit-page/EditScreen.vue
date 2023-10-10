@@ -139,6 +139,7 @@ const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
 
 onMounted(() => {
+  manageStore.configNetwork = structuredClone(manageStore.currentNetwork);
   manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
 });
 onMounted(() => {
@@ -298,7 +299,7 @@ const removeChangeHandler = (item) => {
 
 const addServices = (service) => {
   let item = structuredClone(service);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.servce).includes(item.service)) {
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -335,7 +336,19 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
-  console.log(item);
+  manageStore.confirmChanges.push({
+    id: randomId,
+    content: "INSTALL",
+    contentIcon: "/img/icon/manage-node-icons/install.png",
+    service: item.client,
+    data: {
+      network: manageStore.configNetwork.network,
+      installDir: item.installDir ? item.installDir : "/opt/stereum",
+      executionClients: item.executionClients,
+      beaconServices: item.consensusClients,
+      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+    },
+  });
 };
 
 // Cancel Adding service
