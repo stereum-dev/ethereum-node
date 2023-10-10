@@ -10,10 +10,10 @@
       <ClientButtons
         :client="item"
         @open-expert="openExport(item)"
-        @open-log="$emit('openLog', item)"
-        @state-handler="$emit('stateHandler', item)"
-        @restart-handler="$emit('restartHandler', item)"
-        @open-doc="$emit('openDoc', item)"
+        @open-log="openLog"
+        @state-handler="stateHandler"
+        @restart-handler="restartHandler"
+        @open-doc="openDoc"
         @open-resync="openResync(item)"
       />
       <TransitionGroup name="fadeModal">
@@ -31,14 +31,12 @@ import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 
-const emit = defineEmits(["openExpert"]);
-
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler"]);
 
 //Refs
 const consensusRefs = ref([]);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
-
 
 //Computed & Watchers
 const getConsensusServices = computed(() =>
@@ -70,6 +68,22 @@ const openResync = (item) => {
 
 const openExport = (item) => {
   emit("openExpert", item);
+};
+
+const openLog = (item) => {
+  emit("openLog", item);
+};
+
+const openDoc = (item) => {
+  emit("openDoc", item);
+};
+
+const stateHandler = (item) => {
+  emit("stateHandler", item);
+};
+
+const restartHandler = (item) => {
+  emit("restartHandler", item);
 };
 </script>
 

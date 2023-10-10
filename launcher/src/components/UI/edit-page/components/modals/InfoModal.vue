@@ -98,7 +98,6 @@ const getConnectedExecution = computed(() => {
   let service = manageStore.newConfiguration.find((i) => i.config.serviceID === executionClients[0]?.id);
   return executionClients.length ? service : null;
 });
-console.log(getConnectedExecution.value);
 
 const getConnectedConsensus = computed(() => {
   let { consensusClients } = client.config ? client.config.dependencies : {};

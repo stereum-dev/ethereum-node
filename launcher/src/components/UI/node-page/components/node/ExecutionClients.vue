@@ -10,10 +10,10 @@
       <ClientButtons
         :client="item"
         @open-expert="openExpert"
-        @open-log="$emit('openLog', item)"
-        @state-handler="$emit('stateHandler', item)"
-        @restart-handler="$emit('restartHandler', item)"
-        @open-doc="$emit('openDoc', item)"
+        @open-log="openLog"
+        @state-handler="stateHandler"
+        @restart-handler="restartHandler"
+        @open-doc="openDoc"
         @open-resync="openResync(item)"
         @open-pruning="openPruning"
       />
@@ -35,7 +35,7 @@ import ClientButtons from "./ClientButtons.vue";
 import { computed, ref, watchEffect } from "vue";
 
 //Emits
-const emit = defineEmits(["openExpert"]);
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler"]);
 
 //Refs
 const executionRefs = ref([]);
@@ -81,6 +81,22 @@ const closePruning = () => {
 
 const openExpert = (item) => {
   emit("openExpert", item);
+};
+
+const openLog = (item) => {
+  emit("openLog", item);
+};
+
+const openDoc = (item) => {
+  emit("openDoc", item);
+};
+
+const stateHandler = (item) => {
+  emit("stateHandler", item);
+};
+
+const restartHandler = (item) => {
+  emit("restartHandler", item);
 };
 </script>
 

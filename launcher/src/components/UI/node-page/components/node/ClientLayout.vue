@@ -36,7 +36,6 @@
   </div>
 </template>
 <script setup>
-import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted, onUnmounted } from "vue";
 import { useServices } from "@/store/services";
 import { useControlStore } from "@/store/theControl";
@@ -46,7 +45,7 @@ const props = defineProps({
   client: Object,
 });
 
-const stakingStore = useStakingStore();
+
 const serviceStore = useServices();
 const controlStore = useControlStore();
 

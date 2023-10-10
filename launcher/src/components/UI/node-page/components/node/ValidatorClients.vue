@@ -10,10 +10,10 @@
       <ClientButtons
         :client="item"
         @open-expert="openExpert"
-        @open-log="$emit('openLog', item)"
-        @state-handler="$emit('stateHandler', item)"
-        @restart-handler="$emit('restartHandler', item)"
-        @open-doc="$emit('openDoc', item)"
+        @open-log="openLog"
+        @state-handler="stateHandler"
+        @restart-handler="restartHandler"
+        @open-doc="openDoc"
       />
     </div>
   </div>
@@ -26,7 +26,7 @@ import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed, watch, ref } from "vue";
 
-const emit = defineEmits(["openExpert"]);
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler"]);
 
 const validatorRefs = ref([]);
 
@@ -50,5 +50,20 @@ watch(getValidatorRef, (newValue) => {
 
 const openExpert = (item) => {
   emit("openExpert", item);
+};
+const openLog = (item) => {
+  emit("openLog", item);
+};
+
+const openDoc = (item) => {
+  emit("openDoc", item);
+};
+
+const stateHandler = (item) => {
+  emit("stateHandler", item);
+};
+
+const restartHandler = (item) => {
+  emit("restartHandler", item);
 };
 </script>

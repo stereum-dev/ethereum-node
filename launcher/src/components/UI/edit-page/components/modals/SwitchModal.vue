@@ -1,9 +1,9 @@
 <template>
   <custom-modal
-    main-title="Switch Client"
-    sub-title="Replace Service"
-    icon="/img/icon/manage-node-icons/switch.png"
-    confirm-text="Confirm"
+    :main-title="`${client.name} - ${client.category}`"
+    :client="client"
+    sub-title="Switch Client"
+    :confirm-text="getConfirmText"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="switchConfirm"
@@ -86,6 +86,7 @@ import CustomModal from "./CustomModal.vue";
 import { ref, computed } from "vue";
 import { useServices } from "@/store/services";
 
+//Props & Emits
 const { client } = defineProps({
   client: {
     type: Object,
@@ -95,14 +96,26 @@ const { client } = defineProps({
 
 const emit = defineEmits(["closeWindow", "switchConfirm"]);
 
+//Refs
 const switchDropdownOpen = ref(false);
+
+//Store
 const serviceStore = useServices();
 
+//Computed & Watcher
 const getServices = computed(() => {
   let service;
   service = serviceStore.allServices.filter((e) => e?.category == client.category && e?.name != client.name);
   return service;
 });
+
+const getConfirmText = computed(() => {
+  let text = "";
+
+  return text;
+});
+
+//Methods
 
 const switchService = (service) => {
   serviceStore.selectedServiceToSwitch = service;

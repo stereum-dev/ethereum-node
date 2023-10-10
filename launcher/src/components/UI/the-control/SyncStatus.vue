@@ -430,9 +430,15 @@ export default {
 .consensusIconCons,
 .executionIconCons {
   position: absolute;
-  width: 52%;
+  width: 51%;
   left: 0;
-  top: -53%;
+  top: -52%;
+}
+.consensusIconCons img,
+.executionIconCons img{
+  width: 98%;
+  height: 100%;
+  object-fit: contain;
 }
 .consensusPer {
   position: absolute;

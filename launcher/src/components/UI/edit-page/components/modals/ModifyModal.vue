@@ -9,7 +9,7 @@
     @confirm-action="confirmModify"
   >
     <template #content>
-      <ModifyContent :client="client" :list="options" @select-service="selectService" />
+      <ModifyContent :client="client" @select-service="selectService" />
     </template>
   </custom-modal>
 </template>

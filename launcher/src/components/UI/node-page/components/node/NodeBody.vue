@@ -147,7 +147,6 @@ const getRefOfConnectedClients = () => {
 };
 
 const openLogsPage = (item) => {
-  console.log("hello");
   itemToLogs.value = item;
   isPluginLogPageActive.value = true;
 };

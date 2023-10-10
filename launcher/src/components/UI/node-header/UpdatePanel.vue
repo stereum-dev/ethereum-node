@@ -60,7 +60,10 @@
                     </div>
                     <div
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
-                      :class="{ disabled: nodeHeaderStore.osVersionLatest === 0 || nodeHeaderStore.osUpdating }"
+                      :class="{
+                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
+                          nodeHeaderStore.osVersionLatest === 0 || nodeHeaderStore.osUpdating,
+                      }"
                       @click="$emit('runOsUpdate')"
                     >
                       <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
@@ -136,7 +139,10 @@
                     </div>
                     <div
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
-                      :class="{ disabled: !checkStereumUpdate || nodeHeaderStore.updating }"
+                      :class="{
+                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
+                          !checkStereumUpdate || nodeHeaderStore.updating,
+                      }"
                       @click="$emit('runUpdate', nodeHeaderStore.stereumUpdate)"
                     >
                       <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
@@ -232,7 +238,8 @@
               <div
                 class="w-2/3 h-full flex justify-evenly items-center bg-[#334d4d] border border-gray-500 rounded-sm text-gray-400 text-sm font-semibold hover:bg-[#243535] transition-colors cursor-pointer active:scale-95"
                 :class="{
-                  disabled: (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || nodeHeaderStore.updating,
+                  'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
+                    (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || nodeHeaderStore.updating,
                 }"
                 @click.prevent.stop="$emit('updateConfirm')"
               >
@@ -241,9 +248,9 @@
               </div>
             </div>
             <div class="w-1/2 h-full flex justify-center items-center p-1">
-              <span class="text-gray-400 text-sm font-semibold"
+              <span class="text-gray-400 text-md font-semibold"
                 >{{ $t("updatePanel.auto") }} :
-                <span class="autoUpdateText_status" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
+                <span class="text-md uppercase font-semibold" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
               >
             </div>
           </div>
@@ -277,10 +284,11 @@ const osVersionCurrent = ref("-");
 
 //Computed
 const onOff = computed(() => {
-  return {
-    green: stereumApp.value.autoUpdate === "on",
-    red: stereumApp.value.autoUpdate === "off",
-  };
+  if (stereumApp.value.autoUpdate == "on") {
+    return "text-green-700";
+  } else {
+    return "text-red-700";
+  }
 });
 
 watchEffect(() => {
@@ -394,388 +402,7 @@ const getOsVersion = async () => {
   transform: translateX(405px);
   opacity: 0.5;
 }
-.no-events {
-  pointer-events: none;
-}
-.green {
-  color: #7bbb1a;
-}
-.red {
-  color: #c70505;
-}
 
-.white {
-  color: white !important;
-}
-
-.red-circle {
-  color: white !important;
-  background-color: #c70505;
-  width: 20px;
-  height: 20px;
-  padding: 4px;
-  border-radius: 30px;
-  text-align: center;
-  cursor: default;
-}
-.spinner {
-  padding: 0px;
-}
-
-.panelParent {
-  width: 36%;
-  height: 91%;
-  position: fixed;
-  top: 10%;
-  right: -37%;
-  z-index: 310;
-  transition-duration: 300ms;
-}
-.clickOutside {
-  width: 100vw;
-  height: 91vh;
-  position: fixed;
-  left: 0;
-  top: 52px;
-  border-radius: 0 35px 0 0;
-  z-index: 311;
-}
-.panelContent {
-  width: 100%;
-  height: 100%;
-  border-radius: 1rem 0 0 1rem;
-  background-color: #2a2f32;
-  border: 2px solid rgb(107, 107, 107);
-  border-right: none;
-  z-index: 312;
-  opacity: 1;
-  position: absolute;
-  top: -6px;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.stereumUpdates {
-  width: 100%;
-  height: 40%;
-  padding: 10px;
-}
-.serviceUpdates {
-  width: 100%;
-  height: 53%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.nodeUpdate-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #375b5c;
-  margin-left: 15px;
-  margin-top: 10px;
-  text-transform: uppercase;
-}
-.nodeUpdate-title_row {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #4b8789;
-  margin-left: 1.5%;
-  text-transform: uppercase;
-}
-
-.serviceUpdates-titleWithIcon {
-  display: flex;
-  padding: 0 10px;
-}
-
-.serviceUpdates-titleWithIcon > .icon > img,
-.stereum-updateBoxWithIcon > .icon > img {
-  width: 25px;
-  border: 1px solid #d6d6d6;
-  border-radius: 50%;
-  box-shadow: 1px 1px 5px 1px #252525;
-}
-
-.launcherUpdate,
-.serviceUpdates-title {
-  width: 100%;
-  /* height: 20%; */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-}
-.launcherUpdate .title,
-.serviceUpdates-title .title {
-  font-size: 100%;
-  font-weight: 800;
-  color: #4b8789;
-  margin-left: 5px;
-  text-transform: uppercase;
-}
-.description,
-.description {
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: #c7c7c7;
-  margin-left: 5px;
-}
-
-.launcherBox {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.launcherBox .currentLauncher {
-  width: 17%;
-  margin-left: 15px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  align-self: center;
-}
-.launcherBox .valueLauncher {
-  width: max-content;
-  font-size: 0.8rem;
-  font-weight: 400;
-  margin-left: 33px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b4b443;
-  text-align: left;
-}
-
-.stereum-updateBoxesWrapper {
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: space-between;
-}
-
-.stereum-updateBoxWithIcon {
-  display: flex;
-  margin-top: 5px;
-}
-.stereum-updateBox {
-  width: 94%;
-  height: 90%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: space-between;
-}
-.versionContainer {
-  display: flex;
-  width: 100%;
-  height: 40%;
-  position: relative;
-}
-.stereum-updateBox .versionBox {
-  width: 60%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 40% 60%;
-  grid-template-rows: repeat(2, 1fr);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.stereum-updateBox .versionBox #current {
-  grid-column: 1/2;
-  grid-row: 1/2;
-  width: 100%;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  margin-left: 5px;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.stereum-updateBox .versionBox #currentValue {
-  width: 100%;
-  height: 100%;
-  grid-column: 2/3;
-  grid-row: 1/2;
-  font-size: 0.6rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b4b443;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-}
-.stereum-updateBox .versionBox #latest {
-  grid-column: 1/2;
-  grid-row: 2/3;
-  width: 100%;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  margin-left: 5px;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.stereum-updateBox .versionBox #latestValue {
-  width: 100%;
-  max-width: max-content;
-  height: 100%;
-  grid-column: 2/3;
-  grid-row: 2/3;
-  font-size: 0.6rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  color: #b4b443;
-  justify-self: center;
-  align-self: center;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-#currentValue span,
-#latestValue span {
-  width: 100%;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b4b443;
-  justify-self: center;
-  align-self: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-}
-#latestValue .redCircle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: #ec110e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#latestValue .redCircle span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #fff;
-}
-.stereum-updateBox .versionBox #autoUpdate {
-  grid-column: 1/2;
-  grid-row: 3/4;
-  width: 100%;
-  font-size: 0.6rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  margin-left: 5px;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: clip;
-  white-space: nowrap;
-}
-.stereum-updateBox .versionBox #updateStatus {
-  grid-column: 2/3;
-  grid-row: 3/4;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #37614b;
-  justify-self: center;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.btnBox {
-  width: 40%;
-  height: 100%;
-  max-height: 33px;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(12, 1fr);
-}
-.btnBox .searchBtn {
-  grid-column: 1/4;
-  grid-row: 2/9;
-  border-radius: 3px;
-  margin-left: 10px;
-  box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
-  width: 70%;
-  height: 100%;
-  min-height: 20px;
-  border: 1px solid #17a2b8;
-  background-color: #17a2b8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.btnBox .searchBtn img {
-  width: 30%;
-  height: 70%;
-}
-.btnBox .searchBtn:hover {
-  background-color: #028397;
-}
-.btnBox .searchBtn:active {
-  border-color: #028397;
-  box-shadow: none;
-}
-.btnBox .downloadBtn {
-  grid-column: 4/7;
-  grid-row: 2/9;
-  margin-right: 20px;
-  border: 1px solid #067c5a;
-  border-radius: 3px;
-  width: 70%;
-  height: 100%;
-  min-height: 20px;
-  background-color: #067c5a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.btnBox .downloadBtn img {
-  width: 40%;
-  height: 90%;
-}
-.btnBox .downloadBtn:hover {
-  background-color: rgb(3, 82, 60);
-}
-.btnBox .downloadBtn:active {
-  border-color: rgb(3, 82, 60);
-  box-shadow: none;
-}
 .available {
   grid-column: 1/7;
   grid-row: 10/12;
@@ -975,7 +602,7 @@ const getOsVersion = async () => {
   width: 25%;
   height: 80%;
 }
-.availableTable .tableContent .tableRow .serviceName {
+.serviceName {
   grid-column: 2/3;
   width: 100%;
   height: 100%;
@@ -983,14 +610,14 @@ const getOsVersion = async () => {
   justify-content: center;
   align-items: center;
 }
-.availableTable .tableContent .tableRow .serviceName span {
+.serviceName span {
   font-size: 0.8rem;
   font-weight: 500;
   color: #c6c6c6;
   text-transform: uppercase;
 }
 
-.availableTable .tableContent .tableRow .version {
+.version {
   grid-column: 3/4;
   width: 100%;
   height: 100%;
@@ -1001,7 +628,7 @@ const getOsVersion = async () => {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.availableTable .tableContent .tableRow .version span {
+.version span {
   font-size: 0.8rem;
   font-weight: 500;
   color: #b4b443;
@@ -1009,87 +636,5 @@ const getOsVersion = async () => {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-.updateAllBtnBox {
-  width: 100%;
-  height: 10%;
-  background-color: transparent;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  position: absolute;
-  bottom: 0;
-}
-.updateAllBtn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 45%;
-  height: 100%;
-}
-.updateAllBtnBox .confirmUpdate {
-  width: 80%;
-  height: 50%;
-  background-color: #067c5a;
-  border-radius: 3px;
-  border: 2px solid #067c5a;
-  box-shadow: 0 1px 3px 1px rgb(46, 46, 46);
-  color: #c6c6c6;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  cursor: pointer;
-  transition-duration: 50ms;
-}
-.autoUpdateText {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  color: #c6c6c6;
-  width: 45%;
-  height: 100%;
-  font-size: 80%;
-}
-.autoUpdateText_status {
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.updateAllBtnBox .confirmUpdate img {
-  width: 13%;
-  height: 70%;
-  max-width: 13px;
-  max-height: 15px;
-}
-.updateAllBtnBox .confirmUpdate span {
-  font-size: 73%;
-  font-weight: 700;
-  color: #c6c6c6;
-  text-transform: uppercase;
-}
-.updateAllBtnBox .confirmUpdate:hover {
-  background-color: rgb(3, 82, 60);
-}
-.updateAllBtnBox .confirmUpdate:active {
-  border: none;
-  box-shadow: none;
-  transform: scale(0.95);
-}
-/* .btnBox .confirmUpdate:hover {
-  transform: scale(1.05);
-  color: #c6c6c6;
-  border: 2px solid #63957d;
-}
-.btnBox .confirmUpdate:active {
-  box-shadow: none;
-  transform: scale(1);
-  border: none;
-} */
-
-.disabled {
-  pointer-events: none;
-  background-color: #3d4244 !important;
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 </style>

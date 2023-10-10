@@ -59,8 +59,8 @@ export default {
   border-radius: 5px;
   border: 3px solid #adadad;
   position: absolute;
-  top: 10.4%;
-  left: 19%;
+  top: 8%;
+  left: 18%;
   padding: 10px;
   display: flex;
   flex-direction: column;

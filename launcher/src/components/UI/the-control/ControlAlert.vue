@@ -1,11 +1,6 @@
 <template>
   <div class="alert-box_parent">
     <!-- <comming-soon></comming-soon> -->
-    <update-panel
-      :click-bg="displayUpdatePanel"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
-      @click-out="removeUpdateModal"
-    ></update-panel>
     <div class="alert-box">
       <div class="alert-box_header">
         <div class="icon_alarm" :class="{ active: perfect }">
@@ -124,18 +119,13 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 export default {
-  components: {
-    UpdatePanel,
-  },
   data() {
     return {
-      displayUpdatePanel: false,
       storageWarning: false,
       cpuWarning: false,
       cpuAlarm: false,
@@ -155,6 +145,7 @@ export default {
       cpu: "cpu",
     }),
     ...mapWritableState(useNodeHeader, {
+      displayUpdatePanel: "displayUpdatePanel",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
       rpcState: "rpcState",
@@ -432,7 +423,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 15%;
+  height: 13%;
   background: #ffd924;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -444,7 +435,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 15%;
+  height: 13%;
   background: rgb(173, 7, 7);
   border: 1px solid #707070;
   border-radius: 5px;
@@ -456,7 +447,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 15%;
+  height: 13%;
   background: #5f7e6a;
   border: 1px solid #707070;
   border-radius: 5px;
