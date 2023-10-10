@@ -1338,6 +1338,26 @@ video {
   height: 100vh;
 }
 
+.h-\[\]{
+  height: ;
+}
+
+.h-\[235px\]{
+  height: 235px;
+}
+
+.h-\[180px\]{
+  height: 180px;
+}
+
+.h-\[233px\]{
+  height: 233px;
+}
+
+.h-\[185px\]{
+  height: 185px;
+}
+
 .max-h-60{
   max-height: 15rem;
 }

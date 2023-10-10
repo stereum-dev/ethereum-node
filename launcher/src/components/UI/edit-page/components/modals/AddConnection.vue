@@ -6,12 +6,14 @@ import { onMounted, computed } from 'vue';
   <div v-else class="w-full mt-4 flex justify-center items-center box-border">
     <div
       v-if="list.length && list.some((e) => e.category === 'consensus')"
-      class="w-1/3 flex flex-col justify-start items-center"
+      class="w-1/3 h-[233px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-4">
         <span class="text-lg font-semibold text-gray-500">Consensus Clients</span>
       </div>
-      <div class="w-full flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-4">
+      <div
+        class="w-full h-[185px] overflow-y-auto overflow-x-hidden flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-4"
+      >
         <div
           v-for="option in list.filter((e) => e.category === 'consensus')"
           :key="option.service"
@@ -45,12 +47,14 @@ import { onMounted, computed } from 'vue';
     </div>
     <div
       v-if="list.length && list.some((e) => e.category === 'execution')"
-      class="w-1/3 flex flex-col justify-start items-center"
+      class="w-1/3 h-[235px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-4">
         <span class="text-lg font-semibold text-gray-500">Execution Clients</span>
       </div>
-      <div class="w-full flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-4">
+      <div
+        class="w-full h-[185px] overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-4"
+      >
         <div
           v-for="option in list.filter((e) => e.category === 'execution')"
           :key="option.service"
@@ -84,12 +88,14 @@ import { onMounted, computed } from 'vue';
     </div>
     <div
       v-if="list.length && list.some((e) => e.category === 'validator')"
-      class="w-1/3 flex flex-col justify-start items-center"
+      class="w-1/3 h-[235px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-4">
         <span class="text-lg font-semibold text-gray-500">Validator Clients</span>
       </div>
-      <div class="w-full flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-4">
+      <div
+        class="w-full h-[185px] flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-4 overflow-x-hidden overflow-y-auto"
+      >
         <div
           v-for="option in list.filter((e) => e.category === 'validator')"
           :key="option.service"

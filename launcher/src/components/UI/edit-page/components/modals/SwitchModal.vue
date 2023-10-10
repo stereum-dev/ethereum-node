@@ -9,9 +9,7 @@
     @close-window="closeWindow"
     @confirm-action="switchConfirm"
   >
-    <template #content>
-      <SwitchContent :client="client" />
-    </template>
+    <template #content> <SwitchContent :client="client" :properties="properties" /> </template>
   </custom-modal>
 </template>
 <script setup>

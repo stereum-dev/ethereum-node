@@ -1,4 +1,4 @@
-import { useNodeManage } from '@/store/nodeManage';
+import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vue';
 <template>
   <div
     class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
@@ -10,14 +10,14 @@ import { useNodeManage } from '@/store/nodeManage';
       <div class="h-full flex flex-col justify-between gap-4">
         <div class="text-center pt-4 flex-auto justify-center space-y-2">
           <div class="flex justify-center items-center px-4 mx-auto">
-            <img v-if="client" class="w-[55px] h-[55px] mr-2" :src="client.sIcon" alt="Service Icon" />
+            <img v-if="client" class="w-[55px] h-[55px] mr-2" :src="getClientIcon" alt="Service Icon" />
             <div class="flex flex-col justify-center items-start">
               <span v-if="mainTitle" class="text-[26px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
               <span v-if="subTitle" class="text-[22px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
             </div>
           </div>
 
-          <div v-if="messageText" class="text-md font-bold text-gray-400">
+          <div v-if="messageText" class="text-md font-bold text-gray-400 mt-8">
             <span>{{ messageText }}</span>
           </div>
         </div>
@@ -44,6 +44,7 @@ import { useNodeManage } from '@/store/nodeManage';
 </template>
 
 <script setup>
+import { computed } from "vue";
 //Props
 const { client, mainTitle, messageText, confirmText, clickOutsideText, subTitle, disabledButton } = defineProps({
   client: {
@@ -65,6 +66,10 @@ const emit = defineEmits(["closeWindow", "confirmAction"]);
 //Refs
 
 //Watchers
+
+const getClientIcon = computed(() => {
+  return client.sIcon ? client.sIcon : client.icon;
+});
 
 //Methods
 const closeModal = () => {

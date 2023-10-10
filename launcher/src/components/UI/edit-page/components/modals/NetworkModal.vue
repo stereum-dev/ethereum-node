@@ -1,15 +1,17 @@
 <template>
   <custom-modal
-    main-title="Switch Network"
-    message-text="Are you sure you want to switch network?"
+    :main-title="network.name"
+    :client="network"
+    sub-title="Switch Network"
+    :message-text="`Select a network to replace the ${network.name}.`"
     confirm-text="Confirm"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="switchConfirm"
   >
     <template #content>
-      <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto -mt-2">
-        <div class="w-full flex flex-col justify-between items-center space-y-1">
+      <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto mt-4">
+        <!-- <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Current Network</span>
           <div
             class="flex justify-center items-center w-full bg-[#131617] shadow-sm shadow-[#0e0f0f] rounded-md py-1 px-2 font-semibold text-lg"
@@ -19,7 +21,7 @@
               <p class="text-gray-200">{{ network.name }}</p>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Switch To</span>
           <div class="w-full relative">
@@ -86,6 +88,7 @@ const network = ref({});
 
 watchEffect(() => {
   network.value = manageStore.currentNetwork;
+  console.log(network.value);
 });
 const switchNetwork = (network) => {
   manageStore.selectedNetwrok = network;

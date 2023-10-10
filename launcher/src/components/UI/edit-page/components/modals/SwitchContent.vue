@@ -54,7 +54,10 @@
           </ul>
         </Transition>
       </div>
-      <SyncCarousel v-if="isSyncingActived && (client.category === 'execution' || client.category === 'consensus')" />
+      <SyncCarousel
+        v-if="isSyncingActived && (client.category === 'execution' || client.category === 'consensus')"
+        :properties="properties"
+      />/>
     </div>
   </div>
 </template>
@@ -63,8 +66,12 @@ import { ref, computed } from "vue";
 import { useServices } from "@/store/services";
 import SyncCarousel from "../edit/SyncCarousel";
 
-const { client } = defineProps({
+const { client, properties } = defineProps({
   client: {
+    type: Object,
+    default: null,
+  },
+  properties: {
     type: Object,
     default: null,
   },
