@@ -55,9 +55,6 @@
       <SwitchModal
         v-if="isSwitchModalOpen"
         :client="clientToSwitch"
-        main-title="Switch Client"
-        confirm-text="Confirm"
-        click-outside-text="Click outside to cancel"
         @close-window="isSwitchModalOpen = false"
         @switch-confirm="switchClientConfirm"
       />

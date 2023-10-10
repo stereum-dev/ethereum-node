@@ -11,13 +11,13 @@ import { useNodeManage } from '@/store/nodeManage';
         <div class="text-center pt-4 flex-auto justify-center space-y-2">
           <div class="flex justify-center items-center px-4 mx-auto">
             <img v-if="client" class="w-[55px] h-[55px] mr-2" :src="client.sIcon" alt="Service Icon" />
-            <div v-if="mainTitle || subTitle" class="flex flex-col justify-center items-start">
-              <span class="text-[26px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
-              <span class="text-[22px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
+            <div class="flex flex-col justify-center items-start">
+              <span v-if="mainTitle" class="text-[26px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
+              <span v-if="subTitle" class="text-[22px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
             </div>
           </div>
 
-          <div v-if="messageText" class="text-md font-bold text-amber-600">
+          <div v-if="messageText" class="text-md font-bold text-gray-400">
             <span>{{ messageText }}</span>
           </div>
         </div>
