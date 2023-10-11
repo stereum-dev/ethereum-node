@@ -12,19 +12,14 @@
     <template #content>
       <AddPanel v-if="isAddPanelActivated" ref="addPanelComponent" :client="client" :properties="properties" />
       <MevboostRelays v-if="isRelaysActivated" :client="client" :properties="properties" />
-      <AddConnection
-        v-if="isModifyActivated"
-        :client="client"
-        :properties="properties"
-        @select-service="selectService"
-      />
+      <AddConnection v-if="isModifyActivated" :client="client" :properties="properties" />
     </template>
   </custom-modal>
 </template>
 <script setup>
 import CustomModal from "./CustomModal.vue";
-import AddPanel from "./AddPanel.vue";
-import AddConnection from "./AddConnection.vue";
+import AddPanel from "./AddPanel";
+import AddConnection from "./AddConnection";
 import MevboostRelays from "./MevboostRelays.vue";
 import { ref, onMounted, computed } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
@@ -138,10 +133,6 @@ const confirmInstall = () => {
 
 const closeWindow = () => {
   emit("closeWindow", props.client);
-};
-
-const selectService = (item) => {
-  emit("selectService", item);
 };
 </script>
 

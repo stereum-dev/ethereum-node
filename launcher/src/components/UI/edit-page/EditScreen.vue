@@ -212,15 +212,18 @@ const switchClientConfirm = (item) => {
 
 const confirmModifyingService = (item) => {
   isModifyModalOpen.value = false;
-  if (item.service === "FlashbotsMevBoostService") {
+  if (item.client.service === "FlashbotsMevBoostService") {
     changeMevboostConnection();
-    console.log("MEVBOOST CONNECTION CHANGED");
   }
   manageStore.confirmChanges.push({
     id: randomId,
     content: "MODIFY",
     contentIcon: "/img/icon/manage-node-icons/connected.png",
-    service: item,
+    service: item.client,
+    data: {
+      executionClients: item.executionClients,
+      consensusClients: item.consensusClients,
+    },
   });
 };
 
@@ -342,7 +345,7 @@ const addServiceHandler = (item) => {
       network: manageStore.configNetwork.network,
       installDir: item.installDir ? item.installDir : "/opt/stereum",
       executionClients: item.executionClients,
-      beaconServices: item.consensusClients,
+      consensusClients: item.consensusClients,
       relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
     },
   });

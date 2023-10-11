@@ -292,7 +292,7 @@ export class ServiceManager {
 
     tasks.forEach((task) => {
       let service = services.find((s) => s.id === task.service.config.serviceID);
-      let dependencies = task.data.executionClients.concat(task.data.beaconServices).map((s) =>
+      let dependencies = task.data.executionClients.concat(task.data.consensusClients).map((s) =>
         services.find((e) => {
           if (e.id === s.config.serviceID) {
             return true;
@@ -607,7 +607,7 @@ export class ServiceManager {
         });
         break;
       case "validator":
-        switchTask.data.data.beaconServices = previousService.dependencies.consensusClients;
+        switchTask.data.data.consensusClients = previousService.dependencies.consensusClients;
         break;
     }
     try {
@@ -647,7 +647,7 @@ export class ServiceManager {
     }
   }
 
-  //args: network, installDir, port, executionClients, checkpointURL, beaconServices, mevboost, relays
+  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays
   getService(name, args) {
     let ports;
     let service;
@@ -711,7 +711,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/lighthouse",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "PrysmBeaconService":
@@ -736,7 +736,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/prysm",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "LodestarBeaconService":
@@ -762,7 +762,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/lodestar",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "NimbusBeaconService":
@@ -786,7 +786,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/nimbus",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "TekuBeaconService":
@@ -811,7 +811,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/teku",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "PrometheusNodeExporterService":
@@ -851,11 +851,11 @@ export class ServiceManager {
           ports,
           args.installDir + "/ssv_network",
           args.executionClients,
-          args.beaconServices
+          args.consensusClients
         );
       case "CharonService":
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
-        return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.beaconServices);
+        return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
     }
   }
 
@@ -1004,8 +1004,8 @@ export class ServiceManager {
     });
     let VLInstalls = tasks.filter((t) => t.service.category === "validator");
     VLInstalls.forEach((t) => {
-      if (t.data.beaconServices.length > 0) {
-        t.data.beaconServices = t.data.beaconServices.map((bc) => {
+      if (t.data.consensusClients.length > 0) {
+        t.data.consensusClients = t.data.consensusClients.map((bc) => {
           let id = bc.config ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
@@ -1020,8 +1020,8 @@ export class ServiceManager {
     });
     let PInstalls = tasks.filter((t) => t.service.category === "service");
     PInstalls.forEach((t) => {
-      if (t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService") {
-        t.data.beaconServices = t.data.beaconServices.map((bc) => {
+      if (t.data.consensusClients.length > 0 && t.service.service === "FlashbotsMevBoostService") {
+        t.data.consensusClients = t.data.consensusClients.map((bc) => {
           let id = bc.config ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
@@ -1031,8 +1031,8 @@ export class ServiceManager {
         });
       }
       let service = this.getService(t.service.service, t.data);
-      if (t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService") {
-        let changed = this.addDependencies(service, t.data.beaconServices);
+      if (t.data.consensusClients.length > 0 && t.service.service === "FlashbotsMevBoostService") {
+        let changed = this.addDependencies(service, t.data.consensusClients);
         changed.forEach((dep) => {
           let index = newServices.findIndex((s) => s.id === dep.id);
           if (index != -1) {

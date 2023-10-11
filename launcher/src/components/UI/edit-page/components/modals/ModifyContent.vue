@@ -133,8 +133,6 @@ import { onMounted, computed } from 'vue';
 import { useNodeManage } from "@/store/nodeManage";
 import { onMounted, ref } from "vue";
 
-const emit = defineEmits(["select-service"]);
-
 const list = ref([]);
 
 //Props
@@ -143,58 +141,55 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  properties: {
+    type: Object,
+    default: null,
+  },
 });
 
-//Refs
-const connectedConsensus = ref(null);
-const connectedExecution = ref(null);
 //Stores
 const manageStore = useNodeManage();
 
 //Lifecycle Hooks
 onMounted(() => {
+  manageStore.newConfiguration.forEach((e) => {
+    e.isConnected = false;
+  });
   list.value = getConnectionOptions();
   getConnectedClient();
-  getConnectedServicesToSSV();
 });
 //Methods
-
-const getConnectedClient = () => {
-  if (props.client.category === "consensus") {
-    manageStore.newConfiguration.forEach((e) => {
-      if (e.category === "execution" && e.config.dependencies.executionClients[0]) {
-        e.isConnected = true;
-      }
-    });
-  } else if (props.client.category === "validator" && props.client.service !== "SSVNetworkService") {
-    manageStore.newConfiguration.forEach((e) => {
-      if (e.category === "consensus" && e.config.dependencies.consensusClients[0]) {
-        e.isConnected = true;
-      }
-    });
-  }
+const updateProperties = () => {
+  props.properties.executionClients = list.value.filter((e) => e.category === "execution" && e.isConnected);
+  props.properties.consensusClients = list.value.filter((e) => e.category === "consensus" && e.isConnected);
 };
 
-const getConnectedServicesToSSV = () => {
-  connectedConsensus.value = props.client.config.dependencies.consensusClients[0]?.id;
-  connectedExecution.value = props.client.config.dependencies.executionClients[0]?.id;
-  manageStore.newConfiguration.forEach((e) => {
-    if (connectedConsensus.value === e.config.serviceID || connectedExecution.value === e.config.serviceID) {
-      return {
-        ...e,
-        isConnectedToSSVNetwork: true,
-      };
+const getConnectedClient = () => {
+  list.value.forEach((service) => {
+    if (service.config?.dependencies) {
+      const allDependencies = props.client.config.dependencies.consensusClients.concat(
+        props.client.config.dependencies.executionClients
+      );
+      if (allDependencies.map((s) => s.id).includes(service.config.serviceID)) {
+        service.isConnected = true;
+      }
+      if (props.client.service === "FlashbotsMevBoostService") {
+        if (service.config.dependencies.mevboost.map((s) => s.id).includes(props.client.config.serviceID)) {
+          service.isConnected = true;
+        }
+      }
     }
+    updateProperties();
   });
 };
 
 const toggleConnection = (option) => {
   if (!option.isConnected) {
     option.isConnected = true;
-    emit("select-service", option);
   } else {
     option.isConnected = false;
   }
+  updateProperties();
 };
 
 const getConnectionOptions = () => {

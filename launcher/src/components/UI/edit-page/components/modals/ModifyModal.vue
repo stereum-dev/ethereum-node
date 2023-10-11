@@ -9,34 +9,39 @@
     @confirm-action="confirmModify"
   >
     <template #content>
-      <ModifyContent :client="client" @select-service="selectService" />
+      <ModifyContent :client="client" :properties="properties" />
     </template>
   </custom-modal>
 </template>
 <script setup>
 import CustomModal from "./CustomModal.vue";
 import ModifyContent from "./ModifyContent.vue";
-import { useServices } from "@/store/services";
+import { ref } from "vue";
 
 import { computed, onMounted } from "vue";
 
-const { client } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     default: null,
   },
 });
 
-const emit = defineEmits(["closeWindow", "confirmModify"]);
+// eslint-disable-next-line vue/no-setup-props-destructure
+const properties = ref({
+  client: props.client,
+  executionClients: [],
+  consensusClients: [],
+});
 
-const serviceStore = useServices();
+const emit = defineEmits(["closeWindow", "confirmModify"]);
 
 const mainTitleHandler = computed(() => {
   let title = "";
-  if (client.service !== "FlashbotsMevBoostService") {
-    title = `${client.name} - ${client.category}`;
+  if (props.client.service !== "FlashbotsMevBoostService") {
+    title = `${props.client.name} - ${props.client.category}`;
   } else {
-    title = `${client.name}`;
+    title = `${props.client.name}`;
   }
 
   return title;
@@ -56,15 +61,10 @@ onMounted(() => {});
 // };
 
 const confirmModify = () => {
-  emit("confirmModify", client);
+  emit("confirmModify", properties.value);
 };
 
 const closeWindow = () => {
   emit("closeWindow");
-};
-
-const selectService = (option) => {
-  serviceStore.selectedServiceToConnect.push(option);
-  console.log(serviceStore.selectedServiceToConnect);
 };
 </script>

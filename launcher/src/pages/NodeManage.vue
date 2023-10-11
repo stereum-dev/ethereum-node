@@ -156,12 +156,11 @@ export default {
   mounted() {
     this.confirmChanges = [];
     this.configNetwork = this.currentNetwork;
-    if(!this.architecture)
-      this.setArchitecture();
+    if (!this.architecture) this.setArchitecture();
   },
   methods: {
     async setArchitecture() {
-      let settings = await ControlService.getStereumSettings()
+      let settings = await ControlService.getStereumSettings();
       this.architecture = settings.stereum?.settings.arch;
     },
     sortByName(a, b) {
@@ -299,7 +298,7 @@ export default {
         installDir: this.installationPath ? this.installationPath : "/opt/stereum",
         port: parseInt(this.port),
         executionClients: [],
-        beaconServices: [],
+        consensusClients: [],
         checkpointURL: data.checkpointURL ? data.checkpointURL : false,
         relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
       };

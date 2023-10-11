@@ -60,7 +60,7 @@ test("lodestar validator import", async () => {
 
   let lBC = serviceManager.getService("LodestarBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] });
 
-  let lVC = serviceManager.getService("LodestarValidatorService", { network: "goerli", installDir: "/opt/stereum", beaconServices: [lBC] });
+  let lVC = serviceManager.getService("LodestarValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [lBC] });
 
   //get latest versions
   let versions = await nodeConnection.checkUpdates();
