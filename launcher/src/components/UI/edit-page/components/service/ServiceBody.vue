@@ -10,6 +10,7 @@
     <div
       ref="service"
       class="h-full max-h-[430px] flex flex-col space-y-4 items-center pt-10 px-1 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
+      :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
     >
       <div
         v-for="item in getServices"

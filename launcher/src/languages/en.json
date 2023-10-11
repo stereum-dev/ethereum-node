@@ -86,7 +86,8 @@
     "filter": "Filter..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
+    "confirm": "CONFIRM CHANGES",
+    "process": "processing...",
     "change": "CHANGES TO CONFIRM",
     "delete": "DELETE"
   },
