@@ -7,7 +7,8 @@
     "username": "JMÉNO UŽIVATELE",
     "password": "HESLO",
     "keylocation": "LOKALITA KLÍČE",
-    "usessh": "POUŽÍT SSH KLÍČ"
+    "usessh": "POUŽÍT SSH KLÍČ",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "JIŽ BRZY"
@@ -663,5 +664,11 @@
   },
   "taskMang": {
     "taskMng": "Task Manager"
+  },
+  "ipScanModal": {
+    "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
+    "clockClose": "Click outside to close",
+    "noIpFound": "No IP found",
+    "clickSearch": "Click [search] to start"
   }
 }

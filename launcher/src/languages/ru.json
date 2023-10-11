@@ -1,64 +1,65 @@
 {
   "formsetup": {
-    "login": "login",
-    "server": "Connect to your server",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY"
+    "login": "вход",
+    "server": "Подключиться к вашему серверу",
+    "servername": "НАЗВАНИЕ СЕРВЕРА",
+    "iphost": "IP / ИМЯ ХОСТА",
+    "username": "ИМЯ ПОЛЬЗОВАТЕЛЯ",
+    "password": "ПАРОЛЬ",
+    "keylocation": "КЛЮЧ МЕСТОНАХОЖДЕНИЯ",
+    "usessh": "ИСПОЛЬЗОВАТЬ КЛЮЧ SSH",
+    "fillFields": "Пожалуйста, заполните отсутствующие поля!"
   },
   "comingsoon": {
-    "comingsoon": "COMING SOON"
+    "comingsoon": "СКОРО"
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "NAME",
-    "edit": "to edit node",
-    "loading": "loading new states",
-    "turnOn": "Turn Node on",
-    "turnOff": "Turn Node off",
-    "log": "Open Logs",
-    "restart": "Restart",
-    "start": "start",
-    "resync": "resync",
-    "stop": "stop",
-    "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
-    "clkEdit": "click to edit your node",
-    "clkOn": "click to turn on your node",
-    "clkOff": "click to turn off your node",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "НАЗВАНИЕ",
+    "edit": "редактировать узел",
+    "loading": "загрузка новых состояний",
+    "turnOn": "Вкл узел",
+    "turnOff": "Выкл узел",
+    "log": "Открыть журналы",
+    "restart": "Перезапуск",
+    "start": "начать",
+    "resync": "ресинх",
+    "stop": "остановить",
+    "machineIp": "IP-адрес машины",
+    "machineName": "Название машины",
+    "clkEdit": "кликните, чтобы редактировать ваш узел",
+    "clkOn": "кликните, чтобы включить ваш узел",
+    "clkOff": "кликните, чтобы отключить ваш узел",
+    "clkLog": "Кликните, чтобы открыть панель, чтобы журнал для клиентов и служб был доступен вам отдельно",
+    "clkSwitch": "Кликните мышью, чтобы открыть панель и сделать доступным включение/выключение клиентов и услуг по отдельности",
+    "clkRestart": "Кликните, чтобы открыть панель, позволяющую перезапускать клиенты и службы по отдельности",
+    "clkResync": "Кликните, чтобы открыть панель, на которой можно отдельно синхронизировать клиентов"
   },
   "pagesnav": {
-    "node": "NODE",
-    "control": "CONTROL",
-    "staking": "STAKING"
+    "node": "УЗЕЛ",
+    "control": "УПРАВЛЕНИЕ",
+    "staking": "СТАКИРОВКА"
   },
   "supportModal": {
-    "support": "support",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
-    "bugReport": "BUG REPORT",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
-    "emailText": "or write an email to:",
-    "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "support": "поддержка",
+    "supportText": "Самый быстрый способ связаться с человеком для получения поддержки - присоединиться к нашему Discord серверу!",
+    "bugReport": "СООБЩИТЬ ОБ ОШИБКЕ",
+    "bugRepText": "Пожалуйста, найдите время, чтобы написать о проблеме, и позвольте нам сделать Stereum лучше!",
+    "emailText": "или напишите на электронную почту:",
+    "docsTitle": "цепные документы",
+    "docsText": "Удобная ссылка на документацию по сетевым журналам для выбранной конфигурации узла."
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLY",
-    "general": "GENERAL",
-    "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
-    "lane": "Stereum - Testing Lane",
+    "stereumName": "настройки stereum",
+    "langName": "Выбор языка",
+    "confirm": "ПРИМЕНИТЬ",
+    "general": "ОБЩЕЕ",
+    "credits": "Титры",
+    "open": "открыть",
+    "update": "ОБНОВЛЕНИЕ",
+    "launcherVersion": "Версия лаунчера",
+    "nodeVersion": "Версия узла",
+    "lane": "Stereum - Испытательный переулок",
     "on": "on",
     "off": "off",
     "updateConfig": "Stereum Update Configuration",
@@ -123,60 +124,60 @@
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
     "all": "update all",
     "osTitle": "server os updates",
-    "availableUpdates": "updates",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "availableUpdates": "обновления",
+    "searchVersion": "Поиск доступных обновлений",
+    "updtBtn": "кликните, чтобы обновить",
+    "updtAllPlugin": "обновить все плагины",
+    "autoUpt": "автоматическое обновление",
+    "manualUpt": "ручное обновление",
+    "chngAppr": "Изменения будут применены"
   },
   "controlPage": {
-    "node": "NODE",
-    "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
-    "inclusionDistance": "INCLUSION DISTANCE",
+    "node": "УЗЕЛ",
+    "disk": "СКОРОСТЬ ДИСКА",
+    "write": "НАПИСАТЬ",
+    "read": "ЧИТАТЬ",
+    "inclusionDistance": "РАССТОЯНИЕ ВКЛЮЧЕНИЯ",
     "rpc": "RPC-ENDPOINT",
     "ws": "WS-ENDPOINT",
-    "syncStatus": "SYNC STATUS",
-    "hard": "STORAGE VOLUME",
-    "free": "FREE",
-    "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
-    "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
-    "storage": "STORAGE",
-    "active": "ACTIVE",
-    "rating": "RATING",
-    "usage": "Usage",
-    "netSel": "The selected network is",
-    "machineName": "Machine Name",
-    "storVol": "Storage Volume",
-    "stor": "the storage",
-    "diskSpeed": "Disk Speed",
-    "p2p": "peer to peer networks",
-    "cpuUse": "CPU Usage",
-    "syncInfo": "Synchronization status",
-    "ramUse": "RAM Usage",
-    "netSpeed": "Network Speed",
-    "listPort": "list of ports",
-    "endPoint": "endpoint",
-    "data": "data",
-    "enteredKeys": "The number of entered validator keys",
-    "ttlBal": "Total balance",
-    "finEPOCH": "Finalized EPOCH",
-    "pending": "service is pending",
-    "off": "Switch off the service",
-    "on": "Switch on the service",
-    "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "syncStatus": "СТАТУС СИНХ",
+    "hard": "ГРОМКОСТЬ ХРАНИЛИЩА",
+    "free": "БЕСПЛАТНОЕ",
+    "total": "ВСЕГО",
+    "network": "СЕТЬ",
+    "receive": "Получение данных",
+    "transmit": "Передача данных",
+    "ram": "ОЗУ",
+    "used": "используется",
+    "totalram": "всего",
+    "storage": "ХРАНИЛИЩЕ",
+    "active": "АКТИВНОЕ",
+    "rating": "РЕЙТИНГ",
+    "usage": "Использование",
+    "netSel": "Выбранная сеть -",
+    "machineName": "Название машины",
+    "storVol": "Громкость хранилища",
+    "stor": "хранилище",
+    "diskSpeed": "Скорость диска",
+    "p2p": "одноранговые сети",
+    "cpuUse": "Использование ЦП",
+    "syncInfo": "Статус синхронизации",
+    "ramUse": "Использование ОЗУ",
+    "netSpeed": "Скорость сети",
+    "listPort": "список портов",
+    "endPoint": "конечная точка",
+    "data": "данные",
+    "enteredKeys": "Количество введенных ключей валидатора",
+    "ttlBal": "Итоговый баланс",
+    "finEPOCH": "Завершенные EPOCH",
+    "pending": "служба в ожидании",
+    "off": "Выключить службу",
+    "on": "Включить службу",
+    "settingService": "Настройка службы",
+    "restart": "перезапустить службу"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Кликните на задачи для отображения"
   },
   "displayValidator": {
     "pk": "Public Key",
@@ -251,78 +252,78 @@
     "proposed": "PROPOSED",
     "attestRate": "ATTESTATION RATE",
     "attention": "ATTESTATION",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
+    "missed": "ПОТЕРЯНО",
+    "aggregations": "СОГЛАШЕНИЯ",
+    "slashed": "СРЕШЕНО"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIDATOR",
+    "date": "ДАТА",
+    "validator": "ВАЛИДАТОР",
     "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "reward": "НАГРАДА"
   },
   "installOption": {
-    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
-    "install": "INSTALL",
-    "placeHoldrer": "choose a network"
+    "installText": "ВЫБЕРИТЕ ВАРИАНТ ИСПОЛЬЗОВАНИЯ И СЕТЬ. ПОСЛЕ ВЫБОРА И ПРИ НАЖАТИИ КНОПКИ \"НАЧАТЬ\" БУДЕТ ПРОИЗВЕДЕН СЛУЧАЙНЫЙ ВЫБОР КЛИЕНТА ДЛЯ ОБСЛУЖИВАНИЯ ВАШЕГО СЦЕНАРИЯ ИСПОЛЬЗОВАНИЯ",
+    "back": "НАЗАД",
+    "install": "УСТАНОВИТЬ",
+    "placeHoldrer": "выберите сеть"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "Все службы будут удалены.",
+    "sure": "Вы уверены?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
-    "osSupported": "IS A SUPPORTED OS"
+    "welcome": "ДОБРО ПОЖАЛОВАТЬ",
+    "installText": "НА ЭТОМ ШАГЕ ВЫ ВЫБИРАЕТЕ СПОСОБ УСТАНОВКИ УЗЛА. ЕСЛИ ВАМ НУЖНА ПОМОЩЬ В НАСТРОЙКЕ, ПРИСОЕДИНЯЙТЕСЬ К DISCORD СЕРВЕРУ - МЫ БУДЕМ РАДЫ ПОМОЧЬ ВАМ",
+    "osCheck": "ПРОВЕРКА ПОДДЕРЖКИ ОПЕРАЦИОННОЙ СИСТЕМЫ ВАШЕГО СЕРВЕРА",
+    "osSupported": "ЯВЛЯЕТСЯ ПОДДЕРЖИВАЕМОЙ ОС"
   },
   "pluginName": {
-    "option": "CHOSEN NETWORK",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "INSTALLED SERVICES",
-    "addOpt": "ADDITIONAL OPTIONS",
-    "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "BACK",
-    "next": "NEXT"
+    "option": "ВЫБЕРИТЕ СЕТЬ",
+    "chosen": "ВЫБЕРИТЕ СЕТЬ",
+    "path": "ПУТЬ УСТАНОВКИ",
+    "syncClient": "СИНХРОНИЗИРУЕТ КЛИЕНТА С НАЧАЛОМ ЦЕПОЧКИ",
+    "plugin": "УСТАНОВЛЕННЫЕ СЛУЖБЫ",
+    "addOpt": "ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ",
+    "monitor": "КОНТРОЛЬ",
+    "instMonit": "Установить контроль?",
+    "back": "НАЗАД",
+    "next": "СЛЕДУЮЩЕЕ"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
-    "developers": "DEVELOPERS",
-    "testers": "TESTERS"
+    "creditTitle": "ТИТРЫ - ФИНАНСОВЫЕ ВКЛАДЧИКИ",
+    "fincialTitle": "ВНЕСИТЕ СВОЕ ИМЯ В СПИСОК! СПАСИБО ЗА ПОДДЕРЖКУ РАЗРАБОТКИ!",
+    "technicPage": "ТЕХНИЧЕСКИЙ ВКЛАД",
+    "techTitle": "ТИТРЫ - ТЕХНИЧЕСКИЙ ВКЛАД",
+    "techText": "ЗАРАБОТАЙТЕ GITPOAP! УЗНАЙТЕ, КАК ПРИНЯТЬ УЧАСТИЕ В ПРОЕКТЕ, ПОСЕТИВ НАШ GITHUB!",
+    "financialPage": "ФИНАНСОВЫЙ ВКЛАД",
+    "gitcoinList": "ПОЛНЫЙ СПИСОК GITCOIN",
+    "developers": "РАЗРАБОТЧИКИ",
+    "testers": "ТЕСТЕРЫ"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "ПОДТВЕРДИТЬ И УСТАНОВИТЬ",
+    "name": "НАЗВАНИЕ",
+    "cat": "КАТЕГОРИЯ",
+    "path": "ПУТЬ"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Мы рекомендуем дождаться окончания первоначальной установки, прежде чем вносить дальнейшие изменения"
   },
   "tutorialBox": {
-    "video": "video",
-    "walkthrough": "walkthrough",
-    "textGuide": "written guide"
+    "video": "видео",
+    "walkthrough": "прохождение",
+    "textGuide": "письменное руководство"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
-    "insertTitle": "insert operator key for existing operator",
-    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+    "newRegistritionTitle": "РЕГИСТРАЦИЯ НОВОГО ОПЕРАТОРА",
+    "newRegistritionText": "Используйте сгенерированный ключ оператора для регистрации нового узла-оператора в сети SSV",
+    "register": "Регистрация",
+    "insertTitle": "вставить ключ оператора для существующего оператора",
+    "insertText": "Использование закрытого ключа оператора для восстановления процессов оператора существующего узла"
   },
   "registerSSV": {
-    "pubKey": "Public operator key",
+    "pubKey": "Публичный ключ оператора",
     "copied": "copied!",
     "secKey": "Secret Operator Key",
     "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
@@ -397,27 +398,27 @@
   },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Start Pruning",
-    "close": "click outside to close"
+    "prunningChecked": "ПРОЧИТАЛ ТЕКСТ И ОСОЗНАЮ ПОСЛЕДСТВИЯ",
+    "prunningStart": "Начать чистку",
+    "close": "кликните снаружи, чтобы закрыть"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
-    "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart",
-    "confirmMessage": "Are you sure you want turn your node"
+    "restarQ": "Вы уверены что хотите перезапустить?",
+    "restartMessage": "ваш узел может выйти из сети, пока это делается!",
+    "restart": "перезапуск",
+    "confirmMessage": "Вы уверены что хотите включить ваш узел"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
-    "nukeTitle": "nuke the node",
-    "backToLogin": "Back to login"
+    "nukeQ": "ВЫ УВЕРЕНЫ, ЧТО ХОТИТЕ УДАЛИТЬ STEREUM И ВСЕ ЕГО СЛУЖБЫ С СЕРВЕРА?",
+    "nukeTitle": "уничтожить узел",
+    "backToLogin": "Назад к входу"
   },
   "noData": {
-    "noData": "no data",
-    "turnOn": "please turn on"
+    "noData": "нет данных",
+    "turnOn": "пожалуйста, включите"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
+    "clickNav": "Нажмите кнопку \"КОНТРОЛЬ\" для входа в панель управления.",
     "toggleMessage": "Click on the “ON/OFF” button to open your port",
     "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
     "clickCancel": "Click x to cancel",
@@ -663,5 +664,11 @@
   },
   "taskMang": {
     "taskMng": "Task Manager"
+  },
+  "ipScanModal": {
+    "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
+    "clockClose": "Click outside to close",
+    "noIpFound": "No IP found",
+    "clickSearch": "Click [search] to start"
   }
 }
