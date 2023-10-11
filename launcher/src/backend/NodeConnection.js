@@ -75,7 +75,7 @@ export class NodeConnection {
         exit 0
       fi
       # Check if users needs a password for sudo
-      msg=$(sudo -l 2>&1)
+      msg=$(sudo hostname 2>&1)
       if [[ "$msg" == *"sudo: a password is required"* ]]; then
         echo "FAIL: user can not sudo without password!"
         exit 1
