@@ -184,29 +184,33 @@ const switchClientModalhandler = (item) => {
   }
 };
 
-const switchClientConfirm = (item) => {
+const switchClientConfirm = (properties) => {
   isSwitchModalOpen.value = false;
   const current = manageStore.newConfiguration.find(
-    (e) => e?.config.serviceID === clientToSwitch.value?.config.serviceID
+    (e) => e?.config.serviceID === properties.itemToReplace.config.serviceID
   );
 
   const currentClientIndex = manageStore.newConfiguration.indexOf(current);
 
   manageStore.newConfiguration.splice(currentClientIndex, 1);
 
-  manageStore.newConfiguration.push(item);
+  manageStore.newConfiguration.push(properties.itemToInstall);
   manageStore.confirmChanges.push({
     id: randomId,
     content: "SWITCH CLIENT",
     contentIcon: "/img/icon/manage-node-icons/switch.png",
-    service: current,
+    service: properties.itemToReplace,
     data: {
-      itemToInstall: item,
-      data: {},
+      itemToInstall: properties.itemToInstall,
+      data: {
+        network: properties.itemToReplace.config.network,
+        installDir: "/opt/stereum",
+        executionClients: [],
+        consensusClients: [],
+        checkpointURL: properties.checkPointSyncUrl ? properties.checkPointSyncUrl : false,
+      },
     },
   });
-
-  serviceStore.selectedServiceToSwitch = "";
 };
 // Clients Modifying methods
 

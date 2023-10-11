@@ -9,16 +9,12 @@
           @click="switchDropdownOpen = !switchDropdownOpen"
         >
           <img
-            v-if="serviceStore.selectedServiceToSwitch?.icon"
+            v-if="properties.itemToInstall?.icon"
             class="w-6 h-6 mr-2"
-            :src="serviceStore.selectedServiceToSwitch?.sIcon"
+            :src="properties.itemToInstall?.sIcon"
             alt="Client Icon"
           />
-          <span>{{
-            serviceStore.selectedServiceToSwitch
-              ? serviceStore.selectedServiceToSwitch.name
-              : "Select a Client From List"
-          }}</span>
+          <span>{{ properties.itemToInstall ? properties.itemToInstall.name : "Select a Client From List" }}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-5 h-5 inline ml-1 absolute right-1 text-gray-400"
@@ -66,7 +62,7 @@ import { ref, computed } from "vue";
 import { useServices } from "@/store/services";
 import SyncCarousel from "../edit/SyncCarousel";
 
-const { client, properties } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     default: null,
@@ -86,14 +82,16 @@ const serviceStore = useServices();
 //Computed & Watcher
 const getServices = computed(() => {
   let service;
-  service = serviceStore.allServices.filter((e) => e?.category == client.category && e?.name != client.name);
+  service = serviceStore.allServices.filter(
+    (e) => e?.category == props.client.category && e?.name != props.client.name
+  );
   return service;
 });
 
 //Methods
 
 const switchService = (service) => {
-  serviceStore.selectedServiceToSwitch = service;
+  props.properties.itemToInstall = service;
   switchDropdownOpen.value = false;
   isSyncingActived.value = true;
 };

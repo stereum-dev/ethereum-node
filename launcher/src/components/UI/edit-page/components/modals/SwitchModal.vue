@@ -13,27 +13,31 @@
   </custom-modal>
 </template>
 <script setup>
+import { ref } from "vue";
 import CustomModal from "./CustomModal.vue";
-import SwitchContent from "./SwitchContent.vue";
-import { useServices } from "@/store/services";
+import SwitchContent from "./SwitchContent";
 
 //Props & Emits
-const { client } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     default: null,
   },
 });
 
-const emit = defineEmits(["closeWindow", "switchConfirm"]);
+// eslint-disable-next-line vue/no-setup-props-destructure
+const properties = ref({
+  itemToReplace: props.client,
+  itemToInstall: null,
+  checkPointSyncUrl: null,
+});
 
-//Store
-const serviceStore = useServices();
+const emit = defineEmits(["closeWindow", "switchConfirm"]);
 
 //Methods
 
 const switchConfirm = () => {
-  emit("switchConfirm", serviceStore.selectedServiceToSwitch);
+  emit("switchConfirm", properties.value);
 };
 
 const closeWindow = () => {
