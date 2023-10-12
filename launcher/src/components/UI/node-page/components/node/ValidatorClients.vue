@@ -4,7 +4,8 @@
       v-for="item in getValidatorServices"
       :key="item"
       ref="validatorRefs"
-      class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
+      class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
+      @mouseover="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <ClientButtons
@@ -26,7 +27,7 @@ import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed, watch, ref } from "vue";
 
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler"]);
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver"]);
 
 const validatorRefs = ref([]);
 
@@ -45,8 +46,12 @@ const getValidatorRef = computed(() => {
 });
 
 watch(getValidatorRef, (newValue) => {
-  nodeStore.validatorRef = newValue;
+  nodeStore.validatorRefList = newValue;
 });
+
+const mouseOver = (item) => {
+  emit("mouseOver", item);
+};
 
 const openExpert = (item) => {
   emit("openExpert", item);

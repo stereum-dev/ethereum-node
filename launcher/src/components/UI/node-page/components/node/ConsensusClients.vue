@@ -4,7 +4,8 @@
       v-for="item in getConsensusServices"
       :key="item"
       ref="consensusRefs"
-      class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
+      class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
+      @mouseover="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <ClientButtons
@@ -25,13 +26,13 @@
 
 <script setup>
 import ResyncModal from "../modals/ResyncModal.vue";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler"]);
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver"]);
 
 //Refs
 const consensusRefs = ref([]);
@@ -50,17 +51,14 @@ const getConsensusRef = computed(() =>
   }))
 );
 
-watch(getConsensusRef, () => {
-  nodeStore.consensusRef.value = getConsensusRef.value;
-});
-
-onMounted(() => {
-  if (getConsensusRef.value.length > 0) {
-    nodeStore.consensusRef.value = getConsensusRef.value;
-  }
+watch(getConsensusRef, (newValue) => {
+  nodeStore.consensusRefList = newValue;
 });
 
 //Methods
+const mouseOver = (item) => {
+  emit("mouseOver", item);
+};
 
 const openResync = (item) => {
   item.isResyncModalOpen = true;

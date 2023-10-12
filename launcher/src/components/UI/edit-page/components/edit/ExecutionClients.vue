@@ -8,6 +8,7 @@
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
+      @mouseover="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <TransitionGroup name="slide-fade">
@@ -26,16 +27,14 @@
 
 <script setup>
 import { useServices } from "@/store/services";
-import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
 import { computed, ref, watchEffect } from "vue";
 
-const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal"]);
+const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver"]);
 const executionRefs = ref([]);
-const nodeStore = useNodeStore();
 const manageStore = useNodeManage();
 const serviceStore = useServices();
 
@@ -66,7 +65,7 @@ const getExecutionRef = computed(() => {
 });
 
 watchEffect(() => {
-  nodeStore.executionRef = getExecutionRef.value;
+  manageStore.executionRefList = getExecutionRef.value;
 });
 
 // Methods
@@ -98,6 +97,9 @@ const displayMenu = (item) => {
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+};
+const mouseOver = (item) => {
+  emit("mouseOver", item);
 };
 
 const connectClient = (item) => {

@@ -4,7 +4,8 @@
       v-for="item in getExecutionServices"
       :key="item"
       ref="executionRefs"
-      class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700"
+      class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
+      @mouseover="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <ClientButtons
@@ -32,10 +33,10 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 
 //Emits
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler"]);
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver"]);
 
 //Refs
 const executionRefs = ref([]);
@@ -61,11 +62,14 @@ const getExecutionRef = computed(() => {
   });
 });
 
-watchEffect(() => {
-  nodeStore.executionRef = getExecutionRef.value;
+watch(getExecutionRef, (newValue) => {
+  nodeStore.executionRefList = newValue;
 });
 
 //Methods
+const mouseOver = (item) => {
+  emit("mouseOver", item);
+};
 
 const openResync = (item) => {
   item.isResyncModalOpen = true;

@@ -37,6 +37,7 @@
           @switch-client="switchClient"
           @modify-service="modifyService"
           @info-modal="infoModal"
+          @mouse-over="lineDrawHandler"
         />
         <ConsensusClients
           v-if="!isOverDropZone"
@@ -45,6 +46,7 @@
           @switch-client="switchClient"
           @modify-service="modifyService"
           @info-modal="infoModal"
+          @mouse-over="lineDrawHandler"
         />
         <ExecutionClients
           v-if="!isOverDropZone"
@@ -52,6 +54,7 @@
           @switch-client="switchClient"
           @confirm-consensus="confirmConsensus"
           @info-modal="infoModal"
+          @mouse-over="lineDrawHandler"
         />
       </div>
     </div>
@@ -63,8 +66,10 @@ import EditHeader from "./EditHeader.vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
+import LeaderLine from "leader-line-new";
 import { computed, ref } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
+import { useNodeStore } from "@/store/theNode";
 
 const emit = defineEmits([
   "onDrop",
@@ -78,8 +83,10 @@ const emit = defineEmits([
 
 //Pinia stores
 const manageStore = useNodeManage();
+const nodeStore = useNodeStore();
 
 // refs
+const lineOne = ref(null);
 const isOverDropZone = ref(false);
 
 // computed & watchers properties
@@ -106,6 +113,40 @@ const activateScrollBar = computed(() => {
 });
 
 // methods
+
+const lineDrawHandler = (item) => {
+  let start;
+  let end;
+  if (lineOne.value) {
+    lineOne.value?.hide();
+  }
+  if (item.category === "consensus") {
+    const execution = item.config?.dependencies.executionClients[0];
+    start = manageStore.executionRefList.find((el) => el.refId === execution?.id)?.ref;
+    end = manageStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+  } else if (item.category === "validator") {
+    const consensus = item.config?.dependencies.consensusClients[0];
+    start = manageStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
+    end = manageStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+  } else {
+    return;
+  }
+
+  if (start && end) {
+    lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    lineOne.value.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#58BDA2",
+      endPlug: "behind",
+    });
+  }
+
+  setTimeout(() => {
+    lineOne.value?.hide();
+  }, 5000);
+};
 
 const onDrop = (event) => {
   isOverDropZone.value = false;

@@ -19,6 +19,7 @@ import { mapState, map } from 'pinia';
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
         @open-doc="openDocs"
+        @mouse-over="lineDrawHandler"
       />
       <ConsensusClients
         @open-expert="openExpert"
@@ -27,6 +28,7 @@ import { mapState, map } from 'pinia';
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
         @open-doc="openDocs"
+        @mouse-over="lineDrawHandler"
       />
       <ValidatorClients
         @open-expert="openExpert"
@@ -35,6 +37,7 @@ import { mapState, map } from 'pinia';
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
         @open-doc="openDocs"
+        @mouse-over="lineDrawHandler"
       />
     </div>
     <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
@@ -42,108 +45,64 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, computed, onMounted, reactive, watchEffect } from "vue";
-import { useNodeStore } from "@/store/theNode";
-import { useServices } from "@/store/services";
+import { ref, defineEmits } from "vue";
+import ExecutionClients from "./ExecutionClients.vue";
+import ConsensusClients from "./ConsensusClients.vue";
+import ValidatorClients from "./ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
+import { useNodeStore } from "@/store/theNode";
 import LeaderLine from "leader-line-new";
-import ExecutionClients from "./ExecutionClients";
-import ConsensusClients from "./ConsensusClients";
-import ValidatorClients from "./ValidatorClients";
-import { useRouter } from "vue-router";
 import { useStateHandler, useRestartService } from "@/composables/services";
 
 const emit = defineEmits(["openExpert"]);
-//Refs
 
+// Refs
 const lineOne = ref(null);
-const lineTwo = ref(null);
+
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
-const isClientLinkedToMev = ref(false);
 
-const connected = reactive({
-  val: null,
-  con: null,
-  exe: null,
-});
+// Store and router
+const nodeStore = useNodeStore();
 
-let {
-  selectedExecutionRef,
-  selectedConsensusRef,
-  selectedValidatorRef,
-  validatorRef,
-  consensusRef,
-  executionRef,
-  hideConnectedLines,
-} = useNodeStore();
+// Computed properties
 
-const serviceStore = useServices();
-const router = useRouter();
-
-// Computed & Watchers properties
-
-const installedServices = computed(() => serviceStore.installedServices);
-
-watchEffect(installedServices, (newServices) => {
-  const connectedVal = newServices
-    .filter((item) => item.category === "validator")
-    .find((item) => item.config.dependencies.consensusClients[0]);
-
-  if (connectedVal) {
-    connected.con = connectedVal.config.dependencies.consensusClients[0];
-    connected.exe = connected.con.dependencies.executionClients[0];
-  }
-  if (connected.con.dependencies.mevboost) {
-    isClientLinkedToMev.value = true;
-  }
-});
-
-onMounted(() => {
-  if (!hideConnectedLines || router.path == "/node") {
-    getRefOfConnectedClients();
-    drawLinesHandler();
-    drawConnectingline(selectedValidatorRef, selectedConsensusRef, selectedExecutionRef);
-  } else if (hideConnectedLines || router.path !== "/node") {
-    hideConnectedLinesHandler();
-  }
-});
+//Hooks
 
 // Methods
-const drawLinesHandler = () => {
-  if (lineOne.value != null || lineTwo.value != null) {
-    lineOne.value.show();
-    lineTwo.value.show();
+
+const lineDrawHandler = (item) => {
+  let start;
+  let end;
+  if (lineOne.value) {
+    lineOne.value?.hide();
   }
-};
-
-const hideConnectedLinesHandler = () => {
-  if (lineOne.value != null || lineTwo.value != null) {
-    lineOne.value.hide();
-    lineTwo.value.hide();
-  }
-};
-
-const getRefOfConnectedClients = () => {
-  const connectedVal = connectedVal;
-  const connectedCons = connected.con;
-  const connectedExec = connected.exe;
-
-  if (connectedVal) {
-    console.log(connectedVal.config.serviceID);
-    const refService = validatorRef.find((item) => item.refId === connectedVal.config.serviceID);
-    refService && selectedValidatorRef == refService.ref;
+  if (item.category === "consensus") {
+    const execution = item.config?.dependencies.executionClients[0];
+    start = nodeStore.executionRefList.find((el) => el.refId === execution?.id)?.ref;
+    end = nodeStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+  } else if (item.category === "validator") {
+    const consensus = item.config?.dependencies.consensusClients[0];
+    start = nodeStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
+    end = nodeStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+  } else {
+    return;
   }
 
-  if (connectedCons) {
-    const refService = consensusRef.find((item) => item.refId === connectedCons.id);
-    refService && selectedConsensusRef == refService.ref;
+  if (start && end) {
+    lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    lineOne.value.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#58BDA2",
+      endPlug: "behind",
+    });
   }
 
-  if (connectedExec) {
-    const refService = executionRef.value.find((item) => item.refId === connectedExec.id);
-    refService && selectedExecutionRef == refService.ref;
-  }
+  setTimeout(() => {
+    lineOne.value?.hide();
+  }, 5000);
 };
 
 const openLogsPage = (item) => {
@@ -156,46 +115,10 @@ const closePluginLogsPage = () => {
 };
 
 const clickOutside = (item) => {
-  hideConnectedLines = false;
+  nodeStore.hideConnectedLines = false;
   item.expertOptionsModal = false;
 };
 
-const drawConnectingline = (start, middle, end) => {
-  if (!start || !end || !middle) {
-    hideConnectedLines = true;
-    return;
-  }
-
-  if (lineOne.value || lineTwo.value) {
-    lineOne.value && lineOne.value.remove();
-    lineTwo.value && lineTwo.value.remove();
-  }
-
-  if (!hideConnectedLines) {
-    // Only create lines if hideConnectedLines is not true
-    if (router.path === "/node") {
-      lineOne.value = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
-      lineOne.value.setOptions({
-        path: "fluid",
-        startPlugSize: 1,
-        endPlugSize: 2,
-        size: 2,
-        color: "#58BDA2",
-        endPlug: "behind",
-      });
-      lineTwo.value = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
-      lineTwo.value.setOptions({
-        path: "fluid",
-        startPlugSize: 1,
-        endPlugSize: 2,
-        size: 2,
-        color: "#58BDA2",
-        endPlug: "behind",
-      });
-      LeaderLine.mouseHoverAnchor({ start, middle, end, style: { color: "#E9CE1F" } });
-    }
-  }
-};
 const openDocs = (item) => {
   window.open(item.docsUrl, "_blank");
 };

@@ -8,6 +8,7 @@
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
+      @mouseover="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <TransitionGroup name="slide-fade">
@@ -25,7 +26,6 @@
 </template>
 
 <script setup>
-import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
@@ -33,12 +33,11 @@ import GeneralMenu from "./GeneralMenu.vue";
 import { computed, ref, watchEffect, watch } from "vue";
 
 //Props & Emits
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver"]);
 
 //Refs
 
-const executionRefs = ref([]);
-const nodeStore = useNodeStore();
+const consensusRefs = ref([]);
 const manageStore = useNodeManage();
 const isMouseOverClient = ref(false);
 const isMousePassedClient = ref(false);
@@ -61,8 +60,8 @@ const getConsensus = computed(() => {
     });
 });
 
-const getExecutionRef = computed(() => {
-  return executionRefs.value.map((el, index) => {
+const getConsensusRef = computed(() => {
+  return consensusRefs.value.map((el, index) => {
     return {
       ref: el,
       refId: getConsensus.value[index].config.serviceID,
@@ -78,7 +77,7 @@ watch(isMouseOverClient, () => {
 });
 
 watchEffect(() => {
-  nodeStore.executionRef = getExecutionRef.value;
+  manageStore.consensusRefList = getConsensusRef.value;
 });
 
 // methods
@@ -111,6 +110,10 @@ const displayMenu = (item) => {
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+};
+
+const mouseOver = (item) => {
+  emit("mouseOver", item);
 };
 
 const deleteService = (item) => {

@@ -11,6 +11,7 @@
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
+      @mouseover="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <Transition name="slide-fade">
@@ -28,18 +29,17 @@
 </template>
 
 <script setup>
-import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 
 import GeneralMenu from "./GeneralMenu.vue";
-import { computed, reactive, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 // Variables & Constants
 
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
-const validatorRefs = reactive([]);
-const nodeStore = useNodeStore();
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver"]);
+
+const validatorRefs = ref([]);
 const manageStore = useNodeManage();
 
 // Computed & Watchers
@@ -63,15 +63,15 @@ const getValidators = computed(() => {
   return service;
 });
 
-const getValidatorRef = computed(() =>
-  validatorRefs.map((el, index) => ({
+const getValidatorRef = computed(() => {
+  return validatorRefs.value.map((el, index) => ({
     ref: el,
-    refId: getValidators.value[index]?.config.serviceID,
-  }))
-);
+    refId: getValidators.value[index].config.serviceID,
+  }));
+});
 
-watch(getValidatorRef, () => {
-  nodeStore.validatorRef.value = getValidatorRef.value;
+watch(getValidatorRef, (newValue) => {
+  manageStore.validatorRefList = newValue;
 });
 
 const getDynamicClasses = (item) => {
@@ -99,8 +99,13 @@ const displayMenu = (item) => {
     item.displayPluginMenu = true;
   }
 };
+
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+};
+
+const mouseOver = (item) => {
+  emit("mouseOver", item);
 };
 
 const deleteService = (item) => {
