@@ -51,19 +51,20 @@ import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
 import { useNodeStore } from "@/store/theNode";
+import { useServices } from "@/store/services";
 import LeaderLine from "leader-line-new";
 import { useStateHandler, useRestartService } from "@/composables/services";
 
 const emit = defineEmits(["openExpert"]);
 
 // Refs
-const lineOne = ref(null);
 
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
 
 // Store and router
 const nodeStore = useNodeStore();
+const serviceStore = useServices();
 
 // Computed properties
 
@@ -73,36 +74,75 @@ const nodeStore = useNodeStore();
 
 const lineDrawHandler = (item) => {
   let start;
+  let middle;
   let end;
-  if (lineOne.value) {
-    lineOne.value?.hide();
-  }
-  if (item.category === "consensus") {
-    const execution = item.config?.dependencies.executionClients[0];
-    start = nodeStore.executionRefList.find((el) => el.refId === execution?.id)?.ref;
-    end = nodeStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-  } else if (item.category === "validator") {
-    const consensus = item.config?.dependencies.consensusClients[0];
-    start = nodeStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
-    end = nodeStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-  } else {
-    return;
+  let lineOne = null;
+  let lineTwo = null;
+
+  // Remove the previous line if it exists
+  if (lineOne || lineTwo) {
+    lineOne.remove();
+    lineTwo.remove();
   }
 
-  if (start && end) {
-    lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    lineOne.value.setOptions({
-      startPlugSize: 1,
-      endPlugSize: 2,
-      size: 2,
-      color: "#58BDA2",
-      endPlug: "behind",
-    });
-  }
+  if (item) {
+    if (item.category === "consensus") {
+      const execution = item.config?.dependencies.executionClients[0];
+      start = nodeStore.executionRefList.find((el) => el.refId === execution?.id)?.ref;
+      middle = nodeStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
 
-  setTimeout(() => {
-    lineOne.value?.hide();
-  }, 5000);
+      const validator = serviceStore.installedServices.find(
+        (el) => el.category === "validator" && el.config?.dependencies.consensusClients[0].id === item.config?.serviceID
+      );
+
+      end = nodeStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;
+
+      if (start && middle && end) {
+        lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+        lineOne.setOptions({
+          startPlugSize: 1,
+          endPlugSize: 2,
+          size: 2,
+          color: "#6FD9F0",
+          endPlug: "behind",
+        });
+        lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+        lineTwo.setOptions({
+          startPlugSize: 1,
+          endPlugSize: 2,
+          size: 2,
+          color: "#DBEF6A",
+          endPlug: "behind",
+        });
+
+        setTimeout(() => {
+          lineOne.remove();
+          lineTwo.remove();
+        }, 2000);
+      }
+    } else if (item.category === "validator") {
+      const consensus = item.config?.dependencies.consensusClients[0];
+      start = nodeStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
+      end = nodeStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+
+      if (start && end) {
+        lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+        lineOne.setOptions({
+          startPlugSize: 1,
+          endPlugSize: 2,
+          size: 2,
+          color: "#58BDA2",
+          endPlug: "behind",
+        });
+
+        setTimeout(() => {
+          lineOne.remove();
+        }, 2000);
+      }
+    } else {
+      return;
+    }
+  }
 };
 
 const openLogsPage = (item) => {

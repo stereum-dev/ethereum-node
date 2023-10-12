@@ -5,7 +5,7 @@
       :key="item"
       ref="executionRefs"
       class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
-      @mouseover="mouseOver(item)"
+      @mouseenter="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <ClientButtons

@@ -11,7 +11,7 @@
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
-      @mouseover="mouseOver(item)"
+      @mouseenter="mouseOver(item)"
     >
       <ClientLayout :client="item" />
       <Transition name="slide-fade">

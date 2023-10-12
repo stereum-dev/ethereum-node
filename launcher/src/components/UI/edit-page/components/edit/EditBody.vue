@@ -84,9 +84,7 @@ const emit = defineEmits([
 //Pinia stores
 const manageStore = useNodeManage();
 
-
 // refs
-const lineOne = ref(null);
 const isOverDropZone = ref(false);
 
 // computed & watchers properties
@@ -116,36 +114,75 @@ const activateScrollBar = computed(() => {
 
 const lineDrawHandler = (item) => {
   let start;
+  let middle;
   let end;
-  if (lineOne.value) {
-    lineOne.value?.hide();
-  }
-  if (item.category === "consensus") {
-    const execution = item.config?.dependencies.executionClients[0];
-    start = manageStore.executionRefList.find((el) => el.refId === execution?.id)?.ref;
-    end = manageStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-  } else if (item.category === "validator") {
-    const consensus = item.config?.dependencies.consensusClients[0];
-    start = manageStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
-    end = manageStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-  } else {
-    return;
+  let lineOne = null;
+  let lineTwo = null;
+
+  // Remove the previous line if it exists
+  if (lineOne || lineTwo) {
+    lineOne.remove();
+    lineTwo.remove();
   }
 
-  if (start && end) {
-    lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    lineOne.value.setOptions({
-      startPlugSize: 1,
-      endPlugSize: 2,
-      size: 2,
-      color: "#58BDA2",
-      endPlug: "behind",
-    });
-  }
+  if (item) {
+    if (item.category === "consensus") {
+      const execution = item.config?.dependencies.executionClients[0];
+      start = manageStore.executionRefList.find((el) => el.refId === execution?.id)?.ref;
+      middle = manageStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
 
-  setTimeout(() => {
-    lineOne.value?.hide();
-  }, 5000);
+      const validator = manageStore.newConfiguration.find(
+        (el) => el.category === "validator" && el.config?.dependencies.consensusClients[0].id === item.config?.serviceID
+      );
+
+      end = manageStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;
+
+      if (start && middle && end) {
+        lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+        lineOne.setOptions({
+          startPlugSize: 1,
+          endPlugSize: 2,
+          size: 2,
+          color: "#6FD9F0",
+          endPlug: "behind",
+        });
+        lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+        lineTwo.setOptions({
+          startPlugSize: 1,
+          endPlugSize: 2,
+          size: 2,
+          color: "#DBEF6A",
+          endPlug: "behind",
+        });
+
+        setTimeout(() => {
+          lineOne.remove();
+          lineTwo.remove();
+        }, 2000);
+      }
+    } else if (item.category === "validator") {
+      const consensus = item.config?.dependencies.consensusClients[0];
+      start = manageStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
+      end = manageStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+
+      if (start && end) {
+        lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+        lineOne.setOptions({
+          startPlugSize: 1,
+          endPlugSize: 2,
+          size: 2,
+          color: "#58BDA2",
+          endPlug: "behind",
+        });
+
+        setTimeout(() => {
+          lineOne.remove();
+        }, 2000);
+      }
+    } else {
+      return;
+    }
+  }
 };
 
 const onDrop = (event) => {
