@@ -141,7 +141,11 @@ const lineDrawHandler = (item) => {
 
       end = nodeStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;
 
-      twoWaysConnections(start, middle, end);
+      if (start && middle && end) {
+        twoWaysConnections(start, middle, end);
+      } else if (start && middle) {
+        oneWayConnection(start, middle);
+      }
     } else if (item.category === "validator") {
       const consensus = item.config?.dependencies.consensusClients[0];
       start = nodeStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;

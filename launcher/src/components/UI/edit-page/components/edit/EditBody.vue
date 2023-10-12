@@ -181,17 +181,21 @@ const lineDrawHandler = (item) => {
       );
 
       end = manageStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;
-
-      twoWaysConnections(start, middle, end);
+      if (start && middle && end) {
+        twoWaysConnections(start, middle, end);
+      } else if (start && middle) {
+        oneWayConnection(start, middle);
+      }
     } else if (item.category === "validator") {
       const consensus = item.config?.dependencies.consensusClients[0];
-      start = manageStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
+      start = manageStore.consensusRefList.find((el) => el.refId === consensus?.id)?.ref;
       end = manageStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
 
       oneWayConnection(start, end);
     } else if (item.category === "execution") {
       const consensus = manageStore.newConfiguration.find(
-        (el) => el.category === "consensus" && el.config?.dependencies.executionClients[0].id === item.config?.serviceID
+        (el) =>
+          el.category === "consensus" && el.config?.dependencies.executionClients[0]?.id === item.config?.serviceID
       );
 
       start = manageStore.executionRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
