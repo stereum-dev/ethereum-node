@@ -69,7 +69,7 @@ import ValidatorClients from "./ValidatorClients.vue";
 import LeaderLine from "leader-line-new";
 import { computed, ref } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { useNodeStore } from "@/store/theNode";
+
 
 const emit = defineEmits([
   "onDrop",
@@ -83,7 +83,7 @@ const emit = defineEmits([
 
 //Pinia stores
 const manageStore = useNodeManage();
-const nodeStore = useNodeStore();
+
 
 // refs
 const lineOne = ref(null);
