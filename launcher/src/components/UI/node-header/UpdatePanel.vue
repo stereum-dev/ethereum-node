@@ -241,7 +241,7 @@
                   'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
                     (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || nodeHeaderStore.updating,
                 }"
-                @click.prevent.stop="$emit('updateConfirm')"
+                @click.prevent.stop="updateConfirm"
               >
                 <span>{{ $t("updatePanel.all") }}</span>
                 <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
@@ -267,7 +267,7 @@ import { onMounted, computed, ref, watchEffect } from "vue";
 import { useUpdateCheck } from "@/composables/version.js";
 
 //Emits
-const emit = defineEmits(["clickOutside"]);
+const emit = defineEmits(["clickOutside", "updateConfirm"]);
 //refs
 const show = ref(false);
 //Stores
@@ -383,6 +383,10 @@ const getOsVersion = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const updateConfirm = () => {
+  emit("updateConfirm");
 };
 </script>
 <style scoped>
