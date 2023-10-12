@@ -50,7 +50,9 @@ watch(getValidatorRef, (newValue) => {
 });
 
 const mouseOver = (item) => {
-  emit("mouseOver", item);
+  setTimeout(() => {
+    emit("mouseOver", item);
+  }, 1000);
 };
 
 const openExpert = (item) => {

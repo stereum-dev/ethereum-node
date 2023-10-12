@@ -58,7 +58,6 @@ import { useStateHandler, useRestartService } from "@/composables/services";
 const emit = defineEmits(["openExpert"]);
 
 // Refs
-
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
 
@@ -72,13 +71,58 @@ const serviceStore = useServices();
 
 // Methods
 
+const oneWayConnection = (start, end) => {
+  let lineOne = null;
+  if (start && end) {
+    lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    lineOne.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#DBEF6A",
+      endPlug: "behind",
+    });
+
+    setTimeout(() => {
+      lineOne.remove();
+    }, 2000);
+  }
+};
+
+const twoWaysConnections = (start, middle, end) => {
+  let lineOne = null;
+  let lineTwo = null;
+  if (start && middle && end) {
+    lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+    lineOne.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#6FD9F0",
+      endPlug: "behind",
+    });
+    lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+    lineTwo.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#DBEF6A",
+      endPlug: "behind",
+    });
+
+    setTimeout(() => {
+      lineOne.remove();
+      lineTwo.remove();
+    }, 2000);
+  }
+};
+
 const lineDrawHandler = (item) => {
   let start;
   let middle;
   let end;
-  let lineOne = null;
-  let lineTwo = null;
-
+  let lineOne;
+  let lineTwo;
   // Remove the previous line if it exists
   if (lineOne || lineTwo) {
     lineOne.remove();
@@ -97,50 +141,21 @@ const lineDrawHandler = (item) => {
 
       end = nodeStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;
 
-      if (start && middle && end) {
-        lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
-        lineOne.setOptions({
-          startPlugSize: 1,
-          endPlugSize: 2,
-          size: 2,
-          color: "#6FD9F0",
-          endPlug: "behind",
-        });
-        lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
-        lineTwo.setOptions({
-          startPlugSize: 1,
-          endPlugSize: 2,
-          size: 2,
-          color: "#DBEF6A",
-          endPlug: "behind",
-        });
-
-        setTimeout(() => {
-          lineOne.remove();
-          lineTwo.remove();
-        }, 2000);
-      }
+      twoWaysConnections(start, middle, end);
     } else if (item.category === "validator") {
       const consensus = item.config?.dependencies.consensusClients[0];
       start = nodeStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
       end = nodeStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+      oneWayConnection(start, end);
+    } else if (item.category === "execution") {
+      const consensus = serviceStore.installedServices.find(
+        (el) => el.category === "consensus" && el.config?.dependencies.executionClients[0].id === item.config?.serviceID
+      );
 
-      if (start && end) {
-        lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-        lineOne.setOptions({
-          startPlugSize: 1,
-          endPlugSize: 2,
-          size: 2,
-          color: "#58BDA2",
-          endPlug: "behind",
-        });
+      start = nodeStore.executionRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+      end = nodeStore.consensusRefList.find((el) => el.refId === consensus?.config?.serviceID)?.ref;
 
-        setTimeout(() => {
-          lineOne.remove();
-        }, 2000);
-      }
-    } else {
-      return;
+      oneWayConnection(start, end);
     }
   }
 };

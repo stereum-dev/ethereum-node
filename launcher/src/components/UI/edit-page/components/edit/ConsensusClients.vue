@@ -113,7 +113,9 @@ const hideMenu = (item) => {
 };
 
 const mouseOver = (item) => {
-  emit("mouseOver", item);
+  setTimeout(() => {
+    emit("mouseOver", item);
+  }, 1000);
 };
 
 const deleteService = (item) => {

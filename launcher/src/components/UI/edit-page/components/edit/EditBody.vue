@@ -70,7 +70,6 @@ import LeaderLine from "leader-line-new";
 import { computed, ref } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 
-
 const emit = defineEmits([
   "onDrop",
   "confirmConnection",
@@ -112,6 +111,52 @@ const activateScrollBar = computed(() => {
 
 // methods
 
+const oneWayConnection = (start, end) => {
+  let lineOne = null;
+  if (start && end) {
+    lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    lineOne.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#DBEF6A",
+      endPlug: "behind",
+    });
+
+    setTimeout(() => {
+      lineOne.remove();
+    }, 2000);
+  }
+};
+
+const twoWaysConnections = (start, middle, end) => {
+  let lineOne = null;
+  let lineTwo = null;
+  if (start && middle && end) {
+    lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+    lineOne.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#6FD9F0",
+      endPlug: "behind",
+    });
+    lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+    lineTwo.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#DBEF6A",
+      endPlug: "behind",
+    });
+
+    setTimeout(() => {
+      lineOne.remove();
+      lineTwo.remove();
+    }, 2000);
+  }
+};
+
 const lineDrawHandler = (item) => {
   let start;
   let middle;
@@ -137,50 +182,22 @@ const lineDrawHandler = (item) => {
 
       end = manageStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;
 
-      if (start && middle && end) {
-        lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
-        lineOne.setOptions({
-          startPlugSize: 1,
-          endPlugSize: 2,
-          size: 2,
-          color: "#6FD9F0",
-          endPlug: "behind",
-        });
-        lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
-        lineTwo.setOptions({
-          startPlugSize: 1,
-          endPlugSize: 2,
-          size: 2,
-          color: "#DBEF6A",
-          endPlug: "behind",
-        });
-
-        setTimeout(() => {
-          lineOne.remove();
-          lineTwo.remove();
-        }, 2000);
-      }
+      twoWaysConnections(start, middle, end);
     } else if (item.category === "validator") {
       const consensus = item.config?.dependencies.consensusClients[0];
       start = manageStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
       end = manageStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
 
-      if (start && end) {
-        lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-        lineOne.setOptions({
-          startPlugSize: 1,
-          endPlugSize: 2,
-          size: 2,
-          color: "#58BDA2",
-          endPlug: "behind",
-        });
+      oneWayConnection(start, end);
+    } else if (item.category === "execution") {
+      const consensus = manageStore.newConfiguration.find(
+        (el) => el.category === "consensus" && el.config?.dependencies.executionClients[0].id === item.config?.serviceID
+      );
 
-        setTimeout(() => {
-          lineOne.remove();
-        }, 2000);
-      }
-    } else {
-      return;
+      start = manageStore.executionRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+      end = manageStore.consensusRefList.find((el) => el.refId === consensus?.config?.serviceID)?.ref;
+
+      oneWayConnection(start, end);
     }
   }
 };

@@ -57,7 +57,9 @@ watch(getConsensusRef, (newValue) => {
 
 //Methods
 const mouseOver = (item) => {
-  emit("mouseOver", item);
+  setTimeout(() => {
+    emit("mouseOver", item);
+  }, 1000);
 };
 
 const openResync = (item) => {

@@ -99,7 +99,9 @@ const hideMenu = (item) => {
   item.displayPluginMenu = false;
 };
 const mouseOver = (item) => {
-  emit("mouseOver", item);
+  setTimeout(() => {
+    emit("mouseOver", item);
+  }, 1000);
 };
 
 const connectClient = (item) => {
