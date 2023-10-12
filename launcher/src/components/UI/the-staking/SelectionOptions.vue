@@ -103,6 +103,7 @@ export default {
     }),
   },
   mounted() {
+    this.$emit("vld-picker", this.validators[0]);
     if (this.validators.length > 1) {
       this.multiValidator = true;
     }
