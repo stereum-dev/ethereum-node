@@ -426,61 +426,66 @@ const openInfoModal = (item) => {
 };
 
 const destroyNode = async () => {
-  let condition = true;
-  await ControlService.clearTasks();
-  ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
-  var uxtStart = Math.floor(Date.now() / 1000);
-  var secMax = 30; // wait max X seconds to finish destroy process
-  while (condition) {
-    var secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
-    if (secElapsed >= secMax) {
-      console.log("abort -> timeout -> secElapsed", secElapsed);
-      await ControlService.clearTasks();
-      break;
-    }
-    var tasks = await ControlService.getTasks();
-    var task = tasks.findLast((t) => t.name.includes("Delete Node"));
-    var subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
-    var status = task && task.hasOwnProperty("status") ? task.status : null;
-    // console.log("tasks => ", tasks);
-    // console.log("task => ", task);
-    // console.log("subtasks => ", subtasks);
-    // console.log("status => ", status);
-    var myresult = [];
-    myresult.push("nuke node executed (ok)");
-    if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
-      myresult.push("gathering facts (ok)");
-      for (var i = 0; i < subtasks.length; i++) {
-        var subtask = subtasks[i];
-        myresult.push(subtask.name + " (" + subtask.status + ")");
+  try {
+    let condition = true;
+    await ControlService.clearTasks();
+    ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
+    var uxtStart = Math.floor(Date.now() / 1000);
+    var secMax = 30; // wait max X seconds to finish destroy process
+    while (condition) {
+      var secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
+      if (secElapsed >= secMax) {
+        console.log("abort -> timeout -> secElapsed", secElapsed);
+        await ControlService.clearTasks();
+        break;
       }
-    } else {
-      if (secElapsed >= 2) {
+      var tasks = await ControlService.getTasks();
+      var task = tasks.findLast((t) => t.name.includes("Delete Node"));
+      var subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
+      var status = task && task.hasOwnProperty("status") ? task.status : null;
+      // console.log("tasks => ", tasks);
+      // console.log("task => ", task);
+      // console.log("subtasks => ", subtasks);
+      // console.log("status => ", status);
+      var myresult = [];
+      myresult.push("nuke node executed (ok)");
+      if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
         myresult.push("gathering facts (ok)");
+        for (var i = 0; i < subtasks.length; i++) {
+          var subtask = subtasks[i];
+          myresult.push(subtask.name + " (" + subtask.status + ")");
+        }
+      } else {
+        if (secElapsed >= 2) {
+          myresult.push("gathering facts (ok)");
+        }
+        // console.log("waiting for subtasks");
       }
-      // console.log("waiting for subtasks");
-    }
-    nukeModalComponent.value.nukeData = myresult;
-    // Intentionally as last check since last subtask could be retrieved at exact same frame
-    if (status != null) {
-      status = status === "success" ? "ok" : status;
-      myresult.push("node nuked (" + status + ")");
       nukeModalComponent.value.nukeData = myresult;
-      await ControlService.clearTasks();
-      condition = false;
-      break;
+      // Intentionally as last check since last subtask could be retrieved at exact same frame
+      if (status != null) {
+        status = status === "success" ? "ok" : status;
+        myresult.push("node nuked (" + status + ")");
+        nukeModalComponent.value.nukeData = myresult;
+        await ControlService.clearTasks();
+        condition = false;
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100)); // sleep 100ms between attempts
     }
-    await new Promise((resolve) => setTimeout(resolve, 100)); // sleep 100ms between attempts
+  } catch (e) {
+    console.error(e);
+  } finally {
+    headerStore.refresh = true;
+    stakingStore.forceRefresh = true;
+    stakingStore.keys = [];
+    serviceStore.versions = {};
+    headerStore.runningServices = [];
+    serviceStore.runningServices = [];
+    serviceStore.installedServices = [];
+    manageStore.newConfiguration = [];
+    nukeModalComponent.value.loginBtn = false;
   }
-  headerStore.refresh = true;
-  stakingStore.forceRefresh = true;
-  stakingStore.keys = [];
-  serviceStore.versions = {};
-  headerStore.runningServices = [];
-  serviceStore.runningServices = [];
-  serviceStore.installedServices = [];
-  manageStore.newConfiguration = [];
-  nukeModalComponent.value.loginBtn = false;
 };
 
 const nukeConfirmation = () => {
