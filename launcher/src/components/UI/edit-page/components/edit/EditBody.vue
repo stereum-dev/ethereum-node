@@ -11,9 +11,9 @@
       <div
         class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold z-20"
       >
-        <span class="col-start-1 justify-self-center self-center">Validator </span>
+        <span class="col-start-1 justify-self-center self-center">Execution Clients</span>
         <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>
-        <span class="col-start-3 justify-self-center self-center">Execution Clients</span>
+        <span class="col-start-3 justify-self-center self-center">Validator</span>
       </div>
       <div
         ref="dropZoneRef"
@@ -31,14 +31,15 @@
           class="col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center text-xl text-blue-400"
           >+</span
         >
-        <ValidatorClients
+        <ExecutionClients
           v-if="!isOverDropZone"
           @delete-service="deleteService"
           @switch-client="switchClient"
-          @modify-service="modifyService"
+          @confirm-consensus="confirmConsensus"
           @info-modal="infoModal"
           @mouse-over="lineDrawHandler"
         />
+
         <ConsensusClients
           v-if="!isOverDropZone"
           @delete-service="deleteService"
@@ -48,11 +49,11 @@
           @info-modal="infoModal"
           @mouse-over="lineDrawHandler"
         />
-        <ExecutionClients
+        <ValidatorClients
           v-if="!isOverDropZone"
           @delete-service="deleteService"
           @switch-client="switchClient"
-          @confirm-consensus="confirmConsensus"
+          @modify-service="modifyService"
           @info-modal="infoModal"
           @mouse-over="lineDrawHandler"
         />
@@ -177,7 +178,8 @@ const lineDrawHandler = (item) => {
       middle = manageStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
 
       const validator = manageStore.newConfiguration.find(
-        (el) => el.category === "validator" && el.config?.dependencies.consensusClients[0].id === item.config?.serviceID
+        (el) =>
+          el.category === "validator" && el.config?.dependencies.consensusClients[0]?.id === item.config?.serviceID
       );
 
       end = manageStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;

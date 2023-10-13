@@ -1,6 +1,6 @@
 <template>
   <div
-    class="col-start-1 col-end-2 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative"
+    class="col-start-3 col-end-4 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative"
     @mousedown.prevent
   >
     <div
@@ -66,7 +66,7 @@ const getValidators = computed(() => {
 const getValidatorRef = computed(() => {
   return validatorRefs.value.map((el, index) => ({
     ref: el,
-    refId: getValidators.value[index].config?.serviceID,
+    refId: getValidators.value[index]?.config?.serviceID,
   }));
 });
 

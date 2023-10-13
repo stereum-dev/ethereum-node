@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full col-start-3 col-end-4 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative">
+  <div class="w-full col-start-1 col-end-2 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative">
     <div
       v-for="item in getExecutions"
       :key="item"
