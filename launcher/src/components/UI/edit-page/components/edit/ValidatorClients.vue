@@ -66,7 +66,7 @@ const getValidators = computed(() => {
 const getValidatorRef = computed(() => {
   return validatorRefs.value.map((el, index) => ({
     ref: el,
-    refId: getValidators.value[index].config?.serviceID,
+    refId: getValidators.value[index]?.config?.serviceID,
   }));
 });
 

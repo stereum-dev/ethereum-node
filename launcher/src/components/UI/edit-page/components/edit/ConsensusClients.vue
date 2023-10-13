@@ -64,7 +64,7 @@ const getConsensusRef = computed(() => {
   return consensusRefs.value.map((el, index) => {
     return {
       ref: el,
-      refId: getConsensus.value[index].config.serviceID,
+      refId: getConsensus.value[index]?.config.serviceID,
     };
   });
 });
