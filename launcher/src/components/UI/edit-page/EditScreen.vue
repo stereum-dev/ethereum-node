@@ -110,7 +110,7 @@ import NukeModal from "./components/modals/NukeModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
@@ -160,6 +160,13 @@ onMounted(() => {
       isAddPanelOpen: false,
     };
   });
+});
+
+onUnmounted(() => {
+  manageStore.confirmChanges = [];
+  manageStore.newConfiguration = [];
+  manageStore.selectedNetwork = {};
+  manageStore.configNetwork = {};
 });
 
 // Methods
@@ -373,17 +380,29 @@ const displaySwitchNetwork = () => {
   manageStore.displayNetworkList = true;
 };
 
-const switchNetworkConfirm = () => {
+const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
-  manageStore.currentNetwork = {};
-  manageStore.currentNetwork = manageStore.selectedNetwork;
-  manageStore.confirmChanges.push({
-    id: randomId,
-    content: "SWITCH NETWORK",
-    contentIcon: "/img/icon/manage-node-icons/switch-client.png",
-    service: manageStore.currentNetwork,
-  });
-  manageStore.displayNetworkList = false;
+  if (!(network.network == manageStore.configNetwork.network)) {
+    if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
+      let index = manageStore.confirmChanges.findIndex((j) => j.content.includes("CHANGE NETWORK"));
+      if (manageStore.currentNetwork.network === network.network) {
+        manageStore.confirmChanges.splice(index, 1);
+      } else {
+        manageStore.confirmChanges[index].data.network = network.network;
+        manageStore.confirmChanges[index].service.icon = network.icon;
+      }
+    } else if (manageStore.newConfiguration.length > 0) {
+      manageStore.confirmChanges.push({
+        id: randomId,
+        content: "SWITCH NETWORK",
+        contentIcon: "/img/icon/manage-node-icons/switch-client.png",
+        service: network,
+        data: { network: network.network },
+      });
+    }
+  }
+
+  manageStore.configNetwork = network;
 };
 
 // Nuke node method

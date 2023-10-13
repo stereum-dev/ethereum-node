@@ -133,7 +133,6 @@ watch(currentSlide, (val) => {
 });
 
 onMounted(() => {
-  manageStore.currentNetwork = manageStore.currentNetwork.hasOwnProperty("id") ? manageStore.currentNetwork : null;
   setSelectedLinks();
 });
 
@@ -167,7 +166,7 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
-  switch (manageStore.currentNetwork.id) {
+  switch (manageStore.configNetwork?.id) {
     case 1:
       selectedLinks.value = installStore.mainnet;
       break;

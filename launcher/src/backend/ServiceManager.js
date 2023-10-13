@@ -1220,11 +1220,11 @@ export class ServiceManager {
         log.error("Modifying Services Failed:", err);
       }
     }
-    if (jobs.includes("CHANGE NETWORK")) {
+    if (jobs.includes("SWITCH NETWORK")) {
       let before = this.nodeConnection.getTimeStamp();
       let services = await this.readServiceConfigurations();
       try {
-        let changeNetworkTask = tasks.find((t) => t.content === "CHANGE NETWORK");
+        let changeNetworkTask = tasks.find((t) => t.content === "SWITCH NETWORK");
         await this.changeNetwork(
           changeNetworkTask.data.network,
           services.filter((s) => s.service !== "SSVNetworkService")

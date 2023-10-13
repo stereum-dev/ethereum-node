@@ -18,7 +18,7 @@ const manageStore = useNodeManage();
 const network = ref({});
 
 watchEffect(() => {
-  network.value = manageStore.currentNetwork;
+  network.value = manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork;
 });
 </script>
 <style scoped>

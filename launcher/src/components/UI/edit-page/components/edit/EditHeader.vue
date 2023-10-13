@@ -4,7 +4,7 @@
 
     <ConfigDetails :list="configsToDisplay" />
 
-    <NetworkDetails :network="store.currentNetwork" />
+    <NetworkDetails />
   </div>
 </template>
 <script setup>

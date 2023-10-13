@@ -48,6 +48,7 @@ import { computed, ref } from "vue";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 
 const filters = [
   { name: "All" },
@@ -58,14 +59,36 @@ const filters = [
 ];
 
 const serviceStore = useServices();
+const manageStore = useNodeManage();
 
 const selectedfilter = ref(filters[0]);
 
 serviceStore.filteredServices = computed(() => {
   if (selectedfilter.value.name.toLowerCase() === "all") {
-    return serviceStore.allServices;
+    return serviceStore.allServices.filter(getFilterbyNetwork());
   } else {
-    return serviceStore.allServices.filter((item) => item.category.toLowerCase() === selectedfilter.value.name.toLowerCase());
+    return serviceStore.allServices
+      .filter((item) => item.category.toLowerCase() === selectedfilter.value.name.toLowerCase())
+      .filter(getFilterbyNetwork());
   }
 });
+const getFilterbyNetwork = () => {
+  switch (manageStore.configNetwork.network) {
+    case "mainnet":
+    case "sepolia":
+    case "goerli":
+      return (item) => item.service != "SSVNetworkService" && archFilter(item.service);
+    case "gnosis":
+      return (item) =>
+        /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service) && this.archFilter(item.service);
+    default:
+      return (item) => item.service != "SSVNetworkService" && archFilter(item.service);
+  }
+};
+const archFilter = (service) => {
+  const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"];
+  return armArchs.includes(manageStore.architecture)
+    ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service)
+    : true;
+};
 </script>

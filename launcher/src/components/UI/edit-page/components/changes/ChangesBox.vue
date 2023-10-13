@@ -19,10 +19,10 @@
             <span>{{ item.content }}</span>
           </div>
           <div
-            v-if="item.service.sIcon"
+            v-if="item.service.sIcon || item.service.icon"
             class="col-start-6 col-span-1 w-full self-center flex justify-center items-center"
           >
-            <img class="w-6" :src="item.service.sIcon" alt="icon" />
+            <img class="w-6" :src="item.service.sIcon ? item.service.sIcon : item.service.icon" alt="icon" />
           </div>
         </div>
       </TransitionGroup>
@@ -56,6 +56,7 @@ const contentBgColor = (item) => {
       bg = "bg-red-800 text-gray-300 text-sm font-semibold";
     } else if (content === "SWITCH NETWORK") {
       bg = "bg-gray-500 text-gray-900 text-[10px] font-semibold min-w-[100px]";
+      console.log(item);
     } else if (content === "SWITCH CLIENT") {
       bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
     } else if (content === "MODIFY") {

@@ -1,7 +1,7 @@
 <template>
   <custom-modal
     :main-title="network.name"
-    :client="network"
+    :client="manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork"
     sub-title="Switch Network"
     :message-text="`Select a network to replace the ${network.name}.`"
     confirm-text="Confirm"
@@ -31,13 +31,13 @@
               @click="networkDropdownOpen = !networkDropdownOpen"
             >
               <img
-                v-if="manageStore.selectedNetwrok"
-                :src="manageStore.selectedNetwrok.icon"
+                v-if="manageStore.selectedNetwork.id"
+                :src="manageStore.selectedNetwork.icon"
                 alt="Network Icon"
                 class="w-7"
               />
               <span>{{
-                manageStore.selectedNetwrok ? manageStore.selectedNetwrok.name : "Select Network From List"
+                manageStore.selectedNetwork.id ? manageStore.selectedNetwork.name : "Select Network From List"
               }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@
 <script setup>
 import CustomModal from "./CustomModal.vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, watchEffect } from "vue";
+import { onMounted, ref } from "vue";
 
 const emit = defineEmits(["closeWindow", "switchConfirm"]);
 
@@ -86,17 +86,16 @@ const networkDropdownOpen = ref(false);
 const manageStore = useNodeManage();
 const network = ref({});
 
-watchEffect(() => {
-  network.value = manageStore.currentNetwork;
-  console.log(network.value);
+onMounted(() => {
+  network.value = manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork;
 });
 const switchNetwork = (network) => {
-  manageStore.selectedNetwrok = network;
+  manageStore.selectedNetwork = network;
   networkDropdownOpen.value = false;
 };
 
 const switchConfirm = () => {
-  emit("switchConfirm");
+  emit("switchConfirm", manageStore.selectedNetwork);
 };
 
 const closeWindow = () => {
