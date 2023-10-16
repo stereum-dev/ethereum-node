@@ -159,7 +159,6 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
-import TheExpert from "./TheExpert.vue";
 export default {
   components: {},
   data() {

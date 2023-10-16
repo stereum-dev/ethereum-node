@@ -39,7 +39,7 @@ import { useFooter } from "@/store/theFooter";
 import TheFooter from "../../layers/TheFooter.vue";
 import TechnicalBox from "./TechnicalBox.vue";
 export default {
-  components: { TaskManager, TechnicalBox, TheFooter },
+  components: { TechnicalBox, TheFooter },
   data() {
     return {
       financialIco: "./img/icon/credit/creditFinancial.png",
