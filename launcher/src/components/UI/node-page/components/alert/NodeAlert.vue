@@ -100,13 +100,6 @@
             <span> > {{ validator.name }} vc</span>
           </div>
         </div>
-        <the-expert
-          v-if="validator.expertOptionsModal"
-          :item="validator"
-          position="18.8%"
-          wide="39%"
-          @hide-modal="hideExpertMode(validator)"
-        ></the-expert>
       </div>
 
       <div
