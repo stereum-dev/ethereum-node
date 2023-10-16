@@ -48,7 +48,7 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, onUnmounted } from "vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
@@ -74,6 +74,21 @@ const serviceStore = useServices();
 // Computed properties
 
 //Hooks
+
+onUnmounted(() => {
+  if (lineOne.value) {
+    lineOne.value.remove();
+    lineOne.value = null;
+  }
+  if (lineTwo.value) {
+    lineTwo.value.remove();
+    lineTwo.value = null;
+  }
+  if (lineThree.value) {
+    lineThree.value.remove();
+    lineThree.value = null;
+  }
+});
 
 // Methods
 

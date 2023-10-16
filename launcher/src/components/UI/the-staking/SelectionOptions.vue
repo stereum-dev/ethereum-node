@@ -306,7 +306,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 12%;
+  height: 15%;
   background: #dfdfdf;
   border-radius: 30px;
   padding: 0 1%;
@@ -336,7 +336,6 @@ export default {
 }
 .selection-table {
   width: 100%;
-  height: 59%;
   margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;

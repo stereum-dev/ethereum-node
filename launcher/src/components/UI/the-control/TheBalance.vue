@@ -72,7 +72,7 @@ export default {
 }
 .balance-parent {
   display: flex;
-  width: 99%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;

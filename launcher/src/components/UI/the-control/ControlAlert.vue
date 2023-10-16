@@ -398,8 +398,8 @@ export default {
 }
 .alert-box_parent {
   width: 161px;
-  max-height: 338px;
-  height: 338px;
+  max-height: 333px;
+  height: 333px;
   border-radius: 15px;
   background-color: #264744;
   display: flex;
