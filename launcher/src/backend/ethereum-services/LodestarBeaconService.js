@@ -51,6 +51,10 @@ export class LodestarBeaconService extends NodeService {
         `--metrics.port=8008`,
         `--metrics.address=0.0.0.0`,
         `--builder`,
+        `--port=9000`,
+        `--nat=false`,
+        `--enr.tcp=9000`,
+        `--enr.udp=9000`,
       ], //command
       ["node", "./packages/cli/bin/lodestar"], //entrypoint
       null, //env
@@ -93,8 +97,9 @@ export class LodestarBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${
+      this.id
+    }\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

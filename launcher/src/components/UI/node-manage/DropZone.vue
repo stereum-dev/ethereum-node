@@ -11,8 +11,11 @@
               'chosen-plugin': item.active,
               'modify-plugin': item.modifierPanel,
             }"
+            @mouseenter="cursorLocation = `${item.name}`"
+            @mouseleave="cursorLocation = ''"
             @mouseup.right="selectedItem(item)"
             @click="modifyItem(item)"
+            @dblclick="selectedItem(item)"
           />
         </div>
       </div>
@@ -27,7 +30,8 @@
 <script>
 import ManageTrapezoid from "./ManageTrapezoid.vue";
 import { mapWritableState } from "pinia";
-import { useNodeManage } from "../../../store/nodeManage";
+import { useNodeManage } from "@/store/nodeManage";
+import { useFooter } from "@/store/theFooter";
 export default {
   components: {
     ManageTrapezoid,
@@ -50,6 +54,9 @@ export default {
   computed: {
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
   watch: {

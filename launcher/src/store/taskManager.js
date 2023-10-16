@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 export const useTaskManager = defineStore("taskManager", {
   state: () => {
     return {
+      UpdatedSubtasks: [],
+      stopIntervalForModal: false,
       playbookTasks: [],
       taskManagerIcons: {
         progressIcon: require("../../public/img/icon/task-manager-icons/task-manager-icon.png"),

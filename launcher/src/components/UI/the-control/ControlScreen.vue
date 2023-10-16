@@ -2,6 +2,7 @@
   <base-layout>
     <!-- Start Control main layouts -->
     <div class="ctrGridParent gap-1 relative">
+      <TooltipDialog :open="dialog" />
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
@@ -38,12 +39,16 @@
                           class="pending"
                           src="/img/icon/plugin-menu-icons/turning_circle.gif"
                           alt="icon"
+                          @mouseenter="cursorLocation = `${pending}`"
+                          @mouseleave="cursorLocation = ''"
                         />
                         <img
                           v-else-if="item.state == 'running'"
                           src="/img/icon/plugin-menu-icons/shutdown.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
+                          @mouseenter="cursorLocation = `${off}`"
+                          @mouseleave="cursorLocation = ''"
                         />
                         <img
                           v-else-if="item.state == 'restarting'"
@@ -56,40 +61,47 @@
                           src="/img/icon/plugin-menu-icons/turn-on.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
+                          @mouseenter="cursorLocation = `${on}`"
+                          @mouseleave="cursorLocation = ''"
                         />
                       </div>
                     </div>
                     <div class="icon-bg">
-                      <div class="seting-icon" @click.stop="expertModeHandler(item)">
+                      <div
+                        class="seting-icon"
+                        @click.stop="expertModeHandler(item)"
+                        @mouseenter="cursorLocation = `${settingService}`"
+                        @mouseleave="cursorLocation = ''"
+                      >
                         <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
                       </div>
                     </div>
                   </div>
+                  <the-expert
+                    v-if="isExpertWindowOpen"
+                    :item="expertModeClient"
+                    position="23.4"
+                    @hide-modal="hideExpertMode(item)"
+                    @prunning-warning="runGethPrunningWarning"
+                    @resync-warning="runResyncWarning"
+                  ></the-expert>
+                  <prunning-modal
+                    v-if="gethPrunningWarningModal"
+                    :item="item"
+                    @cancel-warning="hidePrunningWarningsModal"
+                    @confirm-btn="confirmRunningGethPrunning(option)"
+                  ></prunning-modal>
+                  <resync-modal
+                    v-if="resyncWarningModal"
+                    :item="item"
+                    @cancel-warning="hideResyncWarningsModal"
+                    @confirm-btn="confirmRunningResync"
+                  ></resync-modal>
                 </div>
-                <the-expert
-                  v-if="isExpertWindowOpen"
-                  :item="expertModeClient"
-                  position="23.4"
-                  @hide-modal="hideExpertMode(item)"
-                  @prunning-warning="runGethPrunningWarning"
-                  @resync-warning="runResyncWarning"
-                ></the-expert>
-                <prunning-modal
-                  v-if="gethPrunningWarningModal"
-                  :item="item"
-                  @cancel-warning="hidePrunningWarningsModal"
-                  @confirm-btn="confirmRunningGethPrunning(option)"
-                ></prunning-modal>
-                <resync-modal
-                  v-if="resyncWarningModal"
-                  :item="item"
-                  @cancel-warning="hideResyncWarningsModal"
-                  @confirm-btn="confirmRunningResync"
-                ></resync-modal>
               </div>
-            </div>
-            <div class="arrow-down" @click="scrollDown">
-              <img src="/img/icon/manage-node-icons/white-arrow-down.png" alt="icon" />
+              <div class="arrow-down" @click="scrollDown">
+                <img src="/img/icon/manage-node-icons/white-arrow-down.png" alt="icon" />
+              </div>
             </div>
           </div>
         </control-plugins>
@@ -101,11 +113,18 @@
         <control-alert></control-alert>
       </div>
     </div>
+    <div class="dashboard-container">
+      <control-dashboard></control-dashboard>
+    </div>
+    <div class="alerts">
+      <control-alert></control-alert>
+    </div>
     <!-- End Control main layout -->
   </base-layout>
 </template>
 <script>
 import { useStateHandler } from "@/composables/services";
+import TooltipDialog from "./TooltipDialog.vue";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
@@ -113,12 +132,14 @@ import TheExpert from "../the-node/TheExpert.vue";
 import PrunningModal from "../the-node/PrunningModal.vue";
 import ResyncModal from "../the-node/ResyncModal.vue";
 import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useServices } from "../../../store/services";
 export default {
   components: {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
+    TooltipDialog,
     TheExpert,
     PrunningModal,
     ResyncModal,
@@ -131,6 +152,10 @@ export default {
       isPluginLogPageActive: false,
       isExpertWindowOpen: false,
       expertModeClient: null,
+      pending: this.$t("controlPage.pending"),
+      off: this.$t("controlPage.off"),
+      on: this.$t("controlPage.on"),
+      settingService: this.$t("controlPage.settingService"),
     };
   },
   create() {
@@ -146,6 +171,26 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
+
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
+      dialog: "dialog",
+    }),
+    isAnyConsensusRunning() {
+      const consensusServices = this.installedServices.filter((item) => item.category === "consensus");
+
+      if (consensusServices.length === 0) {
+        return false;
+      }
+
+      return consensusServices.some((item) => item.state === "running");
+    },
+  },
+  watch: {
+    isAnyConsensusRunning(newValue) {
+      this.isConsensusRunning = newValue;
+    },
   },
   methods: {
     scrollUp() {
@@ -235,6 +280,7 @@ export default {
   grid-template-rows: repeat(4, 1fr);
   z-index: 0;
   text-align: center;
+  position: relative;
 }
 
 .plugins-container {
@@ -277,15 +323,6 @@ export default {
   z-index: 0;
 }
 
-.footer {
-  width: 100%;
-  height: 99%;
-  margin: 0 auto;
-  grid-column: 1/4;
-  grid-row: 4;
-  background-color: rgb(52, 52, 52);
-  border-radius: 0 0 7px 7px;
-}
 .plugins-title {
   width: 40%;
   height: 25px;

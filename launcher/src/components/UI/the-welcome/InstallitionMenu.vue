@@ -1,12 +1,12 @@
 <template>
   <div class="welcome-parent">
+    <SecurityButton />
+    <ServerAccessManagement v-if="serverAccessManagement" />
     <div class="header bg-zinc-900">
       <span>{{ $t("installitionMenu.welcome") }}</span>
     </div>
 
-
     <div class="welcomeBtnParent">
-
       <div class="serverName">
         Server:
         <span>{{ ServerName }}</span>
@@ -65,14 +65,17 @@
   </div>
 </template>
 <script>
+import ServerAccessManagement from "../../UI/node-header/ServerAccessManagement.vue";
+import SecurityButton from "../../UI/node-header/SecurityButton.vue";
 import ButtonInstallation from "./ButtonInstallation.vue";
 import ControlService from "@/store/ControlService";
 import { mapState, mapWritableState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
-import { useControlStore } from "../../../store/theControl";
+import { useControlStore } from "@/store/theControl";
 import LogoutModal from "../node-header/LogoutModal.vue";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
-  components: { ButtonInstallation, LogoutModal },
+  components: { ButtonInstallation, LogoutModal, SecurityButton, ServerAccessManagement },
   data() {
     return {
       logoutModalIsActive: false,
@@ -84,6 +87,7 @@ export default {
       value: 1,
       max: 100,
       supportMessage: this.$t("installitionMenu.osSupported"),
+      serverAccessManagementTooltip: false,
     };
   },
 
@@ -93,18 +97,27 @@ export default {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+    ...mapState(useNodeHeader, {
+      serverAccessManagement: "serverAccessManagement",
+    }),
   },
   mounted() {
     this.updateConnectionStats();
   },
-  created() {
-    setTimeout(() => {
-      this.active = false;
-    }, 5000);
-    this.checkOsRequirements();
+  async created() {
     this.randomValue();
+    await this.checkOsRequirements();
+    this.active = false;
   },
   methods: {
+    tooltipServerAccess() {
+      // if (!this.serverAccessManagement) {
+      //   this.serverAccessManagementTooltip = true;
+      // } else {
+      //   this.serverAccessManagementTooltip = false;
+      // }
+      console.log(this.serverAccessManagementTooltip);
+    },
     async updateConnectionStats() {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
@@ -133,13 +146,14 @@ export default {
     display: async function (osResponse, suResponse) {
       const osData = await osResponse;
       const suData = await suResponse;
-      if (osData == "Ubuntu" || osData == "CentOS") {
-        this.message = osData.toUpperCase() + " " + this.supportMessage;
+      const osName = osData && osData.hasOwnProperty("name") && osData.name ? osData.name : "";
+      const osVers = osData && osData.hasOwnProperty("version") && osData.version ? osData.version : "";
+      if (osName == "Ubuntu" && osVers == "22.04") {
+        this.message = osName.toUpperCase() + " " + this.supportMessage;
         if (suData.rc) {
           // Description of return codes (suData.rc):
-          // 1 = FAIL: user can not sudo at all because not in sudo group!
-          // 2 = FAIL: user can not sudo without password!
-          // 3 = ERROR: Executed code failed to run (<errmsg>)
+          // 1 = FAIL: user can not sudo without password!
+          // 2 = ERROR: Executed code failed to run (<errmsg>)
           // There could also be unknown return codes that may happen on the OS!
           // Those are usually 127 but they could also overwrite the "known" codes
           // mentioned above. Therefore it's a good idea to parse stdout value in
@@ -162,29 +176,15 @@ export default {
           // OS supported, passless sudo avail - allow install :)
           this.isSupported = true;
         }
-      } else if (osData && osData.hasOwnProperty("name") && osData.name !== undefined) {
-        this.message = osData.name.toUpperCase() + ": " + osData.message.toUpperCase();
       } else {
         this.message = "UNSUPPORTED OS";
       }
       this.running = false;
     },
     checkOsRequirements: async function () {
-      const osResponse = ControlService.checkOS()
-        .then((result) => {
-          return result;
-        })
-        .catch((error) => {
-          return error;
-        });
-      const suResponse = ControlService.checkSudo()
-        .then((result) => {
-          return result;
-        })
-        .catch((error) => {
-          return error;
-        });
-      this.display(await osResponse, await suResponse);
+      const osResponse = await ControlService.checkOS();
+      const suResponse = await ControlService.checkSudo();
+      this.display(osResponse, suResponse);
     },
   },
 };
@@ -275,9 +275,7 @@ export default {
   color: #b4b4b4;
 }
 
-
 .welcomeBtnParent {
-
   grid-column: 2/6;
   grid-row: 3/4;
   display: flex;
@@ -285,7 +283,7 @@ export default {
   align-items: center;
 }
 
-.welcomeBtnParent .spacer{
+.welcomeBtnParent .spacer {
   width: 10%;
   height: 40px;
 }
@@ -508,6 +506,7 @@ export default {
   padding-left: 10px;
   color: yellow;
 }
+
 @keyframes dotFlashing {
   0% {
     background-color: #1068a3;

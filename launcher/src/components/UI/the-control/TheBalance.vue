@@ -1,28 +1,44 @@
 <template>
   <div class="balance-parent">
-    <div class="finalized-box">
-      <div class="finalized-value">{{ finalized_epoch }}</div>
-      <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
-    </div>
-    <div class="balance-box">
-      <div class="balance-value">{{ balance }} GWei</div>
-      <div class="title">{{ $t("balWid.bal") }}</div>
+    <NoData v-if="noDataFlag" />
+    <div v-else class="wrapper">
+      <div class="finalized-box">
+        <div class="finalized-value" @mouseenter="cursorLocation = `${finEPOCH} `" @mouseleave="cursorLocation = ''">
+          {{ finalized_epoch }}
+        </div>
+        <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
+      </div>
+      <div class="balance-box">
+        <div class="balance-value">{{ balance }} GWei</div>
+        <div class="title">{{ $t("balWid.bal") }}</div>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import NoData from "./NoData.vue";
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { mapState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 export default {
+  components: {
+    NoData,
+  },
   data() {
     return {
       finalized_epoch: "Loading..",
       balance: 0,
+      finEPOCH: this.$t("controlPage.finEPOCH"),
     };
   },
   computed: {
     ...mapState(useControlStore, {
       balancestatus: "balancestatus",
+      noDataFlag: "noDataFlag",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
   },
 
@@ -47,6 +63,13 @@ export default {
 };
 </script>
 <style scoped>
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .balance-parent {
   display: flex;
   width: 99%;
@@ -91,7 +114,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-weight: 700;
-  font-size: 100%;
+  font-size: 180%;
   width: 100%;
   height: 50%;
 }

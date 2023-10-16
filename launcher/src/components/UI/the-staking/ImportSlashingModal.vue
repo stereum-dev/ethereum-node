@@ -3,9 +3,13 @@
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
     <div v-if="!importSlashingFile" class="remove-modal-content">
       <div class="title-box">
-        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="removeMessage">
+        <span
+          ><div :class="['status', doppelganger ? 'green' : 'red']" />
+          Doppelgänger Protection is {{ doppelganger ? "Enabled" : "Disabled" }}.</span
+        >
         <span>{{ $t("importSlashingModal.slashModalMessage") }}</span>
       </div>
       <div class="slashingParent">
@@ -20,6 +24,7 @@
             YES
           </label>
         </div>
+
         <!-- </Transition> -->
       </div>
 
@@ -36,7 +41,7 @@
     </div>
     <div v-if="importSlashingFile" class="remove-modal-content">
       <div class="title-box">
-        <img class="folder-icon" src="../../../../public/img/icon/the-staking/folder.png" alt="icon" />
+        <img class="folder-icon" src="/img/icon/the-staking/folder.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("importSlashingModal.importMessage") }}</span>
@@ -70,6 +75,8 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useStakingStore } from "@/store/theStaking";
 export default {
   data() {
     return {
@@ -80,7 +87,11 @@ export default {
       importSlashingFile: false,
     };
   },
-  computed: {},
+  computed: {
+    ...mapState(useStakingStore, {
+      doppelganger: "doppelganger",
+    }),
+  },
   watch: {
     picked: function () {
       if (this.picked === "yes") {
@@ -97,6 +108,7 @@ export default {
       }
     },
   },
+
   methods: {
     openFileUpload() {
       this.$refs.fileInput.click();
@@ -108,6 +120,26 @@ export default {
 };
 </script>
 <style scoped>
+.status {
+  width: 2.5%;
+  height: 63%;
+  border-radius: 100%;
+  box-shadow: 0 1px 3px 1px rgb(48, 91, 80);
+  margin-right: 1%;
+}
+.removeMessage span {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.red {
+  background: #eb5353;
+}
+.green {
+  background: #74fa65;
+}
 .fileName {
   font-size: 1rem;
   font-weight: 500;
@@ -276,10 +308,20 @@ export default {
   border: 2px solid rgb(17, 172, 255);
   border-radius: 100%;
 }
-
+.doppelganger {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  text-transform: uppercase;
+  font-weight: 600;
+  z-index: 502;
+}
 .continue-box {
   width: 100%;
-  height: 25%;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -288,7 +330,7 @@ export default {
 
 .continue-btn {
   width: 30%;
-  height: 40%;
+  height: 50%;
   border-radius: 5px;
   border: 1px solid #229b63;
   background-color: #229b63;

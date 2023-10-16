@@ -21,9 +21,26 @@ export async function useListKeys(forceRefresh) {
             ) {
                 //refresh validaotr list
                 let result = await ControlService.listValidators(client.config.serviceID);
+                if (
+                    !client.service.includes("Lighthouse") &&
+                    !client.service.includes("Lodestar") &&
+                    !client.service.includes("Web3Signer")
+                ) {
+                    let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
+                    let remoteKeys = resultRemote.data
+                        ? resultRemote.data.map((e) => {
+                            return { validating_pubkey: e.pubkey, readonly: true };
+                        })
+                        : [];
+                    result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
+                }
 
                 //update service config (pinia)
-                client.config.keys = result.data ? result.data.map((e) => e.validating_pubkey) : [];
+                client.config.keys = result.data
+                    ? result.data.map((e) => {
+                        return { key: e.validating_pubkey, isRemote: e.readonly };
+                    })
+                    : [];
 
                 //update service datasets in Pinia store
                 serviceStore.installedServices = serviceStore.installedServices.map((service) => {
@@ -38,13 +55,14 @@ export async function useListKeys(forceRefresh) {
                 keyStats = keyStats.concat(
                     client.config.keys.map((key) => {
                         return {
-                            key: key,
+                            key: key.key,
                             validatorID: client.config.serviceID,
                             icon: client.icon,
                             activeSince: "-",
                             status: "loading",
                             balance: "-",
                             network: client.config.network,
+                            isRemote: key.isRemote,
                         };
                     })
                 );
@@ -122,7 +140,13 @@ export async function useUpdateValidatorStats() {
             key.status = info.status;
             key.balance = info.balance / 1000000000;
             key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";
-            totalBalance += key.balance;
+            if (key.isRemote) {
+                if (!stakingStore.keys.some((k) => k.key === key.key && !k.isRemote)) {
+                    totalBalance += key.balance;
+                }
+            } else {
+                totalBalance += key.balance;
+            }
         } else {
             key.status = "deposit";
             key.balance = "-";

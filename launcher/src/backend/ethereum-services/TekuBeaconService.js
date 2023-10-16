@@ -13,9 +13,7 @@ export class TekuBeaconService extends NodeService {
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/data";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir)
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir)];
 
     const executionLayer = executionClients
       .map((client) => {
@@ -42,6 +40,7 @@ export class TekuBeaconService extends NodeService {
         `--network=${network}`,
         "--p2p-enabled=true",
         "--p2p-port=9001",
+        "--p2p-advertised-port=9001",
         //`--eth1-endpoints=${executionLayer}`,
         `--ee-endpoint=${executionLayer}`,
         `--ee-jwt-secret-file=${JWTDir}`,
@@ -99,8 +98,9 @@ export class TekuBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${
+      this.id
+    }\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

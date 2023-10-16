@@ -4,6 +4,12 @@ export const useControlStore = defineStore("theControl", {
   state: () => {
     return {
       request: [],
+      deleteKey: false,
+      generateModalShow: false,
+      currentSlotData: null,
+      currentEpochData: null,
+      currentResult: {},
+      noDataFlag: false,
       ServerName: null,
       ipAddress: null,
       totalRam: null,
@@ -55,6 +61,10 @@ export const useControlStore = defineStore("theControl", {
         {
           name: "geth",
           img: "/img/icon/plugin-icons/execution/Geth.png",
+        },
+        {
+          name: "reth",
+          img: "/img/icon/plugin-icons/execution/Reth.png",
         },
         {
           name: "besu",

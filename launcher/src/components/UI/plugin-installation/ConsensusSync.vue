@@ -93,11 +93,6 @@ export default {
       required: true,
       default: () => ({}),
     },
-    configNetwork: {
-      type: Object,
-      required: true,
-      default: () => ({}),
-    },
   },
   data() {
     return {
@@ -122,6 +117,7 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
+      configNetwork: "configNetwork",
     }),
   },
   watch: {
@@ -151,6 +147,10 @@ export default {
       window.open(url, "_blank");
     },
     toglDropDown() {
+      if (this.selectedItem == "Validating...") {
+        this.dropdown = false;
+        return false;
+      }
       this.dropdown = !this.dropdown;
     },
     async linkPicker(item) {

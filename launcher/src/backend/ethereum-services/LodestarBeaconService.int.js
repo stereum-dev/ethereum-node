@@ -104,7 +104,7 @@ test("lodestar validator import", async () => {
     VCstatus = await await nodeConnection.sshService.exec(`docker logs stereum-${lVC.id}`);
     BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lBC.id}`);
     if (
-      /Starting metrics HTTP server/.test(BCstatus.stdout) &&
+      /Started metrics HTTP server/.test(BCstatus.stdout) &&
       /Started REST API server address/.test(BCstatus.stdout) &&
       /Searching peers/.test(BCstatus.stdout) &&
       /Syncing/.test(BCstatus.stdout) &&
@@ -145,7 +145,7 @@ test("lodestar validator import", async () => {
   }
 
   //check lighthouse BC logs
-  expect(BCstatus.stdout).toMatch(/Starting metrics HTTP server/);
+  expect(BCstatus.stdout).toMatch(/Started metrics HTTP server/);
   expect(BCstatus.stdout).toMatch(/Started REST API server address/);
   expect(BCstatus.stdout).toMatch(/Searching peers/);
   expect(BCstatus.stdout).toMatch(/Syncing/);

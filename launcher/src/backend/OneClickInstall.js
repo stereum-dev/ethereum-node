@@ -29,7 +29,7 @@ export class OneClickInstall {
       }
     }
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
-    mkdir /etc/stereum &&\
+    mkdir -p /etc/stereum/services &&\
     echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
     await this.nodeConnection.findStereumSettings();
     return await this.nodeConnection.prepareStereumNode(
@@ -104,7 +104,7 @@ export class OneClickInstall {
   }
 
 
-  async createServices(constellation, checkpointURL, relayURL) {
+  async createServices(constellation, checkpointURL, relayURL, selectedPreset) {
     this.needsKeystore = [];
     let args = {
       network: this.network,
@@ -115,6 +115,11 @@ export class OneClickInstall {
     if (constellation.includes("GethService")) {
       //GethService
       this.executionClient = this.serviceManager.getService("GethService", args)
+    }
+
+    if (constellation.includes("RethService")) {
+      //RethService
+      this.executionClient = this.serviceManager.getService("RethService", args)
     }
 
     if (constellation.includes("BesuService")) {
@@ -222,6 +227,36 @@ export class OneClickInstall {
     if (constellation.includes("NotificationService")) {
       //NotificationService
       this.extraServices.push(this.serviceManager.getService("NotificationService", args))
+    }
+
+    if (selectedPreset == "staking") {
+      switch (this.executionClient.service) {
+        case "RethService":
+          this.executionClient.command.push("--full");
+          break;
+      }
+    }
+    else if (selectedPreset == "archive") {
+      switch (this.executionClient.service) {
+        case "GethService":
+          this.executionClient.command.push("--syncmode full");
+          this.executionClient.command.push("--gcmode archive");
+          break;
+        case "RethService":
+          //archvie by default
+          break;
+        case "ErigonService":
+          //archive by default
+          break;
+        case "BesuService":
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))] = "--sync-mode=FULL";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--pruning-enabled=true"))] = "--pruning-enabled=false";
+          break;
+        case "NethermindService":
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] += "_archive";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode=Hybrid"))] = "--Pruning.Mode=None";
+          break;
+      }
     }
 
     let versions;
@@ -332,6 +367,8 @@ export class OneClickInstall {
         break;
       case "stereum on arm":
         services = services.filter(s => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s));
+        break;
+      case "archive":
         break;
     }
     return services;

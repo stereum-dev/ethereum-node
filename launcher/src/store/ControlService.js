@@ -114,6 +114,7 @@ class ControlService extends EventEmitter {
       array: buffer,
       checkpointURL: args.checkpointURL,
       relayURL: args.relayURL,
+      selectedPreset: args.selectedPreset,
     });
   }
 
@@ -297,10 +298,6 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("deleteFeeRecipient", args); //
   }
 
-  async getOperatorPageURL(args) {
-    return await this.promiseIpc.send("getOperatorPageURL", args); // insert existing operator keys
-  }
-
   async setGraffitis(args) {
     return await this.promiseIpc.send("setGraffitis", args);
   }
@@ -353,21 +350,50 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
 
+  async readPrometheusConfig(args) {
+    return await this.promiseIpc.send("readPrometheusConfig", args);
+  }
+
+  async writePrometheusConfig(args) {
+    return await this.promiseIpc.send("writePrometheusConfig", args);
+  }
+
   async getQRCode() {
     return await this.promiseIpc.send("getQRCode");
+  }
+
+  async importRemoteKeys(args) {
+    return await this.promiseIpc.send("importRemoteKeys", args);
+  }
+
+  async listRemoteKeys(args) {
+    return await this.promiseIpc.send("listRemoteKeys", args);
+  }
+
+  async deleteRemoteKeys(args) {
+    return await this.promiseIpc.send("deleteRemoteKeys", args);
+  }
+
+  async checkRemoteKeys(args) {
+    return await this.promiseIpc.send("checkRemoteKeys", args);
   }
 
   async checkActiveValidators(args) {
     //resolve proxy
     let files = [];
-    args.files.forEach((file) => {
-      files.push({ name: file.name, path: file.path });
-    });
+    if (args.isRemote) {
+      files = args.files;
+    } else {
+      args.files.forEach((file) => {
+        files.push({ name: file.name, path: file.path });
+      });
+    }
     return await this.promiseIpc.send("checkActiveValidators", {
       files: files,
       password: args.password,
       serviceID: args.serviceID,
       slashingDB: args.slashingDB,
+      isRemote: args.isRemote,
     });
   }
 
@@ -385,6 +411,38 @@ class ControlService extends EventEmitter {
 
   async importConfig(args) {
     return await this.promiseIpc.send("importConfig", args);
+  }
+
+  async getCurrentEpochSlot() {
+    return await this.promiseIpc.send("getCurrentEpochSlot");
+  }
+
+  async changePassword(args) {
+    return await this.promiseIpc.send("changePassword", args);
+  }
+
+  async readSSHKeyFile(args) {
+    return await this.promiseIpc.send("readSSHKeyFile", args);
+  }
+
+  async writeSSHKeyFile(args) {
+    return await this.promiseIpc.send("writeSSHKeyFile", args);
+  }
+
+  async generateSSHKeyPair(args) {
+    return await this.promiseIpc.send("generateSSHKeyPair", args);
+  }
+
+  async openDirectoryDialog(args) {
+    return await this.promiseIpc.send("openDirectoryDialog", args);
+  }
+
+  async AddExistingSSHKey(args) {
+    return await this.promiseIpc.send("AddExistingSSHKey", args);
+  }
+
+  async IpScanLan() {
+    return await this.promiseIpc.send("IpScanLan");
   }
 }
 if (!instance) {

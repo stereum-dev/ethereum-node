@@ -36,7 +36,7 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
+      <img src="/img/icon/control/spinner.gif" alt="" />
     </div>
   </div>
 </template>
@@ -302,11 +302,21 @@ export default {
   height: 27%;
   margin: 2% 0;
   padding: 8%;
-  font-size: 60%;
+  font-size: 50%;
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
   font-weight: 600;
+}
+.dataApi-data:hover {
+  background: #707070;
+  color: #eee;
+  border: none;
+}
+.dataApi-data:active {
+  background: rgba(112, 112, 112, 0.6);
+  color: #eee;
+  border: none;
 }
 
 /* width */

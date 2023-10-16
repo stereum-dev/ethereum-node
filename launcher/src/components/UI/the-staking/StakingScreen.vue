@@ -17,6 +17,7 @@
           @click-btn-graffiti="grafittiHandler"
           @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
+          @import-remote-keys="importRemoteKeysHandler"
         />
       </div>
     </div>
@@ -24,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useServices } from "../../../store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
@@ -33,8 +34,10 @@ import ValidatorStats from "./ValidatorStats.vue";
 
 // refs
 const refresh = ref(0);
-const selectedName = ref("");
-const selectedStatus = ref("");
+const selectedName = ref(null);
+const selectedStatus = ref(null);
+const selectedIcon = ref(null);
+const selectedValdiatorService = ref(null);
 
 // Pinia stores
 const serviceStore = useServices();
@@ -48,7 +51,31 @@ const installedValidators = computed(() => {
   return copyOfInstalledServices.filter((obj) => obj.category === "validator");
 });
 
+onMounted(() => {
+  if (installedValidators.value.length === 0) return;
+  selectedValdiatorService.value = installedValidators.value[0];
+  selectedIcon.value = installedValidators.value[0].icon;
+  selectedName.value = installedValidators.value[0].name;
+  selectedStatus.value = installedValidators.value[0].state;
+
+  if (typeof selectedValdiatorService.value === "object") {
+    const doppelgangerOption = Object.values(selectedValdiatorService.value.expertOptions).find(
+      (option) => option.title === "Doppelganger"
+    );
+    if (doppelgangerOption) {
+      stakingStore.doppelganger = doppelgangerOption.changeValue;
+    }
+  }
+});
+
 // methods
+
+const importRemoteKeysHandler = () => {
+  stakingStore.exitChainForMultiValidatorsActive = false;
+  stakingStore.removeForMultiValidatorsActive = false;
+  stakingStore.grafitiForMultiValidatorsActive = false;
+  stakingStore.importRemoteKeysActive = true;
+};
 
 const grafittiHandler = () => {
   stakingStore.insertKeyBoxActive = false;

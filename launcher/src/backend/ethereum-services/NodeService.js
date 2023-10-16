@@ -19,6 +19,10 @@ export const networks = {
   sepolia: {
     name: "sepolia",
     dataEndpoint: "https://sepolia.beaconcha.in/api/v1",
+  },
+  holesky: {
+    name: "holesky",
+    dataEndpoint: "https://holesky.beaconcha.in/api/v1",
   }
 };
 

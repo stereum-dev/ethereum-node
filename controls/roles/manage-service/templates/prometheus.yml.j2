@@ -57,6 +57,19 @@ scrape_configs:
 {% endfor %}
         ]
 
+# reth
+  - job_name: reth
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "RethService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:6060"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
 # lighthouse beacon
   - job_name: lighthouse_beacon
     static_configs:
@@ -276,6 +289,19 @@ scrape_configs:
 {% for service_config in service_configs.results %}
 {%   if (service_config.content | b64decode | from_yaml).service == "KeysAPIService" %}
           {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:3600"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# Charon
+  - job_name: charon
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "CharonService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:3620"
           {% set config_count = config_count + 1 %}
 {%   endif %}
 {% endfor %}

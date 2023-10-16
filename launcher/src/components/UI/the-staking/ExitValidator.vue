@@ -1,21 +1,21 @@
 <template>
   <div class="exitRow">
     <div class="iconBox">
-      <img class="exit-icon" src="../../../../public/img/icon/the-staking/redexit-icon.png" alt="icon" />
+      <img class="exit-icon" src="/img/icon/the-staking/redexit-icon.png" alt="icon" />
     </div>
     <div class="inputBox">
       <input v-model="enteredPassword" type="password" :placeholder="$t('exitMultipleValidator.passMessage')" />
     </div>
     <div class="confirmBox">
-      <div class="back_button" @click="$emit('backBtn', backBtn)">
-        <img src="/img/icon/arrows/arrow_back.png" alt="back icon" />
-      </div>
+      <button class="back_button" @click="$emit('backBtn', backBtn)">
+        <img src="/img/icon/the-staking/close.png" alt="back icon" />
+      </button>
       <button
         class="confirmBtn"
         :class="{ deactive: enteredPassword === '' ? true : false }"
         @click="$emit('confirmPassword', enteredPassword)"
       >
-        {{ $t("exitMultipleValidator.confirm") }}
+        <img src="/img/icon/the-staking/done.png" alt="" />
       </button>
     </div>
   </div>
@@ -31,17 +31,31 @@ export default {
 </script>
 <style scoped>
 .back_button {
-  margin-right: 5%;
+  width: 40%;
+  height: 100%;
+  background-color: #860505;
+  border: 1px solid #b81717;
   cursor: pointer;
   display: flex;
-  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
-.back_button img:active {
-  transform: scale(0.8);
+.back_button:hover {
+  background-color: rgba(134, 5, 5, 0.6);
+}
+
+.back_button img:hover,
+.confirmBtn img:hover {
+  transform: scale(1.2);
+  transition-duration: 0.4s;
+}
+.back_button img:active,
+.confirmBtn img:active {
+  transform: scale(1);
+  transition-duration: 0.2s;
 }
 .back_button img {
-  width: 90%;
-  height: 100%;
+  width: 50%;
 }
 .deactive {
   opacity: 0.5;
@@ -52,78 +66,67 @@ export default {
   grid-row: 1;
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: 5% 85% 10%;
-  grid-template-rows: 1fr;
+  display: flex;
   background-color: #b81717;
   border-radius: 50px;
   position: absolute;
   z-index: 100;
 }
 .iconBox {
-  grid-column: 1/2;
-  grid-row: 1;
-  width: 100%;
+  width: 5%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .iconBox img {
-  width: 20px;
-  height: 20px;
-  border-radius: 3px;
-  margin: 0 auto;
+  width: 50%;
+  height: 65%;
 }
 .inputBox {
-  grid-column: 2/3;
-  grid-row: 1;
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 98%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .inputBox input {
-  width: 80%;
+  width: 100%;
   height: 95%;
   padding: 0;
-  padding-left: 10px;
-  background-color: #5d0000;
-  border: 1px solid #958797;
-  border-radius: 35px;
-  color: #ababab;
-  font-size: 0.8rem;
+  padding-left: 1%;
+  background-color: #b81717;
+  border: none;
+  color: #eee;
+  font-size: 80%;
   font-weight: 500;
 }
 .confirmBox {
-  grid-column: 3/4;
-  grid-row: 1;
-  width: 100%;
+  width: 15%;
   height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.confirmBtn {
+  width: 60%;
+  height: 100%;
+  border-radius: 0 35px 35px 0;
+  background-color: #860505;
+  border: 1px solid #b81717;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.confirmBtn {
-  width: 100%;
-  height: 100%;
-  border-radius: 0 35px 35px 0;
-  background-color: #292929;
-  color: #b5b5b5;
-  font-size: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
-  cursor: pointer;
-  text-transform: uppercase;
+.confirmBtn img {
+  width: 45%;
 }
 .confirmBtn:focus {
   outline: none;
 }
 .confirmBtn:hover {
-  background-color: #3b3b3b;
+  background-color: rgba(134, 5, 5, 0.6);
 }
 .confirmBtn:active {
   background-color: #292929;

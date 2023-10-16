@@ -57,6 +57,7 @@ export default {
   width: 70%;
 }
 .contributor-parent {
+  cursor: default;
   display: flex;
   width: 16%;
   height: 59%;
@@ -69,6 +70,7 @@ export default {
   border-radius: 30px;
   flex-direction: column;
   margin-top: 2%;
+  margin-right: 2%;
   margin-bottom: 1%;
   position: relative;
 }

@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useStakingStore = defineStore("theStaking", {
   state: () => {
     return {
+      doppelganger: true,
       selectedIcon: "",
       importValidatorKeyActive: true,
       passwordInputActive: false,
@@ -15,6 +16,7 @@ export const useStakingStore = defineStore("theStaking", {
       storedValidatorKeys: [],
       insertKeyBoxActive: true,
       enterPasswordBox: false,
+      importRemoteKeysActive: false,
       exitChainForMultiValidatorsActive: false,
       removeForMultiValidatorsActive: false,
       grafitiForMultiValidatorsActive: false,

@@ -3,6 +3,7 @@ import { LighthouseValidatorService } from "./ethereum-services/LighthouseValida
 import { LodestarBeaconService } from "./ethereum-services/LodestarBeaconService";
 import { LodestarValidatorService } from "./ethereum-services/LodestarValidatorService";
 import { GethService } from "./ethereum-services/GethService";
+import { RethService } from "./ethereum-services/RethService";
 import { ErigonService } from "./ethereum-services/ErigonService";
 import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
@@ -105,6 +106,8 @@ export class ServiceManager {
               services.push(LodestarValidatorService.buildByConfiguration(config));
             } else if (config.service == "GethService") {
               services.push(GethService.buildByConfiguration(config));
+            } else if (config.service == "RethService") {
+              services.push(RethService.buildByConfiguration(config));
             } else if (config.service == "ErigonService") {
               services.push(ErigonService.buildByConfiguration(config));
             } else if (config.service == "BesuService") {
@@ -198,14 +201,19 @@ export class ServiceManager {
         await this.resyncService(service, data);
         break;
 
+      case "removeLockfiles":
+        await this.removeTekuLockFiles(service.config.serviceID)
+        break;
       default:
         break;
     }
   }
 
   async restartService(client) {
-    await this.manageServiceState(client, "stopped");
-    await this.manageServiceState(client, "started");
+    if (client.state == "running") {
+      await this.manageServiceState(client.serviceID, "stopped");
+    }
+    await this.manageServiceState(client.serviceID, "started");
   }
 
   async resyncService(serviceID, checkpointUrl) {
@@ -217,18 +225,21 @@ export class ServiceManager {
         vol.servicePath === "/opt/app/beacon" ||
         vol.servicePath === "/opt/app/data" ||
         vol.servicePath === "/opt/data/geth" ||
+        vol.servicePath === "/opt/data/reth" ||
         vol.servicePath === "/opt/data/erigon"
     ).destinationPath;
-    await this.manageServiceState(client.id, "stopped");
 
-    if (dataDir.length > 0) {
+    let result = await this.nodeConnection.sshService.exec(`test -d ${dataDir}/ `);
+
+    if (dataDir.length > 0 && result.rc == 0) {
+      await this.manageServiceState(serviceID, "stopped");
       await this.deleteDataVolume(dataDir);
     }
 
     this.updateSyncCommand(client, checkpointUrl);
 
     await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-    await this.manageServiceState(client.id, "started");
+    await this.manageServiceState(serviceID, "started");
   }
 
   updateSyncCommand(client, checkpointUrl) {
@@ -290,7 +301,8 @@ export class ServiceManager {
   async modifyServices(tasks, services, newInstallTasks) {
     let modifiedServices = [];
 
-    tasks.forEach((task) => {
+    for (let task of tasks) {
+      let ssvConfig
       let service = services.find((s) => s.id === task.service.config.serviceID);
       let dependencies = task.data.executionClients.concat(task.data.consensusClients).map((s) =>
         services.find((e) => {
@@ -318,10 +330,18 @@ export class ServiceManager {
         });
       }
 
+      if (service.service === "SSVNetworkService") {
+        let result = await this.nodeConnection.readSSVNetworkConfig(service.id)
+        ssvConfig = YAML.parse(result)
+      }
+
       if (task.data.port) {
         service = this.changePort(service, task.data.port);
       }
-      let updated = this.addDependencies(service, dependencies);
+      let updated = this.addDependencies(service, dependencies, ssvConfig);
+      if (service.service === "SSVNetworkService") {
+        await this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig))
+      }
       if (!Array.isArray(updated)) updated = [updated];
       updated.forEach((dep) => {
         let index = modifiedServices.findIndex((s) => s.id === dep.id);
@@ -331,7 +351,7 @@ export class ServiceManager {
           modifiedServices.push(dep);
         }
       });
-    });
+    }
 
     await Promise.all(
       modifiedServices.map(async (service) => {
@@ -340,7 +360,7 @@ export class ServiceManager {
     );
   }
 
-  addDependencies(service, dependencies) {
+  addDependencies(service, dependencies, ssvConfig) {
     let command = "";
     let filter;
 
@@ -408,6 +428,8 @@ export class ServiceManager {
           client.dependencies.mevboost.push(service);
           return client;
         });
+      case "SSVNetwork":
+        return this.addSSVNetworkConnection(service, dependencies, ssvConfig);
       default:
         return service;
     }
@@ -491,6 +513,27 @@ export class ServiceManager {
     return command.concat([fullCommand]);
   }
 
+  addSSVNetworkConnection(service, dependencies, ssvConfig) {
+    const executionClient = dependencies.filter((d) => typeof d.buildExecutionClientWsEndpointUrl === "function")[0];
+    const consensusClient = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function")[0];
+    ssvConfig.eth1.ETH1Addr = `${executionClient ? executionClient.buildExecutionClientWsEndpointUrl() : ""}`
+    ssvConfig.eth2.BeaconNodeAddr = `${consensusClient ? consensusClient.buildConsensusClientHttpEndpointUrl() : ""}`
+    service.dependencies.executionClients = executionClient ? [executionClient] : []
+    service.dependencies.consensusClients = consensusClient ? [consensusClient] : []
+    return service
+  }
+
+  removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs) {
+    let ssvConfig = ssvConfigs[service.id]
+    if (ssvConfig.eth1.ETH1Addr.includes(serviceToDelete.id)) {
+      ssvConfig.eth1.ETH1Addr = ""
+    }
+    if (ssvConfig.eth2.BeaconNodeAddr.includes(serviceToDelete.id)) {
+      ssvConfig.eth2.BeaconNodeAddr = ""
+    }
+    this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig))
+  }
+
   removeDependencies(service, serviceToDelete) {
     //update command
     service.command = this.removeCommandConnection(service.command, serviceToDelete.id);
@@ -550,7 +593,7 @@ export class ServiceManager {
     return command + newValue;
   }
 
-  async deleteService(task, tasks, services) {
+  async deleteService(task, tasks, services, ssvConfigs) {
     let serviceToDelete = services.find((service) => service.id === task.service.config.serviceID);
     let dependents = [];
     services.forEach((service) => {
@@ -560,10 +603,13 @@ export class ServiceManager {
         });
       }
     });
-    dependents.forEach((service) => {
+    for (let service of dependents) {
       service = this.removeDependencies(service, serviceToDelete);
+      if (service.service === "SSVNetworkService") {
+        this.removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs)
+      }
       this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
-    });
+    }
     if (serviceToDelete.service === "Web3SignerService") {
       await this.nodeConnection.sshService.exec(
         `docker stop slashingdb-${serviceToDelete.id} && docker rm slashingdb-${serviceToDelete.id}`
@@ -660,6 +706,15 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
+
+      case "RethService":
+        ports = [
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+        ];
+        return RethService.buildByUserInput(args.network, ports, args.installDir + "/reth");
 
       case "BesuService":
         ports = [
@@ -969,7 +1024,7 @@ export class ServiceManager {
         // prepare service's config file
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
         const escapedConfigFile = StringUtils.escapeStringForShell(
-          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: "' + config.ssv_sk + '"')
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: ' + config.ssv_sk)
         );
         this.nodeConnection.sshService.exec(
           `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
@@ -1002,7 +1057,33 @@ export class ServiceManager {
       t.service.config.serviceID = service.id;
       newServices.push(service);
     });
-    let VLInstalls = tasks.filter((t) => t.service.category === "validator");
+    let SSVInstalls = tasks.filter((t) => t.service.service === "SSVNetworkService");
+    SSVInstalls.forEach((t) => {
+      if (t.data.executionClients.length > 0) {
+        t.data.executionClients = t.data.executionClients.map((ec) => {
+          let id = ec.config ? ec.config.serviceID : ec.id;
+          if (id) {
+            return services.find((s) => s.id === id);
+          }
+          id = ELInstalls.find((el) => el.service.id === ec.id).service.config.serviceID;
+          return newServices.find((s) => s.id === id);
+        });
+      }
+      if (t.data.beaconServices.length > 0) {
+        t.data.beaconServices = t.data.beaconServices.map((cc) => {
+          let id = cc.config ? cc.config.serviceID : cc.id;
+          if (id) {
+            return services.find((s) => s.id === id);
+          }
+          id = CLInstalls.find((el) => el.service.id === cc.id).service.config.serviceID;
+          return newServices.find((s) => s.id === id);
+        });
+      }
+      let service = this.getService(t.service.service, t.data);
+      t.service.config.serviceID = service.id;
+      newServices.push(service);
+    });
+    let VLInstalls = tasks.filter((t) => t.service.category === "validator" && t.service.service !== "SSVNetworkService");
     VLInstalls.forEach((t) => {
       if (t.data.consensusClients.length > 0) {
         t.data.consensusClients = t.data.consensusClients.map((bc) => {
@@ -1071,11 +1152,6 @@ export class ServiceManager {
       });
     })
 
-    await this.createKeystores(
-      newServices.filter(
-        (s) => s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork")
-      )
-    );
     let versions;
     try {
       versions = await this.nodeConnection.checkUpdates();
@@ -1104,6 +1180,11 @@ export class ServiceManager {
       newServices.map(async (service) => {
         await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
       })
+    );
+    await this.createKeystores(
+      newServices.filter(
+        (s) => s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork")
+      )
     );
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
     await this.initKeysAPI(newServices.filter((s) => s.service === "KeysAPIService"));
@@ -1138,12 +1219,12 @@ export class ServiceManager {
     }
     if (service.service === "FlashbotsMevBoostService") {
       command = service.entrypoint;
-      let index = command.findIndex((c) => /^-(mainnet|prater|goerli$)/.test(c));
+      let index = command.findIndex((c) => /^-(mainnet|prater|goerli|sepolia|holesky$)/.test(c));
       command[index] = "-" + newNetwork;
       index = command.findIndex((c) => c === "-relays") + 1;
       command[index] = '""';
     } else if (service.service === "PrysmBeaconService") {
-      let index = command.findIndex((c) => /--(mainnet|prater|goerli)/.test(c));
+      let index = command.findIndex((c) => /--(mainnet|prater|goerli|sepolia|holesky)/.test(c));
       command[index] = "--" + newNetwork;
       if (newNetwork === "mainnet" && command.includes("--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz")) {
         command.splice(command.indexOf("--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz"), 1);
@@ -1155,8 +1236,8 @@ export class ServiceManager {
       }
     } else {
       command = command.map((c) => {
-        if (/mainnet|prater|goerli/.test(c)) {
-          c = c.replace(/mainnet|prater|goerli/, newNetwork);
+        if (/mainnet|prater|goerli|sepolia|holesky/.test(c)) {
+          c = c.replace(/mainnet|prater|goerli|sepolia|holesky/, newNetwork);
         }
         return c;
       });
@@ -1183,15 +1264,28 @@ export class ServiceManager {
     );
   }
 
+  async getSSVConfigs(services) {
+    const ssvServices = services.filter((s) => s.service === "SSVNetworkService");
+    let configs = [];
+    if (ssvServices?.length > 0) {
+      for (let service of ssvServices) {
+        let result = await this.nodeConnection.readSSVNetworkConfig(service.id);
+        configs[service.id] = YAML.parse(result);
+      }
+    }
+    return configs
+  }
+
   async handleServiceChanges(tasks) {
     let jobs = tasks.map((t) => t.content);
     if (jobs.includes("DELETE")) {
       let services = await this.readServiceConfigurations();
+      let ssvConfigs = await this.getSSVConfigs(services);
       let before = this.nodeConnection.getTimeStamp();
       try {
         await Promise.all(
           tasks.filter(ServiceManager.uniqueByID("DELETE")).map((task, index, tasks) => {
-            return this.deleteService(task, tasks, services);
+            return this.deleteService(task, tasks, services, ssvConfigs);
           })
         );
       } catch (err) {
@@ -1349,5 +1443,15 @@ export class ServiceManager {
       );
     }
     return runRefs;
+  }
+
+  async removeTekuLockFiles(serviceID) {
+    let services = await this.readServiceConfigurations();
+    let service = services.find((s) => s.id === serviceID);
+    let workingDir = this.getWorkindDir(service);
+    if (!workingDir.endsWith("/")) {
+      workingDir += "/";
+    }
+    await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`)
   }
 }

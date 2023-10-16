@@ -1,5 +1,7 @@
-const { Client } = require("ssh2");
+const { Client, utils: { generateKeyPairSync } } = require("ssh2");
 import { createTunnel } from "./SSHServiceTunnel";
+import { StringUtils } from "./StringUtils";
+import { writeFile } from "fs/promises";
 const log = require("electron-log");
 
 export class SSHService {
@@ -64,6 +66,16 @@ export class SSHService {
       this.removeConnectionCount = 0;
       this.connectionPool.pop().end();
     }
+  }
+
+  getConnectionFromPool() {
+    let conn
+    let maxVal = 5
+    while (!conn && maxVal < 10) {
+      conn = (this.connectionPool.find(c => c._chanMgr._count < maxVal))
+      maxVal++
+    }
+    return conn
   }
 
   async connect(connectionInfo) {
@@ -137,12 +149,8 @@ export class SSHService {
 
   async execCommand(command) {
     return new Promise((resolve, reject) => {
-      let conn
-      let maxVal = 5
-      while (!conn && maxVal < 10) {
-        conn = (this.connectionPool.find(c => c._chanMgr._count < maxVal))
-        maxVal++
-      }
+      let conn = this.getConnectionFromPool()
+
       const data = {
         rc: -1,
         stdout: "",
@@ -236,5 +244,98 @@ export class SSHService {
         reject("No Tunnels to Close!");
       }
     });
+  }
+
+  async changePassword(password) {
+    try {
+      const result = await this.exec(`echo -e "${this.connectionInfo.user}:${password}" | chpasswd`)
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed changing password: " + SSHService.extractExecError(result));
+      }
+      this.connectionInfo.password = password
+      return "Password changed successfully!"
+    } catch (error) {
+      log.error("Failed changing password: ", error)
+    }
+  }
+
+  async generateSSHKeyPair(opts = {}) {
+    const path = require("path");
+    if (opts.pickPath.endsWith("/")) opts.pickPath = opts.pickPath.slice(0, -1, ""); //if path ends with '/' remove it
+    try {
+
+      //default bit values for keys
+      if (!opts.bits) {
+        switch (opts.keyType.toLowerCase()) {
+          case "rsa": {
+            opts.bits = 4096
+            break;
+          }
+          case "ecdsa": {
+            opts.bits = 521
+            break;
+          }
+          case "ed25519": {
+            break;
+          }
+        }
+      }
+
+      //Make sure opts.bits is an integer
+      opts.bits = parseInt(opts.bits)
+
+      //if passphrase is set but cipher is not, set cipher to aes256-cbc
+      if (opts.passphrase && !opts.cipher)
+        opts = { ...opts, ...{ cipher: "aes256-cbc" } }
+
+      //Set SSH Key Comment
+      opts.comment = 'StereumSSHKey'
+
+      //generate Keypair read exiting ones and write to file
+      const keyPair = generateKeyPairSync(opts.keyType, opts)
+      let exitingKeys = await this.readSSHKeyFile()
+      if (keyPair.public) {
+        let allKeys = [...exitingKeys, keyPair.public]
+        await this.writeSSHKeyFile(allKeys)
+        const savePath = path.join(opts.pickPath, opts.keyType.toLowerCase())
+        await writeFile(savePath, keyPair.private)
+        await writeFile(savePath + ".pub", keyPair.public)
+        return allKeys
+      }
+      return exitingKeys
+    } catch (err) {
+      log.error("Failed generating key pair: ", err)
+    }
+  }
+
+  async readSSHKeyFile(path = `~/.ssh`) {
+    let authorizedKeys = []
+    try {
+      if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
+      let result = await this.exec(`cat ${path}/authorized_keys`);
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+      }
+      authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
+    } catch (err) {
+      log.error("Can't read authorized keys ", err);
+      return []
+    }
+    return authorizedKeys;
+  }
+
+  async writeSSHKeyFile(keys = [], path = `~/.ssh`) {
+    try {
+      if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
+      let newKeys = keys.join("\n")
+      let result = await this.exec(`echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${path}/authorized_keys`);
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));
+      }
+    } catch (err) {
+      log.error("Can't write authorized keys ", err);
+      return []
+    }
+    return keys;
   }
 }
