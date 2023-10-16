@@ -9,7 +9,7 @@
       />
       <button
         v-if="activePassword"
-        @keyup.enter="$emit('importKeyEnter', enteredPassword)"
+        @keyup.enter="$emit('importKey', enteredPassword)"
         @click="$emit('importKey', enteredPassword)"
       >
         {{ $t("exitMultipleValidator.confirm") }}

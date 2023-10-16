@@ -2,7 +2,7 @@
   <div class="selectBox">
     <div class="display-service">
       <div
-        v-for="service in installedServices.filter((i) => i.category === 'validator')"
+        v-for="service in installedServices.filter((i) => i.category === 'validator' && i.service !== 'CharonService')"
         :key="service.id"
         class="serviceBox"
         @click="$emit('selectService', service)"

@@ -3,7 +3,7 @@
     <TotalBalance />
 
     <div class="stateBox border-4 border-gray-400">
-      <div class="stateInnerBox">
+      <div v-if="checkConsensus && checkKeyExists && checkConsensusState.state === 'running'" class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
           <div class="indexBox">
@@ -33,6 +33,18 @@
             <TabBar :tabs="tabs" @get-title="getActiveComponent" />
           </div>
         </div>
+        <div v-if="displayCounter" class="countDown">
+          <span>{{ timer }}</span>
+        </div>
+      </div>
+      <div v-else-if="checkConsensus && checkConsensusState.state !== 'running'" class="w-full h-full">
+        <img src="/img/icon/the-staking/error.png" class="w-full h-full" alt="consensus" />
+      </div>
+      <div v-else-if="!checkConsensus" class="w-full h-full">
+        <img src="/img/icon/the-staking/noConsensus.png" class="w-full h-full" alt="consensus" />
+      </div>
+      <div v-else-if="!checkKeyExists" class="w-full h-full">
+        <img src="/img/icon/the-staking/nokey.png" class="w-full h-full" alt="No key Image" />
       </div>
     </div>
   </div>
@@ -47,8 +59,10 @@ import BlockProduction from "./BlockProduction.vue";
 import TheAttestation from "./TheAttestation.vue";
 import { mapWritableState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
+import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 import { markRaw } from "vue";
+import { shallowRef } from "vue";
 
 export default {
   components: {
@@ -64,18 +78,18 @@ export default {
       optionsType: markRaw([
         {
           title: "ATTESTATION",
-          comp: TheAttestation,
+          comp: shallowRef(TheAttestation),
           props: {
             remainingTime: this.remainingTime,
           },
         },
         {
           title: "SYNC COMMITTEE",
-          comp: SyncCommitte,
+          comp: shallowRef(SyncCommitte),
         },
         {
           title: "BLOCK PRODUCTION",
-          comp: BlockProduction,
+          comp: shallowRef(BlockProduction),
           props: {
             remainingTime: this.remainingTime,
           },
@@ -87,11 +101,14 @@ export default {
         { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
       ],
       selectedValidator: {},
-
       maxCharacters: 30,
       withdrawalAddress: "0x12345gbfdbf097df9gb7s9dfg7b9sdfg7b67890",
       currentComponent: "ATTESTATION",
       intervalId: null,
+      consensusExists: false,
+      timer: 5,
+      countDown: null,
+      displayCounter: false,
     };
   },
   computed: {
@@ -99,6 +116,20 @@ export default {
       keys: "keys",
       stats: "stats",
     }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+    }),
+    checkConsensus() {
+      const consensusItem = this.installedServices.some((item) => item.category === "consensus");
+      return consensusItem;
+    },
+    checkKeyExists() {
+      const keyExistance = this.keys.length ? true : false;
+      return keyExistance;
+    },
+    checkConsensusState() {
+      return this.installedServices.find((item) => item.category === "consensus");
+    },
   },
 
   mounted() {
@@ -106,17 +137,24 @@ export default {
   },
   unmounted() {
     clearInterval(this.intervalId);
+    clearInterval(this.countDown);
   },
   methods: {
     async getValidatorStats(item) {
+      this.displayCounter = true;
       clearInterval(this.intervalId);
       if (item) {
-        this.intervalId = setInterval(
-          () => {
-            this.updateValidatorStats();
-          },
-          item.network === "gnosis" ? 8000 : 12000
-        );
+        this.intervalId = setInterval(() => {
+          this.updateValidatorStats();
+          this.countDown = setInterval(() => {
+            this.timer--;
+            if (this.timer == -1) {
+              clearInterval(this.countDown);
+              this.timer = 5;
+            }
+          }, 1000);
+        }, 6000);
+
         this.selectedValidator = item;
         await this.updateValidatorStats();
       }
@@ -167,7 +205,7 @@ export default {
 
 .indexParent {
   grid-column: 1/7;
-  grid-row: 2/3;
+  grid-row: 5/6;
   width: 100%;
   height: 100%;
 }
@@ -267,7 +305,7 @@ export default {
 
 .tabBarParent {
   grid-column: 1/7;
-  grid-row: 8/9;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   display: flex;
@@ -290,8 +328,8 @@ export default {
 }
 .componentParent {
   grid-column: 1/7;
-  grid-row-start: 2;
-  grid-row-end: 8;
+  grid-row-start: 6;
+  grid-row-end: 11;
   width: 100%;
   height: 95%;
   display: flex;
@@ -299,7 +337,7 @@ export default {
   align-items: flex-start;
 }
 .componentParent .dynamicComponent {
-  width: 70%;
+  width: 75%;
   height: 100%;
   padding: 0 5px;
   display: flex;
@@ -315,17 +353,28 @@ export default {
   align-items: flex-start;
 }
 .componentParent .predicitionIcon {
-  width: 30%;
+  width: 25%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 5px 0;
+  position: relative;
 }
 .componentParent .predicitionIcon img {
-  width: 100%;
+  position: absolute;
+  top: 0;
+  width: 63px;
+  z-index: 0;
 }
-
+.stateBox .countDown {
+  position: absolute;
+  bottom: 3px;
+  right: 25px;
+  font-size: 25px;
+  font-weight: 700;
+  color: gold;
+}
 .blockBox .cubeIcon span {
   color: #cdcdcd;
   font-size: 0.5rem;

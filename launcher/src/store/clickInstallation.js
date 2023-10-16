@@ -88,11 +88,12 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/click-installation/STEREUM_on_ARM.png",
           includedPlugins: [],
         },
+
         {
           id: 5,
-          name: "rocketpool",
+          name: "archive",
           defaultPath: "/opt/stereum",
-          icon: "/img/icon/click-installation/rocketpool.png",
+          icon: "/img/icon/click-installation/archive.png",
           includedPlugins: [],
         },
       ],
@@ -244,6 +245,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://checkpoint.gnosischain.com/",
         },
       ],
+      holesky: [],
     };
   },
   actions: {},

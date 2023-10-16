@@ -1,7 +1,7 @@
 <template>
   <div class="dropDown_parent">
     <div class="dropDown_box">
-      <div class="dropDown" :class="{ disabled: currentNetwork.network === 'gnosis' }" @click="toggleDropDown">
+      <div class="dropDown" @click="toggleDropDown">
         <div v-if="!selectedValidator.key" class="options">Choose a validator</div>
         <div v-else class="options">
           {{ selectedValidator.key }}
@@ -12,7 +12,12 @@
         </div>
       </div>
       <div v-if="dropDownIsOpen" class="valueBox" @mouseleave="dropDownIsOpen = false">
-        <div v-for="(key, index) in keys" :key="index" class="options_value" @click="chooseValidator(key)">
+        <div
+          v-for="(key, index) in [...new Map(keys.map((item) => [item['key'], item])).values()]"
+          :key="index"
+          class="options_value"
+          @click="chooseValidator(key)"
+        >
           <span>{{ `${key.key.substring(0, 10)}...${key.key.substring(key.key.length - 15)}` }}</span>
         </div>
       </div>
@@ -58,7 +63,7 @@ export default {
 <style scoped>
 .dropDown_parent {
   grid-column: 1/7;
-  grid-row: 1/2;
+  grid-row: 4/5;
   display: flex;
   justify-content: space-between;
   align-items: center;

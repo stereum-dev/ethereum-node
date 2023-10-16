@@ -13,6 +13,8 @@
         <div
           class="confirm-btn bg-teal-600 border border-gray-400 hover:border-gray-500 shadow-md shadow-[#1b1b1b] hover:bg-teal-800 active:scale-95 transition duration-150 px-2 py-1"
           @click="confirm"
+          @mouseenter="cursorLocation = `${chngAppr}`"
+          @mouseleave="cursorLocation = ''"
         >
           <span>{{ $t("settingPanel.confirm") }}</span>
         </div>
@@ -41,6 +43,8 @@
                 :is-language="item.isLanguage"
                 :link-value="item.linkValue"
                 @lang-action="langActiveBox"
+                @mouseenter="cursorLocation = item.isLanguage ? `${langInfo}` : `${creditInfo}`"
+                @mouseleave="cursorLocation = ''"
               ></setting-items>
             </div>
           </div>
@@ -48,7 +52,11 @@
             <span>NODE</span>
           </div>
           <hr />
-          <div class="setting-items export-row">
+          <div
+            class="setting-items export-row"
+            @mouseenter="cursorLocation = `${exportInfo}`"
+            @mouseleave="cursorLocation = ''"
+          >
             <div class="setting-items_title">
               <span>{{ $t("settingPanel.sxConf") }}</span>
             </div>
@@ -66,15 +74,19 @@
                 :btn-value="launcherVersion"
                 is-color="alpha"
                 item-type="update"
-              ></setting-items>
+              />
               <setting-items
                 id="version"
                 :title="nodeVersion"
                 :btn-value="stereumUpdate.current"
                 is-color="alpha"
                 item-type="update"
-              ></setting-items>
-              <div class="setting-items">
+              />
+              <div
+                class="setting-items"
+                @mouseenter="cursorLocation = `${stereumUpd}`"
+                @mouseleave="cursorLocation = ''"
+              >
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>
                 </div>
@@ -101,6 +113,7 @@ import LanguagePanel from "./LanguagePanel.vue";
 import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
 import { mapWritableState, mapState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { toRaw } from "vue";
@@ -108,6 +121,11 @@ export default {
   components: { SettingItems, LanguagePanel },
   data() {
     return {
+      creditInfo: this.$t("settingPanel.creditInfo"),
+      langInfo: this.$t("settingPanel.langInfo"),
+      exportInfo: this.$t("settingPanel.exportInfo"),
+      stereumUpd: this.$t("settingPanel.stereumUpd"),
+      chngAppr: this.$t("settingPanel.chngAppr"),
       stereumConfig: [],
       stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",
@@ -156,6 +174,9 @@ export default {
   },
 
   computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
     ...mapState(useServices, {
       launcherVersion: "launcherVersion",
     }),

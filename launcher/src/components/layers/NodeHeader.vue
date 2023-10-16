@@ -1,18 +1,30 @@
 <template>
   <div class="parent">
-    <div class="logo-box">
-      <img src="/img/icon/LOGO.png" class="main-header__brand" />
-    </div>
+    <SecurityButton />
+    <ServerAccessManagement v-if="serverAccessManagement" />
     <header class="main-header">
       <main-navbar></main-navbar>
     </header>
   </div>
 </template>
 <script>
+import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
+import SecurityButton from "../UI/node-header/SecurityButton.vue";
+import { mapState } from "pinia";
+import { useFooter } from "@/store/theFooter";
+import { useNodeHeader } from "@/store/nodeHeader";
 
 export default {
-  components: { MainNavbar },
+  components: { MainNavbar, SecurityButton, ServerAccessManagement },
+  computed: {
+    ...mapState(useFooter, {
+      stereumStatus: "stereumStatus",
+    }),
+    ...mapState(useNodeHeader, {
+      serverAccessManagement: "serverAccessManagement",
+    }),
+  },
 };
 </script>
 <style scoped>

@@ -7,15 +7,17 @@
       </label>
     </div>
     <div class="btn-box">
-      <button :class="{ 'btn-disabled': isBtnDisabled }" :disabled="isBtnDisabled" @click="insertKey($data)">
+      <button
+        :class="{ 'btn-disabled': isBtnDisabled }"
+        :disabled="isBtnDisabled"
+        @click="$emit('insertKey', enteredSecretkey)"
+      >
         {{ $t("secretKeyReg.apply") }}
       </button>
     </div>
   </div>
 </template>
 <script>
-import ControlService from "@/store/ControlService";
-import { toRaw } from "vue";
 export default {
   props: {
     ssvService: {
@@ -40,18 +42,6 @@ export default {
         this.isBtnDisabled = true;
       } else {
         this.$router.push("/node");
-      }
-    },
-    insertKey: async function (data) {
-      const result = await ControlService.insertSSVNetworkKeys({
-        service: toRaw(this.ssvService),
-        pk: data.enteredSecretkey,
-      });
-      if (result && result.stack && result.message) {
-        console.log("importing Keys failed");
-        //implement error msg here
-      } else {
-        this.$emit("loginSecretkey");
       }
     },
   },

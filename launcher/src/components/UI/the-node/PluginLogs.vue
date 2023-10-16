@@ -72,7 +72,7 @@
           <img v-if="!searchValue" src="/img/icon/arrows/search.png" alt="icon" />
         </div>
         <div class="export-log" data-tooltip="Export the log" @click="logExport">
-          <img src="../../../../public/img/icon/manage-node-icons/log_export.png" alt="" />
+          <img src="/img/icon/manage-node-icons/log_export.png" alt="" />
         </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>
@@ -252,7 +252,7 @@ export default {
 }
 .pluginLog-parent {
   width: 100%;
-  height: 91%;
+  height: 86.5%;
   background-color: #32564f;
   background-color: #242529;
   border-radius: 10px;
@@ -261,7 +261,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 0;
+  bottom: 4.8%;
   left: 0;
   z-index: 100;
 }

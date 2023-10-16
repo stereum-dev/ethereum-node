@@ -1,6 +1,11 @@
 <template>
   <div class="task-parent">
-    <div class="task-icon" @click="taskModalHandler">
+    <div
+      class="task-icon"
+      @click="taskModalHandler"
+      @mouseenter="cursorLocation = taskMng"
+      @mouseleave="cursorLocation = ''"
+    >
       <img :src="mainTaskIcon" alt="icon" />
       <span class="notification">{{ displayingTasks.length }}</span>
     </div>
@@ -30,13 +35,13 @@
               <span>{{ item.name }}</span>
               <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <sub-tasks v-if="item.showDropDown" :sub-tasks="item.subTasks"></sub-tasks>
+            <sub-tasks v-if="item.showDropDown"></sub-tasks>
           </div>
         </div>
       </div>
       <div class="list-cleaner">
         <span class="footer-text">{{ $t("taskManager.clickDisplay") }}</span>
-        <img src="../../../../public/img/icon/task-manager-icons/remove-tasks.png" alt="" @click="listCleanerHandler" />
+        <img src="/img/icon/task-manager-icons/remove-tasks.png" alt="" @click="listCleanerHandler" />
       </div>
     </div>
   </div>
@@ -45,12 +50,14 @@
 import SubTasks from "./SubTasks.vue";
 import DropTasks from "./DropTasks.vue";
 import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
 import { useTaskManager } from "@/store/taskManager";
 import ControlService from "@/store/ControlService";
 export default {
   components: { SubTasks, DropTasks },
   data() {
     return {
+      intervalId: null,
       isTaskModalActive: false,
       showDropDownList: false,
       isTaskFailed: false,
@@ -60,6 +67,7 @@ export default {
       Tasks: [],
       displayingTasks: [],
       checkNewTasks: [],
+      taskMng: this.$t("taskMang.taskMng"),
     };
   },
   computed: {
@@ -67,6 +75,11 @@ export default {
       playbookTasks: "playbookTasks",
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
+      UpdatedSubtasks: "UpdatedSubtasks",
+      stopIntervalForModal: "stopIntervalForModal",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     mainTaskIcon() {
       if (this.Tasks.some((task) => task.status === null)) {
@@ -81,11 +94,31 @@ export default {
       return this.taskManagerIcons.progressIcon;
     },
   },
+  watch: {
+    showDropDownList(newValue) {
+      if (newValue == true && !this.stopIntervalForModal) {
+        this.intervalId = setInterval(() => {
+          this.getTasks();
+          this.UpdatedSubtasks = this.displayingTasks[0].subTasks;
+        }, 1000);
+      } else {
+        clearInterval(this.intervalId);
+      }
+    },
+    stopIntervalForModal(newValue) {
+      if (newValue === true) {
+        clearInterval(this.intervalId);
+      } else if (this.showDropDownList === true) {
+        this.intervalId = setInterval(() => {
+          this.getTasks();
+          this.UpdatedSubtasks = this.displayingTasks[0].subTasks;
+        }, 1000);
+      }
+    },
+  },
+
   created() {
     this.checkNewTasks = this.displayingTasks;
-    if (this.$route.name === "TheNode") {
-      this.displayTasksTemprory();
-    }
   },
 
   mounted() {
@@ -112,15 +145,11 @@ export default {
       if (this.isTaskModalActive) {
         this.checkNewTasks = this.displayingTasks;
         this.isTaskModalActive = false;
+        this.showDropDownList = false;
+        clearInterval(this.intervalId);
       } else {
         this.isTaskModalActive = true;
       }
-    },
-    displayTasksTemprory() {
-      this.isTaskModalActive = true;
-      setTimeout(() => {
-        this.isTaskModalActive = false;
-      }, 10000);
     },
 
     openDropDown(item) {

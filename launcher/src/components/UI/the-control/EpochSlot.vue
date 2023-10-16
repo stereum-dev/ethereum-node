@@ -1,22 +1,88 @@
 <template>
   <div class="epockSlot_parent">
-    <commingSoon />
-    <div class="epoch-box">{{ epoch }}</div>
-    <div class="slot-box">{{ slot }}</div>
+    <NoData v-if="noDataFlag" />
+    <div v-else-if="flag" class="wrapper">
+      {{ beaconControler }}
+    </div>
+
+    <div v-else class="wrapper">
+      <div class="epoch-box">
+        <div class="box_value">{{ currentResult.currentEpoch }}</div>
+        <div class="box_title">Current EPOCH</div>
+      </div>
+      <div class="slot-box">
+        <div class="box_value">{{ currentResult.currentSlot }}</div>
+        <div class="box_title">Current SLOT</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import NoData from "./NoData.vue";
+import { mapState, mapWritableState } from "pinia";
+import { useControlStore } from "@/store/theControl";
+import { useNodeManage } from "@/store/nodeManage";
+
 export default {
+  components: {
+    NoData,
+  },
   data() {
     return {
-      //this is dummy and these two data has to be number
-      epoch: "{CURRENT EPOCH}",
-      slot: "{CURRENT SLOT}",
+      message: false,
     };
+  },
+  computed: {
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
+    ...mapWritableState(useControlStore, {
+      currentSlotData: "currentSlotData",
+      currentEpochData: "currentEpochData",
+      currentResult: "currentResult",
+      balancestatus: "balancestatus",
+      noDataFlag: "noDataFlag",
+    }),
+
+    beaconControler() {
+      if (this.currentResult === undefined) {
+        return "Checking Beacon Status...";
+      } else if (this.currentResult.beaconStatus === undefined) {
+        return "Checking Beacon Status...";
+      } else if (this.currentResult.beaconStatus !== 0) {
+        return "No Running Beacon Node!";
+      }
+      return "Loading...";
+    },
+    flag() {
+      if (this.currentResult === undefined) {
+        return true;
+      } else if (this.currentResult.beaconStatus === undefined) {
+        return true;
+      } else if (this.currentResult.beaconStatus !== 0) {
+        return true;
+      } else if (
+        this.currentResult === undefined ||
+        this.noDataFlag == true ||
+        this.currentResult.beaconStatus === undefined ||
+        this.currentResult.beaconStatus !== 0
+      ) {
+        return false;
+      }
+
+      return false;
+    },
   },
 };
 </script>
 <style scoped>
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
 .epockSlot_parent {
   display: flex;
   width: 99%;
@@ -43,11 +109,22 @@ export default {
   height: 90%;
   font-size: 70%;
   font-weight: 600;
+  flex-direction: column;
 }
-.epoch-box {
-  border-right: 2px solid #eee;
+.box_title,
+.box_value {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.slot-box {
-  border-left: 2px solid #eee;
+.box_title {
+  font-size: 80%;
+  font-weight: 600;
+}
+.box_value {
+  font-size: 120%;
+  font-weight: 700;
 }
 </style>

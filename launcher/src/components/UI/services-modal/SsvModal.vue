@@ -38,7 +38,6 @@
         <div v-else class="content-box">
           <frontpage-ssv
             v-if="pubkeyModalActive"
-            :pubkey="pubkey"
             @open-pubkey="operatorModalHandler"
             @open-secretkey="registerSecretkeyHandler"
           ></frontpage-ssv>
@@ -51,9 +50,9 @@
           <secretkey-register
             v-if="registerSecretkeyActive"
             :ssv-service="ssvService"
-            @login-secretkey="loginWithSecretkeyHandler"
+            @insert-key="insertSecretkeyHandler"
           ></secretkey-register>
-          <ssv-dashboard v-if="ssvDashboardActive" :pubkey="pubkey"></ssv-dashboard>
+          <ssv-dashboard v-if="ssvDashboardActive" :operator-data="operatorData" :pubkey="pubkey"></ssv-dashboard>
         </div>
       </div>
     </div>
@@ -68,6 +67,7 @@ import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import SecretkeyRegister from "./SecretkeyRegister.vue";
 import axios from "axios";
+import { toRaw } from "vue";
 export default {
   components: {
     FrontpageSsv,
@@ -77,6 +77,7 @@ export default {
   },
   data() {
     return {
+      operatorData: null,
       ssvService: null,
       isSsvAvailable: false,
       pubkeyModalActive: true,
@@ -114,10 +115,14 @@ export default {
       let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
       this.secretkey = ssvConfig.ssv_sk;
       this.pubkey = ssvConfig.ssv_pk;
-      let pubkeyHash = await ControlService.getOperatorPageURL(this.pubkey);
+
       try {
-        let response = await axios.get("https://api.ssv.network/api/v2/prater/operators/" + pubkeyHash);
-        if (response.status == 200) {
+        let network = ssvConfig.network === "goerli" ? "prater" : ssvConfig.network;
+        let response = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/public_key/` + this.pubkey);
+        if (!response.data.data)
+          response = await axios.get(`https://api.ssv.network/api/v3/${network}/operators/public_key/` + this.pubkey);
+        if (response.data.data) {
+          this.operatorData = response.data.data;
           this.ssvDashboardActive = true;
           this.pubkeyModalActive = false;
           this.dataLoading = false;
@@ -149,12 +154,22 @@ export default {
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = true;
     },
-    loginWithSecretkeyHandler: async function () {
-      await this.getKeys();
-      this.registerModalActive = false;
-      this.pubkeyModalActive = false;
-      this.registerSecretkeyActive = false;
-      this.ssvDashboardActive = true;
+    async insertSecretkeyHandler(data) {
+      this.dataLoading = true;
+      const result = await ControlService.insertSSVNetworkKeys({
+        service: toRaw(this.ssvService),
+        pk: data,
+      });
+      if (result && result.message && result.stack) {
+        console.log("Failed Inserting Key", result.message);
+      } else {
+        await this.getKeys();
+        this.registerModalActive = false;
+        this.pubkeyModalActive = false;
+        this.registerSecretkeyActive = false;
+        this.ssvDashboardActive = true;
+      }
+      this.dataLoading = false;
     },
     openBrowser() {
       let url = "https://ssv.network/";

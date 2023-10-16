@@ -7,6 +7,12 @@ import net from "net";
 import YAML from "yaml";
 const log = require("electron-log");
 const electron = require("electron");
+const Evilscan = require("evilscan");
+const os = require("os");
+
+async function Sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
@@ -20,6 +26,7 @@ export class NodeConnection {
     this.sshService = new SSHService();
     this.nodeConnectionParams = nodeConnectionParams;
     this.os = null;
+    this.osv = null;
   }
 
   async establish(taskManager) {
@@ -33,16 +40,27 @@ export class NodeConnection {
    */
   async findOS() {
     // Run the command without sudo wrapper
+    let osName = null;
+    let osVersion = null;
     const uname = await this.sshService.exec("cat /etc/*-release", null, false);
     log.debug("result uname: ", uname);
-    if (uname.rc == 0) {
-      if (uname.stdout && uname.stdout.toLowerCase().search("centos") >= 0) {
-        this.os = nodeOS.centos;
-      } else if (uname.stdout && uname.stdout.toLowerCase().search("ubuntu") >= 0) {
-        log.debug("setting ubuntu");
-        this.os = nodeOS.ubuntu;
+    if (uname.rc == 0 && uname.stdout) {
+      const regex = /VERSION_ID="([^"]+)"/;
+      const match = uname.stdout.match(regex);
+      const versionId = match ? match[1] : null;
+      if (uname.stdout.toLowerCase().search("centos") >= 0) {
+        log.debug(`setting centos, version ${versionId}`);
+        osName = nodeOS.centos;
+        osVersion = versionId;
+      } else if (uname.stdout.toLowerCase().search("ubuntu") >= 0) {
+        log.debug(`setting ubuntu, version ${versionId}`);
+        osName = nodeOS.ubuntu;
+        osVersion = versionId;
       }
     }
+    this.os = osName;
+    this.osv = osVersion;
+    return { name: osName, version: osVersion };
   }
 
   /**
@@ -318,17 +336,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -494,6 +512,72 @@ export class NodeConnection {
     return;
   }
 
+  async readPrometheusConfig(serviceID) {
+    let prometheusConfig;
+    try {
+      const service = await this.readServiceConfiguration(serviceID);
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/etc/prometheus")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+
+      prometheusConfig = await this.sshService.exec(`cat ${configPath}/prometheus.yml`);
+    } catch (err) {
+      log.error("Can't read Prometheus config " + serviceID, err);
+      throw new Error("Can't read Prometheus config " + serviceID + ": " + err);
+    }
+
+    if (SSHService.checkExecError(prometheusConfig)) {
+      throw new Error(
+        "Failed reading Prometheus config " + serviceID + ": " + SSHService.extractExecError(prometheusConfig)
+      );
+    }
+
+    return prometheusConfig.stdout;
+  }
+
+  async writePrometheusConfig(serviceID, config) {
+    let configStatus;
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "write Prometheus config", otherRunRef: ref });
+    const service = await this.readServiceConfiguration(serviceID);
+    try {
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/etc/prometheus")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+      configStatus = await this.sshService.exec(
+        "echo -e " + StringUtils.escapeStringForShell(config.trim()) + ` > ${configPath}/prometheus.yml`
+      );
+    } catch (err) {
+      this.taskManager.otherSubTasks.push({
+        name: "write Prometheus config yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      log.error("Can't write Prometheus config", err);
+      throw new Error("Can't write Prometheus config: " + err);
+    }
+
+    if (SSHService.checkExecError(configStatus)) {
+      this.taskManager.otherSubTasks.push({
+        name: "write Prometheus config yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("Can't write Prometheus config: " + SSHService.extractExecError(configStatus));
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "write Prometheus config yaml",
+      otherRunRef: ref,
+      status: true,
+    });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    return;
+  }
+
   /**
    * write a specific service YAML
    *
@@ -504,18 +588,22 @@ export class NodeConnection {
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write yaml", otherRunRef: ref });
     try {
+      if (!this.checkServiceYamlFormat(service.data.trim())) {
+        throw new Error("Config is not in the right format!");
+      }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + service.service + " yaml",
         otherRunRef: ref,
         status: false,
+        data: err,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write service yaml of " + service.id, err);
@@ -554,10 +642,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -579,9 +667,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -1015,6 +1103,8 @@ export class NodeConnection {
     this.sshService.disconnect();
     this.settings = undefined;
     await this.closeTunnels();
+    this.os = null;
+    this.osv = null;
   }
 
   async restartServer() {
@@ -1022,11 +1112,11 @@ export class NodeConnection {
     if (status.rc == 0) {
       const ref = StringUtils.createRandomString();
       this.taskManager.otherTasksHandler(ref, "Restarting Server");
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for the TaskManager to pick up the task
       await this.sshService.exec("/sbin/shutdown -r now");
       this.taskManager.otherTasksHandler(ref, "trigger restart", true);
       await this.sshService.disconnect();
-
+      await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for the disconnect to be fully done
       const retry = { connected: false, counter: 0, maxTries: 300 };
       log.info("Connecting via SSH");
 
@@ -1074,5 +1164,74 @@ export class NodeConnection {
     } catch (error) {
       log.error("Error getting CPU Architecture", error);
     }
+  }
+
+  checkServiceYamlFormat(string) {
+    try {
+      const properties = [
+        "id",
+        "service",
+        "configVersion",
+        "command",
+        "entrypoint",
+        "env",
+        "image",
+        "ports",
+        "volumes",
+        "user",
+        "network",
+        "dependencies",
+      ];
+      const service = YAML.parse(string);
+      for (const propertiesKey of properties) {
+        if (!service[propertiesKey]) {
+          throw new Error(service[propertiesKey] + " property is missing, empty or invalid");
+        }
+      }
+      return true;
+    } catch (err) {
+      log.error(err);
+      return false;
+    }
+  }
+
+  async IpScanLan() {
+    let localIpAddresses = "";
+    const networkInterfaces = os.networkInterfaces();
+    for (const interfaceName in networkInterfaces) {
+      const interfaces = networkInterfaces[interfaceName];
+      for (const iface of interfaces) {
+        if (iface.family === "IPv4" && !iface.internal && iface.address.includes("192.168.")) {
+          localIpAddresses = iface.address.substring(0, iface.address.lastIndexOf(".") + 1);
+        }
+      }
+    }
+
+    let avadoIPs = [];
+    let target = [`${localIpAddresses}0/24`];
+
+    for (let i = 0; i < target.length; i++) {
+      const options = {
+        target: target[i],
+        port: "54321",
+        status: "O", // Timeout, Refused, Open, Unreachable
+        banner: true,
+      };
+      const evilscan = new Evilscan(options);
+      evilscan.on("result", (data) => {
+        if (data.status.includes("open")) {
+          avadoIPs.push({ ip: data.ip });
+        }
+      });
+      evilscan.on("error", (err) => {
+        throw new Error(err.toString());
+      });
+      evilscan.on("done", () => {
+        console.log("DONE!");
+      });
+      evilscan.run();
+    }
+    await Sleep(5 * 1000);
+    return avadoIPs;
   }
 }

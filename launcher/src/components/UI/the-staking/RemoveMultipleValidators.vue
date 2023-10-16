@@ -22,7 +22,7 @@
               />
             </div>
           </div> -->
-        <div class="pickSlashing">
+        <div v-if="keys.some((k) => k.validatorID === service.config.serviceID && !k.isRemote)" class="pickSlashing">
           <label for="no" class="inline-flex items-center">
             <input id="no" v-model="picked" class="form-radio" type="radio" value="no" />
             NO
@@ -47,8 +47,12 @@
 <script>
 export default {
   props: {
-    item: {
+    service: {
       type: Object,
+      required: true,
+    },
+    keys: {
+      type: Array,
       required: true,
     },
   },

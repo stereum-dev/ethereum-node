@@ -3,7 +3,7 @@
     <div class="subTask-table">
       <div class="subTask-content">
         <div
-          v-for="(item, index) in modifiedSubTasks"
+          v-for="(item, index) in UpdatedSubtasks"
           :key="index"
           class="subTask-row"
           :class="{
@@ -22,7 +22,7 @@
             <span v-if="displayTaskResult" class="itemAction">{{ item.action }}</span>
             <span v-else class="itemName">{{ item.name }}</span>
             <div class="loading-box">
-              <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
+              <img src="/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
             <div v-if="item.showTooltip" class="success-tooltip">
               <span>{{ item.action }}</span>
@@ -32,7 +32,7 @@
             <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
             <span v-else class="noError">{{ item.name }}</span>
             <div class="error-icon">
-              <img src="../../../../public/img/icon/task-manager-icons/cancel.png" alt="" />
+              <img src="/img/icon/task-manager-icons/cancel.png" alt="" />
               <div v-if="item.showTooltip" class="failed-tooltip">
                 <span>{{ item.name }}</span>
               </div>
@@ -42,7 +42,7 @@
             <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
             <span v-else class="noError">{{ item.name }}</span>
             <div class="loading-box">
-              <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
+              <img src="/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
             <div v-if="item.showTooltip" class="skipped-tooltip">
               <span>{{ item.name }}</span>
@@ -55,6 +55,8 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useTaskManager } from "@/store/taskManager";
 import ErrorTerminal from "./ErrorTerminal.vue";
 export default {
   components: { ErrorTerminal },
@@ -67,12 +69,18 @@ export default {
   data() {
     return {
       displayTaskResult: false,
-      modifiedSubTasks: this.subTasks,
+      // modifiedSubTasks: this.subTasks,
       terminalModal: false,
     };
   },
+  computed: {
+    ...mapWritableState(useTaskManager, {
+      UpdatedSubtasks: "UpdatedSubtasks",
+      stopIntervalForModal: "stopIntervalForModal",
+    }),
+  },
   created() {
-    this.modifiedSubTasks = this.modifiedSubTasks.map((item) => {
+    this.UpdatedSubtasks = this.UpdatedSubtasks.map((item) => {
       return {
         showErrorterminal: false,
         ...item,
@@ -80,13 +88,18 @@ export default {
     });
   },
   mounted() {
-    const el = this.$refs.task;
-    if (el) {
-      //scroll to bottom when opening subtasks
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    this.scrollToTask();
   },
   methods: {
+    scrollToTask() {
+      const el = this.$refs.task;
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    },
+
     copyErrorText(item) {
       let errorToCopy = item.data;
       navigator.clipboard
@@ -99,19 +112,20 @@ export default {
         });
     },
     tooltipShowHandler(el) {
-      this.modifiedSubTasks.filter((item) => {
+      this.UpdatedSubtasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = true;
       });
     },
     tooltipHideHandler(el) {
-      this.modifiedSubTasks.filter((item) => {
+      this.UpdatedSubtasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = false;
       });
     },
     openTerminalHandler(el) {
-      this.modifiedSubTasks.forEach(() => {
+      this.stopIntervalForModal = true;
+      this.UpdatedSubtasks.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
         }
@@ -119,7 +133,7 @@ export default {
           el.showErrorterminal = false;
         }
       });
-      this.modifiedSubTasks.filter((item) => {
+      this.UpdatedSubtasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showErrorterminal = true;
       });
@@ -127,6 +141,7 @@ export default {
     hideTerminalHandler(el) {
       el.showTooltip = false;
       el.showErrorterminal = false;
+      this.stopIntervalForModal = false;
     },
   },
 };
@@ -143,6 +158,7 @@ export default {
 .subTask-table {
   width: 100%;
   height: max-content;
+  overflow: auto;
 }
 
 .subTask-content {

@@ -3,26 +3,38 @@
     <div class="staking-box">
       <div class="staking-ico">
         <div class="staking-ico_container">
-          <img src="../../../../public/img/icon/control/key-eth.svg" alt="Key-icon" />
+          <img src="/img/icon/control/key-eth.svg" alt="Key-icon" />
         </div>
         <span>STAKING</span>
       </div>
+
       <div class="staking-container">
-        <div class="side-top">
-          <div class="top-value">
-            <span>{{ formattedBalance }}</span>
+        <NoData v-if="noDataFlag" />
+        <div v-else class="wrapper">
+          <div class="side-top">
+            <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
+              <span>{{ formattedBalance }}</span>
+            </div>
+            <div
+              class="top-icon"
+              @mouseenter="cursorLocation = `${currentNetwork.name}`"
+              @mouseleave="cursorLocation = ''"
+            >
+              <img :src="selectedCurrency" alt="coin-icon" />
+            </div>
           </div>
-          <div class="top-icon">
-            <img :src="selectedCurrency" alt="coin-icon" />
-          </div>
-        </div>
-        <div class="side-bottom">
-          <div class="number-of-validators">
-            <span>{{ formattedValidatorNo }}</span>
-          </div>
-          <div class="number-of-validators_title">
-            <span>IMPORTED</span>
-            <span>VALIDATOR(s)</span>
+          <div class="side-bottom">
+            <div
+              class="number-of-validators"
+              @mouseenter="cursorLocation = `${enteredKeys}`"
+              @mouseleave="cursorLocation = ''"
+            >
+              <span>{{ formattedValidatorNo }}</span>
+            </div>
+            <div class="number-of-validators_title">
+              <span>IMPORTED</span>
+              <span>VALIDATOR(s)</span>
+            </div>
           </div>
         </div>
       </div>
@@ -30,29 +42,60 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
-import { useStakingStore } from "../../../store/theStaking";
+import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
+import { mapWritableState, mapState } from "pinia";
+import { useFooter } from "@/store/theFooter";
+import { useControlStore } from "@/store/theControl";
+import NoData from "./NoData.vue";
 export default {
+  components: {
+    NoData,
+  },
   data() {
     return {
       currencyIcon: "",
       selectedCurrency: "",
+      enteredKeys: this.$t("controlPage.enteredKeys"),
+      ttlBal: this.$t("controlPage.ttlBal"),
     };
   },
+
   computed: {
     ...mapState(useStakingStore, {
       totalBalance: "totalBalance",
       keys: "keys",
     }),
+    ...mapWritableState(useControlStore, {
+      noDataFlag: "noDataFlag",
+    }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
+    }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
     },
     formattedValidatorNo() {
       return this.keys.length.toString().padStart(3, "0");
+    },
+
+    flagNoData() {
+      if (
+        this.currentResult !== undefined &&
+        this.currentResult.beaconStatus !== 0 &&
+        this.currentResult.beaconStatus === undefined
+      ) {
+        return true;
+      }
+      return false;
+    },
+  },
+  watch: {
+    currentResult() {
+      console.log("currentResult", this.currentResult);
     },
   },
   mounted() {
@@ -68,10 +111,13 @@ export default {
           this.selectedCurrency = "/img/icon/control/goETH_Currency_Symbol.png";
           break;
         case 3:
-          this.selectedCurrency = "/img/icon/control/GNO_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
           break;
         case 4:
-          this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control/gno_currency_symbol.png";
+          break;
+        case 5:
+          this.selectedCurrency = "/img/icon/control/ho_currency_symbol.png";
           break;
         default:
           break;
@@ -88,6 +134,7 @@ export default {
   align-items: center;
   height: 100%;
   color: #c1c1c1;
+  cursor: default;
 }
 .staking-box {
   width: 100%;
@@ -126,11 +173,20 @@ export default {
   height: 90%;
 }
 .staking-container {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 70%;
-  height: 100%;
   flex-direction: column;
 }
 .side-top {

@@ -12,13 +12,13 @@
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- plugin docs row -->
-        <div v-if="!isExpertModeActive && !ssvExpertModeActive" class="docBox">
+        <div v-if="!isExpertModeActive && !ssvExpertModeActive && !prometheusExpertModeActive" class="docBox">
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/doc.png" alt="icon" />
           <span class="docTitle">SERVICE DOCS</span>
           <span class="openBtn" @click="openDocs(item.docsUrl)">open</span>
         </div>
         <!-- expert mode row -->
-        <div v-if="!ssvExpertModeActive" class="dataTitleBox" @click="openExpertMode">
+        <div v-if="!ssvExpertModeActive && !prometheusExpertModeActive" class="dataTitleBox" @click="openExpertMode">
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
           <span>Expert Mode</span>
           <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
@@ -32,6 +32,16 @@
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
           <span>SSV Configuration</span>
           <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+        </div>
+        <div
+          v-if="item.service === 'PrometheusService' && !isExpertModeActive"
+          class="dataTitleBox"
+          @click="openPrometheusExpertMode"
+        >
+          <span></span>
+          <span>Prometheus Configuration</span>
+          <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
 
@@ -49,7 +59,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
           :key="index"
           class="selectBox"
-          :class="{ unvisible: isExpertModeActive }"
+          :class="{ unvisible: isExpertModeActive || prometheusExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
@@ -90,7 +100,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
           class="toggleTextBox"
-          :class="{ unvisible: isExpertModeActive }"
+          :class="{ unvisible: isExpertModeActive || prometheusExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
@@ -112,13 +122,14 @@
           </Transition>
           <input
             v-model="option.changeValue"
-            class="toggleTextInput"
             type="text"
-            :class="{
-              disabled:
-                !option.buttonState &&
-                (option.changeValue === null || option.changeValue === '0x0000000000000000000000000000000000000000'),
-            }"
+            :class="[
+              'toggleTextInput',
+              {
+                disabled: !option.buttonState,
+              },
+              { emptyIP: option.title == 'External TCP/UDP port' && isTcpUdpPortEmpty },
+            ]"
             @input="somethingIsChanged(option)"
           />
         </div>
@@ -133,7 +144,9 @@
         -->
 
         <div
-          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'action' && option.action === 'pruning'
+          )"
           :key="index"
           class="actionBox"
           :class="{ unvisible: isExpertModeActive }"
@@ -152,6 +165,18 @@
               <span class="slider round"></span>
             </label>
           </div>
+        </div>
+        <div
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'action' && option.action === 'removeLockfiles'
+          )"
+          :key="index"
+          class="actionBox"
+          :class="{ unvisible: isExpertModeActive }"
+        >
+          <img :src="option.icon" alt="icon" />
+          <span class="actionBoxTitle">{{ option.title }}</span>
+          <span class="actionBtn" @click="executeAction(option.action, item)">Execute</span>
         </div>
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
@@ -183,6 +208,9 @@
         <div v-if="ssvExpertModeActive" class="expertMode">
           <textarea v-model="item.ssvConfig" class="editContent" @input="somethingIsChanged"></textarea>
         </div>
+        <div v-if="prometheusExpertModeActive" class="expertMode">
+          <textarea v-model="item.prometheusConfig" class="editContent" @input="somethingIsChanged"></textarea>
+        </div>
       </div>
       <div class="btn-box">
         <!-- service version -->
@@ -192,12 +220,28 @@
         <!-- close text -->
         <span class="exit-btn">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
-        <div v-if="!nothingsChanged" class="confirmBtn" @click="confirmExpertChanges(item)">
-          <span>Confirm</span>
+        <div
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
+          class="confirmBtn"
+          @click="confirmExpertChanges(item)"
+        >
+          <span>Apply</span>
         </div>
         <div v-else class="disabledBtn">
-          <span>Confirm</span>
+          <span>Apply</span>
         </div>
+        <!-- restart button box -->
+        <div
+          v-if="!nothingsChanged && !isTcpUdpPortEmpty && !feeRecepient"
+          class="confirmRestartBtn"
+          @click="confirmRestartChanges(item)"
+        >
+          <span>Apply & Restart</span>
+        </div>
+        <div v-else class="disabledRestartBtn">
+          <span>Apply & Restart</span>
+        </div>
+        <!-- close box -->
       </div>
     </div>
   </div>
@@ -223,6 +267,8 @@ export default {
       enterPortIsEnabled: false,
       isExpertModeActive: false,
       ssvExpertModeActive: false,
+      prometheusExpertModeActive: false,
+      prometheusConfig: null,
       ramUsage: null,
       isRamUsageActive: false,
       bindingIsOn: false,
@@ -232,6 +278,7 @@ export default {
       editableData: null,
       changed: false,
       nothingsChanged: true,
+      isTcpUdpPortEmpty: true,
     };
   },
   computed: {
@@ -239,14 +286,29 @@ export default {
       currentNetwork: "currentNetwork",
     }),
   },
+  watch: {
+    "item.expertOptions": {
+      handler(newSettings) {
+        const externalTcpUdpPortSetting = newSettings.find((setting) => setting.title === "External TCP/UDP port");
+        if (externalTcpUdpPortSetting) {
+          this.isTcpUdpPortEmpty = externalTcpUdpPortSetting.changeValue.trim() === "";
+        } else {
+          this.isTcpUdpPortEmpty = false;
+        }
+
+        const feeRecepient = newSettings.find((setting) => setting.title === "Default Fee Recipient");
+        if (feeRecepient) {
+          this.feeRecepient = feeRecepient.changeValue.trim() === "";
+        } else {
+          this.feeRecepient = false;
+        }
+      },
+      deep: true,
+    },
+  },
   mounted() {
     this.readService();
   },
-  // watch: {
-  //   changed: function (newValue, oldValue) {
-
-  //   },
-  // },
   methods: {
     openDocs(docsUrl) {
       window.open(docsUrl, "_blank");
@@ -265,8 +327,13 @@ export default {
       //   [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
       // );
 
-      if (this.item.service === "SSVNetworkService")
+      if (this.item.service === "SSVNetworkService") {
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
+      }
+      if (this.item.service === "PrometheusService") {
+        this.item.prometheusConfig = await ControlService.readPrometheusConfig(this.item.config.serviceID);
+        this.prometheusConfig = this.item.prometheusConfig;
+      }
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         if (this.item.yaml.includes("isPruning: true")) {
           option.disabled = true;
@@ -276,7 +343,13 @@ export default {
           option.disabled = false;
         }
         if (option.type === "select" || option.type === "text" || option.type === "toggle") {
-          option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
+          if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+            option.changeValue = this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
+          } else {
+            option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
+              ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
+              : "";
+          }
         }
         return {
           ...option,
@@ -290,19 +363,103 @@ export default {
         new RegExp("(autoupdate: )(.*)(\\n)"),
         "$1" + this.checkAutoUpdate() + "$3"
       );
+
+      const ipReg = /^(\d{1,3}\.){3}\d{1,3}$/;
       this.item.expertOptions.forEach((option) => {
-        if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
+        let validValue = false;
+        if (option.type === "select" && option.value.length > 0) {
+          for (const el of option.value) {
+            validValue = el === option.changeValue ? true : validValue;
+          }
+        }
+        if (
+          option.changeValue != undefined &&
+          option.changeValue != null &&
+          (!isNaN(option.changeValue) || option.changeValue.match(ipReg) || validValue)
+        ) {
           if (option.changed) {
-            this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
+            for (let i = 0; i < option.pattern.length; i++) {
+              if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+                this.item.yaml =
+                  option.changeValue && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
+                    : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
+              } else if (option.title === "External IP Address") {
+                let reg = "";
+                let replacement = "";
+                const extIPCmd = [
+                  {
+                    name: "Lighthouse",
+                    reg: "  - bn\n",
+                    replacement: `  - bn\n  - --enr-address=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Lodestar",
+                    reg: "  - beacon\n",
+                    replacement: `  - beacon\n  - --enr.ip=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Nimbus",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --nat:extip:${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Prysm",
+                    reg: "--accept-terms-of-use=true",
+                    replacement: `--accept-terms-of-use=true --p2p-host-ip=${option.changeValue}`,
+                  },
+                  {
+                    name: "Teku",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --p2p-advertised-ip=${option.changeValue}\n`,
+                  },
+                ];
+                for (const el of extIPCmd) {
+                  if (el.name === this.item.name) {
+                    reg = el.reg;
+                    replacement = el.replacement;
+                  }
+                }
+                this.item.yaml =
+                  option.changeValue === "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "")
+                    : option.changeValue !== "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "$1" + option.changeValue + "$3")
+                    : option.changeValue !== "" && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(reg), replacement)
+                    : this.item.yaml;
+              } else if (option.title === "External TCP/UDP port" && (i === 2 || i === 3)) {
+                let tcp_udp = i === 2 ? "/tcp" : "/udp";
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i], "m"),
+                  "$1" + ":" + option.changeValue + ":" + option.changeValue + tcp_udp
+                );
+              } else {
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i]),
+                  "$1" + option.changeValue + "$3"
+                );
+              }
+            }
           }
           option.changed = false;
         }
       });
+
       if (this.item.service === "SSVNetworkService")
         await ControlService.writeSSVNetworkConfig({
           serviceID: this.item.config.serviceID,
           config: this.item.ssvConfig,
         });
+      if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig) {
+        if (!this.item.yaml.includes("overwrite: false")) {
+          this.item.yaml = this.item.yaml.trim() + "\noverwrite: false";
+        }
+        await ControlService.writePrometheusConfig({
+          serviceID: this.item.config.serviceID,
+          config: this.item.prometheusConfig,
+        });
+      }
       await ControlService.writeServiceYAML({
         id: this.item.config.serviceID,
         data: this.item.yaml,
@@ -321,6 +478,9 @@ export default {
     },
     openSSVExpertMode() {
       this.ssvExpertModeActive = !this.ssvExpertModeActive;
+    },
+    openPrometheusExpertMode() {
+      this.prometheusExpertModeActive = !this.prometheusExpertModeActive;
     },
     endpointPortTrunOff() {
       this.enterPortIsEnabled = false;
@@ -377,10 +537,23 @@ export default {
     //   }
     // },
     async confirmExpertChanges(el) {
+      // console.log(el);
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
-      await ControlService.restartService(el.config.serviceID);
+
+      // if (el.expertOptions.title == "Default Fee Recipient") {
+      //   if (el.expertOptions.changeValue == "") {
+      //     el.expertOptions.changeValue = "0x0000000000000000000000000000000000000000";
+      //   }
+      // }
+    },
+    async confirmRestartChanges(el) {
+      this.confirmExpertChanges(el);
+      await ControlService.restartService({ serviceID: el.config.serviceID, state: el.state });
+    },
+    async executeAction(action, service) {
+      await ControlService.chooseServiceAction({ action: action, service: structuredClone(service) });
     },
   },
 };
@@ -537,6 +710,26 @@ export default {
   background-color: #1a2e2a;
 }
 .expertRow .docBox .openBtn:active {
+  transform: scale(0.95);
+}
+.actionBtn {
+  grid-row: 1/2;
+  /* width: 100%;
+  height: 100%; */
+  padding-top: 2px;
+  background-color: #264744;
+  border-radius: 35px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #dbdbdb;
+  cursor: pointer;
+}
+.actionBtn:hover {
+  background-color: #1a2e2a;
+}
+.actionBtn:active {
   transform: scale(0.95);
 }
 .expertRow .selectBox {
@@ -803,6 +996,10 @@ input:checked + .slider:before {
   color: rgb(44, 44, 44);
   justify-self: end;
 }
+.emptyIP {
+  border: 2px solid #bd1414;
+  background-color: rgba(189, 20, 20, 0.3);
+}
 .disabled {
   opacity: 0.6 !important;
   background-color: rgb(104, 104, 104) !important;
@@ -909,13 +1106,59 @@ input:checked + .slider:before {
   font-weight: 500;
   align-self: flex-end;
 }
-
-.expert-modal .btn-box .confirmBtn {
+.confirmRestartBtn {
   grid-column: 3/4;
   grid-row: 1;
   margin-right: 20px;
   width: 90%;
-  height: 25px;
+  height: 50%;
+  padding: 3px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  justify-self: flex-end;
+  transition-duration: 150ms;
+  background: #609879;
+  color: #33393e;
+  font-size: 80%;
+  font-weight: 700;
+}
+.confirmRestartBtn:hover {
+  background: rgba(78, 136, 105, 0.9);
+  color: #e6e6e6;
+}
+.confirmRestartBtn:active {
+  transform: scale(0.9);
+  box-shadow: none;
+}
+.disabledRestartBtn {
+  grid-column: 3/4;
+  grid-row: 1;
+  margin-right: 20px;
+  width: 90%;
+  height: 50%;
+  padding: 3px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  justify-self: flex-end;
+  transition-duration: 150ms;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  opacity: 0.7 !important;
+  background: #335844;
+  color: #33393e;
+}
+.expert-modal .btn-box .confirmBtn {
+  grid-column: 2/3;
+  grid-row: 1;
+  margin-right: 20px;
+  width: 90%;
+  height: 50%;
   padding: 3px;
   border: 2px solid #609879;
   border-radius: 50px;
@@ -925,13 +1168,12 @@ input:checked + .slider:before {
   cursor: pointer;
   justify-self: flex-end;
   transition-duration: 150ms;
-}
-.expert-modal .btn-box .confirmBtn span {
-  font-size: 0.8rem;
+  font-size: 80%;
   font-weight: 700;
   color: #609879;
   text-align: center;
 }
+
 .expert-modal .btn-box .confirmBtn:hover {
   background-color: #609879;
 }
@@ -968,11 +1210,11 @@ input:checked + .slider:before {
   display: none !important;
 }
 .disabledBtn {
-  grid-column: 3/4;
+  grid-column: 2/3;
   grid-row: 1;
   margin-right: 20px;
   width: 90%;
-  height: 25px;
+  height: 50%;
   padding: 3px;
   border-radius: 50px;
   display: flex;

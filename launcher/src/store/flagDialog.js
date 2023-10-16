@@ -122,7 +122,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langSelect: "img/flag/czech.png",
           langName: "Česká",
           label: "cs",
-          enable: false,
+          enable: true,
         },
         {
           langImg: "img/flag/vietnam.png",

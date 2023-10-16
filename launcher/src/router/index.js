@@ -22,6 +22,8 @@ import ImportingVerify from "../components/UI/plugin-installation/import-config/
 import ImportingList from "../components/UI/plugin-installation/import-config/ImportingList.vue";
 import ImportingSyncing from "../components/UI/plugin-installation/import-config/ImportingSyncing.vue";
 import ImportingAnimation from "../components/UI/plugin-installation/import-config/ImportingAnimation.vue";
+import UpdateHandler from "../pages/UpdateHandler.vue"
+
 
 const routes = [
   {
@@ -150,6 +152,11 @@ const routes = [
     path: "/importingAnimation",
     name: "ImportingAnimation",
     component: ImportingAnimation,
+  },
+  {
+    path: "/update",
+    name: "UpdateHandler",
+    component: UpdateHandler,
   },
 ];
 

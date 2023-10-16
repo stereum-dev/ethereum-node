@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <no-data v-if="noDataLayerShow"></no-data>
+        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
@@ -23,9 +23,11 @@
             </div>
             <div
               class="consensusIconCons"
-              :data-tooltip="
-                consensusName + ': ' + formatValues(consensusFirstVal) + ' / ' + formatValues(consensusSecondVal)
+              @mouseenter="
+                dialogOpen(consensusName, consensusFirstVal, consensusSecondVal),
+                  (cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`)
               "
+              @mouseleave="dialogClose(), (cursorLocation = '')"
             >
               <img :src="clientImage(consensusName)" alt="consensus" />
             </div>
@@ -43,9 +45,11 @@
             </div>
             <div
               class="executionIconCons"
-              :data-tooltip="
-                executionName + ': ' + formatValues(executionFirstVal) + ' / ' + formatValues(executionSecondVal)
+              @mouseenter="
+                dialogOpen(executionName, executionFirstVal, executionSecondVal),
+                  (cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`)
               "
+              @mouseleave="dialogClose(), (cursorLocation = '')"
             >
               <img :src="clientImage(executionName)" alt="execution" />
             </div>
@@ -69,9 +73,11 @@
 </template>
 <script>
 import SyncCircularProgress from "./SyncCircularProgress.vue";
-import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
+import { mapState, mapWritableState } from "pinia";
+import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
 import NoData from "./NoData.vue";
+
 export default {
   components: { NoData, SyncCircularProgress },
   data() {
@@ -137,13 +143,24 @@ export default {
         {
           id: 4,
           name: "unknown",
-          icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
+          icon: "/img/icon/control/spinner.gif",
         },
       ],
     };
   },
 
   computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+      dialog: "dialog",
+      epochType: "epochType",
+      epoch: "epoch",
+      slot: "slot",
+      status: "status",
+      title: "title",
+      first: "first",
+      second: "second",
+    }),
     ...mapState(useControlStore, {
       code: "code",
       syncstatus: "syncstatus",
@@ -182,6 +199,18 @@ export default {
     if (this.refresher) clearTimeout(this.refresher);
   },
   methods: {
+    dialogOpen(arg1, arg2, arg3) {
+      this.dialog = true;
+      this.title = arg1;
+      this.first = arg2;
+      this.second = arg3;
+    },
+    dialogClose() {
+      this.dialog = false;
+      this.title = "";
+      this.first = "";
+      this.second = "";
+    },
     clientImage(name) {
       if (!name) {
         return "";
@@ -427,18 +456,17 @@ export default {
   align-items: center;
   text-transform: uppercase;
 }
-.consensusIconCons,
 .executionIconCons {
   position: absolute;
-  width: 51%;
-  left: 0;
-  top: -52%;
+  width: 54%;
+  left: 22.7%;
+  top: 24.6%;
 }
-.consensusIconCons img,
-.executionIconCons img{
-  width: 98%;
-  height: 100%;
-  object-fit: contain;
+.consensusIconCons {
+  position: absolute;
+  width: 54%;
+  left: 22.9%;
+  top: 24.6%;
 }
 .consensusPer {
   position: absolute;
@@ -456,7 +484,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 7%;
 }
 .syncStatusStatus {
   width: 100%;
@@ -470,34 +497,6 @@ export default {
   position: absolute;
   bottom: 0;
 }
-[data-tooltip] {
-  position: relative;
-  cursor: default;
-}
-[data-tooltip]::after {
-  position: absolute;
-  width: max-content;
-  left: -300%;
-  text-align: center;
-  content: attr(data-tooltip);
-  background: black;
-  border-radius: 5px;
-  font-size: 70%;
-  padding: 8% 20%;
-  border: 1px solid #929292;
-  text-transform: uppercase;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(-320%);
-  transition: opacity 0.3s transform 0.2s;
-  font-weight: 600;
-}
-[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-  transform: rotateY(50%);
-}
-
 .pageNumber {
   display: flex;
   justify-content: center;
@@ -556,7 +555,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 43%;
+  font-size: 50%;
   color: #c1c1c1;
   font-weight: bold;
 }
@@ -568,7 +567,8 @@ export default {
   height: 75%;
 }
 .sync-icon_container img {
-  width: 60%;
+  width: 70%;
+  height: 90%;
 }
 .sync-box_value {
   display: flex;

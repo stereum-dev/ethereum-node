@@ -181,7 +181,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/mainnet-icon.png",
           currencyIcon: "/img/icon/control/mainnet-currency-symbol.png",
           dataEndpoint: "https://mainnet.beaconcha.in/api/v1",
-          support: ["staking", "mev boost", "stereum on arm"],
+          support: ["staking", "mev boost", "stereum on arm", "ssv.network", "obol", "archive"],
         },
         {
           id: 2,
@@ -190,7 +190,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/testnet-icon.png",
           currencyIcon: "/img/icon/control/goETH_Currency_Symbol.png",
           dataEndpoint: "https://goerli.beaconcha.in/api/v1",
-          support: ["staking", "ssv.network", "mev boost", "obol", "stereum on arm"],
+          support: ["staking", "ssv.network", "mev boost", "obol", "stereum on arm", "archive"],
         },
 
         {
@@ -210,6 +210,15 @@ export const useNodeManage = defineStore("nodeManage", {
           currencyIcon: "/img/icon/control/gno_currency_symbol.png",
           dataEndpoint: "https://beacon.gnosischain.com/api/v1",
           support: ["staking", "stereum on arm"],
+        },
+        {
+          id: 5,
+          name: "Holesky Testnet",
+          network: "holesky",
+          icon: "/img/icon/click-installation/testnet-icon.png",
+          currencyIcon: "/img/icon/control/goETH_Currency_Symbol.png",
+          dataEndpoint: "https://holesky.beaconcha.in/api/v1",
+          support: ["staking", "stereum on arm", "mev boost"],
         },
       ],
       currentNetwork: {},

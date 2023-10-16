@@ -114,6 +114,7 @@ import PrunningModal from "../the-node/PrunningModal.vue";
 import ResyncModal from "../the-node/ResyncModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useFooter } from "@/store/theFooter";
 export default {
   components: {
     ControlDashboard,
@@ -131,6 +132,10 @@ export default {
       isPluginLogPageActive: false,
       isExpertWindowOpen: false,
       expertModeClient: null,
+      pending: this.$t("controlPage.pending"),
+      off: this.$t("controlPage.off"),
+      on: this.$t("controlPage.on"),
+      settingService: this.$t("controlPage.settingService"),
     };
   },
   create() {
@@ -146,6 +151,25 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+      isConsensusRunning: "isConsensusRunning",
+      dialog: "dialog",
+    }),
+    isAnyConsensusRunning() {
+      const consensusServices = this.installedServices.filter((item) => item.category === "consensus");
+
+      if (consensusServices.length === 0) {
+        return false;
+      }
+
+      return consensusServices.some((item) => item.state === "running");
+    },
+  },
+  watch: {
+    isAnyConsensusRunning(newValue) {
+      this.isConsensusRunning = newValue;
+    },
   },
   methods: {
     scrollUp() {

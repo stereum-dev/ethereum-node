@@ -23,7 +23,7 @@
             <span :class="validatorState === 'running' ? 'greenCounter' : 'redCounter'">{{ keyCounter }}</span>
           </div>
           <div class="key-counter_icon">
-            <img src="../../../../public/img/icon/the-staking/keyIcon.png" alt="validator-key" />
+            <img src="/img/icon/the-staking/keyIcon.png" alt="validator-key" />
           </div>
         </div>
       </div>
@@ -37,7 +37,10 @@
       </ul>
       <div
         class="buttonRow"
-        :class="{ disabled: disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' }"
+        :class="{
+          disabled:
+            disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' || validatorName === 'Web3Signer',
+        }"
         @click.stop="$emit('clickBtnGraffiti')"
       >
         <div class="btnContent">
@@ -49,6 +52,16 @@
         <div class="btnContent">
           <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
           <span>{{ $t("selectionOption.removeKeys") }}</span>
+        </div>
+      </div>
+      <div
+        class="buttonRow"
+        :class="{ disabled: validatorName === 'Web3Signer' }"
+        @click.stop="$emit('importRemoteKeys')"
+      >
+        <div class="btnContent">
+          <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+          <span>Import Remote Keys</span>
         </div>
       </div>
     </div>
