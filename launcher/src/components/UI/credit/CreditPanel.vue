@@ -29,17 +29,14 @@
         <TechnicalBox />
       </div>
     </transition>
-    <TheFooter />
-    <task-manager></task-manager>
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
-import TheFooter from "../../layers/TheFooter.vue";
 import TechnicalBox from "./TechnicalBox.vue";
 export default {
-  components: { TechnicalBox, TheFooter },
+  components: { TechnicalBox },
   data() {
     return {
       financialIco: "./img/icon/credit/creditFinancial.png",
