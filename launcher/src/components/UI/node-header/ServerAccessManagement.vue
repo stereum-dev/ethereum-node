@@ -1,115 +1,119 @@
 <template>
-  <div class="dashboard-parent">
-    <GenerateKeyModal v-if="generateModalShow" @generateKey="addKey" />
-    <div class="management-title">{{ $t("serverManagement.serverAccMange") }}</div>
-    <div class="management-info">
-      <div class="management-info_box">
-        <div class="management-info_box_row">
-          <span>{{ serverNam }}</span
-          ><span @mouseenter="cursorLocation = serverNam" @mouseleave="cursorLocation = ''">{{
-            selectedConnection.name
-          }}</span>
+  <div class="w-full h-full flex justify-center items-center fixed inset-0 rounded-md p-1 z-20">
+    <div
+      class="w-full h-full bg-[#33393e] mx-auto rounded-md z-30 flex flex-col justify-between items-center px-2 py-1s"
+    >
+      <GenerateKeyModal v-if="generateModalShow" @generateKey="addKey" />
+      <div class="management-title">{{ $t("serverManagement.serverAccMange") }}</div>
+      <div class="management-info">
+        <div class="management-info_box">
+          <div class="management-info_box_row">
+            <span>{{ serverNam }}</span
+            ><span @mouseenter="cursorLocation = serverNam" @mouseleave="cursorLocation = ''">{{
+              selectedConnection.name
+            }}</span>
+          </div>
+          <div class="management-info_box_row">
+            <span>{{ ipHOST }}</span
+            ><span @mouseenter="cursorLocation = ipHOST" @mouseleave="cursorLocation = ''">{{ ipAddress }}</span>
+          </div>
+          <div class="management-info_box_row">
+            <span>{{ userNam }}</span
+            ><span @mouseenter="cursorLocation = userNam" @mouseleave="cursorLocation = ''">{{
+              selectedConnection.user
+            }}</span>
+          </div>
         </div>
-        <div class="management-info_box_row">
-          <span>{{ ipHOST }}</span
-          ><span @mouseenter="cursorLocation = ipHOST" @mouseleave="cursorLocation = ''">{{ ipAddress }}</span>
-        </div>
-        <div class="management-info_box_row">
-          <span>{{ userNam }}</span
-          ><span @mouseenter="cursorLocation = userNam" @mouseleave="cursorLocation = ''">{{
-            selectedConnection.user
-          }}</span>
+        <div class="management-info_box">
+          <div class="management-info_box_row">
+            <span>{{ machineNam }}</span
+            ><span @mouseenter="cursorLocation = machineNam" @mouseleave="cursorLocation = ''">{{ ServerName }}</span>
+          </div>
+          <div class="management-info_box_row">
+            <span>{{ port }}</span
+            ><span @mouseenter="cursorLocation = port" @mouseleave="cursorLocation = ''">{{
+              selectedConnection.port ? selectedConnection.port : 22
+            }}</span>
+          </div>
+          <div class="management-info_box_row" />
         </div>
       </div>
-      <div class="management-info_box">
-        <div class="management-info_box_row">
-          <span>{{ machineNam }}</span
-          ><span @mouseenter="cursorLocation = machineNam" @mouseleave="cursorLocation = ''">{{ ServerName }}</span>
-        </div>
-        <div class="management-info_box_row">
-          <span>{{ port }}</span
-          ><span @mouseenter="cursorLocation = port" @mouseleave="cursorLocation = ''">{{
-            selectedConnection.port ? selectedConnection.port : 22
-          }}</span>
-        </div>
-        <div class="management-info_box_row" />
-      </div>
-    </div>
-    <div class="login-info-box">
-      <div class="login-info-box_info-part">
-        <div class="helf-part">
-          <div class="half-part_row">
-            <span>{{ $t("serverManagement.pass") }}</span>
-            <div v-if="!chngPassword" class="btn-part">
-              <div
-                class="login-info-btn"
-                @click="(chngPassword = true), (cursorLocation = '')"
-                @mouseenter="cursorLocation = clckChngPass"
-                @mouseleave="cursorLocation = ''"
-              >
-                {{ $t("serverManagement.chngPass") }}
+      <div class="login-info-box">
+        <div class="login-info-box_info-part">
+          <div class="helf-part">
+            <div class="half-part_row">
+              <span>{{ $t("serverManagement.pass") }}</span>
+              <div v-if="!chngPassword" class="btn-part">
+                <div
+                  class="login-info-btn"
+                  @click="(chngPassword = true), (cursorLocation = '')"
+                  @mouseenter="cursorLocation = clckChngPass"
+                  @mouseleave="cursorLocation = ''"
+                >
+                  {{ $t("serverManagement.chngPass") }}
+                </div>
+              </div>
+              <div v-else class="btn-part">
+                <input
+                  v-model="newPass"
+                  :class="['chng-password', controlPass]"
+                  type="password"
+                  :placeholder="passmessage"
+                />
+                <div class="pass-btn-part">
+                  <div
+                    class="pass-btn accept"
+                    @click="acceptChangePass"
+                    @mouseenter="cursorLocation = confirmPassMessage"
+                    @mouseleave="cursorLocation = ''"
+                  >
+                    <img src="/img/icon/access-management/done.png" alt="" />
+                  </div>
+                  <div
+                    class="pass-btn deny"
+                    @click="denyPassChange"
+                    @mouseenter="cursorLocation = cancel"
+                    @mouseleave="cursorLocation = ''"
+                  >
+                    <img src="/img/icon/access-management/close.png" alt="" />
+                  </div>
+                </div>
               </div>
             </div>
-            <div v-else class="btn-part">
-              <input
-                v-model="newPass"
-                :class="['chng-password', controlPass]"
-                type="password"
-                :placeholder="passmessage"
+            <div class="half-part_row">
+              <span>SSH {{ $t("serverManagement.key") }}</span>
+              <div class="btn-part">
+                <div
+                  class="login-info-btn"
+                  @click="generateModal"
+                  @mouseenter="cursorLocation = clckCreateKey"
+                  @mouseleave="cursorLocation = ''"
+                >
+                  {{ $t("serverManagement.createKey") }}
+                </div>
+                <div
+                  class="login-info-btn"
+                  @click="openUploadHandler"
+                  @mouseenter="cursorLocation = clckAddKey"
+                  @mouseleave="cursorLocation = ''"
+                >
+                  {{ $t("serverManagement.addKey") }}
+                  <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="key-info-part">
+          <div v-for="(key, index) in keys" :key="index" class="key-row">
+            <div class="name">{{ confirmIndexDelete[index] ? onAreYouSure : formatKey(key) }}</div>
+            <div class="btn-box">
+              <KeyRowBtn
+                @delete-key="confirmDelete(key)"
+                @are-you-sure="confirmKeyIndex(index)"
+                @cancel-delete="cancelKeyIndex(index)"
               />
-              <div class="pass-btn-part">
-                <div
-                  class="pass-btn accept"
-                  @click="acceptChangePass"
-                  @mouseenter="cursorLocation = confirmPassMessage"
-                  @mouseleave="cursorLocation = ''"
-                >
-                  <img src="/img/icon/access-management/done.png" alt="" />
-                </div>
-                <div
-                  class="pass-btn deny"
-                  @click="denyPassChange"
-                  @mouseenter="cursorLocation = cancel"
-                  @mouseleave="cursorLocation = ''"
-                >
-                  <img src="/img/icon/access-management/close.png" alt="" />
-                </div>
-              </div>
             </div>
-          </div>
-          <div class="half-part_row">
-            <span>SSH {{ $t("serverManagement.key") }}</span>
-            <div class="btn-part">
-              <div
-                class="login-info-btn"
-                @click="generateModal"
-                @mouseenter="cursorLocation = clckCreateKey"
-                @mouseleave="cursorLocation = ''"
-              >
-                {{ $t("serverManagement.createKey") }}
-              </div>
-              <div
-                class="login-info-btn"
-                @click="openUploadHandler"
-                @mouseenter="cursorLocation = clckAddKey"
-                @mouseleave="cursorLocation = ''"
-              >
-                {{ $t("serverManagement.addKey") }}
-                <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="key-info-part">
-        <div v-for="(key, index) in keys" :key="index" class="key-row">
-          <div class="name">{{ confirmIndexDelete[index] ? onAreYouSure : formatKey(key) }}</div>
-          <div class="btn-box">
-            <KeyRowBtn
-              @delete-key="confirmDelete(key)"
-              @are-you-sure="confirmKeyIndex(index)"
-              @cancel-delete="cancelKeyIndex(index)"
-            />
           </div>
         </div>
       </div>
@@ -121,6 +125,7 @@
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
+import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 import KeyRowBtn from "./KeyRowBtn";
 import GenerateKeyModal from "./GenerateKeyModal";
@@ -161,6 +166,9 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+    }),
+    ...mapWritableState(useNodeHeader, {
+      serverAccessManagement: "serverAccessManagement",
     }),
     passSSHRow() {
       return !this.selectedConnection.useAuthKey ? "pass" : "ssh";

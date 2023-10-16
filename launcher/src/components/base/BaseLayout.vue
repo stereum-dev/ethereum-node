@@ -27,6 +27,7 @@
       <TheFooter />
       <TaskManager />
     </div>
+    <serverAccessManagement v-if="serverAccessManagement" />
   </div>
 </template>
 <script>
@@ -34,6 +35,7 @@ import MainNavbar from "../UI/node-header/MainNavbar.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
 import SecurityButton from "../UI/node-header/SecurityButton.vue";
+import serverAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
@@ -44,6 +46,7 @@ export default {
     TaskManager,
     TheFooter,
     SecurityButton,
+    serverAccessManagement,
   },
   data() {
     return {

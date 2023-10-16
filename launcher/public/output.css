@@ -1354,6 +1354,14 @@ video {
   height: 60%;
 }
 
+.h-5\/6{
+  height: 83.333333%;
+}
+
+.h-3\/4{
+  height: 75%;
+}
+
 .max-h-60{
   max-height: 15rem;
 }
@@ -1596,6 +1604,10 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-3\/4{
+  width: 75%;
 }
 
 .min-w-\[100px\]{
@@ -2576,6 +2588,14 @@ video {
 
 .bg-\[\#\]{
   background-color: #;
+}
+
+.bg-\[\]{
+  background-color: ;
+}
+
+.bg-\[\#33393\]{
+  background-color: #33393;
 }
 
 .bg-gradient-to-b{
