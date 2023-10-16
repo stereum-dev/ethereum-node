@@ -515,7 +515,7 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
-::-webkit-backdrop{
+::-ms-backdrop{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
   --tw-translate-x: 0;
@@ -746,6 +746,10 @@ video {
 
 .-top-1{
   top: -0.25rem;
+}
+
+.-top-2{
+  top: -0.5rem;
 }
 
 .bottom-1{

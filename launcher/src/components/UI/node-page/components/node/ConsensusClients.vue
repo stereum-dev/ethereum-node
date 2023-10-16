@@ -6,6 +6,7 @@
       ref="consensusRefs"
       class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
       @mouseenter="mouseOver(item)"
+      @mouseleave="mouseLeave(item)"
     >
       <ClientLayout :client="item" />
       <ClientButtons
@@ -32,7 +33,15 @@ import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver"]);
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "openDoc",
+  "stateHandler",
+  "restartHandler",
+  "mouseOver",
+  "mouseLeave",
+]);
 
 //Refs
 const consensusRefs = ref([]);
@@ -59,6 +68,12 @@ watch(getConsensusRef, (newValue) => {
 const mouseOver = (item) => {
   setTimeout(() => {
     emit("mouseOver", item);
+  }, 1000);
+};
+
+const mouseLeave = (item) => {
+  setTimeout(() => {
+    emit("mouseLeave", item);
   }, 1000);
 };
 

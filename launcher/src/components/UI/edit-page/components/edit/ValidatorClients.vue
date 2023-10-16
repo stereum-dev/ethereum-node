@@ -37,7 +37,7 @@ import { computed, ref, watch } from "vue";
 
 // Variables & Constants
 
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
 
 const validatorRefs = ref([]);
 const manageStore = useNodeManage();
@@ -102,12 +102,17 @@ const displayMenu = (item) => {
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+  setTimeout(() => {
+    emit("mouseLeave", item);
+  }, 1000);
 };
 
 const mouseOver = (item) => {
-  setTimeout(() => {
-    emit("mouseOver", item);
-  }, 1000);
+  if (!item.displayPluginMenu) {
+    setTimeout(() => {
+      emit("mouseOver", item);
+    }, 1000);
+  }
 };
 
 const deleteService = (item) => {

@@ -1,7 +1,7 @@
 <template>
   <div class="disabled-parent">
     <div class="modal-opacity"></div>
-    <div class="disabledModalContent">
+    <div class="disabledModalContent absolute inset-0 -top-2 border-4 border-gray-400 rounded-lg">
       <div class="title-box">
         <img src="/img/icon/the-staking/Fehlender_validatorenclient.svg" alt="icon" />
       </div>
@@ -54,19 +54,14 @@ export default {
   z-index: 11;
 }
 .disabledModalContent {
-  width: 98%;
-  height: 82%;
-  border-radius: 20px;
-  border: 3px solid #bfbfbf;
-  position: absolute;
-  top: 2%;
-  left: 1%;
+  width: 100%;
+  height: 91%;
+
   background-color: #343434;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
   z-index: 1000;
 }
 .title-box {

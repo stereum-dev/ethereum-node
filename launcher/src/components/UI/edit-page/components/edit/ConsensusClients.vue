@@ -33,7 +33,7 @@ import GeneralMenu from "./GeneralMenu.vue";
 import { computed, ref, watchEffect, watch } from "vue";
 
 //Props & Emits
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
 
 //Refs
 
@@ -110,12 +110,17 @@ const displayMenu = (item) => {
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+  setTimeout(() => {
+    emit("mouseLeave", item);
+  }, 1000);
 };
 
 const mouseOver = (item) => {
-  setTimeout(() => {
-    emit("mouseOver", item);
-  }, 1000);
+  if (!item.displayPluginMenu) {
+    setTimeout(() => {
+      emit("mouseOver", item);
+    }, 1000);
+  }
 };
 
 const deleteService = (item) => {

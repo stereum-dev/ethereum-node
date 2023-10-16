@@ -20,6 +20,7 @@ import { mapState, map } from 'pinia';
         @restart-handler="useRestartService"
         @open-doc="openDocs"
         @mouse-over="lineDrawHandler"
+        @mouse-leave="removeConnectionLines"
       />
       <ConsensusClients
         @open-expert="openExpert"
@@ -29,6 +30,7 @@ import { mapState, map } from 'pinia';
         @restart-handler="useRestartService"
         @open-doc="openDocs"
         @mouse-over="lineDrawHandler"
+        @mouse-leave="removeConnectionLines"
       />
       <ValidatorClients
         @open-expert="openExpert"
@@ -38,6 +40,7 @@ import { mapState, map } from 'pinia';
         @restart-handler="useRestartService"
         @open-doc="openDocs"
         @mouse-over="lineDrawHandler"
+        @mouse-leave="removeConnectionLines"
       />
     </div>
     <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
@@ -60,6 +63,9 @@ const emit = defineEmits(["openExpert"]);
 // Refs
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
+let lineOne = ref(null);
+let lineTwo = ref(null);
+let lineThree = ref(null);
 
 // Store and router
 const nodeStore = useNodeStore();
@@ -72,48 +78,36 @@ const serviceStore = useServices();
 // Methods
 
 const oneWayConnection = (start, end) => {
-  let lineOne = null;
   if (start && end) {
-    lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    lineOne.setOptions({
+    lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    lineOne.value.setOptions({
       startPlugSize: 1,
       endPlugSize: 2,
       size: 2,
-      color: "#DBEF6A",
+      color: "#6AEF9B",
       endPlug: "behind",
     });
-
-    setTimeout(() => {
-      lineOne.remove();
-    }, 2000);
   }
 };
 
 const twoWaysConnections = (start, middle, end) => {
-  let lineOne = null;
-  let lineTwo = null;
   if (start && middle && end) {
-    lineOne = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
-    lineOne.setOptions({
-      startPlugSize: 1,
-      endPlugSize: 2,
-      size: 2,
-      color: "#6FD9F0",
-      endPlug: "behind",
-    });
-    lineTwo = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
-    lineTwo.setOptions({
+    lineTwo.value = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+    lineTwo.value.setOptions({
       startPlugSize: 1,
       endPlugSize: 2,
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
     });
-
-    setTimeout(() => {
-      lineOne.remove();
-      lineTwo.remove();
-    }, 2000);
+    lineThree.value = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+    lineThree.value.setOptions({
+      startPlugSize: 1,
+      endPlugSize: 2,
+      size: 2,
+      color: "#DBEF6A",
+      endPlug: "behind",
+    });
   }
 };
 
@@ -121,45 +115,72 @@ const lineDrawHandler = (item) => {
   let start;
   let middle;
   let end;
-  let lineOne;
-  let lineTwo;
-  // Remove the previous line if it exists
-  if (lineOne || lineTwo) {
-    lineOne.remove();
-    lineTwo.remove();
-  }
 
-  if (item) {
+  if (item && !item.displayPluginMenu) {
     if (item.category === "consensus") {
-      const execution = item.config?.dependencies.executionClients[0];
-      start = nodeStore.executionRefList.find((el) => el.refId === execution?.id)?.ref;
-      middle = nodeStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+      if (item.config?.dependencies.executionClients[0]) {
+        const execution = item.config?.dependencies.executionClients[0];
+        const getExecutionRef = nodeStore.executionRefList.find((el) => el.refId === execution?.id);
+        start = getExecutionRef?.ref ? getExecutionRef?.ref : null;
+        middle = nodeStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
+        const validator = serviceStore.installedServices.find(
+          (el) =>
+            el.category === "validator" && el.config?.dependencies.consensusClients[0]?.id === item.config?.serviceID
+        );
+        const getValidatorRef = nodeStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID);
 
-      const validator = serviceStore.installedServices.find(
-        (el) => el.category === "validator" && el.config?.dependencies.consensusClients[0].id === item.config?.serviceID
-      );
-
-      end = nodeStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID)?.ref;
-
-      if (start && middle && end) {
-        twoWaysConnections(start, middle, end);
-      } else if (start && middle) {
-        oneWayConnection(start, middle);
+        end = getValidatorRef ? getValidatorRef?.ref : null;
+        if (start && middle && end) {
+          twoWaysConnections(start, middle, end);
+        } else if (start && middle) {
+          oneWayConnection(start, middle);
+        } else if (middle && end) {
+          oneWayConnection(middle, end);
+        }
+      } else {
+        return;
       }
-    } else if (item.category === "validator") {
+    } else if (item.category === "validator" && item.config?.dependencies.consensusClients[0]) {
       const consensus = item.config?.dependencies.consensusClients[0];
-      start = nodeStore.consensusRefList.find((el) => el.refId === consensus.id)?.ref;
+      start = nodeStore.consensusRefList.find((el) => el.refId === consensus?.id)?.ref;
       end = nodeStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-      oneWayConnection(start, end);
+      if (start && end) {
+        oneWayConnection(start, end);
+      }
     } else if (item.category === "execution") {
       const consensus = serviceStore.installedServices.find(
-        (el) => el.category === "consensus" && el.config?.dependencies.executionClients[0].id === item.config?.serviceID
+        (el) =>
+          el.category === "consensus" && el.config?.dependencies.executionClients[0]?.id === item.config?.serviceID
       );
 
       start = nodeStore.executionRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-      end = nodeStore.consensusRefList.find((el) => el.refId === consensus?.config?.serviceID)?.ref;
+      if (consensus) {
+        end = nodeStore.consensusRefList.find((el) => el.refId === consensus?.config?.serviceID)?.ref;
+      }
 
-      oneWayConnection(start, end);
+      if (start && end) {
+        oneWayConnection(start, end);
+      }
+    }
+  } else if (item && item.displayPluginMenu) {
+    removeConnectionLines(item);
+  }
+};
+
+const removeConnectionLines = (item) => {
+  if (item.category === "execution" || item.category === "validator") {
+    if (lineOne.value) {
+      lineOne.value.remove();
+      lineOne.value = null;
+    }
+  } else if (item.category === "consensus") {
+    if (lineTwo.value) {
+      lineTwo.value.remove();
+      lineTwo.value = null;
+    }
+    if (lineThree.value) {
+      lineThree.value.remove();
+      lineThree.value = null;
     }
   }
 };

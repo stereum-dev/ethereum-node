@@ -6,6 +6,7 @@
       ref="executionRefs"
       class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
       @mouseenter="mouseOver(item)"
+      @mouseleave="mouseLeave(item)"
     >
       <ClientLayout :client="item" />
       <ClientButtons
@@ -36,7 +37,15 @@ import ClientButtons from "./ClientButtons.vue";
 import { computed, ref, watch } from "vue";
 
 //Emits
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver"]);
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "openDoc",
+  "stateHandler",
+  "restartHandler",
+  "mouseOver",
+  "mouseLeave",
+]);
 
 //Refs
 const executionRefs = ref([]);
@@ -70,6 +79,12 @@ watch(getExecutionRef, (newValue) => {
 const mouseOver = (item) => {
   setTimeout(() => {
     emit("mouseOver", item);
+  }, 1000);
+};
+
+const mouseLeave = (item) => {
+  setTimeout(() => {
+    emit("mouseLeave", item);
   }, 1000);
 };
 

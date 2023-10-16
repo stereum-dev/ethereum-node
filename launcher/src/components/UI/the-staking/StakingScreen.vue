@@ -66,8 +66,8 @@ const removeHandler = () => {
 
 const selectedValidator = (validator) => {
   stakingStore.selectedValdiatorService = validator;
-  stakingStore.selectedIcon = validator.icon;
-  selectedName.value = validator.name;
-  selectedStatus.value = validator.state;
+  stakingStore.selectedIcon = validator?.icon;
+  selectedName.value = validator?.name;
+  selectedStatus.value = validator?.state;
 };
 </script>

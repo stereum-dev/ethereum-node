@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      hideConnectingLines: false,
       addConfigButton: false,
       nodeConfigs: [
         { id: 1, configName: "config", status: true },
