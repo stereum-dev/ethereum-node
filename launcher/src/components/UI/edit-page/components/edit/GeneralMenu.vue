@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-const { item } = defineProps({
+const props = defineProps({
   item: {
     type: Object,
     required: true,
@@ -41,18 +41,18 @@ const { item } = defineProps({
 const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
 
 const deleteService = () => {
-  emit("deleteService", item);
+  emit("deleteService", props.item);
 };
 
 const switchClient = () => {
-  emit("switchClient", item);
+  emit("switchClient", props.item);
 };
 
 const modifyService = () => {
-  emit("modifyService", item);
+  emit("modifyService", props.item);
 };
 
 const infoModal = () => {
-  emit("infoModal", item);
+  emit("infoModal", props.item);
 };
 </script>

@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup>
-const { item } = defineProps({
+const props = defineProps({
   item: {
     type: Object,
     required: true,
@@ -31,10 +31,10 @@ const { item } = defineProps({
 const emit = defineEmits(["hideConnection", "confirmConsensus"]);
 
 const hideConnection = () => {
-  emit("hideConnection", item);
+  emit("hideConnection", props.item);
 };
 
 const confirmConnection = () => {
-  emit("confirmConnection", item);
+  emit("confirmConnection", props.item);
 };
 </script>

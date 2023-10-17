@@ -77,15 +77,11 @@ watch(getExecutionRef, (newValue) => {
 
 //Methods
 const mouseOver = (item) => {
-  setTimeout(() => {
-    emit("mouseOver", item);
-  }, 1000);
+  emit("mouseOver", item);
 };
 
 const mouseLeave = (item) => {
-  setTimeout(() => {
-    emit("mouseLeave", item);
-  }, 1000);
+  emit("mouseLeave", item);
 };
 
 const openResync = (item) => {

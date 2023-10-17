@@ -16,7 +16,7 @@
   </div>
 </template>
 <script setup>
-const { client } = defineProps({
+defineProps({
   client: {
     type: Object,
     required: true,

@@ -46,6 +46,8 @@ import { useServices } from "@/store/services";
 const props = defineProps({
   dragging: Function,
 });
+
+// eslint-disable-next-line vue/no-setup-props-destructure
 const dragStart = props.dragging;
 
 const emit = defineEmits(["addServices", "startDrag"]);

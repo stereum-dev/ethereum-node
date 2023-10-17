@@ -82,7 +82,7 @@ import CustomModal from "./CustomModal.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { computed } from "vue";
 
-const { client } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     default: null,
@@ -94,19 +94,19 @@ const emit = defineEmits(["closeWindow", "okButton"]);
 const manageStore = useNodeManage();
 
 const getConnectedExecution = computed(() => {
-  let { executionClients } = client.config ? client.config.dependencies : {};
+  let { executionClients } = props.client.config ? props.client.config.dependencies : {};
   let service = manageStore.newConfiguration.find((i) => i.config.serviceID === executionClients[0]?.id);
   return executionClients.length ? service : null;
 });
 
 const getConnectedConsensus = computed(() => {
-  let { consensusClients } = client.config ? client.config.dependencies : {};
+  let { consensusClients } = props.client.config ? props.client.config.dependencies : {};
   let service = manageStore.newConfiguration.find((i) => i.config.serviceID === consensusClients[0]?.id);
   return consensusClients.length ? service : null;
 });
 
 const getConnectedMevboost = computed(() => {
-  let { mevboost } = client.config ? client.config.dependencies : {};
+  let { mevboost } = props.client.config ? props.client.config.dependencies : {};
   let service = manageStore.newConfiguration.find((i) => i.config.serviceID === mevboost[0]?.id);
   return mevboost.length ? service : null;
 });

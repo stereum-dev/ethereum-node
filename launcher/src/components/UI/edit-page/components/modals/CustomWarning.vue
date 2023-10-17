@@ -49,7 +49,7 @@ const emitConfirmAction = () => {
   emit("confirmAction");
 };
 
-const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, subTitle } = defineProps({
+defineProps({
   icon: String,
   altText: String,
   mainTitle: String,

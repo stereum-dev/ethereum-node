@@ -28,7 +28,15 @@ import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed, watch, ref } from "vue";
 
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver", "mouseLeave"]);
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "openDoc",
+  "stateHandler",
+  "restartHandler",
+  "mouseOver",
+  "mouseLeave",
+]);
 
 const validatorRefs = ref([]);
 
@@ -51,14 +59,10 @@ watch(getValidatorRef, (newValue) => {
 });
 
 const mouseOver = (item) => {
-  setTimeout(() => {
-    emit("mouseOver", item);
-  }, 1000);
+  emit("mouseOver", item);
 };
 const mouseLeave = (item) => {
-  setTimeout(() => {
-    emit("mouseLeave", item);
-  }, 1000);
+  emit("mouseLeave", item);
 };
 
 const openExpert = (item) => {

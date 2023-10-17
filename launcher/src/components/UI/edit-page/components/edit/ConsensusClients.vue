@@ -110,16 +110,12 @@ const displayMenu = (item) => {
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
-  setTimeout(() => {
-    emit("mouseLeave", item);
-  }, 1000);
+  emit("mouseLeave", item);
 };
 
 const mouseOver = (item) => {
   if (!item.displayPluginMenu) {
-    setTimeout(() => {
-      emit("mouseOver", item);
-    }, 1000);
+    emit("mouseOver", item);
   }
 };
 

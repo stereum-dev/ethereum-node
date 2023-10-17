@@ -23,7 +23,7 @@ import { watch, watchEffect } from 'vue';
 </template>
 
 <script setup>
-const { label, fieldId, relay, icon } = defineProps({
+const props = defineProps({
   fieldId: {
     type: Number,
     required: true,
@@ -49,6 +49,6 @@ const { label, fieldId, relay, icon } = defineProps({
 const emit = defineEmits(["getRelays"]);
 
 const getRelays = () => {
-  emit("getRelays", relay);
+  emit("getRelays", props.relay);
 };
 </script>

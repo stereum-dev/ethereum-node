@@ -46,7 +46,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
 <script setup>
 import { computed } from "vue";
 //Props
-const { client, mainTitle, messageText, confirmText, clickOutsideText, subTitle, disabledButton } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     default: () => {},
@@ -68,7 +68,7 @@ const emit = defineEmits(["closeWindow", "confirmAction"]);
 //Watchers
 
 const getClientIcon = computed(() => {
-  return client.sIcon ? client.sIcon : client.icon;
+  return props.client.sIcon ? props.client.sIcon : props.client.icon;
 });
 
 //Methods
@@ -77,6 +77,6 @@ const closeModal = () => {
 };
 
 const emitConfirmAction = () => {
-  emit("confirmAction", client);
+  emit("confirmAction", props.client);
 };
 </script>

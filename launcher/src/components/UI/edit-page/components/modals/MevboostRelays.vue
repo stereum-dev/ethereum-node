@@ -14,7 +14,7 @@
 <script setup>
 import RelaysCheckbox from "./RelaysCheckbox.vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { onMounted, watch } from "vue";
+import { onMounted } from "vue";
 
 const manageStore = useNodeManage();
 

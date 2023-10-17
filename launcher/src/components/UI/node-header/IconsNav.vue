@@ -119,7 +119,6 @@ export default {
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
-      displayUpdatePanel: "displayUpdatePanel",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",

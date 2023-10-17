@@ -28,7 +28,7 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { watchEffect, ref } from "vue";
-const { list } = defineProps({
+defineProps({
   list: {
     type: Array,
     default: () => [],
