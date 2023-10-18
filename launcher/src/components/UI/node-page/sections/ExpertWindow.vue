@@ -208,6 +208,7 @@ import ControlService from "@/store/ControlService";
 import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useNodeStore } from "@/store/theNode";
+import { useRestartService } from "@/composables/services";
 
 export default {
   props: {
@@ -388,7 +389,7 @@ export default {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
-      await ControlService.restartService(el.config.serviceID);
+      await useRestartService(el);
     },
   },
 };

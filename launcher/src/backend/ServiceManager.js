@@ -211,9 +211,9 @@ export class ServiceManager {
 
   async restartService(client) {
     if (client.state == "running") {
-      await this.manageServiceState(client.serviceID, "stopped");
+      await this.manageServiceState(client.config.serviceID, "stopped");
     }
-    await this.manageServiceState(client.serviceID, "started");
+    await this.manageServiceState(client.config.serviceID, "started");
   }
 
   async resyncService(serviceID, checkpointUrl) {
@@ -1069,8 +1069,8 @@ export class ServiceManager {
           return newServices.find((s) => s.id === id);
         });
       }
-      if (t.data.beaconServices.length > 0) {
-        t.data.beaconServices = t.data.beaconServices.map((cc) => {
+      if (t.data.consensusClients.length > 0) {
+        t.data.consensusClients = t.data.consensusClients.map((cc) => {
           let id = cc.config ? cc.config.serviceID : cc.id;
           if (id) {
             return services.find((s) => s.id === id);
