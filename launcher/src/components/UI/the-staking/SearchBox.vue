@@ -8,21 +8,20 @@
 <script>
 export default {
   name: "SearchBox",
-
-
 };
 </script>
 <style scoped>
 .searchBox {
-  grid-column: 3/11;
-  grid-row: 2/3;
+  grid-column: 2/10;
+  grid-row: 3/4;
   width: 100%;
   height: 40px;
-  margin-top: 21px;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
+  align-self: flex-end;
+  margin-bottom: -9px;
 }
 .searchBox .textBox {
   width: 100%;
@@ -33,7 +32,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 
 /* 
 .searchBox .textBox img {

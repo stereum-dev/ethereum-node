@@ -1,729 +1,412 @@
 <template>
-  <div class="panelParent">
-    <div v-if="clickBg" class="clickOutside" @click="$emit('clickOut')"></div>
-    <div class="panelContent">
-      <div class="stereumUpdates">
-        <div class="stereum-updateBoxesWrapper">
-          <div class="stereum-updateBoxWithIcon">
-            <div class="icon">
-              <img src="/img/icon/control/ubuntuIco.svg" />
-            </div>
-            <div class="stereum-updateBox">
-              <div class="nodeUpdate-title_row">
-                <span>{{ $t("updatePanel.osTitle") }}</span>
-              </div>
-              <div class="versionContainer">
-                <div class="versionBox">
-                  <div id="current">
-                    <span>{{ $t("updatePanel.version") }}:</span>
-                  </div>
-                  <div id="latest">
-                    <span>{{ $t("updatePanel.available") }}:</span>
-                  </div>
-                  <div id="currentValue">
-                    <span>{{ osVersionCurrent }}</span>
-                  </div>
-                  <div id="latestValue">
-                    <span v-if="!searchingForOsUpdates || osUpdating" class="red-circle">{{ osVersionLatest }} </span>
-                    <img
-                      v-if="searchingForOsUpdates && !osUpdating"
-                      class="red-circle spinner"
-                      src="/img/icon/control/loading_circle.gif"
-                    />
-                  </div>
+  <div class="w-screen h-screen absolute inset-0 flex justify-end items-center">
+    <div class="w-full h-screen absolute inset-0 bg-black opacity-50 z-30 rounded-lg" @click="clickOutside"></div>
+    <Transition name="slide-fade">
+      <div
+        v-if="show"
+        class="w-[400px] delay-100 transition-transform h-full justify-self-end flex flex-col justify-between items-center border-y border-l border-gray-500 z-40 rounded-tl-lg rounded-bl-lg duration-300 bg-[#264744] p-4"
+        @mouseleave="hidePanel"
+      >
+        <div class="max-h-full bg-[#171a1c] rounded-md grid grid-cols-2 grid-rows-12 py-2">
+          <div class="col-start-1 col-span-3 row-start-1 row-span-6">
+            <div class="w-full h-full grid grid-cols-3 grid-rows-4 p-1 gap-y-2">
+              <div class="w-full col-start-1 col-end-4 row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
+                <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
+                  <img class="w-4/5" src="/img/icon/manage-node-icons/server.png" />
                 </div>
-                <div class="btnBox">
-                  <div
-                    class="searchBtn"
-                    @click="searchOsUpdates"
-                    @mouseenter="cursorLocation = `${searchVersion}`"
-                    @mouseleave="cursorLocation = ''"
+                <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
+                  <span
+                    class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
+                    >{{ $t("updatePanel.osTitle") }}</span
                   >
-                    <img src="/img/icon/header-icons/search.png" alt="icon" />
-                  </div>
-                  <div
-                    class="downloadBtn"
-                    :class="{ disabled: osVersionLatest === 0 || osUpdating }"
-                    @click="$emit('runOsUpdate')"
-                    @mouseenter="cursorLocation = `${updtBtn}`"
-                    @mouseleave="cursorLocation = ''"
-                  >
-                    <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
-                  </div>
-                  <div v-if="searchingForOsUpdates && searchingForOsUpdatesManual && !osUpdating" class="available">
-                    <span class="circle pulse"></span>
-                    <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="stereum-updateBoxWithIcon">
-            <div class="icon">
-              <img src="/img/icon/stereum-logo/stereum_logo_extern.png" />
-            </div>
-            <div class="stereum-updateBox">
-              <div class="nodeUpdate-title_row">
-                <span>{{ $t("updatePanel.launcherTitle") }}</span>
-              </div>
-              <div class="versionContainer">
-                <div class="versionBox">
-                  <div id="current">
-                    <span>{{ $t("updatePanel.current") }}:</span>
-                  </div>
-                  <div id="currentValue">
-                    <span>{{ launcherVersion }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="stereum-updateBoxWithIcon">
-            <div class="icon">
-              <img src="/img/icon/stereum-logo/stereum_logo_extern.png" />
-            </div>
-            <div class="stereum-updateBox">
-              <div class="nodeUpdate-title_row">
-                <span>{{ $t("updatePanel.nodeTitle") }}</span>
-              </div>
-              <div class="versionContainer">
-                <div class="versionBox">
-                  <div id="current">
-                    <span>{{ $t("updatePanel.current") }}:</span>
-                  </div>
-                  <div id="latest">
-                    <span>{{ $t("updatePanel.latest") }}:</span>
-                  </div>
-
-                  <div id="currentValue">
-                    <span>{{ stereumUpdate.current }}</span>
-                  </div>
-                  <div id="latestValue">
-                    <span>{{ stereumUpdate.version }}</span>
-                  </div>
-                </div>
-                <div class="btnBox">
-                  <div
-                    class="searchBtn"
-                    @click="searchUpdate"
-                    @mouseenter="cursorLocation = `${searchVersion}`"
-                    @mouseleave="cursorLocation = ''"
-                  >
-                    <img src="/img/icon/header-icons/search.png" alt="icon" />
-                  </div>
-                  <div
-                    class="downloadBtn"
-                    :class="{ disabled: !checkStereumUpdate() || updating }"
-                    @click="$emit('runUpdate', stereumUpdate)"
-                    @mouseenter="cursorLocation = `${updtBtn}`"
-                    @mouseleave="cursorLocation = ''"
-                  >
-                    <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
-                  </div>
-
-                  <div v-if="checkStereumUpdate()" class="available">
-                    <div class="updateIcon">
-                      <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+                  <div class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                      <span>{{ $t("updatePanel.version") }}:</span>
                     </div>
-                    <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
+                    <div
+                      class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold mr-3"
+                    >
+                      <span>{{ osVersionCurrent }}</span>
+                    </div>
                   </div>
-                  <div v-if="forceUpdateCheck && !checkStereumUpdate()" class="available">
-                    <span class="circle pulse"></span>
-                    <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
+                  <div class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                      <span>{{ $t("updatePanel.available") }}:</span>
+                    </div>
+                    <div
+                      class="col-start-4 col-span-3 row-start-2 row-span-1 text-[10px] flex justify-center items-center mr-3"
+                    >
+                      <div
+                        v-if="!nodeHeaderStore.searchingForOsUpdates || nodeHeaderStore.osUpdating"
+                        class="w-[17px] h-[17px] bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-2"
+                      >
+                        <span>{{ nodeHeaderStore.osVersionLatest ? nodeHeaderStore.osVersionLatest : 0 }}</span>
+                      </div>
+                      <img
+                        v-if="nodeHeaderStore.searchingForOsUpdates && !nodeHeaderStore.osUpdating"
+                        class="w-5 h-5 spinner mr-2"
+                        src="/img/icon/control/loading_circle.gif"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1"
+                  >
+                    <div
+                      class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      @click="searchOsUpdates"
+                    >
+                      <img class="w-4" src="/img/icon/header-icons/search.png" alt="icon" />
+                    </div>
+                    <div
+                      class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      :class="{
+                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
+                          nodeHeaderStore.osVersionLatest === 0 || nodeHeaderStore.osUpdating,
+                      }"
+                      @click="$emit('runOsUpdate')"
+                    >
+                      <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+                    </div>
+                  </div>
+                  <div
+                    v-if="
+                      nodeHeaderStore.searchingForOsUpdates &&
+                      nodeHeaderStore.searchingForOsUpdatesManual &&
+                      !nodeHeaderStore.osUpdating
+                    "
+                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
+                  >
+                    <span class="circle pulse mr-2"></span>
+                    <span class="text-[9px] text-gray-200">{{ $t("updatePanel.searching") }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full col-start-1 col-end-4 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
+                <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
+                  <img class="w-4/5" src="/img/icon/manage-node-icons/launcher.png" />
+                </div>
+                <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
+                  <span
+                    class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
+                    >{{ $t("updatePanel.launcherTitle") }}</span
+                  >
+                  <div class="col-start-1 col-end-6 row-start-2 row-span-1 grid grid-cols-">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                      <span>{{ $t("updatePanel.current") }}:</span>
+                    </div>
+                    <div
+                      class="col-start-6 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold ml-2"
+                    >
+                      <span>{{ serviceStore?.launcherVersion }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full col-start-1 col-end-4 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
+                <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
+                  <img class="w-4/5" src="/img/icon/manage-node-icons/launcher.png" />
+                </div>
+                <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
+                  <span
+                    class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
+                    >{{ $t("updatePanel.nodeTitle") }}</span
+                  >
+                  <div class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                      <span>{{ $t("updatePanel.current") }}:</span>
+                    </div>
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
+                      <span>{{ nodeHeaderStore.stereumUpdate.current }}</span>
+                    </div>
+                  </div>
+                  <div class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                      <span>{{ $t("updatePanel.latest") }}:</span>
+                    </div>
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
+                      <span>{{ nodeHeaderStore.stereumUpdate?.version }}</span>
+                    </div>
+                  </div>
+                  <div
+                    class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1"
+                  >
+                    <div
+                      class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      @click="searchUpdate"
+                    >
+                      <img class="w-4" src="/img/icon/header-icons/search.png" alt="icon" />
+                    </div>
+                    <div
+                      class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      :class="{
+                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
+                          !checkStereumUpdate || nodeHeaderStore.updating,
+                      }"
+                      @click="$emit('runUpdate', nodeHeaderStore.stereumUpdate)"
+                    >
+                      <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+                    </div>
+                  </div>
+
+                  <div
+                    v-if="checkStereumUpdate"
+                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
+                  >
+                    <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1">
+                      <img class="w-2 h-2" src="/img/icon/header-icons/update-green.png" alt="icon" />
+                    </div>
+                    <span class="text-[8px] text-gray-200 font-semibold ml-2"
+                      >{{ nodeHeaderStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
+                    >
+                  </div>
+                  <div
+                    v-if="nodeHeaderStore.searchingForUpdates && !checkStereumUpdate"
+                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
+                  >
+                    <span class="circle pulse mr-2"></span>
+                    <span class="text-[9px] text-gray-200">{{ $t("updatePanel.searching") }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="w-full col-start-1 col-end-4 row-start-4 row-span-1 grid grid-cols-12 grid-rows-2">
+                <div class="col-start-1 col-end-3 row-start-1 row-end-3 flex justify-center items-center p-1">
+                  <img class="w-4/5" src="/img/icon/manage-node-icons/plugin.png" />
+                </div>
+                <div class="col-start-3 col-end-13 row-start-1 row-end-3 grid grid-cols-12 grid-rows-2 p-1">
+                  <span
+                    class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
+                    >{{ $t("updatePanel.serviceTitle") }}</span
+                  >
+                  <span
+                    class="col-start-1 col-end-13 row-start-2 row-span-1 self-start text-[10px] font-semibold text-gray-300 text-left uppercase justify-self-start py-1"
+                    >{{ $t("updatePanel.serviceDesc") }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-start-1 col-span-3 row-start-7 row-span-5 flex flex-col justify-between items-center">
+            <div class="w-full h-[200px] flex justify-center items-center mx-auto px-1">
+              <div
+                class="w-full h-full flex flex-col justify-start items-center bg-[#334d4d] border border-gray-500 rounded-sm"
+              >
+                <div
+                  class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800"
+                >
+                  <div class="w-5 h-5 bg-[#243d36] rounded-full p-1">
+                    <img class="w-3" src="/img/icon/header-icons/update-green.png" alt="icon" />
+                  </div>
+                  <span class="text-center text-sm text-gray-300 font-semibold">{{
+                    $t("updatePanel.availablePlugin")
+                  }}</span>
+                </div>
+                <div
+                  class="w-full h-[170px] max-h-[170px] flex flex-col justify-start items-center bg-[#1c2021] overflow-x-hidden overflow-y-auto gap-1 pt-1"
+                >
+                  <div
+                    v-for="(item, index) in serviceStore.newUpdates"
+                    :key="index"
+                    class="w-full h-[30px] flex justify-between items-center p-1 mx-auto bg-[#334d4d] text-gray-300 font-semibold text-md"
+                  >
+                    <div
+                      v-if="item.running || nodeHeaderStore.updating"
+                      class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
+                    >
+                      <img class="w-5" src="/img/icon/node-icons/download_disabled.png" alt="icon" />
+                    </div>
+                    <div
+                      v-else
+                      class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      @click="$emit('runUpdate', item)"
+                    >
+                      <img class="w-5" src="/img/icon/node-icons/download2.png" alt="icon" />
+                    </div>
+                    <div class="serviceName">
+                      <span>{{ item.name }}</span>
+                    </div>
+                    <div class="version">
+                      <span>{{ item.version }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="serviceUpdates">
-        <div class="serviceUpdates-titleWithIcon">
-          <div class="icon">
-            <img src="/img/icon/click-installation/mainnet-icon.png" />
-          </div>
-          <div class="serviceUpdates-title">
-            <span class="title">{{ $t("updatePanel.serviceTitle") }}</span>
-            <span class="description">{{ $t("updatePanel.serviceDesc") }}</span>
-          </div>
-        </div>
-
-        <div class="service-updateBox">
-          <div class="availableTable">
-            <div class="tableHeader">
-              <div class="tableUpdateIcon">
-                <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+          <div class="col-start-1 col-span-3 row-start-12 row-end-13 w-full h-full flex justify-evenly items-center">
+            <div class="w-1/2 h-full flex justify-center items-center p-1">
+              <div
+                class="w-2/3 h-full flex justify-evenly items-center bg-[#334d4d] border border-gray-500 rounded-sm text-gray-400 text-sm font-semibold hover:bg-[#243535] transition-colors cursor-pointer active:scale-95"
+                :class="{
+                  'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
+                    (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || nodeHeaderStore.updating,
+                }"
+                @click.prevent.stop="updateConfirm"
+              >
+                <span>{{ $t("updatePanel.all") }}</span>
+                <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
               </div>
-              <span>{{ $t("updatePanel.availablePlugin") }}</span>
             </div>
-            <div class="tableContent">
-              <div v-for="(item, index) in newUpdates" :key="index" class="tableRow">
-                <div v-if="item.running || updating" class="downloadBtnDisabled">
-                  <img src="/img/icon/node-journal-icons/download_disabled.png" alt="icon" />
-                </div>
-                <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
-                  <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
-                </div>
-                <div class="serviceName">
-                  <span>{{ item.name }}</span>
-                </div>
-                <div class="version">
-                  <span>{{ item.version }}</span>
-                </div>
-              </div>
+            <div class="w-1/2 h-full flex justify-center items-center p-1">
+              <span class="text-gray-400 text-md font-semibold"
+                >{{ $t("updatePanel.auto") }} :
+                <span class="text-md uppercase font-semibold" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
+              >
             </div>
           </div>
         </div>
       </div>
-      <div class="updateAllBtnBox">
-        <div class="updateAllBtn">
-          <div
-            class="confirmUpdate"
-            :class="{
-              disabled: (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) || updating,
-            }"
-            @click.prevent.stop="$emit('updateConfirm')"
-            @mouseenter="cursorLocation = `${updtAllPlugin}`"
-            @mouseleave="cursorLocation = ''"
-          >
-            <span>{{ $t("updatePanel.all") }}</span>
-            <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
-          </div>
-        </div>
-        <div class="autoUpdateText">
-          <span
-            @mouseenter="cursorLocation = stereumApp.autoUpdate === 'on' ? `${autoUpt}` : `${manualUpt}`"
-            @mouseleave="cursorLocation = ''"
-            >{{ $t("updatePanel.auto") }} :
-            <span
-              class="autoUpdateText_status"
-              :class="onOff"
-              @mouseenter="cursorLocation = stereumApp.autoUpdate === 'on' ? `${autoUpt}` : `${manualUpt}`"
-              @mouseleave="cursorLocation = ''"
-              >{{ stereumApp.autoUpdate }}</span
-            ></span
-          >
-        </div>
-      </div>
-    </div>
+    </Transition>
   </div>
 </template>
-<script>
+<script setup>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useFooter } from "@/store/theFooter";
-export default {
-  props: {
-    clickBg: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      searchVersion: this.$t("updatePanel.searchVersion"),
-      updtBtn: this.$t("updatePanel.updtBtn"),
-      updtAllPlugin: this.$t("updatePanel.updtAllPlugin"),
-      autoUpt: this.$t("updatePanel.autoUpt"),
-      manualUpt: this.$t("updatePanel.manualUpt"),
-      stereumApp: {
-        current: "alpha",
-        latest: "2.0",
-        autoUpdate: "",
-      },
-      osVersionCurrent: "-",
-    };
-  },
-  computed: {
-    ...mapWritableState(useServices, {
-      newUpdates: "newUpdates",
-      launcherVersion: "launcherVersion",
-    }),
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-    }),
-    ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
-      stereumUpdate: "stereumUpdate",
-      updating: "updating",
-      searchingForOsUpdates: "searchingForOsUpdates",
-      searchingForOsUpdatesManual: "searchingForOsUpdatesManual",
-      isOsUpdateAvailable: "isOsUpdateAvailable",
-      osUpdating: "osUpdating",
-      osVersionLatest: "osVersionLatest",
-    }),
-    onOff() {
-      return {
-        green: this.stereumApp.autoUpdate === "on",
-        red: this.stereumApp.autoUpdate === "off",
-      };
-    },
-  },
-  async mounted() {
-    this.getSettings();
-    await this.getOsVersion();
-    await this.searchOsUpdates();
-  },
-  methods: {
-    searchUpdate() {
-      this.forceUpdateCheck = true;
-    },
-    testData() {
-      console.log(this.updating);
-    },
-    async getSettings() {
-      this.settings = await ControlService.getStereumSettings();
-      if (this.settings.stereum?.settings.updates.unattended.install) {
-        this.stereumApp.autoUpdate = "on";
-      } else {
-        this.stereumApp.autoUpdate = "off";
-      }
-    },
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
-      }
-      return false;
-    },
-    checkAvailableServicesNewUpdate() {
-      if (this.newUpdates.length <= 0) {
-        return false;
-      }
-      return true;
-    },
-    async searchOsUpdates(manual = false) {
-      if (this.osUpdating) {
-        this.searchingForOsUpdates = false;
-        this.searchingForOsUpdatesManual = false;
-        return;
-      }
-      if (this.searchingForOsUpdates) {
-        return;
-      }
-      this.searchingForOsUpdates = true;
-      if (manual) {
-        this.searchingForOsUpdatesManual = true;
-      }
-      await this.getUpdatablePackagesCount();
-      this.searchingForOsUpdates = false;
-      this.searchingForOsUpdatesManual = false;
-    },
-    async getUpdatablePackagesCount() {
-      try {
-        const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
-        const numPackages = Number(packagesCount);
-        this.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-        this.isOsUpdateAvailable = this.osVersionLatest ? true : false;
-        return this.osVersionLatest;
-      } catch (error) {
-        this.osVersionLatest = 0;
-        this.isOsUpdateAvailable = false;
-        console.log(error);
-      }
-    },
-    async getOsVersion() {
-      try {
-        const osVersion = await ControlService.getCurrentOsVersion();
+import { onMounted, computed, ref, watchEffect } from "vue";
+import { useUpdateCheck } from "@/composables/version.js";
 
-        this.osVersionCurrent = osVersion;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+//Emits
+const emit = defineEmits(["clickOutside", "updateConfirm"]);
+//refs
+const show = ref(false);
+//Stores
+const serviceStore = useServices();
+const nodeHeaderStore = useNodeHeader();
+
+//Data
+const stereumApp = ref({
+  current: "alpha",
+  latest: "2.0",
+  autoUpdate: "",
+});
+const osVersionCurrent = ref("-");
+
+//Computed
+const onOff = computed(() => {
+  if (stereumApp.value.autoUpdate == "on") {
+    return "text-green-700";
+  } else {
+    return "text-red-700";
+  }
+});
+
+watchEffect(() => {
+  if (nodeHeaderStore.displayUpdatePanel) {
+    setTimeout(() => {
+      show.value = true;
+    });
+  }
+});
+
+//on Mounted
+onMounted(async () => {
+  useUpdateCheck();
+  getSettings();
+  await getOsVersion();
+  await searchOsUpdates();
+});
+
+//Methods
+
+const hidePanel = () => {
+  show.value = false;
+  setTimeout(() => {
+    nodeHeaderStore.displayUpdatePanel = false;
+  }, 500);
+};
+
+const clickOutside = () => {
+  emit("clickOutside");
+};
+const searchUpdate = () => {
+  useUpdateCheck();
+};
+
+const checkStereumUpdate = computed(() => {
+  if (nodeHeaderStore.stereumUpdate && nodeHeaderStore.stereumUpdate.version)
+    return nodeHeaderStore.stereumUpdate.commit != nodeHeaderStore.stereumUpdate.current_commit ? true : false;
+  return false;
+});
+
+const checkAvailableServicesNewUpdate = computed(() => {
+  if (serviceStore.newUpdates.length <= 0) return false;
+  return true;
+});
+
+const getSettings = async () => {
+  let settings = await ControlService.getStereumSettings();
+  if (settings.stereum?.settings.updates.unattended.install) {
+    stereumApp.value.autoUpdate = "on";
+  } else {
+    stereumApp.value.autoUpdate = "off";
+  }
+};
+
+const searchOsUpdates = async (manual = false) => {
+  if (nodeHeaderStore.osUpdating) {
+    nodeHeaderStore.searchingForOsUpdates = false;
+    nodeHeaderStore.searchingForOsUpdatesManual = false;
+    return;
+  }
+  if (nodeHeaderStore.searchingForOsUpdates) {
+    return;
+  }
+  nodeHeaderStore.searchingForOsUpdates = true;
+  if (manual) {
+    nodeHeaderStore.searchingForOsUpdatesManual = true;
+  }
+  await getUpdatablePackagesCount();
+  nodeHeaderStore.searchingForOsUpdates = false;
+  nodeHeaderStore.searchingForOsUpdatesManual = false;
+};
+
+const getUpdatablePackagesCount = async () => {
+  try {
+    const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
+    const numPackages = Number(packagesCount);
+    nodeHeaderStore.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
+    nodeHeaderStore.isOsUpdateAvailable = nodeHeaderStore.osVersionLatest ? true : false;
+    return nodeHeaderStore.osVersionLatest;
+  } catch (error) {
+    nodeHeaderStore.osVersionLatest = 0;
+    nodeHeaderStore.isOsUpdateAvailable = false;
+    console.log(error);
+  }
+};
+
+const getOsVersion = async () => {
+  try {
+    const osVersion = await ControlService.getCurrentOsVersion();
+
+    osVersionCurrent.value = osVersion;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateConfirm = () => {
+  emit("updateConfirm");
 };
 </script>
 <style scoped>
-.no-events {
-  pointer-events: none;
-}
-.green {
-  color: #7bbb1a;
-}
-.red {
-  color: #c70505;
+.slide-fade-enter-active {
+  transition: all 0.5s ease-in-out;
 }
 
-.white {
-  color: white !important;
+.slide-fade-leave-active {
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
-.red-circle {
-  color: white !important;
-  background-color: #c70505;
-  width: 20px;
-  height: 20px;
-  padding: 4px;
-  border-radius: 30px;
-  text-align: center;
-  cursor: default;
+.slide-fade-enter-from {
+  transform: translateX(405px);
+  opacity: 0.5;
 }
-.spinner {
-  padding: 0px;
+.slide-fade-leave-to {
+  transform: translateX(405px);
+  opacity: 0.5;
 }
 
-.panelParent {
-  width: 36%;
-  height: 91%;
-  position: fixed;
-  top: 10%;
-  right: -37%;
-  z-index: 310;
-  transition-duration: 300ms;
-  cursor: default;
-}
-.clickOutside {
-  width: 100vw;
-  height: 91vh;
-  position: fixed;
-  left: 0;
-  top: 52px;
-  border-radius: 0 35px 0 0;
-  z-index: 311;
-}
-.panelContent {
-  width: 100%;
-  height: 100%;
-  border-radius: 1rem 0 0 1rem;
-  background-color: #2a2f32;
-  border: 2px solid rgb(107, 107, 107);
-  border-right: none;
-  z-index: 312;
-  opacity: 1;
-  position: absolute;
-  top: -6px;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.stereumUpdates {
-  width: 100%;
-  height: 40%;
-  padding: 10px;
-}
-.serviceUpdates {
-  width: 100%;
-  height: 53%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.nodeUpdate-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #375b5c;
-  margin-left: 15px;
-  margin-top: 10px;
-  text-transform: uppercase;
-}
-.nodeUpdate-title_row {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #4b8789;
-  margin-left: 1.5%;
-  text-transform: uppercase;
-}
-
-.serviceUpdates-titleWithIcon {
-  display: flex;
-  padding: 0 10px;
-}
-
-.serviceUpdates-titleWithIcon > .icon > img,
-.stereum-updateBoxWithIcon > .icon > img {
-  width: 25px;
-  border: 1px solid #d6d6d6;
-  border-radius: 50%;
-  box-shadow: 1px 1px 5px 1px #252525;
-}
-
-.launcherUpdate,
-.serviceUpdates-title {
-  width: 100%;
-  /* height: 20%; */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-}
-.launcherUpdate .title,
-.serviceUpdates-title .title {
-  font-size: 100%;
-  font-weight: 800;
-  color: #4b8789;
-  margin-left: 5px;
-  text-transform: uppercase;
-}
-.description,
-.description {
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: #c7c7c7;
-  margin-left: 5px;
-}
-
-.launcherBox {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.launcherBox .currentLauncher {
-  width: 17%;
-  margin-left: 15px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  align-self: center;
-}
-.launcherBox .valueLauncher {
-  width: max-content;
-  font-size: 0.8rem;
-  font-weight: 400;
-  margin-left: 33px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b4b443;
-  text-align: left;
-}
-
-.stereum-updateBoxesWrapper {
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: space-between;
-}
-
-.stereum-updateBoxWithIcon {
-  display: flex;
-  margin-top: 5px;
-}
-.stereum-updateBox {
-  width: 94%;
-  height: 90%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: space-between;
-}
-.versionContainer {
-  display: flex;
-  width: 100%;
-  height: 40%;
-  position: relative;
-}
-.stereum-updateBox .versionBox {
-  width: 60%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 40% 60%;
-  grid-template-rows: repeat(2, 1fr);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.stereum-updateBox .versionBox #current {
-  grid-column: 1/2;
-  grid-row: 1/2;
-  width: 100%;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  margin-left: 5px;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.stereum-updateBox .versionBox #currentValue {
-  width: 100%;
-  height: 100%;
-  grid-column: 2/3;
-  grid-row: 1/2;
-  font-size: 0.6rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b4b443;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-}
-.stereum-updateBox .versionBox #latest {
-  grid-column: 1/2;
-  grid-row: 2/3;
-  width: 100%;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  margin-left: 5px;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.stereum-updateBox .versionBox #latestValue {
-  width: 100%;
-  max-width: max-content;
-  height: 100%;
-  grid-column: 2/3;
-  grid-row: 2/3;
-  font-size: 0.6rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  color: #b4b443;
-  justify-self: center;
-  align-self: center;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-#currentValue span,
-#latestValue span {
-  width: 100%;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b4b443;
-  justify-self: center;
-  align-self: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-}
-#latestValue .redCircle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: #ec110e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#latestValue .redCircle span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #fff;
-}
-.stereum-updateBox .versionBox #autoUpdate {
-  grid-column: 1/2;
-  grid-row: 3/4;
-  width: 100%;
-  font-size: 0.6rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #c6c6c6;
-  margin-left: 5px;
-  justify-self: flex-start;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: clip;
-  white-space: nowrap;
-}
-.stereum-updateBox .versionBox #updateStatus {
-  grid-column: 2/3;
-  grid-row: 3/4;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #37614b;
-  justify-self: center;
-  align-self: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.btnBox {
-  width: 40%;
-  height: 100%;
-  max-height: 33px;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(12, 1fr);
-}
-.btnBox .searchBtn {
-  grid-column: 1/4;
-  grid-row: 2/9;
-  border-radius: 3px;
-  margin-left: 10px;
-  box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
-  width: 70%;
-  height: 100%;
-  min-height: 20px;
-  border: 1px solid #17a2b8;
-  background-color: #17a2b8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.btnBox .searchBtn img {
-  width: 30%;
-  height: 70%;
-}
-.btnBox .searchBtn:hover {
-  background-color: #028397;
-}
-.btnBox .searchBtn:active {
-  border-color: #028397;
-  box-shadow: none;
-}
-.btnBox .downloadBtn {
-  grid-column: 4/7;
-  grid-row: 2/9;
-  margin-right: 20px;
-  border: 1px solid #067c5a;
-  border-radius: 3px;
-  width: 70%;
-  height: 100%;
-  min-height: 20px;
-  background-color: #067c5a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.btnBox .downloadBtn img {
-  width: 40%;
-  height: 90%;
-}
-.btnBox .downloadBtn:hover {
-  background-color: rgb(3, 82, 60);
-}
-.btnBox .downloadBtn:active {
-  border-color: rgb(3, 82, 60);
-  box-shadow: none;
-}
 .available {
   grid-column: 1/7;
   grid-row: 10/12;
@@ -923,7 +606,7 @@ export default {
   width: 25%;
   height: 80%;
 }
-.availableTable .tableContent .tableRow .serviceName {
+.serviceName {
   grid-column: 2/3;
   width: 100%;
   height: 100%;
@@ -931,14 +614,14 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.availableTable .tableContent .tableRow .serviceName span {
+.serviceName span {
   font-size: 0.8rem;
   font-weight: 500;
   color: #c6c6c6;
   text-transform: uppercase;
 }
 
-.availableTable .tableContent .tableRow .version {
+.version {
   grid-column: 3/4;
   width: 100%;
   height: 100%;
@@ -949,7 +632,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.availableTable .tableContent .tableRow .version span {
+.version span {
   font-size: 0.8rem;
   font-weight: 500;
   color: #b4b443;
@@ -957,86 +640,5 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-.updateAllBtnBox {
-  width: 100%;
-  height: 10%;
-  background-color: transparent;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  position: absolute;
-  bottom: 0;
-}
-.updateAllBtn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 45%;
-  height: 100%;
-}
-.updateAllBtnBox .confirmUpdate {
-  width: 80%;
-  height: 50%;
-  background-color: #067c5a;
-  border-radius: 3px;
-  border: 2px solid #067c5a;
-  box-shadow: 0 1px 3px 1px rgb(46, 46, 46);
-  color: #c6c6c6;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  cursor: pointer;
-  transition-duration: 50ms;
-}
-.autoUpdateText {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  color: #c6c6c6;
-  width: 45%;
-  height: 100%;
-  font-size: 80%;
-}
-.autoUpdateText_status {
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.updateAllBtnBox .confirmUpdate img {
-  width: 13%;
-  height: 70%;
-  max-width: 13px;
-  max-height: 15px;
-}
-.updateAllBtnBox .confirmUpdate span {
-  font-size: 73%;
-  font-weight: 700;
-  color: #c6c6c6;
-  text-transform: uppercase;
-}
-.updateAllBtnBox .confirmUpdate:hover {
-  background-color: rgb(3, 82, 60);
-}
-.updateAllBtnBox .confirmUpdate:active {
-  border: none;
-  box-shadow: none;
-  transform: scale(0.95);
-}
-/* .btnBox .confirmUpdate:hover {
-  transform: scale(1.05);
-  color: #c6c6c6;
-  border: 2px solid #63957d;
-}
-.btnBox .confirmUpdate:active {
-  box-shadow: none;
-  transform: scale(1);
-  border: none;
-} */
-
-.disabled {
-  pointer-events: none;
-  background-color: #074634 !important;
-  opacity: 0.5;
 }
 </style>

@@ -7,7 +7,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       runningServices: [],
       refresh: true,
       stereumUpdate: {},
-      forceUpdateCheck: false,
+      searchingForUpdates: false,
       isUpdateAvailable: false,
       updating: false,
       searchingForOsUpdates: false,

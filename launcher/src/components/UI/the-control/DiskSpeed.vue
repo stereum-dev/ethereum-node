@@ -13,7 +13,7 @@
             <span>{{ $t("controlPage.write") }}</span>
           </div>
           <div class="write_val">
-            <span>{{ writeValue }} kb</span>
+            <span>{{ convertWriteValueToMb }} Mb</span>
           </div>
         </div>
         <div class="disk-speed_value">
@@ -21,7 +21,7 @@
             <span>{{ $t("controlPage.read") }}</span>
           </div>
           <div class="read_val">
-            <span>{{ readValue }} kb</span>
+            <span>{{ convertReadValueToMb }} Mb</span>
           </div>
         </div>
       </div>
@@ -37,6 +37,15 @@ export default {
       writeValue: "writeValue",
       readValue: "readValue",
     }),
+    convertWriteValueToMb() {
+      const mbValue = this.writeValue / 1024;
+      return Math.floor(mbValue); // Rounded down to the nearest whole number
+    },
+
+    convertReadValueToMb() {
+      const mbValue = this.readValue / 1024;
+      return Math.floor(mbValue); // Rounded down to the nearest whole number
+    },
   },
 };
 </script>

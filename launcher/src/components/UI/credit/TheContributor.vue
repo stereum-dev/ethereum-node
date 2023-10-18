@@ -86,7 +86,7 @@ export default {
   border-radius: 30px 30px 0 0;
 }
 .contributor-avatar img {
-  width: 60%;
+  width: 55%;
   height: 70%;
   border-radius: 40%;
 }

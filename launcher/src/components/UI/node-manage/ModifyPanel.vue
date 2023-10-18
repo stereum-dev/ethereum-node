@@ -210,7 +210,7 @@ export default {
       this.$emit("saveModify", {
         port: parseInt(this.port),
         executionClients: dependencies.filter((s) => s.category === "execution"),
-        beaconServices: dependencies.filter((s) => s.category === "consensus" || s.service === "CharonService"),
+        consensusClients: dependencies.filter((s) => s.category === "consensus" || s.service === "CharonService"),
         relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
       });
     },

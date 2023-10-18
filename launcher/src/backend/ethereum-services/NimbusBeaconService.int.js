@@ -62,7 +62,7 @@ test("nimbus validator import", async () => {
   //install nimbus
   let nimbusBC = serviceManager.getService("NimbusBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] })
 
-  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "goerli", installDir: "/opt/stereum", beaconServices: [nimbusBC] })
+  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
 
   let versions = await nodeConnection.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();

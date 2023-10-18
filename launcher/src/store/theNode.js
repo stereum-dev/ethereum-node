@@ -4,6 +4,10 @@ export const useNodeStore = defineStore("theNode", {
   state: () => {
     return {
       infoAlarm: true,
+      runNodePowerModal: false,
+      validatorRefList: [],
+      consensusRefList: [],
+      executionRefList: [],
       serviceLogs: [],
       consensusItems: [],
       executionItems: [],

@@ -16,7 +16,7 @@
   "journalnode": {
     "serverip": "IP",
     "servername": "NAME",
-    "edit": "to edit node",
+    "edit": "Manage node",
     "loading": "loading new states",
     "turnOn": "Turn Node on",
     "turnOff": "Turn Node off",
@@ -106,7 +106,8 @@
     "filter": "Filter..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
+    "confirm": "CONFIRM CHANGES",
+    "process": "processing...",
     "change": "CHANGES TO CONFIRM",
     "delete": "DELETE"
   },
@@ -480,7 +481,10 @@
     "tillAtest": "till attestation"
   },
   "confirmModal": {
-    "message": "Your node will go off line while you do this!",
+    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
+    "messageOff": "Your node will go offline!",
+    "messageOn": "Your node will go online!",
     "turnOn": "turn on",
     "turnOff": "turn off",
     "close": "click outside to close"
