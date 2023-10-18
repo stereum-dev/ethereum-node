@@ -169,7 +169,7 @@ export class OneClickInstall {
     let charon = undefined
     if (constellation.includes("CharonService")) {
       //SSVNetworkService
-      charon = this.serviceManager.getService("CharonService", { ...args, beaconServices: [this.beaconService] })
+      charon = this.serviceManager.getService("CharonService", { ...args, consensusClients: [this.beaconService] })
 
       this.extraServices.push(charon)
       this.notToStart.push(charon.id)
@@ -177,35 +177,35 @@ export class OneClickInstall {
 
     if (constellation.includes("LighthouseValidatorService")) {
       //LighthouseValidatorService
-      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
     }
 
     if (constellation.includes("LodestarValidatorService")) {
       //LodestarValidatorService
-      this.validatorService = this.serviceManager.getService("LodestarValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("LodestarValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
     }
 
     if (constellation.includes("PrysmValidatorService")) {
       //PrysmValidatorService
-      this.validatorService = this.serviceManager.getService("PrysmValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("PrysmValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
     }
 
 
     if (constellation.includes("NimbusValidatorService")) {
       //NimbusBeaconService
-      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
       this.needsKeystore.push(this.validatorService)
     }
 
     if (constellation.includes("TekuValidatorService")) {
       //TekuBeaconService
-      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
       this.needsKeystore.push(this.validatorService)
     }
 
     if (constellation.includes("SSVNetworkService")) {
       //SSVNetworkService
-      this.validatorService = this.serviceManager.getService("SSVNetworkService", { ...args, beaconServices: [this.beaconService], executionClients: [this.executionClient] })
+      this.validatorService = this.serviceManager.getService("SSVNetworkService", { ...args, consensusClients: [this.beaconService], executionClients: [this.executionClient] })
       this.needsKeystore.push(this.validatorService)
     }
 

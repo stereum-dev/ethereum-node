@@ -298,7 +298,7 @@ export default {
         installDir: this.installationPath ? this.installationPath : "/opt/stereum",
         port: parseInt(this.port),
         executionClients: [],
-        beaconServices: [],
+        consensusClients: [],
         checkpointURL: data.checkpointURL ? data.checkpointURL : false,
         relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
       };

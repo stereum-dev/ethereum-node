@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useServices = defineStore("services", {
   state: () => {
     return {
+      filteredServices: [],
       buttonState: [
         {
           id: 1,
@@ -18,6 +19,8 @@ export const useServices = defineStore("services", {
           display: true,
         },
       ],
+      backendServicesTimestamp: null,
+      backendServices: [],
       installedServices: [],
       runningServices: [],
       allServices: [
@@ -624,14 +627,6 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
-            {
-              title: "Pruning",
-              type: "action",
-              action: "pruning",
-              changeValue: null,
-              displayWarningModal: false,
-              icon: "/img/icon/plugin-menu-icons/prunning.png",
-            },
             // {
             //   title: "Resync",
             //   type: "action",

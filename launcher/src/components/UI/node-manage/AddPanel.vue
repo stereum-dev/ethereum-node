@@ -217,7 +217,7 @@ export default {
         installDir: this.installationPath ? this.installationPath : "/opt/stereum",
         port: parseInt(this.port),
         executionClients: dependencies.filter((s) => s.category === "execution"),
-        beaconServices: dependencies.filter((s) => s.category === "consensus" || s.service === "CharonService"),
+        consensusClients: dependencies.filter((s) => s.category === "consensus" || s.service === "CharonService"),
         checkpointURL: this.checkPointSync ? this.checkPointSync : false,
         relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
       });

@@ -1,21 +1,20 @@
 <template>
   <div class="plugins-parent">
-    <div class="shape"></div>
+    <!-- <div class="shape"></div> -->
 
     <slot></slot>
   </div>
 </template>
 <style scoped>
 .plugins-parent {
-  width: 90%;
-  height: 98%;
+  width: 100%;
+  height: 100%;
   background-color: #264744;
   border-radius: 0 35px 35px 35px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 1px 1px 10px 1px #171717;
 }
 .shape {
   width: 36.5%;

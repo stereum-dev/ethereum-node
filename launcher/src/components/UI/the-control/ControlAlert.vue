@@ -18,7 +18,7 @@
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
-      <div class="alert-box_messages">
+      <div class="alert-box_messages overflow-x-hidden overflow-y-auto">
         <div v-if="storageWarning" class="alert-message_yellow">
           <div class="icon-box">
             <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
@@ -174,13 +174,12 @@ export default {
       cpu: "cpu",
     }),
     ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
+      displayUpdatePanel: "displayUpdatePanel",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
       rpcState: "rpcState",
       dataState: "dataState",
       wsState: "wsState",
-      displayUpdatePanel: "displayUpdatePanel",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -398,39 +397,38 @@ export default {
   right: 0 !important;
 }
 .alert-box_parent {
-  width: 97%;
-  height: 99%;
-  margin-left: 3px;
-  border: 5px solid grey;
-  border-radius: 20px;
+  width: 161px;
+  max-height: 333px;
+  height: 333px;
+  border-radius: 15px;
   background-color: #264744;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 10px 5px;
   position: relative;
   box-shadow: 0px 0px 5px 2px #001717;
   cursor: default;
 }
 .alert-box {
   display: flex;
-  width: 95%;
-  height: 95%;
+  height: 330px;
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
+  padding: 5px;
 }
 .alert-box_header {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 90%;
-  height: 12%;
+  width: 100%;
+  height: 30px;
   background: #23272a;
   border: 1px solid grey;
   border-radius: 5px;
-  box-shadow: 1px 1px 5px 1px #001717;
-  padding: 1px;
+  padding: 1px 2px;
   box-sizing: border-box;
 }
 .icon_alarm {
@@ -442,12 +440,12 @@ export default {
   box-sizing: border-box;
   margin: 0 1.5px;
   opacity: 25%;
+  padding: 2px;
 }
 .active {
   opacity: 100%;
 }
 .icon_alarm img {
-  width: 100%;
   height: 100%;
 }
 .message {
@@ -470,38 +468,22 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 90%;
-  height: 85%;
+  width: 140px;
+  max-height: 338px;
+  height: 338px;
   background: #23272a;
   border: 1px solid #707070;
   border-radius: 5px;
-  box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
   flex-direction: column;
-  overflow: hidden;
-  overflow-y: scroll;
-}
-.alert-box_messages::-webkit-scrollbar {
-  width: 4px;
+  margin-top: 5px;
 }
 
-/* Track */
-.alert-box_messages::-webkit-scrollbar-track {
-  background: #3b4146;
-  box-sizing: border-box;
-  border-radius: 50%;
-}
-
-/* Handle */
-.alert-box_messages::-webkit-scrollbar-thumb {
-  background: #324b3f;
-  border-radius: 50%;
-}
 .alert-message_yellow {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 15%;
+  height: 13%;
   background: #ffd924;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -513,7 +495,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 15%;
+  height: 13%;
   background: rgb(173, 7, 7);
   border: 1px solid #707070;
   border-radius: 5px;
@@ -525,7 +507,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 15%;
+  height: 13%;
   background: #5f7e6a;
   border: 1px solid #707070;
   border-radius: 5px;

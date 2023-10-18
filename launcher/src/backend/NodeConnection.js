@@ -904,6 +904,7 @@ export class NodeConnection {
   }
 
   async checkUpdates() {
+
     let response = await axios.get("https://stereum.net/downloads/updates.json");
     if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
     return response.data;
@@ -1023,7 +1024,7 @@ export class NodeConnection {
     if (SSHService.checkExecError(response)) {
       throw new Error("Failed reading Stereum Version:\n" + SSHService.extractExecError(response));
     }
-    return response.stdout;
+    return response.stdout.trim();
   }
 
   async getCurrentLauncherVersion() {

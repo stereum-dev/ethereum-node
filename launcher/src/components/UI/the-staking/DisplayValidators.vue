@@ -1,6 +1,8 @@
 <template>
-  <div class="keys-parent">
-    <div class="keys-table-box">
+  <div class="col-start-1 col-end-13 row-start-1 row-end-7 relative grid grid-cols-12 grid-rows-3">
+    <div
+      class="h-[475px] border-4 border-gray-400 rounded-xl col-start-1 col-end-13 row-start-1 row-end-4 justify-center items-center bg-[#151618] text-gray-300"
+    >
       <div class="keys-table">
         <div v-if="importValidatorKeyActive" class="table-header">
           <span id="name">{{ $t("displayValidator.pk") }}</span>
@@ -357,6 +359,7 @@
 </template>
 
 <script>
+import { useListKeys, useUpdateValidatorStats } from "@/composables/validators";
 import KeyModal from "./KeyModal.vue";
 import FeeRecepientValidator from "./FeeRecepientValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
@@ -366,7 +369,7 @@ import RemoveValidator from "./RemoveValidatore.vue";
 import RemoveSingleModal from "./RemoveSingleModal.vue";
 import SearchOptions from "./SearchOptions.vue";
 import EnterPassword from "./EnterPassword.vue";
-import SelectService from "./SelectService.vue";
+import SelectService from "./SelectService";
 import FeeRecipient from "./FeeRecipient.vue";
 import InsertValidator from "./InsertValidator.vue";
 import ControlService from "@/store/ControlService";
@@ -376,7 +379,6 @@ import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
-import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
@@ -878,147 +880,10 @@ export default {
       return result;
     },
     listKeys: async function () {
-      this.totalBalance = 0;
-      let keyStats = [];
-      let clients = this.installedServices.filter((s) => s.category == "validator" && s.service !== "CharonService");
-      if (clients && clients.length > 0 && this.currentNetwork.network != "") {
-        for (let client of clients) {
-          //if there is already a list of keys ()
-          if (
-            (client.config.keys === undefined || client.config.keys.length === 0 || this.forceRefresh) &&
-            client.state === "running"
-          ) {
-            //refresh validaotr list
-            let result = await ControlService.listValidators(client.config.serviceID);
-            if (
-              !client.service.includes("Lighthouse") &&
-              !client.service.includes("Lodestar") &&
-              !client.service.includes("Web3Signer")
-            ) {
-              let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
-              let remoteKeys = resultRemote.data
-                ? resultRemote.data.map((e) => {
-                    return { validating_pubkey: e.pubkey, readonly: true };
-                  })
-                : [];
-              result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
-            }
-
-            //update service config (pinia)
-            client.config.keys = result.data
-              ? result.data.map((e) => {
-                  return { key: e.validating_pubkey, isRemote: e.readonly };
-                })
-              : [];
-
-            //update service datasets in Pinia store
-            this.installedServices = this.installedServices.map((service) => {
-              if (service.id === client.id) {
-                return client;
-              }
-              return service;
-            });
-          }
-
-          if (client.config.keys) {
-            keyStats = keyStats.concat(
-              client.config.keys.map((key) => {
-                return {
-                  key: key.key,
-                  validatorID: client.config.serviceID,
-                  icon: client.icon,
-                  activeSince: "-",
-                  status: "loading",
-                  balance: "-",
-                  network: client.config.network,
-                  isRemote: key.isRemote,
-                };
-              })
-            );
-          }
-        }
-        this.forceRefresh = false;
-        let alias = await ControlService.readKeys();
-        this.keys = keyStats.map((key) => {
-          return {
-            ...key,
-            displayName: alias[key.key],
-            showGrafitiText: false,
-            showCopyText: false,
-            showRemoveText: false,
-            showExitText: false,
-          };
-        });
-        if (this.keys && this.keys.length > 0) this.updateValidatorStats();
-      }
+      await useListKeys(this.forceRefresh);
     },
     async updateValidatorStats() {
-      let totalBalance = 0;
-      let data = [];
-
-      try {
-        data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
-        if (!data || data.length == 0) {
-          data = [];
-          let latestEpochResponse = await axios.get(this.currentNetwork.dataEndpoint + "/epoch/latest", {
-            validateStatus: function (status) {
-              return status < 500;
-            },
-          });
-          var latestEpoch = latestEpochResponse.data.data.epoch;
-          let buffer = this.keys.map((key) => key.key);
-
-          const chunkSize = 50;
-          for (let i = 0; i < buffer.length; i += chunkSize) {
-            //split validator accounts into chunks of 50 (api url limit)
-            const chunk = buffer.slice(i, i + chunkSize);
-            let response = await axios.get(
-              this.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()),
-              {
-                validateStatus: function (status) {
-                  return status < 500;
-                },
-              }
-            );
-            if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
-          }
-        }
-      } catch (err) {
-        console.log("Couldn't fetch validator stats:\n", err);
-        this.keys.forEach((key) => {
-          key.status = "NA";
-        });
-        return;
-      }
-
-      this.keys.forEach((key) => {
-        let info = data.find((k) => k.pubkey === key.key);
-        if (info) {
-          let d = new Date();
-          let now = new Date();
-          latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
-          let activationEpoch = parseInt(info.activationepoch);
-          if (key.network === "gnosis") {
-            d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
-          } else {
-            d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
-          }
-          key.status = info.status;
-          key.balance = info.balance / 1000000000;
-          key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";
-          if (key.isRemote) {
-            if (!this.keys.some((k) => k.key === key.key && !k.isRemote)) {
-              totalBalance += key.balance;
-            }
-          } else {
-            totalBalance += key.balance;
-          }
-        } else {
-          key.status = "deposit";
-          key.balance = "-";
-        }
-      });
-      this.totalBalance = totalBalance;
+      await useUpdateValidatorStats();
     },
 
     importKey: async function (val) {
@@ -1323,11 +1188,8 @@ export default {
   align-items: center;
 }
 .keys-parent {
-  width: 100%;
-  height: 100%;
-  margin-left: 5px;
-  grid-column: 1/10;
-  grid-row: 1/4;
+  grid-column: 1/13;
+  grid-row: 1/7;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 86% 7% 7%;
@@ -1340,7 +1202,6 @@ export default {
   grid-row: 1/3;
   width: 99%;
   height: 100%;
-  margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
   border-radius: 20px;
   display: flex;
@@ -1619,8 +1480,8 @@ remove-validator {
 
 .table-header {
   width: 100%;
-  height: 30px;
-  border-bottom: 7px solid #bfbfbf;
+  height: 25px;
+  border-bottom: 4px solid #bfbfbf;
   display: grid;
   grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
 }
@@ -1632,7 +1493,7 @@ remove-validator {
   justify-self: flex-start;
 }
 .table-header span {
-  color: #fff;
+  color: #dddddd;
   font-size: 10px;
   font-weight: 700;
   display: flex;
