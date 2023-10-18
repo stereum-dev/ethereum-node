@@ -95,12 +95,13 @@ onUnmounted(() => {
 const oneWayConnection = (start, end) => {
   if (start && end) {
     lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    lineOne.value.position();
     lineOne.value.setOptions({
-      startPlugSize: 1,
-      endPlugSize: 2,
       size: 2,
-      color: "#6AEF9B",
+      color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
   }
 };
@@ -109,16 +110,14 @@ const twoWaysConnections = (start, middle, end) => {
   if (start && middle && end) {
     lineTwo.value = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
     lineTwo.value.setOptions({
-      startPlugSize: 1,
-      endPlugSize: 2,
+      path: "fluid",
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
     });
     lineThree.value = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
     lineThree.value.setOptions({
-      startPlugSize: 1,
-      endPlugSize: 2,
+      path: "fluid",
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
@@ -147,10 +146,10 @@ const lineDrawHandler = (item) => {
         end = getValidatorRef ? getValidatorRef?.ref : null;
         if (start && middle && end) {
           twoWaysConnections(start, middle, end);
-        } else if (start && middle) {
-          oneWayConnection(start, middle);
-        } else if (middle && end) {
-          oneWayConnection(middle, end);
+        } else if (!start || !middle || !end) {
+          const newStart = !start ? middle : start;
+          const newEnd = !end ? middle : end;
+          oneWayConnection(newStart, newEnd);
         }
       } else {
         return;
@@ -178,25 +177,25 @@ const lineDrawHandler = (item) => {
       }
     }
   } else if (item && item.displayPluginMenu) {
-    removeConnectionLines(item);
+    removeConnectionLines();
   }
 };
 
-const removeConnectionLines = (item) => {
-  if (item.category === "execution" || item.category === "validator") {
-    if (lineOne.value) {
-      lineOne.value.remove();
-      lineOne.value = null;
-    }
-  } else if (item.category === "consensus") {
-    if (lineTwo.value) {
-      lineTwo.value.remove();
-      lineTwo.value = null;
-    }
-    if (lineThree.value) {
-      lineThree.value.remove();
-      lineThree.value = null;
-    }
+const removeConnectionLines = () => {
+  // Remove all existing connections
+  if (lineOne.value) {
+    lineOne.value.remove();
+    lineOne.value = null;
+  }
+
+  if (lineTwo.value) {
+    lineTwo.value.remove();
+    lineTwo.value = null;
+  }
+
+  if (lineThree.value) {
+    lineThree.value.remove();
+    lineThree.value = null;
   }
 };
 
