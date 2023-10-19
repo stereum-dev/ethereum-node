@@ -2,6 +2,7 @@
   <base-layout>
     <!-- Start Control main layouts -->
     <div class="ctrGridParent gap-1 relative">
+      <TooltipDialog :open="dialog" />
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
@@ -115,6 +116,7 @@ import ResyncModal from "../the-node/ResyncModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useFooter } from "@/store/theFooter";
+import TooltipDialog from "./TooltipDialog.vue";
 export default {
   components: {
     ControlDashboard,
@@ -123,6 +125,7 @@ export default {
     TheExpert,
     PrunningModal,
     ResyncModal,
+    TooltipDialog,
   },
   data() {
     return {

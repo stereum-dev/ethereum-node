@@ -26,50 +26,23 @@
 
 <script setup>
 import ControlService from "@/store/ControlService";
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import i18n from "../../../../includes/i18n";
 
 const t = i18n.global.t;
 
 const supportMessage = t("installitionMenu.osSupported");
 
-const active = ref(false);
+const active = ref(true);
 const isSupported = ref(false);
-const running = ref(false);
 let message = ref(null);
 
-const os = computed(() => {
-  return window.navigator.platform;
-});
-
 // Lifecycle Hooks
-
 onMounted(() => {
-  osCheck();
   checkOsRequirements();
 });
 
 //Methods
-const osCheck = () => {
-  active.value = true;
-  setTimeout(() => {
-    if (os.value.includes("Win")) {
-      message.value = "Windows";
-      isSupported.value = true;
-    } else if (os.value.includes("Mac")) {
-      message.value = "MacOS";
-      isSupported.value = true;
-    } else if (os.value.includes("Linux")) {
-      message.value = "Linux";
-      isSupported.value = true;
-    } else {
-      message.value = "Not Supported";
-      isSupported.value = false;
-    }
-    active.value = false;
-  }, 5000);
-};
-
 const display = async (osResponse, suResponse) => {
   const osData = await osResponse;
   const suData = await suResponse;
@@ -106,7 +79,7 @@ const display = async (osResponse, suResponse) => {
   } else {
     message.value = "UNSUPPORTED OS";
   }
-  running.value = false;
+  active.value = false;
 };
 const checkOsRequirements = async () => {
   const osResponse = await ControlService.checkOS();
