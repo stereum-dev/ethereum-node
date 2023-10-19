@@ -26,7 +26,7 @@
 
 <script setup>
 import ControlService from "@/store/ControlService";
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import i18n from "../../../../includes/i18n";
 
 const t = i18n.global.t;
