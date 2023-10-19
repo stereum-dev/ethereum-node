@@ -11,7 +11,7 @@
 
 <script setup>
 import { useControlStore } from "@/store/theControl";
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 import ControlService from "@/store/ControlService";
 
 const controlStore = useControlStore();
