@@ -11,7 +11,7 @@ export async function useListKeys(forceRefresh) {
     const stakingStore = useStakingStore();
 
     let keyStats = [];
-    let clients = serviceStore.installedServices.filter((s) => s.category == "validator");
+    let clients = serviceStore.installedServices.filter((s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService");
     if (clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") {
         for (let client of clients) {
             //if there is already a list of keys ()

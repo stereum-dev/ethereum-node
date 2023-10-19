@@ -904,7 +904,6 @@ export class NodeConnection {
   }
 
   async checkUpdates() {
-
     let response = await axios.get("https://stereum.net/downloads/updates.json");
     if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
     return response.data;
@@ -1214,7 +1213,7 @@ export class NodeConnection {
       const options = {
         target: target[i],
         port: "54321",
-        status: "O", // Timeout, Refused, Open, Unreachable
+        status: "O", // Timeout(T), Refused(R), Open(O), Unreachable(U)
         banner: true,
       };
       const evilscan = new Evilscan(options);

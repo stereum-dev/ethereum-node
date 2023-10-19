@@ -186,7 +186,7 @@ export async function useRestartService(client) {
   client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
   if (!client.yaml.includes("isPruning: true")) {
     client.serviceIsPending = true;
-    await ControlService.restartService(client.config.serviceID);
+    await ControlService.restartService(structuredClone(client));
     client.serviceIsPending = false;
     updateStates();
   }
