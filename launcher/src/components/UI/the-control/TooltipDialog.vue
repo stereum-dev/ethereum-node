@@ -96,12 +96,12 @@ export default {
   animation-duration: 0.5s;
 }
 .amsterdam {
-  top: 16%;
-  left: 48.8%;
+  top: 15%;
+  left: 47.5%;
 }
 .syncstatus {
   top: 30%;
-  left: 48.8%;
+  left: 47.5%;
 }
 .wrapper {
   width: 100%;
