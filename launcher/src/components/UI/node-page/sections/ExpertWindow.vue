@@ -129,7 +129,7 @@
                 name="check-button"
                 class="sr-only peer"
                 checked
-                @change="somethingIsChanged()"
+                @change="somethingIsChanged(option)"
               />
               <div
                 class="w-12 h-5 rounded-full peer bg-gray-700 peer-checked:after:translate-x-7 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-green-600 peer-checked:shadow-inner peer-checked:border-green-600 peer-checked:shadow-gray-600"
@@ -155,7 +155,7 @@
                 name="check-button"
                 class="sr-only peer"
                 checked
-                @change="somethingIsChanged()"
+                @change="somethingIsChanged(option)"
               />
               <div
                 class="w-12 h-5 rounded-full peer bg-gray-700 peer-checked:after:translate-x-7 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all border-gray-600 peer-checked:bg-green-600 peer-checked:shadow-inner peer-checked:border-green-600 peer-checked:shadow-gray-600"
@@ -272,8 +272,13 @@ export default {
       //   [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
       // );
 
-      if (this.item.service === "SSVNetworkService")
+      if (this.item.service === "SSVNetworkService") {
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
+      }
+      if (this.item.service === "PrometheusService") {
+        this.item.prometheusConfig = await ControlService.readPrometheusConfig(this.item.config.serviceID);
+        this.prometheusConfig = this.item.prometheusConfig;
+      }
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         if (this.item.yaml.includes("isPruning: true")) {
           option.disabled = true;
@@ -283,7 +288,13 @@ export default {
           option.disabled = false;
         }
         if (option.type === "select" || option.type === "text" || option.type === "toggle") {
-          option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
+          if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+            option.changeValue = this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
+          } else {
+            option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
+              ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
+              : "";
+          }
         }
         return {
           ...option,
@@ -292,30 +303,116 @@ export default {
         };
       });
     },
+
     async writeService() {
       this.item.yaml = this.item.yaml.replace(
         new RegExp("(autoupdate: )(.*)(\\n)"),
         "$1" + this.checkAutoUpdate() + "$3"
       );
+
+      const ipReg = /^(\d{1,3}\.){3}\d{1,3}$/;
       this.item.expertOptions.forEach((option) => {
-        if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
+        let validValue = false;
+        if (option.type === "select" && option.value.length > 0) {
+          for (const el of option.value) {
+            validValue = el === option.changeValue ? true : validValue;
+          }
+        }
+        if (
+          option.changeValue != undefined &&
+          option.changeValue != null &&
+          (!isNaN(option.changeValue) || option.changeValue.match(ipReg) || validValue)
+        ) {
           if (option.changed) {
-            this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
+            for (let i = 0; i < option.pattern.length; i++) {
+              if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+                this.item.yaml =
+                  option.changeValue && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
+                    : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
+              } else if (option.title === "External IP Address") {
+                let reg = "";
+                let replacement = "";
+                const extIPCmd = [
+                  {
+                    name: "Lighthouse",
+                    reg: "  - bn\n",
+                    replacement: `  - bn\n  - --enr-address=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Lodestar",
+                    reg: "  - beacon\n",
+                    replacement: `  - beacon\n  - --enr.ip=${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Nimbus",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --nat:extip:${option.changeValue}\n`,
+                  },
+                  {
+                    name: "Prysm",
+                    reg: "--accept-terms-of-use=true",
+                    replacement: `--accept-terms-of-use=true --p2p-host-ip=${option.changeValue}`,
+                  },
+                  {
+                    name: "Teku",
+                    reg: "command:\n",
+                    replacement: `command:\n  - --p2p-advertised-ip=${option.changeValue}\n`,
+                  },
+                ];
+                for (const el of extIPCmd) {
+                  if (el.name === this.item.name) {
+                    reg = el.reg;
+                    replacement = el.replacement;
+                  }
+                }
+                this.item.yaml =
+                  option.changeValue === "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "")
+                    : option.changeValue !== "" && this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "$1" + option.changeValue + "$3")
+                    : option.changeValue !== "" && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(new RegExp(reg), replacement)
+                    : this.item.yaml;
+              } else if (option.title === "External TCP/UDP port" && (i === 2 || i === 3)) {
+                let tcp_udp = i === 2 ? "/tcp" : "/udp";
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i], "m"),
+                  "$1" + ":" + option.changeValue + ":" + option.changeValue + tcp_udp
+                );
+              } else {
+                this.item.yaml = this.item.yaml.replace(
+                  new RegExp(option.pattern[i]),
+                  "$1" + option.changeValue + "$3"
+                );
+              }
+            }
           }
           option.changed = false;
         }
       });
+
       if (this.item.service === "SSVNetworkService")
         await ControlService.writeSSVNetworkConfig({
           serviceID: this.item.config.serviceID,
           config: this.item.ssvConfig,
         });
+      if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig) {
+        if (!this.item.yaml.includes("overwrite: false")) {
+          this.item.yaml = this.item.yaml.trim() + "\noverwrite: false";
+        }
+        await ControlService.writePrometheusConfig({
+          serviceID: this.item.config.serviceID,
+          config: this.item.prometheusConfig,
+        });
+      }
       await ControlService.writeServiceYAML({
         id: this.item.config.serviceID,
         data: this.item.yaml,
         service: this.item.service,
       });
     },
+
     checkAutoUpdate(val) {
       if (val != undefined && val != null && !isNaN(val)) {
         val = val == "true";
