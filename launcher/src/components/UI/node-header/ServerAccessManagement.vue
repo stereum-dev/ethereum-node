@@ -10,7 +10,7 @@
           <div class="management-info_box_row">
             <span>{{ serverNam }}</span
             ><span @mouseenter="cursorLocation = serverNam" @mouseleave="cursorLocation = ''">{{
-              selectedConnection.name
+              selectedConnection?.name
             }}</span>
           </div>
           <div class="management-info_box_row">
@@ -20,7 +20,7 @@
           <div class="management-info_box_row">
             <span>{{ userNam }}</span
             ><span @mouseenter="cursorLocation = userNam" @mouseleave="cursorLocation = ''">{{
-              selectedConnection.user
+              selectedConnection?.user
             }}</span>
           </div>
         </div>
@@ -32,7 +32,7 @@
           <div class="management-info_box_row">
             <span>{{ port }}</span
             ><span @mouseenter="cursorLocation = port" @mouseleave="cursorLocation = ''">{{
-              selectedConnection.port ? selectedConnection.port : 22
+              selectedConnection?.port ? selectedConnection.port : 22
             }}</span>
           </div>
           <div class="management-info_box_row" />

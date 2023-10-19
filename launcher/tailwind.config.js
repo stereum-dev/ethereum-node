@@ -3,6 +3,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
+   
         drop: "url('/img/icon/manage-node-icons/drag.png')",
       },
       gridTemplateRows: {

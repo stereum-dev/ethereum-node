@@ -1,13 +1,8 @@
 <template>
-  <background-page>
-    <installation-menu></installation-menu>
-  </background-page>
+  <WelcomeScreen />
 </template>
-<script>
-import BackgroundPage from "../components/layers/BackgroundPage.vue";
-import InstallationMenu from "../components/UI/the-welcome/InstallitionMenu.vue";
-export default {
-  components: { BackgroundPage, InstallationMenu },
-};
+
+
+<script setup>
+import WelcomeScreen from "../components/UI/welcome-page/WelcomeScreen.vue";
 </script>
-<style scoped></style>
