@@ -37,12 +37,7 @@ const active = ref(true);
 const isSupported = ref(false);
 let message = ref(null);
 
-const os = computed(() => {
-  return window.navigator.platform;
-});
-
 // Lifecycle Hooks
-
 onMounted(() => {
   checkOsRequirements();
 });
