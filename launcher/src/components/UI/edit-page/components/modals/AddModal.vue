@@ -57,7 +57,10 @@ const getConfirmText = computed(() => {
   if (isAddPanelActivated.value) {
     if (props.client.category === "execution") {
       text = "confirm";
-    } else if (props.client.category === "consensus" || props.client.category === "validator") {
+    } else if (
+      props.client.category === "consensus" ||
+      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service))
+    ) {
       text = "next";
     } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
       text = "confirm";
@@ -69,7 +72,7 @@ const getConfirmText = computed(() => {
   } else if (isModifyActivated.value) {
     text = "confirm";
   }
-  return text;
+  return text ? text : "confirm";
 });
 
 const getSubTitles = computed(() => {
@@ -92,7 +95,7 @@ onMounted(() => {
 //Methods
 
 const confirmInstall = () => {
-  if (props.client.category === "execution" && getConfirmText.value === "confirm") {
+  if (getConfirmText.value === "confirm") {
     props.client.addPanel = false;
     emit("confirmInstall", properties.value);
   } else if (
@@ -103,22 +106,12 @@ const confirmInstall = () => {
     isModifyActivated.value = true;
   } else if (
     props.client.category === "service" &&
-    props.client.service !== "FlashbotsMevBoostService" &&
-    getConfirmText.value === "confirm"
-  ) {
-    props.client.addPanel = false;
-    emit("confirmInstall", properties.value);
-  } else if (
-    props.client.category === "service" &&
     props.client.service === "FlashbotsMevBoostService" &&
     !isRelaysActivated.value &&
     getConfirmText.value === "next"
   ) {
     isAddPanelActivated.value = false;
     isRelaysActivated.value = true;
-  } else if (isModifyActivated.value && getConfirmText.value === "confirm") {
-    props.client.addPanel = false;
-    emit("confirmInstall", properties.value);
   } else if (
     isRelaysActivated.value &&
     props.client.category === "service" &&
