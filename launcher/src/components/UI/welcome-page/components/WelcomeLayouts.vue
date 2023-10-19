@@ -14,3 +14,19 @@
     </div>
   </div>
 </template>
+<style scoped>
+#logo {
+  animation: logoAnimation 1s ease-in-out forwards;
+}
+
+@keyframes logoAnimation {
+  0% {
+    opacity: 0;
+    transform: scale(0) translate(-300px, -300px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
+}
+</style>
