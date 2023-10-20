@@ -16,7 +16,7 @@
   "journalnode": {
     "serverip": "IP",
     "servername": "НЭР",
-    "edit": "нөүд хянах",
+    "edit": "Manage node",
     "loading": "loading new states",
     "turnOn": "Node-г асаах",
     "turnOff": "Node-г унтраах",
@@ -106,7 +106,8 @@
     "filter": "Шүүлтүүр..."
   },
   "changeConfirm": {
-    "confirm": "БАТАЛГААЖУУЛАХ",
+    "confirm": "CONFIRM CHANGES",
+    "process": "processing...",
     "change": "БАТАЛГААЖУУЛАХ ӨӨРЧЛӨЛТҮҮД",
     "delete": "УСТГАХ"
   },
@@ -480,7 +481,10 @@
     "tillAtest": "till attestation"
   },
   "confirmModal": {
-    "message": "Your node will go off line while you do this!",
+    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
+    "messageOff": "Your node will go offline!",
+    "messageOn": "Your node will go online!",
     "turnOn": "асаах",
     "turnOff": "унтраах",
     "close": "хаахын тулд гадна талд товшино уу"
@@ -522,7 +526,13 @@
     "stepTwo": "Ухаалаг утсан дээрээ програмаа нээнэ үү",
     "stepThree": "QR кодыг сканнердах",
     "stepFour": "Тест мэдэгдэлийг илгээнэ үү",
-    "close": "хаахын тулд гадна талд товшино уу"
+    "close": "хаахын тулд гадна талд товшино уу",
+    "dash": "Dashboard",
+    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
+    "goTo": "Go to",
+    "machinename": "Machine Name",
+    "apikey": "API Key",
+    "apply": "APPLY"
   },
   "replacePanel": {
     "client": "Клайнт",
