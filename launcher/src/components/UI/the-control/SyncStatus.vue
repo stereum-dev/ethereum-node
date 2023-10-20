@@ -494,7 +494,6 @@ export default {
   font-size: 50%;
   justify-content: center;
   align-items: center;
-  position: absolute;
   bottom: 0;
 }
 .pageNumber {
