@@ -26,16 +26,23 @@ export class SSHService {
   }
 
   async checkSSHConnection(connectionInfo, timeout) {
+    console.log("checking ssh connection")
     return new Promise((resolve, reject) => {
       const conn = new Client();
 
       conn.on('ready', () => {
+        console.log("ready")
         conn.end();
         resolve(true);
       });
 
       conn.on('error', (err) => {
+        console.log("error")
         reject(err);
+      });
+
+      conn.on('banner', (msg) => {
+        reject(msg)
       });
 
       conn.connect({
