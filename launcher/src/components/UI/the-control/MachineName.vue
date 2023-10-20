@@ -8,21 +8,13 @@
     </div>
   </div>
 </template>
-<script>
-import { defineComponent, computed } from "vue";
+<script setup>
+import { computed } from "vue";
 import { useControlStore } from "@/store/theControl";
 
-export default defineComponent({
-  setup() {
-    const controlStore = useControlStore();
+const controlStore = useControlStore();
 
-    const ServerName = computed(() => controlStore.ServerName);
-
-    return {
-      ServerName,
-    };
-  },
-});
+const ServerName = computed(() => controlStore.ServerName);
 </script>
 
 <style scoped>
