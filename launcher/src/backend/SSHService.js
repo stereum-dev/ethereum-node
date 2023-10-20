@@ -31,13 +31,11 @@ export class SSHService {
       const conn = new Client();
 
       conn.on('ready', () => {
-        console.log("ready")
         conn.end();
         resolve(true);
       });
 
       conn.on('error', (err) => {
-        console.log("error")
         reject(err);
       });
 
