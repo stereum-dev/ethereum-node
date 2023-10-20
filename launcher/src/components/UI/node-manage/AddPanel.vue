@@ -147,8 +147,9 @@ export default {
         "Web3SignerService",
         "ValidatorEjectorService",
         "SSVNetworkService",
+        "MetricsExporterService",
       ],
-      noInstallPathServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService"],
+      noInstallPathServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService", "MetricsExporterService"],
     };
   },
   computed: {

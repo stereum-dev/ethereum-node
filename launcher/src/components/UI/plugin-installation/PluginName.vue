@@ -161,12 +161,12 @@ export default {
       if (this.installMonitoring) {
         this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.concat(
           this.allPlugins.filter((s) =>
-            ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service)
+            ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
           )
         );
       } else {
         this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.filter(
-          (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s.service)
+          (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
         );
       }
     },

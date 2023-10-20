@@ -440,6 +440,10 @@ class ControlService extends EventEmitter {
   async AddExistingSSHKey(args) {
     return await this.promiseIpc.send("AddExistingSSHKey", args);
   }
+
+  async beaconchainMonitoringModification(args){
+    return await this.promiseIpc.send("beaconchainMonitoringModification", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

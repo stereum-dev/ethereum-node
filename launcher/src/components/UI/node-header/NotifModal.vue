@@ -78,7 +78,7 @@
               </div>
             </div>
             <div class="go-to-link">
-              {{ $t("notifModal.goTo") }}<span @click="openBeaconcha()">https://beaconcha.in/login#app</span>
+              {{ $t("notifModal.goTo") }}<span @click="openBeaconcha()">https://beaconcha.in/user/settings#app</span>
             </div>
             <div class="enter-box">
               <div class="enter-input">
@@ -131,12 +131,16 @@ export default {
   methods: {
     selectedValidator(arg) {
       //to select the validator
-      this.selectedVal = arg.name;
-      console.log(this.selectedVal);
+      this.selectedVal = arg.config.serviceID;
     },
-    applyBeaconChain() {
+    async applyBeaconChain() {
       //to apply the beaconchain dashboard
-      console.log(this.machineName, this.apiKey);
+      await ControlService.beaconchainMonitoringModification(
+        {
+          machineName: this.machineName,
+          apiKey: this.apiKey,
+          selectedVal: this.selectedVal,
+        });
     },
     qrViewer() {
       this.qrPage = !this.qrPage;
@@ -151,7 +155,7 @@ export default {
       }
     },
     openBeaconcha() {
-      let url = "https://beaconcha.in/login#app/";
+      let url = "https://beaconcha.in/user/settings#app";
       window.open(url, "_blank");
       console.log("test");
     },
