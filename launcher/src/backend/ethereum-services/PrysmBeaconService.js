@@ -51,17 +51,17 @@ export class PrysmBeaconService extends NodeService {
       image, //image
       "v3.1.1", //imageVersion
       "/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=" +
-      dataDir +
-      ' --p2p-host-ip="" --p2p-host-dns="" --' +
-      network +
-      "=true --block-batch-limit=512" +
-      genesisFile +
-      " --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint=" +
-      executionEndpoint +
-      " --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=" +
-      JWTDir +
-      checkpointCommand +
-      builderCommand, //command
+        dataDir +
+        ' --p2p-host-dns="" --' +
+        network +
+        "=true --block-batch-limit=512" +
+        genesisFile +
+        " --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint=" +
+        executionEndpoint +
+        " --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=" +
+        JWTDir +
+        checkpointCommand +
+        builderCommand, //command
       null, //entrypoint
       null, //env
       ports, //ports
@@ -100,8 +100,9 @@ export class PrysmBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${
+      this.id
+    }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

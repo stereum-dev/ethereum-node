@@ -5,7 +5,7 @@
 </template>
 <style scoped>
 .card {
-  margin: 1%;
+  max-height: 80px;
   background: #2a2a2a;
   border-radius: 10px;
   border: 1px solid #343434;

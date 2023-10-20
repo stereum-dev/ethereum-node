@@ -11,7 +11,7 @@
           </div>
         </div>
         <div
-          class="confirm-btn"
+          class="confirm-btn bg-teal-600 border border-gray-400 hover:border-gray-500 shadow-md shadow-[#1b1b1b] hover:bg-teal-800 active:scale-95 transition duration-150 px-2 py-1"
           @click="confirm"
           @mouseenter="cursorLocation = `${chngAppr}`"
           @mouseleave="cursorLocation = ''"
@@ -214,7 +214,6 @@ export default {
   },
   mounted() {
     this.getSettings();
-    this.forceUpdateCheck = true;
   },
   updated() {
     this.checkSettings();
@@ -395,23 +394,23 @@ export default {
   pointer-events: none;
 }
 .seting-panel_parent {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 99.95%;
-  height: 91%;
   background-color: #232323;
-  border: 4px solid #979797;
-  border-radius: 10px 35px 10px 10px;
+  border: 3px solid #979797;
+  border-radius: 10px;
   z-index: 0;
   box-sizing: border-box;
 }
 .seting-panel_box {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 95%;
   justify-content: flex-start;
   align-items: center;
 }
@@ -467,31 +466,18 @@ export default {
   align-items: center;
 }
 .confirm-btn {
-  width: max-content;
-  height: 65%;
-  background: #35a835;
-  border: 1px solid #707070;
-  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  width: 100px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 100%;
   font-weight: 600;
   color: #fff;
-  padding: 0 0.7%;
   border-radius: 20px;
   cursor: pointer;
-  margin: 5% 0;
-  padding: 0 2%;
 }
-.confirm-btn:hover {
-  background: #54f454;
-}
-.confirm-btn:active {
-  background: rgba(53, 168, 53, 0.5);
-  border: none;
-  box-shadow: none;
-}
+
 .division-line {
   width: 95%;
   height: 1%;

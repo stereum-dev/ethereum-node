@@ -1,9 +1,9 @@
 <template>
   <circle-progress
     :fill-color="color"
-    :size = 40
-    :border-width = 2
-    :border-bg-width = 3
+    :size="43"
+    :border-width="3"
+    :border-bg-width="2"
     :percent="parseInt(syncPercent)"
     empty-color="black"
   />

@@ -446,27 +446,27 @@ export default {
 }
 .consensusName,
 .executionName {
-  font-size: 40%;
+  font-size: 60%;
   font-weight: 600;
   text-shadow: 1px 2px 5px #4f5256;
   display: flex;
   width: 100%;
-  height: 15%;
+  height: 17%;
   justify-content: center;
   align-items: center;
   text-transform: uppercase;
 }
 .executionIconCons {
   position: absolute;
-  width: 54%;
-  left: 22.7%;
-  top: 24.6%;
+  width: 51%;
+  left: 24.5%;
+  top: 28.5%;
 }
 .consensusIconCons {
   position: absolute;
-  width: 54%;
-  left: 22.9%;
-  top: 24.6%;
+  width: 51%;
+  left: 24.5%;
+  top: 28.5%;
 }
 .consensusPer {
   position: absolute;
@@ -487,11 +487,11 @@ export default {
 }
 .syncStatusStatus {
   width: 100%;
-  height: 15%;
+  height: 12%;
   display: flex;
   font-weight: 500;
   text-transform: uppercase;
-  font-size: 40%;
+  font-size: 50%;
   justify-content: center;
   align-items: center;
   position: absolute;

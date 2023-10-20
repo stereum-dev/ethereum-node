@@ -2,10 +2,24 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      hideConnectingLines: false,
+      addConfigButton: false,
+      nodeConfigs: [
+        { id: 1, configName: "config", status: true },
+        { id: 2, configName: "config", status: false },
+        { id: 3, configName: "config", status: false },
+        { id: 4, configName: "config", status: false },
+        { id: 5, configName: "config", status: false },
+        { id: 6, configName: "config", status: false },
+      ],
+      isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
-      resyncSeparateModal: false,
+      validatorRefList: [],
+      consensusRefList: [],
+      executionRefList: [],
       availableBlocks: [],
+      checkedRelays: [],
       usedBlocks: [],
       relaysList: [
         {
@@ -157,6 +171,8 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       confirmChanges: [],
+      disableConfirmButton: false,
+      displayNetworkList: false,
       networkList: [
         {
           id: 1,
@@ -206,9 +222,17 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       currentNetwork: {},
+      selectedNetwork: {},
       configNetwork: {},
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    addRelay(relay) {
+      this.checkedRelays.push(relay);
+    },
+    removeRelay(relay) {
+      this.checkedRelays.splice(this.checkedRelays.indexOf(relay), 1);
+    },
+  },
 });

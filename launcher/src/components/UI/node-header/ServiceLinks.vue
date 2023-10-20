@@ -28,15 +28,15 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
-import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
 import MevboostModal from "../services-modal//MevboostModal.vue";
+import { useNodeStore } from "@/store/theNode";
 export default {
   components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal },
   data() {
@@ -56,6 +56,9 @@ export default {
     ...mapState(useServices, {
       allServices: "allServices",
     }),
+    ...mapWritableState(useNodeStore, {
+      hideConnectedLines: "hideConnectedLines",
+    }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
@@ -72,19 +75,24 @@ export default {
     },
     //open & close modal for each service
     openServiceBrowser(serviceName) {
-      if (serviceName == "GrafanaService") {
-        this.showGrafanaWindow = true;
-      } else if (serviceName == "SSVNetworkService") {
-        this.showSsvWindow = true;
-      } else if (serviceName == "PrometheusService") {
-        this.showPrometheusWindow = true;
-      } else if (serviceName == "FlashbotsMevBoostService") {
-        this.showMevboostWindow = true;
-      } else {
-        return;
-      }
+      this.hideConnectedLines = true;
+      this.runningServices.filter((item) => {
+        item.service == serviceName;
+        if (serviceName == "GrafanaService") {
+          this.showGrafanaWindow = true;
+        } else if (serviceName == "SSVNetworkService") {
+          this.showSsvWindow = true;
+        } else if (serviceName == "PrometheusService") {
+          this.showPrometheusWindow = true;
+        } else if (serviceName == "FlashbotsMevBoostService") {
+          this.showMevboostWindow = true;
+        } else {
+          return;
+        }
+      });
     },
     closeServiceBrowser() {
+      this.hideConnectedLines = false;
       this.showGrafanaWindow = false;
       this.showSsvWindow = false;
       this.showPrometheusWindow = false;

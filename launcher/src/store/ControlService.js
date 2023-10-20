@@ -382,7 +382,7 @@ class ControlService extends EventEmitter {
     //resolve proxy
     let files = [];
     if (args.isRemote) {
-      files = args.files
+      files = args.files;
     } else {
       args.files.forEach((file) => {
         files.push({ name: file.name, path: file.path });
@@ -441,8 +441,11 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("AddExistingSSHKey", args);
   }
 
-  async beaconchainMonitoringModification(args){
+  async beaconchainMonitoringModification(args) {
     return await this.promiseIpc.send("beaconchainMonitoringModification", args);
+  }
+  async IpScanLan() {
+    return await this.promiseIpc.send("IpScanLan");
   }
 }
 if (!instance) {

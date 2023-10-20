@@ -7,6 +7,12 @@ import net from "net";
 import YAML from "yaml";
 const log = require("electron-log");
 const electron = require("electron");
+const Evilscan = require("evilscan");
+const os = require("os");
+
+async function Sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
@@ -69,7 +75,7 @@ export class NodeConnection {
         exit 0
       fi
       # Check if users needs a password for sudo
-      msg=$(sudo -l 2>&1)
+      msg=$(sudo hostname 2>&1)
       if [[ "$msg" == *"sudo: a password is required"* ]]; then
         echo "FAIL: user can not sudo without password!"
         exit 1
@@ -330,17 +336,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -587,10 +593,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -636,10 +642,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -661,9 +667,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -1017,7 +1023,7 @@ export class NodeConnection {
     if (SSHService.checkExecError(response)) {
       throw new Error("Failed reading Stereum Version:\n" + SSHService.extractExecError(response));
     }
-    return response.stdout;
+    return response.stdout.trim();
   }
 
   async getCurrentLauncherVersion() {
@@ -1186,5 +1192,45 @@ export class NodeConnection {
       log.error(err);
       return false;
     }
+  }
+
+  async IpScanLan() {
+    let localIpAddresses = "";
+    const networkInterfaces = os.networkInterfaces();
+    for (const interfaceName in networkInterfaces) {
+      const interfaces = networkInterfaces[interfaceName];
+      for (const iface of interfaces) {
+        if (iface.family === "IPv4" && !iface.internal && iface.address.includes("192.168.")) {
+          localIpAddresses = iface.address.substring(0, iface.address.lastIndexOf(".") + 1);
+        }
+      }
+    }
+
+    let avadoIPs = [];
+    let target = [`${localIpAddresses}0/24`];
+
+    for (let i = 0; i < target.length; i++) {
+      const options = {
+        target: target[i],
+        port: "54321",
+        status: "O", // Timeout(T), Refused(R), Open(O), Unreachable(U)
+        banner: true,
+      };
+      const evilscan = new Evilscan(options);
+      evilscan.on("result", (data) => {
+        if (data.status.includes("open")) {
+          avadoIPs.push({ ip: data.ip });
+        }
+      });
+      evilscan.on("error", (err) => {
+        throw new Error(err.toString());
+      });
+      evilscan.on("done", () => {
+        console.log("DONE!");
+      });
+      evilscan.run();
+    }
+    await Sleep(5 * 1000);
+    return avadoIPs;
   }
 }

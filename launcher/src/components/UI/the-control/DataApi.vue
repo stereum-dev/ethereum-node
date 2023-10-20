@@ -36,7 +36,7 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
+      <img src="/img/icon/control/spinner.gif" alt="" />
     </div>
   </div>
 </template>

@@ -2,9 +2,9 @@
   <div class="securBtn-parent">
     <div
       class="securBtn-box"
-      @click="accessSwitch"
-      @mouseenter="(tooltip = true), (cursorLocation = serverAccMange)"
-      @mouseleave="(tooltip = false), (cursorLocation = '')"
+      @click="$emit('accessSwitch')"
+      @mouseenter="$emit('mouseEnter')"
+      @mouseleave="$emit('mouseLeave')"
     >
       <img :src="stereumStatus ? '/img/icon/LOGO.png' : '/img/icon/statusOff.png'" class="main-header__brand" />
     </div>
@@ -16,10 +16,16 @@
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
+
 export default {
+  props: {
+    tooltip: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      tooltip: false,
       serverAccMange: this.$t("serverManagement.serverAccMange"),
     };
   },
@@ -32,40 +38,34 @@ export default {
       serverAccessManagement: "serverAccessManagement",
     }),
   },
-  methods: {
-    accessSwitch() {
-      this.serverAccessManagement = !this.serverAccessManagement;
-    },
-  },
 };
 </script>
 
 <style scoped>
 .server-access-tooltip {
-  width: 220%;
-  height: 50%;
-  background-color: #1e2429;
-  border: 1px solid #b4b4b4;
+  width: 200px;
+  height: 40px;
+  background-color: #282c2f;
+  border: 1px solid #57595d;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  top: 5%;
-  left: 15%;
+  position: absolute;
+  top: 60px;
+  left: 30px;
   border-radius: 10px;
   color: #eee;
   font-size: 65%;
   font-weight: 600;
   text-transform: uppercase;
+  z-index: 100;
 }
 .securBtn-parent {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 8%;
-  height: 15%;
-  z-index: 50;
-  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .securBtn-box {
   width: 100%;

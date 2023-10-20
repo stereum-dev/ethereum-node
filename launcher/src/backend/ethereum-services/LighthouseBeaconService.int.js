@@ -61,7 +61,7 @@ test("lighthouse validator import", async () => {
   let lhBC = serviceManager.getService("LighthouseBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] })
 
 
-  let lhVC = serviceManager.getService("LighthouseValidatorService", { network: "goerli", installDir: "/opt/stereum", beaconServices: [lhBC] })
+  let lhVC = serviceManager.getService("LighthouseValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [lhBC] })
 
   //get latest versions
   let versions = await nodeConnection.checkUpdates();

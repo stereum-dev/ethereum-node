@@ -1,5 +1,5 @@
 <template>
-  <div class="ctrlParent">
+  <div class="ctrlParent gap-1 p-1">
     <div class="machineName_cell">
       <machine-name @mouseenter="cursorLocation = `${machineName}`" @mouseleave="cursorLocation = ''" />
     </div>
@@ -136,11 +136,9 @@ export default {
   display: grid;
   width: 100%;
   height: 100%;
-  grid-template-columns: repeat(3, 32%);
-  grid-template-rows: 10% repeat(5, 16.5%);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 10% repeat(5, 80px);
   position: relative;
-  gap: 1%;
-  margin: 1%;
   box-sizing: border-box;
   cursor: default;
 }

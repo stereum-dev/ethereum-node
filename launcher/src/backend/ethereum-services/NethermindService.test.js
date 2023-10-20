@@ -16,7 +16,7 @@ test("buildByUserInput", () => {
   expect(nethermindService.image).toContain("nethermind/nethermind");
   expect(nethermindService.command).toContain("--config=goerli");
   expect(nethermindService.command).toContain("--datadir=/opt/app/data");
-  expect(nethermindService.entrypoint).toContain("./Nethermind.Runner");
+  expect(nethermindService.entrypoint).toContain("./nethermind");
   expect(nethermindService.ports).toHaveLength(1);
   expect(nethermindService.ports).toContain("0.0.0.0:4040:4040/tcp");
   expect(nethermindService.volumes).toContain(

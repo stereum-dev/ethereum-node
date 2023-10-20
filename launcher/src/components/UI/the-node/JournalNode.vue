@@ -27,7 +27,7 @@
         @mouseleave="cursorLocation = ''"
       >
         <the-node-panel-btn
-          img-path="/img/icon/node-journal-icons/edit-node.png"
+          img-path="/img/icon/node-icons/edit-node.png"
           is-color="gold"
           width="20"
           margin-right="1"
@@ -50,7 +50,7 @@
       >
       <the-node-panel-btn
         v-else-if="checkStatus()"
-        img-path="/img/icon/node-journal-icons/turn_on.png"
+        img-path="/img/icon/node-icons/turn_on.png"
         is-color="lighGreen"
         width="10"
         margin-right="5"
@@ -63,7 +63,7 @@
       >
       <the-node-panel-btn
         v-else
-        img-path="/img/icon/node-journal-icons/power2.png"
+        img-path="/img/icon/node-icons/power2.png"
         is-color="red"
         width="10"
         margin-right="5"
@@ -75,7 +75,7 @@
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/log-icon.png"
+        img-path="/img/icon/node-icons/log-icon.png"
         is-color="blue"
         width="15"
         margin-right="3"
@@ -87,7 +87,7 @@
         >{{ $t("journalnode.log") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/start-stop.png"
+        img-path="/img/icon/node-icons/start-stop.png"
         is-color="light"
         width="15"
         margin-right="3"
@@ -100,7 +100,7 @@
       >
 
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/restart.png"
+        img-path="/img/icon/node-icons/restart.png"
         is-color="orange"
         width="14"
         margin-right="3"
@@ -160,7 +160,7 @@
 
     <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/log-icon.png"
+        img-path="/img/icon/node-icons/log-icon.png"
         is-color="light"
         width="15"
         margin-right="3"
@@ -192,7 +192,7 @@
     </div>
     <div v-if="!openRestart && !openLog && openPower" class="configBtn">
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/start-stop.png"
+        img-path="/img/icon/node-icons/start-stop.png"
         is-color="orange"
         width="16"
         margin-right="3"
@@ -235,7 +235,7 @@
         @btn-action="restartToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       ><the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/restart.png"
+        img-path="/img/icon/node-icons/restart.png"
         is-color="orange"
         width="14"
         margin-right="3"
@@ -310,8 +310,8 @@ export default {
       isPluginLogPageActive: false,
       restartModalShow: false,
       restartTitle: "restart",
-      restartIcon: "/img/icon/node-journal-icons/restart.png",
-      switchIcon: "/img/icon/node-journal-icons/start-stop.png",
+      restartIcon: "/img/icon/node-icons/restart.png",
+      switchIcon: "/img/icon/node-icons/start-stop.png",
       startTitle: "start / stop",
       itemToRestart: {},
       restartLoad: false,

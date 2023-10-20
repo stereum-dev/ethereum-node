@@ -35,7 +35,7 @@
               <span>{{ item.name }}</span>
               <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <SubTasks v-if="item.showDropDown" />
+            <sub-tasks v-if="item.showDropDown"></sub-tasks>
           </div>
         </div>
       </div>
@@ -57,6 +57,7 @@ export default {
   components: { SubTasks, DropTasks },
   data() {
     return {
+      intervalId: null,
       isTaskModalActive: false,
       showDropDownList: false,
       isTaskFailed: false,
@@ -74,7 +75,8 @@ export default {
       playbookTasks: "playbookTasks",
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
-      taskShow: "taskShow",
+      UpdatedSubtasks: "UpdatedSubtasks",
+      stopIntervalForModal: "stopIntervalForModal",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -90,6 +92,28 @@ export default {
         return this.taskManagerIcons.successIcon;
       }
       return this.taskManagerIcons.progressIcon;
+    },
+  },
+  watch: {
+    showDropDownList(newValue) {
+      if (newValue == true && !this.stopIntervalForModal) {
+        this.intervalId = setInterval(() => {
+          this.getTasks();
+          this.UpdatedSubtasks = this.displayingTasks[0].subTasks;
+        }, 1000);
+      } else {
+        clearInterval(this.intervalId);
+      }
+    },
+    stopIntervalForModal(newValue) {
+      if (newValue === true) {
+        clearInterval(this.intervalId);
+      } else if (this.showDropDownList === true) {
+        this.intervalId = setInterval(() => {
+          this.getTasks();
+          this.UpdatedSubtasks = this.displayingTasks[0].subTasks;
+        }, 1000);
+      }
     },
   },
 
@@ -115,13 +139,14 @@ export default {
         //if DropDown is open only update what the user sees so the menue doesn't close
         this.displayingTasks[0].subTasks = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).subTasks;
         this.displayingTasks[0].status = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).status;
-        this.taskShow = this.displayingTasks[0].subTasks;
       }
     },
     taskModalHandler() {
       if (this.isTaskModalActive) {
         this.checkNewTasks = this.displayingTasks;
         this.isTaskModalActive = false;
+        this.showDropDownList = false;
+        clearInterval(this.intervalId);
       } else {
         this.isTaskModalActive = true;
       }

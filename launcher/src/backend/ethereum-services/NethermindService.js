@@ -40,7 +40,7 @@ export class NethermindService extends NodeService {
         "--HealthChecks.Enabled=true",
         "--Pruning.Mode=Hybrid",
       ], // command
-      ["./Nethermind.Runner"], // entrypoint
+      ["./nethermind"], // entrypoint
       null, // env
       ports, // ports
       volumes, // volumes

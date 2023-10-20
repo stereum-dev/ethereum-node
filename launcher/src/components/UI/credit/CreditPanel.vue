@@ -1,5 +1,5 @@
 <template>
-  <div class="credit-panel_parent">
+  <div class="credit-panel_parent border-4 border-gray-400">
     <transition name="fade-box" mode="out-in">
       <div class="credit-panel_box">
         <div class="credit-panel_title">
@@ -12,7 +12,6 @@
             </div>
           </div>
         </div>
-        <div class="division-line"></div>
         <div class="desc-line">
           <small>{{ $t("creditPanel.techText") }} </small>
           <div
@@ -30,18 +29,14 @@
         <TechnicalBox />
       </div>
     </transition>
-    <TheFooter />
-    <task-manager></task-manager>
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
-import TheFooter from "../../layers/TheFooter.vue";
 import TechnicalBox from "./TechnicalBox.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
 export default {
-  components: { TaskManager, TechnicalBox, TheFooter },
+  components: { TechnicalBox },
   data() {
     return {
       financialIco: "./img/icon/credit/creditFinancial.png",
@@ -120,11 +115,10 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 99.95%;
-  height: 91%;
+  width: 100%;
+  height: 100%;
   background-color: #232323;
-  border: 4px solid #979797;
-  border-radius: 10px 35px 10px 10px;
+  border-radius: 10px;
   z-index: 0;
   box-sizing: border-box;
   cursor: default;
@@ -133,7 +127,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 95%;
+  height: 100%;
   justify-content: flex-start;
   align-items: center;
 }
@@ -142,7 +136,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 9%;
+  height: 35px;
 }
 .ttl-box {
   display: flex;

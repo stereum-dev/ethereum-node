@@ -1,21 +1,6 @@
 <template>
-  <div class="credit-parent">
-    <node-bg>
-      <credit-panel></credit-panel>
-    </node-bg>
-    <node-header id="head"> </node-header>
-  </div>
+  <CreditScreen />
 </template>
-<script>
-import CreditPanel from "../components/UI/credit/CreditPanel.vue";
-export default {
-  components: { CreditPanel },
-};
+<script setup>
+import CreditScreen from "../components/UI/credit/CreditScreen.vue";
 </script>
-
-<style scoped>
-#head {
-  position: fixed;
-  top: 0;
-}
-</style>

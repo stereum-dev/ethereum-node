@@ -3,8 +3,9 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import BaseHome from "../pages/BaseHome.vue";
 import ClickInstall from "../pages/ClickInstall.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
-import TheNode from "../pages/TheNode.vue";
 import ControlPanel from "../pages/TheControl.vue";
+import NodePage from "../pages/NodePage.vue";
+import NodeEdit from "../pages/NodeEdit.vue";
 import NodeManage from "../pages/NodeManage.vue";
 import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
@@ -42,8 +43,8 @@ const routes = [
   },
   {
     path: "/node",
-    name: "TheNode",
-    component: TheNode,
+    name: "NodePage",
+    component: NodePage,
   },
   {
     path: "/control",
@@ -54,6 +55,11 @@ const routes = [
     path: "/manage",
     name: "NodeManage",
     component: NodeManage,
+  },
+  {
+    path: "/edit",
+    name: "NodeEdit",
+    component: NodeEdit,
   },
   {
     path: "/staking",

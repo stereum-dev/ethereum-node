@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 export const useWelcomeStore = defineStore("welcomePage", {
   state: () => {
     return {
-      installation: [
+      installationOptions: [
         {
           img: "/img/icon/welcome-page/oneclick-install.png",
           imgHover: "/img/icon/welcome-page/oneclick-install-hover.png",
