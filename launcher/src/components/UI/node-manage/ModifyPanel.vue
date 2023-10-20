@@ -149,6 +149,7 @@ export default {
         "NotificationService",
         "Web3SignerService",
         "ValidatorEjectorService",
+        "MetricsExporterService",
       ],
     };
   },
