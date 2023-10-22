@@ -478,6 +478,10 @@ ipcMain.handle("IpScanLan", async () => {
   return await nodeConnection.IpScanLan();
 });
 
+ipcMain.handle("beaconchainMonitoringModification", async (event, args) => {
+  return await serviceManager.beaconchainMonitoringModification(args)
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

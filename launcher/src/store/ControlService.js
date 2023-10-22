@@ -441,6 +441,9 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("AddExistingSSHKey", args);
   }
 
+  async beaconchainMonitoringModification(args) {
+    return await this.promiseIpc.send("beaconchainMonitoringModification", args);
+  }
   async IpScanLan() {
     return await this.promiseIpc.send("IpScanLan");
   }
