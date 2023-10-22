@@ -16,7 +16,7 @@
   "journalnode": {
     "serverip": "IP",
     "servername": "NAME",
-    "edit": "za uređivanje node",
+    "edit": "Manage node",
     "loading": "učitavanje novi states",
     "turnOn": "Uključite Node",
     "turnOff": "Isključite Node",
@@ -106,7 +106,8 @@
     "filter": "Filter..."
   },
   "changeConfirm": {
-    "confirm": "POTVRDI",
+    "confirm": "CONFIRM CHANGES",
+    "process": "processing...",
     "change": "PROMJENE ZA POTVRDU",
     "delete": "IZBRIŠI"
   },
@@ -480,7 +481,10 @@
     "tillAtest": "till attestation"
   },
   "confirmModal": {
-    "message": "Your node will go off line while you do this!",
+    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
+    "messageOff": "Your node will go offline!",
+    "messageOn": "Your node will go online!",
     "turnOn": "turn on",
     "turnOff": "turn off",
     "close": "click outside to close"
@@ -522,7 +526,13 @@
     "stepTwo": "Open the app on your smartphone",
     "stepThree": "Scan the QR Code",
     "stepFour": "Send a test notification",
-    "close": "click outside to close"
+    "close": "click outside to close",
+    "dash": "Dashboard",
+    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
+    "goTo": "Go to",
+    "machinename": "Machine Name",
+    "apikey": "API Key",
+    "apply": "APPLY"
   },
   "replacePanel": {
     "client": "Client",

@@ -16,7 +16,7 @@
   "journalnode": {
     "serverip": "IP",
     "servername": "名称",
-    "edit": "编辑节点",
+    "edit": "Manage node",
     "loading": "加载新状态",
     "turnOn": "开启节点",
     "turnOff": "关闭节点",
@@ -106,7 +106,8 @@
     "filter": "过滤器..."
   },
   "changeConfirm": {
-    "confirm": "确认",
+    "confirm": "CONFIRM CHANGES",
+    "process": "processing...",
     "change": "更改为确认",
     "delete": "删除"
   },
@@ -480,7 +481,10 @@
     "tillAtest": "直到认证"
   },
   "confirmModal": {
-    "message": "您的节点将在此操作时关闭下线",
+    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
+    "messageOff": "Your node will go offline!",
+    "messageOn": "Your node will go online!",
     "turnOn": "开启",
     "turnOff": "关闭",
     "close": "点击外部关闭"
@@ -522,7 +526,13 @@
     "stepTwo": "在您的智能手机上打开应用程式",
     "stepThree": "扫描二维码",
     "stepFour": "发送测试通知",
-    "close": "点击外部关闭"
+    "close": "点击外部关闭",
+    "dash": "Dashboard",
+    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
+    "goTo": "Go to",
+    "machinename": "Machine Name",
+    "apikey": "API Key",
+    "apply": "APPLY"
   },
   "replacePanel": {
     "client": "客户",
