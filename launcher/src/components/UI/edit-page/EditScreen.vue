@@ -507,6 +507,17 @@ const destroyNode = async () => {
   }
 };
 
+// const confirmHandler = async () => {
+//   manageStore.disableConfirmButton = true;
+//   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+
+//   manageStore.confirmChanges = [];
+//   manageStore.disableConfirmButton = false;
+//   setTimeout(() => {
+//     location.reload();
+//   }, 500);
+// };
+
 const nukeConfirmation = () => {
   headerStore.refresh = false;
   destroyNode();

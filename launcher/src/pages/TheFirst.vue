@@ -100,7 +100,7 @@ export default {
       } else {
         this.link = "/img/icon/language-animations/languageSelection3.gif";
         setTimeout(() => {
-          this.$emit("page", "SetupServer");
+          this.$emit("page", "LoginPage");
         }, 650);
       }
     },
@@ -112,7 +112,7 @@ export default {
           savedConfig.savedLanguage.flag,
           savedConfig.savedLanguage.label
         );
-        this.$emit("page", "SetupServer");
+        this.$emit("page", "LoginPage");
       }
     },
     updateSettings: async function (lang, langSelect, langLabel) {

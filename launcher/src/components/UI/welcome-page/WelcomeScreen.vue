@@ -1,5 +1,5 @@
 <template>
-  <welcome-layouts>
+  <installation-layout>
     <WelcomeHeader @logout="logoutModalHandler" />
     <ServerDetails />
     <WelcomeBody />
@@ -10,11 +10,11 @@
       @logout-handler="loggingOut"
       @close-window="closeModal"
     />
-  </welcome-layouts>
+  </installation-layout>
 </template>
 
 <script setup>
-import WelcomeLayouts from "./components/WelcomeLayouts.vue";
+import InstallationLayout from "../../base/InstallationLayout.vue";
 import LogoutModal from "./components/LogoutModal.vue";
 import WelcomeHeader from "./components/WelcomeHeader.vue";
 import WelcomeBody from "./components/WelcomeBody.vue";
@@ -44,7 +44,7 @@ const logoutModalHandler = () => {
 
 const loggingOut = async () => {
   isProcessing.value = true;
-  router.push("/").then(() => {
+  router.push("/login").then(() => {
     location.reload();
   });
   refresh.value = false;

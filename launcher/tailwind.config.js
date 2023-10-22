@@ -3,10 +3,10 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-   
         drop: "url('/img/icon/manage-node-icons/drag.png')",
       },
       gridTemplateRows: {
+        7: "repeat(7 , minmax(0,1fr))",
         12: "repeat(12 , minmax(0,1fr))",
       },
 
@@ -44,6 +44,7 @@ module.exports = {
         25: "25",
       },
       gridRowStart: {
+        6: "6",
         7: "7",
         8: "8",
         9: "9",
@@ -53,6 +54,7 @@ module.exports = {
         13: "13",
       },
       gridRowEnd: {
+        6: "6",
         7: "7",
         8: "8",
         9: "9",

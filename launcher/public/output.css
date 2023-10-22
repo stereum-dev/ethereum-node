@@ -1606,6 +1606,12 @@ video {
   width: 8rem;
 }
 
+.w-fit{
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 .w-full{
   width: 100%;
 }
@@ -2372,6 +2378,11 @@ video {
 .bg-\[\#191b1e\]{
   --tw-bg-opacity: 1;
   background-color: rgb(25 27 30 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#192924\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 41 36 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#1E2429\]{

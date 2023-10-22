@@ -7,6 +7,7 @@ import "./main.css";
 import i18n from "./includes/i18n";
 
 import BaseLayout from "./components/base/BaseLayout.vue";
+import InstallationLayout from "./components/base/InstallationLayout.vue";
 import TaskManager from "./components/UI/task-manager/TaskManager.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
 import TheTrapezium from "./components/UI/the-node/TheTrapezium.vue";
@@ -30,6 +31,7 @@ app.component("ServicePlugin", ServicePlugin);
 app.component("NodeService", NodeService);
 app.component("InstallationBox", InstallationBox);
 app.component("BaseLayout", BaseLayout);
+app.component("InstallationLayout", InstallationLayout);
 app.component("TaskManager", TaskManager);
 
 app.use(router);
