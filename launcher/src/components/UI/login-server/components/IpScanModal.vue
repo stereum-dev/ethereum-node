@@ -85,10 +85,10 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50%;
-  height: 50%;
+  width: 70%;
+  height: 70%;
   background-color: #336666;
-  border-radius: 20px;
+  border-radius: 45px;
   border: 3px solid #8a8f8f;
   display: flex;
   flex-direction: column;

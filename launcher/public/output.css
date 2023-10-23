@@ -900,10 +900,6 @@ video {
   grid-column: 1 / -1;
 }
 
-.col-span-9{
-  grid-column: span 9 / span 9;
-}
-
 .col-start-1{
   grid-column-start: 1;
 }
@@ -1274,6 +1270,10 @@ video {
   height: 3rem;
 }
 
+.h-14{
+  height: 3.5rem;
+}
+
 .h-16{
   height: 4rem;
 }
@@ -1416,10 +1416,6 @@ video {
 
 .h-screen{
   height: 100vh;
-}
-
-.h-14{
-  height: 3.5rem;
 }
 
 .max-h-60{
@@ -1598,6 +1594,10 @@ video {
   width: 110px;
 }
 
+.w-\[150px\]{
+  width: 150px;
+}
+
 .w-\[155px\]{
   width: 155px;
 }
@@ -1670,18 +1670,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-\[100\]{
-  width: 100;
-}
-
-.w-\[100px\]{
-  width: 100px;
-}
-
-.w-\[150px\]{
-  width: 150px;
 }
 
 .min-w-\[100px\]{
@@ -3653,6 +3641,13 @@ html body {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
+.hover\:scale-105:hover{
+  --tw-scale-x: 1.05;
+  --tw-scale-y: 1.05;
+  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .hover\:scale-110:hover{
   --tw-scale-x: 1.1;
   --tw-scale-y: 1.1;
@@ -3663,13 +3658,6 @@ html body {
 .hover\:scale-95:hover{
   --tw-scale-x: .95;
   --tw-scale-y: .95;
-  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.hover\:scale-105:hover{
-  --tw-scale-x: 1.05;
-  --tw-scale-y: 1.05;
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -3725,6 +3713,11 @@ html body {
 .hover\:bg-\[\#243535\]:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(36 53 53 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#264744\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(38 71 68 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-\[\#282a2d\]:hover{
@@ -3832,25 +3825,9 @@ html body {
   background-color: rgb(17 94 89 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-\[\]:hover{
-  background-color: ;
-}
-
-.hover\:bg-\[\#264744\]:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(38 71 68 / var(--tw-bg-opacity));
-}
-
 .hover\:shadow-lg:hover{
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
-  -webkit-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-          box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.hover\:shadow-xl:hover{
-  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   -webkit-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
@@ -3862,6 +3839,13 @@ html body {
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.hover\:shadow-xl:hover{
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+  -webkit-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+          box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 .hover\:shadow-\[\#1a1b1b\]:hover{
   --tw-shadow-color: #1a1b1b;
   --tw-shadow: var(--tw-shadow-colored);
@@ -3869,11 +3853,6 @@ html body {
 
 .hover\:shadow-\[\#303232\]:hover{
   --tw-shadow-color: #303232;
-  --tw-shadow: var(--tw-shadow-colored);
-}
-
-.hover\:shadow-gray-600:hover{
-  --tw-shadow-color: #4b5563;
   --tw-shadow: var(--tw-shadow-colored);
 }
 

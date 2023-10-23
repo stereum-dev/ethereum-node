@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import BaseHome from "../pages/BaseHome.vue";
+import LoginPage from "../pages/LoginPage.vue";
 import ClickInstall from "../pages/ClickInstall.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
 import ControlPanel from "../pages/TheControl.vue";
@@ -29,6 +30,12 @@ const routes = [
     name: "BaseHome",
     component: BaseHome,
   },
+  {
+    path: "/login",
+    name: "LoginPage",
+    component: LoginPage,
+  },
+
   {
     path: "/welcome",
     name: "WelcomePage",
