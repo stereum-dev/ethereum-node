@@ -7,7 +7,7 @@
       <div class="theValidatorBox_left">
         <div class="activePart">
           <div class="activeIco">
-            <img src="../../../../public/img/icon/control/keyEth.svg" />
+            <img src="/img/icon/control/keyEth.svg" />
           </div>
           <div class="activeValue">
             <span>{{ activeVal }} {{ $t("controlPage.active") }}</span>
@@ -15,7 +15,7 @@
         </div>
         <div class="gewiPart">
           <div class="gewiIco">
-            <img src="../../../../public/img/icon/control/ethBag.svg" />
+            <img src="/img/icon/control/ethBag.svg" />
           </div>
           <div class="gewiValuePart">
             <div class="green">
@@ -43,24 +43,17 @@
   </div>
 </template>
 
-<script>
-import { mapState } from "pinia";
-import { useStakingStore } from "../../../store/theStaking";
-export default {
-  data() {
-    return {
-      activeVal: null,
+<script setup>
+import { useStakingStore } from "@/store/theStaking";
+import { computed, ref } from "vue";
 
-      gewiCount: null,
-      ratingVal: "",
-    };
-  },
-  computed: {
-    ...mapState(useStakingStore, {
-      totalBalance: "totalBalance",
-    }),
-  },
-};
+const stakingStore = useStakingStore();
+
+const totalBalance = computed(() => stakingStore.totalBalance);
+
+const activeVal = ref(null);
+const gewiCount = ref(null);
+const ratingVal = ref("");
 </script>
 <style scoped>
 .theValidatorParent {

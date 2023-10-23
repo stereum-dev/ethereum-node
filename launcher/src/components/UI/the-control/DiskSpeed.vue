@@ -124,8 +124,8 @@ const convertReadValueToMb = computed(() => {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 35%;
-  font-size: 75%;
+  height: 50%;
+  font-size: 120%;
   font-weight: 800;
 }
 .write_val {
