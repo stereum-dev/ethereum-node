@@ -1,7 +1,7 @@
 <template>
   <installation-layout>
     <LoginForm />
-    <div class="absolute top-0 right-0 w-fit h-10 bg-[#192924] rounded-full py-1 px-2">
+    <div class="absolute top-2 right-2 w-fit h-9 bg-[#1a2e2c] rounded-full py-1 px-4">
       <span class="text-sm text-gray-300 font-semibold">{{ launchers }}</span>
     </div>
   </installation-layout>
