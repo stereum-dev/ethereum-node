@@ -3,6 +3,10 @@ import { defineStore } from "pinia";
 export const useNodeStore = defineStore("theNode", {
   state: () => {
     return {
+      isLineHidden: false,
+      lineOne: null,
+      lineTwo: null,
+      lineThree: null,
       infoAlarm: true,
       runNodePowerModal: false,
       validatorRefList: [],

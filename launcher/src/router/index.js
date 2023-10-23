@@ -6,7 +6,6 @@ import WelcomePage from "../pages/WelcomePage.vue";
 import ControlPanel from "../pages/TheControl.vue";
 import NodePage from "../pages/NodePage.vue";
 import NodeEdit from "../pages/NodeEdit.vue";
-import NodeManage from "../pages/NodeManage.vue";
 import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
@@ -22,8 +21,7 @@ import ImportingVerify from "../components/UI/plugin-installation/import-config/
 import ImportingList from "../components/UI/plugin-installation/import-config/ImportingList.vue";
 import ImportingSyncing from "../components/UI/plugin-installation/import-config/ImportingSyncing.vue";
 import ImportingAnimation from "../components/UI/plugin-installation/import-config/ImportingAnimation.vue";
-import UpdateHandler from "../pages/UpdateHandler.vue"
-
+import UpdateHandler from "../pages/UpdateHandler.vue";
 
 const routes = [
   {
@@ -51,11 +49,7 @@ const routes = [
     name: "ControlPanel",
     component: ControlPanel,
   },
-  {
-    path: "/manage",
-    name: "NodeManage",
-    component: NodeManage,
-  },
+
   {
     path: "/edit",
     name: "NodeEdit",

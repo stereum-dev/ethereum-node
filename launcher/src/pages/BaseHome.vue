@@ -5,12 +5,12 @@
 </template>
 <script>
 import TheFirst from "./TheFirst.vue";
-import SetupServer from "./SetupServer.vue";
+import LoginPage from "./LoginPage.vue";
 import WelcomePage from "./WelcomePage.vue";
 
 export default {
   name: "BaseHome",
-  components: { TheFirst, SetupServer, WelcomePage },
+  components: { TheFirst, LoginPage, WelcomePage },
   data() {
     return {
       pageName: "TheFirst",
