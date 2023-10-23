@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: molecule-hetznercloud
+  name: molecule_hetznercloud
 platforms:
   - name: "manage-service--monitor-teku--ubuntu-22.04"
     hostname: ubuntu

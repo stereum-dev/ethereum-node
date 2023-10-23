@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: molecule-hetznercloud
+  name: molecule_hetznercloud
 platforms:
   - name: "restart-services--default--ubuntu-22.04"
     hostname: ubuntu

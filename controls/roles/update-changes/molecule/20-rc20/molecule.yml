@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: molecule-hetznercloud
+  name: molecule_hetznercloud
 platforms:
   - name: "update-changes--20-rc20--ubuntu-22.04"
     hostname: ubuntu
