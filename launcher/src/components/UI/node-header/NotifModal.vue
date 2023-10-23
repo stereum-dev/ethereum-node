@@ -135,12 +135,11 @@ export default {
     },
     async applyBeaconChain() {
       //to apply the beaconchain dashboard
-      await ControlService.beaconchainMonitoringModification(
-        {
-          machineName: this.machineName,
-          apiKey: this.apiKey,
-          selectedVal: this.selectedVal,
-        });
+      await ControlService.beaconchainMonitoringModification({
+        machineName: this.machineName,
+        apiKey: this.apiKey,
+        selectedVal: this.selectedVal,
+      });
     },
     qrViewer() {
       this.qrPage = !this.qrPage;
@@ -370,13 +369,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 600;
 }
 .enter-input_input input {
   width: 100%;
   height: 60%;
   border-radius: 10px;
   border: none;
-  padding-left: 1%;
+  padding-left: 2%;
 }
 .apply-btn {
   width: 30%;

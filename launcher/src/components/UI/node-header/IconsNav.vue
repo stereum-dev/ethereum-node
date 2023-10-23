@@ -1,10 +1,11 @@
 <template>
-  <div class="icons-box" @mousedown.prevent>
+  <div class="icons-box">
     <div
       class="icon-btn"
       @click="supportModalOpen"
       @mouseenter="cursorLocation = `${help}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="help" src="/img/icon/header-icons/question-mark.png" />
     </div>
@@ -14,6 +15,7 @@
       @click="notifModalOpen"
       @mouseenter="cursorLocation = `${notif}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
@@ -23,6 +25,7 @@
       @click="updateModalHandler"
       @mouseenter="cursorLocation = `${availableUpdt}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
@@ -33,6 +36,7 @@
       @mouseover="showUpdateText = true"
       @mouseenter="cursorLocation = `${updtPan}`"
       @mouseleave="(showUpdateText = false), (cursorLocation = '')"
+      @mousedown.prevent
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
     </div>
@@ -42,6 +46,7 @@
       class="icon-btn"
       @mouseenter="cursorLocation = `${setting}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <div>
         <img alt="setting" src="/img/icon/header-icons/setting4.png" />
@@ -53,6 +58,7 @@
       @click="logoutModalHandler"
       @mouseenter="cursorLocation = `${logOutBtn}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
