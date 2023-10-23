@@ -24,12 +24,12 @@
   </div>
 </template>
 <script setup>
-import SecurityButton from "../../node-header/SecurityButton.vue";
-import ServerAccessManagement from "../../node-header/ServerAccessManagement.vue";
+import SecurityButton from "../UI/node-header/SecurityButton.vue";
+import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
 import { ref, watchEffect, computed } from "vue";
-import i18n from "../../../../includes/i18n";
+import i18n from "../../../../launcher/src/includes/i18n";
 
 const t = i18n.global.t;
 

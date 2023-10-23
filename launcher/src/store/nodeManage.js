@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      isLineHidden: false,
+      lineOne: null,
+      lineTwo: null,
+      lineThree: null,
       hideConnectingLines: false,
       addConfigButton: false,
       nodeConfigs: [
