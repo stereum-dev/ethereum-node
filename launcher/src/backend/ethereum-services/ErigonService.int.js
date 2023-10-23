@@ -99,7 +99,7 @@ test("erigon installation", async () => {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  expect(status.stderr).toMatch(/Starting metrics server/);
+  expect(status.stderr).toMatch(/Enabling metrics export to prometheus/);
   expect(status.stderr).toMatch(/HTTP endpoint opened for Engine API/);
   expect(status.stderr).toMatch(/HTTP endpoint opened/);
   expect(status.stderr).toMatch(/Started P2P networking/);
