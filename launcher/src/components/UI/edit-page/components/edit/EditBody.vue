@@ -154,6 +154,8 @@ const twoWaysConnections = (start, middle, end) => {
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
     manageStore.lineTwo.position();
     manageStore.lineThree = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
@@ -162,6 +164,8 @@ const twoWaysConnections = (start, middle, end) => {
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
     manageStore.lineThree.position();
   }

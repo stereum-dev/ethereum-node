@@ -114,6 +114,8 @@ const twoWaysConnections = (start, middle, end) => {
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
     lineThree.value = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
     lineThree.value.setOptions({
@@ -121,6 +123,8 @@ const twoWaysConnections = (start, middle, end) => {
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
   }
 };
