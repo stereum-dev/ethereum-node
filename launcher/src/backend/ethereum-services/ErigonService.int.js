@@ -71,7 +71,7 @@ test("erigon installation", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
     if (
-      /Starting metrics server/.test(status.stderr) &&
+      /Enabling metrics export to prometheus/.test(status.stderr) &&
       /HTTP endpoint opened for Engine API/.test(status.stderr) &&
       /HTTP endpoint opened/.test(status.stderr) &&
       /Started P2P networking/.test(status.stderr) &&
