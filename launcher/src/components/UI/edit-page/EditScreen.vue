@@ -47,7 +47,7 @@
       <!-- Start Network Switch Modal -->
       <NetworkModal
         v-if="manageStore.displayNetworkList"
-        @close-window="manageStore.displayNetworkList = false"
+        @close-window="closeNetworkModal"
         @switch-confirm="switchNetworkConfirm"
       />
       <!-- End Switch Network Modal -->
@@ -55,7 +55,7 @@
       <SwitchModal
         v-if="isSwitchModalOpen"
         :client="clientToSwitch"
-        @close-window="isSwitchModalOpen = false"
+        @close-window="closeSwitchModal"
         @switch-confirm="switchClientConfirm"
       />
       <!-- End Switch Client Modal -->
@@ -63,7 +63,7 @@
       <InfoModal
         v-if="isInfoModalOpen"
         :client="clientForInfo"
-        @close-window="isInfoModalOpen = false"
+        @close-window="closeInfoModal"
         @ok-button="isInfoModalOpen = false"
       />
       <!-- End Info Modal -->
@@ -87,7 +87,7 @@
       <NukeModal
         v-if="isNukeModalOpen"
         ref="nukeModalComponent"
-        @close-me="isNukeModalOpen = false"
+        @close-me="closeNukeModal"
         @remove-items="nukeConfirmation"
         @back-to-login="backToLogin"
       />
@@ -221,6 +221,7 @@ const switchClientConfirm = (properties) => {
       },
     },
   });
+  manageStore.isLineHidden = false;
 };
 // Clients Modifying methods
 
@@ -239,6 +240,7 @@ const confirmModifyingService = (item) => {
       consensusClients: item.consensusClients,
     },
   });
+  manageStore.isLineHidden = false;
 };
 
 const serviceModifyHandler = (item) => {
@@ -247,6 +249,7 @@ const serviceModifyHandler = (item) => {
 };
 
 const hideModifyModal = () => {
+  manageStore.isLineHidden = false;
   isModifyModalOpen.value = false;
 };
 const confirmConsensusConnection = (item) => {
@@ -262,6 +265,7 @@ const confirmConsensusConnection = (item) => {
 // Mevboost connection methods
 
 const changeMevboostConnection = () => {
+  manageStore.isLineHidden = true;
   const hasConsensusWithMevboost = manageStore.newConfiguration.some((e) => {
     return e.category === "consensus" && !e.config.dependencies.mevboost[0];
   });
@@ -284,6 +288,7 @@ const confirmConnection = (item) => {
     item.isNotConnectedToMevboost = false;
     item.isConnectedToMevboost = true;
   }, 2000);
+  manageStore.isLineHidden = false;
 };
 
 // Drawer methods
@@ -308,6 +313,7 @@ const removeChangeHandler = (item) => {
     const eventIdx = manageStore.confirmChanges.indexOf(event);
     manageStore.confirmChanges.splice(eventIdx, 1);
   }
+  manageStore.isLineHidden = false;
 };
 // Add service with double click
 
@@ -326,6 +332,7 @@ const addServices = (service) => {
 // Add service with drag and drop
 
 const startDrag = (event, item) => {
+  manageStore.isLineHidden = false;
   if (event.type === "dragstart") {
     event.dataTransfer.dropEffect = "move";
     event.dataTransfer.effectAllowed = "move";
@@ -334,6 +341,7 @@ const startDrag = (event, item) => {
 };
 
 const onDrop = (event) => {
+  manageStore.isLineHidden = true;
   const allServices = structuredClone(serviceStore.allServices);
   const itemId = event.dataTransfer.getData("itemId");
   let item = allServices.find((item) => item.id == itemId);
@@ -350,6 +358,7 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
+  manageStore.isLineHidden = true;
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
@@ -376,10 +385,12 @@ const cancelInstallation = (item) => {
   const event = manageStore.newConfiguration.find((e) => e.id === item.id);
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
+  manageStore.isLineHidden = false;
 };
 
 // Network switch methods
 const displaySwitchNetwork = () => {
+  manageStore.isLineHidden = true;
   manageStore.displayNetworkList = true;
 };
 
@@ -404,17 +415,19 @@ const switchNetworkConfirm = (network) => {
       });
     }
   }
-
+  manageStore.isLineHidden = false;
   manageStore.configNetwork = network;
 };
 
 // Nuke node method
 
 const openNukeNodeModal = async () => {
+  manageStore.isLineHidden = true;
   isNukeModalOpen.value = true;
 };
 
 const selectedServiceToRemove = (item) => {
+  manageStore.isLineHidden = true;
   item.displayPluginMenu = false;
   if (
     item.isNotConnectedToConsensus ||
@@ -448,6 +461,7 @@ const openInfoModal = (item) => {
 };
 
 const destroyNode = async () => {
+  manageStore.isLineHidden = true;
   try {
     let condition = true;
     await ControlService.clearTasks();
@@ -528,6 +542,26 @@ const nukeConfirmation = () => {
 const backToLogin = async () => {
   await ControlService.logout();
   router.push("/");
+};
+
+const closeNetworkModal = () => {
+  manageStore.displayNetworkList = false;
+  manageStore.isLineHidden = false;
+};
+
+const closeSwitchModal = () => {
+  isSwitchModalOpen.value = false;
+  manageStore.isLineHidden = false;
+};
+
+const closeInfoModal = () => {
+  isInfoModalOpen.value = false;
+  manageStore.isLineHidden = false;
+};
+
+const closeNukeModal = () => {
+  isNukeModalOpen.value = false;
+  manageStore.isLineHidden = false;
 };
 </script>
 

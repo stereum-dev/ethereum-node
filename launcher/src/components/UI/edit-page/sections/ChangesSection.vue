@@ -53,6 +53,7 @@ const confirmHandler = async () => {
   editStore.disableConfirmButton = false;
 
   location.reload();
+  editStore.isLineHidden = false;
 };
 
 const removeChange = (item) => {
