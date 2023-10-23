@@ -33,8 +33,8 @@ eth1:
 
 p2p:
   # HostAddress: 192.168.1.1
-  TcpPort: 13001
-  UdpPort: 12001
+  TcpPort: 13000
+  UdpPort: 12000
 
 OperatorPrivateKey: ""
 
