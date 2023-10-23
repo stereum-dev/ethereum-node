@@ -595,6 +595,7 @@ export default {
           passphrase: this.model.passphrase.value,
           signal: this.abortController.signal,
         });
+
         if (this.abortController.signal.aborted) return;
       } catch (err) {
         this.connectingAnimActive = false;
@@ -608,9 +609,9 @@ export default {
       }
       if (await ControlService.checkStereumInstallation()) {
         this.$router.push("/node");
+      } else {
+        this.$router.push("/welcome");
       }
-      this.$router.push("/welcome");
-      // this.$emit("page", "welcome-page");
     },
     cancelLogin() {
       if (this.abortController) {
