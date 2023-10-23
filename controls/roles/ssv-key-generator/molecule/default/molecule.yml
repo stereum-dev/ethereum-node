@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: hetznercloud
+  name: molecule-hetznercloud
 platforms:
   - name: "ssv-key-generator--default--ubuntu-22.04"
     hostname: ubuntu
@@ -21,6 +21,5 @@ scenario:
     - prepare
     - converge
     #- idempotence
-    - lint
     - verify
     - destroy
