@@ -32,7 +32,7 @@
       <div class="cancl-btn" @click="cancelLogin">cancel</div>
     </div>
     <div class="col-start-4 col-end-22 row-start-3 row-end-11 bg-[#1a2e2c] rounded-lg p-4">
-      <delete-modal v-if="bDialogVisible" @delete-server="baseDialogDelete" @remove-modal="hideBDialog"></delete-modal>
+      <RemoveModal v-if="bDialogVisible" @remove-handler="baseDialogDelete" @close-window="hideBDialog" />
       <form
         class="w-full h-full p-1 bg-[#305c59] col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7 gap-y-2"
         @submit.prevent.stop="login"
@@ -315,7 +315,7 @@
 
 <script>
 import IpScanModal from "./IpScanModal.vue";
-import DeleteModal from "./DeleteModal.vue";
+import RemoveModal from "./RemoveModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
@@ -324,7 +324,7 @@ import { useServices } from "@/store/services";
 
 export default {
   name: "FormSetup",
-  components: { DeleteModal, IpScanModal },
+  components: { RemoveModal, IpScanModal },
   emits: ["page"],
   data() {
     return {
@@ -609,7 +609,8 @@ export default {
       if (await ControlService.checkStereumInstallation()) {
         this.$router.push("/node");
       }
-      this.$emit("page", "welcome-page");
+      this.$router.push("/welcome");
+      // this.$emit("page", "welcome-page");
     },
     cancelLogin() {
       if (this.abortController) {
