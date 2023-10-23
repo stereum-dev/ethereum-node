@@ -38,6 +38,10 @@ export class SSHService {
         reject(err);
       });
 
+      conn.on('banner', (msg) => {
+        reject(msg)
+      });
+
       conn.connect({
         host: connectionInfo.host,
         port: parseInt(connectionInfo.port) || 22,
