@@ -65,14 +65,16 @@ export default {
 }
 .stereum-status {
   width: 10%;
-  height: 100%;
+  height: 3.5%;
   background: #1f1f1f;
   border-radius: 0 30px 30px 0;
-  border-right: 1px solid #707070;
+
   margin-left: 35px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  position: absolute;
+  bottom: 0.5%;
 }
 .stereum-stateIcon {
   width: 10px;
