@@ -110,7 +110,7 @@ import NukeModal from "./components/modals/NukeModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, computed, onUnmounted } from "vue";
+import { ref, onMounted, computed, onUnmounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
@@ -135,9 +135,12 @@ const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
 
+watchEffect(() => {
+  manageStore.newConfiguration = Array.from(serviceStore.installedServices);
+});
+
 onMounted(() => {
   manageStore.configNetwork = structuredClone(manageStore.currentNetwork);
-  manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
 });
 onMounted(() => {
   manageStore.confirmChanges = [];
@@ -506,6 +509,17 @@ const destroyNode = async () => {
     nukeModalComponent.value.loginBtn = false;
   }
 };
+
+// const confirmHandler = async () => {
+//   manageStore.disableConfirmButton = true;
+//   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+
+//   manageStore.confirmChanges = [];
+//   manageStore.disableConfirmButton = false;
+//   setTimeout(() => {
+//     location.reload();
+//   }, 500);
+// };
 
 const nukeConfirmation = () => {
   headerStore.refresh = false;

@@ -1,5 +1,11 @@
 <template>
-  <div class="server-parent">
+  <div class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
+    <div
+      class="col-start-1 col-span-full row-start-1 row-span-1 bg-[#264744] flex justify-center items-center rounded-t-md"
+    >
+      <span class="text-2xl text-gray-300 font-bold">{{ $t("formsetup.server") }}</span>
+    </div>
+
     <IpScanModal
       v-if="ipScanModal"
       :btn-state="btnSearchState"
@@ -25,183 +31,281 @@
       <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
       <div class="cancl-btn" @click="cancelLogin">cancel</div>
     </div>
-    <div class="server-box" style="border-style: none">
-      <section id="header">
-        <span>{{ $t("formsetup.server") }}</span>
-      </section>
-
+    <div class="col-start-4 col-end-22 row-start-3 row-end-11 bg-[#1a2e2c] rounded-lg p-4">
       <delete-modal v-if="bDialogVisible" @delete-server="baseDialogDelete" @remove-modal="hideBDialog"></delete-modal>
-      <form class="space-y-1" @submit.prevent.stop="login">
-        <div id="container">
-          <div id="one">
-            <div class="select-wrapper">
-              <select v-model="selectedName" @change="setSelectedConnection($event)">
-                <option value="" disabled>Select your Server-Connection</option>
-                <option v-for="connection in connections" :key="connection.name" :value="connection.name">
-                  {{ connection.name }}
-                </option>
-              </select>
-            </div>
-            <div class="three plus" @click.prevent="addModel">
-              <img src="/img/icon/PLUS_ICON.png" alt="icon" />
+      <form
+        class="w-full h-full p-1 bg-[#305c59] col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7 gap-y-2"
+        @submit.prevent.stop="login"
+      >
+        <div
+          class="w-full col-start-1 col-span-full row-start-1 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
+        >
+          <div class="col-start-1 col-span-10 h-full">
+            <select
+              v-model="selectedName"
+              class="w-full h-full rounded-full px-2 text-md text-gray-800 font-semibold"
+              @change="setSelectedConnection($event)"
+            >
+              <option value="" disabled>Select your Server-Connection</option>
+              <option v-for="connection in connections" :key="connection.name" :value="connection.name">
+                {{ connection.name }}
+              </option>
+            </select>
+          </div>
+          <div
+            class="w-8 h-8 bg-slate-500 rounded-full flex justify-center items-center cursor-pointer hover:bg-slate-400 justify-self-end"
+            @click.prevent="addModel"
+          >
+            <img
+              class="w-6 h-6 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200"
+              src="/img/icon/PLUS_ICON.png"
+              alt="icon"
+              @mousedown.prevent
+            />
+          </div>
+          <div
+            class="w-8 h-8 bg-slate-500 rounded-full flex justify-center items-center cursor-pointer hover:bg-slate-400 justify-self-end"
+            @click.prevent="showBDialog"
+            @mouseover="mouseOver('over')"
+            @mouseleave="mouseOver('leave')"
+          >
+            <img
+              class="w-6 h-6 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200"
+              :src="imgTrash"
+              alt=""
+              @mousedown.prevent
+            />
+          </div>
+        </div>
+        <div
+          class="w-full col-start-1 col-span-full row-start-2 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
+          :class="{ errors: !model.name.isFilled }"
+        >
+          <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+            $t("formsetup.servername")
+          }}</span>
+
+          <input
+            v-model="model.name.value"
+            class="col-start-4 col-span-full w-full h-full rounded-full px-2"
+            :class="{
+              notFilled: !model.host.isFilled,
+              isFilled: model.host.isFilled,
+            }"
+            name="servername"
+            type="text"
+            @blur="checkInput(model.name)"
+          />
+        </div>
+        <div
+          class="w-full col-start-1 col-span-full row-start-3 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
+          :class="{ errors: !model.host.isFilled }"
+        >
+          <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+            $t("formsetup.iphost")
+          }}</span>
+
+          <div
+            class="col-start-4 col-span-1 w-8 h-8 rounded-full border-4 border-slate-500 bg-gray-200 flex justify-center items-center p-1 cursor-pointer hover:border-slate-400 shadow-md shadow-[#1c2122]"
+            @click="ipScanModal = true"
+          >
+            <img class="w-4 h-4 hover:scale-110 active:scale-100" src="/img/icon/form-setup/local-lan.png" alt="" />
+          </div>
+          <input
+            v-model="model.host.value"
+            class="col-start-5 col-span-7 w-full h-full rounded-l-full border-r border-gray-400 px-2"
+            :class="{
+              notFilled: !model.host.isFilled,
+              isFilled: model.host.isFilled,
+            }"
+            name="host"
+            type="text"
+            required
+            @blur="checkInput(model.host)"
+          />
+          <input
+            v-model="model.port.value"
+            class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer px-1"
+            :class="{
+              notFilled: !model.port.isFilled,
+              isFilled: model.port.isFilled,
+            }"
+            type="text"
+            placeholder="22"
+            optional
+            @blur="checkInput(model.port)"
+          />
+        </div>
+        <div
+          class="w-full col-start-1 col-span-full row-start-4 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
+          :class="{
+            errors: !model.user.isFilled,
+            isFilled: model.user.isFilled,
+          }"
+        >
+          <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+            $t("formsetup.username")
+          }}</span>
+
+          <input
+            v-model="model.user.value"
+            class="col-start-4 col-span-full w-full h-full rounded-full px-2"
+            :class="{
+              notFilled: !model.user.isFilled,
+              isFilled: model.user.isFilled,
+            }"
+            type="text"
+            name="user"
+            required
+            @blur="checkInput(model.user)"
+          />
+        </div>
+
+        <Transition name="slide-up">
+          <div
+            v-if="keyAuth"
+            class="col-start-1 col-span-full row-start-5 row-span-2 gap-y-2 grid grid-cols-12 grid-rows-2"
+          >
+            <div
+              class="w-full col-start-1 col-span-full row-start-1 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
+              :class="{
+                errors: keyAuth ? !model.keylocation.isFilled : !model.pass.isFilled,
+              }"
+            >
+              <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+                $t("formsetup.keylocation")
+              }}</span>
+
+              <input
+                v-model="model.keylocation.value"
+                class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
+                type="text"
+                name="keylocation"
+                required
+                @blur="checkInput(model.keylocation)"
+              />
+              <div
+                class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
+                @click="openUploadHandler"
+              >
+                <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
+                <img class="w-4 h-4" src="/img/icon/form-setup/plus.png" />
+              </div>
             </div>
             <div
-              class="three trash"
-              @click.prevent="showBDialog"
-              @mouseover="mouseOver('over')"
-              @mouseleave="mouseOver('leave')"
+              class="w-full col-start-1 col-span-full row-start-2 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
+              :class="{
+                errors: keyAuth ? !model.keylocation.isFilled : !model.passphrase.isFilled,
+              }"
             >
-              <img :src="imgTrash" alt="" />
-            </div>
-          </div>
-          <div class="server-group" :class="{ errors: !model.name.isFilled }">
-            <div class="labelBox">
-              <label for="servername">{{ $t("formsetup.servername") }}</label>
-            </div>
-            <div class="server-group_input">
+              <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2"
+                >SSH-{{ $t("formsetup.password") }}</span
+              >
               <input
-                id="servername"
-                v-model="model.name.value"
+                v-model="model.passphrase.value"
+                class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
                 :class="{
-                  notFilled: !model.host.isFilled,
-                  isFilled: model.host.isFilled,
+                  notFilled: !model.passphrase.isFilled,
+                  isFilled: model.passphrase.isFilled,
                 }"
-                name="servername"
-                type="text"
-                @blur="checkInput(model.name)"
+                :type="inputType"
+                name="passphrase"
+                @blur="checkInput(model.passphrase)"
               />
-            </div>
-          </div>
-          <div class="server-group" :class="{ errors: !model.host.isFilled }">
-            <div class="labelBox">
-              <label for="host">{{ $t("formsetup.iphost") }}</label>
-            </div>
-            <div class="server-group_input">
-              <div class="ip-scaner" @click="ipScanModal = true">
-                <img src="/img/icon/form-setup/local-lan.png" alt="" />
+              <div
+                class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer px-1"
+                @click="toggleShowPassword"
+              >
+                <img class="w-6 h-6" src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
               </div>
-              <input
-                id="iporhostname"
-                v-model="model.host.value"
-                :class="{
-                  notFilled: !model.host.isFilled,
-                  isFilled: model.host.isFilled,
-                }"
-                name="host"
-                type="text"
-                required
-                @blur="checkInput(model.host)"
-              />
-              <input
-                v-model="model.port.value"
-                :class="{
-                  notFilled: !model.port.isFilled,
-                  isFilled: model.port.isFilled,
-                }"
-                type="text"
-                class="ipPort"
-                placeholder="22"
-                optional
-                @blur="checkInput(model.port)"
-              />
             </div>
           </div>
           <div
-            class="server-group"
+            v-else
+            class="w-full col-start-1 col-span-full row-start-5 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
             :class="{
-              errors: !model.user.isFilled,
-              isFilled: model.user.isFilled,
+              errors: keyAuth ? !model.keylocation.isFilled : !model.pass.isFilled,
             }"
           >
-            <div class="labelBox">
-              <label for="user">{{ $t("formsetup.username") }}</label>
-            </div>
-            <div class="server-group_input">
-              <input
-                id="username"
-                v-model="model.user.value"
-                :class="{
-                  notFilled: !model.user.isFilled,
-                  isFilled: model.user.isFilled,
-                }"
-                type="text"
-                name="user"
-                required
-                @blur="checkInput(model.user)"
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          id="keyLocation"
-          :class="{
-            errors: keyAuth ? !model.keylocation.isFilled : !model.pass.isFilled,
-          }"
-        >
-          <label v-if="keyAuth" class="keyLocation_title">{{ $t("formsetup.keylocation") }}</label>
-          <label v-if="!keyAuth" class="keyLocation_title">{{ $t("formsetup.password") }}</label>
-          <div v-if="keyAuth" class="locationPicker">
-            <div class="chooseFile" @click="openUploadHandler">
-              <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
-              <img src="/img/icon/form-setup/plus.png" />
-            </div>
+            <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+              $t("formsetup.password")
+            }}</span>
+
             <input
-              id="keyInput"
-              v-model="model.keylocation.value"
-              type="text"
+              v-model="model.pass.value"
+              class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
+              :class="{
+                notFilled: !model.pass.isFilled,
+                isFilled: model.pass.isFilled,
+              }"
+              :type="inputType"
               name="keylocation"
               required
-              @blur="checkInput(model.keylocation)"
+              @blur="checkInput(model.pass)"
             />
+            <div
+              class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer"
+              @click="toggleShowPassword"
+            >
+              <img class="w-6 h-6" src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
+            </div>
           </div>
-          <input
-            v-else
-            id="keylocation"
-            v-model="model.pass.value"
-            :class="{
-              notFilled: !model.pass.isFilled,
-              isFilled: model.pass.isFilled,
-            }"
-            :type="inputType"
-            name="keylocation"
-            required
-            @blur="checkInput(model.pass)"
-          />
-          <div v-if="!keyAuth" class="passwordShow" @click="toggleShowPassword">
-            <img src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
-          </div>
-        </div>
-        <div class="ssh">
-          <label class="switch">
-            <input v-model="model.useAuthKey" type="checkbox" name="check-button" @change="changeLabel" />
-            <span class="slider round"></span>
-          </label>
-          <label id="lbl" for="" style="margin-right: 5%">{{ $t("formsetup.usessh") }}</label>
-        </div>
+        </Transition>
         <div
-          v-if="keyAuth"
-          id="keyLocation"
-          :class="{
-            errors: keyAuth ? !model.keylocation.isFilled : !model.passphrase.isFilled,
-          }"
+          class="w-full h-8 col-start-5 col-span-4 justify-self-center self-end row-start-7 row-span-1 bg-[#1a2e2c] p-1 rounded-full flex justify-between items-center"
         >
-          <label class="keyLocation_title">SSH-{{ $t("formsetup.password") }}</label>
-          <input
-            id="passphrase"
-            v-model="model.passphrase.value"
-            :class="{
-              notFilled: !model.passphrase.isFilled,
-              isFilled: model.passphrase.isFilled,
-            }"
-            :type="inputType"
-            name="passphrase"
-            @blur="checkInput(model.passphrase)"
-          />
-          <div class="passwordShow" @click="toggleShowPassword">
-            <img src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
-          </div>
+          <span class="w-fit text-gray-300 font-semibold text-sm ml-1">{{ $t("formsetup.usessh") }}</span>
+
+          <label
+            for="AcceptConditions"
+            class="relative h-6 w-12 cursor-pointer [-webkit-tap-highlight-color:_transparent]"
+          >
+            <input
+              id="AcceptConditions"
+              v-model="model.useAuthKey"
+              type="checkbox"
+              class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden"
+              @change="changeLabel"
+            />
+
+            <span
+              class="absolute inset-y-0 start-0 z-10 m-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:start-6 peer-checked:text-green-600"
+            >
+              <svg
+                data-unchecked-icon
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+
+              <svg
+                data-checked-icon
+                xmlns="http://www.w3.org/2000/svg"
+                class="hidden h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
+
+            <span class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"></span>
+          </label>
         </div>
-        <button id="login">
+        <button
+          class="w-[150px] h-14 absolute bottom-4 right-4 text-center bg-[#1a2e2c] rounded-full text-gray-200 font-semibold text-xl capitalize hover:bg-[#264744] transition-all hover:scale-105 active:scale-100 hover:shadow-md active:shadow-none hover:shadow-gray-800"
+        >
           {{ $t("formsetup.login") }}
         </button>
       </form>
@@ -519,6 +623,27 @@ export default {
 };
 </script>
 <style scoped>
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.5s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+select option {
+  background-color: white;
+  margin-bottom: 1px;
+  cursor: pointer;
+  padding: 0.5em;
+  border-width: 0;
+}
 .alert {
   width: 40%;
   height: 20%;
@@ -618,29 +743,7 @@ export default {
     background-color: orange;
   }
 }
-form {
-  grid-column: 1/4;
-  grid-row: 3/4;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-#container {
-  width: 65%;
-  height: 69%;
-  padding: 10px;
-  border: 5px solid #929292;
-  border-radius: 25px;
-  background-color: #234141;
-  opacity: 0.9;
-  box-shadow: 0 1px 3px 1px #1f3737;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
+
 .priority {
   z-index: 200;
 }
@@ -656,22 +759,6 @@ form {
 .select-wrapper::after {
   width: 50%;
   height: 100%;
-}
-
-select {
-  width: 100%;
-  height: 65%;
-  border-radius: 40px;
-  outline-style: none;
-  cursor: pointer;
-  text-align-last: center;
-  font-weight: bold;
-  padding: 0;
-}
-.select::after {
-  position: absolute;
-  top: -5px;
-  width: 50%;
 }
 
 #one {
