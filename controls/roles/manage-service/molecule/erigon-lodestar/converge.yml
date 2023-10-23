@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   vars_files:
-  - ../../../../defaults/stereum_defaults.yaml
+    - ../../../../defaults/stereum_defaults.yaml
   vars:
     lodestar_service: 1cdcfe4e-3540-11ed-9d60-73ad70b8ccc5
     erigon_service: 1d938f4c-3540-11ed-b4fd-f72a7f412029
@@ -10,11 +10,11 @@
   tasks:
     # erigon service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -35,15 +35,19 @@
                 - --datadir=/opt/app/data
                 - --authrpc.addr=0.0.0.0
                 - --authrpc.vhosts=*
+                - --authrpc.port=8551
                 - --authrpc.jwtsecret=/engine.jwt
-                - --prune=htc
-                - --externalcl
+                - --prune=default
                 - --ws
                 - --http
                 - --http.vhosts=*
                 - --http.corsdomain=*
                 - --http.addr=0.0.0.0
-                - --http.api=engine,net,eth
+                - --http.port=8545
+                - --http.api=engine,net,eth,web3
+                - --metrics
+                - --metrics.addr=0.0.0.0
+                - --metrics.port=606
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ erigon_service }}/data:/opt/app/data"
@@ -51,11 +55,11 @@
 
     # lodestar beacon service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -84,5 +88,4 @@
               volumes:
                 - "/opt/app/services/{{ lodestar_service }}/lodestar/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
-
 # EOF
