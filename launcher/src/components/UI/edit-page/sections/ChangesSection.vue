@@ -51,6 +51,8 @@ const confirmHandler = async () => {
 
   editStore.confirmChanges = [];
   editStore.disableConfirmButton = false;
+
+  location.reload();
 };
 
 const removeChange = (item) => {
