@@ -55,6 +55,7 @@ import ValidatorClients from "./ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
+
 import LeaderLine from "leader-line-new";
 import { useStateHandler, useRestartService } from "@/composables/services";
 

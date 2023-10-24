@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  newServerName.value = props.serverName ? props.serverName : controlStore.ServerName;
-  newServerIp.value = props.serverIp ? props.serverIp : controlStore.ipAddress;
+  newServerName.value = props.serverName !== null ? props.serverName : controlStore.ServerName;
+  newServerIp.value = props.serverIp !== null ? props.serverIp : controlStore.ipAddress;
 });
 </script>

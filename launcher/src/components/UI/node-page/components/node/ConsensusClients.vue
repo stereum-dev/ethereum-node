@@ -19,7 +19,12 @@
         @open-resync="openResync(item)"
       />
       <TransitionGroup name="fadeModal">
-        <ResyncModal v-if="item.isResyncModalOpen" :item="item" @close-window="item.isResyncModalOpen = false" />
+        <ResyncModal
+          v-if="item.isResyncModalOpen"
+          icon-size="w-14"
+          :item="item"
+          @close-window="closeResyncModal(item)"
+        />
       </TransitionGroup>
     </div>
   </div>
@@ -74,14 +79,21 @@ const mouseLeave = (item) => {
 };
 
 const openResync = (item) => {
+  nodeStore.isLineHidden = true;
   item.isResyncModalOpen = true;
+};
+const closeResyncModal = (item) => {
+  nodeStore.isLineHidden = false;
+  item.isResyncModalOpen = false;
 };
 
 const openExport = (item) => {
+  nodeStore.isLineHidden = true;
   emit("openExpert", item);
 };
 
 const openLog = (item) => {
+  nodeStore.isLineHidden = true;
   emit("openLog", item);
 };
 
@@ -90,10 +102,12 @@ const openDoc = (item) => {
 };
 
 const stateHandler = (item) => {
+  nodeStore.isLineHidden = true;
   emit("stateHandler", item);
 };
 
 const restartHandler = (item) => {
+  nodeStore.isLineHidden = true;
   emit("restartHandler", item);
 };
 </script>

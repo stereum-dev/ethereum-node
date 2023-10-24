@@ -33,6 +33,7 @@
 
 <script setup>
 import ControlService from "@/store/ControlService";
+import { useRefreshMetrics } from "@/composables/monitoring";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 import ChangesBox from "../components/changes/ChangesBox";
@@ -54,6 +55,8 @@ const confirmHandler = async () => {
 
   location.reload();
   editStore.isLineHidden = false;
+
+  await useRefreshMetrics();
 };
 
 const removeChange = (item) => {
