@@ -17,14 +17,14 @@
         <div class="edit-btn">
           <router-link to="/node">
             <span>{{ $t("modifyPanel.backNode") }}</span>
-            <img src="../../../../public/img/icon/manage-node-icons/undo1.png" alt="icon" />
+            <img src="/img/icon/manage-node-icons/undo1.png" alt="icon" />
           </router-link>
         </div>
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
           <span class="btn-text">{{ $t("modifyPanel.nukeNode") }}</span>
-          <img src="../../../../public/img/icon/manage-node-icons/nuke.png" alt="icon" />
+          <img src="/img/icon/manage-node-icons/nuke.png" alt="icon" />
         </div>
       </div>
       <RemoveModal
@@ -42,9 +42,9 @@ import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
-import { useNodeManage } from "../../../store/nodeManage";
-import { useControlStore } from "../../../store/theControl";
-import { useStakingStore } from "../../../store/theStaking";
+import { useNodeManage } from "@/store/nodeManage";
+import { useControlStore } from "@/store/theControl";
+import { useStakingStore } from "@/store/theStaking";
 import RemoveModal from "./RemoveModal.vue";
 export default {
   components: { RemoveModal },

@@ -7,13 +7,7 @@
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <NodeSection @open-expert="openExpertModal" />
-        <ExpertWindow
-          v-if="isExpertModeOpen"
-          :item="expertModeClient"
-          @hide-modal="isExpertModeOpen = false"
-          @prunning-warning="$emit('prunning-warning', item)"
-          @resync-warning="$emit('resync-warning', item)"
-        />
+        <ExpertWindow v-if="isExpertModeOpen" :item="expertModeClient" @hide-modal="closeExpertMode" />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection @open-expert="openExpertModal" />
@@ -41,7 +35,7 @@ import SidebarSection from "./sections/SidebarSection";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watchEffect } from "vue";
 import ExpertWindow from "./sections/ExpertWindow.vue";
 import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
@@ -50,6 +44,7 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useListKeys } from "../../../composables/validators";
+import { useRouter } from "vue-router";
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
@@ -66,11 +61,19 @@ const nodeStore = useNodeStore();
 const headerStore = useNodeHeader();
 const serviceStore = useServices();
 const controlStore = useControlStore();
+const router = useRouter();
 
-const alarmToggle = () => {
-  nodeStore.infoAlarm = !nodeStore.infoAlarm;
-};
+//Computed & Watchers
 
+watchEffect(() => {
+  if (router.currentRoute.value.path !== "/node") {
+    nodeStore.isLineHidden = true;
+  } else {
+    nodeStore.isLineHidden = false;
+  }
+});
+
+//Lifecycle Hooks
 onMounted(() => {
   updateConnectionStats();
   updateServiceLogs();
@@ -86,6 +89,12 @@ onUnmounted(() => {
   clearInterval(pollingNodeStats);
   clearInterval(pollingListingKeys);
 });
+
+//Methods
+
+const alarmToggle = () => {
+  nodeStore.infoAlarm = !nodeStore.infoAlarm;
+};
 
 const checkForListingKeys = async () => {
   //is true when there is at least one validator service running without keys
@@ -121,12 +130,19 @@ const updateServerVitals = async () => {
   }
 };
 const openExpertModal = (item) => {
+  nodeStore.isLineHidden = true;
   expertModeClient.value = item;
   expertModeClient.value.expertOptionsModal = true;
   isExpertModeOpen.value = true;
 };
 const updateNodeStats = async () => {
   await useRefreshNodeStats();
+  nodeStore.isLineHidden = false;
+};
+
+const closeExpertMode = () => {
+  isExpertModeOpen.value = false;
+  nodeStore.isLineHidden = false;
 };
 </script>
 

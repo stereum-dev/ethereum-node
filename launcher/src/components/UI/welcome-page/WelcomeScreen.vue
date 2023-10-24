@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import InstallationLayout from "../../base/InstallationLayout.vue";
 import LogoutModal from "./components/LogoutModal.vue";
 import WelcomeHeader from "./components/WelcomeHeader.vue";
 import WelcomeBody from "./components/WelcomeBody.vue";

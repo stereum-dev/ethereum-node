@@ -52,27 +52,30 @@ export default {
   cursor: default;
 }
 .footer-status-info {
-  width: 80%;
-  height: 100%;
+  width: 85%;
+  height: 4%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 0.5%;
+  left: 14%;
   font-size: 80%;
   color: #c1c1c1;
   font-weight: 700;
-  text-transform: capitalize;
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0.5%;
 }
 .stereum-status {
   width: 10%;
-  height: 100%;
+  height: 3.5%;
   background: #1f1f1f;
   border-radius: 0 30px 30px 0;
-  border-right: 1px solid #707070;
   margin-left: 35px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  position: absolute;
+  bottom: 0.5%;
 }
 .stereum-stateIcon {
   width: 10px;

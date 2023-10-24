@@ -10,20 +10,21 @@
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import ServerDetails from "./ServerDetails.vue";
-import NetworkDetails from "./NetworkDetails.vue";
-import ConfigDetails from "./ConfigDetails.vue";
+import NetworkDetails from "../../../edit-page/components/edit/NetworkDetails.vue";
+import ConfigDetails from "../../../edit-page/components/edit/ConfigDetails.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
-const nodeStore = useNodeManage();
+const store = useNodeManage();
+
 const route = useRoute();
 
 const configsToDisplay = computed(() => {
   let configs;
   if (route.path === "/node") {
-    configs = nodeStore.nodeConfigs;
+    configs = store.nodeConfigs;
   } else {
-    configs = nodeStore.nodeConfigs.slice(0, 4);
+    configs = store.nodeConfigs.slice(0, 4);
   }
   return configs;
 });

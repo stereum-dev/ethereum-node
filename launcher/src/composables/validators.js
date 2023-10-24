@@ -4,14 +4,15 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 
-
 export async function useListKeys(forceRefresh) {
   const serviceStore = useServices();
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
 
   let keyStats = [];
-  let clients = serviceStore.installedServices.filter((s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService");
+  let clients = serviceStore.installedServices.filter(
+    (s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService"
+  );
   if (clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") {
     for (let client of clients) {
       //if there is already a list of keys ()
@@ -29,8 +30,8 @@ export async function useListKeys(forceRefresh) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
-              return { validating_pubkey: e.pubkey, readonly: true };
-            })
+                return { validating_pubkey: e.pubkey, readonly: true };
+              })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
         }
@@ -38,8 +39,8 @@ export async function useListKeys(forceRefresh) {
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-            return { key: e.validating_pubkey, isRemote: e.readonly };
-          })
+              return { key: e.validating_pubkey, isRemote: e.readonly };
+            })
           : [];
 
         //update service datasets in Pinia store
@@ -72,7 +73,7 @@ export async function useListKeys(forceRefresh) {
     stakingStore.keys = keyStats.map((key) => {
       return {
         ...key,
-        displayName: alias[key.key],
+        displayName: alias[key.key].keyName,
         showGrafitiText: false,
         showCopyText: false,
         showRemoveText: false,
@@ -82,7 +83,6 @@ export async function useListKeys(forceRefresh) {
     if (stakingStore.keys && stakingStore.keys.length > 0) useUpdateValidatorStats();
   }
 }
-
 
 export async function useUpdateValidatorStats() {
   const nodeManageStore = useNodeManage();

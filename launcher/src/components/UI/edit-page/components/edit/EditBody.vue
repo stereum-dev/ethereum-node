@@ -71,7 +71,7 @@ import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
 import LeaderLine from "leader-line-new";
-import { computed, ref, onUnmounted } from "vue";
+import { computed, ref, onUnmounted, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 
 const emit = defineEmits([
@@ -88,10 +88,9 @@ const emit = defineEmits([
 const manageStore = useNodeManage();
 
 // refs
-let lineOne = ref(null);
-let lineTwo = ref(null);
-let lineThree = ref(null);
+
 const isOverDropZone = ref(false);
+const isLineDrawHandlerReady = ref(false);
 
 // computed & watchers properties
 // eslint-disable-next-line no-unused-vars
@@ -116,30 +115,58 @@ const activateScrollBar = computed(() => {
   }
 });
 
+watchEffect(() => {
+  if (manageStore.isLineHidden) {
+    if (manageStore.lineOne) {
+      manageStore.lineOne.remove();
+      manageStore.lineOne = null;
+    }
+    if (manageStore.lineTwo) {
+      manageStore.lineTwo.remove();
+      manageStore.lineTwo = null;
+    }
+    if (manageStore.lineThree) {
+      manageStore.lineThree.remove();
+      manageStore.lineThree = null;
+    }
+  }
+});
+
+watchEffect(() => {
+  if (!manageStore.isLineHidden && isLineDrawHandlerReady.value) {
+    lineDrawHandler();
+  }
+});
+
 //Hooks
 
 onUnmounted(() => {
-  if (lineOne.value) {
-    lineOne.value.remove();
-    lineOne.value = null;
+  if (manageStore.lineOne) {
+    manageStore.lineOne.remove();
+    manageStore.lineOne = null;
   }
-  if (lineTwo.value) {
-    lineTwo.value.remove();
-    lineTwo.value = null;
+  if (manageStore.lineTwo) {
+    manageStore.lineTwo.remove();
+    manageStore.lineTwo = null;
   }
-  if (lineThree.value) {
-    lineThree.value.remove();
-    lineThree.value = null;
+  if (manageStore.lineThree) {
+    manageStore.lineThree.remove();
+    manageStore.lineThree = null;
   }
 });
 
 // methods
 
 const oneWayConnection = (start, end) => {
+  if (manageStore.lineOne) {
+    manageStore.lineOne.remove();
+    manageStore.lineOne = null;
+  }
+
   if (start && end) {
-    lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    lineOne.value.position();
-    lineOne.value.setOptions({
+    manageStore.lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    manageStore.lineOne.position();
+    manageStore.lineOne.setOptions({
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
@@ -150,22 +177,36 @@ const oneWayConnection = (start, end) => {
 };
 
 const twoWaysConnections = (start, middle, end) => {
+  if (manageStore.lineTwo) {
+    manageStore.lineTwo.remove();
+    manageStore.lineTwo = null;
+  }
+
+  if (manageStore.lineThree) {
+    manageStore.lineThree.remove();
+    manageStore.lineThree = null;
+  }
+
   if (start && middle && end) {
-    lineTwo.value = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
-    lineTwo.value.setOptions({
+    manageStore.lineTwo = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+    manageStore.lineTwo.setOptions({
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
-    lineTwo.value.position();
-    lineThree.value = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
-    lineThree.value.setOptions({
+    manageStore.lineTwo.position();
+    manageStore.lineThree = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+    manageStore.lineThree.setOptions({
       path: "fluid",
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
-    lineThree.value.position();
+    manageStore.lineThree.position();
   }
 };
 
@@ -223,28 +264,30 @@ const lineDrawHandler = (item) => {
   } else if (item && item.displayPluginMenu) {
     removeConnectionLines();
   }
+  isLineDrawHandlerReady.value = true;
 };
 
 const removeConnectionLines = () => {
   // Remove all existing connections
-  if (lineOne.value) {
-    lineOne.value.remove();
-    lineOne.value = null;
+  if (manageStore.lineOne) {
+    manageStore.lineOne.remove();
+    manageStore.lineOne = null;
   }
 
-  if (lineTwo.value) {
-    lineTwo.value.remove();
-    lineTwo.value = null;
+  if (manageStore.lineTwo) {
+    manageStore.lineTwo.remove();
+    manageStore.lineTwo = null;
   }
 
-  if (lineThree.value) {
-    lineThree.value.remove();
-    lineThree.value = null;
+  if (manageStore.lineThree) {
+    manageStore.lineThree.remove();
+    manageStore.lineThree = null;
   }
 };
 
 const onDrop = (event) => {
   isOverDropZone.value = false;
+  manageStore.isLineHidden = true;
   emit("onDrop", event);
 };
 
@@ -253,13 +296,16 @@ const confirmConnection = (item) => {
 };
 
 const switchClient = (item) => {
+  manageStore.isLineHidden = true;
   emit("switchClient", item);
 };
 
 const modifyService = (item) => {
+  manageStore.isLineHidden = true;
   emit("modifyService", item);
 };
 const deleteService = (item) => {
+  manageStore.isLineHidden = true;
   emit("deleteService", item);
 };
 
@@ -268,6 +314,7 @@ const confirmConsensus = (item) => {
 };
 
 const infoModal = (item) => {
+  manageStore.isLineHidden = true;
   emit("infoModal", item);
 };
 </script>
