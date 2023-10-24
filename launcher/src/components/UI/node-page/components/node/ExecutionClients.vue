@@ -20,7 +20,12 @@
         @open-pruning="openPruning"
       />
       <TransitionGroup name="fadeModal">
-        <ResyncModal v-if="item.isResyncModalOpen" :item="item" @close-window="item.isResyncModalOpen = false" />
+        <ResyncModal
+          v-if="item.isResyncModalOpen"
+          icon-size="w-14"
+          :item="item"
+          @close-window="closeResyncModal(item)"
+        />
         <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
       </TransitionGroup>
     </div>
@@ -87,12 +92,17 @@ const mouseLeave = (item) => {
 const openResync = (item) => {
   item.isResyncModalOpen = true;
 };
+const closeResyncModal = (item) => {
+  nodeStore.isLineHidden = false;
+  item.isResyncModalOpen = false;
+};
 
 const openPruning = () => {
   showPruningModal.value = true;
 };
 
 const closePruning = () => {
+  nodeStore.isLineHidden = false;
   showPruningModal.value = false;
 };
 
@@ -113,6 +123,7 @@ const stateHandler = (item) => {
 };
 
 const restartHandler = (item) => {
+
   emit("restartHandler", item);
 };
 </script>

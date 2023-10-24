@@ -20,7 +20,7 @@
 
       <slot></slot>
     </div>
-    <ServerAccessManagement v-if="serverAccessManagement" />
+    <ServerAccessManagement v-if="serverAccessManagement && !isRouterLogin" />
   </div>
 </template>
 <script setup>
@@ -28,6 +28,7 @@ import SecurityButton from "../UI/node-header/SecurityButton.vue";
 import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
+import { useRouter } from "vue-router";
 import { ref, watchEffect, computed } from "vue";
 import i18n from "../../../../launcher/src/includes/i18n";
 
@@ -36,6 +37,8 @@ const t = i18n.global.t;
 const footerStore = useFooter();
 const headerStore = useNodeHeader();
 
+const router = useRouter();
+const isRouterLogin = ref(false);
 const serverAccessManagement = ref(false);
 const tooltip = ref(false);
 
@@ -44,6 +47,13 @@ const serverAccMange = computed(() => {
 });
 
 //Computed
+watchEffect(() => {
+  if (router.currentRoute.value.path === "/login") {
+    isRouterLogin.value = true;
+  } else {
+    isRouterLogin.value = false;
+  }
+});
 
 watchEffect(() => {
   serverAccessManagement.value = headerStore.serverAccessManagement;

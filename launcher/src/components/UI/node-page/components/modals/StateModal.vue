@@ -1,71 +1,74 @@
 <template>
-  <div
-    id="modal-id"
-    class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
+  <custom-modal
+    icon-size="w-14"
+    bg-color="bg-[#1c1d1d]"
+    :btn-color="props.mainIcon ? 'green' : 'red'"
+    :icon="getIcon"
+    :main-title="`${getButtonText} The Node `"
+    sub-title="getSubTitles"
+    :message-text="getMessageText"
+    :confirm-text="getButtonText"
+    click-outside-text="Click outside to cancel"
+    @close-window="closeWindow"
+    @confirm-action="confirmAction"
   >
-    <div class="absolute bg-black opacity-80 inset-0 z-0" @click="$emit('closeWindow')"></div>
-    <div
-      class="w-full max-w-lg p-5 relative mx-auto my-auto rounded-[35px] shadow-lg bg-white border-4 border-gray-400"
-    >
-      <!--content-->
-      <div class="">
-        <!--body-->
-        <div class="text-center p-5 flex-auto justify-center">
-          <img
-            class="w-10 -m-1 flex items-center text-red-500 mx-auto"
-            :src="mainIcon ? '/img/icon/node-icons/turn_on.png' : '/img/icon/node-icons/power2.png'"
-            alt="restart warning"
-          />
-          <div v-if="!mainIcon" class="text-md font-bold py-4">
-            <span>{{ $t("confirmModal.off") }} </span>
-          </div>
-          <div v-if="!mainIcon" class="text-md font-bold py-4">
-            <span class="uppercase">{{ $t("confirmModal.messageOff") }} </span>
-          </div>
-          <div v-if="mainIcon" class="text-md font-bold py-4">
-            <span>{{ $t("confirmModal.on") }} </span>
-          </div>
-          <div v-if="mainIcon" class="text-md font-bold py-4">
-            <span class="uppercase">{{ $t("confirmModal.messageOn") }} </span>
-          </div>
-        </div>
-        <!--footer-->
-        <div class="p-3 mt-2 text-center space-y-4">
-          <button
-            v-if="mainIcon"
-            class="mb-2 md:mb-0 bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-green-600"
-            @click="$emit('turnOn')"
-          >
-            Turn on
-          </button>
-          <button
-            v-else
-            class="mb-2 md:mb-0 bg-red-500 border border-red-500 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-red-600"
-            @click="$emit('turnOff')"
-          >
-            Turn off
-          </button>
-          <span class="text-xs flex justify-center items-center text-red-500 mx-auto">click outside to close</span>
-        </div>
+    <template #content>
+      <div class="w-full h-20 flex justify-center items-center">
+        <span class="text-xl font-semibold" :class="props.mainIcon ? 'text-teal-500' : 'text-red-400'">{{
+          getContentText
+        }}</span>
       </div>
-    </div>
-  </div>
+    </template>
+  </custom-modal>
 </template>
-<script>
-export default {
-  props: {
-    service: {
-      type: Object,
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      required: true,
-    },
-    mainIcon: {
-      type: Boolean,
-      required: true,
-    },
+
+<script setup>
+import CustomModal from "./CustomModal.vue";
+import i18n from "../../../../../includes/i18n";
+import { computed } from "vue";
+
+const props = defineProps({
+  mainIcon: {
+    type: Boolean,
+    required: true,
   },
+});
+
+const emit = defineEmits(["closeWindow", "turnOn", "turnOff"]);
+
+const t = i18n.global.t;
+
+const off = t("confirmModal.off");
+const offMsg = t("confirmModal.messageOff");
+
+const on = t("confirmModal.on");
+const onMsg = t("confirmModal.messageOn");
+
+const getIcon = computed(() => {
+  return props.mainIcon ? "/img/icon/node-icons/turn_on.png" : "/img/icon/node-icons/power2.png";
+});
+
+const getMessageText = computed(() => {
+  return props.mainIcon ? on : off;
+});
+
+const getButtonText = computed(() => {
+  return props.mainIcon ? "turn on" : "turn off";
+});
+
+const getContentText = computed(() => {
+  return props.mainIcon ? onMsg : offMsg;
+});
+
+const closeWindow = () => {
+  emit("closeWindow");
+};
+
+const confirmAction = () => {
+  if (props.mainIcon) {
+    emit("turnOn");
+  } else {
+    emit("turnOff");
+  }
 };
 </script>
