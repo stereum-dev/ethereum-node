@@ -1,70 +1,81 @@
 <template>
   <aside class="flex flex-col items-center w-18 h-full bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
     <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-5">
-      <router-link
-        v-if="!routerHovered"
-        to="/edit"
-        class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
-        @mouseover="routerHovered = true"
+      <div
+        class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center cursor-pointer"
+        @click="hoverRouter"
       >
-        <img class="w-8" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
-      </router-link>
-      <router-link v-else to="/edit" class="showManageBtn" @mouseleave="routerHovered = false">
-        <img class="w-7 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
-        <span class="text-sm text-gray-200 font-semibold">To Edit Node</span>
-      </router-link>
-      <button v-if="isloading" class="row-start-2 row-end-3 p-1 rounded-md relative">
+        <img class="w-7" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+      </div>
+      <Transition name="slide-fade">
+        <router-link
+          v-if="routerHovered"
+          to="/edit"
+          class="w-fit h-9 absolute col-span-1 row-start-1 row-end-2 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1 transition duration-200 shadow-md shadow-[#23272a]"
+          @mouseleave="routerHovered = false"
+        >
+          <img class="w-6 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+          <span class="text-sm text-gray-200 font-semibold">To Edit Node</span>
+        </router-link>
+      </Transition>
+
+      <button v-if="isloading" class="row-start-2 row-end-3 p-1 rounded-md relative flex justify-center items-center">
         <img v-if="loading" src="/img/icon/task-manager-icons/turning_circle_blue.gif" alt="loading" />
       </button>
       <button
-        v-else-if="checkStatus && !powerHovered"
-        class="row-start-2 row-end-3 p-1 rounded-md"
-        @mouseenter="powerHovered = true"
-        @click="showPowerModal"
+        v-else-if="checkStatus"
+        class="row-start-2 row-end-3 p-1 rounded-md transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
+        @click="hoverPower"
       >
-        <img class="w-6" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+        <img class="w-5" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
       </button>
 
       <button
-        v-else-if="checkStatus && powerHovered"
-        class="showPowerBtn"
-        @mouseleave="powerHovered = false"
-        @click="showPowerModal"
+        v-else-if="!checkStatus"
+        class="row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
+        @click="hoverPower"
       >
-        <img class="w-7 mr-1" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
-        <span class="text-sm text-gray-200 font-semibold">Turn Node On</span>
+        <img class="w-5" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
       </button>
-      <button
-        v-else-if="!checkStatus && !powerHovered"
-        class="row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
-        @mouseenter="powerHovered = true"
-        @click="showPowerModal"
-      >
-        <img class="w-6" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
-      </button>
+      <Transition name="slide-fade">
+        <button
+          v-if="checkStatus && powerHovered"
+          class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1"
+          @mouseleave="powerHovered = false"
+          @click="showPowerModal"
+        >
+          <img class="w-4 mr-1" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+          <span class="text-sm text-gray-200 font-semibold">Turn Node On</span>
+        </button>
 
-      <button
-        v-else-if="!checkStatus && powerHovered"
-        class="showPowerBtn"
-        @mouseleave="powerHovered = false"
-        @click="showPowerModal"
-      >
-        <img class="w-6 mr-1" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
-        <span class="text-sm text-gray-200 font-semibold">Turn Node Off</span>
-      </button>
-
-      <button
-        v-if="!exportHovered"
-        class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a]"
-        @mouseenter="exportHovered = true"
-        @click="exportData"
-      >
-        <img class="w-8" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
-      </button>
-      <button v-else class="showExportBtn" @mouseleave="exportHovered = false" @click="exportData">
-        <img class="w-7 mr-1" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
-        <span class="text-sm text-gray-200 font-semibold">Export Node Config</span>
-      </button>
+        <button
+          v-else-if="!checkStatus && powerHovered"
+          class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1"
+          @mouseleave="powerHovered = false"
+          @click="showPowerModal"
+        >
+          <img class="w-4 mr-1" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
+          <span class="text-xs text-gray-200">Turn Node Off</span>
+        </button>
+      </Transition>
+      <Transition name="slide-fade">
+        <button
+          v-if="!exportHovered"
+          class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
+          @click="hoverExport"
+        >
+          <img class="w-5" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
+        </button>
+        <button
+          v-else
+          class="w-fit h-9 absolute row-start-3 row-end-4 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1"
+          @mouseleave="exportHovered = false"
+          @click="exportData"
+        >
+          <img class="w-4" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
+          <span class="text-xs text-gray-200 font-semibold">Export Node Config</span>
+        </button>
+      </Transition>
     </div>
     <StateModal
       v-if="nodeStore.runNodePowerModal"
@@ -172,9 +183,53 @@ const exportData = async () => {
     }
   }
 };
+
+const hoverRouter = () => {
+  if (routerHovered.value || exportHovered.value || powerHovered.value) {
+    routerHovered.value = false;
+    exportHovered.value = false;
+    powerHovered.value = false;
+  }
+  routerHovered.value = true;
+};
+
+const hoverPower = () => {
+  if (routerHovered.value || exportHovered.value || powerHovered.value) {
+    routerHovered.value = false;
+    exportHovered.value = false;
+    powerHovered.value = false;
+  }
+  powerHovered.value = true;
+};
+
+const hoverExport = () => {
+  if (routerHovered.value || exportHovered.value || powerHovered.value) {
+    routerHovered.value = false;
+    exportHovered.value = false;
+    powerHovered.value = false;
+  }
+  exportHovered.value = true;
+};
 </script>
 
 <style scoped>
+.slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+.slide-fade-leave-to {
+  transform: translateX(30px);
+  opacity: 0;
+}
+
 .showManageBtn {
   grid-column: 1;
   grid-row: 1/2;
