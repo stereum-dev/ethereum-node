@@ -2,7 +2,8 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import BaseHome from "../pages/BaseHome.vue";
 import LoginPage from "../pages/LoginPage.vue";
-import ClickInstall from "../pages/ClickInstall.vue";
+import OneclickPage from "../pages/OneclickPage.vue";
+import SelectPreset from "../../src/components/UI/one-click/sections/SelectPreset.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
 import ControlPanel from "../pages/TheControl.vue";
 import NodePage from "../pages/NodePage.vue";
@@ -42,10 +43,33 @@ const routes = [
     component: WelcomePage,
   },
   {
-    path: "/selectPlugin",
-    name: "/selectPlugin",
-    component: ClickInstall,
+    path: "/oneclick",
+    name: "OneclickPage",
+    component: OneclickPage,
+    children: [
+      {
+        path: "preset",
+        name: "SelectPreset",
+        component: SelectPreset,
+      },
+      {
+        path: "sync",
+        name: "FastSync",
+        component: FastSync,
+      },
+      {
+        path: "verify",
+        name: "VerifyInstallation",
+        component: VerifyInstallation,
+      },
+      {
+        path: "play",
+        name: "InstallingAnimation",
+        component: InstallingAnimation,
+      },
+    ],
   },
+
   {
     path: "/node",
     name: "NodePage",
