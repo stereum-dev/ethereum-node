@@ -3,7 +3,7 @@
     <div class="storage-box">
       <div class="storage-icon">
         <div class="storage-icon_container">
-          <img src="../../../../public/img/icon/control/ServiceIcon.png" />
+          <img src="/img/icon/control/ServiceIcon.png" />
         </div>
         <span>{{ $t("controlPage.storage") }}</span>
       </div>
@@ -21,31 +21,20 @@
     </div>
   </div>
 </template>
-<script>
-import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
-export default {
-  data() {
-    return {
-      // datas are dummy, but the best stracture for the design is like this
-      //for the wiring use this stracture
-      isLoading: true, // initialize this here with true to show a spinner
-      bttnLoading: "/img/icon/control/spinner.gif",
-    };
-  },
-  computed: {
-    ...mapState(useControlStore, {
-      storagestatus: "storagestatus",
-    }),
-  },
-  watch: {
-    storagestatus(newVal) {
-      if (newVal && Array.isArray(newVal) && newVal.length) {
-        this.isLoading = false;
-      }
-    },
-  },
-};
+<script setup>
+import { useControlStore } from "@/store/theControl";
+import { ref, computed, watch } from "vue";
+
+const controlStore = useControlStore();
+const storagestatus = computed(() => controlStore.storagestatus);
+const isLoading = ref(true);
+const bttnLoading = ref("/img/icon/control/spinner.gif");
+
+watch(storagestatus, (newVal) => {
+  if (newVal && Array.isArray(newVal) && newVal.length) {
+    isLoading.value = false;
+  }
+});
 </script>
 <style scoped>
 .bttnLoading {

@@ -675,7 +675,7 @@ export default {
       el.displayName = name;
       const keys = await ControlService.readKeys();
       if (keys) {
-        keys[el.key] = name;
+        keys[el.key].keyName = name;
         await ControlService.writeKeys(keys);
       } else {
         console.log("Couldn't read KeyFile!");

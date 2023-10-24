@@ -21,6 +21,8 @@
   </div>
 </template>
 <script>
+import { ref } from "vue";
+
 export default {
   props: {
     serviceCat: {
@@ -28,9 +30,10 @@ export default {
       default: "Prometheus",
     },
   },
-  data() {
+  setup(props) {
+    const serviceName = ref(props.serviceCat);
     return {
-      serviceName: "Prometheus",
+      serviceName,
     };
   },
 };
