@@ -25,7 +25,9 @@
       <div v-if="thirdPoint" class="point-wrapper">
         <div class="second-point">
           <div class="second-point_title">{{ $t("rpcGuide.clickExtention") }}</div>
-          <div class="second-point_icon"><img src="/img/icon/arrows/Pointer1.png" alt="pointer" /></div>
+          <div class="second-point_icon">
+            <img src="/img/icon/arrows/Pointer1.png" alt="pointer" />
+          </div>
         </div>
         <div class="second-border"></div>
       </div>
@@ -64,7 +66,7 @@
 
 <script>
 import { mapWritableState } from "pinia";
-import { useNodeHeader } from "../../../store/nodeHeader";
+import { useNodeHeader } from "@/store/nodeHeader";
 import RpcEndpoint from "../the-control/RpcEndpoint.vue";
 
 export default {
@@ -472,8 +474,8 @@ export default {
   height: 7%;
   cursor: pointer;
   position: absolute;
-  left: 16%;
-  top: 1%;
+  left: 22%;
+  top: 2%;
   opacity: 1;
   color: #eee;
   text-transform: uppercase;
@@ -485,8 +487,8 @@ export default {
   transform: rotate(180deg);
   width: 20%;
   position: absolute;
-  left: 25%;
-  top: 7%;
+  left: 29%;
+  top: 8%;
 }
 .comp-arrow {
   filter: invert(1);
@@ -498,12 +500,13 @@ export default {
 }
 .title {
   width: 100%;
-  height: 100%;
+  height: 90%;
   background: #264744;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  border-radius: 20px;
 }
 .step-one {
   color: #eee;

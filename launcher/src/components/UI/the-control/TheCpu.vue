@@ -3,7 +3,7 @@
     <div class="cpuContentBox">
       <div class="cpuIco">
         <div class="cpuIco-container">
-          <img src="../../../../public/img/icon/control/cpuIcon.svg" />
+          <img src="/img/icon/control/cpuIcon.svg" />
         </div>
         <span>CPU</span>
       </div>
@@ -30,30 +30,20 @@
   </div>
 </template>
 
-<script>
-import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
-export default {
-  data() {
-    return {
-      cpuValue: null,
-    };
-  },
-  computed: {
-    ...mapState(useControlStore, {
-      cpu: "cpu",
-    }),
-    getStyle() {
-      return { width: 100 - this.cpu + "%" };
-    },
-  },
-};
+<script setup>
+import { useControlStore } from "@/store/theControl";
+import { computed } from "vue";
+
+const controlStore = useControlStore();
+
+const cpu = computed(() => controlStore.cpu);
+
+const getStyle = computed(() => {
+  return { width: 100 - cpu.value + "%" };
+});
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
 .theCpuParent {
   display: flex;
   width: 100%;

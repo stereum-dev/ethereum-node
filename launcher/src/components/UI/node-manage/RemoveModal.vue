@@ -156,7 +156,7 @@ export default {
   left: 0;
   top: 0;
 
-  z-index: 311;
+  z-index: 312;
 }
 .modal-opacity span {
   text-transform: uppercase;
@@ -164,7 +164,7 @@ export default {
   position: absolute;
   top: 10%;
   left: 75%;
-  width: 20%;
+  width: 25%;
   height: 10%;
   display: flex;
   justify-content: center;

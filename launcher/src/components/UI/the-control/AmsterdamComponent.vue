@@ -116,6 +116,7 @@ export default {
   components: {
     NoData,
   },
+
   data() {
     return {
       showSyncInfo: false,
@@ -150,9 +151,15 @@ export default {
     }),
     proposedBlock() {
       if (this.currentNetwork.id === 4) {
-        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+        return Array.from({ length: 16 }, () => ({
+          slotNumber: 0,
+          slotStatus: "pending",
+        }));
       } else {
-        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+        return Array.from({ length: 32 }, () => ({
+          slotNumber: 0,
+          slotStatus: "pending",
+        }));
       }
     },
 
@@ -180,9 +187,10 @@ export default {
     currentResult: {
       handler(newResult) {
         if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
-          const newArray = newResult.currentEpochStatus[0]
-            .slice(0, this.proposedBlock.length)
-            .map((slot) => ({ slotNumber: slot.slotNumber, slotStatus: slot.slotStatus }));
+          const newArray = newResult.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
+            slotNumber: slot.slotNumber,
+            slotStatus: slot.slotStatus,
+          }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -238,9 +246,15 @@ export default {
 
     initializeProposedBlock() {
       if (this.currentNetwork.id === 4) {
-        return Array.from({ length: 16 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+        return Array.from({ length: 16 }, () => ({
+          slotNumber: 0,
+          slotStatus: "pending",
+        }));
       } else {
-        return Array.from({ length: 32 }, () => ({ slotNumber: 0, slotStatus: "pending" }));
+        return Array.from({ length: 32 }, () => ({
+          slotNumber: 0,
+          slotStatus: "pending",
+        }));
       }
     },
     async currentEpochSlot() {
