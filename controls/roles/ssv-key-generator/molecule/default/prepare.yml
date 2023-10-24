@@ -1,51 +1,29 @@
 ---
 - name: Prepare
   hosts: all
+  roles:
+    - role: "../"
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+
   tasks:
-    - name: apt update (Ubuntu)
+    - name: Install python for Ansible (Ubuntu)
       apt:
         update_cache: yes
+        name: pip
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
 
-    - name: Remove conflicting docker packages
-      apt:
-        name:
-        - docker-engine
-        - docker.io
-        - docker-registry
-        state: absent
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
 
-    - name: Install required system packages
-      apt:
-        name:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - software-properties-common
-        - python3-pip
-        - python3-docker
-        - virtualenv
-        - python3-setuptools
-        - gnupg2
-        - pass
-        state: present
-        update_cache: yes
+    - include_role:
+        name: "setup"
 
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu bionic stable
-        state: present
-
-    - name: Update apt and install docker-ce
-      apt:
-        update_cache: yes
-        name:
-          - docker-ce
-        state: present
+    - include_role:
+        name: "configure-firewall"
+# EOF
