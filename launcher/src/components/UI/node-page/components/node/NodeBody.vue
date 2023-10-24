@@ -48,7 +48,7 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, onUnmounted, watchEffect } from "vue";
+import { ref, onUnmounted, watchEffect, watch } from "vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
@@ -89,11 +89,16 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  if (!nodeStore.isLineHidden && isLineDrawHandlerReady.value) {
-    lineDrawHandler();
+watch(
+  () => nodeStore.isLineHidden,
+  (newValue) => {
+    if (newValue === false) {
+      lineDrawHandler();
+    } else {
+      removeConnectionLines();
+    }
   }
-});
+);
 
 //Hooks
 
@@ -242,7 +247,6 @@ const removeConnectionLines = () => {
 };
 
 const openLogsPage = (item) => {
-  nodeStore.isLineHidden = true;
   itemToLogs.value = item;
   isPluginLogPageActive.value = true;
 };
@@ -262,7 +266,6 @@ const openDocs = (item) => {
 };
 
 const openExpert = (item) => {
-  nodeStore.isLineHidden = true;
   emit("openExpert", item);
 };
 </script>

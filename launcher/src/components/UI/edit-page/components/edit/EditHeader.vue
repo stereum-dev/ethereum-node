@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
-    <ServerDetails :server-name="getServerName" :server-ip="getServerIp" />
+    <ServerDetails />
 
     <ConfigDetails :list="configsToDisplay" />
 
@@ -9,7 +9,6 @@
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { useControlStore } from "@/store/theControl";
 import ServerDetails from "./ServerDetails.vue";
 import NetworkDetails from "./NetworkDetails.vue";
 import ConfigDetails from "./ConfigDetails.vue";
@@ -17,7 +16,6 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 const nodeStore = useNodeManage();
-const controlStore = useControlStore();
 const route = useRoute();
 
 const configsToDisplay = computed(() => {
@@ -28,14 +26,6 @@ const configsToDisplay = computed(() => {
     configs = nodeStore.nodeConfigs.slice(0, 4);
   }
   return configs;
-});
-
-const getServerName = computed(() => {
-  return controlStore.ServerName;
-});
-
-const getServerIp = computed(() => {
-  return controlStore.ipAddress;
 });
 </script>
 <style scoped>

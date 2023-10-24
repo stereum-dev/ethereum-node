@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
-    <ServerDetails :server-name="controlStore.ServerName" :server-ip="controlStore.ipAddress" />
+    <ServerDetails />
 
     <ConfigDetails :list="configsToDisplay" />
 
@@ -9,14 +9,11 @@
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { useControlStore } from "@/store/theControl";
 import ServerDetails from "./ServerDetails.vue";
 import NetworkDetails from "../../../edit-page/components/edit/NetworkDetails.vue";
 import ConfigDetails from "../../../edit-page/components/edit/ConfigDetails.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-
-const controlStore = useControlStore();
 
 const store = useNodeManage();
 

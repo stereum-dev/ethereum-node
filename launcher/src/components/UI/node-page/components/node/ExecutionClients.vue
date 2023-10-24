@@ -90,7 +90,6 @@ const mouseLeave = (item) => {
 };
 
 const openResync = (item) => {
-  nodeStore.isLineHidden = true;
   item.isResyncModalOpen = true;
 };
 const closeResyncModal = (item) => {
@@ -99,22 +98,19 @@ const closeResyncModal = (item) => {
 };
 
 const openPruning = () => {
-  nodeStore.isLineHidden = false;
   showPruningModal.value = true;
 };
 
 const closePruning = () => {
-  nodeStore.isLineHidden = true;
+  nodeStore.isLineHidden = false;
   showPruningModal.value = false;
 };
 
 const openExpert = (item) => {
-  nodeStore.isLineHidden = false;
   emit("openExpert", item);
 };
 
 const openLog = (item) => {
-  nodeStore.isLineHidden = false;
   emit("openLog", item);
 };
 
@@ -123,12 +119,11 @@ const openDoc = (item) => {
 };
 
 const stateHandler = (item) => {
-  nodeStore.isLineHidden = false;
   emit("stateHandler", item);
 };
 
 const restartHandler = (item) => {
-  nodeStore.isLineHidden = false;
+
   emit("restartHandler", item);
 };
 </script>

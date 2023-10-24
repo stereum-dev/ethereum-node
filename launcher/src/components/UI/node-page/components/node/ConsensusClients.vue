@@ -79,7 +79,6 @@ const mouseLeave = (item) => {
 };
 
 const openResync = (item) => {
-  nodeStore.isLineHidden = true;
   item.isResyncModalOpen = true;
 };
 const closeResyncModal = (item) => {
@@ -88,12 +87,10 @@ const closeResyncModal = (item) => {
 };
 
 const openExport = (item) => {
-  nodeStore.isLineHidden = true;
   emit("openExpert", item);
 };
 
 const openLog = (item) => {
-  nodeStore.isLineHidden = true;
   emit("openLog", item);
 };
 
@@ -102,12 +99,10 @@ const openDoc = (item) => {
 };
 
 const stateHandler = (item) => {
-  nodeStore.isLineHidden = true;
   emit("stateHandler", item);
 };
 
 const restartHandler = (item) => {
-  nodeStore.isLineHidden = true;
   emit("restartHandler", item);
 };
 </script>

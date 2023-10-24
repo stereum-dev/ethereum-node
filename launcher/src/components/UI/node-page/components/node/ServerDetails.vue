@@ -4,32 +4,29 @@
   >
     <div class="w-full flex justify-center items-center px-2 h-[25px]">
       <span class="text-md font-semibold ml-1 text-yellow-500 overflow-hidden whitespace-pre text-center">{{
-        newServerName
+        controlStore.ServerName
       }}</span>
     </div>
-    <div v-if="newServerIp" class="w-full flex justify-center items-center px-2 h-[25px]">
+    <div v-if="controlStore.ipAddress" class="w-full flex justify-center items-center px-2 h-[25px]">
       <span class="text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">IP :</span>
-      <span class="text-sm pl-2 text-yellow-500 overflow-hidden whitespace-pre">{{ newServerIp }}</span>
+      <span class="text-sm pl-2 text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ipAddress }}</span>
     </div>
   </div>
 </template>
 <script setup>
 import { useControlStore } from "@/store/theControl";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
+import ControlService from "@/store/ControlService";
 
 const controlStore = useControlStore();
 
-let newServerName = ref("");
-let newServerIp = ref("");
-
-const props = defineProps({
-  disabledButton: Boolean,
-  serverName: String,
-  serverIp: String,
-});
-
 onMounted(() => {
-  newServerName.value = props.serverName !== null ? props.serverName : controlStore.ServerName;
-  newServerIp.value = props.serverIp !== null ? props.serverIp : controlStore.ipAddress;
+  updateConnectionStats();
 });
+
+const updateConnectionStats = async () => {
+  const stats = await ControlService.getConnectionStats();
+  controlStore.ServerName = stats.ServerName;
+  controlStore.ipAddress = stats.ipAddress;
+};
 </script>

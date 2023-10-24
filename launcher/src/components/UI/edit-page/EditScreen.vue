@@ -6,7 +6,6 @@
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
-
         <EditBody
           :drop-zone="isOverDropZone"
           @on-drop="onDrop"
@@ -22,7 +21,7 @@
         <ServiceSection @change-connection="serviceModifyHandler" @delete-service="selectedServiceToRemove" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <ChangesSection @remove-change="removeChangeHandler" />
+        <ChangesSection @remove-change="removeChangeHandler" @confirm-changes="confirmHandler" />
       </div>
     </div>
     <!-- End Node main layout -->
@@ -109,7 +108,6 @@ import ModifyModal from "./components/modals/ModifyModal.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import ControlService from "@/store/ControlService";
-import { useRefreshMetrics } from "@/composables/monitoring";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import { ref, onMounted, computed, onUnmounted, watchEffect } from "vue";
@@ -143,7 +141,6 @@ watchEffect(() => {
 
 onMounted(() => {
   manageStore.configNetwork = structuredClone(manageStore.currentNetwork);
-  useRefreshMetrics();
 });
 onMounted(() => {
   manageStore.confirmChanges = [];
@@ -188,6 +185,7 @@ const randomId = computed(() => generateRandomId());
 
 // Switch Clients methods
 const switchClientModalhandler = (item) => {
+  manageStore.isLineHidden = true;
   item.replacePanel = true;
   clientToSwitch.value = item;
   if (item.replacePanel) {
@@ -526,17 +524,19 @@ const destroyNode = async () => {
     nukeModalComponent.value.loginBtn = false;
   }
 };
+const confirmHandler = async () => {
+  manageStore.disableConfirmButton = true;
+  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+  setTimeout(() => {
+    manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
+  }, 4000);
 
-// const confirmHandler = async () => {
-//   manageStore.disableConfirmButton = true;
-//   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+  manageStore.confirmChanges = [];
+  manageStore.disableConfirmButton = false;
 
-//   manageStore.confirmChanges = [];
-//   manageStore.disableConfirmButton = false;
-//   setTimeout(() => {
-//     location.reload();
-//   }, 500);
-// };
+  location.reload();
+  manageStore.isLineHidden = false;
+};
 
 const nukeConfirmation = () => {
   headerStore.refresh = false;

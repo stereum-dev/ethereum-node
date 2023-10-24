@@ -7,13 +7,7 @@
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <NodeSection @open-expert="openExpertModal" />
-        <ExpertWindow
-          v-if="isExpertModeOpen"
-          :item="expertModeClient"
-          @hide-modal="closeExpertMode"
-          @prunning-warning="$emit('prunning-warning', item)"
-          @resync-warning="$emit('resync-warning', item)"
-        />
+        <ExpertWindow v-if="isExpertModeOpen" :item="expertModeClient" @hide-modal="closeExpertMode" />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection @open-expert="openExpertModal" />
@@ -143,6 +137,7 @@ const openExpertModal = (item) => {
 };
 const updateNodeStats = async () => {
   await useRefreshNodeStats();
+  nodeStore.isLineHidden = false;
 };
 
 const closeExpertMode = () => {
