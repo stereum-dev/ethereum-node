@@ -39,3 +39,7 @@
         group: "2000"
         mode: 0644
       become: yes
+
+    - name: "Include ssv-key-generator"
+      include_role:
+        name: "ssv-key-generator"
