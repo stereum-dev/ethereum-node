@@ -76,20 +76,17 @@ export default {
     //open & close modal for each service
     openServiceBrowser(serviceName) {
       this.hideConnectedLines = true;
-      this.runningServices.filter((item) => {
-        item.service == serviceName;
-        if (serviceName == "GrafanaService") {
-          this.showGrafanaWindow = true;
-        } else if (serviceName == "SSVNetworkService") {
-          this.showSsvWindow = true;
-        } else if (serviceName == "PrometheusService") {
-          this.showPrometheusWindow = true;
-        } else if (serviceName == "FlashbotsMevBoostService") {
-          this.showMevboostWindow = true;
-        } else {
-          return;
-        }
-      });
+      if (serviceName == "GrafanaService") {
+        this.showGrafanaWindow = true;
+      } else if (serviceName == "SSVNetworkService") {
+        this.showSsvWindow = true;
+      } else if (serviceName == "PrometheusService") {
+        this.showPrometheusWindow = true;
+      } else if (serviceName == "FlashbotsMevBoostService") {
+        this.showMevboostWindow = true;
+      } else {
+        return;
+      }
     },
     closeServiceBrowser() {
       this.hideConnectedLines = false;
