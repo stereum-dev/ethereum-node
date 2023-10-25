@@ -1286,6 +1286,10 @@ video {
   height: 66.666667%;
 }
 
+.h-20{
+  height: 5rem;
+}
+
 .h-3{
   height: 0.75rem;
 }
@@ -3249,6 +3253,11 @@ video {
 
 .shadow-\[\#1c2122\]{
   --tw-shadow-color: #1c2122;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.shadow-\[\#23272a\]{
+  --tw-shadow-color: #23272a;
   --tw-shadow: var(--tw-shadow-colored);
 }
 

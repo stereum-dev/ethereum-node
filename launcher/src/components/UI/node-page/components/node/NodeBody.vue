@@ -48,13 +48,14 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, onUnmounted } from "vue";
+import { ref, onUnmounted, watchEffect, watch } from "vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
+
 import LeaderLine from "leader-line-new";
 import { useStateHandler, useRestartService } from "@/composables/services";
 
@@ -63,40 +64,71 @@ const emit = defineEmits(["openExpert"]);
 // Refs
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
-let lineOne = ref(null);
-let lineTwo = ref(null);
-let lineThree = ref(null);
+const isLineDrawHandlerReady = ref(false);
 
 // Store and router
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
-// Computed properties
+// Computed & Watchers
+
+watchEffect(() => {
+  if (nodeStore.isLineHidden) {
+    if (nodeStore.lineOne) {
+      nodeStore.lineOne.remove();
+      nodeStore.lineOne = null;
+    }
+    if (nodeStore.lineTwo) {
+      nodeStore.lineTwo.remove();
+      nodeStore.lineTwo = null;
+    }
+    if (nodeStore.lineThree) {
+      nodeStore.lineThree.remove();
+      nodeStore.lineThree = null;
+    }
+  }
+});
+
+watch(
+  () => nodeStore.isLineHidden,
+  (newValue) => {
+    if (newValue === false) {
+      lineDrawHandler();
+    } else {
+      removeConnectionLines();
+    }
+  }
+);
 
 //Hooks
 
 onUnmounted(() => {
-  if (lineOne.value) {
-    lineOne.value.remove();
-    lineOne.value = null;
+  if (nodeStore.lineOne) {
+    nodeStore.lineOne.remove();
+    nodeStore.lineOne = null;
   }
-  if (lineTwo.value) {
-    lineTwo.value.remove();
-    lineTwo.value = null;
+  if (nodeStore.lineTwo) {
+    nodeStore.lineTwo.remove();
+    nodeStore.lineTwo = null;
   }
-  if (lineThree.value) {
-    lineThree.value.remove();
-    lineThree.value = null;
+  if (nodeStore.lineThree) {
+    nodeStore.lineThree.remove();
+    nodeStore.lineThree = null;
   }
 });
 
 // Methods
 
 const oneWayConnection = (start, end) => {
+  if (nodeStore.lineOne) {
+    nodeStore.lineOne.remove();
+    nodeStore.lineOne = null;
+  }
+
   if (start && end) {
-    lineOne.value = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    lineOne.value.position();
-    lineOne.value.setOptions({
+    nodeStore.lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    nodeStore.lineOne.position();
+    nodeStore.lineOne.setOptions({
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
@@ -107,20 +139,34 @@ const oneWayConnection = (start, end) => {
 };
 
 const twoWaysConnections = (start, middle, end) => {
+  if (nodeStore.lineTwo) {
+    nodeStore.lineTwo.remove();
+    nodeStore.lineTwo = null;
+  }
+
+  if (nodeStore.lineThree) {
+    nodeStore.lineThree.remove();
+    nodeStore.lineThree = null;
+  }
+
   if (start && middle && end) {
-    lineTwo.value = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
-    lineTwo.value.setOptions({
+    nodeStore.lineTwo = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
+    nodeStore.lineTwo.setOptions({
       path: "fluid",
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
-    lineThree.value = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
-    lineThree.value.setOptions({
+    nodeStore.lineThree = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
+    nodeStore.lineThree.setOptions({
       path: "fluid",
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
+      startSocket: "right",
+      endSocket: "left",
     });
   }
 };
@@ -179,23 +225,24 @@ const lineDrawHandler = (item) => {
   } else if (item && item.displayPluginMenu) {
     removeConnectionLines();
   }
+  isLineDrawHandlerReady.value = true;
 };
 
 const removeConnectionLines = () => {
   // Remove all existing connections
-  if (lineOne.value) {
-    lineOne.value.remove();
-    lineOne.value = null;
+  if (nodeStore.lineOne) {
+    nodeStore.lineOne.remove();
+    nodeStore.lineOne = null;
   }
 
-  if (lineTwo.value) {
-    lineTwo.value.remove();
-    lineTwo.value = null;
+  if (nodeStore.lineTwo) {
+    nodeStore.lineTwo.remove();
+    nodeStore.lineTwo = null;
   }
 
-  if (lineThree.value) {
-    lineThree.value.remove();
-    lineThree.value = null;
+  if (nodeStore.lineThree) {
+    nodeStore.lineThree.remove();
+    nodeStore.lineThree = null;
   }
 };
 
@@ -205,11 +252,12 @@ const openLogsPage = (item) => {
 };
 
 const closePluginLogsPage = () => {
+  nodeStore.isLineHidden = false;
   isPluginLogPageActive.value = false;
 };
 
 const clickOutside = (item) => {
-  nodeStore.hideConnectedLines = false;
+  nodeStore.isLineHidden = false;
   item.expertOptionsModal = false;
 };
 

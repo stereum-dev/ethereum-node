@@ -19,7 +19,12 @@
         @open-resync="openResync(item)"
       />
       <TransitionGroup name="fadeModal">
-        <ResyncModal v-if="item.isResyncModalOpen" :item="item" @close-window="item.isResyncModalOpen = false" />
+        <ResyncModal
+          v-if="item.isResyncModalOpen"
+          icon-size="w-14"
+          :item="item"
+          @close-window="closeResyncModal(item)"
+        />
       </TransitionGroup>
     </div>
   </div>
@@ -75,6 +80,10 @@ const mouseLeave = (item) => {
 
 const openResync = (item) => {
   item.isResyncModalOpen = true;
+};
+const closeResyncModal = (item) => {
+  nodeStore.isLineHidden = false;
+  item.isResyncModalOpen = false;
 };
 
 const openExport = (item) => {

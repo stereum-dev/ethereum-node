@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      reloadEditBody: false,
       isLineHidden: false,
       lineOne: null,
       lineTwo: null,
