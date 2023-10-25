@@ -2,18 +2,25 @@
 dependency:
   name: galaxy
 driver:
-  name: hetznercloud
+  name: molecule_hetznercloud
 platforms:
   - name: "ssv-key-generator--default--ubuntu-22.04"
     hostname: ubuntu
     server_type: cpx21
     image: ubuntu-22.04
+#  - name: "ssv-key-generator--default--centos-stream-8"
+#    hostname: "centos"
+#    server_type: cpx31
+#    image: centos-stream-8
 provisioner:
   name: ansible
-  env:
-    ANSIBLE_PIPELINING: "True"
-verifier:
-  name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
 scenario:
   test_sequence:
     - destroy
@@ -21,6 +28,5 @@ scenario:
     - prepare
     - converge
     #- idempotence
-    - lint
     - verify
     - destroy

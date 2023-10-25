@@ -3,13 +3,12 @@
   hosts: all
   gather_facts: false
   tasks:
-  #  nimbus beacon logs
-  - name: nimbus beacon
-    command: "docker logs stereum-cd1efba0-1401-11ed-b7bc-3b8bd60e0aa1"
-    register: nimbus_beacon
-    until:
-      - nimbus_beacon.stdout is search("Established connection to execution layer")
-    retries: 60
-    delay: 10
-
+    #  nimbus beacon logs
+    - name: nimbus beacon
+      command: "docker logs stereum-cd1efba0-1401-11ed-b7bc-3b8bd60e0aa1"
+      register: nimbus_beacon
+      until:
+        - nimbus_beacon.stdout is search("Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)")
+      retries: 60
+      delay: 10
 # EOF

@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: hetznercloud
+  name: molecule_hetznercloud
 platforms:
   - name: "update-stereum--full--ubuntu-2204"
     server_type: cpx21
@@ -28,6 +28,5 @@ scenario:
     - prepare
     - converge
     #- idempotence
-    - lint
     - verify
     - destroy
