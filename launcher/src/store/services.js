@@ -480,15 +480,7 @@ export const useServices = defineStore("services", {
               changeValue: true,
               icon: "/img/icon/plugin-menu-icons/doppelganger.png",
               pattern: ["(- --doppelganger-detection-enabled=)(.*)(\\n)"],
-            },
-            {
-              title: "Remove Lockfiles",
-              type: "action",
-              action: "removeLockfiles",
-              changeValue: null,
-              displayWarningModal: false,
-              icon: "/img/icon/plugin-menu-icons/prunning.png",
-            },
+            }
           ],
           drag: true,
           state: "exited",

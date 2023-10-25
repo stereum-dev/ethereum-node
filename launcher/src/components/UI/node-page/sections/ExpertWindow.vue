@@ -191,13 +191,23 @@
         <!-- confirm button box -->
         <button
           v-if="!nothingsChanged"
-          class="w-1/4 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-          @click="confirmExpertChanges(item)"
+          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          @click="confirmExpertChanges(item, false)"
         >
           Confirm
         </button>
-        <button v-else class="w-1/4 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
+        <button v-else class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
           <span>Confirm</span>
+        </button>
+        <button
+          v-if="!nothingsChanged"
+          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          @click="confirmExpertChanges(item, true)"
+        >
+          Confirm & Restart
+        </button>
+        <button v-else class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
+          <span>Confirm & Restart</span>
         </button>
       </div>
     </div>
@@ -480,13 +490,13 @@ export default {
     //       });
     //   }
     // },
-    async confirmExpertChanges(el) {
+    async confirmExpertChanges(el, restart) {
       this.$emit("hideModal");
       this.hideConnectedLines = false;
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
-      await useRestartService(el);
+      if (restart) await useRestartService(el);
     },
   },
 };
