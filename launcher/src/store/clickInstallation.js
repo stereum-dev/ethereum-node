@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useClickInstall = defineStore("clickInstallation", {
   state: () => {
     return {
+      installMonitoring: false,
       relayURL: "",
       checkPointSync: "",
       currentSlide: 0,
