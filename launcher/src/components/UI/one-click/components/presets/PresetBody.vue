@@ -2,7 +2,7 @@ import { ref } from 'vue';
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
     <div
-      class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1c1d1d] rounded-md grid grid-cols-12 grid-rows-7 p-2"
+      class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
         <span class="text-center text-gray-200 text-sm">
@@ -23,7 +23,7 @@ import { ref } from 'vue';
           />
           <span
             class="col-start-2 col-end-6 justify-self-center self-center text-center text-gray-800 text-lg font-semibold"
-            >{{ manageStore.selectedNetwork?.name ? manageStore.selectedNetwork?.name : "Select Network" }}</span
+            >{{ manageStore.currentNetwork?.name ? manageStore.currentNetwork?.name : "Select Network" }}</span
           >
 
           <svg
@@ -67,10 +67,22 @@ import { ref } from 'vue';
           <div
             v-for="preset in clickStore.presets"
             :key="preset.name"
-            class="col-span-1 row-span-1 justify-self-center self-center hover:scale-110 hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
+            class="col-span-1 row-span-1 justify-self-center self-center hover:border hover:border-teal-500 rounded-md hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
+            :class="{
+              'opacity-30 pointer-events-none':
+                !manageStore.currentNetwork?.support?.includes(preset.name) || !manageStore.currentNetwork,
+            }"
             @click="getPreset(preset)"
           >
-            <img class="w-20" :src="preset.icon" alt="Preset Icon" />
+            <img
+              class="w-20"
+              :class="{
+                'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out':
+                  preset.selected,
+              }"
+              :src="preset.icon"
+              alt="Preset Icon"
+            />
           </div>
         </div>
       </div>
@@ -82,6 +94,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useClickInstall } from "@/store/clickInstallation";
 import { ref } from "vue";
 
+const emit = defineEmits(["installPreset"]);
 //Store
 const manageStore = useNodeManage();
 const clickStore = useClickInstall();
@@ -99,15 +112,15 @@ const closeDropdown = () => {
   }, 200);
 };
 
-const getNetwork = (item) => {
+const getNetwork = (network) => {
   openDropdown.value = false;
-  manageStore.selectedNetwork = item;
+  clickStore.presets.forEach((p) => (p.selected = false));
+  manageStore.currentNetwork = network;
 };
 
 const getPreset = (preset) => {
-  console.log(preset);
-  clickStore.selectedPreset = preset;
-  clickStore.btnActive = true;
+  preset.selected = true;
+  emit("installPreset", preset);
 };
 </script>
 <style scoped>
