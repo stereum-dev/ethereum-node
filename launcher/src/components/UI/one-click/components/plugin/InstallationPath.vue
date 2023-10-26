@@ -1,0 +1,60 @@
+<template>
+  <div
+    class="col-start-7 col-end-13 row-start-3 row-span-full border border-gray-600 rounded-md bg-[#14171a] grid grid-cols-6 grid-rows-6"
+  >
+    <div
+      class="col-start-1 col-end-7 row-start-1 row-span-1 h-8 border-b border-gray-600 rounded-t-md p-1 flex flex-col justify-between items-center bg-[#2a3034]"
+    >
+      <span class="text-center text-gray-400 text-md font-normal">ADDITIONAL OPTIONS</span>
+    </div>
+
+    <div
+      class="col-start-1 col-span-full row-start-2 row-span-2 border rounded-md border-gray-600 mx-1 bg-[#336666] grid grid-cols-6 grid-rows-2"
+    >
+      <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1">
+        <span class="text-md text-gray-300 font-semibold">{{ $t("pluginName.path") }}</span>
+      </div>
+      <div class="h-full col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1">
+        <input
+          v-model="clickStore.installationPath"
+          type="text"
+          class="w-full h-full rounded-md bg-gray-300 pl-2 text-sm"
+        />
+      </div>
+    </div>
+    <div
+      v-if="clickStore.selectedPreset.name === 'stereum on arm'"
+      class="col-start-1 col-span-full row-start-4 row-span-2 border rounded-md border-gray-600 mx-1 bg-[#336666] mt-1"
+    >
+      <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1">
+        <span class="text-md text-gray-300 font-semibold">{{ $t("pluginName.monitor") }}</span>
+      </div>
+      <div class="h-10 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1">
+        <div class="">
+          <label for="MarketingAccept" class="flex gap-2">
+            <span class="text-md text-gray-300 font-semibold">{{ $t("pluginName.instMonit") }}</span>
+            <input
+              id="MarketingAccept"
+              v-model="clickStore.installMonitoring"
+              type="checkbox"
+              name="marketing_accept"
+              class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+            />
+          </label>
+        </div>
+
+        <!-- <div :class="[checkBox, 'checkItem']" @click="props.monitoring = !props.monitoring">
+          <img v-if="props.monitoring" src="/img/icon/access-management/done.png" alt="" />
+        </div> -->
+
+        <!-- <input v-model="installMonitoring" class="switch" type="checkbox" /> -->
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { useClickInstall } from "@/store/clickInstallation";
+
+const clickStore = useClickInstall();
+</script>
