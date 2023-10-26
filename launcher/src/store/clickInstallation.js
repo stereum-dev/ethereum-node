@@ -32,7 +32,7 @@ export const useClickInstall = defineStore("clickInstallation", {
       ],
       selectedNetwork: {},
       installationPath: "/opt/stereum",
-      selectedPreset: [],
+      selectedPreset: null,
       installation: [
         {
           img: "/img/icon/one-click-installer.png",

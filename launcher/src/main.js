@@ -17,7 +17,6 @@ import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
 import NodeService from "./components/UI/the-node/NodeService.vue";
 import CommingSoon from "./components/layers/CommingSoon.vue";
 import TheNodePanelBtn from "./components/UI/the-node/TheNodePanelBtn.vue";
-import InstallationBox from "./components/UI/plugin-installation/InstallationBox.vue";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -29,7 +28,6 @@ app.component("NodeBg", NodeBg);
 app.component("NodeHeader", NodeHeader);
 app.component("ServicePlugin", ServicePlugin);
 app.component("NodeService", NodeService);
-app.component("InstallationBox", InstallationBox);
 app.component("BaseLayout", BaseLayout);
 app.component("InstallationLayout", InstallationLayout);
 app.component("TaskManager", TaskManager);

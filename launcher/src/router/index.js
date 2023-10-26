@@ -4,6 +4,9 @@ import BaseHome from "../pages/BaseHome.vue";
 import LoginPage from "../pages/LoginPage.vue";
 import OneclickPage from "../pages/OneclickPage.vue";
 import SelectPreset from "../../src/components/UI/one-click/sections/SelectPreset.vue";
+import ConfigPlugins from "../../src/components/UI/one-click/sections/ConfigPlugins.vue";
+import SelectSync from "../../src/components/UI/one-click/sections/SelectSync.vue";
+import VerifyCheck from "../../src/components/UI/one-click/sections/VerifyCheck.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
 import ControlPanel from "../pages/TheControl.vue";
 import NodePage from "../pages/NodePage.vue";
@@ -11,12 +14,9 @@ import NodeEdit from "../pages/NodeEdit.vue";
 import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
-import PluginName from "../components/UI/plugin-installation/PluginName.vue";
-import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 import MevboostConfig from "../components/UI/plugin-installation/MevboostConfig.vue";
 import CustomInstall from "../pages/CustomInstall.vue";
 import UploadConfig from "../components/UI/plugin-installation/import-config/UploadConfig.vue";
-import FastSync from "../components/UI/plugin-installation/FastSync.vue";
 import InstallingAnimation from "../components/UI/plugin-installation/InstallingAnimation.vue";
 import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
 import ImportingVerify from "../components/UI/plugin-installation/import-config/ImportingVerify.vue";
@@ -53,14 +53,19 @@ const routes = [
         component: SelectPreset,
       },
       {
+        path: "config",
+        name: "ConfigPlugins",
+        component: ConfigPlugins,
+      },
+      {
         path: "sync",
-        name: "FastSync",
-        component: FastSync,
+        name: "SelectSync",
+        component: SelectSync,
       },
       {
         path: "verify",
-        name: "VerifyInstallation",
-        component: VerifyInstallation,
+        name: "VerifyCheck",
+        component: VerifyCheck,
       },
       {
         path: "play",
@@ -90,26 +95,6 @@ const routes = [
     path: "/staking",
     name: "StakingPage",
     component: StakingPage,
-  },
-  {
-    path: "/install",
-    name: "PluginName",
-    component: PluginName,
-  },
-  {
-    path: "/sync",
-    name: "FastSync",
-    component: FastSync,
-  },
-  {
-    path: "/verify",
-    name: "VerifyInstallation",
-    component: VerifyInstallation,
-  },
-  {
-    path: "/play",
-    name: "InstallingAnimation",
-    component: InstallingAnimation,
   },
 
   {
