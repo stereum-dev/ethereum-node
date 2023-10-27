@@ -13,7 +13,9 @@
       @close-ipscan="ipScanModal = false"
       @btn-function="scanFunction"
     />
-    <div v-if="alertBox" class="alert animate__animated animate__flipInX">{{ $t("formsetup.fillFields") }}</div>
+    <div v-if="alertBox" class="alert animate__animated animate__flipInX">
+      {{ $t("formsetup.fillFields") }}
+    </div>
     <div v-if="errorMsgExists" class="error-box"></div>
     <div v-if="errorMsgExists" class="error-modal">
       <div class="title-box">
@@ -27,9 +29,20 @@
       </div>
     </div>
 
-    <div v-if="connectingAnimActive" class="anim">
-      <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
-      <div class="cancl-btn" @click="cancelLogin">cancel</div>
+    <div
+      v-if="connectingAnimActive"
+      class="col-start-1 col-span-full row-start-1 row-span-full flex flex-col justify-center items-center z-20"
+    >
+      <div class="w-full h-full absolute inset-0 bg-black rounded-md opacity-80"></div>
+      <div class="w-full h-full flex flex-col justify-center items-center space-y-4 z-50">
+        <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
+        <div
+          class="w-[150px] h-12 bg-red-500 py-2 px-4 rounded-full shadow-md shadow-[#161515] hover:scale-110 active:scale-100 hover:bg-red-700 flex justify-center items-center cursor-pointer transition-all duration-200 ease-in-out"
+          @click="cancelLogin"
+        >
+          <span class="text-gray-200 text-xl font-semibold uppercase">Cancel</span>
+        </div>
+      </div>
     </div>
     <div class="col-start-4 col-end-22 row-start-3 row-end-11 bg-[#1a2e2c] rounded-lg p-4">
       <RemoveModal v-if="bDialogVisible" @remove-handler="baseDialogDelete" @close-window="hideBDialog" />
@@ -788,8 +801,7 @@ select option {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+
   color: #393939;
   font-weight: 800;
   font-size: 1rem;
