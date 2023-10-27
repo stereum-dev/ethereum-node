@@ -1,6 +1,9 @@
 <template>
   <div class="flex justify-center z-10">
-    <div class="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-20" @click="$emit('hideModal')"></div>
+    <div
+      class="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-20"
+      @click="$emit('hideModal')"
+    ></div>
     <div
       x-transition:enter="transition duration-500 ease-out"
       x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
@@ -13,7 +16,9 @@
       role="dialog"
       aria-modal="true"
     >
-      <div class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600">
+      <div
+        class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600"
+      >
         <span class="text-xl text-gray-200 font-bold uppercase">{{ item.name }}</span>
         <p class="text-sm text-gray-200 capitalize">
           {{ item.category }}
@@ -21,12 +26,27 @@
         </p>
         <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
       </div>
-      <div class="w-full h-[30px] space-y-4 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
+      <div
+        class="w-full h-[30px] space-y-4 mt-2"
+        :class="{ shorterRowBox: isExpertModeActive }"
+      >
         <!-- expert mode row -->
-        <div v-if="!ssvExpertModeActive" class="z-10 dataTitleBox" @click="openExpertMode">
-          <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
+        <div
+          v-if="!ssvExpertModeActive"
+          class="z-10 dataTitleBox"
+          @click="openExpertMode"
+        >
+          <img
+            class="titleIcon"
+            src="/img/icon/plugin-menu-icons/crown2.png"
+            alt="icon"
+          />
           <span>Expert Mode</span>
-          <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img
+            v-if="isExpertModeActive"
+            src="/img/icon/task-manager-icons/up.png"
+            alt=""
+          />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
         <div
@@ -34,9 +54,17 @@
           class="dataTitleBox"
           @click="openSSVExpertMode"
         >
-          <img class="titleIcon" src="/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
+          <img
+            class="titleIcon"
+            src="/img/icon/plugin-menu-icons/ssv-config.png"
+            alt="icon"
+          />
           <span>SSV Configuration</span>
-          <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img
+            v-if="ssvExpertModeActive"
+            src="/img/icon/task-manager-icons/up.png"
+            alt=""
+          />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
 
@@ -51,7 +79,9 @@
           }
         -->
         <div
-          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'select'
+          )"
           :key="index"
           class="selectBox"
           :class="{ invisible: isExpertModeActive }"
@@ -59,15 +89,23 @@
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span class="text-center">{{ option.title }}</span>
           <div class="spaceParent">
-            <select id="value" v-model="option.changeValue" @change="somethingIsChanged(option)">
-              <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
+            <select
+              id="value"
+              v-model="option.changeValue"
+              @change="somethingIsChanged(option)"
+            >
+              <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">
+                {{ rate }} {{ option.unit }}
+              </option>
             </select>
           </div>
         </div>
 
         <!-- Fee recipient -->
         <div
-          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'text'
+          )"
           :key="index"
           class="toggleTextBox"
           :class="{ invisible: isExpertModeActive }"
@@ -97,7 +135,8 @@
             :class="{
               disabled:
                 !option.buttonState &&
-                (option.changeValue === null || option.changeValue === '0x0000000000000000000000000000000000000000'),
+                (option.changeValue === null ||
+                  option.changeValue === '0x0000000000000000000000000000000000000000'),
             }"
             @input="somethingIsChanged(option)"
           />
@@ -113,7 +152,9 @@
         -->
         <!-- toggle btn -->
         <div
-          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'action'
+          )"
           :key="index"
           class="actionBox"
           :class="{ invisible: isExpertModeActive }"
@@ -139,7 +180,9 @@
         </div>
         <!-- toggle btn -->
         <div
-          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'toggle'
+          )"
           :key="index"
           class="actionBox"
           :class="{ invisible: isExpertModeActive }"
@@ -165,7 +208,10 @@
         </div>
       </div>
       <!-- expert mode textarea -->
-      <div class="expertTable" :class="{ showExpertTable: isExpertModeActive || ssvExpertModeActive }">
+      <div
+        class="expertTable"
+        :class="{ showExpertTable: isExpertModeActive || ssvExpertModeActive }"
+      >
         <div v-if="isExpertModeActive" class="expertMode">
           <textarea
             v-model="item.yaml"
@@ -187,7 +233,9 @@
           version: <span>{{ item.config.imageVersion }}</span>
         </p>
         <!-- close text -->
-        <span class="w-1/4 text-sm text-red-400">{{ $t("exitValidatorModal.clickClose") }}</span>
+        <span class="w-1/4 text-sm text-red-400">{{
+          $t("exitValidatorModal.clickClose")
+        }}</span>
         <!-- confirm button box -->
         <button
           v-if="!nothingsChanged"
@@ -196,7 +244,10 @@
         >
           Confirm
         </button>
-        <button v-else class="w-1/4 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
+        <button
+          v-else
+          class="w-1/4 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled"
+        >
           <span>Confirm</span>
         </button>
       </div>
@@ -257,7 +308,8 @@ export default {
   methods: {
     openDocs(docsUrl) {
       window.open(docsUrl, "_blank");
-      if (this.currentNetwork.network === "gnosis") window.open("https://docs.gnosischain.com/node/", "_blank");
+      if (this.currentNetwork.network === "gnosis")
+        window.open("https://docs.gnosischain.com/node/", "_blank");
     },
 
     somethingIsChanged(item) {
@@ -273,10 +325,14 @@ export default {
       // );
 
       if (this.item.service === "SSVNetworkService") {
-        this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
+        this.item.ssvConfig = await ControlService.readSSVNetworkConfig(
+          this.item.config.serviceID
+        );
       }
       if (this.item.service === "PrometheusService") {
-        this.item.prometheusConfig = await ControlService.readPrometheusConfig(this.item.config.serviceID);
+        this.item.prometheusConfig = await ControlService.readPrometheusConfig(
+          this.item.config.serviceID
+        );
         this.prometheusConfig = this.item.prometheusConfig;
       }
       this.item.expertOptions = this.item.expertOptions.map((option) => {
@@ -287,9 +343,17 @@ export default {
           if (option.type === "action") option.changeValue = false;
           option.disabled = false;
         }
-        if (option.type === "select" || option.type === "text" || option.type === "toggle") {
-          if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
-            option.changeValue = this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
+        if (
+          option.type === "select" ||
+          option.type === "text" ||
+          option.type === "toggle"
+        ) {
+          if (
+            this.item.service === "LighthouseValidatorService" &&
+            option.title === "Doppelganger"
+          ) {
+            option.changeValue =
+              this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
           } else {
             option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
               ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
@@ -325,11 +389,20 @@ export default {
         ) {
           if (option.changed) {
             for (let i = 0; i < option.pattern.length; i++) {
-              if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+              if (
+                this.item.service === "LighthouseValidatorService" &&
+                option.title === "Doppelganger"
+              ) {
                 this.item.yaml =
-                  option.changeValue && !this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
-                    : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
+                  option.changeValue &&
+                  !this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(
+                        "  - vc\n",
+                        `  - vc\n  ${option.pattern[i]}\n`
+                      )
+                    : this.item.yaml
+                        .replace(new RegExp(option.pattern[i]), "\n")
+                        .replace(/^\s*\n/m, "");
               } else if (option.title === "External IP Address") {
                 let reg = "";
                 let replacement = "";
@@ -367,14 +440,25 @@ export default {
                   }
                 }
                 this.item.yaml =
-                  option.changeValue === "" && this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "")
-                    : option.changeValue !== "" && this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "$1" + option.changeValue + "$3")
-                    : option.changeValue !== "" && !this.item.yaml.match(new RegExp(option.pattern[i]))
+                  option.changeValue === "" &&
+                  this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml
+                        .replace(new RegExp(option.pattern[i]), "\n")
+                        .replace(/^\s*\n/m, "")
+                    : option.changeValue !== "" &&
+                      this.item.yaml.match(new RegExp(option.pattern[i]))
+                    ? this.item.yaml.replace(
+                        new RegExp(option.pattern[i]),
+                        "$1" + option.changeValue + "$3"
+                      )
+                    : option.changeValue !== "" &&
+                      !this.item.yaml.match(new RegExp(option.pattern[i]))
                     ? this.item.yaml.replace(new RegExp(reg), replacement)
                     : this.item.yaml;
-              } else if (option.title === "External TCP/UDP port" && (i === 2 || i === 3)) {
+              } else if (
+                option.title === "External TCP/UDP port" &&
+                (i === 2 || i === 3)
+              ) {
                 let tcp_udp = i === 2 ? "/tcp" : "/udp";
                 this.item.yaml = this.item.yaml.replace(
                   new RegExp(option.pattern[i], "m"),
@@ -397,7 +481,10 @@ export default {
           serviceID: this.item.config.serviceID,
           config: this.item.ssvConfig,
         });
-      if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig) {
+      if (
+        this.item.service === "PrometheusService" &&
+        this.item.prometheusConfig != this.prometheusConfig
+      ) {
         if (!this.item.yaml.includes("overwrite: false")) {
           this.item.yaml = this.item.yaml.trim() + "\noverwrite: false";
         }
