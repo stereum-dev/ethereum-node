@@ -515,7 +515,7 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
-::-ms-backdrop{
+::-webkit-backdrop{
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
   --tw-translate-x: 0;

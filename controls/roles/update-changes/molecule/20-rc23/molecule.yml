@@ -23,6 +23,5 @@ scenario:
     - prepare
     - converge
     - idempotence
-    #- lint
     - verify
     - destroy

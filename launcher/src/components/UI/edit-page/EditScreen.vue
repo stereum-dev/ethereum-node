@@ -371,6 +371,7 @@ const addServiceHandler = (item) => {
       executionClients: item.executionClients,
       consensusClients: item.consensusClients,
       relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+      checkpointURL: item.checkPointSyncUrl ? item.checkPointSyncUrl : false,
     },
   });
 };
@@ -380,9 +381,7 @@ const addServiceHandler = (item) => {
 const cancelInstallation = (item) => {
   clientToInstall.value = null;
   isAddModalOpen.value = false;
-  const element = manageStore.confirmChanges.find((e) => e.id === item.id);
-  const eventIdx = manageStore.confirmChanges.indexOf(element);
-  manageStore.confirmChanges.splice(eventIdx, 1);
+
   const event = manageStore.newConfiguration.find((e) => e.id === item.id);
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);

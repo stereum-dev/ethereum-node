@@ -23,20 +23,34 @@
       </div>
       <div class="w-full h-[30px] space-y-4 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- expert mode row -->
-        <div v-if="!ssvExpertModeActive" class="z-10 dataTitleBox" @click="openExpertMode">
+        <div
+          v-if="!ssvExpertModeActive && !prometheusExpertModeActive"
+          class="z-10 dataTitleBox"
+          @click="openExpertMode"
+        >
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
           <span>Expert Mode</span>
           <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
         <div
-          v-if="item.service === 'SSVNetworkService' && !isExpertModeActive"
+          v-if="item.service === 'SSVNetworkService' && !isExpertModeActive && !prometheusExpertModeActive"
           class="dataTitleBox"
           @click="openSSVExpertMode"
         >
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
           <span>SSV Configuration</span>
           <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+        </div>
+        <div
+          v-if="item.service === 'PrometheusService' && !isExpertModeActive"
+          class="dataTitleBox"
+          @click="openPrometheusExpertMode"
+        >
+          <span></span>
+          <span>Prometheus Configuration</span>
+          <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
 
@@ -54,7 +68,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
           :key="index"
           class="selectBox"
-          :class="{ invisible: isExpertModeActive }"
+          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span class="text-center">{{ option.title }}</span>
@@ -70,7 +84,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
           class="toggleTextBox"
-          :class="{ invisible: isExpertModeActive }"
+          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
@@ -116,7 +130,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
           :key="index"
           class="actionBox"
-          :class="{ invisible: isExpertModeActive }"
+          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
         >
           <img :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
@@ -142,7 +156,7 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
           :key="index"
           class="actionBox"
-          :class="{ invisible: isExpertModeActive }"
+          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
         >
           <img :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
@@ -165,7 +179,10 @@
         </div>
       </div>
       <!-- expert mode textarea -->
-      <div class="expertTable" :class="{ showExpertTable: isExpertModeActive || ssvExpertModeActive }">
+      <div
+        class="expertTable"
+        :class="{ showExpertTable: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
+      >
         <div v-if="isExpertModeActive" class="expertMode">
           <textarea
             v-model="item.yaml"
@@ -176,6 +193,13 @@
         <div v-if="ssvExpertModeActive" class="expertMode">
           <textarea
             v-model="item.ssvConfig"
+            class="overflow-x-scroll overflow-y-scroll font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
+            @input="somethingIsChanged"
+          ></textarea>
+        </div>
+        <div v-if="prometheusExpertModeActive" class="expertMode">
+          <textarea
+            v-model="item.prometheusConfig"
             class="overflow-x-scroll overflow-y-scroll font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
             @input="somethingIsChanged"
           ></textarea>
@@ -191,13 +215,23 @@
         <!-- confirm button box -->
         <button
           v-if="!nothingsChanged"
-          class="w-1/4 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
-          @click="confirmExpertChanges(item)"
+          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          @click="confirmExpertChanges(item, false)"
         >
           Confirm
         </button>
-        <button v-else class="w-1/4 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
+        <button v-else class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
           <span>Confirm</span>
+        </button>
+        <button
+          v-if="!nothingsChanged"
+          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          @click="confirmExpertChanges(item, true)"
+        >
+          Confirm & Restart
+        </button>
+        <button v-else class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
+          <span>Confirm & Restart</span>
         </button>
       </div>
     </div>
@@ -227,6 +261,8 @@ export default {
       enterPortIsEnabled: false,
       isExpertModeActive: false,
       ssvExpertModeActive: false,
+      prometheusExpertModeActive: false,
+      prometheusConfig: null,
       ramUsage: null,
       isRamUsageActive: false,
       bindingIsOn: false,
@@ -426,6 +462,9 @@ export default {
     openSSVExpertMode() {
       this.ssvExpertModeActive = !this.ssvExpertModeActive;
     },
+    openPrometheusExpertMode() {
+      this.prometheusExpertModeActive = !this.prometheusExpertModeActive;
+    },
     endpointPortTrunOff() {
       this.enterPortIsEnabled = false;
     },
@@ -480,13 +519,13 @@ export default {
     //       });
     //   }
     // },
-    async confirmExpertChanges(el) {
+    async confirmExpertChanges(el, restart) {
       this.$emit("hideModal");
       this.hideConnectedLines = false;
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
-      await useRestartService(el);
+      if (restart) await useRestartService(el);
     },
   },
 };

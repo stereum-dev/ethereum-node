@@ -10,29 +10,29 @@ stereum_static:
     arch: x86_64
     versions:
       # consensus clients
-      lighthouse: v3.4.0
-      nimbus: multiarch-v23.1.0
-      teku: "22.12.0"
-      prysm: v3.2.0
-      lodestar: v1.3.0
+      lighthouse: v4.5.0
+      nimbus: multiarch-v23.10.0
+      teku: "23.10.0"
+      prysm: v4.1.0
+      lodestar: v1.11.3
 
       # execution clients
-      geth: v1.10.26
-      besu: "22.10.3"
-      nethermind: "1.16.1"
-      erigon: v2.36.1
+      geth: v1.13.4
+      besu: "23.10.0"
+      nethermind: "1.21.0"
+      erigon: v2.52.5
 
       # mevboost
-      mevboost: v1.4.0
+      mevboost: "1.6"
 
       # ssv
-      ssv_network: v0.3.4
+      ssv_network: v1.0.0-rc.2
 
       # tools
-      curl: "7.85.0"
-      grafana: "9.3.2"
-      node_exporter: v1.4.0
-      prometheus: v2.41.0
+      curl: latest
+      grafana: "10.1.5"
+      node_exporter: v1.6.1
+      prometheus: v2.47.2
       notifications: v1.1.0
 
     # mevboost - relay
