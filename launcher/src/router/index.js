@@ -5,8 +5,10 @@ import LoginPage from "../pages/LoginPage.vue";
 import OneclickPage from "../pages/OneclickPage.vue";
 import SelectPreset from "../../src/components/UI/one-click/sections/SelectPreset.vue";
 import ConfigPlugins from "../../src/components/UI/one-click/sections/ConfigPlugins.vue";
+import MevboostRelays from "../../src/components/UI/one-click/sections/MevboostRelays.vue";
 import SelectSync from "../../src/components/UI/one-click/sections/SelectSync.vue";
 import VerifyCheck from "../../src/components/UI/one-click/sections/VerifyCheck.vue";
+import AnimationSection from "../../src/components/UI/one-click/sections/AnimationSection.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
 import ControlPanel from "../pages/TheControl.vue";
 import NodePage from "../pages/NodePage.vue";
@@ -14,10 +16,9 @@ import NodeEdit from "../pages/NodeEdit.vue";
 import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
-import MevboostConfig from "../components/UI/plugin-installation/MevboostConfig.vue";
 import CustomInstall from "../pages/CustomInstall.vue";
 import UploadConfig from "../components/UI/plugin-installation/import-config/UploadConfig.vue";
-import InstallingAnimation from "../components/UI/plugin-installation/InstallingAnimation.vue";
+
 import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
 import ImportingVerify from "../components/UI/plugin-installation/import-config/ImportingVerify.vue";
 import ImportingList from "../components/UI/plugin-installation/import-config/ImportingList.vue";
@@ -43,7 +44,7 @@ const routes = [
     component: WelcomePage,
   },
   {
-    path: "/oneclick",
+    path: "/oneClick",
     name: "OneclickPage",
     component: OneclickPage,
     children: [
@@ -58,6 +59,11 @@ const routes = [
         component: ConfigPlugins,
       },
       {
+        path: "mevboost",
+        name: "MevboostRelays",
+        component: MevboostRelays,
+      },
+      {
         path: "sync",
         name: "SelectSync",
         component: SelectSync,
@@ -69,8 +75,8 @@ const routes = [
       },
       {
         path: "play",
-        name: "InstallingAnimation",
-        component: InstallingAnimation,
+        name: "AnimationSection",
+        component: AnimationSection,
       },
     ],
   },
@@ -97,11 +103,11 @@ const routes = [
     component: StakingPage,
   },
 
-  {
-    path: "/mevboost",
-    name: "MevboostConfig",
-    component: MevboostConfig,
-  },
+  // {
+  //   path: "/mevboost",
+  //   name: "MevboostRelays",
+  //   component: MevboostRelays,
+  // },
 
   // {
   //   path: "/videos",

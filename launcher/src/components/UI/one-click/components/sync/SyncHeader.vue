@@ -1,14 +1,21 @@
 <template>
-  <div
-    class="col-start-1 col-span-full row-start-1 row-span-1 p-1 flex justify-center items-center relative bg-[#264744] rounded-t-md"
-  >
-    <div class="flex justify-center items-center">
-      <img class="w-10 mr-2" :src="selectedPreset.icon" alt="Preset Icon" />
-      <div class="h-10 flex flex-col justify-center items-start">
-        <span class="w-fit h-fit text-[18px] font-bold text-gray-200 uppercase tracking-wider">
+  <div class="col-start-5 col-span-8 row-start-1 row-span-2 grid grid-cols-6 grid-rows-2 p-1 items-end">
+    <!-- <img
+      class="w-14 h-14 col-start-1 col-span-2 row-start-1 row-span-2 z-10 self-center"
+      :src="selectedPreset.icon"
+      alt="Preset Icon"
+    /> -->
+    <div class="h-14 col-start-1 col-span-full row-start-1 row-span-2 flex justify-center bg-[#1E2429] rounded-md p-1">
+      <img
+        class="w-[50px] h-[50px] col-start-1 col-span-2 row-start-1 row-span-2 z-10 self-center"
+        :src="selectedPreset.icon"
+        alt="Preset Icon"
+      />
+      <div class="w-full h-full flex flex-col justify-evenly items-start ml-2">
+        <span class="w-full text-[16px] font-semibold text-gray-200 uppercase tracking-wider">
           {{ selectedPreset.name }}</span
         >
-        <span class="w-fit h-fit text-sm font-bold text-gray-900 uppercase tracking-wider">{{
+        <span class="w-full h-fit text-xs font-semibold text-amber-500 uppercase tracking-wider">{{
           currentNetwork.name
         }}</span>
       </div>

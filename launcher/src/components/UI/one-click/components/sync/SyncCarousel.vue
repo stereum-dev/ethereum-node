@@ -1,8 +1,16 @@
 <template>
   <div class="w-11/12 h-full flex justify-center items-center">
-    <Carousel ref="carousel" v-model="currentSlide" :items-to-show="1" :wrap-around="true" :transition="500">
-      <slide v-for="(item, index) in installStore.syncType" :key="index">
-        <div class="w-full h-full flex justify-center items-center px-1">
+    <Carousel
+      ref="carousel"
+      v-model="currentSlide"
+      class="carousel"
+      :items-to-show="1"
+      :wrap-around="true"
+      :transition="500"
+      snap-align="center"
+    >
+      <slide v-for="(item, index) in installStore.syncType" :key="index" aria-current="0">
+        <div class="w-full h-full flex justify-center items-center">
           <div v-if="item.name === 'genesis'" class="w-full h-full flex flex-col justify-center items-start">
             <span class="text-md text-gray-300 font-semibold text-left uppercase">{{ item.name }}</span>
             <span class="text-sm text-teal-600 font-semibold text-left">{{ item.type }}</span>
@@ -33,7 +41,7 @@
                 class="w-[200px] h-10 text-center bg-[#1E2429] text-gray-300 p-1 rounded-md flex justify-center items-center cursor-pointer"
                 @click="openDropdown"
               >
-                <span class="text-sm text-gr ay-300">{{ selectedItem }}</span>
+                <span class="text-sm text-gray-300">{{ selectedItem }}</span>
               </div>
               <div
                 v-else
@@ -113,7 +121,7 @@ const router = useRouter();
 const carousel = ref(null);
 const dropdown = ref(false);
 const selectedItem = ref("- SELECT A SOURCE -");
-const currentSlide = ref(0);
+const currentSlide = ref(null);
 const selectedLinks = ref([]);
 const prevVal = ref(0);
 const selectedIcon = ref("");
@@ -128,6 +136,9 @@ watch(currentSlide, (val) => {
       installStore.checkPointSync = "";
       selectedItem.value = "- SELECT A SOURCE -";
     }
+    if (installStore.selectedPreset.name === "archive") {
+      val = 3;
+    }
 
     if (val === 1 && installStore.checkPointSync === "") {
       installStore.btnActive = false;
@@ -139,7 +150,7 @@ watch(currentSlide, (val) => {
 
 // Lifecycle hooks
 onBeforeMount(() => {
-  currentSlide.value = 0;
+  currentSlide.value = 3;
 });
 
 onMounted(() => {
@@ -216,5 +227,47 @@ const setSelectedLinks = () => {
   justify-content: center;
   align-items: center;
   padding: 10px 0;
+}
+
+.carousel {
+  grid-column: 4/13;
+  grid-row: 2/3;
+  width: 100%;
+  height: 100% !important;
+  position: relative;
+}
+.carousel__viewport {
+  height: 100% !important;
+  background: #be1212 !important;
+}
+.carousel__track {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.carousel__item {
+  min-height: 200px;
+  width: 100%;
+  background-color: var(--vc-clr-primary);
+  color: var(--vc-clr-white);
+  font-size: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel__slide {
+  width: 100%;
+  height: 100% !important;
+}
+
+.carousel button {
+  width: 20px;
+}
+.carousel button .carousel__icon {
+  width: 30px;
+  height: 30px;
+  color: #fff;
 }
 </style>

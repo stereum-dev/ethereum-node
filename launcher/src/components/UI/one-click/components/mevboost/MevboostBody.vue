@@ -104,7 +104,6 @@ const selectItemToAdd = (el) => {
 const selectItemToRemove = (item) => {
   const block = manageStore.usedBlocks.find((e) => e.id == item.id);
   block.isRemoved = true;
-  console.log(block);
 };
 
 // Add selected items from availableBlocks to usedBlocks
