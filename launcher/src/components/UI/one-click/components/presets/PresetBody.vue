@@ -16,9 +16,9 @@ import { ref } from 'vue';
           @click="dropdownHandler"
         >
           <img
-            v-if="manageStore.selectedNetwork !== null"
-            class="col-start-1 col-span-1 w-6 h-6 justify-self-center self-center"
-            :src="manageStore.selectedNetwork.icon"
+            v-if="manageStore.currentNetwork.icon"
+            class="col-start-1 col-span-1 w-7 h-7 justify-self-center self-center"
+            :src="manageStore.currentNetwork?.icon"
             alt="Arrow icon"
           />
           <span
