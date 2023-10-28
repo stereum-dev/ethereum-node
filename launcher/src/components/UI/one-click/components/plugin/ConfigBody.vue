@@ -14,17 +14,6 @@ import { ref, computed, onMounted, watch } from 'vue';
           <div class="w-full h-8 border border-gray-600 rounded-md p-1 flex flex-col justify-between items-center">
             <span class="text-center text-gray-400 text-md font-normal"> CHOSEN NETWORK</span>
           </div>
-          <div
-            class="w-fit h-6 absolute top-10 right-14 border border-gray-600 bg-[#2a3034] rounded-md px-6 flex flex-col justify-between items-center"
-          >
-            <span class="h-full text-sm text-teal-500 font-semibold capitalize">{{
-              manageStore.currentNetwork.name
-            }}</span>
-          </div>
-
-          <div class="absolute -top-1 -right-3 w-20 h-20 border-2 border-gray-500 rounded-full">
-            <img class="w-full h-full" :src="manageStore.currentNetwork.icon" alt="icon" />
-          </div>
         </div>
       </div>
 
