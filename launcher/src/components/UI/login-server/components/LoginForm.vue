@@ -16,18 +16,6 @@
     <div v-if="alertBox" class="alert animate__animated animate__flipInX">
       {{ $t("formsetup.fillFields") }}
     </div>
-    <div v-if="errorMsgExists" class="error-box"></div>
-    <div v-if="errorMsgExists" class="error-modal">
-      <div class="title-box">
-        <img src="/img/icon/form-setup/form-error.png" alt="icon" />
-      </div>
-      <div class="description">
-        <span>{{ error }}</span>
-      </div>
-      <div class="btn-box">
-        <button @click="closeErrorDialog">OK</button>
-      </div>
-    </div>
 
     <div
       v-if="connectingAnimActive"
@@ -46,6 +34,7 @@
     </div>
     <div class="col-start-4 col-end-22 row-start-3 row-end-11 bg-[#1a2e2c] rounded-lg p-4">
       <RemoveModal v-if="bDialogVisible" @remove-handler="baseDialogDelete" @close-window="hideBDialog" />
+      <ErrorModal v-if="errorMsgExists" :description="error" @close-window="closeErrorDialog" />
       <form
         class="w-full h-full p-1 bg-[#305c59] col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7 gap-y-2"
         @submit.prevent.stop="login"
@@ -329,6 +318,7 @@
 <script>
 import IpScanModal from "./IpScanModal.vue";
 import RemoveModal from "./RemoveModal.vue";
+import ErrorModal from "./ErrorModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
@@ -337,7 +327,7 @@ import { useServices } from "@/store/services";
 
 export default {
   name: "FormSetup",
-  components: { RemoveModal, IpScanModal },
+  components: { RemoveModal, IpScanModal, ErrorModal },
   emits: ["page"],
   data() {
     return {
