@@ -12,7 +12,7 @@ import { ref, computed, onMounted, watch } from 'vue';
         </div>
         <div class="w-full h-10 col-start-2 col-span-1 flex justify-center items-center relative">
           <div class="w-full h-8 border border-gray-600 rounded-md p-1 flex flex-col justify-between items-center">
-            <span class="text-center text-gray-400 text-md font-normal"> CHOSEN NETWORK</span>
+            <span class="text-center text-gray-400 text-md font-normal">ADDITIONAL OPTIONS</span>
           </div>
         </div>
       </div>

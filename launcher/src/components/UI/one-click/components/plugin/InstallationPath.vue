@@ -1,18 +1,12 @@
 <template>
   <div
-    class="col-start-7 col-end-13 row-start-2 row-span-full border border-gray-600 rounded-md bg-[#14171a] grid grid-cols-6 grid-rows-7 gap-y-1"
+    class="col-start-7 col-end-13 row-start-2 row-span-full border border-gray-600 rounded-md bg-[#14171a] grid grid-cols-6 grid-rows-7 gap-y-1 p-1"
   >
     <div
-      class="col-start-1 col-end-7 row-start-1 row-span-1 h-8 border-b border-gray-600 rounded-t-md p-1 flex flex-col justify-between items-center bg-[#2a3034]"
-    >
-      <span class="text-center text-gray-400 text-md font-normal">ADDITIONAL OPTIONS</span>
-    </div>
-
-    <div
-      class="col-start-1 col-span-full row-start-2 row-span-2 border rounded-md border-gray-600 mx-1 bg-[#336666] grid grid-cols-6 grid-rows-2"
+      class="w-full col-start-1 col-span-full row-start-1 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666] grid grid-cols-6 grid-rows-2"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1">
-        <span class="text-md text-gray-300 font-semibold">{{ $t("pluginName.path") }}</span>
+        <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.path") }}</span>
       </div>
       <div class="h-8 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center px-1 pb-1">
         <input
@@ -24,14 +18,14 @@
     </div>
     <div
       v-if="clickStore.selectedPreset.name === 'stereum on arm'"
-      class="col-start-1 col-span-full row-start-4 row-span-2 border rounded-md border-gray-600 mx-1 bg-[#336666]"
+      class="w-full col-start-1 col-span-full row-start-3 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666]"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1">
-        <span class="text-md text-gray-300 font-semibold">{{ $t("pluginName.monitor") }}</span>
+        <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.monitor") }}</span>
       </div>
       <div class="h-8 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1">
         <div class="">
-          <label for="MarketingAccept" class="flex gap-2">
+          <label for="MarketingAccept" class="flex gap-2 cursor-pointer">
             <input
               id="MarketingAccept"
               v-model="clickStore.installMonitoring"
