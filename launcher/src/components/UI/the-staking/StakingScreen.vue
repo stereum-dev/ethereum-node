@@ -26,7 +26,7 @@
 
 <script setup>
 import ControlService from "@/store/ControlService";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
@@ -51,46 +51,49 @@ const installedValidators = computed(() => {
   return copyOfInstalledServices.filter((obj) => obj.category === "validator");
 });
 
+// lifecycle hooks
+
 onMounted(() => {
   if (installedValidators.value.length === 0) return;
   selectedValdiatorService.value = installedValidators.value[0];
-  console.log(selectedValdiatorService.value);
   selectedIcon.value = installedValidators.value[0].icon;
   selectedName.value = installedValidators.value[0].name;
   selectedStatus.value = installedValidators.value[0].state;
-  // console.log(selectedValdiatorService.value.expertOptions);
 
   if (typeof selectedValdiatorService.value === "object") {
     const doppelgangerOption = Object.values(selectedValdiatorService.value.expertOptions).find(
       (option) => option.title === "Doppelganger"
     );
-    // console.log(doppelgangerOption);
     if (doppelgangerOption) {
       doppelganger.value = doppelgangerOption.pattern;
     }
   }
-  // console.log(doppelganger.value[0]);
 });
 
 onMounted(() => {
-  test(selectedValdiatorService.value);
+  doppelgangerController(selectedValdiatorService.value, doppelganger.value);
 });
 
 // methods
 
-let test = async (arg) => {
+let doppelgangerController = async (arg, arg1) => {
   try {
     let result = await ControlService.getServiceYAML(arg?.config.serviceID);
-    if (result && result.endsWith) {
-      console.log("Valid result:", result, arg?.config.serviceID);
+
+    if (arg.service === "LighthouseValidatorService") {
+      stakingStore.doppelgangerStatus = result.match(new RegExp(arg1[0])) ? true : false;
     } else {
-      console.error("Invalid result:", result);
+      const matchResult = result.match(new RegExp(arg1[0]));
+      if (matchResult) {
+        stakingStore.doppelgangerStatus = matchResult[2] === "true";
+      } else {
+        console.log("Pattern not found in the input string.");
+      }
     }
   } catch (error) {
     // console.error("Error fetching service YAML:", error);
   }
 };
-
 const importRemoteKeysHandler = () => {
   stakingStore.exitChainForMultiValidatorsActive = false;
   stakingStore.removeForMultiValidatorsActive = false;
@@ -117,14 +120,12 @@ const selectedValidator = async (validator) => {
   stakingStore.selectedIcon = validator?.icon;
   selectedName.value = validator?.name;
   selectedStatus.value = validator?.state;
-  console.log("selected val", stakingStore.selectedValdiatorService);
 
   try {
-    await test(stakingStore.selectedValdiatorService); // Wait for test() to complete before proceeding
     const doppelgangerOption = validator?.expertOptions?.find((option) => option.title === "Doppelganger");
-    console.log(doppelgangerOption.pattern[0]);
+    await doppelgangerController(stakingStore.selectedValdiatorService, doppelgangerOption.pattern);
   } catch (error) {
-    console.error("Error in test function:", error);
+    // console.error("Error in test function:", error);
   }
 };
 </script>
