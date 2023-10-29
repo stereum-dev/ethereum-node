@@ -1452,17 +1452,38 @@ export class ServiceManager {
   }
 
   async removeTekuLockFiles(serviceID) {
-    let services = await this.readServiceConfigurations();
-    let service = services.find((s) => s.id === serviceID);
-    let workingDir = this.getWorkindDir(service);
-    if (!workingDir.endsWith("/")) {
-      workingDir += "/";
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.tasks.push({ name: "Remove Lockfiles", otherRunRef: ref });
+    let status = ""
+    try {
+      let services = await this.readServiceConfigurations();
+      let service = services.find((s) => s.id === serviceID);
+      let workingDir = this.getWorkindDir(service);
+      if (!workingDir.endsWith("/")) {
+        workingDir += "/";
+      }
+      status = await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`)
+      this.nodeConnection.taskManager.otherSubTasks.push({
+        name: "remove lock files",
+        otherRunRef: ref,
+        status: true,
+        data: JSON.stringify(status),
+      });
+    } catch (err) {
+      log.error("Removing Teku Lock Files Failed:", err);
+      this.nodeConnection.taskManager.otherSubTasks.push({
+        name: "remove lock files",
+        otherRunRef: ref,
+        status: false,
+        data: JSON.stringify(status),
+      });
+    } finally {
+      this.nodeConnection.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
     }
-    await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`)
   }
 
-  async beaconchainMonitoringModification(data){
-    console.log(data.selectedVal +" "+ data.apiKey +" "+ data.machineName);
+  async beaconchainMonitoringModification(data) {
+    console.log(data.selectedVal + " " + data.apiKey + " " + data.machineName);
     // NOT YET IMPLEMENTED
   }
 }

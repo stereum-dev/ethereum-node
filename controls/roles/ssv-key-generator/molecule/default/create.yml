@@ -52,16 +52,6 @@
       retries: 300
       with_items: "{{ server.results }}"
 
-    - name: Attach Server to Subnetwork(s)
-      hcloud_server_network:
-        network: "{{ item.network.name }}"
-        server: "{{ item.name }}"
-        ip: "{{ item.network.ip }}"
-        api_token: "{{ lookup('env', 'HCLOUD_TOKEN') }}"
-        state: "present"
-      loop: "{{ molecule_yml.platforms }}"
-      when: molecule_yml.platforms is search('network')
-
     - name: Populate instance config dict
       set_fact:
         instance_conf_dict: {

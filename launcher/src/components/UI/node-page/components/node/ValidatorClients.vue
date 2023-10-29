@@ -16,6 +16,7 @@
         @state-handler="stateHandler"
         @restart-handler="restartHandler"
         @open-doc="openDoc"
+        @remove-lockfiles="removeLockfilesHandler"
       />
     </div>
   </div>
@@ -27,6 +28,7 @@ import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed, watch, ref } from "vue";
+import ControlService from "@/store/ControlService";
 
 const emit = defineEmits([
   "openExpert",
@@ -36,6 +38,7 @@ const emit = defineEmits([
   "restartHandler",
   "mouseOver",
   "mouseLeave",
+  "removeLockfiles",
 ]);
 
 const validatorRefs = ref([]);
@@ -82,5 +85,12 @@ const stateHandler = (item) => {
 
 const restartHandler = (item) => {
   emit("restartHandler", item);
+};
+
+const removeLockfilesHandler = async (item) => {
+  await ControlService.chooseServiceAction({
+    action: "removeLockfiles",
+    service: structuredClone(item),
+  });
 };
 </script>

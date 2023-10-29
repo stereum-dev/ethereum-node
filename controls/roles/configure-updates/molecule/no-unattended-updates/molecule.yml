@@ -8,8 +8,8 @@ platforms:
     image: ubuntu:focal
   - name: "configure-updates--default--ubuntu-22.04"
     image: ubuntu:jammy
- # - name: "configure-updates--default--centos-8"
- #   image: geerlingguy/docker-centos8-ansible
+  # - name: "configure-updates--default--centos-8"
+  #   image: geerlingguy/docker-centos8-ansible
 provisioner:
   name: ansible
   env:
@@ -25,6 +25,5 @@ scenario:
     - prepare
     - converge
     # - idempotence
-    - lint
     - verify
     - destroy

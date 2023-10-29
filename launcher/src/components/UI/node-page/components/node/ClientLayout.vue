@@ -45,7 +45,6 @@ const props = defineProps({
   client: Object,
 });
 
-
 const serviceStore = useServices();
 const controlStore = useControlStore();
 
@@ -99,8 +98,8 @@ const getPercent = () => {
     let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());
 
     if (data) {
-      const lo = data.frstVal;
-      const hi = data.scndVal;
+      const lo = parseInt(data.frstVal);
+      const hi = parseInt(data.scndVal);
       const percent = Math.floor((parseInt(lo) / parseInt(hi)) * 100);
 
       if (isNaN(percent)) {
@@ -108,7 +107,7 @@ const getPercent = () => {
       } else {
         syncPercent.value = percent + "%";
       }
-      // console.log(data.title, lo, hi);
+
       if (lo > hi) {
         //fonts.orange.push(k);
         syncIcon.value = syncIcons.value[0].icon;
