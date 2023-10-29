@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: hetznercloud
+  name: molecule_hetznercloud
 platforms:
   # cpx31 for the storage requirements
   - name: "update-services--default--ubuntu-22.04"
@@ -29,6 +29,5 @@ scenario:
     - prepare
     - converge
     - idempotence
-    - lint
     - verify
     - destroy

@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: hetznercloud
+  name: molecule_hetznercloud
 platforms:
   - name: "restart-services--default--ubuntu-22.04"
     hostname: ubuntu
@@ -24,6 +24,5 @@ scenario:
     - prepare
     - converge
     #- idempotence
-    - lint
     - verify
     - destroy
