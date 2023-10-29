@@ -26,7 +26,7 @@
 
 <script setup>
 import ControlService from "@/store/ControlService";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
