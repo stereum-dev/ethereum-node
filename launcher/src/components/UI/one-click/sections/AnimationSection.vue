@@ -1,29 +1,46 @@
-import { mapWritableState } from 'pinia';
 <template>
   <div class="anim">
     <div class="anim__content">
       <div class="anim__content__box">
         <div class="anim__img__content">
-          <img src="/animation/installerBG.png" alt="Icon" />
-          <img src="/animation/installer-1.png" alt="Icon" />
-          <img v-if="cilentIconActive" :src="executionClientIcon" class="execution__icon" alt="icon" />
-          <img v-if="cilentIconActive" :src="consensusClientIcon" class="consensus__icon" alt="icon" />
-          <img
-            v-for="img in images"
-            :key="img"
-            :class="{
-              'execution__icon ': img === executionClientIcon,
-              'consensus__icon ': img === consensusClientIcon,
-            }"
-            :src="img"
-            alt="Animation"
-          />
+          <img v-for="(img, index) in images" :key="index" :src="img" :class="imgClass(img)" alt="Animation" />
+
+          <img v-if="cilentIconActive" :src="executionClientIcon" class="execution__icon_big" alt="icon" />
+          <img v-if="!cilentIconActive" :src="executionClientIcon" class="animate__flip execution__icon" alt="icon" />
+
+          <img v-if="!cilentIconActive" :src="consensusClientIcon" class="consensus__icon" alt="icon" />
+
+          <img v-if="cilentIconActive" :src="consensusClientIcon" class="consensus__icon_big" alt="icon" />
+
+          <img v-if="cilentIconActive" :src="eyesLight" class="eyesLight" alt="icon" />
+          <img v-if="cilentIconActive" :src="lightening" class="lightening" alt="icon" />
         </div>
       </div>
     </div>
 
+    <div
+      class="w-full h-14 col-start-2 col-end-5 row-start-1 row-span-1 z-50 flex justify-center items-center mx-auto self-center"
+    >
+      <transition-group
+        name="list"
+        mode="out-in"
+        duration="2000"
+        tag="div"
+        class="flex justify-evenly items-center space-x-6"
+      >
+        <img
+          v-for="(item, index) in displayIcons"
+          :key="index"
+          :src="item.src"
+          class="w-8 h-8 scale-100"
+          alt="Animation"
+          :class="cilentIconActive ? item.class : ''"
+        />
+      </transition-group>
+    </div>
+
     <div class="taskBox">
-      <div v-if="displayNewTask !== ''" class="message-box">
+      <div v-if="displayNewTask" class="message-box">
         <p class="msg-title">
           {{ displayNewTask }}
           <span class="dot-flashing"></span>
@@ -33,93 +50,111 @@ import { mapWritableState } from 'pinia';
   </div>
 </template>
 
-<script>
-import { mapWritableState } from "pinia";
+<script setup>
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
-export default {
-  components: {},
-  data() {
+import "animate.css";
+
+const installStore = useClickInstall();
+
+const selectedPreset = installStore.selectedPreset;
+
+const executionClientIcon = ref("");
+const consensusClientIcon = ref("");
+const eyesLight = ref("/animation/installer-05.png");
+const lightening = ref("/animation/installer-06.png");
+const images = ref([]);
+const displayNewTask = ref("");
+const cilentIconActive = ref(false);
+const displayIcons = ref([]);
+let polling = null;
+let refresh = null;
+
+const installerImages = ["installer-01.png", "installer-02.png", "installer-03.png", "installer-04.png"];
+
+const getIcons = computed(() => {
+  const plugins = selectedPreset.includedPlugins;
+  return plugins.map((plugin, index) => {
     return {
-      installAnimations: [
-        "/animation/installer-2.png",
-        "/animation/installer-3.png",
-        "/animation/installer-4.png",
-        "/animation/installer-5.png",
-      ],
-      images: [],
-      animationIsDone: false,
-      currentIndex: null,
-      executionClientIcon: "",
-      consensusClientIcon: "",
-      Tasks: [],
-      displayNewTask: "",
-      cilentIconActive: false,
+      src: plugin.icon,
+      class: "z-50 scale-110 transition-all ease-in-out " + `delay-${index + 10}00` + `duration-${index + 5}00`,
     };
-  },
-  computed: {
-    ...mapWritableState(useClickInstall, {
-      selectedPreset: "selectedPreset",
-    }),
-  },
+  });
+});
 
-  mounted() {
-    this.displayImages();
-    this.selectedPreset.includedPlugins.forEach((plugin) => {
-      if (plugin.category === "execution") {
-        this.executionClientIcon = plugin.icon;
-      } else if (plugin.category === "consensus") {
-        this.consensusClientIcon = plugin.icon;
+//Lifecycle Hooks
+onMounted(() => {
+  pushIconsWithDelay();
+  selectedPreset.includedPlugins.forEach(async (plugin) => {
+    if (plugin.category === "execution") {
+      executionClientIcon.value = plugin.icon;
+    } else if (plugin.category === "consensus") {
+      consensusClientIcon.value = plugin.icon;
+    }
+    await displayImages();
+  });
+
+  polling = setInterval(ControlService.updateTasks, 2000);
+  refresh = setInterval(getTasks, 5000);
+});
+
+onUnmounted(() => {
+  clearInterval(polling);
+  clearInterval(refresh);
+  clearInterval(intervalId);
+});
+
+//Methods
+
+const pushIconsWithDelay = () => {
+  let index = 0;
+  function pushNextIcon() {
+    if (index < getIcons.value.length) {
+      displayIcons.value.push(getIcons.value[index]);
+      index++;
+
+      if (index < getIcons.value.length) {
+        setTimeout(pushNextIcon, 1000);
       }
-    });
-    this.polling = setInterval(ControlService.updateTasks, 2000);
-    this.refresh = setInterval(this.getTasks, 5000); //refresh data
-  },
-  unmounted() {
-    this.images = [];
-  },
+    }
+  }
 
-  methods: {
-    displayImages() {
-      setTimeout(() => {
-        setTimeout(() => {
-          this.images.push(this.installAnimations[0]);
-        }, 500);
-        setTimeout(() => {
-          this.images.push(this.installAnimations[1], this.installAnimations[2]);
-          this.images.push(this.executionClientIcon, this.consensusClientIcon);
-          this.images.push(this.installAnimations[3]);
-        }, 700);
-        this.cilentIconActive = true;
-        this.images = [];
-
-        setInterval(() => {
-          setTimeout(() => {
-            this.images.slice(3, 1);
-          }, 200);
-          setTimeout(() => {
-            this.images.push(
-              this.installAnimations[0],
-              this.installAnimations[1],
-              this.installAnimations[2],
-              this.installAnimations[3]
-            );
-          }, 300);
-
-          this.images = [];
-        }, 2000);
-      }, 4000);
-    },
-    getTasks: async function () {
-      const freshTasks = await ControlService.getTasks();
-      this.Tasks = Array.isArray(freshTasks) ? freshTasks : this.Tasks;
-      // use try/catch to avoid an error if no tasks responded for whatever reason
-      try {
-        this.displayNewTask = this.Tasks.at(-1).name;
-      } catch (e) {}
-    },
-  },
+  pushNextIcon();
 };
+
+const addImage = (image) => {
+  images.value.push(`/animation/${image}`);
+};
+
+const imgClass = (img) => ({
+  execution__icon: img === executionClientIcon.value,
+  consensus__icon: img === consensusClientIcon.value,
+  eyesLight: img === eyesLight.value,
+  lightening: img === lightening.value,
+});
+
+const displayImages = async () => {
+  for (const img of installerImages) {
+    addImage(img);
+    if (img === "installer-05.png" || img === "installer-06.png") {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+  }
+};
+
+const getTasks = async () => {
+  const freshTasks = await ControlService.getTasks();
+  try {
+    displayNewTask.value = freshTasks.at(-1).name;
+  } catch (e) {}
+};
+
+const intervalId = setInterval(() => {
+  if (executionClientIcon.value) {
+    cilentIconActive.value = !cilentIconActive.value;
+  }
+}, 1000);
 </script>
 
 <style scoped>
@@ -134,6 +169,17 @@ export default {
 
   position: relative;
 }
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease-in 0.2s;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
 .anim__content {
   grid-column: 1/6;
   grid-row: 1/7;
@@ -148,7 +194,6 @@ export default {
   z-index: 10;
 }
 .anim__content__box {
-  /* border-image: linear-gradient(98deg, blue, #ff000000) 1; */
   width: 100%;
   height: 100%;
   display: flex;
@@ -165,6 +210,7 @@ export default {
   left: 0;
   animation-name: anim1;
   animation-duration: 500ms;
+  z-index: 0;
 }
 
 @keyframes anim1 {
@@ -184,40 +230,63 @@ export default {
     opacity: 1;
   }
 }
-
-/* .anim__content__box img:last-child {
-  animation: anim3 1s infinite;
-}
-@keyframes anim3 {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-} */
-
 .execution__icon {
   width: 148px !important;
   height: 148px !important;
   position: absolute !important;
   top: 30% !important;
   left: 28.8% !important;
-  animation-name: anim2 3s !important;
+  animation-name: anim2 3s infinite !important;
 }
-
 .consensus__icon {
   width: 148px !important;
   height: 148px !important;
   position: absolute !important;
   top: 29.2% !important;
   left: 58.6% !important;
-  animation-name: anim2 3s !important;
+  animation-name: anim2 3s infinite !important;
 }
-@keyframes anim2 {
+.execution__icon_big {
+  width: 148px !important;
+  height: 148px !important;
+  position: absolute !important;
+  top: 30% !important;
+  left: 28.8% !important;
+  transform: scale(1.5) !important;
+  animation-name: bounce 3s !important;
+}
+.consensus__icon_big {
+  width: 148px !important;
+  height: 148px !important;
+  position: absolute !important;
+  top: 29.2% !important;
+  left: 58.6% !important;
+  transform: scale(1.5) !important;
+  animation-name: bounce 3s !important;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.eyesLight,
+.lightening {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  position: absolute !important;
+  animation-name: anim2 5s !important;
+  z-index: 1;
+}
+
+/* @keyframes anim2 {
   0% {
     opacity: 0;
   }
@@ -245,8 +314,10 @@ export default {
   90% {
     opacity: 0.9;
   }
+} */
+.blinking {
+  animation: anim3 1s infinite;
 }
-
 .taskBox {
   grid-column: 1/7;
   grid-row: 6/7;
