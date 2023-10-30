@@ -36,7 +36,7 @@
 
 <script setup>
 import ResyncModal from "../modals/ResyncModal.vue";
-import { ref, computed, watch } from "vue";
+import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
