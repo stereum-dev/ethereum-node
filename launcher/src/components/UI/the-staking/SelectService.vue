@@ -5,7 +5,7 @@
         v-for="service in installedServices.filter((i) => i.category === 'validator' && i.service !== 'CharonService')"
         :key="service.id"
         class="serviceBox"
-        @click="$emit('selectService', service)"
+        @click="handleServiceClick(service)"
       >
         <div class="service-icon">
           <img :src="service.sIcon" alt="icon" />
@@ -18,16 +18,45 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
   data() {
-    return {};
+    return {
+      doppelgangerStatus: false,
+    };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
     }),
+  },
+  methods: {
+    handleServiceClick(service) {
+      this.$emit("selectService", service);
+      this.doppelgangerController(service);
+    },
+    async doppelgangerController(item) {
+      try {
+        const res = await ControlService.getServiceYAML(item?.config.serviceID);
+        item.expertOptions.map((option) => {
+          if (item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+            this.doppelgangerStatus = res.indexOf(option.pattern[0]) === -1 ? false : true;
+            console.log(this.doppelgangerStatus);
+          } else if (option.title === "Doppelganger") {
+            const matchedValue = res.match(new RegExp(option.pattern[0]))
+              ? [...res.match(new RegExp(option.pattern[0]))][2]
+              : "";
+
+            this.doppelgangerStatus = matchedValue === "true" ? true : false;
+            console.log(this.doppelgangerStatus);
+          }
+        });
+      } catch (error) {
+        // console.error("Error fetching service YAML:", error);
+      }
+    },
   },
 };
 </script>
