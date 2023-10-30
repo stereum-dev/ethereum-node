@@ -35,7 +35,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
-import { computed, ref, watchEffect } from "vue";
+import { computed, } from "vue";
 
 const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
 const manageStore = useNodeManage();
