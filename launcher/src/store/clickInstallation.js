@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useClickInstall = defineStore("clickInstallation", {
   state: () => {
     return {
+      installMonitoring: false,
       relayURL: "",
       checkPointSync: "",
       currentSlide: 0,
@@ -32,7 +33,7 @@ export const useClickInstall = defineStore("clickInstallation", {
       ],
       selectedNetwork: {},
       installationPath: "/opt/stereum",
-      selectedPreset: [],
+      selectedPreset: null,
       installation: [
         {
           img: "/img/icon/one-click-installer.png",
