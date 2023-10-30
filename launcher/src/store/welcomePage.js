@@ -7,7 +7,7 @@ export const useWelcomeStore = defineStore("welcomePage", {
           img: "/img/icon/welcome-page/oneclick-install.png",
           imgHover: "/img/icon/welcome-page/oneclick-install-hover.png",
           imgDisabled: "/img/icon/welcome-page/oneclick-install-disabled.png",
-          path: "/selectPlugin",
+          path: "/oneClick/preset",
           display: true,
         },
         {

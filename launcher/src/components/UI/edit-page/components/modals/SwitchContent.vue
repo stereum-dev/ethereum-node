@@ -25,7 +25,7 @@
             <path stroke-linecap="round" stroke-width="2" d="M5 10l7 7 7-7"></path>
           </svg>
         </button>
-        <Transition name="slide">
+        <Transition name="slide-fade">
           <ul
             v-show="switchDropdownOpen"
             class="transition-all max-h-[200px] duration-400 ease-in-out absolute bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
@@ -96,3 +96,18 @@ const switchService = (service) => {
   isSyncingActived.value = true;
 };
 </script>
+<style scoped>
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+</style>

@@ -550,10 +550,16 @@ export default {
     },
     async confirmRestartChanges(el) {
       this.confirmExpertChanges(el);
-      await ControlService.restartService({ serviceID: el.config.serviceID, state: el.state });
+      await ControlService.restartService({
+        serviceID: el.config.serviceID,
+        state: el.state,
+      });
     },
     async executeAction(action, service) {
-      await ControlService.chooseServiceAction({ action: action, service: structuredClone(service) });
+      await ControlService.chooseServiceAction({
+        action: action,
+        service: structuredClone(service),
+      });
     },
   },
 };

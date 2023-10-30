@@ -3,7 +3,7 @@
     <div class="storageBox">
       <div class="storageIco">
         <div class="icoContainer">
-          <img src="../../../../public/img/icon/control/hdd.svg" />
+          <img src="/img/icon/control/hdd.svg" />
         </div>
         <div class="icoTitle">
           <span>{{ $t("controlPage.hard") }}</span>
@@ -27,24 +27,19 @@
     </div>
   </div>
 </template>
-<script>
-import { useControlStore } from "../../../store/theControl";
-import { mapState } from "pinia";
-export default {
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapState(useControlStore, {
-      availDisk: "availDisk",
-      totalDisk: "totalDisk",
-      usedPerc: "usedPerc",
-    }),
-    getPerc() {
-      return { width: 100 - parseInt(this.usedPerc) + "%" };
-    },
-  },
-};
+<script setup>
+import { computed } from "vue";
+import { useControlStore } from "@/store/theControl";
+
+const controlStore = useControlStore();
+
+const availDisk = computed(() => controlStore.availDisk);
+const totalDisk = computed(() => controlStore.totalDisk);
+const usedPerc = computed(() => controlStore.usedPerc);
+
+const getPerc = computed(() => {
+  return { width: `calc(100% - ${parseInt(usedPerc.value)}%)` };
+});
 </script>
 <style scoped>
 .storageParent {
