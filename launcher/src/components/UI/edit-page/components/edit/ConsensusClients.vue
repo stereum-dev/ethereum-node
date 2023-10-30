@@ -42,8 +42,8 @@ const emit = defineEmits(["deleteService", "switchClient", "modifyService", "inf
 //Refs
 
 const manageStore = useNodeManage();
-const isMouseOverClient = ref(false);
-const isMousePassedClient = ref(false);
+//const isMouseOverClient = ref(false);
+//const isMousePassedClient = ref(false);
 
 // computed & watchers properties
 const getConsensus = computed(() => {
