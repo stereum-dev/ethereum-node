@@ -21,15 +21,17 @@
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import { useStakingStore } from "@/store/theStaking";
 export default {
   data() {
-    return {
-      doppelgangerStatus: false,
-    };
+    return {};
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+    }),
+    ...mapWritableState(useStakingStore, {
+      doppelgangerStatus: "doppelgangerStatus",
     }),
   },
   methods: {
@@ -43,14 +45,12 @@ export default {
         item.expertOptions.map((option) => {
           if (item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
             this.doppelgangerStatus = res.indexOf(option.pattern[0]) === -1 ? false : true;
-            console.log(this.doppelgangerStatus);
           } else if (option.title === "Doppelganger") {
             const matchedValue = res.match(new RegExp(option.pattern[0]))
               ? [...res.match(new RegExp(option.pattern[0]))][2]
               : "";
 
             this.doppelgangerStatus = matchedValue === "true" ? true : false;
-            console.log(this.doppelgangerStatus);
           }
         });
       } catch (error) {
