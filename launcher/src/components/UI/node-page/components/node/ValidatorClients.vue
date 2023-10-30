@@ -31,7 +31,7 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
-import { computed, watch, ref } from "vue";
+import { computed } from "vue";
 import ControlService from "@/store/ControlService";
 
 const emit = defineEmits([
@@ -45,7 +45,6 @@ const emit = defineEmits([
   "removeLockfiles",
 ]);
 
-const validatorRefs = ref([]);
 
 const serviceStore = useServices();
 
