@@ -135,12 +135,9 @@ const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
 
-watchEffect(() => {
-  manageStore.newConfiguration = Array.from(serviceStore.installedServices);
-});
-
 onMounted(() => {
   manageStore.configNetwork = structuredClone(manageStore.currentNetwork);
+  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 });
 onMounted(() => {
   manageStore.confirmChanges = [];
@@ -527,14 +524,11 @@ const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
   setTimeout(() => {
-    manageStore.newConfiguration = structuredClone(serviceStore.installedServices);
+    manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+    manageStore.confirmChanges = [];
+    manageStore.disableConfirmButton = false;
+    manageStore.isLineHidden = false;
   }, 4000);
-
-  manageStore.confirmChanges = [];
-  manageStore.disableConfirmButton = false;
-
-  location.reload();
-  manageStore.isLineHidden = false;
 };
 
 const nukeConfirmation = () => {

@@ -3,7 +3,11 @@
     <div
       v-for="item in getValidatorServices"
       :key="item"
-      ref="validatorRefs"
+      :ref="
+        (el) => {
+          item.ref = el;
+        }
+      "
       class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
       @mouseenter="mouseOver(item)"
       @mouseleave="mouseLeave(item)"
@@ -43,23 +47,11 @@ const emit = defineEmits([
 
 const validatorRefs = ref([]);
 
-const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
 const getValidatorServices = computed(() =>
   serviceStore.installedServices.filter((e) => e.category === "validator").sort((a, b) => a.name.localeCompare(b.name))
 );
-
-const getValidatorRef = computed(() => {
-  return validatorRefs.value.map((el, index) => ({
-    ref: el,
-    refId: getValidatorServices.value[index].config.serviceID,
-  }));
-});
-
-watch(getValidatorRef, (newValue) => {
-  nodeStore.validatorRefList = newValue;
-});
 
 const mouseOver = (item) => {
   emit("mouseOver", item);

@@ -3,7 +3,11 @@
     <div
       v-for="item in getConsensus"
       :key="item.config.serviceID"
-      ref="consensusRefs"
+      :ref="
+        (el) => {
+          item.ref = el;
+        }
+      "
       class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md self-center justify-self-center cursor-pointer relative"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
@@ -37,7 +41,6 @@ const emit = defineEmits(["deleteService", "switchClient", "modifyService", "inf
 
 //Refs
 
-const consensusRefs = ref([]);
 const manageStore = useNodeManage();
 const isMouseOverClient = ref(false);
 const isMousePassedClient = ref(false);
@@ -58,26 +61,6 @@ const getConsensus = computed(() => {
       }
       return 0;
     });
-});
-
-const getConsensusRef = computed(() => {
-  return consensusRefs.value.map((el, index) => {
-    return {
-      ref: el,
-      refId: getConsensus.value[index]?.config.serviceID,
-    };
-  });
-});
-watch(isMouseOverClient, () => {
-  if (isMouseOverClient.value) {
-    isMousePassedClient.value = true;
-  } else {
-    isMousePassedClient.value = false;
-  }
-});
-
-watchEffect(() => {
-  manageStore.consensusRefList = getConsensusRef.value;
 });
 
 // methods
