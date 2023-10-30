@@ -71,7 +71,7 @@ import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
 import LeaderLine from "leader-line-new";
-import { computed, ref, onUnmounted, watchEffect } from "vue";
+import { computed, ref, onUnmounted } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 
 const emit = defineEmits([
