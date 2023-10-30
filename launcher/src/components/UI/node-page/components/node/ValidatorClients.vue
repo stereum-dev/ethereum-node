@@ -28,7 +28,6 @@
 
 <script setup>
 import { useServices } from "@/store/services";
-import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed } from "vue";
