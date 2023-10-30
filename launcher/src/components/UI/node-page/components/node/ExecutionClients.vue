@@ -43,7 +43,7 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 //Emits
 const emit = defineEmits([
