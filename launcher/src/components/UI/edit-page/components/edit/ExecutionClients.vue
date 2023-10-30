@@ -3,7 +3,11 @@
     <div
       v-for="item in getExecutions"
       :key="item"
-      ref="executionRefs"
+      :ref="
+        (el) => {
+          item.ref = el;
+        }
+      "
       class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md self-center justify-self-center cursor-pointer relative"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
@@ -31,10 +35,9 @@ import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
-import { computed, ref, watchEffect } from "vue";
+import { computed, } from "vue";
 
 const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
-const executionRefs = ref([]);
 const manageStore = useNodeManage();
 const serviceStore = useServices();
 
@@ -53,19 +56,6 @@ const getExecutions = computed(() => {
       }
       return 0;
     });
-});
-
-const getExecutionRef = computed(() => {
-  return executionRefs.value.map((el, index) => {
-    return {
-      ref: el,
-      refId: getExecutions.value[index]?.config.serviceID,
-    };
-  });
-});
-
-watchEffect(() => {
-  manageStore.executionRefList = getExecutionRef.value;
 });
 
 // Methods

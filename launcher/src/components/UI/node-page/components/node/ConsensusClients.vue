@@ -3,7 +3,11 @@
     <div
       v-for="item in getConsensusServices"
       :key="item"
-      ref="consensusRefs"
+      :ref="
+        (el) => {
+          item.ref = el;
+        }
+      "
       class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
       @mouseenter="mouseOver(item)"
       @mouseleave="mouseLeave(item)"
@@ -32,7 +36,7 @@
 
 <script setup>
 import ResyncModal from "../modals/ResyncModal.vue";
-import { ref, computed, watch } from "vue";
+import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
@@ -49,7 +53,6 @@ const emit = defineEmits([
 ]);
 
 //Refs
-const consensusRefs = ref([]);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
@@ -57,18 +60,6 @@ const serviceStore = useServices();
 const getConsensusServices = computed(() =>
   serviceStore.installedServices.filter((e) => e.category === "consensus").sort((a, b) => a.name.localeCompare(b.name))
 );
-
-const getConsensusRef = computed(() =>
-  consensusRefs.value.map((el, index) => ({
-    ref: el,
-    refId: getConsensusServices.value[index].config.serviceID,
-  }))
-);
-
-watch(getConsensusRef, (newValue) => {
-  nodeStore.consensusRefList = newValue;
-});
-
 //Methods
 const mouseOver = (item) => {
   emit("mouseOver", item);
