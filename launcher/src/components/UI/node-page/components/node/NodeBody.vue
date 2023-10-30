@@ -48,7 +48,7 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, onUnmounted, watchEffect, watch } from "vue";
+import { ref, } from "vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
