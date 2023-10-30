@@ -29,6 +29,7 @@
           @click="openExpertMode"
         >
           <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
+
           <span>Expert Mode</span>
           <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
@@ -68,7 +69,9 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
           :key="index"
           class="selectBox"
-          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
+          :class="{
+            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+          }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span class="text-center">{{ option.title }}</span>
@@ -84,7 +87,9 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
           class="toggleTextBox"
-          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
+          :class="{
+            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+          }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
@@ -130,7 +135,9 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
           :key="index"
           class="actionBox"
-          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
+          :class="{
+            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+          }"
         >
           <img :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
@@ -156,7 +163,9 @@
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
           :key="index"
           class="actionBox"
-          :class="{ invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
+          :class="{
+            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+          }"
         >
           <img :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
@@ -181,7 +190,9 @@
       <!-- expert mode textarea -->
       <div
         class="expertTable"
-        :class="{ showExpertTable: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive }"
+        :class="{
+          showExpertTable: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+        }"
       >
         <div v-if="isExpertModeActive" class="expertMode">
           <textarea
@@ -220,6 +231,7 @@
         >
           Confirm
         </button>
+
         <button v-else class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize rounded-lg disabled">
           <span>Confirm</span>
         </button>

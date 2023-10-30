@@ -7,8 +7,9 @@
       </div>
       <div class="removeMessage">
         <span
-          ><div :class="['status', doppelganger ? 'green' : 'red']" />
-          Doppelgänger Protection is {{ doppelganger ? "Enabled" : "Disabled" }}.</span
+          ><div :class="['status', doppelgangerStatus ? 'green' : 'red']" />
+          Doppelgänger Protection is
+          {{ doppelgangerStatus ? "Enabled" : "Disabled" }}.</span
         >
         <span>{{ $t("importSlashingModal.slashModalMessage") }}</span>
       </div>
@@ -89,7 +90,7 @@ export default {
   },
   computed: {
     ...mapState(useStakingStore, {
-      doppelganger: "doppelganger",
+      doppelgangerStatus: "doppelgangerStatus",
     }),
   },
   watch: {
