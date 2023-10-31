@@ -1,6 +1,7 @@
 <template>
   <div
     class="grid-col-1 col-span-1 relative w-full h-full flex justify-center items-center box-border"
+    style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
     @mouseenter="cursorLocation = `${props.client.name} service`"
