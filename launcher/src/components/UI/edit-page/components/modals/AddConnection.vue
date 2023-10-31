@@ -169,7 +169,9 @@ const toggleConnection = (option) => {
     option.isConnected = false;
   }
   props.properties.executionClients = list.value.filter((e) => e.category === "execution" && e.isConnected);
-  props.properties.consensusClients = list.value.filter((e) => e.category === "consensus" && e.isConnected);
+  props.properties.consensusClients = list.value.filter(
+    (e) => (e.category === "consensus" || e.service === "CharonService") && e.isConnected
+  );
 };
 
 const getConnectionOptions = () => {

@@ -3,15 +3,13 @@ import { defineStore } from "pinia";
 export const useNodeStore = defineStore("theNode", {
   state: () => {
     return {
+      lines: [],
       isLineHidden: false,
       lineOne: null,
       lineTwo: null,
       lineThree: null,
       infoAlarm: true,
       runNodePowerModal: false,
-      validatorRefList: [],
-      consensusRefList: [],
-      executionRefList: [],
       serviceLogs: [],
       consensusItems: [],
       executionItems: [],

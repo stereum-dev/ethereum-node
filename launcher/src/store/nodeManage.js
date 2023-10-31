@@ -4,9 +4,7 @@ export const useNodeManage = defineStore("nodeManage", {
     return {
       reloadEditBody: false,
       isLineHidden: false,
-      lineOne: null,
-      lineTwo: null,
-      lineThree: null,
+      lines: [],
       hideConnectingLines: false,
       addConfigButton: false,
       nodeConfigs: [
@@ -20,9 +18,6 @@ export const useNodeManage = defineStore("nodeManage", {
       isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
-      validatorRefList: [],
-      consensusRefList: [],
-      executionRefList: [],
       availableBlocks: [],
       checkedRelays: [],
       usedBlocks: [],
