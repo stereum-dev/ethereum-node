@@ -1,5 +1,7 @@
 <template>
-  <div class="w-screen h-screen border-2 border-slate-500 rounded-lg bg-[#336666]">
+  <div
+    class="w-screen h-screen border-2 border-slate-500 rounded-lg bg-[#336666] flex flex-col justify-evenly items-center"
+  >
     <div
       class="w-full h-full bg-no-repeat bg-center bg-contain bg-fixed grid grid-cols-24 grid-rows-12"
       style="background-image: url('/img/icon/stereum-logo/stereum-logo-2.png')"
@@ -20,11 +22,15 @@
 
       <slot></slot>
     </div>
+    <TaskManager
+      v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
+    />
     <ServerAccessManagement v-if="serverAccessManagement && !isRouterLogin" />
   </div>
 </template>
 <script setup>
 import SecurityButton from "../UI/node-header/SecurityButton.vue";
+import TaskManager from "../UI/task-manager/TaskManager.vue";
 import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";

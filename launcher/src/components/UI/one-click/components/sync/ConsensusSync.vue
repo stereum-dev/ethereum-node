@@ -65,31 +65,6 @@
         <navigation />
       </template>
     </carousel>
-    <Transition name="slide-fade">
-      <ul
-        v-if="dropdown"
-        class="absolute top-12 right-10 transition-all w-64 h-[200px] duration-400 ease-in-out bg-gray-700 rounded-b-lg shadow-lg pt-18 pb-1 z-10 mt-1 divide-y divide-gray-500 overflow-y-auto flex flex-col justify-start items-center"
-        @mouseleave="colseDropdown"
-      >
-        <li
-          v-for="link in selectedLinks"
-          :key="link"
-          class="w-full h-16 grid grid-cols-6 py-1 px-4 hover:bg-blue-400"
-          @click="linkPicker(link)"
-        >
-          <img
-            v-if="link.icon"
-            class="w-6 h-6 col-start-1 col-end-2 self-center justify-self-center"
-            :src="link.icon"
-            alt="service Icon"
-          />
-          <span
-            class="col-start-3 col-end-6 px-4 py-1 flex justify-start links-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
-            >{{ link.name }}</span
-          >
-        </li>
-      </ul>
-    </Transition>
   </div>
 </template>
 

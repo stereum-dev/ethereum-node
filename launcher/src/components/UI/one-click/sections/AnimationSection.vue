@@ -1,6 +1,8 @@
 <template>
-  <div class="anim">
-    <div class="anim__content">
+  <div
+    class="w-screen h-screen colstart-1 col-span-full row-start-1 row-span-full flex flex-col justify-evenly items-center"
+  >
+    <div class="w-full h-full flex justify-center items-center">
       <div class="anim__content__box">
         <div class="anim__img__content">
           <img v-for="(img, index) in images" :key="index" :src="img" :class="imgClass(img)" alt="Animation" />
@@ -12,34 +14,57 @@
 
           <img v-if="cilentIconActive" :src="consensusClientIcon" class="consensus__icon_big" alt="icon" />
 
+          <img v-if="cilentIconActive" :src="bgLight" class="eyesLight" alt="icon" />
+          <img v-if="cilentIconActive" :src="shadow" class="eyesLight" alt="icon" />
           <img v-if="cilentIconActive" :src="eyesLight" class="eyesLight" alt="icon" />
           <img v-if="cilentIconActive" :src="lightening" class="lightening" alt="icon" />
         </div>
       </div>
     </div>
 
-    <div
-      class="w-full h-14 col-start-2 col-end-5 row-start-1 row-span-1 z-50 flex justify-center items-center mx-auto self-center"
-    >
-      <transition-group
-        name="list"
-        mode="out-in"
-        duration="2000"
-        tag="div"
-        class="flex justify-evenly items-center space-x-6"
-      >
-        <img
-          v-for="(item, index) in displayIcons"
-          :key="index"
-          :src="item.src"
-          class="w-8 h-8 scale-100"
-          alt="Animation"
-          :class="cilentIconActive ? item.class : ''"
-        />
-      </transition-group>
+    <div class="wrapper w-screen h-screen absolute inset-0 z-50 flex justify-center items-center">
+      <div class="absolute bottom-50 inset-x-0">
+        <img src="/img/icon/stereum-logo/stereum_logo_extern.png" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img src="/img/icon/stereum-logo/logo-bw.png" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[0]" :src="bubbleIcons[0]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[1]" :src="bubbleIcons[1]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[2]" :src="bubbleIcons[2]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[3]" :src="bubbleIcons[3]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[4]" :src="bubbleIcons[4]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[5]" :src="bubbleIcons[5]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[6]" :src="bubbleIcons[6]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[7]" :src="bubbleIcons[7]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[8]" :src="bubbleIcons[8]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[9]" :src="bubbleIcons[9]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div class="absolute bottom-50 inset-x-0">
+        <img v-if="bubbleIcons[10]" :src="bubbleIcons[10]" class="dot w-full h-full" alt="Animation" />
+      </div>
     </div>
 
-    <div class="taskBox">
+    <div class="absolute bottom-[3rem] inset-x-0 h-14">
       <div v-if="displayNewTask" class="message-box">
         <p class="msg-title">
           {{ displayNewTask }}
@@ -51,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 import "animate.css";
@@ -62,30 +87,23 @@ const selectedPreset = installStore.selectedPreset;
 
 const executionClientIcon = ref("");
 const consensusClientIcon = ref("");
-const eyesLight = ref("/animation/installer-05.png");
-const lightening = ref("/animation/installer-06.png");
+const eyesLight = ref("/animation/installer-06.png");
+const bgLight = ref("/animation/installer-03.png");
+const shadow = ref("/animation/installer-04.png");
+const lightening = ref("/animation/installer-05.png");
+const bubbleIcons = ref([]);
+
 const images = ref([]);
 const displayNewTask = ref("");
 const cilentIconActive = ref(false);
-const displayIcons = ref([]);
 let polling = null;
 let refresh = null;
 
-const installerImages = ["installer-01.png", "installer-02.png", "installer-03.png", "installer-04.png"];
-
-const getIcons = computed(() => {
-  const plugins = selectedPreset.includedPlugins;
-  return plugins.map((plugin, index) => {
-    return {
-      src: plugin.icon,
-      class: "z-50 scale-110 transition-all ease-in-out " + `delay-${index + 10}00` + `duration-${index + 5}00`,
-    };
-  });
-});
+const installerImages = ["installer-01.png", "installer-02.png"];
 
 //Lifecycle Hooks
 onMounted(() => {
-  pushIconsWithDelay();
+  getBubbleIcons();
   selectedPreset.includedPlugins.forEach(async (plugin) => {
     if (plugin.category === "execution") {
       executionClientIcon.value = plugin.icon;
@@ -107,20 +125,10 @@ onUnmounted(() => {
 
 //Methods
 
-const pushIconsWithDelay = () => {
-  let index = 0;
-  function pushNextIcon() {
-    if (index < getIcons.value.length) {
-      displayIcons.value.push(getIcons.value[index]);
-      index++;
-
-      if (index < getIcons.value.length) {
-        setTimeout(pushNextIcon, 1000);
-      }
-    }
-  }
-
-  pushNextIcon();
+const getBubbleIcons = async () => {
+  installStore.selectedPreset.includedPlugins.forEach((plugin) => {
+    bubbleIcons.value.push(plugin.icon);
+  });
 };
 
 const addImage = (image) => {
@@ -161,23 +169,13 @@ const intervalId = setInterval(() => {
 .anim {
   grid-column: 1/25;
   grid-row: 1/13;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(6, 1fr);
 
-  position: relative;
-}
-
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease-in 0.2s;
-}
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(-30px);
+  position: absolute;
 }
 
 .anim__content {
@@ -286,35 +284,6 @@ const intervalId = setInterval(() => {
   z-index: 1;
 }
 
-/* @keyframes anim2 {
-  0% {
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.1;
-  }
-  25% {
-    opacity: 0.25;
-  }
-  35% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  60% {
-    opacity: 0.6;
-  }
-  75% {
-    opacity: 0.75;
-  }
-  85% {
-    opacity: 0.85;
-  }
-  90% {
-    opacity: 0.9;
-  }
-} */
 .blinking {
   animation: anim3 1s infinite;
 }
@@ -414,5 +383,90 @@ const intervalId = setInterval(() => {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+}
+
+.wrapper div {
+  height: 60px;
+  width: 60px;
+  animation: 4s linear infinite;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+div .dot {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 20%;
+  right: 20%;
+}
+.wrapper div:nth-child(1) {
+  top: 20%;
+  left: 20%;
+  animation: animate 8s linear infinite;
+}
+.wrapper div:nth-child(2) {
+  top: 60%;
+  left: 80%;
+  animation: animate 10s linear infinite;
+}
+.wrapper div:nth-child(3) {
+  top: 40%;
+  left: 40%;
+  animation: animate 3s linear infinite;
+}
+.wrapper div:nth-child(4) {
+  top: 66%;
+  left: 30%;
+  animation: animate 7s linear infinite;
+}
+.wrapper div:nth-child(5) {
+  top: 90%;
+  left: 10%;
+  animation: animate 9s linear infinite;
+}
+.wrapper div:nth-child(6) {
+  top: 30%;
+  left: 60%;
+  animation: animate 5s linear infinite;
+}
+.wrapper div:nth-child(7) {
+  top: 70%;
+  left: 20%;
+  animation: animate 8s linear infinite;
+}
+.wrapper div:nth-child(8) {
+  top: 75%;
+  left: 60%;
+  animation: animate 10s linear infinite;
+}
+.wrapper div:nth-child(9) {
+  top: 50%;
+  left: 50%;
+  animation: animate 6s linear infinite;
+}
+.wrapper div:nth-child(10) {
+  top: 45%;
+  left: 20%;
+  animation: animate 10s linear infinite;
+}
+.wrapper div:nth-child(11) {
+  top: 10%;
+  left: 90%;
+  animation: animate 9s linear infinite;
+}
+
+@keyframes animate {
+  0% {
+    transform: scale(0) translateY(0) rotate(70deg);
+  }
+  100% {
+    transform: scale(1.3) translateY(-100px) rotate(360deg);
+  }
 }
 </style>
