@@ -3,7 +3,11 @@
     <div
       v-for="item in getExecutionServices"
       :key="item"
-      ref="executionRefs"
+      :ref="
+        (el) => {
+          item.ref = el;
+        }
+      "
       class="max-h-[100px] max-w-[180px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md divide-x divide-gray-700 hover:bg-[#2b3034]"
       @mouseenter="mouseOver(item)"
       @mouseleave="mouseLeave(item)"
@@ -39,7 +43,7 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 //Emits
 const emit = defineEmits([
@@ -53,7 +57,6 @@ const emit = defineEmits([
 ]);
 
 //Refs
-const executionRefs = ref([]);
 const showPruningModal = ref(false);
 
 //Stores
@@ -65,19 +68,6 @@ const getExecutionServices = computed(() => {
   return serviceStore.installedServices
     .filter((e) => e.category === "execution")
     .sort((a, b) => a.name.localeCompare(b.name));
-});
-
-const getExecutionRef = computed(() => {
-  return executionRefs.value.map((el, index) => {
-    return {
-      ref: el,
-      refId: getExecutionServices.value[index].config.serviceID,
-    };
-  });
-});
-
-watch(getExecutionRef, (newValue) => {
-  nodeStore.executionRefList = newValue;
 });
 
 //Methods
@@ -123,7 +113,6 @@ const stateHandler = (item) => {
 };
 
 const restartHandler = (item) => {
-
   emit("restartHandler", item);
 };
 </script>

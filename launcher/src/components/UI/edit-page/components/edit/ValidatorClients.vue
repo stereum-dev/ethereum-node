@@ -6,7 +6,11 @@
     <div
       v-for="item in getValidators"
       :key="item"
-      ref="validatorRefs"
+      :ref="
+        (el) => {
+          item.ref = el;
+        }
+      "
       class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md shadow-md divide-x divide-gray-700 self-center justify-self-center cursor-pointer"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
@@ -33,13 +37,12 @@ import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 
 import GeneralMenu from "./GeneralMenu.vue";
-import { computed, ref, watch } from "vue";
+import { computed,  } from "vue";
 
 // Variables & Constants
 
 const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
 
-const validatorRefs = ref([]);
 const manageStore = useNodeManage();
 
 // Computed & Watchers
@@ -63,17 +66,6 @@ const getValidators = computed(() => {
   return service;
 });
 
-const getValidatorRef = computed(() => {
-  return validatorRefs.value.map((el, index) => ({
-    ref: el,
-    refId: getValidators.value[index]?.config?.serviceID,
-  }));
-});
-
-watch(getValidatorRef, (newValue) => {
-  manageStore.validatorRefList = newValue;
-});
-
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "border bg-red-600 border-white hover:bg-red-600";
@@ -83,7 +75,6 @@ const getDynamicClasses = (item) => {
 };
 
 // Methods
-
 const displayMenu = (item) => {
   manageStore.newConfiguration.forEach((service) => {
     service.displayPluginMenu = false;

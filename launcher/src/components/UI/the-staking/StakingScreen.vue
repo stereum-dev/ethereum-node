@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useServices } from "../../../store/services";
+import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
@@ -37,19 +37,19 @@ const refresh = ref(0);
 const selectedName = ref(null);
 const selectedStatus = ref(null);
 const selectedIcon = ref(null);
-const selectedValdiatorService = ref(null);
+let selectedValdiatorService = ref(null);
 
 // Pinia stores
 const serviceStore = useServices();
 
 const stakingStore = useStakingStore();
 
-// computed
-
 const installedValidators = computed(() => {
   const copyOfInstalledServices = structuredClone(serviceStore.installedServices);
   return copyOfInstalledServices.filter((obj) => obj.category === "validator");
 });
+
+// lifecycle hooks
 
 onMounted(() => {
   if (installedValidators.value.length === 0) return;
@@ -57,15 +57,6 @@ onMounted(() => {
   selectedIcon.value = installedValidators.value[0].icon;
   selectedName.value = installedValidators.value[0].name;
   selectedStatus.value = installedValidators.value[0].state;
-
-  if (typeof selectedValdiatorService.value === "object") {
-    const doppelgangerOption = Object.values(selectedValdiatorService.value.expertOptions).find(
-      (option) => option.title === "Doppelganger"
-    );
-    if (doppelgangerOption) {
-      stakingStore.doppelganger = doppelgangerOption.changeValue;
-    }
-  }
 });
 
 // methods
@@ -91,7 +82,7 @@ const removeHandler = () => {
   stakingStore.removeForMultiValidatorsActive = true;
 };
 
-const selectedValidator = (validator) => {
+const selectedValidator = async (validator) => {
   stakingStore.selectedValdiatorService = validator;
   stakingStore.selectedIcon = validator?.icon;
   selectedName.value = validator?.name;

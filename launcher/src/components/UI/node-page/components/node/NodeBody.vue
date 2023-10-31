@@ -48,7 +48,7 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, onUnmounted, watchEffect, watch } from "vue";
+import { ref, } from "vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
@@ -70,156 +70,105 @@ const isLineDrawHandlerReady = ref(false);
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
-// Computed & Watchers
-
-watchEffect(() => {
-  if (nodeStore.isLineHidden) {
-    if (nodeStore.lineOne) {
-      nodeStore.lineOne.remove();
-      nodeStore.lineOne = null;
-    }
-    if (nodeStore.lineTwo) {
-      nodeStore.lineTwo.remove();
-      nodeStore.lineTwo = null;
-    }
-    if (nodeStore.lineThree) {
-      nodeStore.lineThree.remove();
-      nodeStore.lineThree = null;
-    }
-  }
-});
-
-watch(
-  () => nodeStore.isLineHidden,
-  (newValue) => {
-    if (newValue === false) {
-      lineDrawHandler();
-    } else {
-      removeConnectionLines();
-    }
-  }
-);
-
-//Hooks
-
-onUnmounted(() => {
-  if (nodeStore.lineOne) {
-    nodeStore.lineOne.remove();
-    nodeStore.lineOne = null;
-  }
-  if (nodeStore.lineTwo) {
-    nodeStore.lineTwo.remove();
-    nodeStore.lineTwo = null;
-  }
-  if (nodeStore.lineThree) {
-    nodeStore.lineThree.remove();
-    nodeStore.lineThree = null;
-  }
-});
-
 // Methods
 
-const oneWayConnection = (start, end) => {
-  if (nodeStore.lineOne) {
-    nodeStore.lineOne.remove();
-    nodeStore.lineOne = null;
-  }
-
+const oneWayConnection = (start, end, startSocket, endSocket) => {
   if (start && end) {
-    nodeStore.lineOne = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    nodeStore.lineOne.position();
-    nodeStore.lineOne.setOptions({
+    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    newLine.position();
+    newLine.setOptions({
       size: 2,
       color: "#DBEF6A",
       endPlug: "behind",
-      startSocket: "right",
-      endSocket: "left",
+      startSocket: startSocket ? startSocket : "right",
+      endSocket: endSocket ? endSocket : "left",
     });
-  }
-};
-
-const twoWaysConnections = (start, middle, end) => {
-  if (nodeStore.lineTwo) {
-    nodeStore.lineTwo.remove();
-    nodeStore.lineTwo = null;
-  }
-
-  if (nodeStore.lineThree) {
-    nodeStore.lineThree.remove();
-    nodeStore.lineThree = null;
-  }
-
-  if (start && middle && end) {
-    nodeStore.lineTwo = new LeaderLine(start, middle, { dash: { animation: true } }, { hide: true });
-    nodeStore.lineTwo.setOptions({
-      path: "fluid",
-      size: 2,
-      color: "#DBEF6A",
-      endPlug: "behind",
-      startSocket: "right",
-      endSocket: "left",
-    });
-    nodeStore.lineThree = new LeaderLine(middle, end, { dash: { animation: true } }, { hide: true });
-    nodeStore.lineThree.setOptions({
-      path: "fluid",
-      size: 2,
-      color: "#DBEF6A",
-      endPlug: "behind",
-      startSocket: "right",
-      endSocket: "left",
-    });
+    nodeStore.lines.push(newLine);
   }
 };
 
 const lineDrawHandler = (item) => {
   let start;
-  let middle;
   let end;
-
   if (item && !item.displayPluginMenu) {
-    if (item.category === "consensus") {
-      if (item.config?.dependencies.executionClients[0]) {
-        const execution = item.config?.dependencies.executionClients[0];
-        const getExecutionRef = nodeStore.executionRefList.find((el) => el.refId === execution?.id);
-        start = getExecutionRef?.ref ? getExecutionRef?.ref : null;
-        middle = nodeStore.consensusRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-        const validator = serviceStore.installedServices.find(
-          (el) =>
-            el.category === "validator" && el.config?.dependencies.consensusClients[0]?.id === item.config?.serviceID
+    switch (item.category) {
+      case "execution": {
+        const dependencies = serviceStore.installedServices.filter(
+          (s) =>
+            s.config?.dependencies?.executionClients?.length > 0 &&
+            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
         );
-        const getValidatorRef = nodeStore.validatorRefList.find((el) => el.refId === validator?.config?.serviceID);
-
-        end = getValidatorRef ? getValidatorRef?.ref : null;
-        if (start && middle && end) {
-          twoWaysConnections(start, middle, end);
-        } else if (!start || !middle || !end) {
-          const newStart = !start ? middle : start;
-          const newEnd = !end ? middle : end;
-          oneWayConnection(newStart, newEnd);
-        }
-      } else {
-        return;
+        dependencies.forEach((d) => {
+          if (d.category === "consensus") {
+            start = d.ref;
+            end = item.ref;
+            if (start && end) {
+              oneWayConnection(end, start);
+            }
+          }
+        });
+        break;
       }
-    } else if (item.category === "validator" && item.config?.dependencies.consensusClients[0]) {
-      const consensus = item.config?.dependencies.consensusClients[0];
-      start = nodeStore.consensusRefList.find((el) => el.refId === consensus?.id)?.ref;
-      end = nodeStore.validatorRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-      if (start && end) {
-        oneWayConnection(start, end);
+      case "consensus": {
+        const dependencies = serviceStore.installedServices.filter(
+          (s) =>
+            (s.config?.dependencies?.consensusClients?.length > 0 &&
+              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
+            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
+        );
+        dependencies.forEach((d) => {
+          if (d.category === "validator") {
+            start = d.ref;
+            end = item.ref;
+            if (start && end) {
+              oneWayConnection(end, start);
+            }
+          }
+          if (d.category === "execution") {
+            start = d.ref;
+            end = item.ref;
+            if (start && end) {
+              oneWayConnection(start, end);
+            }
+          }
+        });
+        break;
       }
-    } else if (item.category === "execution") {
-      const consensus = serviceStore.installedServices.find(
-        (el) =>
-          el.category === "consensus" && el.config?.dependencies.executionClients[0]?.id === item.config?.serviceID
-      );
-
-      start = nodeStore.executionRefList.find((el) => el.refId === item.config?.serviceID)?.ref;
-      if (consensus) {
-        end = nodeStore.consensusRefList.find((el) => el.refId === consensus?.config?.serviceID)?.ref;
-      }
-
-      if (start && end) {
-        oneWayConnection(start, end);
+      case "validator": {
+        const dependencies = serviceStore.installedServices.filter(
+          (s) =>
+            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
+            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
+            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
+        );
+        dependencies.forEach((d) => {
+          if (d.category === "validator") {
+            start = d.ref;
+            end = item.ref;
+            if (start && end) {
+              if (item.service === "CharonService") {
+                oneWayConnection(end, start, "left", "left");
+              } else {
+                oneWayConnection(start, end, "left", "left");
+              }
+            }
+          }
+          if (d.category === "execution") {
+            start = d.ref;
+            end = item.ref;
+            if (start && end) {
+              oneWayConnection(start, end);
+            }
+          }
+          if (d.category === "consensus") {
+            start = d.ref;
+            end = item.ref;
+            if (start && end) {
+              oneWayConnection(start, end);
+            }
+          }
+        });
+        break;
       }
     }
   } else if (item && item.displayPluginMenu) {
@@ -230,20 +179,10 @@ const lineDrawHandler = (item) => {
 
 const removeConnectionLines = () => {
   // Remove all existing connections
-  if (nodeStore.lineOne) {
-    nodeStore.lineOne.remove();
-    nodeStore.lineOne = null;
-  }
-
-  if (nodeStore.lineTwo) {
-    nodeStore.lineTwo.remove();
-    nodeStore.lineTwo = null;
-  }
-
-  if (nodeStore.lineThree) {
-    nodeStore.lineThree.remove();
-    nodeStore.lineThree = null;
-  }
+  nodeStore.lines.forEach((line) => {
+    line.remove();
+  });
+  nodeStore.lines = [];
 };
 
 const openLogsPage = (item) => {
