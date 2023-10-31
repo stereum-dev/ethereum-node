@@ -11,6 +11,7 @@
           class="w-full h-10 border border-gray-500 shadow-md shadow-black p-1 rounded-md grid grid-cols-6 hover:border-gray-300 cursor-pointer"
           :class="contentBgColor(item)"
           @click="removeChange(item)"
+          @mouseenter="footerStore.cursorLocation = `Click here to cancel this change`"
         >
           <div class="col-start-1 col-span-1 w-full self-center flex justify-center items-center">
             <img class="w-6" :src="item.contentIcon" alt="icon" />
@@ -33,9 +34,11 @@
   </div>
 </template>
 <script setup>
+import { useFooter } from "@/store/theFooter";
 import { useNodeManage } from "@/store/nodeManage";
 import { computed } from "vue";
 
+const footerStore = useFooter();
 const emit = defineEmits(["remove-change"]);
 
 const manageStore = useNodeManage();

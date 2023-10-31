@@ -4,6 +4,8 @@
       <div
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center cursor-pointer"
         @click="hoverRouter"
+        @mouseenter="footerStore.cursorLocation = `To Edit Node`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-7" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
       </div>
@@ -26,6 +28,8 @@
         v-else-if="checkStatus"
         class="row-start-2 row-end-3 p-1 rounded-md transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverPower"
+        @mouseenter="footerStore.cursorLocation = `Turn Node On`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-5" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
       </button>
@@ -34,6 +38,8 @@
         v-else-if="!checkStatus"
         class="row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverPower"
+        @mouseenter="footerStore.cursorLocation = `Turn Node off`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-5" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
       </button>
@@ -63,6 +69,8 @@
           v-if="!exportHovered"
           class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
           @click="hoverExport"
+          @mouseenter="footerStore.cursorLocation = `Export Node Config`"
+          @mouseleave="footerStore.cursorLocation = ''"
         >
           <img class="w-5" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
         </button>
@@ -86,12 +94,14 @@
     />
   </aside>
 </template>
+
 <script setup>
 import StateModal from "../components/modals/StateModal";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import { computed, ref } from "vue";
+import { useFooter } from "@/store/theFooter";
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
 
@@ -100,6 +110,7 @@ let powerHovered = ref(false);
 let exportHovered = ref(false);
 let loading = ref(false);
 let isExporting = ref(false);
+const footerStore = useFooter();
 
 //stores
 const serviceStore = useServices();
