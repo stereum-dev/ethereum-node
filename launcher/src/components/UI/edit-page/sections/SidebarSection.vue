@@ -4,6 +4,8 @@
       <div
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverRouter"
+        @mouseenter="footerStore.cursorLocation = `To the Node Page`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-8" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
       </div>
@@ -58,10 +60,12 @@
 </template>
 <script setup>
 import { ref } from "vue";
+import { useFooter } from "@/store/theFooter";
 
 const routerHovered = ref(false);
 const networkHovered = ref(false);
 const nukeHovered = ref(false);
+const footerStore = useFooter();
 
 const emit = defineEmits(["nukeNode", "networkModal"]);
 

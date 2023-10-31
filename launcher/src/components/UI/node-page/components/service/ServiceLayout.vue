@@ -4,8 +4,8 @@
     style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
-    @mouseenter="cursorLocation = `${props.client.name} service`"
-    @mouseleave="cursorLocation = ''"
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} service`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
       class="w-[160px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
@@ -20,6 +20,9 @@
 </template>
 <script setup>
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+const footerStore = useFooter();
 
 const props = defineProps({
   client: { type: Object, required: true },
@@ -32,15 +35,4 @@ const clientStatus = computed(() => {
   }
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
 });
-</script>
-<script>
-import { mapWritableState } from "pinia";
-import { useFooter } from "@/store/theFooter";
-export default {
-  computed: {
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-    }),
-  },
-};
 </script>

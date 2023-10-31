@@ -5,8 +5,8 @@
   >
     <div
       class="w-full flex justify-center items-center px-2 h-[25px]"
-      @mouseenter="cursorLocation = `server name`"
-      @mouseleave="cursorLocation = ''"
+      @mouseenter="footerStore.cursorLocation = `server name`"
+      @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="text-md font-semibold ml-1 text-yellow-500 overflow-hidden whitespace-pre text-center">{{
         controlStore.ServerName
@@ -15,8 +15,8 @@
     <div
       v-if="controlStore.ipAddress"
       class="w-full flex justify-center items-center px-2 h-[25px]"
-      @mouseenter="cursorLocation = `server ip`"
-      @mouseleave="cursorLocation = ''"
+      @mouseenter="footerStore.cursorLocation = `server ip`"
+      @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">IP :</span>
       <span class="text-sm pl-2 text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ipAddress }}</span>
@@ -24,11 +24,13 @@
   </div>
 </template>
 <script setup>
+import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import { onMounted } from "vue";
 import ControlService from "@/store/ControlService";
 
 const controlStore = useControlStore();
+const footerStore = useFooter();
 
 onMounted(() => {
   updateConnectionStats();
@@ -38,16 +40,5 @@ const updateConnectionStats = async () => {
   const stats = await ControlService.getConnectionStats();
   controlStore.ServerName = stats.ServerName;
   controlStore.ipAddress = stats.ipAddress;
-};
-</script>
-<script>
-import { mapWritableState } from "pinia";
-import { useFooter } from "@/store/theFooter";
-export default {
-  computed: {
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-    }),
-  },
 };
 </script>

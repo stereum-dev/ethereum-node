@@ -2,8 +2,9 @@ import { useNodeManage } from '@/store/nodeManage';
 <template>
   <div
     class="col-start-7 col-span-3 flex flex-col justify-between items-center bg-[#151618] border h-full border-gray-600 rounded-md px-2 py-1"
-    @mouseenter="cursorLocation = `Current Network is ${network.name}`"
-    @mouseleave="cursorLocation = ''"
+    style="cursor: default"
+    @mouseenter="footerStore.cursorLocation = `Current Network is ${network.name}`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="w-full self-start text-xs font-semibold text-teal-700">Current Network</div>
     <div class="w-full flex justify-center items-center">
@@ -15,24 +16,15 @@ import { useNodeManage } from '@/store/nodeManage';
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import { watchEffect, ref } from "vue";
+import { useFooter } from "@/store/theFooter";
 
+const footerStore = useFooter();
 const manageStore = useNodeManage();
 const network = ref({});
 
 watchEffect(() => {
   network.value = manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork;
 });
-</script>
-<script>
-import { mapWritableState } from "pinia";
-import { useFooter } from "@/store/theFooter";
-export default {
-  computed: {
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-    }),
-  },
-};
 </script>
 <style scoped>
 .fade-move,

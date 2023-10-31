@@ -4,8 +4,8 @@
     style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
-    @mouseenter="cursorLocation = `${props.client.name} client`"
-    @mouseleave="cursorLocation = ''"
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} client`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
       class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-[10px] font-semibold capitalize bg-[#264744]"
@@ -19,8 +19,8 @@
       <div
         v-if="props.client.category !== 'validator'"
         class="h-1/3 flex justify-evenly items-center"
-        @mouseenter="cursorLocation = `sync status: ${syncPercent}`"
-        @mouseleave="cursorLocation = ''"
+        @mouseenter="footerStore.cursorLocation = `sync status: ${syncPercent}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-4" :src="syncIcon" alt="icon" />
         <span class="text-xs text-gray-100">{{ syncPercent }}</span>
@@ -28,8 +28,8 @@
       <div
         v-else
         class="h-1/3 flex justify-center items-center"
-        @mouseenter="cursorLocation = ` ${getKeyNumbers} key(s) imported`"
-        @mouseleave="cursorLocation = ''"
+        @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} key(s) imported`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
         <span
@@ -53,6 +53,9 @@ import { computed, onMounted, onUnmounted } from "vue";
 import { useServices } from "@/store/services";
 import { useControlStore } from "@/store/theControl";
 import { ref } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+const footerStore = useFooter();
 
 const props = defineProps({
   client: Object,
@@ -166,15 +169,4 @@ const getConnectedMevboost = computed(() => {
     .find((e) => e.config.dependencies.mevboost[0]);
   return connectedMevboost;
 });
-</script>
-<script>
-import { mapWritableState } from "pinia";
-import { useFooter } from "@/store/theFooter";
-export default {
-  computed: {
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-    }),
-  },
-};
 </script>
