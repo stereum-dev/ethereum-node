@@ -17,6 +17,7 @@
         v-else-if="editStore.confirmChanges.length"
         class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase text-sm"
         @click="confirmChanges"
+        @mouseenter="footerStore.cursorLocation = `Click here to confirm change(s)`"
       >
         {{ $t("changeConfirm.confirm") }}
       </button>
@@ -34,7 +35,9 @@
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import ChangesBox from "../components/changes/ChangesBox";
+import { useFooter } from "@/store/theFooter";
 
+const footerStore = useFooter();
 const emit = defineEmits(["remove-change", "confirm-changes"]);
 
 const editStore = useNodeManage();
