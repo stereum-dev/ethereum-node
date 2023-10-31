@@ -17,7 +17,7 @@ import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
 import CustomInstall from "../pages/CustomInstall.vue";
-import ConfigPage from "../pages/ConfigPage.vue";
+import ConfigPage from "@/pages/ConfigPage.vue";
 import UploadConfig from "../components/UI/import-config/components/UploadConfig.vue";
 import ImportingSyncing from "../components/UI/import-config/components/ImportingSyncing.vue";
 import ImportingList from "../components/UI/import-config/components/ImportingList.vue";
