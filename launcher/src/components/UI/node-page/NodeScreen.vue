@@ -49,8 +49,8 @@ import { useFooter } from "@/store/theFooter";
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
-const chckTutorial = "/img/icon/round-icon.png";
-const returnStatus = "/img/icon/round-icon.png";
+// const chckTutorial = "/img/icon/round-icon.png";
+// const returnStatus = "/img/icon/round-icon.png";
 
 let polling = null;
 let pollingVitals = null;
