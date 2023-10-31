@@ -71,7 +71,7 @@ import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
 import LeaderLine from "leader-line-new";
-import { computed, ref,  } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 
 const emit = defineEmits([
@@ -112,6 +112,12 @@ const activateScrollBar = computed(() => {
     return true;
   } else {
     return false;
+  }
+});
+
+watchEffect(() => {
+  if (manageStore.isLineHidden) {
+    removeConnectionLines();
   }
 });
 
