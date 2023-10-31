@@ -48,7 +48,7 @@
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('openLogs', props.client), (cursorLocation = '')"
-      @mouseenter="cursorLocation = 'service logs'"
+      @mouseenter="cursorLocation = 'open logs'"
       @mouseleave="cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" class="w-4 active:scale-95" />
@@ -56,7 +56,7 @@
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('openDocs', props.client), (cursorLocation = '')"
-      @mouseenter="cursorLocation = 'service docs'"
+      @mouseenter="cursorLocation = 'open docs'"
       @mouseleave="cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/doc.png" alt="icon" class="w-5 active:scale-95" />
