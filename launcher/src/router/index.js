@@ -17,13 +17,14 @@ import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
 import CustomInstall from "../pages/CustomInstall.vue";
-import UploadConfig from "../components/UI/plugin-installation/import-config/UploadConfig.vue";
+import ConfigPage from "../pages/ConfigPage.vue";
+import UploadConfig from "../components/UI/import-config/components/UploadConfig.vue";
+import ImportingSyncing from "../components/UI/import-config/components/ImportingSyncing.vue";
+import ImportingList from "../components/UI/import-config/components/ImportingList.vue";
+import ImportingVerify from "../components/UI/import-config/components/ImportingVerify.vue";
+import ImportingAnimation from "../components/UI/import-config/components/ImportingAnimation.vue";
 
 import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
-import ImportingVerify from "../components/UI/plugin-installation/import-config/ImportingVerify.vue";
-import ImportingList from "../components/UI/plugin-installation/import-config/ImportingList.vue";
-import ImportingSyncing from "../components/UI/plugin-installation/import-config/ImportingSyncing.vue";
-import ImportingAnimation from "../components/UI/plugin-installation/import-config/ImportingAnimation.vue";
 import UpdateHandler from "../pages/UpdateHandler.vue";
 
 const routes = [
@@ -80,7 +81,38 @@ const routes = [
       },
     ],
   },
-
+  {
+    path: "/config",
+    name: "ConfigPage",
+    component: ConfigPage,
+    children: [
+      {
+        path: "upload",
+        name: "UploadConfig",
+        component: UploadConfig,
+      },
+      {
+        path: "sync",
+        name: "ImportingSyncing",
+        component: ImportingSyncing,
+      },
+      {
+        path: "list",
+        name: "ImportingList",
+        component: ImportingList,
+      },
+      {
+        path: "verify",
+        name: "ImportingVerify",
+        component: ImportingVerify,
+      },
+      {
+        path: "play",
+        name: "ImportingAnimation",
+        component: ImportingAnimation,
+      },
+    ],
+  },
   {
     path: "/node",
     name: "NodePage",
@@ -103,27 +135,6 @@ const routes = [
     component: StakingPage,
   },
 
-  // {
-  //   path: "/mevboost",
-  //   name: "MevboostRelays",
-  //   component: MevboostRelays,
-  // },
-
-  // {
-  //   path: "/videos",
-  //   name: "TheVideos",
-  //   component: TheVideos,
-  // },
-  // {
-  //   path: "/walkthrough",
-  //   name: "Walkthrough",
-  //   component: WalkThrough,
-  // },
-  // {
-  //   path: "/guide",
-  //   name: "Written Guide",
-  //   component: WrittenGuide,
-  // },
   {
     path: "/setting",
     name: "SettingPage",
@@ -144,31 +155,7 @@ const routes = [
     name: "CustomAnim",
     component: CustomAnim,
   },
-  {
-    path: "/uploadConfig",
-    name: "UploadConfig",
-    component: UploadConfig,
-  },
-  {
-    path: "/importingList",
-    name: "ImportingList",
-    component: ImportingList,
-  },
-  {
-    path: "/importingSyncing",
-    name: "ImportingSyncing",
-    component: ImportingSyncing,
-  },
-  {
-    path: "/importingVerify",
-    name: "ImportingVerify",
-    component: ImportingVerify,
-  },
-  {
-    path: "/importingAnimation",
-    name: "ImportingAnimation",
-    component: ImportingAnimation,
-  },
+
   {
     path: "/update",
     name: "UpdateHandler",
