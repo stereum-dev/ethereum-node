@@ -3,6 +3,8 @@
     class="grid-col-1 col-span-1 relative w-full h-full flex justify-center items-center box-border"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
+    @mouseenter="cursorLocation = `${props.client.name} service`"
+    @mouseleave="cursorLocation = ''"
   >
     <div
       class="w-[160px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
@@ -29,4 +31,15 @@ const clientStatus = computed(() => {
   }
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
 });
+</script>
+<script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
+export default {
+  computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
+  },
+};
 </script>
