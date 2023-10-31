@@ -23,6 +23,8 @@
       <button
         class="col-span-1 row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverNetwork"
+        @mouseenter="footerStore.cursorLocation = `Switch Network`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-6" src="/img/icon/manage-node-icons/change-network.png" alt="Network" />
       </button>
@@ -41,6 +43,8 @@
       <button
         class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverNuke"
+        @mouseenter="footerStore.cursorLocation = `Nuke the Node`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-6" src="/img/icon/manage-node-icons/nuke.png" alt="Export Icon" />
       </button>
