@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-    <CustomFooter @prepare-stereum="prepareStereum" />
+    <CustomFooter :disabled-btn="nextBtnDisabled" @prepare-stereum="prepareStereum" />
   </div>
 </template>
 
@@ -103,6 +103,7 @@ export default {
       selectedNetworkIcon: "",
       selectedNetworkName: "",
       inputTitle: "Choose your installation path where Stereum will be installed",
+      nextBtnDisabled: false,
     };
   },
 
@@ -126,6 +127,7 @@ export default {
       this.selectedNetworkIcon = network.icon;
       this.selectedNetworkName = network.name;
       this.currentNetwork = network;
+      this.nextBtnDisabled = true;
       this.networkListDropdown = false;
     },
     async getInstallPath() {
@@ -135,6 +137,7 @@ export default {
       this.installPath = stereumInstallationPath;
     },
     async prepareStereum() {
+      this.$router.push("/custom/play");
       this.refresh = false;
       await ControlService.prepareStereumNode(this.installPath);
       const restarted = await ControlService.restartServer();
