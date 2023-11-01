@@ -10,7 +10,7 @@
     </div>
 
     <div
-      class="h-14 col-start-4 col-span-full rounded-md py-1 pl-1 pr-4 flex justify-start items-center z-10 bg-[#33393e]"
+      class="h-14 col-start-4 col-span-full rounded-md py-1 pl-1 pr-4 flex justify-start items-center z-10 bg-[#33393e] relative"
     >
       <TheCarousel :client="props.client" />
     </div>
