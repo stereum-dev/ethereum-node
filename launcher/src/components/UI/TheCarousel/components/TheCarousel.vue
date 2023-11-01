@@ -80,7 +80,6 @@
       <ul
         v-if="dropdown"
         class="absolute bottom-6 right-[13rem] transition-all w-64 h-[150px] duration-400 ease-in-out bg-gray-700 rounded-b-lg shadow-lg pt-18 pb-1 z-10 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
-        @mouseleave="colseDropdown"
       >
         <li
           v-for="link in selectedLinks"
@@ -163,11 +162,6 @@ onMounted(() => {
 });
 
 // Methods
-const colseDropdown = () => {
-  setTimeout(() => {
-    dropdown.value = false;
-  }, 200);
-};
 
 const openWindow = () => {
   const url = installStore.checkPointSync;

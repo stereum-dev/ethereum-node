@@ -40,8 +40,8 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
-import ConsensusSync from "./ConsensusSync.vue";
-import ExecutionSync from "./ExecutionSync.vue";
+import ConsensusSync from "../../TheCarousel/ConsensusSync.vue";
+import ExecutionSync from "../../TheCarousel/ExecutionSync.vue";
 export default {
   name: "ImportingSyncing",
   components: {
