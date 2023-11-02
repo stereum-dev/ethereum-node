@@ -55,7 +55,7 @@ export default {
 <style scoped>
 .balance_box {
   width: 100%;
-  height: 100%;
+  height: 60px;
   grid-column: 1/2 !important;
   grid-row: 1/3 !important;
   border-radius: 10px;
