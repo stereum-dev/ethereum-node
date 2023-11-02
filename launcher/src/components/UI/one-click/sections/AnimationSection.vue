@@ -23,44 +23,56 @@
     </div>
 
     <div class="wrapper w-screen h-screen absolute inset-0 z-50 flex justify-center items-center">
-      <div class="absolute bottom-50 inset-x-0">
+      <div class="absolute bottom-50 inset-x-0 rounded-full">
         <img src="/img/icon/stereum-logo/stereum_logo_extern.png" class="dot w-full h-full" alt="Animation" />
       </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img src="/img/icon/stereum-logo/logo-bw.png" class="dot w-full h-full" alt="Animation" />
+      <div class="absolute bottom-50 inset-x-0 rounded-full">
+        <img src="/img/icon/stereum-logo/logo-bw.png" class="dot w-full h-full rounded-full" alt="Animation" />
+      </div>
+      <div v-if="bubbleIcons[0]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[0]" class="dot w-full h-full" alt="Animation" />
+        <span></span>
+      </div>
+      <div v-if="bubbleIcons[1]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[1]" class="dot w-full h-full" alt="Animation" />
+        <span></span>
+      </div>
+      <div v-if="bubbleIcons[2]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[2]" class="dot w-full h-full" alt="Animation" />
+        <span></span>
+      </div>
+      <div v-if="bubbleIcons[3]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[3]" class="dot w-full h-full" alt="Animation" />
+      </div>
+      <div v-if="bubbleIcons[4]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[4]" class="dot w-full h-full" alt="Animation" />
       </div>
       <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[0]" :src="bubbleIcons[0]" class="dot w-full h-full" alt="Animation" />
+        <div class="absolute bottom-50 inset-x-0">
+          <img :src="bubbleIcons[5]" class="dot w-full h-full" alt="Animation" />
+        </div>
+      </div>
+      <div v-if="bubbleIcons[5]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[5]" class="dot w-full h-full" alt="Animation" />
       </div>
       <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[1]" :src="bubbleIcons[1]" class="dot w-full h-full" alt="Animation" />
+        <div class="absolute bottom-50 inset-x-0"></div>
       </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[2]" :src="bubbleIcons[2]" class="dot w-full h-full" alt="Animation" />
+      <div v-if="bubbleIcons[6]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[6]" class="dot w-full h-full" alt="Animation" />
       </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[3]" :src="bubbleIcons[3]" class="dot w-full h-full" alt="Animation" />
+      <div v-if="bubbleIcons[7]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[7]" class="dot w-full h-full" alt="Animation" />
       </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[4]" :src="bubbleIcons[4]" class="dot w-full h-full" alt="Animation" />
+      <div v-if="bubbleIcons[8]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[8]" class="dot w-full h-full" alt="Animation" />
       </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[5]" :src="bubbleIcons[5]" class="dot w-full h-full" alt="Animation" />
+      <div v-if="bubbleIcons[9]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[9]" class="dot w-full h-full" alt="Animation" />
       </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[6]" :src="bubbleIcons[6]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[7]" :src="bubbleIcons[7]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[8]" :src="bubbleIcons[8]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[9]" :src="bubbleIcons[9]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <img v-if="bubbleIcons[10]" :src="bubbleIcons[10]" class="dot w-full h-full" alt="Animation" />
+      <div class="absolute bottom-50 inset-x-0"></div>
+      <div v-if="bubbleIcons[10]" class="absolute bottom-50 inset-x-0">
+        <img :src="bubbleIcons[10]" class="dot w-full h-full" alt="Animation" />
       </div>
     </div>
 
@@ -329,7 +341,7 @@ const intervalId = setInterval(() => {
   height: 5px;
   align-self: flex-end;
   margin-left: 20px;
-  border-radius: 5px;
+  border-radius: 50px;
   background-color: #262626;
   color: #2b2b2b;
   animation: dotFlashing 1s infinite linear alternate;
@@ -397,13 +409,29 @@ const intervalId = setInterval(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 100px;
+  padding: 5px;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1), inset 0px 10px 30px 5px rgb(237, 239, 240);
 }
-div .dot {
+.wrapper div .dot {
   height: 100%;
   width: 100%;
+  border-radius: 50px;
+  opacity: 0.2;
+  z-index: 99;
+}
+.wrapper div span {
+  background: #f5f5f5;
+  width: 10px;
+  height: 10px;
   position: absolute;
-  top: 20%;
-  right: 20%;
+  right: 10%;
+  bottom: 50%;
+  z-index: 101;
+  opacity: 0.5;
+  border-radius: 61% 40% 48% 72% / 62% 44% 56% 38%;
+  box-shadow: -20px 30px 16px #aedbf1, -40px 60px 32px #b6dcf0, inset -6px 6px 10px #c7ebfd, inset 2px 6px 10px #c7ebfd,
+    inset 20px -20px 22px white, inset 40px -40px 44px #c7ebfd;
 }
 .wrapper div:nth-child(1) {
   top: 20%;
@@ -456,6 +484,21 @@ div .dot {
   animation: animate 10s linear infinite;
 }
 .wrapper div:nth-child(11) {
+  top: 10%;
+  left: 90%;
+  animation: animate 9s linear infinite;
+}
+.wrapper div:nth-child(12) {
+  top: 50%;
+  left: 50%;
+  animation: animate 6s linear infinite;
+}
+.wrapper div:nth-child(13) {
+  top: 66%;
+  left: 30%;
+  animation: animate 7s linear infinite;
+}
+.wrapper div:nth-child(14) {
   top: 10%;
   left: 90%;
   animation: animate 9s linear infinite;

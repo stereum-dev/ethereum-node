@@ -2,7 +2,9 @@
   <div class="selection-box border-4 border-gray-400">
     <div class="selection-table">
       <div class="selection-table_validator">
-        <div class="validator-icon"><img :src="validatorIcon" :alt="validatorName" /></div>
+        <div class="validator-icon">
+          <img :src="validatorIcon" :alt="validatorName" />
+        </div>
         <div class="validator-name">
           <span>{{ validatorName }}</span>
         </div>
@@ -16,7 +18,9 @@
           <div class="validator-state_Icon">
             <div class="validator-state_Icon-icon" :class="validatorState === 'running' ? 'green' : 'red'"></div>
           </div>
-          <div class="validator-state_status">{{ validatorState === "running" ? "running" : "off" }}</div>
+          <div class="validator-state_status">
+            {{ validatorState === "running" ? "running" : "off" }}
+          </div>
         </div>
         <div class="key-counter">
           <div class="key-counter_counter">
@@ -29,7 +33,9 @@
       </div>
       <ul v-if="selector" class="validator-selectionpart divide-y">
         <li v-for="validator in validators" :key="validator" @click="vldPicker(validator)">
-          <div class="validator-icons"><img :src="validator.icon" :alt="validator.name" /></div>
+          <div class="validator-icons">
+            <img :src="validator.icon" :alt="validator.name" />
+          </div>
           <div class="validators-name">
             <span>{{ validator.name }}</span>
           </div>
@@ -323,12 +329,11 @@ export default {
   grid-column: 1/2;
   grid-row: 8/13;
   width: 100%;
-  height: 44%;
+  height: 36%;
   border-radius: 10px;
   background-color: #242529;
   display: flex;
   margin: 0 auto;
-  margin-top: 10px;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
