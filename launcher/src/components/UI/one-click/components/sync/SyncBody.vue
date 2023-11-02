@@ -11,52 +11,21 @@ import { ref, computed } from 'vue';
       <div class="col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-12 grid-rows-2 gap-2">
         <div
           v-if="executionClient"
-          class="col-start-1 col-span-full row-start-1 row-span-1 w-full h-24 flex justify-between items-center space-x-2"
+          class="h-14 col-start-1 col-span-full row-start-1 row-span-1 w-full flex justify-between items-center space-x-2"
         >
-          <div class="w-1/3 h-14 flex justify-start items-center bg-[#33393e] rounded-md px-2">
-            <img class="w-10 mr-1" :src="executionClient.sIcon" alt="Client Icon" />
-            <div class="flex flex-col justify-center items-start">
-              <span class="text-md text-gray-300 font-semibold text-left">{{ executionClient.name }}</span>
-              <span class="text-sm text-teal-600 font-semibold text-left">{{ executionClient.category }}</span>
-            </div>
-          </div>
-
-          <div class="w-4/6 h-14 flex flex-col justify-center items-start bg-[#33393e] rounded-md py-1 px-4">
-            <span class="text-md text-gray-300 font-semibold text-left">GENESIS</span>
-            <span class="text-sm text-teal-600 font-semibold text-left">Syncs from genesis</span>
-          </div>
+          <ExecutionSync :client="executionClient" />
         </div>
         <div
           v-if="consensusClient && !isPresetArchive"
-          class="col-start-1 col-span-full row-start-2 row-span-1 w-full h-24 flex justify-between items-center relative space-x-2"
+          class="col-start-1 col-span-full row-start-2 row-span-1 w-full h-14 flex justify-between items-center relative space-x-2"
         >
-          <div class="w-1/3 h-14 flex justify-start items-center bg-[#33393e] rounded-md px-2">
-            <img class="w-10 mr-1" :src="consensusClient.sIcon" alt="Client Icon" />
-            <div class="flex flex-col justify-center items-start">
-              <span class="text-md text-gray-300 font-semibold text-left">{{ consensusClient.name }}</span>
-              <span class="text-sm text-teal-600 font-semibold text-left">{{ consensusClient.category }}</span>
-            </div>
-          </div>
-          <div class="w-4/6 h-14 flex justify-center items-center bg-[#33393e] rounded-md">
-            <SyncCarousel :client="consensusClient" />
-          </div>
+          <ConsensusSync :client="consensusClient" />
         </div>
         <div
           v-if="consensusClient && isPresetArchive"
-          class="col-start-1 col-span-full row-start-2 row-span-1 w-full h-24 flex justify-between items-center relative space-x-2"
+          class="col-start-1 col-span-full row-start-2 row-span-1 w-full h-14 flex justify-between items-center relative space-x-2"
         >
-          <div class="w-1/3 h-14 flex justify-start items-center bg-[#33393e] rounded-md px-2">
-            <img class="w-10 mr-1" :src="consensusClient.sIcon" alt="Client Icon" />
-            <div class="flex flex-col justify-center items-start">
-              <span class="text-md text-gray-300 font-semibold text-left">{{ consensusClient.name }}</span>
-              <span class="text-sm text-teal-600 font-semibold text-left">{{ consensusClient.category }}</span>
-            </div>
-          </div>
-
-          <div class="w-4/6 h-14 flex flex-col justify-center items-start bg-[#33393e] rounded-md py-1 px-4">
-            <span class="text-md text-gray-300 font-semibold text-left">GENESIS</span>
-            <span class="text-sm text-teal-600 font-semibold text-left">Syncs from genesis</span>
-          </div>
+          <ExecutionSync :client="consensusClient" />
         </div>
       </div>
 
@@ -70,7 +39,8 @@ import { ref, computed } from 'vue';
 </template>
 <script setup>
 import { useClickInstall } from "@/store/clickInstallation";
-import SyncCarousel from "./SyncCarousel.vue";
+import ExecutionSync from "../../../TheCarousel/ExecutionSync.vue";
+import ConsensusSync from "../../../TheCarousel/ConsensusSync.vue";
 import { computed } from "vue";
 
 //Store

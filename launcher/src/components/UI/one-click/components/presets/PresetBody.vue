@@ -39,9 +39,8 @@ import { ref } from 'vue';
         </div>
         <Transition name="slide-fade">
           <ul
-            v-show="openDropdown"
-            class="col-start-3 col-span-8 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
-            @mouseleave="closeDropdown"
+            v-if="openDropdown"
+            class="col-start-3 col-span-8 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pb-1 w-full z-10 divide-y overflow-y-auto flex flex-col justify-start items-center mt-2"
           >
             <li
               v-for="item in manageStore.networkList"
@@ -104,12 +103,7 @@ const openDropdown = ref(false);
 
 //Methods
 const dropdownHandler = () => {
-  openDropdown.value = true;
-};
-const closeDropdown = () => {
-  setTimeout(() => {
-    openDropdown.value = false;
-  }, 200);
+  openDropdown.value = !openDropdown.value;
 };
 
 const getNetwork = (network) => {

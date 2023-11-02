@@ -1,40 +1,39 @@
 <template>
-  <background-page>
-    <div class="animContainer">
-      <div class="opacity"></div>
-      <div class="anim">
-        <div class="anim__content">
-          <div class="anim__content__box">
-            <div class="anim__img__content">
-              <img src="/animation/custom-BG.png" alt="Icon" />
-              <img v-for="img in images" :key="img" :src="img" alt="Animation" />
-            </div>
-          </div>
-        </div>
-
-        <div class="taskBox">
-          <div v-if="displayNewTask !== ''" class="message-box">
-            <p class="msg-title">
-              {{ displayNewTask }}
-              <span class="dot-flashing"></span>
-            </p>
-          </div>
+  <div
+    class="w-screen h-screen colstart-1 col-span-full row-start-1 row-span-full flex flex-col justify-evenly items-center"
+  >
+    <div class="w-full h-full flex justify-center items-center">
+      <div class="anim__content__box">
+        <div class="anim__img__content">
+          <img src="/animation/custom/custom-1.png" alt="Anim Image" />
+          <img v-for="img in images" :key="img" :src="img" alt="Animation" />
         </div>
       </div>
     </div>
-    <TaskManager />
-  </background-page>
+
+    <div class="w-full h-16 absolute bottom-20 inset-x-0 flex justify-center items-center p-1">
+      <div
+        v-if="displayNewTask !== ''"
+        class="w-[400px] h-full bg-[#23272b] rounded-full flex justify-center items-center py-1 px-4 z-20"
+      >
+        <p class="p-0 m-0 w-full text-lg text-gray-300 font-semibold text-left flex justify-center items-center">
+          {{ displayNewTask }}
+          <span class="dot-flashing self-center mb-1"></span>
+        </p>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
 export default {
-  components: {
-    TaskManager,
-  },
   data() {
     return {
-      customAnims: ["/animation/custom-2.png", "/animation/installer-2.png", "/animation/custom-3.png"],
+      customAnims: [
+        "/animation/custom/custom-2.png",
+        "/animation/custom/custom-3.png",
+        "/animation/custom/custom-4.png",
+      ],
       images: [],
       currentIndex: null,
       Tasks: [],
@@ -53,24 +52,33 @@ export default {
 
   methods: {
     displayImages() {
-      setTimeout(() => {
-        setTimeout(() => {
-          this.images.push(this.customAnims[0]);
-        }, 500);
-        setTimeout(() => {
-          this.images.push(this.customAnims[1], this.customAnims[2]);
-        }, 700);
-        setInterval(() => {
-          setTimeout(() => {
-            this.images.slice(1, 2);
-          }, 200);
-          setTimeout(() => {
-            this.images.push(this.customAnims[1], this.customAnims[2]);
-          }, 1000);
+      const initialDelay = 4000;
+      const cycleDuration = 2000;
+      const imageDisplayDuration = 1000;
 
-          this.images = [];
-        }, 2000);
-      }, 4000);
+      const addImages = () => {
+        this.images.push(this.customAnims[0], this.customAnims[1], this.customAnims[2]);
+      };
+
+      const clearImages = () => {
+        this.images = [];
+      };
+
+      // Initial animation start
+      setTimeout(() => {
+        addImages();
+        setTimeout(() => {
+          clearImages();
+        }, imageDisplayDuration);
+      }, initialDelay);
+
+      // Repeating animation cycles
+      setInterval(() => {
+        addImages();
+        setTimeout(() => {
+          clearImages();
+        }, imageDisplayDuration);
+      }, cycleDuration);
     },
     getTasks: async function () {
       const freshTasks = await ControlService.getTasks();
@@ -84,46 +92,6 @@ export default {
 };
 </script>
 <style scoped>
-.animContainer {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-}
-.opacity {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: #000;
-  opacity: 0.6;
-  z-index: 1;
-}
-.anim {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-
-  position: relative;
-}
-.anim__content {
-  grid-column: 1/6;
-  grid-row: 1/7;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  border-radius: 23px;
-  z-index: 10;
-}
 .anim__content__box {
   /* border-image: linear-gradient(98deg, blue, #ff000000) 1; */
   width: 100%;
@@ -162,68 +130,6 @@ export default {
   }
   100% {
     opacity: 1;
-  }
-}
-
-/* .anim__content__box img:last-child {
-  animation: anim3 1s infinite;
-}
-@keyframes anim3 {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-} */
-
-.execution__icon {
-  width: 148px !important;
-  height: 148px !important;
-  position: absolute !important;
-  top: 30% !important;
-  left: 28.8% !important;
-  animation-name: anim2 3s !important;
-}
-
-.consensus__icon {
-  width: 148px !important;
-  height: 148px !important;
-  position: absolute !important;
-  top: 29.2% !important;
-  left: 58.6% !important;
-  animation-name: anim2 3s !important;
-}
-@keyframes anim2 {
-  0% {
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.1;
-  }
-  25% {
-    opacity: 0.25;
-  }
-  35% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  60% {
-    opacity: 0.6;
-  }
-  75% {
-    opacity: 0.75;
-  }
-  85% {
-    opacity: 0.85;
-  }
-  90% {
-    opacity: 0.9;
   }
 }
 

@@ -16,15 +16,15 @@ import NodeEdit from "../pages/NodeEdit.vue";
 import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
-import CustomInstall from "../pages/CustomInstall.vue";
+import CustomPage from "@/pages/CustomPage.vue";
 import ConfigPage from "@/pages/ConfigPage.vue";
 import UploadConfig from "../components/UI/import-config/components/UploadConfig.vue";
 import ImportingSyncing from "../components/UI/import-config/components/ImportingSyncing.vue";
 import ImportingList from "../components/UI/import-config/components/ImportingList.vue";
 import ImportingVerify from "../components/UI/import-config/components/ImportingVerify.vue";
 import ImportingAnimation from "../components/UI/import-config/components/ImportingAnimation.vue";
-
-import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
+import CustomAnim from "../components/UI/custom-installation/components/CustomAnim.vue";
+import CustomPath from "../components/UI/custom-installation/components/CustomPath.vue";
 import UpdateHandler from "../pages/UpdateHandler.vue";
 
 const routes = [
@@ -44,6 +44,24 @@ const routes = [
     name: "WelcomePage",
     component: WelcomePage,
   },
+  {
+    path: "/custom",
+    name: "CustomPage",
+    component: CustomPage,
+    children: [
+      {
+        path: "path",
+        name: "CustomPath",
+        component: CustomPath,
+      },
+      {
+        path: "play",
+        name: "CustomAnim",
+        component: CustomAnim,
+      },
+    ],
+  },
+
   {
     path: "/oneClick",
     name: "OneclickPage",
@@ -144,16 +162,6 @@ const routes = [
     path: "/credit",
     name: "CreditPage",
     component: CreditPage,
-  },
-  {
-    path: "/custom",
-    name: "CustomInstall",
-    component: CustomInstall,
-  },
-  {
-    path: "/customAnim",
-    name: "CustomAnim",
-    component: CustomAnim,
   },
 
   {

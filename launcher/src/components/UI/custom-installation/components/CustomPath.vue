@@ -1,62 +1,100 @@
 <template>
-  <div class="custom-layer_parent">
-    <div class="customInstall_header">
-      <span>{{ $t("customInstallation.customInstallationTitle") }}</span>
-    </div>
-    <div class="container-box">
-      <div class="custom-container">
-        <div class="text-container">
-          <span>{{ $t("customInstallation.customInstallationText") }}</span>
+  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
+    <div
+      class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
+    >
+      <div
+        class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
+      >
+        <div class="col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center p-2">
+          <span class="text-left text-gray-200 text-sm"> {{ $t("customInstallation.customInstallationText") }}</span>
         </div>
-        <div class="select-network">
-          <div class="path-title network">
-            <span>choose a network</span>
+        <div class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7">
+          <div
+            class="col-start-3 col-span-8 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
+            @click="networkListDropdown = !networkListDropdown"
+          >
+            <img
+              v-if="currentNetwork.icon"
+              class="col-start-1 col-span-1 w-7 h-7 justify-self-center self-center"
+              :src="currentNetwork?.icon"
+              alt="Arrow icon"
+            />
+            <span
+              class="col-start-2 col-end-6 justify-self-center self-center text-center text-gray-800 text-lg font-semibold"
+              >{{ currentNetwork?.name ? currentNetwork?.name : "Select Network" }}</span
+            >
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="col-start-6 col-span-1 justify-self-center self-center w-5 h-5 text-gray-900"
+              :class="{ 'transform rotate-180': networkListDropdown }"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-width="2" d="M5 10l7 7 7-7"></path>
+            </svg>
           </div>
-          <div class="network-selector" @click="networkListDropdown = true">
-            <div v-if="selectedNetworkIcon !== ''" class="network-selector-icon">
-              <img :src="selectedNetworkIcon" alt="" />
+          <Transition name="slide-fade">
+            <ul
+              v-if="networkListDropdown"
+              class="col-start-3 col-span-8 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pb-1 w-full z-10 divide-y overflow-y-auto flex flex-col justify-start items-center mt-2"
+            >
+              <li
+                v-for="item in networkList"
+                :key="item.name"
+                class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+                @click="selectNetwork(item)"
+              >
+                <img
+                  class="h-[30px] col-start-1 col-end-2 self-center justify-self-center"
+                  :src="item.icon"
+                  alt="service Icon"
+                />
+                <span
+                  class="col-start-3 col-end-6 px-4 py-1 flex justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
+                  >{{ item.name }}</span
+                >
+              </li>
+            </ul>
+          </Transition>
+          <div
+            class="w-full col-start-1 col-span-full row-start-3 row-span-full mx-auto flex flex-col justify-start items-center px-2"
+          >
+            <div class="w-full h-10 flex justify-center items-center">
+              <span class="text-center text-gray-200 text-md">{{ inputTitle }}:</span>
             </div>
-            <div v-if="selectedNetworkName !== ''" class="network-selector-title">{{ selectedNetworkName }}</div>
-            <span v-else>{{ selectedNetwork }}</span>
-          </div>
-          <div v-if="networkListDropdown" class="network-dropdown" @mouseleave="networkListDropdown = false">
-            <div v-for="network in networkList" :key="network" class="networks" @click="selectNetwork(network)">
-              <div class="icon-networks"><img :src="network.icon" alt="" /></div>
-              <div class="networks-title">{{ network.name }}</div>
-            </div>
-          </div>
-        </div>
-        <div class="path-container">
-          <div class="path-title">
-            <span>{{ $t("customInstallation.chooseWhereToInstall") }}:</span>
-          </div>
-          <div class="textbox-cont">
-            <div class="textbox-cont_front">
-              <div class="textbox-title">
-                <span>{{ $t("customInstallation.installationPath") }}</span>
-              </div>
-              <div class="textbox">
-                <input v-model="installPath" type="text" placeholder="/opt/stereum" />
+
+            <div class="w-full h-20 flex justify-center items-center p-4 bg-[#3d4449] rounded-full">
+              <div class="w-full h-full bg-gray-300 rounded-full flex justify-start items-center">
+                <input
+                  v-model="installPath"
+                  type="text"
+                  placeholder="/opt/stereum"
+                  class="w-full h-full bg-gray-300 rounded-full px-2 text-lg text-gray-800 font-semibold outline-none"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <router-link class="back" to="/welcome">{{ $t("installOption.back") }} </router-link>
-    <router-link class="install" :class="activeBtn()" to="/customAnim" @click="prepareStereum">{{
-      $t("installOption.install")
-    }}</router-link>
+    <CustomFooter :disabled-btn="nextBtnDisabled" @prepare-stereum="prepareStereum" />
   </div>
 </template>
 
 <script>
 import ControlService from "@/store/ControlService";
+import CustomFooter from "./CustomFooter.vue";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeManage } from "@/store/nodeManage";
 
 export default {
+  components: {
+    CustomFooter,
+  },
   data() {
     return {
       installPath: "/opt/stereum",
@@ -64,6 +102,8 @@ export default {
       selectedNetwork: "click to select a network",
       selectedNetworkIcon: "",
       selectedNetworkName: "",
+      inputTitle: "Choose your installation path where Stereum will be installed",
+      nextBtnDisabled: false,
     };
   },
 
@@ -87,6 +127,7 @@ export default {
       this.selectedNetworkIcon = network.icon;
       this.selectedNetworkName = network.name;
       this.currentNetwork = network;
+      this.nextBtnDisabled = true;
       this.networkListDropdown = false;
     },
     async getInstallPath() {
@@ -96,6 +137,7 @@ export default {
       this.installPath = stereumInstallationPath;
     },
     async prepareStereum() {
+      this.$router.push("/custom/play");
       this.refresh = false;
       await ControlService.prepareStereumNode(this.installPath);
       const restarted = await ControlService.restartServer();
@@ -115,6 +157,18 @@ export default {
 </script>
 
 <style scoped>
+.slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-20px);
+}
 .custom-layer_parent {
   display: flex;
   justify-content: flex-start;
