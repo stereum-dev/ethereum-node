@@ -32,6 +32,7 @@ import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed } from "vue";
 import ControlService from "@/store/ControlService";
+import { useDeepClone } from "@/composables/utils";
 
 const emit = defineEmits([
   "openExpert",
@@ -43,7 +44,6 @@ const emit = defineEmits([
   "mouseLeave",
   "removeLockfiles",
 ]);
-
 
 const serviceStore = useServices();
 
@@ -80,7 +80,7 @@ const restartHandler = (item) => {
 const removeLockfilesHandler = async (item) => {
   await ControlService.chooseServiceAction({
     action: "removeLockfiles",
-    service: structuredClone(item),
+    service: useDeepClone(item),
   });
 };
 </script>

@@ -209,15 +209,17 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
-  if (configNetwork.value.id === 1 || configNetwork.value.id === 1) {
+
+  if (configNetwork.value.id === 1 || currentNetwork.value.id === 1) {
+
     selectedLinks.value = installStore.mainnet;
-  } else if (configNetwork.value.id === 2 || configNetwork.value.id === 2) {
+  } else if (configNetwork.value.id === 2 || currentNetwork.value.id === 2) {
     selectedLinks.value = installStore.georli;
-  } else if (configNetwork.value.id === 3 || configNetwork.value.id === 3) {
+  } else if (currentNetwork.value.id === 3 || currentNetwork.value.id === 3) {
     selectedLinks.value = installStore.sepolia;
-  } else if (configNetwork.value.id === 4 || configNetwork.value.id === 4) {
+  } else if (configNetwork.value.id === 4 || currentNetwork.value.id === 4) {
     selectedLinks.value = installStore.gnosis;
-  } else if (configNetwork.value.id === 5 || configNetwork.value.id === 5) {
+  } else if (configNetwork.value.id === 5 || currentNetwork.value.id === 5) {
     selectedLinks.value = installStore.holesky;
   }
 };

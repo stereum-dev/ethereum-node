@@ -14,7 +14,7 @@ export const useWelcomeStore = defineStore("welcomePage", {
           img: "/img/icon/welcome-page/custom-install.png",
           imgHover: "img/icon/welcome-page/custom-install-hover.png",
           imgDisabled: "img/icon/welcome-page/custom-install-disabled.png",
-          path: "/custom",
+          path: "/custom/path",
           display: true,
         },
         {

@@ -52,6 +52,7 @@
 import { computed, onMounted, onUnmounted } from "vue";
 import { useServices } from "@/store/services";
 import { useControlStore } from "@/store/theControl";
+import { useDeepClone } from "@/composables/utils";
 import { ref } from "vue";
 import { useFooter } from "@/store/theFooter";
 
@@ -108,7 +109,7 @@ onUnmounted(() => {
 });
 
 const getPercent = () => {
-  const syncResult = structuredClone(controlStore.syncstatus);
+  const syncResult = useDeepClone(controlStore.syncstatus);
   if (syncResult.code === 0) {
     const flatArray = syncResult.data.flat();
     let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());

@@ -250,6 +250,7 @@
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { useDeepClone } from "@/composables/utils";
 export default {
   props: {
     item: {
@@ -558,7 +559,7 @@ export default {
     async executeAction(action, service) {
       await ControlService.chooseServiceAction({
         action: action,
-        service: structuredClone(service),
+        service: useDeepClone(service),
       });
     },
   },
