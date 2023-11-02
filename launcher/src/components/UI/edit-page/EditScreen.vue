@@ -32,6 +32,8 @@
       alt="Arrow Icon"
       @mousedown.prevent.stop
       @click="openDrawer"
+      @mouseenter="footerStore.cursorLocation = 'all services'"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <transition name="drawerSlide" mode="out-in">
       <DrawerBox
@@ -115,7 +117,9 @@ import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone } from "@/composables/utils";
+import { useFooter } from "@/store/theFooter";
 
+const footerStore = useFooter();
 const serviceStore = useServices();
 const manageStore = useNodeManage();
 const headerStore = useNodeHeader();

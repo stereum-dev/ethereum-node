@@ -17,8 +17,8 @@
           <button
             class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
             @click="alarmToggle"
-            @mouseenter="cursorLocation = nodeStore.infoAlarm ? `${chckTutorial}` : `${returnStatus}`"
-            @mouseleave="cursorLocation = ''"
+            @mouseenter="footerStore.cursorLocation = nodeStore.infoAlarm ? `stereum tutorials` : `status box`"
+            @mouseleave="footerStore.cursorLocation = ''"
           >
             <img class="w-8" src="/img/icon/round-icon.png" alt="information" />
           </button>
@@ -45,12 +45,12 @@ import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
+import { useFooter } from "@/store/theFooter";
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
-const cursorLocation = ref("");
-const chckTutorial = "/img/icon/round-icon.png";
-const returnStatus = "/img/icon/round-icon.png";
+// const chckTutorial = "/img/icon/round-icon.png";
+// const returnStatus = "/img/icon/round-icon.png";
 
 let polling = null;
 let pollingVitals = null;
@@ -62,6 +62,7 @@ const headerStore = useNodeHeader();
 const serviceStore = useServices();
 const controlStore = useControlStore();
 const router = useRouter();
+const footerStore = useFooter();
 
 //Computed & Watchers
 
@@ -94,6 +95,7 @@ onUnmounted(() => {
 
 const alarmToggle = () => {
   nodeStore.infoAlarm = !nodeStore.infoAlarm;
+  footerStore.cursorLocation = "";
 };
 
 const checkForListingKeys = async () => {
@@ -145,6 +147,17 @@ const closeExpertMode = () => {
   nodeStore.isLineHidden = false;
 };
 </script>
+<!-- <script>
+import { mapWritableState } from "pinia";
+import { useFooter } from "@/store/theFooter";
+export default {
+  computed: {
+    ...mapWritableState(useFooter, {
+      cursorLocation: "cursorLocation",
+    }),
+  },
+};
+</script> -->
 
 <style scoped>
 .info-button {

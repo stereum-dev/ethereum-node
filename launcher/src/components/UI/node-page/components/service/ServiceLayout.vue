@@ -1,8 +1,11 @@
 <template>
   <div
     class="grid-col-1 col-span-1 relative w-full h-full flex justify-center items-center box-border"
+    style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} service`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
       class="w-[160px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
@@ -17,6 +20,9 @@
 </template>
 <script setup>
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+const footerStore = useFooter();
 
 const props = defineProps({
   client: { type: Object, required: true },

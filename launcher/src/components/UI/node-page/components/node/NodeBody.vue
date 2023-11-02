@@ -48,7 +48,7 @@ import { mapState, map } from 'pinia';
 </template>
 
 <script setup>
-import { ref, } from "vue";
+import { ref, watchEffect } from "vue";
 import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
@@ -69,6 +69,12 @@ const isLineDrawHandlerReady = ref(false);
 // Store and router
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
+
+watchEffect(() => {
+  if (nodeStore.isLineHidden) {
+    removeConnectionLines();
+  }
+});
 
 // Methods
 

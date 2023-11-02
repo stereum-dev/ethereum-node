@@ -95,11 +95,16 @@ const selectedPluginsValidation = () => {
     router.push("/oneClick/preset");
   }
 };
-
 const pluginChangeHandler = (plugin, item, idx) => {
   plugin.openReplaceModal = false;
+  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin.id);
 
-  clickStore.selectedPreset.includedPlugins[idx] = item;
+  if (oldPluginIndex !== -1) {
+    clickStore.selectedPreset.includedPlugins.splice(oldPluginIndex, 1);
+  }
+
+  clickStore.selectedPreset.includedPlugins.splice(idx, 0, item);
+
   if (["staking", "mev boost", "stereum on arm", "archive"].includes(clickStore.selectedPreset.name)) {
     if (item.category === "consensus") {
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
@@ -114,6 +119,25 @@ const pluginChangeHandler = (plugin, item, idx) => {
     }
   }
 };
+
+// const pluginChangeHandler = (plugin, item, idx) => {
+//   plugin.openReplaceModal = false;
+
+//   clickStore.selectedPreset.includedPlugins[idx] = item;
+//   if (["staking", "mev boost", "stereum on arm", "archive"].includes(clickStore.selectedPreset.name)) {
+//     if (item.category === "consensus") {
+//       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
+//       clickStore.selectedPreset.includedPlugins[valIndex] = serviceStore.allServices.find(
+//         (e) => e.service === item.name + "ValidatorService"
+//       );
+//     } else if (item.category === "validator") {
+//       let conIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "consensus");
+//       clickStore.selectedPreset.includedPlugins[conIndex] = serviceStore.allServices.find(
+//         (e) => e.service === item.name + "BeaconService"
+//       );
+//     }
+//   }
+// };
 
 const sortPlugins = () => {
   if (clickStore.selectedPreset.includedPlugins) {

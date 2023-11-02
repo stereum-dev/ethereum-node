@@ -31,20 +31,6 @@ export default {
 </script>
 
 <style scoped lang="css">
-/* .footer-parent {
-  width: 99%;
-  height: 3.8%;
-  left: 0.5%;
-  border-radius: 0 0 7px 7px;
-  position: fixed;
-  bottom: 0.8%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  cursor: default;
-  z-index: 0 !important;
-} */
-
 .footer-parent {
   display: flex;
   justify-content: flex-start;
