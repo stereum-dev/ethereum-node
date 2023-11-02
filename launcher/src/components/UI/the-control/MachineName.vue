@@ -47,7 +47,7 @@ const ServerName = computed(() => controlStore.ServerName);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0 0 0 3%;
+  padding: 0 0 0 6%;
 }
 
 .machineNam:hover,
