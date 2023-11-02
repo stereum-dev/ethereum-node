@@ -378,6 +378,7 @@ import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
@@ -789,7 +790,7 @@ export default {
     },
     async importRemoteKeys(args) {
       this.remoteImportArgs = {};
-      this.message = await ControlService.importRemoteKeys(structuredClone(args));
+      this.message = await ControlService.importRemoteKeys(useDeepClone(args));
       this.forceRefresh = true;
       await this.listKeys();
       this.importIsProcessing = false;

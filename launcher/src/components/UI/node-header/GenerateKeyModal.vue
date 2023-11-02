@@ -96,6 +96,7 @@
 import { mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
+import { useDeepClone } from "@/composables/utils";
 export default {
   data() {
     return {
@@ -206,7 +207,7 @@ export default {
     async openDirectoryPicker() {
       try {
         const paths = await ControlService.openDirectoryDialog(
-          structuredClone({ properties: ["openDirectory", "createDirectory"] })
+          useDeepClone({ properties: ["openDirectory", "createDirectory"] })
         );
         this.pickPath = paths[0];
       } catch (error) {
