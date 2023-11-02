@@ -114,6 +114,7 @@ import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
+import { useDeepClone } from "@/composables/utils";
 
 const serviceStore = useServices();
 const manageStore = useNodeManage();
@@ -136,7 +137,7 @@ const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
 
 onMounted(() => {
-  manageStore.configNetwork = structuredClone(manageStore.currentNetwork);
+  manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
   manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 });
 onMounted(() => {
@@ -316,7 +317,7 @@ const removeChangeHandler = (item) => {
 // Add service with double click
 
 const addServices = (service) => {
-  let item = structuredClone(service);
+  let item = useDeepClone(service);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
   } else {
@@ -340,7 +341,7 @@ const startDrag = (event, item) => {
 
 const onDrop = (event) => {
   manageStore.isLineHidden = true;
-  const allServices = structuredClone(serviceStore.allServices);
+  const allServices = useDeepClone(serviceStore.allServices);
   const itemId = event.dataTransfer.getData("itemId");
   let item = allServices.find((item) => item.id == itemId);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {

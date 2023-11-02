@@ -2,6 +2,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeManage } from "@/store/nodeManage";
+import { useDeepClone } from "@/composables/utils";
 
 export async function useBackendServices(force = false) {
   const serviceStore = useServices();
@@ -186,7 +187,7 @@ export async function useRestartService(client) {
   client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
   if (!client.yaml.includes("isPruning: true")) {
     client.serviceIsPending = true;
-    await ControlService.restartService(structuredClone(client));
+    await ControlService.restartService(useDeepClone(client));
     client.serviceIsPending = false;
     updateStates();
   }
