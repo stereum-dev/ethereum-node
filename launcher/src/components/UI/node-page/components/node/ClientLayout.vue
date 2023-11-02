@@ -1,8 +1,11 @@
 <template>
   <div
     class="grid-col-1 col-span-1 relative w-full h-full flex justify-center items-center box-border"
+    style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} client`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
       class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-[10px] font-semibold capitalize bg-[#264744]"
@@ -13,11 +16,21 @@
     </div>
     <div class="flex flex-col gap-2">
       <img class="w-10" :src="props.client.sIcon" alt="icon" />
-      <div v-if="props.client.category !== 'validator'" class="h-1/3 flex justify-evenly items-center">
+      <div
+        v-if="props.client.category !== 'validator'"
+        class="h-1/3 flex justify-evenly items-center"
+        @mouseenter="footerStore.cursorLocation = `sync status: ${syncPercent}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img class="w-4" :src="syncIcon" alt="icon" />
         <span class="text-xs text-gray-100">{{ syncPercent }}</span>
       </div>
-      <div v-else class="h-1/3 flex justify-center items-center">
+      <div
+        v-else
+        class="h-1/3 flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} key(s) imported`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
         <span
           class="text-md font-semibold"
@@ -40,6 +53,9 @@ import { computed, onMounted, onUnmounted } from "vue";
 import { useServices } from "@/store/services";
 import { useControlStore } from "@/store/theControl";
 import { ref } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+const footerStore = useFooter();
 
 const props = defineProps({
   client: Object,

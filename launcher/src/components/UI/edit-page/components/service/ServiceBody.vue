@@ -17,6 +17,9 @@
         :key="item"
         class="w-full max-h-[78px] grid grid-cols-2 py-2 rounded-md border border-gray-600 shadow-md mx-auto"
         :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
+        style="cursor: default"
+        @mouseenter="footerStore.cursorLocation = `${item.name} service`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <ServiceLayout :client="item" />
         <div class="w-full h-full grid grid-cols-2">
@@ -31,6 +34,8 @@
             class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1"
             :class="{ 'border-red-500': item.displayTooltip }"
             @click="deleteService(item)"
+            @mouseenter="footerStore.cursorLocation = `delete ${item.name} service`"
+            @mouseleave="footerStore.cursorLocation = ''"
           >
             <img class="w-5 z-10" src="/img/icon/manage-node-icons/trash.png" alt="" @mousedown.prevent.stop />
           </div>
@@ -44,6 +49,9 @@
 import { useNodeManage } from "@/store/nodeManage";
 import ServiceLayout from "./ServiceLayout.vue";
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+const footerStore = useFooter();
 
 const emit = defineEmits(["changeConnection", "deleteService"]);
 

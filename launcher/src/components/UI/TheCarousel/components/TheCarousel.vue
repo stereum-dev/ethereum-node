@@ -209,7 +209,9 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
+
   if (configNetwork.value.id === 1 || currentNetwork.value.id === 1) {
+
     selectedLinks.value = installStore.mainnet;
   } else if (configNetwork.value.id === 2 || configNetwork.value.id === 2) {
     selectedLinks.value = installStore.georli;
