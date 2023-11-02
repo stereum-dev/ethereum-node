@@ -18,7 +18,9 @@
           $t("importingSyncing.syncSrc")
         }}</span>
       </div>
-      <div class="col-start-1 col-span-full row-start-3 row-span-full rounded-md p-1 grid grid-cols-6 grid-rows-5">
+      <div
+        class="col-start-1 col-span-full row-start-3 row-span-full rounded-md p-1 grid grid-cols-6 grid-rows-5 gap-2"
+      >
         <div
           v-if="configServices.some((s) => s.category === 'execution')"
           class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1"
@@ -27,7 +29,7 @@
         </div>
         <div
           v-if="configServices.some((s) => s.category === 'consensus')"
-          class="w-full h-14 col-start-1 col-span-full row-start-4 row-span-1"
+          class="w-full h-14 col-start-1 col-span-full row-start-3 row-span-1"
         >
           <ConsensusSync :client="consensusClient" :config-network="configNetwork" />
         </div>
@@ -40,8 +42,8 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
-import ConsensusSync from "./ConsensusSync.vue";
-import ExecutionSync from "./ExecutionSync.vue";
+import ConsensusSync from "../../TheCarousel/ConsensusSync.vue";
+import ExecutionSync from "../../TheCarousel/ExecutionSync.vue";
 export default {
   name: "ImportingSyncing",
   components: {

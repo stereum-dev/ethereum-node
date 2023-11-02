@@ -79,8 +79,7 @@
     <Transition name="slide-fade">
       <ul
         v-if="dropdown"
-        class="absolute bottom-6 right-[13rem] transition-all w-64 h-[150px] duration-400 ease-in-out bg-gray-700 rounded-b-lg shadow-lg pt-18 pb-1 z-10 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
-        @mouseleave="colseDropdown"
+        class="absolute top-14 right-5 transition-all w-64 h-[150px] duration-400 ease-in-out bg-gray-700 rounded-b-lg shadow-lg pb-1 z-10 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
       >
         <li
           v-for="link in selectedLinks"
@@ -109,7 +108,7 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "@/store/nodeManage";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
-import { ref, watch, onBeforeMount, onMounted, computed } from "vue";
+import { ref, watch, onMounted, computed, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
 // Store
@@ -125,22 +124,37 @@ const currentSlide = ref(null);
 const selectedLinks = ref([]);
 const prevVal = ref(0);
 const selectedIcon = ref("");
+const incommingNetwork = ref(null);
+const fullPath = router.currentRoute.value.fullPath;
 
 // Computed properties
+
+const currentNetwork = computed(() => {
+  return manageStore.currentNetwork;
+});
 
 const configNetwork = computed(() => {
   return installStore.configNetwork;
 });
 
 // Watchers
+
+watchEffect(() => {
+  if (fullPath.startsWith("/config")) {
+    incommingNetwork.value = configNetwork.value;
+  } else {
+    incommingNetwork.value = currentNetwork.value;
+  }
+});
+
 watch(currentSlide, (val) => {
-  if (router.currentRoute.value.path === "/sync" || router.currentRoute.value.path === "/importingSyncing") {
+  if (router.currentRoute.value.path === "/oneClick/sync") {
     if (val !== prevVal.value) {
       prevVal.value = val;
       installStore.checkPointSync = "";
       selectedItem.value = "- SELECT A SOURCE -";
     }
-    if (installStore.selectedPreset.name === "archive") {
+    if (installStore.selectedPreset?.name === "archive") {
       val = 3;
     }
 
@@ -153,21 +167,13 @@ watch(currentSlide, (val) => {
 });
 
 // Lifecycle hooks
-onBeforeMount(() => {
-  currentSlide.value = 3;
-});
 
 onMounted(() => {
+  currentSlide.value = 3;
   setSelectedLinks();
-  manageStore.currentNetwork = configNetwork.value;
 });
 
 // Methods
-const colseDropdown = () => {
-  setTimeout(() => {
-    dropdown.value = false;
-  }, 200);
-};
 
 const openWindow = () => {
   const url = installStore.checkPointSync;
@@ -203,23 +209,38 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
-  switch (configNetwork.value.id) {
-    case 1:
-      selectedLinks.value = installStore.mainnet;
-      break;
-    case 2:
-      selectedLinks.value = installStore.georli;
-      break;
-    case 3:
-      selectedLinks.value = installStore.sepolia;
-      break;
-    case 4:
-      selectedLinks.value = installStore.gnosis;
-      break;
-    default:
-      break;
+  if (configNetwork.value.id === 1 || configNetwork.value.id === 1) {
+    selectedLinks.value = installStore.mainnet;
+  } else if (configNetwork.value.id === 2 || configNetwork.value.id === 2) {
+    selectedLinks.value = installStore.georli;
+  } else if (configNetwork.value.id === 3 || configNetwork.value.id === 3) {
+    selectedLinks.value = installStore.sepolia;
+  } else if (configNetwork.value.id === 4 || configNetwork.value.id === 4) {
+    selectedLinks.value = installStore.gnosis;
+  } else if (configNetwork.value.id === 5 || configNetwork.value.id === 5) {
+    selectedLinks.value = installStore.holesky;
   }
 };
+
+// const setSelectedLinks = () => {
+//   switch (configNetwork.value.id) {
+//     case 1:
+//       selectedLinks.value = installStore.mainnet;
+//       break;
+
+//     case 2:
+//       selectedLinks.value = installStore.georli;
+//       break;
+//     case 3:
+//       selectedLinks.value = installStore.sepolia;
+//       break;
+//     case 4:
+//       selectedLinks.value = installStore.gnosis;
+//       break;
+//     default:
+//       break;
+//   }
+// };
 </script>
 <style scoped>
 .extentions {

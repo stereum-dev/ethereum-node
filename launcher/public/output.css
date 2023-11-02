@@ -905,6 +905,18 @@ video {
   bottom: 3rem;
 }
 
+.top-16{
+  top: 4rem;
+}
+
+.right-5{
+  right: 1.25rem;
+}
+
+.top-14{
+  top: 3.5rem;
+}
+
 .z-0{
   z-index: 0;
 }
