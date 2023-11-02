@@ -2,6 +2,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeManage } from "@/store/nodeManage";
+import { useFooter } from "@/store/theFooter";
 
 export async function useBackendServices(force = false) {
   const serviceStore = useServices();
@@ -132,13 +133,16 @@ export async function useFrontendServices() {
 
 async function useConnectionCheck() {
   const nodeHeaderStore = useNodeHeader();
+  const footerStore = useFooter();
 
   if (!nodeHeaderStore.updating) {
     let connected = await ControlService.checkConnection();
     if (!connected) {
       console.log("Reconnecting...");
+      footerStore.stereumStatus = false;
       await ControlService.reconnect();
     }
+    footerStore.stereumStatus = true;
     return connected;
   }
   return false;
