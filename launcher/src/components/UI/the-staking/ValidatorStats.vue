@@ -1,8 +1,9 @@
 <template>
-  <div class="w-full col-start-1 col-end-5 row-start-1 row-end-7 grid grid-cols-1 grid-flow-row gap-y-1">
-    <TotalBalance />
-
-    <div class="stateBox border-4 border-gray-400">
+  <div class="statParent" @mousedown.prevent>
+    <div class="balanceParent">
+      <TotalBalance />
+    </div>
+    <div class="stateBox">
       <div v-if="checkConsensus && checkKeyExists && checkConsensusState.state === 'running'" class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
@@ -61,7 +62,6 @@ import { mapWritableState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
-import { markRaw } from "vue";
 import { shallowRef } from "vue";
 
 export default {
@@ -75,7 +75,7 @@ export default {
   },
   data() {
     return {
-      optionsType: markRaw([
+      optionsType: [
         {
           title: "ATTESTATION",
           comp: shallowRef(TheAttestation),
@@ -94,7 +94,7 @@ export default {
             remainingTime: this.remainingTime,
           },
         },
-      ]),
+      ],
       tabs: [
         { id: 1, title: "ATTESTATION", imgPath: "/img/icon/the-staking/eye.png", display: false },
         // { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
@@ -177,12 +177,16 @@ export default {
 
 <style scoped>
 .statParent {
+  grid-column: 10/13;
+  grid-row: 1/3;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-height: 320px;
   height: 100%;
+  padding: 10px 5px 10px 5px;
 }
 .balanceParent {
   width: 100%;
@@ -192,15 +196,24 @@ export default {
   align-items: center;
 }
 .stateBox {
+  width: 100%;
+  height: 74%;
+  background-color: #bfbfbf;
   border-radius: 10px;
+  padding: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
 .stateInnerBox {
+  width: 100%;
+  height: 100%;
   background-color: #242529;
   border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(10, 1fr);
 }
 
 .indexParent {
