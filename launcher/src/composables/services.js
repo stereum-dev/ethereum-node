@@ -5,7 +5,6 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useFooter } from "@/store/theFooter";
 import { useDeepClone } from "@/composables/utils";
 
-
 export async function useBackendServices(force = false) {
   const serviceStore = useServices();
   const currentTimestamp = Date.now();
@@ -142,9 +141,11 @@ async function useConnectionCheck() {
     if (!connected) {
       console.log("Reconnecting...");
       footerStore.stereumStatus = false;
+      console.log(footerStore.stereumStatus);
       await ControlService.reconnect();
+    } else {
+      footerStore.stereumStatus = true;
     }
-    footerStore.stereumStatus = true;
     return connected;
   }
   return false;
