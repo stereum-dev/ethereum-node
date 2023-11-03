@@ -4,7 +4,7 @@
     style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
-    @mouseenter="footerStore.cursorLocation = `${props.client.name} service`"
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} ${srvice}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
@@ -35,4 +35,13 @@ const clientStatus = computed(() => {
   }
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
 });
+</script>
+<script>
+export default {
+  data() {
+    return {
+      srvice: this.$t("serviceLay.service"),
+    };
+  },
+};
 </script>

@@ -689,5 +689,8 @@
     "settings": "service settings",
     "logs": "open logs",
     "docs": "open docs"
+  },
+  "serviceLay": {
+    "srvice": "service"
   }
 }
