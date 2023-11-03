@@ -141,7 +141,6 @@ async function useConnectionCheck() {
     if (!connected) {
       console.log("Reconnecting...");
       footerStore.stereumStatus = false;
-      console.log(footerStore.stereumStatus);
       await ControlService.reconnect();
     } else {
       footerStore.stereumStatus = true;
