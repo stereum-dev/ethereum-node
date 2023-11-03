@@ -10,7 +10,7 @@ import { ref } from 'vue';
           SERVE YOUR USE CASE</span
         >
       </div>
-      <div class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7">
+      <div class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5">
         <div
           class="col-start-3 col-span-8 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
           @click="dropdownHandler"
