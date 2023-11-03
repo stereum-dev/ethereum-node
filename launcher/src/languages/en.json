@@ -704,5 +704,10 @@
     "removeLock": "remove lock files",
     "pruning": "pruning the service",
     "resync": "resync the service"
+  },
+  "clientLay": {
+    "client": "client",
+    "keyMsg": "key(s) imported",
+    "syncStatus": "sync status:"
   }
 }
