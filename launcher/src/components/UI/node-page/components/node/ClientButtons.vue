@@ -53,7 +53,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = 'open logs'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-icons/log-command.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
@@ -61,7 +61,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = 'open docs'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/doc.png" alt="icon" class="w-5 active:scale-95" />
+      <img src="/img/icon/node-icons/plugin-docs.png" alt="icon" class="w-5 active:scale-95" />
     </button>
     <button
       v-if="props.client.category !== 'validator'"
@@ -70,7 +70,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = 'resync the client'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/resync.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-icons/resync.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       v-if="props.client.service == 'TekuValidatorService'"
@@ -79,7 +79,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = 'remove lock files'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/prunning.png" alt="icon" class="active:scale-95" />
+      <img src="/img/icon/node-icons/delete-lock.png" alt="icon" class="w-4 h-4 active:scale-95" />
     </button>
     <button
       v-if="props.client.service == 'GethService'"
@@ -88,7 +88,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = 'pruning the service'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/prunning.png" alt="icon" class="active:scale-95" />
+      <img src="/img/icon/node-icons/pruning.png" alt="icon" class="active:scale-95" />
     </button>
     <slot></slot>
   </div>
