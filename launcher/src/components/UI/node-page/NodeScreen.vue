@@ -124,11 +124,15 @@ const updateServiceLogs = async () => {
   }
 };
 const updateServerVitals = async () => {
-  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
-    const data = await ControlService.getServerVitals();
-    controlStore.cpu = data.cpu;
-    controlStore.availDisk = data.availDisk;
-    controlStore.usedPerc = data.usedPerc;
+  try {
+    if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+      const data = await ControlService.getServerVitals();
+      controlStore.cpu = data.cpu;
+      controlStore.availDisk = data.availDisk;
+      controlStore.usedPerc = data.usedPerc;
+    }
+  } catch (e) {
+    console.log("couldn't check server vitals");
   }
 };
 const openExpertModal = (item) => {

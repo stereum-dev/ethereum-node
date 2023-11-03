@@ -17,7 +17,7 @@
           @mouseleave="routerHovered = false"
         >
           <img class="w-6 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
-          <span class="text-sm text-gray-200 font-semibold">To Edit Node</span>
+          <span class="text-sm text-gray-200 font-semibold">Back To Node</span>
         </router-link>
       </Transition>
       <button

@@ -48,20 +48,20 @@
               ></setting-items>
             </div>
           </div>
-          <div class="update-panel_title">
+          <!-- <div class="update-panel_title">
             <span>NODE</span>
           </div>
-          <hr />
-          <div
+          <hr /> -->
+          <!-- <div
             class="setting-items export-row"
             @mouseenter="cursorLocation = `${exportInfo}`"
             @mouseleave="cursorLocation = ''"
-          >
-            <div class="setting-items_title">
+          > -->
+          <!-- <div class="setting-items_title">
               <span>{{ $t("settingPanel.sxConf") }}</span>
-            </div>
-            <div class="setting-items_btn export" @click="exportData">export ...</div>
-          </div>
+            </div> -->
+          <!-- <div class="setting-items_btn export" @click="exportData">export ...</div> -->
+          <!-- </div> -->
           <div class="update-panel">
             <div class="update-panel_title">
               <span>{{ $t("settingPanel.update") }}</span>
@@ -107,8 +107,8 @@
   </div>
 </template>
 <script>
-const JSZip = require("jszip");
-const saveAs = require("file-saver");
+// const JSZip = require("jszip");
+// const saveAs = require("file-saver");
 import LanguagePanel from "./LanguagePanel.vue";
 import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
@@ -123,7 +123,7 @@ export default {
     return {
       creditInfo: this.$t("settingPanel.creditInfo"),
       langInfo: this.$t("settingPanel.langInfo"),
-      exportInfo: this.$t("settingPanel.exportInfo"),
+      // exportInfo: this.$t("settingPanel.exportInfo"),
       stereumUpd: this.$t("settingPanel.stereumUpd"),
       chngAppr: this.$t("settingPanel.chngAppr"),
       stereumConfig: [],
@@ -227,18 +227,18 @@ export default {
     this.exportConfig();
   },
   methods: {
-    exportData() {
-      if (this.stereumConfig.length > 0) {
-        const zip = new JSZip();
-        this.stereumConfig.forEach((item) => {
-          zip.file(item.filename, item.content);
-        });
+    // exportData() {
+    //   if (this.stereumConfig.length > 0) {
+    //     const zip = new JSZip();
+    //     this.stereumConfig.forEach((item) => {
+    //       zip.file(item.filename, item.content);
+    //     });
 
-        zip.generateAsync({ type: "blob" }).then(function (blob) {
-          saveAs(blob, "stereum_config.zip");
-        });
-      }
-    },
+    //     zip.generateAsync({ type: "blob" }).then(function (blob) {
+    //       saveAs(blob, "stereum_config.zip");
+    //     });
+    //   }
+    // },
 
     async exportConfig() {
       this.stereumConfig = await ControlService.exportConfig();
