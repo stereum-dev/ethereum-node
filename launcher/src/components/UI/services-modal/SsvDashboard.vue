@@ -28,6 +28,7 @@
 import { mapState, mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   props: {
     operatorData: {
@@ -52,6 +53,9 @@ export default {
     ...mapState(useServices, {
       installedServices: "installedServices",
     }),
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
   },
   mounted() {
     this.getURL();
@@ -71,8 +75,9 @@ export default {
     },
     async getURL() {
       const grafana = this.installedServices.find((service) => service.service === "GrafanaService");
-      this.ssvNetworkUrl.operatorUrl =
-        "https://explorer.ssv.network/operators/" + (this.operatorData?.id ? this.operatorData?.id : "");
+      this.ssvNetworkUrl.operatorUrl = `https://${
+        this.currentNetwork.network === "goerli" ? "goerli." : ""
+      }explorer.ssv.network/operators/${this.operatorData?.id ? this.operatorData?.id : ""}`;
       this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl
         ? grafana.linkUrl + "/d/QNiMrdoVz/node-dashboard?orgId=1"
         : "";
