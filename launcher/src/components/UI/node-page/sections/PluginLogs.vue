@@ -150,7 +150,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.logsItem.config.runningImageVersion);
     this.filteredServiceLogs();
   },
   updated() {
