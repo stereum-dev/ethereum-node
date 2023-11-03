@@ -8,7 +8,7 @@
         v-else-if="props.client.state == 'running'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
         @click="$emit('handleState', props.client), (footerStore.cursorLocation = '')"
-        @mouseenter="footerStore.cursorLocation = 'Turn off the service'"
+        @mouseenter="footerStore.cursorLocation = `${turnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img src="/img/icon/plugin-menu-icons/shutdown.png" alt="icon" class="w-4 active:scale-95" />
@@ -16,7 +16,8 @@
       <button
         v-else-if="props.client.state == 'restarting'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
-        @mouseenter="footerStore.cursorLocation = 'service is pending'"
+        @click="$emit('handleState', props.client), (footerStore.cursorLocation = '')"
+        @mouseenter="footerStore.cursorLocation = `${pending}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img src="/img/icon/plugin-menu-icons/pending.png" alt="icon" class="w-4 active:scale-95" />
@@ -25,7 +26,7 @@
         v-else
         class="transition-colors duration-200 rounded-md flex justify-center items-center"
         @click="$emit('handleState', props.client), (footerStore.cursorLocation = '')"
-        @mouseenter="footerStore.cursorLocation = 'Turn on the service'"
+        @mouseenter="footerStore.cursorLocation = `${turnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" class="w-4 active:scale-95" />
@@ -34,7 +35,7 @@
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('restartService', props.client), (footerStore.cursorLocation = '')"
-      @mouseenter="footerStore.cursorLocation = 'Restart the service'"
+      @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/restart.png" alt="icon" class="w-4 active:scale-95" />
@@ -42,7 +43,7 @@
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
       @click="$emit('openExpert', props.client), (footerStore.cursorLocation = '')"
-      @mouseenter="footerStore.cursorLocation = 'service settings'"
+      @mouseenter="footerStore.cursorLocation = `${settings}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/setting2.png" alt="icon" class="w-8 active:scale-95" />
@@ -50,7 +51,7 @@
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('openLogs', props.client), (footerStore.cursorLocation = '')"
-      @mouseenter="footerStore.cursorLocation = 'open logs'"
+      @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" class="w-4 active:scale-95" />
@@ -58,7 +59,7 @@
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('openDocs', props.client), (footerStore.cursorLocation = '')"
-      @mouseenter="footerStore.cursorLocation = 'open docs'"
+      @mouseenter="footerStore.cursorLocation = `${docs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/doc.png" alt="icon" class="w-5 active:scale-95" />
@@ -76,4 +77,19 @@ const props = defineProps({
     required: true,
   },
 });
+</script>
+<script>
+export default {
+  data() {
+    return {
+      turnOff: this.$t("serviceBtn.turnOff"),
+      turnOn: this.$t("serviceBtn.turnOn"),
+      restart: this.$t("serviceBtn.restart"),
+      pending: this.$t("serviceBtn.pending"),
+      settings: this.$t("serviceBtn.settings"),
+      logs: this.$t("serviceBtn.logs"),
+      docs: this.$t("serviceBtn.docs"),
+    };
+  },
+};
 </script>
