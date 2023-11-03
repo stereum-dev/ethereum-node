@@ -75,7 +75,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       v-if="props.client.service == 'TekuValidatorService'"
       class="col-start-3 row-start-2 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="handleClick"
+      @click="removeLock"
       @mouseenter="footerStore.cursorLocation = 'remove lock files'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -115,7 +115,7 @@ const emit = defineEmits([
 
 const nodeStore = useNodeStore();
 
-const handleClick = () => {
+const removeLock = () => {
   emit("removeLockfiles", props.client);
 
   footerStore.cursorLocation = "";
