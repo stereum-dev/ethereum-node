@@ -495,7 +495,7 @@
     "use": "USAGE",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
-    "clkFee": "click to set fee recipient",
+    "clkFee": "Service Settings",
     "clkUpdate": "Click to open update panel"
   },
   "restartModalNode": {

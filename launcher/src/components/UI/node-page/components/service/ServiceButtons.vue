@@ -16,6 +16,8 @@
       <button
         v-else-if="props.client.state == 'restarting'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = 'service is pending'"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img src="/img/icon/plugin-menu-icons/pending.png" alt="icon" class="w-4 active:scale-95" />
       </button>
