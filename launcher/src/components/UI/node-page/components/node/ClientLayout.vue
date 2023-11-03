@@ -171,3 +171,12 @@ const getConnectedMevboost = computed(() => {
   return connectedMevboost;
 });
 </script>
+<script>
+export default {
+  data() {
+    return {
+      srvice: this.$t("serviceLay.service"),
+    };
+  },
+};
+</script>

@@ -9,7 +9,7 @@ import { useNodeStore } from '@/store/theNode';
         v-else-if="props.client.state == 'running'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
         @click="stateHandler"
-        @mouseenter="footerStore.cursorLocation = 'Turn off the service'"
+        @mouseenter="footerStore.cursorLocation = `${turnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img src="/img/icon/plugin-menu-icons/shutdown.png" alt="icon" class="w-4 active:scale-95" />
@@ -25,7 +25,7 @@ import { useNodeStore } from '@/store/theNode';
         v-else
         class="transition-colors duration-200 rounded-md flex justify-center items-center"
         @click="stateHandler"
-        @mouseenter="footerStore.cursorLocation = 'Turn on the service'"
+        @mouseenter="footerStore.cursorLocation = `${turnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" class="w-4 active:scale-95" />
@@ -34,7 +34,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       class="col-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="restartHandler"
-      @mouseenter="footerStore.cursorLocation = 'restart the service'"
+      @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/restart.png" alt="icon" class="w-4 active:scale-95" />
@@ -42,7 +42,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       class="col-start-3 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
       @click="openExpert"
-      @mouseenter="footerStore.cursorLocation = 'services´ expert mode'"
+      @mouseenter="footerStore.cursorLocation = `${expert}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/setting2.png" alt="icon" class="w-8 active:scale-95" />
@@ -50,7 +50,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openLog"
-      @mouseenter="footerStore.cursorLocation = 'open logs'"
+      @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" class="w-4 active:scale-95" />
@@ -58,7 +58,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openDoc"
-      @mouseenter="footerStore.cursorLocation = 'open docs'"
+      @mouseenter="footerStore.cursorLocation = `${docs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/doc.png" alt="icon" class="w-5 active:scale-95" />
@@ -67,7 +67,7 @@ import { useNodeStore } from '@/store/theNode';
       v-if="props.client.category !== 'validator'"
       class="col-start-3 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openResync"
-      @mouseenter="footerStore.cursorLocation = 'resync the client'"
+      @mouseenter="footerStore.cursorLocation = `${resync}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/resync.png" alt="icon" class="w-4 active:scale-95" />
@@ -76,7 +76,7 @@ import { useNodeStore } from '@/store/theNode';
       v-if="props.client.service == 'TekuValidatorService'"
       class="col-start-3 row-start-2 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="removeLock"
-      @mouseenter="footerStore.cursorLocation = 'remove lock files'"
+      @mouseenter="footerStore.cursorLocation = `${removeLock}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/prunning.png" alt="icon" class="active:scale-95" />
@@ -85,7 +85,7 @@ import { useNodeStore } from '@/store/theNode';
       v-if="props.client.service == 'GethService'"
       class="col-start-1 row-start-3 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openPruning"
-      @mouseenter="footerStore.cursorLocation = 'pruning the service'"
+      @mouseenter="footerStore.cursorLocation = `${pruning}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/prunning.png" alt="icon" class="active:scale-95" />
@@ -159,5 +159,22 @@ const openPruning = () => {
   nodeStore.isLineHidden = true;
   emit("openPruning", props.client);
   footerStore.cursorLocation = "";
+};
+</script>
+<script>
+export default {
+  data() {
+    return {
+      turnOn: this.$t("clientButtons.turnOn"),
+      turnOff: this.$t("clientButtons.turnOff"),
+      restart: this.$t("clientButtons.restart"),
+      resync: this.$t("clientButtons.resync"),
+      pruning: this.$t("clientButtons.pruning"),
+      expert: this.$t("clientButtons.settings"),
+      logs: this.$t("clientButtons.logs"),
+      docs: this.$t("clientButtons.docs"),
+      removeLock: this.$t("clientButtons.removeLock"),
+    };
+  },
 };
 </script>
