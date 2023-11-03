@@ -8,7 +8,9 @@
     >
       <img :src="stereumStatus ? '/img/icon/LOGO.png' : '/img/icon/statusOff.png'" class="main-header__brand" />
     </div>
-    <div v-if="tooltip" class="server-access-tooltip">{{ serverAccMange }}</div>
+    <div v-if="tooltip && checkTheRouter" class="server-access-tooltip">
+      {{ serverAccMange }}
+    </div>
   </div>
 </template>
 
@@ -37,6 +39,13 @@ export default {
     ...mapWritableState(useNodeHeader, {
       serverAccessManagement: "serverAccessManagement",
     }),
+    checkTheRouter() {
+      if (this.$route.fullPath !== "/login") {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
