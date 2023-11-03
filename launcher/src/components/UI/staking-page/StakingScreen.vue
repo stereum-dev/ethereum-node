@@ -1,12 +1,12 @@
 <template>
   <base-layout>
     <SidebarSection />
-    <ImportSection />
-    <StatsSection />
+    <ListSection />
+    <ManagementSection />
   </base-layout>
 </template>
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
-import ImportSection from "./sections/ImportSection.vue";
-import StatsSection from "./sections/StatsSection.vue";
+import ListSection from "./sections/ListSection.vue";
+import ManagementSection from "./sections/ManagementSection.vue";
 </script>
