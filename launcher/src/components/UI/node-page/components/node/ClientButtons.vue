@@ -8,7 +8,7 @@ import { useNodeStore } from '@/store/theNode';
       <button
         v-else-if="props.client.state == 'running'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
-        @click="stateHandler, (cursorLocation = '')"
+        @click="stateHandler"
         @mouseenter="footerStore.cursorLocation = 'Turn off the service'"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -24,7 +24,7 @@ import { useNodeStore } from '@/store/theNode';
       <button
         v-else
         class="transition-colors duration-200 rounded-md flex justify-center items-center"
-        @click="stateHandler, (cursorLocation = '')"
+        @click="stateHandler"
         @mouseenter="footerStore.cursorLocation = 'Turn on the service'"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -33,7 +33,7 @@ import { useNodeStore } from '@/store/theNode';
     </div>
     <button
       class="col-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="restartHandler, (cursorLocation = '')"
+      @click="restartHandler"
       @mouseenter="footerStore.cursorLocation = 'restart the service'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -41,7 +41,7 @@ import { useNodeStore } from '@/store/theNode';
     </button>
     <button
       class="col-start-3 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
-      @click="openExpert, (cursorLocation = '')"
+      @click="openExpert"
       @mouseenter="footerStore.cursorLocation = 'services´ expert mode'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -49,7 +49,7 @@ import { useNodeStore } from '@/store/theNode';
     </button>
     <button
       class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="openLog, (cursorLocation = '')"
+      @click="openLog"
       @mouseenter="footerStore.cursorLocation = 'open logs'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -57,7 +57,7 @@ import { useNodeStore } from '@/store/theNode';
     </button>
     <button
       class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="openDoc, (cursorLocation = '')"
+      @click="openDoc"
       @mouseenter="footerStore.cursorLocation = 'open docs'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -66,7 +66,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       v-if="props.client.category !== 'validator'"
       class="col-start-3 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="openResync, (cursorLocation = '')"
+      @click="openResync"
       @mouseenter="footerStore.cursorLocation = 'resync the client'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -75,7 +75,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       v-if="props.client.service == 'TekuValidatorService'"
       class="col-start-3 row-start-2 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="$emit('removeLockfiles', props.client), (cursorLocation = '')"
+      @click="removeLock"
       @mouseenter="footerStore.cursorLocation = 'remove lock files'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -84,7 +84,7 @@ import { useNodeStore } from '@/store/theNode';
     <button
       v-if="props.client.service == 'GethService'"
       class="col-start-1 row-start-3 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="openPruning, (footerStore.cursorLocation = '')"
+      @click="openPruning"
       @mouseenter="footerStore.cursorLocation = 'pruning the service'"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -115,19 +115,28 @@ const emit = defineEmits([
 
 const nodeStore = useNodeStore();
 
+const removeLock = () => {
+  emit("removeLockfiles", props.client);
+
+  footerStore.cursorLocation = "";
+};
+
 const openExpert = () => {
   nodeStore.isLineHidden = true;
   emit("openExpert", props.client);
+  footerStore.cursorLocation = "";
 };
 
 const openLog = () => {
   nodeStore.isLineHidden = true;
   emit("openLog", props.client);
+  footerStore.cursorLocation = "";
 };
 
 const openDoc = () => {
   nodeStore.isLineHidden = true;
   emit("openDoc", props.client);
+  footerStore.cursorLocation = "";
 };
 
 const stateHandler = () => {
@@ -143,10 +152,12 @@ const restartHandler = () => {
 const openResync = () => {
   nodeStore.isLineHidden = true;
   emit("openResync", props.client);
+  footerStore.cursorLocation = "";
 };
 
 const openPruning = () => {
   nodeStore.isLineHidden = true;
   emit("openPruning", props.client);
+  footerStore.cursorLocation = "";
 };
 </script>
