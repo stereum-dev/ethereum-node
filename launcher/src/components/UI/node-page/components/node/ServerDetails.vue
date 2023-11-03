@@ -5,7 +5,7 @@
   >
     <div
       class="w-full flex justify-center items-center px-2 h-[25px]"
-      @mouseenter="footerStore.cursorLocation = `server name`"
+      @mouseenter="footerStore.cursorLocation = `${machineName}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="text-md font-semibold ml-1 text-yellow-500 overflow-hidden whitespace-pre text-center">{{
@@ -15,7 +15,7 @@
     <div
       v-if="controlStore.ipAddress"
       class="w-full flex justify-center items-center px-2 h-[25px]"
-      @mouseenter="footerStore.cursorLocation = `server ip`"
+      @mouseenter="footerStore.cursorLocation = `${machineIp}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">IP :</span>
@@ -40,5 +40,15 @@ const updateConnectionStats = async () => {
   const stats = await ControlService.getConnectionStats();
   controlStore.ServerName = stats.ServerName;
   controlStore.ipAddress = stats.ipAddress;
+};
+</script>
+<script>
+export default {
+  data() {
+    return {
+      machineName: this.$t("serverDetails.machineName"),
+      machineIp: this.$t("serverDetails.machineIp"),
+    };
+  },
 };
 </script>

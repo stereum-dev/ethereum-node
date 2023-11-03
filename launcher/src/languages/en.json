@@ -709,5 +709,9 @@
     "client": "client",
     "keyMsg": "key(s) imported",
     "syncStatus": "sync status:"
+  },
+  "serverDetails": {
+    "machineName": "Machine Name",
+    "machineIp": "Machine IP Address"
   }
 }
