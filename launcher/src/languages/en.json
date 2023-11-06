@@ -713,5 +713,8 @@
   "serverDetails": {
     "machineName": "Machine Name",
     "machineIp": "Machine IP Address"
+  },
+  "changesBox": {
+    "clickToCancel": "Click here to cancel this change"
   }
 }
