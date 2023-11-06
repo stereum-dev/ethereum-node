@@ -14,7 +14,9 @@
         <div
           class="status-icon"
           :class="{
-            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
+            active:
+              stereumUpdate.current !== stereumUpdate.version ||
+              updatedNewUpdates.length > 0,
           }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
@@ -216,7 +218,9 @@ export default {
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
-        const matchingService = this.installedServices.find((service) => service.name === update.name);
+        const matchingService = this.installedServices.find(
+          (service) => service.name === update.name
+        );
         if (matchingService) {
           return {
             ...update,
@@ -281,7 +285,9 @@ export default {
       }
     },
     expertHandler(el) {
-      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
+      let selectedObject = this.installedServices.find(
+        (obj) => obj.config.serviceID === el
+      );
       selectedObject.expertOptionsModal = true;
       return selectedObject;
     },
@@ -300,11 +306,15 @@ export default {
           }
           if (!validator.yaml)
             try {
-              validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+              validator.yaml = await ControlService.getServiceYAML(
+                validator.config.serviceID
+              );
             } catch (e) {
               console.log("couldn't get service yaml");
             }
-          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
+          const patternIndex = validator.expertOptions.findIndex(
+            (o) => o.title === "Default Fee Recipient"
+          );
           if (patternIndex === -1 || !validator.yaml) {
             continue;
           }
@@ -326,7 +336,8 @@ export default {
           }
         }
         const notSetAddresses = addresses.filter(
-          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
+          (validator) =>
+            validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
       }

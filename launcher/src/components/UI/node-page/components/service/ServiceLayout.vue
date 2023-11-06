@@ -4,7 +4,7 @@
     style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
-    @mouseenter="footerStore.cursorLocation = `${props.client.name} service`"
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} ${srvice}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
@@ -21,6 +21,11 @@
 <script setup>
 import { computed } from "vue";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const srvice = t("serviceLay.service");
 
 const footerStore = useFooter();
 

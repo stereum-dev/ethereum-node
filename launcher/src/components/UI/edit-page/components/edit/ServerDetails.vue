@@ -5,7 +5,7 @@
   >
     <div
       class="w-full flex justify-center items-center px-2 h-[25px]"
-      @mouseenter="footerStore.cursorLocation = `server name`"
+      @mouseenter="footerStore.cursorLocation = `${machineName}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="text-md font-semibold ml-1 text-yellow-500 overflow-hidden whitespace-pre text-center">{{
@@ -15,7 +15,7 @@
     <div
       v-if="controlStore.ipAddress"
       class="w-full flex justify-center items-center px-2 h-[25px]"
-      @mouseenter="footerStore.cursorLocation = `server ip`"
+      @mouseenter="footerStore.cursorLocation = `${machineIp}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">IP :</span>
@@ -28,6 +28,12 @@ import { useControlStore } from "@/store/theControl";
 import { onMounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const machineName = t("serverDetails.machineName");
+const machineIp = t("serverDetails.machineIp");
 
 const controlStore = useControlStore();
 const footerStore = useFooter();
