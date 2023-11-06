@@ -22,58 +22,26 @@
       </div>
     </div>
 
-    <div class="wrapper w-screen h-screen absolute inset-0 z-50 flex justify-center items-center">
-      <div class="absolute bottom-50 inset-x-0 rounded-full">
-        <img src="/img/icon/stereum-logo/stereum_logo_extern.png" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0 rounded-full">
-        <img src="/img/icon/stereum-logo/logo-bw.png" class="dot w-full h-full rounded-full" alt="Animation" />
-      </div>
-      <div v-if="bubbleIcons[0]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[0]" class="dot w-full h-full" alt="Animation" />
-        <span></span>
-      </div>
-      <div v-if="bubbleIcons[1]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[1]" class="dot w-full h-full" alt="Animation" />
-        <span></span>
-      </div>
-      <div v-if="bubbleIcons[2]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[2]" class="dot w-full h-full" alt="Animation" />
-        <span></span>
-      </div>
-      <div v-if="bubbleIcons[3]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[3]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div v-if="bubbleIcons[4]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[4]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <div class="absolute bottom-50 inset-x-0">
-          <img :src="bubbleIcons[5]" class="dot w-full h-full" alt="Animation" />
-        </div>
-      </div>
-      <div v-if="bubbleIcons[5]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[5]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0">
-        <div class="absolute bottom-50 inset-x-0"></div>
-      </div>
-      <div v-if="bubbleIcons[6]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[6]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div v-if="bubbleIcons[7]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[7]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div v-if="bubbleIcons[8]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[8]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div v-if="bubbleIcons[9]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[9]" class="dot w-full h-full" alt="Animation" />
-      </div>
-      <div class="absolute bottom-50 inset-x-0"></div>
-      <div v-if="bubbleIcons[10]" class="absolute bottom-50 inset-x-0">
-        <img :src="bubbleIcons[10]" class="dot w-full h-full" alt="Animation" />
-      </div>
+    <div
+      v-if="displayNewTask"
+      class="w-full h-14 col-start-2 col-end-5 row-start-1 row-span-1 z-50 flex justify-center items-center mx-auto self-center"
+    >
+      <transition-group
+        name="list"
+        mode="out-in"
+        duration="2000"
+        tag="div"
+        class="flex justify-evenly items-center space-x-6"
+      >
+        <img
+          v-for="(item, index) in displayIcons"
+          :key="index"
+          :src="item.src"
+          class="w-8 h-8 scale-100"
+          alt="Animation"
+          :class="cilentIconActive ? item.class : ''"
+        />
+      </transition-group>
     </div>
 
     <div class="absolute bottom-[3rem] inset-x-0 h-14">
@@ -88,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 import "animate.css";
@@ -103,19 +71,29 @@ const eyesLight = ref("/animation/installer-06.png");
 const bgLight = ref("/animation/installer-03.png");
 const shadow = ref("/animation/installer-04.png");
 const lightening = ref("/animation/installer-05.png");
-const bubbleIcons = ref([]);
 
 const images = ref([]);
 const displayNewTask = ref("");
 const cilentIconActive = ref(false);
+const displayIcons = ref([]);
 let polling = null;
 let refresh = null;
 
 const installerImages = ["installer-01.png", "installer-02.png"];
 
+const getIcons = computed(() => {
+  const plugins = selectedPreset.includedPlugins;
+  return plugins.map((plugin, index) => {
+    return {
+      src: plugin.icon,
+      class: "z-50 scale-110 transition-all ease-in-out " + `delay-${index + 10}00` + `duration-${index + 5}00`,
+    };
+  });
+});
+
 //Lifecycle Hooks
 onMounted(() => {
-  getBubbleIcons();
+  pushIconsWithDelay();
   selectedPreset.includedPlugins.forEach(async (plugin) => {
     if (plugin.category === "execution") {
       executionClientIcon.value = plugin.icon;
@@ -137,10 +115,20 @@ onUnmounted(() => {
 
 //Methods
 
-const getBubbleIcons = async () => {
-  installStore.selectedPreset.includedPlugins.forEach((plugin) => {
-    bubbleIcons.value.push(plugin.icon);
-  });
+const pushIconsWithDelay = () => {
+  let index = 0;
+  function pushNextIcon() {
+    if (index < getIcons.value.length) {
+      displayIcons.value.push(getIcons.value[index]);
+      index++;
+
+      if (index < getIcons.value.length) {
+        setTimeout(pushNextIcon, 1000);
+      }
+    }
+  }
+
+  pushNextIcon();
 };
 
 const addImage = (image) => {
@@ -178,6 +166,16 @@ const intervalId = setInterval(() => {
 </script>
 
 <style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease-in 0.2s;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+  position: absolute;
+}
 .anim {
   grid-column: 1/25;
   grid-row: 1/13;
