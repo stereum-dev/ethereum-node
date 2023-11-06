@@ -21,7 +21,7 @@ export default {
 </script>
 <style scoped>
 .feeBox {
-  grid-column: 3/11;
+  grid-column: 4/12;
   grid-row: 2/3;
   width: 100%;
   height: 40px;
