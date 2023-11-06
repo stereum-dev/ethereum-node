@@ -1,19 +1,24 @@
 <template>
   <div
-    class="col-start-1 col-span-full row-start-1 row-span-1 border border-gray-500 rounded-md grid grid-cols-6 items-center bg-[#334B3F]"
+    class="col-start-1 col-span-full row-start-1 row-span-1 border border-gray-500 rounded-md grid grid-cols-7 items-center bg-[#334B3F]"
   >
-    <div class="col-start-1 col-end-3 flex justify-between items-center px-1 space-x-1">
-      <div class="w-1/2 flex justify-center items-center">
-        <span class="text-sm text-green-600 font-semibold">22</span>
-        <img class="w-5 h-5 -rotate-90" src="/img/icon/the-staking/keyIcon.png" alt="" />
-      </div>
+    <div class="col-start-1 col-end-4 flex justify-between items-center px-1 space-x-1">
+      <span class="w-1/2 flex justify-center items-center text-[10px] text-amber-300 font-semibold"> Epoch </span>
 
-      <span class="w-1/2 text-xs text-amber-300 font-semibold text-center">Total</span>
+      <span class="w-1/2 text-[10px] text-amber-300 font-semibold text-center"> 155906</span>
     </div>
     <div
-      class="col-start-3 col-span-full bg-[#151618] rounded-md flex justify-center items-center py-1 px-3 overflow-hidden"
+      class="w-full h-full col-start-4 col-span-full bg-[#151618] rounded-md overflow-hidden grid grid-cols-3 divide-x divide-gray-600"
     >
-      <span class="text-[12px] text-gray-300 font-semibold self-center text-center">32.0000012311512</span>
+      <span
+        class="col-start-1 col-span-1 text-[8px] text-amber-300 font-semibold self-center text-center overflow-hidden"
+        >16 / 32 #</span
+      >
+
+      <div class="col-start-2 col-span-full self-center text-center overflow-hidden flex justify-evenly items-center">
+        <span class="text-[10px] text-amber-300 font-semibold">Slot</span>
+        <span class="text-[10px] text-amber-300 font-semibold">4989008</span>
+      </div>
     </div>
   </div>
 </template>

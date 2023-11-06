@@ -1,12 +1,12 @@
 <template>
   <aside
-    class="flex flex-col justify-start items-center w-18 h-full bg-[#33393E]"
+    class="h-full col-start-1 col-span-1 row-start-1 row-span-full grid grid-cols-1 grid-rows-6 bg-[#33393E]"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-5">
+    <div class="w-full h-full row-start-1 row-span-3 grid grid-rows-6">
       <button
-        class="row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
+        class="row-start-3 row-span-1 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="mouseHover"
         @mouseenter="footerStore.cursorLocation = `Display public key`"
         @mouseleave="footerStore.cursorLocation = ''"
