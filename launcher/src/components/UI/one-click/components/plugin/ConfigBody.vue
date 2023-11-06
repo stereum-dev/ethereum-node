@@ -118,6 +118,7 @@ const pluginChangeHandler = (plugin, item, idx) => {
       );
     }
   }
+  sortPlugins();
 };
 
 // const pluginChangeHandler = (plugin, item, idx) => {
@@ -181,15 +182,11 @@ const checkPluginCategory = (element) => {
     case "obol":
       filter = (item) => {
         if (element.category === "validator" && element.service !== "CharonService") {
-          return item.service === "TekuValidatorService";
+          return /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) && item.category === element.category;
         } else if (element.category === "validator") {
           return item.service === "CharonService";
-        }
-        if (element.category === "consensus") {
-          return item.service === "LighthouseBeaconService";
-        }
-        if (element.category === "execution") {
-          return item.service === "GethService";
+        } else {
+          return item.category === element.category;
         }
       };
       break;
