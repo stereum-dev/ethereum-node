@@ -727,5 +727,22 @@
     "delete": "delete",
     "service": "service",
     "info": "info"
+  },
+  "networkDetail": {
+    "currIs": "The current network is",
+    "currentNet": "Current Network"
+  },
+  "changeSect": {
+    "clkConfirm": "Click here to confirm change(s)"
+  },
+  "sidebarSect": {
+    "toNode": "To the Node Page",
+    "toEdit": "To the Edit Node",
+    "setchNet": "Switch Network",
+    "nukTheNud": "Nuke the Node",
+    "nukNod": "Nuke Node",
+    "trnOn": "Turn Node On",
+    "trnOff": "Turn Node Off",
+    "expNode": "Export Node Config"
   }
 }
