@@ -18,20 +18,22 @@
               <span>{{ $t("notifModal.stereumMonitor") }} (Mobile App)</span>
             </div>
           </li>
-          <li @click="(beaconchaDashboard = true), (qrPage = true)">
+          <!-- <li @click="(beaconchaDashboard = true), (qrPage = true)">
             <div class="notif-row_icon">
               <img src="/img/icon/service-icons/beaconchain.png" alt="notif logo" />
             </div>
             <div class="notif-row_name">
               <span>Beaconchain {{ $t("notifModal.dash") }} (Mobile App)</span>
             </div>
-          </li>
+          </li> -->
         </ul>
         <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
       <div v-if="!qrPage && !beaconchaDashboard" class="qrPage_content">
         <div class="banner" @click="qrViewer">
-          <div class="banner_icon"><img src="/img/icon/stereum-logo/stereum_logo_extern.png" /></div>
+          <div class="banner_icon">
+            <img src="/img/icon/stereum-logo/stereum_logo_extern.png" />
+          </div>
           <div class="banner_title">
             <span>{{ $t("notifModal.stereumMonitor") }}</span>
           </div>
@@ -55,7 +57,9 @@
       </div>
       <div v-if="beaconchaDashboard" class="qrPage_content">
         <div class="banner" @click="beaconchaDashboard = false">
-          <div class="banner_icon"><img src="/img/icon/service-icons/beaconchain.png" /></div>
+          <div class="banner_icon">
+            <img src="/img/icon/service-icons/beaconchain.png" />
+          </div>
           <div class="banner_title">
             <span>Beaconchain {{ $t("notifModal.dash") }}</span>
           </div>
@@ -73,7 +77,9 @@
                 <img
                   :src="validator.icon"
                   alt=""
-                  :class="{ 'selected-val': validator.name == selectedVal ? true : false }"
+                  :class="{
+                    'selected-val': validator.name == selectedVal ? true : false,
+                  }"
                 />
               </div>
             </div>
@@ -83,14 +89,20 @@
             <div class="enter-box">
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.machinename") }}</div>
-                <div class="enter-input_input"><input v-model="machineName" type="text" /></div>
+                <div class="enter-input_input">
+                  <input v-model="machineName" type="text" />
+                </div>
               </div>
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.apikey") }}</div>
-                <div class="enter-input_input"><input v-model="apiKey" type="text" /></div>
+                <div class="enter-input_input">
+                  <input v-model="apiKey" type="text" />
+                </div>
               </div>
             </div>
-            <div class="apply-btn" @click="applyBeaconChain">{{ $t("notifModal.apply") }}</div>
+            <div class="apply-btn" @click="applyBeaconChain">
+              {{ $t("notifModal.apply") }}
+            </div>
           </div>
         </div>
         <span class="close">{{ $t("notifModal.close") }}</span>
