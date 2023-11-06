@@ -19,11 +19,15 @@
         </div>
       </div>
     </div>
+
     <div class="w-full h-14 absolute inset-x-0 top-12 z-50 flex justify-center items-center mx-auto self-center">
       <transition-group
         enter-active-class="animate__animated animate__flip"
         leave-active-class="animate__animated animate__flipOutY"
         name="list"
+
+
+
         duration="2000"
         tag="div"
         class="flex justify-evenly items-center space-x-6"
@@ -86,7 +90,9 @@ const getIcons = computed(() => {
   return plugins.map((plugin, index) => {
     return {
       src: plugin.icon,
+
       class: "z-50 scale-110 transition-all ease-in-out duration-1000 " + `delay-${index + 20}00`,
+
     };
   });
 });
@@ -168,7 +174,9 @@ const intervalId = setInterval(() => {
 <style scoped>
 .list-enter-active,
 .list-leave-active {
-  transition: all 0.5s infinite;
+
+  transition: all 0.5s ease-in 0.2s;
+
 }
 .list-enter-from,
 .list-leave-to {

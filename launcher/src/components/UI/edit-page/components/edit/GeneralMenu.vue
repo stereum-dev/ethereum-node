@@ -7,7 +7,7 @@
         src="/img/icon/manage-node-icons/connection.png"
         alt="Trash Icon"
         @click="modifyService"
-        @mouseenter="footerStore.cursorLocation = `modify ${item.name} connection`"
+        @mouseenter="footerStore.cursorLocation = `${modify} ${item.name} ${connection}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
@@ -15,7 +15,7 @@
         src="/img/icon/manage-node-icons/switch-client.png"
         alt="Trash Icon"
         @click="switchClient"
-        @mouseenter="footerStore.cursorLocation = `switch client`"
+        @mouseenter="footerStore.cursorLocation = `${switchClientTooltip}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
@@ -23,7 +23,7 @@
         src="/img/icon/manage-node-icons/trash.png"
         alt="Trash Icon"
         @click="deleteService"
-        @mouseenter="footerStore.cursorLocation = `delete ${item.name} service`"
+        @mouseenter="footerStore.cursorLocation = `${deleteServiceTooltip} ${item.name} ${service}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
@@ -31,7 +31,7 @@
         src="/img/icon/manage-node-icons/info.png"
         alt="Trash Icon"
         @click="infoModal"
-        @mouseenter="footerStore.cursorLocation = `info ${item.name} service`"
+        @mouseenter="footerStore.cursorLocation = `${info} ${item.name} ${service}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
     </div>
@@ -40,6 +40,16 @@
 
 <script setup>
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const modify = t("generalMenu.modify");
+const connection = t("generalMenu.connection");
+const switchClientTooltip = t("generalMenu.switchClient");
+const deleteServiceTooltip = t("generalMenu.delete");
+const service = t("generalMenu.service");
+const info = t("generalMenu.info");
 
 const footerStore = useFooter();
 const props = defineProps({
