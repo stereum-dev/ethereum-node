@@ -25,7 +25,7 @@ import i18n from "@/includes/i18n";
 
 const t = i18n.global.t;
 
-const srvice = t("serviceLay.service");
+const srvice = t("serviceLay.srvice");
 
 const footerStore = useFooter();
 
