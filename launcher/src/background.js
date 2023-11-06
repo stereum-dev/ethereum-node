@@ -240,7 +240,7 @@ ipcMain.handle("deleteValidators", async (event, args) => {
 });
 
 ipcMain.handle("listValidators", async (event, args) => {
-  return await validatorAccountManager.listValidators(args);
+  return await validatorAccountManager.listValidators(args.serviceID, args.numRunningValidatorService);
 });
 
 ipcMain.handle("listServices", async () => {
@@ -479,7 +479,7 @@ ipcMain.handle("IpScanLan", async () => {
 });
 
 ipcMain.handle("beaconchainMonitoringModification", async (event, args) => {
-  return await serviceManager.beaconchainMonitoringModification(args)
+  return await serviceManager.beaconchainMonitoringModification(args);
 });
 
 // Scheme must be registered before the app is ready
