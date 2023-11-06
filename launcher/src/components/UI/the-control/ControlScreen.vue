@@ -67,14 +67,15 @@
                     </div>
                   </div>
                 </div>
-                <the-expert
+                <ExpertWindow
                   v-if="isExpertWindowOpen"
                   :item="expertModeClient"
-                  position="23.4"
+                  left-distance="left-[100px]"
+                  bg-opacity="opacity-25"
                   @hide-modal="hideExpertMode(item)"
                   @prunning-warning="runGethPrunningWarning"
                   @resync-warning="runResyncWarning"
-                ></the-expert>
+                />
                 <prunning-modal
                   v-if="gethPrunningWarningModal"
                   :item="item"
@@ -110,9 +111,10 @@ import { useStateHandler } from "@/composables/services";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
-import TheExpert from "../the-node/TheExpert.vue";
+
 import PrunningModal from "../the-node/PrunningModal.vue";
 import ResyncModal from "../the-node/ResyncModal.vue";
+import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useFooter } from "@/store/theFooter";
@@ -122,10 +124,10 @@ export default {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-    TheExpert,
     PrunningModal,
     ResyncModal,
     TooltipDialog,
+    ExpertWindow,
   },
   data() {
     return {

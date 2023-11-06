@@ -6,7 +6,7 @@
         :src="selectedPreset?.icon"
         alt="Preset Icon"
       />
-      <div class="w-full h-full flex justify-center items-center ml-2">
+      <div class="w-full h-full flex justify-center items-center ml-4">
         <span class="w-full text-[24px] font-bold text-gray-400 uppercase tracking-wider">
           {{ selectedPreset?.name }}</span
         >
@@ -16,7 +16,7 @@
       v-if="network.name"
       class="h-14 col-start-4 col-span-full row-start-1 row-span-2 flex justify-end bg-[#1E2429] rounded-md p-1"
     >
-      <div class="w-fit h-full flex justify-end items-center mr-1">
+      <div class="w-fit h-full flex justify-end items-center mr-2">
         <span class="w-full text-[22px] font-bold text-gray-400 uppercase tracking-wider"> {{ network?.name }}</span>
       </div>
       <img
