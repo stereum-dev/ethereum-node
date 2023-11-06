@@ -716,5 +716,16 @@
   },
   "changesBox": {
     "clickToCancel": "Click here to cancel this change"
+  },
+  "editClientLay": {
+    "clkEdit": "click to edit your service"
+  },
+  "generalMenu": {
+    "modify": "modify",
+    "connection": "connection",
+    "switchClient": "switch client",
+    "delete": "delete",
+    "service": "service",
+    "info": "info"
   }
 }
