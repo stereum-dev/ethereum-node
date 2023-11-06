@@ -69,6 +69,17 @@
 <script setup>
 import { defineProps } from "vue";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const turnOff = t("serviceBtn.turnOff");
+const turnOn = t("serviceBtn.turnOn");
+const restart = t("serviceBtn.restart");
+const pending = t("serviceBtn.pending");
+const settings = t("serviceBtn.settings");
+const logs = t("serviceBtn.logs");
+const docs = t("serviceBtn.docs");
 
 const footerStore = useFooter();
 const props = defineProps({
@@ -77,19 +88,4 @@ const props = defineProps({
     required: true,
   },
 });
-</script>
-<script>
-export default {
-  data() {
-    return {
-      turnOff: this.$t("serviceBtn.turnOff"),
-      turnOn: this.$t("serviceBtn.turnOn"),
-      restart: this.$t("serviceBtn.restart"),
-      pending: this.$t("serviceBtn.pending"),
-      settings: this.$t("serviceBtn.settings"),
-      logs: this.$t("serviceBtn.logs"),
-      docs: this.$t("serviceBtn.docs"),
-    };
-  },
-};
 </script>

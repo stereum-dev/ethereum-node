@@ -76,7 +76,7 @@ import { useNodeStore } from '@/store/theNode';
       v-if="props.client.service == 'TekuValidatorService'"
       class="col-start-3 row-start-2 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="removeLock"
-      @mouseenter="footerStore.cursorLocation = `${removeLock}`"
+      @mouseenter="footerStore.cursorLocation = `${removeLockBtn}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/plugin-menu-icons/prunning.png" alt="icon" class="active:scale-95" />
@@ -96,6 +96,19 @@ import { useNodeStore } from '@/store/theNode';
 <script setup>
 import { useNodeStore } from "@/store/theNode";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const turnOn = t("clientButtons.turnOn");
+const turnOff = t("clientButtons.turnOff");
+const restart = t("clientButtons.restart");
+const resync = t("clientButtons.resync");
+const pruning = t("clientButtons.pruning");
+const expert = t("clientButtons.settings");
+const logs = t("clientButtons.logs");
+const docs = t("clientButtons.docs");
+const removeLockBtn = t("clientButtons.removeLock");
 
 const footerStore = useFooter();
 
@@ -159,22 +172,5 @@ const openPruning = () => {
   nodeStore.isLineHidden = true;
   emit("openPruning", props.client);
   footerStore.cursorLocation = "";
-};
-</script>
-<script>
-export default {
-  data() {
-    return {
-      turnOn: this.$t("clientButtons.turnOn"),
-      turnOff: this.$t("clientButtons.turnOff"),
-      restart: this.$t("clientButtons.restart"),
-      resync: this.$t("clientButtons.resync"),
-      pruning: this.$t("clientButtons.pruning"),
-      expert: this.$t("clientButtons.settings"),
-      logs: this.$t("clientButtons.logs"),
-      docs: this.$t("clientButtons.docs"),
-      removeLock: this.$t("clientButtons.removeLock"),
-    };
-  },
 };
 </script>

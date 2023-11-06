@@ -4,7 +4,7 @@
     style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
-    @mouseenter="footerStore.cursorLocation = `${props.client.name} ${client}`"
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} ${clientClient}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
@@ -55,6 +55,13 @@ import { useControlStore } from "@/store/theControl";
 import { useDeepClone } from "@/composables/utils";
 import { ref } from "vue";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const clientClient = t("clientLay.client");
+const keyMsg = t("clientLay.keyMsg");
+const syncStatusPer = t("clientLay.syncStatus");
 
 const footerStore = useFooter();
 
@@ -170,15 +177,4 @@ const getConnectedMevboost = computed(() => {
     .find((e) => e.config.dependencies.mevboost[0]);
   return connectedMevboost;
 });
-</script>
-<script>
-export default {
-  data() {
-    return {
-      client: this.$t("clientLay.client"),
-      keyMsg: this.$t("clientLay.keyMsg"),
-      syncStatusPer: this.$t("clientLay.syncStatus"),
-    };
-  },
-};
 </script>

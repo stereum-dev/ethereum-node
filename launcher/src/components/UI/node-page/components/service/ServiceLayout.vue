@@ -21,6 +21,11 @@
 <script setup>
 import { computed } from "vue";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const srvice = t("serviceLay.service");
 
 const footerStore = useFooter();
 
@@ -35,13 +40,4 @@ const clientStatus = computed(() => {
   }
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
 });
-</script>
-<script>
-export default {
-  data() {
-    return {
-      srvice: this.$t("serviceLay.service"),
-    };
-  },
-};
 </script>
