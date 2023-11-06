@@ -1,5 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @tailwind base;
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #85cac4;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-corner {
+  width: 0;
+  height: 0;
+  background-color: transparent;
+}
+
 @tailwind components;
 @tailwind utilities;
 html body {

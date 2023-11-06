@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapWritableState } from "pinia";
+import { computed, ref, watch } from "vue";
 import { useFooter } from "@/store/theFooter";
 import "animate.css";
 export default {
@@ -37,44 +37,56 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      animateClass: "",
-      flag: false,
-    };
-  },
-  computed: {
-    ...mapWritableState(useFooter, {
-      epochType: "epochType",
-      epoch: "epoch",
-      slot: "slot",
-      status: "status",
-      title: "title",
-      first: "first",
-      second: "second",
-    }),
-  },
-  watch: {
-    open(newVal) {
-      if (newVal) {
-        this.animateClass = "animate__animated animate__flipInX";
-        setTimeout(() => {
-          this.animateClass = "";
-        }, 600);
+  setup(props) {
+    const animateClass = ref("");
+    const flag = ref(false);
+    const epochType = computed(() => useFooter().epochType);
+    const epoch = computed(() => useFooter().epoch);
+    const slot = computed(() => useFooter().slot);
+    const status = computed(() => useFooter().status);
+    const title = computed(() => useFooter().title);
+    const first = computed(() => useFooter().first);
+    const second = computed(() => useFooter().second);
+
+    watch(
+      () => props.open,
+      (newVal) => {
+        if (newVal) {
+          animateClass.value = "animate__animated animate__flipInX";
+          setTimeout(() => {
+            animateClass.value = "";
+          }, 600);
+        }
       }
-    },
-    epochType(newVal) {
-      if (newVal !== "") {
-        this.flag = true;
-      } else {
-        this.flag = false;
+    );
+
+    watch(
+      () => epochType.value,
+      (newVal) => {
+        if (newVal !== "") {
+          flag.value = true;
+        } else {
+          flag.value = false;
+        }
       }
-    },
-  },
-  methods: {
-    formatValues(value) {
+    );
+
+    const formatValues = (value) => {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    },
+    };
+
+    return {
+      animateClass,
+      flag,
+      epochType,
+      epoch,
+      slot,
+      status,
+      title,
+      first,
+      second,
+      formatValues,
+    };
   },
 };
 </script>
@@ -84,7 +96,6 @@ export default {
   border-radius: 10px;
   z-index: 100;
   position: fixed;
-
   height: 20%;
   width: 25%;
   border: 3px solid #929292;
@@ -96,12 +107,12 @@ export default {
   animation-duration: 0.5s;
 }
 .amsterdam {
-  top: 16%;
-  left: 48.8%;
+  top: 15%;
+  left: 47.5%;
 }
 .syncstatus {
   top: 30%;
-  left: 48.8%;
+  left: 47.5%;
 }
 .wrapper {
   width: 100%;

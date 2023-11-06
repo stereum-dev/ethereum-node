@@ -44,7 +44,7 @@ export class ValidatorAccountManager {
     let client = services.find((service) => service.id === serviceID);
     let pubkeys = [];
     if (isRemote) {
-      pubkeys = files
+      pubkeys = files;
     } else {
       this.batches = [];
       this.createBatch(files, password, slashingDB, client.service === "Web3SignerService" ? 20 : 100);
@@ -187,7 +187,7 @@ export class ValidatorAccountManager {
       const apiToken = await this.getApiToken(client);
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get API Token`, true);
       for (const batch of this.batches) {
-        const returnVal = await this.keymanagerAPI(client, "POST", '/eth/v1/keystores', batch, [], apiToken);
+        const returnVal = await this.keymanagerAPI(client, "POST", "/eth/v1/keystores", batch, [], apiToken);
 
         //Error Handling
         if (returnVal.rc === 52) throw "service ran out of memory";
@@ -219,9 +219,9 @@ export class ValidatorAccountManager {
       }
 
       let pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
-      const message = this.formatImportResult(pubkeys, data)
+      const message = this.formatImportResult(pubkeys, data);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-      return message
+      return message;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
@@ -269,7 +269,7 @@ export class ValidatorAccountManager {
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Keys`);
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keymanagerAPI(client, "DELETE", '/eth/v1/keystores', { pubkeys: keys });
+      const result = await this.keymanagerAPI(client, "DELETE", "/eth/v1/keystores", { pubkeys: keys });
 
       //Error handling
       if (result.rc === 52) throw "service ran out of memory";
@@ -287,8 +287,7 @@ export class ValidatorAccountManager {
 
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       //Return slashing protection data
-      if (picked)
-        return data.slashing_protection;
+      if (picked) return data.slashing_protection;
       return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
@@ -304,11 +303,13 @@ export class ValidatorAccountManager {
   }
 
   async keymanagerAPI(service, method = "GET", path, data, args = [], apiToken) {
-    if (!path.startsWith('/')) path = '/' + path;
+    if (!path.startsWith("/")) path = "/" + path;
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]}${path}`,
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
+      }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
       apiToken ? `-H 'Authorization: Bearer ${apiToken}'` : "",
@@ -325,7 +326,7 @@ export class ValidatorAccountManager {
       let ssvConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout;
       if (ssvConfig) {
         const escapedConfigFile = StringUtils.escapeStringForShell(
-          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: ' + sk)
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, "OperatorPrivateKey: " + sk)
         );
         await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
 
@@ -360,7 +361,7 @@ export class ValidatorAccountManager {
   //Returns the Fee Recipient for a given PubKey
   async getFeeRecipient(serviceID, pubKey) {
     const ref = StringUtils.createRandomString(); //Create a random string to identify the task
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Getting Fee Recipient`);  //Push the task to the task manager
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Getting Fee Recipient`); //Push the task to the task manager
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
       const result = await this.keymanagerAPI(client, "GET", `/eth/v1/validator/${pubKey}/feerecipient`);
@@ -380,7 +381,7 @@ export class ValidatorAccountManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Fee Recipient`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
 
-      return data
+      return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
@@ -396,23 +397,29 @@ export class ValidatorAccountManager {
 
   async setFeeRecipient(serviceID, pubKey, address) {
     const ref = StringUtils.createRandomString(); //Create a random string to identify the task
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Setting Fee Recipient`);  //Push the task to the task manager
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Setting Fee Recipient`); //Push the task to the task manager
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keymanagerAPI(client, "POST", `/eth/v1/validator/${pubKey}/feerecipient`, { ethaddress: address }, ["-i"]);
+      const result = await this.keymanagerAPI(
+        client,
+        "POST",
+        `/eth/v1/validator/${pubKey}/feerecipient`,
+        { ethaddress: address },
+        ["-i"]
+      );
 
       //Error handling
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
       if (!result.stdout.includes("202 Accepted")) {
         throw "Undexpected Error: " + result;
       }
-      const data = result.stdout
+      const data = result.stdout;
 
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Set Fee Recipient`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
 
-      return data
+      return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
@@ -428,23 +435,25 @@ export class ValidatorAccountManager {
 
   async deleteFeeRecipient(serviceID, pubKey) {
     const ref = StringUtils.createRandomString(); //Create a random string to identify the task
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Fee Recipient`);  //Push the task to the task manager
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Fee Recipient`); //Push the task to the task manager
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keymanagerAPI(client, "DELETE", `/eth/v1/validator/${pubKey}/feerecipient`, null, ["-i"]);
+      const result = await this.keymanagerAPI(client, "DELETE", `/eth/v1/validator/${pubKey}/feerecipient`, null, [
+        "-i",
+      ]);
 
       //Error handling
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
       if (!result.stdout.includes("204 No Content")) {
         throw "Undexpected Error: " + result;
       }
-      const data = result.stdout
+      const data = result.stdout;
 
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Fee Recipient`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
 
-      return data
+      return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
@@ -516,14 +525,27 @@ export class ValidatorAccountManager {
 
   async writeKeys(keys) {
     let obj = keys;
+    console.log(obj);
     if (Array.isArray(keys)) {
-      obj = {};
       const existing = await this.readKeys();
+      obj = existing ? existing : {};
       keys.forEach((key) => {
         if (existing && existing[key]) {
-          obj[key] = existing[key];
+          if (typeof existing[key] === "string") {
+            obj[key] = {
+              keyName: existing[key],
+              groupName: "",
+              groupID: null,
+            };
+          } else {
+            obj[key] = existing[key];
+          }
         } else {
-          obj[key] = "";
+          obj[key] = {
+            keyName: "",
+            groupName: "",
+            groupID: null,
+          };
         }
       });
     }
@@ -552,8 +574,8 @@ export class ValidatorAccountManager {
           path = service.volumes.find((v) => v.servicePath == "/opt/app/data/wallets").destinationPath;
         }
         //Make sure keystores have correct permissions
-        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + path + "/direct/accounts/*")
-        log.info(chmodResult.stdout)
+        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + path + "/direct/accounts/*");
+        log.info(chmodResult.stdout);
         if (path) {
           result = await this.nodeConnection.sshService.exec("cat " + path + "/auth-token");
           result.stdout = result.stdout
@@ -649,15 +671,21 @@ export class ValidatorAccountManager {
           await this.nodeConnection.sshService.exec(
             `chown 2000:2000 ${validatorsDir}/${pubkey}/exit_password.txt && chmod 700 ${validatorsDir}/${pubkey}/exit_password.txt`
           );
-          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=${client.network} --beacon-node=${client.dependencies.consensusClients[0] ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http:stereum-" + client.id + ":5052"} --no-confirmation`;
+          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=${
+            client.network
+          } --beacon-node=${
+            client.dependencies.consensusClients[0]
+              ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
+              : "http:stereum-" + client.id + ":5052"
+          } --no-confirmation`;
           result = await this.nodeConnection.sshService.exec(exitNimbusCmd);
-          await this.nodeConnection.sshService.exec(
-            `rm ${validatorsDir}/${pubkey}/exit_password.txt`
-          );
+          await this.nodeConnection.sshService.exec(`rm ${validatorsDir}/${pubkey}/exit_password.txt`);
           break;
         }
         case "prysm": {
-          const passwordDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data/passwords").destinationPath;
+          const passwordDir = client.volumes.find(
+            (vol) => vol.servicePath === "/opt/app/data/passwords"
+          ).destinationPath;
           const walletDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data/wallets").destinationPath;
 
           await this.nodeConnection.sshService.exec(
@@ -668,14 +696,16 @@ export class ValidatorAccountManager {
           );
           const exitPrysmCmd = `docker run -v ${walletDir}:/wallets -v ${passwordDir}:/passwords --network=stereum gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest validator exit --wallet-dir=/wallets --wallet-password-file=/passwords/wallet-password --public-keys=${pubkey} --account-password-file=/passwords/exit_password.txt --beacon-rpc-provider=stereum-${beaconNodeID}:4000 --${client.network}=true --accept-terms-of-use=true --force-exit=true`;
           result = await this.nodeConnection.sshService.exec(exitPrysmCmd);
-          await this.nodeConnection.sshService.exec(
-            `rm ${passwordDir}/exit_password.txt`
-          );
+          await this.nodeConnection.sshService.exec(`rm ${passwordDir}/exit_password.txt`);
           break;
         }
         case "teku": {
           let noPrefixPubkey = pubkey.slice(2, 98);
-          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${client.dependencies.consensusClients[0] ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http://127.0.0.1:5051"} --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
+          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${
+            client.dependencies.consensusClients[0]
+              ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
+              : "http://127.0.0.1:5051"
+          } --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
           result = await this.nodeConnection.sshService.exec(exitTekuCmd);
           break;
         }
@@ -712,10 +742,7 @@ export class ValidatorAccountManager {
   async importRemoteKeys(serviceID, pubkeys, url) {
     //Init Task in TaskManager
     const ref = StringUtils.createRandomString();
-    this.nodeConnection.taskManager.otherTasksHandler(
-      ref,
-      `Importing ${pubkeys.length} Remote Keys`
-    );
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${pubkeys.length} Remote Keys`);
 
     let services = await this.serviceManager.readServiceConfigurations();
 
@@ -723,14 +750,15 @@ export class ValidatorAccountManager {
     await this.initWallet(client, ref);
     await this.addRemoteSignerTags(client, url);
 
-
     try {
-      const args = pubkeys.map(key => { return { pubkey: key, url: url } })
+      const args = pubkeys.map((key) => {
+        return { pubkey: key, url: url };
+      });
       const result = await this.keymanagerAPI(client, "POST", "/eth/v1/remotekeys", { remote_keys: args });
 
       //Error Handling
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-      const response = JSON.parse(result.stdout)
+      const response = JSON.parse(result.stdout);
       if (response.data === undefined) {
         if (response.code === undefined || response.message === undefined) {
           throw "Undexpected Error: " + result;
@@ -756,7 +784,7 @@ export class ValidatorAccountManager {
 
       const message = this.formatImportResult(pubkeys, response.data);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-      return message
+      return message;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
@@ -802,7 +830,7 @@ export class ValidatorAccountManager {
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Remote Keys`);
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keymanagerAPI(client, "DELETE", '/eth/v1/remotekeys', { pubkeys: pubkeys });
+      const result = await this.keymanagerAPI(client, "DELETE", "/eth/v1/remotekeys", { pubkeys: pubkeys });
 
       //Error handling
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -840,7 +868,7 @@ export class ValidatorAccountManager {
         let services = await this.serviceManager.readServiceConfigurations();
 
         let client = services.find((service) => service.id === serviceID);
-        let result = await this.keymanagerAPI(client, "GET", "/api/v1/eth2/publicKeys");  //returns an array of pubkeys that the signer is hodlding
+        let result = await this.keymanagerAPI(client, "GET", "/api/v1/eth2/publicKeys"); //returns an array of pubkeys that the signer is hodlding
 
         //Error handling
         if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -852,7 +880,7 @@ export class ValidatorAccountManager {
           throw data.code + " " + data.message;
         }
 
-        return { keys: data, url: client.buildWeb3SignerHttpEndpointUrl() }
+        return { keys: data, url: client.buildWeb3SignerHttpEndpointUrl() };
       }
 
       // For remote Web3Singer Instances (url is defined and serviceID is undefined)
@@ -876,55 +904,57 @@ export class ValidatorAccountManager {
           throw data.code + " " + data.message;
         }
 
-        return { keys: data, url: url }
+        return { keys: data, url: url };
       }
-
     } catch (err) {
-      log.error("Error checking remote keys: ", err)
-      return { error: err }
+      log.error("Error checking remote keys: ", err);
+      return { error: err };
     }
   }
 
   async addRemoteSignerTags(client, url) {
     switch (client.service.replace(/(Beacon|Validator|Service)/gm, "")) {
       case "Prysm": {
-        let command = structuredClone(client.command)
+        let command = structuredClone(client.command);
         if (!client.command.includes("--validators-external-signer-url=")) {
           command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
           command.push(`--validators-external-signer-url=${url}`);
-        } else if (client.command.includes("--validators-external-signer-url=") && !client.command.includes(`--validators-external-signer-url=${url}`)) {
+        } else if (
+          client.command.includes("--validators-external-signer-url=") &&
+          !client.command.includes(`--validators-external-signer-url=${url}`)
+        ) {
           command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
-          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="))
+          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="));
           command.push(`--validators-external-signer-url=${url}`);
         }
         if (Array.isArray(command)) {
           command = command.join(" ").trim();
           client.command = command;
           await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-          await this.serviceManager.manageServiceState(client.id, "stopped")
-          await this.serviceManager.manageServiceState(client.id, "started")
-          await Sleep(30000)
+          await this.serviceManager.manageServiceState(client.id, "stopped");
+          await this.serviceManager.manageServiceState(client.id, "started");
+          await Sleep(30000);
         }
         break;
       }
       case "Teku": {
-        let command = structuredClone(client.command)
-        let urlCommand = command.find(arg => arg.includes("--validators-external-signer-url="))
-        let changed = false
+        let command = structuredClone(client.command);
+        let urlCommand = command.find((arg) => arg.includes("--validators-external-signer-url="));
+        let changed = false;
         if (!urlCommand) {
           command.push(`--validators-external-signer-url=${url}`);
-          changed = true
+          changed = true;
         } else if (urlCommand && urlCommand !== `--validators-external-signer-url=${url}`) {
-          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="))
+          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="));
           command.push(`--validators-external-signer-url=${url}`);
-          changed = true
+          changed = true;
         }
         if (changed) {
           client.command = command;
           await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-          await this.serviceManager.manageServiceState(client.id, "stopped")
-          await this.serviceManager.manageServiceState(client.id, "started")
-          await Sleep(30000)
+          await this.serviceManager.manageServiceState(client.id, "stopped");
+          await this.serviceManager.manageServiceState(client.id, "started");
+          await Sleep(30000);
         }
         break;
       }

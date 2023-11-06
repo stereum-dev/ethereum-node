@@ -1,9 +1,12 @@
 <template>
-  <div class="technical-box_parent" name="contributors-list">
-    <select id="technikToggl" v-model="techToggl" class="techToggl" name="technikToggl">
-      <option value="developers">{{ $t("creditPanel.developers") }}</option>
-      <option value="testers">{{ $t("creditPanel.testers") }}</option>
-    </select>
+  <div class="w-full h-[425px] flex flex-col justify-between items-center p-1" name="contributors-list">
+    <div class="w-full flex justify-end items-center px-6">
+      <select id="technikToggl" v-model="techToggl" class=" rounded-full text-sm py-1 px-2" name="technikToggl">
+        <option value="developers">{{ $t("creditPanel.developers") }}</option>
+        <option value="testers">{{ $t("creditPanel.testers") }}</option>
+      </select>
+    </div>
+
     <div v-if="compToggl" class="wrapper">
       <TheContributor
         v-for="(result, index) in results"

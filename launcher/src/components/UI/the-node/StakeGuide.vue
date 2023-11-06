@@ -720,8 +720,8 @@ export default {
   height: 7%;
   cursor: pointer;
   position: absolute;
-  left: 16%;
-  top: 1%;
+  left: 22%;
+  top: 2%;
   opacity: 1;
   color: #eee;
   text-transform: uppercase;
@@ -733,8 +733,8 @@ export default {
   height: 7%;
   cursor: pointer;
   position: absolute;
-  left: 27%;
-  top: 1%;
+  left: 35%;
+  top: 2%;
   opacity: 1;
   color: #eee;
   text-transform: uppercase;
@@ -743,28 +743,29 @@ export default {
 }
 .title {
   width: 100%;
-  height: 100%;
+  height: 90%;
   background: #264744;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  border-radius: 20px;
 }
 .header-arrow {
   filter: invert(1);
   transform: rotate(180deg);
   width: 20%;
   position: absolute;
-  left: 25%;
-  top: 7%;
+  left: 28%;
+  top: 9%;
 }
 .header-arrow-staking {
   filter: invert(1);
-  transform: rotate(180deg);
-  width: 20%;
+  transform: rotate(187deg);
+  width: 17%;
   position: absolute;
-  left: 35%;
-  top: 7%;
+  left: 42%;
+  top: 10%;
 }
 .arrow-staking-pass {
   filter: invert(1);

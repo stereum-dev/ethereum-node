@@ -7,7 +7,8 @@
     "username": "JMÉNO UŽIVATELE",
     "password": "HESLO",
     "keylocation": "LOKALITA KLÍČE",
-    "usessh": "POUŽÍT SSH KLÍČ"
+    "usessh": "POUŽÍT SSH KLÍČ",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "JIŽ BRZY"
@@ -15,7 +16,7 @@
   "journalnode": {
     "serverip": "IP",
     "servername": "JMÉNO",
-    "edit": "upravit uzel",
+    "edit": "Manage node",
     "loading": "načítání nových stavů",
     "turnOn": "Zapnout uzel",
     "turnOff": "Vypnout uzel",
@@ -105,7 +106,8 @@
     "filter": "Filtrovat..."
   },
   "changeConfirm": {
-    "confirm": "POTVRDIT",
+    "confirm": "CONFIRM CHANGES",
+    "process": "processing...",
     "change": "ZMĚNY K POTVRZENÍ",
     "delete": "ODSTRANIT"
   },
@@ -479,7 +481,10 @@
     "tillAtest": "do atestace"
   },
   "confirmModal": {
-    "message": "Váš uzel se během tohoto procesu odpojí!",
+    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
+    "messageOff": "Your node will go offline!",
+    "messageOn": "Your node will go online!",
     "turnOn": "zapnout",
     "turnOff": "vypnout",
     "close": "klikněte mimo pro zavření"
@@ -521,7 +526,13 @@
     "stepTwo": "Otevřete aplikaci na svém chytrém telefonu",
     "stepThree": "Naskenujte QR kód",
     "stepFour": "Odešlete zkušební oznámení",
-    "close": "klikněte mimo pro zavření"
+    "close": "klikněte mimo pro zavření",
+    "dash": "Dashboard",
+    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
+    "goTo": "Go to",
+    "machinename": "Machine Name",
+    "apikey": "API Key",
+    "apply": "APPLY"
   },
   "replacePanel": {
     "client": "Klient",
@@ -663,5 +674,11 @@
   },
   "taskMang": {
     "taskMng": "Task Manager"
+  },
+  "ipScanModal": {
+    "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
+    "clockClose": "Click outside to close",
+    "noIpFound": "No IP found",
+    "clickSearch": "Click [search] to start"
   }
 }

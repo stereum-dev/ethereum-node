@@ -75,7 +75,7 @@ export class NodeConnection {
         exit 0
       fi
       # Check if users needs a password for sudo
-      msg=$(sudo -l 2>&1)
+      msg=$(sudo hostname 2>&1)
       if [[ "$msg" == *"sudo: a password is required"* ]]; then
         echo "FAIL: user can not sudo without password!"
         exit 1
@@ -336,17 +336,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-          playbookRunRef +
-          "\
+        playbookRunRef +
+        "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-          StringUtils.escapeStringForShell(extraVarsJson) +
-          "\
+        StringUtils.escapeStringForShell(extraVarsJson) +
+        "\
                         " +
-          this.settings.stereum.settings.controls_install_path +
-          "/ansible/controls/genericPlaybook.yaml\
+        this.settings.stereum.settings.controls_install_path +
+        "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -593,10 +593,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-          StringUtils.escapeStringForShell(service.data.trim()) +
-          " > /etc/stereum/services/" +
-          service.id +
-          ".yaml"
+        StringUtils.escapeStringForShell(service.data.trim()) +
+        " > /etc/stereum/services/" +
+        service.id +
+        ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -642,10 +642,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-          " > /etc/stereum/services/" +
-          serviceConfiguration.id +
-          ".yaml"
+        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+        " > /etc/stereum/services/" +
+        serviceConfiguration.id +
+        ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -667,9 +667,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-          serviceConfiguration.id +
-          ": " +
-          SSHService.extractExecError(configStatus)
+        serviceConfiguration.id +
+        ": " +
+        SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -1023,7 +1023,7 @@ export class NodeConnection {
     if (SSHService.checkExecError(response)) {
       throw new Error("Failed reading Stereum Version:\n" + SSHService.extractExecError(response));
     }
-    return response.stdout;
+    return response.stdout.trim();
   }
 
   async getCurrentLauncherVersion() {
@@ -1139,6 +1139,7 @@ export class NodeConnection {
           log.info(" Could not connect.\n" + (retry.maxTries - retry.counter) + " tries left.");
         }
       }
+      log.info("OUT OF WHILE LOOP")
       if (retry.connected) {
         await this.establish(this.taskManager);
         this.taskManager.otherTasksHandler(ref, "Connected", true);
@@ -1213,7 +1214,7 @@ export class NodeConnection {
       const options = {
         target: target[i],
         port: "54321",
-        status: "O", // Timeout, Refused, Open, Unreachable
+        status: "O", // Timeout(T), Refused(R), Open(O), Unreachable(U)
         banner: true,
       };
       const evilscan = new Evilscan(options);

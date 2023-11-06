@@ -439,11 +439,7 @@ export default {
   text-align: center;
   margin-right: 3px;
 }
-.syncContent img {
-  width: 5%;
-  height: 50%;
-  cursor: pointer;
-}
+
 .content {
   width: 100%;
   height: 64%;

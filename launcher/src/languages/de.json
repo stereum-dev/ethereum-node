@@ -7,7 +7,8 @@
     "username": "BENUTZERNAME",
     "password": "PASSWORT",
     "keylocation": "SCHLÜSSELPFAD",
-    "usessh": "SSH KEY BENUTZEN"
+    "usessh": "SSH KEY BENUTZEN",
+    "fillFields": "Please fill in the missing fields!"
   },
   "comingsoon": {
     "comingsoon": "KOMMT BALD"
@@ -15,7 +16,7 @@
   "journalnode": {
     "serverip": "IP",
     "servername": "NAME",
-    "edit": "Node bearbeiten",
+    "edit": "Manage node",
     "loading": "lade neuen Status",
     "turnOn": "Node einschalten",
     "turnOff": "Node ausschalten",
@@ -105,7 +106,8 @@
     "filter": "Filter..."
   },
   "changeConfirm": {
-    "confirm": "BESTÄTIGEN",
+    "confirm": "CONFIRM CHANGES",
+    "process": "processing...",
     "change": "BESTÄTIGE ÄNDERUNGEN",
     "delete": "LÖSCHEN"
   },
@@ -479,7 +481,10 @@
     "tillAtest": "till attestation"
   },
   "confirmModal": {
-    "message": "Your node will go off line while you do this!",
+    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
+    "messageOff": "Your node will go offline!",
+    "messageOn": "Your node will go online!",
     "turnOn": "turn on",
     "turnOff": "turn off",
     "close": "click outside to close"
@@ -521,7 +526,13 @@
     "stepTwo": "Open the app on your smartphone",
     "stepThree": "Scan the QR Code",
     "stepFour": "Send a test notification",
-    "close": "click outside to close"
+    "close": "click outside to close",
+    "dash": "Dashboard",
+    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
+    "goTo": "Go to",
+    "machinename": "Machine Name",
+    "apikey": "API Key",
+    "apply": "APPLY"
   },
   "replacePanel": {
     "client": "Client",
@@ -663,5 +674,11 @@
   },
   "taskMang": {
     "taskMng": "Task Manager"
+  },
+  "ipScanModal": {
+    "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
+    "clockClose": "Click outside to close",
+    "noIpFound": "No IP found",
+    "clickSearch": "Click [search] to start"
   }
 }

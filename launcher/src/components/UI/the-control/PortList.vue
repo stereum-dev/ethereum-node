@@ -25,16 +25,12 @@
     </div>
   </div>
 </template>
-<script>
-import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
-export default {
-  computed: {
-    ...mapState(useControlStore, {
-      portstatus: "portstatus",
-    }),
-  },
-};
+<script setup>
+import { computed } from "vue";
+import { useControlStore } from "@/store/theControl";
+
+const controlStore = useControlStore();
+const portstatus = computed(() => controlStore.portstatus);
 </script>
 <style scoped>
 .portlist_parent {

@@ -3,7 +3,7 @@
     <div class="dick-speed_box">
       <div class="disk-speed_icon">
         <div class="disk-speed_icon_container">
-          <img src="../../../../public/img/icon/control/Speedmeter.png" />
+          <img src="/img/icon/control/Speedmeter.png" />
         </div>
         <span>{{ $t("controlPage.disk") }}</span>
       </div>
@@ -13,7 +13,7 @@
             <span>{{ $t("controlPage.write") }}</span>
           </div>
           <div class="write_val">
-            <span>{{ writeValue }} kb</span>
+            <span>{{ convertWriteValueToMb }} Mb</span>
           </div>
         </div>
         <div class="disk-speed_value">
@@ -21,24 +21,31 @@
             <span>{{ $t("controlPage.read") }}</span>
           </div>
           <div class="read_val">
-            <span>{{ readValue }} kb</span>
+            <span>{{ convertReadValueToMb }} Mb</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script>
-import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
-export default {
-  computed: {
-    ...mapState(useControlStore, {
-      writeValue: "writeValue",
-      readValue: "readValue",
-    }),
-  },
-};
+
+<script setup>
+import { useControlStore } from "@/store/theControl";
+import { computed } from "vue";
+
+const controlStore = useControlStore();
+const writeValue = computed(() => controlStore.writeValue);
+const readValue = computed(() => controlStore.readValue);
+
+const convertWriteValueToMb = computed(() => {
+  const mbValue = writeValue.value / 1024;
+  return Math.floor(mbValue);
+});
+
+const convertReadValueToMb = computed(() => {
+  const mbValue = readValue.value / 1024;
+  return Math.floor(mbValue);
+});
 </script>
 <style scoped>
 .disk-speed_parent {
@@ -117,8 +124,8 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 35%;
-  font-size: 75%;
+  height: 50%;
+  font-size: 120%;
   font-weight: 800;
 }
 .write_val {

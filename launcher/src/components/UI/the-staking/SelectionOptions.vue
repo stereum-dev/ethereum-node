@@ -1,9 +1,10 @@
 <template>
-  <div class="selection-box">
-    .
+  <div class="selection-box border-4 border-gray-400">
     <div class="selection-table">
       <div class="selection-table_validator">
-        <div class="validator-icon"><img :src="validatorIcon" :alt="validatorName" /></div>
+        <div class="validator-icon">
+          <img :src="validatorIcon" :alt="validatorName" />
+        </div>
         <div class="validator-name">
           <span>{{ validatorName }}</span>
         </div>
@@ -17,7 +18,9 @@
           <div class="validator-state_Icon">
             <div class="validator-state_Icon-icon" :class="validatorState === 'running' ? 'green' : 'red'"></div>
           </div>
-          <div class="validator-state_status">{{ validatorState === "running" ? "running" : "off" }}</div>
+          <div class="validator-state_status">
+            {{ validatorState === "running" ? "running" : "off" }}
+          </div>
         </div>
         <div class="key-counter">
           <div class="key-counter_counter">
@@ -28,9 +31,11 @@
           </div>
         </div>
       </div>
-      <ul v-if="selector" class="validator-selectionpart">
+      <ul v-if="selector" class="validator-selectionpart divide-y">
         <li v-for="validator in validators" :key="validator" @click="vldPicker(validator)">
-          <div class="validator-icons"><img :src="validator.icon" :alt="validator.name" /></div>
+          <div class="validator-icons">
+            <img :src="validator.icon" :alt="validator.name" />
+          </div>
           <div class="validators-name">
             <span>{{ validator.name }}</span>
           </div>
@@ -117,6 +122,7 @@ export default {
     }),
   },
   mounted() {
+    this.$emit("vld-picker", this.validators[0]);
     if (this.validators.length > 1) {
       this.multiValidator = true;
     }
@@ -138,11 +144,12 @@ export default {
 <style scoped>
 .validator-commands {
   display: flex;
-  width: 90%;
-  height: 8%;
+  width: 100%;
+  height: 10%;
   justify-content: center;
   align-items: center;
-  top: 12%;
+  top: 10%;
+  background-color: #171818;
   position: absolute;
 }
 .validator-state {
@@ -195,8 +202,8 @@ export default {
 }
 .validator-state_Icon-icon {
   display: flex;
-  width: 38%;
-  height: 95%;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: #bfbfbf;
   box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3), 0 0 5px rgba(0, 0, 0, 0.1);
@@ -215,28 +222,26 @@ export default {
   color: #ff5733;
 }
 .validator-selectionpart {
-  width: 90%;
+  width: 99%;
   height: 90%;
+  max-height: 200px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   position: absolute;
   background: #1258a2;
-  top: 10%;
+  top: 9%;
   overflow-y: scroll;
-  opacity: 1 !important;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 8px 8px;
 }
 .validator-selectionpart li {
   width: 100%;
   height: 30%;
   display: flex;
-  border-bottom: 1px solid #dfdfdf;
   color: #eee;
-  margin-bottom: 1%;
-  cursor: pointer;
   background: #1258a2;
+  cursor: pointer;
   z-index: 100;
 }
 .validator-selectionpart li:hover {
@@ -300,7 +305,7 @@ export default {
   height: 100%;
 }
 .validator-icon img {
-  width: 41%;
+  width: 43%;
 }
 .selection-table_validator {
   display: flex;
@@ -321,16 +326,14 @@ export default {
   user-select: none;
 }
 .selection-box {
-  grid-column: 10/13;
-  grid-row: 3/4;
-  width: 96%;
-  height: 77%;
-  border: 4px solid #bfbfbf;
+  grid-column: 1/2;
+  grid-row: 8/13;
+  width: 100%;
+  height: 36%;
   border-radius: 10px;
   background-color: #242529;
   display: flex;
   margin: 0 auto;
-  margin-top: 35px;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
@@ -338,8 +341,6 @@ export default {
 }
 .selection-table {
   width: 100%;
-  height: 80%;
-  padding: 0 5px;
   margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;

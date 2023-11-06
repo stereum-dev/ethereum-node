@@ -1,8 +1,7 @@
 <template>
-  <div class="statParent" @mousedown.prevent>
-    <div class="balanceParent">
-      <TotalBalance />
-    </div>
+  <div class="statParent space-y-1" @mousedown.prevent>
+    <TotalBalance />
+
     <div class="stateBox">
       <div v-if="checkConsensus && checkKeyExists && checkConsensusState.state === 'running'" class="stateInnerBox">
         <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
@@ -96,9 +95,19 @@ export default {
         },
       ],
       tabs: [
-        { id: 1, title: "ATTESTATION", imgPath: "/img/icon/the-staking/eye.png", display: false },
+        {
+          id: 1,
+          title: "ATTESTATION",
+          imgPath: "/img/icon/the-staking/eye.png",
+          display: false,
+        },
         // { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
-        { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
+        {
+          id: 3,
+          title: "BLOCK PRODUCTION",
+          imgPath: "/img/icon/the-staking/cube.png",
+          display: false,
+        },
       ],
       selectedValidator: {},
       maxCharacters: 30,
@@ -182,11 +191,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
-  min-height: 320px;
-  height: 100%;
-  padding: 10px 5px 10px 5px;
+  height: 300px;
 }
 .balanceParent {
   width: 100%;
@@ -218,7 +225,7 @@ export default {
 
 .indexParent {
   grid-column: 1/7;
-  grid-row: 5/6;
+  grid-row: 2/3;
   width: 100%;
   height: 100%;
 }
@@ -318,7 +325,7 @@ export default {
 
 .tabBarParent {
   grid-column: 1/7;
-  grid-row: 1/4;
+  grid-row: 8/11;
   width: 100%;
   height: 100%;
   display: flex;
@@ -341,10 +348,9 @@ export default {
 }
 .componentParent {
   grid-column: 1/7;
-  grid-row-start: 6;
-  grid-row-end: 11;
+  grid-row: 3/8;
   width: 100%;
-  height: 95%;
+  height: 100px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;

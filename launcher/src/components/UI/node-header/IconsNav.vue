@@ -5,6 +5,7 @@
       @click="supportModalOpen"
       @mouseenter="cursorLocation = `${help}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="help" src="/img/icon/header-icons/question-mark.png" />
     </div>
@@ -14,6 +15,7 @@
       @click="notifModalOpen"
       @mouseenter="cursorLocation = `${notif}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
@@ -23,6 +25,7 @@
       @click="updateModalHandler"
       @mouseenter="cursorLocation = `${availableUpdt}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
@@ -33,6 +36,7 @@
       @mouseover="showUpdateText = true"
       @mouseenter="cursorLocation = `${updtPan}`"
       @mouseleave="(showUpdateText = false), (cursorLocation = '')"
+      @mousedown.prevent
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
     </div>
@@ -42,6 +46,7 @@
       class="icon-btn"
       @mouseenter="cursorLocation = `${setting}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <div>
         <img alt="setting" src="/img/icon/header-icons/setting4.png" />
@@ -53,18 +58,20 @@
       @click="logoutModalHandler"
       @mouseenter="cursorLocation = `${logOutBtn}`"
       @mouseleave="cursorLocation = ''"
+      @mousedown.prevent
     >
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
+
     <update-panel
+      v-if="displayUpdatePanel"
       ref="UpdatePanelComp"
-      :click-bg="displayUpdatePanel"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
       @update-confirm="updateConfirmationHandler"
       @run-update="runUpdate"
       @run-os-update="runOsUpdate"
-      @click-out="removeUpdateModal"
+      @click-outside="removeUpdateModal"
     ></update-panel>
+
     <logout-modal
       v-if="logoutModalIsActive"
       @close-me="clickToCancelLogout"
@@ -87,6 +94,7 @@ import NotifModal from "./NotifModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useUpdateCheck } from "@/composables/version";
 import TutorialGuide from "../the-node/TutorialGuide.vue";
 import StakeGuide from "../the-node/StakeGuide.vue";
 export default {
@@ -107,7 +115,7 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
+      displayUpdatePanel: "displayUpdatePanel",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
       isOsUpdateAvailable: "isOsUpdateAvailable",
@@ -117,7 +125,6 @@ export default {
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
-      displayUpdatePanel: "displayUpdatePanel",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
@@ -127,6 +134,7 @@ export default {
       cursorLocation: "cursorLocation",
     }),
   },
+
   methods: {
     updateConfirmationHandler: async function () {
       let seconds = 0;
@@ -138,11 +146,11 @@ export default {
       } catch (err) {
         console.log("Running All Updates Failed: ", err);
       } finally {
-        this.forceUpdateCheck = true;
         this.updating = false;
         this.versions = {};
         this.newUpdates = [];
         this.refresh = true;
+        // search for updates afterwards
         await ControlService.restartServices(seconds);
       }
     },
@@ -160,7 +168,6 @@ export default {
       } catch (err) {
         console.log(JSON.stringify(item) + "\nUpdate Failed", err);
       } finally {
-        this.forceUpdateCheck = true;
         this.refresh = true;
         this.newUpdates = this.newUpdates.filter((u) => {
           if (item && item.id) {
@@ -169,8 +176,9 @@ export default {
             return u.commit != item.commit;
           }
         });
-        await ControlService.restartServices(seconds);
         this.updating = false;
+        // Search for updates afterwards
+        await ControlService.restartServices(seconds);
       }
     },
     async runOsUpdate() {
@@ -200,8 +208,8 @@ export default {
       });
     },
     updateModalHandler() {
-      if (!this.updating) this.forceUpdateCheck = true;
-      this.displayUpdatePanel = !this.displayUpdatePanel;
+      this.displayUpdatePanel = true;
+      useUpdateCheck();
     },
     removeUpdateModal() {
       this.displayUpdatePanel = false;
@@ -222,10 +230,26 @@ export default {
 };
 </script>
 <style scoped>
+.slide-fade-enter-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from {
+  transform: translateX(405px);
+  opacity: 0;
+}
+.slide-fade-leave-to {
+  transform: translateX(405px);
+  opacity: 0;
+}
 .icons-box {
   width: 25%;
   max-width: 250px;
-  height: 80%;
+  height: 65%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -249,9 +273,9 @@ export default {
   align-items: center;
 }
 .icon-btn {
-  width: 14%;
-  height: 85%;
-  border: 2px solid #a5a5a5;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #597777;
   border-radius: 100%;
   background-color: #336666;
   box-shadow: 1px 1px 5px 1px rgb(33, 58, 53);
@@ -264,25 +288,20 @@ export default {
 }
 .icon-btn:hover {
   background-color: #274f4f;
-  border: 2px solid rgb(141, 141, 141);
-  transition-duration: 200ms;
+  border: 1px solid #84abab;
+  transition-duration: 100ms;
 }
+
 .icon-btn:active {
   box-shadow: none;
-  background-color: #274f4f;
-  transition-duration: 200ms;
-  transform: scale(0.92);
+  transition-duration: 100ms;
+  transform: scale(0.95);
 }
-.icon-btn:active img {
-  /* width: 65%;
-  height: 65%; */
-  box-shadow: none;
-}
+
 .icon-btn img {
-  width: 70%;
-  height: 70%;
-  transform: scale(1);
+  width: 67%;
 }
+
 .help-text {
   width: 20px;
   height: 5px;

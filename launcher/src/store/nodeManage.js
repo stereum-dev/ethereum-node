@@ -2,10 +2,24 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      reloadEditBody: false,
+      isLineHidden: false,
+      lines: [],
+      hideConnectingLines: false,
+      addConfigButton: false,
+      nodeConfigs: [
+        { id: 1, configName: "config", status: true },
+        { id: 2, configName: "config", status: false },
+        { id: 3, configName: "config", status: false },
+        { id: 4, configName: "config", status: false },
+        { id: 5, configName: "config", status: false },
+        { id: 6, configName: "config", status: false },
+      ],
+      isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
-      resyncSeparateModal: false,
       availableBlocks: [],
+      checkedRelays: [],
       usedBlocks: [],
       relaysList: [
         {
@@ -44,18 +58,7 @@ export const useNodeManage = defineStore("nodeManage", {
           isRemoved: false,
           freeCensorship: false,
         },
-        {
-          icon: "/img/icon/click-installation/blocknative.png",
-          name: "BLOCKNATIVE",
-          mainnet:
-            "https://0x9000009807ed12c1f08bf4e81c6da3ba8e3fc3d953898ce0102433094e5f22f21102ec057841fcb81978ed1ea0fa8246@builder-relay-mainnet.blocknative.com",
-          goerli:
-            "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com",
-          id: 5,
-          isSelected: false,
-          isRemoved: false,
-          freeCensorship: false,
-        },
+
         {
           icon: "/img/icon/click-installation/MANIFOLD.png",
           name: "MANIFOLD",
@@ -157,6 +160,8 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       confirmChanges: [],
+      disableConfirmButton: false,
+      displayNetworkList: false,
       networkList: [
         {
           id: 1,
@@ -206,9 +211,17 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       currentNetwork: {},
+      selectedNetwork: null,
       configNetwork: {},
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    addRelay(relay) {
+      this.checkedRelays.push(relay);
+    },
+    removeRelay(relay) {
+      this.checkedRelays.splice(this.checkedRelays.indexOf(relay), 1);
+    },
+  },
 });

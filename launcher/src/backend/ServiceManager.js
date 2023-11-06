@@ -24,6 +24,7 @@ import { StringUtils } from "./StringUtils";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
+import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 import YAML from "yaml";
@@ -140,6 +141,8 @@ export class ServiceManager {
               services.push(Web3SignerService.buildByConfiguration(config));
             } else if (config.service == "NotificationService") {
               services.push(NotificationService.buildByConfiguration(config));
+            } else if (config.service == "MetricsExporterService") {
+              services.push(MetricsExporterService.buildByConfiguration(config));
             } else if (config.service == "ValidatorEjectorService") {
               services.push(ValidatorEjectorService.buildByConfiguration(config));
             } else if (config.service == "KeysAPIService") {
@@ -183,6 +186,7 @@ export class ServiceManager {
     switch (action) {
       case "pruneGeth":
         if (service.service === "GethService") {
+          service.yaml = await this.nodeConnection.readServiceYAML(service.config.serviceID);
           let data = service.yaml + "\nisPruning: true";
           await this.nodeConnection.writeServiceYAML({
             id: service.config.serviceID,
@@ -210,9 +214,9 @@ export class ServiceManager {
 
   async restartService(client) {
     if (client.state == "running") {
-      await this.manageServiceState(client.serviceID, "stopped");
+      await this.manageServiceState(client.config.serviceID, "stopped");
     }
-    await this.manageServiceState(client.serviceID, "started");
+    await this.manageServiceState(client.config.serviceID, "started");
   }
 
   async resyncService(serviceID, checkpointUrl) {
@@ -303,7 +307,7 @@ export class ServiceManager {
     for (let task of tasks) {
       let ssvConfig
       let service = services.find((s) => s.id === task.service.config.serviceID);
-      let dependencies = task.data.executionClients.concat(task.data.beaconServices).map((s) =>
+      let dependencies = task.data.executionClients.concat(task.data.consensusClients).map((s) =>
         services.find((e) => {
           if (e.id === s.config.serviceID) {
             return true;
@@ -652,7 +656,7 @@ export class ServiceManager {
         });
         break;
       case "validator":
-        switchTask.data.data.beaconServices = previousService.dependencies.consensusClients;
+        switchTask.data.data.consensusClients = previousService.dependencies.consensusClients;
         break;
     }
     try {
@@ -692,7 +696,7 @@ export class ServiceManager {
     }
   }
 
-  //args: network, installDir, port, executionClients, checkpointURL, beaconServices, mevboost, relays
+  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays
   getService(name, args) {
     let ports;
     let service;
@@ -765,7 +769,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/lighthouse",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "PrysmBeaconService":
@@ -790,7 +794,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/prysm",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "LodestarBeaconService":
@@ -816,7 +820,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/lodestar",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "NimbusBeaconService":
@@ -840,7 +844,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/nimbus",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "TekuBeaconService":
@@ -865,7 +869,7 @@ export class ServiceManager {
           args.network,
           ports,
           args.installDir + "/teku",
-          args.beaconServices
+          args.consensusClients
         );
 
       case "PrometheusNodeExporterService":
@@ -888,6 +892,9 @@ export class ServiceManager {
       case "NotificationService":
         return NotificationService.buildByUserInput(args.network, args.installDir + "/notification");
 
+      case "MetricsExporterService":
+        return MetricsExporterService.buildByUserInput(args.network);
+
       case "ValidatorEjectorService":
         return ValidatorEjectorService.buildByUserInput(args.network, args.installDir + "/validatorejector");
 
@@ -905,11 +912,11 @@ export class ServiceManager {
           ports,
           args.installDir + "/ssv_network",
           args.executionClients,
-          args.beaconServices
+          args.consensusClients
         );
       case "CharonService":
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
-        return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.beaconServices);
+        return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
     }
   }
 
@@ -1068,8 +1075,8 @@ export class ServiceManager {
           return newServices.find((s) => s.id === id);
         });
       }
-      if (t.data.beaconServices.length > 0) {
-        t.data.beaconServices = t.data.beaconServices.map((cc) => {
+      if (t.data.consensusClients.length > 0) {
+        t.data.consensusClients = t.data.consensusClients.map((cc) => {
           let id = cc.config ? cc.config.serviceID : cc.id;
           if (id) {
             return services.find((s) => s.id === id);
@@ -1084,8 +1091,8 @@ export class ServiceManager {
     });
     let VLInstalls = tasks.filter((t) => t.service.category === "validator" && t.service.service !== "SSVNetworkService");
     VLInstalls.forEach((t) => {
-      if (t.data.beaconServices.length > 0) {
-        t.data.beaconServices = t.data.beaconServices.map((bc) => {
+      if (t.data.consensusClients.length > 0) {
+        t.data.consensusClients = t.data.consensusClients.map((bc) => {
           let id = bc.config ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
@@ -1100,8 +1107,8 @@ export class ServiceManager {
     });
     let PInstalls = tasks.filter((t) => t.service.category === "service");
     PInstalls.forEach((t) => {
-      if (t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService") {
-        t.data.beaconServices = t.data.beaconServices.map((bc) => {
+      if (t.data.consensusClients.length > 0 && t.service.service === "FlashbotsMevBoostService") {
+        t.data.consensusClients = t.data.consensusClients.map((bc) => {
           let id = bc.config ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
@@ -1111,8 +1118,8 @@ export class ServiceManager {
         });
       }
       let service = this.getService(t.service.service, t.data);
-      if (t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService") {
-        let changed = this.addDependencies(service, t.data.beaconServices);
+      if (t.data.consensusClients.length > 0 && t.service.service === "FlashbotsMevBoostService") {
+        let changed = this.addDependencies(service, t.data.consensusClients);
         changed.forEach((dep) => {
           let index = newServices.findIndex((s) => s.id === dep.id);
           if (index != -1) {
@@ -1313,11 +1320,11 @@ export class ServiceManager {
         log.error("Modifying Services Failed:", err);
       }
     }
-    if (jobs.includes("CHANGE NETWORK")) {
+    if (jobs.includes("SWITCH NETWORK")) {
       let before = this.nodeConnection.getTimeStamp();
       let services = await this.readServiceConfigurations();
       try {
-        let changeNetworkTask = tasks.find((t) => t.content === "CHANGE NETWORK");
+        let changeNetworkTask = tasks.find((t) => t.content === "SWITCH NETWORK");
         await this.changeNetwork(
           changeNetworkTask.data.network,
           services.filter((s) => s.service !== "SSVNetworkService")
@@ -1445,12 +1452,38 @@ export class ServiceManager {
   }
 
   async removeTekuLockFiles(serviceID) {
-    let services = await this.readServiceConfigurations();
-    let service = services.find((s) => s.id === serviceID);
-    let workingDir = this.getWorkindDir(service);
-    if (!workingDir.endsWith("/")) {
-      workingDir += "/";
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.tasks.push({ name: "Remove Lockfiles", otherRunRef: ref });
+    let status = ""
+    try {
+      let services = await this.readServiceConfigurations();
+      let service = services.find((s) => s.id === serviceID);
+      let workingDir = this.getWorkindDir(service);
+      if (!workingDir.endsWith("/")) {
+        workingDir += "/";
+      }
+      status = await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`)
+      this.nodeConnection.taskManager.otherSubTasks.push({
+        name: "remove lock files",
+        otherRunRef: ref,
+        status: true,
+        data: JSON.stringify(status),
+      });
+    } catch (err) {
+      log.error("Removing Teku Lock Files Failed:", err);
+      this.nodeConnection.taskManager.otherSubTasks.push({
+        name: "remove lock files",
+        otherRunRef: ref,
+        status: false,
+        data: JSON.stringify(status),
+      });
+    } finally {
+      this.nodeConnection.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
     }
-    await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`)
+  }
+
+  async beaconchainMonitoringModification(data) {
+    console.log(data.selectedVal + " " + data.apiKey + " " + data.machineName);
+    // NOT YET IMPLEMENTED
   }
 }

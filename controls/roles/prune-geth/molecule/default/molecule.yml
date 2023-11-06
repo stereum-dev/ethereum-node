@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
 driver:
-  name: hetznercloud
+  name: molecule_hetznercloud
 platforms:
   - name: "prune-geth--default--ubuntu-22.04"
     hostname: ubuntu
@@ -27,8 +27,6 @@ scenario:
     - prepare
     - converge
     #- idempotence
-    - lint
     - verify
     - destroy
-
 #EOF

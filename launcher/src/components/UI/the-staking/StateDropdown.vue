@@ -51,7 +51,7 @@ export default {
       this.dropDownIsOpen = !this.dropDownIsOpen;
     },
     chooseValidator(key) {
-      if (this.keys == []) return;
+      if (!this.keys.length) return;
       this.selectedValidator = key;
       this.dropDownIsOpen = false;
       this.$emit("getValidator", this.selectedValidator);
@@ -63,7 +63,7 @@ export default {
 <style scoped>
 .dropDown_parent {
   grid-column: 1/7;
-  grid-row: 4/5;
+  grid-row: 1/2;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -160,7 +160,6 @@ export default {
 .dropDown_box .dropDown .dropDown_icon {
   width: 13%;
   height: 100%;
-  background-color: #0a7ae2;
   border-radius: 0 5px 5px 0;
   display: flex;
   justify-content: center;

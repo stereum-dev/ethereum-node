@@ -66,13 +66,7 @@ jobs:
   update-changes:
     strategy:
       matrix:
-        tests:
-          [
-            { role: "update-changes", test: "20-rc10" },
-            { role: "update-changes", test: "20-rc12" },
-            { role: "update-changes", test: "20-rc13" },
-            { role: "update-changes", test: "20-rc16" },
-          ]
+        tests: [{ role: "update-changes", test: "20-rc23" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
