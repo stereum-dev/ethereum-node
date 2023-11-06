@@ -19,6 +19,8 @@ export class ValidatorAccountManager {
     this.nodeConnection = nodeConnection;
     this.serviceManager = serviceManager;
     this.batches = [];
+    this.callCount = 0;
+    this.storedKeys = [];
   }
 
   createBatch(files, password, slashingDB, chunkSize = 100) {
@@ -235,7 +237,7 @@ export class ValidatorAccountManager {
     }
   }
 
-  async listValidators(serviceID) {
+  async listValidators(serviceID, numRunningValidatorService) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Keys`);
     try {
@@ -246,7 +248,7 @@ export class ValidatorAccountManager {
 
       const data = JSON.parse(result.stdout);
       if (!data.data) data.data = [];
-      await this.writeKeys(data.data.map((k) => k.validating_pubkey));
+      await this.storeKeys(data.data, numRunningValidatorService);
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -523,31 +525,54 @@ export class ValidatorAccountManager {
     }
   }
 
+  async storeKeys(data, numRunningValidatorService) {
+    this.callCount++;
+    if (this.callCount % numRunningValidatorService !== 0 && !isNaN(this.callCount % numRunningValidatorService)) {
+      this.storedKeys.push(...data.map((k) => k.validating_pubkey));
+    } else if (this.callCount % numRunningValidatorService === 0) {
+      this.storedKeys.push(...data.map((k) => k.validating_pubkey));
+      await this.writeKeys(this.storedKeys);
+      this.storedKeys = [];
+      this.callCount = 0;
+    } else if (data.length === 0) {
+      await this.writeKeys(data);
+      this.callCount = 0;
+    }
+  }
+
   async writeKeys(keys) {
     let obj = keys;
-    console.log(obj);
     if (Array.isArray(keys)) {
       const existing = await this.readKeys();
-      obj = existing ? existing : {};
-      keys.forEach((key) => {
-        if (existing && existing[key]) {
-          if (typeof existing[key] === "string") {
+      if (existing) {
+        obj = existing;
+        if (Object.keys(existing).length !== 0) {
+          Object.keys(existing).forEach((key) => {
+            obj = !keys.includes(key) ? {} : obj;
+          });
+        }
+        keys.forEach((key) => {
+          if (existing[key]) {
+            if (typeof existing[key] === "string") {
+              obj[key] = {
+                keyName: existing[key],
+                groupName: "",
+                groupID: null,
+              };
+            } else {
+              obj[key] = existing[key];
+            }
+          } else {
             obj[key] = {
-              keyName: existing[key],
+              keyName: "",
               groupName: "",
               groupID: null,
             };
-          } else {
-            obj[key] = existing[key];
           }
-        } else {
-          obj[key] = {
-            keyName: "",
-            groupName: "",
-            groupID: null,
-          };
-        }
-      });
+        });
+      } else {
+        obj = {};
+      }
     }
     await this.nodeConnection.sshService.exec(
       "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(obj)) + " > /etc/stereum/keys.yaml"
