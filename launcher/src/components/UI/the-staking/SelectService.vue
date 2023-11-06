@@ -62,7 +62,7 @@ export default {
 </script>
 <style scoped>
 .selectBox {
-  grid-column: 2/10;
+  grid-column: 4/12;
   grid-row: 3/4;
   width: 100%;
   height: 40px;
