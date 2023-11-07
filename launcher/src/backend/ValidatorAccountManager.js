@@ -244,9 +244,19 @@ export class ValidatorAccountManager {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
       const result = await this.keymanagerAPI(client, "GET", "/eth/v1/keystores");
 
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      const data = JSON.parse(result.stdout);
+      if (data.data === undefined) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
+        }
+        throw data.code + " " + data.message;
+      }
+
+      //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout);
 
-      const data = JSON.parse(result.stdout);
       if (!data.data) data.data = [];
       await this.storeKeys(data.data, numRunningValidatorService);
 
@@ -309,8 +319,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -696,13 +705,11 @@ export class ValidatorAccountManager {
           await this.nodeConnection.sshService.exec(
             `chown 2000:2000 ${validatorsDir}/${pubkey}/exit_password.txt && chmod 700 ${validatorsDir}/${pubkey}/exit_password.txt`
           );
-          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=${
-            client.network
-          } --beacon-node=${
-            client.dependencies.consensusClients[0]
+          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=${client.network
+            } --beacon-node=${client.dependencies.consensusClients[0]
               ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
               : "http:stereum-" + client.id + ":5052"
-          } --no-confirmation`;
+            } --no-confirmation`;
           result = await this.nodeConnection.sshService.exec(exitNimbusCmd);
           await this.nodeConnection.sshService.exec(`rm ${validatorsDir}/${pubkey}/exit_password.txt`);
           break;
@@ -726,11 +733,10 @@ export class ValidatorAccountManager {
         }
         case "teku": {
           let noPrefixPubkey = pubkey.slice(2, 98);
-          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${
-            client.dependencies.consensusClients[0]
+          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${client.dependencies.consensusClients[0]
               ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
               : "http://127.0.0.1:5051"
-          } --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
+            } --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
           result = await this.nodeConnection.sshService.exec(exitTekuCmd);
           break;
         }
