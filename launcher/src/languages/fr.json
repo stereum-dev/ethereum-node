@@ -8,7 +8,8 @@
     "password": "MOT DE PASSE",
     "keylocation": "LOCALISATION DE LA CLÉ",
     "usessh": "UTILISER UNE CLÉ SSH",
-    "fillFields": "Please fill in the missing fields!"
+    "fillFields": "Please fill in the missing fields!",
+    "KeyPassphrase": "KEY PASSPHRASE"
   },
   "comingsoon": {
     "comingsoon": "COMING SOON"
