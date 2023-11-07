@@ -4,7 +4,7 @@
     style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
-    @mouseenter="footerStore.cursorLocation = `${props.client.name} client`"
+    @mouseenter="footerStore.cursorLocation = `${props.client.name} ${clientClient}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
@@ -19,7 +19,7 @@
       <div
         v-if="props.client.category !== 'validator'"
         class="h-1/3 flex justify-evenly items-center"
-        @mouseenter="footerStore.cursorLocation = `sync status: ${syncPercent}`"
+        @mouseenter="footerStore.cursorLocation = `${syncStatusPer} ${syncPercent}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-4" :src="syncIcon" alt="icon" />
@@ -28,7 +28,7 @@
       <div
         v-else
         class="h-1/3 flex justify-center items-center"
-        @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} key(s) imported`"
+        @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} ${keyMsg}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
@@ -55,6 +55,13 @@ import { useControlStore } from "@/store/theControl";
 import { useDeepClone } from "@/composables/utils";
 import { ref } from "vue";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const clientClient = t("clientLay.client");
+const keyMsg = t("clientLay.keyMsg");
+const syncStatusPer = t("clientLay.syncStatus");
 
 const footerStore = useFooter();
 

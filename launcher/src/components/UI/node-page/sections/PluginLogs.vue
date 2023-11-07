@@ -30,7 +30,7 @@
           <p class="category">
             {{ logsItem.category }}<span v-if="logsItem.category != 'service'" class="client"> client</span>
           </p>
-          <span id="serviceVersion">{{ logsItem.config.imageVersion }}</span>
+          <span id="serviceVersion">{{ logsItem.config.runningImageVersion }}</span>
         </div>
         <div class="closeBox" @click="$emit('closeLog')">
           <div class="closeBtn"><span>x</span></div>

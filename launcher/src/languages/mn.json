@@ -495,7 +495,7 @@
     "use": "ХЭРЭГЛЭЭ",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM-ийн ШИНЭЧЛЭЛТ",
-    "clkFee": "click to set fee recipient",
+    "clkFee": "Service Settings",
     "clkUpdate": "Шинэчлэх самбарыг нээхийн тулд товшино уу"
   },
   "restartModalNode": {
@@ -680,5 +680,69 @@
     "clockClose": "Хаахын тулд гадна талд товшино уу",
     "noIpFound": "No IP found",
     "clickSearch": "Click [search] to start"
+  },
+  "serviceBtn": {
+    "turnOff": "Turn off the service",
+    "turnOn": "Turn on the service",
+    "restart": "Restart the service",
+    "pending": "Service is pending",
+    "settings": "service settings",
+    "logs": "open logs",
+    "docs": "open docs"
+  },
+  "serviceLay": {
+    "srvice": "service"
+  },
+  "clientButtons": {
+    "turnOn": "Turn on the service",
+    "turnOff": "Turn off the service",
+    "restart": "Restart the service",
+    "pending": "service is pending",
+    "settings": "service settings",
+    "logs": "open logs",
+    "docs": "open docs",
+    "removeLock": "remove lock files",
+    "pruning": "pruning the service",
+    "resync": "resync the service"
+  },
+  "clientLay": {
+    "client": "client",
+    "keyMsg": "key(s) imported",
+    "syncStatus": "sync status:"
+  },
+  "serverDetails": {
+    "machineName": "Machine Name",
+    "machineIp": "Machine IP Address"
+  },
+  "changesBox": {
+    "clickToCancel": "Click here to cancel this change"
+  },
+  "editClientLay": {
+    "clkEdit": "click to edit your service"
+  },
+  "generalMenu": {
+    "modify": "modify",
+    "connection": "connection",
+    "switchClient": "switch client",
+    "delete": "delete",
+    "service": "service",
+    "info": "info"
+  },
+  "networkDetail": {
+    "currIs": "The current network is",
+    "currentNet": "Current Network"
+  },
+  "changeSect": {
+    "clkConfirm": "Click here to confirm change(s)"
+  },
+  "sidebarSect": {
+    "toNode": "To the Node Page",
+    "toEdit": "To the Edit Node",
+    "setchNet": "Switch Network",
+    "nukTheNud": "Nuke the Node",
+    "nukNod": "Nuke Node",
+    "trnOn": "Turn Node On",
+    "trnOff": "Turn Node Off",
+    "expNode": "Export Node Config"
   }
 }

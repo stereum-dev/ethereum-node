@@ -206,8 +206,11 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("deleteValidators", args);
   }
 
-  async listValidators(args) {
-    return await this.promiseIpc.send("listValidators", args);
+  async listValidators(serviceID, numRunningValidatorService) {
+    return await this.promiseIpc.send("listValidators", {
+      serviceID: serviceID,
+      numRunningValidatorService: numRunningValidatorService,
+    });
   }
 
   async listServices() {
