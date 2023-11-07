@@ -7,11 +7,13 @@ import { useNodeManage } from '@/store/nodeManage';
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="w-full self-start text-xs font-semibold text-teal-700">
-      {{ $t("networkDetails.currentNet") }}
+      {{ t("networkDetails.currentNet") }}
     </div>
     <div class="w-full flex justify-center items-center">
       <img v-if="network.icon" :src="network.icon" alt="Networks" class="w-5 mr-1" />
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ network.name }}</span>
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
+        network.name
+      }}</span>
     </div>
   </div>
 </template>
@@ -30,7 +32,9 @@ const manageStore = useNodeManage();
 const network = ref({});
 
 watchEffect(() => {
-  network.value = manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork;
+  network.value = manageStore.configNetwork.id
+    ? manageStore.configNetwork
+    : manageStore.currentNetwork;
 });
 </script>
 <style scoped>
