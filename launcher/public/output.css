@@ -3110,6 +3110,10 @@ video {
   padding-top: 2rem;
 }
 
+.pt-20{
+  padding-top: 5rem;
+}
+
 .text-left{
   text-align: left;
 }
