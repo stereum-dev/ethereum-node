@@ -200,9 +200,9 @@
                 errors: keyAuth ? !model.keylocation.isFilled : !model.passphrase.isFilled,
               }"
             >
-              <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2"
-                >SSH-{{ $t("formsetup.password") }}</span
-              >
+              <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+                $t("formsetup.KeyPassphrase")
+              }}</span>
               <input
                 v-model="model.passphrase.value"
                 class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
