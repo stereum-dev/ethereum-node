@@ -19,7 +19,7 @@
           :key="idx"
           class="col-span-1 w-9 h-9 flex justify-center items-center relative bg-[#191c21] rounded-md p-1 justify-self-center self-center hover:bg-[#141517] hover:scale-90 transition-all duration-200 ease-in-out cursor-pointer"
           @mouseover="runningTooltip(item)"
-          @mouseleave="item.displayTooltip = false"
+          @mouseleave="mouseLeave(plugin, item)"
         >
           <img :src="item.icon" alt="icon" class="w-5" @click="changeHandler(plugin, item, idx)" />
           <span
@@ -46,6 +46,11 @@ const emit = defineEmits(["changeHandler", "pluginExchange"]);
 
 const clickStore = useClickInstall();
 const serviceStore = useServices();
+
+const mouseLeave = (plugin, item) => {
+  plugin.openReplaceModal = false;
+  item.displayTooltip = false;
+};
 
 const runningTooltip = (el) => {
   serviceStore.allServices.filter((i) => {

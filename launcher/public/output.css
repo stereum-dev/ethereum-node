@@ -3098,6 +3098,10 @@ video {
   padding-top: 0.5rem;
 }
 
+.pt-20{
+  padding-top: 5rem;
+}
+
 .pt-4{
   padding-top: 1rem;
 }
@@ -3108,10 +3112,6 @@ video {
 
 .pt-8{
   padding-top: 2rem;
-}
-
-.pt-20{
-  padding-top: 5rem;
 }
 
 .text-left{
