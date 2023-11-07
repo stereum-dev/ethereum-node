@@ -1,6 +1,8 @@
 <template>
-  <div class="w-full h-full flex flex-col">
-    <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
+  <div class="h-full grid grid-cols-1 grid-rows-8">
+    <div
+      class="col-start-1 col-span-full row-start-1 row-span-1 h-[60px] self-center w-full flex flex-col justify-center items-center"
+    >
       <button
         v-if="editStore.disableConfirmButton"
         type="button"
