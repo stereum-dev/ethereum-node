@@ -5,20 +5,23 @@
     <div class="w-full h-full flex justify-center items-center">
       <div class="anim__content__box">
         <div class="anim__img__content">
-          <img src="/animation/custom/custom-1.png" alt="Anim Image" />
-          <img v-for="img in images" :key="img" :src="img" alt="Animation" />
+          <img class="z-[2]" src="/animation/custom/custom-1.png" alt="Anim Image " />
+          <img v-for="(img, idx) in images" :key="img" :src="img" :class="`z-[${idx}]`" alt="Animation" />
         </div>
       </div>
     </div>
 
-    <div class="w-full h-16 absolute bottom-20 inset-x-0 flex justify-center items-center p-1">
-      <div
-        v-if="displayNewTask !== ''"
-        class="w-[400px] h-full bg-[#23272b] rounded-full flex justify-center items-center py-1 px-4 z-20"
-      >
-        <p class="p-0 m-0 w-full text-lg text-gray-300 font-semibold text-left flex justify-center items-center">
+    <div class="absolute bottom-[3rem] inset-x-0 h-14 z-50">
+      <div v-if="displayNewTask" class="message-box">
+        <p class="msg-title">
           {{ displayNewTask }}
-          <span class="dot-flashing self-center mb-1"></span>
+          <span class="dot-flashing"></span>
+        </p>
+      </div>
+      <div v-else class="message-box">
+        <p class="msg-title">
+          Processing
+          <span class="dot-flashing"></span>
         </p>
       </div>
     </div>
