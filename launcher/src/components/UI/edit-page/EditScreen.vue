@@ -143,6 +143,7 @@ const nukeModalComponent = ref();
 onMounted(() => {
   manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
   manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  if (!manageStore.architecture) setArchitecture();
 });
 onMounted(() => {
   manageStore.confirmChanges = [];
@@ -182,6 +183,11 @@ function generateRandomId() {
   const randomPart = Math.random().toString(16).substring(2, 8); // Generate a random hexadecimal string
   return timestamp + randomPart;
 }
+
+const setArchitecture = async () => {
+  let settings = await ControlService.getStereumSettings();
+  manageStore.architecture = settings.stereum?.settings.arch;
+};
 
 const randomId = computed(() => generateRandomId());
 
