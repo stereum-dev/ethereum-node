@@ -175,8 +175,12 @@ const checkPluginCategory = (element) => {
       filter = (item) => {
         if (element.category === "validator") {
           return item.service === "SSVNetworkService";
+        } else if (element.category === "consensus" && item.category === "consensus") {
+          return true;
+        } else if (element.category === "execution" && item.category === "execution") {
+          return true;
         }
-        return element.category === "consensus" ? !/Reth/.test(item.service) : item.category === element.category;
+        return false;
       };
       break;
     case "obol":

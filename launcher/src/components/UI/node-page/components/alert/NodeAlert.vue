@@ -1,6 +1,6 @@
 <template>
   <div class="status-box flex flex-col justify-between items-center">
-    <div class="status-box_header bg-[#151618] border border-gray-500 rounded-md">
+    <div class="status-box_header bg-[#151618] border border-gray-600 rounded-md">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
@@ -14,16 +14,14 @@
         <div
           class="status-icon"
           :class="{
-            active:
-              stereumUpdate.current !== stereumUpdate.version ||
-              updatedNewUpdates.length > 0,
+            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
           }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
     </div>
-    <div class="status-box_messages bg-[#151618] border border-gray-500 rounded-md">
+    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md">
       <div v-if="storageWarning" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
@@ -218,9 +216,7 @@ export default {
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
-        const matchingService = this.installedServices.find(
-          (service) => service.name === update.name
-        );
+        const matchingService = this.installedServices.find((service) => service.name === update.name);
         if (matchingService) {
           return {
             ...update,
@@ -285,9 +281,7 @@ export default {
       }
     },
     expertHandler(el) {
-      let selectedObject = this.installedServices.find(
-        (obj) => obj.config.serviceID === el
-      );
+      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
       selectedObject.expertOptionsModal = true;
       return selectedObject;
     },
@@ -306,15 +300,11 @@ export default {
           }
           if (!validator.yaml)
             try {
-              validator.yaml = await ControlService.getServiceYAML(
-                validator.config.serviceID
-              );
+              validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
             } catch (e) {
               console.log("couldn't get service yaml");
             }
-          const patternIndex = validator.expertOptions.findIndex(
-            (o) => o.title === "Default Fee Recipient"
-          );
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
           if (patternIndex === -1 || !validator.yaml) {
             continue;
           }
@@ -336,8 +326,7 @@ export default {
           }
         }
         const notSetAddresses = addresses.filter(
-          (validator) =>
-            validator.address === "0x0000000000000000000000000000000000000000"
+          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
       }

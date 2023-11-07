@@ -1547,6 +1547,10 @@ video {
   max-height: 430px;
 }
 
+.max-h-\[503px\]{
+  max-height: 503px;
+}
+
 .max-h-\[70px\]{
   max-height: 70px;
 }
@@ -2030,6 +2034,10 @@ video {
 
 .grid-rows-7{
   grid-template-rows: repeat(7 , minmax(0,1fr));
+}
+
+.grid-rows-8{
+  grid-template-rows: repeat(8 , minmax(0,1fr));
 }
 
 .flex-col{
@@ -3100,6 +3108,10 @@ video {
 
 .pt-8{
   padding-top: 2rem;
+}
+
+.pt-20{
+  padding-top: 5rem;
 }
 
 .text-left{
