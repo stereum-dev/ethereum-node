@@ -8,7 +8,8 @@
     "password": "LOZINKA",
     "keylocation": "KEY LOKACIJA",
     "usessh": "KORISTITI SSH KEY",
-    "fillFields": "Please fill in the missing fields!"
+    "fillFields": "Please fill in the missing fields!",
+    "KeyPassphrase": "KEY PASSPHRASE"
   },
   "comingsoon": {
     "comingsoon": "DOLAZI USKORO"
