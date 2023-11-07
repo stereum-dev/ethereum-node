@@ -1,5 +1,5 @@
 <template>
-  <div class="searchOptions" @mousedown.prevent.stop>
+  <div class="searchOptions space-x-5" @mousedown.prevent.stop>
     <img
       v-if="isPubkeyVisible"
       class="pubkeyView"
@@ -18,13 +18,7 @@
       @mouseenter="cursorLocation = `${switchShow}`"
       @mouseleave="cursorLocation = ''"
     />
-    <img
-      class="folder"
-      src="/img/icon/the-staking/newfolder-icon.png"
-      alt="icon"
-      @mouseenter="cursorLocation = `${group}`"
-      @mouseleave="cursorLocation = ''"
-    />
+
     <img
       class="filter"
       src="/img/icon/the-staking/staking-filter.png"
@@ -33,6 +27,13 @@
       @mouseenter="cursorLocation = `${searchFilter}`"
       @mouseleave="cursorLocation = ''"
     />
+    <!-- <img
+      class="folder pointer-events-none opacity-50"
+      src="/img/icon/the-staking/newfolder-icon.png"
+      alt="icon"
+      @mouseenter="cursorLocation = `${group}`"
+      @mouseleave="cursorLocation = ''"
+    /> -->
   </div>
 </template>
 <script>
@@ -66,12 +67,12 @@ export default {
 }
 .searchOptions {
   position: relative;
-  grid-column: 10/13;
+  grid-column: 2/4;
   grid-row: 3/4;
   width: 100%;
   height: max-content;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   align-self: flex-end;
 }

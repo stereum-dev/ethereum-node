@@ -1,16 +1,14 @@
 <template>
-  <div
-    class="w-screen h-screen colstart-1 col-span-full row-start-1 row-span-full flex flex-col justify-evenly items-center"
-  >
-    <div class="w-full h-full flex justify-center items-center">
+  <div class="w-screen h-screen col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
+    <div class="col-start-1 col-span-full row-start-1 row-span-full h-full flex justify-center items-center">
       <div class="anim__content__box">
         <div class="anim__img__content">
           <img v-for="(img, index) in images" :key="index" :src="img" :class="imgClass(img)" alt="Animation" />
 
           <img v-if="cilentIconActive" :src="executionClientIcon" class="execution__icon_big" alt="icon" />
-          <img v-if="!cilentIconActive" :src="executionClientIcon" class="animate__flip execution__icon" alt="icon" />
+          <img v-if="!cilentIconActive" :src="executionClientIcon" class="execution__icon opacity-50" alt="icon" />
 
-          <img v-if="!cilentIconActive" :src="consensusClientIcon" class="consensus__icon" alt="icon" />
+          <img v-if="!cilentIconActive" :src="consensusClientIcon" class="consensus__icon opacity-50" alt="icon" />
 
           <img v-if="cilentIconActive" :src="consensusClientIcon" class="consensus__icon_big" alt="icon" />
 
@@ -22,13 +20,11 @@
       </div>
     </div>
 
-    <div
-      v-if="displayNewTask"
-      class="w-full h-14 col-start-2 col-end-5 row-start-1 row-span-1 z-50 flex justify-center items-center mx-auto self-center"
-    >
+    <div class="w-full h-14 absolute inset-x-0 top-12 z-50 flex justify-center items-center mx-auto self-center">
       <transition-group
+        enter-active-class="animate__animated animate__flip"
+        leave-active-class="animate__animated animate__flipOutY"
         name="list"
-        mode="out-in"
         duration="2000"
         tag="div"
         class="flex justify-evenly items-center space-x-6"
@@ -43,11 +39,16 @@
         />
       </transition-group>
     </div>
-
     <div class="absolute bottom-[3rem] inset-x-0 h-14">
       <div v-if="displayNewTask" class="message-box">
         <p class="msg-title">
           {{ displayNewTask }}
+          <span class="dot-flashing"></span>
+        </p>
+      </div>
+      <div v-else class="message-box">
+        <p class="msg-title">
+          Processing
           <span class="dot-flashing"></span>
         </p>
       </div>
@@ -86,7 +87,8 @@ const getIcons = computed(() => {
   return plugins.map((plugin, index) => {
     return {
       src: plugin.icon,
-      class: "z-50 scale-110 transition-all ease-in-out " + `delay-${index + 10}00` + `duration-${index + 5}00`,
+
+      class: "z-50 scale-110 transition-all ease-in-out duration-1000 " + `delay-${index + 20}00`,
     };
   });
 });
@@ -244,6 +246,7 @@ const intervalId = setInterval(() => {
   position: absolute !important;
   top: 30% !important;
   left: 28.8% !important;
+  opacity: 0.5 !important;
   animation-name: anim2 3s infinite !important;
 }
 .consensus__icon {
@@ -252,6 +255,7 @@ const intervalId = setInterval(() => {
   position: absolute !important;
   top: 29.2% !important;
   left: 58.6% !important;
+  opacity: 0.5 !important;
   animation-name: anim2 3s infinite !important;
 }
 .execution__icon_big {

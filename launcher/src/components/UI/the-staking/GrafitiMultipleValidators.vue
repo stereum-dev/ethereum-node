@@ -5,7 +5,12 @@
         <img class="grafiti-icon" src="../../../../public/img/icon/the-staking/option-graffiti.png" alt="icon" />
       </div>
       <div class="inputBox">
-        <input v-model="graffiti" type="text" maxlength="32" :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')" />
+        <input
+          v-model="graffiti"
+          type="text"
+          maxlength="32"
+          :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')"
+        />
       </div>
       <div class="confirmBox">
         <button class="confirmBtn" @click="$emit('confirmBtn', graffiti)">
@@ -26,7 +31,7 @@ export default {
 </script>
 <style scoped>
 .grafitiBox {
-  grid-column: 3/11;
+  grid-column: 4/12;
   grid-row: 2/3;
   width: 100%;
   height: 40px;
