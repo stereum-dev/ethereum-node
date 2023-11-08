@@ -97,7 +97,7 @@ const selectedPluginsValidation = () => {
 };
 const pluginChangeHandler = (plugin, item, idx) => {
   plugin.openReplaceModal = false;
-  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin.id);
+  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin?.id);
 
   if (oldPluginIndex !== -1) {
     clickStore.selectedPreset.includedPlugins.splice(oldPluginIndex, 1);
@@ -154,7 +154,7 @@ const pluginExChange = (el) => {
   if (el.category !== "service") {
     clickStore.selectedPreset.includedPlugins.filter((item) => {
       item.openReplaceModal = false;
-      if (item?.service === el.service) {
+      if (item.service === el.service) {
         checkPluginCategory(item);
       }
     });
@@ -175,8 +175,12 @@ const checkPluginCategory = (element) => {
       filter = (item) => {
         if (element.category === "validator") {
           return item.service === "SSVNetworkService";
+        } else if (element.category === "consensus" && item.category === "consensus") {
+          return true;
+        } else if (element.category === "execution" && item.category === "execution") {
+          return true;
         }
-        return element.category === "consensus" ? !/Reth/.test(item.service) : item.category === element.category;
+        return false;
       };
       break;
     case "obol":

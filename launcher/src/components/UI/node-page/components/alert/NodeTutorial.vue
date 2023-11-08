@@ -1,5 +1,5 @@
 <template>
-  <div class="tutorial-box border border-gray-500 rounded-md bg-[#151618]">
+  <div class="tutorial-box border border-gray-600 rounded-md bg-[#151618]">
     <div class="tutorial-btn" @click="handleWrittenOptionClick">
       <div class="icon-box">
         <img src="/img/icon/tutorial-icons/manual-icon.png" alt="" />

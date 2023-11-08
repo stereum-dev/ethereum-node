@@ -17,11 +17,13 @@
         <div
           v-for="(item, idx) in props.filteredPlugin"
           :key="idx"
-          class="col-span-1 w-9 h-9 flex justify-center items-center relative bg-[#191c21] rounded-md p-1 justify-self-center self-center hover:bg-[#141517] hover:scale-90 transition-all duration-200 ease-in-out cursor-pointer"
+          class="col-span-1 w-9 h-9 flex justify-center items-center relative rounded-md p-1 justify-self-center self-center hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer active:scale-100"
+          :class="item.replacePanel ? 'bg-teal-500' : 'bg-[#191c21]'"
           @mouseover="runningTooltip(item)"
           @mouseleave="item.displayTooltip = false"
+          @click="changeHandler(plugin, item, idx)"
         >
-          <img :src="item.icon" alt="icon" class="w-5" @click="changeHandler(plugin, item, idx)" />
+          <img :src="item.icon" alt="icon" class="w-5" />
           <span
             class="absolute -bottom-8 -right-4 text-xs text-[#14171a] font-semibold bg-gray-300 rounded-md px-2 py-1 z-50"
             :class="item.displayTooltip ? 'block' : 'invisible'"
@@ -55,6 +57,10 @@ const runningTooltip = (el) => {
 };
 
 const changeHandler = (plugin, item, idx) => {
+  clickStore.selectedPreset.includedPlugins.forEach((i) => {
+    i.replacePanel = false;
+  });
+  item.replacePanel = true;
   emit("changeHandler", plugin, item, idx);
 };
 

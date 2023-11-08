@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
-    })
+    }),
   },
   mounted() {
     if (this.currentNetwork.network === "gnosis") {
@@ -64,7 +64,7 @@ export default {
     openGnoEthDocs() {
       let url;
       if (this.currentNetwork.network === "gnosis") {
-        url = "https://docs.gnosischain.com/node/guide/";
+        url = "https://docs.gnosischain.com/node/manual/";
       } else {
         url = "https://ethereum.org/en/developers/docs/";
       }
