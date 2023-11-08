@@ -10,7 +10,10 @@ import { watch, watchEffect } from 'vue';
     "
   >
     <input :id="fieldId" v-model="relay.isSelected" type="checkbox" :value="relay" class="hidden" @change="getRelays" />
-    <div class="col-start-1 col-span-1 w-[15px] h-[15px] flex justify-center items-center mr-1 bg-black rounded-full">
+    <div
+      v-if="icon"
+      class="col-start-1 col-span-1 w-[15px] h-[15px] flex justify-center items-center mr-1 bg-black rounded-full"
+    >
       <img class="self-center rounded-full" :src="icon" alt="Relay Icon" />
     </div>
     <span class="col-start-3 col-end-12 text-sm" :class="relay.isSelected ? 'text-gray-800' : 'text-gray-300'">{{

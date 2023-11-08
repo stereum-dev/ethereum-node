@@ -9,20 +9,22 @@
         <div class="col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center p-2">
           <span class="text-left text-gray-200 text-sm"> {{ $t("customInstallation.customInstallationText") }}</span>
         </div>
-        <div class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7">
+        <div
+          class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7 relative duration-500"
+        >
           <div
             class="col-start-3 col-span-8 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
             @click="networkListDropdown = !networkListDropdown"
           >
             <img
-              v-if="currentNetwork.icon"
+              v-if="displayItem?.icon"
               class="col-start-1 col-span-1 w-7 h-7 justify-self-center self-center"
-              :src="currentNetwork?.icon"
+              :src="displayItem?.icon"
               alt="Arrow icon"
             />
             <span
               class="col-start-2 col-end-6 justify-self-center self-center text-center text-gray-800 text-lg font-semibold"
-              >{{ currentNetwork?.name ? currentNetwork?.name : "Select Network" }}</span
+              >{{ displayItem?.name ? displayItem?.name : displayItem }}</span
             >
 
             <svg
@@ -36,29 +38,30 @@
               <path stroke-linecap="round" stroke-width="2" d="M5 10l7 7 7-7"></path>
             </svg>
           </div>
-          <Transition name="slide-fade">
-            <ul
-              v-if="networkListDropdown"
-              class="col-start-3 col-span-8 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pb-1 w-full z-10 divide-y overflow-y-auto flex flex-col justify-start items-center mt-2"
+          <TransitionGroup
+            v-if="networkListDropdown"
+            tag="ul"
+            name="slide-fade"
+            class="col-start-3 col-span-8 row-start-2 row-span-full max-h-[200px] bg-gray-700 rounded-lg shadow-lg pb-1 w-full z-10 divide-y overflow-y-auto flex flex-col justify-start items-center mt-2"
+            :duration="500"
+          >
+            <li
+              v-for="item in networkList"
+              :key="item.name"
+              class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+              @click="selectNetwork(item)"
             >
-              <li
-                v-for="item in networkList"
-                :key="item.name"
-                class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
-                @click="selectNetwork(item)"
+              <img
+                class="h-[30px] col-start-1 col-end-2 self-center justify-self-center"
+                :src="item.icon"
+                alt="service Icon"
+              />
+              <span
+                class="col-start-3 col-end-6 px-4 py-1 flex justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
+                >{{ item.name }}</span
               >
-                <img
-                  class="h-[30px] col-start-1 col-end-2 self-center justify-self-center"
-                  :src="item.icon"
-                  alt="service Icon"
-                />
-                <span
-                  class="col-start-3 col-end-6 px-4 py-1 flex justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
-                  >{{ item.name }}</span
-                >
-              </li>
-            </ul>
-          </Transition>
+            </li>
+          </TransitionGroup>
           <div
             class="w-full col-start-1 col-span-full row-start-3 row-span-full mx-auto flex flex-col justify-start items-center px-2"
           >
@@ -104,6 +107,7 @@ export default {
       selectedNetworkName: "",
       inputTitle: "Choose your installation path where Stereum will be installed",
       nextBtnDisabled: false,
+      displayItem: "Click to select a network",
     };
   },
 
@@ -121,12 +125,16 @@ export default {
     this.activeBtn();
     this.getInstallPath();
   },
+  mounted() {
+    this.displayItem = "Click to select a network";
+  },
 
   methods: {
     selectNetwork(network) {
       this.selectedNetworkIcon = network.icon;
       this.selectedNetworkName = network.name;
       this.currentNetwork = network;
+      this.displayItem = network;
       this.nextBtnDisabled = true;
       this.networkListDropdown = false;
     },
@@ -158,15 +166,18 @@ export default {
 
 <style scoped>
 .slide-fade-enter-active {
-  transition: all 0.2s ease-out;
+  transition-duration: 500;
+  opacity: 0;
 }
 
 .slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  transition-duration: 500;
+  opacity: 0;
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
+  transition-duration: 500;
   transform: translateY(-20px);
 }
 .custom-layer_parent {

@@ -239,8 +239,8 @@ export class OneClickInstall {
     else if (selectedPreset == "archive") {
       switch (this.executionClient.service) {
         case "GethService":
-          this.executionClient.command.push("--syncmode full");
-          this.executionClient.command.push("--gcmode archive");
+          this.executionClient.command.push("--syncmode=full");
+          this.executionClient.command.push("--gcmode=archive");
           break;
         case "RethService":
           //archvie by default

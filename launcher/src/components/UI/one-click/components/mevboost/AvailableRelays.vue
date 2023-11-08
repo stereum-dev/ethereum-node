@@ -10,7 +10,7 @@
       @click="addItem(item)"
       @dblclick="doubleClick(item)"
     >
-      <img class="w-8 mr-2" :src="item.icon" alt="Client Icon" />
+      <img class="w-6 mr-2" :src="item?.icon" alt="Client Icon" />
       <div class="w-full flex flex-col justify-center items-start">
         <span class="text-sm text-gray-300 font-semibold">{{ item.name }}</span>
       </div>

@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
     <div
@@ -16,14 +16,14 @@ import { ref } from 'vue';
           @click="dropdownHandler"
         >
           <img
-            v-if="manageStore.currentNetwork.icon"
+            v-if="displayItem?.icon"
             class="col-start-1 col-span-1 w-7 h-7 justify-self-center self-center"
-            :src="manageStore.currentNetwork?.icon"
+            :src="displayItem?.icon"
             alt="Arrow icon"
           />
           <span
             class="col-start-2 col-end-6 justify-self-center self-center text-center text-gray-800 text-lg font-semibold"
-            >{{ manageStore.currentNetwork?.name ? manageStore.currentNetwork?.name : "Select Network" }}</span
+            >{{ displayItem?.name ? displayItem?.name : displayItem }}</span
           >
 
           <svg
@@ -69,16 +69,17 @@ import { ref } from 'vue';
             class="col-span-1 row-span-1 justify-self-center self-center hover:border hover:border-teal-500 rounded-md hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
             :class="{
               'opacity-30 pointer-events-none':
-                !manageStore.currentNetwork?.support?.includes(preset.name) || !manageStore.currentNetwork,
+                !manageStore.currentNetwork?.support?.includes(preset.name) || !displayItem?.name,
             }"
             @click="getPreset(preset)"
           >
             <img
               class="w-20"
-              :class="{
-                'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out':
-                  preset.selected,
-              }"
+              :class="
+                preset.selected
+                  ? 'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out'
+                  : ''
+              "
               :src="preset.icon"
               alt="Preset Icon"
             />
@@ -91,7 +92,7 @@ import { ref } from 'vue';
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import { useClickInstall } from "@/store/clickInstallation";
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 const emit = defineEmits(["installPreset"]);
 //Store
@@ -99,7 +100,23 @@ const manageStore = useNodeManage();
 const clickStore = useClickInstall();
 
 //Refs
+let displayItem = ref(null);
 const openDropdown = ref(false);
+
+//watchers
+
+watch(displayItem, () => {
+  if (displayItem.value === "Click to select a network") {
+    clickStore.selectedPreset = null;
+  }
+});
+
+//Lifecycle
+
+onMounted(() => {
+  displayItem.value = "Click to select a network";
+  clickStore.presets.forEach((p) => (p.selected = false));
+});
 
 //Methods
 const dropdownHandler = () => {
@@ -110,16 +127,19 @@ const getNetwork = (network) => {
   openDropdown.value = false;
   clickStore.presets.forEach((p) => (p.selected = false));
   manageStore.currentNetwork = network;
+  displayItem.value = network;
 };
 
 const getPreset = (preset) => {
-  preset.selected = true;
-  emit("installPreset", preset);
+  if (displayItem?.value.name) {
+    preset.selected = true;
+    emit("installPreset", preset);
+  }
 };
 </script>
 <style scoped>
 .slide-fade-enter-active {
-  transition: all 0.2s ease-out;
+  transition: all 0.4s ease-out;
 }
 
 .slide-fade-leave-active {

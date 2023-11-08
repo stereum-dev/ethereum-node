@@ -728,7 +728,7 @@
     "service": "service",
     "info": "info"
   },
-  "networkDetail": {
+  "networkDetails": {
     "currIs": "The current network is",
     "currentNet": "Current Network"
   },
