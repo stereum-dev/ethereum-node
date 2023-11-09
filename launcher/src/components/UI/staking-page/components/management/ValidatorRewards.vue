@@ -9,9 +9,9 @@
 </template>
 
 <script setup>
-import EpochSlot from "./components/rewards/EpochSlot.vue";
-import TotalBalance from "./components/rewards/TotalBalance.vue";
-import AttestationReward from "./components/rewards/AttestationReward.vue";
-import CommitteeReward from "./components/rewards/CommitteeReward.vue";
-import BlockReward from "./components/rewards/BlockReward.vue";
+import EpochSlot from "./components/val-rewards/EpochSlot.vue";
+import TotalBalance from "./components/val-rewards/TotalBalance.vue";
+import AttestationReward from "./components/val-rewards/AttestationReward.vue";
+import CommitteeReward from "./components/val-rewards/CommitteeReward.vue";
+import BlockReward from "./components/val-rewards/BlockReward.vue";
 </script>

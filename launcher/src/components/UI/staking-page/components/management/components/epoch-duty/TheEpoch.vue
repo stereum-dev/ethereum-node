@@ -1,9 +1,8 @@
 import { computed } from 'vue';
 <template>
-  <div class="w-10 h-10 rounded-md flex flex-col justify-center items-center p-1" :class="getStateColor">
-    <span class="text-[7px] font-semibold text-center uppercase" :class="getTextColor">{{ props.state }}</span>
-    <span class="text-[10px] font-semibold text-center text-gray-300">{{ props.keyNumber }} </span>
-    <img class="w-4 h-2" src="/img/icon/the-staking/keyIcon.png" alt="Key Icon" />
+  <div class="w-8 h-8 rounded-md flex flex-col justify-center items-center p-1" :class="getStateColor">
+    <span class="text-[6px] font-semibold text-center uppercase" :class="getTextColor">{{ props.state }}</span>
+    <span class="text-[12px] font-semibold text-center text-gray-300">{{ props.keyNumber }} </span>
   </div>
 </template>
 <script setup>

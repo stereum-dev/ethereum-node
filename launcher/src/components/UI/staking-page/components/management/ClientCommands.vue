@@ -1,7 +1,12 @@
 <template>
-  <div class="col-start-1 col-span-full row-start-5 row-end-8 flex justify-center items-center">
-    <div class="w-full h-full flex relative">
-      <div class="selection-table">
+  <div class="col-start-1 col-span-full row-start-5 row-end-9 flex justify-center items-center overflow-hidden">
+    <div
+      class="w-full h-full border border-gray-600 rounded-b-md rounded-t-2xl grid grid-cols-12 grid-rows-6 items-center bg-[#151618]"
+    >
+      <Dropdown />
+      <ValidatorState state="running" />
+      <ButtonRows />
+      <!-- <div class="selection-table">
         <div class="selection-table_validator">
           <div class="validator-icon">
             <img :src="validatorIcon" :alt="validatorName" />
@@ -42,36 +47,8 @@
             </div>
           </li>
         </ul>
-        <div
-          class="buttonRow"
-          :class="{
-            disabled:
-              disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' || validatorName === 'Web3Signer',
-          }"
-          @click.stop="$emit('clickBtnGraffiti')"
-        >
-          <div class="btnContent">
-            <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
-            <span>{{ $t("selectionOption.graffiti") }}</span>
-          </div>
-        </div>
-        <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
-          <div class="btnContent">
-            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-            <span>{{ $t("selectionOption.removeKeys") }}</span>
-          </div>
-        </div>
-        <div
-          class="buttonRow"
-          :class="{ disabled: validatorName === 'Web3Signer' }"
-          @click.stop="$emit('importRemoteKeys')"
-        >
-          <div class="btnContent">
-            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-            <span>Import Remote Keys</span>
-          </div>
-        </div>
-      </div>
+        <ButtonRows />
+      </div> -->
     </div>
   </div>
 </template>
@@ -79,68 +56,72 @@
 <script>
 import { mapState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
+import ButtonRows from "./components/client-commands/ButtonRows.vue";
+import Dropdown from "./components/client-commands/DropDown.vue";
+import ValidatorState from "./components/client-commands/ValidatorState.vue";
 export default {
-  props: {
-    validatorIcon: {
-      type: String,
-      required: true,
-    },
-    validatorName: {
-      type: String,
-      required: true,
-    },
-    validatorState: {
-      type: String,
-      required: true,
-    },
-    vIcon: {
-      type: String,
-      required: false,
-    },
-    vName: {
-      type: String,
-      required: false,
-    },
-    validators: {
-      type: Array,
-      required: true,
-    },
-    disable: {
-      type: Boolean,
-      required: true,
-      default: true,
-    },
-  },
-  emits: ["vld-picker"],
-  data() {
-    return {
-      selector: false,
-      multiValidator: false,
-    };
-  },
-  computed: {
-    ...mapState(useStakingStore, {
-      keyCounter: "keyCounter",
-    }),
-  },
-  mounted() {
-    this.$emit("vld-picker", this.validators[0]);
-    if (this.validators.length > 1) {
-      this.multiValidator = true;
-    }
-  },
-  methods: {
-    selectorToggl() {
-      this.selector = !this.selector;
-    },
-    vldPicker(validator) {
-      this.$emit("vld-picker", validator);
-      this.selector = false;
-    },
-    checkLodestar() {
-      this.lodestarValidator = this.validators.find((validator) => validator.name === "lodestar");
-    },
-  },
+  components: { ButtonRows, Dropdown, ValidatorState },
+  //   props: {
+  //     validatorIcon: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //     validatorName: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //     validatorState: {
+  //       type: String,
+  //       required: true,
+  //     },
+  //     vIcon: {
+  //       type: String,
+  //       required: false,
+  //     },
+  //     vName: {
+  //       type: String,
+  //       required: false,
+  //     },
+  //     validators: {
+  //       type: Array,
+  //       required: true,
+  //     },
+  //     disable: {
+  //       type: Boolean,
+  //       required: true,
+  //       default: true,
+  //     },
+  //   },
+  //   emits: ["vld-picker"],
+  //   data() {
+  //     return {
+  //       selector: false,
+  //       multiValidator: false,
+  //     };
+  //   },
+  //   computed: {
+  //     ...mapState(useStakingStore, {
+  //       keyCounter: "keyCounter",
+  //     }),
+  //   },
+  //   mounted() {
+  //     this.$emit("vld-picker", this.validators[0]);
+  //     if (this.validators.length > 1) {
+  //       this.multiValidator = true;
+  //     }
+  //   },
+  //   methods: {
+  //     selectorToggl() {
+  //       this.selector = !this.selector;
+  //     },
+  //     vldPicker(validator) {
+  //       this.$emit("vld-picker", validator);
+  //       this.selector = false;
+  //     },
+  //     checkLodestar() {
+  //       this.lodestarValidator = this.validators.find((validator) => validator.name === "lodestar");
+  //     },
+  //   },
 };
 </script>
 <style scoped>

@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 <template>
-  <div class="col-start-1 col-span-full row-start-8 row-span-full flex justify-center items-center">
+  <div class="col-start-1 col-span-full row-start-9 row-span-full flex justify-center items-center">
     <div
       class="w-full h-full border border-gray-600 rounded-md grid grid-cols-12 grid-rows-8 items-center bg-[#151618]"
     >
@@ -11,9 +11,9 @@ import { ref } from 'vue';
   </div>
 </template>
 <script setup>
-import DutyHeader from "./components/duty/DutyHeader.vue";
-import DutyBody from "./components/duty/DutyBody.vue";
-import DutyFooter from "./components/duty/DutyFooter.vue";
+import DutyHeader from "./components/epoch-duty/DutyHeader.vue";
+import DutyBody from "./components/epoch-duty/DutyBody.vue";
+import DutyFooter from "./components/epoch-duty/DutyFooter.vue";
 import { ref } from "vue";
 
 const epochs = ref([
