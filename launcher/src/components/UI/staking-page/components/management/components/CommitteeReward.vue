@@ -1,11 +1,13 @@
 <template>
   <div
-    class="col-start-1 col-span-full row-start-4 self-center row-span-1 border border-gray-500 rounded-full grid grid-cols-6 justify-center items-center bg-zinc-600"
+    class="w-full h-full max-h-7 col-start-1 col-span-full row-start-4 row-span-1 border border-gray-600 rounded-full grid grid-cols-6 bg-[#5a6168] items-center p-[1px]"
   >
-    <div class="h-full col-start-1 col-end-3 self-center flex justify-start items-center space-x-1 p-1">
-      <img class="w-5 h-5" src="/img/icon/the-staking/comitte.png" alt="Block Icon" />
-      <span class="text-[10px] text-amber-300 font-semibold">Reward</span>
+    <div class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]">
+      <img class="col-start-1 col-span-1 w-4 h-4" src="/img/icon/the-staking/comitte.png" alt="Block Icon" />
+      <span class="col-start-2 col-span-full text-[9px] text-amber-300 font-semibold">Reward</span>
     </div>
-    <div class="h-full col-start-3 col-span-full bg-[#151618] rounded-full self-center"></div>
+    <div
+      class="w-full h-full col-start-3 col-span-full rounded-full self-center flex justify-center items-center bg-[#151618]"
+    ></div>
   </div>
 </template>

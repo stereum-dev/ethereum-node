@@ -3,7 +3,7 @@
     <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 p-1">
       <SidebarSection />
       <ListSection />
-      <!-- <ManagementSection /> -->
+      <ManagementSection />
     </div>
   </base-layout>
 </template>
