@@ -5,7 +5,7 @@
     <div class="col-start-1 col-end-4 flex justify-between items-center px-1 space-x-1">
       <div class="w-2/3 flex justify-center items-center">
         <span class="text-[10px] text-green-600 font-semibold">3333</span>
-        <img class="w-5 h-5 -rotate-90" src="/img/icon/the-staking/keyIcon.png" alt="" />
+        <img class="w-4 -rotate-90" src="/img/icon/the-staking/keyIcon.png" alt="" />
       </div>
 
       <span class="w-1/3 text-[10px] text-amber-300 font-semibold text-center">Total</span>
