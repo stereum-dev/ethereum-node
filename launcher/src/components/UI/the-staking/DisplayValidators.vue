@@ -810,7 +810,7 @@ export default {
       }
       this.insertKeyBoxActive = true;
       try {
-        this.exitValidatorResponse = await ControlService.exitValidator({
+        this.exitValidatorResponse = await ControlService.exitValidatorAccount({
           pubkey: el.key,
           password: this.exitPassword,
           serviceID: el.validatorID,
