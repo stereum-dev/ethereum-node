@@ -8,7 +8,8 @@
     "password": "HESLO",
     "keylocation": "LOKALITA KLÍČE",
     "usessh": "POUŽÍT SSH KLÍČ",
-    "fillFields": "Please fill in the missing fields!"
+    "fillFields": "Please fill in the missing fields!",
+    "KeyPassphrase": "KEY PASSPHRASE"
   },
   "comingsoon": {
     "comingsoon": "JIŽ BRZY"

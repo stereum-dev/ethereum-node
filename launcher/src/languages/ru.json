@@ -8,7 +8,8 @@
     "password": "ПАРОЛЬ",
     "keylocation": "КЛЮЧ МЕСТОНАХОЖДЕНИЯ",
     "usessh": "ИСПОЛЬЗОВАТЬ КЛЮЧ SSH",
-    "fillFields": "Пожалуйста, заполните отсутствующие поля!"
+    "fillFields": "Пожалуйста, заполните отсутствующие поля!",
+    "KeyPassphrase": "KEY PASSPHRASE"
   },
   "comingsoon": {
     "comingsoon": "СКОРО"
