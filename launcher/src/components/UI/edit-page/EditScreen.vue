@@ -214,6 +214,10 @@ const switchClientConfirm = (properties) => {
   const currentClientIndex = manageStore.newConfiguration.indexOf(current);
 
   manageStore.newConfiguration.splice(currentClientIndex, 1);
+  properties.itemToInstall = {
+    ...properties.itemToInstall,
+    isNewClient: true,
+  };
 
   manageStore.newConfiguration.push(properties.itemToInstall);
   manageStore.confirmChanges.push({
@@ -315,6 +319,11 @@ const removeChangeHandler = (item) => {
   item.service.isRemoveProcessing = false;
   if (item) {
     if (item.content === "INSTALL") {
+      const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
+      const eventIdx = manageStore.newConfiguration.indexOf(event);
+      manageStore.newConfiguration.splice(eventIdx, 1);
+    }
+    if (item.content === "SWITCH CLIENT") {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
