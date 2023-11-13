@@ -215,7 +215,7 @@ const switchClientConfirm = (properties) => {
 
   manageStore.newConfiguration.push(properties.itemToInstall);
   manageStore.confirmChanges.push({
-    id: properties.itemToReplace.config.serviceID,
+    id: properties.itemToReplace.config?.serviceID,
     content: "SWITCH CLIENT",
     contentIcon: "/img/icon/manage-node-icons/switch.png",
     service: properties.itemToReplace,
