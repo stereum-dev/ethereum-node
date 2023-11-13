@@ -192,6 +192,9 @@ export default {
         case 4:
           this.selectedLinks = this.gnosis;
           break;
+        case 5:
+          this.selectedLinks = this.holesky;
+          break;
         default:
           break;
       }

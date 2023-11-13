@@ -205,7 +205,7 @@ export class ServiceManager {
         break;
 
       case "removeLockfiles":
-        await this.removeTekuLockFiles(service.config.serviceID)
+        await this.removeTekuLockFiles(service.config.serviceID);
         break;
       default:
         break;
@@ -305,7 +305,7 @@ export class ServiceManager {
     let modifiedServices = [];
 
     for (let task of tasks) {
-      let ssvConfig
+      let ssvConfig;
       let service = services.find((s) => s.id === task.service.config.serviceID);
       let dependencies = task.data.executionClients.concat(task.data.consensusClients).map((s) =>
         services.find((e) => {
@@ -334,8 +334,8 @@ export class ServiceManager {
       }
 
       if (service.service === "SSVNetworkService") {
-        let result = await this.nodeConnection.readSSVNetworkConfig(service.id)
-        ssvConfig = YAML.parse(result)
+        let result = await this.nodeConnection.readSSVNetworkConfig(service.id);
+        ssvConfig = YAML.parse(result);
       }
 
       if (task.data.port) {
@@ -343,7 +343,7 @@ export class ServiceManager {
       }
       let updated = this.addDependencies(service, dependencies, ssvConfig);
       if (service.service === "SSVNetworkService") {
-        await this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig))
+        await this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig));
       }
       if (!Array.isArray(updated)) updated = [updated];
       updated.forEach((dep) => {
@@ -519,22 +519,22 @@ export class ServiceManager {
   addSSVNetworkConnection(service, dependencies, ssvConfig) {
     const executionClient = dependencies.filter((d) => typeof d.buildExecutionClientWsEndpointUrl === "function")[0];
     const consensusClient = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function")[0];
-    ssvConfig.eth1.ETH1Addr = `${executionClient ? executionClient.buildExecutionClientWsEndpointUrl() : ""}`
-    ssvConfig.eth2.BeaconNodeAddr = `${consensusClient ? consensusClient.buildConsensusClientHttpEndpointUrl() : ""}`
-    service.dependencies.executionClients = executionClient ? [executionClient] : []
-    service.dependencies.consensusClients = consensusClient ? [consensusClient] : []
-    return service
+    ssvConfig.eth1.ETH1Addr = `${executionClient ? executionClient.buildExecutionClientWsEndpointUrl() : ""}`;
+    ssvConfig.eth2.BeaconNodeAddr = `${consensusClient ? consensusClient.buildConsensusClientHttpEndpointUrl() : ""}`;
+    service.dependencies.executionClients = executionClient ? [executionClient] : [];
+    service.dependencies.consensusClients = consensusClient ? [consensusClient] : [];
+    return service;
   }
 
   removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs) {
-    let ssvConfig = ssvConfigs[service.id]
+    let ssvConfig = ssvConfigs[service.id];
     if (ssvConfig.eth1.ETH1Addr.includes(serviceToDelete.id)) {
-      ssvConfig.eth1.ETH1Addr = ""
+      ssvConfig.eth1.ETH1Addr = "";
     }
     if (ssvConfig.eth2.BeaconNodeAddr.includes(serviceToDelete.id)) {
-      ssvConfig.eth2.BeaconNodeAddr = ""
+      ssvConfig.eth2.BeaconNodeAddr = "";
     }
-    this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig))
+    this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig));
   }
 
   removeDependencies(service, serviceToDelete) {
@@ -609,7 +609,7 @@ export class ServiceManager {
     for (let service of dependents) {
       service = this.removeDependencies(service, serviceToDelete);
       if (service.service === "SSVNetworkService") {
-        this.removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs)
+        this.removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs);
       }
       this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
     }
@@ -1030,7 +1030,7 @@ export class ServiceManager {
         // prepare service's config file
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
         const escapedConfigFile = StringUtils.escapeStringForShell(
-          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: ' + config.ssv_sk)
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, "OperatorPrivateKey: " + config.ssv_sk)
         );
         this.nodeConnection.sshService.exec(
           `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
@@ -1089,7 +1089,9 @@ export class ServiceManager {
       t.service.config.serviceID = service.id;
       newServices.push(service);
     });
-    let VLInstalls = tasks.filter((t) => t.service.category === "validator" && t.service.service !== "SSVNetworkService");
+    let VLInstalls = tasks.filter(
+      (t) => t.service.category === "validator" && t.service.service !== "SSVNetworkService"
+    );
     VLInstalls.forEach((t) => {
       if (t.data.consensusClients.length > 0) {
         t.data.consensusClients = t.data.consensusClients.map((bc) => {
@@ -1140,7 +1142,7 @@ export class ServiceManager {
     newServices.forEach((service) => {
       service.ports.forEach((newPort) => {
         do {
-          changed = false
+          changed = false;
           if (
             allPorts.includes(newPort.destinationPort + "/" + newPort.servicePortProtocol) &&
             !services.map((s) => s.id).includes(service.id)
@@ -1151,12 +1153,11 @@ export class ServiceManager {
             !allPorts.includes(newPort.destinationPort + "/" + newPort.servicePortProtocol) &&
             !services.map((s) => s.id).includes(service.id)
           ) {
-            allPorts.push(newPort.destinationPort + "/" + newPort.servicePortProtocol)
+            allPorts.push(newPort.destinationPort + "/" + newPort.servicePortProtocol);
           }
-
-        } while (changed)
+        } while (changed);
       });
-    })
+    });
 
     let versions;
     try {
@@ -1179,7 +1180,7 @@ export class ServiceManager {
       } else if (versions["prater"] && versions["prater"][service.service]) {
         service.imageVersion = versions["prater"][service.service].slice(-1).pop();
       }
-      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch)
+      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
     });
 
     await Promise.all(
@@ -1279,7 +1280,7 @@ export class ServiceManager {
         configs[service.id] = YAML.parse(result);
       }
     }
-    return configs
+    return configs;
   }
 
   async handleServiceChanges(tasks) {
@@ -1320,11 +1321,11 @@ export class ServiceManager {
         log.error("Modifying Services Failed:", err);
       }
     }
-    if (jobs.includes("SWITCH NETWORK")) {
+    if (jobs.includes("NETWORK")) {
       let before = this.nodeConnection.getTimeStamp();
       let services = await this.readServiceConfigurations();
       try {
-        let changeNetworkTask = tasks.find((t) => t.content === "SWITCH NETWORK");
+        let changeNetworkTask = tasks.find((t) => t.content === "NETWORK");
         await this.changeNetwork(
           changeNetworkTask.data.network,
           services.filter((s) => s.service !== "SSVNetworkService")
@@ -1351,8 +1352,7 @@ export class ServiceManager {
         );
       } catch (err) {
         log.error("Switching Services Failed:", err);
-      }
-      finally {
+      } finally {
         let after = this.nodeConnection.getTimeStamp();
         await this.nodeConnection.restartServices(after - before);
       }
@@ -1454,7 +1454,7 @@ export class ServiceManager {
   async removeTekuLockFiles(serviceID) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.tasks.push({ name: "Remove Lockfiles", otherRunRef: ref });
-    let status = ""
+    let status = "";
     try {
       let services = await this.readServiceConfigurations();
       let service = services.find((s) => s.id === serviceID);
@@ -1462,7 +1462,7 @@ export class ServiceManager {
       if (!workingDir.endsWith("/")) {
         workingDir += "/";
       }
-      status = await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`)
+      status = await this.nodeConnection.sshService.exec(`rm ${workingDir}/data/validator/key-manager/local/*.lock`);
       this.nodeConnection.taskManager.otherSubTasks.push({
         name: "remove lock files",
         otherRunRef: ref,
