@@ -179,7 +179,7 @@
                       class="exit-icon"
                       src="/img/icon/the-staking/withdraw.png"
                       alt="icon"
-                      @click="passwordBoxSingleExitChain(item)"
+                      @click="item.displayExitModal = true"
                       @mouseenter="cursorLocation = `${exitChain}`"
                       @mouseleave="cursorLocation = ''"
                     />
@@ -380,7 +380,7 @@ import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
-import ExitMultipleValidators from "./ExitMultipleValidators.vue";
+// import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
 import DisabledStaking from "./DisabledStaking.vue";
 import SearchBox from "./SearchBox.vue";
@@ -401,7 +401,7 @@ export default {
     EnterPassword,
     GrafitiMultipleValidators,
     RemoveMultipleValidators,
-    ExitMultipleValidators,
+    // ExitMultipleValidators,
     SelectService,
     ImportSlashingModal,
     DisabledStaking,
