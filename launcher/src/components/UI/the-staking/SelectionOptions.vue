@@ -41,33 +41,41 @@
           </div>
         </li>
       </ul>
-      <div
-        class="buttonRow"
-        :class="{
-          disabled:
-            disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' || validatorName === 'Web3Signer',
-        }"
-        @click.stop="$emit('clickBtnGraffiti')"
-      >
-        <div class="btnContent">
-          <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
-          <span>{{ $t("selectionOption.graffiti") }}</span>
+      <div class="btn-box-selection-option">
+        <div
+          class="buttonRow"
+          :class="{
+            disabled:
+              disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' || validatorName === 'Web3Signer',
+          }"
+          @click.stop="$emit('clickBtnGraffiti')"
+        >
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
+            <span>{{ $t("selectionOption.graffiti") }}</span>
+          </div>
         </div>
-      </div>
-      <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
-        <div class="btnContent">
-          <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-          <span>{{ $t("selectionOption.removeKeys") }}</span>
+        <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+            <span>{{ $t("selectionOption.removeKeys") }}</span>
+          </div>
         </div>
-      </div>
-      <div
-        class="buttonRow"
-        :class="{ disabled: validatorName === 'Web3Signer' }"
-        @click.stop="$emit('importRemoteKeys')"
-      >
-        <div class="btnContent">
-          <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-          <span>Import Remote Keys</span>
+        <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('exitAllValidatorKeys')">
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+            <span>Exit all validator keys</span>
+          </div>
+        </div>
+        <div
+          class="buttonRow"
+          :class="{ disabled: validatorName === 'Web3Signer' }"
+          @click.stop="$emit('importRemoteKeys')"
+        >
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+            <span>Import Remote Keys</span>
+          </div>
         </div>
       </div>
     </div>
@@ -142,6 +150,17 @@ export default {
 };
 </script>
 <style scoped>
+.btn-box-selection-option {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  bottom: -18%;
+  z-index: 0;
+}
 .validator-commands {
   display: flex;
   width: 100%;
@@ -234,6 +253,7 @@ export default {
   top: 9%;
   overflow-y: scroll;
   border-radius: 0 0 8px 8px;
+  z-index: 1;
 }
 .validator-selectionpart li {
   width: 100%;
