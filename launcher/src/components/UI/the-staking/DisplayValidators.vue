@@ -204,7 +204,7 @@
               @close-rename="closeRenameHandler"
             />
 
-            <ExitValidator
+            <!-- <ExitValidator
               v-if="item.isExitBoxActive"
               @back-btn="(item.isExitBoxActive = false), (deactiveInsertValidator = false)"
               @confirm-password="
@@ -212,7 +212,7 @@
                   confirmPasswordSingleExitChain(item, enteredPassword);
                 }
               "
-            />
+            /> -->
 
             <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
@@ -361,7 +361,7 @@ import { useListKeys, useUpdateValidatorStats } from "@/composables/validators";
 import KeyModal from "./KeyModal.vue";
 import FeeRecepientValidator from "./FeeRecepientValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
-import ExitValidator from "./ExitValidator.vue";
+// import ExitValidator from "./ExitValidator.vue";
 import ExitValidatorsModal from "./ExitValidatorsModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
 import RemoveSingleModal from "./RemoveSingleModal.vue";
@@ -392,7 +392,7 @@ export default {
     FeeRecipient,
     FeeRecepientValidator,
     RenameValidator,
-    ExitValidator,
+    // ExitValidator,
     RemoveValidator,
     RemoveSingleModal,
     ExitValidatorsModal,
