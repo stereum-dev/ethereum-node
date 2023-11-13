@@ -11,9 +11,7 @@ import { useNodeManage } from '@/store/nodeManage';
     </div>
     <div class="w-full flex justify-center items-center">
       <img v-if="network.icon" :src="network.icon" alt="Networks" class="w-5 mr-1" />
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
-        network.name
-      }}</span>
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ network.name }}</span>
     </div>
   </div>
 </template>
@@ -32,9 +30,8 @@ const manageStore = useNodeManage();
 const network = ref({});
 
 watchEffect(() => {
-  network.value = manageStore.configNetwork.id
-    ? manageStore.configNetwork
-    : manageStore.currentNetwork;
+  let id = manageStore.configNetwork?.id ? manageStore.configNetwork.id : manageStore.currentNetwork.id;
+  network.value = manageStore.networkList.find((net) => (net.id === id ? id : 5));
 });
 </script>
 <style scoped>
