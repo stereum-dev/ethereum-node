@@ -220,9 +220,7 @@
               @exit-modal="closeExitChainModal(item)"
               @confirm-btn="confirmExitChainForValidators(item)"
             />
-            <RemoveValidator
-              v-if="item.toRemove || exitChainForMultiValidatorsActive || removeForMultiValidatorsActive"
-            />
+            <RemoveValidator v-if="item.toRemove || removeForMultiValidatorsActive" />
             <RemoveSingleModal
               v-if="item.isRemoveBoxActive"
               :item="item"
@@ -353,7 +351,7 @@
     />
 
     <!-- Exit box for validator keys -->
-    <ExitMultipleValidators v-if="exitChainForMultiValidatorsActive" @confirm-btn="confirmPasswordMultiExitChain" />
+    <!-- <ExitMultipleValidators v-if="exitChainForMultiValidatorsActive" @confirm-btn="confirmPasswordMultiExitChain" /> -->
     <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
@@ -663,9 +661,16 @@ export default {
     async feeRecepientConfirmHandler(key, input) {
       key.isFeeRecepientBoxActive = false;
       if (/0x[a-fA-F0-9]{40}/g.test(input)) {
-        await ControlService.setFeeRecipient({ serviceID: key.validatorID, pubkey: key.key, address: input });
+        await ControlService.setFeeRecipient({
+          serviceID: key.validatorID,
+          pubkey: key.key,
+          address: input,
+        });
       } else {
-        await ControlService.deleteFeeRecipient({ serviceID: key.validatorID, pubkey: key.key });
+        await ControlService.deleteFeeRecipient({
+          serviceID: key.validatorID,
+          pubkey: key.key,
+        });
       }
     },
     renameDisplayHandler(el) {
@@ -797,7 +802,7 @@ export default {
       this.importIsDone = true;
     },
     confirmPasswordMultiExitChain() {
-      this.exitChainForMultiValidatorsActive = false;
+      // this.exitChainForMultiValidatorsActive = false;
       this.exitChainModalForMultiValidators = true;
     },
     confirmExitChainForValidators: async function (el) {
@@ -1005,7 +1010,10 @@ export default {
       }
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
+      await ControlService.setGraffitis({
+        id: this.selectedValdiatorService.config.serviceID,
+        graffiti: graffiti,
+      });
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },
