@@ -2,7 +2,7 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1 bg-black rounded-md grid grid-cols-6 grid-rows-1 items-center px-2"
   >
-    <span class="relative h-3 w-3 rounded-full col-start-1 col-span-1 flex justify-center items-center">
+    <span class="relative h-4 w-4 rounded-full col-start-1 col-span-1 flex justify-center items-center">
       <span
         class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
         :class="getStateColor"
@@ -15,7 +15,7 @@
     <img class="w-4 col-start-5 col-span-1" src="/img/icon/the-staking/keyIcon.png" alt="Key Icon" />
     <span
       class="text-[10px] font-semibold text-center col-start-6 col-span-1"
-      :class="stakingStore.keyCounter > 0 ? 'text-green-600' : 'text-red-500'"
+      :class="stakingStore.keyCounter > 0 ? 'text-amber-400' : 'text-red-500'"
       >{{ stakingStore.keyCounter }}
     </span>
   </div>

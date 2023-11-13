@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#336666] hover:bg-gray-300 rounded-full -mt-1 relative flex justify-center items-center cursor-pointer text-gray-300 hover:text-gray-800 transition-all duration-200 z-20"
+    class="h-6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#336666] hover:bg-gray-300 rounded-md -mt-1 relative flex justify-center items-center cursor-pointer text-gray-300 hover:text-gray-800 transition-all duration-200 z-20"
   >
     <div class="w-full h-full grid grid-cols-6" @click="isOpen = !isOpen">
       <img

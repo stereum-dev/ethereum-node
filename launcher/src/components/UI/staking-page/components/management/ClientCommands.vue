@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
-import { useStakingStore } from "@/store/theStaking";
+// import { mapState } from "pinia";
+// import { useStakingStore } from "@/store/theStaking";
 import ButtonRows from "./components/client-commands/ButtonRows.vue";
 import Dropdown from "./components/client-commands/DropDown.vue";
 import ValidatorState from "./components/client-commands/ValidatorState.vue";
