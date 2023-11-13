@@ -29,7 +29,6 @@
           <ul
             v-show="switchDropdownOpen"
             class="transition-all max-h-[200px] duration-400 ease-in-out absolute bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
-            @mouseleave="switchDropdownOpen = false"
           >
             <li
               v-for="service in getServices"
@@ -107,7 +106,7 @@ const switchService = (service) => {
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(20px);
+  transform: translateY(-20px);
   opacity: 0;
 }
 </style>

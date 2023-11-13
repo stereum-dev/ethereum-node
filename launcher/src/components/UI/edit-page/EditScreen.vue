@@ -215,7 +215,7 @@ const switchClientConfirm = (properties) => {
 
   manageStore.newConfiguration.push(properties.itemToInstall);
   manageStore.confirmChanges.push({
-    id: randomId,
+    id: properties.itemToReplace.config?.serviceID,
     content: "SWITCH CLIENT",
     contentIcon: "/img/icon/manage-node-icons/switch.png",
     service: properties.itemToReplace,
@@ -415,8 +415,8 @@ const switchNetworkConfirm = (network) => {
       }
     } else if (manageStore.newConfiguration.length > 0) {
       manageStore.confirmChanges.push({
-        id: randomId,
-        content: "SWITCH NETWORK",
+        id: network.network,
+        content: "NETWORK",
         contentIcon: "/img/icon/manage-node-icons/switch-client.png",
         service: network,
         data: { network: network.network },
