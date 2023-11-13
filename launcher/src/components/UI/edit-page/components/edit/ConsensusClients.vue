@@ -34,7 +34,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
-import { computed  } from "vue";
+import { computed } from "vue";
 
 //Props & Emits
 const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
@@ -86,7 +86,12 @@ const displayMenu = (item) => {
     service.displayPluginMenu = false;
     service.isConnectedToMevboost = false;
   });
-  if (!item.isNotConnectedToMevboost && !item.isNotConnectedToValidator && !item.isRemoveProcessing) {
+  if (
+    !item.isNotConnectedToMevboost &&
+    !item.isNotConnectedToValidator &&
+    !item.isRemoveProcessing &&
+    !item.isNewClient
+  ) {
     item.displayPluginMenu = true;
   }
 };

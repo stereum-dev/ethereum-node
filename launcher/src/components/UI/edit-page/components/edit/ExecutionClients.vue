@@ -35,7 +35,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
-import { computed, } from "vue";
+import { computed } from "vue";
 
 const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
 const manageStore = useNodeManage();
@@ -80,7 +80,12 @@ const displayMenu = (item) => {
   serviceStore.installedServices.forEach((service) => {
     service.displayPluginMenu = false;
   });
-  if (!item.isNotConnectedToConsensus && !item.isNotConnectedToValidator && !item.isRemoveProcessing) {
+  if (
+    !item.isNotConnectedToConsensus &&
+    !item.isNotConnectedToValidator &&
+    !item.isRemoveProcessing &&
+    !item.isNewClient
+  ) {
     item.displayPluginMenu = true;
   }
 };

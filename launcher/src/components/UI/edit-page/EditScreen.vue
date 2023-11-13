@@ -140,6 +140,8 @@ const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
 
+// Computed & Watcher
+
 onMounted(() => {
   manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
   manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
@@ -332,8 +334,12 @@ const addServices = (service) => {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
-    manageStore.newConfiguration.push(item);
-    clientToInstall.value = item;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+    };
+    manageStore.newConfiguration.push(newItem);
+    clientToInstall.value = newItem;
     clientToInstall.value.addPanel = true;
   }
 };
@@ -358,8 +364,12 @@ const onDrop = (event) => {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
-    manageStore.newConfiguration.push(item);
-    clientToInstall.value = item;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+    };
+    manageStore.newConfiguration.push(newItem);
+    clientToInstall.value = newItem;
     clientToInstall.value.addPanel = true;
   }
 };
