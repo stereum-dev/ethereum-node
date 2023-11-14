@@ -84,9 +84,7 @@ const removeHandler = () => {
 };
 
 const withdrawHandler = () => {
-  stakingStore.removeForMultiValidatorsActive = false;
-  stakingStore.grafitiForMultiValidatorsActive = false;
-  stakingStore.exitChainForMultiValidatorsActive = true;
+  stakingStore.exitMultiValidatorKeys = !stakingStore.exitMultiValidatorKeys;
 };
 
 const selectedValidator = async (validator) => {

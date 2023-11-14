@@ -231,6 +231,12 @@
               @delete-key="validatorRemoveConfirm"
             />
           </div>
+          <ExitValidatorsModal
+            v-if="exitMultiValidatorKeys"
+            :item="item"
+            @exit-modal="exitMultiValidatorKeys = false"
+            @confirm-btn="confirmExitChainForValidators(item)"
+          />
           <div v-for="(item, index) in keyImages" :key="index" class="tableRow">
             <div class="rowContent">
               <div class="circle"><img :src="keyIconPicker(item)" alt="keyIcon" /></div>
@@ -489,6 +495,7 @@ export default {
       currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useStakingStore, {
+      exitMultiValidatorKeys: "exitMultiValidatorKeys",
       importValidatorKeyActive: "importValidatorKeyActive",
       passwordInputActive: "passwordInputActive",
       selectedIcon: "selectedIcon",
@@ -593,6 +600,12 @@ export default {
     //     return this.keys;
     //   }
     // },
+    exitMultiValidatorKeys(val) {
+      if (val == true) {
+        this.multiKeyToExitPicker();
+        console.log(this.selectedKeyToExit);
+      }
+    },
   },
 
   beforeMount() {
@@ -625,6 +638,19 @@ export default {
   },
 
   methods: {
+    multiKeyToExitPicker() {
+      let filteredKeys = this.keys.filter((key) => key.icon === this.selectedIcon);
+
+      const allHaveSameValidatorID = filteredKeys.every((key) => key.validatorID === filteredKeys[0].validatorID);
+
+      if (allHaveSameValidatorID) {
+        this.selectedKeyToExit = [...filteredKeys].map((key) => key.key);
+        let selectedkeysValidatorID = filteredKeys.map((item) => item.validatorID);
+        this.selectedkeysValidatorID = selectedkeysValidatorID[0];
+      } else {
+        console.log("not all keys have the same validatorID");
+      }
+    },
     keyIconPicker(item) {
       if (item.isRemote) {
         return this.keyIcon.remoteKey;
@@ -802,30 +828,43 @@ export default {
       this.importIsDone = true;
     },
     confirmPasswordMultiExitChain() {
-      // this.exitChainForMultiValidatorsActive = false;
+      this.exitChainForMultiValidatorsActive = false;
       this.exitChainModalForMultiValidators = true;
     },
     confirmExitChainForValidators: async function (el) {
-      if (el.displayExitModal || el.isExitBoxActive) {
+      if (this.exitMultiValidatorKeys && this.displayExitModal == undefined) {
+        const array = Object.keys(this.selectedKeyToExit).map((key) => this.selectedKeyToExit[key]);
+        this.exitMultiValidatorKeys = false;
+        this.insertKeyBoxActive = true;
+        try {
+          this.exitValidatorResponse = await ControlService.exitValidatorAccount({
+            pubkey: array,
+            serviceID: this.selectedkeysValidatorID,
+          });
+          this.importIsProcessing = false;
+          this.exitInfo = true;
+          this.bDialogVisible = true;
+          this.importIsDone = false;
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (el.displayExitModal || el.isExitBoxActive) {
         el.displayExitModal = false;
         el.isExitBoxActive = false;
         this.deactiveInsertValidator = false;
-      } else {
-        this.exitChainModalForMultiValidators = false;
-      }
-      this.insertKeyBoxActive = true;
-      try {
-        this.exitValidatorResponse = await ControlService.exitValidatorAccount({
-          pubkey: el.key,
-          password: this.exitPassword,
-          serviceID: el.validatorID,
-        });
-        this.importIsProcessing = false;
-        this.exitInfo = true;
-        this.bDialogVisible = true;
-        this.importIsDone = false;
-      } catch (error) {
-        console.log(error);
+        this.insertKeyBoxActive = true;
+        try {
+          this.exitValidatorResponse = await ControlService.exitValidatorAccount({
+            pubkey: el.key,
+            serviceID: el.validatorID,
+          });
+          this.importIsProcessing = false;
+          this.exitInfo = true;
+          this.bDialogVisible = true;
+          this.importIsDone = false;
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     passwordBoxSingleExitChain(el) {
