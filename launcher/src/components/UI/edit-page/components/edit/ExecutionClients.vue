@@ -35,7 +35,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
-import { computed, } from "vue";
+import { computed } from "vue";
 
 const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
 const manageStore = useNodeManage();
@@ -62,15 +62,10 @@ const getExecutions = computed(() => {
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "border bg-red-600 border-white hover:bg-red-600";
-  }
-  if (item.hasOwnProperty("isNotConnectedToConsensus") && item.isNotConnectedToConsensus) {
-    return "border border-blue-400 bg-blue-600 hover:bg-blue-600";
-  } else if (
-    item.hasOwnProperty("connectedToConsensus") &&
-    item.connectedToConsensus &&
-    manageStore.newConfiguration.filter((e) => e.category === "consensus").length > 1
-  ) {
-    return "border border-green-500 bg-green-500 hover:bg-green-500 pointer-events-none";
+  } else if (item.hasOwnProperty("isNewClient") && item.isNewClient) {
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
+  } else if (item.hasOwnProperty("modifierPanel") && item.modifierPanel) {
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
   } else {
     return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
@@ -80,7 +75,12 @@ const displayMenu = (item) => {
   serviceStore.installedServices.forEach((service) => {
     service.displayPluginMenu = false;
   });
-  if (!item.isNotConnectedToConsensus && !item.isNotConnectedToValidator && !item.isRemoveProcessing) {
+  if (
+    !item.isNotConnectedToConsensus &&
+    !item.isNotConnectedToValidator &&
+    !item.isRemoveProcessing &&
+    !item.isNewClient
+  ) {
     item.displayPluginMenu = true;
   }
 };
