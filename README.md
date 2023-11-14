@@ -1,4 +1,5 @@
-![GitHub_Stereum_Banner](https://github.com/stereum-dev/ethereum-node/assets/82385103/cf94018a-b926-4fbe-aec8-ceef587053ff)
+![Gitcoin_Stereum_Banner](https://github.com/stereum-dev/ethereum-node/assets/82385103/66a46c61-3a99-4d06-be05-97e79b3480e5)
+
 
 ---
 
