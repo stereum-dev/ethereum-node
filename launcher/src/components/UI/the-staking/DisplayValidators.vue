@@ -56,10 +56,23 @@
           <!-- start of new exit modal -->
 
           <div v-if="exitInfo" class="import-message">
-            <p :class="importingErrorMessage">Status:{{ exitValidatorResponse.rc }}</p>
-            <p v-if="exitValidatorResponse.stdout !== ''" :class="importingErrorMessage">
+            <!-- <p :class="importingErrorMessage">Status:{{ exitValidatorResponse.rc }}</p> -->
+            <!-- <p v-if="exitValidatorResponse.stdout !== ''" :class="importingErrorMessage">
               <span> Output:</span><br />
               {{ exitValidatorResponse.stdout }}
+            </p>
+            <p v-if="exitValidatorResponse.stderr !== ''" :class="importingErrorMessage">
+              <span> Error:</span><br />
+              {{ exitValidatorResponse.stderr }}
+            </p> -->
+            <p v-if="exitValidatorResponse.length >= 1" :class="importingErrorMessage">
+              <small>Output:</small>
+              <span v-for="(item, index) in exitValidatorResponse" :key="index">
+                <p>
+                  ACCOUNT: {{ item.pubkey }} <br />
+                  OUTPUT: {{ item.stdout }}
+                </p> </span
+              ><br />
             </p>
             <p v-if="exitValidatorResponse.stderr !== ''" :class="importingErrorMessage">
               <span> Error:</span><br />
@@ -367,7 +380,6 @@ import { useListKeys, useUpdateValidatorStats } from "@/composables/validators";
 import KeyModal from "./KeyModal.vue";
 import FeeRecepientValidator from "./FeeRecepientValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
-// import ExitValidator from "./ExitValidator.vue";
 import ExitValidatorsModal from "./ExitValidatorsModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
 import RemoveSingleModal from "./RemoveSingleModal.vue";
@@ -386,7 +398,6 @@ import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
-// import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
 import DisabledStaking from "./DisabledStaking.vue";
 import SearchBox from "./SearchBox.vue";
@@ -398,7 +409,6 @@ export default {
     FeeRecipient,
     FeeRecepientValidator,
     RenameValidator,
-    // ExitValidator,
     RemoveValidator,
     RemoveSingleModal,
     ExitValidatorsModal,
@@ -407,7 +417,6 @@ export default {
     EnterPassword,
     GrafitiMultipleValidators,
     RemoveMultipleValidators,
-    // ExitMultipleValidators,
     SelectService,
     ImportSlashingModal,
     DisabledStaking,
@@ -603,7 +612,6 @@ export default {
     exitMultiValidatorKeys(val) {
       if (val == true) {
         this.multiKeyToExitPicker();
-        console.log(this.selectedKeyToExit);
       }
     },
   },
