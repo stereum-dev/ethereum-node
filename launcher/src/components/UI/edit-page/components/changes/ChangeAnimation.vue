@@ -1,6 +1,6 @@
 <template>
   <div class="w-screen h-screen absolute inset-0 flex justify-center items-center">
-    <div class="w-screen h-screen opacity-25 absolute inset-0 bg-black z-10"></div>
+    <div class="w-screen h-screen opacity-50 absolute inset-0 bg-black z-10"></div>
     <div
       class="w-[400px] h-[400px] rounded-full border border-gray-500 z-20 relative p-8 flex justify-center items-center"
     >
