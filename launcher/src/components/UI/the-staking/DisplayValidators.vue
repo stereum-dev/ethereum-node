@@ -56,10 +56,23 @@
           <!-- start of new exit modal -->
 
           <div v-if="exitInfo" class="import-message">
-            <p :class="importingErrorMessage">Status:{{ exitValidatorResponse.rc }}</p>
-            <p v-if="exitValidatorResponse.stdout !== ''" :class="importingErrorMessage">
+            <!-- <p :class="importingErrorMessage">Status:{{ exitValidatorResponse.rc }}</p> -->
+            <!-- <p v-if="exitValidatorResponse.stdout !== ''" :class="importingErrorMessage">
               <span> Output:</span><br />
               {{ exitValidatorResponse.stdout }}
+            </p>
+            <p v-if="exitValidatorResponse.stderr !== ''" :class="importingErrorMessage">
+              <span> Error:</span><br />
+              {{ exitValidatorResponse.stderr }}
+            </p> -->
+            <p v-if="exitValidatorResponse.length >= 1" :class="importingErrorMessage">
+              <small>Output:</small>
+              <span v-for="(item, index) in exitValidatorResponse" :key="index">
+                <p>
+                  ACCOUNT: {{ item.pubkey }} <br />
+                  OUTPUT: {{ item.stdout }}
+                </p> </span
+              ><br />
             </p>
             <p v-if="exitValidatorResponse.stderr !== ''" :class="importingErrorMessage">
               <span> Error:</span><br />
@@ -179,7 +192,7 @@
                       class="exit-icon"
                       src="/img/icon/the-staking/withdraw.png"
                       alt="icon"
-                      @click="passwordBoxSingleExitChain(item)"
+                      @click="item.displayExitModal = true"
                       @mouseenter="cursorLocation = `${exitChain}`"
                       @mouseleave="cursorLocation = ''"
                     />
@@ -204,7 +217,7 @@
               @close-rename="closeRenameHandler"
             />
 
-            <ExitValidator
+            <!-- <ExitValidator
               v-if="item.isExitBoxActive"
               @back-btn="(item.isExitBoxActive = false), (deactiveInsertValidator = false)"
               @confirm-password="
@@ -212,7 +225,7 @@
                   confirmPasswordSingleExitChain(item, enteredPassword);
                 }
               "
-            />
+            /> -->
 
             <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
@@ -220,9 +233,7 @@
               @exit-modal="closeExitChainModal(item)"
               @confirm-btn="confirmExitChainForValidators(item)"
             />
-            <RemoveValidator
-              v-if="item.toRemove || exitChainForMultiValidatorsActive || removeForMultiValidatorsActive"
-            />
+            <RemoveValidator v-if="item.toRemove || removeForMultiValidatorsActive" />
             <RemoveSingleModal
               v-if="item.isRemoveBoxActive"
               :item="item"
@@ -233,6 +244,12 @@
               @delete-key="validatorRemoveConfirm"
             />
           </div>
+          <ExitValidatorsModal
+            v-if="exitMultiValidatorKeys"
+            :item="item"
+            @exit-modal="exitMultiValidatorKeys = false"
+            @confirm-btn="confirmExitChainForValidators(item)"
+          />
           <div v-for="(item, index) in keyImages" :key="index" class="tableRow">
             <div class="rowContent">
               <div class="circle"><img :src="keyIconPicker(item)" alt="keyIcon" /></div>
@@ -353,7 +370,7 @@
     />
 
     <!-- Exit box for validator keys -->
-    <ExitMultipleValidators v-if="exitChainForMultiValidatorsActive" @confirm-btn="confirmPasswordMultiExitChain" />
+    <!-- <ExitMultipleValidators v-if="exitChainForMultiValidatorsActive" @confirm-btn="confirmPasswordMultiExitChain" /> -->
     <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
@@ -363,7 +380,6 @@ import { useListKeys, useUpdateValidatorStats } from "@/composables/validators";
 import KeyModal from "./KeyModal.vue";
 import FeeRecepientValidator from "./FeeRecepientValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
-import ExitValidator from "./ExitValidator.vue";
 import ExitValidatorsModal from "./ExitValidatorsModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
 import RemoveSingleModal from "./RemoveSingleModal.vue";
@@ -382,7 +398,6 @@ import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
-import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
 import DisabledStaking from "./DisabledStaking.vue";
 import SearchBox from "./SearchBox.vue";
@@ -394,7 +409,6 @@ export default {
     FeeRecipient,
     FeeRecepientValidator,
     RenameValidator,
-    ExitValidator,
     RemoveValidator,
     RemoveSingleModal,
     ExitValidatorsModal,
@@ -403,7 +417,6 @@ export default {
     EnterPassword,
     GrafitiMultipleValidators,
     RemoveMultipleValidators,
-    ExitMultipleValidators,
     SelectService,
     ImportSlashingModal,
     DisabledStaking,
@@ -491,6 +504,7 @@ export default {
       currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useStakingStore, {
+      exitMultiValidatorKeys: "exitMultiValidatorKeys",
       importValidatorKeyActive: "importValidatorKeyActive",
       passwordInputActive: "passwordInputActive",
       selectedIcon: "selectedIcon",
@@ -595,6 +609,11 @@ export default {
     //     return this.keys;
     //   }
     // },
+    exitMultiValidatorKeys(val) {
+      if (val == true) {
+        this.multiKeyToExitPicker();
+      }
+    },
   },
 
   beforeMount() {
@@ -627,6 +646,19 @@ export default {
   },
 
   methods: {
+    multiKeyToExitPicker() {
+      let filteredKeys = this.keys.filter((key) => key.icon === this.selectedIcon);
+
+      const allHaveSameValidatorID = filteredKeys.every((key) => key.validatorID === filteredKeys[0].validatorID);
+
+      if (allHaveSameValidatorID) {
+        this.selectedKeyToExit = [...filteredKeys].map((key) => key.key);
+        let selectedkeysValidatorID = filteredKeys.map((item) => item.validatorID);
+        this.selectedkeysValidatorID = selectedkeysValidatorID[0];
+      } else {
+        console.log("not all keys have the same validatorID");
+      }
+    },
     keyIconPicker(item) {
       if (item.isRemote) {
         return this.keyIcon.remoteKey;
@@ -663,9 +695,16 @@ export default {
     async feeRecepientConfirmHandler(key, input) {
       key.isFeeRecepientBoxActive = false;
       if (/0x[a-fA-F0-9]{40}/g.test(input)) {
-        await ControlService.setFeeRecipient({ serviceID: key.validatorID, pubkey: key.key, address: input });
+        await ControlService.setFeeRecipient({
+          serviceID: key.validatorID,
+          pubkey: key.key,
+          address: input,
+        });
       } else {
-        await ControlService.deleteFeeRecipient({ serviceID: key.validatorID, pubkey: key.key });
+        await ControlService.deleteFeeRecipient({
+          serviceID: key.validatorID,
+          pubkey: key.key,
+        });
       }
     },
     renameDisplayHandler(el) {
@@ -801,26 +840,39 @@ export default {
       this.exitChainModalForMultiValidators = true;
     },
     confirmExitChainForValidators: async function (el) {
-      if (el.displayExitModal || el.isExitBoxActive) {
+      if (this.exitMultiValidatorKeys && this.displayExitModal == undefined) {
+        const array = Object.keys(this.selectedKeyToExit).map((key) => this.selectedKeyToExit[key]);
+        this.exitMultiValidatorKeys = false;
+        this.insertKeyBoxActive = true;
+        try {
+          this.exitValidatorResponse = await ControlService.exitValidatorAccount({
+            pubkey: array,
+            serviceID: this.selectedkeysValidatorID,
+          });
+          this.importIsProcessing = false;
+          this.exitInfo = true;
+          this.bDialogVisible = true;
+          this.importIsDone = false;
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (el.displayExitModal || el.isExitBoxActive) {
         el.displayExitModal = false;
         el.isExitBoxActive = false;
         this.deactiveInsertValidator = false;
-      } else {
-        this.exitChainModalForMultiValidators = false;
-      }
-      this.insertKeyBoxActive = true;
-      try {
-        this.exitValidatorResponse = await ControlService.exitValidator({
-          pubkey: el.key,
-          password: this.exitPassword,
-          serviceID: el.validatorID,
-        });
-        this.importIsProcessing = false;
-        this.exitInfo = true;
-        this.bDialogVisible = true;
-        this.importIsDone = false;
-      } catch (error) {
-        console.log(error);
+        this.insertKeyBoxActive = true;
+        try {
+          this.exitValidatorResponse = await ControlService.exitValidatorAccount({
+            pubkey: el.key,
+            serviceID: el.validatorID,
+          });
+          this.importIsProcessing = false;
+          this.exitInfo = true;
+          this.bDialogVisible = true;
+          this.importIsDone = false;
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     passwordBoxSingleExitChain(el) {
@@ -1005,7 +1057,10 @@ export default {
       }
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
+      await ControlService.setGraffitis({
+        id: this.selectedValdiatorService.config.serviceID,
+        graffiti: graffiti,
+      });
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },

@@ -319,7 +319,8 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -658,93 +659,35 @@ export class ValidatorAccountManager {
     return result.stdout.trim();
   }
 
-  async exitValidator(pubkey, password, serviceID) {
-    let services = await this.serviceManager.readServiceConfigurations();
-    let client = services.find((service) => service.id === serviceID);
-    let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
-
-    let beaconNodeID;
-    if (service === "prysm" || service === "lighthouse" || service === "lodestar") {
-      beaconNodeID = JSON.stringify(
-        JSON.stringify(client.command).match(/[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}/)
-      ).replace(/['"[\]']/g, "");
-    }
-
-    let result;
+  async getExitValidatorMessage(pubkey, password, serviceID) {
+    const ref = StringUtils.createRandomString(); //Create a random string to identify the task
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit msg for ${pubkey.substring(0, 6)}..`);
     try {
-      switch (service) {
-        case "lighthouse": {
-          await this.nodeConnection.sshService.exec(
-            `docker exec stereum-${serviceID} sh -c "touch /opt/app/validator/validators/${pubkey}/exit_password.txt && echo "${password}" > /opt/app/validator/validators/${pubkey}/exit_password.txt"`
-          );
-          const exitLighthouseCmd = `docker exec stereum-${serviceID} sh -c "lighthouse account validator exit --keystore=/opt/app/validator/validators/${pubkey}/voting-keystore.json --password-file=/opt/app/validator/validators/${pubkey}/exit_password.txt --network=${client.network} --beacon-node=http://stereum-${beaconNodeID}:5052 --no-confirmation"`;
-          result = await this.nodeConnection.sshService.exec(exitLighthouseCmd);
-          await this.nodeConnection.sshService.exec(
-            `docker exec stereum-${serviceID} sh -c "rm /opt/app/validator/validators/${pubkey}/exit_password.txt"`
-          );
-          break;
-        }
-        case "lodestar": {
-          await this.nodeConnection.sshService.exec(
-            `docker exec stereum-${serviceID} sh -c "touch /opt/app/validator/secrets/exit_password.txt && echo "${password}" > /opt/app/validator/secrets/exit_password.txt"`
-          );
-          const exitLodestarCmd = `docker exec -u 0 stereum-${serviceID} sh -c "node ./packages/cli/bin/lodestar validator voluntary-exit --dataDir=/opt/app/validator --keystore=/opt/app/validator/keystores --passphraseFile=/opt/app/validator/secrets/exit_password.txt --beaconNodes=http://stereum-${beaconNodeID}:9596 --pubkeys=${pubkey} --network=${client.network} --force=true --yes=true"`;
-          result = await this.nodeConnection.sshService.exec(exitLodestarCmd);
-          await this.nodeConnection.sshService.exec(
-            `docker exec stereum-${serviceID} sh -c "rm /opt/app/validator/secrets/exit_password.txt"`
-          );
-          break;
-        }
+      let service = await this.nodeConnection.readServiceConfiguration(serviceID);
+      let data = [];
+      const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit`, data);
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      log.info(result);
 
-        case "nimbus": {
-          const validatorsDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/validators").destinationPath;
-
-          await this.nodeConnection.sshService.exec(
-            `touch ${validatorsDir}/${pubkey}/exit_password.txt && echo "${password}" > ${validatorsDir}/${pubkey}/exit_password.txt`
-          );
-          await this.nodeConnection.sshService.exec(
-            `chown 2000:2000 ${validatorsDir}/${pubkey}/exit_password.txt && chmod 700 ${validatorsDir}/${pubkey}/exit_password.txt`
-          );
-          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=${client.network
-            } --beacon-node=${client.dependencies.consensusClients[0]
-              ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
-              : "http:stereum-" + client.id + ":5052"
-            } --no-confirmation`;
-          result = await this.nodeConnection.sshService.exec(exitNimbusCmd);
-          await this.nodeConnection.sshService.exec(`rm ${validatorsDir}/${pubkey}/exit_password.txt`);
-          break;
-        }
-        case "prysm": {
-          const passwordDir = client.volumes.find(
-            (vol) => vol.servicePath === "/opt/app/data/passwords"
-          ).destinationPath;
-          const walletDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data/wallets").destinationPath;
-
-          await this.nodeConnection.sshService.exec(
-            `touch ${passwordDir}/exit_password.txt && echo "${password}" > ${passwordDir}/exit_password.txt`
-          );
-          await this.nodeConnection.sshService.exec(
-            `chown 2000:2000 ${passwordDir}/exit_password.txt && chmod 700 ${passwordDir}/exit_password.txt`
-          );
-          const exitPrysmCmd = `docker run -v ${walletDir}:/wallets -v ${passwordDir}:/passwords --network=stereum gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest validator exit --wallet-dir=/wallets --wallet-password-file=/passwords/wallet-password --public-keys=${pubkey} --account-password-file=/passwords/exit_password.txt --beacon-rpc-provider=stereum-${beaconNodeID}:4000 --${client.network}=true --accept-terms-of-use=true --force-exit=true`;
-          result = await this.nodeConnection.sshService.exec(exitPrysmCmd);
-          await this.nodeConnection.sshService.exec(`rm ${passwordDir}/exit_password.txt`);
-          break;
-        }
-        case "teku": {
-          let noPrefixPubkey = pubkey.slice(2, 98);
-          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${client.dependencies.consensusClients[0]
-              ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
-              : "http://127.0.0.1:5051"
-            } --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
-          result = await this.nodeConnection.sshService.exec(exitTekuCmd);
-          break;
-        }
+      if (!result.stdout.includes("validator_index")) {
+        throw "Undexpected Error: " + result.stdout;
       }
+
+      //Push successful task
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, result.stdout);
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+
       return result;
-    } catch (err) {
-      log.error("Validator Voluntary-Exit Failed:\n", err);
-      return err;
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Getting signed voluntary exit message Failed`,
+        false,
+        `Getting signed voluntary exit message ${pubkey} Failed:\n` + error
+      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+      log.error("Getting signed voluntary exit message Failed:\n", error);
+      return error;
     }
   }
 
