@@ -245,6 +245,7 @@ const confirmModifyingService = (item) => {
   if (item.client.service === "FlashbotsMevBoostService") {
     changeMevboostConnection();
   }
+
   manageStore.confirmChanges.push({
     id: randomId,
     content: "MODIFY",
@@ -259,6 +260,7 @@ const confirmModifyingService = (item) => {
 };
 
 const serviceModifyHandler = (item) => {
+  item.modifierPanel = true;
   clientToModify.value = item;
   isModifyModalOpen.value = true;
 };
@@ -327,6 +329,10 @@ const removeChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
+    }
+
+    if (item.content === "MODIFY") {
+      item.service.modifierPanel = false;
     }
 
     const event = manageStore.confirmChanges.find((e) => e.id === item.id);

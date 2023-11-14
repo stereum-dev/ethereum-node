@@ -69,11 +69,14 @@ const getValidators = computed(() => {
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "border bg-red-600 border-white hover:bg-red-600";
+  } else if (item.hasOwnProperty("isNewClient") && item.isNewClient) {
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
+  } else if (item.hasOwnProperty("modifierPanel") && item.modifierPanel) {
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
   } else {
     return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
 };
-
 // Methods
 const displayMenu = (item) => {
   manageStore.newConfiguration.forEach((service) => {
@@ -83,10 +86,12 @@ const displayMenu = (item) => {
     item.isNotConnectedToConsensus ||
     item.isNotConnectedToValidator ||
     item.isNotConnectedToMevboost ||
-    item.isRemoveProcessing
+    item.isRemoveProcessing ||
+    item.isNewClient ||
+    item.modifierPanel
   ) {
     return;
-  } else if (!item.isNewClient) {
+  } else {
     item.displayPluginMenu = true;
   }
 };
