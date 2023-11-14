@@ -329,6 +329,7 @@ const removeChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
+      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
     }
 
     if (item.content === "MODIFY") {
