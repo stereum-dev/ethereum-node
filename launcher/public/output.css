@@ -897,6 +897,50 @@ video {
   top: -2px;
 }
 
+.left-2{
+  left: 0.5rem;
+}
+
+.left-4{
+  left: 1rem;
+}
+
+.-top-4{
+  top: -1rem;
+}
+
+.left-6{
+  left: 1.5rem;
+}
+
+.left-10{
+  left: 2.5rem;
+}
+
+.-top-5{
+  top: -1.25rem;
+}
+
+.right-6{
+  right: 1.5rem;
+}
+
+.left-12{
+  left: 3rem;
+}
+
+.-bottom-4{
+  bottom: -1rem;
+}
+
+.-bottom-5{
+  bottom: -1.25rem;
+}
+
+.-bottom-6{
+  bottom: -1.5rem;
+}
+
 .z-0{
   z-index: 0;
 }
@@ -1201,6 +1245,10 @@ video {
   grid-row-end: 9;
 }
 
+.row-end-10{
+  grid-row-end: 10;
+}
+
 .-m-1{
   margin: -0.25rem;
 }
@@ -1320,6 +1368,10 @@ video {
 
 .mt-8{
   margin-top: 2rem;
+}
+
+.-mb-4{
+  margin-bottom: -1rem;
 }
 
 .box-border{
@@ -1549,6 +1601,14 @@ video {
   height: 100vh;
 }
 
+.h-1\/2{
+  height: 50%;
+}
+
+.h-\[400px\]{
+  height: 400px;
+}
+
 .max-h-60{
   max-height: 15rem;
 }
@@ -1615,6 +1675,18 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-\[500px\]{
+  max-height: 500px;
+}
+
+.max-h-\[475px\]{
+  max-height: 475px;
+}
+
+.max-h-\[468px\]{
+  max-height: 468px;
 }
 
 .min-h-\[18px\]{
@@ -2657,6 +2729,16 @@ video {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
+.border-gray-50{
+  --tw-border-opacity: 1;
+  border-color: rgb(249 250 251 / var(--tw-border-opacity));
+}
+
+.border-gray-100{
+  --tw-border-opacity: 1;
+  border-color: rgb(243 244 246 / var(--tw-border-opacity));
+}
+
 .border-l-gray-200{
   --tw-border-opacity: 1;
   border-left-color: rgb(229 231 235 / var(--tw-border-opacity));
@@ -3050,6 +3132,51 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#17A2B8\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(23 162 184 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#000\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#392626\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 38 38 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#263039\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(38 48 57 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#202325\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(32 35 37 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#1a1b1c\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(26 27 28 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#2f3437\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(47 52 55 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#25272a\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 39 42 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#a7aeb5\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(167 174 181 / var(--tw-bg-opacity));
+}
+
 .bg-gradient-to-b{
   background-image: -webkit-gradient(linear, left top, left bottom, from(var(--tw-gradient-stops)));
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -3137,6 +3264,10 @@ video {
 
 .p-\[2px\]{
   padding: 2px;
+}
+
+.p-8{
+  padding: 2rem;
 }
 
 .px-1{
@@ -3253,6 +3384,10 @@ video {
 
 .pt-8{
   padding-top: 2rem;
+}
+
+.pb-4{
+  padding-bottom: 1rem;
 }
 
 .text-left{
@@ -4276,6 +4411,36 @@ html body {
   background-color: rgb(17 94 89 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-\[\#17A2B8\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(23 162 184 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#2e8e9c\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(46 142 156 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#4b8e98\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 142 152 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#349eae\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(52 158 174 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#2c8692\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(44 134 146 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-slate-300:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
+
 .hover\:text-gray-300:hover{
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
@@ -4339,6 +4504,11 @@ html body {
 
 .hover\:shadow-gray-950:hover{
   --tw-shadow-color: #030712;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.hover\:shadow-black:hover{
+  --tw-shadow-color: #000;
   --tw-shadow: var(--tw-shadow-colored);
 }
 

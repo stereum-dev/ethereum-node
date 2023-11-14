@@ -1,0 +1,26 @@
+<template>
+  <div
+    class="w-full h-[40px] bg-[#25272a] rounded-full flex justify-center items-center cursor-pointer overflow-hidden border border-gray-600"
+  >
+    <div class="w-full h-full grid grid-cols-4 p-1">
+      <div
+        v-for="service in runningValidators"
+        :key="service.config?.serviceID"
+        class="col-span-1 colst w-24 h-full flex justify-start items-center bg-[#a7aeb5] hover:bg-slate-300 rounded-full space-x-1 cursor-pointer transition-all duration-150 px-1"
+      >
+        <img class="w-6 h-6" :src="service.icon" alt="Service Icon" />
+        <span class="text-[10px] text-gray-700 font-semibold">{{ service.name }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+<script setup>
+import { computed } from "vue";
+import { useServices } from "@/store/services";
+
+const serviceStore = useServices();
+
+const runningValidators = computed(() => {
+  return serviceStore.installedServices.filter((s) => s.category === "validator" && s.state === "running");
+});
+</script>
