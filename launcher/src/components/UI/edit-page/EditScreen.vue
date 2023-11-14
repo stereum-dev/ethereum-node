@@ -1,6 +1,7 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
+    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
     <div class="w-full h-full grid grid-cols-24 relative">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
@@ -109,6 +110,7 @@ import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
+import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";

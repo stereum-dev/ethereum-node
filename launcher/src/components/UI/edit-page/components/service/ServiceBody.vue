@@ -1,6 +1,7 @@
 <template>
   <div
     class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] relative hover:scroll-auto overflow-y-auto"
+    :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
   >
     <div
       class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-[10px] font-semibold z-10"
