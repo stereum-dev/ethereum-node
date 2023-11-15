@@ -19,6 +19,7 @@ import { useNodeManage } from '@/store/nodeManage';
 import { useNodeManage } from "@/store/nodeManage";
 import { watchEffect, ref } from "vue";
 import { useFooter } from "@/store/theFooter";
+import { useDeepClone } from "@/composables/utils";
 import i18n from "@/includes/i18n";
 
 const t = i18n.global.t;
@@ -31,7 +32,10 @@ const network = ref({});
 
 watchEffect(() => {
   let id = manageStore.configNetwork?.id ? manageStore.configNetwork.id : manageStore.currentNetwork.id;
-  network.value = manageStore.networkList.find((net) => (net.id === id ? id : 5));
+  if (!id) {
+    manageStore.currentNetwork = useDeepClone(manageStore.networkList.find((net) => net.id === (id ? id : 5)));
+  }
+  network.value = useDeepClone(manageStore.currentNetwork);
 });
 </script>
 <style scoped>
