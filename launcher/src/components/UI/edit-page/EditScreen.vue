@@ -145,8 +145,8 @@ const nukeModalComponent = ref();
 // Computed & Watcher
 
 onMounted(() => {
-  manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  if (manageStore.currentNetwork.id) manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
+  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
   if (!manageStore.architecture) setArchitecture();
 });
 onMounted(() => {
@@ -451,6 +451,8 @@ const switchNetworkConfirm = (network) => {
         service: network,
         data: { network: network.network },
       });
+    } else if (manageStore.newConfiguration.length === 0) {
+      manageStore.currentNetwork = network;
     }
   }
   manageStore.isLineHidden = false;
