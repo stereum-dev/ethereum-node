@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#336666] hover:bg-gray-300 rounded-md -mt-1 relative flex justify-center items-center cursor-pointer text-gray-300 hover:text-gray-800 transition-all duration-200 z-20"
+    class="h-full col-start-1 col-span-full row-start-1 row-span-1 bg-[#336666] hover:bg-gray-300 rounded-t-sm -mt-1 relative flex justify-center items-center cursor-pointer text-gray-300 hover:text-gray-800 transition-all duration-200 z-20"
   >
     <div class="w-full h-full grid grid-cols-6" @click="isOpen = !isOpen">
       <img
@@ -27,7 +27,7 @@
     <TransitionGroup name="slide-fade">
       <div
         v-if="isOpen"
-        class="absolute top-7 w-[200px] h-fit max-h-[150px] bg-gray-700 rounded-sm shadow-lg p-1 overflow-y-auto flex flex-col justify-start items-center divide-y divide-gray-500"
+        class="absolute top-8 w-[200px] h-fit max-h-[150px] bg-gray-700 rounded-sm shadow-lg p-1 overflow-y-auto flex flex-col justify-start items-center divide-y divide-gray-500"
       >
         <li
           v-for="item in getValidatorList"
@@ -66,7 +66,7 @@ const selectValidator = (item) => {
 <style scoped>
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 
 .slide-fade-enter-from,

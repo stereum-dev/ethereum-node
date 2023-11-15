@@ -1,7 +1,7 @@
 <template>
-  <div class="col-start-1 col-span-full row-start-5 row-end-9 flex justify-center items-center overflow-hidden">
+  <div class="col-start-1 col-span-full row-start-5 row-end-10 flex justify-center items-center overflow-hidden">
     <div
-      class="w-full h-full border border-gray-600 rounded-b-md rounded-t-2xl grid grid-cols-12 grid-rows-6 items-center bg-[#151618]"
+      class="w-full h-full border border-gray-600 rounded-b-md grid grid-cols-12 grid-rows-6 items-center bg-[#151618]"
     >
       <Dropdown />
       <ValidatorState state="running" />

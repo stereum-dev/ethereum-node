@@ -3,6 +3,18 @@ import { defineStore } from "pinia";
 export const useStakingStore = defineStore("theStaking", {
   state: () => {
     return {
+      // ***** Staking List
+      groupName: null,
+      activePanel: "insert",
+      searchContent: "",
+      isInsertPanelActive: true,
+      isValidatorPanelActive: false,
+      isPasswordPanelActive: false,
+      isSearchPanelActive: false,
+      isGrafitiPanelActive: false,
+      isGroupingPanelActive: false,
+      //***** End Staking List
+
       exitMultiValidatorKeys: false,
       doppelgangerStatus: true,
       selectedIcon: "",
@@ -31,5 +43,9 @@ export const useStakingStore = defineStore("theStaking", {
       keyCounter: 0,
     };
   },
-  actions: {},
+  actions: {
+    setActivePanel(panelName) {
+      this.activePanel = panelName;
+    },
+  },
 });

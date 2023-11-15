@@ -1,13 +1,11 @@
 import { computed } from 'vue';
 <template>
-  <div class="w-8 h-8 rounded-md flex flex-col justify-center items-center p-1" :class="getStateColor">
-    <span class="text-[6px] font-semibold text-center uppercase" :class="getTextColor">{{ props.state }}</span>
-    <span class="text-[12px] font-semibold text-center text-gray-300">{{ props.keyNumber }} </span>
+  <div class="w-full h-full rounded-md flex justify-evenly items-center p-1">
+    <span class="text-sm text-amber-400 font-semibold text-center uppercase">{{ props.state }}</span>
+    <span class="text-sm font-semibold text-center text-gray-300">{{ props.keyNumber }} </span>
   </div>
 </template>
 <script setup>
-import { computed } from "vue";
-
 const props = defineProps({
   state: {
     type: String,
@@ -17,28 +15,5 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-});
-
-const getTextColor = computed(() => {
-  let textColor;
-  if (props.state === "pending") {
-    textColor = "text-amber-400";
-  } else if (props.state === "missed") {
-    textColor = "text-red-800";
-  } else if (props.state === "attested") {
-    textColor = "text-green-400";
-  }
-  return textColor;
-});
-const getStateColor = computed(() => {
-  let stateColor;
-  if (props.state === "pending") {
-    stateColor = "bg-gray-500 ";
-  } else if (props.state === "missed") {
-    stateColor = "bg-red-400 ";
-  } else if (props.state === "attested") {
-    stateColor = "bg-teal-800 ";
-  }
-  return stateColor;
 });
 </script>
