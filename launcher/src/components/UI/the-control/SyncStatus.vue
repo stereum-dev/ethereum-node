@@ -90,7 +90,6 @@ export default {
       syncIcoSituation: false,
       syncIcoError: false,
       noDataLayerShow: false,
-      consensusName: "",
       executionName: "",
       consensusFirstVal: 0,
       consensusSecondVal: 0,
@@ -166,6 +165,10 @@ export default {
       syncstatus: "syncstatus",
       consensusClientsData: "consensusClientsData",
       executionClientsData: "executionClientsData",
+      consensusName: "consensusName",
+    }),
+    ...mapWritableState(useControlStore, {
+      consensusName: "consensusName",
     }),
     errorIco() {
       return this.syncIco[0].icon;

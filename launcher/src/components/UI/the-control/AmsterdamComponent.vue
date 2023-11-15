@@ -4,6 +4,7 @@
       class="icoTitle"
       @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
       @mouseleave="cursorLocation = ''"
+      @click="test"
     >
       <div class="icoContainer">
         <img :src="networkIcon" />
@@ -148,6 +149,7 @@ export default {
       currentEpochData: "currentEpochData",
       currentResult: "currentResult",
       noDataFlag: "noDataFlag",
+      consensusName: "consensusName",
     }),
     proposedBlock() {
       if (this.currentNetwork.id === 4) {
@@ -221,6 +223,13 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    test() {
+      this.currentResult = {};
+      console.log(this.consensusName);
+      setTimeout(() => {
+        this.currentEpochSlot();
+      }, 500);
+    },
     flagController() {
       if (this.flag === false && this.currentResult.beaconStatus !== 0) {
         this.noDataFlag = true;
