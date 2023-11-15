@@ -18,11 +18,11 @@
     </div>
 
     <div
-      class="w-full h-full col-start-4 col-end-12 row-start-1 grid grid-cols-12 overflow-hidden items-center self-center"
+      class="w-full h-full col-start-4 col-end-12 row-start-1 grid grid-cols-12 overflow-hidden items-center self-center relative"
     >
       <transition
         tag="div"
-        class="w-full h-full self-center relative"
+        class="w-full h-full self-center"
         enter-to-class="opacity-0 translate-y-0 duration-500"
         leave-to-class="opacity-0 -translate-y-4 duration-500"
       >
@@ -32,7 +32,7 @@
           v-on="
             activePanel?.events
               ? Object.keys(activePanel.events).reduce((acc, eventName) => {
-                  acc[eventName] = (...args) => handleEvent(eventName, ...args);
+                  acc[eventName] = (args) => handleEvent(eventName, args);
                   return acc;
                 }, {})
               : {}
@@ -53,7 +53,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { computed, watchEffect } from "vue";
 
 //Emits
-const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile"]);
+const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile", "confirmPassword"]);
 
 //Stores
 const stakingStore = useStakingStore();
@@ -74,7 +74,7 @@ const panels = {
   password: {
     component: PasswordPanel,
     events: {
-      confirmPassword: confirmPassword,
+      confirmPassword: () => confirmPassword,
     },
   },
   search: {
@@ -111,8 +111,8 @@ watchEffect(() => {
 });
 
 //Methods
-const handleEvent = (eventName, ...args) => {
-  emit(eventName, ...args);
+const handleEvent = (eventName, args) => {
+  emit(eventName, args);
 };
 
 const confirmGrouping = (groupName) => {
