@@ -208,28 +208,31 @@ export default {
     },
   },
   mounted() {
-    if (this.currentNetwork.id === 4) {
-      this.polling = setInterval(() => {
-        if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-          this.currentEpochSlot(this.consensusName);
-        }
-      }, 5000);
-    } else {
-      this.polling = setInterval(() => {
-        if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-          this.currentEpochSlot(this.consensusName);
-        }
-      }, 12000);
-    }
+    this.refreshTimer();
   },
   beforeUnmount() {
     clearInterval(this.polling);
   },
   methods: {
+    refreshTimer() {
+      if (this.currentNetwork.id === 4) {
+        this.polling = setInterval(() => {
+          if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
+            this.currentEpochSlot(this.consensusName);
+          }
+        }, 5000);
+      } else {
+        this.polling = setInterval(() => {
+          if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
+            this.currentEpochSlot(this.consensusName);
+          }
+        }, 12000);
+      }
+    },
     test() {
       this.currentResult = {};
       console.log(this.consensusName);
-
+      clearInterval(this.polling);
       this.currentEpochSlot(this.consensusName);
     },
     flagController() {
