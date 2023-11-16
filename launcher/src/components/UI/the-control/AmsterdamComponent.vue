@@ -128,6 +128,7 @@ export default {
       footerInfo: this.$t("controlPage.netSel"),
       proposed: [],
       polling: {},
+      loadingStrater: false,
     };
   },
   computed: {
@@ -177,6 +178,8 @@ export default {
         return true;
       } else if (this.currentResult.beaconStatus !== 0) {
         return false;
+      } else if (this.loadingStrater) {
+        return true;
       }
       return false;
     },
@@ -187,7 +190,12 @@ export default {
 
   watch: {
     pageNumber() {
-      this.test(this.consensusName);
+      clearInterval(this.polling);
+      this.loadingStrater = true;
+      setTimeout(() => {
+        this.test(this.consensusName);
+        this.loadingStrater = false;
+      }, 3000);
     },
     currentResult: {
       handler(newResult) {
