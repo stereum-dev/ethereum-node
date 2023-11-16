@@ -9,12 +9,13 @@
     </div>
     <div
       ref="service"
-      class="h-full flex flex-col space-y-4 items-center pt-2 overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
+      style="padding-right: 0 !important"
+      class="h-full max-h-[430px] flex flex-col space-y-4 items-center pt-2 px-1 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
     >
       <div
         v-for="item in getServices"
         :key="item"
-        class="max-h-[70px] max-w-[160px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md mx-auto mt-8"
+        class="max-h-[70px] max-w-[160px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md mt-8"
       >
         <ServiceLayout :client="item" />
         <ServiceButtons
