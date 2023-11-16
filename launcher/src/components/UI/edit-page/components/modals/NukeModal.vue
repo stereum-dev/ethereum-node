@@ -9,6 +9,9 @@
         <span class="warning">{{ $t("nukeModal.nukeQ") }} </span>
       </div>
       <div class="remove-btn">
+        <div class="save-config-btn">
+          <img src="/img/icon/manage-node-icons/log_export.png" alt="" /><span>dump logs</span>
+        </div>
         <div class="yes-box" @click="removeItems">
           <span>{{ $t("nukeModal.nukeTitle") }}</span>
         </div>
@@ -303,8 +306,33 @@ export default {
   width: 90%;
   height: 45%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+}
+.save-config-btn {
+  box-shadow: 0 1px 10px 1px rgb(16, 16, 16);
+  cursor: pointer;
+  width: 35%;
+  height: 35px;
+  background: rgb(60, 96, 154);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.save-config-btn span {
+  color: #eee;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.save-config-btn img {
+  height: 85%;
+}
+.save-config-btn:active {
+  transform: scale(0.9);
+  transition: all 100ms ease-in-out;
+  box-shadow: none;
 }
 .yes-box {
   width: 35%;
