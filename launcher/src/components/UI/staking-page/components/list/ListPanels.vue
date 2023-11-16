@@ -22,9 +22,9 @@
     >
       <transition
         tag="div"
-        class="w-full h-full self-center"
-        enter-to-class="opacity-0 translate-y-0 duration-500"
-        leave-to-class="opacity-0 -translate-y-4 duration-500"
+        class="w-full h-full"
+        enter-to-class="opacity-0 translate-y-0 duration-300 delay-100"
+        leave-to-class="opacity-0 -translate-y-6 duration-300"
       >
         <component
           :is="activePanel?.component"

@@ -7,13 +7,12 @@ export const useStakingStore = defineStore("theStaking", {
       groupName: null,
       activePanel: "insert",
       searchContent: "",
-      isInsertPanelActive: true,
-      isValidatorPanelActive: false,
-      isPasswordPanelActive: false,
-      isSearchPanelActive: false,
-      isGrafitiPanelActive: false,
-      isGroupingPanelActive: false,
+
       //***** End Staking List
+
+      // ***** Staking Modals *****
+      activeModal: null,
+      // ***** End Staking Modals *****
 
       exitMultiValidatorKeys: false,
       doppelgangerStatus: true,
@@ -46,6 +45,9 @@ export const useStakingStore = defineStore("theStaking", {
   actions: {
     setActivePanel(panelName) {
       this.activePanel = panelName;
+    },
+    setActiveModal(modalName) {
+      this.activeModal = modalName;
     },
   },
 });
