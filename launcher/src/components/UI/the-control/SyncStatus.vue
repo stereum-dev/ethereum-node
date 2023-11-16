@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       isMultiService: false,
-      pageNumber: 1,
+      // pageNumber: 1,
       clients: [],
       syncItemsShow: false,
       syncIcoUnknown: true,
@@ -166,6 +166,7 @@ export default {
       consensusClientsData: "consensusClientsData",
       executionClientsData: "executionClientsData",
       consensusName: "consensusName",
+      pageNumber: "pageNumber",
     }),
     ...mapWritableState(useControlStore, {
       consensusName: "consensusName",
@@ -318,7 +319,7 @@ export default {
               this.syncIcoError = false;
               this.syncIcoSituation = false;
               this.noDataLayerShow = true;
-              //this.pageNumber = 1;
+              this.pageNumber = 1;
               //this.clients = [];
               //this.isMultiService = false;
             }

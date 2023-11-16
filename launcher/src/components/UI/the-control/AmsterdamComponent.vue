@@ -4,7 +4,6 @@
       class="icoTitle"
       @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
       @mouseleave="cursorLocation = ''"
-      @click="test"
     >
       <div class="icoContainer">
         <img :src="networkIcon" />
@@ -187,9 +186,9 @@ export default {
   },
 
   watch: {
-    // pageNumber() {
-    //   this.test(this.consensusName);
-    // },
+    pageNumber() {
+      this.test(this.consensusName);
+    },
     currentResult: {
       handler(newResult) {
         if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
@@ -274,7 +273,6 @@ export default {
       try {
         console.log("aaaaaaa", this.consensusName);
 
-        this.currentResult = {};
         let res = await ControlService.getCurrentEpochSlot(this.consensusName);
         console.log("res", res);
         if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
