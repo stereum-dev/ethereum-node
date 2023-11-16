@@ -229,9 +229,8 @@ export default {
     test() {
       this.currentResult = {};
       console.log(this.consensusName);
-      setTimeout(() => {
-        this.currentEpochSlot(this.consensusName);
-      }, 500);
+
+      this.currentEpochSlot(this.consensusName);
     },
     flagController() {
       if (this.flag === false && this.currentResult.beaconStatus !== 0) {
