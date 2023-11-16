@@ -7,7 +7,8 @@ export const useStakingStore = defineStore("theStaking", {
       groupName: null,
       activePanel: "insert",
       searchContent: "",
-
+      isOverDropZone: false,
+      inputWrongKey: false,
       //***** End Staking List
 
       // ***** Staking Modals *****

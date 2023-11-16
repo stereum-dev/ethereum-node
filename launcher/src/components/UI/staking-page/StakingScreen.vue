@@ -7,6 +7,7 @@
         @pick-validator="pickValidatorService"
         @upload-file="uploadValidatorKey"
         @confirm-password="passwordValidation"
+        @on-drop="onDrop"
       />
       <ManagementSection />
     </div>
@@ -17,13 +18,9 @@ import SidebarSection from "./sections/SidebarSection.vue";
 import ListSection from "./sections/ListSection.vue";
 import ManagementSection from "./sections/ManagementSection.vue";
 import { useStakingStore } from "@/store/theStaking";
-import { ref } from "vue";
 
 //Store
 const stakingStore = useStakingStore();
-
-//Refs
-let validatorKeyFile = ref(null);
 
 //Computed & Watchers
 
@@ -32,6 +29,49 @@ let validatorKeyFile = ref(null);
 // });
 
 //Methods
+
+//**** Validator Key File ****
+
+const processFile = (file) => {
+  if (file.type === "application/json") {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const jsonKey = JSON.parse(e.target.result);
+        stakingStore.keys.push(jsonKey);
+        stakingStore.setActivePanel("validator");
+      } catch (err) {
+        console.error("Error parsing JSON:", err);
+      }
+    };
+
+    reader.readAsText(file);
+  } else {
+    return;
+  }
+};
+
+const onDrop = (event) => {
+  stakingStore.isOverDropZone = false;
+  const files = event.dataTransfer.files;
+  if (files.length > 0) {
+    processFile(files[0]);
+  }
+};
+
+const uploadValidatorKey = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    processFile(file);
+  } else {
+    stakingStore.setActivePanel(null);
+  }
+};
+
+//****End of Validator Key File ****
+
+//Create Grouping
 const confirmGroupingName = (groupName) => {
   if (groupName === "") {
     return;
@@ -40,24 +80,14 @@ const confirmGroupingName = (groupName) => {
   console.log(groupName);
 };
 
-const uploadValidatorKey = (event) => {
-  const file = event.target.files;
-  validatorKeyFile.value = file[0];
-  if (validatorKeyFile.value) {
-    stakingStore.setActivePanel("validator");
-  } else {
-    stakingStore.setActivePanel(null);
-  }
-
-  console.log(validatorKeyFile.value);
-};
+//Pick a Validator Service
 
 const pickValidatorService = (service) => {
   stakingStore.selectedValidatorService = service;
   stakingStore.setActivePanel("password");
-  console.log(service);
 };
 
+//Validation validator key Password
 const passwordValidation = (password) => {
   stakingStore.setActivePanel("insert");
   console.log(password);
