@@ -195,7 +195,7 @@ export default {
       setTimeout(() => {
         this.test(this.consensusName);
         this.loadingStrater = false;
-      }, 3000);
+      }, 2000);
     },
     currentResult: {
       handler(newResult) {
