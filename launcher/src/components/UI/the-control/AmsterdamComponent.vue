@@ -150,6 +150,7 @@ export default {
       currentResult: "currentResult",
       noDataFlag: "noDataFlag",
       consensusName: "consensusName",
+      pageNumber: "pageNumber",
     }),
     proposedBlock() {
       if (this.currentNetwork.id === 4) {
@@ -186,6 +187,9 @@ export default {
   },
 
   watch: {
+    // pageNumber() {
+    //   this.test(this.consensusName);
+    // },
     currentResult: {
       handler(newResult) {
         if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
@@ -208,13 +212,13 @@ export default {
     if (this.currentNetwork.id === 4) {
       this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-          this.currentEpochSlot();
+          this.currentEpochSlot(this.consensusName);
         }
       }, 5000);
     } else {
       this.polling = setInterval(() => {
         if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-          this.currentEpochSlot();
+          this.currentEpochSlot(this.consensusName);
         }
       }, 12000);
     }
@@ -227,7 +231,7 @@ export default {
       this.currentResult = {};
       console.log(this.consensusName);
       setTimeout(() => {
-        this.currentEpochSlot();
+        this.currentEpochSlot(this.consensusName);
       }, 500);
     },
     flagController() {
@@ -268,8 +272,11 @@ export default {
     },
     async currentEpochSlot() {
       try {
-        let res = await ControlService.getCurrentEpochSlot();
+        console.log("aaaaaaa", this.consensusName);
 
+        this.currentResult = {};
+        let res = await ControlService.getCurrentEpochSlot(this.consensusName);
+        console.log("res", res);
         if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
           this.currentSlotData = res.currentSlot;
           this.currentEpochData = res.currentEpoch;

@@ -416,8 +416,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("importConfig", args);
   }
 
-  async getCurrentEpochSlot() {
-    return await this.promiseIpc.send("getCurrentEpochSlot");
+  async getCurrentEpochSlot(args) {
+    return await this.promiseIpc.send("getCurrentEpochSlot", args);
   }
 
   async changePassword(args) {

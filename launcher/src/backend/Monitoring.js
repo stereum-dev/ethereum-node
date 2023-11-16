@@ -3027,9 +3027,11 @@ rm -rf diskoutput
     }
   }
 
-  async getCurrentEpochSlot() {
+  async getCurrentEpochSlot(currBeaconService) {
     try {
-      const beaconStatus = await this.getBeaconStatus();
+      let beaconStatus = await this.getBeaconStatus();
+      beaconStatus.data = beaconStatus.data.filter((obj) => obj.clt === currBeaconService);
+      console.log("fhhfhfhfhfhfh", beaconStatus);
       let currentEpochSlotStatus = {};
       if (beaconStatus.code === 0) {
         // retrive current network & define epoch length (ethereum -> 32 | gnosis -> 16)
@@ -3124,6 +3126,7 @@ rm -rf diskoutput
         currentEpochSlotStatus["justifiedEpochStatus"].push(justifiedSlotStatusArray);
         currentEpochSlotStatus["preJustifiedEpochStatus"].push(preJustifiedSlotStatusArray);
         currentEpochSlotStatus["finalizedEpochStatus"].push(finalizedSlotStatusArray);
+        console.log("currentEpochSlotStatus", currentEpochSlotStatus);
         return currentEpochSlotStatus;
       } else if (beaconStatus.code === 2) {
         return (currentEpochSlotStatus = {
