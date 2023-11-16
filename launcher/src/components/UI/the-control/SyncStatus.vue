@@ -166,10 +166,10 @@ export default {
       consensusClientsData: "consensusClientsData",
       executionClientsData: "executionClientsData",
       consensusName: "consensusName",
-      pageNumber: "pageNumber",
     }),
     ...mapWritableState(useControlStore, {
       consensusName: "consensusName",
+      pageNumber: "pageNumber",
     }),
     errorIco() {
       return this.syncIco[0].icon;
