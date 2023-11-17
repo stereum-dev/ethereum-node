@@ -272,7 +272,7 @@ export class ValidatorAccountManager {
       );
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       log.error("Listing Validators Failed:\n", err);
-      return err;
+      return { data: [] };
     }
   }
 
@@ -653,7 +653,7 @@ export class ValidatorAccountManager {
 
     if (SSHService.checkExecError(result)) {
       log.error(`Couldn't get API token for ${service.service}: ${SSHService.extractExecError(result)}`);
-      return null;
+      throw `Couldn't get API token for ${service.service}: ${SSHService.extractExecError(result)}`;
     }
     return result.stdout.trim();
   }
@@ -734,8 +734,8 @@ export class ValidatorAccountManager {
         case "teku": {
           let noPrefixPubkey = pubkey.slice(2, 98);
           const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${client.dependencies.consensusClients[0]
-              ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
-              : "http://127.0.0.1:5051"
+            ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
+            : "http://127.0.0.1:5051"
             } --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
           result = await this.nodeConnection.sshService.exec(exitTekuCmd);
           break;
@@ -852,7 +852,7 @@ export class ValidatorAccountManager {
       );
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       log.error("Listing Remote Validators Failed:\n", err);
-      return err;
+      return { data: [] };
     }
   }
 
