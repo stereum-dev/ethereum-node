@@ -272,7 +272,7 @@ export class ValidatorAccountManager {
       );
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       log.error("Listing Validators Failed:\n", err);
-      return err;
+      return { data: [] };
     }
   }
 
@@ -319,8 +319,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -654,7 +653,7 @@ export class ValidatorAccountManager {
 
     if (SSHService.checkExecError(result)) {
       log.error(`Couldn't get API token for ${service.service}: ${SSHService.extractExecError(result)}`);
-      return null;
+      throw `Couldn't get API token for ${service.service}: ${SSHService.extractExecError(result)}`;
     }
     return result.stdout.trim();
   }
@@ -690,6 +689,7 @@ export class ValidatorAccountManager {
       return error;
     }
   }
+
 
   formatImportResult(pubkeys, data) {
     let imported = 0;
@@ -795,7 +795,7 @@ export class ValidatorAccountManager {
       );
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       log.error("Listing Remote Validators Failed:\n", err);
-      return err;
+      return { data: [] };
     }
   }
 
