@@ -9,6 +9,7 @@ export const useStakingStore = defineStore("theStaking", {
       searchContent: "",
       isOverDropZone: false,
       inputWrongKey: false,
+      isPreviewListActive: false,
       //***** End Staking List
 
       // ***** Staking Modals *****

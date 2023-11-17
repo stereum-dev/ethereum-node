@@ -11,19 +11,45 @@
       />
       <ManagementSection />
     </div>
+    <transition
+      tag="div"
+      enter-active-class="animate__animated animate__fadeIn"
+      leave-active-class="animate__animated animate__fadeOut"
+    >
+      <component :is="activeModal?.component" v-bind="activeModal?.props" v-on="activeModal?.events" />
+    </transition>
   </base-layout>
 </template>
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
 import ListSection from "./sections/ListSection.vue";
+import ImportValidator from "./components/modals/ImportValidator.vue";
 import ManagementSection from "./sections/ManagementSection.vue";
 import { useStakingStore } from "@/store/theStaking";
+import { computed } from "vue";
 
 //Store
 const stakingStore = useStakingStore();
 
+const modals = {
+  import: {
+    component: ImportValidator,
+    events: {
+      closeWindow: () => closeWindow,
+    },
+    props: {},
+  },
+};
 //Computed & Watchers
 
+const activeModal = computed(() => {
+  const modalConfig = modals[stakingStore.activeModal] || {};
+  return {
+    component: modalConfig.component || null,
+    props: modalConfig.props || {},
+    events: modalConfig.events || {},
+  };
+});
 // const searchContent = computed(() => {
 //   return console.log(stakingStore.searchContent);
 // });
@@ -39,8 +65,9 @@ const processFile = (file) => {
     reader.onload = (e) => {
       try {
         const jsonKey = JSON.parse(e.target.result);
-        stakingStore.keys.push(jsonKey);
-        stakingStore.setActivePanel("validator");
+        stakingStore.keyFiles.push(jsonKey);
+        stakingStore.setActiveModal("import");
+        stakingStore.isPreviewListActive = true;
       } catch (err) {
         console.error("Error parsing JSON:", err);
       }
@@ -55,6 +82,7 @@ const processFile = (file) => {
 const onDrop = (event) => {
   stakingStore.isOverDropZone = false;
   const files = event.dataTransfer.files;
+
   if (files.length > 0) {
     processFile(files[0]);
   }
