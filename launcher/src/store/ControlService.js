@@ -450,6 +450,9 @@ class ControlService extends EventEmitter {
   async IpScanLan() {
     return await this.promiseIpc.send("IpScanLan");
   }
+  async dumpDockerLogs() {
+    return await this.promiseIpc.send("dumpDockerLogs");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
