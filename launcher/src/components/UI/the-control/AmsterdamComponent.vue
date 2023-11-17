@@ -128,6 +128,7 @@ export default {
       footerInfo: this.$t("controlPage.netSel"),
       proposed: [],
       polling: {},
+      loadingStrater: false,
     };
   },
   computed: {
@@ -148,6 +149,8 @@ export default {
       currentEpochData: "currentEpochData",
       currentResult: "currentResult",
       noDataFlag: "noDataFlag",
+      consensusName: "consensusName",
+      pageNumber: "pageNumber",
     }),
     proposedBlock() {
       if (this.currentNetwork.id === 4) {
@@ -175,6 +178,8 @@ export default {
         return true;
       } else if (this.currentResult.beaconStatus !== 0) {
         return false;
+      } else if (this.loadingStrater) {
+        return true;
       }
       return false;
     },
@@ -184,6 +189,14 @@ export default {
   },
 
   watch: {
+    pageNumber() {
+      clearInterval(this.polling);
+      this.loadingStrater = true;
+      setTimeout(() => {
+        this.refreshHandling(this.consensusName);
+        this.loadingStrater = false;
+      }, 3000);
+    },
     currentResult: {
       handler(newResult) {
         if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
@@ -203,24 +216,32 @@ export default {
     },
   },
   mounted() {
-    if (this.currentNetwork.id === 4) {
-      this.polling = setInterval(() => {
-        if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-          this.currentEpochSlot();
-        }
-      }, 5000);
-    } else {
-      this.polling = setInterval(() => {
-        if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-          this.currentEpochSlot();
-        }
-      }, 12000);
-    }
+    this.refreshTimer();
   },
   beforeUnmount() {
     clearInterval(this.polling);
   },
   methods: {
+    refreshTimer() {
+      if (this.currentNetwork.id === 4) {
+        this.polling = setInterval(() => {
+          if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
+            this.currentEpochSlot(this.consensusName);
+          }
+        }, 5000);
+      } else {
+        this.polling = setInterval(() => {
+          if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
+            this.currentEpochSlot(this.consensusName);
+          }
+        }, 12000);
+      }
+    },
+    refreshHandling() {
+      this.currentResult = {};
+      clearInterval(this.polling);
+      this.currentEpochSlot(this.consensusName);
+    },
     flagController() {
       if (this.flag === false && this.currentResult.beaconStatus !== 0) {
         this.noDataFlag = true;
@@ -259,8 +280,7 @@ export default {
     },
     async currentEpochSlot() {
       try {
-        let res = await ControlService.getCurrentEpochSlot();
-
+        let res = await ControlService.getCurrentEpochSlot(this.consensusName);
         if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
           this.currentSlotData = res.currentSlot;
           this.currentEpochData = res.currentEpoch;
