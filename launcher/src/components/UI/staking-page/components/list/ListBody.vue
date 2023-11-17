@@ -20,7 +20,19 @@ import { ref } from 'vue';
         v-if="!stakingStore.isOverDropZone"
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto"
       >
-        <KeyRow v-for="item in stakingStore.keys" :key="item.pubkey" :item="item" />
+        <PreviewKey
+          v-for="item in stakingStore.keyFiles"
+          v-show="stakingStore.isPreviewListActive"
+          :key="item.pubkey"
+          :item="item"
+        />
+
+        <KeyRow
+          v-for="item in stakingStore.keys"
+          v-show="!stakingStore.isPreviewListActive"
+          :key="item.pubkey"
+          :item="item"
+        />
       </div>
     </div>
   </div>
