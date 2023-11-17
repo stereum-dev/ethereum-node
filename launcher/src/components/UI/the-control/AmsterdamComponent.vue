@@ -193,7 +193,7 @@ export default {
       clearInterval(this.polling);
       this.loadingStrater = true;
       setTimeout(() => {
-        this.test(this.consensusName);
+        this.refreshHandling(this.consensusName);
         this.loadingStrater = false;
       }, 3000);
     },
@@ -237,9 +237,8 @@ export default {
         }, 12000);
       }
     },
-    test() {
+    refreshHandling() {
       this.currentResult = {};
-      console.log(this.consensusName);
       clearInterval(this.polling);
       this.currentEpochSlot(this.consensusName);
     },
@@ -281,10 +280,7 @@ export default {
     },
     async currentEpochSlot() {
       try {
-        console.log("aaaaaaa", this.consensusName);
-
         let res = await ControlService.getCurrentEpochSlot(this.consensusName);
-        console.log("res", res);
         if (res && res.currentSlot !== undefined && res.currentEpoch !== undefined) {
           this.currentSlotData = res.currentSlot;
           this.currentEpochData = res.currentEpoch;
