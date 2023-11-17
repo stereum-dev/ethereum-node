@@ -418,8 +418,8 @@ ipcMain.handle("checkActiveValidators", async (event, args) => {
   );
 });
 
-ipcMain.handle("exitValidator", async (event, args) => {
-  return await validatorAccountManager.exitValidator(args.pubkey, args.password, args.serviceID);
+ipcMain.handle("exitValidatorAccount", async (event, args) => {
+  return await monitoring.exitValidatorAccount(args.pubkey, args.password, args.serviceID);
 });
 
 ipcMain.handle("exportConfig", async () => {
@@ -446,8 +446,8 @@ ipcMain.handle("checkRemoteKeys", async (event, args) => {
   return await validatorAccountManager.checkRemoteKeys(args.url, args.serviceID);
 });
 
-ipcMain.handle("getCurrentEpochSlot", async () => {
-  return await monitoring.getCurrentEpochSlot();
+ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
+  return await monitoring.getCurrentEpochSlot(args);
 });
 
 ipcMain.handle("changePassword", async (event, args) => {
