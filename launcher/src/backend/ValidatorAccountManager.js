@@ -319,8 +319,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -676,284 +675,284 @@ export class ValidatorAccountManager {
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-          await this.nodeConnection.sshService.exec(
-            `touch ${passwordDir}/exit_password.txt && echo "${password}" > ${passwordDir}/exit_password.txt`
-          );
-          await this.nodeConnection.sshService.exec(
-            `chown 2000:2000 ${passwordDir}/exit_password.txt && chmod 700 ${passwordDir}/exit_password.txt`
-          );
-          const exitPrysmCmd = `docker run -v ${walletDir}:/wallets -v ${passwordDir}:/passwords --network=stereum gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest validator exit --wallet-dir=/wallets --wallet-password-file=/passwords/wallet-password --public-keys=${pubkey} --account-password-file=/passwords/exit_password.txt --beacon-rpc-provider=stereum-${beaconNodeID}:4000 --${client.network}=true --accept-terms-of-use=true --force-exit=true`;
-          result = await this.nodeConnection.sshService.exec(exitPrysmCmd);
-          await this.nodeConnection.sshService.exec(`rm ${passwordDir}/exit_password.txt`);
-          break;
-        }
+      await this.nodeConnection.sshService.exec(
+        `touch ${passwordDir}/exit_password.txt && echo "${password}" > ${passwordDir}/exit_password.txt`
+      );
+      await this.nodeConnection.sshService.exec(
+        `chown 2000:2000 ${passwordDir}/exit_password.txt && chmod 700 ${passwordDir}/exit_password.txt`
+      );
+      const exitPrysmCmd = `docker run -v ${walletDir}:/wallets -v ${passwordDir}:/passwords --network=stereum gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest validator exit --wallet-dir=/wallets --wallet-password-file=/passwords/wallet-password --public-keys=${pubkey} --account-password-file=/passwords/exit_password.txt --beacon-rpc-provider=stereum-${beaconNodeID}:4000 --${client.network}=true --accept-terms-of-use=true --force-exit=true`;
+      result = await this.nodeConnection.sshService.exec(exitPrysmCmd);
+      await this.nodeConnection.sshService.exec(`rm ${passwordDir}/exit_password.txt`);
+      break;
+    }
         case "teku": {
-          let noPrefixPubkey = pubkey.slice(2, 98);
-          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${client.dependencies.consensusClients[0]
-            ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
-            : "http://127.0.0.1:5051"
-            } --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
-          result = await this.nodeConnection.sshService.exec(exitTekuCmd);
-          break;
-        }
-      }
+      let noPrefixPubkey = pubkey.slice(2, 98);
+      const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${client.dependencies.consensusClients[0]
+        ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl()
+        : "http://127.0.0.1:5051"
+        } --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
+      result = await this.nodeConnection.sshService.exec(exitTekuCmd);
+      break;
+    }
+  }
       return result;
     } catch (error) {
-      this.nodeConnection.taskManager.otherTasksHandler(
-        ref,
-        `Getting signed voluntary exit message Failed`,
-        false,
-        `Getting signed voluntary exit message ${pubkey} Failed:\n` + error
+  this.nodeConnection.taskManager.otherTasksHandler(
+    ref,
+    `Getting signed voluntary exit message Failed`,
+    false,
+    `Getting signed voluntary exit message ${pubkey} Failed:\n` + error
+  );
+  this.nodeConnection.taskManager.otherTasksHandler(ref);
+  log.error("Getting signed voluntary exit message Failed:\n", error);
+  return error;
+}
+  }
+
+formatImportResult(pubkeys, data) {
+  let imported = 0;
+  let duplicate = 0;
+  let error = 0;
+
+  let message = data
+    .map((key, index) => {
+      if (key.status === "imported") imported++;
+      if (key.status === "duplicate") duplicate++;
+      if (key.status === "error") error++;
+      return (
+        `${pubkeys[index].substring(0, 20)}...${pubkeys[index].substring(
+          pubkeys[index].length - 6,
+          pubkeys[index].length
+        )}:\t${key.status}` + (key.status == "error" ? `:\n${key.message}\n` : "")
       );
-      this.nodeConnection.taskManager.otherTasksHandler(ref);
-      log.error("Getting signed voluntary exit message Failed:\n", error);
-      return error;
-    }
-  }
+    })
+    .join("\n");
 
-  formatImportResult(pubkeys, data) {
-    let imported = 0;
-    let duplicate = 0;
-    let error = 0;
-
-    let message = data
-      .map((key, index) => {
-        if (key.status === "imported") imported++;
-        if (key.status === "duplicate") duplicate++;
-        if (key.status === "error") error++;
-        return (
-          `${pubkeys[index].substring(0, 20)}...${pubkeys[index].substring(
-            pubkeys[index].length - 6,
-            pubkeys[index].length
-          )}:\t${key.status}` + (key.status == "error" ? `:\n${key.message}\n` : "")
-        );
-      })
-      .join("\n");
-
-    return message + `\n${imported} key(s) imported...\n${duplicate} duplicate(s)...\n${error} import(s) failed...`;
-  }
+  return message + `\n${imported} key(s) imported...\n${duplicate} duplicate(s)...\n${error} import(s) failed...`;
+}
 
   async importRemoteKeys(serviceID, pubkeys, url) {
-    //Init Task in TaskManager
-    const ref = StringUtils.createRandomString();
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${pubkeys.length} Remote Keys`);
+  //Init Task in TaskManager
+  const ref = StringUtils.createRandomString();
+  this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${pubkeys.length} Remote Keys`);
 
-    let services = await this.serviceManager.readServiceConfigurations();
+  let services = await this.serviceManager.readServiceConfigurations();
 
-    let client = services.find((service) => service.id === serviceID);
-    await this.initWallet(client, ref);
-    await this.addRemoteSignerTags(client, url);
+  let client = services.find((service) => service.id === serviceID);
+  await this.initWallet(client, ref);
+  await this.addRemoteSignerTags(client, url);
 
-    try {
-      const args = pubkeys.map((key) => {
-        return { pubkey: key, url: url };
-      });
-      const result = await this.keymanagerAPI(client, "POST", "/eth/v1/remotekeys", { remote_keys: args });
+  try {
+    const args = pubkeys.map((key) => {
+      return { pubkey: key, url: url };
+    });
+    const result = await this.keymanagerAPI(client, "POST", "/eth/v1/remotekeys", { remote_keys: args });
 
-      //Error Handling
-      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-      const response = JSON.parse(result.stdout);
-      if (response.data === undefined) {
-        if (response.code === undefined || response.message === undefined) {
-          throw "Undexpected Error: " + result;
-        }
-        throw response.code + " " + response.message;
+    //Error Handling
+    if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+    const response = JSON.parse(result.stdout);
+    if (response.data === undefined) {
+      if (response.code === undefined || response.message === undefined) {
+        throw "Undexpected Error: " + result;
       }
+      throw response.code + " " + response.message;
+    }
 
-      if (response.data.map((k) => k.status).includes("error")) {
-        this.nodeConnection.taskManager.otherTasksHandler(
-          ref,
-          `${pubkeys.length} Rremote Keys Imported with errors`,
-          false,
-          JSON.stringify(response.data)
-        );
-      } else {
-        this.nodeConnection.taskManager.otherTasksHandler(
-          ref,
-          `Batch with ${pubkeys.length} Remote Keys Imported`,
-          true,
-          JSON.stringify(response.data)
-        );
-      }
-
-      const message = this.formatImportResult(pubkeys, response.data);
-      this.nodeConnection.taskManager.otherTasksHandler(ref);
-      return message;
-    } catch (err) {
+    if (response.data.map((k) => k.status).includes("error")) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
-        `Remote Import Failed`,
+        `${pubkeys.length} Rremote Keys Imported with errors`,
         false,
-        "Remote Validator Import Failed:\n" + err
+        JSON.stringify(response.data)
       );
-      this.nodeConnection.taskManager.otherTasksHandler(ref);
-      log.error("Remote Validator Import Failed:\n", err);
-      return "Remote Validator Import Failed:\n" + err;
+    } else {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Batch with ${pubkeys.length} Remote Keys Imported`,
+        true,
+        JSON.stringify(response.data)
+      );
     }
+
+    const message = this.formatImportResult(pubkeys, response.data);
+    this.nodeConnection.taskManager.otherTasksHandler(ref);
+    return message;
+  } catch (err) {
+    this.nodeConnection.taskManager.otherTasksHandler(
+      ref,
+      `Remote Import Failed`,
+      false,
+      "Remote Validator Import Failed:\n" + err
+    );
+    this.nodeConnection.taskManager.otherTasksHandler(ref);
+    log.error("Remote Validator Import Failed:\n", err);
+    return "Remote Validator Import Failed:\n" + err;
   }
+}
 
   async listRemoteKeys(serviceID) {
-    const ref = StringUtils.createRandomString();
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Remote Keys`);
-    try {
-      let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keymanagerAPI(client, "GET", "/eth/v1/remotekeys");
+  const ref = StringUtils.createRandomString();
+  this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Remote Keys`);
+  try {
+    let client = await this.nodeConnection.readServiceConfiguration(serviceID);
+    const result = await this.keymanagerAPI(client, "GET", "/eth/v1/remotekeys");
 
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Remote Keys`, true, result.stdout);
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Remote Keys`, true, result.stdout);
 
-      const data = JSON.parse(result.stdout);
-      if (!data.data) data.data = [];
+    const data = JSON.parse(result.stdout);
+    if (!data.data) data.data = [];
 
-      this.nodeConnection.taskManager.otherTasksHandler(ref);
-      return data;
-    } catch (err) {
-      this.nodeConnection.taskManager.otherTasksHandler(
-        ref,
-        `Listing Remote Keys Failed`,
-        false,
-        "Listing Remote Validators Failed:\n" + err
-      );
-      this.nodeConnection.taskManager.otherTasksHandler(ref);
-      log.error("Listing Remote Validators Failed:\n", err);
-      return { data: [] };
-    }
+    this.nodeConnection.taskManager.otherTasksHandler(ref);
+    return data;
+  } catch (err) {
+    this.nodeConnection.taskManager.otherTasksHandler(
+      ref,
+      `Listing Remote Keys Failed`,
+      false,
+      "Listing Remote Validators Failed:\n" + err
+    );
+    this.nodeConnection.taskManager.otherTasksHandler(ref);
+    log.error("Listing Remote Validators Failed:\n", err);
+    return { data: [] };
   }
+}
 
   async deleteRemoteKeys(serviceID, pubkeys) {
-    const ref = StringUtils.createRandomString();
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Remote Keys`);
-    try {
-      let client = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keymanagerAPI(client, "DELETE", "/eth/v1/remotekeys", { pubkeys: pubkeys });
+  const ref = StringUtils.createRandomString();
+  this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Remote Keys`);
+  try {
+    let client = await this.nodeConnection.readServiceConfiguration(serviceID);
+    const result = await this.keymanagerAPI(client, "DELETE", "/eth/v1/remotekeys", { pubkeys: pubkeys });
+
+    //Error handling
+    if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+    const data = JSON.parse(result.stdout);
+    if (data.data === undefined) {
+      if (data.code === undefined || data.message === undefined) {
+        throw "Undexpected Error: " + result;
+      }
+      throw data.code + " " + data.message;
+    }
+
+    //Push successful task
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Remote Keys`, true, result.stdout);
+
+    this.nodeConnection.taskManager.otherTasksHandler(ref);
+
+    return data;
+  } catch (err) {
+    this.nodeConnection.taskManager.otherTasksHandler(
+      ref,
+      `Deleting Remote Keys Failed`,
+      false,
+      "Deleting Remote Validators Failed:\n" + err
+    );
+    this.nodeConnection.taskManager.otherTasksHandler(ref);
+    log.error("Deleting Remote Validators Failed:\n", err);
+    return err;
+  }
+}
+
+  async checkRemoteKeys(url, serviceID) {
+  try {
+    // For local Web3Singer Instances (url is undefined and serviceID is defined)
+    if (serviceID) {
+      let services = await this.serviceManager.readServiceConfigurations();
+
+      let client = services.find((service) => service.id === serviceID);
+      let result = await this.keymanagerAPI(client, "GET", "/api/v1/eth2/publicKeys"); //returns an array of pubkeys that the signer is hodlding
 
       //Error handling
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
       const data = JSON.parse(result.stdout);
-      if (data.data === undefined) {
+      if (!Array.isArray(data)) {
         if (data.code === undefined || data.message === undefined) {
           throw "Undexpected Error: " + result;
         }
         throw data.code + " " + data.message;
       }
 
-      //Push successful task
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Remote Keys`, true, result.stdout);
-
-      this.nodeConnection.taskManager.otherTasksHandler(ref);
-
-      return data;
-    } catch (err) {
-      this.nodeConnection.taskManager.otherTasksHandler(
-        ref,
-        `Deleting Remote Keys Failed`,
-        false,
-        "Deleting Remote Validators Failed:\n" + err
-      );
-      this.nodeConnection.taskManager.otherTasksHandler(ref);
-      log.error("Deleting Remote Validators Failed:\n", err);
-      return err;
+      return { keys: data, url: client.buildWeb3SignerHttpEndpointUrl() };
     }
-  }
 
-  async checkRemoteKeys(url, serviceID) {
-    try {
-      // For local Web3Singer Instances (url is undefined and serviceID is defined)
-      if (serviceID) {
-        let services = await this.serviceManager.readServiceConfigurations();
+    // For remote Web3Singer Instances (url is defined and serviceID is undefined)
+    if (url) {
+      let CurlCommand = [
+        "docker run --rm --network=stereum curlimages/curl",
+        `curl ${url}/api/v1/eth2/publicKeys`,
+        `-X GET`,
+        `-H 'Content-Type: application/json'`,
+        `-s`,
+      ];
+      let result = await this.nodeConnection.sshService.exec(CurlCommand.join(" "));
 
-        let client = services.find((service) => service.id === serviceID);
-        let result = await this.keymanagerAPI(client, "GET", "/api/v1/eth2/publicKeys"); //returns an array of pubkeys that the signer is hodlding
-
-        //Error handling
-        if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-        const data = JSON.parse(result.stdout);
-        if (!Array.isArray(data)) {
-          if (data.code === undefined || data.message === undefined) {
-            throw "Undexpected Error: " + result;
-          }
-          throw data.code + " " + data.message;
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      const data = JSON.parse(result.stdout);
+      if (!Array.isArray(data)) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
         }
-
-        return { keys: data, url: client.buildWeb3SignerHttpEndpointUrl() };
+        throw data.code + " " + data.message;
       }
 
-      // For remote Web3Singer Instances (url is defined and serviceID is undefined)
-      if (url) {
-        let CurlCommand = [
-          "docker run --rm --network=stereum curlimages/curl",
-          `curl ${url}/api/v1/eth2/publicKeys`,
-          `-X GET`,
-          `-H 'Content-Type: application/json'`,
-          `-s`,
-        ];
-        let result = await this.nodeConnection.sshService.exec(CurlCommand.join(" "));
-
-        //Error handling
-        if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-        const data = JSON.parse(result.stdout);
-        if (!Array.isArray(data)) {
-          if (data.code === undefined || data.message === undefined) {
-            throw "Undexpected Error: " + result;
-          }
-          throw data.code + " " + data.message;
-        }
-
-        return { keys: data, url: url };
-      }
-    } catch (err) {
-      log.error("Error checking remote keys: ", err);
-      return { error: err };
+      return { keys: data, url: url };
     }
+  } catch (err) {
+    log.error("Error checking remote keys: ", err);
+    return { error: err };
   }
+}
 
   async addRemoteSignerTags(client, url) {
-    switch (client.service.replace(/(Beacon|Validator|Service)/gm, "")) {
-      case "Prysm": {
-        let command = structuredClone(client.command);
-        if (!client.command.includes("--validators-external-signer-url=")) {
-          command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
-          command.push(`--validators-external-signer-url=${url}`);
-        } else if (
-          client.command.includes("--validators-external-signer-url=") &&
-          !client.command.includes(`--validators-external-signer-url=${url}`)
-        ) {
-          command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
-          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="));
-          command.push(`--validators-external-signer-url=${url}`);
-        }
-        if (Array.isArray(command)) {
-          command = command.join(" ").trim();
-          client.command = command;
-          await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-          await this.serviceManager.manageServiceState(client.id, "stopped");
-          await this.serviceManager.manageServiceState(client.id, "started");
-          await Sleep(30000);
-        }
-        break;
+  switch (client.service.replace(/(Beacon|Validator|Service)/gm, "")) {
+    case "Prysm": {
+      let command = structuredClone(client.command);
+      if (!client.command.includes("--validators-external-signer-url=")) {
+        command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+        command.push(`--validators-external-signer-url=${url}`);
+      } else if (
+        client.command.includes("--validators-external-signer-url=") &&
+        !client.command.includes(`--validators-external-signer-url=${url}`)
+      ) {
+        command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+        command = command.filter((arg) => !arg.includes("--validators-external-signer-url="));
+        command.push(`--validators-external-signer-url=${url}`);
       }
-      case "Teku": {
-        let command = structuredClone(client.command);
-        let urlCommand = command.find((arg) => arg.includes("--validators-external-signer-url="));
-        let changed = false;
-        if (!urlCommand) {
-          command.push(`--validators-external-signer-url=${url}`);
-          changed = true;
-        } else if (urlCommand && urlCommand !== `--validators-external-signer-url=${url}`) {
-          command = command.filter((arg) => !arg.includes("--validators-external-signer-url="));
-          command.push(`--validators-external-signer-url=${url}`);
-          changed = true;
-        }
-        if (changed) {
-          client.command = command;
-          await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-          await this.serviceManager.manageServiceState(client.id, "stopped");
-          await this.serviceManager.manageServiceState(client.id, "started");
-          await Sleep(30000);
-        }
-        break;
+      if (Array.isArray(command)) {
+        command = command.join(" ").trim();
+        client.command = command;
+        await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
+        await this.serviceManager.manageServiceState(client.id, "stopped");
+        await this.serviceManager.manageServiceState(client.id, "started");
+        await Sleep(30000);
       }
-      default:
-        break;
+      break;
     }
+    case "Teku": {
+      let command = structuredClone(client.command);
+      let urlCommand = command.find((arg) => arg.includes("--validators-external-signer-url="));
+      let changed = false;
+      if (!urlCommand) {
+        command.push(`--validators-external-signer-url=${url}`);
+        changed = true;
+      } else if (urlCommand && urlCommand !== `--validators-external-signer-url=${url}`) {
+        command = command.filter((arg) => !arg.includes("--validators-external-signer-url="));
+        command.push(`--validators-external-signer-url=${url}`);
+        changed = true;
+      }
+      if (changed) {
+        client.command = command;
+        await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
+        await this.serviceManager.manageServiceState(client.id, "stopped");
+        await this.serviceManager.manageServiceState(client.id, "started");
+        await Sleep(30000);
+      }
+      break;
+    }
+    default:
+      break;
   }
+}
 }
