@@ -23,21 +23,27 @@
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
 import ListSection from "./sections/ListSection.vue";
-import ImportValidator from "./components/modals/ImportValidator.vue";
 import ManagementSection from "./sections/ManagementSection.vue";
+import ControlService from "../../../store/ControlService";
+import ImportValidator from "./components/modals/ImportValidator.vue";
+import RiskWarning from "./components/modals/RiskWarning.vue";
+import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
+import { useServices } from "@/store/services";
 
 //Store
 const stakingStore = useStakingStore();
+const serviceStore = useServices();
 
 const modals = {
   import: {
     component: ImportValidator,
-    events: {
-      closeWindow: () => closeWindow,
-    },
+
     props: {},
+  },
+  risk: {
+    component: RiskWarning,
   },
 };
 //Computed & Watchers
@@ -54,58 +60,143 @@ const activeModal = computed(() => {
 //   return console.log(stakingStore.searchContent);
 // });
 
-//Methods
+//Lifecycle Hooks
+
+onMounted(async () => {
+  await listKeys();
+});
+
+// *************** Methods *****************
 
 //**** Validator Key File ****
 
-const processFile = (file) => {
-  if (file.type === "application/json") {
-    const reader = new FileReader();
+//Read File Content
+const readFileContent = (file) => {
+  const reader = new FileReader();
 
-    reader.onload = (e) => {
-      try {
-        const jsonKey = JSON.parse(e.target.result);
-        stakingStore.keyFiles.push(jsonKey);
-        stakingStore.setActiveModal("import");
-        stakingStore.isPreviewListActive = true;
-      } catch (err) {
-        console.error("Error parsing JSON:", err);
-      }
-    };
+  reader.onload = (event) => {
+    try {
+      const jsonContent = JSON.parse(event.target.result);
+      stakingStore.previewKeys.push(jsonContent);
+    } catch (e) {
+      console.error("Error parsing JSON file:", e);
+    }
+  };
+  reader.onerror = (event) => {
+    console.error("Error reading file:", event.target.error);
+  };
 
-    reader.readAsText(file);
-  } else {
-    return;
-  }
+  reader.readAsText(file);
 };
 
-const onDrop = (event) => {
-  stakingStore.isOverDropZone = false;
-  const files = event.dataTransfer.files;
-
-  if (files.length > 0) {
-    processFile(files[0]);
+//Handle multiple files
+const handleFiles = (files) => {
+  if (files.length > 1) {
+    for (let file of files) {
+      if (file.type === "application/json") {
+        readFileContent(file);
+      }
+    }
+  } else {
+    readFileContent(files[0]);
   }
 };
 
 const uploadValidatorKey = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    processFile(file);
-  } else {
-    stakingStore.setActivePanel(null);
+  let uploadedFiles = event.target.files;
+  if (!stakingStore.keyFiles.includes(uploadedFiles[0]["name"]) && uploadedFiles[0]["type"] === "application/json") {
+    handleFiles(uploadedFiles);
+    stakingStore.keyFiles.push(...uploadedFiles);
+    stakingStore.isOverDropZone = false;
+    stakingStore.isPreviewListActive = true;
+    stakingStore.setActivePanel("validator");
   }
 };
 
+const onDrop = (event) => {
+  let validator = serviceStore.installedServices.filter((s) => s.category === "validator");
+  if (validator && validator.map((e) => e.state).includes("running")) {
+    let droppedFiles = event.dataTransfer.files;
+    if (droppedFiles[0]["type"] === "application/json") {
+      stakingStore.isOverDropZone = false;
+      stakingStore.isPreviewListActive = true;
+      handleFiles(droppedFiles);
+      stakingStore.keyFiles.push(...droppedFiles);
+      stakingStore.setActivePanel("validator");
+    }
+  }
+};
+
+const listKeys = async () => {
+  await useListKeys(stakingStore.forceRefresh);
+};
+
+// const updateValidatorStats = async () => {
+//   await useUpdateValidatorStats();
+// };
+
 //****End of Validator Key File ****
+
+//**** Import Key Validation ****
+
+const importKey = async (val) => {
+  stakingStore.importEnteredPassword = val;
+  stakingStore.importKeyMessage = await ControlService.importKey(
+    stakingStore.selectedValidatorService.config.serviceID
+  );
+  stakingStore.isPreviewListActive = false;
+  stakingStore.setActivePanel("insert");
+  stakingStore.keyFiles = [];
+  stakingStore.previewKeys = [];
+  stakingStore.importEnteredPassword = "";
+
+  await listKeys();
+};
+
+//Validation validator key Password
+const passwordValidation = async (pass) => {
+  stakingStore.importEnteredPassword = pass;
+
+  stakingStore.setActiveModal("import");
+  stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
+    files: stakingStore.keyFiles,
+    password: stakingStore.importEnteredPassword,
+    serviceID: stakingStore.selectedValidatorService.config.serviceID,
+    //Temporarily set slashingDB to null
+    slashingDB: null,
+  });
+  stakingStore.setActivePanel(null);
+  if (
+    stakingStore.checkActiveValidatorsResponse.length === 0 ||
+    stakingStore.checkActiveValidatorsResponse.includes("Validator check error:\n")
+  ) {
+    importKey(stakingStore.importEnteredPassword);
+    stakingStore.keys.push(...stakingStore.checkActiveValidatorsResponse);
+  } else {
+    console.log("error");
+  }
+};
+//****End of Import Key Validation ****
 
 //Create Grouping
 const confirmGroupingName = (groupName) => {
-  if (groupName === "") {
+  if (groupName === "" || groupName === null) {
+    stakingStore.setActivePanel(null);
     return;
   }
-  stakingStore.setActivePanel("insert");
-  console.log(groupName);
+  stakingStore.groupName = groupName.trim();
+
+  stakingStore.validatorKeyGroups.push({
+    id: stakingStore.validatorKeyGroups.length + 1,
+    keys: [...stakingStore.selectedValidatorKeys],
+    name: stakingStore.groupName,
+    selected: false,
+  });
+  stakingStore.setActivePanel(null);
+  stakingStore.selectedValidatorKeys = [];
+  stakingStore.groupName = "";
+  stakingStore.isPreviewListActive = false;
+  console.log(stakingStore.validatorKeyGroups);
 };
 
 //Pick a Validator Service
@@ -113,11 +204,5 @@ const confirmGroupingName = (groupName) => {
 const pickValidatorService = (service) => {
   stakingStore.selectedValidatorService = service;
   stakingStore.setActivePanel("password");
-};
-
-//Validation validator key Password
-const passwordValidation = (password) => {
-  stakingStore.setActivePanel("insert");
-  console.log(password);
 };
 </script>
