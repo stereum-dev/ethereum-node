@@ -18,14 +18,14 @@
               <span>{{ $t("notifModal.stereumMonitor") }} (Mobile App)</span>
             </div>
           </li>
-          <!-- <li @click="(beaconchaDashboard = true), (qrPage = true)">
+          <li @click="(beaconchaDashboard = true), (qrPage = true)">
             <div class="notif-row_icon">
               <img src="/img/icon/service-icons/beaconchain.png" alt="notif logo" />
             </div>
             <div class="notif-row_name">
               <span>Beaconchain {{ $t("notifModal.dash") }} (Mobile App)</span>
             </div>
-          </li> -->
+          </li>
         </ul>
         <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
@@ -71,16 +71,15 @@
               <div
                 v-for="validator in installedValidators"
                 :key="validator"
-                class="choose-validator_validators_validator-box"
+                :class="[
+                  'choose-validator_validators_validator-box',
+                  validator.config.serviceID == selectedVal ? selectValidatorBorder : '',
+                  validator.config.serviceID == fixedValTest ? fixedValidatorBorder : '',
+                ]"
                 @click="selectedValidator(validator)"
+                @dblclick="test(validator)"
               >
-                <img
-                  :src="validator.icon"
-                  alt=""
-                  :class="{
-                    'selected-val': validator.name == selectedVal ? true : false,
-                  }"
-                />
+                <img :src="validator.icon" :alt="validator.name" />
               </div>
             </div>
             <div class="go-to-link">
@@ -126,6 +125,9 @@ export default {
       selectedVal: "",
       machineName: "",
       apiKey: "",
+      selectedValToConnect: false,
+      fixedConnectedVal: false,
+      fixedValTest: "",
     };
   },
   computed: {
@@ -136,14 +138,26 @@ export default {
       const copyOfInstalledServices = [...this.installedServices];
       return copyOfInstalledServices.filter((obj) => obj.category === "validator");
     },
+    selectValidatorBorder() {
+      return this.selectedValToConnect ? "selected-val" : "none";
+    },
+    fixedValidatorBorder() {
+      return this.fixedConnectedVal ? "fixed-val" : "none";
+    },
   },
   mounted() {
     this.getqrcode();
   },
   methods: {
+    test(arg) {
+      this.fixedValTest = arg.config.serviceID;
+      this.fixedConnectedVal = !this.fixedConnectedVal;
+    },
     selectedValidator(arg) {
       //to select the validator
       this.selectedVal = arg.config.serviceID;
+      this.selectedValToConnect = !this.selectedValToConnect;
+      console.log(this.selectedValToConnect);
     },
     async applyBeaconChain() {
       //to apply the beaconchain dashboard
@@ -321,15 +335,24 @@ export default {
   align-items: center;
 }
 .choose-validator_validators_validator-box {
-  width: 12.5%;
-  height: 100%;
+  width: 10.5%;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 1.4%;
+}
+.selected-val {
+  border: 3px solid #00ffdc;
+  border-radius: 50%;
+}
+.fixed-val {
+  border: 3px solid #1aff00;
+  border-radius: 50%;
 }
 .choose-validator_validators_validator-box img {
-  width: 70%;
-  height: 70%;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
 .go-to-link {
