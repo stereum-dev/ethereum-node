@@ -133,6 +133,7 @@ const confirmPassword = (pass) => {
 
 const groupingPanel = () => {
   stakingStore.setActivePanel("grouping");
+  stakingStore.isGroupingAllowed = true;
 };
 
 const searchPanel = () => {

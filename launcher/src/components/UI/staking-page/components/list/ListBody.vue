@@ -21,7 +21,7 @@ import { ref } from 'vue';
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto"
       >
         <PreviewKey
-          v-for="item in stakingStore.keyFiles"
+          v-for="item in stakingStore.previewKeys"
           v-show="stakingStore.isPreviewListActive"
           :key="item.pubkey"
           :item="item"
@@ -29,7 +29,13 @@ import { ref } from 'vue';
 
         <KeyRow
           v-for="item in stakingStore.keys"
-          v-show="!stakingStore.isPreviewListActive"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0"
+          :key="item.pubkey"
+          :item="item"
+        />
+        <GroupRow
+          v-for="item in stakingStore.validatorKeyGroups"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0"
           :key="item.pubkey"
           :item="item"
         />
@@ -39,6 +45,8 @@ import { ref } from 'vue';
 </template>
 <script setup>
 import KeyRow from "./rows/KeyRow.vue";
+import PreviewKey from "./rows/PreviewKey.vue";
+import GroupRow from "./rows/GroupRow.vue";
 import { useStakingStore } from "@/store/theStaking";
 
 const emit = defineEmits(["onDrop"]);

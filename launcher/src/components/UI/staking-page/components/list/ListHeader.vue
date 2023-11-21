@@ -24,7 +24,7 @@
       <span id="state" class="col-start-7 col-span-1 text-xs text-gray-300 font-semibold self-center text-center">{{
         t("displayValidator.state")
       }}</span>
-      <span id="balance" class="col-start-8 col-span-2 text-xs text-gray-300 font-semibold self-center text-center">{{
+      <span id="balance" class="col-start-8 col-span-2 text-xs text-gray-300 font-semibold self-center text-left">{{
         t("displayValidator.balance")
       }}</span>
       <span
