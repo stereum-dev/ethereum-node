@@ -73,7 +73,7 @@
                 <img
                   :src="validator.icon"
                   alt=""
-                  :class="{ 'selected-val': validator.name == selectedVal ? true : false }"
+                  :class="{ 'selected-val': validator == selectedVal ? true : false }"
                 />
               </div>
             </div>
@@ -156,7 +156,6 @@ export default {
     openBeaconcha() {
       let url = "https://beaconcha.in/user/settings#app";
       window.open(url, "_blank");
-      console.log("test");
     },
   },
 };
