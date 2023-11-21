@@ -206,8 +206,11 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("deleteValidators", args);
   }
 
-  async listValidators(args) {
-    return await this.promiseIpc.send("listValidators", args);
+  async listValidators(serviceID, numRunningValidatorService) {
+    return await this.promiseIpc.send("listValidators", {
+      serviceID: serviceID,
+      numRunningValidatorService: numRunningValidatorService,
+    });
   }
 
   async listServices() {
@@ -397,8 +400,8 @@ class ControlService extends EventEmitter {
     });
   }
 
-  async exitValidator(args) {
-    return await this.promiseIpc.send("exitValidator", {
+  async exitValidatorAccount(args) {
+    return await this.promiseIpc.send("exitValidatorAccount", {
       pubkey: args.pubkey,
       password: args.password,
       serviceID: args.serviceID,
@@ -413,8 +416,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("importConfig", args);
   }
 
-  async getCurrentEpochSlot() {
-    return await this.promiseIpc.send("getCurrentEpochSlot");
+  async getCurrentEpochSlot(args) {
+    return await this.promiseIpc.send("getCurrentEpochSlot", args);
   }
 
   async changePassword(args) {
@@ -446,6 +449,9 @@ class ControlService extends EventEmitter {
   }
   async IpScanLan() {
     return await this.promiseIpc.send("IpScanLan");
+  }
+  async dumpDockerLogs() {
+    return await this.promiseIpc.send("dumpDockerLogs");
   }
 }
 if (!instance) {

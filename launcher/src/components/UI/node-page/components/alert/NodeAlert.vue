@@ -1,6 +1,6 @@
 <template>
   <div class="status-box flex flex-col justify-between items-center">
-    <div class="status-box_header bg-[#151618] border border-gray-500 rounded-md">
+    <div class="status-box_header bg-[#151618] border border-gray-600 rounded-md">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
           <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="status-box_messages bg-[#151618] border border-gray-500 rounded-md">
+    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md">
       <div v-if="storageWarning" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />

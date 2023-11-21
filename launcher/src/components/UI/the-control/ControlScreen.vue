@@ -100,7 +100,7 @@
         <control-dashboard></control-dashboard>
       </div>
       <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
-        <control-alert></control-alert>
+        <control-alert @expert-handler="expertModeHandlerAlert"></control-alert>
       </div>
     </div>
     <!-- End Control main layout -->
@@ -189,6 +189,10 @@ export default {
     },
     expertModeHandler(el) {
       this.expertModeClient = el;
+      this.isExpertWindowOpen = true;
+    },
+    expertModeHandlerAlert(validator) {
+      this.expertModeClient = validator;
       this.isExpertWindowOpen = true;
     },
     // Check if service is Geth

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-[430px] flex flex-col justify-start items-center px-1 py-2 overflow-y-hidden hover:overflow-y-auto rounded-md border border-gray-600 bg-[#151618] space-y-2"
+    class="col-start-1 col-span-full row-start-2 row-span-full flex flex-col justify-start items-center p-1 overflow-y-hidden hover:overflow-y-auto rounded-md border border-gray-600 bg-[#151618] space-y-2"
     :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
   >
     <template v-if="manageStore.confirmChanges.length">
@@ -11,7 +11,7 @@
           class="w-full h-10 border border-gray-500 shadow-md shadow-black p-1 rounded-md grid grid-cols-6 hover:border-gray-300 cursor-pointer"
           :class="contentBgColor(item)"
           @click="removeChange(item)"
-          @mouseenter="footerStore.cursorLocation = `Click here to cancel this change`"
+          @mouseenter="footerStore.cursorLocation = `${clickToCancel}`"
         >
           <div class="col-start-1 col-span-1 w-full self-center flex justify-center items-center">
             <img class="w-6" :src="item.contentIcon" alt="icon" />
@@ -38,6 +38,12 @@ import { useFooter } from "@/store/theFooter";
 import { useNodeManage } from "@/store/nodeManage";
 import { computed } from "vue";
 
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const clickToCancel = t("changesBox.clickToCancel");
+
 const footerStore = useFooter();
 const emit = defineEmits(["remove-change"]);
 
@@ -57,13 +63,12 @@ const contentBgColor = (item) => {
       bg = "bg-green-800 text-gray-100 text-sm font-semibold";
     } else if (content === "DELETE") {
       bg = "bg-red-800 text-gray-300 text-sm font-semibold";
-    } else if (content === "SWITCH NETWORK") {
-      bg = "bg-gray-500 text-gray-900 text-[10px] font-semibold min-w-[100px]";
-      console.log(item);
+    } else if (content === "NETWORK") {
+      bg = "bg-teal-700 text-gray-100 text-sm font-semibold min-w-[100px]";
     } else if (content === "SWITCH CLIENT") {
       bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
     } else if (content === "MODIFY") {
-      bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
+      bg = "bg-teal-700 text-gray-200 text-sm font-semibold min-w-[100px]";
     }
   }
   return bg;

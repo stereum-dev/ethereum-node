@@ -97,7 +97,7 @@ const selectedPluginsValidation = () => {
 };
 const pluginChangeHandler = (plugin, item, idx) => {
   plugin.openReplaceModal = false;
-  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin.id);
+  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin?.id);
 
   if (oldPluginIndex !== -1) {
     clickStore.selectedPreset.includedPlugins.splice(oldPluginIndex, 1);
@@ -118,6 +118,7 @@ const pluginChangeHandler = (plugin, item, idx) => {
       );
     }
   }
+  sortPlugins();
 };
 
 // const pluginChangeHandler = (plugin, item, idx) => {
@@ -153,7 +154,7 @@ const pluginExChange = (el) => {
   if (el.category !== "service") {
     clickStore.selectedPreset.includedPlugins.filter((item) => {
       item.openReplaceModal = false;
-      if (item?.service === el.service) {
+      if (item.service === el.service) {
         checkPluginCategory(item);
       }
     });
@@ -174,22 +175,22 @@ const checkPluginCategory = (element) => {
       filter = (item) => {
         if (element.category === "validator") {
           return item.service === "SSVNetworkService";
+        } else if (element.category === "consensus" && item.category === "consensus") {
+          return true;
+        } else if (element.category === "execution" && item.category === "execution") {
+          return true;
         }
-        return element.category === "consensus" ? !/Reth/.test(item.service) : item.category === element.category;
+        return false;
       };
       break;
     case "obol":
       filter = (item) => {
         if (element.category === "validator" && element.service !== "CharonService") {
-          return item.service === "TekuValidatorService";
+          return /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) && item.category === element.category;
         } else if (element.category === "validator") {
           return item.service === "CharonService";
-        }
-        if (element.category === "consensus") {
-          return item.service === "LighthouseBeaconService";
-        }
-        if (element.category === "execution") {
-          return item.service === "GethService";
+        } else {
+          return item.category === element.category;
         }
       };
       break;

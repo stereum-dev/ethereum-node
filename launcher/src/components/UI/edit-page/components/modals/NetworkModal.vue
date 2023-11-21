@@ -52,7 +52,7 @@
             <Transition name="slide">
               <ul
                 v-show="networkDropdownOpen"
-                class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-10 w-full z-10 mt-1 divide-y overflow-x-hidden overflow-y-auto flex flex-col justify-evenly items-center"
+                class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-20 w-full z-10 mt-1 divide-y overflow-x-hidden overflow-y-auto flex flex-col justify-evenly items-center"
                 @mouseleave="networkDropdownOpen = false"
               >
                 <li
@@ -87,7 +87,7 @@ const manageStore = useNodeManage();
 const network = ref({});
 
 onMounted(() => {
-  network.value = manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork;
+  network.value = manageStore.configNetwork?.id ? manageStore.configNetwork : manageStore.currentNetwork;
 });
 const switchNetwork = (network) => {
   manageStore.selectedNetwork = network;
