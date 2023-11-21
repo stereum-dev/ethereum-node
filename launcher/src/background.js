@@ -446,8 +446,8 @@ ipcMain.handle("checkRemoteKeys", async (event, args) => {
   return await validatorAccountManager.checkRemoteKeys(args.url, args.serviceID);
 });
 
-ipcMain.handle("getCurrentEpochSlot", async () => {
-  return await monitoring.getCurrentEpochSlot();
+ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
+  return await monitoring.getCurrentEpochSlot(args);
 });
 
 ipcMain.handle("changePassword", async (event, args) => {
@@ -480,6 +480,10 @@ ipcMain.handle("IpScanLan", async () => {
 
 ipcMain.handle("beaconchainMonitoringModification", async (event, args) => {
   return await serviceManager.beaconchainMonitoringModification(args);
+});
+
+ipcMain.handle("dumpDockerLogs", async () => {
+  return await nodeConnection.dumpDockerLogs();
 });
 
 // Scheme must be registered before the app is ready

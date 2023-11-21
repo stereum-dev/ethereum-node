@@ -87,7 +87,7 @@ const manageStore = useNodeManage();
 const network = ref({});
 
 onMounted(() => {
-  network.value = manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork;
+  network.value = manageStore.configNetwork?.id ? manageStore.configNetwork : manageStore.currentNetwork;
 });
 const switchNetwork = (network) => {
   manageStore.selectedNetwork = network;

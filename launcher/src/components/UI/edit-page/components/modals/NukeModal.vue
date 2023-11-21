@@ -9,7 +9,10 @@
         <span class="warning">{{ $t("nukeModal.nukeQ") }} </span>
       </div>
       <div class="remove-btn">
-        <div class="yes-box" @click="removeItems">
+        <div :class="['save-config-btn', loadingDumpClass]" @click="dumpLogs">
+          <img :src="loadingIconsClass" alt="" :class="loadingBtnClass" /><span>dump logs</span>
+        </div>
+        <div :class="['yes-box', loadingDumpClass]" @click="removeItems">
           <span>{{ $t("nukeModal.nukeTitle") }}</span>
         </div>
       </div>
@@ -59,7 +62,20 @@ export default {
       loginBtn: true,
       nukeNode: "url('./img/icon/arrows/NukeNode_Final.gif')",
       autoScroll: true,
+      loadingDump: false,
     };
+  },
+
+  computed: {
+    loadingDumpClass() {
+      return this.loadingDump ? "deactivate" : "";
+    },
+    loadingBtnClass() {
+      return this.loadingDump ? "animate-spin" : "";
+    },
+    loadingIconsClass() {
+      return this.loadingDump ? "/img/icon/arrows/loading.png" : "/img/icon/manage-node-icons/log_export.png";
+    },
   },
   mounted() {
     // @frontend: uncomment the block below to use nuke dummy data to style the content
@@ -78,6 +94,14 @@ export default {
     }, 100);
   },
   methods: {
+    //dummy method to simulate the nuke process
+    dumpLogs() {
+      this.loadingDump = true;
+      setTimeout(() => {
+        this.loadingDump = false;
+      }, 4000);
+    },
+    //end dummy method
     disableAutoScroll() {
       this.autoScroll = false;
     },
@@ -109,6 +133,12 @@ export default {
 };
 </script>
 <style scoped>
+.deactivate {
+  opacity: 0.5;
+  box-shadow: none;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 .item {
   width: 100%;
   display: flex;
@@ -303,8 +333,33 @@ export default {
   width: 90%;
   height: 45%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+}
+.save-config-btn {
+  box-shadow: 0 1px 10px 1px rgb(16, 16, 16);
+  cursor: pointer;
+  width: 35%;
+  height: 35px;
+  background: rgb(60, 96, 154);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.save-config-btn span {
+  color: #eee;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.save-config-btn img {
+  height: 85%;
+}
+.save-config-btn:active {
+  transform: scale(0.9);
+  transition: all 100ms ease-in-out;
+  box-shadow: none;
 }
 .yes-box {
   width: 35%;
