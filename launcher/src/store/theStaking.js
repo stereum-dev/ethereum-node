@@ -4,17 +4,29 @@ export const useStakingStore = defineStore("theStaking", {
   state: () => {
     return {
       // ***** Staking List
-      groupName: null,
+
       activePanel: "insert",
       searchContent: "",
       isOverDropZone: false,
       inputWrongKey: false,
       isPreviewListActive: false,
+      importEnteredPassword: "",
+      importKeyMessage: "",
+      checkActiveValidatorsResponse: [],
+      previewKeys: [],
       //***** End Staking List
 
       // ***** Staking Modals *****
       activeModal: null,
       // ***** End Staking Modals *****
+
+      // ***** Staking Groups *****
+      groupName: null,
+      isGroupingAllowed: false,
+      validatorKeyGroups: [],
+      selectedGroup: null,
+      selectedValidatorKeys: [],
+      // ***** End Staking Groups *****
 
       exitMultiValidatorKeys: false,
       doppelgangerStatus: true,
