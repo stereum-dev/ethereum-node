@@ -42,6 +42,7 @@ export class ValidatorAccountManager {
   }
 
   async checkActiveValidators(files, password, serviceID, slashingDB, isRemote = false) {
+    console.log("FILESSSSSS", files);
     let services = await this.serviceManager.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
     let pubkeys = [];
