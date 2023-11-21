@@ -5,7 +5,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
   >
     <div class="absolute bg-black opacity-80 inset-0 z-0 rounded-md" @click="closeModal"></div>
     <div
-      class="w-2/3 min-h-[450px] p-2 relative mx-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-600 grid grid-cols-12 grid-rows-7"
+      class="w-2/3 min-h-[450px] max-h-[500px] p-2 relative mx-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-600 grid grid-cols-12 grid-rows-7"
     >
       <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7">
         <div v-if="mainTitle" class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
@@ -25,7 +25,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
           <button
             class="mr-4 min-w-[100px] bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full uppercase"
             :class="
-              disabledButton
+              !activeButton
                 ? 'opacity-40 pointer-events-none'
                 : 'hover:bg-green-600  active:scale-95 transition duration-200'
             "
@@ -77,7 +77,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  disabledButton: {
+  activeButton: {
     type: Boolean,
     default: false,
   },
