@@ -12,10 +12,7 @@
         <ul class="notif-box">
           <li @click="qrPage = false">
             <div class="notif-row_icon">
-              <img
-                src="/img/icon/stereum-logo/stereum_logo_extern.png"
-                alt="notif logo"
-              />
+              <img src="/img/icon/stereum-logo/stereum_logo_extern.png" alt="notif logo" />
             </div>
             <div class="notif-row_name">
               <span>{{ $t("notifModal.stereumMonitor") }} (Mobile App)</span>
@@ -80,16 +77,12 @@
                   validator.config.serviceID == fixedValTest ? fixedValidatorBorder : '',
                 ]"
                 @click="selectedValidator(validator)"
-                @dblclick="test(validator)"
               >
                 <img :src="validator.icon" :alt="validator.name" />
               </div>
             </div>
             <div class="go-to-link">
-              {{ $t("notifModal.goTo")
-              }}<span @click="openBeaconcha()"
-                >https://beaconcha.in/user/settings#app</span
-              >
+              {{ $t("notifModal.goTo") }}<span @click="openBeaconcha()">https://beaconcha.in/user/settings#app</span>
             </div>
             <div class="enter-box">
               <div class="enter-input">
@@ -153,17 +146,19 @@ export default {
   },
   mounted() {
     this.getqrcode();
+    this.testFunc();
+    console.log(this.fixedValTest);
   },
   methods: {
-    test(arg) {
-      this.fixedValTest = arg.config.serviceID;
-      this.fixedConnectedVal = !this.fixedConnectedVal;
-    },
     selectedValidator(arg) {
       //to select the validator
-      this.selectedVal = arg.config.serviceID;
-      this.selectedValToConnect = !this.selectedValToConnect;
-      console.log(this.selectedValToConnect);
+      if (this.fixedConnectedVal == false) {
+        this.selectedVal = arg.config.serviceID;
+        this.selectedValToConnect = !this.selectedValToConnect;
+      } else {
+        this.selectedVal = "";
+        this.selectedValToConnect = false;
+      }
     },
     async applyBeaconChain() {
       //to apply the beaconchain dashboard
@@ -175,6 +170,36 @@ export default {
     },
     qrViewer() {
       this.qrPage = !this.qrPage;
+    },
+    async testFunc() {
+      try {
+        for (let i = 0; i < this.installedValidators.length; i++) {
+          const item = this.installedValidators[i];
+          const res = await ControlService.getServiceYAML(item?.config.serviceID);
+          if (
+            item.service === "LighthouseValidatorService" ||
+            item.service === "LighthouseBeaconService" ||
+            item.service === "LodestarValidatorService" ||
+            item.service === "LodestarBeaconService"
+          ) {
+            const matchedValue = res.match(new RegExp("(- --monitoring-endpoint=)(.*)(\\n)"));
+            console.log(matchedValue);
+            if (matchedValue !== null) {
+              this.fixedValTest = item.config.serviceID;
+              this.fixedConnectedVal = true;
+            }
+          } else {
+            const matchedValue = res.match(new RegExp("(- --metrics-publish-endpoint=)(.*)(\\n)"));
+            console.log(matchedValue);
+            if (matchedValue !== null) {
+              this.fixedValTest = item.config.serviceID;
+              this.fixedConnectedVal = true;
+            }
+          }
+        }
+      } catch (error) {
+        // console.error("Error fetching service YAML:", error);
+      }
     },
     async getqrcode() {
       const response = await ControlService.getQRCode();
