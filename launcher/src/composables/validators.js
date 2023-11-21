@@ -80,11 +80,12 @@ export async function useListKeys(forceRefresh) {
     stakingStore.keys = keyStats.map((key) => {
       return {
         ...key,
-        displayName: alias[key.key].keyName,
+        displayName: alias[key.key]?.keyName,
         showGrafitiText: false,
         showCopyText: false,
         showRemoveText: false,
         showExitText: false,
+        selected: false,
       };
     });
     if (stakingStore.keys && stakingStore.keys.length > 0) useUpdateValidatorStats();
