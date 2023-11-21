@@ -3,7 +3,7 @@
     class="w-full max-h-[35px] col-start-1 col-span-full bg-[#171D22] rounded-full flex justify-center items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-700"
   >
     <div class="w-full flex justify-evenly items-center px-5 rounded-full relative">
-      <div class="flex items-center pointer-events-none">
+      <div class="flex items-center pointer-events-none" @mousedown.prevent>
         <svg
           aria-hidden="true"
           class="w-5 h-5 text-gray-500 dark:text-gray-400"
