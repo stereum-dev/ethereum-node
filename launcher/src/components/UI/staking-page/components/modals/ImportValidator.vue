@@ -2,12 +2,12 @@
   <staking-custom-modal
     main-title="Import Validator Key"
     confirm-text="OK"
-    :disabled-button="activeButton"
+    :active-button="activeButton"
     @confirm-action="okHandler"
   >
     <template #content>
       <div
-        v-if="showImage"
+        v-if="!activeButton"
         class="w-full col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-3 grid-rows-3 items-center overflow-hidden"
       >
         <div
@@ -26,65 +26,84 @@
       </div>
       <div
         v-else
-        class="w-full col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-3 grid-rows-3 items-center overflow-hidden"
+        class="w-full col-start-1 col-span-full row-start-3 row-end-6 overflow-hidden flex justify-center items-center"
       >
-        <div
+        <!-- <div
           v-if="importedKeyNumber"
           class="col-start-1 col-span-full row-start-1 row-span-3 flex justify-center items-center space-x-1"
         >
           <span class="text-2xl text-teal-500 font-semibold">{{ importedKeyNumber }}</span>
           <span class="text-2xl text-gray-200 font-semibold">key(s) imported.</span>
-        </div>
-        <div
-          v-else
-          class="col-start-1 col-span-full row-start-1 row-span-3 flex flex-col justify-center items-center space-x-1"
-        >
-          <span class="text-2xl text-red-500 font-semibold uppercase">Importing failed</span>
-          <span class="text-2xl text-gray-200 font-semibold">{{ props.error }}</span>
+        </div> -->
+        <div class="w-full h-fit flex flex-col justify-center items-center space-y-2">
+          <span
+            v-if="description"
+            class="w-fit max-w-lg text-sm font-semibold text-left whitespace-pre-wrap break-all mx-auto"
+            :class="getDescriptionClass"
+          >
+            {{ description }}
+          </span>
+          <span
+            v-if="details"
+            class="w-9/12 text-md text-gray-300 font-semibold text-center whitespace-pre-wrap break-all mx-auto"
+          >
+            {{ details }}
+          </span>
         </div>
       </div>
     </template>
   </staking-custom-modal>
 </template>
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 
-//Props
-const props = defineProps({
-  error: {
-    type: String,
-    default: "Wrong password or invalid key file.",
-  },
-});
-const importedKeyNumber = ref(null);
+//  Props
 
 const stakingStore = useStakingStore();
-const showImage = ref(false);
+let description = ref("");
+let details = ref("");
+const activeButton = ref(false);
 
-// const importedKeyNumber = computed(() => {
-//   return stakingStore.keyFiles.length;
-// });
-
-const activeButton = computed(() => {
-  if (importedKeyNumber.value || props.error) {
-    return false;
-  } else {
-    return true;
-  }
+const getMessage = computed(() => {
+  return stakingStore.importKeyMessage ? stakingStore.importKeyMessage : "";
 });
 
-//Lifecycle Hooks
+const getDescriptionClass = computed(() => {
+  let className;
+  if (description.value && description.value.includes("error")) {
+    className = "text-red-400";
+  } else if (description.value && description.value.includes("duplicate")) {
+    className = "text-amber-400";
+  } else if (description.value && description.value.includes("imported")) {
+    className = "text-teal-400";
+  } else {
+    className = "text-gray-300";
+  }
+  return className;
+});
 
-onMounted(() => {
-  showImage.value = false;
+watch(getMessage, () => {
+  if (getMessage.value) {
+    splitedTexts(getMessage.value);
+    activeButton.value = true;
+  }
 });
 
 //Methods
 
+const splitedTexts = (text) => {
+  text = getMessage.value;
+  const lines = text.split("\n");
+  const lastThreeLinesIndex = lines.length - 3;
+
+  description.value = lines.slice(0, lastThreeLinesIndex).join("\n");
+  details.value = lines.slice(lastThreeLinesIndex).join("\n");
+};
+
 const okHandler = () => {
   stakingStore.setActiveModal(null);
-  stakingStore.setActivePanel("validator");
+  stakingStore.setActivePanel(null);
 };
 </script>
 <style scoped>
