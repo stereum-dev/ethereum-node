@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-[35px] col-start-1 col-span-full bg-[#171D22] rounded-full flex justify-center items-center cursor-pointer overflow-hidden border border-gray-600"
+    class="w-full max-h-[35px] col-start-1 col-span-full bg-[#171D22] rounded-full flex justify-center items-center cursor-pointer overflow-hidden border border-gray-600"
   >
     <div class="w-full h-full grid grid-cols-4 p-1">
       <div

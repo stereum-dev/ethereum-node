@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-[35px] col-start-1 col-span-full bg-[#25272a] rounded-full grid grid-cols-12 items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-600"
+    class="w-full max-h-[35px] col-start-1 col-span-full bg-[#25272a] rounded-full grid grid-cols-12 items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-600"
   >
     <div class="w-full h-full col-start-1 col-end-11 relative flex justify-start items-center">
       <button class="absolute right-2 focus:outline-none rtl:left-0 rtl:right-auto" @click="togglePasswordVisibility">
@@ -9,7 +9,7 @@
       </button>
 
       <input
-        v-model="enteredPassword"
+        v-model="eneteredPassword"
         :type="isPasswordVisible ? 'text' : 'password'"
         placeholder="Enter password"
         class="w-full h-full text-gray-400 placeholder-gray-400/70 rounded-l-full items-center py-1 pl-4 bg-[#171D22]"
@@ -39,8 +39,9 @@ import { useStakingStore } from "@/store/theStaking";
 import { ref } from "vue";
 
 const emit = defineEmits(["confirmPassword"]);
+
 const stakingStore = useStakingStore();
-let enteredPassword = ref("");
+let eneteredPassword = ref("");
 let isPasswordVisible = ref(false);
 
 //Methods
@@ -54,6 +55,6 @@ const cancelPassword = () => {
 };
 
 const confirmPassword = () => {
-  emit("confirmPassword", enteredPassword.value);
+  emit("confirmPassword", eneteredPassword.value.trim());
 };
 </script>

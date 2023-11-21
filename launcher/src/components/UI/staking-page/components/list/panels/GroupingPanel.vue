@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-[35px] col-start-1 col-span-full bg-[#2e3335] rounded-md flex justify-center items-center cursor-pointer border border-gray-600 p-1 shadow-md shadow-[#171D22]"
+    class="w-full max-h-[35px] col-start-1 col-span-full bg-[#2e3335] rounded-md flex justify-center items-center cursor-pointer border border-gray-600 p-1 shadow-md shadow-[#171D22]"
   >
     <div class="w-full h-full grid grid-cols-12 grid-rows-1">
       <img
@@ -39,17 +39,19 @@
 </template>
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
+import { ref } from "vue";
 
 const emit = defineEmits(["confirmGrouping"]);
 
 const stakingStore = useStakingStore();
+let groupName = ref(null);
 
 const cancelGrouping = () => {
-  stakingStore.groupName = "";
+  groupName.value = "";
   stakingStore.setActivePanel(null);
 };
 
 const confirmGrouping = () => {
-  emit("confirmGrouping", stakingStore.groupName);
+  emit("confirmGrouping", groupName.value.trim());
 };
 </script>

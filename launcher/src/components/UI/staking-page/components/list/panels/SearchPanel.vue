@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-[35px] col-start-1 col-span-full bg-[#171D22] rounded-full flex justify-center items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-700"
+    class="w-full max-h-[35px] col-start-1 col-span-full bg-[#171D22] rounded-full flex justify-center items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-700"
   >
     <div class="w-full flex justify-evenly items-center px-5 rounded-full relative">
       <div class="flex items-center pointer-events-none">
