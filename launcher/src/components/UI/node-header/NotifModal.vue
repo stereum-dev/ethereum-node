@@ -88,13 +88,13 @@
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.machinename") }}</div>
                 <div class="enter-input_input">
-                  <input v-model="machineName" type="text" />
+                  <input v-model="machineName" type="text" :disabled="readyToRemove" />
                 </div>
               </div>
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.apikey") }}</div>
                 <div class="enter-input_input">
-                  <input v-model="apiKey" type="text" />
+                  <input v-model="apiKey" type="text" :disabled="readyToRemove" />
                 </div>
               </div>
             </div>
