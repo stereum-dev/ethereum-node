@@ -98,8 +98,8 @@
                 </div>
               </div>
             </div>
-            <div class="apply-btn" @click="applyBeaconChain">
-              {{ $t("notifModal.apply") }}
+            <div class="apply-btn" @click="confirmHandling">
+              {{ readyToRemove ? "ROMOVE" : $t("notifModal.apply") }}
             </div>
           </div>
         </div>
@@ -112,6 +112,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
@@ -127,11 +128,16 @@ export default {
       selectedValToConnect: false,
       fixedConnectedVal: false,
       fixedValTest: "",
+      matchedServiceId: "",
+      readyToRemove: false,
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+    }),
+    ...mapWritableState(useNodeHeader, {
+      notificationModalIsActive: "notificationModalIsActive",
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
@@ -143,6 +149,9 @@ export default {
     fixedValidatorBorder() {
       return this.fixedConnectedVal ? "fixed-val" : "none";
     },
+    confirmHandling() {
+      return this.readyToRemove ? this.testReadyToRemove() : this.applyBeaconChain();
+    },
   },
   mounted() {
     this.getqrcode();
@@ -150,18 +159,33 @@ export default {
     console.log(this.fixedValTest);
   },
   methods: {
+    testReadyToRemove() {
+      this.readyToRemove = false;
+      this.notificationModalIsActive = false;
+    },
+
     selectedValidator(arg) {
       //to select the validator
       if (this.fixedConnectedVal == false) {
         this.selectedVal = arg.config.serviceID;
         this.selectedValToConnect = !this.selectedValToConnect;
+        this.fixedConnectedVal = false;
+        this.readyToRemove = false;
+      } else if (this.matchedServiceId == arg.config.serviceID) {
+        this.selectedVal = arg.config.serviceID;
+        this.selectedValToConnect = true;
+        this.fixedConnectedVal = false;
+        this.readyToRemove = true;
       } else {
         this.selectedVal = "";
         this.selectedValToConnect = false;
+        this.readyToRemove = false;
       }
     },
     async applyBeaconChain() {
       //to apply the beaconchain dashboard
+      this.readyToRemove = false;
+      this.notificationModalIsActive = false;
       await ControlService.beaconchainMonitoringModification({
         machineName: this.machineName,
         apiKey: this.apiKey,
@@ -183,17 +207,19 @@ export default {
             item.service === "LodestarBeaconService"
           ) {
             const matchedValue = res.match(new RegExp("(- --monitoring-endpoint=)(.*)(\\n)"));
-            console.log(matchedValue);
+
             if (matchedValue !== null) {
               this.fixedValTest = item.config.serviceID;
               this.fixedConnectedVal = true;
+              this.matchedServiceId = item.config.serviceID;
             }
           } else {
             const matchedValue = res.match(new RegExp("(- --metrics-publish-endpoint=)(.*)(\\n)"));
-            console.log(matchedValue);
+
             if (matchedValue !== null) {
               this.fixedValTest = item.config.serviceID;
               this.fixedConnectedVal = true;
+              this.matchedServiceId = item.config.serviceID;
             }
           }
         }
