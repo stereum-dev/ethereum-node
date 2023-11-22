@@ -74,7 +74,7 @@
                 :class="[
                   'choose-validator_validators_validator-box',
                   validator.config.serviceID == selectedVal ? selectValidatorBorder : '',
-                  validator.config.serviceID == fixedValTest ? fixedValidatorBorder : '',
+                  validator.config.serviceID == connectedValidator ? fixedValidatorBorder : '',
                 ]"
                 @click="selectedValidator(validator)"
               >
@@ -98,7 +98,7 @@
                 </div>
               </div>
             </div>
-            <div class="apply-btn" @click="confirmHandling">
+            <div class="apply-btn" @click="readyToRemove ? removeFromBeaconChain() : applyBeaconChain()">
               {{ readyToRemove ? "ROMOVE" : $t("notifModal.apply") }}
             </div>
           </div>
@@ -127,9 +127,10 @@ export default {
       apiKey: "",
       selectedValToConnect: false,
       fixedConnectedVal: false,
-      fixedValTest: "",
+      connectedValidator: "",
       matchedServiceId: "",
       readyToRemove: false,
+      prysmServiceID: "",
     };
   },
   computed: {
@@ -143,32 +144,36 @@ export default {
       const copyOfInstalledServices = [...this.installedServices];
       return copyOfInstalledServices.filter((obj) => obj.category === "validator");
     },
+    installedMetricsExporter() {
+      const copyOfInstalledServices = [...this.installedServices];
+      return copyOfInstalledServices.filter((obj) => obj.service === "MetricsExporterService");
+    },
+
     selectValidatorBorder() {
       return this.selectedValToConnect ? "selected-val" : "none";
     },
     fixedValidatorBorder() {
       return this.fixedConnectedVal ? "fixed-val" : "none";
     },
-    confirmHandling() {
-      return this.readyToRemove ? this.testReadyToRemove() : this.applyBeaconChain();
-    },
   },
   mounted() {
     this.getqrcode();
-    this.testFunc();
-    console.log(this.fixedValTest);
+    this.beaconChainConnectionController();
   },
   methods: {
-    testReadyToRemove() {
+    removeFromBeaconChain() {
       this.readyToRemove = false;
       this.notificationModalIsActive = false;
+      // it can use for the wiring
+      console.log("its remove Func");
     },
 
     selectedValidator(arg) {
       //to select the validator
+      console.log(arg);
       if (this.fixedConnectedVal == false) {
         this.selectedVal = arg.config.serviceID;
-        this.selectedValToConnect = !this.selectedValToConnect;
+        this.selectedValToConnect = true;
         this.fixedConnectedVal = false;
         this.readyToRemove = false;
       } else if (this.matchedServiceId == arg.config.serviceID) {
@@ -184,18 +189,20 @@ export default {
     },
     async applyBeaconChain() {
       //to apply the beaconchain dashboard
-      this.readyToRemove = false;
       this.notificationModalIsActive = false;
       await ControlService.beaconchainMonitoringModification({
         machineName: this.machineName,
         apiKey: this.apiKey,
         selectedVal: this.selectedVal,
       });
+      this.readyToRemove = false;
+
+      this.fixedConnectedVal = false;
     },
     qrViewer() {
       this.qrPage = !this.qrPage;
     },
-    async testFunc() {
+    async beaconChainConnectionController() {
       try {
         for (let i = 0; i < this.installedValidators.length; i++) {
           const item = this.installedValidators[i];
@@ -209,28 +216,40 @@ export default {
             const matchedValue = res.match(new RegExp("(- --monitoring-endpoint=)(.*)(\\n)"));
 
             if (matchedValue !== null) {
-              this.fixedValTest = item.config.serviceID;
+              this.connectedValidator = item.config.serviceID;
               this.fixedConnectedVal = true;
               this.matchedServiceId = item.config.serviceID;
             }
-          } else {
+          } else if (item.service === "TekuValidatorService" || item.service === "TekuBeaconService") {
             const matchedValue = res.match(new RegExp("(- --metrics-publish-endpoint=)(.*)(\\n)"));
 
             if (matchedValue !== null) {
-              this.fixedValTest = item.config.serviceID;
+              this.connectedValidator = item.config.serviceID;
               this.fixedConnectedVal = true;
               this.matchedServiceId = item.config.serviceID;
+            }
+          } else if (item.service === "PrysmValidatorService") {
+            let prysmServiceID = item.config.serviceID;
+            console.log("prysmServiceID", prysmServiceID);
+            for (let idx = 0; idx < this.installedMetricsExporter.length; idx++) {
+              const metrx = this.installedMetricsExporter[idx];
+              const metricsRes = await ControlService.getServiceYAML(metrx?.config.serviceID);
+              const matchValue = metricsRes.match(new RegExp("(- --validator.address=http://stereum-)(.*)(\\n)"));
+              if (matchValue[2].includes(prysmServiceID)) {
+                this.connectedValidator = item.config.serviceID;
+                this.fixedConnectedVal = true;
+                this.matchedServiceId = item.config.serviceID;
+              }
             }
           }
         }
       } catch (error) {
-        // console.error("Error fetching service YAML:", error);
+        console.error("Error Connection Result:", error);
       }
     },
     async getqrcode() {
       const response = await ControlService.getQRCode();
       if (response instanceof Error) {
-        console.log(response);
         this.qrCode = this.ErrorQRCode;
       } else {
         this.qrCode = response;
