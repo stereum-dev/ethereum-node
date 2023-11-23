@@ -1,7 +1,7 @@
 <template>
   <div class="h-full col-start-2 col-end-20 row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
     <div
-      class="h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 rounded-md relative"
+      class="h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 rounded-md relative overflow-hidden"
     >
       <ListHeader />
       <ListBody @on-drop="onDrop" />

@@ -3,7 +3,7 @@
     <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1">
       <SidebarSection />
       <ListSection
-        @confirm-grouping="confirmGroupingName"
+        @confirm-grouping="creatingNewGroup"
         @pick-validator="pickValidatorService"
         @upload-file="uploadValidatorKey"
         @confirm-password="passwordValidation"
@@ -27,6 +27,7 @@ import ManagementSection from "./sections/ManagementSection.vue";
 import ControlService from "../../../store/ControlService";
 import ImportValidator from "./components/modals/ImportValidator.vue";
 import RiskWarning from "./components/modals/RiskWarning.vue";
+import { v4 as uuidv4 } from "uuid";
 import { useDeepClone } from "@/composables/utils";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
@@ -180,23 +181,26 @@ const passwordValidation = async (pass) => {
 //****End of Import Key Validation ****
 
 //Create Grouping
-const confirmGroupingName = (groupName) => {
+const creatingNewGroup = (groupName) => {
   if (groupName === "" || groupName === null) {
     stakingStore.setActivePanel(null);
     return;
   }
-  stakingStore.groupName = groupName.trim();
+
+  const uniqueId = uuidv4();
 
   stakingStore.validatorKeyGroups.push({
-    id: stakingStore.validatorKeyGroups.length + 1,
+    id: uniqueId,
     keys: useDeepClone(stakingStore.selectedValidatorKeys),
     name: stakingStore.groupName,
     selected: false,
   });
   stakingStore.setActivePanel(null);
+
+  stakingStore.keys = stakingStore.keys.filter(
+    (key) => !stakingStore.selectedValidatorKeys.find((e) => e.key === key.key)
+  );
   stakingStore.selectedValidatorKeys = [];
-  stakingStore.groupName = "";
-  stakingStore.isPreviewListActive = false;
 };
 
 //Pick a Validator Service

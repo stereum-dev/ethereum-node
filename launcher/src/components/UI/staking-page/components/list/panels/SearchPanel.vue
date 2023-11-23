@@ -1,6 +1,6 @@
 <template>
   <div
-    class="animate__animated animate__slideInLeft animate__delay-1s w-full h-full max-h-[35px] col-start-1 col-span-full bg-[#3e4347] rounded-sm flex justify-center items-center cursor-pointer px-1"
+    class="animate__animated animate__slideInLeft w-full h-full max-h-[35px] col-start-1 col-span-full bg-[#3e4347] rounded-sm flex justify-center items-center cursor-pointer px-1"
   >
     <div class="w-full flex justify-evenly items-center px-5 relative bg-[#171D22] rounded-sm">
       <div class="flex items-center pointer-events-none" @mousedown.prevent>
@@ -19,7 +19,7 @@
         </svg>
       </div>
       <input
-        v-model="stakingStore.searchContent"
+        v-model="searchContent"
         type="search"
         class="z-10 text-gray-400 text-sm rounded-full block w-full px-2 py-1 placeholder-gray-500 bg-transparent"
         placeholder="Search"
@@ -29,24 +29,16 @@
 </template>
 
 <script setup>
+import { computed, ref } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 
 const stakingStore = useStakingStore();
+const searchContent = ref("");
+
+stakingStore.filteredKeys = computed(() => {
+  if (!stakingStore.searchContent) {
+    return stakingStore.keys;
+  }
+  return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
+});
 </script>
-
-<style scoped>
-.panelIn {
-  animation: slideIn 0.3s ease-in-out 0.8s;
-}
-
-@keyframes slideIn {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-</style>

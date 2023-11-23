@@ -40,20 +40,3 @@ const getFileValue = (event) => {
   emit("uploadFile", event);
 };
 </script>
-
-<style scoped>
-.panelIn {
-  animation: slideIn 0.3s ease-in-out 0.8s;
-}
-
-@keyframes slideIn {
-  0% {
-    transform: translateX(500px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-</style>
