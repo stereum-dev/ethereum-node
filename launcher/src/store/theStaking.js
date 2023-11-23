@@ -4,7 +4,7 @@ export const useStakingStore = defineStore("theStaking", {
   state: () => {
     return {
       // ***** Staking List
-
+      filteredKeys: [],
       activePanel: "insert",
       searchContent: "",
       isOverDropZone: false,
@@ -22,6 +22,8 @@ export const useStakingStore = defineStore("theStaking", {
 
       // ***** Staking Groups *****
       groupName: null,
+      currentGroup: null,
+      isGroupListActive: false,
       isGroupingAllowed: false,
       validatorKeyGroups: [],
       selectedGroup: null,
