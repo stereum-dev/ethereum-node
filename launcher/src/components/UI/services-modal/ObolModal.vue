@@ -26,8 +26,14 @@
         </div>
 
         <div class="browserBox">
-          <div class="import-title">
-            <span>IMPORT EXISTING ENR</span>
+          <div class="browserBox_import">
+            <div class="import-title">
+              <span>IMPORT EXISTING ENR</span>
+            </div>
+            <div class="enrImport">
+              <input v-model="importedENR" type="text" placeholder="Enter ENR" />
+              <div class="import-btn" @click="enrImport">import</div>
+            </div>
           </div>
         </div>
       </div>
@@ -41,7 +47,7 @@ export default {
   data() {
     return {
       obolSharonService: {},
-      isprometheusAvailable: false,
+      importedENR: "",
     };
   },
 
@@ -58,7 +64,6 @@ export default {
       this.runningServices.forEach((item) => {
         if (item.name === "Obol Charon") this.obolSharonService = item;
       });
-      this.isprometheusAvailable = true;
     },
     openBrowser() {
       let url = "https://obol.tech/";
@@ -67,6 +72,9 @@ export default {
     openGitHub() {
       let url = "https://github.com/ObolNetwork";
       window.open(url, "_blank");
+    },
+    enrImport() {
+      console.log(this.importedENR);
     },
   },
 };
@@ -209,14 +217,38 @@ export default {
   margin-left: 10px;
   margin-top: 10px;
 }
+.browserBox_import {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
 .import-title {
   width: 100%;
   height: 30%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
   align-self: flex-start;
+}
+.enrImport {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.enrImport input {
+  width: 95%;
+  height: 50%;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding-left: 10px;
 }
 .import-title span {
   color: #dbdbdb;
@@ -224,6 +256,31 @@ export default {
   font-weight: 600;
   margin-left: 10px;
   margin-top: 5px;
+}
+.import-btn {
+  width: 27%;
+  height: 50%;
+  background-color: #192d31;
+  text-decoration: none;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #2fe4ab;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition-duration: all 200ms;
+  position: absolute;
+  right: 2%;
+}
+.import-btn:hover {
+  transition-duration: 100ms;
+  background-color: rgba(26, 46, 50, 0.9);
+}
+.import-btn:active {
+  transform: scale(0.95);
 }
 
 .browserBox .btn-box {
@@ -257,6 +314,6 @@ export default {
   background-color: rgba(26, 46, 50, 0.6);
 }
 .btn:active {
-  transform: scale(0.9);
+  transform: scale(0.95);
 }
 </style>
