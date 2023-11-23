@@ -99,7 +99,7 @@
               </div>
             </div>
             <div class="apply-btn" @click="readyToRemove ? removeFromBeaconChain() : applyBeaconChain()">
-              {{ readyToRemove ? "ROMOVE" : $t("notifModal.apply") }}
+              {{ readyToRemove ? "REMOVE" : $t("notifModal.apply") }}
             </div>
           </div>
         </div>
@@ -131,6 +131,7 @@ export default {
       matchedServiceId: "",
       readyToRemove: false,
       prysmServiceID: "",
+      nimbusServiceID: "",
     };
   },
   computed: {
@@ -161,11 +162,12 @@ export default {
     this.beaconChainConnectionController();
   },
   methods: {
-    removeFromBeaconChain() {
+    async removeFromBeaconChain() {
       this.readyToRemove = false;
       this.notificationModalIsActive = false;
-      // it can use for the wiring
-      console.log("its remove Func");
+      await ControlService.removeBeaconchainMonitoring({
+        selectedVal: this.selectedVal,
+      });
     },
 
     selectedValidator(arg) {
@@ -230,12 +232,26 @@ export default {
             }
           } else if (item.service === "PrysmValidatorService") {
             let prysmServiceID = item.config.serviceID;
-            console.log("prysmServiceID", prysmServiceID);
+            //console.log("prysmServiceID", prysmServiceID);
             for (let idx = 0; idx < this.installedMetricsExporter.length; idx++) {
               const metrx = this.installedMetricsExporter[idx];
               const metricsRes = await ControlService.getServiceYAML(metrx?.config.serviceID);
               const matchValue = metricsRes.match(new RegExp("(- --validator.address=http://stereum-)(.*)(\\n)"));
               if (matchValue[2].includes(prysmServiceID)) {
+                this.connectedValidator = item.config.serviceID;
+                this.fixedConnectedVal = true;
+                this.matchedServiceId = item.config.serviceID;
+              }
+            }
+          }else if (item.service === "NimbusValidatorService") {
+            console.log(item)
+            let nimbusServiceID = item.config.dependencies.consensusClients[0].id;
+            //console.log("nimbusServiceID", nimbusServiceID);
+            for (let idx = 0; idx < this.installedMetricsExporter.length; idx++) {
+              const metrx = this.installedMetricsExporter[idx];
+              const metricsRes = await ControlService.getServiceYAML(metrx?.config.serviceID);
+              const matchValue = metricsRes.match(new RegExp("(- --beaconnode.address=http://stereum-)(.*)(\\n)"));
+              if (matchValue[2].includes(nimbusServiceID)) {
                 this.connectedValidator = item.config.serviceID;
                 this.fixedConnectedVal = true;
                 this.matchedServiceId = item.config.serviceID;

@@ -1485,6 +1485,9 @@ export class ServiceManager {
   async beaconchainMonitoringModification(data) {
     let services = await this.readServiceConfigurations();
     let selectedValidator = services.find((service) => service.id === data.selectedVal);
+    let firstConsensusClient = services.find(
+      (service) => service.id === selectedValidator.dependencies.consensusClients[0].id
+    );
 
     const metricsExporterCommands = {
       LighthouseValidatorService: "--monitoring-endpoint=",
@@ -1494,7 +1497,7 @@ export class ServiceManager {
       LodestarValidatorService: "--monitoring.endpoint=",
       LodestarBeaconService: "--monitoring.endpoint=",
     };
-
+ 
     let metricsExporterAdded = false;
 
     switch (selectedValidator.service) {
@@ -1530,10 +1533,6 @@ export class ServiceManager {
         metricsExporterAdded = true;
         break;
     }
-
-    let firstConsensusClient = services.find(
-      (service) => service.id === selectedValidator.dependencies.consensusClients[0].id
-    );
 
     switch (firstConsensusClient.service) {
       case "LighthouseBeaconService":
@@ -1606,7 +1605,7 @@ export class ServiceManager {
       await this.manageServiceState(metricsExporter.id, "started");
     }
   }
-
+  
   async addMetricsExporter(services) {
     try {
       let installTask = [];
@@ -1641,6 +1640,76 @@ export class ServiceManager {
       await this.addServices(installTask, services);
     } catch (err) {
       log.error("Installing Services Failed:", err);
+    }
+  }
+
+  async removeBeaconchainMonitoring(data){
+    let metricsCommandIndex;
+    let metricsExporterRemoveID = null;
+    let linkedMetricsExporter;
+
+    const metricsExporterCommands = {
+      LighthouseValidatorService: "--monitoring-endpoint=",
+      LighthouseBeaconService: "--monitoring-endpoint=",
+      TekuValidatorService: "--metrics-publish-endpoint=",
+      TekuBeaconService: "--metrics-publish-endpoint=",
+      LodestarValidatorService: "--monitoring.endpoint=",
+      LodestarBeaconService: "--monitoring.endpoint=",
+    };
+
+    let services = await this.readServiceConfigurations();
+    let selectedValidator = services.find((service) => service.id === data.selectedVal);
+    let firstConsensusClient = services.find(
+      (service) => service.id === selectedValidator.dependencies.consensusClients[0].id
+    );
+
+    switch (selectedValidator.service) {
+      case "LighthouseValidatorService":
+      case "TekuValidatorService":
+      case "LodestarValidatorService":
+        await this.manageServiceState(selectedValidator.id, "stopped");
+        metricsCommandIndex = selectedValidator.command.findIndex((c) => c.includes(metricsExporterCommands[selectedValidator.service]));
+        if (metricsCommandIndex > -1) {
+          selectedValidator.command.splice(metricsCommandIndex, 1);
+        }
+        await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
+        await this.manageServiceState(selectedValidator.id, "started");
+        break;
+      case "PrysmValidatorService":
+        metricsExporterRemoveID = selectedValidator.id;
+        break;
+    }
+
+    switch (firstConsensusClient.service) {
+      case "LighthouseBeaconService":
+      case "TekuBeaconService":
+      case "LodestarBeaconService":
+        await this.manageServiceState(firstConsensusClient.id, "stopped");
+        metricsCommandIndex = firstConsensusClient.command.findIndex((c) => c.includes(metricsExporterCommands[firstConsensusClient.service]));
+        if (metricsCommandIndex > -1) {
+          firstConsensusClient.command.splice(metricsCommandIndex, 1);
+        }
+        await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
+        await this.manageServiceState(firstConsensusClient.id, "started");
+        break;
+      case "PrysmBeaconService":
+      case "NimbusBeaconService":
+        metricsExporterRemoveID = firstConsensusClient.id;
+        break;
+    }
+    if(metricsExporterRemoveID != null){
+      let metricsExporters = services.filter((services) => services.service == "MetricsExporterService");
+      metricsExporters.forEach((metricsExporter) => {
+        let IDIndex = metricsExporter.command.findIndex((c) => c.includes(metricsExporterRemoveID));
+        if (IDIndex > -1) {
+          linkedMetricsExporter = metricsExporter;
+        }
+      })
+    
+      await this.nodeConnection.runPlaybook("Delete Service", {
+        stereum_role: "delete-service",
+        service: linkedMetricsExporter.id,
+      });
     }
   }
 }
