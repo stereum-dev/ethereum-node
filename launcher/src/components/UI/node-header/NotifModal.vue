@@ -177,7 +177,6 @@ export default {
     BeaconchainBtnHandling() {
       if ((this.machineName == "" || this.apiKey == "" || this.selectedVal == "") && !this.readyToRemove) {
         this.haveToFill = true;
-        console.log("fill the inputs");
       } else if (this.readyToRemove) {
         this.removeFromBeaconChain();
         this.haveToFill = false;
@@ -305,7 +304,7 @@ export default {
 <style scoped>
 .emptyInput {
   border: 1px solid red !important;
-  background: rgba(255, 0, 0, 0.1);
+  background: #f58f8f;
 }
 .emptyValidator {
   position: relative;
@@ -494,7 +493,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 1.4%;
+  margin-right: 1.6%;
 }
 .selected-val {
   border: 3px solid #00ffdc;
