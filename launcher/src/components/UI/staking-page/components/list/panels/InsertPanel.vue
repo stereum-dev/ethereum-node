@@ -1,6 +1,6 @@
 <template>
   <div
-    class="animate__animated animate__slideInLeft w-full h-full max-h-[35px] col-start-1 col-span-full bg-[#17A2B8] hover:bg-[#2c8692] rounded-sm flex justify-center items-center cursor-pointer shadow-md shadow-gray-800"
+    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#336666] hover:bg-[#234545] rounded-sm flex justify-center items-center cursor-pointer shadow-md shadow-gray-800"
   >
     <div class="w-full h-full flex justify-evenly items-center" @click="openUploadHandler">
       <input

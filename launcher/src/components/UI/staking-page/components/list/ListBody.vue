@@ -1,12 +1,27 @@
 import { ref, computed, watchEffect, watch } from 'vue';
 <template>
   <div
-    class="col-start-1 col-span-full row-start-2 row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 bg-[#151618] rounded-b-sm mb-[1px]"
-    :class="stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : ''"
+    class="col-start-1 col-span-full row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm rounded-t-md mb-[1px]"
+    :class="[
+      stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : '',
+      stakingStore.isPreviewListActive || stakingStore.isGroupListActive ? 'row-start-2' : 'row-start-1',
+    ]"
   >
+    <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn">
+      <KeyRow
+        v-for="item in stakingStore.validatorKeyGroups.filter(
+          (group) => group.name === stakingStore.currentGroup.name
+        )[0].keys"
+        v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0"
+        :key="item.pubkey"
+        :item="item"
+      />
+    </div>
+
     <div
+      v-else
       ref="dropZoneRef"
-      class="w-full h-full"
+      class="w-full h-full animate__animated animate__fadeIn"
       @drop.prevent="onDrop($event)"
       @dragover.prevent="stakingStore.isOverDropZone = true"
       @dragleave.prevent="stakingStore.isOverDropZone = false"
@@ -26,20 +41,29 @@ import { ref, computed, watchEffect, watch } from 'vue';
           v-show="stakingStore.isPreviewListActive"
           :key="item.pubkey"
           :item="item"
-        />
-
-        <KeyRow
-          v-for="item in nonGroupedKeys"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0"
-          :key="item.pubkey"
-          :item="item"
+          @delete-key="deleteKey"
         />
         <GroupRow
           v-for="item in stakingStore.validatorKeyGroups"
           v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0"
           :key="item.pubkey"
           :item="item"
+          @open-group="openGroup"
+          @rename-group="renameGroup"
+          @withdraw-group="withdrawGroup"
         />
+
+        <KeyRow
+          v-for="item in stakingStore.filteredKeys"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0"
+          :key="item.pubkey"
+          :item="item"
+        />
+        <span
+          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length === 0"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
+          >No Validator key imported.</span
+        >
       </div>
     </div>
   </div>
@@ -49,21 +73,47 @@ import KeyRow from "./rows/KeyRow.vue";
 import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, watchEffect } from "vue";
+import { computed } from "vue";
 
-const emit = defineEmits(["onDrop"]);
+const emit = defineEmits(["onDrop", "deleteKey"]);
 const stakingStore = useStakingStore();
 
-const nonGroupedKeys = computed(() => {
-  return stakingStore.keys.filter(
-    (key) => !stakingStore.validatorKeyGroups.find((group) => group.keys.find((groupKey) => groupKey === key))
-  );
-});
-watchEffect(() => {
-  console.log("KEYSSSSS", stakingStore.keys);
+stakingStore.filteredKeys = computed(() => {
+  if (!stakingStore.searchContent) {
+    return stakingStore.keys;
+  }
+  return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
 });
 
 const onDrop = (event) => {
   emit("onDrop", event);
 };
+
+const deleteKey = (item) => {
+  emit("deleteKey", item);
+};
+
+const openGroup = (item) => {
+  emit("openGroup", item);
+};
+
+const renameGroup = (item) => {
+  emit("renameGroup", item);
+};
+
+const withdrawGroup = (item) => {
+  emit("withdrawGroup", item);
+};
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 <template>
   <div
-    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer"
+    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate__slideInLeft animate__faster"
     :class="props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 '"
     @click="selectKey(props.item)"
   >
@@ -108,13 +108,16 @@ const formattedPubKey = computed(() => {
 //Methods
 const selectKey = (key) => {
   if (stakingStore.isGroupingAllowed) {
-    stakingStore.keys.forEach((item) => {
+    const updatedKeys = stakingStore.keys.map((item) => {
       if (item.key === key.key) {
-        item.selected = !item.selected;
+        return { ...item, selected: !item.selected };
       }
+      return item;
     });
+
+    stakingStore.keys = updatedKeys;
+    stakingStore.selectedValidatorKeys = updatedKeys.filter((item) => item.selected);
   }
-  stakingStore.selectedValidatorKeys = stakingStore.keys.filter((item) => item.selected);
 };
 </script>
 <style scoped>

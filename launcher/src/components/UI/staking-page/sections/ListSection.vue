@@ -1,10 +1,16 @@
 <template>
   <div class="h-full col-start-2 col-end-20 row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
     <div
-      class="h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 rounded-md relative overflow-hidden"
+      class="h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 relative overflow-hidden"
     >
-      <ListHeader />
-      <ListBody @on-drop="onDrop" />
+      <ListHeader v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive" />
+      <ListBody
+        @on-drop="onDrop"
+        @delete-key="deleteKey"
+        @open-group="openGroup"
+        @rename-group="renameGroup"
+        @withdraw-group="withdrawGroup"
+      />
       <ListPanels
         @confirm-grouping="confirmGrouping"
         @pick-validator="pickValidator"
@@ -18,9 +24,11 @@
 import ListHeader from "../components/list/ListHeader.vue";
 import ListBody from "../components/list/ListBody.vue";
 import ListPanels from "../components/list/ListPanels.vue";
+import { useStakingStore } from "@/store/theStaking";
 
-const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile", "confirmPassword", "onDrop"]);
+const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile", "confirmPassword", "onDrop", "deleteKey"]);
 
+const stakingStore = useStakingStore();
 const confirmGrouping = (groupName) => {
   emit("confirmGrouping", groupName);
 };
@@ -39,5 +47,20 @@ const confirmPassword = (password) => {
 
 const onDrop = (event) => {
   emit("onDrop", event);
+};
+
+const deleteKey = (item) => {
+  emit("deleteKey", item);
+};
+const openGroup = (item) => {
+  emit("openGroup", item);
+};
+
+const renameGroup = (item) => {
+  emit("renameGroup", item);
+};
+
+const withdrawGroup = (item) => {
+  emit("withdrawGroup", item);
 };
 </script>

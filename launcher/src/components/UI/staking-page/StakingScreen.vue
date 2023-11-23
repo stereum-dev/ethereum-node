@@ -8,6 +8,10 @@
         @upload-file="uploadValidatorKey"
         @confirm-password="passwordValidation"
         @on-drop="onDrop"
+        @delete-key="deletePreviewKey"
+        @open-group="openGroupList"
+        @rename-group="renameGroup"
+        @withdraw-group="withdrawGroup"
       />
       <ManagementSection />
     </div>
@@ -182,6 +186,7 @@ const passwordValidation = async (pass) => {
 
 //Create Grouping
 const creatingNewGroup = (groupName) => {
+  stakingStore.isPreviewListActive = false;
   if (groupName === "" || groupName === null) {
     stakingStore.setActivePanel(null);
     return;
@@ -189,18 +194,39 @@ const creatingNewGroup = (groupName) => {
 
   const uniqueId = uuidv4();
 
-  stakingStore.validatorKeyGroups.push({
-    id: uniqueId,
-    keys: useDeepClone(stakingStore.selectedValidatorKeys),
-    name: stakingStore.groupName,
-    selected: false,
-  });
-  stakingStore.setActivePanel(null);
+  if (stakingStore.selectedValidatorKeys.length > 0) {
+    stakingStore.validatorKeyGroups.push({
+      id: uniqueId,
+      keys: useDeepClone(stakingStore.selectedValidatorKeys),
+      name: stakingStore.groupName,
+      selected: false,
+    });
+    stakingStore.setActivePanel(null);
 
-  stakingStore.keys = stakingStore.keys.filter(
-    (key) => !stakingStore.selectedValidatorKeys.find((e) => e.key === key.key)
-  );
-  stakingStore.selectedValidatorKeys = [];
+    stakingStore.keys = stakingStore.keys.filter(
+      (key) => !stakingStore.selectedValidatorKeys.find((e) => e.key === key.key)
+    );
+    stakingStore.selectedValidatorKeys = [];
+  }
+};
+
+//Open Group List
+
+const openGroupList = (item) => {
+  stakingStore.isGroupListActive = true;
+  stakingStore.currentGroup = item;
+};
+
+//Rename Group
+
+const renameGroup = (item) => {
+  console.log(item);
+};
+
+//Withdraw Group
+
+const withdrawGroup = (item) => {
+  console.log(item);
 };
 
 //Pick a Validator Service
@@ -208,5 +234,14 @@ const creatingNewGroup = (groupName) => {
 const pickValidatorService = (service) => {
   stakingStore.selectedValidatorService = service;
   stakingStore.setActivePanel("password");
+};
+
+//Delete Key
+const deletePreviewKey = (item) => {
+  stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.key !== item.key);
+  if (!stakingStore.previewKeys.length) {
+    stakingStore.isPreviewListActive = false;
+    stakingStore.setActivePanel("insert");
+  }
 };
 </script>

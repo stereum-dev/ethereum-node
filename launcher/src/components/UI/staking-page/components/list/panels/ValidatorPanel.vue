@@ -1,6 +1,6 @@
 <template>
   <div
-    class="animate__animated animate__slideInLeft w-full h-full max-h-[35px] col-start-1 col-span-full bg-[#2e3335] rounded-sm flex justify-center items-center cursor-pointer p-1"
+    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-sm flex justify-center items-center cursor-pointer p-1"
   >
     <div class="w-full h-full grid grid-cols-4 bg-[#171D22]">
       <div

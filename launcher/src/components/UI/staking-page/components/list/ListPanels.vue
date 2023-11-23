@@ -1,10 +1,10 @@
 <template>
   <div
-    class="w-full col-start-1 col-span-full row-start-12 row-end-13 grid grid-cols-12 grid-rows-1 items-center z-10 rounded-sm bg-[#151618] px-1"
+    class="w-full col-start-1 col-span-full row-start-12 row-end-13 grid grid-cols-12 grid-rows-1 items-center z-10 border border-gray-600 rounded-b-md bg-[#151618] px-1 pr-0"
   >
-    <div class="w-full h-full col-start-1 col-end-3 flex justify-evenly items-center space-x-1 p-1">
+    <div class="w-full h-full col-start-1 col-end-4 grid grid-cols-3 py-1">
       <div
-        class="w-2/3 h-full flex justify-center items-center rounded-sm bg-gray-600 hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer px-1 active:scale-95"
+        class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer px-1 active:scale-95"
       >
         <img
           class="w-5 h-5"
@@ -15,7 +15,7 @@
         />
       </div>
       <div
-        class="w-2/3 h-full flex justify-center items-center rounded-sm bg-gray-600 hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer active:scale-95 px-1"
+        class="w-2/3 h-full col-start-2 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer active:scale-95 px-1"
       >
         <img
           class="h-6"
@@ -25,9 +25,22 @@
           @mousedown.prevent
         />
       </div>
+      <div
+        class="w-2/3 h-full col-start-3 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer active:scale-95 px-1"
+      >
+        <img
+          class="h-6"
+          src="/img/icon/the-staking/display-name.png"
+          alt="Insert Icon"
+          @click="displayName"
+          @mousedown.prevent
+        />
+      </div>
     </div>
 
-    <div class="w-full h-full col-start-3 col-end-13 row-start-1 grid grid-cols-12 items-center self-center">
+    <div
+      class="w-full h-full col-start-4 col-end-13 row-start-1 grid grid-cols-12 items-center self-center px-1 relative"
+    >
       <component
         :is="activePanel?.component"
         v-bind="activePanel?.props"
@@ -133,11 +146,13 @@ const confirmPassword = (pass) => {
 };
 
 const groupingPanel = () => {
+  stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("grouping");
   stakingStore.isGroupingAllowed = true;
 };
 
 const searchPanel = () => {
+  stakingStore.isPreviewListActive = false;
   if (stakingStore.activePanel === "search") {
     stakingStore.setActivePanel(null);
   } else {
