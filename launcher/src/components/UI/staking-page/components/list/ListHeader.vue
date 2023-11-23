@@ -13,7 +13,7 @@
       v-else
       class="w-full h-full col-start-1 col-span-full rounded-t-md bg-[#336666] grid grid-cols-12 items-center px-3"
     >
-      <div class="col-start-1 col-end-4 flex justify-center items-center space-x-1">
+      <div class="col-start-1 col-end-6 flex justify-start items-center space-x-1">
         <img class="w-6 h-6" src="/img/icon/the-staking/group.png" alt="Manage Icon" />
         <span class="text-md font-semibold text-gray-200 uppercase">{{ stakingStore.currentGroup.name }}</span>
       </div>

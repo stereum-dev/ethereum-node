@@ -195,6 +195,12 @@ const creatingNewGroup = (groupName) => {
   const uniqueId = uuidv4();
 
   if (stakingStore.selectedValidatorKeys.length > 0) {
+    stakingStore.selectedValidatorKeys.forEach((key) => {
+      if (key.selected) {
+        key.selected = false;
+      }
+    });
+
     stakingStore.validatorKeyGroups.push({
       id: uniqueId,
       keys: useDeepClone(stakingStore.selectedValidatorKeys),

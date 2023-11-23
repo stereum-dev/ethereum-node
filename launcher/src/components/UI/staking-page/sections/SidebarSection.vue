@@ -4,65 +4,63 @@
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-8 p-1 pl-0 items-center">
-      <div class="w-full h-full row-start-1 row-span-1 flex justify-center items-center relative">
+    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-8 items-center justify-center">
+      <div class="w-full h-9 row-start-1 row-span-1 relative">
+        <!-- Main Button: Always visible -->
         <button
-          v-if="stakingStore.isGroupListActive"
-          class="w-8 h-8 row-start-1 row-span-1 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 bg-[#202123] flex justify-center items-center ml-1"
-          @click="mouseHover"
+          class="w-9 h-9 row-start-1 row-span-1 p-1 rounded-md text-gray-700 bg-[#202123] flex justify-center items-center cursor-pointer border border-gray-600"
           @mouseenter="footerStore.cursorLocation = `Back to keys List`"
           @mouseleave="footerStore.cursorLocation = ''"
+          @click="mouseHover"
         >
-          <img class="w-6 h-4" src="/img/icon/manage-node-icons/backtonode.png" alt="Back Icon" />
+          <img class="w-5 h-5" src="/img/icon/the-staking/list2.png" alt="Back Icon" />
         </button>
 
         <button
           v-if="buttonHovered"
-          class="animate__animated animate__slideInLeft animate__faster w-36 h-9 absolute left-1 row-start-1 row-end-2 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-start items-center z-10 space-x-2"
-          @mouseleave="buttonHovered = false"
+          class="animate__animated animate__slideInLeft w-36 h-9 row-start-1 row-end-2 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-start items-center z-10 space-x-2 absolute top-0 cursor-pointer"
           @click="backToList"
+          @mouseleave="buttonHovered = false"
         >
-          <img class="w-6 h-4" src="/img/icon/manage-node-icons/backtonode.png" alt="Back Icon" />
+          <img class="w-6 h-6" src="/img/icon/the-staking/list2.png" alt="Back Icon" />
           <span class="text-xs text-gray-200 font-semibold">Back To List</span>
         </button>
       </div>
 
-      <div class="w-full h-full row-start-2 row-span-full grid grid-rows-8">
-        <div
-          v-for="(item, index) in installedValidators"
-          :key="item.service"
-          class="w-full h-9 row-span-1 flex justify-end items-center py-1 pr-1 rounded-r-full cursor-pointer relative"
+      <div
+        v-for="(item, index) in installedValidators"
+        :key="item.service"
+        class="w-9 h-9 row-span-1 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 flex justify-center items-center cursor-pointer"
+        :class="{
+          'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
+            selectedService === item.service,
+          'bg-[#202123] border border-gray-600': selectedService !== item.service,
+        }"
+        @click="getService(index)"
+        @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
+        @mouseleave="[(footerStore.cursorLocation = ''), (hoveredIndex = null)]"
+      >
+        <!-- Main Button: Always visible -->
+        <img
+          :src="item.sIcon"
+          :alt="`${item.service} Icon`"
           :class="{
-            'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
-              selectedService === item.service,
-            'bg-[#202123] border-2  border-l-0 border-gray-600': selectedService !== item.service,
+            'w-6': selectedService === item.service,
+            'w-5': selectedService !== item.service,
           }"
-          @click="getService(index)"
-          @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
-          @mouseleave="[(footerStore.cursorLocation = ''), (hoveredIndex = null)]"
+          @mousedown.prevent
+        />
+
+        <!-- Detailed Button: Appears on hover -->
+
+        <button
+          v-if="hoveredIndex === index"
+          class="w-36 h-9 absolute left-1 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-start items-center z-10 space-x-2 animate__animated animate__slideInLeft cursor-pointer"
+          @click="filterByService(item)"
         >
-          <!-- Main Button: Always visible -->
-          <img
-            :src="item.icon"
-            :alt="`${item.service} Icon`"
-            :class="{
-              'w-7': selectedService === item.service,
-              'w-6': selectedService !== item.service,
-            }"
-            @mousedown.prevent
-          />
-
-          <!-- Detailed Button: Appears on hover -->
-
-          <button
-            v-if="hoveredIndex === index"
-            class="w-36 h-9 absolute left-1 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-start items-center z-10 space-x-2 animate__animated animate__slideInLeft"
-            @click="filterByService(item)"
-          >
-            <img class="w-6" :src="item.icon" :alt="`${item.name} Icon`" />
-            <span class="text-xs text-gray-200 font-semibold">{{ item.name }}</span>
-          </button>
-        </div>
+          <img class="w-6" :src="item.icon" :alt="`${item.name} Icon`" />
+          <span class="text-xs text-gray-200 font-semibold">{{ item.name }}</span>
+        </button>
       </div>
     </div>
   </aside>
@@ -95,9 +93,11 @@ const mouseHover = () => {
 const backToList = () => {
   stakingStore.isGroupListActive = false;
   buttonHovered.value = false;
+  selectedService.value = null;
 };
 
 const getService = (index) => {
+  hoveredIndex.value = null;
   hoveredIndex.value = index;
 };
 
@@ -108,7 +108,7 @@ const filterByService = (item) => {
 </script>
 
 <style scoped>
-button {
+/* button {
   --animate-duration: 500ms;
-}
+} */
 </style>

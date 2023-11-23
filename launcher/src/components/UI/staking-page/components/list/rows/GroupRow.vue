@@ -1,6 +1,9 @@
 import { useStakingStore } from '@/store/theStaking';
 <template>
-  <div class="w-full h-8 bg-[#336666] rounded-full grid grid-cols-12 p-1">
+  <div
+    class="w-full h-8 bg-[#336666] rounded-full grid grid-cols-12 p-1 animate__animated animate__faster"
+    :class="isRemoveActive ? 'animate__slideOutRight' : 'animate__slideInLeft'"
+  >
     <div class="col-start-1 col-end-5 self-center overflow-hidden flex justify-start items-center">
       <img class="w-6" src="/img/icon/the-staking/newfolder-icon.png" alt="Folder Icon" @mousedown.prevent />
       <span class="text-center text-xs text-gray-300 ml-1 overflow-hidden">{{ props.item.name }}</span>
@@ -17,7 +20,7 @@ import { useStakingStore } from '@/store/theStaking';
     <div class="col-start-10 col-span-full bg-[#151618] rounded-full grid grid-cols-3 items-center">
       <div class="col-start-1 col-span-1 justify-self-center">
         <img
-          class="w-5 h-5 hover:scale-110 active:scale-100 cursor-pointer transition-all duration-150"
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/open-group.png"
           alt="Icon"
           @mousedown.prevent
@@ -26,7 +29,7 @@ import { useStakingStore } from '@/store/theStaking';
       </div>
       <div class="col-start-2 col-span-1 justify-self-center">
         <img
-          class="w-5 h-5 hover:scale-110 active:scale-100 cursor-pointer transition-all duration-150"
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/rename-group.png"
           alt="Icon"
           @mousedown.prevent
@@ -36,7 +39,7 @@ import { useStakingStore } from '@/store/theStaking';
 
       <div class="col-start-3 col-span-1 justify-self-center">
         <img
-          class="w-5 h-5 hover:scale-110 active:scale-100 cursor-pointer transition-all duration-150"
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/withdraw.png"
           alt="Icon"
           @mousedown.prevent

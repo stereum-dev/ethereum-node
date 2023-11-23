@@ -6,7 +6,7 @@ import { computed } from 'vue';
     @click="selectKey(props.item)"
   >
     <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
-      <span class="w-5 h-5 rounded-full cursor-pointer bg-white"></span>
+      <span class="w-6 h-6 rounded-full cursor-pointer bg-white"></span>
     </div>
     <div class="col-start-2 col-end-9 self-center overflow-hidden flex justify-start items-center">
       <span

@@ -1,10 +1,10 @@
 import { ref, computed, watchEffect, watch } from 'vue';
 <template>
   <div
-    class="col-start-1 col-span-full row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm rounded-t-md mb-[1px]"
+    class="col-start-1 col-span-full row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : '',
-      stakingStore.isPreviewListActive || stakingStore.isGroupListActive ? 'row-start-2' : 'row-start-1',
+      stakingStore.isPreviewListActive || stakingStore.isGroupListActive ? 'row-start-2 ' : 'row-start-1 rounded-t-md',
     ]"
   >
     <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn">
