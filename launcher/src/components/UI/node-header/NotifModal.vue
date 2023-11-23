@@ -75,6 +75,7 @@
                   'choose-validator_validators_validator-box',
                   validator.config.serviceID == selectedVal ? selectValidatorBorder : '',
                   validator.config.serviceID == connectedValidator ? fixedValidatorBorder : '',
+                  !selectedVal && haveToFill && !connectedValidator ? 'emptyValidator' : '',
                 ]"
                 @click="selectedValidator(validator)"
               >
@@ -88,17 +89,27 @@
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.machinename") }}</div>
                 <div class="enter-input_input">
-                  <input v-model="machineName" type="text" :disabled="readyToRemove" />
+                  <input
+                    v-model="machineName"
+                    type="text"
+                    :disabled="readyToRemove"
+                    :class="machineName == '' && haveToFill ? 'emptyInput' : ''"
+                  />
                 </div>
               </div>
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.apikey") }}</div>
                 <div class="enter-input_input">
-                  <input v-model="apiKey" type="text" :disabled="readyToRemove" />
+                  <input
+                    v-model="apiKey"
+                    type="text"
+                    :class="apiKey == '' && haveToFill ? 'emptyInput' : ''"
+                    :disabled="readyToRemove"
+                  />
                 </div>
               </div>
             </div>
-            <div class="apply-btn" @click="readyToRemove ? removeFromBeaconChain() : applyBeaconChain()">
+            <div class="apply-btn" @click="BeaconchainBtnHandling">
               {{ readyToRemove ? "REMOVE" : $t("notifModal.apply") }}
             </div>
           </div>
@@ -132,6 +143,7 @@ export default {
       readyToRemove: false,
       prysmServiceID: "",
       nimbusServiceID: "",
+      haveToFill: false,
     };
   },
   computed: {
@@ -162,6 +174,18 @@ export default {
     this.beaconChainConnectionController();
   },
   methods: {
+    BeaconchainBtnHandling() {
+      if ((this.machineName == "" || this.apiKey == "" || this.selectedVal == "") && !this.readyToRemove) {
+        this.haveToFill = true;
+        console.log("fill the inputs");
+      } else if (this.readyToRemove) {
+        this.removeFromBeaconChain();
+        this.haveToFill = false;
+      } else {
+        this.applyBeaconChain();
+        this.haveToFill = false;
+      }
+    },
     async removeFromBeaconChain() {
       this.readyToRemove = false;
       this.notificationModalIsActive = false;
@@ -243,8 +267,8 @@ export default {
                 this.matchedServiceId = item.config.serviceID;
               }
             }
-          }else if (item.service === "NimbusValidatorService") {
-            console.log(item)
+          } else if (item.service === "NimbusValidatorService") {
+            console.log(item);
             let nimbusServiceID = item.config.dependencies.consensusClients[0].id;
             //console.log("nimbusServiceID", nimbusServiceID);
             for (let idx = 0; idx < this.installedMetricsExporter.length; idx++) {
@@ -279,6 +303,45 @@ export default {
 };
 </script>
 <style scoped>
+.emptyInput {
+  border: 1px solid red !important;
+  background: rgba(255, 0, 0, 0.1);
+}
+.emptyValidator {
+  position: relative;
+  border-radius: 50%;
+  border: 2px solid red;
+}
+.emptyValidator::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.3);
+  animation: blink-animation 1s steps(5, start) infinite;
+}
+.emptyValidator:nth-child(1)::after {
+  animation-delay: 0.3s;
+}
+
+.emptyValidator:nth-child(2)::after {
+  animation-delay: 0.5s;
+}
+
+.emptyValidator:nth-child(3)::after {
+  animation-delay: 0.8s;
+}
+.emptyValidator:nth-child(4)::after {
+  animation-delay: 1s;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
 .selected-val {
   border: 5px solid #3e8f8f;
   border-radius: 50%;
