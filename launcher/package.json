@@ -44,6 +44,7 @@
     "pinia": "^2.0.33",
     "qrcode": "^1.5.1",
     "ssh2": "^1.1.0",
+    "uuid": "^9.0.1",
     "vue": "^3.2.33",
     "vue-i18n": "9.2.2",
     "vue-router": "^4.0.15",
@@ -89,4 +90,3 @@
     "url": "git@github.com:stereum-dev/ethereum-node.git"
   }
 }
-

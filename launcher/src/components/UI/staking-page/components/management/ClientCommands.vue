@@ -3,9 +3,8 @@
     <div
       class="w-full h-full border border-gray-600 rounded-b-md grid grid-cols-12 grid-rows-6 items-center bg-[#151618]"
     >
-      <Dropdown />
       <ValidatorState state="running" />
-      <ButtonRows />
+      <ButtonBox />
       <!-- <div class="selection-table">
         <div class="selection-table_validator">
           <div class="validator-icon">
@@ -56,11 +55,10 @@
 <script>
 // import { mapState } from "pinia";
 // import { useStakingStore } from "@/store/theStaking";
-import ButtonRows from "./components/client-commands/ButtonRows.vue";
-import Dropdown from "./components/client-commands/DropDown.vue";
+import ButtonBox from "./components/client-commands/ButtonBox.vue";
 import ValidatorState from "./components/client-commands/ValidatorState.vue";
 export default {
-  components: { ButtonRows, Dropdown, ValidatorState },
+  components: { ButtonBox, ValidatorState },
   //   props: {
   //     validatorIcon: {
   //       type: String,
