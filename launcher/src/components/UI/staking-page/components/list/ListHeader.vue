@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full col-start-1 col-span-full row-start-1 row-span-1 rounded-t-md border-b-2 border-gray-500 grid grid-cols-12"
+    class="w-full col-start-1 col-span-full row-start-1 row-span-1 rounded-t-md border-b-2 grid grid-cols-12 bg-[#151618] border-gray-500"
   >
     <div
       v-if="stakingStore.isPreviewListActive"

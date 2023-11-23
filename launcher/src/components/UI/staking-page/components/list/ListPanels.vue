@@ -1,31 +1,36 @@
 <template>
-  <div class="w-full h-10 absolute inset-x-0 -bottom-4 row-end-13 grid grid-cols-12 grid-rows-1 items-center z-10">
-    <div class="col-start-2 col-span-1 flex justify-center items-center justify-self-start self-center">
-      <img
-        class="w-7 h-7 shadow-md hover:scale-110 hover:shadow-lg hover:shadow-black shadow-black cursor-pointer active:scale-100 transition-all duration-150 rounded-full"
-        src="/img/icon/the-staking/group.png"
-        alt="Group Icon"
-        @click="groupingPanel"
-      />
-    </div>
-    <div class="col-start-3 col-span-1 flex justify-center items-center justify-self-start self-center">
-      <img
-        class="w-7 h-7 shadow-md hover:scale-110 hover:shadow-lg hover:shadow-black shadow-black cursor-pointer active:scale-100 transition-all duration-150 rounded-full"
-        src="/img/icon/the-staking/search.png"
-        alt="Insert Icon"
-        @click="searchPanel"
-      />
+  <div
+    class="w-full col-start-1 col-span-full row-start-12 row-end-13 grid grid-cols-12 grid-rows-1 items-center z-10 rounded-sm bg-[#151618] px-1"
+  >
+    <div class="col-start-1 col-end-3 flex justify-evenly items-center p-1 space-x-1">
+      <div
+        class="w-2/3 h-7 flex justify-center items-center rounded-sm bg-gray-600 hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 shadow-md hover:shadow-lg hover:shadow-black shadow-black cursor-pointer active:scale-95 px-1"
+      >
+        <img
+          class="w-6 h-6"
+          src="/img/icon/the-staking/group.png"
+          alt="Group Icon"
+          @click="groupingPanel"
+          @mousedown.prevent
+        />
+      </div>
+      <div
+        class="w-2/3 h-7 flex justify-center items-center rounded-sm bg-gray-600 hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 shadow-md hover:shadow-lg hover:shadow-black shadow-black cursor-pointer active:scale-95 px-1"
+      >
+        <img
+          class="w-6 h-6"
+          src="/img/icon/the-staking/filter.png"
+          alt="Insert Icon"
+          @click="searchPanel"
+          @mousedown.prevent
+        />
+      </div>
     </div>
 
     <div
-      class="w-full h-full col-start-4 col-end-12 row-start-1 grid grid-cols-12 overflow-hidden items-center self-center relative"
+      class="w-full h-full col-start-3 col-end-13 row-start-1 grid grid-cols-12 overflow-hidden items-center self-center"
     >
-      <transition
-        tag="div"
-        class="w-full h-full"
-        enter-to-class="opacity-0 translate-y-0 duration-300 delay-100"
-        leave-to-class="opacity-0 -translate-y-6 duration-300"
-      >
+      <Transition leave-to-class="panelOut ">
         <component
           :is="activePanel?.component"
           v-bind="activePanel?.props"
@@ -38,7 +43,7 @@
               : {}
           "
         />
-      </transition>
+      </Transition>
     </div>
   </div>
 </template>
@@ -144,3 +149,20 @@ const searchPanel = () => {
   }
 };
 </script>
+<style scoped>
+.panelOut {
+  animation: slideOut 0.1s ease-in-out 0.2;
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0);
+    taransform-origin: left;
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+</style>

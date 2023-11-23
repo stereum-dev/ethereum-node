@@ -27,6 +27,7 @@ import ManagementSection from "./sections/ManagementSection.vue";
 import ControlService from "../../../store/ControlService";
 import ImportValidator from "./components/modals/ImportValidator.vue";
 import RiskWarning from "./components/modals/RiskWarning.vue";
+import { useDeepClone } from "@/composables/utils";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted } from "vue";
@@ -188,7 +189,7 @@ const confirmGroupingName = (groupName) => {
 
   stakingStore.validatorKeyGroups.push({
     id: stakingStore.validatorKeyGroups.length + 1,
-    keys: [...stakingStore.selectedValidatorKeys],
+    keys: useDeepClone(stakingStore.selectedValidatorKeys),
     name: stakingStore.groupName,
     selected: false,
   });
@@ -196,7 +197,6 @@ const confirmGroupingName = (groupName) => {
   stakingStore.selectedValidatorKeys = [];
   stakingStore.groupName = "";
   stakingStore.isPreviewListActive = false;
-  console.log(stakingStore.validatorKeyGroups);
 };
 
 //Pick a Validator Service

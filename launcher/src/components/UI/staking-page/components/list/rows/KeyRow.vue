@@ -28,7 +28,7 @@ import { computed } from 'vue';
       >{{ props.item.activeSince }}</span
     >
     <div class="w-full col-start-13 col-end-15 self-center overflow-hidden flex justify-center items-center">
-      <img class="w-6 h-6" :src="keyStates" alt="icon" @mousedown.prevent />
+      <img class="w-6 h-6" :src="getKeyState" alt="icon" @mousedown.prevent />
     </div>
 
     <span
@@ -52,7 +52,6 @@ import { computed } from 'vue';
 <script setup>
 import { computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
-import { useKeyStates } from "../../../../../../composables/keyStates";
 
 const props = defineProps({
   item: {
@@ -62,7 +61,41 @@ const props = defineProps({
 });
 
 const stakingStore = useStakingStore();
-const keyStates = useKeyStates(props.item.status);
+//Key Status Icons
+const activeStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Active.png";
+const slashedStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Slashed.png";
+const depositStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Deposit.png";
+const offlineStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Offline.png";
+const pendingStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png";
+const exitedStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Exited.png";
+const apiProblems = "/img/icon/the-staking/State_Icon.png";
+const apiLoading = "/img/icon/task-manager-icons/turning_circle.gif";
+
+const getKeyState = computed(() => {
+  const item = props.item.status;
+  switch (item) {
+    case "active_online":
+      return activeStatusIcon;
+    case "active":
+      return activeStatusIcon;
+    case "active_offline":
+      return offlineStatusIcon;
+    case "slashed":
+      return slashedStatusIcon;
+    case "pending":
+      return pendingStatusIcon;
+    case "exited":
+      return exitedStatusIcon;
+    case "withdrawal":
+      return exitedStatusIcon;
+    case "NA":
+      return apiProblems;
+    case "loading":
+      return apiLoading;
+    default:
+      return depositStatusIcon;
+  }
+});
 
 const formattedPubKey = computed(() => {
   const pubkey = props.item.key;
@@ -72,6 +105,7 @@ const formattedPubKey = computed(() => {
   return pubkey;
 });
 
+//Methods
 const selectKey = (key) => {
   if (stakingStore.isGroupingAllowed) {
     stakingStore.keys.forEach((item) => {
@@ -79,8 +113,8 @@ const selectKey = (key) => {
         item.selected = !item.selected;
       }
     });
-    stakingStore.selectedValidatorKeys = stakingStore.keys.filter((item) => item.selected);
   }
+  stakingStore.selectedValidatorKeys = stakingStore.keys.filter((item) => item.selected);
 };
 </script>
 <style scoped>

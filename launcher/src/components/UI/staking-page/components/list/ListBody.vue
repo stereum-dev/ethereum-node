@@ -1,11 +1,12 @@
-import { ref } from 'vue';
+import { ref, computed, watchEffect, watch } from 'vue';
 <template>
   <div
-    class="col-start-1 col-span-full row-start-2 row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2"
+    class="col-start-1 col-span-full row-start-2 row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 bg-[#151618] rounded-b-sm mb-[1px]"
+    :class="stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : ''"
   >
     <div
       ref="dropZoneRef"
-      class="w-full h-full max-h-[428px]"
+      class="w-full h-full"
       @drop.prevent="onDrop($event)"
       @dragover.prevent="stakingStore.isOverDropZone = true"
       @dragleave.prevent="stakingStore.isOverDropZone = false"
@@ -28,7 +29,7 @@ import { ref } from 'vue';
         />
 
         <KeyRow
-          v-for="item in stakingStore.keys"
+          v-for="item in nonGroupedKeys"
           v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0"
           :key="item.pubkey"
           :item="item"
@@ -48,9 +49,19 @@ import KeyRow from "./rows/KeyRow.vue";
 import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
 import { useStakingStore } from "@/store/theStaking";
+import { computed, watchEffect } from "vue";
 
 const emit = defineEmits(["onDrop"]);
 const stakingStore = useStakingStore();
+
+const nonGroupedKeys = computed(() => {
+  return stakingStore.keys.filter(
+    (key) => !stakingStore.validatorKeyGroups.find((group) => group.keys.find((groupKey) => groupKey === key))
+  );
+});
+watchEffect(() => {
+  console.log("KEYSSSSS", stakingStore.keys);
+});
 
 const onDrop = (event) => {
   emit("onDrop", event);

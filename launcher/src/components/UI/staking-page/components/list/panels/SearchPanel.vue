@@ -1,8 +1,8 @@
 <template>
   <div
-    class="w-full max-h-[35px] col-start-1 col-span-full bg-[#171D22] rounded-full flex justify-center items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-700"
+    class="animate__animated animate__slideInLeft animate__delay-1s w-full h-full max-h-[35px] col-start-1 col-span-full bg-[#3e4347] rounded-sm flex justify-center items-center cursor-pointer px-1"
   >
-    <div class="w-full flex justify-evenly items-center px-5 rounded-full relative">
+    <div class="w-full flex justify-evenly items-center px-5 relative bg-[#171D22] rounded-sm">
       <div class="flex items-center pointer-events-none" @mousedown.prevent>
         <svg
           aria-hidden="true"
@@ -33,3 +33,20 @@ import { useStakingStore } from "@/store/theStaking";
 
 const stakingStore = useStakingStore();
 </script>
+
+<style scoped>
+.panelIn {
+  animation: slideIn 0.3s ease-in-out 0.8s;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+</style>
