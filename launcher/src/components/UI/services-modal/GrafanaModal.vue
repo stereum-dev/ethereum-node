@@ -255,6 +255,7 @@ export default {
 }
 
 .btn:active {
-  transform: scale(0.9);
+  background-color: rgb(179, 72, 0);
+  box-shadow: 1px 1px 10px 1px #171717 inset;
 }
 </style>

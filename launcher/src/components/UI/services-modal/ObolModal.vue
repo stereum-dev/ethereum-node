@@ -11,31 +11,35 @@
           <div class="service-option">
             <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
             <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
       <div class="content">
-        <div class="browserBox">
-          <div class="title">
-            <span>CREATE NEW ENR</span>
-            <span>Generate a new ENR to use to create or join an existing cluster</span>
+        <div v-if="true" class="wrapper">
+          <div class="browserBox">
+            <div class="title">
+              <span>CREATE NEW ENR</span>
+              <span>Generate a new ENR to use to create or join an existing cluster</span>
+            </div>
+            <div class="btn-box">
+              <div class="btn">GENERATE</div>
+            </div>
           </div>
-          <div class="btn-box">
-            <div class="btn">GENERATE</div>
-          </div>
-        </div>
 
-        <div class="browserBox">
-          <div class="browserBox_import">
-            <div class="import-title">
-              <span>IMPORT EXISTING ENR</span>
-            </div>
-            <div class="enrImport">
-              <input v-model="importedENR" type="text" placeholder="Enter ENR" />
-              <div class="import-btn" @click="enrImport">import</div>
+          <div class="browserBox">
+            <div class="browserBox_import">
+              <div class="import-title">
+                <span>IMPORT EXISTING ENR</span>
+              </div>
+              <div class="enrImport">
+                <input v-model="importedENR" type="text" placeholder="Enter ENR" />
+                <div class="import-btn" @click="enrImport">import</div>
+              </div>
             </div>
           </div>
         </div>
+        <div v-else class="wrapper"><EnrGenerator /></div>
       </div>
     </div>
   </div>
@@ -43,7 +47,11 @@
 <script>
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import EnrGenerator from "./EnrGenerator.vue";
 export default {
+  components: {
+    EnrGenerator,
+  },
   data() {
     return {
       obolSharonService: {},
@@ -71,6 +79,10 @@ export default {
     },
     openGitHub() {
       let url = "https://github.com/ObolNetwork";
+      window.open(url, "_blank");
+    },
+    openDiscord() {
+      let url = "https://discord.gg/n6ebKsX46w";
       window.open(url, "_blank");
     },
     enrImport() {
@@ -145,6 +157,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 .service-name {
   width: 100%;
@@ -277,10 +297,12 @@ export default {
 }
 .import-btn:hover {
   transition-duration: 100ms;
-  background-color: rgba(26, 46, 50, 0.9);
+  background-color: #1a2e32e6;
 }
 .import-btn:active {
-  transform: scale(0.95);
+  transition-duration: 100ms;
+  background-color: #1a2e32e6;
+  box-shadow: 1px 1px 10px 1px #171717 inset;
 }
 
 .browserBox .btn-box {
@@ -314,6 +336,8 @@ export default {
   background-color: rgba(26, 46, 50, 0.6);
 }
 .btn:active {
-  transform: scale(0.95);
+  transition-duration: 100ms;
+  background-color: #1a2e32e6;
+  box-shadow: 1px 1px 10px 1px #171717 inset;
 }
 </style>

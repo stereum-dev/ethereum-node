@@ -234,6 +234,8 @@ export default {
   background-color: rgb(179, 72, 0);
 }
 .btn:active {
-  transform: scale(0.9);
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+  transition-duration: 100ms;
+  background-color: rgb(179, 72, 0);
 }
 </style>
