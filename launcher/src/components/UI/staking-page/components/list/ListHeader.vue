@@ -11,18 +11,39 @@
     </div>
     <div
       v-else
-      class="w-full h-full col-start-1 col-span-full rounded-t-md bg-[#336666] grid grid-cols-12 items-center px-3"
+      class="w-full h-full col-start-1 col-span-full rounded-t-md bg-[#336666] grid grid-cols-24 items-center px-3"
     >
-      <div class="col-start-1 col-end-6 flex justify-start items-center space-x-1">
-        <img class="w-6 h-6" src="/img/icon/the-staking/group.png" alt="Manage Icon" />
-        <span class="text-md font-semibold text-gray-200 uppercase">{{ stakingStore.currentGroup.name }}</span>
-      </div>
+      <img
+        class="w-6 h-6 col-start-1 col-span-1 justify-self-center"
+        src="/img/icon/the-staking/group.png"
+        alt="Manage Icon"
+        @mousedown.prevent
+      />
+      <span class="col-start-2 col-span-10 justify-self-start text-md font-semibold text-gray-200 uppercase">{{
+        stakingStore.currentGroup.name
+      }}</span>
+
+      <button
+        class="w-9 h-9 col-start-24 col-span-full rounded-md flex justify-center items-center cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150"
+        @mouseenter="footerStore.cursorLocation = `Back to keys List`"
+        @mouseleave="footerStore.cursorLocation = ''"
+        @click="backToList"
+        @mousedown.prevent
+      >
+        <img class="w-5 h-5" src="/img/icon/the-staking/list2.png" alt="Back Icon" />
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
+import { useFooter } from "@/store/theFooter";
 
 const stakingStore = useStakingStore();
+const footerStore = useFooter();
+
+const backToList = () => {
+  stakingStore.isGroupListActive = false;
+};
 </script>

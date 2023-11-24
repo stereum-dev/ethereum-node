@@ -7,7 +7,7 @@ import { ref, computed, watchEffect, watch } from 'vue';
       stakingStore.isPreviewListActive || stakingStore.isGroupListActive ? 'row-start-2 ' : 'row-start-1 rounded-t-md',
     ]"
   >
-    <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn">
+    <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn space-y-1">
       <KeyRow
         v-for="item in stakingStore.validatorKeyGroups.filter(
           (group) => group.name === stakingStore.currentGroup.name
@@ -75,7 +75,7 @@ import GroupRow from "./rows/GroupRow.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
 
-const emit = defineEmits(["onDrop", "deleteKey"]);
+const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup"]);
 const stakingStore = useStakingStore();
 
 stakingStore.filteredKeys = computed(() => {

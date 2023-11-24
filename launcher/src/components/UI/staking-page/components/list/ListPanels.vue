@@ -7,6 +7,15 @@
         class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer px-1 active:scale-95"
       >
         <img
+          v-if="stakingStore.isGroupListActive"
+          class="w-5 h-5"
+          src="/img/icon/the-staking/ungroup.png"
+          alt="Group Icon"
+          @click="removeGroup"
+          @mousedown.prevent
+        />
+        <img
+          v-else
           class="w-5 h-5"
           src="/img/icon/the-staking/group.png"
           alt="Group Icon"
@@ -149,6 +158,11 @@ const groupingPanel = () => {
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("grouping");
   stakingStore.isGroupingAllowed = true;
+};
+const removeGroup = () => {
+  stakingStore.isGroupListActive = false;
+  stakingStore.setActivePanel("insert");
+  emit("removeGroup", stakingStore.currentGroup);
 };
 
 const searchPanel = () => {
