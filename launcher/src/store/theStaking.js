@@ -21,6 +21,7 @@ export const useStakingStore = defineStore("theStaking", {
       // ***** End Staking Modals *****
 
       // ***** Staking Groups *****
+      mode: "create",
       groupName: null,
       currentGroup: null,
       isGroupListActive: false,
@@ -64,6 +65,9 @@ export const useStakingStore = defineStore("theStaking", {
     },
     setActiveModal(modalName) {
       this.activeModal = modalName;
+    },
+    setMode(mode) {
+      this.mode = mode;
     },
   },
 });

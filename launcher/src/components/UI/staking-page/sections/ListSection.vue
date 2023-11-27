@@ -10,6 +10,7 @@
         @open-group="openGroup"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
+        @remove-group="removeGroup"
       />
       <ListPanels
         @confirm-grouping="confirmGrouping"
@@ -26,7 +27,18 @@ import ListBody from "../components/list/ListBody.vue";
 import ListPanels from "../components/list/ListPanels.vue";
 import { useStakingStore } from "@/store/theStaking";
 
-const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile", "confirmPassword", "onDrop", "deleteKey"]);
+const emit = defineEmits([
+  "confirmGrouping",
+  "pickValidator",
+  "uploadFile",
+  "confirmPassword",
+  "onDrop",
+  "deleteKey",
+  "openGroup",
+  "renameGroup",
+  "withdrawGroup",
+  "removeGroup",
+]);
 
 const stakingStore = useStakingStore();
 const confirmGrouping = (groupName) => {
@@ -62,5 +74,9 @@ const renameGroup = (item) => {
 
 const withdrawGroup = (item) => {
   emit("withdrawGroup", item);
+};
+
+const removeGroup = (item) => {
+  emit("removeGroup", item);
 };
 </script>

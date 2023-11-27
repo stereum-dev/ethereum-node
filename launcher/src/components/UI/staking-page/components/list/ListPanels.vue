@@ -76,7 +76,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { computed, watchEffect } from "vue";
 
 //Emits
-const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile", "confirmPassword"]);
+const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile", "confirmPassword", "removeGroup"]);
 
 //Stores
 const stakingStore = useStakingStore();
@@ -162,7 +162,9 @@ const groupingPanel = () => {
 const removeGroup = () => {
   stakingStore.isGroupListActive = false;
   stakingStore.setActivePanel("insert");
-  emit("removeGroup", stakingStore.currentGroup);
+  if (stakingStore.currentGroup) {
+    emit("removeGroup", stakingStore.currentGroup);
+  }
 };
 
 const searchPanel = () => {

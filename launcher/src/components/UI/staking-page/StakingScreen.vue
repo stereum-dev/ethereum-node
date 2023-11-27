@@ -3,7 +3,7 @@
     <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1">
       <SidebarSection />
       <ListSection
-        @confirm-grouping="creatingNewGroup"
+        @confirm-grouping="confirmGrouping"
         @pick-validator="pickValidatorService"
         @upload-file="uploadValidatorKey"
         @confirm-password="passwordValidation"
@@ -12,6 +12,7 @@
         @open-group="openGroupList"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
+        @remove-group="removeGroup"
       />
       <ManagementSection />
     </div>
@@ -184,6 +185,28 @@ const passwordValidation = async (pass) => {
 };
 //****End of Import Key Validation ****
 
+//Open Group List
+
+const openGroupList = (item) => {
+  stakingStore.isGroupListActive = true;
+  stakingStore.currentGroup = item;
+};
+
+//Confirm Grouping
+
+const confirmGrouping = (groupName) => {
+  if (stakingStore.mode === "create") {
+    creatingNewGroup(groupName);
+  } else if (stakingStore.mode === "rename") {
+    const group = stakingStore.validatorKeyGroups.find((g) => g.id === stakingStore.currentGroup.id);
+    if (group) {
+      group.name = groupName;
+      stakingStore.setMode("create");
+      stakingStore.setActivePanel(null);
+    }
+  }
+};
+
 //Create Grouping
 const creatingNewGroup = (groupName) => {
   stakingStore.isPreviewListActive = false;
@@ -216,23 +239,19 @@ const creatingNewGroup = (groupName) => {
   }
 };
 
-//Open Group List
-
-const openGroupList = (item) => {
-  stakingStore.isGroupListActive = true;
-  stakingStore.currentGroup = item;
-};
-
 //Rename Group
 
 const renameGroup = (item) => {
-  console.log(item);
+  stakingStore.setMode("rename");
+  stakingStore.currentGroup = item;
+  stakingStore.setActivePanel("grouping");
 };
 
 //Withdraw Group
 
 const withdrawGroup = (item) => {
   console.log(item);
+  stakingStore.setActivePanel("password");
 };
 
 //Pick a Validator Service
@@ -242,12 +261,18 @@ const pickValidatorService = (service) => {
   stakingStore.setActivePanel("password");
 };
 
-//Delete Key
+//Delete Preview Key
 const deletePreviewKey = (item) => {
-  stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.key !== item.key);
+  stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.pubkey !== item.pubkey);
   if (!stakingStore.previewKeys.length) {
     stakingStore.isPreviewListActive = false;
     stakingStore.setActivePanel("insert");
   }
+};
+
+//Remove Group
+
+const removeGroup = (item) => {
+  stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) => group.id !== item.id);
 };
 </script>

@@ -23,7 +23,7 @@
 
       <input
         id="input1"
-        v-model="groupName"
+        v-model="stakingStore.groupName"
         class="col-start-2 col-end-11 w-full bg-[#171D22] border px-4 rounded-sm outline-none text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
         type="text"
         autofocus
@@ -63,12 +63,13 @@ import { useStakingStore } from "@/store/theStaking";
 
 const emit = defineEmits(["confirmGrouping"]);
 const stakingStore = useStakingStore();
-const groupName = ref("");
+
 const validName = ref("");
 const alertMessage = ref("");
 const isGroupNameValid = ref(false);
 
 const isKeysEmpty = computed(() => stakingStore.keys.length === 0);
+const groupName = computed(() => stakingStore.groupName);
 
 const inputClass = computed(() => {
   if (!groupName.value) {
@@ -101,15 +102,11 @@ watch(groupName, (newValue) => {
 });
 
 const confirmGrouping = () => {
-  if (isGroupNameValid.value) {
-    emit("confirmGrouping", validName.value);
-  } else {
-    // Show alert or handle invalid input
-  }
+  if (!isGroupNameValid.value) return;
+  emit("confirmGrouping", validName.value);
 };
-
 const cancelGrouping = () => {
-  groupName.value = "";
+  stakingStore.groupName = "";
   stakingStore.setActivePanel(null);
 };
 </script>

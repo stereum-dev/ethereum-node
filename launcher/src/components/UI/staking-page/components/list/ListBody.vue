@@ -51,6 +51,7 @@ import { ref, computed, watchEffect, watch } from 'vue';
           @open-group="openGroup"
           @rename-group="renameGroup"
           @withdraw-group="withdrawGroup"
+          @remove-group="removeGroup"
         />
 
         <KeyRow
@@ -75,7 +76,7 @@ import GroupRow from "./rows/GroupRow.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
 
-const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup"]);
+const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
 const stakingStore = useStakingStore();
 
 stakingStore.filteredKeys = computed(() => {
@@ -103,6 +104,10 @@ const renameGroup = (item) => {
 
 const withdrawGroup = (item) => {
   emit("withdrawGroup", item);
+};
+
+const removeGroup = (item) => {
+  emit("removeGroup", item);
 };
 </script>
 

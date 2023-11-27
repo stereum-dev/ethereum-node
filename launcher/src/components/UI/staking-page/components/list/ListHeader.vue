@@ -25,12 +25,12 @@
 
       <button
         class="w-9 h-9 col-start-24 col-span-full rounded-md flex justify-center items-center cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150"
-        @mouseenter="footerStore.cursorLocation = `Back to keys List`"
+        @mouseenter="footerStore.cursorLocation = `Back to List`"
         @mouseleave="footerStore.cursorLocation = ''"
         @click="backToList"
         @mousedown.prevent
       >
-        <img class="w-5 h-5" src="/img/icon/the-staking/list2.png" alt="Back Icon" />
+        <img class="w-5 h-5" src="/img/icon/the-staking/backtolist.png" alt="Back Icon" />
       </button>
     </div>
   </div>

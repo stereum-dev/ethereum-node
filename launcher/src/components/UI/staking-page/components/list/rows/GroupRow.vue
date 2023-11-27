@@ -49,10 +49,10 @@ import { useStakingStore } from '@/store/theStaking';
       <div class="col-start-4 col-span-1 justify-self-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/ungroup.png"
+          src="/img/icon/the-staking/removeGroup.png"
           alt="Icon"
           @mousedown.prevent
-          @click="withdrawGroup(props.item)"
+          @click="removeGroup(props.item)"
         />
       </div>
     </div>
@@ -84,7 +84,7 @@ const getkeyNumbers = computed(() => {
   return props.item.keys.length;
 });
 
-const emit = defineEmits(["openGroup", "renameGroup", "withdrawGroup"]);
+const emit = defineEmits(["openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
 
 const openGroup = (item) => {
   emit("openGroup", item);
@@ -96,5 +96,9 @@ const renameGroup = (item) => {
 
 const withdrawGroup = (item) => {
   emit("withdrawGroup", item);
+};
+
+const removeGroup = (item) => {
+  emit("removeGroup", item);
 };
 </script>
