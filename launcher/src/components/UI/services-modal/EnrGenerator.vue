@@ -2,17 +2,130 @@
   <div class="obol-modal-plugin_parent">
     <div class="obol-modal-plugin_header"><span>GENERATING NEW ENR</span></div>
     <div class="obol-modal-plugin_spaceWindow">
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magni qui veritatis officiis quos culpa. Error
-        corporis atque rerum natus ipsum.
-      </p>
+      <span>{{ generatedENR }}</span>
     </div>
-    <div class="obol-modal-plugin_btn">GENERATING...</div>
+    <div :class="['obol-modal-plugin_btn', !enrIsGenerating ? 'activeBtn' : '']" @click="btnHandling">
+      {{ enrBtnToShow }}
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
+export default {
+  data() {
+    return {
+      enrIsGenerating: true,
+      enrGeneratedSuccess: false,
+      enrGeneratedFailed: false,
+      enrGeneratedContinue: false,
+    };
+  },
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      generatorPlugin: "generatorPlugin",
+      obolDashboard: "obolDashboard",
+      generatedENR: "generatedENR",
+    }),
+    enrBtnToShow() {
+      if (this.enrIsGenerating && !this.enrGeneratedSuccess && !this.enrGeneratedFailed && !this.enrGeneratedContinue) {
+        return "GENERATING..."; //generating
+      } else if (
+        this.enrGeneratedSuccess &&
+        !this.enrGeneratedFailed &&
+        !this.enrIsGenerating &&
+        !this.enrGeneratedContinue
+      ) {
+        return "BACKUP ENR"; //generated
+      } else if (
+        this.enrGeneratedFailed &&
+        !this.enrGeneratedSuccess &&
+        !this.enrIsGenerating &&
+        !this.enrGeneratedContinue
+      ) {
+        return "RETURN"; //failed
+      } else if (
+        this.enrGeneratedContinue &&
+        !this.enrGeneratedFailed &&
+        !this.enrIsGenerating &&
+        !this.enrGeneratedSuccess
+      ) {
+        return "CONTINUE"; //continue
+      }
+      return "RETURN"; //failed
+    },
+  },
+  mounted() {
+    this.randomDummyText();
+  },
+  methods: {
+    btnHandling() {
+      if (this.enrBtnToShow === "GENERATING...") {
+        console.log("GENERATING...");
+      } else if (this.enrBtnToShow === "BACKUP ENR") {
+        this.saveToFile();
+        this.enrIsGenerating = false;
+        this.enrGeneratedSuccess = false;
+        this.enrGeneratedFailed = false;
+        this.enrGeneratedContinue = true;
+        console.log("BACKUP ENR");
+      } else if (this.enrBtnToShow === "RETURN") {
+        this.enrIsGenerating = true;
+        this.enrGeneratedSuccess = false;
+        this.enrGeneratedFailed = false;
+        this.enrGeneratedContinue = false;
+        this.generatorPlugin = false;
+        this.obolDashboard = false;
+      } else if (this.enrBtnToShow === "CONTINUE") {
+        this.enrIsGenerating = true;
+        this.enrGeneratedSuccess = false;
+        this.enrGeneratedFailed = false;
+        this.enrGeneratedContinue = false;
+        this.generatorPlugin = false;
+        this.obolDashboard = true;
+      }
+    },
+    //dummy enr generator
+    randomDummyText() {
+      setTimeout(() => {
+        let text = "";
+        let possible =
+          "IS4QHCYrYZbAKWCBRlAy5zzaDZXJBGkcnh4MHcBFZntXNFrdvJjX04jRzjzCBOonrkTfj499SZuOh8R33Ls8RRcy5wBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQPKY0yuDUmstAHYpMa2_oxVtw0RW_QAdpzBQA8yWM0xOIN1ZHCCdl8";
+
+        const randomNumber = Math.random();
+
+        if (randomNumber < 0.5) {
+          this.enrIsGenerating = false;
+          this.enrGeneratedSuccess = false;
+          this.enrGeneratedFailed = true;
+          this.enrGeneratedContinue = false;
+          console.log("failed");
+        } else {
+          for (let i = 0; i < 100; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+          }
+          this.enrIsGenerating = false;
+          this.enrGeneratedSuccess = true;
+          this.enrGeneratedFailed = false;
+          this.enrGeneratedContinue = false;
+          this.generatedENR = "enr:-" + text;
+        }
+      }, 3000);
+    },
+
+    saveToFile() {
+      const dataToSave = this.generatedENR; // Replace this with your actual data
+      const blob = new Blob([dataToSave], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "ENR.txt";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -45,6 +158,7 @@ export default {};
   width: 90%;
   height: 60%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
   background-color: #192d31;
@@ -56,6 +170,14 @@ export default {};
   color: #dbdbdb;
   font-size: 100%;
   font-weight: 400;
+}
+.obol-modal-plugin_spaceWindow span {
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+  flex-shrink: 0; /* Prevent the item from shrinking to fit in a single line */
+  word-wrap: break-word;
 }
 .obol-modal-plugin_btn {
   width: 30%;
@@ -81,5 +203,8 @@ export default {};
   transition-duration: 100ms;
   background-color: #1e3a3f;
   box-shadow: 1px 1px 10px 1px #171717 inset;
+}
+.activeBtn {
+  color: #2fe4ab;
 }
 </style>

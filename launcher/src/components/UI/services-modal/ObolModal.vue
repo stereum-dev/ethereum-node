@@ -16,14 +16,14 @@
         </div>
       </div>
       <div class="content">
-        <div v-if="true" class="wrapper">
+        <div v-if="!generatorPlugin" class="wrapper">
           <div class="browserBox">
             <div class="title">
               <span>CREATE NEW ENR</span>
               <span>Generate a new ENR to use to create or join an existing cluster</span>
             </div>
             <div class="btn-box">
-              <div class="btn">GENERATE</div>
+              <div class="btn" @click="topBlock">GENERATE</div>
             </div>
           </div>
 
@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import EnrGenerator from "./EnrGenerator.vue";
 export default {
@@ -60,14 +60,22 @@ export default {
   },
 
   computed: {
-    ...mapState(useNodeHeader, {
+    ...mapWritableState(useNodeHeader, {
       runningServices: "runningServices",
+      generatorPlugin: "generatorPlugin",
+      obolDashboard: "obolDashboard",
+      generatedENR: "generatedENR",
     }),
   },
   mounted() {
     this.filterObolSharonService();
   },
   methods: {
+    topBlock() {
+      this.generatorPlugin = true;
+      this.obolDashboard = false;
+      this.generatedENR = "";
+    },
     filterObolSharonService() {
       this.runningServices.forEach((item) => {
         if (item.name === "Obol Charon") this.obolSharonService = item;
