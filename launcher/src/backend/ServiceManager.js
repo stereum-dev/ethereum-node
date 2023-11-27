@@ -1536,23 +1536,7 @@ export class ServiceManager {
 
     switch (firstConsensusClient.service) {
       case "LighthouseBeaconService":
-        await this.manageServiceState(firstConsensusClient.id, "stopped");
-        firstConsensusClient.command.push(
-          metricsExporterCommands[firstConsensusClient.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
-        );
-        await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
-        await this.manageServiceState(firstConsensusClient.id, "started");
-        break;
       case "TekuBeaconService":
-        await this.manageServiceState(firstConsensusClient.id, "stopped");
-        firstConsensusClient.command.push(
-          metricsExporterCommands[firstConsensusClient.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
-        );
-        await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
-        await this.manageServiceState(firstConsensusClient.id, "started");
-        break;
       case "LodestarBeaconService":
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
@@ -1563,11 +1547,6 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "started");
         break;
       case "PrysmBeaconService":
-        if (!metricsExporterAdded) {
-          await this.addMetricsExporter(services);
-          metricsExporterAdded = true;
-        }
-        break;
       case "NimbusBeaconService":
         if (!metricsExporterAdded) {
           await this.addMetricsExporter(services);
