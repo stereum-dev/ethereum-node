@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 <template>
   <div
-    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate animate__slideInLeft animate__faster bg-gray-400"
+    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate animate__slideInLeft animate__faster bg-gray-400 opacity-50"
   >
     <div class="flash col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
       <span class="w-6 h-6 rounded-full cursor-pointer bg-white flash"></span>
@@ -26,24 +26,19 @@ import { computed } from 'vue';
 </template>
 <style scoped>
 .flash {
-  animation: flash 1s infinite 0.2s;
+  animation: flash 2s infinite 0.2s;
 }
 @keyframes flash {
   0% {
-    opacity: 0;
+    opacity: 0.2;
   }
-  25% {
-    opacity: 0.25;
-  }
+
   50% {
     opacity: 0.5;
   }
-  75% {
-    opacity: 0.75;
-  }
 
   100% {
-    opacity: 1;
+    opacity: 0.2;
   }
 }
 </style>

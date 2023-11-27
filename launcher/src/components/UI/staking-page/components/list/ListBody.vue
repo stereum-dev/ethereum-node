@@ -8,7 +8,7 @@ import { ref, computed, watchEffect, watch } from 'vue';
     ]"
   >
     <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn space-y-1">
-      <SkeletonRow v-if="isLoading" />
+      <SkeletonRow v-if="isLoading" /><SkeletonRow v-if="isLoading" /><SkeletonRow v-if="isLoading" />
 
       <KeyRow
         v-for="item in getKeysInsideGroup"
@@ -37,6 +37,8 @@ import { ref, computed, watchEffect, watch } from 'vue';
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto"
       >
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading && !noKey" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading && !noKey" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading && !noKey" />
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
           v-show="stakingStore.isPreviewListActive && !isLoading"
@@ -60,7 +62,7 @@ import { ref, computed, watchEffect, watch } from 'vue';
           :key="item.pubkey"
           :item="item"
         />
-        <span v-show="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
+        <span v-if="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
         >
       </div>
@@ -96,15 +98,15 @@ watch(
   ([isPreviewActive, keysLength]) => {
     if (!isPreviewActive && keysLength === 0) {
       isLoading.value = true;
-      setTimeout(() => {
-        isLoading.value = false;
-        noKey.value = keysLength === 0;
-      }, 9000);
+    } else if (keysLength > 0 && isPreviewActive) {
+      isLoading.value = false;
+      noKey.value = true;
     } else {
       isLoading.value = false;
       noKey.value = false;
     }
   },
+
   { immediate: true }
 );
 

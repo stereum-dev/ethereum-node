@@ -118,7 +118,7 @@ const selectKey = (key) => {
   if (stakingStore.isGroupingAllowed) {
     const updatedKeys = stakingStore.keys.map((item) => {
       if (item.key === key.key) {
-        return { ...item, selected: !item.selected };
+        return { ...item, selected: !item.selected }; // Toggle selection
       }
       return item;
     });
