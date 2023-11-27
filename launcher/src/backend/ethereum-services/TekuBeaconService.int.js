@@ -111,7 +111,7 @@ test("teku validator import", async () => {
       /Listening on http:\/\/.*:5051/.test(BCstatus.stdout) &&
       /Syncing started/.test(BCstatus.stdout) &&
       /Metrics service started/.test(VCstatus.stdout) &&
-      /Listening on http:\/\/.*:5052/.test(VCstatus.stdout) &&
+      /Listening on https:\/\/.*:5052/.test(VCstatus.stdout) &&
       /Successfully connected to beacon node event stream/.test(VCstatus.stdout) &&
       /Starting doppelganger detection for public keys: .{7}, .{7}, .{7}/.test(VCstatus.stdout)
     ) {
