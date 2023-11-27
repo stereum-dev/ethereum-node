@@ -18,7 +18,7 @@
         v-model="eneteredPassword"
         :type="isPasswordVisible ? 'text' : 'password'"
         placeholder="Enter password"
-        class="w-full h-full text-gray-400 placeholder-gray-400/70 rounded-sm items-center py-1 pl-4 bg-[#171D22]"
+        class="w-full max-h-[28px] text-gray-400 placeholder-gray-400/70 rounded-sm items-center py-1 pl-4 bg-[#171D22]"
       />
     </div>
     <div class="col-start-11 col-span-1 flex justify-center items-center p-1">

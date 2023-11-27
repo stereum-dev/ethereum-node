@@ -94,19 +94,29 @@ const getKeysInsideGroup = computed(() => {
 });
 
 watch(
-  () => [stakingStore.isPreviewListActive, stakingStore.keys.length],
-  ([isPreviewActive, keysLength]) => {
-    if (!isPreviewActive && keysLength === 0) {
+  () => stakingStore.keys.length,
+  (keysLength) => {
+    if (keysLength === 0) {
       isLoading.value = true;
-    } else if (keysLength > 0 && isPreviewActive) {
-      isLoading.value = false;
-      noKey.value = true;
+      setTimeout(() => {
+        if (stakingStore.keys.length === 0) {
+          isLoading.value = false;
+          noKey.value = true;
+        }
+      }, 10000);
+    } else if (keysLength > 0) {
+      isLoading.value = true;
+      setTimeout(() => {
+        if (stakingStore.keys.length > 0 && !stakingStore.isPreviewListActive) {
+          isLoading.value = false;
+          noKey.value = false;
+        }
+      }, 2000);
     } else {
       isLoading.value = false;
       noKey.value = false;
     }
   },
-
   { immediate: true }
 );
 

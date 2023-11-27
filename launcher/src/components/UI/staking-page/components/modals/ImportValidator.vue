@@ -1,7 +1,7 @@
 <template>
   <staking-custom-modal
     main-title="Import Validator Key"
-    confirm-text="OK"
+    confirm-text="ok"
     :active-button="activeButton"
     @confirm-action="okHandler"
   >
@@ -57,6 +57,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { useStakingStore } from "@/store/theStaking";
+import { useListKeys } from "@/composables/validators";
 
 //  Props
 
@@ -100,8 +101,12 @@ const splitedTexts = (text) => {
   description.value = lines.slice(0, lastThreeLinesIndex).join("\n");
   details.value = lines.slice(lastThreeLinesIndex).join("\n");
 };
+const listKeys = async () => {
+  await useListKeys(stakingStore.forceRefresh);
+};
 
-const okHandler = () => {
+const okHandler = async () => {
+  await listKeys();
   stakingStore.setActiveModal(null);
   stakingStore.setActivePanel(null);
 };
