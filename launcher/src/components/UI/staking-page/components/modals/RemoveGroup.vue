@@ -3,23 +3,22 @@
     main-title="Remove Group"
     title-color="remove"
     message-text="Are you sure you want to remove this group?"
-    confirm-text="DELETE"
+    confirm-text="remove"
     :active-button="activeButton"
     @confirm-action="removeGroup"
   >
     <template #content>
-      <div class="col-start-1 col-span-full row-start-4 row-end-6 w-full h-full grid grid-cols-12 grid-rows-2">
-        <p
-          class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-1 text-sm text-left text-gray-300 flex justify-start items-center px-4"
+      <div class="col-start-1 col-span-full row-start-4 row-end-5 w-full h-full grid grid-cols-12 grid-rows-3">
+        <div class="w-full h-full col-start-4 col-end-11 row-start-1 row-span-1 flex justify-start items-center px-1">
+          <span class="w-fit text-xs font-semibold text-left text-gray-400">Group ID: </span>
+          <span class="w-fit text-amber-400 text-xs font-semibold ml-5">{{ group.id }}</span>
+        </div>
+        <div
+          class="w-full h-full col-start-4 col-end-11 row-start-2 row-span-1 text-sm text-left text-gray-300 flex justify-start items-center px-1"
         >
-          Group ID: <span class="text-amber-400 ml-5">{{ group.id }}</span>
-        </p>
-        <p
-          class="w-full h-full col-start-3 col-end-11 row-start-2 row-span-1 text-sm text-left text-gray-300 flex justify-start items-center px-4"
-        >
-          Group Name:
-          <span class="text-amber-400 ml-5">{{ group.name }}</span>
-        </p>
+          <span class="w-fit text-xs font-semibold text-left text-gray-400">Group Name:</span>
+          <span class="w-fit text-amber-400 text-xs font-semibold ml-5">{{ group.name }}</span>
+        </div>
       </div>
     </template>
   </staking-custom-modal>

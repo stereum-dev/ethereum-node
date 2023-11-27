@@ -23,12 +23,8 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
         <slot name="content"></slot>
         <div class="w-full flex justify-end text-md font-bold py-3 mt-2 space-y-4 absolute bottom-4 right-2">
           <button
-            class="mr-4 min-w-[100px] bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full uppercase"
-            :class="
-              !activeButton
-                ? 'opacity-40 pointer-events-none'
-                : 'hover:bg-green-600  active:scale-95 transition duration-200'
-            "
+            class="mr-4 min-w-[100px] px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full uppercase hover:scale-105 active:scale-100 transition-all duration-150"
+            :class="!activeButton ? 'opacity-40 pointer-events-none' : getButtonColor"
             @click="emitConfirmAction"
           >
             {{ confirmText }}
@@ -99,10 +95,22 @@ const emit = defineEmits(["closeWindow", "confirmAction"]);
 const getTitleColor = computed(() => {
   if (props.titleColor === "remove") {
     return "text-red-500";
-  } else if (props.titleColor === "warning") {
+  } else if (props.titleColor === "confirm") {
     return "text-amber-400";
   } else {
     return "text-teal-500";
+  }
+});
+
+const getButtonColor = computed(() => {
+  if (props.confirmText === "remove") {
+    return "bg-red-500 border border-red-500 hover:bg-red-700 ";
+  } else if (props.confirmText === "confirm") {
+    return "bg-green-700 ";
+  } else if (props.confirmText === "ok") {
+    return "bg-teal-400 ";
+  } else {
+    return "bg-teal-500 ";
   }
 });
 
