@@ -61,6 +61,7 @@ import { useStakingStore } from '@/store/theStaking';
 
 <script setup>
 import { computed, ref } from "vue";
+import { useStakingStore } from "@/store/theStaking";
 
 const props = defineProps({
   item: {
@@ -68,6 +69,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const stakingStore = useStakingStore();
 
 const isRemoveActive = ref(false);
 
@@ -99,6 +102,7 @@ const withdrawGroup = (item) => {
 };
 
 const removeGroup = (item) => {
-  emit("removeGroup", item);
+  stakingStore.currentGroup = item;
+  stakingStore.setActiveModal("removeGroup");
 };
 </script>

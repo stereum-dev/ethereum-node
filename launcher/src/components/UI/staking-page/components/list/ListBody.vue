@@ -8,11 +8,11 @@ import { ref, computed, watchEffect, watch } from 'vue';
     ]"
   >
     <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn space-y-1">
+      <SkeletonRow v-if="isLoading" />
+
       <KeyRow
-        v-for="item in stakingStore.validatorKeyGroups.filter(
-          (group) => group.name === stakingStore.currentGroup.name
-        )[0].keys"
-        v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0"
+        v-for="item in getKeysInsideGroup"
+        v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
         :key="item.pubkey"
         :item="item"
       />
@@ -36,33 +36,31 @@ import { ref, computed, watchEffect, watch } from 'vue';
         v-if="!stakingStore.isOverDropZone"
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto"
       >
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading && !noKey" />
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
-          v-show="stakingStore.isPreviewListActive"
+          v-show="stakingStore.isPreviewListActive && !isLoading"
           :key="item.pubkey"
           :item="item"
           @delete-key="deleteKey"
         />
         <GroupRow
           v-for="item in stakingStore.validatorKeyGroups"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0 && !isLoading"
           :key="item.pubkey"
           :item="item"
           @open-group="openGroup"
           @rename-group="renameGroup"
           @withdraw-group="withdrawGroup"
-          @remove-group="removeGroup"
         />
 
         <KeyRow
           v-for="item in stakingStore.filteredKeys"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
           :key="item.pubkey"
           :item="item"
         />
-        <span
-          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length === 0"
-          class="text-lg font-bold text-gray-300 text-center uppercase"
+        <span v-show="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
         >
       </div>
@@ -73,11 +71,14 @@ import { ref, computed, watchEffect, watch } from 'vue';
 import KeyRow from "./rows/KeyRow.vue";
 import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
+import SkeletonRow from "./rows/SkeletonRow.vue";
 import { useStakingStore } from "@/store/theStaking";
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 
 const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
 const stakingStore = useStakingStore();
+const isLoading = ref(true);
+const noKey = ref(false);
 
 stakingStore.filteredKeys = computed(() => {
   if (!stakingStore.searchContent) {
@@ -85,6 +86,29 @@ stakingStore.filteredKeys = computed(() => {
   }
   return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
 });
+
+const getKeysInsideGroup = computed(() => {
+  return stakingStore.keys.filter((key) => key.group === stakingStore.selectedGroup);
+});
+
+watch(
+  () => [stakingStore.isPreviewListActive, stakingStore.keys.length],
+  ([isPreviewActive, keysLength]) => {
+    if (!isPreviewActive && keysLength === 0) {
+      isLoading.value = true;
+      setTimeout(() => {
+        isLoading.value = false;
+        noKey.value = keysLength === 0;
+      }, 9000);
+    } else {
+      isLoading.value = false;
+      noKey.value = false;
+    }
+  },
+  { immediate: true }
+);
+
+// Methods
 
 const onDrop = (event) => {
   emit("onDrop", event);
@@ -104,10 +128,6 @@ const renameGroup = (item) => {
 
 const withdrawGroup = (item) => {
   emit("withdrawGroup", item);
-};
-
-const removeGroup = (item) => {
-  emit("removeGroup", item);
 };
 </script>
 

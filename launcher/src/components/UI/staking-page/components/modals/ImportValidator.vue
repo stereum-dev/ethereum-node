@@ -38,7 +38,7 @@
         <div class="w-full h-fit flex flex-col justify-center items-center space-y-2">
           <span
             v-if="description"
-            class="w-fit max-w-lg text-sm font-semibold text-left whitespace-pre-wrap break-all mx-auto"
+            class="w-fit max-w-lg max-h-32 overflow-x-hidden overflow-y-auto text-sm font-semibold text-left whitespace-pre-wrap break-all mx-auto"
             :class="getDescriptionClass"
           >
             {{ description }}

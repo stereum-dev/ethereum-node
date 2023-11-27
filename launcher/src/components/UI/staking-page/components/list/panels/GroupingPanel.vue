@@ -29,7 +29,6 @@
         autofocus
         :class="inputClass"
         placeholder="Write here your group name"
-        :disabled="isKeysEmpty"
         @change="changeActive"
       />
 
@@ -44,11 +43,7 @@
       <div class="col-start-12 col-span-1 flex justify-center items-center p-1">
         <div
           class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
-          :class="
-            stakingStore.selectedValidatorKeys.length || !isKeysEmpty
-              ? 'cursor-pointer'
-              : 'pointer-events-none opacity-50'
-          "
+          :class="stakingStore.selectedValidatorKeys.length ? 'cursor-pointer' : 'pointer-events-none opacity-50'"
           @click="confirmGrouping"
         >
           <img class="w-4 h-4" src="/img/icon/the-staking/check.png" alt="Check Icon" @mousedown.prevent />
@@ -68,7 +63,6 @@ const validName = ref("");
 const alertMessage = ref("");
 const isGroupNameValid = ref(false);
 
-const isKeysEmpty = computed(() => stakingStore.keys.length === 0);
 const groupName = computed(() => stakingStore.groupName);
 
 const inputClass = computed(() => {
