@@ -31,6 +31,12 @@ export const useStakingStore = defineStore("theStaking", {
       selectedValidatorKeys: [],
       // ***** End Staking Groups *****
 
+      // ***** Validator Keys *****
+      selectKeyToRename: null,
+      validatorDisplayName: "",
+
+      // ***** End Validator Keys *****
+
       exitMultiValidatorKeys: false,
       doppelgangerStatus: true,
       selectedIcon: "",
@@ -68,6 +74,9 @@ export const useStakingStore = defineStore("theStaking", {
     },
     setMode(mode) {
       this.mode = mode;
+    },
+    setValidatorName(newName) {
+      this.validatorDisplayName = newName;
     },
   },
 });

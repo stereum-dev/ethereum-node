@@ -10,13 +10,13 @@
         @open-group="openGroup"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
-        @remove-group="removeGroup"
       />
       <ListPanels
         @confirm-grouping="confirmGrouping"
         @pick-validator="pickValidator"
         @upload-file="uploadFile"
         @confirm-password="confirmPassword"
+        @confirm-rename="confirmRename"
       />
     </div>
   </div>
@@ -68,15 +68,15 @@ const openGroup = (item) => {
   emit("openGroup", item);
 };
 
+const confirmRename = (item) => {
+  emit("confirmRename", item);
+};
+
 const renameGroup = (item) => {
   emit("renameGroup", item);
 };
 
 const withdrawGroup = (item) => {
   emit("withdrawGroup", item);
-};
-
-const removeGroup = (item) => {
-  emit("removeGroup", item);
 };
 </script>

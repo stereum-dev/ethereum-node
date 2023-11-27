@@ -72,11 +72,19 @@ import PasswordPanel from "./panels/PasswordPanel.vue";
 import SearchPanel from "./panels/SearchPanel.vue";
 import GrafitiPanel from "./panels/GrafitiPanel.vue";
 import GroupingPanel from "./panels/GroupingPanel.vue";
+import RenameKey from "./panels/RenameKey.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, watchEffect } from "vue";
 
 //Emits
-const emit = defineEmits(["confirmGrouping", "pickValidator", "uploadFile", "confirmPassword", "removeGroup"]);
+const emit = defineEmits([
+  "confirmGrouping",
+  "pickValidator",
+  "uploadFile",
+  "confirmPassword",
+  "removeGroup",
+  "confirmRename",
+]);
 
 //Stores
 const stakingStore = useStakingStore();
@@ -112,6 +120,12 @@ const panels = {
       confirmGrouping: confirmGrouping,
     },
   },
+  renameKey: {
+    component: RenameKey,
+    events: {
+      confirmRename: confirmRename,
+    },
+  },
 };
 
 //Computed & Watchers
@@ -144,6 +158,10 @@ const confirmGrouping = (groupName) => {
 
 const pickValidator = (service) => {
   handleEvent("pickValidator", service);
+};
+
+const confirmRename = (newName) => {
+  handleEvent("confirmRename", newName);
 };
 
 const uploadFile = (event) => {

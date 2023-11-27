@@ -42,7 +42,15 @@ import { computed } from 'vue';
       @mousedown.prevent
     >
       <div class="col-start-1 col-span-1 w-4 h-4 bg-teal-800 rounded-md justify-self-center"></div>
-      <div class="col-start-2 col-span-1 w-4 h-4 bg-teal-800 rounded-md justify-self-center"></div>
+      <div class="col-start-2 col-span-1 justify-self-center">
+        <img
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          src="/img/icon/the-staking/rename-group.png"
+          alt="Icon"
+          @mousedown.prevent
+          @click="renameKey(props.item)"
+        />
+      </div>
       <div class="col-start-3 col-span-1 w-4 h-4 bg-teal-800 rounded-md justify-self-center"></div>
       <div class="col-start-4 col-span-1 w-4 h-4 bg-teal-800 rounded-md justify-self-center"></div>
     </div>
@@ -118,6 +126,11 @@ const selectKey = (key) => {
     stakingStore.keys = updatedKeys;
     stakingStore.selectedValidatorKeys = updatedKeys.filter((item) => item.selected);
   }
+};
+
+const renameKey = (key) => {
+  stakingStore.selectKeyToRename = key;
+  stakingStore.setActivePanel("renameKey");
 };
 </script>
 <style scoped>

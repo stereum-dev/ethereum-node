@@ -9,7 +9,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
     >
       <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7">
         <div v-if="mainTitle" class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
-          <span class="text-[26px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
+          <span class="text-[26px] font-bold uppercase" :class="getTitleColor">{{ mainTitle }}</span>
         </div>
 
         <div
@@ -43,6 +43,8 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 //Props
 const props = defineProps({
   icon: {
@@ -56,6 +58,10 @@ const props = defineProps({
   mainTitle: {
     type: String,
     default: "",
+  },
+  titleColor: {
+    type: String,
+    default: "text-teal-500",
   },
   messageText: {
     type: String,
@@ -87,6 +93,18 @@ const props = defineProps({
 const emit = defineEmits(["closeWindow", "confirmAction"]);
 
 //Refs
+
+//Computed
+
+const getTitleColor = computed(() => {
+  if (props.titleColor === "remove") {
+    return "text-red-500";
+  } else if (props.titleColor === "warning") {
+    return "text-amber-400";
+  } else {
+    return "text-teal-500";
+  }
+});
 
 //Watchers
 

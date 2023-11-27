@@ -12,7 +12,7 @@
         @open-group="openGroupList"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
-        @remove-group="removeGroup"
+        @confirm-rename="confirmValidatorKeyRename"
       />
       <ManagementSection />
     </div>
@@ -32,6 +32,7 @@ import ManagementSection from "./sections/ManagementSection.vue";
 import ControlService from "../../../store/ControlService";
 import ImportValidator from "./components/modals/ImportValidator.vue";
 import RiskWarning from "./components/modals/RiskWarning.vue";
+import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useDeepClone } from "@/composables/utils";
 import { useListKeys } from "@/composables/validators";
@@ -46,11 +47,17 @@ const serviceStore = useServices();
 const modals = {
   import: {
     component: ImportValidator,
-
     props: {},
   },
   risk: {
     component: RiskWarning,
+  },
+  removeGroup: {
+    component: RemoveGroup,
+    props: {},
+    events: {
+      removeGroup: () => removeGroupConfirm(stakingStore.currentGroup),
+    },
   },
 };
 //Computed & Watchers
@@ -63,9 +70,6 @@ const activeModal = computed(() => {
     events: modalConfig.events || {},
   };
 });
-// const searchContent = computed(() => {
-//   return console.log(stakingStore.searchContent);
-// });
 
 //Lifecycle Hooks
 
@@ -185,6 +189,8 @@ const passwordValidation = async (pass) => {
 };
 //****End of Import Key Validation ****
 
+//**** Grouping ****
+
 //Open Group List
 
 const openGroupList = (item) => {
@@ -194,7 +200,7 @@ const openGroupList = (item) => {
 
 //Confirm Grouping
 
-const confirmGrouping = (groupName) => {
+const confirmGrouping = async (groupName) => {
   if (stakingStore.mode === "create") {
     creatingNewGroup(groupName);
   } else if (stakingStore.mode === "rename") {
@@ -204,11 +210,22 @@ const confirmGrouping = (groupName) => {
       stakingStore.setMode("create");
       stakingStore.setActivePanel(null);
     }
+
+    //Rename GroupName inside the keys
+    const keys = await ControlService.readKeys();
+    if (keys) {
+      group.keys.forEach((key) => {
+        keys[key.key].groupName = groupName;
+      });
+      await ControlService.writeKeys(keys);
+    } else {
+      console.log("Couldn't read KeyFile!");
+    }
   }
 };
 
 //Create Grouping
-const creatingNewGroup = (groupName) => {
+const creatingNewGroup = async (groupName) => {
   stakingStore.isPreviewListActive = false;
   if (groupName === "" || groupName === null) {
     stakingStore.setActivePanel(null);
@@ -226,10 +243,29 @@ const creatingNewGroup = (groupName) => {
 
     stakingStore.validatorKeyGroups.push({
       id: uniqueId,
-      keys: useDeepClone(stakingStore.selectedValidatorKeys),
+      keys: useDeepClone(
+        stakingStore.selectedValidatorKeys.map((key) => ({
+          ...key,
+          groupName: stakingStore.groupName,
+          groupID: uniqueId,
+        }))
+      ),
       name: stakingStore.groupName,
       selected: false,
     });
+
+    const keys = await ControlService.readKeys();
+
+    if (keys) {
+      stakingStore.selectedValidatorKeys.forEach((key) => {
+        keys[key.key].groupName = stakingStore.groupName;
+        keys[key.key].groupID = uniqueId;
+      });
+      await ControlService.writeKeys(keys);
+    } else {
+      console.log("Couldn't read KeyFile!");
+    }
+
     stakingStore.setActivePanel(null);
 
     stakingStore.keys = stakingStore.keys.filter(
@@ -254,6 +290,40 @@ const withdrawGroup = (item) => {
   stakingStore.setActivePanel("password");
 };
 
+//Remove Group
+
+const removeGroupConfirm = (item) => {
+  stakingStore.currentGroup.keys.forEach((key) => {
+    stakingStore.keys.push(key);
+  });
+  stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) => group?.id !== item.id);
+  stakingStore.setActiveModal(null);
+  stakingStore.setMode("create");
+  stakingStore.currentGroup = "";
+};
+
+//****End of Grouping ****
+
+//**** Validator Key ****
+
+//Confirm Rename Validator Key
+const confirmValidatorKeyRename = async (name) => {
+  let el = stakingStore.selectKeyToRename;
+  el.displayName = name;
+  const keys = await ControlService.readKeys();
+  if (keys) {
+    keys[el.key].keyName = name;
+    await ControlService.writeKeys(keys);
+    stakingStore.setActivePanel(null);
+  } else {
+    console.log("Couldn't read KeyFile!");
+  }
+};
+
+// await ControlService.writeKeys(keys);
+
+//****End of Validator Key ****
+
 //Pick a Validator Service
 
 const pickValidatorService = (service) => {
@@ -268,11 +338,5 @@ const deletePreviewKey = (item) => {
     stakingStore.isPreviewListActive = false;
     stakingStore.setActivePanel("insert");
   }
-};
-
-//Remove Group
-
-const removeGroup = (item) => {
-  stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) => group.id !== item.id);
 };
 </script>
