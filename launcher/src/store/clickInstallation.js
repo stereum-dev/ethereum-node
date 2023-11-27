@@ -157,7 +157,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 5,
           name: "Sigma Prime",
-          icon: "",
+          icon: "/img/icon/service-icons/sigmaprime.png",
           url: "https://mainnet.checkpoint.sigp.io/",
         },
         {
@@ -178,14 +178,18 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/service-icons/stakely-io.png",
           url: "https://mainnet-checkpoint-sync.stakely.io/",
         },
-
-        // "https://beaconstate.info/",
+        {
+          id: 9,
+          name: "BeaconState.info",
+          icon: "",
+          url: "https://beaconstate.info/",
+        },
       ],
       georli: [
         {
           id: 1,
           name: "Sigma Prime",
-          icon: "",
+          icon: "/img/icon/service-icons/sigmaprime.png",
           url: "https://prater.checkpoint.sigp.io/",
         },
         {
@@ -217,21 +221,25 @@ export const useClickInstall = defineStore("clickInstallation", {
           name: "EthStaker",
           icon: "/img/icon/service-icons/ethstaker.png",
           url: "https://goerli.beaconstate.ethstaker.cc/",
-        }, //
+        },
         {
           id: 7,
           name: "Lodestar",
           icon: "/img/icon/service-icons/lodestar.png",
           url: "https://beaconstate-goerli.chainsafe.io/",
         },
-
-        // "https://goerli.beaconstate.info/",
+        {
+          id: 8,
+          name: "BeaconState.info",
+          icon: "",
+          url: "https://goerli.beaconstate.info/",
+        },
       ],
       sepolia: [
         {
           id: 1,
           name: "Lodestar",
-          icon: "",
+          icon: "/img/icon/service-icons/lodestar.png",
           url: "https://beaconstate-sepolia.chainsafe.io/",
         },
         {
@@ -240,13 +248,18 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/service-icons/checkpoint.png",
           url: "https://checkpoint-sync.sepolia.ethpandaops.io/",
         },
-        // "https://sepolia.beaconstate.info/",
+        {
+          id: 3,
+          name: "BeaconState.info",
+          icon: "",
+          url: "https://sepolia.beaconstate.info/",
+        },
       ],
       gnosis: [
         {
           id: 2,
           name: "Gnosis",
-          icon: "",
+          icon: "/img/icon/click-installation/gnosis_mainnet_icon.png",
           url: "https://checkpoint.gnosischain.com/",
         },
       ],
@@ -274,6 +287,12 @@ export const useClickInstall = defineStore("clickInstallation", {
           name: "EF DevOps",
           icon: "/img/icon/service-icons/ef-devops.png",
           url: "https://checkpoint-sync.holesky.ethpandaops.io",
+        },
+        {
+          id: 4,
+          name: "Flashbots",
+          icon: "/img/icon/click-installation/flashbot-icon.png",
+          url: "https://boost-relay-holesky.flashbots.net/",
         },
       ],
     };
