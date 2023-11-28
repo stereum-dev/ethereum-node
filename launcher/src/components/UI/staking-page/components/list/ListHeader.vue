@@ -24,7 +24,7 @@
       }}</span>
 
       <button
-        class="w-7 h-7 shadow-md shadow-[#242c29] col-start-24 col-span-full rounded-md flex justify-center items-center cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150 border border-[#242c29]"
+        class="w-7 h-7 shadow-md shadow-[#242c29] col-start-24 col-span-full rounded-md flex justify-center items-center cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150 bg-[#578f84] border border-[#6c7e78] active:shadow-none"
         @mouseenter="footerStore.cursorLocation = `Back to List`"
         @mouseleave="footerStore.cursorLocation = ''"
         @click="backToList"
