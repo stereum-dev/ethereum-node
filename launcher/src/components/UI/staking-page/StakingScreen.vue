@@ -75,7 +75,6 @@ const activeModal = computed(() => {
 
 onMounted(async () => {
   await listKeys();
-  // await fetchAndUpdateKeys();
 });
 
 // *************** Methods *****************
@@ -243,24 +242,33 @@ const createGroup = async (groupName) => {
 };
 
 const groupRenameHandler = async (newGroupName, groupId) => {
-  const keysFromServer = await ControlService.readKeys();
+  console.log("NEW NAME", newGroupName);
 
+  const keysFromServer = await ControlService.readKeys();
+  console.log("REAAADDDDDD", keysFromServer);
   if (keysFromServer) {
-    console.log("keysFromServer", keysFromServer);
-    stakingStore.keys.forEach((key) => {
-      console.log("key", key);
-      if (key.groupID === groupId) {
-        key.groupName = newGroupName;
-        keysFromServer[key.key] = key;
+    stakingStore.validatorKeyGroups.forEach((group) => {
+      console.log("GROUP", group);
+      if (group.id === groupId) {
+        group.name = newGroupName;
+        group.keys.forEach((key) => {
+          console.log(keysFromServer[key.key]);
+          keysFromServer[key.key] = {
+            keyName: keysFromServer[key.key].keyName || "",
+            groupName: newGroupName,
+            groupID: groupId,
+          };
+        });
       }
     });
+    console.log("WRITEEEE", keysFromServer);
     await ControlService.writeKeys(keysFromServer);
   } else {
     console.error("Error fetching keys from server");
   }
 };
 
-const confirmGrouping = async () => {
+const confirmGrouping = async (val) => {
   const groupName = stakingStore.groupName;
 
   if (stakingStore.mode === "create") {
@@ -268,9 +276,10 @@ const confirmGrouping = async () => {
     stakingStore.isGroupingAllowed = false;
     await createGroup(groupName);
   } else if (stakingStore.mode === "rename") {
+    console.log("RENAME", val);
     stakingStore.setActivePanel(null);
     const groupId = stakingStore.currentGroup.id;
-    await groupRenameHandler(groupName, groupId);
+    await groupRenameHandler(val, groupId);
   }
 };
 

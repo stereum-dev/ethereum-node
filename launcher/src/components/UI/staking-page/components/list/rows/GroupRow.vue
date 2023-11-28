@@ -6,7 +6,7 @@ import { useStakingStore } from '@/store/theStaking';
   >
     <div class="col-start-1 col-end-5 self-center overflow-hidden flex justify-start items-center">
       <img class="w-6" src="/img/icon/the-staking/newfolder-icon.png" alt="Folder Icon" @mousedown.prevent />
-      <span class="text-center text-xs text-gray-300 ml-1 overflow-hidden">{{ props.item.groupName }}</span>
+      <span class="text-center text-xs text-gray-300 ml-1 overflow-hidden">{{ groupName }}</span>
     </div>
     <div
       class="col-start-5 col-end-8 self-center text-center text-sm text-gray-300 overflow-hidden flex justify-center items-center"
@@ -85,6 +85,10 @@ const getBalanceSum = computed(() => {
 
 const getkeyNumbers = computed(() => {
   return props.item.keys.length;
+});
+
+const groupName = computed(() => {
+  return props.item.name;
 });
 
 const emit = defineEmits(["openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
