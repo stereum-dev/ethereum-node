@@ -38,11 +38,19 @@ import { computed } from 'vue';
     >
 
     <div
-      class="h-full col-start-18 col-span-full bg-[#151618] rounded-full grid grid-cols-4 items-center"
+      class="h-full col-start-18 col-span-full bg-[#151618] rounded-full grid grid-cols-5 items-center"
       @mousedown.prevent
     >
-      <div class="col-start-1 col-span-1 w-4 h-4 bg-teal-800 rounded-md justify-self-center"></div>
-      <div class="col-start-2 col-span-1 justify-self-center">
+      <div class="col-start-1 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+        <img
+          class="w-5 h-5 bg-[#343434] rounded-sm hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          src="/img/icon/the-staking/copy6.png"
+          alt="Icon"
+          @mousedown.prevent
+          @click="copyHandler(props.item)"
+        />
+      </div>
+      <div class="col-start-2 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/rename-group.png"
@@ -51,8 +59,33 @@ import { computed } from 'vue';
           @click="renameKey(props.item)"
         />
       </div>
-      <div class="col-start-3 col-span-1 w-4 h-4 bg-teal-800 rounded-md justify-self-center"></div>
-      <div class="col-start-4 col-span-1 w-4 h-4 bg-teal-800 rounded-md justify-self-center"></div>
+      <div class="col-start-3 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+        <img
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          src="/img/icon/the-staking/option-graffiti.png"
+          alt="Icon"
+          @mousedown.prevent
+          @click="copyPubkey(props.item)"
+        />
+      </div>
+      <div class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+        <img
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          src="/img/icon/the-staking/option-remove.png"
+          alt="Icon"
+          @mousedown.prevent
+          @click="copyPubkey(props.item)"
+        />
+      </div>
+      <div class="col-start-5 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+        <img
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          src="/img/icon/the-staking/withdraw.png"
+          alt="Icon"
+          @mousedown.prevent
+          @click="copyPubkey(props.item)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -60,6 +93,8 @@ import { computed } from 'vue';
 <script setup>
 import { computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
 
 const props = defineProps({
   item: {
@@ -69,6 +104,9 @@ const props = defineProps({
 });
 
 const stakingStore = useStakingStore();
+const footerStore = useFooter();
+
+const t = i18n.global.t;
 //Key Status Icons
 const activeStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Active.png";
 const slashedStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Slashed.png";
@@ -131,6 +169,19 @@ const selectKey = (key) => {
 const renameKey = (key) => {
   stakingStore.selectKeyToRename = key;
   stakingStore.setActivePanel("renameKey");
+};
+
+const copyHandler = (item) => {
+  let toCopy = item.key;
+  navigator.clipboard
+    .writeText(toCopy)
+    .then(() => {
+      footerStore.cursorLocation = t("displayValidator.copiedPub");
+    })
+    .catch(() => {
+      console.log(`can't copy`);
+    });
+  footerStore.cursorLocation = "";
 };
 </script>
 <style scoped>
