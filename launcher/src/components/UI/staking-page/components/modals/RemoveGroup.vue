@@ -3,6 +3,7 @@
     main-title="Remove Group"
     title-color="remove"
     message-text="Are you sure you want to remove this group?"
+    click-outside-text="Click outside to cancel"
     confirm-text="remove"
     :active-button="activeButton"
     @confirm-action="removeGroup"

@@ -35,10 +35,10 @@
           <span class="text-2xl text-teal-500 font-semibold">{{ importedKeyNumber }}</span>
           <span class="text-2xl text-gray-200 font-semibold">key(s) imported.</span>
         </div> -->
-        <div class="w-full h-fit flex flex-col justify-center items-center space-y-2">
+        <div class="w-2/3 h-fit flex flex-col justify-center items-center space-y-2">
           <span
             v-if="description"
-            class="w-fit max-w-lg max-h-32 overflow-x-hidden overflow-y-auto text-sm font-semibold text-left whitespace-pre-wrap break-all mx-auto"
+            class="w-full max-h-28 overflow-x-hidden overflow-y-auto text-sm font-semibold text-left whitespace-pre-wrap break-all mx-2 px-6 py-2 bg-[#0d0d0e] rounded-md"
             :class="getDescriptionClass"
           >
             {{ description }}
