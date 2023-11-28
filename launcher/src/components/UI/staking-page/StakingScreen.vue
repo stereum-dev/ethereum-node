@@ -34,7 +34,6 @@ import ImportValidator from "./components/modals/ImportValidator.vue";
 import RiskWarning from "./components/modals/RiskWarning.vue";
 import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import { v4 as uuidv4 } from "uuid";
-import { useDeepClone } from "@/composables/utils";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted } from "vue";
@@ -75,9 +74,16 @@ const activeModal = computed(() => {
 
 onMounted(async () => {
   await listKeys();
+  await fetchAndUpdateKeys();
 });
 
 // *************** Methods *****************
+
+//**** List Keys ****
+
+const listKeys = async () => {
+  await useListKeys(stakingStore.forceRefresh);
+};
 
 //**** Validator Key File ****
 
@@ -138,13 +144,7 @@ const onDrop = (event) => {
   }
 };
 
-const listKeys = async () => {
-  await useListKeys(stakingStore.forceRefresh);
-};
-
-// const updateValidatorStats = async () => {
-//   await useUpdateValidatorStats();
-// };
+//Group Keys by GroupName and GroupId
 
 //****End of Validator Key File ****
 
@@ -198,80 +198,91 @@ const openGroupList = (item) => {
   stakingStore.currentGroup = item;
 };
 
-//Confirm Grouping
+//Fetch keys from server and Update Keys
 
-const confirmGrouping = async (groupName) => {
-  if (stakingStore.mode === "create") {
-    creatingNewGroup(groupName);
-  } else if (stakingStore.mode === "rename") {
-    const group = stakingStore.validatorKeyGroups.find((g) => g.id === stakingStore.currentGroup.id);
-    if (group) {
-      group.name = groupName;
-      stakingStore.setMode("create");
-      stakingStore.setActivePanel(null);
-    }
+const fetchAndUpdateKeys = async () => {
+  await useListKeys(stakingStore.forceRefresh);
+  const readKeysOutput = await ControlService.readKeys();
 
-    //Rename GroupName inside the keys
-    const keys = await ControlService.readKeys();
-    if (keys) {
-      group.keys.forEach((key) => {
-        keys[key.key].groupName = groupName;
-      });
-      await ControlService.writeKeys(keys);
-    } else {
-      console.log("Couldn't read KeyFile!");
-    }
+  if (readKeysOutput) {
+    const groups = {};
+    stakingStore.keys.forEach((key) => {
+      const keyData = readKeysOutput[key.key];
+      if (keyData && keyData.groupName && keyData.groupID) {
+        key.groupName = keyData.groupName;
+        key.groupId = keyData.groupID;
+
+        // Grouping logic
+        const groupId = key.groupId;
+        if (!groups[groupId]) {
+          groups[groupId] = {
+            groupID: groupId,
+            groupName: key.groupName,
+            keys: [],
+            selected: false,
+          };
+        }
+        groups[groupId].keys.push(key);
+      }
+    });
+
+    stakingStore.validatorKeyGroups = Object.values(groups);
+  } else {
+    console.error("Couldn't read KeyFile!");
   }
 };
 
-//Create Grouping
-const creatingNewGroup = async (groupName) => {
-  stakingStore.isPreviewListActive = false;
-  if (groupName === "" || groupName === null) {
+//Confirm new group or rename existing group
+
+const confirmGrouping = async (groupName) => {
+  if (!groupName) {
     stakingStore.setActivePanel(null);
     return;
   }
 
-  const uniqueId = uuidv4();
-
-  if (stakingStore.selectedValidatorKeys.length > 0) {
-    stakingStore.selectedValidatorKeys.forEach((key) => {
-      if (key.selected) {
-        key.selected = false;
-      }
-    });
-
-    stakingStore.validatorKeyGroups.push({
+  if (stakingStore.mode === "create") {
+    // Create new group
+    const uniqueId = uuidv4();
+    const newGroup = {
       id: uniqueId,
-      keys: useDeepClone(
-        stakingStore.selectedValidatorKeys.map((key) => ({
-          ...key,
-          groupName: stakingStore.groupName,
-          groupID: uniqueId,
-        }))
-      ),
-      name: stakingStore.groupName,
+      name: groupName,
+      keys: stakingStore.selectedValidatorKeys.map((key) => ({
+        ...key,
+        groupName,
+        groupID: uniqueId,
+      })),
       selected: false,
-    });
-
-    const keys = await ControlService.readKeys();
-
-    if (keys) {
-      stakingStore.selectedValidatorKeys.forEach((key) => {
-        keys[key.key].groupName = stakingStore.groupName;
-        keys[key.key].groupID = uniqueId;
-      });
-      await ControlService.writeKeys(keys);
-    } else {
-      console.log("Couldn't read KeyFile!");
+    };
+    stakingStore.validatorKeyGroups.push(newGroup);
+    await updateGroupKeysInServer(newGroup.keys);
+  } else if (stakingStore.mode === "rename") {
+    const group = stakingStore.validatorKeyGroups.find((g) => g.groupID === stakingStore.currentGroup.groupID);
+    if (group) {
+      group.groupName = groupName;
+      await updateGroupKeysInServer(group.keys);
     }
+  }
 
-    stakingStore.setActivePanel(null);
+  stakingStore.setActivePanel(null);
+  stakingStore.isGroupingAllowed = false;
+  stakingStore.keys = stakingStore.keys.filter(
+    (key) => !stakingStore.selectedValidatorKeys.find((e) => e.key === key.key)
+  );
+  stakingStore.selectedValidatorKeys = [];
+  stakingStore.setMode("create");
+};
 
-    stakingStore.keys = stakingStore.keys.filter(
-      (key) => !stakingStore.selectedValidatorKeys.find((e) => e.key === key.key)
-    );
-    stakingStore.selectedValidatorKeys = [];
+// Utility function to update group keys on the server
+const updateGroupKeysInServer = async (keys) => {
+  const keysData = await ControlService.readKeys();
+  if (keysData) {
+    keys.forEach((key) => {
+      keysData[key.key].groupName = key.groupName;
+      keysData[key.key].groupID = key.groupID;
+    });
+    await ControlService.writeKeys(keysData);
+  } else {
+    console.log("Couldn't read KeyFile!");
   }
 };
 

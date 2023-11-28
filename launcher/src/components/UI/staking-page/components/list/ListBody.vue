@@ -7,8 +7,10 @@ import { ref, computed, watchEffect, watch } from 'vue';
       stakingStore.isPreviewListActive || stakingStore.isGroupListActive ? 'row-start-2 ' : 'row-start-1 rounded-t-md',
     ]"
   >
-    <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn space-y-1">
-      <SkeletonRow v-if="isLoading" /><SkeletonRow v-if="isLoading" /><SkeletonRow v-if="isLoading" />
+    <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn space-y-2">
+      <SkeletonRow v-if="isLoading" />
+      <SkeletonRow v-if="isLoading" />
+      <SkeletonRow v-if="isLoading" />
 
       <KeyRow
         v-for="item in getKeysInsideGroup"
@@ -47,20 +49,20 @@ import { ref, computed, watchEffect, watch } from 'vue';
           @delete-key="deleteKey"
         />
         <GroupRow
-          v-for="item in stakingStore.validatorKeyGroups"
+          v-for="group in stakingStore.validatorKeyGroups"
           v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0 && !isLoading"
-          :key="item.pubkey"
-          :item="item"
+          :key="group.groupID"
+          :item="group"
           @open-group="openGroup"
-          @rename-group="renameGroup"
+          @rename-group="renameGroup(group)"
           @withdraw-group="withdrawGroup"
         />
 
         <KeyRow
-          v-for="item in stakingStore.filteredKeys"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
-          :key="item.pubkey"
-          :item="item"
+          v-for="key in stakingStore.filteredKeys"
+          v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
+          :key="key.pubkey"
+          :item="key"
         />
         <span v-if="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
@@ -90,7 +92,7 @@ stakingStore.filteredKeys = computed(() => {
 });
 
 const getKeysInsideGroup = computed(() => {
-  return stakingStore.keys.filter((key) => key.group === stakingStore.selectedGroup);
+  return stakingStore.currentGroup.keys;
 });
 
 watch(
@@ -121,6 +123,10 @@ watch(
 );
 
 // Methods
+
+const isKeyInGroup = (key) => {
+  return stakingStore.validatorKeyGroups.some((group) => group.keys.some((groupKey) => groupKey.key === key.key));
+};
 
 const onDrop = (event) => {
   emit("onDrop", event);
