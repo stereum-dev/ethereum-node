@@ -294,9 +294,28 @@ const withdrawGroup = (item) => {
 //Remove Group
 
 const removeGroupConfirm = async (item) => {
-  stakingStore.currentGroup.keys.forEach((key) => {
-    stakingStore.keys.push(key);
-  });
+  const keysFromServer = await ControlService.readKeys();
+
+  if (keysFromServer) {
+    stakingStore.validatorKeyGroups.forEach((group) => {
+      if (group.id === item.id) {
+        group.keys.forEach((key) => {
+          keysFromServer[key.key] = {
+            keyName: keysFromServer[key.key].keyName || "",
+            groupName: "",
+            groupID: null,
+          };
+        });
+      }
+    });
+
+    await ControlService.writeKeys(keysFromServer);
+  } else {
+    console.error("Error fetching keys from server");
+  }
+  // stakingStore.currentGroup.keys.forEach((key) => {
+  //   stakingStore.keys.push(key);
+  // });
   stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) => group?.id !== item.id);
   stakingStore.setActiveModal(null);
   stakingStore.setMode("create");
