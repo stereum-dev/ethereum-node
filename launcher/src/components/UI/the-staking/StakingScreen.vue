@@ -18,6 +18,7 @@
           @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
           @import-remote-keys="importRemoteKeysHandler"
+          @exit-all-validator-keys="withdrawHandler"
         />
       </div>
     </div>
@@ -80,6 +81,10 @@ const removeHandler = () => {
   stakingStore.exitChainForMultiValidatorsActive = false;
   stakingStore.grafitiForMultiValidatorsActive = false;
   stakingStore.removeForMultiValidatorsActive = true;
+};
+
+const withdrawHandler = () => {
+  stakingStore.exitMultiValidatorKeys = !stakingStore.exitMultiValidatorKeys;
 };
 
 const selectedValidator = async (validator) => {

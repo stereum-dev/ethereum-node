@@ -30,15 +30,13 @@ export async function useListKeys(forceRefresh) {
         //refresh validaotr list
         let result = await ControlService.listValidators(client.config.serviceID, numRunningValidatorService);
         if (
-          !client.service.includes("Lighthouse") &&
-          !client.service.includes("Lodestar") &&
           !client.service.includes("Web3Signer")
         ) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
-                return { validating_pubkey: e.pubkey, readonly: true };
-              })
+              return { validating_pubkey: e.pubkey, readonly: true };
+            })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
         }
@@ -46,8 +44,8 @@ export async function useListKeys(forceRefresh) {
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-              return { key: e.validating_pubkey, isRemote: e.readonly };
-            })
+            return { key: e.validating_pubkey, isRemote: e.readonly };
+          })
           : [];
 
         //update service datasets in Pinia store

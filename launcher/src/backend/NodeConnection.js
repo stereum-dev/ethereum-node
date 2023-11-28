@@ -1234,4 +1234,44 @@ export class NodeConnection {
     await Sleep(5 * 1000);
     return avadoIPs;
   }
+
+  async dumpDockerLogs() {
+    try {
+      const services = await this.listServices();
+      log.info(services)
+      const containerIds = services.map((service) => service.ID);
+
+
+      const logsPromises = containerIds.map(async (containerId) => {
+        try {
+          let jsonFilePathsResult = await this.sshService.exec(`ls /var/lib/docker/containers/${containerId}/${containerId}*`);
+
+          if (SSHService.checkExecError(jsonFilePathsResult)) {
+            throw new Error("Failed reading docker logs: " + SSHService.extractExecError(jsonFilePathsResult));
+          }
+
+          const jsonFilePaths = jsonFilePathsResult.stdout.split("\n").filter((i) => i);
+
+          for (const jsonFilePath of jsonFilePaths) {
+
+            const logs = await this.sshService.exec(`cat ${jsonFilePath}`);
+
+            return { containerId, logs };
+          }
+        } catch (err) {
+          log.error("Failed to dump Docker Logs: ", err)
+          return { containerId, logs: '' };
+        }
+      });
+
+      const allLogs = await Promise.all(logsPromises);
+      return allLogs;
+
+    } catch (err) {
+      log.error("Failed to dump Docker Logs: ", err)
+      return [{ containerId: 'ERROR', logs: err }];
+    }
+
+
+  }
 }

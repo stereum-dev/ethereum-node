@@ -8,7 +8,8 @@
     "password": "密码",
     "keylocation": "密钥定位",
     "usessh": "使用 SSH 密钥",
-    "fillFields": "Please fill in the missing fields!"
+    "fillFields": "Please fill in the missing fields!",
+    "KeyPassphrase": "KEY PASSPHRASE"
   },
   "comingsoon": {
     "comingsoon": "即将播出！"

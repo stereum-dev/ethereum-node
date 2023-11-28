@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 export const useControlStore = defineStore("theControl", {
   state: () => {
     return {
+      pageNumber: 1,
+      consensusName: "",
       request: [],
       deleteKey: false,
       generateModalShow: false,

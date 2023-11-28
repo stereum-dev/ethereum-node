@@ -83,14 +83,13 @@ export default {
   data() {
     return {
       isMultiService: false,
-      pageNumber: 1,
+      // pageNumber: 1,
       clients: [],
       syncItemsShow: false,
       syncIcoUnknown: true,
       syncIcoSituation: false,
       syncIcoError: false,
       noDataLayerShow: false,
-      consensusName: "",
       executionName: "",
       consensusFirstVal: 0,
       consensusSecondVal: 0,
@@ -166,6 +165,11 @@ export default {
       syncstatus: "syncstatus",
       consensusClientsData: "consensusClientsData",
       executionClientsData: "executionClientsData",
+      consensusName: "consensusName",
+    }),
+    ...mapWritableState(useControlStore, {
+      consensusName: "consensusName",
+      pageNumber: "pageNumber",
     }),
     errorIco() {
       return this.syncIco[0].icon;
@@ -315,7 +319,7 @@ export default {
               this.syncIcoError = false;
               this.syncIcoSituation = false;
               this.noDataLayerShow = true;
-              //this.pageNumber = 1;
+              this.pageNumber = 1;
               //this.clients = [];
               //this.isMultiService = false;
             }

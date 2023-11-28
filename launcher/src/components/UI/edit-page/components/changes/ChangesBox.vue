@@ -63,13 +63,12 @@ const contentBgColor = (item) => {
       bg = "bg-green-800 text-gray-100 text-sm font-semibold";
     } else if (content === "DELETE") {
       bg = "bg-red-800 text-gray-300 text-sm font-semibold";
-    } else if (content === "SWITCH NETWORK") {
-      bg = "bg-gray-500 text-gray-900 text-[10px] font-semibold min-w-[100px]";
-      console.log(item);
+    } else if (content === "NETWORK") {
+      bg = "bg-teal-700 text-gray-100 text-sm font-semibold min-w-[100px]";
     } else if (content === "SWITCH CLIENT") {
       bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
     } else if (content === "MODIFY") {
-      bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
+      bg = "bg-teal-700 text-gray-200 text-sm font-semibold min-w-[100px]";
     }
   }
   return bg;
