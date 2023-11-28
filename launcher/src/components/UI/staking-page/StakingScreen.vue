@@ -213,39 +213,35 @@ const openGroupList = (item) => {
 
 const createGroup = async (groupName) => {
   const groupId = uuidv4();
-
-  // const newGroup = {
-  //   id: groupId,
-  //   name: groupName,
-  //   keys: updatedKeys,
-  // };
-
-  // stakingStore.validatorKeyGroups.push(newGroup);
-
   const existingKeys = await ControlService.readKeys();
 
   if (existingKeys) {
     stakingStore.selectedValidatorKeys.forEach((key) => {
-      console.log(key);
-      let pubkey = key.key;
-      existingKeys[pubkey].groupName = groupName;
-      // existingKeys[pubkey] = key;
-      // existingKeys[key.pubkey].groupName = groupName;
-      console.log("one----------------", existingKeys[pubkey]);
-      // existingKeys[key.pubkey].groupID = groupId;
-      // console.log("two----------------", existingKeys[key.pubkey]);
-      // console.log(existingKeys[pubkey]);
+      const pubkey = key.key;
+      existingKeys[pubkey] = {
+        keyName: existingKeys[pubkey].keyName || "",
+        groupName: groupName,
+        groupID: groupId,
+      };
     });
+
     await ControlService.writeKeys(existingKeys);
+
+    const newGroup = {
+      id: groupId,
+      name: groupName,
+      keys: stakingStore.selectedValidatorKeys.map((key) => ({
+        ...key,
+        groupName: groupName,
+        groupID: groupId,
+      })),
+    };
+    stakingStore.validatorKeyGroups.push(newGroup);
   } else {
     console.error("Error fetching keys from server");
   }
-
-  // for (const key of updatedKeys) {
-
-  //   await ControlService.writeKeys(key);
-  // }
 };
+
 const groupRenameHandler = async (newGroupName, groupId) => {
   const keysFromServer = await ControlService.readKeys();
 
