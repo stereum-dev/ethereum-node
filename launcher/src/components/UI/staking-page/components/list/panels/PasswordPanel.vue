@@ -59,6 +59,7 @@ const togglePasswordVisibility = () => {
 const cancelPassword = () => {
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel(null);
+  stakingStore.previewKeys = [];
 };
 
 const confirmPassword = () => {

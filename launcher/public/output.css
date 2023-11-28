@@ -2652,6 +2652,11 @@ video {
   border-color: rgb(51 102 102 / var(--tw-border-opacity));
 }
 
+.border-\[\#6c7e78\]{
+  --tw-border-opacity: 1;
+  border-color: rgb(108 126 120 / var(--tw-border-opacity));
+}
+
 .border-blue-100{
   --tw-border-opacity: 1;
   border-color: rgb(219 234 254 / var(--tw-border-opacity));
@@ -2764,16 +2769,6 @@ video {
 .border-white{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
-
-.border-\[\#242c29\]{
-  --tw-border-opacity: 1;
-  border-color: rgb(36 44 41 / var(--tw-border-opacity));
-}
-
-.border-\[\#6c7e78\]{
-  --tw-border-opacity: 1;
-  border-color: rgb(108 126 120 / var(--tw-border-opacity));
 }
 
 .border-l-gray-200{
@@ -2995,6 +2990,11 @@ video {
   background-color: rgb(51 102 102 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#343434\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(52 52 52 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#38504e\]{
   --tw-bg-opacity: 1;
   background-color: rgb(56 80 78 / var(--tw-bg-opacity));
@@ -3033,6 +3033,11 @@ video {
 .bg-\[\#537263\]{
   --tw-bg-opacity: 1;
   background-color: rgb(83 114 99 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#578f84\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(87 143 132 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#5a6168\]{
@@ -3212,21 +3217,6 @@ video {
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#343434\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(52 52 52 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#688f80\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(104 143 128 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#578f84\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(87 143 132 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-b{
@@ -3918,6 +3908,11 @@ video {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.shadow-\[\#242c29\]{
+  --tw-shadow-color: #242c29;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
 .shadow-\[\#252525\]{
   --tw-shadow-color: #252525;
   --tw-shadow: var(--tw-shadow-colored);
@@ -3945,11 +3940,6 @@ video {
 
 .shadow-zinc-800{
   --tw-shadow-color: #27272a;
-  --tw-shadow: var(--tw-shadow-colored);
-}
-
-.shadow-\[\#242c29\]{
-  --tw-shadow-color: #242c29;
   --tw-shadow: var(--tw-shadow-colored);
 }
 
@@ -4565,11 +4555,6 @@ html body {
 .hover\:bg-teal-800:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(17 94 89 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#343434\]:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(52 52 52 / var(--tw-bg-opacity));
 }
 
 .hover\:text-gray-300:hover{

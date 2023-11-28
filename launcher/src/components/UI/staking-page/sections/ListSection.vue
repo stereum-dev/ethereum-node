@@ -3,7 +3,7 @@
     <div
       class="h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 relative overflow-hidden"
     >
-      <ListHeader v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive" />
+      <ListHeader v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive" @back-list="backList" />
       <ListBody
         @on-drop="onDrop"
         @delete-key="deleteKey"
@@ -38,6 +38,8 @@ const emit = defineEmits([
   "renameGroup",
   "withdrawGroup",
   "removeGroup",
+  "backList",
+  "confirmRename",
 ]);
 
 const stakingStore = useStakingStore();
@@ -78,5 +80,9 @@ const renameGroup = (item) => {
 
 const withdrawGroup = (item) => {
   emit("withdrawGroup", item);
+};
+
+const backList = () => {
+  emit("backList");
 };
 </script>

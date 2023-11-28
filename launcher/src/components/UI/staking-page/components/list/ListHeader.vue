@@ -40,10 +40,12 @@
 import { useStakingStore } from "@/store/theStaking";
 import { useFooter } from "@/store/theFooter";
 
+const emit = defineEmits(["backList"]);
+
 const stakingStore = useStakingStore();
 const footerStore = useFooter();
 
 const backToList = () => {
-  stakingStore.isGroupListActive = false;
+  emit("backList");
 };
 </script>

@@ -106,9 +106,9 @@ const listKeys = async () => {
 };
 
 const okHandler = async () => {
-  await listKeys();
   stakingStore.setActiveModal(null);
   stakingStore.setActivePanel(null);
+  await listKeys();
 };
 </script>
 <style scoped>

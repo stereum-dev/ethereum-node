@@ -77,7 +77,7 @@ import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
 import SkeletonRow from "./rows/SkeletonRow.vue";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 
 const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
 const stakingStore = useStakingStore();
@@ -96,12 +96,16 @@ const getKeysInsideGroup = computed(() => {
 });
 
 watch(
-  () => stakingStore.keys.length,
-  (keysLength) => {
-    if (keysLength === 0) {
+  () => [stakingStore.keys.length, stakingStore.previewKeys.length],
+  (keysLength, previewLength) => {
+    if (keysLength === 0 && previewLength === 0) {
       isLoading.value = true;
       setTimeout(() => {
-        if (stakingStore.keys.length === 0) {
+        if (
+          stakingStore.keys.length === 0 &&
+          !stakingStore.isPreviewListActive &&
+          stakingStore.previewKeys.length === 0
+        ) {
           isLoading.value = false;
           noKey.value = true;
         }
@@ -114,6 +118,9 @@ watch(
           noKey.value = false;
         }
       }, 2000);
+    } else if (stakingStore.previewKeys.length > 0 && stakingStore.isPreviewListActive) {
+      isLoading.value = false;
+      noKey.value = false;
     } else {
       isLoading.value = false;
       noKey.value = false;
@@ -121,6 +128,24 @@ watch(
   },
   { immediate: true }
 );
+
+watchEffect(() => {
+  if (stakingStore.isPreviewListActive) {
+    isLoading.value = false;
+    noKey.value = false;
+  } else if (!stakingStore.isPreviewListActive && stakingStore.keys.length === 0) {
+    isLoading.value = true;
+    setTimeout(() => {
+      if (stakingStore.keys.length === 0) {
+        isLoading.value = false;
+        noKey.value = true;
+      }
+    }, 10000);
+  } else if (!stakingStore.isPreviewListActive && stakingStore.keys.length > 0) {
+    isLoading.value = false;
+    noKey.value = false;
+  }
+});
 
 // Methods
 
