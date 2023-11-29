@@ -27,6 +27,7 @@ export default {
       generatorPlugin: "generatorPlugin",
       obolDashboard: "obolDashboard",
       generatedENR: "generatedENR",
+      countinueForExistENR: "countinueForExistENR",
     }),
     enrBtnToShow() {
       if (this.enrIsGenerating && !this.enrGeneratedSuccess && !this.enrGeneratedFailed && !this.enrGeneratedContinue) {
@@ -58,6 +59,7 @@ export default {
   },
   mounted() {
     this.randomDummyText();
+    this.generatedENR = "";
   },
   methods: {
     btnHandling() {
@@ -77,6 +79,7 @@ export default {
         this.enrGeneratedContinue = false;
         this.generatorPlugin = false;
         this.obolDashboard = false;
+        this.countinueForExistENR = false;
       } else if (this.enrBtnToShow === "CONTINUE") {
         this.enrIsGenerating = true;
         this.enrGeneratedSuccess = false;
@@ -84,6 +87,7 @@ export default {
         this.enrGeneratedContinue = false;
         this.generatorPlugin = false;
         this.obolDashboard = true;
+        this.countinueForExistENR = true;
       }
     },
     //dummy enr generator

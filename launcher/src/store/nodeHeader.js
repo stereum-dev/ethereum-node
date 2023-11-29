@@ -5,6 +5,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       generatedENR: "",
       generatorPlugin: false,
       obolDashboard: false,
+      countinueForExistENR: false,
       serverAccessManagement: false,
       displayUpdatePanel: false,
       runningServices: [],

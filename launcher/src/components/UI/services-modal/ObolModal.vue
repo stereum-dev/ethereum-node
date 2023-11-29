@@ -19,16 +19,22 @@
         <div v-if="!generatorPlugin" class="wrapper">
           <div class="browserBox">
             <div class="title">
-              <span>CREATE NEW ENR</span>
-              <span>Generate a new ENR to use to create or join an existing cluster</span>
+              <span>{{ !countinueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
+              <span>{{
+                !countinueForExistENR
+                  ? "Generate a new ENR to use to create or join an existing cluster"
+                  : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
+              }}</span>
             </div>
             <div class="btn-box">
-              <div class="btn" @click="topBlock">GENERATE</div>
+              <div class="btn" @click="topBlock">
+                {{ !countinueForExistENR ? "GENERATE" : "OPEN IN BROWSER" }}
+              </div>
             </div>
           </div>
 
           <div class="browserBox">
-            <div class="browserBox_import">
+            <div v-if="!countinueForExistENR" class="browserBox_import">
               <div class="import-title">
                 <span>IMPORT EXISTING ENR</span>
               </div>
@@ -36,6 +42,34 @@
                 <input v-model="importedENR" type="text" placeholder="Enter ENR" />
                 <div class="import-btn" @click="enrImport">import</div>
               </div>
+            </div>
+            <div v-else class="wrapper" style="flex-direction: row">
+              <div class="title">
+                <span>{{ !countinueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
+                <span>{{
+                  !countinueForExistENR
+                    ? "Generate a new ENR to use to create or join an existing cluster"
+                    : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
+                }}</span>
+              </div>
+              <div class="btn-box">
+                <div class="btn" style="background: #494949; color: #dbdbdb">
+                  <img style="width: 10%; margin-right: 2%" src="/img/icon/service-icons/copy1.png" alt="" />ENR
+                </div>
+                <div class="btn" style="background: #eb5353; color: #dbdbdb">REMOVE</div>
+              </div>
+            </div>
+          </div>
+          <div v-if="countinueForExistENR" class="browserBox">
+            <div class="title">
+              <span>START THE DKG</span>
+              <span
+                >When all ENRs are signed, you will be presented with a command. All Node Operators have to run this
+                command at the same time!
+              </span>
+            </div>
+            <div class="btn-box">
+              <div class="btn">START</div>
             </div>
           </div>
         </div>
@@ -65,10 +99,12 @@ export default {
       generatorPlugin: "generatorPlugin",
       obolDashboard: "obolDashboard",
       generatedENR: "generatedENR",
+      countinueForExistENR: "countinueForExistENR",
     }),
   },
   mounted() {
     this.filterObolSharonService();
+    this.generatorPlugin = false;
   },
   methods: {
     topBlock() {
@@ -324,7 +360,7 @@ export default {
 .browserBox .btn {
   width: 90%;
   height: 35%;
-  margin-top: 15px;
+
   margin-right: 10px;
   background-color: #192d31;
   text-decoration: none;
@@ -338,6 +374,12 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   transition-duration: all 200ms;
+}
+.browserBox .btn:first-child {
+  margin-top: 15px;
+}
+.browserBox .btn:not(:first-child) {
+  margin-top: 5px;
 }
 .btn:hover {
   transition-duration: 100ms;
