@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      notificationModalIsActive: false,
       serverAccessManagement: false,
       displayUpdatePanel: false,
       runningServices: [],
