@@ -24,7 +24,6 @@ export class GethService extends NodeService {
         `--${network}`,
         `--datadir=${dataDir}`,
         "--state.scheme=path",
-        "--db.engine=pebble",
         "--http",
         "--http.port=8545",
         "--http.addr=0.0.0.0",
