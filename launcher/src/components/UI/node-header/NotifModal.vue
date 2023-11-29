@@ -74,10 +74,10 @@
                 :class="[
                   'choose-validator_validators_validator-box',
                   validator.config.serviceID == selectedVal ? selectValidatorBorder : '',
-                  validator.config.serviceID == fixedValTest ? fixedValidatorBorder : '',
+                  validator.config.serviceID == connectedValidator ? fixedValidatorBorder : '',
+                  !selectedVal && haveToFill && !connectedValidator ? 'emptyValidator' : '',
                 ]"
                 @click="selectedValidator(validator)"
-                @dblclick="test(validator)"
               >
                 <img :src="validator.icon" :alt="validator.name" />
               </div>
@@ -89,18 +89,28 @@
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.machinename") }}</div>
                 <div class="enter-input_input">
-                  <input v-model="machineName" type="text" />
+                  <input
+                    v-model="machineName"
+                    type="text"
+                    :disabled="readyToRemove"
+                    :class="machineName == '' && haveToFill ? 'emptyInput' : ''"
+                  />
                 </div>
               </div>
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.apikey") }}</div>
                 <div class="enter-input_input">
-                  <input v-model="apiKey" type="text" />
+                  <input
+                    v-model="apiKey"
+                    type="text"
+                    :class="apiKey == '' && haveToFill ? 'emptyInput' : ''"
+                    :disabled="readyToRemove"
+                  />
                 </div>
               </div>
             </div>
-            <div class="apply-btn" @click="applyBeaconChain">
-              {{ $t("notifModal.apply") }}
+            <div class="apply-btn" @click="BeaconchainBtnHandling">
+              {{ readyToRemove ? "REMOVE" : $t("notifModal.apply") }}
             </div>
           </div>
         </div>
@@ -113,6 +123,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
@@ -127,17 +138,30 @@ export default {
       apiKey: "",
       selectedValToConnect: false,
       fixedConnectedVal: false,
-      fixedValTest: "",
+      connectedValidator: "",
+      matchedServiceId: "",
+      readyToRemove: false,
+      prysmServiceID: "",
+      nimbusServiceID: "",
+      haveToFill: false,
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
     }),
+    ...mapWritableState(useNodeHeader, {
+      notificationModalIsActive: "notificationModalIsActive",
+    }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
       return copyOfInstalledServices.filter((obj) => obj.category === "validator");
     },
+    installedMetricsExporter() {
+      const copyOfInstalledServices = [...this.installedServices];
+      return copyOfInstalledServices.filter((obj) => obj.service === "MetricsExporterService");
+    },
+
     selectValidatorBorder() {
       return this.selectedValToConnect ? "selected-val" : "none";
     },
@@ -147,33 +171,124 @@ export default {
   },
   mounted() {
     this.getqrcode();
+    this.beaconChainConnectionController();
   },
   methods: {
-    test(arg) {
-      this.fixedValTest = arg.config.serviceID;
-      this.fixedConnectedVal = !this.fixedConnectedVal;
+    BeaconchainBtnHandling() {
+      if ((this.machineName == "" || this.apiKey == "" || this.selectedVal == "") && !this.readyToRemove) {
+        this.haveToFill = true;
+      } else if (this.readyToRemove) {
+        this.removeFromBeaconChain();
+        this.haveToFill = false;
+      } else {
+        this.applyBeaconChain();
+        this.haveToFill = false;
+      }
     },
+    async removeFromBeaconChain() {
+      this.readyToRemove = false;
+      this.notificationModalIsActive = false;
+      await ControlService.removeBeaconchainMonitoring({
+        selectedVal: this.selectedVal,
+      });
+    },
+
     selectedValidator(arg) {
       //to select the validator
-      this.selectedVal = arg.config.serviceID;
-      this.selectedValToConnect = !this.selectedValToConnect;
-      console.log(this.selectedValToConnect);
+      console.log(arg);
+      if (this.fixedConnectedVal == false) {
+        this.selectedVal = arg.config.serviceID;
+        this.selectedValToConnect = true;
+        this.fixedConnectedVal = false;
+        this.readyToRemove = false;
+      } else if (this.matchedServiceId == arg.config.serviceID) {
+        this.selectedVal = arg.config.serviceID;
+        this.selectedValToConnect = true;
+        this.fixedConnectedVal = false;
+        this.readyToRemove = true;
+      } else {
+        this.selectedVal = "";
+        this.selectedValToConnect = false;
+        this.readyToRemove = false;
+      }
     },
     async applyBeaconChain() {
       //to apply the beaconchain dashboard
+      this.notificationModalIsActive = false;
       await ControlService.beaconchainMonitoringModification({
         machineName: this.machineName,
         apiKey: this.apiKey,
         selectedVal: this.selectedVal,
       });
+      this.readyToRemove = false;
+
+      this.fixedConnectedVal = false;
     },
     qrViewer() {
       this.qrPage = !this.qrPage;
     },
+    async beaconChainConnectionController() {
+      try {
+        for (let i = 0; i < this.installedValidators.length; i++) {
+          const item = this.installedValidators[i];
+          const res = await ControlService.getServiceYAML(item?.config.serviceID);
+          if (
+            item.service === "LighthouseValidatorService" ||
+            item.service === "LighthouseBeaconService" ||
+            item.service === "LodestarValidatorService" ||
+            item.service === "LodestarBeaconService"
+          ) {
+            const matchedValue = res.match(new RegExp("(- --monitoring-endpoint=)(.*)(\\n)"));
+
+            if (matchedValue !== null) {
+              this.connectedValidator = item.config.serviceID;
+              this.fixedConnectedVal = true;
+              this.matchedServiceId = item.config.serviceID;
+            }
+          } else if (item.service === "TekuValidatorService" || item.service === "TekuBeaconService") {
+            const matchedValue = res.match(new RegExp("(- --metrics-publish-endpoint=)(.*)(\\n)"));
+
+            if (matchedValue !== null) {
+              this.connectedValidator = item.config.serviceID;
+              this.fixedConnectedVal = true;
+              this.matchedServiceId = item.config.serviceID;
+            }
+          } else if (item.service === "PrysmValidatorService") {
+            let prysmServiceID = item.config.serviceID;
+            //console.log("prysmServiceID", prysmServiceID);
+            for (let idx = 0; idx < this.installedMetricsExporter.length; idx++) {
+              const metrx = this.installedMetricsExporter[idx];
+              const metricsRes = await ControlService.getServiceYAML(metrx?.config.serviceID);
+              const matchValue = metricsRes.match(new RegExp("(- --validator.address=http://stereum-)(.*)(\\n)"));
+              if (matchValue[2].includes(prysmServiceID)) {
+                this.connectedValidator = item.config.serviceID;
+                this.fixedConnectedVal = true;
+                this.matchedServiceId = item.config.serviceID;
+              }
+            }
+          } else if (item.service === "NimbusValidatorService") {
+            console.log(item);
+            let nimbusServiceID = item.config.dependencies.consensusClients[0].id;
+            //console.log("nimbusServiceID", nimbusServiceID);
+            for (let idx = 0; idx < this.installedMetricsExporter.length; idx++) {
+              const metrx = this.installedMetricsExporter[idx];
+              const metricsRes = await ControlService.getServiceYAML(metrx?.config.serviceID);
+              const matchValue = metricsRes.match(new RegExp("(- --beaconnode.address=http://stereum-)(.*)(\\n)"));
+              if (matchValue[2].includes(nimbusServiceID)) {
+                this.connectedValidator = item.config.serviceID;
+                this.fixedConnectedVal = true;
+                this.matchedServiceId = item.config.serviceID;
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error Connection Result:", error);
+      }
+    },
     async getqrcode() {
       const response = await ControlService.getQRCode();
       if (response instanceof Error) {
-        console.log(response);
         this.qrCode = this.ErrorQRCode;
       } else {
         this.qrCode = response;
@@ -182,12 +297,50 @@ export default {
     openBeaconcha() {
       let url = "https://beaconcha.in/user/settings#app";
       window.open(url, "_blank");
-      console.log("test");
     },
   },
 };
 </script>
 <style scoped>
+.emptyInput {
+  border: 1px solid red !important;
+  background: #f58f8f;
+}
+.emptyValidator {
+  position: relative;
+  border-radius: 50%;
+  border: 2px solid red;
+}
+.emptyValidator::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.3);
+  animation: blink-animation 1s steps(5, start) infinite;
+}
+.emptyValidator:nth-child(1)::after {
+  animation-delay: 0.3s;
+}
+
+.emptyValidator:nth-child(2)::after {
+  animation-delay: 0.5s;
+}
+
+.emptyValidator:nth-child(3)::after {
+  animation-delay: 0.8s;
+}
+.emptyValidator:nth-child(4)::after {
+  animation-delay: 1s;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
 .selected-val {
   border: 5px solid #3e8f8f;
   border-radius: 50%;
@@ -340,7 +493,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 1.4%;
+  margin-right: 1.6%;
 }
 .selected-val {
   border: 3px solid #00ffdc;
