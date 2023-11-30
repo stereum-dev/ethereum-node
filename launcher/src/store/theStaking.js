@@ -10,7 +10,7 @@ export const useStakingStore = defineStore("theStaking", {
       isOverDropZone: false,
       inputWrongKey: false,
       isPreviewListActive: false,
-      importEnteredPassword: "",
+      importEnteredPassword: null,
       importKeyMessage: "",
       checkActiveValidatorsResponse: [],
       previewKeys: [],

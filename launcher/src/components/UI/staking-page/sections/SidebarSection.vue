@@ -46,6 +46,7 @@
 <script setup>
 import { ref, computed, watchEffect } from "vue";
 import { useListKeys } from "@/composables/validators";
+import { useListGroups } from "@/composables/groups";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
@@ -55,6 +56,7 @@ const stakingStore = useStakingStore();
 const serviceStore = useServices();
 const selectedService = ref(null);
 const currentService = ref(null);
+const { listGroups } = useListGroups();
 
 const hoveredIndex = ref(null);
 
@@ -80,6 +82,11 @@ watchEffect(() => {
 
 //Methods
 
+const listKeys = async () => {
+  await useListKeys(stakingStore.forceRefresh);
+  await listGroups(stakingStore.forceRefresh);
+};
+
 const getService = (index) => {
   hoveredIndex.value = null;
   hoveredIndex.value = index;
@@ -88,7 +95,7 @@ const getService = (index) => {
 const filterByService = async (item) => {
   currentService.value = item.service;
   selectedService.value = item;
-  await useListKeys();
+  await listKeys();
   stakingStore.keys = stakingStore.keys.filter((key) => key.validatorID === selectedService.value.config?.serviceID);
   stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) =>
     group.keys.some((e) => e.validatorID === selectedService.value.config?.serviceID)

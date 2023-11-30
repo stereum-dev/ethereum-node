@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 <template>
   <div
-    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate__slideInLeft animate__faster"
+    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer"
     :class="props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 '"
     @click="selectKey(props.item)"
   >

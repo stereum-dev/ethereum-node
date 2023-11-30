@@ -36,6 +36,7 @@ import RiskWarning from "./components/modals/RiskWarning.vue";
 import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
+import { useListGroups } from "@/composables/groups";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted } from "vue";
 import { useServices } from "@/store/services";
@@ -43,6 +44,7 @@ import { useServices } from "@/store/services";
 //Store
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
+const { listGroups } = useListGroups();
 
 const modals = {
   import: {
@@ -83,7 +85,14 @@ onMounted(async () => {
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
+  await listingGroups();
 };
+const listingGroups = async () => {
+  if (stakingStore.keys.length > 0) {
+    await listGroups();
+  }
+};
+
 // const updateValidatorStats = async () => {
 //   await useUpdateValidatorStats();
 // };
@@ -208,7 +217,7 @@ const openGroupList = (item) => {
   stakingStore.currentGroup = item;
 };
 
-//Fetch keys from server and Update Keys
+//Create Group;
 
 const createGroup = async (groupName) => {
   const groupId = uuidv4();
@@ -218,7 +227,7 @@ const createGroup = async (groupName) => {
     stakingStore.selectedValidatorKeys.forEach((key) => {
       const pubkey = key.key;
       existingKeys[pubkey] = {
-        keyName: existingKeys[pubkey].keyName || "",
+        keyName: existingKeys[pubkey]?.keyName || "",
         groupName: groupName,
         groupID: groupId,
       };
@@ -233,6 +242,7 @@ const createGroup = async (groupName) => {
         ...key,
         groupName: groupName,
         groupID: groupId,
+        selected: false,
       })),
     };
     stakingStore.validatorKeyGroups.push(newGroup);
@@ -271,11 +281,14 @@ const confirmGrouping = async (val) => {
     stakingStore.setActivePanel(null);
     stakingStore.isGroupingAllowed = false;
     await createGroup(groupName);
+    stakingStore.groupName = "";
   } else if (stakingStore.mode === "rename") {
     stakingStore.setActivePanel(null);
     const groupId = stakingStore.currentGroup.id;
     await groupRenameHandler(val, groupId);
+    stakingStore.groupName = "";
   }
+  await listKeys();
 };
 
 const renameGroup = (item) => {

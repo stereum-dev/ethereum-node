@@ -1,8 +1,8 @@
 import { useStakingStore } from '@/store/theStaking';
 <template>
   <div
-    class="w-full h-8 bg-[#336666] rounded-full grid grid-cols-12 p-1 animate__animated animate__faster"
-    :class="isRemoveActive ? 'animate__slideOutRight' : 'animate__slideInLeft'"
+    class="w-full h-8 bg-[#336666] rounded-full grid grid-cols-12 p-1 animate__animated"
+    :class="isRemoveActive ? 'animate__slideOutRight animate__faster ' : 'animate__slideInLeft animate__delay-0.5s'"
   >
     <div class="col-start-1 col-end-5 self-center overflow-hidden flex justify-start items-center">
       <img class="w-6" src="/img/icon/the-staking/newfolder-icon.png" alt="Folder Icon" @mousedown.prevent />

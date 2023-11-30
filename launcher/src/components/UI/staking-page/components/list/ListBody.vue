@@ -1,20 +1,27 @@
-import { ref, computed, watchEffect, watch } from 'vue';
+import { ref, computed, watchEffect, watch, onMounted } from 'vue';
 <template>
   <div
     class="col-start-1 col-span-full row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : '',
-      stakingStore.isPreviewListActive || stakingStore.isGroupListActive ? 'row-start-2 ' : 'row-start-1 rounded-t-md',
+      stakingStore.isPreviewListActive || stakingStore.isGroupListActive
+        ? 'row-start-2 '
+        : 'row-start-1 rounded-t-md',
     ]"
   >
-    <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn space-y-2">
+    <div
+      v-if="stakingStore.isGroupListActive"
+      class="w-full h-full animate__animated animate__fadeIn space-y-2"
+    >
       <SkeletonRow v-if="isLoading" />
       <SkeletonRow v-if="isLoading" />
       <SkeletonRow v-if="isLoading" />
 
       <KeyRow
         v-for="item in getKeysInsideGroup"
-        v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
+        v-show="
+          !stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading
+        "
         :key="item.pubkey"
         :item="item"
       />
@@ -50,7 +57,11 @@ import { ref, computed, watchEffect, watch } from 'vue';
         />
         <GroupRow
           v-for="group in stakingStore.validatorKeyGroups"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0 && !isLoading"
+          v-show="
+            !stakingStore.isPreviewListActive &&
+            stakingStore.validatorKeyGroups.length > 0 &&
+            !isLoading
+          "
           :key="group.groupID"
           :item="group"
           @open-group="openGroup"
@@ -60,7 +71,12 @@ import { ref, computed, watchEffect, watch } from 'vue';
 
         <KeyRow
           v-for="key in stakingStore.filteredKeys"
-          v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
+          v-show="
+            !isKeyInGroup(key) &&
+            !stakingStore.isPreviewListActive &&
+            stakingStore.keys.length > 0 &&
+            !isLoading
+          "
           :key="key.pubkey"
           :item="key"
         />
@@ -77,9 +93,16 @@ import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
 import SkeletonRow from "./rows/SkeletonRow.vue";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, ref, watch, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 
-const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
+const emit = defineEmits([
+  "onDrop",
+  "deleteKey",
+  "openGroup",
+  "renameGroup",
+  "withdrawGroup",
+  "removeGroup",
+]);
 const stakingStore = useStakingStore();
 const isLoading = ref(true);
 const noKey = ref(false);
@@ -88,46 +111,14 @@ stakingStore.filteredKeys = computed(() => {
   if (!stakingStore.searchContent) {
     return stakingStore.keys;
   }
-  return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
+  return stakingStore.keys.filter((key) =>
+    key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())
+  );
 });
 
 const getKeysInsideGroup = computed(() => {
   return stakingStore.currentGroup.keys;
 });
-
-watch(
-  () => [stakingStore.keys.length, stakingStore.previewKeys.length],
-  (keysLength, previewLength) => {
-    if (keysLength === 0 && previewLength === 0) {
-      isLoading.value = true;
-      setTimeout(() => {
-        if (
-          stakingStore.keys.length === 0 &&
-          !stakingStore.isPreviewListActive &&
-          stakingStore.previewKeys.length === 0
-        ) {
-          isLoading.value = false;
-          noKey.value = true;
-        }
-      }, 10000);
-    } else if (keysLength > 0) {
-      isLoading.value = true;
-      setTimeout(() => {
-        if (stakingStore.keys.length > 0 && !stakingStore.isPreviewListActive) {
-          isLoading.value = false;
-          noKey.value = false;
-        }
-      }, 2000);
-    } else if (stakingStore.previewKeys.length > 0 && stakingStore.isPreviewListActive) {
-      isLoading.value = false;
-      noKey.value = false;
-    } else {
-      isLoading.value = false;
-      noKey.value = false;
-    }
-  },
-  { immediate: true }
-);
 
 watchEffect(() => {
   if (stakingStore.isPreviewListActive) {
@@ -147,10 +138,14 @@ watchEffect(() => {
   }
 });
 
+// Lifecycle Hooks
+
 // Methods
 
 const isKeyInGroup = (key) => {
-  return stakingStore.validatorKeyGroups.some((group) => group.keys.some((groupKey) => groupKey.key === key.key));
+  return stakingStore.validatorKeyGroups.some((group) =>
+    group.keys.some((groupKey) => groupKey.key === key.key)
+  );
 };
 
 const onDrop = (event) => {

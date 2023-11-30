@@ -83,7 +83,7 @@ export async function useListKeys(forceRefresh) {
         showExitText: false,
         selected: false,
         groupName: "",
-        groupId: null,
+        groupID: null,
       };
     });
     if (stakingStore.keys && stakingStore.keys.length > 0) useUpdateValidatorStats();
