@@ -566,20 +566,20 @@ export class ValidatorAccountManager {
           if (existing[key]) {
             if (typeof existing[key] === "string") {
               obj[key] = {
-                validatorID: "",
                 keyName: existing[key],
                 groupName: "",
                 groupID: null,
+                validatorClientID: "",
               };
             } else {
               obj[key] = existing[key];
             }
           } else {
             obj[key] = {
-              validatorID: "",
               keyName: "",
               groupName: "",
               groupID: null,
+              validatorClientID: "",
             };
           }
         });
@@ -587,6 +587,7 @@ export class ValidatorAccountManager {
         obj = {};
       }
     }
+    console.log("obj:-----------", obj);
     await this.nodeConnection.sshService.exec(
       "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(obj)) + " > /etc/stereum/keys.yaml"
     );
