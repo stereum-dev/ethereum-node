@@ -221,9 +221,9 @@ const createGroup = async (groupName) => {
       const pubkey = key.key;
       existingKeys[pubkey] = {
         keyName: existingKeys[pubkey]?.keyName || "",
-        validatorID: stakingStore.selectedValidatorKeys[0].validatorID,
         groupName: groupName,
         groupID: groupId,
+        validatorClientID: stakingStore.selectedValidatorKeys[0].validatorID,
       };
     });
 
