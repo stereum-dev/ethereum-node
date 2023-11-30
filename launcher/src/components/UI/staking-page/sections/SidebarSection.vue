@@ -49,8 +49,6 @@ import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
 
-const emit = defineEmits(["filterKeys"]);
-
 const footerStore = useFooter();
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
@@ -61,12 +59,14 @@ const hoveredIndex = ref(null);
 const installedValidators = computed(() => {
   return serviceStore.installedServices
     .filter((s) => s.category === "validator")
-    .map((service) => ({ ...service, selected: false }));
+    .map((service) => ({ ...service, selected: false }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 });
 
 //Lifecycle Hooks
 onMounted(() => {
   currentService.value = installedValidators.value[0].service;
+  stakingStore.selectedServiceToFilter = installedValidators.value[0];
 });
 
 //Methods
@@ -79,6 +79,5 @@ const getService = (index) => {
 const filterByService = async (item) => {
   currentService.value = item.service;
   stakingStore.selectedServiceToFilter = item;
-  emit("filterKeys", item);
 };
 </script>

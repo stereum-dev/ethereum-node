@@ -1,7 +1,7 @@
 <template>
   <base-layout>
     <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1">
-      <SidebarSection @filter-keys="filteredValidatorByService" />
+      <SidebarSection />
       <ListSection
         @confirm-grouping="confirmGrouping"
         @pick-validator="pickValidatorService"
@@ -36,7 +36,6 @@ import RiskWarning from "./components/modals/RiskWarning.vue";
 import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
-import { useListGroups } from "@/composables/groups";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted } from "vue";
 import { useServices } from "@/store/services";
@@ -44,7 +43,6 @@ import { useServices } from "@/store/services";
 //Store
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
-const { listGroups } = useListGroups();
 
 const modals = {
   import: {
@@ -85,12 +83,6 @@ onMounted(async () => {
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
-  await listingGroups();
-};
-const listingGroups = async () => {
-  if (stakingStore.keys.length > 0) {
-    await listGroups();
-  }
 };
 
 // const updateValidatorStats = async () => {
@@ -200,10 +192,6 @@ const passwordValidation = async (pass) => {
   }
 };
 
-//Filtered key by service+
-
-const filteredValidatorByService = (item) => {};
-
 //****End of Import Key Validation ****
 
 //**** Grouping ****
@@ -233,6 +221,7 @@ const createGroup = async (groupName) => {
       const pubkey = key.key;
       existingKeys[pubkey] = {
         keyName: existingKeys[pubkey]?.keyName || "",
+        validatorID: stakingStore.selectedValidatorKeys[0].validatorID,
         groupName: groupName,
         groupID: groupId,
       };
@@ -243,6 +232,7 @@ const createGroup = async (groupName) => {
     const newGroup = {
       id: groupId,
       name: groupName,
+      validatorID: stakingStore.selectedValidatorKeys[0].validatorID,
       keys: stakingStore.selectedValidatorKeys.map((key) => ({
         ...key,
         groupName: groupName,
@@ -320,6 +310,7 @@ const removeGroupConfirm = async (item) => {
         group.keys.forEach((key) => {
           keysFromServer[key.key] = {
             keyName: keysFromServer[key.key].keyName || "",
+            validatorID: "",
             groupName: "",
             groupID: null,
           };

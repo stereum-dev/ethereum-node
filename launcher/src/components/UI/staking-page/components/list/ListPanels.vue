@@ -41,7 +41,7 @@
           class="h-6"
           src="/img/icon/the-staking/display-name.png"
           alt="Insert Icon"
-          @click="displayName"
+          @click="displayKeyAlias"
           @mousedown.prevent
         />
       </div>
@@ -170,6 +170,11 @@ const uploadFile = (event) => {
 
 const confirmPassword = (pass) => {
   handleEvent("confirmPassword", pass);
+};
+
+const displayKeyAlias = () => {
+  stakingStore.isPreviewListActive = false;
+  stakingStore.setActivePanel("grafiti");
 };
 
 const groupingPanel = () => {

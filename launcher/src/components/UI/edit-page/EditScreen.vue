@@ -120,6 +120,7 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
+import { useListKeys } from "@/composables/validators";
 
 const footerStore = useFooter();
 const serviceStore = useServices();
@@ -180,6 +181,10 @@ onUnmounted(() => {
 });
 
 // Methods
+
+const listKeys = async () => {
+  await useListKeys();
+};
 
 // Random ID generator
 function generateRandomId() {
@@ -572,6 +577,7 @@ const confirmHandler = async () => {
     manageStore.disableConfirmButton = false;
     manageStore.isLineHidden = false;
   }, 4000);
+  await listKeys();
 };
 
 const nukeConfirmation = () => {
