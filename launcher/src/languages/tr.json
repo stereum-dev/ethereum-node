@@ -26,11 +26,11 @@
     "start": "başlat",
     "resync": "resync",
     "stop": "durdur",
-    "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
-    "clkEdit": "click to edit your node",
-    "clkOn": "click to turn on your node",
-    "clkOff": "click to turn off your node",
+    "machineIp": "Makine IP Adresi",
+    "machineName": "Makine Adı",
+    "clkEdit": "Düğümünüzü düzenlemek için tıklayın",
+    "clkOn": "Düğümünüzü açmak için tıklayın",
+    "clkOff": "Düğümünüzü kapatmak için tıklayın",
     "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
     "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
     "clkRestart": "Click to open the panel so that you can restart clients and services separately",
@@ -67,12 +67,12 @@
     "servicePlugin": "Eklenti / Hizmet Güncelleme Yapılandırması",
     "manual": "EL İLE",
     "auto": "OTOMATİK",
-    "sxConf": "Export Config",
-    "chngAppr": "Changes to be applied",
-    "creditInfo": "click the button to see the contributors",
-    "langInfo": "click the button to change the language",
-    "exportInfo": "click the button to export the configuration in a yaml file",
-    "stereumUpd": "Click the button to configure the Stereum update"
+    "sxConf": "Yapılandırmayı Dışa Aktar",
+    "chngAppr": "Uygulanacak değişiklikler",
+    "creditInfo": "Katkıda bulunanları görmek için düğmeye tıklayın",
+    "langInfo": "Dili değiştirmek için düğmeye tıklayın",
+    "exportInfo": "Yapılandırmayı bir YAML dosyasına aktarmak için düğmeye tıklayın",
+    "stereumUpd": "Stereum güncellemesini yapılandırmak için düğmeye tıklayın"
   },
   "nodeSidebarVideo": {
     "stake": "32 ETH Stake edin",
@@ -82,8 +82,8 @@
     "migrate": "Düğüm Geçişi",
     "rpc": "RPC Bağlantısı",
     "gnoStake": "1 GNO STAKE EDİN",
-    "written": "Written Guides",
-    "video": "Video Guides"
+    "written": "Yazılı Rehberler",
+    "video": "Videolu Rehberler"
   },
   "pluginZone": {
     "client": "istemci"
@@ -93,9 +93,9 @@
     "consensus": "fikir birliği",
     "validator": "doğrulayıcı",
     "servicePlugin": "SERVİS EKLENTİSİ",
-    "message": "The current network is ",
-    "chckTutorial": "Check out the tutorials",
-    "returnStatus": "Return to status box"
+    "message": "Mevcut ağ ",
+    "chckTutorial": "Öğreticilere göz atın",
+    "returnStatus": "Durum kutusuna dön"
   },
   "modifyPanel": {
     "backNode": "DÜĞÜME geri dön",
@@ -107,8 +107,8 @@
     "filter": "Filtre..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM CHANGES",
-    "process": "processing...",
+    "confirm": "DEĞİŞİKLİKLERİ ONAYLA",
+    "process": "işleniyor...",
     "change": "DEĞİŞİKLİKLERİ ONAYLA",
     "delete": "SİL"
   },
@@ -127,9 +127,9 @@
     "all": "tamamını güncelle",
     "osTitle": "sunucu işletim sistemi güncellemeleri",
     "availableUpdates": "güncellemeler",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
+    "searchVersion": "Kullanılabilir sürüm güncellemelerini arayın",
+    "updtBtn": "Güncellemek için tıklayın",
+    "updtAllPlugin": "Tüm eklentileri güncelle",
     "autoUpt": "the update is automatic",
     "manualUpt": "the update is manual",
     "chngAppr": "Changes to be applied"
@@ -157,22 +157,22 @@
     "rating": "DERECE",
     "usage": "Kullanım",
     "netSel": "The selected network is",
-    "machineName": "Machine Name",
-    "storVol": "Storage Volume",
-    "stor": "the storage",
-    "diskSpeed": "Disk Speed",
-    "p2p": "peer to peer networks",
-    "cpuUse": "CPU Usage",
+    "machineName": "Mekine Adı",
+    "storVol": "Server storage volume",
+    "stor": "Server storage overview",
+    "diskSpeed": "Disk hızı",
+    "p2p": "Peer to peer connections",
+    "cpuUse": "CPU Kullanımı",
     "syncInfo": "Synchronization status",
-    "ramUse": "RAM Usage",
-    "netSpeed": "Network Speed",
-    "listPort": "list of ports",
-    "endPoint": "endpoint",
-    "data": "data",
-    "enteredKeys": "The number of entered validator keys",
-    "ttlBal": "Total balance",
+    "ramUse": "RAM Kullanımı",
+    "netSpeed": "Ağ Hızı",
+    "listPort": "List of service ports",
+    "endPoint": "bitiş noktası",
+    "data": "veri",
+    "enteredKeys": "The number of imported validator keys",
+    "ttlBal": "Toplam bakiye",
     "finEPOCH": "Finalized EPOCH",
-    "pending": "service is pending",
+    "pending": "hizmet beklemede",
     "off": "Switch off the service",
     "on": "Switch on the service",
     "settingService": "Setting up the service",
@@ -444,7 +444,7 @@
     "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
-    "clickPass": "Please click here to enter your password and confirm.",
+    "clickPass": "Parolanızı girmek ve onaylamak için lütfen buraya tıklayın.",
     "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
     "test": "testtesttestte"
   },
@@ -458,59 +458,59 @@
     "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
   },
   "selectionOption": {
-    "graffiti": "graffiti",
-    "removeKeys": "Remove all keys"
+    "graffiti": "duvar yazısı",
+    "removeKeys": "Tüm anahtarları kaldır"
   },
   "syncCommitte": {
-    "total": "total",
-    "status": "STATUS",
+    "total": "toplam",
+    "status": "DURUM",
     "particip": "PARTICIPATING",
     "noParticip": "NOT PARTICIPATING",
-    "start": "Start",
-    "end": "End",
+    "start": "Başlat",
+    "end": "Bitir",
     "newSync": "New Sync Committee in",
-    "hours": "hours"
+    "hours": "saat"
   },
   "theAttes": {
     "lastAttest": "Last Attestation Slot:",
-    "keyStatus": "Key Status:",
+    "keyStatus": "Anahtar Durumu:",
     "attest": "ATTESTING",
-    "pending": "PENDING",
-    "noKey": "CHOOSE A KEY",
+    "pending": "BEKLEMEDE",
+    "noKey": "BİR ANAHTAR SEÇİN",
     "nxtAttest": "next Attestation Slot:",
     "slotRem": "Slots remaining",
     "tillAtest": "till attestation"
   },
   "confirmModal": {
-    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
-    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
-    "messageOff": "Your node will go offline!",
-    "messageOn": "Your node will go online!",
-    "turnOn": "turn on",
-    "turnOff": "turn off",
+    "off": "DÜĞÜMÜNÜZÜ KAPATMAK İSTEDİĞİNİZDEN EMİN MİSİNİZ?",
+    "on": "DÜĞÜMÜNÜZÜ AÇMAK İSTEDİĞİNİZDEN EMİN MİSİNİZ?",
+    "messageOff": "Düğümünüz çevrim dışı olacak!",
+    "messageOn": "Düğümünüz çevrim içi olacak!",
+    "turnOn": "Aç",
+    "turnOff": "Kapat",
     "close": "click outside to close"
   },
   "nodeAlert": {
-    "lowSpace": "LOW STORAGE",
+    "lowSpace": "DÜŞÜK DEPOLAMA",
     "missAttest": "MISSED ATTESTATION",
-    "use": "USAGE",
+    "use": "KULLANIMI",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
-    "clkFee": "Service Settings",
-    "clkUpdate": "Click to open update panel"
+    "clkFee": "Hizmet Ayarları",
+    "clkUpdate": "Güncelleme panelini açmak için tıklayın"
   },
   "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
+    "message": "Bunu istediğinize emin misiniz?",
+    "close": "Kapatmak için pencere dışında bir yere tıklayın"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
     "sync": "SYNCHRONISATION",
     "gen": "GENESIS",
-    "chkSync": "CHECKPOINT SYNC",
+    "chkSync": "KONTROL NOKTASI SENKRONİZESİ",
     "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cont": "CONTINUE",
-    "resync": "RESYNC",
+    "cont": "DEVAM ET",
+    "resync": "TEKRAR SENKRONİZE ET",
     "close": "click outside to close"
   },
   "resyncSeparateService": {
@@ -520,7 +520,7 @@
     "close": "click outside to close"
   },
   "notifModal": {
-    "addNotif": "add a notification channel",
+    "addNotif": "Bildirim kanalı ekle",
     "chooseNotif": "Choose what kind of Notification Channel you want to configure",
     "stereumMonitor": "Stereum Node Monitor",
     "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
@@ -558,30 +558,30 @@
   },
   "importingVerify": {
     "pluginInst": "Plugins To Install",
-    "cat": "category",
+    "cat": "kategori",
     "path": "path"
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
     "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "configFile": "Yapılandırma dosyası"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
-    "client": "CLIENTs",
-    "syncSrc": "SYNC SOURCE",
+    "client": "MÜŞTERİLER",
+    "syncSrc": "SENKRONİZASYON KAYNAĞI",
     "gen": "GENESIS",
     "sync": "Syncs from genesis",
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
     "message": "Do you want to remove the saved connection?",
-    "rem": "Remove",
+    "rem": "Kaldır",
     "close": "click outside to close"
   },
   "errTerminal": {
-    "copy": "copied!",
-    "close": "click outside to close"
+    "copy": "kopyalandı!",
+    "close": "Kapatmak için pencere dışında bir yere tıklayın"
   },
   "sliderTutorial": {
     "visitUrl": "Visit the website",
@@ -608,16 +608,16 @@
     "wagueKey": "Switch to the WAGYU Key Generator app",
     "secratePhrase": "Click on “Create New Secret Recovery Phrase”",
     "selectNetwork": "Select the network in which you want your node to run",
-    "clickOk": "Click on “OK”",
-    "clickCreate": "Click on “CREATE”",
+    "clickOk": "\"TAMAM\"a tıklayın",
+    "clickCreate": "\"OLUŞTUR\"a tıklayın",
     "recoveryPhrase": "After your Secret Recovery Phrase is created safe it in a safe place. Click on the copy button.",
-    "clickNext": "Click on “NEXT”",
-    "imSure": "Click on “I’M SURE”",
+    "clickNext": "\"SONRAKİ\"ne tıklayın",
+    "imSure": "\"EMİNİM\"e tıklayın",
     "pasteRecovery": "Paste in your Secret Recovery Phrase",
-    "clickCheck": "Click on “CHECK”",
+    "clickCheck": "\"KONTROL ET\"e tıklayın",
     "needKey": "Type in the number of keys you need",
-    "typPass": "Type in a password",
-    "retypPass": "Retype your pasword",
+    "typPass": "Bir parola yazın",
+    "retypPass": "Parolayı tekrar yazın",
     "clickBrowse": "Click on “BROWSE”",
     "chooseFolder": "Choose a folder where you want to save your keys and safe them in a safe place",
     "clickCreateWait": "Click on “CREATE” and wait for a couple of seconds",
@@ -638,12 +638,12 @@
     "bal": "BALANCE CHANGE"
   },
   "headerBtn": {
-    "help": "help",
+    "help": "yardım",
     "notif": "Management of notification channels",
     "availableUpdt": "New update is available",
-    "updtPan": "update panel",
-    "setting": "Stereum settings",
-    "logOutBtn": "Log out"
+    "updtPan": "paneli güncelle",
+    "setting": "Stereum ayarları",
+    "logOutBtn": "Çıkış yap"
   },
   "switchNetwork": {
     "message": "This is the current network, you can click to select another network"
@@ -651,83 +651,83 @@
   "searchOption": {
     "switchShow": "Switch between showing the public key & your picked custom name",
     "group": "Group multiple key(s)",
-    "searchFilter": "Search & filters"
+    "searchFilter": "Arama ve filtreler"
   },
   "serverManagement": {
-    "serverAccMange": "Server Access Management",
-    "serverNam": "Server Name",
-    "ipHOST": "IP or HOST NAME",
-    "userNam": "User Name",
-    "machineNam": "Machine Name",
-    "port": "Port",
-    "pass": "Password",
-    "chngPass": "Change Password",
-    "passmessage": "Please enter a password to change it",
-    "confirmPass": "please enter the password again",
-    "confirmPassMessage": "confirm your password",
-    "cancel": "CANCEL",
-    "clckChngPass": "click to change your password",
-    "key": "Key",
-    "createKey": "create a new key",
-    "clckCreateKey": "click to generate a new key",
+    "serverAccMange": "Sunucu Erişimi Yönetimi",
+    "serverNam": "Sunucu Adı",
+    "ipHOST": "IP ADRESİ veya ANA BİLGİSAYAR ADI",
+    "userNam": "Kullanıcı Adı",
+    "machineNam": "Mekine Adı",
+    "port": "Bağlantı Noktası (port)",
+    "pass": "Parola",
+    "chngPass": "Parolayı Değiştir",
+    "passmessage": "Lütfen değiştirmek için bir parola girin",
+    "confirmPass": "Lütfen parolayı tekrar girin",
+    "confirmPassMessage": "Parolanızı onaylayın",
+    "cancel": "İPTAL ET",
+    "clckChngPass": "Parolanızı değiştirmek için tıklayın",
+    "key": "Anahtar",
+    "createKey": "Yeni bir anahtar oluştur",
+    "clckCreateKey": "Yeni bir anahtar oluşturmak için tıklayın",
     "addKey": "add an existing key",
     "clckAddKey": "click to add an existing key"
   },
   "taskMang": {
-    "taskMng": "Task Manager"
+    "taskMng": "Görev Yöneticisi"
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
     "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
+    "noIpFound": "IP adresi bulunamadı",
     "clickSearch": "Click [search] to start"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
     "turnOn": "Turn on the service",
     "restart": "Restart the service",
-    "pending": "Service is pending",
-    "settings": "service settings",
-    "logs": "open logs",
-    "docs": "open docs"
+    "pending": "Hizmet beklemede",
+    "settings": "Hizmet ayarları",
+    "logs": "günlükleri aç",
+    "docs": "dökümanları aç"
   },
   "serviceLay": {
-    "srvice": "service"
+    "srvice": "hizmet"
   },
   "clientButtons": {
-    "turnOn": "Turn on the service",
-    "turnOff": "Turn off the service",
-    "restart": "Restart the service",
-    "pending": "service is pending",
-    "settings": "service settings",
-    "logs": "open logs",
-    "docs": "open docs",
-    "removeLock": "remove lock files",
-    "pruning": "pruning the service",
-    "resync": "resync the service"
+    "turnOn": "Hizmeti aç",
+    "turnOff": "Hizmeti kapat",
+    "restart": "Hizmeti yeniden başlat",
+    "pending": "Hizmet beklemede",
+    "settings": "Access the settings of the service",
+    "logs": "Open the logs of the service",
+    "docs": "Open the documentation of the service in your browser",
+    "removeLock": "Remove Lock files of the service",
+    "pruning": "Prune the service database",
+    "resync": "Resync the service from a selected source"
   },
   "clientLay": {
-    "client": "client",
+    "client": "istemci",
     "keyMsg": "key(s) imported",
     "syncStatus": "sync status:"
   },
   "serverDetails": {
-    "machineName": "Machine Name",
+    "machineName": "Mekine Adı",
     "machineIp": "Machine IP Address"
   },
   "changesBox": {
     "clickToCancel": "Click here to cancel this change"
   },
   "editClientLay": {
-    "clkEdit": "click to edit your service"
+    "clkEdit": "Click to edit your service"
   },
   "generalMenu": {
     "modify": "modify",
-    "connection": "connection",
-    "switchClient": "switch client",
-    "delete": "delete",
-    "service": "service",
-    "info": "info"
+    "connection": "bağlantı",
+    "switchClient": "istemci değiştir",
+    "delete": "sil",
+    "service": "hizmet",
+    "info": "bilgi"
   },
   "networkDetails": {
     "currIs": "The current network is",
@@ -737,13 +737,13 @@
     "clkConfirm": "Click here to confirm change(s)"
   },
   "sidebarSect": {
-    "toNode": "To the Node Page",
-    "toEdit": "To the Edit Node",
-    "setchNet": "Switch Network",
-    "nukTheNud": "Nuke the Node",
+    "toNode": "Return to the Node Page",
+    "toEdit": "Go to the Edit Node Page",
+    "setchNet": "Switch Network in the configuration of the Node",
+    "nukTheNud": "Nuke the Stereum Node and all its services",
     "nukNod": "Nuke Node",
-    "trnOn": "Turn Node On",
-    "trnOff": "Turn Node Off",
-    "expNode": "Export Node Config"
+    "trnOn": "Düğümünüzü açın",
+    "trnOff": "Düğümünüzü kapatın",
+    "expNode": "Düğüm Yapılandırmanızı Dışa Aktarın"
   }
 }
