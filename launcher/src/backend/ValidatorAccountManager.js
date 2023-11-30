@@ -42,7 +42,6 @@ export class ValidatorAccountManager {
   }
 
   async checkActiveValidators(files, password, serviceID, slashingDB, isRemote = false) {
-    console.log("FILESSSSSS", files);
     let services = await this.serviceManager.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
     let pubkeys = [];
@@ -587,7 +586,6 @@ export class ValidatorAccountManager {
         obj = {};
       }
     }
-    console.log("obj:-----------", obj);
     await this.nodeConnection.sshService.exec(
       "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(obj)) + " > /etc/stereum/keys.yaml"
     );
