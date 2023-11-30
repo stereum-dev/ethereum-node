@@ -44,19 +44,17 @@
   </aside>
 </template>
 <script setup>
-import { ref, computed, watchEffect } from "vue";
-import { useListKeys } from "@/composables/validators";
-import { useListGroups } from "@/composables/groups";
+import { ref, computed, onMounted } from "vue";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
 
+const emit = defineEmits(["filterKeys"]);
+
 const footerStore = useFooter();
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
-const selectedService = ref(null);
 const currentService = ref(null);
-const { listGroups } = useListGroups();
 
 const hoveredIndex = ref(null);
 
@@ -66,26 +64,12 @@ const installedValidators = computed(() => {
     .map((service) => ({ ...service, selected: false }));
 });
 
-watchEffect(() => {
-  if (stakingStore.keys.length && installedValidators.value.length && selectedService.value === null) {
-    currentService.value = installedValidators.value[0].service;
-    stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) =>
-      group.keys.some((e) => e.validatorID === installedValidators.value[0].config?.serviceID)
-    );
-    stakingStore.keys = stakingStore.keys.filter(
-      (key) => key.validatorID === installedValidators.value[0].config?.serviceID
-    );
-  }
+//Lifecycle Hooks
+onMounted(() => {
+  currentService.value = installedValidators.value[0].service;
 });
 
-//Lifecycle Hooks
-
 //Methods
-
-const listKeys = async () => {
-  await useListKeys(stakingStore.forceRefresh);
-  await listGroups(stakingStore.forceRefresh);
-};
 
 const getService = (index) => {
   hoveredIndex.value = null;
@@ -94,17 +78,7 @@ const getService = (index) => {
 
 const filterByService = async (item) => {
   currentService.value = item.service;
-  selectedService.value = item;
-  await listKeys();
-  stakingStore.keys = stakingStore.keys.filter((key) => key.validatorID === selectedService.value.config?.serviceID);
-  stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) =>
-    group.keys.some((e) => e.validatorID === selectedService.value.config?.serviceID)
-  );
+  stakingStore.selectedServiceToFilter = item;
+  emit("filterKeys", item);
 };
 </script>
-
-<style scoped>
-/* button {
-  --animate-duration: 500ms;
-} */
-</style>

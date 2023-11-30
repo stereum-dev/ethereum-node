@@ -4,6 +4,7 @@ export const useStakingStore = defineStore("theStaking", {
   state: () => {
     return {
       // ***** Staking List
+      selectedServiceToFilter: null,
       filteredKeys: [],
       activePanel: "insert",
       searchContent: "",
