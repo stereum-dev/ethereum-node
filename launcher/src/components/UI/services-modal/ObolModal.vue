@@ -19,22 +19,22 @@
         <div v-if="!generatorPlugin" class="wrapper">
           <div class="browserBox">
             <div class="title">
-              <span>{{ !countinueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
+              <span>{{ !continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
               <span>{{
-                !countinueForExistENR
+                !continueForExistENR
                   ? "Generate a new ENR to use to create or join an existing cluster"
                   : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
               }}</span>
             </div>
             <div class="btn-box">
               <div class="btn" @click="topBlock">
-                {{ !countinueForExistENR ? "GENERATE" : "OPEN IN BROWSER" }}
+                {{ !continueForExistENR ? "GENERATE" : "OPEN IN BROWSER" }}
               </div>
             </div>
           </div>
 
           <div class="browserBox">
-            <div v-if="!countinueForExistENR" class="browserBox_import">
+            <div v-if="!continueForExistENR" class="browserBox_import">
               <div class="import-title">
                 <span>IMPORT EXISTING ENR</span>
               </div>
@@ -45,31 +45,42 @@
             </div>
             <div v-else class="wrapper" style="flex-direction: row">
               <div class="title">
-                <span>{{ !countinueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
+                <span>{{ !continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
                 <span>{{
-                  !countinueForExistENR
+                  !continueForExistENR
                     ? "Generate a new ENR to use to create or join an existing cluster"
                     : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
                 }}</span>
               </div>
               <div class="btn-box">
-                <div class="btn" style="background: #494949; color: #dbdbdb">
+                <div class="btn" style="background: #494949; color: #dbdbdb" @click="copyHandler">
                   <img style="width: 10%; margin-right: 2%" src="/img/icon/service-icons/copy1.png" alt="" />ENR
                 </div>
-                <div class="btn" style="background: #eb5353; color: #dbdbdb">REMOVE</div>
+                <div class="btn" style="background: #eb5353; color: #dbdbdb" @click="removeHandler">REMOVE</div>
               </div>
             </div>
           </div>
-          <div v-if="countinueForExistENR" class="browserBox">
-            <div class="title">
-              <span>START THE DKG</span>
-              <span
-                >When all ENRs are signed, you will be presented with a command. All Node Operators have to run this
-                command at the same time!
-              </span>
+          <div v-if="continueForExistENR" class="browserBox">
+            <div v-if="!dkgControl" class="wrapper" style="flex-direction: row">
+              <div class="title">
+                <span>START THE DKG</span>
+                <span
+                  >When all ENRs are signed, you will be presented with a command. All Node Operators have to run this
+                  command at the same time!
+                </span>
+              </div>
+              <div class="btn-box">
+                <div class="btn" @click="dkgSwitch">START</div>
+              </div>
             </div>
-            <div class="btn-box">
-              <div class="btn">START</div>
+            <div v-else class="browserBox_import">
+              <div class="import-title">
+                <span>PASTE THE URL</span>
+              </div>
+              <div class="enrImport">
+                <input v-model="startDKG" type="text" placeholder="Enter URL" />
+                <div class="import-btn" @click="dkgImporter">start</div>
+              </div>
             </div>
           </div>
         </div>
@@ -90,6 +101,8 @@ export default {
     return {
       obolSharonService: {},
       importedENR: "",
+      startDKG: "",
+      dkgControl: false,
     };
   },
 
@@ -99,7 +112,7 @@ export default {
       generatorPlugin: "generatorPlugin",
       obolDashboard: "obolDashboard",
       generatedENR: "generatedENR",
-      countinueForExistENR: "countinueForExistENR",
+      continueForExistENR: "continueForExistENR",
     }),
   },
   mounted() {
@@ -107,11 +120,6 @@ export default {
     this.generatorPlugin = false;
   },
   methods: {
-    topBlock() {
-      this.generatorPlugin = true;
-      this.obolDashboard = false;
-      this.generatedENR = "";
-    },
     filterObolSharonService() {
       this.runningServices.forEach((item) => {
         if (item.name === "Obol Charon") this.obolSharonService = item;
@@ -129,8 +137,39 @@ export default {
       let url = "https://discord.gg/n6ebKsX46w";
       window.open(url, "_blank");
     },
+    topBlock() {
+      if (!this.continueForExistENR) {
+        this.generatorPlugin = true;
+        this.obolDashboard = false;
+        this.generatedENR = "";
+      } else {
+        let url = "https://goerli.launchpad.obol.tech/";
+        window.open(url, "_blank");
+      }
+    },
     enrImport() {
       console.log(this.importedENR);
+    },
+    copyHandler() {
+      let toCopy = this.generatedENR;
+      navigator.clipboard
+        .writeText(toCopy)
+        .then(() => {
+          this.cursorLocation = this.copiedPub;
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
+    },
+    removeHandler() {
+      this.generatedENR = "";
+      this.continueForExistENR = false;
+    },
+    dkgSwitch() {
+      this.dkgControl = true;
+    },
+    dkgImporter() {
+      console.log(this.startDKG);
     },
   },
 };
