@@ -37,7 +37,7 @@ import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { useServices } from "@/store/services";
 
 //Store
@@ -71,20 +71,48 @@ const activeModal = computed(() => {
   };
 });
 
+watch(
+  () => serviceStore.installedServices,
+  (newServices) => {
+    // Check the condition whenever installedServices changes
+    const shouldUseListKeys =
+      newServices.length > 0 &&
+      newServices.some(
+        (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
+      );
+
+    if (shouldUseListKeys) {
+      useListKeys();
+    }
+  },
+  {
+    deep: true, // To watch nested properties in the array objects
+  }
+);
+
 //Lifecycle Hooks
 
-onMounted(async () => {
-  await listKeys();
+onMounted(() => {
+  checkForListingKeys();
 });
 
 // *************** Methods *****************
 
 //**** List Keys ****
+//Methods
 
-const listKeys = async () => {
-  await useListKeys(stakingStore.forceRefresh);
+const checkForListingKeys = async () => {
+  //is true when there is at least one validator service running without keys
+  if (
+    serviceStore.installedServices &&
+    serviceStore.installedServices.length > 0 &&
+    serviceStore.installedServices.some(
+      (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
+    )
+  ) {
+    useListKeys();
+  }
 };
-
 // const updateValidatorStats = async () => {
 //   await useUpdateValidatorStats();
 // };
@@ -165,7 +193,7 @@ const importKey = async (val) => {
   stakingStore.previewKeys = [];
   stakingStore.importEnteredPassword = "";
 
-  await listKeys();
+  useListKeys();
 };
 
 //Validation validator key Password
@@ -232,7 +260,7 @@ const createGroup = async (groupName) => {
     const newGroup = {
       id: groupId,
       name: groupName,
-      validatorID: stakingStore.selectedValidatorKeys[0].validatorID,
+      validatorClientID: stakingStore.selectedValidatorKeys[0].validatorID,
       keys: stakingStore.selectedValidatorKeys.map((key) => ({
         ...key,
         groupName: groupName,
@@ -258,6 +286,7 @@ const groupRenameHandler = async (newGroupName, groupId) => {
             keyName: keysFromServer[key.key].keyName || "",
             groupName: newGroupName,
             groupID: groupId,
+            validatorClientID: keysFromServer[key.key].validatorClientID,
           };
         });
       }
@@ -283,7 +312,7 @@ const confirmGrouping = async (val) => {
     await groupRenameHandler(val, groupId);
     stakingStore.groupName = "";
   }
-  await listKeys();
+  useListKeys();
 };
 
 const renameGroup = (item) => {
@@ -310,9 +339,9 @@ const removeGroupConfirm = async (item) => {
         group.keys.forEach((key) => {
           keysFromServer[key.key] = {
             keyName: keysFromServer[key.key].keyName || "",
-            validatorID: "",
             groupName: "",
             groupID: null,
+            validatorClientID: "",
           };
         });
       }
@@ -329,7 +358,7 @@ const removeGroupConfirm = async (item) => {
   stakingStore.setActiveModal(null);
   stakingStore.setMode("create");
   stakingStore.currentGroup = "";
-  await listKeys();
+  useListKeys();
 };
 
 //****End of Grouping ****
@@ -368,6 +397,6 @@ const deletePreviewKey = async (item) => {
     stakingStore.isPreviewListActive = false;
     stakingStore.setActivePanel("insert");
   }
-  await listKeys();
+  useListKeys();
 };
 </script>

@@ -44,7 +44,7 @@
   </aside>
 </template>
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watchEffect } from "vue";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
@@ -63,6 +63,12 @@ const installedValidators = computed(() => {
     .sort((a, b) => a.name.localeCompare(b.name));
 });
 
+watchEffect(() => {
+  if (stakingStore.selectedServiceToFilter === null) {
+    stakingStore.selectedServiceToFilter = installedValidators.value[0];
+  }
+});
+
 //Lifecycle Hooks
 onMounted(() => {
   currentService.value = installedValidators.value[0].service;
@@ -76,7 +82,7 @@ const getService = (index) => {
   hoveredIndex.value = index;
 };
 
-const filterByService = async (item) => {
+const filterByService = (item) => {
   currentService.value = item.service;
   stakingStore.selectedServiceToFilter = item;
 };

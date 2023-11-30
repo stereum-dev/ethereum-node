@@ -19,6 +19,7 @@ export const useListGroups = () => {
               id: keyData.groupID,
               name: keyData.groupName,
               keys: [],
+              validatorClientID: keyData.validatorClientID,
             };
           }
           const matchingKey = item.find((key) => key.key === pubkey);

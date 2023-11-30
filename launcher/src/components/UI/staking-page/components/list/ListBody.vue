@@ -105,11 +105,13 @@ const getFilteredValidators = computed(() => {
 });
 
 const getCorrectValidatorGroups = computed(() => {
-  // return stakingStore.validatorKeyGroups.filter(
-  //   (group) => group.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
-  // );
-  return console.log("SERVICEEEEEE", stakingStore.validatorKeyGroups);
+  return stakingStore.validatorKeyGroups.filter(
+    (group) =>
+      group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
+  );
 });
+console.log(getCorrectValidatorGroups.value);
+console.log(stakingStore.validatorKeyGroups);
 
 watch(
   () => getFilteredValidators,
@@ -117,6 +119,13 @@ watch(
     if (newVal.length > 0) {
       await listGroups(getFilteredValidators.value);
     }
+  }
+);
+watch(
+  () => stakingStore.selectedServiceToFilter,
+  async () => {
+    await listGroups(getFilteredValidators.value);
+    await listKeys();
   }
 );
 
