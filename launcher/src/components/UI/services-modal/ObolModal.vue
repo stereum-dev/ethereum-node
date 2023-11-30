@@ -113,11 +113,15 @@ export default {
       obolDashboard: "obolDashboard",
       generatedENR: "generatedENR",
       continueForExistENR: "continueForExistENR",
+      distrubutedValidatorGenerator: "distrubutedValidatorGenerator",
+      enrIsGenerating: "enrIsGenerating",
+      deactivateBtnToWaitForLogs: "deactivateBtnToWaitForLogs",
     }),
   },
   mounted() {
     this.filterObolSharonService();
     this.generatorPlugin = false;
+    this.distrubutedValidatorGenerator = false;
   },
   methods: {
     filterObolSharonService() {
@@ -139,9 +143,11 @@ export default {
     },
     topBlock() {
       if (!this.continueForExistENR) {
+        this.enrIsGenerating = true;
         this.generatorPlugin = true;
         this.obolDashboard = false;
         this.generatedENR = "";
+        this.distrubutedValidatorGenerator = false;
       } else {
         let url = "https://goerli.launchpad.obol.tech/";
         window.open(url, "_blank");
@@ -169,7 +175,14 @@ export default {
       this.dkgControl = true;
     },
     dkgImporter() {
-      console.log(this.startDKG);
+      if (!this.startDKG) {
+        console.log("please enter url");
+      } else {
+        this.enrIsGenerating = false;
+        this.generatorPlugin = true;
+        this.distrubutedValidatorGenerator = true;
+        this.deactivateBtnToWaitForLogs = true;
+      }
     },
   },
 };
