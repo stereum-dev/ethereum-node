@@ -110,22 +110,11 @@ const getCorrectValidatorGroups = computed(() => {
       group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   );
 });
-console.log(getCorrectValidatorGroups.value);
-console.log(stakingStore.validatorKeyGroups);
 
-watch(
-  () => getFilteredValidators,
-  async (newVal) => {
-    if (newVal.length > 0) {
-      await listGroups(getFilteredValidators.value);
-    }
-  }
-);
 watch(
   () => stakingStore.selectedServiceToFilter,
   async () => {
     await listGroups(getFilteredValidators.value);
-    await listKeys();
   }
 );
 

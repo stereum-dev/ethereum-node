@@ -71,48 +71,13 @@ const activeModal = computed(() => {
   };
 });
 
-watch(
-  () => serviceStore.installedServices,
-  (newServices) => {
-    // Check the condition whenever installedServices changes
-    const shouldUseListKeys =
-      newServices.length > 0 &&
-      newServices.some(
-        (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
-      );
-
-    if (shouldUseListKeys) {
-      useListKeys();
-    }
-  },
-  {
-    deep: true, // To watch nested properties in the array objects
-  }
-);
-
 //Lifecycle Hooks
-
-onMounted(() => {
-  checkForListingKeys();
-});
 
 // *************** Methods *****************
 
 //**** List Keys ****
 //Methods
 
-const checkForListingKeys = async () => {
-  //is true when there is at least one validator service running without keys
-  if (
-    serviceStore.installedServices &&
-    serviceStore.installedServices.length > 0 &&
-    serviceStore.installedServices.some(
-      (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
-    )
-  ) {
-    useListKeys();
-  }
-};
 // const updateValidatorStats = async () => {
 //   await useUpdateValidatorStats();
 // };
