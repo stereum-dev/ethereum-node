@@ -165,6 +165,7 @@ const importKey = async (val) => {
   stakingStore.importEnteredPassword = "";
   stakingStore.forceRefresh = true;
   await listKeys();
+  listGroups();
 };
 
 //Validation validator key Password
@@ -345,6 +346,8 @@ const confirmValidatorKeyRename = async (name) => {
   let el = stakingStore.selectKeyToRename;
   el.displayName = name;
   const keys = await ControlService.readKeys();
+  console.log("keys------------", keys);
+  console.log("name------------", name);
   if (keys) {
     keys[el.key].keyName = name;
     await ControlService.writeKeys(keys);
