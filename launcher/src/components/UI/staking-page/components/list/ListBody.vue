@@ -137,6 +137,12 @@ watchEffect(() => {
 });
 
 // Lifecycle Hooks
+onMounted(() => {
+  isLoading.value = true;
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 10000);
+});
 onMounted(async () => {
   stakingStore.forceRefresh = true;
   await listKeys();
