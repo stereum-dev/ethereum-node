@@ -1,4 +1,4 @@
-import { ref, computed, watchEffect, watch, onMounted } from 'vue';
+import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 <template>
   <div
     class="col-start-1 col-span-full row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
@@ -67,6 +67,11 @@ import { ref, computed, watchEffect, watch, onMounted } from 'vue';
         <span v-if="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
         >
+        <span
+          v-if="searchNotFound && stakingStore.searchContent !== '' && getFilteredValidators.length === 0"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
+          >No Matches.</span
+        >
       </div>
     </div>
   </div>
@@ -78,7 +83,7 @@ import GroupRow from "./rows/GroupRow.vue";
 import SkeletonRow from "./rows/SkeletonRow.vue";
 import { useListGroups } from "@/composables/groups";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import { useListKeys } from "@/composables/validators";
 
 const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
@@ -86,12 +91,21 @@ const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
 const noKey = ref(false);
+const searchNotFound = ref(false);
 
+// Computed
 stakingStore.filteredKeys = computed(() => {
-  if (!stakingStore.searchContent) {
-    return stakingStore.keys;
+  let output;
+  if (stakingStore.searchContent === "") {
+    output = stakingStore.keys;
+  } else if (stakingStore.searchContent !== "" && stakingStore.keys.length === 0) {
+    output = [];
+  } else {
+    output = stakingStore.keys.filter((key) =>
+      key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())
+    );
   }
-  return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
+  return output;
 });
 
 const getKeysInsideGroup = computed(() => {
@@ -122,17 +136,46 @@ watchEffect(() => {
   if (stakingStore.isPreviewListActive) {
     isLoading.value = false;
     noKey.value = false;
-  } else if (!stakingStore.isPreviewListActive && getFilteredValidators.value.length === 0) {
+  } else if (
+    !stakingStore.isPreviewListActive &&
+    getFilteredValidators.value.length === 0 &&
+    stakingStore.searchContent === "" &&
+    stakingStore.validatorKeyGroups.length === 0
+  ) {
     isLoading.value = true;
     setTimeout(() => {
-      if (getFilteredValidators.value.length === 0) {
+      if (
+        getFilteredValidators.value.length === 0 &&
+        stakingStore.searchContent !== "" &&
+        stakingStore.validatorKeyGroups.length === 0
+      ) {
         isLoading.value = false;
         noKey.value = true;
       }
     }, 10000);
-  } else if (!stakingStore.isPreviewListActive && getFilteredValidators.value.length > 0) {
+  } else if (
+    !stakingStore.isPreviewListActive &&
+    getFilteredValidators.value.length > 0 &&
+    stakingStore.searchContent === ""
+  ) {
     isLoading.value = false;
     noKey.value = false;
+  } else if (
+    !stakingStore.isPreviewListActive &&
+    getFilteredValidators.value.length > 0 &&
+    stakingStore.searchContent !== ""
+  ) {
+    isLoading.value = false;
+    noKey.value = false;
+    searchNotFound.value = false;
+  } else if (
+    !stakingStore.isPreviewListActive &&
+    getFilteredValidators.value.length === 0 &&
+    stakingStore.searchContent !== ""
+  ) {
+    isLoading.value = false;
+    noKey.value = false;
+    searchNotFound.value = true;
   }
 });
 
@@ -146,12 +189,27 @@ onMounted(() => {
 onMounted(async () => {
   stakingStore.forceRefresh = true;
   await listKeys();
-  if (getFilteredValidators.value.length > 0) {
+  if (getFilteredValidators.value.length > 0 && stakingStore.searchContent === "") {
     await listGroups();
   }
 });
+onUnmounted(() => {
+  stakingStore.setActivePanel(null);
+});
 
 // Methods
+
+// const checkKeysAndSearchContent = () => {
+//   if (!stakingStore.searchContent === "") {
+//     stakingStore.filteredKeys = stakingStore.keys;
+//   } else if (stakingStore.searchContent !== "" && stakingStore.filteredKeys.length > 0) {
+//     searchNotFound.value = true;
+//   } else {
+//     stakingStore.filteredKeys = stakingStore.keys.filter((key) =>
+//       key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())
+//     );
+//   }
+// };
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);

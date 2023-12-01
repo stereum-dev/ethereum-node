@@ -5,7 +5,8 @@ export const useStakingStore = defineStore("theStaking", {
     return {
       // ***** Staking List
       selectedServiceToFilter: null,
-      filteredKeys: [],
+      filteredKeys: null,
+      searchedKeys: [],
       activePanel: "insert",
       searchContent: "",
       isOverDropZone: false,
