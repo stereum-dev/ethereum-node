@@ -287,6 +287,8 @@
     "syncClient": "СИНХРОНИЗИРУЕТ КЛИЕНТА С НАЧАЛОМ ЦЕПОЧКИ",
     "plugin": "УСТАНОВЛЕННЫЕ СЛУЖБЫ",
     "addOpt": "ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ",
+    "installOpt": "INSTALLATION OPTIONS",
+    "startOnInstall": "Start up client after installation?",
     "monitor": "КОНТРОЛЬ",
     "instMonit": "Установить контроль?",
     "back": "НАЗАД",

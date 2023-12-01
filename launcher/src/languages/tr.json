@@ -287,6 +287,8 @@
     "syncClient": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
     "plugin": "KURULAN SERVİSLER",
     "addOpt": "ADDITIONAL OPTIONS",
+    "installOpt": "INSTALLATION OPTIONS",
+    "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
     "instMonit": "Install Monitoring?",
     "back": "GERİ",

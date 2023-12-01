@@ -287,6 +287,8 @@
     "syncClient": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
     "plugin": "NAINSTALOVANÉ SLUŽBY",
     "addOpt": "DALŠÍ MOŽNOSTI",
+    "installOpt": "INSTALLATION OPTIONS",
+    "startOnInstall": "Start up client after installation?",
     "monitor": "MONITOROVÁNÍ",
     "instMonit": "Instalovat monitorování?",
     "back": "ZPĚT",

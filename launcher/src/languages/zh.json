@@ -287,6 +287,8 @@
     "syncClient": "由原始区块链同步您的客户端",
     "plugin": "安装服务器",
     "addOpt": "附加选项",
+    "installOpt": "INSTALLATION OPTIONS",
+    "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
     "instMonit": "Install Monitoring?",
     "back": "回去",
