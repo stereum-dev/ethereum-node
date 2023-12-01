@@ -3,10 +3,17 @@
     <div class="obol-modal-plugin_header">
       <span>{{ distrubutedValidatorGenerator ? "DISTRIBUTED VALIDATOR GENERATION" : "GENERATING NEW ENR" }}</span>
     </div>
-    <div class="obol-modal-plugin_spaceWindow">
-      <span v-if="!distrubutedValidatorGenerator">{{ generatedENR }}</span>
-      <div v-else class="span-wrapper">
-        <span v-for="item in dummmmmmmy" :key="item">{{ item }}</span>
+    <div
+      class="obol-modal-plugin_spaceWindow"
+      :style="{
+        backgroundImage: backupDistributedValidator || distributedCompleted ? distrubutedValidatorAnimation : '',
+      }"
+    >
+      <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
+        <span v-if="!distrubutedValidatorGenerator">{{ generatedENR }}</span>
+        <div v-else class="span-wrapper">
+          <span v-for="item in dummmmmmmy" :key="item">{{ item }}</span>
+        </div>
       </div>
     </div>
     <div
@@ -32,6 +39,10 @@ export default {
       enrGeneratedFailed: false,
       enrGeneratedContinue: false,
       dummmmmmmy: [],
+      backupDistributedValidator: false,
+      distrubutedValidatorAnimation: "url('./img/icon/service-icons/obol_animation.gif')",
+      nukeNode: "url('./img/icon/service-icons/obol_animation.gif')",
+      distributedCompleted: false,
     };
   },
   computed: {
@@ -79,11 +90,16 @@ export default {
         return "CONTINUE"; //continue
       } else if (this.distrubutedValidatorGenerator && !this.enrIsGenerating) {
         return "Y of X CONNECTED";
+      } else if (this.backupDistributedValidator && !this.enrIsGenerating) {
+        return "BACKUP";
+      } else if (this.distributedCompleted && !this.enrIsGenerating && !this.backupDistributedValidator) {
+        return "COMPLETE";
       }
 
       return "RETURN"; //failed
     },
   },
+
   mounted() {
     if (!this.distrubutedValidatorGenerator && this.enrIsGenerating) {
       this.randomDummyText();
@@ -103,7 +119,6 @@ export default {
         this.enrGeneratedSuccess = false;
         this.enrGeneratedFailed = false;
         this.enrGeneratedContinue = true;
-        console.log("BACKUP ENR");
       } else if (this.enrBtnToShow === "RETURN") {
         this.enrIsGenerating = true;
         this.enrGeneratedSuccess = false;
@@ -121,7 +136,13 @@ export default {
         this.obolDashboard = true;
         this.continueForExistENR = true;
       } else if (this.enrBtnToShow === "Y of X CONNECTED") {
-        console.log("Y of X CONNECTED");
+        this.backupDistributedValidator = true;
+        this.distrubutedValidatorGenerator = false;
+        this.distributedCompleted = false;
+      } else if (this.enrBtnToShow === "BACKUP") {
+        this.backupDistributedValidator = false;
+        this.distrubutedValidatorGenerator = false;
+        this.distributedCompleted = true;
       }
     },
     //dummy enr generator
@@ -242,6 +263,17 @@ export default {
   font-size: 100%;
   font-weight: 400;
   overflow-y: scroll;
+  background-size: cover;
+  background-position: center;
+}
+.obol-modal-plugin_wapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: scroll;
 }
 .span-wrapper {
   width: 100%;
@@ -286,5 +318,9 @@ export default {
 }
 .activeBtn {
   color: #2fe4ab;
+}
+.distributed-confirmed {
+  background-size: cover;
+  background-position: center;
 }
 </style>
