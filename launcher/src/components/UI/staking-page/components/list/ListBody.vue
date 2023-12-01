@@ -67,11 +67,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         <span v-if="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
         >
-        <span
-          v-if="searchNotFound && stakingStore.searchContent !== '' && getFilteredValidators.length === 0"
-          class="text-lg font-bold text-gray-300 text-center uppercase"
-          >No Matches.</span
-        >
+        <span v-if="searchNotFound" class="text-lg font-bold text-gray-300 text-center uppercase">No Matches.</span>
       </div>
     </div>
   </div>
@@ -90,22 +86,15 @@ const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "wi
 const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
-const noKey = ref(false);
-const searchNotFound = ref(false);
+// const noKey = ref(false);
+// const searchNotFound = ref(false);
 
 // Computed
 stakingStore.filteredKeys = computed(() => {
-  let output;
   if (stakingStore.searchContent === "") {
-    output = stakingStore.keys;
-  } else if (stakingStore.searchContent !== "" && stakingStore.keys.length === 0) {
-    output = [];
-  } else {
-    output = stakingStore.keys.filter((key) =>
-      key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())
-    );
+    return stakingStore.keys;
   }
-  return output;
+  return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
 });
 
 const getKeysInsideGroup = computed(() => {
@@ -124,6 +113,23 @@ const getCorrectValidatorGroups = computed(() => {
       group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   );
 });
+const noKey = computed(() => {
+  return (
+    !stakingStore.isPreviewListActive &&
+    !isLoading.value &&
+    stakingStore.searchContent === "" &&
+    stakingStore.filteredKeys.length === 0
+  );
+});
+
+const searchNotFound = computed(() => {
+  return (
+    !stakingStore.isPreviewListActive &&
+    !isLoading.value &&
+    stakingStore.searchContent !== "" &&
+    stakingStore.filteredKeys.length === 0
+  );
+});
 
 watch(
   () => stakingStore.selectedServiceToFilter,
@@ -131,67 +137,73 @@ watch(
     await listGroups();
   }
 );
-
 watchEffect(() => {
-  if (stakingStore.isPreviewListActive) {
-    isLoading.value = false;
-    noKey.value = false;
-  } else if (
-    !stakingStore.isPreviewListActive &&
-    getFilteredValidators.value.length === 0 &&
-    stakingStore.searchContent === "" &&
-    stakingStore.validatorKeyGroups.length === 0
-  ) {
+  if (!stakingStore.isPreviewListActive) {
     isLoading.value = true;
     setTimeout(() => {
-      if (
-        getFilteredValidators.value.length === 0 &&
-        stakingStore.searchContent !== "" &&
-        stakingStore.validatorKeyGroups.length === 0
-      ) {
-        isLoading.value = false;
-        noKey.value = true;
-      }
+      isLoading.value = false;
     }, 10000);
-  } else if (
-    !stakingStore.isPreviewListActive &&
-    getFilteredValidators.value.length > 0 &&
-    stakingStore.searchContent === ""
-  ) {
-    isLoading.value = false;
-    noKey.value = false;
-  } else if (
-    !stakingStore.isPreviewListActive &&
-    getFilteredValidators.value.length > 0 &&
-    stakingStore.searchContent !== ""
-  ) {
-    isLoading.value = false;
-    noKey.value = false;
-    searchNotFound.value = false;
-  } else if (
-    !stakingStore.isPreviewListActive &&
-    getFilteredValidators.value.length === 0 &&
-    stakingStore.searchContent !== ""
-  ) {
-    isLoading.value = false;
-    noKey.value = false;
-    searchNotFound.value = true;
   }
 });
 
+// watchEffect(() => {
+//   if (stakingStore.isPreviewListActive) {
+//     isLoading.value = false;
+//     noKey.value = false;
+//   } else if (
+//     !stakingStore.isPreviewListActive &&
+//     getFilteredValidators.value.length === 0 &&
+//     stakingStore.searchContent === "" &&
+//     stakingStore.validatorKeyGroups.length === 0
+//   ) {
+//     isLoading.value = true;
+//     setTimeout(() => {
+//       if (
+//         getFilteredValidators.value.length === 0 &&
+//         stakingStore.searchContent !== "" &&
+//         stakingStore.validatorKeyGroups.length === 0
+//       ) {
+//         isLoading.value = false;
+//         noKey.value = true;
+//       }
+//     }, 10000);
+//   } else if (
+//     !stakingStore.isPreviewListActive &&
+//     getFilteredValidators.value.length > 0 &&
+//     stakingStore.searchContent === ""
+//   ) {
+//     isLoading.value = false;
+//     noKey.value = false;
+//   } else if (
+//     !stakingStore.isPreviewListActive &&
+//     getFilteredValidators.value.length > 0 &&
+//     stakingStore.searchContent !== ""
+//   ) {
+//     isLoading.value = false;
+//     noKey.value = false;
+//     searchNotFound.value = false;
+//   } else if (
+//     !stakingStore.isPreviewListActive &&
+//     getFilteredValidators.value.length === 0 &&
+//     stakingStore.searchContent !== ""
+//   ) {
+//     isLoading.value = false;
+//     noKey.value = false;
+//     searchNotFound.value = true;
+//   }
+// });
+
 // Lifecycle Hooks
-onMounted(() => {
-  isLoading.value = true;
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 10000);
-});
 onMounted(async () => {
+  isLoading.value = true;
   stakingStore.forceRefresh = true;
   await listKeys();
   if (getFilteredValidators.value.length > 0 && stakingStore.searchContent === "") {
     await listGroups();
   }
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 10000);
 });
 onUnmounted(() => {
   stakingStore.setActivePanel(null);
