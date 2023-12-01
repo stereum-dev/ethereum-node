@@ -114,7 +114,7 @@ const getCorrectValidatorGroups = computed(() => {
 watch(
   () => stakingStore.selectedServiceToFilter,
   async () => {
-    await listGroups(getFilteredValidators.value);
+    await listGroups();
   }
 );
 
@@ -138,16 +138,17 @@ watchEffect(() => {
 
 // Lifecycle Hooks
 onMounted(async () => {
+  stakingStore.forceRefresh = true;
   await listKeys();
   if (getFilteredValidators.value.length > 0) {
-    await listGroups(getFilteredValidators.value);
+    await listGroups();
   }
 });
 
 // Methods
 
 const listKeys = async () => {
-  await useListKeys();
+  await useListKeys(stakingStore.forceRefresh);
 };
 
 const isKeyInGroup = (key) => {

@@ -28,6 +28,7 @@ export const useStakingStore = defineStore("theStaking", {
       isGroupListActive: false,
       isGroupingAllowed: false,
       validatorKeyGroups: [],
+      filteredGroups: [],
       selectedGroup: null,
       selectedValidatorKeys: [],
       // ***** End Staking Groups *****

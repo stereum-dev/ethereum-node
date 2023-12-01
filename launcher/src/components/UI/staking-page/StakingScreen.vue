@@ -37,12 +37,14 @@ import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted, watch } from "vue";
+import { computed } from "vue";
 import { useServices } from "@/store/services";
+import { useListGroups } from "@/composables/groups";
 
 //Store
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
+const { listGroups } = useListGroups();
 
 const modals = {
   import: {
@@ -77,6 +79,10 @@ const activeModal = computed(() => {
 
 //**** List Keys ****
 //Methods
+
+const listKeys = async () => {
+  await useListKeys(stakingStore.forceRefresh);
+};
 
 // const updateValidatorStats = async () => {
 //   await useUpdateValidatorStats();
@@ -157,8 +163,8 @@ const importKey = async (val) => {
   stakingStore.keyFiles = [];
   stakingStore.previewKeys = [];
   stakingStore.importEnteredPassword = "";
-
-  useListKeys();
+  stakingStore.forceRefresh = true;
+  await listKeys();
 };
 
 //Validation validator key Password
@@ -277,7 +283,9 @@ const confirmGrouping = async (val) => {
     await groupRenameHandler(val, groupId);
     stakingStore.groupName = "";
   }
-  useListKeys();
+  stakingStore.forceRefresh = true;
+  await listKeys();
+  listGroups();
 };
 
 const renameGroup = (item) => {
@@ -323,7 +331,9 @@ const removeGroupConfirm = async (item) => {
   stakingStore.setActiveModal(null);
   stakingStore.setMode("create");
   stakingStore.currentGroup = "";
-  useListKeys();
+  stakingStore.forceRefresh = true;
+  await listKeys();
+  listGroups();
 };
 
 //****End of Grouping ****
@@ -362,6 +372,7 @@ const deletePreviewKey = async (item) => {
     stakingStore.isPreviewListActive = false;
     stakingStore.setActivePanel("insert");
   }
-  useListKeys();
+  stakingStore.forceRefresh = true;
+  await listKeys();
 };
 </script>

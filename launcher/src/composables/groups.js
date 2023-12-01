@@ -4,10 +4,7 @@ import ControlService from "@/store/ControlService"; // Adjust the import path a
 export const useListGroups = () => {
   const stakingStore = useStakingStore();
 
-  const listGroups = async (item) => {
-    if (!Array.isArray(item)) {
-      console.log("item is not an array");
-    }
+  const listGroups = async () => {
     const existingKeys = await ControlService.readKeys();
     const groups = {};
 
@@ -22,7 +19,7 @@ export const useListGroups = () => {
               validatorClientID: keyData.validatorClientID,
             };
           }
-          const matchingKey = item.find((key) => key.key === pubkey);
+          const matchingKey = stakingStore.filteredKeys.find((key) => key.key === pubkey);
           if (matchingKey) {
             groups[keyData.groupID].keys.push(matchingKey);
           }
