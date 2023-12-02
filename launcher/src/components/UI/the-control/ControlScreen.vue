@@ -67,14 +67,15 @@
                     </div>
                   </div>
                 </div>
-                <the-expert
+                <ExpertWindow
                   v-if="isExpertWindowOpen"
                   :item="expertModeClient"
-                  position="23.4"
+                  left-distance="left-[100px]"
+                  bg-opacity="opacity-25"
                   @hide-modal="hideExpertMode(item)"
                   @prunning-warning="runGethPrunningWarning"
                   @resync-warning="runResyncWarning"
-                ></the-expert>
+                />
                 <prunning-modal
                   v-if="gethPrunningWarningModal"
                   :item="item"
@@ -99,7 +100,7 @@
         <control-dashboard></control-dashboard>
       </div>
       <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
-        <control-alert></control-alert>
+        <control-alert @expert-handler="expertModeHandlerAlert"></control-alert>
       </div>
     </div>
     <!-- End Control main layout -->
@@ -110,9 +111,10 @@ import { useStateHandler } from "@/composables/services";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
-import TheExpert from "../the-node/TheExpert.vue";
+
 import PrunningModal from "../the-node/PrunningModal.vue";
 import ResyncModal from "../the-node/ResyncModal.vue";
+import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useFooter } from "@/store/theFooter";
@@ -122,10 +124,10 @@ export default {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-    TheExpert,
     PrunningModal,
     ResyncModal,
     TooltipDialog,
+    ExpertWindow,
   },
   data() {
     return {
@@ -187,6 +189,10 @@ export default {
     },
     expertModeHandler(el) {
       this.expertModeClient = el;
+      this.isExpertWindowOpen = true;
+    },
+    expertModeHandlerAlert(validator) {
+      this.expertModeClient = validator;
       this.isExpertWindowOpen = true;
     },
     // Check if service is Geth

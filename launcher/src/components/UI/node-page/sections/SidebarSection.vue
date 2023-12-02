@@ -4,6 +4,8 @@
       <div
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center cursor-pointer"
         @click="hoverRouter"
+        @mouseenter="footerStore.cursorLocation = `${toEdit}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-7" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
       </div>
@@ -15,7 +17,7 @@
           @mouseleave="routerHovered = false"
         >
           <img class="w-6 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
-          <span class="text-sm text-gray-200 font-semibold">To Edit Node</span>
+          <span class="text-sm text-gray-200 font-semibold">{{ toEdit }}</span>
         </router-link>
       </Transition>
 
@@ -26,6 +28,8 @@
         v-else-if="checkStatus"
         class="row-start-2 row-end-3 p-1 rounded-md transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverPower"
+        @mouseenter="footerStore.cursorLocation = `${trnOn}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-5" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
       </button>
@@ -34,6 +38,8 @@
         v-else-if="!checkStatus"
         class="row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverPower"
+        @mouseenter="footerStore.cursorLocation = `${trnOff}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-5" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
       </button>
@@ -45,7 +51,7 @@
           @click="showPowerModal"
         >
           <img class="w-4 mr-1" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
-          <span class="text-sm text-gray-200 font-semibold">Turn Node On</span>
+          <span class="text-sm text-gray-200 font-semibold">{{ trnOn }}</span>
         </button>
 
         <button
@@ -55,7 +61,7 @@
           @click="showPowerModal"
         >
           <img class="w-4 mr-1" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
-          <span class="text-xs text-gray-200">Turn Node Off</span>
+          <span class="text-xs text-gray-200">{{ trnOff }}</span>
         </button>
       </Transition>
       <Transition name="slide-fade">
@@ -63,6 +69,8 @@
           v-if="!exportHovered"
           class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
           @click="hoverExport"
+          @mouseenter="footerStore.cursorLocation = `${expNode}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         >
           <img class="w-5" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
         </button>
@@ -73,7 +81,7 @@
           @click="exportData"
         >
           <img class="w-4" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
-          <span class="text-xs text-gray-200 font-semibold">Export Node Config</span>
+          <span class="text-xs text-gray-200 font-semibold">{{ expNode }}</span>
         </button>
       </Transition>
     </div>
@@ -86,12 +94,14 @@
     />
   </aside>
 </template>
+
 <script setup>
 import StateModal from "../components/modals/StateModal";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import { computed, ref } from "vue";
+import { useFooter } from "@/store/theFooter";
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
 
@@ -100,6 +110,15 @@ let powerHovered = ref(false);
 let exportHovered = ref(false);
 let loading = ref(false);
 let isExporting = ref(false);
+const footerStore = useFooter();
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const toEdit = t("sidebarSect.toEdit");
+const trnOn = t("sidebarSect.trnOn");
+const trnOff = t("sidebarSect.trnOff");
+const expNode = t("sidebarSect.expNode");
 
 //stores
 const serviceStore = useServices();

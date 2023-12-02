@@ -4,6 +4,8 @@
       <div
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverRouter"
+        @mouseenter="footerStore.cursorLocation = `${toNode}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-8" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
       </div>
@@ -15,12 +17,14 @@
           @mouseleave="routerHovered = false"
         >
           <img class="w-6 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
-          <span class="text-sm text-gray-200 font-semibold">To Edit Node</span>
+          <span class="text-sm text-gray-200 font-semibold">{{ $t("sidebarSect.toNode") }}</span>
         </router-link>
       </Transition>
       <button
         class="col-span-1 row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverNetwork"
+        @mouseenter="footerStore.cursorLocation = `${setchNet}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-6" src="/img/icon/manage-node-icons/change-network.png" alt="Network" />
       </button>
@@ -32,13 +36,15 @@
           @click="networkModal"
         >
           <img class="w-4 mr-1" src="/img/icon/manage-node-icons/change-network.png" alt="Network Icon" />
-          <span class="text-sm text-gray-200 font-semibold">Switch Network</span>
+          <span class="text-sm text-gray-200 font-semibold">{{ setchNet }}</span>
         </button>
       </Transition>
 
       <button
         class="row-start-3 row-end-4 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverNuke"
+        @mouseenter="footerStore.cursorLocation = `${nukTheNud}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-6" src="/img/icon/manage-node-icons/nuke.png" alt="Export Icon" />
       </button>
@@ -50,7 +56,7 @@
           @click="nukeNode"
         >
           <img class="w-4" src="/img/icon/manage-node-icons/nuke.png" alt="Export Icon" />
-          <span class="text-xs text-gray-200 font-semibold">Nuke Node</span>
+          <span class="text-xs text-gray-200 font-semibold">{{ $t("sidebarSect.nukNod") }}</span>
         </button>
       </Transition>
     </div>
@@ -58,10 +64,19 @@
 </template>
 <script setup>
 import { ref } from "vue";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const toNode = t("sidebarSect.toNode");
+const setchNet = t("sidebarSect.setchNet");
+const nukTheNud = t("sidebarSect.nukTheNud");
 
 const routerHovered = ref(false);
 const networkHovered = ref(false);
 const nukeHovered = ref(false);
+const footerStore = useFooter();
 
 const emit = defineEmits(["nukeNode", "networkModal"]);
 

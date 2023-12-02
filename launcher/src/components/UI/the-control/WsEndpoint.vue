@@ -316,13 +316,13 @@ export default {
 .ws-data:hover {
   background: #707070;
   color: #eee;
-  border: none;
+  border: 1px solid #707070;
 }
 
 .ws-data:active {
   background: rgba(112, 112, 112, 0.6);
   color: #eee;
-  border: none;
+  border: 1px solid #707070;
 }
 
 /* width */

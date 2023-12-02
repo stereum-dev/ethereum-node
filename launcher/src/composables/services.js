@@ -2,6 +2,8 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeManage } from "@/store/nodeManage";
+import { useFooter } from "@/store/theFooter";
+import { useDeepClone } from "@/composables/utils";
 
 export async function useBackendServices(force = false) {
   const serviceStore = useServices();
@@ -132,12 +134,16 @@ export async function useFrontendServices() {
 
 async function useConnectionCheck() {
   const nodeHeaderStore = useNodeHeader();
+  const footerStore = useFooter();
 
   if (!nodeHeaderStore.updating) {
     let connected = await ControlService.checkConnection();
     if (!connected) {
       console.log("Reconnecting...");
+      footerStore.stereumStatus = false;
       await ControlService.reconnect();
+    } else {
+      footerStore.stereumStatus = true;
     }
     return connected;
   }
@@ -186,7 +192,7 @@ export async function useRestartService(client) {
   client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
   if (!client.yaml.includes("isPruning: true")) {
     client.serviceIsPending = true;
-    await ControlService.restartService(structuredClone(client));
+    await ControlService.restartService(useDeepClone(client));
     client.serviceIsPending = false;
     updateStates();
   }

@@ -3,11 +3,15 @@ import { defineStore } from "pinia";
 export const useClickInstall = defineStore("clickInstallation", {
   state: () => {
     return {
+      isConfigButtonEnbabled: false,
       installMonitoring: false,
       relayURL: "",
       checkPointSync: "",
       currentSlide: 0,
       btnActive: false,
+      selectedItem: "- SELECT A SOURCE -",
+      selectedLinks: null,
+      selectedIcon: null,
       syncType: [
         {
           id: 1,
@@ -135,7 +139,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 2,
           name: "Lodestar",
-          icon: "",
+          icon: "/img/icon/service-icons/lodestar.png",
           url: "https://beaconstate-mainnet.chainsafe.io/",
         },
         {
@@ -217,7 +221,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 7,
           name: "Lodestar",
-          icon: "",
+          icon: "/img/icon/service-icons/lodestar.png",
           url: "https://beaconstate-goerli.chainsafe.io/",
         },
 
@@ -246,7 +250,32 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://checkpoint.gnosischain.com/",
         },
       ],
-      holesky: [],
+      holesky: [
+        {
+          id: 1,
+          name: "Lodestar",
+          icon: "/img/icon/service-icons/lodestar.png",
+          url: "https://beaconstate-holesky.chainsafe.io",
+        },
+        {
+          id: 2,
+          name: "BeaconState.info",
+          icon: "",
+          url: "https://holesky.beaconstate.info",
+        },
+        {
+          id: 3,
+          name: "EthStaker",
+          icon: "/img/icon/service-icons/ethstaker.png",
+          url: "https://holesky.beaconstate.ethstaker.cc",
+        },
+        {
+          id: 4,
+          name: "EF DevOps",
+          icon: "/img/icon/service-icons/ef-devops.png",
+          url: "https://checkpoint-sync.holesky.ethpandaops.io",
+        },
+      ],
     };
   },
   actions: {},

@@ -1,14 +1,13 @@
 <template>
-  <div class="flex justify-center z-10">
-    <div class="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-20" @click="$emit('hideModal')"></div>
+  <div class="flex justify-center items-center">
     <div
-      x-transition:enter="transition duration-500 ease-out"
-      x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
-      x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100"
-      x-transition:leave="transition duration-150 ease-in"
-      x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100"
-      x-transition:leave-end="translate-y-8 opacity-0 sm:translate-y-0 sm:scale-95"
-      class="w-full h-full absolute top-0 left-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      class="fixed top-0 left-0 w-full h-full bg-black z-20 rounded-lg"
+      :class="bgOpacity ? bgOpacity : 'opacity-50'"
+      @click="$emit('hideModal')"
+    ></div>
+    <div
+      class="w-[807px] absolute inset-y-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      :class="leftDistance ? leftDistance : 'left-0'"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -262,8 +261,13 @@ export default {
       type: Object,
       required: true,
     },
-    position: {
-      type: [Number, String],
+
+    bgOpacity: {
+      type: String,
+      required: false,
+    },
+    leftDistance: {
+      type: String,
       required: false,
     },
   },

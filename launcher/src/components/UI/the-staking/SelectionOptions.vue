@@ -2,7 +2,9 @@
   <div class="selection-box border-4 border-gray-400">
     <div class="selection-table">
       <div class="selection-table_validator">
-        <div class="validator-icon"><img :src="validatorIcon" :alt="validatorName" /></div>
+        <div class="validator-icon">
+          <img :src="validatorIcon" :alt="validatorName" />
+        </div>
         <div class="validator-name">
           <span>{{ validatorName }}</span>
         </div>
@@ -16,7 +18,9 @@
           <div class="validator-state_Icon">
             <div class="validator-state_Icon-icon" :class="validatorState === 'running' ? 'green' : 'red'"></div>
           </div>
-          <div class="validator-state_status">{{ validatorState === "running" ? "running" : "off" }}</div>
+          <div class="validator-state_status">
+            {{ validatorState === "running" ? "running" : "off" }}
+          </div>
         </div>
         <div class="key-counter">
           <div class="key-counter_counter">
@@ -29,39 +33,49 @@
       </div>
       <ul v-if="selector" class="validator-selectionpart divide-y">
         <li v-for="validator in validators" :key="validator" @click="vldPicker(validator)">
-          <div class="validator-icons"><img :src="validator.icon" :alt="validator.name" /></div>
+          <div class="validator-icons">
+            <img :src="validator.icon" :alt="validator.name" />
+          </div>
           <div class="validators-name">
             <span>{{ validator.name }}</span>
           </div>
         </li>
       </ul>
-      <div
-        class="buttonRow"
-        :class="{
-          disabled:
-            disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' || validatorName === 'Web3Signer',
-        }"
-        @click.stop="$emit('clickBtnGraffiti')"
-      >
-        <div class="btnContent">
-          <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
-          <span>{{ $t("selectionOption.graffiti") }}</span>
+      <div class="btn-box-selection-option">
+        <div
+          class="buttonRow"
+          :class="{
+            disabled:
+              disable || validatorName === 'Lodestar' || validatorName === 'Nimbus' || validatorName === 'Web3Signer',
+          }"
+          @click.stop="$emit('clickBtnGraffiti')"
+        >
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
+            <span>{{ $t("selectionOption.graffiti") }}</span>
+          </div>
         </div>
-      </div>
-      <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
-        <div class="btnContent">
-          <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-          <span>{{ $t("selectionOption.removeKeys") }}</span>
+        <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+            <span>{{ $t("selectionOption.removeKeys") }}</span>
+          </div>
         </div>
-      </div>
-      <div
-        class="buttonRow"
-        :class="{ disabled: validatorName === 'Web3Signer' }"
-        @click.stop="$emit('importRemoteKeys')"
-      >
-        <div class="btnContent">
-          <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
-          <span>Import Remote Keys</span>
+        <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('exitAllValidatorKeys')">
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+            <span>Exit all validator keys</span>
+          </div>
+        </div>
+        <div
+          class="buttonRow"
+          :class="{ disabled: validatorName === 'Web3Signer' }"
+          @click.stop="$emit('importRemoteKeys')"
+        >
+          <div class="btnContent">
+            <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+            <span>Import Remote Keys</span>
+          </div>
         </div>
       </div>
     </div>
@@ -136,6 +150,17 @@ export default {
 };
 </script>
 <style scoped>
+.btn-box-selection-option {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  bottom: -18%;
+  z-index: 0;
+}
 .validator-commands {
   display: flex;
   width: 100%;
@@ -228,6 +253,7 @@ export default {
   top: 9%;
   overflow-y: scroll;
   border-radius: 0 0 8px 8px;
+  z-index: 1;
 }
 .validator-selectionpart li {
   width: 100%;
@@ -323,12 +349,11 @@ export default {
   grid-column: 1/2;
   grid-row: 8/13;
   width: 100%;
-  height: 44%;
+  height: 36%;
   border-radius: 10px;
   background-color: #242529;
   display: flex;
   margin: 0 auto;
-  margin-top: 10px;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;

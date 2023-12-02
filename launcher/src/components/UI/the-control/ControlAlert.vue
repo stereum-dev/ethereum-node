@@ -13,7 +13,9 @@
         </div>
         <div
           class="icon_alarm"
-          :class="{ active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0 }"
+          :class="{
+            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
+          }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
         </div>
@@ -78,7 +80,7 @@
           class="alert-message_red pointer"
           @mouseenter="cursorLocation = `${clkFee}`"
           @mouseleave="cursorLocation = ''"
-          @click="expertHandler(validator.serviceID)"
+          @click="expertHandler(validator)"
         >
           <div class="icon-box">
             <img :src="validator.icon" />
@@ -108,7 +110,9 @@
             <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="main-message" @click="showUpdate"><span>STEREUM UPDATE</span></div>
+            <div class="main-message" @click="showUpdate">
+              <span>STEREUM UPDATE</span>
+            </div>
             <div class="val-message">
               <span>{{ stereumUpdate.version }}</span>
             </div>
@@ -274,13 +278,50 @@ export default {
       }
     },
     expertHandler(el) {
-      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
-      selectedObject.expertOptionsModal = true;
-      return selectedObject;
+      this.$emit("expert-handler", el);
     },
     hideExpertMode(el) {
       el.expertOptionsModal = false;
     },
+    // async readService() {
+    //   const validators = this.installedServices.filter((i) => i.category === "validator");
+
+    //   if (validators && validators.length > 0 && validators[0].config) {
+    //     const addresses = [];
+
+    //     for (const validator of validators) {
+    //       if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
+    //         continue;
+    //       }
+    //       if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+    //       const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
+    //       if (patternIndex === -1) {
+    //         continue;
+    //       }
+    //       const pattern = validator.expertOptions[patternIndex].pattern;
+    //       const match = [...validator.yaml.match(new RegExp(pattern))][2];
+    //       if (match) {
+    //         const address = match;
+    //         addresses.push({
+    //           name: validator.name,
+    //           address: address,
+    //           icon: validator.sIcon,
+    //           serviceID: validator.config.serviceID,
+    //         });
+    //       } else {
+    //         console.error(
+    //           "Could not find default-fee-recipient address in the service YAML for validator:",
+    //           validator.name
+    //         );
+    //       }
+    //     }
+    //     const notSetAddresses = addresses.filter(
+    //       (validator) => validator.address === "0x0000000000000000000000000000000000000000"
+    //     );
+    //     this.notSetAddresses = notSetAddresses;
+    //   }
+    // },
+
     async readService() {
       const validators = this.installedServices.filter((i) => i.category === "validator");
 
@@ -299,13 +340,8 @@ export default {
           const pattern = validator.expertOptions[patternIndex].pattern;
           const match = [...validator.yaml.match(new RegExp(pattern))][2];
           if (match) {
-            const address = match;
-            addresses.push({
-              name: validator.name,
-              address: address,
-              icon: validator.sIcon,
-              serviceID: validator.config.serviceID,
-            });
+            validator.address = match; // Update the address property directly
+            addresses.push(validator);
           } else {
             console.error(
               "Could not find default-fee-recipient address in the service YAML for validator:",
@@ -319,6 +355,7 @@ export default {
         this.notSetAddresses = notSetAddresses;
       }
     },
+
     closeNotification() {
       this.notification = false;
     },

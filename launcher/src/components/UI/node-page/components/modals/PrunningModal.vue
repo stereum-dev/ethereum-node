@@ -25,6 +25,7 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
+import { useDeepClone } from "@/composables/utils";
 export default {
   props: {
     item: {
@@ -55,7 +56,7 @@ export default {
       this.$emit("cancelWarning");
       ControlService.chooseServiceAction({
         action: "pruneGeth",
-        service: structuredClone(this.item),
+        service: useDeepClone(this.item),
         data: {},
       });
     },

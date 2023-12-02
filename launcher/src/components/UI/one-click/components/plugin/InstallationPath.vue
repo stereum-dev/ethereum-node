@@ -29,7 +29,6 @@
             <input
               id="MarketingAccept"
               v-model="clickStore.installMonitoring"
-              a
               type="checkbox"
               name="marketing_accept"
               class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
@@ -50,6 +49,11 @@
 
 <script setup>
 import { useClickInstall } from "@/store/clickInstallation";
+import { onMounted } from "vue";
 
 const clickStore = useClickInstall();
+
+onMounted(() => {
+  clickStore.installMonitoring = false;
+});
 </script>

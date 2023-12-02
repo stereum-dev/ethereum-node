@@ -1,73 +1,80 @@
 <template>
-  <installation-box :back="back" :title="title" :next="nextRouteHandler ? 'importingSyncing' : 'importingVerify'">
-    <div class="list-parent">
-      <div class="content-box shadow-md shadow-gray-700">
-        <div class="table">
-          <div class="table-header">
-            <img :src="configNetwork.icon ? configNetwork.icon : ''" alt="Icon" />
-            <span>{{ configNetwork.name ? configNetwork.name : "" }}</span>
+  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 p-1">
+    <div
+      class="w-full h-full col-start-5 col-end-21 row-start-3 row-end-11 grid grid-cols-12 grid-rows-12 p-2 mx-auto bg-[#1E2429] rounded-md"
+    >
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 bg-teal-600 rounded-md py-1 px-2 flex justify-between items-center z-10"
+      >
+        <span class="text-sm text-gray-200 font-normal uppercase">To import</span>
+        <span class="text-sm text-gray-200 font-normal uppercase">Remove</span>
+      </div>
+      <div
+        class="col-start-1 col-span-full row-start-2 row-span-full overflow-x-hidden overscroll-y-auto flex flex-col justify-start items-start space-y-2 mt-2"
+      >
+        <TransitionGroup name="fade">
+          <div v-if="configServices.length" class="configTitle">
+            <span class="text-sm text-gray-300 font-semibold uppercase">{{ $t("importingList.nodeConf") }}</span>
           </div>
-
-          <div class="table-content">
-            <div class="container_content gap-y-1">
-              <TransitionGroup name="fade" class="container">
-                <div v-if="configServices.length" class="configTitle">
-                  <span>{{ $t("importingList.nodeConf") }}</span>
-                </div>
-                <div v-for="(plugin, index) in categoryConfig" :key="index" class="table-row duration-500">
-                  <div class="plugins">
-                    <img :src="plugin.icon" alt="icon" class="pluginIcon" />
-                    <div class="pluginName">
-                      <span>
-                        {{ plugin.name ? plugin.name : plugin.service }}
-                      </span>
-                    </div>
-                    <div class="pluginCategory">
-                      <span>
-                        {{ plugin.category }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="remove">
-                    <img
-                      src="/img/icon/click-installation/cancel.png"
-                      alt="remove"
-                      @click="removeServiceFromList(plugin, index)"
-                    />
-                  </div>
-                </div>
-                <div v-if="configServices.length" class="serviceTitle">
-                  <span>Services</span>
-                </div>
-                <div v-for="(plugin, index) in categoryService" :key="index" class="table-row duration-500">
-                  <div class="plugins">
-                    <img :src="plugin.icon" alt="icon" class="pluginIcon" />
-                    <div class="pluginName">
-                      <span>
-                        {{ plugin.name }}
-                      </span>
-                    </div>
-                    <div class="pluginCategory ml-2">
-                      <span>
-                        {{ plugin.category }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="remove">
-                    <img
-                      src="/img/icon/click-installation/cancel.png"
-                      alt="remove"
-                      @click="removeServiceFromList(plugin, index)"
-                    />
-                  </div>
-                </div>
-              </TransitionGroup>
+          <div
+            v-for="(plugin, index) in categoryConfig"
+            :key="`${plugin.name} + ${index}`"
+            class="table-row duration-500"
+          >
+            <div class="plugins">
+              <img :src="plugin.icon" alt="icon" class="pluginIcon" />
+              <div class="pluginName">
+                <span>
+                  {{ plugin.name ? plugin.name : plugin.service }}
+                </span>
+              </div>
+              <div class="pluginCategory">
+                <span>
+                  {{ plugin.category }}
+                </span>
+              </div>
+            </div>
+            <div class="remove">
+              <img
+                src="/img/icon/click-installation/cancel.png"
+                alt="remove"
+                @click="removeServiceFromList(plugin, index)"
+              />
             </div>
           </div>
-        </div>
+          <div v-if="configServices.length" class="serviceTitle">
+            <span class="text-sm text-gray-300 font-semibold uppercase">Services</span>
+          </div>
+          <div
+            v-for="(plugin, index) in categoryService"
+            :key="`${plugin.name} + ${index}`"
+            class="table-row duration-500"
+          >
+            <div class="plugins">
+              <img :src="plugin.icon" alt="icon" class="pluginIcon" />
+              <div class="pluginName">
+                <span>
+                  {{ plugin.name }}
+                </span>
+              </div>
+              <div class="pluginCategory ml-2">
+                <span>
+                  {{ plugin.category }}
+                </span>
+              </div>
+            </div>
+            <div class="remove">
+              <img
+                src="/img/icon/click-installation/cancel.png"
+                alt="remove"
+                @click="removeServiceFromList(plugin, index)"
+              />
+            </div>
+          </div>
+        </TransitionGroup>
       </div>
     </div>
-  </installation-box>
+  </div>
 </template>
 
 <script>

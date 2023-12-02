@@ -135,8 +135,9 @@ export default {
       this.Tasks = Array.isArray(freshTasks) ? freshTasks : this.Tasks;
       if (!this.showDropDownList) {
         this.displayingTasks = this.Tasks;
-      } else {
-        //if DropDown is open only update what the user sees so the menue doesn't close
+      } else if (this.displayingTasks.length > 0) {
+        // check length of array to avoid side effects
+        // if DropDown is open only update what the user sees so the menue doesn't close
         this.displayingTasks[0].subTasks = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).subTasks;
         this.displayingTasks[0].status = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).status;
       }

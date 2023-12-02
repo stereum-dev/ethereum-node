@@ -331,12 +331,12 @@ export default {
 .rpc-data:hover {
   background: #707070;
   color: #eee;
-  border: none;
+  border: 1px solid #707070;
 }
 .rpc-data:active {
-  background: rgba(112, 112, 112, 0.6);
+  background: #70707099;
   color: #eee;
-  border: none;
+  border: 1px solid #70707099;
 }
 
 /* width */

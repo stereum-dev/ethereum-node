@@ -269,7 +269,7 @@ export default {
   border-radius: 15px;
 }
 .skipping-installation {
-  background-color: rgb(134, 184, 202);
+  background-color: rgb(167, 167, 167);
   border-radius: 15px;
 }
 

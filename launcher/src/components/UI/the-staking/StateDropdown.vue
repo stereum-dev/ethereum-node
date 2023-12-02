@@ -63,7 +63,7 @@ export default {
 <style scoped>
 .dropDown_parent {
   grid-column: 1/7;
-  grid-row: 4/5;
+  grid-row: 1/2;
   display: flex;
   justify-content: space-between;
   align-items: center;

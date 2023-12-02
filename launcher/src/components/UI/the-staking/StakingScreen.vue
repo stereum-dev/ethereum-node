@@ -4,7 +4,7 @@
       <div class="col-start-1 col-end-10 row-start-1 row-end-7 grid grid-cols-12 grid-rows-6">
         <DisplayValidators />
       </div>
-      <div class="col-start-10 col-end-13 row-start-1 row-end-7 flex flex-col">
+      <div class="col-start-10 col-end-13 row-start-1 row-span-full flex flex-col">
         <ValidatorStats />
         <SelectionOptions
           :key="refresh"
@@ -18,6 +18,7 @@
           @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
           @import-remote-keys="importRemoteKeysHandler"
+          @exit-all-validator-keys="withdrawHandler"
         />
       </div>
     </div>
@@ -80,6 +81,10 @@ const removeHandler = () => {
   stakingStore.exitChainForMultiValidatorsActive = false;
   stakingStore.grafitiForMultiValidatorsActive = false;
   stakingStore.removeForMultiValidatorsActive = true;
+};
+
+const withdrawHandler = () => {
+  stakingStore.exitMultiValidatorKeys = !stakingStore.exitMultiValidatorKeys;
 };
 
 const selectedValidator = async (validator) => {

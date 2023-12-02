@@ -1,41 +1,32 @@
 import { mapWritableState } from 'pinia';
 <template>
-  <background-page>
-    <div class="animContainer">
-      <div class="opacity"></div>
-      <div class="anim">
-        <div class="anim__content">
-          <div class="anim__content__box">
-            <div class="anim__img__content">
-              <img src="/animation/config-import/importBg.png" alt="Icon" />
-              <img v-for="img in images" :key="img" :src="img" alt="Animation" />
-            </div>
-          </div>
-        </div>
-
-        <div class="taskBox">
-          <div v-if="displayNewTask !== ''" class="message-box">
-            <p class="msg-title">
-              {{ displayNewTask }}
-              <span class="dot-flashing"></span>
-            </p>
-          </div>
+  <div class="col-start-1 col-span-full row-start-1 row-span-full flex flex-col justify-center items-center">
+    <div class="w-screen h-screen">
+      <div class="anim__content__box">
+        <div class="anim__img__content">
+          <img src="/animation/config-import/importBg.png" alt="Icon" />
+          <img v-for="img in images" :key="img" :src="img" alt="Animation" />
         </div>
       </div>
     </div>
-    <TaskManager />
-  </background-page>
+
+    <div class="absolute bottom-20 inset-x-20">
+      <div v-if="displayNewTask !== ''" class="message-box">
+        <p class="msg-title">
+          {{ displayNewTask }}
+          <span class="dot-flashing"></span>
+        </p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
-import TaskManager from "../../task-manager/TaskManager.vue";
+
 import ControlService from "@/store/ControlService";
 export default {
-  components: {
-    TaskManager,
-  },
   data() {
     return {
       importingAnimations: [

@@ -17,6 +17,7 @@ import { useServices } from '@/store/services';
           draggable="true"
           @dragstart="dragStart($event, service)"
           @dblclick="addServices(service)"
+          @mouseenter="footerStore.cursorLocation = `${service.name} ${serv}`"
         >
           <img :src="service.sIcon" alt="Client Icon" class="w-14 mx-auto" />
           <p
@@ -42,7 +43,14 @@ import { useServices } from '@/store/services';
 <script setup>
 import DrawerFilter from "./DrawerFilter.vue";
 import { useServices } from "@/store/services";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
 
+const t = i18n.global.t;
+
+const serv = t("serviceLay.srvice");
+
+const footerStore = useFooter();
 const props = defineProps({
   dragging: Function,
 });

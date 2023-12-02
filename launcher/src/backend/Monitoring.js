@@ -1,6 +1,8 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { ServiceManager } from "./ServiceManager";
 import { ValidatorAccountManager } from "./ValidatorAccountManager";
+import { StringUtils } from "./StringUtils.js";
+import { SSHService } from "./SSHService.js";
 import * as QRCode from "qrcode";
 import * as log from "electron-log";
 import * as crypto from "crypto";
@@ -140,6 +142,7 @@ export class Monitoring {
               configVersion: config.configVersion,
               image: config.image,
               imageVersion: config.imageVersion,
+              runningImageVersion: newState?.Image ? newState.Image.split(":").pop() : null,
               ports: config.ports,
               volumes: config.volumes,
               network: config.network,
@@ -3024,9 +3027,10 @@ rm -rf diskoutput
     }
   }
 
-  async getCurrentEpochSlot() {
+  async getCurrentEpochSlot(currBeaconService) {
     try {
-      const beaconStatus = await this.getBeaconStatus();
+      let beaconStatus = await this.getBeaconStatus();
+      beaconStatus.data = beaconStatus.data.filter((obj) => obj.clt === currBeaconService);
       let currentEpochSlotStatus = {};
       if (beaconStatus.code === 0) {
         // retrive current network & define epoch length (ethereum -> 32 | gnosis -> 16)
@@ -3135,6 +3139,65 @@ rm -rf diskoutput
           preJustifiedEpochStatus: [],
           finalizedEpochStatus: [],
         });
+      }
+    } catch (error) {
+      console.log("Error occured to get Beacon node status: ", error);
+      return {
+        info: "Error occured to get Beacon node status: ",
+        data: error,
+      };
+    }
+  }
+
+  async exitValidatorAccount(pubkey, password, serviceID) {
+    const beaconStatus = await this.getBeaconStatus();
+    try {
+      if (beaconStatus.code === 0) {
+        const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+        const serviceId = beaconStatus.data[0].sid;
+        if (!Array.isArray(pubkey)) {
+          pubkey = [pubkey];
+        }
+        const results = [];
+        for (let i = 0; i < pubkey.length; i++) {
+          const ref = StringUtils.createRandomString(); // Create a random string to identify the task
+          this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit Account ${pubkey[i].substring(0, 6)}..`);
+          try {
+            const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey[i], password, serviceID);
+            if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+            log.info(result);
+
+            const exitMsg = JSON.stringify(JSON.parse(result.stdout).data);
+            const exitCommand = `docker run --rm --network=stereum curlimages/curl curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${exitMsg}'`;
+            const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
+            if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
+              throw SSHService.extractExecError(runExitCommand);
+            log.info(runExitCommand);
+
+            // if (!runExitCommand.stdout.includes("validator_index")) { // find out "successful msg" and put instead of <validator_index> !!!!
+            //   throw "Undexpected Error: " + runExitCommand.stdout;
+            // }
+
+            // Push successful task
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
+            this.nodeConnection.taskManager.otherTasksHandler(ref);
+
+            // add pubkey into the runExitCommands' result;
+            runExitCommand["pubkey"] = `${pubkey[i]}`;
+            results.push(runExitCommand);
+          } catch (error) {
+            this.nodeConnection.taskManager.otherTasksHandler(
+              ref,
+              `Exiting Account Failed`,
+              false,
+              `Exiting Account Failed ${pubkey[i]} Failed:\n` + error
+            );
+            this.nodeConnection.taskManager.otherTasksHandler(ref);
+            log.error("Exiting signed voluntary account Failed:\n", error);
+            return error;
+          }
+        }
+        return results;
       }
     } catch (error) {
       console.log("Error occured to get Beacon node status: ", error);

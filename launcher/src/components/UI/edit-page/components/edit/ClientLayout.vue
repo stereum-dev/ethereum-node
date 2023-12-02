@@ -5,6 +5,8 @@ import { computed, ref } from 'vue';
     :class="{ 'opacity-25': client.displayPluginMenu }"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
+    @mouseenter="footerStore.cursorLocation = `${clkEdit}`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="flex flex-col justify-center items-center gap-2">
       <span class="text-xs text-gray-200 font-semibold">{{ client.name }}</span>
@@ -37,6 +39,15 @@ import { computed, ref } from 'vue';
 
 <script setup>
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const clkEdit = t("editClientLay.clkEdit");
+
+const footerStore = useFooter();
 
 // Props
 const props = defineProps({

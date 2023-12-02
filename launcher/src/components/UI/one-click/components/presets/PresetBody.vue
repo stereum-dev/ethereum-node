@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
     <div
@@ -10,20 +10,20 @@ import { ref } from 'vue';
           SERVE YOUR USE CASE</span
         >
       </div>
-      <div class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7">
+      <div class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5">
         <div
           class="col-start-3 col-span-8 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
           @click="dropdownHandler"
         >
           <img
-            v-if="manageStore.currentNetwork.icon"
+            v-if="displayItem?.icon"
             class="col-start-1 col-span-1 w-7 h-7 justify-self-center self-center"
-            :src="manageStore.currentNetwork?.icon"
+            :src="displayItem?.icon"
             alt="Arrow icon"
           />
           <span
             class="col-start-2 col-end-6 justify-self-center self-center text-center text-gray-800 text-lg font-semibold"
-            >{{ manageStore.currentNetwork?.name ? manageStore.currentNetwork?.name : "Select Network" }}</span
+            >{{ displayItem?.name ? displayItem?.name : displayItem }}</span
           >
 
           <svg
@@ -39,9 +39,8 @@ import { ref } from 'vue';
         </div>
         <Transition name="slide-fade">
           <ul
-            v-show="openDropdown"
-            class="col-start-3 col-span-8 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
-            @mouseleave="closeDropdown"
+            v-if="openDropdown"
+            class="col-start-3 col-span-8 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pb-1 w-full z-10 divide-y overflow-y-auto flex flex-col justify-start items-center mt-2"
           >
             <li
               v-for="item in manageStore.networkList"
@@ -70,16 +69,17 @@ import { ref } from 'vue';
             class="col-span-1 row-span-1 justify-self-center self-center hover:border hover:border-teal-500 rounded-md hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
             :class="{
               'opacity-30 pointer-events-none':
-                !manageStore.currentNetwork?.support?.includes(preset.name) || !manageStore.currentNetwork,
+                !manageStore.currentNetwork?.support?.includes(preset.name) || !displayItem?.name,
             }"
             @click="getPreset(preset)"
           >
             <img
               class="w-20"
-              :class="{
-                'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out':
-                  preset.selected,
-              }"
+              :class="
+                preset.selected
+                  ? 'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out'
+                  : ''
+              "
               :src="preset.icon"
               alt="Preset Icon"
             />
@@ -92,7 +92,7 @@ import { ref } from 'vue';
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import { useClickInstall } from "@/store/clickInstallation";
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 const emit = defineEmits(["installPreset"]);
 //Store
@@ -100,32 +100,46 @@ const manageStore = useNodeManage();
 const clickStore = useClickInstall();
 
 //Refs
+let displayItem = ref(null);
 const openDropdown = ref(false);
+
+//watchers
+
+watch(displayItem, () => {
+  if (displayItem.value === "Click to select a network") {
+    clickStore.selectedPreset = null;
+  }
+});
+
+//Lifecycle
+
+onMounted(() => {
+  displayItem.value = "Click to select a network";
+  clickStore.presets.forEach((p) => (p.selected = false));
+});
 
 //Methods
 const dropdownHandler = () => {
-  openDropdown.value = true;
-};
-const closeDropdown = () => {
-  setTimeout(() => {
-    openDropdown.value = false;
-  }, 200);
+  openDropdown.value = !openDropdown.value;
 };
 
 const getNetwork = (network) => {
   openDropdown.value = false;
   clickStore.presets.forEach((p) => (p.selected = false));
   manageStore.currentNetwork = network;
+  displayItem.value = network;
 };
 
 const getPreset = (preset) => {
-  preset.selected = true;
-  emit("installPreset", preset);
+  if (displayItem?.value.name) {
+    preset.selected = true;
+    emit("installPreset", preset);
+  }
 };
 </script>
 <style scoped>
 .slide-fade-enter-active {
-  transition: all 0.2s ease-out;
+  transition: all 0.4s ease-out;
 }
 
 .slide-fade-leave-active {
