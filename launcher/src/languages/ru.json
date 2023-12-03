@@ -28,9 +28,9 @@
     "stop": "остановить",
     "machineIp": "IP-адрес машины",
     "machineName": "Название машины",
-    "clkEdit": "кликните, чтобы редактировать ваш узел",
-    "clkOn": "кликните, чтобы включить ваш узел",
-    "clkOff": "кликните, чтобы отключить ваш узел",
+    "clkEdit": "Click to edit your node",
+    "clkOn": "Click to turn your node on",
+    "clkOff": "Click to turn your node off",
     "clkLog": "Кликните, чтобы открыть панель, чтобы журнал для клиентов и служб был доступен вам отдельно",
     "clkSwitch": "Кликните мышью, чтобы открыть панель и сделать доступным включение/выключение клиентов и услуг по отдельности",
     "clkRestart": "Кликните, чтобы открыть панель, позволяющую перезапускать клиенты и службы по отдельности",
@@ -158,18 +158,18 @@
     "usage": "Использование",
     "netSel": "Выбранная сеть -",
     "machineName": "Название машины",
-    "storVol": "Громкость хранилища",
-    "stor": "хранилище",
-    "diskSpeed": "Скорость диска",
-    "p2p": "одноранговые сети",
+    "storVol": "Server storage volume",
+    "stor": "Server storage overview",
+    "diskSpeed": "Disk speed",
+    "p2p": "Peer to peer connections",
     "cpuUse": "Использование ЦП",
     "syncInfo": "Статус синхронизации",
     "ramUse": "Использование ОЗУ",
     "netSpeed": "Скорость сети",
-    "listPort": "список портов",
+    "listPort": "List of service ports",
     "endPoint": "конечная точка",
     "data": "данные",
-    "enteredKeys": "Количество введенных ключей валидатора",
+    "enteredKeys": "The number of imported validator keys",
     "ttlBal": "Итоговый баланс",
     "finEPOCH": "Завершенные EPOCH",
     "pending": "служба в ожидании",
@@ -695,16 +695,16 @@
     "srvice": "service"
   },
   "clientButtons": {
-    "turnOn": "Turn on the service",
-    "turnOff": "Turn off the service",
+    "turnOn": "Turn the service on",
+    "turnOff": "Turn the service off",
     "restart": "Restart the service",
-    "pending": "service is pending",
-    "settings": "service settings",
-    "logs": "open logs",
-    "docs": "open docs",
-    "removeLock": "remove lock files",
-    "pruning": "pruning the service",
-    "resync": "resync the service"
+    "pending": "Service is pending",
+    "settings": "Access the settings of the service",
+    "logs": "Open the logs of the service",
+    "docs": "Open the documentation of the service in your browser",
+    "removeLock": "Remove Lock files of the service",
+    "pruning": "Prune the service database",
+    "resync": "Resync the service from a selected source"
   },
   "clientLay": {
     "client": "client",
@@ -719,7 +719,7 @@
     "clickToCancel": "Click here to cancel this change"
   },
   "editClientLay": {
-    "clkEdit": "click to edit your service"
+    "clkEdit": "Click to edit your service"
   },
   "generalMenu": {
     "modify": "modify",
@@ -737,13 +737,13 @@
     "clkConfirm": "Click here to confirm change(s)"
   },
   "sidebarSect": {
-    "toNode": "To the Node Page",
-    "toEdit": "To the Edit Node",
-    "setchNet": "Switch Network",
-    "nukTheNud": "Nuke the Node",
+    "toNode": "Return to the Node Page",
+    "toEdit": "Go to the Edit Node Page",
+    "setchNet": "Switch Network in the configuration of the Node",
+    "nukTheNud": "Nuke the Stereum Node and all its services",
     "nukNod": "Nuke Node",
-    "trnOn": "Turn Node On",
-    "trnOff": "Turn Node Off",
-    "expNode": "Export Node Config"
+    "trnOn": "Turn your node on",
+    "trnOff": "Turn your node off",
+    "expNode": "Export your Node Configuration"
   }
 }
