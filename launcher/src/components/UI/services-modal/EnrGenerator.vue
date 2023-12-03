@@ -54,6 +54,7 @@ export default {
       continueForExistENR: "continueForExistENR",
       distrubutedValidatorGenerator: "distrubutedValidatorGenerator",
       deactivateBtnToWaitForLogs: "deactivateBtnToWaitForLogs",
+      depositFile: "depositFile",
     }),
     enrBtnToShow() {
       if (
@@ -143,6 +144,14 @@ export default {
         this.backupDistributedValidator = false;
         this.distrubutedValidatorGenerator = false;
         this.distributedCompleted = true;
+      } else if (this.enrBtnToShow === "COMPLETE") {
+        this.backupDistributedValidator = false;
+        this.distrubutedValidatorGenerator = false;
+        this.distributedCompleted = false;
+        this.generatorPlugin = false;
+        this.obolDashboard = true;
+        this.continueForExistENR = true;
+        this.depositFile = true;
       }
     },
     //dummy enr generator
@@ -180,12 +189,6 @@ export default {
         "2021-08-04 12:00:00.000000 | INFO | 0x00000002",
         "2021-08-04 12:00:00.000000 | INFO | 0x00000003",
         "2021-08-04 12:00:00.000000 | INFO | 0x00000004",
-        "2021-08-04 12:00:00.000000 | INFO | 0x00000005",
-        "2021-08-04 12:00:00.000000 | INFO | 0x00000006",
-        "2021-08-04 12:00:00.000000 | INFO | 0x00000007",
-        "2021-08-04 12:00:00.000000 | INFO | 0x00000008",
-        "2021-08-04 12:00:00.000000 | INFO | 0x00000009",
-        "2021-08-04 12:00:00.000000 | INFO | 0x00000010",
       ];
       let currentIndex = 0;
 

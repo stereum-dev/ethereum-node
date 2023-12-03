@@ -61,16 +61,21 @@
             </div>
           </div>
           <div v-if="continueForExistENR" class="browserBox">
-            <div v-if="!dkgControl" class="wrapper" style="flex-direction: row">
+            <div v-if="!dkgControl || depositFile" class="wrapper" style="flex-direction: row">
               <div class="title">
-                <span>START THE DKG</span>
+                <span>{{ depositFile ? "BACKUP DEPOSIT FILE" : "START THE DKG" }}</span>
                 <span
-                  >When all ENRs are signed, you will be presented with a command. All Node Operators have to run this
-                  command at the same time!
+                  >{{
+                    depositFile
+                      ? "Export your backup deposit file from the server to back it up"
+                      : "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!"
+                  }}
                 </span>
               </div>
               <div class="btn-box">
-                <div class="btn" @click="dkgSwitch">START</div>
+                <div class="btn" @click="dkgSwitch">
+                  {{ depositFile ? "SAVE" : "START" }}
+                </div>
               </div>
             </div>
             <div v-else class="browserBox_import">
@@ -116,6 +121,7 @@ export default {
       distrubutedValidatorGenerator: "distrubutedValidatorGenerator",
       enrIsGenerating: "enrIsGenerating",
       deactivateBtnToWaitForLogs: "deactivateBtnToWaitForLogs",
+      depositFile: "depositFile",
     }),
   },
   mounted() {
