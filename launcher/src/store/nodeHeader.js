@@ -8,6 +8,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       generatorPlugin: false,
       obolDashboard: false,
       continueForExistENR: false,
+      notificationModalIsActive: false,
       serverAccessManagement: false,
       distrubutedValidatorGenerator: false,
       deactivateBtnToWaitForLogs: false,

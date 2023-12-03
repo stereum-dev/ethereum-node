@@ -98,13 +98,20 @@ import { useUpdateCheck } from "@/composables/version";
 import TutorialGuide from "../the-node/TutorialGuide.vue";
 import StakeGuide from "../the-node/StakeGuide.vue";
 export default {
-  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal, TutorialGuide, StakeGuide },
+  components: {
+    UpdatePanel,
+    LogoutModal,
+    SupportModal,
+    NotifModal,
+    TutorialGuide,
+    StakeGuide,
+  },
   data() {
     return {
       test: true,
       logoutModalIsActive: false,
       supportModalIsActive: false,
-      notificationModalIsActive: false,
+      // notificationModalIsActive: false,
       help: this.$t("headerBtn.help"),
       notif: this.$t("headerBtn.notif"),
       availableUpdt: this.$t("headerBtn.availableUpdt"),
@@ -125,6 +132,7 @@ export default {
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
+      notificationModalIsActive: "notificationModalIsActive",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
@@ -142,7 +150,9 @@ export default {
         this.refresh = false;
         this.updating = true;
         this.newUpdates.forEach((update) => (update.running = true));
-        seconds = await ControlService.runAllUpdates({ commit: this.stereumUpdate.commit });
+        seconds = await ControlService.runAllUpdates({
+          commit: this.stereumUpdate.commit,
+        });
       } catch (err) {
         console.log("Running All Updates Failed: ", err);
       } finally {
