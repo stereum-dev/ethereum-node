@@ -161,6 +161,9 @@ export default {
     },
     enrImport() {
       console.log(this.importedENR);
+      this.depositFile = true;
+      this.generatorPlugin = false;
+      this.continueForExistENR = true;
     },
     copyHandler() {
       let toCopy = this.generatedENR;
