@@ -33,8 +33,8 @@ export async function useListKeys(forceRefresh) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
-                return { validating_pubkey: e.pubkey, readonly: true };
-              })
+              return { validating_pubkey: e.pubkey, readonly: true };
+            })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
         }
@@ -42,8 +42,8 @@ export async function useListKeys(forceRefresh) {
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-              return { key: e.validating_pubkey, isRemote: e.readonly };
-            })
+            return { key: e.validating_pubkey, isRemote: e.readonly };
+          })
           : [];
 
         //update service datasets in Pinia store
@@ -143,6 +143,7 @@ export async function useUpdateValidatorStats() {
       } else {
         d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
       }
+      key.index = info.validatorindex;
       key.status = info.status;
       key.balance = info.balance / 1000000000;
       key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";

@@ -453,6 +453,12 @@ class ControlService extends EventEmitter {
   async dumpDockerLogs() {
     return await this.promiseIpc.send("dumpDockerLogs");
   }
+  async getCurrentEpochandSlot() {
+    return await this.promiseIpc.send("getCurrentEpochandSlot");
+  }
+  async getValidatorDuties(args) {
+    return await this.promiseIpc.send("getValidatorDuties", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

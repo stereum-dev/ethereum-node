@@ -45,7 +45,7 @@ export class Monitoring {
     this.globalMonitoringCache = { ...globalMonitoringCache };
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // Jobs to handle on login
@@ -234,7 +234,7 @@ export class Monitoring {
         }
         //console.log('REQUIRE fresh cache ' + hash, dnow);
       }
-    } catch (e) {}
+    } catch (e) { }
     if (await this.checkStereumInstallation()) {
       var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
       const serviceStates = await this.nodeConnectionProm.listServices();
@@ -426,11 +426,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-            jsonrpc: "2.0",
-            method: rpc_method.trim(),
-            params: rpc_params,
-            id: 1,
-          })
+          jsonrpc: "2.0",
+          method: rpc_method.trim(),
+          params: rpc_params,
+          id: 1,
+        })
         : rpc_method;
 
     // Define default response
@@ -1240,12 +1240,12 @@ export class Monitoring {
             labels.forEach(function (label, index) {
               try {
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
-              } catch (e) {}
+              } catch (e) { }
             });
             try {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            } catch (e) {}
+            } catch (e) { }
           }
           // Set chain head block for this client from RPC server (if available)
           if (
@@ -1262,7 +1262,7 @@ export class Monitoring {
                 typeof chain_head_block === "string" && chain_head_block.startsWith("0x")
                   ? parseInt(chain_head_block, 16)
                   : 0;
-            } catch (e) {}
+            } catch (e) { }
             let stay_on_hold_till_first_block = false; // true = enabled | false = disabled
             if (stay_on_hold_till_first_block && !chain_head_block) {
               // stay on hold until EC has responded the first block by RPC
@@ -1571,7 +1571,7 @@ export class Monitoring {
                     .value.pop()
                 );
                 details[clientType]["numPeerBy"]["fields"].push(item);
-              } catch (e) {}
+              } catch (e) { }
             });
           }
 
@@ -1942,7 +1942,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.rpcTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
@@ -2126,7 +2126,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.wsTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh WS status data
     const freshwsstatus = await this.getWsStatus();
@@ -2275,7 +2275,7 @@ export class Monitoring {
     try {
       let r = wsResult.stdout.trim().split("\n");
       statuscode = r.length > 0 ? parseInt(r.pop()) : statuscode;
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond true if websocket is available, false otherwise
     if (!wsResult.stdout.toLowerCase().includes("sec-websocket") && statuscode != 200) {
@@ -2382,7 +2382,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.beaconTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
@@ -2507,8 +2507,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-      ? "str"
-      : "invalid";
+        ? "str"
+        : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2596,7 +2596,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-        serviceInfos[i].config.dependencies.executionClients.length
+          serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({
@@ -2827,144 +2827,96 @@ rm -rf diskoutput
     return serviceInfos;
   }
 
-  async getValidatorStats(validatorPublicKey) {
+
+  async getCurrentEpochandSlot() {
     try {
-      const verbose = true;
-      const proposer = false;
 
-      const beaconStatus = await this.getBeaconStatus();
-      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error({
+          code: 441,
+          message: "error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")",
+          data: "",
+        });
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
 
-      const baseURL = `http://localhost:${beaconAPIPort}`;
+      let genesisRes = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/genesis", [], "GET");
+      let specRes = await this.queryBeaconApi(baseURL, "/eth/v1/config/spec", [], "GET");
+      if (genesisRes.code || specRes.code) {
+        throw new Error({
+          code: 1,
+          info: `Couldn't get genesis or spec:\n${genesisRes.info}\n${specRes.info}`,
+          data: JSON.stringify(genesisRes) + "\n" + JSON.stringify(specRes),
+        });
+      }
 
-      const validatorRes = await this.queryBeaconApi(
-        baseURL,
-        `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
-        undefined,
-        "GET"
-      );
-      log.debug(validatorRes);
+      const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = specRes.data.api_reponse.data;
+      const { genesis_time } = genesisRes.data.api_reponse.data;
 
-      const validators_arr = [validatorRes.data.api_reponse.data.index];
-
-      const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
-      const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
-
-      const beaconAPICmdSpec = `curl -s -X GET '${baseURL}/eth/v1/config/spec' -H 'accept: application/json'`;
-      const specRes = await this.nodeConnection.sshService.exec(beaconAPICmdSpec);
-
-      const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = JSON.parse(specRes.stdout).data;
-
-      let output = {};
-
-      const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
       const current_time = Math.floor(Date.now() / 1000);
       const slot_time = secondsPerSlot;
-      const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
+
       const current_slot = Math.floor((current_time - genesis_time) / slot_time);
       const current_epoch = Math.floor(current_slot / slotsPerEpoch);
 
-      output = { currentEpoch: current_epoch, currentSlot: current_slot };
 
-      const res = await this.queryBeaconApi(
-        baseURL,
-        `/eth/v1/validator/duties/attester/${Math.trunc(current_epoch)}`,
-        validators_arr,
-        "POST",
-        {
-          "Content-Type": "application/json",
-        }
-      );
 
-      const res_p = await this.queryBeaconApi(
-        baseURL,
-        `/eth/v1/validator/duties/proposer/${Math.trunc(current_epoch)}`,
-        null,
-        "GET",
-        {
-          "Content-Type": "application/json",
-        }
-      );
+      return { current_epoch, current_slot, secondsPerSlot, slotsPerEpoch }
 
-      let current_prop = 0;
-      let next_att_slot = 0;
-      let next_prop_slot = 0;
 
-      const attestationDuties = JSON.stringify(res.data.api_reponse);
-      const proposerDuties = JSON.stringify(res_p.data.api_reponse);
-
-      // Handle attestation duties
-      let vidx = attestationDuties.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      let slot = attestationDuties.match(/.*"slot":"?(\d+)"?.*/)[1];
-      if (vidx !== undefined && slot !== undefined) {
-        if (vidx.match(/^[-]?\d+$/) !== null) {
-          if (verbose === true) {
-            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
-            let eta_str = "";
-            if (duty_eta > 0) {
-              eta_str = " ETA: " + duty_eta + " sec";
-            } else if (duty_eta > 0 - slot_time) {
-              eta_str = " ETA: now!";
-            }
-            let slot_idx = slot % slotsPerEpoch;
-            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
-          }
-          if (slot > current_slot) {
-            if (slot < next_att_slot || next_att_slot === 0) {
-              next_att_slot = slot;
-            }
-          }
-        }
-      }
-
-      // Handle proposer duties
-      vidx = proposerDuties.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      slot = proposerDuties.match(/.*"slot":"?(\d+)"?.*/)[1];
-      if (vidx !== undefined && slot !== undefined) {
-        if (vidx.match(/^[-]?\d+$/) !== null && validators_arr.includes(vidx) === true) {
-          if (verbose === true) {
-            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
-            let eta_str = "";
-            if (duty_eta >= 0) {
-              eta_str = " ETA: " + duty_eta + " sec";
-            } else if (duty_eta > 0 - slot_time) {
-              eta_str = " ETA: now!";
-            }
-            let slot_idx = slot % slotsPerEpoch;
-            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
-          }
-          if (slot > current_slot) {
-            if (slot < next_prop_slot || next_prop_slot === 0) {
-              next_prop_slot = slot;
-            }
-          } else if (slot === current_slot) {
-            current_prop = vidx;
-          }
-        }
-      }
-
-      if (proposer === true) {
-        output = { ...output, nextAttSlot: next_att_slot, nextPropSlot: next_prop_slot };
-      }
-
-      let next_duty_slot;
-      if (next_prop_slot > 0 && next_prop_slot < next_att_slot) {
-        next_duty_slot = next_prop_slot;
-      } else {
-        next_duty_slot = next_att_slot;
-      }
-
-      if (next_duty_slot > 0) {
-        const remaining_slots = next_duty_slot - current_slot - 1;
-
-        const remaining_time = remaining_slots * slot_time + slot_timeout;
-
-        output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
-      }
-
-      return { ...output, currentProp: current_prop, slotsPerEpoch };
     } catch (error) {
-      return { error: true, message: "An error occurred in getValidatorStats" };
+      log.error("Getting Epoch and Slot Failed:\n" + JSON.stringify(error));
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
+  }
+
+
+  // Fetches the validator duties (proposer and sync) for the given validator indices
+  // Returns an array of validator duties (proposer and sync) for the given validator indices
+  // validatorIndices: array of validator indices
+  async getValidatorDuties(validatorIndices) {
+    try {
+      if (!Array.isArray(validatorIndices)) {
+        throw new Error({ code: 1, message: "Invalid Argument: validatorIndices must be an Array", });
+      }
+
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error({
+          code: 441,
+          message: "error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")",
+          data: "",
+        });
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+
+      const { current_epoch, current_slot } = await this.getCurrentEpochandSlot();
+
+      let proposerDutiesRes = await this.queryBeaconApi(baseURL, "/eth/v1/validator/duties/proposer/" + current_epoch, [], "GET");
+      let syncDutiesRes = await this.queryBeaconApi(baseURL, "/eth/v1/validator/duties/sync/" + current_epoch, validatorIndices, "POST");
+
+      return {
+        proposerDuties: proposerDutiesRes.data.api_reponse.data.filter(d => validatorIndices.some(i => i === d.validator_index)), // filter out duties for validators that are not in the validatorIndices (imported vals) array
+        syncDuties: syncDutiesRes.data.api_reponse.data,
+        currentEpoch: current_epoch,
+        currentSlot: current_slot
+      }
+
+    } catch (error) {
+      log.error("Getting Validator Duties Failed:\n" + JSON.stringify(error));
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : JSON.stringify(error),
+        data: error
+      };
     }
   }
 
@@ -3003,7 +2955,7 @@ rm -rf diskoutput
           validatorBalances = queryResult.map((key, id) => {
             return {
               id: id,
-              index: key.index,
+              validatorindex: key.index,
               balance: key.balance,
               status: key.validator.slashed === "true" ? "slashed" : key.status.replace(/_.*/, ""),
               pubkey: key.validator.pubkey,

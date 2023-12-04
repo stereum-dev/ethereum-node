@@ -486,6 +486,14 @@ ipcMain.handle("dumpDockerLogs", async () => {
   return await nodeConnection.dumpDockerLogs();
 });
 
+ipcMain.handle("getCurrentEpochandSlot", async () => {
+  return await monitoring.getCurrentEpochandSlot();
+})
+
+ipcMain.handle("getValidatorDuties", async (event, args) => {
+  return await monitoring.getValidatorDuties(args);
+})
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
