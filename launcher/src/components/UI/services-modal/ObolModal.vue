@@ -179,6 +179,7 @@ export default {
     removeHandler() {
       this.generatedENR = "";
       this.continueForExistENR = false;
+      this.depositFile = false;
     },
     dkgSwitch() {
       this.dkgControl = true;
