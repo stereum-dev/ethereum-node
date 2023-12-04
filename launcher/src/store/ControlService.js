@@ -403,7 +403,6 @@ class ControlService extends EventEmitter {
   async exitValidatorAccount(args) {
     return await this.promiseIpc.send("exitValidatorAccount", {
       pubkey: args.pubkey,
-      password: args.password,
       serviceID: args.serviceID,
     });
   }

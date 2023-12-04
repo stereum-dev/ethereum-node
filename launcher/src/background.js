@@ -419,7 +419,7 @@ ipcMain.handle("checkActiveValidators", async (event, args) => {
 });
 
 ipcMain.handle("exitValidatorAccount", async (event, args) => {
-  return await monitoring.exitValidatorAccount(args.pubkey, args.password, args.serviceID);
+  return await monitoring.exitValidatorAccount(args.pubkey, args.serviceID);
 });
 
 ipcMain.handle("exportConfig", async () => {
@@ -488,11 +488,11 @@ ipcMain.handle("dumpDockerLogs", async () => {
 
 ipcMain.handle("getCurrentEpochandSlot", async () => {
   return await monitoring.getCurrentEpochandSlot();
-})
+});
 
 ipcMain.handle("getValidatorDuties", async (event, args) => {
   return await monitoring.getValidatorDuties(args);
-})
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
