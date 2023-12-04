@@ -14,6 +14,8 @@
         @withdraw-group="withdrawGroup"
         @confirm-rename="confirmValidatorKeyRename"
         @back-list="backToList"
+        @rename-single="confirmValidatorKeyRename"
+        @withdraw-single="withdrawSingleKey"
       />
       <ManagementSection
         @graffiti-multiple="graffitiMultipleKeys"
@@ -402,6 +404,7 @@ const removeSingleKey = () => {
 
 const withdrawMultipleKeys = (key) => {
   if (key) console.log("withdrawMultipleKeys");
+  else console.log("this is multiple");
 };
 
 const graffitiMultipleKeys = () => {

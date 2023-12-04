@@ -83,7 +83,7 @@ import { computed } from 'vue';
           src="/img/icon/the-staking/withdraw.png"
           alt="Icon"
           @mousedown.prevent
-          @click="copyPubkey(props.item)"
+          @click="withdrawSingle(props.item)"
         />
       </div>
     </div>

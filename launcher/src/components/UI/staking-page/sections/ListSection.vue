@@ -10,6 +10,8 @@
         @open-group="openGroup"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
+        @rename-single="renameSingle"
+        @withdraw-single="withdrawSingle"
       />
       <ListPanels
         @confirm-grouping="confirmGrouping"
@@ -40,6 +42,8 @@ const emit = defineEmits([
   "removeGroup",
   "backList",
   "confirmRename",
+  "renameSingle",
+  "withdrawSingle",
 ]);
 
 const stakingStore = useStakingStore();
@@ -66,6 +70,15 @@ const onDrop = (event) => {
 const removeSingle = (item) => {
   emit("removeSingle", item);
 };
+
+const renameSingle = (item) => {
+  emit("renameSingle", item);
+};
+
+const withdrawSingle = (item) => {
+  emit("withdrawSingle", item);
+};
+
 const openGroup = (item) => {
   emit("openGroup", item);
 };
