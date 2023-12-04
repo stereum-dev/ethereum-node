@@ -15,12 +15,12 @@
         @confirm-rename="confirmValidatorKeyRename"
         @back-list="backToList"
         @rename-single="confirmValidatorKeyRename"
-        @withdraw-single="withdrawSingleKey"
+        @withdraw-single="withdrawValidatorKey"
       />
       <ManagementSection
         @graffiti-multiple="graffitiMultipleKeys"
         @remove-multiple="removeMultipleKeys"
-        @withdraw-multiple="withdrawMultipleKeys"
+        @withdraw-multiple="withdrawValidatorKey"
         @import-remote="importRemoteKey"
       />
     </div>
@@ -402,8 +402,8 @@ const removeSingleKey = () => {
   console.log("removeSingleKey");
 };
 
-const withdrawMultipleKeys = (key) => {
-  if (key) console.log("withdrawMultipleKeys");
+const withdrawValidatorKey = (key) => {
+  if (key) console.log("withdrawMultipleKeys single");
   else console.log("this is multiple");
 };
 
