@@ -188,6 +188,10 @@ const copyHandler = (item) => {
 const removeSingle = (item) => {
   emit("removeSingle", item);
 };
+
+const withdrawSingle = (item) => {
+  emit("withdrawSingle", item);
+};
 </script>
 <style scoped>
 * {
