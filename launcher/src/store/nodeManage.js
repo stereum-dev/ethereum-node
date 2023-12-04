@@ -207,7 +207,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/testnet-icon.png",
           currencyIcon: "/img/icon/control/goETH_Currency_Symbol.png",
           dataEndpoint: "https://holesky.beaconcha.in/api/v1",
-          support: ["staking", "stereum on arm", "mev boost"],
+          support: ["staking", "ssv.network", "stereum on arm", "mev boost"],
         },
       ],
       currentNetwork: {},
