@@ -63,6 +63,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
           :key="key.pubkey"
           :item="key"
+          @remove-single="removeSingle"
         />
         <span v-if="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
@@ -82,7 +83,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import { useListKeys } from "@/composables/validators";
 
-const emit = defineEmits(["onDrop", "deleteKey", "openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
+const emit = defineEmits(["onDrop", "removeSingle", "openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
 const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
@@ -235,8 +236,8 @@ const onDrop = (event) => {
   emit("onDrop", event);
 };
 
-const deleteKey = (item) => {
-  emit("deleteKey", item);
+const removeSingle = (item) => {
+  emit("removeSingle", item);
 };
 
 const openGroup = (item) => {

@@ -9,16 +9,16 @@
     @confirm-action="removeGroup"
   >
     <template #content>
-      <div class="col-start-1 col-span-full row-start-4 row-end-5 w-full h-full grid grid-cols-12 grid-rows-3">
-        <div class="w-full h-full col-start-4 col-end-11 row-start-1 row-span-1 flex justify-start items-center px-1">
-          <span class="w-fit text-xs font-semibold text-left text-gray-400">Group ID: </span>
-          <span class="w-fit text-amber-400 text-xs font-semibold ml-5">{{ group.id }}</span>
+      <div class="col-start-1 col-span-full row-start-4 row-end-5 w-full h-full grid grid-cols-12 grid-rows-2">
+        <div class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-1 flex justify-start items-center px-1">
+          <span class="w-fit text-sm font-semibold text-left text-gray-400">Group ID: </span>
+          <span class="w-fit text-amber-400 text-md font-semibold ml-5">{{ group.id }}</span>
         </div>
         <div
-          class="w-full h-full col-start-4 col-end-11 row-start-2 row-span-1 text-sm text-left text-gray-300 flex justify-start items-center px-1"
+          class="w-full h-full col-start-3 col-end-11 row-start-2 row-span-1 text-sm text-left text-gray-300 flex justify-start items-center px-1"
         >
-          <span class="w-fit text-xs font-semibold text-left text-gray-400">Group Name:</span>
-          <span class="w-fit text-amber-400 text-xs font-semibold ml-5">{{ group.name }}</span>
+          <span class="w-fit text-sm font-semibold text-left text-gray-400">Group Name:</span>
+          <span class="w-fit text-amber-400 text-md font-semibold ml-5">{{ group.name }}</span>
         </div>
       </div>
     </template>

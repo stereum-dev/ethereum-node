@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 <template>
   <div
-    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer"
+    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate__slideInLeft animate__delay-0.5s"
     :class="props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 '"
     @click="selectKey(props.item)"
   >
@@ -74,7 +74,7 @@ import { computed } from 'vue';
           src="/img/icon/the-staking/option-remove.png"
           alt="Icon"
           @mousedown.prevent
-          @click="copyPubkey(props.item)"
+          @click="removeSingle(props.item)"
         />
       </div>
       <div class="col-start-5 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
@@ -106,6 +106,7 @@ const props = defineProps({
 const stakingStore = useStakingStore();
 const footerStore = useFooter();
 
+const emit = defineEmits(["removeSingle"]);
 const t = i18n.global.t;
 //Key Status Icons
 const activeStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Active.png";
@@ -182,6 +183,10 @@ const copyHandler = (item) => {
       console.log(`can't copy`);
     });
   footerStore.cursorLocation = "";
+};
+
+const removeSingle = (item) => {
+  emit("removeSingle", item);
 };
 </script>
 <style scoped>

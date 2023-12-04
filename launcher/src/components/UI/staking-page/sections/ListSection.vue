@@ -6,7 +6,7 @@
       <ListHeader v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive" @back-list="backList" />
       <ListBody
         @on-drop="onDrop"
-        @delete-key="deleteKey"
+        @remove-single="removeSingle"
         @open-group="openGroup"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
@@ -33,7 +33,7 @@ const emit = defineEmits([
   "uploadFile",
   "confirmPassword",
   "onDrop",
-  "deleteKey",
+  "removeSingle",
   "openGroup",
   "renameGroup",
   "withdrawGroup",
@@ -63,8 +63,8 @@ const onDrop = (event) => {
   emit("onDrop", event);
 };
 
-const deleteKey = (item) => {
-  emit("deleteKey", item);
+const removeSingle = (item) => {
+  emit("removeSingle", item);
 };
 const openGroup = (item) => {
   emit("openGroup", item);

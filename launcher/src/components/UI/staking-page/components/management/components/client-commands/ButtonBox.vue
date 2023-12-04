@@ -7,22 +7,44 @@
 import ButtonRow from "./ButtonRow.vue";
 import { ref } from "vue";
 
+const emit = defineEmits(["graffitiMultiple", "removeMultiple", "withdrawMultiple", "importRemote"]);
+
+const graffitiMultiple = () => {
+  emit("graffitiMultiple");
+};
+
+const removeMultiple = () => {
+  emit("removeMultiple");
+};
+
+const withdrawMultiple = () => {
+  emit("withdrawMultiple");
+};
+
+const importRemote = () => {
+  emit("importRemote");
+};
+
 const buttonState = ref([
   {
     text: "CHANGE ALL GRAFFITI",
     icon: "/img/icon/the-staking/option-graffiti.png",
+    events: graffitiMultiple,
   },
   {
     text: "REMOVE ALL KEYS",
     icon: "/img/icon/the-staking/option-remove.png",
+    events: removeMultiple,
   },
   {
     text: "WITHDRAW & EXIT ALL KEYS",
     icon: "/img/icon/the-staking/withdraw.png",
+    events: withdrawMultiple,
   },
   {
     text: "Import Remote Keys",
     icon: "/img/icon/the-staking/remotekey.svg",
+    events: importRemote,
   },
 ]);
 </script>

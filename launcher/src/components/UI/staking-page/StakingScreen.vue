@@ -8,14 +8,19 @@
         @upload-file="uploadValidatorKey"
         @confirm-password="passwordValidation"
         @on-drop="onDrop"
-        @delete-key="deletePreviewKey"
+        @remove-single="removeMultipleKeys"
         @open-group="openGroupList"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
         @confirm-rename="confirmValidatorKeyRename"
         @back-list="backToList"
       />
-      <ManagementSection />
+      <ManagementSection
+        @graffiti-multiple="graffitiMultipleKeys"
+        @remove-multiple="removeMultipleKeys"
+        @withdraw-multiple="withdrawMultipleKeys"
+        @import-remote="importRemoteKey"
+      />
     </div>
     <transition
       tag="div"
@@ -378,4 +383,39 @@ const deletePreviewKey = async (item) => {
   stakingStore.forceRefresh = true;
   await listKeys();
 };
+
+//****End of Validator Key ****
+
+//**** Client Commands Buttons ****
+
+const withdrawSingleKey = (key) => {
+  console.log("Withdrawing single key");
+};
+
+const GraffitiSingleKey = () => {
+  console.log("GraffitiSingleKey");
+};
+
+const removeSingleKey = () => {
+  console.log("removeSingleKey");
+};
+
+const withdrawMultipleKeys = (key) => {
+  if (key) console.log("withdrawMultipleKeys");
+};
+
+const graffitiMultipleKeys = () => {
+  console.log("GraffitiMultipleKeys");
+};
+
+const removeMultipleKeys = (key) => {
+  if (key) console.log("this is single remove", key.key);
+  else console.log("this is multiple");
+};
+
+const importRemoteKey = () => {
+  console.log("importRemoteKey");
+};
+
+//****End of Client Commands Buttons ****
 </script>
