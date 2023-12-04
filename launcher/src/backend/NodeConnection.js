@@ -336,17 +336,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -446,6 +446,83 @@ export class NodeConnection {
     }
 
     return serviceYAML.stdout;
+  }
+
+  async readSSVKeystoreConfig(serviceID) {
+    try {
+      const service = await this.readServiceConfiguration(serviceID);
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+
+      let ssvNetworkConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
+      if (SSHService.checkExecError(ssvNetworkConfig)) {
+        throw new Error(
+          "Failed reading SSV network config to get keystore keystore from service " +
+            serviceID +
+            ": " +
+            SSHService.extractExecError(ssvNetworkConfig)
+        );
+      }
+      let ssvNetworkConfigParsed = YAML.parse(ssvNetworkConfig.stdout);
+
+      const regex = /^(\.\/|)data\//; // string starts with "./data/" or "data/"
+      let keyStorePasswordFile = ssvNetworkConfigParsed.KeyStore.PasswordFile;
+      if (regex.test(keyStorePasswordFile)) {
+        keyStorePasswordFile = configPath + "/" + keyStorePasswordFile.replace(regex, "");
+      }
+      let keyStorePrivateKeyFile = ssvNetworkConfigParsed.KeyStore.PrivateKeyFile;
+      if (regex.test(keyStorePrivateKeyFile)) {
+        keyStorePrivateKeyFile = configPath + "/" + keyStorePrivateKeyFile.replace(regex, "");
+      }
+
+      let keyStorePasswordFileRequest = await this.sshService.exec(`cat "${keyStorePasswordFile}"`);
+      if (SSHService.checkExecError(keyStorePasswordFileRequest) || keyStorePasswordFileRequest.rc) {
+        log.error(
+          "Can't read SSV keystore password file content from service " + serviceID,
+          keyStorePasswordFileRequest.stderr
+        );
+        throw new Error(
+          "Can't read SSV keystore password file content from service " +
+            serviceID +
+            ": " +
+            keyStorePasswordFileRequest.stderr
+        );
+      }
+      let keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
+
+      let keyStorePrivateKeyFileRequest = await this.sshService.exec(`cat "${keyStorePrivateKeyFile}"`);
+      if (SSHService.checkExecError(keyStorePrivateKeyFileRequest) || keyStorePrivateKeyFileRequest.rc) {
+        log.error(
+          "Can't read SSV keystore private key file content from service " + serviceID,
+          keyStorePrivateKeyFileRequest.stderr
+        );
+        throw new Error(
+          "Can't read SSV keystore private key file content from service " +
+            serviceID +
+            ": " +
+            keyStorePrivateKeyFileRequest.stderr
+        );
+      }
+      let keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
+
+      return {
+        passwordFilePath: keyStorePasswordFile,
+        passwordFileData: keyStorePasswordFileContent.trim(),
+        privateKeyFilePath: keyStorePrivateKeyFile,
+        privateKeyFileData: (() => {
+          try {
+            return JSON.parse(keyStorePrivateKeyFileContent);
+          } catch (e) {
+            return keyStorePrivateKeyFileContent;
+          }
+        })(),
+      };
+    } catch (err) {
+      log.error("Can't read SSV keystore from service " + serviceID, err);
+      throw new Error("Can't read SSV keystore from service " + serviceID + ": " + err);
+    }
   }
 
   async readSSVNetworkConfig(serviceID) {
@@ -593,10 +670,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -642,10 +719,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -667,9 +744,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -1139,7 +1216,7 @@ export class NodeConnection {
           log.info(" Could not connect.\n" + (retry.maxTries - retry.counter) + " tries left.");
         }
       }
-      log.info("OUT OF WHILE LOOP")
+      log.info("OUT OF WHILE LOOP");
       if (retry.connected) {
         await this.establish(this.taskManager);
         this.taskManager.otherTasksHandler(ref, "Connected", true);
@@ -1238,13 +1315,14 @@ export class NodeConnection {
   async dumpDockerLogs() {
     try {
       const services = await this.listServices();
-      log.info(services)
+      log.info(services);
       const containerIds = services.map((service) => service.ID);
-
 
       const logsPromises = containerIds.map(async (containerId) => {
         try {
-          let jsonFilePathsResult = await this.sshService.exec(`ls /var/lib/docker/containers/${containerId}/${containerId}*`);
+          let jsonFilePathsResult = await this.sshService.exec(
+            `ls /var/lib/docker/containers/${containerId}/${containerId}*`
+          );
 
           if (SSHService.checkExecError(jsonFilePathsResult)) {
             throw new Error("Failed reading docker logs: " + SSHService.extractExecError(jsonFilePathsResult));
@@ -1253,25 +1331,21 @@ export class NodeConnection {
           const jsonFilePaths = jsonFilePathsResult.stdout.split("\n").filter((i) => i);
 
           for (const jsonFilePath of jsonFilePaths) {
-
             const logs = await this.sshService.exec(`cat ${jsonFilePath}`);
 
             return { containerId, logs };
           }
         } catch (err) {
-          log.error("Failed to dump Docker Logs: ", err)
-          return { containerId, logs: '' };
+          log.error("Failed to dump Docker Logs: ", err);
+          return { containerId, logs: "" };
         }
       });
 
       const allLogs = await Promise.all(logsPromises);
       return allLogs;
-
     } catch (err) {
-      log.error("Failed to dump Docker Logs: ", err)
-      return [{ containerId: 'ERROR', logs: err }];
+      log.error("Failed to dump Docker Logs: ", err);
+      return [{ containerId: "ERROR", logs: err }];
     }
-
-
   }
 }
