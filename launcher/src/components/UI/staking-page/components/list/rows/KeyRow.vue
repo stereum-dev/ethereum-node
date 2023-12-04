@@ -62,10 +62,10 @@ import { computed } from 'vue';
       <div class="col-start-3 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/option-graffiti.png"
+          src="/img/icon/the-staking/fee-recepient.png"
           alt="Icon"
           @mousedown.prevent
-          @click="copyPubkey(props.item)"
+          @click="FeeRecepient"
         />
       </div>
       <div class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
@@ -106,7 +106,7 @@ const props = defineProps({
 const stakingStore = useStakingStore();
 const footerStore = useFooter();
 
-const emit = defineEmits(["removeSingle"]);
+const emit = defineEmits(["removeSingle", "withdrawSingle", "graffitiSingle", "renameKey"]);
 const t = i18n.global.t;
 //Key Status Icons
 const activeStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Active.png";
@@ -191,6 +191,11 @@ const removeSingle = (item) => {
 
 const withdrawSingle = (item) => {
   emit("withdrawSingle", item);
+};
+
+const FeeRecepient = () => {
+  stakingStore.setActivePanel(null);
+  stakingStore.setActivePanel("fee");
 };
 </script>
 <style scoped>

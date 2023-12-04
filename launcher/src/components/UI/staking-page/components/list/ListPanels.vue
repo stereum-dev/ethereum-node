@@ -70,7 +70,7 @@ import InsertPanel from "./panels/InsertPanel.vue";
 import ValidatorPanel from "./panels/ValidatorPanel.vue";
 import PasswordPanel from "./panels/PasswordPanel.vue";
 import SearchPanel from "./panels/SearchPanel.vue";
-import GrafitiPanel from "./panels/GrafitiPanel.vue";
+import FeePanel from "./panels/FeePanel.vue";
 import GroupingPanel from "./panels/GroupingPanel.vue";
 import RenameKey from "./panels/RenameKey.vue";
 import { useStakingStore } from "@/store/theStaking";
@@ -84,6 +84,7 @@ const emit = defineEmits([
   "confirmPassword",
   "removeGroup",
   "confirmRename",
+  "confirmFeerecepient",
 ]);
 
 //Stores
@@ -111,8 +112,11 @@ const panels = {
   search: {
     component: SearchPanel,
   },
-  grafiti: {
-    component: GrafitiPanel,
+  fee: {
+    component: FeePanel,
+    events: {
+      confirmFeerecepient: () => confirmFeerecepient,
+    },
   },
   grouping: {
     component: GroupingPanel,
@@ -154,6 +158,9 @@ const handleEvent = (eventName, args) => {
 
 const confirmGrouping = (groupName) => {
   handleEvent("confirmGrouping", groupName);
+};
+const confirmFeerecepient = (item) => {
+  handleEvent("confirmFeerecepient", item);
 };
 
 const pickValidator = (service) => {

@@ -16,6 +16,7 @@
         @back-list="backToList"
         @rename-single="confirmValidatorKeyRename"
         @withdraw-single="withdrawValidatorKey"
+        @confirm-feerecepient="confirmFeeRecepient"
       />
       <ManagementSection
         @graffiti-multiple="graffitiMultipleKeys"
@@ -394,8 +395,11 @@ const withdrawSingleKey = (key) => {
   console.log("Withdrawing single key");
 };
 
-const GraffitiSingleKey = () => {
-  console.log("GraffitiSingleKey");
+const confirmFeeRecepient = (item) => {
+  console.log("ADDRESSS", item);
+  console.log("confirmFeeRecepient");
+  stakingStore.eneterdFeeRecipientAddress = "";
+  stakingStore.setActivePanel(null);
 };
 
 const removeSingleKey = () => {

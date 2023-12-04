@@ -37,7 +37,8 @@ export const useStakingStore = defineStore("theStaking", {
       // ***** Validator Keys *****
       selectKeyToRename: null,
       validatorDisplayName: "",
-
+      eneterdFeeRecipientAddress: "",
+      feeRecepientAddress: "",
       // ***** End Validator Keys *****
 
       exitMultiValidatorKeys: false,

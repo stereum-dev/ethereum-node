@@ -19,6 +19,7 @@
         @upload-file="uploadFile"
         @confirm-password="confirmPassword"
         @confirm-rename="confirmRename"
+        @confirm-feerecepient="confirmFeerecepient"
       />
     </div>
   </div>
@@ -44,6 +45,7 @@ const emit = defineEmits([
   "confirmRename",
   "renameSingle",
   "withdrawSingle",
+  "confirmFeerecepient",
 ]);
 
 const stakingStore = useStakingStore();
@@ -65,6 +67,10 @@ const confirmPassword = (password) => {
 
 const onDrop = (event) => {
   emit("onDrop", event);
+};
+
+const confirmFeerecepient = (item) => {
+  emit("confirmFeerecepient", item);
 };
 
 const removeSingle = (item) => {
