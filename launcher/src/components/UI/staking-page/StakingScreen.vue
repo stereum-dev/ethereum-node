@@ -391,10 +391,6 @@ const deletePreviewKey = async (item) => {
 
 //**** Client Commands Buttons ****
 
-const withdrawSingleKey = (key) => {
-  console.log("Withdrawing single key");
-};
-
 const confirmFeeRecepient = (item) => {
   console.log("ADDRESSS", item);
   console.log("confirmFeeRecepient");
@@ -407,8 +403,16 @@ const removeSingleKey = () => {
 };
 
 const withdrawValidatorKey = (key) => {
+  //if single key
   if (key) console.log("withdrawMultipleKeys single");
-  else console.log("this is multiple");
+
+  //if multiple keys
+  console.log(stakingStore.selectedServiceToFilter.config?.serviceID);
+  stakingStore.keys.forEach((item) => {
+    if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
+      console.log("withdrawMultipleKeys multiple");
+    }
+  });
 };
 
 const graffitiMultipleKeys = () => {
