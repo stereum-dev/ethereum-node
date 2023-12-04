@@ -3105,6 +3105,8 @@ rm -rf diskoutput
   }
 
   async exitValidatorAccount(pubkey, serviceID) {
+    console.log("keysssssssssssssssssss ", pubkey);
+    console.log("service IDDDDDDDDDDDDDDDDDDDDD ", serviceID);
     const beaconStatus = await this.getBeaconStatus();
     try {
       if (beaconStatus.code === 0) {

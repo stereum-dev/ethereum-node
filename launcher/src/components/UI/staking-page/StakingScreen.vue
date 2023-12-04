@@ -45,7 +45,7 @@ import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 
@@ -53,6 +53,7 @@ import { useListGroups } from "@/composables/groups";
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
 const { listGroups } = useListGroups();
+const exitValidatorResponse = ref({});
 
 const modals = {
   import: {
@@ -402,15 +403,24 @@ const removeSingleKey = () => {
   console.log("removeSingleKey");
 };
 
-const withdrawValidatorKey = (key) => {
+const withdrawValidatorKey = async (key) => {
   //if single key
-  if (key) console.log("withdrawMultipleKeys single");
+  if (key) {
+    exitValidatorResponse.value = await ControlService.exitValidatorAccount({
+      pubkey: key.key,
+      serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+    });
+  }
 
   //if multiple keys
-  console.log(stakingStore.selectedServiceToFilter.config?.serviceID);
-  stakingStore.keys.forEach((item) => {
+  stakingStore.keys.forEach(async (item) => {
     if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
-      console.log("withdrawMultipleKeys multiple");
+      exitValidatorResponse.value = await ControlService.exitValidatorAccount({
+        pubkey: item.key,
+        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      });
+      console.log("itemmmmmmmmmmmmmmmmmmm ", item);
+      console.log("responseeeeeeeeeeee ", exitValidatorResponse.value);
     }
   });
 };
