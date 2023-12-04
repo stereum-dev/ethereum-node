@@ -661,7 +661,7 @@ export class ValidatorAccountManager {
     return result.stdout.trim();
   }
 
-  async getExitValidatorMessage(pubkey, password, serviceID) {
+  async getExitValidatorMessage(pubkey, serviceID) {
     const ref = StringUtils.createRandomString(); //Create a random string to identify the task
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit msg for ${pubkey.substring(0, 6)}..`);
     try {
