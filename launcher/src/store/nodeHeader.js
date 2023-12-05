@@ -2,8 +2,16 @@ import { defineStore } from "pinia";
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      depositFile: false,
+      enrIsGenerating: true,
+      generatedENR: "",
+      generatorPlugin: false,
+      obolDashboard: false,
+      continueForExistENR: false,
       notificationModalIsActive: false,
       serverAccessManagement: false,
+      distrubutedValidatorGenerator: false,
+      deactivateBtnToWaitForLogs: false,
       displayUpdatePanel: false,
       runningServices: [],
       refresh: true,

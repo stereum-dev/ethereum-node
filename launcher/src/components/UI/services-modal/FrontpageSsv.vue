@@ -106,7 +106,13 @@ export default {};
 
 .operator-btn span:active,
 .insert-btn span:active {
-  transform: scale(0.9);
+  background-color: #06669e;
+  border: none;
+  box-shadow: 1px 1px 8px 1px rgb(28, 42, 60) inset;
+  transition-duration: 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .operator-btn:active span,
 .insert-btn:active span {

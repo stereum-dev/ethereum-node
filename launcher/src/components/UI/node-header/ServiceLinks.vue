@@ -16,13 +16,14 @@
       <ssv-modal v-if="showSsvWindow" @close-window="closeServiceBrowser"></ssv-modal>
       <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser" />
       <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser"></mevboost-modal>
-      <div class="arrow-box">
-        <div class="right-arrow left-paddle paddle" @click="scrollRight">
-          <img alt="update-icon" src="/img/icon/header-icons/right.png" />
-        </div>
-        <div class="left-arrow" @click="scrollLeft">
-          <img alt="update-icon" src="/img/icon/header-icons/left.png" />
-        </div>
+      <ObolModal v-if="showObolCharonWindow" @close-window="closeServiceBrowser" />
+    </div>
+    <div class="arrow-box">
+      <div class="right-arrow left-paddle paddle" @click="scrollRight">
+        <img alt="update-icon" src="/img/icon/header-icons/right.png" />
+      </div>
+      <div class="left-arrow" @click="scrollLeft">
+        <img alt="update-icon" src="/img/icon/header-icons/left.png" />
       </div>
     </div>
   </div>
@@ -36,9 +37,10 @@ import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
 import MevboostModal from "../services-modal//MevboostModal.vue";
+import ObolModal from "../services-modal/ObolModal.vue";
 import { useNodeStore } from "@/store/theNode";
 export default {
-  components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal },
+  components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal, ObolModal },
   data() {
     return {
       isServiceAvailable: true,
@@ -46,6 +48,7 @@ export default {
       showSsvWindow: false,
       showPrometheusWindow: false,
       showMevboostWindow: false,
+      showObolCharonWindow: false,
     };
   },
 
@@ -84,6 +87,9 @@ export default {
         this.showPrometheusWindow = true;
       } else if (serviceName == "FlashbotsMevBoostService") {
         this.showMevboostWindow = true;
+      } else if (serviceName == "CharonService") {
+        this.showObolCharonWindow = true;
+        console.log("ObolCharonService");
       } else {
         return;
       }
@@ -94,6 +100,7 @@ export default {
       this.showSsvWindow = false;
       this.showPrometheusWindow = false;
       this.showMevboostWindow = false;
+      this.showObolCharonWindow = false;
     },
   },
 };
@@ -104,13 +111,13 @@ export default {
   max-width: 300px;
   height: 90%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .arrow-box {
   width: 25px;
-  height: 90%;
+  height: 7%;
   padding: 0 3px;
   border-left: 2px solid #a5a5a5;
   border-right: 2px solid #a5a5a5;
@@ -119,6 +126,8 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  right: 20.5%;
 }
 
 .right-arrow {

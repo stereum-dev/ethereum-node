@@ -36,7 +36,7 @@
       <div class="copiedPubKey">
         <label for="copyPubkey"
           >{{ $t("registerSSV.copyMessage") }}
-          <input id="copyPubkey" v-model="model.copiedPubkey" name="copiedPubkey" type="password" @mousedown.stop/>
+          <input id="copyPubkey" v-model="model.copiedPubkey" name="copiedPubkey" type="password" @mousedown.stop />
         </label>
       </div>
       <div class="btn-box">
@@ -77,7 +77,7 @@ export default {
     getPubkeyHandler() {
       if (this.model.copiedPubkey === this.localpubkey) {
         this.isBtnDisabled = false;
-      }else {
+      } else {
         this.isBtnDisabled = true;
       }
     },
@@ -296,13 +296,12 @@ export default {
   z-index: -1;
 }
 .btn-box button:hover {
-  transform: scale(1.07);
   border: 2px solid #364a59;
   background-color: #283742;
   color: #5ba3cd;
 }
 .btn-box button:active {
-  transform: scale(1);
+  box-shadow: 1px 1px 10px 1px #171717 inset !important;
   border: none;
   background-color: #1f2d37;
   color: #5ba3cd;
