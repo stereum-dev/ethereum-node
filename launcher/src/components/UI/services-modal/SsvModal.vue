@@ -33,7 +33,7 @@
       </div>
       <div class="wrapper">
         <div v-if="dataLoading" class="spinnerBox">
-          <img src="../../../../public/img/icon/control/spinner.gif" alt="spinner" />
+          <img src="/img/icon/control/spinner.gif" alt="spinner" />
         </div>
         <div v-else class="content-box">
           <frontpage-ssv

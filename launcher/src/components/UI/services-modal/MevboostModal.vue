@@ -432,7 +432,8 @@ export default {
 }
 
 .openBtn:active {
-  transform: scale(0.9);
+  transition-duration: 100ms !important;
+  box-shadow: 1px 1px 10px 1px #171717 inset !important;
 }
 .relaysParent {
   width: 90%;
@@ -571,11 +572,12 @@ export default {
 .btn-box span:hover {
   background-color: #1661b7;
   color: #dddddd;
-  transition-duration: 200ms;
+  transition-duration: 100ms;
 }
 .btn-box span:active {
-  transform: scale(0.9);
-  box-shadow: none;
+  transition-duration: 100ms !important;
+  box-shadow: 1px 1px 10px 1px #171717 inset !important;
+  border: none;
 }
 .btn-box .process {
   width: 50%;
