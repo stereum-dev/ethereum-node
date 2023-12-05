@@ -40,7 +40,7 @@ export default {
       serverAccessManagement: "serverAccessManagement",
     }),
     checkTheRouter() {
-      if (this.$route.fullPath !== "/login" && this.$route.fullPath !== "/oneClick/play") {
+      if (this.$route.fullPath !== "/login" || this.$route.fullPath !== "/oneClick/play") {
         return true;
       } else {
         return false;
