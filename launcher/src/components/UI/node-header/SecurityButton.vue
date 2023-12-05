@@ -2,7 +2,7 @@
   <div class="securBtn-parent">
     <div
       class="securBtn-box"
-      @click="$emit('accessSwitch')"
+      @click="securityButtonHandler"
       @mouseenter="$emit('mouseEnter')"
       @mouseleave="$emit('mouseLeave')"
     >
@@ -44,6 +44,16 @@ export default {
         return true;
       } else {
         return false;
+      }
+    },
+  },
+
+  watch: {
+    securityButtonHandler() {
+      if (this.$route.fullPath === "/login" || this.$route.fullPath === "/oneClick/play") {
+        return;
+      } else {
+        this.$emit("accessSwitch");
       }
     },
   },
