@@ -6,16 +6,15 @@
       alt="Block Icon"
     />
     <div class="col-start-2 col-span-full flex justify-evenly items-center">
-      <TheEpoch v-for="epoch in props.epochs" :key="epoch" :state="epoch.state" :key-number="epoch.keyNumber" />
+      <TheEpoch :duties-number="epoch.syncDuties" />
     </div>
   </div>
 </template>
 <script setup>
 import TheEpoch from "./TheEpoch.vue";
-
-const props = defineProps({
-  epochs: {
-    type: Array,
+defineProps({
+  epoch: {
+    type: Object,
     required: true,
   },
 });

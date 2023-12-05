@@ -3,6 +3,10 @@ import { defineStore } from "pinia";
 export const useStakingStore = defineStore("theStaking", {
   state: () => {
     return {
+      currentEpoch: 0,
+      currentSlot: 0,
+      secondsPerSlot: null,
+      slotsPerEpoch: null,
       // ***** Staking List
       selectedServiceToFilter: null,
       filteredKeys: null,
