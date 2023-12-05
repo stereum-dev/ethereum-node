@@ -17,6 +17,7 @@
         @rename-single="confirmValidatorKeyRename"
         @withdraw-single="withdrawValidatorKey"
         @confirm-feerecepient="confirmFeeRecepient"
+        @delete-preview="deletePreviewKey"
       />
       <ManagementSection
         @graffiti-multiple="graffitiMultipleKeys"
@@ -379,6 +380,7 @@ const pickValidatorService = (service) => {
 
 //Delete Preview Key
 const deletePreviewKey = async (item) => {
+  console.log("item", item);
   stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.pubkey !== item.pubkey);
   if (!stakingStore.previewKeys.length) {
     stakingStore.isPreviewListActive = false;

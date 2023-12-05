@@ -35,6 +35,7 @@ const runInstalltion = async () => {
     });
 
     await ControlService.startOneClickServices();
+
     router.push("/node");
   } catch (err) {
     console.log("Installation Failed: ", err);

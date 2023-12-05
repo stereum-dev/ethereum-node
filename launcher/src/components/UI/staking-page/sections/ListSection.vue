@@ -12,6 +12,7 @@
         @withdraw-group="withdrawGroup"
         @rename-single="renameSingle"
         @withdraw-single="withdrawSingle"
+        @delete-preview="deletePreview"
       />
       <ListPanels
         @confirm-grouping="confirmGrouping"
@@ -46,6 +47,7 @@ const emit = defineEmits([
   "renameSingle",
   "withdrawSingle",
   "confirmFeerecepient",
+  "deletePreview",
 ]);
 
 const stakingStore = useStakingStore();
@@ -73,6 +75,9 @@ const confirmFeerecepient = (item) => {
   emit("confirmFeerecepient", item);
 };
 
+const deletePreview = (item) => {
+  emit("deletePreview", item);
+};
 const removeSingle = (item) => {
   emit("removeSingle", item);
 };

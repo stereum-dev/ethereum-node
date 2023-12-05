@@ -13,7 +13,7 @@ import { computed, ref } from 'vue';
       <span class="text-center text-xs text-gray-300 ml-2">{{ props.item.pubkey }}</span>
       <div
         class="w-6 h-6 bg-[#1b1d1f] hover:bg-[#212325] rounded-full flex justify-center items-center p-1 cursor-pointer"
-        @click="deleteKey(props.item)"
+        @click="deletePreview(props.item)"
       >
         <img
           class="w-4 h-4 hover:scale-105 active:scale-100"
@@ -38,10 +38,10 @@ const props = defineProps({
 
 const isRemoveActive = ref(false);
 
-const emit = defineEmits(["deleteKey"]);
+const emit = defineEmits(["deletePreview"]);
 
-const deleteKey = (item) => {
+const deletePreview = (item) => {
   isRemoveActive.value = true;
-  emit("deleteKey", item);
+  emit("deletePreview", item);
 };
 </script>

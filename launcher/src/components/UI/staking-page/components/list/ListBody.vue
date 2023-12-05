@@ -46,7 +46,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           v-show="stakingStore.isPreviewListActive && !isLoading"
           :key="item.pubkey"
           :item="item"
-          @delete-key="deleteKey"
+          @delete-preview="deletePreview"
         />
         <GroupRow
           v-for="group in getCorrectValidatorGroups"
@@ -92,7 +92,7 @@ const emit = defineEmits([
   "renameGroup",
   "withdrawGroup",
   "removeGroup",
-
+  "deletePreview",
   "withdrawSingle",
   "renameSingle",
 ]);
@@ -246,6 +246,10 @@ const isKeyInGroup = (key) => {
 
 const onDrop = (event) => {
   emit("onDrop", event);
+};
+
+const deletePreview = (item) => {
+  emit("deletePreview", item);
 };
 
 const removeSingle = (item) => {
