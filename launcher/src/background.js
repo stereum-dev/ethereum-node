@@ -482,6 +482,10 @@ ipcMain.handle("beaconchainMonitoringModification", async (event, args) => {
   return await serviceManager.beaconchainMonitoringModification(args);
 });
 
+ipcMain.handle("removeBeaconchainMonitoring", async (event, args) => {
+  return await serviceManager.removeBeaconchainMonitoring(args);
+});
+
 ipcMain.handle("dumpDockerLogs", async () => {
   return await nodeConnection.dumpDockerLogs();
 });
