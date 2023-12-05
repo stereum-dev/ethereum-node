@@ -18,7 +18,7 @@
     "test-coverage": "jest --coverage",
     "watch:css": "npx tailwindcss -i ./src/main.css -o ./public/output.css --watch",
     "lint:fix": "eslint --ext .js,.vue --ignore-path ../.gitignore --fix src",
-    "max": "concurrently \"npm:electron:serve\" \"npm:watch:css\"",
+    "stereum": "concurrently \"npm:electron:serve\" \"npm:watch:css\"",
     "format": "prettier .  --write"
   },
   "dependencies": {
