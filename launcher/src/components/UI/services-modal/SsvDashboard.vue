@@ -201,7 +201,6 @@ export default {
 }
 .operator-btn:hover,
 .grafana-btn:hover {
-  transform: scale(1.005);
   background-color: rgb(9, 140, 216);
   border: 1px solid #91caf3;
   border-radius: 10px;
@@ -213,13 +212,15 @@ export default {
 }
 .operator-btn:active,
 .grafana-btn:active {
-  transform: scale(1);
+  box-shadow: 1px 1px 10px 1px #171717 inset !important;
+  border: none;
   background-color: rgb(6, 116, 180);
   box-shadow: none;
-  border: none;
 }
 .operator-btn:active a,
 .grafana-btn:active a {
+  box-shadow: 1px 1px 10px 1px #171717 inset !important;
+
   color: rgb(222, 222, 222);
 }
 

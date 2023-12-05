@@ -447,6 +447,11 @@ class ControlService extends EventEmitter {
   async beaconchainMonitoringModification(args) {
     return await this.promiseIpc.send("beaconchainMonitoringModification", args);
   }
+  
+  async removeBeaconchainMonitoring(args) {
+    return await this.promiseIpc.send("removeBeaconchainMonitoring", args);
+  }
+
   async IpScanLan() {
     return await this.promiseIpc.send("IpScanLan");
   }

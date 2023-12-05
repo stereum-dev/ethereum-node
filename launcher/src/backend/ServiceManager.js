@@ -1483,7 +1483,212 @@ export class ServiceManager {
   }
 
   async beaconchainMonitoringModification(data) {
-    console.log(data.selectedVal + " " + data.apiKey + " " + data.machineName);
-    // NOT YET IMPLEMENTED
+    let services = await this.readServiceConfigurations();
+    let selectedValidator = services.find((service) => service.id === data.selectedVal);
+    let firstConsensusClient = services.find(
+      (service) => service.id === selectedValidator.dependencies.consensusClients[0].id
+    );
+
+    const metricsExporterCommands = {
+      LighthouseValidatorService: "--monitoring-endpoint=",
+      LighthouseBeaconService: "--monitoring-endpoint=",
+      TekuValidatorService: "--metrics-publish-endpoint=",
+      TekuBeaconService: "--metrics-publish-endpoint=",
+      LodestarValidatorService: "--monitoring.endpoint=",
+      LodestarBeaconService: "--monitoring.endpoint=",
+    };
+ 
+    let metricsExporterAdded = false;
+
+    switch (selectedValidator.service) {
+      case "LighthouseValidatorService":
+        await this.manageServiceState(selectedValidator.id, "stopped");
+        selectedValidator.command.push(
+          metricsExporterCommands[selectedValidator.service] +
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+        );
+        await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
+        await this.manageServiceState(selectedValidator.id, "started");
+        break;
+      case "TekuValidatorService":
+        await this.manageServiceState(selectedValidator.id, "stopped");
+        selectedValidator.command.push(
+          metricsExporterCommands[selectedValidator.service] +
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+        );
+        await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
+        await this.manageServiceState(selectedValidator.id, "started");
+        break;
+      case "LodestarValidatorService":
+        await this.manageServiceState(selectedValidator.id, "stopped");
+        selectedValidator.command.push(
+          metricsExporterCommands[selectedValidator.service] +
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+        );
+        await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
+        await this.manageServiceState(selectedValidator.id, "started");
+        break;
+      case "PrysmValidatorService":
+        await this.addMetricsExporter(services);
+        metricsExporterAdded = true;
+        break;
+    }
+
+    switch (firstConsensusClient.service) {
+      case "LighthouseBeaconService":
+      case "TekuBeaconService":
+      case "LodestarBeaconService":
+        await this.manageServiceState(firstConsensusClient.id, "stopped");
+        firstConsensusClient.command.push(
+          metricsExporterCommands[firstConsensusClient.service] +
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+        );
+        await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
+        await this.manageServiceState(firstConsensusClient.id, "started");
+        break;
+      case "PrysmBeaconService":
+      case "NimbusBeaconService":
+        if (!metricsExporterAdded) {
+          await this.addMetricsExporter(services);
+          metricsExporterAdded = true;
+        }
+        break;
+    }
+    if (metricsExporterAdded) {
+      let newServices = await this.readServiceConfigurations();
+      let metricsExporter = newServices.filter(({ id: id1 }) => !services.some(({ id: id2 }) => id2 === id1))[0];
+      metricsExporter.command = [];
+      metricsExporter.command.push(
+        `--server.address=https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`,
+        `--system.partition=/host/rootfs`
+      );
+      if (selectedValidator.service == "PrysmValidatorService") {
+        metricsExporter.command.push(
+          `--validator.type=prysm`,
+          `--validator.address=http://stereum-${selectedValidator.id}:8081/metrics`
+        );
+      }
+      if (firstConsensusClient.service == "PrysmBeaconService") {
+        metricsExporter.command.push(
+          `--beaconnode.type=prysm`,
+          `--beaconnode.address=http://stereum-${firstConsensusClient.id}:8080/metrics`
+        );
+      } else if (firstConsensusClient.service == "NimbusBeaconService") {
+        metricsExporter.command.push(
+          `--beaconnode.type=nimbus`,
+          `--beaconnode.address=http://stereum-${firstConsensusClient.id}:8008/metrics`
+        );
+      }
+
+      await this.nodeConnection.writeServiceConfiguration(metricsExporter.buildConfiguration());
+      await this.manageServiceState(metricsExporter.id, "started");
+    }
+  }
+  
+  async addMetricsExporter(services) {
+    try {
+      let installTask = [];
+      installTask.push({
+        service: {
+          id: services.length + 1,
+          name: "MetricsExporter",
+          service: "MetricsExporterService",
+          category: "service",
+          config: [
+            {
+              serviceID: "",
+              configVersion: "",
+              image: "",
+              imageVersion: "",
+              ports: [],
+              volumes: [],
+              network: "",
+            },
+          ],
+        },
+        data: {
+          network: "goerli",
+          installDir: "/opt/stereum",
+          executionClients: [],
+          consensusClients: [],
+          relays: "",
+          checkpointURL: false,
+        },
+      });
+
+      await this.addServices(installTask, services);
+    } catch (err) {
+      log.error("Installing Services Failed:", err);
+    }
+  }
+
+  async removeBeaconchainMonitoring(data){
+    let metricsCommandIndex;
+    let metricsExporterRemoveID = null;
+    let linkedMetricsExporter;
+
+    const metricsExporterCommands = {
+      LighthouseValidatorService: "--monitoring-endpoint=",
+      LighthouseBeaconService: "--monitoring-endpoint=",
+      TekuValidatorService: "--metrics-publish-endpoint=",
+      TekuBeaconService: "--metrics-publish-endpoint=",
+      LodestarValidatorService: "--monitoring.endpoint=",
+      LodestarBeaconService: "--monitoring.endpoint=",
+    };
+
+    let services = await this.readServiceConfigurations();
+    let selectedValidator = services.find((service) => service.id === data.selectedVal);
+    let firstConsensusClient = services.find(
+      (service) => service.id === selectedValidator.dependencies.consensusClients[0].id
+    );
+
+    switch (selectedValidator.service) {
+      case "LighthouseValidatorService":
+      case "TekuValidatorService":
+      case "LodestarValidatorService":
+        await this.manageServiceState(selectedValidator.id, "stopped");
+        metricsCommandIndex = selectedValidator.command.findIndex((c) => c.includes(metricsExporterCommands[selectedValidator.service]));
+        if (metricsCommandIndex > -1) {
+          selectedValidator.command.splice(metricsCommandIndex, 1);
+        }
+        await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
+        await this.manageServiceState(selectedValidator.id, "started");
+        break;
+      case "PrysmValidatorService":
+        metricsExporterRemoveID = selectedValidator.id;
+        break;
+    }
+
+    switch (firstConsensusClient.service) {
+      case "LighthouseBeaconService":
+      case "TekuBeaconService":
+      case "LodestarBeaconService":
+        await this.manageServiceState(firstConsensusClient.id, "stopped");
+        metricsCommandIndex = firstConsensusClient.command.findIndex((c) => c.includes(metricsExporterCommands[firstConsensusClient.service]));
+        if (metricsCommandIndex > -1) {
+          firstConsensusClient.command.splice(metricsCommandIndex, 1);
+        }
+        await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
+        await this.manageServiceState(firstConsensusClient.id, "started");
+        break;
+      case "PrysmBeaconService":
+      case "NimbusBeaconService":
+        metricsExporterRemoveID = firstConsensusClient.id;
+        break;
+    }
+    if(metricsExporterRemoveID != null){
+      let metricsExporters = services.filter((services) => services.service == "MetricsExporterService");
+      metricsExporters.forEach((metricsExporter) => {
+        let IDIndex = metricsExporter.command.findIndex((c) => c.includes(metricsExporterRemoveID));
+        if (IDIndex > -1) {
+          linkedMetricsExporter = metricsExporter;
+        }
+      })
+    
+      await this.nodeConnection.runPlaybook("Delete Service", {
+        stereum_role: "delete-service",
+        service: linkedMetricsExporter.id,
+      });
+    }
   }
 }
