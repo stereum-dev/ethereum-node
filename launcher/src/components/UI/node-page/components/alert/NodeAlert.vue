@@ -72,6 +72,19 @@
           </div>
         </div>
       </div>
+      <div v-if="true" class="status-message_red">
+        <div class="message-icon">
+          <img src="/img/icon/arrows/SynchronisationIconError.gif" alt="warn_storage" />
+        </div>
+        <div class="message-text_container">
+          <div class="main-message">
+            <span>CLIENT / SERVICE</span>
+          </div>
+          <div class="val-message">
+            <span>Synchronization Error</span>
+          </div>
+        </div>
+      </div>
       <div v-if="missedAttest" class="status-message_red">
         <div class="message-icon">
           <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
@@ -565,7 +578,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   font-size: 50%;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
 }
 .main-message-rpc {
@@ -585,7 +598,7 @@ export default {
   height: 35%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 50%;
+  font-size: 45%;
   font-weight: 700;
   text-transform: uppercase;
 }
