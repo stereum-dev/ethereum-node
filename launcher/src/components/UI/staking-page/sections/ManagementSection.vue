@@ -3,7 +3,6 @@
     <ValidatorRewards />
     <ClientCommands
       @graffiti-panel="graffitiPanel"
-      @remove-multiple="removeMultiple"
       @import-remote="importRemote"
       @withdraw-multiple="withdrawMultiple"
     />
@@ -16,14 +15,10 @@ import ValidatorRewards from "../components/management/ValidatorRewards.vue";
 import ClientCommands from "../components/management/ClientCommands.vue";
 import EpochDuty from "../components/management/EpochDuty.vue";
 
-const emit = defineEmits(["graffitiPanel", "removeMultiple", "importRemote", "withdrawMultiple"]);
+const emit = defineEmits(["graffitiPanel", "importRemote", "withdrawMultiple"]);
 
 const graffitiPanel = () => {
   emit("graffitiPanel");
-};
-
-const removeMultiple = () => {
-  emit("removeMultiple");
 };
 
 const importRemote = () => {

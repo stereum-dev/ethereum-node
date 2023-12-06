@@ -6,15 +6,22 @@
 <script setup>
 import ButtonRow from "./ButtonRow.vue";
 import { ref } from "vue";
+import { useStakingStore } from "@/store/theStaking";
 
 const emit = defineEmits(["removeMultiple", "importRemote", "withdrawMultiple", "graffitiPanel"]);
+
+const stakingStore = useStakingStore();
 
 const graffitiPanel = () => {
   emit("graffitiPanel");
 };
 
 const removeMultiple = () => {
-  emit("removeMultiple");
+  const keys = stakingStore.keys.filter(
+    (key) => key.validatorID === stakingStore.selectedServiceToFilter.config.serviceID
+  );
+  stakingStore.removeKeys = [...keys];
+  stakingStore.setActiveModal("removeValidator");
 };
 
 const withdrawMultiple = () => {

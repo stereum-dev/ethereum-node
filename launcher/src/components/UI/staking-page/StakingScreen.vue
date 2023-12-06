@@ -23,7 +23,6 @@
       />
       <ManagementSection
         @graffiti-panel="graffitiPanelHandler"
-        @remove-multiple="removeMultipleKeys"
         @import-remote="importRemoteKey"
         @withdraw-multiple="withdrawModalHandler"
       />
@@ -52,6 +51,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
+import RemoveValidators from "./components/modals/RemoveValidators.vue";
 
 //Store
 const stakingStore = useStakingStore();
@@ -77,6 +77,13 @@ const modals = {
     component: WithdrawMultiple,
     events: {
       confirmWithdraw: () => withdrawValidatorKey(),
+    },
+  },
+  removeValidator: {
+    component: RemoveValidators,
+    props: {},
+    events: {
+      removeValidator: () => removeMultipleKeys(),
     },
   },
 };
@@ -481,9 +488,18 @@ const confirmEnteredGrafiti = async (graffiti) => {
 
 //****** End of Graffiti *******
 
-const removeMultipleKeys = (key) => {
-  if (key) console.log("this is single remove", key.key);
-  else console.log("this is multiple");
+const removeMultipleKeys = () => {
+  if (stakingStore.selectedKeyToRemove) {
+    stakingStore.keys = stakingStore.keys.filter((key) => key.key !== stakingStore.selectedKeyToRemove.key);
+  } else {
+    console.log("this is multiple");
+    stakingStore.keys = stakingStore.keys.filter(
+      (key) => key.validatorID !== stakingStore.selectedServiceToFilter.config.serviceID
+    );
+  }
+
+  stakingStore.removeKeys = [];
+  stakingStore.setActiveModal(null);
 };
 
 const importRemoteKey = () => {

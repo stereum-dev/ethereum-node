@@ -197,7 +197,10 @@ const copyHandler = (item) => {
 };
 
 const removeSingle = (item) => {
-  emit("removeSingle", item);
+  item.showExitText = true;
+  stakingStore.selectedKeyToRemove = item;
+  stakingStore.removeKeys.push(item);
+  stakingStore.setActiveModal("removeValidator");
 };
 
 const withdrawSingle = () => {

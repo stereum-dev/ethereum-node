@@ -27,7 +27,7 @@ export const useListGroups = () => {
       }
 
       stakingStore.validatorKeyGroups = Object.values(groups);
-      console.log(stakingStore.validatorKeyGroups);
+      // console.log(stakingStore.validatorKeyGroups);
     } else {
       console.error("Error fetching keys from server");
     }
