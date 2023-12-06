@@ -10,47 +10,57 @@
       <span class="relative inline-flex rounded-full h-3 w-3" :class="getStateColor"></span>
     </span>
     <span class="text-xs font-semibold text-center col-start-2 col-end-5 capitalize" :class="getTextColor">{{
-      props.state === "running" ? "running" : "off"
+      getServiceState
     }}</span>
     <img class="w-4 col-start-5 col-span-1" src="/img/icon/the-staking/keyIcon.png" alt="Key Icon" />
-    <span
-      class="text-[10px] font-semibold text-center col-start-6 col-span-1"
-      :class="stakingStore.keyCounter > 0 ? 'text-amber-400' : 'text-red-500'"
-      >{{ stakingStore.keyCounter }}
+    <span class="text-[10px] font-semibold text-center col-start-6 col-span-1" :class="getTextColor"
+      >{{ getKeyNumbers }}
     </span>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 
-const props = defineProps({
-  state: {
-    type: String,
-    required: true,
-  },
+const stakingStore = useStakingStore();
+const filteredKeys = ref([]);
+
+const getServiceState = computed(() => {
+  return stakingStore.selectedServiceToFilter?.state;
 });
 
-const stakingStore = useStakingStore();
-
 const getTextColor = computed(() => {
-  let textColor;
-  if (props.state === "off") {
-    textColor = "text-red-500";
-  } else if (props.state === "running") {
-    textColor = "text-green-600";
+  if (getServiceState.value === "running") {
+    return "text-green-600";
+  } else if (getServiceState.value === "off") {
+    return "text-red-500";
   }
-  return textColor;
+
+  return "text-gray-500";
 });
 
 const getStateColor = computed(() => {
-  let stateColor;
-  if (props.state === "off") {
-    stateColor = "bg-red-500";
-  } else if (props.state === "running") {
-    stateColor = "bg-green-600";
+  if (getServiceState.value === "running") {
+    return "bg-green-600";
+  } else if (getServiceState.value === "off") {
+    return "bg-red-500";
   }
-  return stateColor;
+
+  return "bg-gray-500";
 });
+
+const getKeyNumbers = computed(() => {
+  return filteredKeys.value.length > 0 ? filteredKeys.value.length : 0;
+});
+
+watch(
+  () => stakingStore.keys,
+  (newKeys) => {
+    filteredKeys.value = newKeys.filter(
+      (key) => key.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID
+    );
+  },
+  { deep: true }
+);
 </script>
