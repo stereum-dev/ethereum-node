@@ -20,6 +20,7 @@
         @upload-file="uploadFile"
         @confirm-password="confirmPassword"
         @confirm-rename="confirmRename"
+        @reset-name="resetName"
         @confirm-feerecepient="confirmFeerecepient"
       />
     </div>
@@ -96,6 +97,10 @@ const openGroup = (item) => {
 
 const confirmRename = (item) => {
   emit("confirmRename", item);
+};
+
+const resetName = (item) => {
+  emit("resetName", item);
 };
 
 const renameGroup = (item) => {

@@ -15,6 +15,7 @@
         @confirm-rename="confirmValidatorKeyRename"
         @back-list="backToList"
         @rename-single="confirmValidatorKeyRename"
+        @reset-name="resetValidatorKeyName"
         @withdraw-single="withdrawModalHandler"
         @confirm-feerecepient="confirmFeeRecepient"
         @delete-preview="deletePreviewKey"
@@ -373,6 +374,10 @@ const confirmValidatorKeyRename = async (name) => {
   } else {
     console.log("Couldn't read KeyFile!");
   }
+};
+
+const resetValidatorKeyName = (key) => {
+  console.log("resetValidatorKeyName", key);
 };
 
 //****End of Validator Key ****

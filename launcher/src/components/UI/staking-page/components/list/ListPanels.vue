@@ -128,6 +128,7 @@ const panels = {
     component: RenameKey,
     events: {
       confirmRename: confirmRename,
+      resetName: resetName,
     },
   },
 };
@@ -169,6 +170,10 @@ const pickValidator = (service) => {
 
 const confirmRename = (newName) => {
   handleEvent("confirmRename", newName);
+};
+
+const resetName = (item) => {
+  handleEvent("resetName", item);
 };
 
 const uploadFile = (event) => {
