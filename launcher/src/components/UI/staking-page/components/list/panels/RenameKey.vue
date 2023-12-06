@@ -16,7 +16,7 @@
     <div class="w-full h-full grid grid-cols-12 grid-rows-1 py-[2px]">
       <img
         class="w-6 h-6 self-center col-start-1 col-span-1 justify-self-center"
-        src="/img/icon/the-staking/black-key.png"
+        src="/img/icon/the-staking/key-sign.png"
         alt="Group Icon"
         @mousedown.prevent
       />
@@ -24,7 +24,7 @@
       <input
         id="input1"
         v-model="stakingStore.validatorDisplayName"
-        class="col-start-2 col-end-11 w-full bg-[#171D22] border px-4 rounded-sm outline-none text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
+        class="col-start-2 col-end-10 w-full bg-[#171D22] border px-4 rounded-sm outline-none text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
         type="text"
         autofocus
         :class="inputClass"
@@ -33,12 +33,21 @@
         @change="changeActive"
       />
 
+      <div class="col-start-10 col-span-1 flex justify-center items-center p-1">
+        <div
+          class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
+          @click="cancelRename"
+        >
+          <img class="w-4 h-4" src="/img/icon/the-staking/close.png" alt="Close Icon" @mousedown.prevent />
+        </div>
+      </div>
       <div class="col-start-11 col-span-1 flex justify-center items-center p-1">
         <div
           class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
-          @click="cancelGrouping"
+          :class="stakingStore.selectKeyToRename !== null ? 'cursor-pointer' : 'pointer-events-none opacity-50'"
+          @click="resetName"
         >
-          <img class="w-4 h-4" src="/img/icon/the-staking/close.png" alt="Close Icon" @mousedown.prevent />
+          <img class="w-4 h-4" src="/img/icon/the-staking/reset.png" alt="Reset Icon" @mousedown.prevent />
         </div>
       </div>
       <div class="col-start-12 col-span-1 flex justify-center items-center p-1">
@@ -57,7 +66,7 @@
 import { ref, watch, computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 
-const emit = defineEmits(["confirmRename"]);
+const emit = defineEmits(["confirmRename", "resetName"]);
 const stakingStore = useStakingStore();
 
 const validName = ref("");
@@ -79,7 +88,7 @@ const inputClass = computed(() => {
 
 watch(keyName, (newValue) => {
   const trimmedName = newValue.trim();
-  const isNameTaken = stakingStore.validatorKeyGroups.some((group) => group.name === trimmedName);
+  const isNameTaken = stakingStore.keys.some((key) => key.displayName === trimmedName);
   const hasNoSpaces = !/\s/.test(trimmedName);
   const isUnderMaxLength = trimmedName.length <= 30;
 
@@ -101,8 +110,13 @@ const confirmRename = () => {
   if (!isKeyNameValid.value) return;
   emit("confirmRename", validName.value);
 };
-const cancelGrouping = () => {
+const cancelRename = () => {
+  stakingStore.keys.find((key) => key.key === stakingStore.selectKeyToRename.key).selected = false;
   stakingStore.validatorDisplayName = "";
   stakingStore.setActivePanel(null);
+};
+
+const resetName = () => {
+  emit("resetName", stakingStore.selectKeyToRename);
 };
 </script>
