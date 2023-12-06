@@ -287,6 +287,8 @@
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "plugin": "INSTALLED SERVICES",
     "addOpt": "ADDITIONAL OPTIONS",
+    "installOpt": "INSTALLATION OPTIONS",
+    "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
     "instMonit": "Install Monitoring?",
     "back": "RETOUR",

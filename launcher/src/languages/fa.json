@@ -287,6 +287,8 @@
     "syncClient": "کلاینت خود را از ابتدای زنجیره همگام سازی می کند",
     "plugin": "خدمات نصب شده",
     "addOpt": "ADDITIONAL OPTIONS",
+    "installOpt": "INSTALLATION OPTIONS",
+    "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
     "instMonit": "Install Monitoring?",
     "back": "بازگشت",
