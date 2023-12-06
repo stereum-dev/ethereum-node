@@ -4,8 +4,8 @@
     <ClientCommands
       @graffiti-multiple="graffitiMultiple"
       @remove-multiple="removeMultiple"
-      @withdraw-multiple="withdrawMultiple"
       @import-remote="importRemote"
+      @withdraw-multiple="withdrawMultiple"
     />
     <EpochDuty />
   </div>
@@ -16,7 +16,7 @@ import ValidatorRewards from "../components/management/ValidatorRewards.vue";
 import ClientCommands from "../components/management/ClientCommands.vue";
 import EpochDuty from "../components/management/EpochDuty.vue";
 
-const emit = defineEmits(["graffitiMultiple", "removeMultiple", "withdrawMultiple", "importRemote"]);
+const emit = defineEmits(["graffitiMultiple", "removeMultiple", "importRemote", "withdrawMultiple"]);
 
 const graffitiMultiple = () => {
   emit("graffitiMultiple");
@@ -26,11 +26,11 @@ const removeMultiple = () => {
   emit("removeMultiple");
 };
 
-const withdrawMultiple = () => {
-  emit("withdrawMultiple");
-};
-
 const importRemote = () => {
   emit("importRemote");
+};
+
+const withdrawMultiple = () => {
+  emit("withdrawMultiple");
 };
 </script>

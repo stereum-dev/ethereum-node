@@ -3,12 +3,12 @@
     <div
       class="w-full h-full border border-gray-600 rounded-b-md grid grid-cols-12 grid-rows-6 items-center bg-[#151618]"
     >
-      <ValidatorState state="running" />
+      <ValidatorState />
       <ButtonBox
         @graffiti-multiple="graffitiMultiple"
         @remove-multiple="removeMultiple"
-        @withdraw-multiple="withdrawMultiple"
         @import-remote="importRemote"
+        @withdraw-multiple="withdrawMultiple"
       />
     </div>
   </div>
@@ -18,7 +18,7 @@
 import ButtonBox from "./components/client-commands/ButtonBox.vue";
 import ValidatorState from "./components/client-commands/ValidatorState.vue";
 
-const emit = defineEmits(["graffitiMultiple", "removeMultiple", "withdrawMultiple", "importRemote"]);
+const emit = defineEmits(["graffitiMultiple", "removeMultiple", "importRemote", "withdrawMultiple"]);
 
 const graffitiMultiple = () => {
   emit("graffitiMultiple");
@@ -28,11 +28,11 @@ const removeMultiple = () => {
   emit("removeMultiple");
 };
 
-const withdrawMultiple = () => {
-  emit("withdrawMultiple");
-};
-
 const importRemote = () => {
   emit("importRemote");
+};
+
+const withdrawMultiple = () => {
+  emit("withdrawMultiple");
 };
 </script>

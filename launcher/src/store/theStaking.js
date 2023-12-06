@@ -44,6 +44,9 @@ export const useStakingStore = defineStore("theStaking", {
       eneterdFeeRecipientAddress: "",
       feeRecepientAddress: "",
       // ***** End Validator Keys *****
+      selectedSingleKeyToWithdraw: null,
+      withdrawAndExitResponse: null,
+      withdrawIsChecked: false,
 
       exitMultiValidatorKeys: false,
       doppelgangerStatus: true,

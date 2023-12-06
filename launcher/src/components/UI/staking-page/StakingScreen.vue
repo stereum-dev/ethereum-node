@@ -15,15 +15,15 @@
         @confirm-rename="confirmValidatorKeyRename"
         @back-list="backToList"
         @rename-single="confirmValidatorKeyRename"
-        @withdraw-single="withdrawValidatorKey"
+        @withdraw-single="withdrawModalHandler"
         @confirm-feerecepient="confirmFeeRecepient"
         @delete-preview="deletePreviewKey"
       />
       <ManagementSection
         @graffiti-multiple="graffitiMultipleKeys"
         @remove-multiple="removeMultipleKeys"
-        @withdraw-multiple="withdrawValidatorKey"
         @import-remote="importRemoteKey"
+        @withdraw-multiple="withdrawModalHandler"
       />
     </div>
     <transition
@@ -43,10 +43,11 @@ import ControlService from "../../../store/ControlService";
 import ImportValidator from "./components/modals/ImportValidator.vue";
 import RiskWarning from "./components/modals/RiskWarning.vue";
 import RemoveGroup from "./components/modals/RemoveGroup.vue";
+import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 
@@ -54,7 +55,6 @@ import { useListGroups } from "@/composables/groups";
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
 const { listGroups } = useListGroups();
-const exitValidatorResponse = ref({});
 
 const modals = {
   import: {
@@ -69,6 +69,12 @@ const modals = {
     props: {},
     events: {
       removeGroup: () => removeGroupConfirm(stakingStore.currentGroup),
+    },
+  },
+  withdraw: {
+    component: WithdrawMultiple,
+    events: {
+      confirmWithdraw: () => withdrawValidatorKey(),
     },
   },
 };
@@ -401,30 +407,43 @@ const confirmFeeRecepient = (item) => {
   stakingStore.setActivePanel(null);
 };
 
-const removeSingleKey = () => {
-  console.log("removeSingleKey");
+// const removeSingleKey = () => {
+//   console.log("removeSingleKey");
+// };
+
+const withdrawModalHandler = (key) => {
+  if (key) {
+    key.showExitText = true;
+    stakingStore.selectedSingleKeyToWithdraw = key;
+    stakingStore.setActiveModal("withdraw");
+  }
+
+  stakingStore.setActiveModal("withdraw");
 };
 
-const withdrawValidatorKey = async (key) => {
+const withdrawValidatorKey = async () => {
   //if single key
-  if (key) {
-    exitValidatorResponse.value = await ControlService.exitValidatorAccount({
+  const key = stakingStore.selectedSingleKeyToWithdraw;
+  if (key && key !== null) {
+    stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
       pubkey: key.key,
       serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
     });
+    console.log("SINGLE WITHDRAW ", key);
+    console.log("SINGLE RESPONSSEEEEEE ", stakingStore.withdrawAndExitResponse);
+  } else {
+    //if multiple keys
+    stakingStore.keys.forEach(async (item) => {
+      if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
+        stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+          pubkey: item.key,
+          serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+        });
+        console.log("itemmmmmmmmmmmmmmmmmmm ", item);
+        console.log("responseeeeeeeeeeee ", stakingStore.withdrawAndExitResponse);
+      }
+    });
   }
-
-  //if multiple keys
-  stakingStore.keys.forEach(async (item) => {
-    if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
-      exitValidatorResponse.value = await ControlService.exitValidatorAccount({
-        pubkey: item.key,
-        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-      });
-      console.log("itemmmmmmmmmmmmmmmmmmm ", item);
-      console.log("responseeeeeeeeeeee ", exitValidatorResponse.value);
-    }
-  });
 };
 
 const graffitiMultipleKeys = () => {

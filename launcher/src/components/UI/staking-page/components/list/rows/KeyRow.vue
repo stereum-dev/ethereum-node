@@ -2,7 +2,7 @@ import { computed } from 'vue';
 <template>
   <div
     class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate__slideInLeft animate__delay-0.5s"
-    :class="props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 '"
+    :class="[props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 ', props.item?.showExitText ? 'bg-red-500 z-10' : '']"
     @click="selectKey(props.item)"
   >
     <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
@@ -83,7 +83,7 @@ import { computed } from 'vue';
           src="/img/icon/the-staking/withdraw.png"
           alt="Icon"
           @mousedown.prevent
-          @click="withdrawSingle(props.item)"
+          @click="withdrawSingle"
         />
       </div>
     </div>
@@ -189,8 +189,8 @@ const removeSingle = (item) => {
   emit("removeSingle", item);
 };
 
-const withdrawSingle = (item) => {
-  emit("withdrawSingle", item);
+const withdrawSingle = () => {
+  emit("withdrawSingle", props.item);
 };
 
 const FeeRecepient = () => {
