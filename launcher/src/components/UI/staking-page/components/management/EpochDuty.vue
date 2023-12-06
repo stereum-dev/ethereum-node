@@ -5,8 +5,8 @@ import { ref } from 'vue';
       class="w-full h-full border border-gray-600 rounded-md grid grid-cols-12 grid-rows-4 items-center bg-[#151618]"
     >
       <DutyHeader />
-      <DutyBody v-if="isValidSyncDuties && isValidProposerDuties" :epoch="epoch" />
-      <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter?.name }" />
+      <DutyBody :epoch="epoch" />
+      <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter.name }" />
     </div>
   </div>
 </template>
@@ -26,14 +26,6 @@ const epoch = ref({
   proposerDuties: 0,
 });
 
-const isValidSyncDuties = computed(() => {
-  return !isNaN(epoch.value.syncDuties) && epoch.value.syncDuties !== undefined;
-});
-
-const isValidProposerDuties = computed(() => {
-  return !isNaN(epoch.value.proposerDuties) && epoch.value.proposerDuties !== undefined;
-});
-
 const getFilteredValidators = computed(() => {
   return stakingStore.filteredKeys.filter(
     (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
@@ -43,11 +35,11 @@ const getFilteredValidators = computed(() => {
 onMounted(() => {
   if (!stakingStore.secondsPerSlot && !stakingStore.slotsPerEpoch) {
     ControlService.getCurrentEpochandSlot().then((data) => {
-      stakingStore.secondsPerSlot = data.secondsPerSlot;
-      stakingStore.slotsPerEpoch = data.slotsPerEpoch;
+      stakingStore.secondsPerSlot = data.secondsPerSlot | 0;
+      stakingStore.slotsPerEpoch = data.slotsPerEpoch | 0;
       stakingStore.currentEpoch = data.current_epoch | 0;
       stakingStore.currentSlot = data.current_slot | 0;
-      setupInterval();
+      if (stakingStore.secondsPerSlot && stakingStore.slotsPerEpoch) setupInterval();
     });
   } else {
     setupInterval();
