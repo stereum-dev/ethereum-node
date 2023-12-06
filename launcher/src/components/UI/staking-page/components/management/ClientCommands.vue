@@ -5,7 +5,7 @@
     >
       <ValidatorState />
       <ButtonBox
-        @graffiti-multiple="graffitiMultiple"
+        @graffiti-panel="graffitiPanel"
         @remove-multiple="removeMultiple"
         @import-remote="importRemote"
         @withdraw-multiple="withdrawMultiple"
@@ -18,10 +18,10 @@
 import ButtonBox from "./components/client-commands/ButtonBox.vue";
 import ValidatorState from "./components/client-commands/ValidatorState.vue";
 
-const emit = defineEmits(["graffitiMultiple", "removeMultiple", "importRemote", "withdrawMultiple"]);
+const emit = defineEmits(["graffitiPanel", "removeMultiple", "importRemote", "withdrawMultiple"]);
 
-const graffitiMultiple = () => {
-  emit("graffitiMultiple");
+const graffitiPanel = () => {
+  emit("graffitiPanel");
 };
 
 const removeMultiple = () => {

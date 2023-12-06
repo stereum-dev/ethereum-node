@@ -7,10 +7,10 @@
 import ButtonRow from "./ButtonRow.vue";
 import { ref } from "vue";
 
-const emit = defineEmits(["graffitiMultiple", "removeMultiple", "withdrawMultiple", "importRemote"]);
+const emit = defineEmits(["removeMultiple", "importRemote", "withdrawMultiple", "graffitiPanel"]);
 
-const graffitiMultiple = () => {
-  emit("graffitiMultiple");
+const graffitiPanel = () => {
+  emit("graffitiPanel");
 };
 
 const removeMultiple = () => {
@@ -29,7 +29,7 @@ const buttonState = ref([
   {
     text: "CHANGE ALL GRAFFITI",
     icon: "/img/icon/the-staking/option-graffiti.png",
-    events: graffitiMultiple,
+    events: graffitiPanel,
   },
   {
     text: "REMOVE ALL KEYS",

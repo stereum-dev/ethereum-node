@@ -22,6 +22,7 @@
         @confirm-rename="confirmRename"
         @reset-name="resetName"
         @confirm-feerecepient="confirmFeerecepient"
+        @confirm-graffiti="confirmGraffiti"
       />
     </div>
   </div>
@@ -49,6 +50,8 @@ const emit = defineEmits([
   "withdrawSingle",
   "confirmFeerecepient",
   "deletePreview",
+  "resetName",
+  "confirmGraffiti",
 ]);
 
 const stakingStore = useStakingStore();
@@ -74,6 +77,10 @@ const onDrop = (event) => {
 
 const confirmFeerecepient = (item) => {
   emit("confirmFeerecepient", item);
+};
+
+const confirmGraffiti = (item) => {
+  emit("confirmGraffiti", item);
 };
 
 const deletePreview = (item) => {

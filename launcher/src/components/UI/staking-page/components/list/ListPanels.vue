@@ -73,6 +73,7 @@ import SearchPanel from "./panels/SearchPanel.vue";
 import FeePanel from "./panels/FeePanel.vue";
 import GroupingPanel from "./panels/GroupingPanel.vue";
 import RenameKey from "./panels/RenameKey.vue";
+import GraffitiPanel from "./panels/GraffitiPanel.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, watchEffect } from "vue";
 
@@ -85,6 +86,8 @@ const emit = defineEmits([
   "removeGroup",
   "confirmRename",
   "confirmFeerecepient",
+  "resetName",
+  "confirmGraffiti",
 ]);
 
 //Stores
@@ -129,6 +132,12 @@ const panels = {
     events: {
       confirmRename: confirmRename,
       resetName: resetName,
+    },
+  },
+  graffiti: {
+    component: GraffitiPanel,
+    events: {
+      confirmGraffiti: () => confirmGraffiti,
     },
   },
 };
@@ -182,6 +191,10 @@ const uploadFile = (event) => {
 
 const confirmPassword = (pass) => {
   handleEvent("confirmPassword", pass);
+};
+
+const confirmGraffiti = (graffiti) => {
+  handleEvent("confirmGraffiti", graffiti);
 };
 
 const displayKeyAlias = () => {

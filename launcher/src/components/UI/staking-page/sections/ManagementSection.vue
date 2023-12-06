@@ -2,7 +2,7 @@
   <div class="h-full col-start-20 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 px-1 gap-y-1">
     <ValidatorRewards />
     <ClientCommands
-      @graffiti-multiple="graffitiMultiple"
+      @graffiti-panel="graffitiPanel"
       @remove-multiple="removeMultiple"
       @import-remote="importRemote"
       @withdraw-multiple="withdrawMultiple"
@@ -16,10 +16,10 @@ import ValidatorRewards from "../components/management/ValidatorRewards.vue";
 import ClientCommands from "../components/management/ClientCommands.vue";
 import EpochDuty from "../components/management/EpochDuty.vue";
 
-const emit = defineEmits(["graffitiMultiple", "removeMultiple", "importRemote", "withdrawMultiple"]);
+const emit = defineEmits(["graffitiPanel", "removeMultiple", "importRemote", "withdrawMultiple"]);
 
-const graffitiMultiple = () => {
-  emit("graffitiMultiple");
+const graffitiPanel = () => {
+  emit("graffitiPanel");
 };
 
 const removeMultiple = () => {

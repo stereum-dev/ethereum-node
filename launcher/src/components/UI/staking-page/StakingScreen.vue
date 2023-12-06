@@ -19,9 +19,10 @@
         @withdraw-single="withdrawModalHandler"
         @confirm-feerecepient="confirmFeeRecepient"
         @delete-preview="deletePreviewKey"
+        @confirm-graffiti="confirmEnteredGrafiti"
       />
       <ManagementSection
-        @graffiti-multiple="confirmEnteredGrafiti"
+        @graffiti-panel="graffitiPanelHandler"
         @remove-multiple="removeMultipleKeys"
         @import-remote="importRemoteKey"
         @withdraw-multiple="withdrawModalHandler"
@@ -466,14 +467,17 @@ const withdrawValidatorKey = async () => {
 //****** End of Withdraw & Exit *******
 
 //****** Graffiti *******
+const graffitiPanelHandler = () => {
+  stakingStore.setActivePanel("graffiti");
+};
 
-// const confirmEnteredGrafiti = async (graffiti) => {
-//   await ControlService.setGraffitis({
-//     id: this.selectedValdiatorService.config.serviceID,
-//     graffiti: graffiti,
-//   });
-//   stakingStore.setActivePanel(null);
-// };
+const confirmEnteredGrafiti = async (graffiti) => {
+  await ControlService.setGraffitis({
+    id: stakingStore.selectedServiceToFilter.config?.serviceID,
+    graffiti: graffiti,
+  });
+  stakingStore.setActivePanel(null);
+};
 
 //****** End of Graffiti *******
 
