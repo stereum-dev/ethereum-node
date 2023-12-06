@@ -5,6 +5,7 @@ export const useClickInstall = defineStore("clickInstallation", {
     return {
       isConfigButtonEnbabled: false,
       installMonitoring: false,
+      startServicesAfterInstall: true,
       relayURL: "",
       checkPointSync: "",
       currentSlide: 0,
