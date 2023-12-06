@@ -71,8 +71,10 @@ watchEffect(() => {
 
 //Lifecycle Hooks
 onMounted(() => {
-  currentService.value = installedValidators.value[0].service;
-  stakingStore.selectedServiceToFilter = installedValidators.value[0];
+  if (installedValidators.value.length) {
+    currentService.value = installedValidators.value[0].service;
+    stakingStore.selectedServiceToFilter = installedValidators.value[0];
+  }
 });
 
 //Methods
