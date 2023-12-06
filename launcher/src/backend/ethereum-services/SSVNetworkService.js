@@ -18,7 +18,8 @@ export class SSVNetworkService extends NodeService {
 ssv:
   # The SSV network to join to
   # Mainnet = Network: mainnet (default)
-  # Testnet = Network: jato-v2
+  # Testnet (Goerli) = Network: jato-v2
+  # Testnet (Holesky) = Network: holesky
   Network: ${network === "goerli" ? "jato-v2" : network}
   
   ValidatorOptions:

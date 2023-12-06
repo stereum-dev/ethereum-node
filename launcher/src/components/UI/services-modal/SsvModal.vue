@@ -117,6 +117,12 @@ export default {
       this.pubkey = ssvConfig.ssv_pk;
 
       try {
+        if (!this.pubkey) {
+          let ssvKeystoreConfig = await ControlService.readSSVKeystoreConfig(ssv.config.serviceID);
+          if (ssvKeystoreConfig.privateKeyFileData.publicKey) {
+            this.pubkey = ssvKeystoreConfig.privateKeyFileData.publicKey;
+          }
+        }
         let network = ssvConfig.network === "goerli" ? "prater" : ssvConfig.network;
         let response = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/public_key/` + this.pubkey);
         if (!response.data.data)
