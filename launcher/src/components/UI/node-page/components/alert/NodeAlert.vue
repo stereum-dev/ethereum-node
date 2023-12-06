@@ -199,6 +199,7 @@ export default {
       dataState: "dataState",
       wsState: "wsState",
       displayUpdatePanel: "displayUpdatePanel",
+      synchronizationError: "synchronizationError",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
