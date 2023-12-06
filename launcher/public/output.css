@@ -769,6 +769,10 @@ video {
   top: -90px;
 }
 
+.bottom-0{
+  bottom: 0px;
+}
+
 .bottom-1{
   bottom: 0.25rem;
 }
@@ -3149,14 +3153,14 @@ video {
   background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
 
+.bg-green-400{
+  --tw-bg-opacity: 1;
+  background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+}
+
 .bg-green-500{
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity));
-}
-
-.bg-green-600{
-  --tw-bg-opacity: 1;
-  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
 .bg-green-700{
