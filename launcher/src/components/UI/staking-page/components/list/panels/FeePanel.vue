@@ -100,6 +100,7 @@ const confirmFeerecepient = () => {
   emit("confirmFeerecepient", stakingStore.feeRecepientAddress);
 };
 const cancelFeeRecepient = () => {
+  stakingStore.keys.find((key) => key.key === stakingStore.selectKeyForFee.key).selected = false;
   stakingStore.eneterdFeeRecipientAddress = "";
   stakingStore.setActivePanel(null);
 };

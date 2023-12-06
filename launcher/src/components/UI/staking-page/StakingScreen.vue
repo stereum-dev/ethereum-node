@@ -20,7 +20,7 @@
         @delete-preview="deletePreviewKey"
       />
       <ManagementSection
-        @graffiti-multiple="graffitiMultipleKeys"
+        @graffiti-multiple="confirmEnteredGrafiti"
         @remove-multiple="removeMultipleKeys"
         @import-remote="importRemoteKey"
         @withdraw-multiple="withdrawModalHandler"
@@ -262,6 +262,7 @@ const createGroup = async (groupName) => {
   }
 };
 
+//Rename Group
 const groupRenameHandler = async (newGroupName, groupId) => {
   const keysFromServer = await ControlService.readKeys();
 
@@ -286,6 +287,7 @@ const groupRenameHandler = async (newGroupName, groupId) => {
   }
 };
 
+//Confirm Create or Rename Group
 const confirmGrouping = async (val) => {
   const groupName = stakingStore.groupName;
 
@@ -359,11 +361,11 @@ const removeGroupConfirm = async (item) => {
 
 //Confirm Rename Validator Key
 const confirmValidatorKeyRename = async (name) => {
+  stakingStore.keys.find((key) => key.key === stakingStore.selectKeyToRename.key).selected = false;
   let el = stakingStore.selectKeyToRename;
+
   el.displayName = name;
   const keys = await ControlService.readKeys();
-  console.log("keys------------", keys);
-  console.log("name------------", name);
   if (keys) {
     keys[el.key].keyName = name;
     await ControlService.writeKeys(keys);
@@ -372,8 +374,6 @@ const confirmValidatorKeyRename = async (name) => {
     console.log("Couldn't read KeyFile!");
   }
 };
-
-// await ControlService.writeKeys(keys);
 
 //****End of Validator Key ****
 
@@ -400,16 +400,28 @@ const deletePreviewKey = async (item) => {
 
 //**** Client Commands Buttons ****
 
-const confirmFeeRecepient = (item) => {
-  console.log("ADDRESSS", item);
-  console.log("confirmFeeRecepient");
+// ****** Fee Recepient *******
+const confirmFeeRecepient = async (item) => {
+  console.log("feeRecepientConfirmHandler", item);
+  if (item) {
+    await ControlService.setFeeRecipient({
+      serviceID: item.validatorID,
+      pubkey: item.key,
+      address: stakingStore.feeRecepientAddress,
+    });
+  } else {
+    await ControlService.deleteFeeRecipient({
+      serviceID: item.validatorID,
+      pubkey: item.key,
+    });
+  }
   stakingStore.eneterdFeeRecipientAddress = "";
   stakingStore.setActivePanel(null);
 };
 
-// const removeSingleKey = () => {
-//   console.log("removeSingleKey");
-// };
+// ****** End of Fee Recepient *******
+
+//****** Withdraw & Exit *******
 
 const withdrawModalHandler = (key) => {
   if (key) {
@@ -424,31 +436,41 @@ const withdrawModalHandler = (key) => {
 const withdrawValidatorKey = async () => {
   //if single key
   const key = stakingStore.selectedSingleKeyToWithdraw;
-  if (key && key !== null) {
-    stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
-      pubkey: key.key,
-      serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-    });
-    console.log("SINGLE WITHDRAW ", key);
-    console.log("SINGLE RESPONSSEEEEEE ", stakingStore.withdrawAndExitResponse);
-  } else {
-    //if multiple keys
-    stakingStore.keys.forEach(async (item) => {
-      if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
-        stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
-          pubkey: item.key,
-          serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-        });
-        console.log("itemmmmmmmmmmmmmmmmmmm ", item);
-        console.log("responseeeeeeeeeeee ", stakingStore.withdrawAndExitResponse);
-      }
-    });
+  try {
+    if (key && key !== null) {
+      stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+        pubkey: key.key,
+        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      });
+    } else {
+      //if multiple keys
+      stakingStore.keys.forEach(async (item) => {
+        if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
+          stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+            pubkey: item.key,
+            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+          });
+        }
+      });
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
-const graffitiMultipleKeys = () => {
-  console.log("GraffitiMultipleKeys");
-};
+//****** End of Withdraw & Exit *******
+
+//****** Graffiti *******
+
+// const confirmEnteredGrafiti = async (graffiti) => {
+//   await ControlService.setGraffitis({
+//     id: this.selectedValdiatorService.config.serviceID,
+//     graffiti: graffiti,
+//   });
+//   stakingStore.setActivePanel(null);
+// };
+
+//****** End of Graffiti *******
 
 const removeMultipleKeys = (key) => {
   if (key) console.log("this is single remove", key.key);

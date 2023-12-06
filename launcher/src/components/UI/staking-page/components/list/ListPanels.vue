@@ -180,8 +180,7 @@ const confirmPassword = (pass) => {
 };
 
 const displayKeyAlias = () => {
-  stakingStore.isPreviewListActive = false;
-  stakingStore.setActivePanel("grafiti");
+  stakingStore.isPubkeyVisible = !stakingStore.isPubkeyVisible;
 };
 
 const groupingPanel = () => {

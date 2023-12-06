@@ -39,7 +39,9 @@ export const useStakingStore = defineStore("theStaking", {
       // ***** End Staking Groups *****
 
       // ***** Validator Keys *****
+      isPubkeyVisible: false,
       selectKeyToRename: null,
+      selectKeyForFee: null,
       validatorDisplayName: "",
       eneterdFeeRecipientAddress: "",
       feeRecepientAddress: "",
@@ -63,9 +65,6 @@ export const useStakingStore = defineStore("theStaking", {
       insertKeyBoxActive: true,
       enterPasswordBox: false,
       importRemoteKeysActive: false,
-      exitChainForMultiValidatorsActive: false,
-      removeForMultiValidatorsActive: false,
-      grafitiForMultiValidatorsActive: false,
       display: true,
       isDragOver: false,
       keyFiles: [],
