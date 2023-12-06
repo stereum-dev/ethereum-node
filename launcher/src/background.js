@@ -380,6 +380,10 @@ ipcMain.handle("restartServer", async () => {
   return await nodeConnection.restartServer();
 });
 
+ipcMain.handle("readSSVKeystoreConfig", async (event, args) => {
+  return await nodeConnection.readSSVKeystoreConfig(args);
+});
+
 ipcMain.handle("readSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.readSSVNetworkConfig(args);
 });

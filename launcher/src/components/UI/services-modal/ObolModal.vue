@@ -16,25 +16,25 @@
         </div>
       </div>
       <div class="content">
-        <div v-if="!generatorPlugin" class="wrapper">
+        <div v-if="!headerStore.generatorPlugin" class="wrapper">
           <div class="browserBox">
             <div class="title">
-              <span>{{ !continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
+              <span>{{ !headerStore.continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
               <span>{{
-                !continueForExistENR
+                !headerStore.continueForExistENR
                   ? "Generate a new ENR to use to create or join an existing cluster"
                   : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
               }}</span>
             </div>
             <div class="btn-box">
               <div class="btn" @click="topBlock">
-                {{ !continueForExistENR ? "GENERATE" : "OPEN IN BROWSER" }}
+                {{ !headerStore.continueForExistENR ? "GENERATE" : "OPEN IN BROWSER" }}
               </div>
             </div>
           </div>
 
           <div class="browserBox">
-            <div v-if="!continueForExistENR" class="browserBox_import">
+            <div v-if="!headerStore.continueForExistENR" class="browserBox_import">
               <div class="import-title">
                 <span>IMPORT EXISTING ENR</span>
               </div>
@@ -45,9 +45,9 @@
             </div>
             <div v-else class="wrapper" style="flex-direction: row">
               <div class="title">
-                <span>{{ !continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
+                <span>{{ !headerStore.continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
                 <span>{{
-                  !continueForExistENR
+                  !headerStore.continueForExistENR
                     ? "Generate a new ENR to use to create or join an existing cluster"
                     : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
                 }}</span>
@@ -60,13 +60,13 @@
               </div>
             </div>
           </div>
-          <div v-if="continueForExistENR" class="browserBox">
-            <div v-if="!dkgControl || depositFile" class="wrapper" style="flex-direction: row">
+          <div v-if="headerStore.continueForExistENR" class="browserBox">
+            <div v-if="!dkgControl || headerStore.depositFile" class="wrapper" style="flex-direction: row">
               <div class="title">
-                <span>{{ depositFile ? "BACKUP DEPOSIT FILE" : "START THE DKG" }}</span>
+                <span>{{ headerStore.depositFile ? "BACKUP DEPOSIT FILE" : "START THE DKG" }}</span>
                 <span
                   >{{
-                    depositFile
+                    headerStore.depositFile
                       ? "Export your backup deposit file from the server to back it up"
                       : "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!"
                   }}
@@ -74,7 +74,7 @@
               </div>
               <div class="btn-box">
                 <div class="btn" @click="dkgSwitch">
-                  {{ depositFile ? "SAVE" : "START" }}
+                  {{ headerStore.depositFile ? "SAVE" : "START" }}
                 </div>
               </div>
             </div>
@@ -94,109 +94,99 @@
     </div>
   </div>
 </template>
-<script>
-import { mapWritableState } from "pinia";
+<script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
 import EnrGenerator from "./EnrGenerator.vue";
-export default {
-  components: {
-    EnrGenerator,
-  },
-  data() {
-    return {
-      obolSharonService: {},
-      importedENR: "",
-      startDKG: "",
-      dkgControl: false,
-    };
-  },
+import { ref, onMounted } from "vue";
 
-  computed: {
-    ...mapWritableState(useNodeHeader, {
-      runningServices: "runningServices",
-      generatorPlugin: "generatorPlugin",
-      obolDashboard: "obolDashboard",
-      generatedENR: "generatedENR",
-      continueForExistENR: "continueForExistENR",
-      distrubutedValidatorGenerator: "distrubutedValidatorGenerator",
-      enrIsGenerating: "enrIsGenerating",
-      deactivateBtnToWaitForLogs: "deactivateBtnToWaitForLogs",
-      depositFile: "depositFile",
-    }),
-  },
-  mounted() {
-    this.filterObolSharonService();
-    this.generatorPlugin = false;
-    this.distrubutedValidatorGenerator = false;
-  },
-  methods: {
-    filterObolSharonService() {
-      this.runningServices.forEach((item) => {
-        if (item.name === "Obol Charon") this.obolSharonService = item;
-      });
-    },
-    openBrowser() {
-      let url = "https://obol.tech/";
-      window.open(url, "_blank");
-    },
-    openGitHub() {
-      let url = "https://github.com/ObolNetwork";
-      window.open(url, "_blank");
-    },
-    openDiscord() {
-      let url = "https://discord.gg/n6ebKsX46w";
-      window.open(url, "_blank");
-    },
-    topBlock() {
-      if (!this.continueForExistENR) {
-        this.enrIsGenerating = true;
-        this.generatorPlugin = true;
-        this.obolDashboard = false;
-        this.generatedENR = "";
-        this.distrubutedValidatorGenerator = false;
-      } else {
-        let url = "https://goerli.launchpad.obol.tech/";
-        window.open(url, "_blank");
-      }
-    },
-    enrImport() {
-      console.log(this.importedENR);
-      this.depositFile = true;
-      this.generatorPlugin = false;
-      this.continueForExistENR = true;
-    },
-    copyHandler() {
-      let toCopy = this.generatedENR;
-      navigator.clipboard
-        .writeText(toCopy)
-        .then(() => {
-          this.cursorLocation = this.copiedPub;
-        })
-        .catch(() => {
-          console.log(`can't copy`);
-        });
-    },
-    removeHandler() {
-      this.generatedENR = "";
-      this.continueForExistENR = false;
-      this.depositFile = false;
-    },
-    dkgSwitch() {
-      this.dkgControl = true;
-    },
-    dkgImporter() {
-      if (!this.startDKG) {
-        console.log("please enter url");
-      } else {
-        this.enrIsGenerating = false;
-        this.generatorPlugin = true;
-        this.distrubutedValidatorGenerator = true;
-        this.deactivateBtnToWaitForLogs = true;
-      }
-    },
-  },
+const obolSharonService = ref({});
+const importedENR = ref("");
+const startDKG = ref("");
+const dkgControl = ref(false);
+
+const headerStore = useNodeHeader();
+
+const filterObolSharonService = () => {
+  headerStore.runningServices.forEach((item) => {
+    if (item.name === "Obol Charon") obolSharonService.value = item;
+  });
 };
+
+const openBrowser = () => {
+  let url = "https://obol.tech/";
+  window.open(url, "_blank");
+};
+
+const openGitHub = () => {
+  let url = "https://github.com/ObolNetwork";
+  window.open(url, "_blank");
+};
+
+const openDiscord = () => {
+  let url = "https://discord.gg/n6ebKsX46w";
+  window.open(url, "_blank");
+};
+
+const topBlock = () => {
+  if (!headerStore.continueForExistENR) {
+    headerStore.enrIsGenerating = true;
+    headerStore.generatorPlugin = true;
+    headerStore.obolDashboard = false;
+    headerStore.generatedENR = "";
+    headerStore.distrubutedValidatorGenerator = false;
+  } else {
+    let url = "https://goerli.launchpad.obol.tech/";
+    window.open(url, "_blank");
+  }
+};
+
+const enrImport = () => {
+  console.log(importedENR.value);
+  headerStore.depositFile = true;
+  headerStore.generatorPlugin = false;
+  headerStore.continueForExistENR = true;
+};
+
+const copyHandler = () => {
+  let toCopy = headerStore.generatedENR;
+  navigator.clipboard
+    .writeText(toCopy)
+    .then(() => {
+      headerStore.cursorLocation = headerStore.copiedPub;
+    })
+    .catch(() => {
+      console.log(`can't copy`);
+    });
+};
+
+const removeHandler = () => {
+  headerStore.generatedENR = "";
+  headerStore.continueForExistENR = false;
+  headerStore.depositFile = false;
+};
+
+const dkgSwitch = () => {
+  dkgControl.value = true;
+};
+
+const dkgImporter = () => {
+  if (!startDKG.value) {
+    console.log("please enter url");
+  } else {
+    headerStore.enrIsGenerating = false;
+    headerStore.generatorPlugin = true;
+    headerStore.distrubutedValidatorGenerator = true;
+    headerStore.deactivateBtnToWaitForLogs = true;
+  }
+};
+
+onMounted(() => {
+  filterObolSharonService();
+  headerStore.generatorPlugin = false;
+  headerStore.distrubutedValidatorGenerator = false;
+});
 </script>
+
 <style scoped>
 .service-modal_parent {
   width: 100vw;

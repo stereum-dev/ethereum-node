@@ -342,6 +342,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("restartServer");
   }
 
+  async readSSVKeystoreConfig(args) {
+    return await this.promiseIpc.send("readSSVKeystoreConfig", args);
+  }
+
   async readSSVNetworkConfig(args) {
     return await this.promiseIpc.send("readSSVNetworkConfig", args);
   }

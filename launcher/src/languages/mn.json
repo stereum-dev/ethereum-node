@@ -287,6 +287,8 @@
     "syncClient": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
     "plugin": "СУУЛГАСАН СЕРВИСҮҮД",
     "addOpt": "ADDITIONAL OPTIONS",
+    "installOpt": "INSTALLATION OPTIONS",
+    "startOnInstall": "Start up client after installation?",
     "monitor": "MОНИТОРИНГ",
     "instMonit": "Мониторинг суулгах уу?",
     "back": "БУЦАХ",
