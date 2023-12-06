@@ -6,13 +6,15 @@ import { computed } from 'vue';
     @click="selectKey(props.item)"
   >
     <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
-      <span class="w-6 h-6 rounded-full cursor-pointer bg-white"></span>
+      <div class="w-6 h-6 rounded-full cursor-pointer bg-white p-[2px]">
+        <img class="w-full h-full" src="/img/icon/the-staking/key-sign.png" alt="Key Icon" />
+      </div>
     </div>
     <div class="col-start-2 col-end-9 self-center overflow-hidden flex justify-start items-center">
       <span
         class="text-center font-semibold text-sm ml-1"
         :class="props.item?.selected ? 'text-gray-800' : 'text-gray-300'"
-        >{{ props.item?.displayName ? props.item?.displayName : formattedPubKey }}</span
+        >{{ displayText }}</span
       >
     </div>
 
@@ -65,7 +67,7 @@ import { computed } from 'vue';
           src="/img/icon/the-staking/fee-recepient.png"
           alt="Icon"
           @mousedown.prevent
-          @click="FeeRecepient"
+          @click="FeeRecepient(props.item)"
         />
       </div>
       <div class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
@@ -152,6 +154,14 @@ const formattedPubKey = computed(() => {
   return pubkey;
 });
 
+const displayText = computed(() => {
+  const item = props.item;
+  if (item.displayName && !stakingStore.isPubkeyVisible) {
+    return item.displayName;
+  }
+  return formattedPubKey.value; // Assuming formattedPubKey is the formatted version of the public key
+});
+
 //Methods
 const selectKey = (key) => {
   if (stakingStore.isGroupingAllowed) {
@@ -168,6 +178,7 @@ const selectKey = (key) => {
 };
 
 const renameKey = (key) => {
+  key.selected = true;
   stakingStore.selectKeyToRename = key;
   stakingStore.setActivePanel("renameKey");
 };
@@ -193,7 +204,9 @@ const withdrawSingle = () => {
   emit("withdrawSingle", props.item);
 };
 
-const FeeRecepient = () => {
+const FeeRecepient = (key) => {
+  key.selected = true;
+  stakingStore.selectKeyForFee = key;
   stakingStore.setActivePanel(null);
   stakingStore.setActivePanel("fee");
 };
