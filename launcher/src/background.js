@@ -240,7 +240,7 @@ ipcMain.handle("deleteValidators", async (event, args) => {
 });
 
 ipcMain.handle("listValidators", async (event, args) => {
-  return await validatorAccountManager.listValidators(args.serviceID, args.numRunningValidatorService);
+  return await validatorAccountManager.listValidators(args);
 });
 
 ipcMain.handle("listServices", async () => {

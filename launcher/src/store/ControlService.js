@@ -206,11 +206,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("deleteValidators", args);
   }
 
-  async listValidators(serviceID, numRunningValidatorService) {
-    return await this.promiseIpc.send("listValidators", {
-      serviceID: serviceID,
-      numRunningValidatorService: numRunningValidatorService,
-    });
+  async listValidators(args) {
+    return await this.promiseIpc.send("listValidators", args);
   }
 
   async listServices() {
@@ -446,7 +443,7 @@ class ControlService extends EventEmitter {
   async beaconchainMonitoringModification(args) {
     return await this.promiseIpc.send("beaconchainMonitoringModification", args);
   }
-  
+
   async removeBeaconchainMonitoring(args) {
     return await this.promiseIpc.send("removeBeaconchainMonitoring", args);
   }

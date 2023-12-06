@@ -213,7 +213,7 @@ const passwordValidation = async (pass) => {
     importKey(stakingStore.importEnteredPassword);
     stakingStore.keys.push(...stakingStore.checkActiveValidatorsResponse);
   } else {
-    console.log("error");
+    console.log("error: there are active validators");
   }
 };
 
@@ -245,7 +245,7 @@ const createGroup = async (groupName) => {
     stakingStore.selectedValidatorKeys.forEach((key) => {
       const pubkey = key.key;
       existingKeys[pubkey] = {
-        keyName: existingKeys[pubkey]?.keyName || "",
+        ...existingKeys[pubkey],
         groupName: groupName,
         groupID: groupId,
         validatorClientID: stakingStore.selectedValidatorKeys[0].validatorID,
@@ -281,7 +281,7 @@ const groupRenameHandler = async (newGroupName, groupId) => {
         group.name = newGroupName;
         group.keys.forEach((key) => {
           keysFromServer[key.key] = {
-            keyName: keysFromServer[key.key].keyName || "",
+            ...keysFromServer[key.key],
             groupName: newGroupName,
             groupID: groupId,
             validatorClientID: keysFromServer[key.key].validatorClientID,
@@ -312,7 +312,6 @@ const confirmGrouping = async (val) => {
     stakingStore.groupName = "";
   }
   stakingStore.forceRefresh = true;
-  await listKeys();
   listGroups();
 };
 
@@ -339,7 +338,7 @@ const removeGroupConfirm = async (item) => {
       if (group.id === item.id) {
         group.keys.forEach((key) => {
           keysFromServer[key.key] = {
-            keyName: keysFromServer[key.key].keyName || "",
+            ...keysFromServer,
             groupName: "",
             groupID: null,
             validatorClientID: "",
@@ -360,7 +359,6 @@ const removeGroupConfirm = async (item) => {
   stakingStore.setMode("create");
   stakingStore.currentGroup = "";
   stakingStore.forceRefresh = true;
-  await listKeys();
   listGroups();
 };
 

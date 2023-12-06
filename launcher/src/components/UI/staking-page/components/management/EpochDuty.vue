@@ -6,7 +6,7 @@ import { ref } from 'vue';
     >
       <DutyHeader />
       <DutyBody :epoch="epoch" />
-      <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter.name }" />
+      <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter?.name }" />
     </div>
   </div>
 </template>
