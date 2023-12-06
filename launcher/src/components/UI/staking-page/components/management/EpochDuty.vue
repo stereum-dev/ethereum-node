@@ -5,8 +5,8 @@ import { ref } from 'vue';
       class="w-full h-full border border-gray-600 rounded-md grid grid-cols-12 grid-rows-4 items-center bg-[#151618]"
     >
       <DutyHeader />
-      <DutyBody :epoch="epoch" />
-      <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter.name }" />
+      <DutyBody v-if="isValidSyncDuties && isValidProposerDuties" :epoch="epoch" />
+      <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter?.name }" />
     </div>
   </div>
 </template>
@@ -24,6 +24,14 @@ const intervalID = ref(null);
 const epoch = ref({
   syncDuties: 0,
   proposerDuties: 0,
+});
+
+const isValidSyncDuties = computed(() => {
+  return !isNaN(epoch.value.syncDuties) && epoch.value.syncDuties !== undefined;
+});
+
+const isValidProposerDuties = computed(() => {
+  return !isNaN(epoch.value.proposerDuties) && epoch.value.proposerDuties !== undefined;
 });
 
 const getFilteredValidators = computed(() => {
