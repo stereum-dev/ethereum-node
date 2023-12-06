@@ -65,6 +65,17 @@
             </div>
           </div>
         </div>
+        <div v-if="synchronizationError" class="alert-message_red">
+          <div class="icon-box">
+            <img src="/img/icon/arrows/SynchronisationIconError.gif" alt="warn_storage" />
+          </div>
+          <div class="message">
+            <div class="main-message"><span>CLIENT / SERVICE</span></div>
+            <div class="val-message">
+              <span>Synchronization Error</span>
+            </div>
+          </div>
+        </div>
         <div v-if="missedAttest" class="alert-message_red">
           <div class="icon-box">
             <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
@@ -176,6 +187,7 @@ export default {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
+      synchronizationError: "synchronizationError",
     }),
     ...mapWritableState(useNodeHeader, {
       displayUpdatePanel: "displayUpdatePanel",
@@ -598,7 +610,7 @@ export default {
   height: 50%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 50%;
+  font-size: 42%;
   font-weight: 700;
   text-transform: uppercase;
 }

@@ -72,7 +72,7 @@
           </div>
         </div>
       </div>
-      <div v-if="true" class="status-message_red">
+      <div v-if="synchronizationError" class="status-message_red">
         <div class="message-icon">
           <img src="/img/icon/arrows/SynchronisationIconError.gif" alt="warn_storage" />
         </div>
@@ -191,6 +191,7 @@ export default {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
+      synchronizationError: "synchronizationError",
     }),
     ...mapWritableState(useNodeHeader, {
       stereumUpdate: "stereumUpdate",
@@ -199,7 +200,6 @@ export default {
       dataState: "dataState",
       wsState: "wsState",
       displayUpdatePanel: "displayUpdatePanel",
-      synchronizationError: "synchronizationError",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
