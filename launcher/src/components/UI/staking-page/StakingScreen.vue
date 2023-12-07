@@ -311,6 +311,12 @@ const confirmGrouping = async (val) => {
     await groupRenameHandler(val, groupId);
     stakingStore.groupName = "";
   }
+  stakingStore.keys = stakingStore.keys.map((key) => {
+    if (key.selected) {
+      return { ...key, selected: false };
+    }
+    return key;
+  });
   stakingStore.forceRefresh = true;
   listGroups();
 };
@@ -397,7 +403,6 @@ const pickValidatorService = (service) => {
 
 //Delete Preview Key
 const deletePreviewKey = async (item) => {
-  console.log("item", item);
   stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.pubkey !== item.pubkey);
   if (!stakingStore.previewKeys.length) {
     stakingStore.isPreviewListActive = false;

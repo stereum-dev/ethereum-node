@@ -87,5 +87,7 @@ const getService = (index) => {
 const filterByService = (item) => {
   currentService.value = item.service;
   stakingStore.selectedServiceToFilter = item;
+  stakingStore.isGroupListActive = false;
+  stakingStore.currentGroup = null;
 };
 </script>
