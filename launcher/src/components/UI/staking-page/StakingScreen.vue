@@ -344,10 +344,10 @@ const removeGroupConfirm = async (item) => {
       if (group.id === item.id) {
         group.keys.forEach((key) => {
           keysFromServer[key.key] = {
-            ...keysFromServer,
+            keyName: keysFromServer[key.key].keyName,
             groupName: "",
             groupID: null,
-            validatorClientID: "",
+            validatorClientID: null,
           };
         });
       }
