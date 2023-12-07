@@ -74,6 +74,7 @@ import FeePanel from "./panels/FeePanel.vue";
 import GroupingPanel from "./panels/GroupingPanel.vue";
 import RenameKey from "./panels/RenameKey.vue";
 import GraffitiPanel from "./panels/GraffitiPanel.vue";
+import RemooteKey from "./panels/RemooteKey.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, watchEffect } from "vue";
 
@@ -136,6 +137,12 @@ const panels = {
   },
   graffiti: {
     component: GraffitiPanel,
+    events: {
+      confirmGraffiti: () => confirmGraffiti,
+    },
+  },
+  remote: {
+    component: RemooteKey,
     events: {
       confirmGraffiti: () => confirmGraffiti,
     },

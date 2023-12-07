@@ -29,7 +29,7 @@ const withdrawMultiple = () => {
 };
 
 const importRemote = () => {
-  emit("importRemote");
+  stakingStore.setActivePanel("remote");
 };
 
 const buttonState = ref([
