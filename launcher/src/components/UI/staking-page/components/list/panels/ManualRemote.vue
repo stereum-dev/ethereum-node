@@ -18,7 +18,7 @@
           :class="remoteKey !== '' ? 'cursor-pointer' : 'pointer-events-none opacity-50'"
           @click="addNewRemoteKey"
         >
-          <img class="w-4 h-4" src="/img/icon/PLUS_ICON.png" alt="Check Icon" @mousedown.prevent />
+          <img class="w-5" src="/img/icon/PLUS_ICON.png" alt="Check Icon" @mousedown.prevent />
         </div>
       </div>
 

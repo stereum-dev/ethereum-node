@@ -513,24 +513,20 @@ const importRemoteKey = async () => {
   stakingStore.setActivePanel(null);
   stakingStore.isRemoteListActive = false;
   stakingStore.previewRemoteKeys = [];
+
+  //************ Important ************
+  // stakingStore.selectedRemoteKeys  is where all the selected pubkeys are stored
+  // stakingStore.remoteUrl is if the user wants to import from a remote url
+  //stakingStore.selectedServiceToFilter is the selected validator filter on sidebar
+  stakingStore.remoteResponse = await ControlService.checkRemoteKeys({
+    url: stakingStore.remoteUrl,
+    serviceID: stakingStore.selectedServiceToFilter?.config?.serviceID,
+  });
+
   stakingStore.selectedRemoteKeys = [];
   stakingStore.remoteUrl = "";
-
-  if (stakingStore.remoteUrl) {
-    const response = await ControlService.checkRemoteKeys({
-      url: stakingStore.remoteUrl,
-      serviceID: stakingStore.selectedServiceToFilter?.config?.serviceID,
-    });
-
-    if (response.error) {
-      console.log(response.error);
-    } else {
-      // stakingStore.remoteKeys = response.keys;
-      console.log(response.keys);
-    }
-  } else {
-    console.log("NO IDEA");
-  }
+  stakingStore.forceRefresh = true;
+  await listKeys();
 };
 
 //****End of Client Commands Buttons ****

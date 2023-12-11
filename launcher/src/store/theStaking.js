@@ -44,6 +44,7 @@ export const useStakingStore = defineStore("theStaking", {
       selectedRemoteKeys: [], // Selected Remote Keys to Add
       remoteKeys: [], // Remote Keys List
       remoteUrl: "",
+      remoteResponse: {},
 
       // ***** End Staking Remote Keys *****
 

@@ -61,11 +61,11 @@ const pickRemoteKey = (item) => {
   item.selected = !item.selected;
 
   if (item.selected) {
-    if (!stakingStore.selectedRemoteKeys.includes(item)) {
-      stakingStore.selectedRemoteKeys.push(item);
+    if (!stakingStore.selectedRemoteKeys.includes(item.key)) {
+      stakingStore.selectedRemoteKeys.push(item.key);
     }
   } else {
-    const index = stakingStore.selectedRemoteKeys.indexOf(item);
+    const index = stakingStore.selectedRemoteKeys.indexOf(item.key);
     if (index > -1) {
       stakingStore.selectedRemoteKeys.splice(index, 1);
     }

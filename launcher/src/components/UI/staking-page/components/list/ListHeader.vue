@@ -71,7 +71,10 @@ const stakingStore = useStakingStore();
 const footerStore = useFooter();
 
 const close = () => {
-  stakingStore.isRemoteListActive = false;
   stakingStore.setActivePanel(null);
+  stakingStore.isRemoteListActive = false;
+  stakingStore.previewRemoteKeys = [];
+  stakingStore.selectedRemoteKeys = [];
+  stakingStore.remoteUrl = "";
 };
 </script>
