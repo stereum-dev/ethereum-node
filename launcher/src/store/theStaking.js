@@ -50,7 +50,8 @@ export const useStakingStore = defineStore("theStaking", {
 
       // ***** Validator Keys *****
       isPubkeyVisible: false,
-      removeKeys: [], // keys to remove
+      removeKeys: [],
+      pickedSlashing: "no", // keys to remove
       selectedKeyToRemove: null,
       selectKeyToRename: null,
       selectKeyForFee: null,

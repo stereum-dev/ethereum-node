@@ -492,19 +492,58 @@ const confirmEnteredGrafiti = async (graffiti) => {
 };
 
 //****** End of Graffiti *******
+const deleteValidators = async (serviceID, keys, picked) => {
+  const result = await ControlService.deleteValidators({
+    serviceID: serviceID,
+    keys: keys,
+    picked: picked === "yes" ? true : false,
+  });
+  stakingStore.forceRefresh = true;
+  await listKeys();
+  return result;
+};
+const deleteRemoteKeys = async (serviceID, keys) => {
+  const result = await ControlService.deleteRemoteKeys({
+    serviceID: serviceID,
+    pubkeys: keys,
+  });
+  stakingStore.forceRefresh = true;
+  await listKeys();
+  return result;
+};
 
-const removeMultipleKeys = () => {
+const removeMultipleKeys = async () => {
+  let val;
   if (stakingStore.selectedKeyToRemove) {
-    stakingStore.keys = stakingStore.keys.filter((key) => key.key !== stakingStore.selectedKeyToRemove.key);
-  } else {
-    console.log("this is multiple");
-    stakingStore.keys = stakingStore.keys.filter(
-      (key) => key.validatorID !== stakingStore.selectedServiceToFilter.config.serviceID
-    );
+    if (stakingStore.selectedKeyToRemove.isRemote) {
+      val = await deleteRemoteKeys(stakingStore.selectedKeyToRemove.validatorID, [
+        stakingStore.selectedKeyToRemove.key,
+      ]);
+    } else {
+      val = await deleteValidators(
+        stakingStore.selectedKeyToRemove.validatorID,
+        [stakingStore.selectedKeyToRemove.key],
+        stakingStore.pickedSlashing
+      );
+    }
+  }
+  stakingStore.setActiveModal(null);
+  if (stakingStore.pickedSlashing === "yes") {
+    downloadFile(val);
   }
 
-  stakingStore.removeKeys = [];
-  stakingStore.setActiveModal(null);
+  stakingStore.selectedKeyToRemove = null;
+};
+
+const downloadFile = (data) => {
+  let json = JSON.stringify(data);
+  let blob = new Blob([json], { type: "application/json" });
+  let url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "slashingDB");
+  link.click();
+  window.URL.revokeObjectURL(url);
 };
 
 // ******  Remote Key *******
