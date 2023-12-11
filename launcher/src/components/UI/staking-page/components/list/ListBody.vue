@@ -4,21 +4,13 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
     class="col-start-1 col-span-full row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : '',
-      stakingStore.isPreviewListActive || stakingStore.isGroupListActive ? 'row-start-2 ' : 'row-start-1 rounded-t-md',
+      stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
+        ? 'row-start-2 '
+        : 'row-start-1 rounded-t-md',
     ]"
   >
-    <div v-if="stakingStore.isGroupListActive" class="w-full h-full animate__animated animate__fadeIn space-y-2">
-      <SkeletonRow v-if="isLoading" />
-      <SkeletonRow v-if="isLoading" />
-      <SkeletonRow v-if="isLoading" />
-
-      <KeyRow
-        v-for="item in getKeysInsideGroup"
-        v-show="!stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
-        :key="item.pubkey"
-        :item="item"
-      />
-    </div>
+    <GroupList v-if="stakingStore.isGroupListActive" :is-loading="isLoading" />
+    <RemoteList v-else-if="stakingStore.isRemoteListActive" :is-loading="isLoading" />
 
     <div
       v-else
@@ -80,6 +72,8 @@ import KeyRow from "./rows/KeyRow.vue";
 import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
 import SkeletonRow from "./rows/SkeletonRow.vue";
+import GroupList from "./GroupList.vue";
+import RemoteList from "./RemoteList.vue";
 import { useListGroups } from "@/composables/groups";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
@@ -108,10 +102,6 @@ stakingStore.filteredKeys = computed(() => {
     return stakingStore.keys;
   }
   return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
-});
-
-const getKeysInsideGroup = computed(() => {
-  return stakingStore.currentGroup.keys;
 });
 
 const getFilteredValidators = computed(() => {

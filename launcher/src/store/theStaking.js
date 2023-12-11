@@ -38,6 +38,15 @@ export const useStakingStore = defineStore("theStaking", {
       selectedValidatorKeys: [],
       // ***** End Staking Groups *****
 
+      // ***** Staking Remote Keys *****
+      isRemoteListActive: false,
+      previewRemoteKeys: [], // Remote Keys List to display
+      selectedRemoteKeys: [], // Selected Remote Keys to Add
+      remoteKeys: [], // Remote Keys List
+      remoteUrl: "",
+
+      // ***** End Staking Remote Keys *****
+
       // ***** Validator Keys *****
       isPubkeyVisible: false,
       removeKeys: [], // keys to remove

@@ -7,7 +7,13 @@ import { computed } from 'vue';
   >
     <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
       <div class="w-6 h-6 rounded-full cursor-pointer bg-white p-[2px]">
-        <img class="w-full h-full" src="/img/icon/the-staking/key-sign.png" alt="Key Icon" />
+        <img
+          v-if="props.item.isRemoote"
+          class="w-full h-full"
+          src="/img/icon/the-staking/remotekey.png"
+          alt="Key Icon"
+        />
+        <img v-else class="w-full h-full" src="/img/icon/the-staking/key-sign.png" alt="Key Icon" />
       </div>
     </div>
     <div class="col-start-2 col-end-9 self-center overflow-hidden flex justify-start items-center">

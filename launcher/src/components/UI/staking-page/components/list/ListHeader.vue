@@ -10,7 +10,7 @@
       <img class="w-4 h-5" src="/img/icon/the-staking/black-key.png" alt="icon" />
     </div>
     <div
-      v-else
+      v-else-if="stakingStore.isGroupListActive"
       class="w-full h-full col-start-1 col-span-full rounded-t-md bg-[#336666] grid grid-cols-24 items-center px-3"
     >
       <img
@@ -33,6 +33,33 @@
         <img class="w-5 h-5" src="/img/icon/the-staking/backtolist.png" alt="Back Icon" />
       </button>
     </div>
+    <div
+      v-else-if="stakingStore.isRemoteListActive"
+      class="w-full h-full col-start-1 col-span-full rounded-t-md bg-[#336666] grid grid-cols-24 items-center px-3"
+    >
+      <img
+        class="w-6 h-6 col-start-1 col-span-1 justify-self-center"
+        :src="stakingStore.selectedServiceToFilter.sIcon"
+        alt="Manage Icon"
+        @mousedown.prevent
+      />
+      <span class="col-start-2 col-end-6 justify-self-start text-xs font-semibold text-gray-200 uppercase">{{
+        stakingStore.selectedServiceToFilter.name
+      }}</span>
+      <span class="col-start-7 col-end-20 text-center text-sm font-semibold text-gray-200 uppercase"
+        >WEB3SIGNER REMOTE KEY IMPORT</span
+      >
+
+      <button
+        class="w-7 h-7 shadow-md shadow-[#242c29] col-start-24 col-span-full rounded-md flex justify-center items-center cursor-pointer hover:scale-105 active:scale-95 transition-all duration-150 bg-[#578f84] border border-[#6c7e78] active:shadow-none"
+        @mouseenter="footerStore.cursorLocation = `Back to List`"
+        @mouseleave="footerStore.cursorLocation = ''"
+        @click="close"
+        @mousedown.prevent
+      >
+        <img class="w-5 h-5" src="/img/icon/the-staking/close.png" alt="Back Icon" />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -40,12 +67,11 @@
 import { useStakingStore } from "@/store/theStaking";
 import { useFooter } from "@/store/theFooter";
 
-const emit = defineEmits(["backList"]);
-
 const stakingStore = useStakingStore();
 const footerStore = useFooter();
 
-const backToList = () => {
-  emit("backList");
+const close = () => {
+  stakingStore.isRemoteListActive = false;
+  stakingStore.setActivePanel(null);
 };
 </script>

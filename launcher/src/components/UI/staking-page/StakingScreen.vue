@@ -20,6 +20,7 @@
         @confirm-feerecepient="confirmFeeRecepient"
         @delete-preview="deletePreviewKey"
         @confirm-graffiti="confirmEnteredGrafiti"
+        @confirm-remote="importRemoteKey"
       />
       <ManagementSection
         @graffiti-panel="graffitiPanelHandler"
@@ -214,6 +215,7 @@ const passwordValidation = async (pass) => {
     stakingStore.keys.push(...stakingStore.checkActiveValidatorsResponse);
   } else {
     console.log("error: there are active validators");
+    //Risk Modal
   }
 };
 
@@ -505,8 +507,30 @@ const removeMultipleKeys = () => {
   stakingStore.setActiveModal(null);
 };
 
-const importRemoteKey = () => {
-  console.log("importRemoteKey");
+// ******  Remote Key *******
+
+const importRemoteKey = async () => {
+  stakingStore.setActivePanel(null);
+  stakingStore.isRemoteListActive = false;
+  stakingStore.previewRemoteKeys = [];
+  stakingStore.selectedRemoteKeys = [];
+  stakingStore.remoteUrl = "";
+
+  if (stakingStore.remoteUrl) {
+    const response = await ControlService.checkRemoteKeys({
+      url: stakingStore.remoteUrl,
+      serviceID: stakingStore.selectedServiceToFilter?.config?.serviceID,
+    });
+
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      // stakingStore.remoteKeys = response.keys;
+      console.log(response.keys);
+    }
+  } else {
+    console.log("NO IDEA");
+  }
 };
 
 //****End of Client Commands Buttons ****

@@ -74,7 +74,8 @@ import FeePanel from "./panels/FeePanel.vue";
 import GroupingPanel from "./panels/GroupingPanel.vue";
 import RenameKey from "./panels/RenameKey.vue";
 import GraffitiPanel from "./panels/GraffitiPanel.vue";
-import RemooteKey from "./panels/RemooteKey.vue";
+import RemotePanel from "./panels/RemotePanel.vue";
+import ManualRemote from "./panels/ManualRemote.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, watchEffect } from "vue";
 
@@ -89,6 +90,7 @@ const emit = defineEmits([
   "confirmFeerecepient",
   "resetName",
   "confirmGraffiti",
+  "confirmRemote",
 ]);
 
 //Stores
@@ -142,9 +144,12 @@ const panels = {
     },
   },
   remote: {
-    component: RemooteKey,
+    component: RemotePanel,
+  },
+  manualRemote: {
+    component: ManualRemote,
     events: {
-      confirmGraffiti: () => confirmGraffiti,
+      confirmRemote: () => confirmRemote,
     },
   },
 };
@@ -171,6 +176,9 @@ watchEffect(() => {
 //Methods
 const handleEvent = (eventName, args) => {
   emit(eventName, args);
+};
+const confirmRemote = () => {
+  handleEvent("confirmRemote");
 };
 
 const confirmGrouping = (groupName) => {

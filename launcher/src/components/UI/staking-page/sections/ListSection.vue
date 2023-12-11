@@ -3,7 +3,10 @@
     <div
       class="h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 relative overflow-hidden"
     >
-      <ListHeader v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive" @back-list="backList" />
+      <ListHeader
+        v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive || stakingStore.isRemoteListActive"
+        @back-list="backList"
+      />
       <ListBody
         @on-drop="onDrop"
         @remove-single="removeSingle"
@@ -23,6 +26,7 @@
         @reset-name="resetName"
         @confirm-feerecepient="confirmFeerecepient"
         @confirm-graffiti="confirmGraffiti"
+        @confirm-remote="confirmRemote"
       />
     </div>
   </div>
@@ -52,6 +56,7 @@ const emit = defineEmits([
   "deletePreview",
   "resetName",
   "confirmGraffiti",
+  "confirmRemote",
 ]);
 
 const stakingStore = useStakingStore();
@@ -120,5 +125,8 @@ const withdrawGroup = (item) => {
 
 const backList = () => {
   emit("backList");
+};
+const confirmRemote = () => {
+  emit("confirmRemote");
 };
 </script>
