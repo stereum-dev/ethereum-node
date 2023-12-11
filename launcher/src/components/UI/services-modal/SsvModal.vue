@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="wrapper">
+      <!-- <div class="wrapper">
         <div v-if="dataLoading" class="spinnerBox">
           <img src="/img/icon/control/spinner.gif" alt="spinner" />
         </div>
@@ -54,27 +54,36 @@
           ></secretkey-register>
           <ssv-dashboard v-if="ssvDashboardActive" :operator-data="operatorData" :pubkey="pubkey"></ssv-dashboard>
         </div>
+      </div> -->
+
+      <!-- start renew -->
+      <div class="modal-content">
+        <div class="browserBox"></div>
+        <div class="browserBox"></div>
+        <div class="browserBox"></div>
       </div>
+
+      <!-- end renew -->
     </div>
   </div>
 </template>
 <script>
-import FrontpageSsv from "./FrontpageSsv.vue";
-import RegisterSsv from "./RegisterSsv.vue";
-import SsvDashboard from "./SsvDashboard.vue";
+// import FrontpageSsv from "./FrontpageSsv.vue";
+// import RegisterSsv from "./RegisterSsv.vue";
+// import SsvDashboard from "./SsvDashboard.vue";
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-import SecretkeyRegister from "./SecretkeyRegister.vue";
+// import SecretkeyRegister from "./SecretkeyRegister.vue";
 import axios from "axios";
 import { toRaw } from "vue";
 export default {
-  components: {
-    FrontpageSsv,
-    RegisterSsv,
-    SsvDashboard,
-    SecretkeyRegister,
-  },
+  // components: {
+  //   FrontpageSsv,
+  //   RegisterSsv,
+  //   SsvDashboard,
+  //   SecretkeyRegister,
+  // },
   data() {
     return {
       operatorData: null,
@@ -330,7 +339,7 @@ export default {
   margin-right: 15px;
   cursor: pointer;
 }
-.wrapper {
+/*.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -388,5 +397,26 @@ export default {
 .network-icon img {
   width: 68%;
   height: 68%;
+}*/
+.modal-content {
+  width: 100%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: default;
+}
+.browserBox {
+  width: 95%;
+  height: 30%;
+  background-color: #393939;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2%;
 }
 </style>
