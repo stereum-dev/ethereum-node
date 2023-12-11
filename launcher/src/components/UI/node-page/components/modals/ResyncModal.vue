@@ -219,22 +219,7 @@ const linkPicker = (item) => {
   btnActive.value = true;
 };
 const setSelectedLinks = () => {
-  switch (nodeManageStore.currentNetwork.id) {
-    case 1:
-      selectedLinks.value = clickInstallStore.mainnet;
-      break;
-    case 2:
-      selectedLinks.value = clickInstallStore.georli;
-      break;
-    case 3:
-      selectedLinks.value = clickInstallStore.sepolia;
-      break;
-    case 4:
-      selectedLinks.value = clickInstallStore.gnosis;
-      break;
-    default:
-      break;
-  }
+  selectedLinks.value = clickInstallStore[nodeManageStore.currentNetwork.network];
 };
 </script>
 
