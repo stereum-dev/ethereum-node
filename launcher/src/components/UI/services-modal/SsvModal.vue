@@ -58,7 +58,30 @@
 
       <!-- start renew -->
       <div class="modal-content">
-        <div class="browserBox"></div>
+        <div class="browserBox">
+          <div v-if="!switchEncryptedKeyGenerator" class="wrapper" style="flex-direction: row">
+            <div class="title">
+              <span>GENERATE ENCRYPTED KEY PAIR</span>
+              <span>The most secure way to run your Operator node, is to generate an Encrypted key pair. </span>
+            </div>
+            <div class="btn-box">
+              <div class="btn" @click="switchEncryptedKeyGenerator = true">GENERATE</div>
+            </div>
+          </div>
+          <div v-else class="browserBox_import">
+            <div class="import-title">
+              <span>{{ passControlGenerateEncryptKeyTitle }}</span>
+            </div>
+            <div class="enrImport">
+              <input
+                v-model="psswordConfirmationForGenrateEncryptKey"
+                type="text"
+                :placeholder="passControlGenerateEncryptKeyPlaceholder"
+              />
+              <div class="import-btn" @click="passConfirm">GENERATE</div>
+            </div>
+          </div>
+        </div>
         <div class="browserBox"></div>
         <div class="browserBox"></div>
       </div>
@@ -98,6 +121,12 @@ export default {
       accepted: "",
       secretkey: null,
       dataLoading: true,
+      //new ssv start hereeeeeeeeeeee
+      switchEncryptedKeyGenerator: false,
+      firstPassToGenerate: "",
+      confirmPassToGenerate: "",
+      firstPassToGenerateCheck: false,
+      confirmPassToGenerateCheck: false,
     };
   },
 
@@ -106,6 +135,44 @@ export default {
       runningServices: "runningServices",
       operators: "operators",
     }),
+    //new ssv start hereeeeeeeeeeee
+    psswordConfirmationForGenrateEncryptKey: {
+      get() {
+        if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+          return this.firstPassToGenerate;
+        } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+          return this.confirmPassToGenerate;
+        } else {
+          return "disabled";
+        }
+      },
+      set(value) {
+        // Handle the setter to update the corresponding data properties
+        if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+          this.firstPassToGenerate = value;
+        } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+          this.confirmPassToGenerate = value;
+        }
+      },
+    },
+    passControlGenerateEncryptKeyTitle() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "ENTER A PASSWORD TO GENERATE AN ENCRYPTED KEY PAIR";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "CONFIRM YOUR PASSWORD";
+      } else {
+        return "CONFIRM WARNING";
+      }
+    },
+    passControlGenerateEncryptKeyPlaceholder() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "Set your password";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "Confirm your password";
+      } else {
+        return "Confirm your password";
+      }
+    },
   },
   mounted() {
     this.getKeys();
@@ -197,6 +264,26 @@ export default {
     openDiscord() {
       let url = " https://discord.gg/AbYHBfjkDY";
       window.open(url, "_blank");
+    },
+
+    //new ssv start hereeeeeeeeeeee
+    switchToGenerateEncryptedKeyPair() {
+      this.switchEncryptedKeyGenerator = true;
+    },
+    passConfirm() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        this.firstPassToGenerateCheck = true;
+        this.confirmPassToGenerateCheck = false;
+        console.log("firstPassToGenerate", this.firstPassToGenerate);
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        this.firstPassToGenerateCheck = true;
+        this.confirmPassToGenerateCheck = true;
+        console.log("confirmPassToGenerateCheck", this.confirmPassToGenerate);
+      } else if (this.firstPassToGenerateCheck && this.confirmPassToGenerateCheck) {
+        this.firstPassToGenerateCheck = false;
+        this.confirmPassToGenerateCheck = false;
+        console.log("confirmPassToGenerateCheck", this.confirmPassToGenerate);
+      }
     },
   },
 };
@@ -418,5 +505,143 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2%;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.browserBox .title {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.title span:first-child {
+  color: #dbdbdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+.title span:last-child {
+  color: #dbdbdb;
+  font-size: 0.65rem;
+  font-weight: 400;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.import-title span {
+  color: #dbdbdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+.import-btn {
+  width: 27%;
+  height: 50%;
+  background-color: #1ba5f8;
+  text-decoration: none;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #dbdbdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition-duration: all 200ms;
+  position: absolute;
+  right: 2%;
+}
+.import-btn:hover {
+  transition-duration: 100ms;
+  background-color: #1a2e32e6;
+}
+.import-btn:active {
+  transition-duration: 100ms;
+  background-color: #1a2e32e6;
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+}
+.browserBox_import {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.browserBox .btn-box {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.browserBox .btn {
+  width: 90%;
+  height: 35%;
+
+  margin-right: 10px;
+  background-color: #1ba5f8;
+  text-decoration: none;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #dbdbdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition-duration: all 200ms;
+}
+.browserBox .btn:first-child {
+  margin-top: 15px;
+}
+.browserBox .btn:not(:first-child) {
+  margin-top: 5px;
+}
+.btn:hover {
+  transition-duration: 100ms;
+  background-color: rgba(26, 46, 50, 0.6);
+}
+.btn:active {
+  transition-duration: 100ms;
+  background-color: #1a2e32e6;
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+}
+.import-title {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-self: flex-start;
+}
+.enrImport {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.enrImport input {
+  width: 95%;
+  height: 50%;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding-left: 10px;
 }
 </style>
