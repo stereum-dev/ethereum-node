@@ -33,7 +33,8 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
           <button
             v-if="props.isProcessing"
             type="button"
-            class="bg-blue-500 mr-4 min-w-[120px] px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full transition-all duration-150 flex justify-center items-center pointer-events-none uppercase"
+            class="mr-4 min-w-[120px] px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full transition-all duration-150 flex justify-center items-center pointer-events-none uppercase"
+            :class="!activeButton ? 'opacity-40 pointer-events-none bg-gray-500' : getButtonColor"
             disabled
           >
             <span

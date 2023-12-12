@@ -26,7 +26,7 @@ const props = defineProps({
 const stakingStore = useStakingStore();
 const displayButtonByCondition = computed(() => {
   if (
-    stakingStore.selectedServiceToFilter.service === "Web3SignerService" &&
+    stakingStore.selectedServiceToFilter?.service === "Web3SignerService" &&
     props.button.text === "Import Remote Keys"
   ) {
     return true;

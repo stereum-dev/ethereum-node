@@ -965,10 +965,6 @@ video {
   grid-column: 1 / -1;
 }
 
-.col-span-5{
-  grid-column: span 5 / span 5;
-}
-
 .col-start-1{
   grid-column-start: 1;
 }
@@ -1013,6 +1009,10 @@ video {
   grid-column-start: 21;
 }
 
+.col-start-23{
+  grid-column-start: 23;
+}
+
 .col-start-24{
   grid-column-start: 24;
 }
@@ -1043,14 +1043,6 @@ video {
 
 .col-start-9{
   grid-column-start: 9;
-}
-
-.col-start-22{
-  grid-column-start: 22;
-}
-
-.col-start-23{
-  grid-column-start: 23;
 }
 
 .col-end-10{
@@ -2318,6 +2310,12 @@ video {
   row-gap: 1.25rem;
 }
 
+.gap-x-8{
+  -webkit-column-gap: 2rem;
+     -moz-column-gap: 2rem;
+          column-gap: 2rem;
+}
+
 .space-x-1 > :not([hidden]) ~ :not([hidden]){
   --tw-space-x-reverse: 0;
   margin-right: calc(0.25rem * var(--tw-space-x-reverse));
@@ -2668,6 +2666,11 @@ video {
   border-color: rgb(51 102 102 / var(--tw-border-opacity));
 }
 
+.border-\[\#3e4347\]{
+  --tw-border-opacity: 1;
+  border-color: rgb(62 67 71 / var(--tw-border-opacity));
+}
+
 .border-\[\#6c7e78\]{
   --tw-border-opacity: 1;
   border-color: rgb(108 126 120 / var(--tw-border-opacity));
@@ -2785,11 +2788,6 @@ video {
 .border-white{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
-
-.border-\[\#3e4347\]{
-  --tw-border-opacity: 1;
-  border-color: rgb(62 67 71 / var(--tw-border-opacity));
 }
 
 .border-l-gray-200{
@@ -3393,6 +3391,11 @@ video {
   padding-right: 2rem;
 }
 
+.px-\[1px\]{
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
 .px-\[2px\]{
   padding-left: 2px;
   padding-right: 2px;
@@ -3421,11 +3424,6 @@ video {
 .py-\[2px\]{
   padding-top: 2px;
   padding-bottom: 2px;
-}
-
-.px-\[1px\]{
-  padding-left: 1px;
-  padding-right: 1px;
 }
 
 .pb-1{
@@ -3929,6 +3927,11 @@ video {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.shadow-\[\#111010\]{
+  --tw-shadow-color: #111010;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
 .shadow-\[\#141516\]{
   --tw-shadow-color: #141516;
   --tw-shadow: var(--tw-shadow-colored);
@@ -4338,9 +4341,9 @@ html body {
   border-color: rgb(22 163 74 / var(--tw-border-opacity));
 }
 
-.peer:checked ~ .peer-checked\:border-blue-500{
-  --tw-border-opacity: 1;
-  border-color: rgb(59 130 246 / var(--tw-border-opacity));
+.peer:checked ~ .peer-checked\:bg-blue-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 
 .peer:checked ~ .peer-checked\:bg-green-500{
@@ -4353,19 +4356,14 @@ html body {
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
-.peer:checked ~ .peer-checked\:bg-blue-500{
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+.peer:checked ~ .peer-checked\:text-gray-200{
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
 .peer:checked ~ .peer-checked\:text-green-600{
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
-}
-
-.peer:checked ~ .peer-checked\:text-gray-200{
-  --tw-text-opacity: 1;
-  color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
 .peer:checked ~ .peer-checked\:shadow-inner{
@@ -4380,16 +4378,15 @@ html body {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
-.peer:checked ~ .peer-checked\:ring-1{
+.peer:checked ~ .peer-checked\:ring-2{
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   -webkit-box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
           box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
-.peer:checked ~ .peer-checked\:ring-blue-500{
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity));
+.peer:checked ~ .peer-checked\:ring-offset-2{
+  --tw-ring-offset-width: 2px;
 }
 
 .peer:checked ~ .peer-checked\:after\:translate-x-7::after{
@@ -4483,11 +4480,6 @@ html body {
 .hover\:border-teal-600:hover{
   --tw-border-opacity: 1;
   border-color: rgb(13 148 136 / var(--tw-border-opacity));
-}
-
-.hover\:border-gray-200:hover{
-  --tw-border-opacity: 1;
-  border-color: rgb(229 231 235 / var(--tw-border-opacity));
 }
 
 .hover\:bg-\[\#212325\]:hover{

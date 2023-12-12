@@ -55,7 +55,7 @@
         v-bind="activePanel?.props"
         v-on="
           activePanel?.events
-            ? Object.keys(activePanel.events).reduce((acc, eventName) => {
+            ? Object.keys(activePanel?.events).reduce((acc, eventName) => {
                 acc[eventName] = (args) => handleEvent(eventName, args);
                 return acc;
               }, {})
