@@ -6,6 +6,7 @@
     click-outside-text="Click outside to cancel"
     confirm-text="remove"
     :active-button="activeButton"
+    :is-processing="checkProcessing"
     @confirm-action="removeValidator"
     @close-modal="closeModal"
   >
@@ -30,41 +31,36 @@
         <div class="col-start-1 col-span-full row-start-3 row-span-2 flex flex-col justify-start items-center">
           <span class="text-sm text-gray-400 font-semibold">{{ $t("importSlashingModal.slashModalMessage") }}</span>
 
-          <fieldset class="grid grid-cols-2 gap-4 mt-2">
+          <fieldset class="grid grid-cols-2 gap-x-8 mt-2">
             <div>
-              <input
-                id="yes"
-                v-model="stakingStore.pickedSlashing"
-                type="radio"
-                name="no"
-                value="yes"
-                class="peer hidden"
-                checked
-              />
+              <input id="yes" v-model="stakingStore.pickedSlashing" type="radio" value="yes" class="peer hidden" />
 
               <label
                 for="yes"
-                class="w-20 h-8 cursor-pointer rounded-md border border-gray-100 bg-white px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center peer-checked:bg-blue-500 transition-all ease-in-out duration-150"
+                class="flex justify-center items-center space-x-2"
+                @click="stakingStore.pickedSlashing === 'yes'"
               >
-                <span class="text-gray-900 peer-checked:text-gray-200 font-semibold text-center">YES</span>
+                <span
+                  class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
+                  :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'yes' }"
+                ></span>
+                <span class="text-gray-200 font-semibold text-center">YES</span>
               </label>
             </div>
 
             <div>
-              <input
-                id="no"
-                v-model="stakingStore.pickedSlashing"
-                type="radio"
-                name="no"
-                value="no"
-                class="peer hidden"
-              />
+              <input id="no" v-model="stakingStore.pickedSlashing" type="radio" value="no" class="peer hidden" />
 
               <label
                 for="no"
-                class="w-20 h-8 cursor-pointer rounded-md border border-gray-100 bg-white px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center peer-checked:bg-blue-500 transition-all ease-in-out duration-150"
+                class="flex justify-center items-center space-x-2"
+                @click="stakingStore.pickedSlashing === 'no'"
               >
-                <span class="text-gray-900 active:text-gray-200 font-semibold text-center">NO</span>
+                <span
+                  class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
+                  :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'no' }"
+                ></span>
+                <span class="text-gray-200 font-semibold text-center">NO</span>
               </label>
             </div>
           </fieldset>
@@ -76,11 +72,12 @@
 
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const emit = defineEmits(["removeValidator"]);
 
 const stakingStore = useStakingStore();
+const checkProcessing = ref(false);
 
 const activeButton = computed(() => {
   if (stakingStore.selectedKeyToRemove !== null || stakingStore.removeKeys.length > 0) {
@@ -91,6 +88,7 @@ const activeButton = computed(() => {
 
 const removeValidator = () => {
   emit("removeValidator", stakingStore.selectedKeyToRemove, stakingStore.pickedSlashing);
+  checkProcessing.value = true;
 };
 
 const closeModal = () => {

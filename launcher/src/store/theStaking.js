@@ -44,14 +44,16 @@ export const useStakingStore = defineStore("theStaking", {
       selectedRemoteKeys: [], // Selected Remote Keys to Add
       remoteKeys: [], // Remote Keys List
       remoteUrl: "",
-      remoteResponse: {},
+      remoteResponse: null,
+      remoteResponseMessage: null,
 
       // ***** End Staking Remote Keys *****
 
       // ***** Validator Keys *****
       isPubkeyVisible: false,
       removeKeys: [],
-      pickedSlashing: "no", // keys to remove
+      pickedSlashing: "no",
+      slashingDB: "", // Slashing DB
       selectedKeyToRemove: null,
       selectKeyToRename: null,
       selectKeyForFee: null,
