@@ -59,10 +59,20 @@
       <!-- start renew -->
       <div class="modal-content">
         <div class="browserBox">
-          <div v-if="!switchEncryptedKeyGenerator" class="wrapper" style="flex-direction: row">
+          <div
+            v-if="!switchEncryptedKeyGenerator || passGenerateEncryptKeyConfirmed"
+            class="wrapper"
+            style="flex-direction: row"
+          >
             <div class="title">
-              <span>GENERATE ENCRYPTED KEY PAIR</span>
-              <span>The most secure way to run your Operator node, is to generate an Encrypted key pair. </span>
+              <span>{{ !passGenerateEncryptKeyConfirmed ? "GENERATE ENCRYPTED KEY PAIR" : "CONFIRM WARNING" }}</span>
+              <span
+                >{{
+                  !passGenerateEncryptKeyConfirmed
+                    ? "The most secure way to run your Operator node, is to generate an Encrypted key pair."
+                    : "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!"
+                }}
+              </span>
             </div>
             <div class="btn-box">
               <div class="btn" @click="switchEncryptedKeyGenerator = true">GENERATE</div>
@@ -77,6 +87,7 @@
                 v-model="psswordConfirmationForGenrateEncryptKey"
                 type="text"
                 :placeholder="passControlGenerateEncryptKeyPlaceholder"
+                :style="{ border: borderForInput }"
               />
               <div class="import-btn" @click="passConfirm">GENERATE</div>
             </div>
@@ -127,6 +138,8 @@ export default {
       confirmPassToGenerate: "",
       firstPassToGenerateCheck: false,
       confirmPassToGenerateCheck: false,
+      tryAgain: false,
+      passGenerateEncryptKeyConfirmed: false,
     };
   },
 
@@ -143,7 +156,7 @@ export default {
         } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
           return this.confirmPassToGenerate;
         } else {
-          return "disabled";
+          return "";
         }
       },
       set(value) {
@@ -167,11 +180,16 @@ export default {
     passControlGenerateEncryptKeyPlaceholder() {
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
         return "Set your password";
-      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && !this.tryAgain) {
         return "Confirm your password";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && this.tryAgain) {
+        return "Passwords do not match, please try again";
       } else {
-        return "Confirm your password";
+        return "";
       }
+    },
+    borderForInput() {
+      return this.tryAgain ? "1px solid red" : "none";
     },
   },
   mounted() {
@@ -272,17 +290,42 @@ export default {
     },
     passConfirm() {
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        if (this.firstPassToGenerate !== "") {
+          this.firstPassToGenerateCheck = true;
+          this.confirmPassToGenerateCheck = false;
+          this.tryAgain = false;
+          console.log("firstPassToGenerate", this.firstPassToGenerate);
+        } else {
+          this.firstPassToGenerateCheck = false;
+          this.confirmPassToGenerateCheck = false;
+          this.tryAgain = true;
+        }
+      } else if (
+        this.firstPassToGenerateCheck &&
+        !this.confirmPassToGenerateCheck &&
+        this.firstPassToGenerate === this.confirmPassToGenerate
+      ) {
+        if (this.confirmPassToGenerate !== "") {
+          this.firstPassToGenerateCheck = true;
+          this.confirmPassToGenerateCheck = true;
+          this.tryAgain = false;
+          console.log("set pass");
+          this.passGenerateEncryptKeyConfirmed = true;
+        } else {
+          this.firstPassToGenerateCheck = true;
+          this.confirmPassToGenerateCheck = false;
+          this.tryAgain = true;
+        }
+      } else if (
+        this.firstPassToGenerateCheck &&
+        !this.confirmPassToGenerateCheck &&
+        this.firstPassToGenerate !== this.confirmPassToGenerate
+      ) {
         this.firstPassToGenerateCheck = true;
         this.confirmPassToGenerateCheck = false;
-        console.log("firstPassToGenerate", this.firstPassToGenerate);
-      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
-        this.firstPassToGenerateCheck = true;
-        this.confirmPassToGenerateCheck = true;
-        console.log("confirmPassToGenerateCheck", this.confirmPassToGenerate);
-      } else if (this.firstPassToGenerateCheck && this.confirmPassToGenerateCheck) {
-        this.firstPassToGenerateCheck = false;
-        this.confirmPassToGenerateCheck = false;
-        console.log("confirmPassToGenerateCheck", this.confirmPassToGenerate);
+        console.log("pass conflict");
+        this.confirmPassToGenerate = "";
+        this.tryAgain = true;
       }
     },
   },
