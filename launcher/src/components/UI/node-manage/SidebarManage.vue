@@ -114,7 +114,8 @@ export default {
           return (item) => item.service != "SSVNetworkService" && this.archFilter(item.service);
         case "gnosis":
           return (item) =>
-            /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service) && this.archFilter(item.service);
+            /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(item.service) &&
+            this.archFilter(item.service);
         default:
           return (item) => item.service != "SSVNetworkService" && this.archFilter(item.service);
       }
