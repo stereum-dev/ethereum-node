@@ -1,13 +1,75 @@
 <template>
   <staking-custom-modal
     main-title="Import Validator Key"
-    confirm-text="ok"
-    :active-button="activeButton"
-    @confirm-action="okHandler"
+    :confirm-text="getActionButton === importValidator ? 'import' : 'ok'"
+    :active-button="getActiveButton"
+    :is-processing="checkProcessing"
+    @confirm-action="getActionButton"
   >
     <template #content>
       <div
-        v-if="!activeButton"
+        class="w-full col-start-1 col-span-full row-start-2 row-span-1 overflow-hidden flex justify-center items-center"
+      >
+        <div v-if="isSlashingActive" class="flex justify-center items-center space-x-2">
+          <span
+            class="w-4 h-4 rounded-full shadow-lg shadow-[#111010]"
+            :class="stakingStore.doppelgangerStatus ? 'bg-green-500' : 'bg-red-500'"
+          ></span>
+          <span class="text-sm font-semibold text-left text-gray-300">
+            Doppelgänger Protection is
+            {{ stakingStore.doppelgangerStatus ? "Enabled" : "Disabled" }}.</span
+          >
+        </div>
+      </div>
+
+      <div
+        v-if="isSlashingActive"
+        class="col-start-1 col-span-full row-start-3 row-span-3 flex flex-col justify-start items-center"
+      >
+        <span class="col-start-1 col-end-5 row-start-1 row-span-1 text-center text-sm font-semibold text-gray-300">{{
+          $t("importSlashingModal.slashModalMessage")
+        }}</span>
+
+        <fieldset class="grid grid-cols-2 gap-x-8 mt-4">
+          <div>
+            <input id="yes" v-model="stakingStore.pickedSlashing" type="radio" value="yes" class="peer hidden" />
+
+            <label
+              for="yes"
+              class="flex justify-center items-center space-x-2"
+              @click="stakingStore.pickedSlashing === 'yes'"
+            >
+              <span
+                class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
+                :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'yes' }"
+              ></span>
+              <span class="text-gray-200 font-semibold text-center">YES</span>
+            </label>
+          </div>
+
+          <div>
+            <input id="no" v-model="stakingStore.pickedSlashing" type="radio" value="no" class="peer hidden" />
+
+            <label
+              for="no"
+              class="flex justify-center items-center space-x-2"
+              @click="stakingStore.pickedSlashing === 'no'"
+            >
+              <span
+                class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
+                :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'no' }"
+              ></span>
+              <span class="text-gray-200 font-semibold text-center">NO</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div v-if="stakingStore.pickedSlashing === 'yes'">
+          <input ref="fileInput" type="file" accept=".json" class="hidden" @change="handleFileUpload" />
+        </div>
+      </div>
+      <div
+        v-else-if="!activeButton && !isSlashingActive"
         class="w-full col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-3 grid-rows-3 items-center overflow-hidden"
       >
         <div
@@ -25,16 +87,9 @@
         </div>
       </div>
       <div
-        v-else
+        v-else-if="!isSlashingActive && description"
         class="w-full col-start-1 col-span-full row-start-3 row-end-6 overflow-hidden flex justify-center items-center"
       >
-        <!-- <div
-          v-if="importedKeyNumber"
-          class="col-start-1 col-span-full row-start-1 row-span-3 flex justify-center items-center space-x-1"
-        >
-          <span class="text-2xl text-teal-500 font-semibold">{{ importedKeyNumber }}</span>
-          <span class="text-2xl text-gray-200 font-semibold">key(s) imported.</span>
-        </div> -->
         <div class="w-2/3 h-fit flex flex-col justify-center items-center space-y-2">
           <span
             v-if="description"
@@ -59,15 +114,37 @@ import { computed, ref, watch } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useListKeys } from "@/composables/validators";
 
+const emit = defineEmits(["importKey"]);
+
 //  Props
 
 const stakingStore = useStakingStore();
+stakingStore.pickedSlashing = "no";
 let description = ref("");
 let details = ref("");
 const activeButton = ref(false);
+const isSlashingActive = ref(true);
+const fileInput = ref(null);
+const checkProcessing = ref(false);
 
 const getMessage = computed(() => {
   return stakingStore.importKeyMessage ? stakingStore.importKeyMessage : "";
+});
+
+const getActiveButton = computed(() => {
+  if (stakingStore.pickedSlashing !== "") {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+const getActionButton = computed(() => {
+  if (isSlashingActive.value) {
+    return importValidator;
+  } else {
+    return okHandler;
+  }
 });
 
 const getDescriptionClass = computed(() => {
@@ -88,10 +165,17 @@ watch(getMessage, () => {
   if (getMessage.value) {
     splitedTexts(getMessage.value);
     activeButton.value = true;
+    checkProcessing.value = false;
   }
 });
 
 //Methods
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    emit("importKey", file);
+  }
+};
 
 const splitedTexts = (text) => {
   text = getMessage.value;
@@ -103,6 +187,16 @@ const splitedTexts = (text) => {
 };
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
+};
+
+const importValidator = () => {
+  if (stakingStore.pickedSlashing === "yes") {
+    handleFileUpload();
+  } else {
+    isSlashingActive.value = false;
+    checkProcessing.value = true;
+    emit("importKey");
+  }
 };
 
 const okHandler = async () => {

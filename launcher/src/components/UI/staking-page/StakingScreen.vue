@@ -6,9 +6,9 @@
         @confirm-grouping="confirmGrouping"
         @pick-validator="pickValidatorService"
         @upload-file="uploadValidatorKey"
-        @confirm-password="passwordValidation"
+        @confirm-password="confirmPassword"
         @on-drop="onDrop"
-        @remove-single="removeMultipleKeys"
+        @remove-single="removeValidatorKeys"
         @open-group="openGroupList"
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
@@ -53,6 +53,7 @@ import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
+import { useDeepClone } from "@/composables/utils";
 
 //Store
 const stakingStore = useStakingStore();
@@ -63,6 +64,9 @@ const modals = {
   import: {
     component: ImportValidator,
     props: {},
+    events: {
+      importKey: () => importValidatorProcessing(),
+    },
   },
   risk: {
     component: RiskWarning,
@@ -84,7 +88,7 @@ const modals = {
     component: RemoveValidators,
     props: {},
     events: {
-      removeValidator: () => removeMultipleKeys(),
+      removeValidator: () => removeValidatorKeys(),
     },
   },
 };
@@ -179,6 +183,14 @@ const onDrop = (event) => {
 
 //**** Import Key Validation ****
 
+const riskAccepted = async () => {
+  if (this.remoteImportArgs.serviceID && this.remoteImportArgs.url) {
+    await this.importRemoteKeys(this.remoteImportArgs);
+  } else {
+    await this.importKey(this.password);
+  }
+};
+
 const importKey = async (val) => {
   stakingStore.importEnteredPassword = val;
   stakingStore.importKeyMessage = await ControlService.importKey(
@@ -195,16 +207,18 @@ const importKey = async (val) => {
 };
 
 //Validation validator key Password
-const passwordValidation = async (pass) => {
-  stakingStore.importEnteredPassword = pass;
 
+const confirmPassword = async (pass) => {
+  stakingStore.importEnteredPassword = pass;
   stakingStore.setActiveModal("import");
+};
+
+const importValidatorProcessing = async () => {
   stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
     files: stakingStore.keyFiles,
     password: stakingStore.importEnteredPassword,
     serviceID: stakingStore.selectedValidatorService.config.serviceID,
-    //Temporarily set slashingDB to null
-    slashingDB: null,
+    slashingDB: stakingStore.slashingDB,
   });
   stakingStore.setActivePanel(null);
   if (
@@ -215,7 +229,7 @@ const passwordValidation = async (pass) => {
     stakingStore.keys.push(...stakingStore.checkActiveValidatorsResponse);
   } else {
     console.log("error: there are active validators");
-    //Risk Modal
+    stakingStore.setActiveModal("risk");
   }
 };
 
@@ -512,27 +526,33 @@ const deleteRemoteKeys = async (serviceID, keys) => {
   return result;
 };
 
-const removeMultipleKeys = async () => {
-  let val;
-  if (stakingStore.selectedKeyToRemove) {
-    if (stakingStore.selectedKeyToRemove.isRemote) {
-      val = await deleteRemoteKeys(stakingStore.selectedKeyToRemove.validatorID, [
-        stakingStore.selectedKeyToRemove.key,
-      ]);
-    } else {
-      val = await deleteValidators(
-        stakingStore.selectedKeyToRemove.validatorID,
-        [stakingStore.selectedKeyToRemove.key],
-        stakingStore.pickedSlashing
-      );
-    }
-  }
-  stakingStore.setActiveModal(null);
-  if (stakingStore.pickedSlashing === "yes") {
-    downloadFile(val);
-  }
+const removeValidatorKeys = async () => {
+  if (stakingStore.removeKeys && stakingStore.removeKeys.length > 0) {
+    // Process each key for removal
+    for (const keyToRemove of stakingStore.removeKeys) {
+      let val;
+      if (keyToRemove.isRemote) {
+        val = await deleteRemoteKeys(keyToRemove.validatorID, [keyToRemove.key]);
+      } else {
+        val = await deleteValidators(keyToRemove.validatorID, [keyToRemove.key], stakingStore.pickedSlashing);
+      }
 
-  stakingStore.selectedKeyToRemove = null;
+      // If "yes" to slashing, download file for each key
+      if (stakingStore.pickedSlashing === "yes") {
+        downloadFile(val);
+      }
+    }
+
+    // Remove the keys from the server configuration
+    const keysToRemove = stakingStore.removeKeys.map((key) => key.key);
+    await ControlService.writeKeys(null, keysToRemove);
+
+    stakingStore.setActiveModal(null);
+    stakingStore.removeKeys = [];
+
+    // Refresh the list of keys
+    await listKeys();
+  }
 };
 
 const downloadFile = (data) => {
@@ -553,7 +573,7 @@ const importRemoteKey = async () => {
   stakingStore.isRemoteListActive = false;
   stakingStore.previewRemoteKeys = [];
 
-  //************ Important ************
+  //************ Infos ************
   // stakingStore.selectedRemoteKeys  is where all the selected pubkeys are stored
   // stakingStore.remoteUrl is if the user wants to import from a remote url
   //stakingStore.selectedServiceToFilter is the selected validator filter on sidebar
