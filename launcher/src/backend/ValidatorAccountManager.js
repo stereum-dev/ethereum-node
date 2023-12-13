@@ -59,10 +59,7 @@ export class ValidatorAccountManager {
           let latestEpochsResponse = await axios.get(
             networks[client.network].dataEndpoint + "/validator/" + pubkey + "/attestations"
           );
-          if (
-            latestEpochsResponse.status === 200 &&
-            latestEpochsResponse.data.data.length > 0
-          ) {
+          if (latestEpochsResponse.status === 200 && latestEpochsResponse.data.data.length > 0) {
             for (let i = 0; i < 2; i++) {
               if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
                 isActiveRunning.push(pubkey);
@@ -255,7 +252,10 @@ export class ValidatorAccountManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout);
 
       if (!data.data) data.data = [];
-      this.writeKeys(data.data.map(key => key.validating_pubkey));
+      this.writeKeys(
+        data.data.map((key) => key.validating_pubkey),
+        serviceID
+      );
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -316,7 +316,8 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -532,30 +533,43 @@ export class ValidatorAccountManager {
   }
 
   async writeKeys(keys) {
-
+    console.log("keys-----------------", keys);
     //get current keys in yaml file
-    let currentKeys = await this.readKeys()
+    let currentKeys = await this.readKeys();
     if (!currentKeys) {
-      currentKeys = {}
+      currentKeys = {};
     }
+
+    console.log("currentkeys-----------------", currentKeys);
 
     //if the argument is an array of keys, add them to the current keys if they don't exist
     if (Array.isArray(keys)) {
-      keys.forEach(key => {
-        if (!currentKeys[key]) currentKeys[key] = { keyName: "", groupName: "", groupID: null, validatorClientID: null }
-      })
+      keys.forEach((key) => {
+        if (!currentKeys[key])
+          currentKeys[key] = { keyName: "", groupName: "", groupID: null, validatorClientID: null };
+      });
+
+      currentKeys = keys.reduce((result, key) => {
+        if (currentKeys.hasOwnProperty(key)) {
+          result[key] = currentKeys[key];
+        }
+        return result;
+      }, {});
+
+      console.log("currentkeys after reduce:-----------------", currentKeys);
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(currentKeys)) + " > /etc/stereum/keys.yaml"
       );
 
       //if the argument is an object of keys, overwrite the current keys
-    } else if (keys) {
-      keys = { ...currentKeys, ...keys }
+    } else if (typeof keys === "object") {
+      // } else if (keys) {
+      keys = { ...currentKeys, ...keys };
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(keys)) + " > /etc/stereum/keys.yaml"
       );
     } else {
-      log.error("INVALID ARGUMENT: keys must be an array or an object")
+      log.error("INVALID ARGUMENT: keys must be an array or an object");
     }
   }
 
