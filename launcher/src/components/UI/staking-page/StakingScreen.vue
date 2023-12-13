@@ -561,7 +561,13 @@ const removeValidatorKeys = async () => {
     }
 
     // Remove the keys from the server configuration
-    const keysToRemove = stakingStore.removeKeys.map((key) => key.key);
+    const keysToRemove = stakingStore.removeKeys.map((key) => {
+      return {
+        pubkey: key.key,
+        validatorID: key.validatorID,
+      };
+    });
+
     await ControlService.writeKeys(keysToRemove);
 
     stakingStore.removeKeys = [];

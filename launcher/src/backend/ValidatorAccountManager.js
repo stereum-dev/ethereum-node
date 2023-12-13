@@ -252,10 +252,13 @@ export class ValidatorAccountManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout);
 
       if (!data.data) data.data = [];
-      this.writeKeys(
-        data.data.map((key) => key.validating_pubkey),
-        serviceID
-      );
+      let newData = data.data.map((key) => {
+        return {
+          pubkey: key.validating_pubkey,
+          serviceID: serviceID,
+        };
+      });
+      this.writeKeys(newData);
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -533,37 +536,43 @@ export class ValidatorAccountManager {
   }
 
   async writeKeys(keys) {
-    console.log("keys-----------------", keys);
     //get current keys in yaml file
     let currentKeys = await this.readKeys();
     if (!currentKeys) {
       currentKeys = {};
     }
 
-    console.log("currentkeys-----------------", currentKeys);
-
     //if the argument is an array of keys, add them to the current keys if they don't exist
     if (Array.isArray(keys)) {
       keys.forEach((key) => {
-        if (!currentKeys[key])
-          currentKeys[key] = { keyName: "", groupName: "", groupID: null, validatorClientID: null };
+        if (!currentKeys[key.pubkey])
+          currentKeys[key.pubkey] = { keyName: "", groupName: "", groupID: null, validatorClientID: key.serviceID };
       });
+      // remove keys from server
+      if (keys.length > 0) {
+        let selectedServiceID = keys[0].serviceID;
+        let selectedClientKeys = Object.fromEntries(
+          Object.entries(currentKeys).filter(([, values]) => values.validatorClientID === selectedServiceID)
+        );
+        currentKeys = Object.fromEntries(
+          Object.entries(currentKeys).filter(([, values]) => values.validatorClientID !== selectedServiceID)
+        );
 
-      currentKeys = keys.reduce((result, key) => {
-        if (currentKeys.hasOwnProperty(key)) {
-          result[key] = currentKeys[key];
-        }
-        return result;
-      }, {});
+        let filteredCurrentKeys = keys.reduce((result, key) => {
+          if (selectedClientKeys.hasOwnProperty(key.pubkey)) {
+            result[key.pubkey] = selectedClientKeys[key.pubkey];
+          }
+          return result;
+        }, {});
+        currentKeys = { ...filteredCurrentKeys, ...currentKeys };
+      }
 
-      console.log("currentkeys after reduce:-----------------", currentKeys);
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(currentKeys)) + " > /etc/stereum/keys.yaml"
       );
 
       //if the argument is an object of keys, overwrite the current keys
     } else if (typeof keys === "object") {
-      // } else if (keys) {
       keys = { ...currentKeys, ...keys };
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(keys)) + " > /etc/stereum/keys.yaml"
