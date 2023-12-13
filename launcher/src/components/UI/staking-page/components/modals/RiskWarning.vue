@@ -1,9 +1,11 @@
 <template>
   <staking-custom-modal
-    main-title="Import Validator Key"
-    confirm-text="OK"
+    main-title="Risk Warning"
+    title-color="warning"
+    :message-text="getTextMessage"
+    confirm-text="Accept"
     :disabled-button="activeButton"
-    @confirm-action="okHandler"
+    @confirm-action="acceptRisk"
   >
     <template #content>
       <div
@@ -26,10 +28,10 @@
               <span> {{ $t("displayValidator.warningQuestion") }}</span>
             </div>
             <div class="button-box">
-              <div class="sure-button" @click="riskAccepted">
+              <div class="sure-button" @click="acceptRisk">
                 <span>{{ $t("displayValidator.sure") }}</span>
               </div>
-              <div class="cancel-button" @click="hideWDialog">
+              <div class="cancel-button" @click="cancelHandler">
                 <span>{{ $t("displayValidator.cancel") }}</span>
               </div>
             </div>
@@ -41,13 +43,27 @@
 </template>
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
+import i18n from "@/includes/i18n";
+import { computed } from "vue";
+
+const emit = defineEmits(["acceptRisk"]);
+
+const { t } = i18n.global.t;
 
 const stakingStore = useStakingStore();
 
+const getTextMessage = computed(() => {
+  return t("displayValidator.warningMessage");
+});
+
 //Methods
 
-const okHandler = () => {
+const acceptRisk = () => {
+  emit("acceptRisk");
+};
+
+const cancelHandler = () => {
   stakingStore.setActiveModal(null);
-  stakingStore.setActivePanel("validator");
+  stakingStore.setActivePanel(null);
 };
 </script>
