@@ -345,6 +345,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("restartServer");
   }
 
+  async readSSVKeystoreConfig(args) {
+    return await this.promiseIpc.send("readSSVKeystoreConfig", args);
+  }
+
   async readSSVNetworkConfig(args) {
     return await this.promiseIpc.send("readSSVNetworkConfig", args);
   }
@@ -447,7 +451,7 @@ class ControlService extends EventEmitter {
   async beaconchainMonitoringModification(args) {
     return await this.promiseIpc.send("beaconchainMonitoringModification", args);
   }
-  
+
   async removeBeaconchainMonitoring(args) {
     return await this.promiseIpc.send("removeBeaconchainMonitoring", args);
   }
