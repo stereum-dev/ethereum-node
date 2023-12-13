@@ -50,6 +50,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
 </template>
 
 <script setup>
+import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
 
 //Props
@@ -104,6 +105,7 @@ const props = defineProps({
 const emit = defineEmits(["closeModal", "confirmAction"]);
 
 //Store
+const stakingStore = useStakingStore();
 
 //Refs
 
@@ -137,7 +139,11 @@ const getButtonColor = computed(() => {
 
 //Methods
 const closeModal = () => {
-  emit("closeModal", props.clickOutsideText);
+  if (props.clickOutsideText !== "") {
+    stakingStore.setActiveModal(null);
+  } else {
+    emit("closeModal", props.clickOutsideText);
+  }
 };
 
 const emitConfirmAction = () => {

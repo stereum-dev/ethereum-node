@@ -4,6 +4,7 @@
     :confirm-text="getActionButton === importValidator ? 'import' : 'ok'"
     :active-button="getActiveButton"
     :is-processing="checkProcessing"
+    click-outside-text="Click outside to close"
     @confirm-action="getActionButton"
   >
     <template #content>
@@ -32,39 +33,31 @@
 
         <fieldset class="grid grid-cols-2 gap-x-8 mt-4">
           <div>
-            <input id="yes" v-model="stakingStore.pickedSlashing" type="radio" value="yes" class="peer hidden" />
+            <input id="yes" v-model="pickedSlashing" type="radio" value="yes" class="peer hidden" />
 
-            <label
-              for="yes"
-              class="flex justify-center items-center space-x-2"
-              @click="stakingStore.pickedSlashing === 'yes'"
-            >
+            <label for="yes" class="flex justify-center items-center space-x-2" @click="getYes">
               <span
                 class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
-                :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'yes' }"
+                :class="{ 'bg-blue-500': pickedSlashing === 'yes' }"
               ></span>
               <span class="text-gray-200 font-semibold text-center">YES</span>
             </label>
           </div>
 
           <div>
-            <input id="no" v-model="stakingStore.pickedSlashing" type="radio" value="no" class="peer hidden" />
+            <input id="no" v-model="pickedSlashing" type="radio" value="no" class="peer hidden" />
 
-            <label
-              for="no"
-              class="flex justify-center items-center space-x-2"
-              @click="stakingStore.pickedSlashing === 'no'"
-            >
+            <label for="no" class="flex justify-center items-center space-x-2" @click="getNo">
               <span
                 class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
-                :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'no' }"
+                :class="{ 'bg-blue-500': pickedSlashing === 'no' }"
               ></span>
               <span class="text-gray-200 font-semibold text-center">NO</span>
             </label>
           </div>
         </fieldset>
 
-        <div v-if="stakingStore.pickedSlashing === 'yes'">
+        <div v-if="pickedSlashing === 'yes'">
           <input ref="fileInput" type="file" accept=".json" class="hidden" @change="handleFileUpload" />
         </div>
       </div>
@@ -110,7 +103,7 @@
   </staking-custom-modal>
 </template>
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useListKeys } from "@/composables/validators";
 
@@ -119,11 +112,11 @@ const emit = defineEmits(["importKey"]);
 //  Props
 
 const stakingStore = useStakingStore();
-stakingStore.pickedSlashing = "no";
 let description = ref("");
 let details = ref("");
 const activeButton = ref(false);
 const isSlashingActive = ref(true);
+const pickedSlashing = ref(null);
 const fileInput = ref(null);
 const checkProcessing = ref(false);
 
@@ -132,7 +125,7 @@ const getMessage = computed(() => {
 });
 
 const getActiveButton = computed(() => {
-  if (stakingStore.pickedSlashing !== "") {
+  if (pickedSlashing.value !== "") {
     return true;
   } else {
     return false;
@@ -161,6 +154,14 @@ const getDescriptionClass = computed(() => {
   return className;
 });
 
+watch(pickedSlashing, (newValue, oldValue) => {
+  if (newValue === "yes" && oldValue !== "yes") {
+    nextTick(() => {
+      fileInput.value.click();
+    });
+  }
+});
+
 watch(getMessage, () => {
   if (getMessage.value) {
     splitedTexts(getMessage.value);
@@ -169,11 +170,22 @@ watch(getMessage, () => {
   }
 });
 
+onMounted(() => {
+  pickedSlashing.value = "no";
+});
+
 //Methods
+
+const getNo = () => {
+  pickedSlashing.value = "no";
+};
+const getYes = () => {
+  pickedSlashing.value = "yes";
+};
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
-    emit("importKey", file);
+    stakingStore.slashingDB = file;
   }
 };
 
@@ -190,13 +202,9 @@ const listKeys = async () => {
 };
 
 const importValidator = () => {
-  if (stakingStore.pickedSlashing === "yes") {
-    handleFileUpload();
-  } else {
-    isSlashingActive.value = false;
-    checkProcessing.value = true;
-    emit("importKey");
-  }
+  isSlashingActive.value = false;
+  checkProcessing.value = true;
+  emit("importKey");
 };
 
 const okHandler = async () => {

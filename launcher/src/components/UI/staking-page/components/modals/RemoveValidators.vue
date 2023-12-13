@@ -72,7 +72,7 @@
 
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 
 const emit = defineEmits(["removeValidator"]);
 
@@ -84,6 +84,10 @@ const activeButton = computed(() => {
     return true;
   }
   return false;
+});
+
+onMounted(() => {
+  stakingStore.pickedSlashing = "no";
 });
 
 const removeValidator = () => {
