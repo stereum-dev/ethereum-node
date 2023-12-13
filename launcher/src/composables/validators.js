@@ -22,12 +22,13 @@ export async function useListKeys(forceRefresh) {
       ) {
         //refresh validaotr list
         let result = await ControlService.listValidators(client.config.serviceID);
+
         if (!client.service.includes("Web3Signer")) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
-              return { validating_pubkey: e.pubkey, readonly: true };
-            })
+                return { validating_pubkey: e.pubkey, readonly: true };
+              })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
         }
@@ -35,8 +36,8 @@ export async function useListKeys(forceRefresh) {
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-            return { key: e.validating_pubkey, isRemote: e.readonly };
-          })
+              return { key: e.validating_pubkey, isRemote: e.readonly };
+            })
           : [];
 
         //update service datasets in Pinia store
@@ -66,6 +67,7 @@ export async function useListKeys(forceRefresh) {
       }
     }
     let alias = await ControlService.readKeys();
+
     stakingStore.keys = keyStats.map((key) => {
       return {
         ...key,
@@ -75,8 +77,8 @@ export async function useListKeys(forceRefresh) {
         showRemoveText: false,
         showExitText: false,
         selected: false,
-        groupName: "",
-        groupID: null,
+        groupName: alias[key.key]?.groupName,
+        groupID: alias[key.key]?.groupID,
       };
     });
     if (stakingStore.keys && stakingStore.keys.length > 0) useUpdateValidatorStats();

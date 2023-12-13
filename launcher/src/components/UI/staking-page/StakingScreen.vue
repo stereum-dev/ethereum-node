@@ -410,10 +410,31 @@ const resetValidatorKeyName = (key) => {
 
 //****End of Validator Key ****
 
+//Doppelganger
+const doppelgangerController = async (item) => {
+  try {
+    const res = await ControlService.getServiceYAML(item?.config.serviceID);
+    item.expertOptions.map((option) => {
+      if (item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
+        stakingStore.doppelgangerStatus = res.indexOf(option.pattern[0]) === -1 ? false : true;
+      } else if (option.title === "Doppelganger") {
+        const matchedValue = res.match(new RegExp(option.pattern[0]))
+          ? [...res.match(new RegExp(option.pattern[0]))][2]
+          : "";
+
+        stakingStore.doppelgangerStatus = matchedValue === "true" ? true : false;
+      }
+    });
+  } catch (error) {
+    // console.error("Error fetching service YAML:", error);
+  }
+};
+
 //Pick a Validator Service
 
-const pickValidatorService = (service) => {
+const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
+  await doppelgangerController(service);
   stakingStore.setActivePanel("password");
 };
 
@@ -512,8 +533,6 @@ const deleteValidators = async (serviceID, keys, picked) => {
     keys: keys,
     picked: picked === "yes" ? true : false,
   });
-  stakingStore.forceRefresh = true;
-  await listKeys();
   return result;
 };
 const deleteRemoteKeys = async (serviceID, keys) => {
@@ -521,8 +540,6 @@ const deleteRemoteKeys = async (serviceID, keys) => {
     serviceID: serviceID,
     pubkeys: keys,
   });
-  stakingStore.forceRefresh = true;
-  await listKeys();
   return result;
 };
 
@@ -547,11 +564,12 @@ const removeValidatorKeys = async () => {
     const keysToRemove = stakingStore.removeKeys.map((key) => key.key);
     await ControlService.writeKeys(null, keysToRemove);
 
-    stakingStore.setActiveModal(null);
     stakingStore.removeKeys = [];
 
     // Refresh the list of keys
+    stakingStore.forceRefresh = true;
     await listKeys();
+    stakingStore.setActiveModal(null);
   }
 };
 
