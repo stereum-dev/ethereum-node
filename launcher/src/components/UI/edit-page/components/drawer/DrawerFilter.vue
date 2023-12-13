@@ -80,7 +80,8 @@ const getFilterbyNetwork = () => {
     case "sepolia":
       return (item) => item.service != "SSVNetworkService" && archFilter(item.service);
     case "gnosis":
-      return (item) => /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service) && archFilter(item.service);
+      return (item) =>
+        /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(item.service) && archFilter(item.service);
     default:
       return (item) => item.service != "SSVNetworkService" && archFilter(item.service);
   }

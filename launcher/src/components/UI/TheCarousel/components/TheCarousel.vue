@@ -209,40 +209,8 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
-
-  if (configNetwork.value.id === 1 || currentNetwork.value.id === 1) {
-
-    selectedLinks.value = installStore.mainnet;
-  } else if (configNetwork.value.id === 2 || currentNetwork.value.id === 2) {
-    selectedLinks.value = installStore.georli;
-  } else if (currentNetwork.value.id === 3 || currentNetwork.value.id === 3) {
-    selectedLinks.value = installStore.sepolia;
-  } else if (configNetwork.value.id === 4 || currentNetwork.value.id === 4) {
-    selectedLinks.value = installStore.gnosis;
-  } else if (configNetwork.value.id === 5 || currentNetwork.value.id === 5) {
-    selectedLinks.value = installStore.holesky;
-  }
+  selectedLinks.value = installStore[manageStore.currentNetwork.network];
 };
-
-// const setSelectedLinks = () => {
-//   switch (configNetwork.value.id) {
-//     case 1:
-//       selectedLinks.value = installStore.mainnet;
-//       break;
-
-//     case 2:
-//       selectedLinks.value = installStore.georli;
-//       break;
-//     case 3:
-//       selectedLinks.value = installStore.sepolia;
-//       break;
-//     case 4:
-//       selectedLinks.value = installStore.gnosis;
-//       break;
-//     default:
-//       break;
-//   }
-// };
 </script>
 <style scoped>
 .extentions {
