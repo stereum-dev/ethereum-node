@@ -59,25 +59,18 @@
       <!-- start renew -->
       <div class="modal-content">
         <div class="browserBox">
-          <div
+          <ConfirmBox
             v-if="!switchEncryptedKeyGenerator || passGenerateEncryptKeyConfirmed"
-            class="wrapper"
-            style="flex-direction: row"
-          >
-            <div class="title">
-              <span>{{ !passGenerateEncryptKeyConfirmed ? "GENERATE ENCRYPTED KEY PAIR" : "CONFIRM WARNING" }}</span>
-              <span
-                >{{
-                  !passGenerateEncryptKeyConfirmed
-                    ? "The most secure way to run your Operator node, is to generate an Encrypted key pair."
-                    : "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!"
-                }}
-              </span>
-            </div>
-            <div class="btn-box">
-              <div class="btn" @click="switchEncryptedKeyGenerator = true">GENERATE</div>
-            </div>
-          </div>
+            :btn-bg-color="`#1ba5f8`"
+            :top-line="`${!passGenerateEncryptKeyConfirmed ? ' GENERATE ENCRYPTED PAIR' : 'CONFIRM WARNING'}`"
+            :bottom-line="`${
+              !passGenerateEncryptKeyConfirmed
+                ? 'The most secure way to run your Operator node, is to generate an Encrypted key pair.'
+                : 'Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!'
+            }`"
+            btn-name="GENERATE"
+            @confirmPluginClick="switchEncryptedKeyGenerator = true"
+          />
           <div v-else class="browserBox_import">
             <div class="import-title">
               <span>{{ passControlGenerateEncryptKeyTitle }}</span>
@@ -93,7 +86,7 @@
             </div>
           </div>
         </div>
-        <div class="browserBox"></div>
+        <div class="browserBox"><ConfirmBox /></div>
         <div class="browserBox"></div>
       </div>
 
@@ -111,13 +104,15 @@ import { useNodeHeader } from "@/store/nodeHeader";
 // import SecretkeyRegister from "./SecretkeyRegister.vue";
 import axios from "axios";
 import { toRaw } from "vue";
+import ConfirmBox from "./plugin/ConfirmBox.vue";
 export default {
-  // components: {
-  //   FrontpageSsv,
-  //   RegisterSsv,
-  //   SsvDashboard,
-  //   SecretkeyRegister,
-  // },
+  components: {
+    // FrontpageSsv,
+    // RegisterSsv,
+    // SsvDashboard,
+    // SecretkeyRegister,
+    ConfirmBox,
+  },
   data() {
     return {
       operatorData: null,
@@ -557,35 +552,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
 }
-.browserBox .title {
-  width: 70%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.title span:first-child {
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-left: 10px;
-  margin-top: 5px;
-}
-.title span:last-child {
-  color: #dbdbdb;
-  font-size: 0.65rem;
-  font-weight: 400;
-  margin-left: 10px;
-  margin-top: 10px;
-}
-.import-title span {
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-left: 10px;
-  margin-top: 5px;
-}
+
 .import-btn {
   width: 27%;
   height: 50%;
@@ -621,47 +588,7 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
 }
-.browserBox .btn-box {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-.browserBox .btn {
-  width: 90%;
-  height: 35%;
 
-  margin-right: 10px;
-  background-color: #1ba5f8;
-  text-decoration: none;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  transition-duration: all 200ms;
-}
-.browserBox .btn:first-child {
-  margin-top: 15px;
-}
-.browserBox .btn:not(:first-child) {
-  margin-top: 5px;
-}
-.btn:hover {
-  transition-duration: 100ms;
-  background-color: rgba(26, 46, 50, 0.6);
-}
-.btn:active {
-  transition-duration: 100ms;
-  background-color: #1a2e32e6;
-  box-shadow: 1px 1px 10px 1px #171717 inset;
-}
 .import-title {
   width: 100%;
   height: 30%;

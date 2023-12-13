@@ -18,19 +18,18 @@
       <div class="content">
         <div v-if="!headerStore.generatorPlugin" class="wrapper">
           <div class="browserBox">
-            <div class="title">
-              <span>{{ !headerStore.continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
-              <span>{{
+            <ConfirmBox
+              :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'OPEN OBOL LAUNCHPAD'}`"
+              :bottom-line="`${
                 !headerStore.continueForExistENR
-                  ? "Generate a new ENR to use to create or join an existing cluster"
-                  : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
-              }}</span>
-            </div>
-            <div class="btn-box">
-              <div class="btn" @click="topBlock">
-                {{ !headerStore.continueForExistENR ? "GENERATE" : "OPEN IN BROWSER" }}
-              </div>
-            </div>
+                  ? 'Generate a new ENR to use to create or join an existing cluster'
+                  : 'Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.'
+              }`"
+              :btn-name="`${!headerStore.continueForExistENR ? 'GENERATE' : 'OPEN IN BROWSER'}`"
+              :btn-bg-color="`#192d31`"
+              :btn-name-color="`#2fe4ab`"
+              @confirmPluginClick="topBlock"
+            />
           </div>
 
           <div class="browserBox">
@@ -44,40 +43,38 @@
               </div>
             </div>
             <div v-else class="wrapper" style="flex-direction: row">
-              <div class="title">
-                <span>{{ !headerStore.continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
-                <span>{{
+              <ConfirmBox
+                :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'OPEN OBOL LAUNCHPAD'}`"
+                :bottom-line="`${
                   !headerStore.continueForExistENR
-                    ? "Generate a new ENR to use to create or join an existing cluster"
-                    : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
-                }}</span>
-              </div>
-              <div class="btn-box">
-                <div class="btn" style="background: #494949; color: #dbdbdb" @click="copyHandler">
-                  <img style="width: 10%; margin-right: 2%" src="/img/icon/service-icons/copy1.png" alt="" />ENR
-                </div>
-                <div class="btn" style="background: #eb5353; color: #dbdbdb" @click="removeHandler">REMOVE</div>
-              </div>
+                    ? 'Generate a new ENR to use to create or join an existing cluster'
+                    : 'Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.'
+                }`"
+                :btn-name="`COPY`"
+                :second-btn-name="`REMOVE`"
+                :btn-bg-color="`#494949`"
+                :second-btn-bg-color="`#eb5353`"
+                :btn-name-color="`#dbdbdb`"
+                img-url="/img/icon/service-icons/copy1.png"
+                @confirmPluginClick="copyHandler"
+                @secBtnPluginClick="removeHandler"
+              />
             </div>
           </div>
           <div v-if="headerStore.continueForExistENR" class="browserBox">
-            <div v-if="!dkgControl || headerStore.depositFile" class="wrapper" style="flex-direction: row">
-              <div class="title">
-                <span>{{ headerStore.depositFile ? "BACKUP DEPOSIT FILE" : "START THE DKG" }}</span>
-                <span
-                  >{{
-                    headerStore.depositFile
-                      ? "Export your backup deposit file from the server to back it up"
-                      : "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!"
-                  }}
-                </span>
-              </div>
-              <div class="btn-box">
-                <div class="btn" @click="dkgSwitch">
-                  {{ headerStore.depositFile ? "SAVE" : "START" }}
-                </div>
-              </div>
-            </div>
+            <ConfirmBox
+              v-if="!dkgControl || headerStore.depositFile"
+              :top-line="`${headerStore.depositFile ? 'BACKUP DEPOSIT FILE' : 'START THE DKG'}`"
+              :bottom-line="`${
+                headerStore.depositFile
+                  ? 'Export your backup deposit file from the server to back it up'
+                  : 'When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!'
+              }`"
+              :btn-name="`${headerStore.depositFile ? 'SAVE' : 'START'}`"
+              :btn-bg-color="`#192d31`"
+              :btn-name-color="`#2fe4ab`"
+              @confirmPluginClick="dkgSwitch"
+            />
             <div v-else class="browserBox_import">
               <div class="import-title">
                 <span>PASTE THE URL</span>
@@ -98,6 +95,7 @@
 import { useNodeHeader } from "@/store/nodeHeader";
 import EnrGenerator from "./EnrGenerator.vue";
 import { ref, onMounted } from "vue";
+import ConfirmBox from "./plugin/ConfirmBox.vue";
 
 const obolSharonService = ref({});
 const importedENR = ref("");
