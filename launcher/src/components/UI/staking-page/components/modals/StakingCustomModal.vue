@@ -37,9 +37,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
             :class="!activeButton ? 'opacity-40 pointer-events-none bg-gray-500' : getButtonColor"
             disabled
           >
-            <span
-              class="animate-spin h-5 w-5 mr-2 rounded-full border-2 border-white border-r-blue-500 border-t-white"
-            ></span>
+            <span class="animate-spinGrow h-5 w-5 mr-2 rounded-full border-2"></span>
             Processing...
           </button>
         </div>
@@ -126,14 +124,12 @@ const getTitleColor = computed(() => {
 const getButtonColor = computed(() => {
   if (props.confirmText === "remove") {
     return "bg-red-500 border border-red-500 hover:bg-red-700 ";
-  } else if (props.confirmText === "confirm") {
+  } else if (props.confirmText === "confirm" || props.confirmText === "import" || props.confirmText === "ok") {
     return "bg-green-700 ";
-  } else if (props.confirmText === "ok") {
-    return "bg-teal-400 ";
   } else if (props.confirmText === "Withdraw & Exit") {
     return "bg-blue-500 ";
   } else {
-    return "bg-teal-500 ";
+    return "bg-teal-800 ";
   }
 });
 
@@ -150,3 +146,27 @@ const emitConfirmAction = () => {
   }
 };
 </script>
+<style scoped>
+.animate-spinGrow {
+  animation: spinGrow 6s infinite;
+}
+@keyframes spinGrow {
+  0% {
+    transform: rotate(0deg);
+    border-color: white transparent transparent transparent;
+  }
+  25% {
+    border-color: white white transparent transparent;
+  }
+  50% {
+    border-color: white white white transparent;
+  }
+  75% {
+    border-color: white;
+  }
+  100% {
+    transform: rotate(360deg);
+    border-color: white transparent transparent transparent;
+  }
+}
+</style>
