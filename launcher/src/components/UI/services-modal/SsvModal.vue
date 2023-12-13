@@ -71,20 +71,14 @@
             btn-name="GENERATE"
             @confirmPluginClick="switchEncryptedKeyGenerator = true"
           />
-          <div v-else class="browserBox_import">
-            <div class="import-title">
-              <span>{{ passControlGenerateEncryptKeyTitle }}</span>
-            </div>
-            <div class="enrImport">
-              <input
-                v-model="psswordConfirmationForGenrateEncryptKey"
-                type="text"
-                :placeholder="passControlGenerateEncryptKeyPlaceholder"
-                :style="{ border: borderForInput }"
-              />
-              <div class="import-btn" @click="passConfirm">GENERATE</div>
-            </div>
-          </div>
+          <ImportBox
+            v-else
+            :btn-bg-color="`#1ba5f8`"
+            :import-box-title="passControlGenerateEncryptKeyTitle"
+            :import-box-placeholder="passControlGenerateEncryptKeyPlaceholder"
+            :try-again="tryAgain"
+            @importBoxHandler="passConfirm"
+          />
         </div>
         <div class="browserBox"><ConfirmBox /></div>
         <div class="browserBox"></div>
@@ -99,12 +93,13 @@
 // import RegisterSsv from "./RegisterSsv.vue";
 // import SsvDashboard from "./SsvDashboard.vue";
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 // import SecretkeyRegister from "./SecretkeyRegister.vue";
 import axios from "axios";
 import { toRaw } from "vue";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
+import ImportBox from "./plugin/ImportBox.vue";
 export default {
   components: {
     // FrontpageSsv,
@@ -112,6 +107,7 @@ export default {
     // SsvDashboard,
     // SecretkeyRegister,
     ConfirmBox,
+    ImportBox,
   },
   data() {
     return {
@@ -139,30 +135,12 @@ export default {
   },
 
   computed: {
-    ...mapState(useNodeHeader, {
+    ...mapWritableState(useNodeHeader, {
       runningServices: "runningServices",
       operators: "operators",
+      importBoxModel: "importBoxModel",
     }),
     //new ssv start hereeeeeeeeeeee
-    psswordConfirmationForGenrateEncryptKey: {
-      get() {
-        if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
-          return this.firstPassToGenerate;
-        } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
-          return this.confirmPassToGenerate;
-        } else {
-          return "";
-        }
-      },
-      set(value) {
-        // Handle the setter to update the corresponding data properties
-        if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
-          this.firstPassToGenerate = value;
-        } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
-          this.confirmPassToGenerate = value;
-        }
-      },
-    },
     passControlGenerateEncryptKeyTitle() {
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
         return "ENTER A PASSWORD TO GENERATE AN ENCRYPTED KEY PAIR";
@@ -187,13 +165,18 @@ export default {
       return this.tryAgain ? "1px solid red" : "none";
     },
   },
+
   mounted() {
     this.getKeys();
+    this.importBoxModel = "";
   },
   created() {
     this.dataLoading = true;
   },
   methods: {
+    handleImportBox(value) {
+      this.test = value;
+    },
     operatorModalHandler() {
       this.pubkeyModalActive = false;
       this.registerModalActive = true;
@@ -285,42 +268,26 @@ export default {
     },
     passConfirm() {
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
-        if (this.firstPassToGenerate !== "") {
-          this.firstPassToGenerateCheck = true;
-          this.confirmPassToGenerateCheck = false;
-          this.tryAgain = false;
-          console.log("firstPassToGenerate", this.firstPassToGenerate);
-        } else {
-          this.firstPassToGenerateCheck = false;
-          this.confirmPassToGenerateCheck = false;
-          this.tryAgain = true;
-        }
-      } else if (
-        this.firstPassToGenerateCheck &&
-        !this.confirmPassToGenerateCheck &&
-        this.firstPassToGenerate === this.confirmPassToGenerate
-      ) {
-        if (this.confirmPassToGenerate !== "") {
-          this.firstPassToGenerateCheck = true;
-          this.confirmPassToGenerateCheck = true;
-          this.tryAgain = false;
-          console.log("set pass");
-          this.passGenerateEncryptKeyConfirmed = true;
-        } else {
-          this.firstPassToGenerateCheck = true;
-          this.confirmPassToGenerateCheck = false;
-          this.tryAgain = true;
-        }
-      } else if (
-        this.firstPassToGenerateCheck &&
-        !this.confirmPassToGenerateCheck &&
-        this.firstPassToGenerate !== this.confirmPassToGenerate
-      ) {
         this.firstPassToGenerateCheck = true;
         this.confirmPassToGenerateCheck = false;
-        console.log("pass conflict");
-        this.confirmPassToGenerate = "";
-        this.tryAgain = true;
+        this.firstPassToGenerate = this.importBoxModel;
+        this.importBoxModel = "";
+        console.log(this.firstPassToGenerate, this.importBoxModel);
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        this.firstPassToGenerateCheck = true;
+        this.confirmPassToGenerateCheck = true;
+        this.confirmPassToGenerate = this.importBoxModel;
+        this.importBoxModel = "";
+        console.log(this.confirmPassToGenerate, this.importBoxModel);
+        if (this.firstPassToGenerate === this.confirmPassToGenerate) {
+          this.passGenerateEncryptKeyConfirmed = true;
+        } else if (this.firstPassToGenerate !== this.confirmPassToGenerate) {
+          this.firstPassToGenerateCheck = true;
+          this.confirmPassToGenerateCheck = false;
+          console.log("pass conflict");
+          this.confirmPassToGenerate = "";
+          this.tryAgain = true;
+        }
       }
     },
   },

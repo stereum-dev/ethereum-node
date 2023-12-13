@@ -1,56 +1,46 @@
 <template>
-  <div class="confirm-box-parent">
+  <div class="import-box-parent">
     <div class="title">
-      <span>{{ topLine }}</span>
-      <span>{{ bottomLine }}</span>
+      <span>{{ importBoxTitle }}</span>
     </div>
-    <div class="btn-box">
+    <div class="inputBox">
+      <input
+        v-model="importBoxModel"
+        type="text"
+        :placeholder="importBoxPlaceholder"
+        :style="{ border: borderForInput }"
+      />
       <div
-        class="btn"
+        :class="['btn', importBoxModel ? '' : 'disabled']"
         :style="{ backgroundColor: dynamicBackgroundColor, color: btnNameColor }"
         @mouseover="handleMouseOver"
         @mouseleave="handleMouseLeave"
-        @click="confirmPluginClick"
+        @click="importBoxHandler"
       >
-        <img v-if="imgUrl" style="width: 10%; margin-right: 2%" :src="imgUrl" alt="" />
-        {{ btnName }}
-      </div>
-      <div
-        v-if="secondBtnName"
-        :style="{ backgroundColor: secondBtnBgColor, color: btnNameColor }"
-        class="btn"
-        @click="secBtnPluginClick"
-      >
-        {{ secondBtnName }}
+        GENERATE
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   props: {
-    topLine: {
+    importBoxTitle: {
       type: String,
       default: "",
     },
-    bottomLine: {
+    importBoxPlaceholder: {
       type: String,
       default: "",
     },
-    btnName: {
-      type: String,
-      default: "",
-    },
-    secondBtnName: {
-      type: String,
-      default: "",
+    tryAgain: {
+      type: Boolean,
+      default: false,
     },
     btnBgColor: {
-      type: String,
-      default: "",
-    },
-    secondBtnBgColor: {
       type: String,
       default: "",
     },
@@ -58,23 +48,29 @@ export default {
       type: String,
       default: "#eee",
     },
-    imgUrl: {
-      type: String,
-      default: "",
-    },
   },
-  emits: ["confirmPluginClick", "secBtnPluginClick"],
+  emits: ["importBoxHandler"],
   data() {
     return {
       dynamicBackgroundColor: this.btnBgColor,
     };
   },
-  methods: {
-    confirmPluginClick() {
-      this.$emit("confirmPluginClick");
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      importBoxModel: "importBoxModel",
+      componentCountStore: "componentCountStore",
+    }),
+
+    borderForInput() {
+      return this.tryAgain ? "2px solid red" : "none";
     },
-    secBtnPluginClick() {
-      this.$emit("secBtnPluginClick");
+  },
+
+  methods: {
+    importBoxHandler() {
+      if (this.importBoxModel) {
+        this.$emit("importBoxHandler");
+      }
     },
     handleMouseOver() {
       this.dynamicBackgroundColor = this.adjustOpacity(this.btnBgColor, 0.8);
@@ -99,71 +95,72 @@ export default {
 </script>
 
 <style scoped>
-.confirm-box-parent {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+.disabled {
+  background: rgb(156, 194, 240) !important;
+  opacity: 0.7;
+  box-shadow: none;
+  pointer-events: none;
+  cursor: not-allowed;
 }
-.title {
-  width: 70%;
+.import-box-parent {
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  cursor: default;
 }
-.title span:first-child {
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-left: 10px;
-  margin-top: 5px;
-}
-.title span:last-child {
-  color: #dbdbdb;
-  font-size: 0.65rem;
-  font-weight: 400;
-  margin-left: 10px;
-  margin-top: 10px;
-}
-.import-title span {
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-left: 10px;
-  margin-top: 5px;
-}
-.btn-box {
-  width: 30%;
-  height: 100%;
+.title {
+  width: 100%;
+  height: 30%;
   display: flex;
-  flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-end;
+  align-items: center;
+  align-self: flex-start;
+}
+.title span {
+  color: #dbdbdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+.inputBox {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.inputBox input {
+  width: 95%;
+  height: 50%;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding-left: 10px;
 }
 .btn {
-  width: 90%;
-  height: 35%;
-  transition-duration: 100ms;
-  margin-right: 10px;
+  width: 27%;
+  height: 50%;
+  background-color: #1ba5f8;
   text-decoration: none;
-  border-radius: 50px;
+  border-radius: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  color: #dbdbdb;
   font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
   transition-duration: all 200ms;
-}
-.btn:first-child {
-  margin-top: 15px;
-}
-.btn:not(:first-child) {
-  margin-top: 5px;
+  position: absolute;
+  right: 2%;
+  transition-duration: 100ms;
 }
 
 .btn:active {
