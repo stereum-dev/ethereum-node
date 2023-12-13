@@ -77,11 +77,28 @@
             :import-box-title="passControlGenerateEncryptKeyTitle"
             :import-box-placeholder="passControlGenerateEncryptKeyPlaceholder"
             :try-again="tryAgain"
+            :btn-name="passControlGenerateEncryptKeyBtn"
             @importBoxHandler="passConfirm"
           />
         </div>
-        <div class="browserBox"><ConfirmBox /></div>
-        <div class="browserBox"></div>
+        <div class="browserBox">
+          <ConfirmBox
+            btn-bg-color="#1ba5f8"
+            top-line="IMPORT ENCRYPTED OPERATOR KEY"
+            bottom-line="Import an existing encrypted operator key"
+            btn-name="IMPORT"
+            @confirmPluginClick="console.log('confirm 2nd row PluginClick')"
+          />
+        </div>
+        <div class="browserBox">
+          <ConfirmBox
+            btn-bg-color="#1ba5f8"
+            top-line="IMPORT raw (OLD METHOD) Operator Keys"
+            bottom-line="Use an existing operator private key to recover your existing node operator's  processes"
+            btn-name="IMPORT"
+            @confirmPluginClick="console.log('confirm 3rd row PluginClick')"
+          />
+        </div>
       </div>
 
       <!-- end renew -->
@@ -148,6 +165,17 @@ export default {
         return "CONFIRM YOUR PASSWORD";
       } else {
         return "CONFIRM WARNING";
+      }
+    },
+    passControlGenerateEncryptKeyBtn() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "Generate";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && !this.tryAgain) {
+        return "Confirm";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && this.tryAgain) {
+        return "Try Again";
+      } else {
+        return "";
       }
     },
     passControlGenerateEncryptKeyPlaceholder() {

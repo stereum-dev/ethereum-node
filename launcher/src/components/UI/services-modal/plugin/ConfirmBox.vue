@@ -120,6 +120,7 @@ export default {
   font-weight: 600;
   margin-left: 10px;
   margin-top: 5px;
+  text-transform: uppercase;
 }
 .title span:last-child {
   color: #dbdbdb;

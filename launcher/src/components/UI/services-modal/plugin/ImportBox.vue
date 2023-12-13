@@ -17,7 +17,7 @@
         @mouseleave="handleMouseLeave"
         @click="importBoxHandler"
       >
-        GENERATE
+        {{ btnName }}
       </div>
     </div>
   </div>
@@ -47,6 +47,10 @@ export default {
     btnNameColor: {
       type: String,
       default: "#eee",
+    },
+    btnName: {
+      type: String,
+      default: "",
     },
   },
   emits: ["importBoxHandler"],
@@ -96,15 +100,14 @@ export default {
 
 <style scoped>
 .disabled {
-  background: rgb(156, 194, 240) !important;
-  opacity: 0.7;
+  opacity: 0.5;
   box-shadow: none;
   pointer-events: none;
   cursor: not-allowed;
 }
 .import-box-parent {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
