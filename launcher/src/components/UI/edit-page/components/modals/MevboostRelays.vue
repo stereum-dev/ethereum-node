@@ -2,6 +2,7 @@
   <div class="w-10/12 h-full grid grid-cols-2 grid-flow-row p-2 mx-auto trasnform duration-200 mt-6">
     <RelaysCheckbox
       v-for="relay in manageStore.relaysList"
+      v-show="manageStore.currentNetwork.name !== 'Holesky Testnet'"
       :key="relay.id"
       :label="relay.name"
       :field-id="relay.id"
