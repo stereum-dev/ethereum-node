@@ -309,28 +309,7 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 2%;
 }
-.browserBox .title {
-  width: 70%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.title span:first-child {
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-left: 10px;
-  margin-top: 5px;
-}
-.title span:last-child {
-  color: #dbdbdb;
-  font-size: 0.65rem;
-  font-weight: 400;
-  margin-left: 10px;
-  margin-top: 10px;
-}
+
 .browserBox_import {
   width: 100%;
   height: 100%;
@@ -394,48 +373,6 @@ onMounted(() => {
   background-color: #1a2e32e6;
 }
 .import-btn:active {
-  transition-duration: 100ms;
-  background-color: #1a2e32e6;
-  box-shadow: 1px 1px 10px 1px #171717 inset;
-}
-
-.browserBox .btn-box {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-.browserBox .btn {
-  width: 90%;
-  height: 35%;
-
-  margin-right: 10px;
-  background-color: #192d31;
-  text-decoration: none;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: #2fe4ab;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  transition-duration: all 200ms;
-}
-.browserBox .btn:first-child {
-  margin-top: 15px;
-}
-.browserBox .btn:not(:first-child) {
-  margin-top: 5px;
-}
-.btn:hover {
-  transition-duration: 100ms;
-  background-color: rgba(26, 46, 50, 0.6);
-}
-.btn:active {
   transition-duration: 100ms;
   background-color: #1a2e32e6;
   box-shadow: 1px 1px 10px 1px #171717 inset;
