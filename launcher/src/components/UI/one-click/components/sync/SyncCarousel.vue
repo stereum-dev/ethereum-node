@@ -201,6 +201,7 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
+
   const networkLinks = {
     1: installStore.mainnet,
     2: installStore.goerli,
@@ -210,6 +211,7 @@ const setSelectedLinks = () => {
   };
 
   selectedLinks.value = networkLinks[manageStore.currentNetwork?.id] || [];
+
 };
 </script>
 <style scoped>
