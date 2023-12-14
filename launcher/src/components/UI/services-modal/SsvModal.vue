@@ -71,7 +71,8 @@
             btn-name="GENERATE"
             @confirmPluginClick="switchEncryptedKeyGenerator = true"
           />
-          <ImportBox
+
+          <PasswordBox
             v-else
             :btn-bg-color="`#1ba5f8`"
             :import-box-title="passControlGenerateEncryptKeyTitle"
@@ -117,6 +118,7 @@ import axios from "axios";
 import { toRaw } from "vue";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
 import ImportBox from "./plugin/ImportBox.vue";
+import PasswordBox from "./plugin/PasswordBox";
 export default {
   components: {
     // FrontpageSsv,
@@ -125,6 +127,7 @@ export default {
     // SecretkeyRegister,
     ConfirmBox,
     ImportBox,
+    PasswordBox,
   },
   data() {
     return {
@@ -156,6 +159,7 @@ export default {
       runningServices: "runningServices",
       operators: "operators",
       importBoxModel: "importBoxModel",
+      passwordBoxModel: "passwordBoxModel",
     }),
     //new ssv start hereeeeeeeeeeee
     passControlGenerateEncryptKeyTitle() {
@@ -196,7 +200,7 @@ export default {
 
   mounted() {
     this.getKeys();
-    this.importBoxModel = "";
+    this.passwordBoxModel = "";
   },
   created() {
     this.dataLoading = true;
@@ -296,17 +300,18 @@ export default {
     },
     passConfirm() {
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        this.firstPassToGenerate = this.passwordBoxModel;
+        console.log("this.firstPassToGenerate", this.firstPassToGenerate, this.passwordBoxModel);
+        this.passwordBoxModel = "";
         this.firstPassToGenerateCheck = true;
         this.confirmPassToGenerateCheck = false;
-        this.firstPassToGenerate = this.importBoxModel;
-        this.importBoxModel = "";
-        console.log(this.firstPassToGenerate, this.importBoxModel);
       } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        this.confirmPassToGenerate = this.passwordBoxModel;
+        this.passwordBoxModel = "";
         this.firstPassToGenerateCheck = true;
         this.confirmPassToGenerateCheck = true;
-        this.confirmPassToGenerate = this.importBoxModel;
-        this.importBoxModel = "";
-        console.log(this.confirmPassToGenerate, this.importBoxModel);
+
+        console.log(this.confirmPassToGenerate, this.passwordBoxModel);
         if (this.firstPassToGenerate === this.confirmPassToGenerate) {
           this.passGenerateEncryptKeyConfirmed = true;
         } else if (this.firstPassToGenerate !== this.confirmPassToGenerate) {

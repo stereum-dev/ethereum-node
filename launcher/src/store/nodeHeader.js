@@ -3,6 +3,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
       importBoxModel: "",
+      passwordBoxModel: "",
       depositFile: false,
       enrIsGenerating: true,
       generatedENR: "",
