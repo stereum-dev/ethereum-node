@@ -3109,10 +3109,10 @@ rm -rf diskoutput
           this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit Account ${pubkey[i].substring(0, 6)}..`);
           try {
             const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey[i], serviceID);
-            if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-            log.info(result);
-
-            const exitMsg = JSON.stringify(JSON.parse(result.stdout).data);
+            if (result.data === undefined) {
+              throw result;
+            }
+            const exitMsg = result.data;
             const exitCommand = `docker run --rm --network=stereum curlimages/curl curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${exitMsg}'`;
             const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
             if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)

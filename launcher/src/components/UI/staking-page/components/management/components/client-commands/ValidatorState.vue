@@ -72,7 +72,7 @@ watch(
   () => stakingStore.keys,
   (newKeys) => {
     filteredKeys.value = newKeys.filter(
-      (key) => key.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID
+      (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
     );
   },
   { deep: true }

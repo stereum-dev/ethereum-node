@@ -319,8 +319,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -657,20 +656,23 @@ export class ValidatorAccountManager {
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit msg for ${pubkey.substring(0, 6)}..`);
     try {
       let service = await this.nodeConnection.readServiceConfiguration(serviceID);
-      let data = [];
-      const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit`, data);
+      const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit`, []);
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-      log.info(result);
 
-      if (!result.stdout.includes("validator_index")) {
-        throw "Undexpected Error: " + result.stdout;
+      log.info(result);
+      const data = JSON.parse(result.stdout);
+      if (data.data === undefined) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
+        }
+        throw data.code + " " + data.message;
       }
 
       //Push successful task
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, result.stdout);
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, data);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
 
-      return result;
+      return data;
     } catch (error) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
