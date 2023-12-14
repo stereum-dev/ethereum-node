@@ -73,6 +73,11 @@ export async function useListKeys(forceRefresh) {
         keysToWrite[key.key] = alias[key.key];
       }
     });
+    for (let key in alias) {
+      if (keysToWrite[key] === undefined && serviceStore.installedServices.some((s) => s.config?.serviceID === alias[key].validatorID)) {
+        keysToWrite[key] = alias[key];
+      }
+    }
     keysToWrite.overwrite = true;
     await ControlService.writeKeys(keysToWrite);
 

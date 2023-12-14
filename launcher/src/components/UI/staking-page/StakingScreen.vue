@@ -384,6 +384,7 @@ const removeGroupConfirm = async (item) => {
   stakingStore.setMode("create");
   stakingStore.currentGroup = "";
   stakingStore.forceRefresh = true;
+  await listKeys(true);
   listGroups();
 };
 
