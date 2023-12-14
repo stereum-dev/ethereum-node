@@ -12,8 +12,9 @@ import { computed } from 'vue';
           class="w-full h-full"
           src="/img/icon/the-staking/remotekey.png"
           alt="Key Icon"
+          @mousedown.prevent
         />
-        <img v-else class="w-full h-full" src="/img/icon/the-staking/key-sign.png" alt="Key Icon" />
+        <img v-else class="w-full h-full" src="/img/icon/the-staking/key-sign.png" alt="Key Icon" @mousedown.prevent />
       </div>
     </div>
     <div class="col-start-2 col-end-9 self-center overflow-hidden flex justify-start items-center">

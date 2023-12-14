@@ -49,7 +49,7 @@ import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed } from "vue";
+import { computed, setBlockTracking } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
@@ -591,6 +591,8 @@ const removeValidatorKeys = async () => {
     // Refresh the list of keys
     stakingStore.forceRefresh = true;
     await listKeys();
+    await listGroups();
+    stakingStore.isGroupListActive = false;
     stakingStore.setActiveModal(null);
   }
 };
