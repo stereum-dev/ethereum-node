@@ -585,16 +585,6 @@ const removeValidatorKeys = async () => {
       console.log("Multiple validator services are not supported yet!");
     }
 
-    // Remove the keys from the server configuration
-    const keysToRemove = stakingStore.removeKeys.map((key) => {
-      return {
-        pubkey: key.key,
-        validatorID: key.validatorID,
-      };
-    });
-
-    await ControlService.writeKeys(keysToRemove);
-
     stakingStore.removeKeys = [];
 
     // Refresh the list of keys
@@ -618,6 +608,7 @@ const downloadFile = (data) => {
 // ******  Remote Key *******
 
 const importRemoteKey = async () => {
+  console.log("importRemoteKey");
   stakingStore.setActivePanel(null);
   stakingStore.isRemoteListActive = false;
   stakingStore.previewRemoteKeys = [];

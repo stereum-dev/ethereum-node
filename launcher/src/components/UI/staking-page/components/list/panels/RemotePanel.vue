@@ -7,8 +7,8 @@
         class="col-start-1 col-end-3 w-full h-full flex justify-start items-center bg-[#a7aeb5] hover:bg-slate-300 rounded-sm space-x-1 cursor-pointer transition-all duration-150 px-1"
         @click="openLocalList"
       >
-        <img class="w-5 h-5" :src="web3Signer.icon" alt="Service Icon" @mousedown.prevent />
-        <span class="text-[10px] text-gray-700 font-semibold">{{ web3Signer.name }}</span>
+        <img class="w-5 h-5" :src="web3Signer?.icon" alt="Service Icon" @mousedown.prevent />
+        <span class="text-[10px] text-gray-700 font-semibold">{{ web3Signer?.name }}</span>
       </div>
       <input
         id="input1"

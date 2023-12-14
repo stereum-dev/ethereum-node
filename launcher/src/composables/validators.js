@@ -13,7 +13,7 @@ export async function useListKeys(forceRefresh) {
   let clients = serviceStore.installedServices.filter(
     (s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService"
   );
-  if (clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") {
+  if ((clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") || forceRefresh) {
     for (let client of clients) {
       //if there is already a list of keys ()
       if (
@@ -27,8 +27,8 @@ export async function useListKeys(forceRefresh) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
-                return { validating_pubkey: e.pubkey, readonly: true };
-              })
+              return { validating_pubkey: e.pubkey, readonly: true };
+            })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
         }
@@ -36,8 +36,8 @@ export async function useListKeys(forceRefresh) {
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-              return { key: e.validating_pubkey, isRemote: e.readonly };
-            })
+            return { key: e.validating_pubkey, isRemote: e.readonly };
+          })
           : [];
 
         //update service datasets in Pinia store
@@ -67,6 +67,14 @@ export async function useListKeys(forceRefresh) {
       }
     }
     let alias = await ControlService.readKeys();
+    let keysToWrite = {};
+    keyStats.forEach((key) => {
+      if (alias[key.key]) {
+        keysToWrite[key.key] = alias[key.key];
+      }
+    });
+    keysToWrite.overwrite = true;
+    await ControlService.writeKeys(keysToWrite);
 
     stakingStore.keys = keyStats.map((key) => {
       return {

@@ -252,13 +252,7 @@ export class ValidatorAccountManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout);
 
       if (!data.data) data.data = [];
-      let newData = data.data.map((key) => {
-        return {
-          pubkey: key.validating_pubkey,
-          serviceID: serviceID,
-        };
-      });
-      this.writeKeys(newData);
+      this.writeKeys(data.data.map(key => key.validating_pubkey));
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -536,48 +530,31 @@ export class ValidatorAccountManager {
 
   async writeKeys(keys) {
     //get current keys in yaml file
-    let currentKeys = await this.readKeys();
+    let currentKeys = await this.readKeys()
     if (!currentKeys) {
-      currentKeys = {};
+      currentKeys = {}
     }
 
     //if the argument is an array of keys, add them to the current keys if they don't exist
     if (Array.isArray(keys)) {
-      keys.forEach((key) => {
-        if (!currentKeys[key.pubkey])
-          currentKeys[key.pubkey] = { keyName: "", groupName: "", groupID: null, validatorClientID: key.serviceID };
-      });
-      // remove keys from server
-      if (keys.length > 0) {
-        let selectedServiceID = keys[0].serviceID;
-        let selectedClientKeys = Object.fromEntries(
-          Object.entries(currentKeys).filter(([, values]) => values.validatorClientID === selectedServiceID)
-        );
-        currentKeys = Object.fromEntries(
-          Object.entries(currentKeys).filter(([, values]) => values.validatorClientID !== selectedServiceID)
-        );
-
-        let filteredCurrentKeys = keys.reduce((result, key) => {
-          if (selectedClientKeys.hasOwnProperty(key.pubkey)) {
-            result[key.pubkey] = selectedClientKeys[key.pubkey];
-          }
-          return result;
-        }, {});
-        currentKeys = { ...filteredCurrentKeys, ...currentKeys };
-      }
-
+      keys.forEach(key => {
+        if (!currentKeys[key]) currentKeys[key] = { keyName: "", groupName: "", groupID: null, validatorClientID: null }
+      })
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(currentKeys)) + " > /etc/stereum/keys.yaml"
       );
 
       //if the argument is an object of keys, overwrite the current keys
-    } else if (typeof keys === "object") {
-      keys = { ...currentKeys, ...keys };
+    } else if (keys) {
+      if (!keys.overwrite) {
+        keys = { ...currentKeys, ...keys }
+      }
+      delete keys.overwrite
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(keys)) + " > /etc/stereum/keys.yaml"
       );
     } else {
-      log.error("INVALID ARGUMENT: keys must be an array or an object");
+      log.error("INVALID ARGUMENT: keys must be an array or an object")
     }
   }
 

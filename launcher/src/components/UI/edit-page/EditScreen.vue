@@ -182,8 +182,8 @@ onUnmounted(() => {
 
 // Methods
 
-const listKeys = async () => {
-  await useListKeys();
+const listKeys = async (forceRefresh) => {
+  await useListKeys(forceRefresh);
 };
 
 // Random ID generator
@@ -577,7 +577,7 @@ const confirmHandler = async () => {
     manageStore.disableConfirmButton = false;
     manageStore.isLineHidden = false;
   }, 4000);
-  await listKeys();
+  await listKeys(true);
 };
 
 const nukeConfirmation = () => {
