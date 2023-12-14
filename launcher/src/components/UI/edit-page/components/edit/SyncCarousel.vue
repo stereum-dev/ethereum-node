@@ -1,7 +1,15 @@
 <template>
-  <div class="w-full h-[60px] col-start-6 col-span-7 flex justify-center items-center relative">
-    <carousel ref="carousel" v-model="currentSlide" :items-to-show="1" :wrap-around="true" :transition="500">
-      <slide v-for="(item, index) in installStore.syncType" :key="index">
+  <div class="w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center relative gap-x-2">
+    <Carousel
+      ref="carousel"
+      v-model="currentSlide"
+      class="carousel"
+      :items-to-show="1"
+      :wrap-around="true"
+      :transition="500"
+      snap-align="center"
+    >
+      <slide v-for="(item, index) in installStore.syncType" :key="index" aria-current="0">
         <div class="w-full h-full bg-[#33393e] flex justify-center items-center border border-gray-600 rounded-lg">
           <div v-if="item.name === 'genesis'" class="w-full h-full flex justify-evenly items-center p-1">
             <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1">
@@ -16,10 +24,10 @@
             </div>
             <div class="w-2/3 h-full cursor-pointer">
               <input
-                v-model="props.properties.checkPointSyncUrl"
+                v-model="installStore.checkPointSync"
                 type="text"
                 placeholder="https://example.cc/"
-                class="w-full h-full flex justify-center items-center bg-[#111315] rounded-md text-gray-400 placeholder:text-gray-500 pl-2 text-sm"
+                class="w-full h-full flex justify-center items-center bg-[#111315] rounded-md text-gray-400 placeholder:text-gray-500 pl-2 text-xs"
               />
             </div>
           </div>
@@ -33,7 +41,7 @@
               <div
                 v-if="selectedItem == '- SELECT A SOURCE -'"
                 class="w-full h-full flex justify-center items-center bg-[#111315] rounded-md text-gray-400"
-                @click="toglDropDown"
+                @click="openDropdown"
               >
                 <span>{{ selectedItem }}</span>
               </div>
@@ -41,13 +49,15 @@
                 v-else
                 class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md"
               >
-                <div v-if="selectedIcon !== ''" class="w-1/6" @click="toglDropDown">
-                  <img class="w-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
+                <div v-if="selectedIcon !== ''" class="w-1/6" @click="openDropdown">
+                  <img class="w-5 h-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
                 </div>
-                <div v-if="selectedIcon !== ''" class="w-4/6 text-md text-gray-300 font-semibold" @click="toglDropDown">
+                <div v-if="selectedIcon !== ''" class="w-4/6 text-md text-gray-300 font-semibold" @click="openDropdown">
                   {{ selectedItem }}
                 </div>
-                <div v-else class="w-4/6 text-gray-500 text-sm" @click="toglDropDown">{{ selectedItem }}</div>
+                <div v-else class="w-4/6 text-gray-500 text-sm" @click="openDropdown">
+                  {{ selectedItem }}
+                </div>
                 <div class="w-1/6" @click="openWindow">
                   <img class="w-6" src="/img/icon/service-icons/internet.png" alt="Internet" />
                 </div>
@@ -60,28 +70,28 @@
       <template #addons>
         <navigation />
       </template>
-    </carousel>
+    </Carousel>
 
     <Transition name="slide">
       <ul
         v-show="dropdown"
-        class="w-64 transition-all max-h-[110px] duration-400 ease-in-out absolute right-[5px] -bottom-25 bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-40 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
-        @mouseleave="dropdown = false"
+        class="w-64 transition-all min-h-[100px] max-h-[110px] duration-400 ease-in-out absolute right-[5px] -bottom-25 bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-40 divide-y divide-gray-600 overflow-y-auto flex flex-col justify-start items-center"
+        @mouseleave="colseDropdown"
       >
         <li
           v-for="link in selectedLinks"
-          :key="link.name"
-          class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+          :key="link"
+          class="w-full h-16 grid grid-cols-6 py-1 px-4 hover:bg-blue-400"
           @click="linkPicker(link)"
         >
           <img
             v-if="link.icon"
-            class="h-[30px] col-start-1 col-end-2 self-center justify-self-center"
+            class="w-5 h-5 col-start-1 col-end-2 self-center justify-self-center"
             :src="link.icon"
             alt="service Icon"
           />
           <span
-            class="col-start-3 col-end-6 px-4 py-1 flex justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-md text-gray-200 font-semibold"
+            class="col-start-3 col-end-6 px-4 py-1 flex justify-start links-center outline-0 whitespace-nowrap cursor-pointer text-sm text-gray-200 font-semibold"
             >{{ link.name }}</span
           >
         </li>
@@ -91,40 +101,41 @@
 </template>
 <script setup>
 import ControlService from "@/store/ControlService";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onBeforeMount } from "vue";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "@/store/nodeManage";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
-const props = defineProps({
-  properties: {
-    type: Object,
-    default: null,
-  },
-});
+const installStore = useClickInstall();
+const manageStore = useNodeManage();
+const router = useRouter();
 
+// Data
+const carousel = ref(null);
 const dropdown = ref(false);
 const selectedItem = ref("- SELECT A SOURCE -");
-const currentSlide = ref(0);
+const currentSlide = ref(null);
 const selectedLinks = ref([]);
 const prevVal = ref(0);
 const selectedIcon = ref("");
 
-const route = useRoute();
-const manageStore = useNodeManage();
-const installStore = useClickInstall();
+// Computed properties
 
+// Watchers
 watch(currentSlide, (val) => {
-  if (route.path === "/sync" || route.path === "/importingSyncing") {
-    if (val != prevVal.value) {
+  if (router.currentRoute.value.path === "/sync" || router.currentRoute.value.path === "/importingSyncing") {
+    if (val !== prevVal.value) {
       prevVal.value = val;
-      props.properties.checkPointSyncUrl = "";
+      installStore.checkPointSync = "";
       selectedItem.value = "- SELECT A SOURCE -";
     }
+    if (installStore.selectedPreset.name === "archive") {
+      val = 3;
+    }
 
-    if (val === 1 && props.properties.checkPointSyncUrl === "") {
+    if (val === 1 && installStore.checkPointSync === "") {
       installStore.btnActive = false;
     } else {
       installStore.btnActive = true;
@@ -132,23 +143,42 @@ watch(currentSlide, (val) => {
   }
 });
 
+// Lifecycle hooks
+onBeforeMount(() => {
+  currentSlide.value = 3;
+});
+
 onMounted(() => {
+  manageStore.currentNetwork = manageStore.currentNetwork.hasOwnProperty("id")
+    ? manageStore.currentNetwork
+    : manageStore.configNetwork;
   setSelectedLinks();
 });
 
+// Methods
+const colseDropdown = () => {
+  setTimeout(() => {
+    dropdown.value = false;
+  }, 200);
+};
+
 const openWindow = () => {
-  let url = props.properties.checkPointSyncUrl;
+  const url = installStore.checkPointSync;
   window.open(url, "_blank");
 };
 
-const toglDropDown = () => {
+const openDropdown = () => {
+  if (selectedItem.value === "Validating...") {
+    dropdown.value = false;
+    return false;
+  }
   dropdown.value = !dropdown.value;
 };
 
 const linkPicker = async (item) => {
   selectedItem.value = "Validating...";
   selectedIcon.value = "/img/icon/control/spinner.gif";
-  props.properties.checkPointSyncUrl = "";
+  installStore.checkPointSync = "";
   dropdown.value = false;
   const isCheckpointValid = await ControlService.isCheckpointValid(item.url);
   if (!isCheckpointValid) {
@@ -162,26 +192,21 @@ const linkPicker = async (item) => {
   }
   selectedItem.value = item.name;
   selectedIcon.value = item.icon;
-  props.properties.checkPointSyncUrl = item.url;
+  installStore.checkPointSync = item.url;
 };
 
 const setSelectedLinks = () => {
-  switch (manageStore.configNetwork?.id) {
-    case 1:
-      selectedLinks.value = installStore.mainnet;
-      break;
-    case 2:
-      selectedLinks.value = installStore.goerli;
-      break;
-    case 3:
-      selectedLinks.value = installStore.sepolia;
-      break;
-    case 4:
-      selectedLinks.value = installStore.gnosis;
-      break;
-    default:
-      break;
-  }
+
+  const networkLinks = {
+    1: installStore.mainnet,
+    2: installStore.goerli,
+    3: installStore.sepolia,
+    4: installStore.gnosis,
+    5: installStore.holesky,
+  };
+
+  selectedLinks.value = networkLinks[manageStore.currentNetwork?.id] || [];
+
 };
 </script>
 

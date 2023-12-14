@@ -46,8 +46,12 @@
                 <div v-if="selectedIcon !== ''" class="iconbox" @click="toglDropDown">
                   <img :src="selectedIcon" :alt="selectedItem" />
                 </div>
-                <div v-if="selectedIcon !== ''" class="selected-item" @click="toglDropDown">{{ selectedItem }}</div>
-                <div v-else class="w-selected" @click="toglDropDown">{{ selectedItem }}</div>
+                <div v-if="selectedIcon !== ''" class="selected-item" @click="toglDropDown">
+                  {{ selectedItem }}
+                </div>
+                <div v-else class="w-selected" @click="toglDropDown">
+                  {{ selectedItem }}
+                </div>
                 <div class="openURL" @click="openWindow">
                   <img src="/img/icon/service-icons/internet.png" alt="Internet" />
                 </div>
@@ -189,6 +193,9 @@ export default {
           break;
         case 4:
           this.selectedLinks = this.gnosis;
+          break;
+        case 5:
+          this.selectedLinks = this.holesky;
           break;
         default:
           break;

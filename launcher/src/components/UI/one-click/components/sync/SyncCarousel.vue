@@ -85,7 +85,7 @@
         <li
           v-for="link in selectedLinks"
           :key="link"
-          class="w-full h-16 grid grid-cols-6 py-1 px-4 hover:bg-blue-400"
+          class="w-full h-16 grid grid-cols-6 py-1 px-4 hover:bg-blue-400 z-20"
           @click="linkPicker(link)"
         >
           <img
@@ -201,23 +201,17 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
-  switch (manageStore.currentNetwork?.id) {
-    case 1:
-      selectedLinks.value = installStore.mainnet;
-      break;
-    case 2:
-      selectedLinks.value = installStore.goerli;
-      break;
-    case 3:
-      selectedLinks.value = installStore.sepolia;
-      break;
-    case 4:
-      selectedLinks.value = installStore.gnosis;
-      break;
-    default:
-      selectedLinks.value = [];
-      break;
-  }
+
+  const networkLinks = {
+    1: installStore.mainnet,
+    2: installStore.goerli,
+    3: installStore.sepolia,
+    4: installStore.gnosis,
+    5: installStore.holesky,
+  };
+
+  selectedLinks.value = networkLinks[manageStore.currentNetwork?.id] || [];
+
 };
 </script>
 <style scoped>
