@@ -893,6 +893,10 @@ video {
   top: -2px;
 }
 
+.top-16{
+  top: 4rem;
+}
+
 .z-0{
   z-index: 0;
 }
@@ -1587,6 +1591,10 @@ video {
   min-height: 450px;
 }
 
+.min-h-\[100px\]{
+  min-height: 100px;
+}
+
 .w-1\/2{
   width: 50%;
 }
@@ -2134,6 +2142,12 @@ video {
 
 .gap-y-5{
   row-gap: 1.25rem;
+}
+
+.gap-x-2{
+  -webkit-column-gap: 0.5rem;
+     -moz-column-gap: 0.5rem;
+          column-gap: 0.5rem;
 }
 
 .space-x-1 > :not([hidden]) ~ :not([hidden]){
