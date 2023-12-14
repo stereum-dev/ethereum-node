@@ -156,7 +156,7 @@ const uploadValidatorKey = (event) => {
   let uploadedFiles = event.target.files;
   if (!stakingStore.keyFiles.includes(uploadedFiles[0]["name"]) && uploadedFiles[0]["type"] === "application/json") {
     handleFiles(uploadedFiles);
-    stakingStore.keyFiles.push(...uploadedFiles);
+    stakingStore.keyFiles = [...uploadedFiles];
     stakingStore.isOverDropZone = false;
     stakingStore.isPreviewListActive = true;
     stakingStore.setActivePanel("validator");
@@ -171,7 +171,7 @@ const onDrop = (event) => {
       stakingStore.isOverDropZone = false;
       stakingStore.isPreviewListActive = true;
       handleFiles(droppedFiles);
-      stakingStore.keyFiles.push(...droppedFiles);
+      stakingStore.keyFiles = [...droppedFiles];
       stakingStore.setActivePanel("validator");
     }
   }
@@ -218,7 +218,7 @@ const importValidatorProcessing = async () => {
     files: stakingStore.keyFiles,
     password: stakingStore.importEnteredPassword,
     serviceID: stakingStore.selectedValidatorService.config.serviceID,
-    slashingDB: stakingStore.slashingDB,
+    slashingDB: stakingStore.slashingDB.path,
   });
   stakingStore.setActivePanel(null);
   if (
@@ -545,19 +545,41 @@ const deleteRemoteKeys = async (serviceID, keys) => {
 
 const removeValidatorKeys = async () => {
   if (stakingStore.removeKeys && stakingStore.removeKeys.length > 0) {
-    // Process each key for removal
-    for (const keyToRemove of stakingStore.removeKeys) {
-      let val;
-      if (keyToRemove.isRemote) {
-        val = await deleteRemoteKeys(keyToRemove.validatorID, [keyToRemove.key]);
+    // filter for local and remote keys
+    let localKeys = [];
+    let remoteKeys = [];
+    stakingStore.removeKeys.forEach((k) => {
+      if (k.isRemote) {
+        remoteKeys.push(k.key);
       } else {
-        val = await deleteValidators(keyToRemove.validatorID, [keyToRemove.key], stakingStore.pickedSlashing);
+        localKeys.push(k.key);
       }
+    });
 
-      // If "yes" to slashing, download file for each key
-      if (stakingStore.pickedSlashing === "yes") {
-        downloadFile(val);
+    //check if all belong to the same vc
+    let id = "";
+    let changed = 0;
+    stakingStore.removeKeys.forEach((key) => {
+      if (id != key.validatorID) {
+        id = key.validatorID;
+        changed++;
       }
+    });
+
+    if (changed === 1 && id) {
+      // Remove all Local Keys if selected validator holds some
+      if (localKeys && localKeys.length > 0) {
+        const returnVal = await deleteValidators(id, localKeys, stakingStore.pickedSlashing);
+        if (stakingStore.pickedSlashing === "yes") {
+          downloadFile(returnVal);
+        }
+      }
+      // Remove all Remote Keys if selected validator holds some
+      if (remoteKeys && remoteKeys.length > 0) await deleteRemoteKeys(id, remoteKeys);
+    } else if (changed === 0) {
+      console.log("Nothing to delete!");
+    } else {
+      console.log("Multiple validator services are not supported yet!");
     }
 
     // Remove the keys from the server configuration

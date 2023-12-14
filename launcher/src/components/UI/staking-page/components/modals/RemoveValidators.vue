@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-start-1 col-span-full row-start-3 row-span-2 flex flex-col justify-start items-center">
-          <span class="text-sm text-gray-400 font-semibold">{{ $t("importSlashingModal.slashModalMessage") }}</span>
+          <span class="text-sm text-gray-400 font-semibold">{{ $t("removeSingleModal.question") }}</span>
 
           <fieldset class="grid grid-cols-2 gap-x-8 mt-2">
             <div>

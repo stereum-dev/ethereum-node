@@ -59,6 +59,9 @@
 
         <div v-if="pickedSlashing === 'yes'">
           <input ref="fileInput" type="file" accept=".json" class="hidden" @change="handleFileUpload" />
+          <span class="col-start-1 col-end-5 row-start-1 row-span-1 text-center text-sm font-semibold text-gray-300">{{
+            stakingStore.slashingDB ? stakingStore.slashingDB.name : "No file selected"
+          }}</span>
         </div>
       </div>
       <div
@@ -172,12 +175,14 @@ watch(getMessage, () => {
 
 onMounted(() => {
   pickedSlashing.value = "no";
+  stakingStore.slashingDB = null;
 });
 
 //Methods
 
 const getNo = () => {
   pickedSlashing.value = "no";
+  stakingStore.slashingDB = null;
 };
 const getYes = () => {
   pickedSlashing.value = "yes";
