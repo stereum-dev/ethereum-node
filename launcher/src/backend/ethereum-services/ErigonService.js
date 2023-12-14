@@ -28,7 +28,7 @@ export class ErigonService extends NodeService {
         `--authrpc.vhosts=*`,
         `--authrpc.port=8551`,
         `--authrpc.jwtsecret=/engine.jwt`,
-        `--prune=default`,
+        '--rpc.returndata.limit=1000000',
         `--ws`,
         `--http`,
         `--http.vhosts=*`,
@@ -39,6 +39,8 @@ export class ErigonService extends NodeService {
         `--metrics`,
         `--metrics.addr=0.0.0.0`,
         `--metrics.port=6060`,
+        '--db.pagesize=16K',
+        '--db.size.limit=8TB',
       ], // command
       [], // entrypoint
       null, // env
@@ -49,6 +51,27 @@ export class ErigonService extends NodeService {
       // executionClients
       // consensusClients
     );
+
+    switch (network) {
+      case "mainnet":
+        service.command.push("--prune=htc", "--prune.r.before=11052984");
+        break;
+      case "goerli":
+        service.command.push("--prune=htc", "--prune.r.before=4367322");
+        break;
+      case "sepolia":
+        service.command.push("--prune=htc", "--prune.r.before=1273020");
+        break;
+      case "holesky":
+        service.command.push("--prune=htc");
+        break;
+      case "gnosis":
+        service.command.push("--prune=htc", "--prune.r.before=19469077");
+        break;
+      default:
+        service.command.push("--prune=htc");
+        break;
+    }
 
     return service;
   }

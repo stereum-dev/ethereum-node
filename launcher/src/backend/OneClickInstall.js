@@ -246,7 +246,7 @@ export class OneClickInstall {
           //archvie by default
           break;
         case "ErigonService":
-          //archive by default
+          this.executionClient.command = this.executionClient.command.filter(c => !c.includes("--prune"));
           break;
         case "BesuService":
           this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))] = "--sync-mode=FULL";

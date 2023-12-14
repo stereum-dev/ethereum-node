@@ -2,4 +2,8 @@
 - name: Include RC23 Update Scripts
   include_tasks: "2.0-rc23/updates-20-rc23.yaml"
   ignore_errors: yes
+
+- name: Include 2.0.2 Update Scripts
+  include_tasks: "2.0.2/updates-202.yaml"
+  ignore_errors: yes
 # EOF
