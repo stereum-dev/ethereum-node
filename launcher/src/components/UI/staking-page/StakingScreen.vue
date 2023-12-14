@@ -128,6 +128,7 @@ const readFileContent = (file) => {
     try {
       const jsonContent = JSON.parse(event.target.result);
       stakingStore.previewKeys.push(jsonContent);
+      console.log(jsonContent);
     } catch (e) {
       console.error("Error parsing JSON file:", e);
     }
@@ -218,7 +219,7 @@ const importValidatorProcessing = async () => {
     files: stakingStore.keyFiles,
     password: stakingStore.importEnteredPassword,
     serviceID: stakingStore.selectedValidatorService.config.serviceID,
-    slashingDB: stakingStore.slashingDB.path,
+    slashingDB: stakingStore.slashingDB?.path,
   });
   stakingStore.setActivePanel(null);
   if (
