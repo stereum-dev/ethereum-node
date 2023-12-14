@@ -91,13 +91,6 @@
               <span> > {{ validator.name }} vc</span>
             </div>
           </div>
-          <the-expert
-            v-if="validator.expertOptionsModal"
-            :item="validator"
-            position="18.8%"
-            wide="39%"
-            @hide-modal="hideExpertMode(validator)"
-          ></the-expert>
         </div>
 
         <div
@@ -145,16 +138,13 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import TheExpert from "../the-node/TheExpert.vue";
+
 import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 export default {
-  components: {
-    TheExpert,
-  },
   data() {
     return {
       storageWarning: false,
