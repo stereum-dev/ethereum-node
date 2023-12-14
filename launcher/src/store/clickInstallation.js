@@ -289,12 +289,6 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/service-icons/ef-devops.png",
           url: "https://checkpoint-sync.holesky.ethpandaops.io",
         },
-        {
-          id: 4,
-          name: "Flashbots",
-          icon: "/img/icon/click-installation/flashbot-icon.png",
-          url: "https://boost-relay-holesky.flashbots.net/",
-        },
       ],
     };
   },
