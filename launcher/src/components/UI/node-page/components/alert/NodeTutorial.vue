@@ -24,7 +24,7 @@
         <span>{{ $t("nodeSidebarVideo.rpc") }}</span>
       </div>
     </div>
-    <div v-if="currentNetwork.id !== 4" class="tutorial-btn" @click="stakeGuide = true">
+    <div v-if="currentNetwork.network !== 'gnosis'" class="tutorial-btn" @click="stakeGuide = true">
       <div class="icon-box camera">
         <img src="/img/icon/tutorial-icons/Guide-icon.png" alt="" />
       </div>
