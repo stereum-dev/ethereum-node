@@ -7,12 +7,12 @@
     <div class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start">
       <div
         v-for="(item, index) in installedValidators"
-        :key="item.service"
+        :key="item.config?.serviceID"
         class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 focus:outline-nones transition-colors duration-200 flex justify-center items-center cursor-pointer"
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
-            currentService === item.service,
-          'bg-[#202123] border border-gray-600': currentService !== item.service,
+            currentService === item.config?.serviceID,
+          'bg-[#202123] border border-gray-600': currentService !== item.config?.serviceID,
         }"
         @click="getService(index)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
@@ -23,8 +23,8 @@
           :src="item.icon"
           :alt="`${item.service} Icon`"
           :class="{
-            'w-7': currentService === item.service,
-            'w-6': currentService !== item.service,
+            'w-7': currentService === item.config?.serviceID,
+            'w-6': currentService !== item.config?.serviceID,
           }"
           @mousedown.prevent
         />
@@ -72,7 +72,7 @@ watchEffect(() => {
 //Lifecycle Hooks
 onMounted(() => {
   if (installedValidators.value.length) {
-    currentService.value = installedValidators.value[0].service;
+    currentService.value = installedValidators.value[0].config?.serviceID;
     stakingStore.selectedServiceToFilter = installedValidators.value[0];
   }
 });
@@ -85,7 +85,7 @@ const getService = (index) => {
 };
 
 const filterByService = (item) => {
-  currentService.value = item.service;
+  currentService.value = item.config?.serviceID;
   stakingStore.selectedServiceToFilter = item;
   stakingStore.isGroupListActive = false;
   stakingStore.currentGroup = null;

@@ -48,7 +48,7 @@ const serviceStore = useServices();
 const stakingStore = useStakingStore();
 
 const web3Signer = computed(() => {
-  return serviceStore.installedServices.find((s) => s.category === "validator" && s.service === "Web3SignerService");
+  return serviceStore.installedServices.filter((s) => s.category === "validator" && s.service === "Web3SignerService");
 });
 
 const openLocalList = () => {
