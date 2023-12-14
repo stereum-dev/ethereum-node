@@ -1507,10 +1507,6 @@ video {
   height: 100vh;
 }
 
-.h-\[400px\]{
-  height: 400px;
-}
-
 .max-h-60{
   max-height: 15rem;
 }
@@ -2556,11 +2552,6 @@ video {
 .border-white{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
-
-.border-gray-100{
-  --tw-border-opacity: 1;
-  border-color: rgb(243 244 246 / var(--tw-border-opacity));
 }
 
 .border-l-gray-200{
