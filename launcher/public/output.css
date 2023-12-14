@@ -901,10 +901,6 @@ video {
   top: -2px;
 }
 
-.top-16{
-  top: 4rem;
-}
-
 .z-0{
   z-index: 0;
 }
@@ -1548,10 +1544,6 @@ video {
   height: 37px;
 }
 
-.h-\[400px\]{
-  height: 400px;
-}
-
 .h-\[40px\]{
   height: 40px;
 }
@@ -1698,6 +1690,10 @@ video {
   max-height: 100%;
 }
 
+.min-h-\[100px\]{
+  min-height: 100px;
+}
+
 .min-h-\[18px\]{
   min-height: 18px;
 }
@@ -1720,10 +1716,6 @@ video {
 
 .min-h-\[450px\]{
   min-height: 450px;
-}
-
-.min-h-\[100px\]{
-  min-height: 100px;
 }
 
 .w-1\/2{
@@ -2302,6 +2294,12 @@ video {
   gap: 1.25rem;
 }
 
+.gap-x-2{
+  -webkit-column-gap: 0.5rem;
+     -moz-column-gap: 0.5rem;
+          column-gap: 0.5rem;
+}
+
 .gap-x-8{
   -webkit-column-gap: 2rem;
      -moz-column-gap: 2rem;
@@ -2322,12 +2320,6 @@ video {
 
 .gap-y-5{
   row-gap: 1.25rem;
-}
-
-.gap-x-2{
-  -webkit-column-gap: 0.5rem;
-     -moz-column-gap: 0.5rem;
-          column-gap: 0.5rem;
 }
 
 .space-x-1 > :not([hidden]) ~ :not([hidden]){
