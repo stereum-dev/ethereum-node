@@ -156,6 +156,7 @@ const handleFiles = (files) => {
 const uploadValidatorKey = (event) => {
   let uploadedFiles = event.target.files;
   if (!stakingStore.keyFiles.includes(uploadedFiles[0]["name"]) && uploadedFiles[0]["type"] === "application/json") {
+    stakingStore.previewKeys = [];
     handleFiles(uploadedFiles);
     stakingStore.keyFiles = [...uploadedFiles];
     stakingStore.isOverDropZone = false;
@@ -167,6 +168,7 @@ const uploadValidatorKey = (event) => {
 const onDrop = (event) => {
   let validator = serviceStore.installedServices.filter((s) => s.category === "validator");
   if (validator && validator.map((e) => e.state).includes("running")) {
+    stakingStore.previewKeys = [];
     let droppedFiles = event.dataTransfer.files;
     if (droppedFiles[0]["type"] === "application/json") {
       stakingStore.isOverDropZone = false;
