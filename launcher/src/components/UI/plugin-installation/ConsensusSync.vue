@@ -111,7 +111,7 @@ export default {
       checkPointSync: "checkPointSync",
       btnActive: "btnActive",
       mainnet: "mainnet",
-      georli: "georli",
+      goerli: "goerli",
       sepolia: "sepolia",
       gnosis: "gnosis",
     }),
@@ -182,7 +182,7 @@ export default {
           this.selectedLinks = this.mainnet;
           break;
         case 2:
-          this.selectedLinks = this.georli;
+          this.selectedLinks = this.goerli;
           break;
         case 3:
           this.selectedLinks = this.sepolia;

@@ -206,7 +206,7 @@ const setSelectedLinks = () => {
       selectedLinks.value = installStore.mainnet;
       break;
     case 2:
-      selectedLinks.value = installStore.georli;
+      selectedLinks.value = installStore.goerli;
       break;
     case 3:
       selectedLinks.value = installStore.sepolia;
@@ -215,6 +215,7 @@ const setSelectedLinks = () => {
       selectedLinks.value = installStore.gnosis;
       break;
     default:
+      selectedLinks.value = [];
       break;
   }
 };
