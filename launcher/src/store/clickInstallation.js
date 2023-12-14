@@ -186,7 +186,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://beaconstate.info/",
         },
       ],
-      georli: [
+      goerli: [
         {
           id: 1,
           name: "Sigma Prime",
