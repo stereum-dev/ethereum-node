@@ -624,15 +624,9 @@ const importRemoteKey = async () => {
   stakingStore.previewRemoteKeys = [];
 
   //************ Infos ************
-  // stakingStore.selectedRemoteKeys  is where all the selected pubkeys are stored
   // stakingStore.remoteUrl is if the user wants to import from a remote url
   //stakingStore.selectedServiceToFilter is the selected validator filter on sidebar
-  // stakingStore.remoteResponse = await ControlService.checkRemoteKeys({
-  //   url: stakingStore.remoteUrl,
-  //   serviceID: stakingStore.selectedServiceToFilter?.config?.serviceID,
-  // });
 
-  stakingStore.selectedRemoteKeys = [];
   stakingStore.remoteUrl = "";
   stakingStore.forceRefresh = true;
   await listKeys();

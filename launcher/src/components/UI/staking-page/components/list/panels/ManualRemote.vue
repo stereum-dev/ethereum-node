@@ -25,7 +25,11 @@
       <div class="col-start-23 col-span-1 h-full flex justify-center items-center px-1">
         <div
           class="w-6 h-6 rounded-md bg-[#3e4347] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
-          :class="stakingStore.selectedRemoteKeys.length ? 'cursor-pointer' : 'pointer-events-none opacity-50'"
+          :class="
+            stakingStore.previewRemoteKeys.filter((k) => k.selected).length
+              ? 'cursor-pointer'
+              : 'pointer-events-none opacity-50'
+          "
           @click="confirmRemote"
         >
           <img class="w-4 h-4" src="/img/icon/the-staking/check.png" alt="Check Icon" @mousedown.prevent />
@@ -46,8 +50,7 @@ const remoteKey = ref("");
 //Temprorary function to test adding new remote keys
 const addNewRemoteKey = () => {
   if (remoteKey.value !== "") {
-    const newKey = stakingStore.keys.find((key) => key.key === remoteKey.value);
-    stakingStore.previewRemoteKeys.push(newKey);
+    stakingStore.previewRemoteKeys.push({ pubkey: remoteKey.value, selected: true, url: stakingStore.remoteUrl });
   }
 
   remoteKey.value = "";

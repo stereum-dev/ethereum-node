@@ -10,7 +10,7 @@ import { computed, ref } from 'vue';
       </div>
     </div>
     <div class="w-full h-full col-start-2 col-end-25 self-center overflow-hidden flex justify-between items-center">
-      <span class="text-left text-xs text-gray-300 ml-2">{{ props.item.key }}</span>
+      <span class="text-left text-xs text-gray-300 ml-2">{{ props.item.pubkey }}</span>
     </div>
   </div>
 </template>

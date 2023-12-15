@@ -24,6 +24,7 @@ import RemoteRow from "./rows/RemoteRow.vue";
 import { onMounted, onUnmounted } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
+import ControlService from "@/store/ControlService";
 
 const props = defineProps({
   isLoading: {
@@ -43,32 +44,22 @@ onUnmounted(() => {
   stakingStore.previewRemoteKeys = [];
 });
 
-const localKeys = () => {
-  const service = serviceStore.installedServices.find(
-    (s) => s.category === "validator" && s.service === "Web3SignerService"
-  );
-  if (service) {
-    const keys = stakingStore.keys.filter((key) => key.validatorID === service.config?.serviceID);
-    if (keys.length > 0) {
-      keys.forEach((key) => {
-        stakingStore.previewRemoteKeys.push(key);
-      });
-    }
+const localKeys = async () => {
+  const service = serviceStore.installedServices.find((s) => s.service === "Web3SignerService");
+  const remoteSignerStats = await ControlService.checkRemoteKeys({
+    serviceID: stakingStore.remoteUrl ? undefined : service?.config?.serviceID,
+    url: stakingStore.remoteUrl,
+  });
+  if (remoteSignerStats.error) {
+    console.log(remoteSignerStats.error);
+  } else {
+    stakingStore.previewRemoteKeys = remoteSignerStats.keys.map((k) => {
+      return { pubkey: k, selected: true, url: remoteSignerStats.url };
+    });
   }
 };
 
 const pickRemoteKey = (item) => {
   item.selected = !item.selected;
-
-  if (item.selected) {
-    if (!stakingStore.selectedRemoteKeys.includes(item.key)) {
-      stakingStore.selectedRemoteKeys.push(item.key);
-    }
-  } else {
-    const index = stakingStore.selectedRemoteKeys.indexOf(item.key);
-    if (index > -1) {
-      stakingStore.selectedRemoteKeys.splice(index, 1);
-    }
-  }
 };
 </script>
