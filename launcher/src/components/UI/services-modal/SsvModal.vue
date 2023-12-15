@@ -60,7 +60,7 @@
       <div class="modal-content">
         <div class="browserBox">
           <ConfirmBox
-            v-if="!switchEncryptedKeyGenerator || passGenerateEncryptKeyConfirmed"
+            v-if="(!importEncryptedKey && !switchEncryptedKeyGenerator) || passGenerateEncryptKeyConfirmed"
             :btn-bg-color="`#1ba5f8`"
             :top-line="`${!passGenerateEncryptKeyConfirmed ? ' GENERATE ENCRYPTED PAIR' : 'CONFIRM WARNING'}`"
             :bottom-line="`${
@@ -71,27 +71,45 @@
             btn-name="GENERATE"
             @confirmPluginClick="switchEncryptedKeyGenerator = true"
           />
+          <ImportBox
+            v-else-if="!switchEncryptedKeyGenerator || (passGenerateEncryptKeyConfirmed && importEncryptedKey)"
+            :btn-bg-color="`#1ba5f8`"
+            import-box-title="SELECT AN EXISTING PRIVATE KEY TO IMPORT"
+            import-box-placeholder=""
+            try-again="true"
+            btn-name="SELECT"
+            @importBoxHandler="test"
+          />
 
           <PasswordBox
             v-else
-            :btn-bg-color="`#1ba5f8`"
+            :btn-bg-color="`#12e9ae`"
             :import-box-title="passControlGenerateEncryptKeyTitle"
             :import-box-placeholder="passControlGenerateEncryptKeyPlaceholder"
             :try-again="tryAgain"
             :btn-name="passControlGenerateEncryptKeyBtn"
-            @importBoxHandler="passConfirm"
+            @importBoxHandler="console.log('confirm 1st row PluginClick')"
           />
         </div>
         <div class="browserBox">
           <ConfirmBox
+            v-if="!importEncryptedKey"
             btn-bg-color="#1ba5f8"
             top-line="IMPORT ENCRYPTED OPERATOR KEY"
             bottom-line="Import an existing encrypted operator key"
             btn-name="IMPORT"
-            @confirmPluginClick="console.log('confirm 2nd row PluginClick')"
+            @confirmPluginClick="importEncryptedKey = true"
+          />
+          <PasswordBox
+            v-else
+            :btn-bg-color="`#1ba5f8`"
+            import-box-title="ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY"
+            import-box-placeholder=""
+            btn-name="IMPORT"
+            @importBoxHandler="console.log('confirm 2nd row PluginClick')"
           />
         </div>
-        <div class="browserBox">
+        <div v-if="!importEncryptedKey" class="browserBox">
           <ConfirmBox
             btn-bg-color="#1ba5f8"
             top-line="IMPORT raw (OLD METHOD) Operator Keys"
@@ -151,6 +169,7 @@ export default {
       confirmPassToGenerateCheck: false,
       tryAgain: false,
       passGenerateEncryptKeyConfirmed: false,
+      importEncryptedKey: false,
     };
   },
 
@@ -299,6 +318,7 @@ export default {
       this.switchEncryptedKeyGenerator = true;
     },
     passConfirm() {
+      console.log("passConfirm", this.passwordBoxModel);
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
         this.firstPassToGenerate = this.passwordBoxModel;
         console.log("this.firstPassToGenerate", this.firstPassToGenerate, this.passwordBoxModel);
