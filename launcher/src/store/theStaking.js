@@ -20,6 +20,7 @@ export const useStakingStore = defineStore("theStaking", {
       importKeyMessage: "",
       checkActiveValidatorsResponse: [],
       previewKeys: [],
+
       //***** End Staking List
 
       // ***** Staking Modals *****

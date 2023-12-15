@@ -205,10 +205,12 @@ const importKey = async (val) => {
 //Risk Accepted
 
 const riskAccepted = async () => {
-  if (this.remoteImportArgs.serviceID && this.remoteImportArgs.url) {
-    await importRemoteKey(this.remoteImportArgs);
+  if (stakingStore.previewRemoteKeys.length > 0) {
+    // await importRemoteKey();
+    console.log("importRemoteKey");
   } else {
     await importKey(stakingStore.importEnteredPassword);
+    stakingStore.setActiveModal(null);
   }
 };
 

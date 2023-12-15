@@ -4,7 +4,7 @@
     :confirm-text="getActionButton === importValidator ? 'import' : 'ok'"
     :active-button="getActiveButton"
     :is-processing="checkProcessing"
-    :click-outside-text="getActionButton !== importValidator ? 'Click outside to close' : null"
+    :click-outside-text="clickOut"
     @confirm-action="getActionButton"
   >
     <template #content>
@@ -122,6 +122,7 @@ const isSlashingActive = ref(true);
 const pickedSlashing = ref(null);
 const fileInput = ref(null);
 const checkProcessing = ref(false);
+const clickOut = ref("Click outside to close");
 
 const getMessage = computed(() => {
   return stakingStore.importKeyMessage ? stakingStore.importKeyMessage : "";
@@ -207,6 +208,7 @@ const listKeys = async () => {
 };
 
 const importValidator = () => {
+  clickOut.value = null;
   isSlashingActive.value = false;
   checkProcessing.value = true;
   emit("importKey");

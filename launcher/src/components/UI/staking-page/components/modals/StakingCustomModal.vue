@@ -42,7 +42,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
           </button>
         </div>
         <span class="absolute bottom-1 left-[40%] text-xs flex justify-center items-center text-red-500 mx-auto">{{
-          clickOutsideText !== null ? clickOutsideText : ""
+          getCanceltext
         }}</span>
       </div>
     </div>
@@ -77,7 +77,7 @@ const props = defineProps({
   },
   clickOutsideText: {
     type: String,
-    default: "",
+    default: null,
   },
   subTitle: {
     type: String,
@@ -110,6 +110,14 @@ const stakingStore = useStakingStore();
 //Refs
 
 //Computed
+
+const getCanceltext = computed(() => {
+  if (props.clickOutsideText !== "" && props.clickOutsideText !== null) {
+    return props.clickOutsideText;
+  } else {
+    return null;
+  }
+});
 
 const getTitleColor = computed(() => {
   if (props.titleColor === "remove") {
@@ -151,6 +159,7 @@ const closeModal = () => {
 };
 
 const emitConfirmAction = () => {
+  props.clickOutsideText = null;
   if (props.confirmText) {
     emit("confirmAction");
   }
