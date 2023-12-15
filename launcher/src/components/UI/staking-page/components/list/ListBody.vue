@@ -60,7 +60,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           @rename-single="renameSingle"
         />
         <span
-          v-if="!getFilteredValidators.length > 0 && !isLoading"
+          v-if="!getFilteredValidators.length > 0 && !isLoading && !stakingStore.isPreviewListActive"
           class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
         >
@@ -95,7 +95,7 @@ const emit = defineEmits([
 const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
-// const noKey = ref(false);
+const noKey = ref(false);
 // const searchNotFound = ref(false);
 
 // Computed
@@ -118,14 +118,6 @@ const getCorrectValidatorGroups = computed(() => {
       group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   );
 });
-const noKey = computed(() => {
-  return (
-    !stakingStore.isPreviewListActive &&
-    !isLoading.value &&
-    stakingStore.searchContent === "" &&
-    stakingStore.filteredKeys.length === 0
-  );
-});
 
 const searchNotFound = computed(() => {
   return (
@@ -134,6 +126,20 @@ const searchNotFound = computed(() => {
     stakingStore.searchContent !== "" &&
     stakingStore.filteredKeys.length === 0
   );
+});
+
+watchEffect(() => {
+  if (stakingStore.keys.length === 0) {
+    isLoading.value = true;
+  } else if (stakingStore.keys.length > 0) {
+    isLoading.value = false;
+  }
+  setTimeout(() => {
+    if (stakingStore.keys.length === 0) {
+      isLoading.value = false;
+      noKey.value = true;
+    }
+  }, 5000);
 });
 
 watch(
@@ -147,68 +153,17 @@ watchEffect(() => {
     isLoading.value = true;
     setTimeout(() => {
       isLoading.value = false;
-    }, 10000);
+    }, 6000);
   }
 });
 
-// watchEffect(() => {
-//   if (stakingStore.isPreviewListActive) {
-//     isLoading.value = false;
-//     noKey.value = false;
-//   } else if (
-//     !stakingStore.isPreviewListActive &&
-//     getFilteredValidators.value.length === 0 &&
-//     stakingStore.searchContent === "" &&
-//     stakingStore.validatorKeyGroups.length === 0
-//   ) {
-//     isLoading.value = true;
-//     setTimeout(() => {
-//       if (
-//         getFilteredValidators.value.length === 0 &&
-//         stakingStore.searchContent !== "" &&
-//         stakingStore.validatorKeyGroups.length === 0
-//       ) {
-//         isLoading.value = false;
-//         noKey.value = true;
-//       }
-//     }, 10000);
-//   } else if (
-//     !stakingStore.isPreviewListActive &&
-//     getFilteredValidators.value.length > 0 &&
-//     stakingStore.searchContent === ""
-//   ) {
-//     isLoading.value = false;
-//     noKey.value = false;
-//   } else if (
-//     !stakingStore.isPreviewListActive &&
-//     getFilteredValidators.value.length > 0 &&
-//     stakingStore.searchContent !== ""
-//   ) {
-//     isLoading.value = false;
-//     noKey.value = false;
-//     searchNotFound.value = false;
-//   } else if (
-//     !stakingStore.isPreviewListActive &&
-//     getFilteredValidators.value.length === 0 &&
-//     stakingStore.searchContent !== ""
-//   ) {
-//     isLoading.value = false;
-//     noKey.value = false;
-//     searchNotFound.value = true;
-//   }
-// });
-
 // Lifecycle Hooks
 onMounted(async () => {
-  isLoading.value = true;
   stakingStore.forceRefresh = true;
   await listKeys();
   if (getFilteredValidators.value.length > 0 && stakingStore.searchContent === "") {
     await listGroups();
   }
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 10000);
 });
 onUnmounted(() => {
   stakingStore.setActivePanel(null);
