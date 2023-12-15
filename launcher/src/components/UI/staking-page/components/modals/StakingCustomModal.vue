@@ -42,7 +42,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
           </button>
         </div>
         <span class="absolute bottom-1 left-[40%] text-xs flex justify-center items-center text-red-500 mx-auto">{{
-          clickOutsideText
+          clickOutsideText !== null ? clickOutsideText : ""
         }}</span>
       </div>
     </div>
@@ -139,8 +139,12 @@ const getButtonColor = computed(() => {
 
 //Methods
 const closeModal = () => {
-  if (props.clickOutsideText !== "") {
+  if (props.clickOutsideText !== null) {
     stakingStore.setActiveModal(null);
+    stakingStore.setActiveModal(null);
+    stakingStore.setActivePanel(null);
+    stakingStore.isPreviewListActive = false;
+    stakingStore.previewKeys = [];
   } else {
     emit("closeModal", props.clickOutsideText);
   }

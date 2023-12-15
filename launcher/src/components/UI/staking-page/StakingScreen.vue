@@ -69,6 +69,9 @@ const modals = {
   },
   risk: {
     component: RiskWarning,
+    events: {
+      acceptRisk: () => riskAccepted(),
+    },
   },
   removeGroup: {
     component: RemoveGroup,
@@ -127,7 +130,6 @@ const readFileContent = (file) => {
     try {
       const jsonContent = JSON.parse(event.target.result);
       stakingStore.previewKeys.push(jsonContent);
-      console.log(jsonContent);
     } catch (e) {
       console.error("Error parsing JSON file:", e);
     }
@@ -185,14 +187,6 @@ const onDrop = (event) => {
 
 //**** Import Key Validation ****
 
-const riskAccepted = async () => {
-  if (this.remoteImportArgs.serviceID && this.remoteImportArgs.url) {
-    await this.importRemoteKeys(this.remoteImportArgs);
-  } else {
-    await this.importKey(this.password);
-  }
-};
-
 const importKey = async (val) => {
   stakingStore.importEnteredPassword = val;
   stakingStore.importKeyMessage = await ControlService.importKey(
@@ -208,6 +202,16 @@ const importKey = async (val) => {
   listGroups();
 };
 
+//Risk Accepted
+
+const riskAccepted = async () => {
+  if (this.remoteImportArgs.serviceID && this.remoteImportArgs.url) {
+    await importRemoteKey(this.remoteImportArgs);
+  } else {
+    await importKey(stakingStore.importEnteredPassword);
+  }
+};
+
 //Validation validator key Password
 
 const confirmPassword = async (pass) => {
@@ -216,22 +220,25 @@ const confirmPassword = async (pass) => {
 };
 
 const importValidatorProcessing = async () => {
+  console.log(stakingStore.slashingDB);
   stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
     files: stakingStore.keyFiles,
     password: stakingStore.importEnteredPassword,
-    serviceID: stakingStore.selectedValidatorService.config.serviceID,
-    slashingDB: stakingStore.slashingDB?.path,
+    serviceID: stakingStore.selectedValidatorService.config?.serviceID,
+    slashingDB: stakingStore.slashingDB?.path || null,
   });
+
+  console.log(stakingStore.checkActiveValidatorsResponse);
   stakingStore.setActivePanel(null);
   if (
-    stakingStore.checkActiveValidatorsResponse.length === 0 ||
+    stakingStore.checkActiveValidatorsResponse.length === 1 ||
     stakingStore.checkActiveValidatorsResponse.includes("Validator check error:\n")
   ) {
     importKey(stakingStore.importEnteredPassword);
-    stakingStore.keys.push(...stakingStore.checkActiveValidatorsResponse);
+    stakingStore.keyFiles = [];
   } else {
-    console.log("error: there are active validators");
     stakingStore.setActiveModal("risk");
+    console.log("error: there are active validators");
   }
 };
 
@@ -437,6 +444,7 @@ const doppelgangerController = async (item) => {
 
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
+
   await doppelgangerController(service);
   stakingStore.setActivePanel("password");
 };
@@ -619,10 +627,10 @@ const importRemoteKey = async () => {
   // stakingStore.selectedRemoteKeys  is where all the selected pubkeys are stored
   // stakingStore.remoteUrl is if the user wants to import from a remote url
   //stakingStore.selectedServiceToFilter is the selected validator filter on sidebar
-  stakingStore.remoteResponse = await ControlService.checkRemoteKeys({
-    url: stakingStore.remoteUrl,
-    serviceID: stakingStore.selectedServiceToFilter?.config?.serviceID,
-  });
+  // stakingStore.remoteResponse = await ControlService.checkRemoteKeys({
+  //   url: stakingStore.remoteUrl,
+  //   serviceID: stakingStore.selectedServiceToFilter?.config?.serviceID,
+  // });
 
   stakingStore.selectedRemoteKeys = [];
   stakingStore.remoteUrl = "";

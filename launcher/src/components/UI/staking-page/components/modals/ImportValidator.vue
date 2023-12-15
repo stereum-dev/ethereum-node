@@ -4,7 +4,7 @@
     :confirm-text="getActionButton === importValidator ? 'import' : 'ok'"
     :active-button="getActiveButton"
     :is-processing="checkProcessing"
-    click-outside-text="Click outside to close"
+    :click-outside-text="getActionButton !== importValidator ? 'Click outside to close' : null"
     @confirm-action="getActionButton"
   >
     <template #content>

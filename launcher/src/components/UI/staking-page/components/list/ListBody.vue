@@ -59,7 +59,9 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           @withdraw-single="withdrawSingle"
           @rename-single="renameSingle"
         />
-        <span v-if="noKey" class="text-lg font-bold text-gray-300 text-center uppercase"
+        <span
+          v-if="!getFilteredValidators.length > 0 && !isLoading"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
           >No Validator key imported.</span
         >
         <span v-if="searchNotFound" class="text-lg font-bold text-gray-300 text-center uppercase">No Matches.</span>
