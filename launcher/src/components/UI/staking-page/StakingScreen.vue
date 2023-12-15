@@ -49,11 +49,10 @@ import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, setBlockTracking } from "vue";
+import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
-import { useDeepClone } from "@/composables/utils";
 
 //Store
 const stakingStore = useStakingStore();

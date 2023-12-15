@@ -48,7 +48,7 @@ import { computed } from "vue";
 
 const emit = defineEmits(["acceptRisk"]);
 
-const { t } = i18n.global.t;
+const t = i18n.global.t;
 
 const stakingStore = useStakingStore();
 
