@@ -3,7 +3,7 @@
     main-title="Remove Validator Key(s)"
     title-color="remove"
     message-text="Are you sure you want to remove this Key(s)?"
-    click-outside-text="Click outside to cancel"
+    :click-outside-text="clickOut"
     confirm-text="remove"
     :active-button="activeButton"
     :is-processing="checkProcessing"
@@ -78,6 +78,7 @@ const emit = defineEmits(["removeValidator"]);
 
 const stakingStore = useStakingStore();
 const checkProcessing = ref(false);
+const clickOut = ref("Click outside to cancel");
 
 const activeButton = computed(() => {
   if (stakingStore.selectedKeyToRemove !== null || stakingStore.removeKeys.length > 0) {
@@ -91,6 +92,7 @@ onMounted(() => {
 });
 
 const removeValidator = () => {
+  clickOut.value = null;
   emit("removeValidator", stakingStore.selectedKeyToRemove, stakingStore.pickedSlashing);
   checkProcessing.value = true;
 };

@@ -42,7 +42,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
           </button>
         </div>
         <span class="absolute bottom-1 left-[40%] text-xs flex justify-center items-center text-red-500 mx-auto">{{
-          getCanceltext
+          props.clickOutsideText
         }}</span>
       </div>
     </div>
@@ -111,14 +111,6 @@ const stakingStore = useStakingStore();
 
 //Computed
 
-const getCanceltext = computed(() => {
-  if (props.clickOutsideText !== "" && props.clickOutsideText !== null) {
-    return props.clickOutsideText;
-  } else {
-    return null;
-  }
-});
-
 const getTitleColor = computed(() => {
   if (props.titleColor === "remove") {
     return "text-red-500";
@@ -151,6 +143,9 @@ const closeModal = () => {
     stakingStore.setActiveModal(null);
     stakingStore.setActiveModal(null);
     stakingStore.setActivePanel(null);
+    stakingStore.keys.forEach((key) => {
+      key.showExitText = false;
+    });
     stakingStore.isPreviewListActive = false;
     stakingStore.previewKeys = [];
   } else {
@@ -159,7 +154,6 @@ const closeModal = () => {
 };
 
 const emitConfirmAction = () => {
-  props.clickOutsideText = null;
   if (props.confirmText) {
     emit("confirmAction");
   }
@@ -167,25 +161,17 @@ const emitConfirmAction = () => {
 </script>
 <style scoped>
 .animate-spinGrow {
-  animation: spinGrow 6s infinite;
+  animation: spinGrow 5s infinite;
+  border-color: white #e6e6e649 #e6e6e649 #e6e6e649;
 }
+
 @keyframes spinGrow {
   0% {
     transform: rotate(0deg);
-    border-color: white transparent transparent transparent;
   }
-  25% {
-    border-color: white white transparent transparent;
-  }
-  50% {
-    border-color: white white white transparent;
-  }
-  75% {
-    border-color: white;
-  }
+
   100% {
     transform: rotate(360deg);
-    border-color: white transparent transparent transparent;
   }
 }
 </style>

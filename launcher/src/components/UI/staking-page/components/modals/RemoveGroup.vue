@@ -3,7 +3,7 @@
     main-title="Remove Group"
     title-color="remove"
     message-text="Are you sure you want to remove this group?"
-    click-outside-text="Click outside to cancel"
+    :click-outside-text="clickOut"
     confirm-text="remove"
     :active-button="activeButton"
     @confirm-action="removeGroup"
@@ -27,11 +27,12 @@
 
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const emit = defineEmits(["removeGroup"]);
 
 const stakingStore = useStakingStore();
+const clickOut = ref("Click outside to cancel");
 
 const group = computed(() => {
   return stakingStore.currentGroup;
@@ -45,6 +46,7 @@ const activeButton = computed(() => {
 });
 
 const removeGroup = () => {
+  clickOut.value = null;
   emit("removeGroup", group.value);
 };
 </script>

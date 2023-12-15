@@ -2,7 +2,7 @@
   <staking-custom-modal
     main-title="Withdraw & Exit Validator Keys"
     title-color="withdraw"
-    click-outside-text="Click outside to cancel"
+    :click-outside-text="clickOut"
     :confirm-text="confirmButtonText"
     :is-processing="isProcessing"
     :active-button="activeButton"
@@ -49,6 +49,7 @@ import { computed, ref } from "vue";
 const emit = defineEmits(["confirmWithdraw"]);
 
 const stakingStore = useStakingStore();
+const clickOut = ref("Click outside to cancel");
 
 const getTextMessage = computed(() => {
   return "ARE YOU SURE YOU WANT TO EXIT THE CHAIN WITH THE SELECTED VALIDATOR KEYS? THIS STOPS YOUR VALIDATOR DUTY & CAN NOT BE REVERSED. YOUR FUND ARE ALSO ONLY WITHDRAWABLE, IF THE CHAIN ALLOWS IT.";
@@ -76,6 +77,7 @@ const confirmButtonText = computed(() => {
 });
 
 const confirmWithdraw = () => {
+  clickOut.value = null;
   buttonClicked.value = true;
   emit("confirmWithdraw");
 };

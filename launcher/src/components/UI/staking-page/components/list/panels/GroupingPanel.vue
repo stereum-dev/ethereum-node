@@ -104,6 +104,8 @@ const confirmGrouping = () => {
   emit("confirmGrouping", validName.value);
 };
 const cancelGrouping = () => {
+  stakingStore.keys.forEach((key) => (key.selected = false));
+  stakingStore.isGroupingAllowed = false;
   stakingStore.groupName = "";
   stakingStore.setActivePanel(null);
 };

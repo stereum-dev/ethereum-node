@@ -4,7 +4,7 @@
   >
     <div class="w-full h-full col-start-1 col-end-4 grid grid-cols-3 py-1">
       <div
-        class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer px-1 active:scale-95"
+        class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer px-1 active:scale-95"
       >
         <img
           v-if="stakingStore.isGroupListActive"
@@ -24,7 +24,7 @@
         />
       </div>
       <div
-        class="w-2/3 h-full col-start-2 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer active:scale-95 px-1"
+        class="w-2/3 h-full col-start-2 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
       >
         <img
           class="h-6"
@@ -35,7 +35,7 @@
         />
       </div>
       <div
-        class="w-2/3 h-full col-start-3 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#323335] hover:border hover:border-gray-500 transition-all duration-100 cursor-pointer active:scale-95 px-1"
+        class="w-2/3 h-full col-start-3 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
       >
         <img
           class="h-6"
@@ -238,20 +238,3 @@ const searchPanel = () => {
   }
 };
 </script>
-<style scoped>
-/* .panelOut {
-  animation: slideOut 0.1s ease-in-out 0.2;
-}
-
-@keyframes slideOut {
-  0% {
-    transform: translateX(0);
-    taransform-origin: left;
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-} */
-</style>
