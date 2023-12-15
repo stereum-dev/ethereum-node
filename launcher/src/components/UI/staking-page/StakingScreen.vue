@@ -233,7 +233,7 @@ const importValidatorProcessing = async () => {
   console.log(stakingStore.checkActiveValidatorsResponse);
   stakingStore.setActivePanel(null);
   if (
-    stakingStore.checkActiveValidatorsResponse.length === 1 ||
+    stakingStore.checkActiveValidatorsResponse.length === 0 ||
     stakingStore.checkActiveValidatorsResponse.includes("Validator check error:\n")
   ) {
     importKey(stakingStore.importEnteredPassword);
