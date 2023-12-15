@@ -8,7 +8,7 @@ import { computed } from 'vue';
     <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
       <div class="w-6 h-6 rounded-full cursor-pointer bg-white p-[2px]">
         <img
-          v-if="props.item.isRemoote"
+          v-if="props.item.isRemote"
           class="w-full h-full"
           src="/img/icon/the-staking/remotekey.png"
           alt="Key Icon"

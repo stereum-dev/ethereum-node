@@ -75,7 +75,6 @@ const close = () => {
   stakingStore.isRemoteListActive = false;
   stakingStore.isGroupListActive = false;
   stakingStore.previewRemoteKeys = [];
-  stakingStore.selectedRemoteKeys = [];
   stakingStore.remoteUrl = "";
 };
 </script>
