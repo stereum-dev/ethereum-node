@@ -83,12 +83,12 @@
 
           <PasswordBox
             v-else
-            :btn-bg-color="`#12e9ae`"
+            :btn-bg-color="`#1ba5f8`"
             :import-box-title="passControlGenerateEncryptKeyTitle"
             :import-box-placeholder="passControlGenerateEncryptKeyPlaceholder"
             :try-again="tryAgain"
             :btn-name="passControlGenerateEncryptKeyBtn"
-            @importBoxHandler="console.log('confirm 1st row PluginClick')"
+            @password-box-handler="passConfirm"
           />
         </div>
         <div class="browserBox">
@@ -106,6 +106,7 @@
             import-box-title="ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY"
             import-box-placeholder=""
             btn-name="IMPORT"
+            :class="[importBoxModel ? '' : 'disabled']"
             @importBoxHandler="console.log('confirm 2nd row PluginClick')"
           />
         </div>
@@ -225,6 +226,9 @@ export default {
     this.dataLoading = true;
   },
   methods: {
+    testaaa() {
+      console.log("aaaa");
+    },
     handleImportBox(value) {
       this.test = value;
     },
@@ -347,6 +351,12 @@ export default {
 };
 </script>
 <style scoped>
+.disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 .flip-box {
   background-color: transparent;
   perspective: 1000px;

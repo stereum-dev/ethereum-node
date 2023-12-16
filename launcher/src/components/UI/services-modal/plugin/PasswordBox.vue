@@ -17,7 +17,7 @@
           :style="{ backgroundColor: dynamicBackgroundColor, color: btnNameColor }"
           @mouseover="handleMouseOver"
           @mouseleave="handleMouseLeave"
-          @click="importBoxHandler"
+          @click="passwordBoxHandler"
         >
           {{ btnName }}
         </div>
@@ -56,7 +56,7 @@ export default {
       default: "",
     },
   },
-  emits: ["importBoxHandler"],
+  emits: ["password-box-handler"],
   data() {
     return {
       dynamicBackgroundColor: this.btnBgColor,
@@ -78,10 +78,8 @@ export default {
     passCtrlSwitch() {
       this.passCtrl = !this.passCtrl;
     },
-    importBoxHandler() {
-      if (this.importBoxModel) {
-        this.$emit("importBoxHandler");
-      }
+    passwordBoxHandler() {
+      this.$emit("password-box-handler");
     },
     handleMouseOver() {
       this.dynamicBackgroundColor = this.adjustOpacity(this.btnBgColor, 0.8);

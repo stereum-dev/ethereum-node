@@ -4,12 +4,7 @@
       <span>{{ importBoxTitle }}</span>
     </div>
     <div class="inputBox">
-      <input
-        v-model="importBoxModel"
-        type="text"
-        :placeholder="importBoxPlaceholder"
-        :style="{ border: borderForInput }"
-      />
+      <input v-model="importBoxModel" type="text" :placeholder="importBoxPlaceholder" />
       <div
         :class="['btn', importBoxModel ? '' : 'disabled']"
         :style="{ backgroundColor: dynamicBackgroundColor, color: btnNameColor }"
@@ -72,9 +67,7 @@ export default {
 
   methods: {
     importBoxHandler() {
-      if (this.importBoxModel) {
-        this.$emit("importBoxHandler");
-      }
+      this.$emit("importBoxHandler");
     },
     handleMouseOver() {
       this.dynamicBackgroundColor = this.adjustOpacity(this.btnBgColor, 0.8);
