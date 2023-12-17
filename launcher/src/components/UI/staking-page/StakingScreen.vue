@@ -20,11 +20,11 @@
         @confirm-feerecepient="confirmFeeRecepient"
         @delete-preview="deletePreviewKey"
         @confirm-graffiti="confirmEnteredGrafiti"
-        @confirm-remote="importRemoteKey"
+        @confirm-remote="confirmImportRemoteKeys"
       />
       <ManagementSection
         @graffiti-panel="graffitiPanelHandler"
-        @import-remote="importRemoteKey"
+        @import-remote="confirmImportRemoteKeys"
         @withdraw-multiple="withdrawModalHandler"
       />
     </div>
@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
-import ListSection from "./sections/ListSection.vue";
+import ListSection from "./sections/ListSection";
 import ManagementSection from "./sections/ManagementSection.vue";
 import ControlService from "../../../store/ControlService";
 import ImportValidator from "./components/modals/ImportValidator.vue";
@@ -53,6 +53,7 @@ import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
+import { useDeepClone } from "@/composables/utils";
 
 //Store
 const stakingStore = useStakingStore();
@@ -206,12 +207,17 @@ const importKey = async (val) => {
 
 const riskAccepted = async () => {
   if (stakingStore.previewRemoteKeys.length > 0) {
-    // await importRemoteKey();
-    console.log("importRemoteKey");
+    await importRemoteKey(
+      useDeepClone({
+        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+        url: stakingStore.previewRemoteKeys[0]?.url, //url is for all keys the same
+        pubkeys: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
+      })
+    );
   } else {
     await importKey(stakingStore.importEnteredPassword);
-    stakingStore.setActiveModal(null);
   }
+  stakingStore.setActiveModal(null);
 };
 
 //Validation validator key Password
@@ -222,15 +228,12 @@ const confirmPassword = async (pass) => {
 };
 
 const importValidatorProcessing = async () => {
-  console.log(stakingStore.slashingDB);
   stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
     files: stakingStore.keyFiles,
     password: stakingStore.importEnteredPassword,
     serviceID: stakingStore.selectedValidatorService.config?.serviceID,
     slashingDB: stakingStore.slashingDB?.path || null,
   });
-
-  console.log(stakingStore.checkActiveValidatorsResponse);
   stakingStore.setActivePanel(null);
   if (
     stakingStore.checkActiveValidatorsResponse.length === 0 ||
@@ -619,19 +622,45 @@ const downloadFile = (data) => {
 
 // ******  Remote Key *******
 
-const importRemoteKey = async () => {
-  console.log("importRemoteKey");
+const importRemoteKey = async (args) => {
   stakingStore.setActivePanel(null);
   stakingStore.isRemoteListActive = false;
   stakingStore.previewRemoteKeys = [];
+  stakingStore.remoteUrl = "";
 
   //************ Infos ************
   // stakingStore.remoteUrl is if the user wants to import from a remote url
   //stakingStore.selectedServiceToFilter is the selected validator filter on sidebar
+  await ControlService.importRemoteKeys(args);
 
-  stakingStore.remoteUrl = "";
   stakingStore.forceRefresh = true;
   await listKeys();
+};
+
+const confirmImportRemoteKeys = async () => {
+  stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
+    files: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
+    serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+    isRemote: true,
+  });
+  stakingStore.setActivePanel(null);
+  if (
+    stakingStore.checkActiveValidatorsResponse.length === 0 ||
+    stakingStore.checkActiveValidatorsResponse.includes("Validator check error:\n")
+  ) {
+    importRemoteKey(
+      useDeepClone({
+        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+        url: stakingStore.previewRemoteKeys[0]?.url,
+        pubkeys: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
+      })
+    );
+    stakingStore.keyFiles = [];
+    stakingStore.previewRemoteKeys = [];
+  } else {
+    stakingStore.setActiveModal("risk");
+    console.log("error: there are active validators");
+  }
 };
 
 //****End of Client Commands Buttons ****

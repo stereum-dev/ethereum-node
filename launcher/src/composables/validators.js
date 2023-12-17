@@ -31,6 +31,13 @@ export async function useListKeys(forceRefresh) {
             })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
+
+          //make sure there are no duplicates
+          let validating_pubkeys = result.data.map(obj => obj.validating_pubkey);
+          result.data = result.data.filter((obj, index) => {
+            return validating_pubkeys.indexOf(obj.validating_pubkey) === index;
+          });
+
         }
 
         //update service config (pinia)

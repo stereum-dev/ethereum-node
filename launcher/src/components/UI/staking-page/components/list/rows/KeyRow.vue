@@ -10,7 +10,7 @@ import { computed } from 'vue';
         <img
           v-if="props.item.isRemote"
           class="w-full h-full"
-          src="/img/icon/the-staking/remotekey.png"
+          src="/img/icon/the-staking/remotekey.svg"
           alt="Key Icon"
           @mousedown.prevent
         />

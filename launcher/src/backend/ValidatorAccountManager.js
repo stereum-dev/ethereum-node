@@ -47,7 +47,7 @@ export class ValidatorAccountManager {
       pubkeys = files;
     } else {
       this.batches = [];
-      this.createBatch(files, password, slashingDB, client.service === "Web3SignerService" ? 20 : 100);
+      this.createBatch(files, password, slashingDB, isRemote ? 20 : 100);
       pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
     }
 

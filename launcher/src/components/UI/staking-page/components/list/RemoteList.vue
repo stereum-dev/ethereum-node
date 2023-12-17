@@ -54,7 +54,12 @@ const localKeys = async () => {
     console.log(remoteSignerStats.error);
   } else {
     stakingStore.previewRemoteKeys = remoteSignerStats.keys.map((k) => {
-      return { pubkey: k, selected: true, url: remoteSignerStats.url };
+      return {
+        pubkey: k,
+        selected: true,
+        url: remoteSignerStats.url,
+        serviceID: stakingStore.remoteUrl ? undefined : service?.config?.serviceID,
+      };
     });
   }
 };

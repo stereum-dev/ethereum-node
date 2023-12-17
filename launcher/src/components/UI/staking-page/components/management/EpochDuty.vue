@@ -27,9 +27,7 @@ const epoch = ref({
 });
 
 const getFilteredValidators = computed(() => {
-  return stakingStore.filteredKeys.filter(
-    (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
-  );
+  return stakingStore.keys.filter((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID);
 });
 
 onMounted(() => {
