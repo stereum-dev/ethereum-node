@@ -120,16 +120,40 @@ export default {
       this.installedServices.forEach((item) => {
         if (item.name === "Flashbots Mev Boost") this.mevService = item;
       });
+
       this.isMevAvailable = true;
-      ControlService.getServiceConfig(this.mevService.config.serviceID).then((service) => {
-        let relayURLs = service.entrypoint[service.entrypoint.findIndex((e) => e === "-relays") + 1].split(",");
-        relayURLs.forEach((relay) => {
-          let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
-          if (relayData) this.checkedRelays.push(relayData);
-        });
-        this.serviceConfig = service;
-      });
+
+      if (this.mevService && this.mevService.config && this.mevService.config.serviceID) {
+        ControlService.getServiceConfig(this.mevService.config.serviceID)
+          .then((service) => {
+            if (service && service.entrypoint) {
+              const relayEntryPointIndex = service.entrypoint.findIndex((e) => e === "-relays");
+              if (relayEntryPointIndex !== -1 && relayEntryPointIndex + 1 < service.entrypoint.length) {
+                const relayURLs = service.entrypoint[relayEntryPointIndex + 1].split(",");
+                relayURLs.forEach((relay) => {
+                  let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
+                  if (relayData) this.checkedRelays.push(relayData);
+                });
+              } else {
+                console.error("Invalid or missing -relays entry in service entrypoint");
+                // Handle the error or add appropriate fallback logic.
+              }
+              this.serviceConfig = service;
+            } else {
+              console.error("Invalid service or missing entrypoint");
+              // Handle the error or add appropriate fallback logic.
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching service config:", error);
+            // Handle the error or add appropriate fallback logic.
+          });
+      } else {
+        console.error("Invalid or missing service or serviceID in config");
+        // Handle the error or add appropriate fallback logic.
+      }
     },
+
     openBrowser() {
       let url = "https://boost.flashbots.net/";
       window.open(url, "_blank");

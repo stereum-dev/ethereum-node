@@ -4,6 +4,8 @@ export const useNodeHeader = defineStore("nodeHeader", {
     return {
       importBoxModel: "",
       passwordBoxModel: "",
+      selectedValidatorFromNodeAlert: {},
+      openModalFromNodeAlert: false,
       depositFile: false,
       enrIsGenerating: true,
       generatedENR: "",
