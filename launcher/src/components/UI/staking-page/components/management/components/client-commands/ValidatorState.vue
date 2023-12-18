@@ -64,9 +64,12 @@ const getStateColor = computed(() => {
 });
 
 watch(
-  () => stakingStore.selectedServiceToFilter,
-  (service) => {
-    if (!service) return;
+  () => [stakingStore.selectedServiceToFilter, stakingStore.keys],
+  ([service, keys]) => {
+    if (!service || keys.length === 0) {
+      stakingStore.keyNumbers = 0;
+      return;
+    }
     stakingStore.keyNumbers = stakingStore.keys.filter((key) => key.validatorID === service.config.serviceID).length;
   },
   { immediate: true }
