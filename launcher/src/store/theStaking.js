@@ -51,6 +51,7 @@ export const useStakingStore = defineStore("theStaking", {
 
       // ***** Validator Keys *****
       isPubkeyVisible: false,
+      removeResponse: [],
       removeKeys: [],
       pickedSlashing: "no",
       slashingDB: "", // Slashing DB

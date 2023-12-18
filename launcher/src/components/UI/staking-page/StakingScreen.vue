@@ -130,6 +130,8 @@ const readFileContent = (file) => {
   reader.onload = (event) => {
     try {
       const jsonContent = JSON.parse(event.target.result);
+      // Add filename property to jsonContent
+      jsonContent.filename = file.name;
       stakingStore.previewKeys.push(jsonContent);
     } catch (e) {
       console.error("Error parsing JSON file:", e);
@@ -467,11 +469,18 @@ const pickValidatorService = async (service) => {
 
 //Delete Preview Key
 const deletePreviewKey = async (item) => {
-  stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.pubkey !== item.pubkey);
+  stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.filename !== item.filename);
+  const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
+
+  if (indexItem !== -1) {
+    stakingStore.keyFiles.splice(indexItem, 1);
+  }
+
   if (!stakingStore.previewKeys.length) {
     stakingStore.isPreviewListActive = false;
     stakingStore.setActivePanel("insert");
   }
+
   stakingStore.forceRefresh = true;
   await listKeys();
 };
@@ -560,12 +569,20 @@ const deleteValidators = async (serviceID, keys, picked) => {
     keys: keys,
     picked: picked === "yes" ? true : false,
   });
+  stakingStore.removeResponse.push({
+    name: "local",
+    data: result,
+  });
   return result;
 };
 const deleteRemoteKeys = async (serviceID, keys) => {
   const result = await ControlService.deleteRemoteKeys({
     serviceID: serviceID,
     pubkeys: keys,
+  });
+  stakingStore.removeResponse.push({
+    name: "remote",
+    data: result,
   });
   return result;
 };
@@ -597,18 +614,20 @@ const removeValidatorKeys = async () => {
       // Remove all Local Keys if selected validator holds some
       if (localKeys && localKeys.length > 0) {
         const returnVal = await deleteValidators(id, localKeys, stakingStore.pickedSlashing);
+
         if (stakingStore.pickedSlashing === "yes") {
           downloadFile(returnVal);
         }
       }
       // Remove all Remote Keys if selected validator holds some
-      if (remoteKeys && remoteKeys.length > 0) await deleteRemoteKeys(id, remoteKeys);
+      if (remoteKeys && remoteKeys.length > 0) {
+        await deleteRemoteKeys(id, remoteKeys);
+      }
     } else if (changed === 0) {
       console.log("Nothing to delete!");
     } else {
       console.log("Multiple validator services are not supported yet!");
     }
-
     stakingStore.removeKeys = [];
 
     // Refresh the list of keys
@@ -616,6 +635,8 @@ const removeValidatorKeys = async () => {
     await listKeys();
     await listGroups();
     stakingStore.isGroupListActive = false;
+
+    stakingStore.removeResponse = [];
     stakingStore.setActiveModal(null);
   }
 };

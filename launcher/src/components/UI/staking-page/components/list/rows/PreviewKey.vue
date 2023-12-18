@@ -13,7 +13,7 @@ import { computed, ref } from 'vue';
       <span class="text-center text-xs text-gray-300 ml-2">{{ props.item.pubkey }}</span>
       <div
         class="w-6 h-6 bg-[#1b1d1f] hover:bg-[#212325] rounded-full flex justify-center items-center p-1 cursor-pointer"
-        @click="deletePreview(props.item)"
+        @click="deletePreview"
       >
         <img
           class="w-4 h-4 hover:scale-105 active:scale-100"
@@ -40,8 +40,8 @@ const isRemoveActive = ref(false);
 
 const emit = defineEmits(["deletePreview"]);
 
-const deletePreview = (item) => {
+const deletePreview = () => {
   isRemoveActive.value = true;
-  emit("deletePreview", item);
+  emit("deletePreview", props.item);
 };
 </script>
