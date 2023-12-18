@@ -414,6 +414,7 @@ const confirmValidatorKeyRename = async (name) => {
     keys[el.key].keyName = name;
     await ControlService.writeKeys(keys);
     stakingStore.setActivePanel(null);
+    stakingStore.validatorDisplayName = "";
   } else {
     console.log("Couldn't read KeyFile!");
   }

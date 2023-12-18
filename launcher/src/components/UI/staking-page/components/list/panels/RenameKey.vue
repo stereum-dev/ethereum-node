@@ -117,6 +117,7 @@ const cancelRename = () => {
 };
 
 const resetName = () => {
+  stakingStore.validatorDisplayName = "";
   emit("resetName", stakingStore.selectKeyToRename);
 };
 </script>
