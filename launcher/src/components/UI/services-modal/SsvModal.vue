@@ -31,31 +31,8 @@
           </div>
         </div>
       </div>
-      <!-- <div class="wrapper">
-        <div v-if="dataLoading" class="spinnerBox">
-          <img src="/img/icon/control/spinner.gif" alt="spinner" />
-        </div>
-        <div v-else class="content-box">
-          <frontpage-ssv
-            v-if="pubkeyModalActive"
-            @open-pubkey="operatorModalHandler"
-            @open-secretkey="registerSecretkeyHandler"
-          ></frontpage-ssv>
-          <register-ssv
-            v-if="registerModalActive"
-            :pubkey="pubkey"
-            :secretkey="secretkey"
-            @register-pubkey="registerSsvPubkeyHandler"
-          ></register-ssv>
-          <secretkey-register
-            v-if="registerSecretkeyActive"
-            :ssv-service="ssvService"
-            @insert-key="insertSecretkeyHandler"
-          ></secretkey-register>
-          <ssv-dashboard v-if="ssvDashboardActive" :operator-data="operatorData" :pubkey="pubkey"></ssv-dashboard>
-        </div>
-      </div> -->
 
+      <!-- <div v-if="dataLoading" class="spinnerBox"> -->
       <!-- start renew -->
       <div class="modal-content">
         <div class="browserBox">
@@ -68,7 +45,7 @@
                 ? 'The most secure way to run your Operator node, is to generate an Encrypted key pair.'
                 : 'Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!'
             }`"
-            btn-name="GENERATE"
+            :btn-name="`${!passGenerateEncryptKeyConfirmed ? 'GENERATE' : 'CONFIRM'}`"
             @confirmPluginClick="switchEncryptedKeyGenerator = true"
           />
           <ImportBox
@@ -94,11 +71,14 @@
         <div class="browserBox">
           <ConfirmBox
             v-if="!importEncryptedKey"
+            :class="[
+              !importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator ? 'disabled' : '',
+            ]"
             btn-bg-color="#1ba5f8"
-            top-line="IMPORT ENCRYPTED OPERATOR KEY"
-            bottom-line="Import an existing encrypted operator key"
-            btn-name="IMPORT"
-            @confirmPluginClick="importEncryptedKey = true"
+            :top-line="secondRowTitle"
+            :bottom-line="secondRowExplain"
+            :btn-name="secondRowBtnName"
+            @confirmPluginClick="secondRowBtnHandler"
           />
           <PasswordBox
             v-else
@@ -112,11 +92,14 @@
         </div>
         <div v-if="!importEncryptedKey" class="browserBox">
           <ConfirmBox
+            :class="[
+              !importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator ? 'disabled' : '',
+            ]"
             btn-bg-color="#1ba5f8"
-            top-line="IMPORT raw (OLD METHOD) Operator Keys"
-            bottom-line="Use an existing operator private key to recover your existing node operator's  processes"
-            btn-name="IMPORT"
-            @confirmPluginClick="console.log('confirm 3rd row PluginClick')"
+            :top-line="thirdRowTitle"
+            :bottom-line="thirdRowExplain"
+            :btn-name="thirdRowBtnName"
+            @confirmPluginClick="thirdRowBtnHandler"
           />
         </div>
       </div>
@@ -215,6 +198,48 @@ export default {
     },
     borderForInput() {
       return this.tryAgain ? "1px solid red" : "none";
+    },
+    secondRowTitle() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "DOWNLOAD BACKUP";
+      } else {
+        return "IMPORT ENCRYPTED OPERATOR KEY";
+      }
+    },
+    secondRowExplain() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
+      } else {
+        return "Import an existing encrypted operator key";
+      }
+    },
+    secondRowBtnName() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "DOWNLOAD";
+      } else {
+        return "IMPORT";
+      }
+    },
+    thirdRowTitle() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "REGISTER NEW OPERATOR";
+      } else {
+        return "IMPORT raw (OLD METHOD) Operator Keys";
+      }
+    },
+    thirdRowExplain() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "Register your SSV node as a new operator in the browser";
+      } else {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
+      }
+    },
+    thirdRowBtnName() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "OPEN IN BROWSER";
+      } else {
+        return "IMPORT";
+      }
     },
   },
 
@@ -345,6 +370,20 @@ export default {
           this.confirmPassToGenerate = "";
           this.tryAgain = true;
         }
+      }
+    },
+    secondRowBtnHandler() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        console.log("download");
+      } else {
+        this.importEncryptedKey = true;
+      }
+    },
+    thirdRowBtnHandler() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        console.log("open in browser");
+      } else {
+        console.log("import");
       }
     },
   },
