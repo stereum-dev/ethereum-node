@@ -37,7 +37,10 @@
       <div class="modal-content">
         <div class="browserBox">
           <ConfirmBox
-            v-if="(!importEncryptedKey && !switchEncryptedKeyGenerator) || passGenerateEncryptKeyConfirmed"
+            v-if="
+              (!importRawOperatorKeyOldMethod && !importEncryptedKey && !switchEncryptedKeyGenerator) ||
+              passGenerateEncryptKeyConfirmed
+            "
             :btn-bg-color="`#1ba5f8`"
             :top-line="`${!passGenerateEncryptKeyConfirmed ? ' GENERATE ENCRYPTED PAIR' : 'CONFIRM WARNING'}`"
             :bottom-line="`${
@@ -49,13 +52,21 @@
             @confirmPluginClick="switchEncryptedKeyGenerator = true"
           />
           <ImportBox
-            v-else-if="!switchEncryptedKeyGenerator || (passGenerateEncryptKeyConfirmed && importEncryptedKey)"
+            v-else-if="
+              !switchEncryptedKeyGenerator ||
+              (passGenerateEncryptKeyConfirmed && importEncryptedKey) ||
+              importRawOperatorKeyOldMethod
+            "
             :btn-bg-color="`#1ba5f8`"
-            import-box-title="SELECT AN EXISTING PRIVATE KEY TO IMPORT"
+            :import-box-title="
+              importRawOperatorKeyOldMethod
+                ? 'SELECT AN EXISTING PRIVATE KEY TO IMPORT'
+                : 'SELECT UNENCRYPTED PRIVATE KEY'
+            "
             import-box-placeholder=""
             try-again="true"
             btn-name="SELECT"
-            @importBoxHandler="test"
+            @importBoxHandler="firstImportBoxHandler"
           />
 
           <PasswordBox
@@ -154,6 +165,7 @@ export default {
       tryAgain: false,
       passGenerateEncryptKeyConfirmed: false,
       importEncryptedKey: false,
+      importRawOperatorKeyOldMethod: false,
     };
   },
 
@@ -200,14 +212,18 @@ export default {
       return this.tryAgain ? "1px solid red" : "none";
     },
     secondRowTitle() {
-      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator && !this.importRawOperatorKeyOldMethod) {
         return "DOWNLOAD BACKUP";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "MIGRATE TO ENCRYPTED KEY?";
       } else {
         return "IMPORT ENCRYPTED OPERATOR KEY";
       }
     },
     secondRowExplain() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
         return "Use an existing operator private key to recover your existing node operator's  processes";
       } else {
         return "Import an existing encrypted operator key";
@@ -216,6 +232,8 @@ export default {
     secondRowBtnName() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "DOWNLOAD";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "MIGRATE";
       } else {
         return "IMPORT";
       }
@@ -223,6 +241,8 @@ export default {
     thirdRowTitle() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "REGISTER NEW OPERATOR";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "IMPORT UNENCRYPTED PRIVATE KEY";
       } else {
         return "IMPORT raw (OLD METHOD) Operator Keys";
       }
@@ -230,6 +250,8 @@ export default {
     thirdRowExplain() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "Register your SSV node as a new operator in the browser";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
       } else {
         return "Use an existing operator private key to recover your existing node operator's  processes";
       }
@@ -383,7 +405,8 @@ export default {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         console.log("open in browser");
       } else {
-        console.log("import");
+        this.importRawOperatorKeyOldMethod = true;
+        console.log("import raw operator key");
       }
     },
   },
