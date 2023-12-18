@@ -103,7 +103,13 @@ stakingStore.filteredKeys = computed(() => {
   if (stakingStore.searchContent === "") {
     return stakingStore.keys;
   }
-  return stakingStore.keys.filter((key) => key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase()));
+  return stakingStore.keys.filter(
+    (key) =>
+      (key.key && key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
+      (key.displayName &&
+        key.displayName !== "" &&
+        key.displayName.toLowerCase().includes(stakingStore.searchContent.toLowerCase()))
+  );
 });
 
 const getFilteredValidators = computed(() => {

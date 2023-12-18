@@ -233,6 +233,7 @@ const searchPanel = () => {
   stakingStore.isPreviewListActive = false;
   if (stakingStore.activePanel === "search") {
     stakingStore.setActivePanel(null);
+    stakingStore.searchContent = "";
   } else {
     stakingStore.setActivePanel("search");
   }
