@@ -24,17 +24,16 @@
       alt="Key Icon"
     />
     <span class="text-[10px] font-semibold text-center col-start-6 col-span-1" :class="getTextColor"
-      >{{ getKeyNumbers }}
+      >{{ stakingStore.keyNumbers }}
     </span>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 
 const stakingStore = useStakingStore();
-const filteredKeys = ref([]);
 
 const getServiceState = computed(() => {
   return stakingStore.selectedServiceToFilter?.state;
@@ -64,17 +63,12 @@ const getStateColor = computed(() => {
   return "bg-gray-500";
 });
 
-const getKeyNumbers = computed(() => {
-  return filteredKeys.value.length > 0 ? filteredKeys.value.length : 0;
-});
-
 watch(
-  () => stakingStore.keys,
-  (newKeys) => {
-    filteredKeys.value = newKeys.filter(
-      (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
-    );
+  () => stakingStore.selectedServiceToFilter,
+  (service) => {
+    if (!service) return;
+    stakingStore.keyNumbers = stakingStore.keys.filter((key) => key.validatorID === service.config.serviceID).length;
   },
-  { deep: true }
+  { immediate: true }
 );
 </script>
