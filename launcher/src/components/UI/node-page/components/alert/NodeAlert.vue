@@ -186,6 +186,8 @@ export default {
       dataState: "dataState",
       wsState: "wsState",
       displayUpdatePanel: "displayUpdatePanel",
+      selectedValidatorFromNodeAlert: "selectedValidatorFromNodeAlert",
+      openModalFromNodeAlert: "openModalFromNodeAlert",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -282,8 +284,8 @@ export default {
     },
     expertHandler(el) {
       let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
-      selectedObject.expertOptionsModal = true;
-      return selectedObject;
+      this.selectedValidatorFromNodeAlert = selectedObject;
+      this.openModalFromNodeAlert = true;
     },
     hideExpertMode(el) {
       el.expertOptionsModal = false;

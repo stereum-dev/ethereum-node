@@ -31,13 +31,13 @@
               @click="networkDropdownOpen = !networkDropdownOpen"
             >
               <img
-                v-if="manageStore.selectedNetwork.id"
+                v-if="manageStore.selectedNetwork?.id"
                 :src="manageStore.selectedNetwork.icon"
                 alt="Network Icon"
                 class="w-7"
               />
               <span>{{
-                manageStore.selectedNetwork.id ? manageStore.selectedNetwork.name : "Select Network From List"
+                manageStore.selectedNetwork?.id ? manageStore.selectedNetwork?.name : "Select Network From List"
               }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
