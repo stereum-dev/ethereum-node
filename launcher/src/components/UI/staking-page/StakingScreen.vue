@@ -419,8 +419,18 @@ const confirmValidatorKeyRename = async (name) => {
   }
 };
 
-const resetValidatorKeyName = (key) => {
-  console.log("resetValidatorKeyName", key);
+const resetValidatorKeyName = async (el) => {
+  el.displayName = "";
+  const keys = await ControlService.readKeys();
+  if (keys) {
+    keys[el.key].keyName = "";
+    await ControlService.writeKeys(keys);
+    stakingStore.setActivePanel(null);
+  } else {
+    console.log("Couldn't Reset Key Name!");
+  }
+
+  stakingStore.keys.find((key) => key.key === stakingStore.selectKeyToRename.key).selected = false;
 };
 
 //****End of Validator Key ****

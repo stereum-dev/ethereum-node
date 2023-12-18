@@ -4452,11 +4452,6 @@ html body {
   border-color: rgb(13 148 136 / var(--tw-border-opacity));
 }
 
-.hover\:border-gray-700:hover{
-  --tw-border-opacity: 1;
-  border-color: rgb(55 65 81 / var(--tw-border-opacity));
-}
-
 .hover\:bg-\[\#212325\]:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(33 35 37 / var(--tw-bg-opacity));
@@ -4495,11 +4490,6 @@ html body {
 .hover\:bg-\[\#2b3034\]:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(43 48 52 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#323335\]:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(50 51 53 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-\[\#325e5a\]:hover{
