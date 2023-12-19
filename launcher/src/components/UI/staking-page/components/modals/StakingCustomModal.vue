@@ -5,7 +5,8 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
   >
     <div class="absolute bg-black opacity-80 inset-0 z-0 rounded-md" @click="closeModal"></div>
     <div
-      class="w-2/3 min-h-[450px] max-h-[500px] p-2 relative mx-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-600 grid grid-cols-12 grid-rows-7"
+      class="w-2/3 p-2 relative mx-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-600 grid grid-cols-12 grid-rows-7"
+      :style="getHeight"
     >
       <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7">
         <div v-if="mainTitle" class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
@@ -99,6 +100,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  height: {
+    type: String,
+    default: "",
+  },
 });
 
 //Emits
@@ -110,6 +115,17 @@ const stakingStore = useStakingStore();
 //Refs
 
 //Computed
+
+console.log(props.height);
+
+const getHeight = computed(() => {
+  if (props.height && props.height !== "") {
+    const heightValue = `${props.height}px`;
+    return { height: heightValue };
+  } else {
+    return { minHeight: "450px", maxHeight: "550px" };
+  }
+});
 
 const getTitleColor = computed(() => {
   if (props.titleColor === "remove") {

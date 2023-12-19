@@ -1670,10 +1670,6 @@ video {
   max-height: 430px;
 }
 
-.max-h-\[500px\]{
-  max-height: 500px;
-}
-
 .max-h-\[503px\]{
   max-height: 503px;
 }
@@ -2804,11 +2800,6 @@ video {
 .border-r-\[\#264744\]{
   --tw-border-opacity: 1;
   border-right-color: rgb(38 71 68 / var(--tw-border-opacity));
-}
-
-.border-r-gray-50{
-  --tw-border-opacity: 1;
-  border-right-color: rgb(249 250 251 / var(--tw-border-opacity));
 }
 
 .border-r-transparent{
