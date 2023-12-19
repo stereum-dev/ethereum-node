@@ -116,8 +116,6 @@ const stakingStore = useStakingStore();
 
 //Computed
 
-console.log(props.height);
-
 const getHeight = computed(() => {
   if (props.height && props.height !== "") {
     const heightValue = `${props.height}px`;
