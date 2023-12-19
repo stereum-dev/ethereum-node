@@ -83,7 +83,10 @@
           <ConfirmBox
             v-if="!importEncryptedKey"
             :class="[
-              !importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator ? 'disabled' : '',
+              (importRawOperatorKeyOldMethod && !importBoxModel) ||
+              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator)
+                ? 'disabled'
+                : '',
             ]"
             btn-bg-color="#1ba5f8"
             :top-line="secondRowTitle"
@@ -104,7 +107,10 @@
         <div v-if="!importEncryptedKey" class="browserBox">
           <ConfirmBox
             :class="[
-              !importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator ? 'disabled' : '',
+              (importRawOperatorKeyOldMethod && !importBoxModel) ||
+              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator)
+                ? 'disabled'
+                : '',
             ]"
             btn-bg-color="#1ba5f8"
             :top-line="thirdRowTitle"
