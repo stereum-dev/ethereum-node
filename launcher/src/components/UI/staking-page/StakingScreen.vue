@@ -535,16 +535,20 @@ const withdrawValidatorKey = async () => {
         pubkey: key.key,
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
       });
+      console.log("SINGLEEEE", stakingStore.withdrawAndExitResponse);
     } else {
       //if multiple keys
-      stakingStore.keys.forEach(async (item) => {
+      const multiKeys = stakingStore.keys.map((item) => {
         if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
-          stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
-            pubkey: item.key,
-            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-          });
+          return item.key;
         }
       });
+
+      stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+        pubkeys: multiKeys,
+        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      });
+      console.log("MULTIIII", stakingStore.withdrawAndExitResponse);
     }
   } catch (e) {
     console.log(e);
