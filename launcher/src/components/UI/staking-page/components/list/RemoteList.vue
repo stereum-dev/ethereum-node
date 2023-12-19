@@ -56,7 +56,7 @@ const localKeys = async () => {
     stakingStore.previewRemoteKeys = remoteSignerStats.keys.map((k) => {
       return {
         pubkey: k,
-        selected: true,
+        selected: false,
         url: remoteSignerStats.url,
         serviceID: stakingStore.remoteUrl ? undefined : service?.config?.serviceID,
       };

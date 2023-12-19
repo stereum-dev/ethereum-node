@@ -23,7 +23,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
         <slot name="content"></slot>
         <div class="w-full flex justify-end text-md font-bold py-3 mt-2 space-y-4 absolute bottom-4 right-2">
           <button
-            v-if="!props.isProcessing"
+            v-if="!props.isProcessing && props.confirmText"
             class="mr-4 min-w-[100px] px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full uppercase active:scale-90 transition-all duration-150"
             :class="!activeButton ? 'opacity-40 pointer-events-none bg-gray-500' : getButtonColor"
             @click="emitConfirmAction"

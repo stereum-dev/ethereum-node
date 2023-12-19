@@ -50,7 +50,11 @@ const remoteKey = ref("");
 //Temprorary function to test adding new remote keys
 const addNewRemoteKey = () => {
   if (remoteKey.value !== "") {
-    stakingStore.previewRemoteKeys.push({ pubkey: remoteKey.value, selected: true, url: stakingStore.remoteUrl });
+    stakingStore.previewRemoteKeys.push({
+      pubkey: remoteKey.value,
+      selected: false,
+      url: stakingStore.remoteUrl,
+    });
   }
 
   remoteKey.value = "";

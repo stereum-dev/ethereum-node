@@ -2806,6 +2806,11 @@ video {
   border-right-color: rgb(38 71 68 / var(--tw-border-opacity));
 }
 
+.border-r-gray-50{
+  --tw-border-opacity: 1;
+  border-right-color: rgb(249 250 251 / var(--tw-border-opacity));
+}
+
 .border-r-transparent{
   border-right-color: transparent;
 }

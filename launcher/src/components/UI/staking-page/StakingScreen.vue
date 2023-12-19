@@ -45,6 +45,7 @@ import ControlService from "../../../store/ControlService";
 import ImportValidator from "./components/modals/ImportValidator.vue";
 import RiskWarning from "./components/modals/RiskWarning.vue";
 import RemoveGroup from "./components/modals/RemoveGroup.vue";
+import ImportRemote from "./components/modals/ImportRemote.vue";
 import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
 import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
@@ -93,6 +94,9 @@ const modals = {
     events: {
       removeValidator: () => removeValidatorKeys(),
     },
+  },
+  remote: {
+    component: ImportRemote,
   },
 };
 //Computed & Watchers
@@ -667,9 +671,11 @@ const importRemoteKey = async (args) => {
 
   stakingStore.forceRefresh = true;
   await listKeys();
+  stakingStore.setActiveModal(null);
 };
 
 const confirmImportRemoteKeys = async () => {
+  stakingStore.setActiveModal("remote");
   stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
     files: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
     serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
@@ -687,6 +693,7 @@ const confirmImportRemoteKeys = async () => {
         pubkeys: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
       })
     );
+
     stakingStore.keyFiles = [];
     stakingStore.previewRemoteKeys = [];
   } else {
