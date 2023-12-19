@@ -39,11 +39,10 @@ import { useStakingStore } from '@/store/theStaking';
 
       <div class="col-start-3 col-span-1 justify-self-center">
         <img
-          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150 opacity-30 pointer-events-none"
           src="/img/icon/the-staking/withdraw.png"
           alt="Icon"
           @mousedown.prevent
-          @click="withdrawGroup(props.item)"
         />
       </div>
       <div class="col-start-4 col-span-1 justify-self-center">
@@ -99,10 +98,6 @@ const openGroup = (item) => {
 
 const renameGroup = (item) => {
   emit("renameGroup", item);
-};
-
-const withdrawGroup = (item) => {
-  emit("withdrawGroup", item);
 };
 
 const removeGroup = (item) => {

@@ -5,6 +5,8 @@
     message-text="Are you sure you want to remove this Key(s)?"
     :click-outside-text="clickOut"
     confirm-text="remove"
+    height="450"
+    :external-close="true"
     :active-button="activeButton"
     :is-processing="checkProcessing"
     @confirm-action="removeValidator"
@@ -119,10 +121,18 @@ const removeValidator = () => {
 
 const closeModal = () => {
   if (stakingStore.selectedKeyToRemove !== null) {
-    stakingStore.keys.find((key) => key.key === stakingStore.selectedKeyToRemove.key).showExitText = false;
     stakingStore.selectedKeyToRemove = null;
   }
-  stakingStore.removeKeys = [];
+  if (stakingStore.removeKeys.length > 0) {
+    stakingStore.removeKeys = [];
+  }
+
+  stakingStore.keys.forEach((key) => {
+    if (key.showExitText) {
+      key.showExitText = false;
+    }
+  });
+
   stakingStore.setActiveModal(null);
 };
 

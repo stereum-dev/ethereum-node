@@ -30,7 +30,7 @@ const totalKeys = computed(() => {
 
 // Computed property to calculate the total balance for the validator service
 const totalBalance = computed(() => {
-  const validatorID = stakingStore.selectedServiceToFilter.config?.serviceID;
+  const validatorID = stakingStore.selectedServiceToFilter?.config?.serviceID;
   if (!validatorID) return 0;
   const keysForValidator = stakingStore.keys.filter((key) => key.validatorID === validatorID);
   return keysForValidator.reduce((sum, key) => {

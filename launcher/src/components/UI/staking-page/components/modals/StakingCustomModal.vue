@@ -80,6 +80,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  externalClose: {
+    type: Boolean,
+    default: false,
+  },
   subTitle: {
     type: String,
     default: "",
@@ -153,7 +157,7 @@ const getButtonColor = computed(() => {
 
 //Methods
 const closeModal = () => {
-  if (props.clickOutsideText !== null) {
+  if (!props.externalClose) {
     stakingStore.setActiveModal(null);
     stakingStore.setActiveModal(null);
     stakingStore.setActivePanel(null);

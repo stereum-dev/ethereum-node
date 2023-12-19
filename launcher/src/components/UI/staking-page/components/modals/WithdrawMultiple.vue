@@ -3,6 +3,7 @@
     main-title="Withdraw & Exit Validator Keys"
     title-color="withdraw"
     :click-outside-text="clickOut"
+    :external-close="true"
     :confirm-text="confirmButtonText"
     :is-processing="isProcessing"
     :active-button="activeButton"
