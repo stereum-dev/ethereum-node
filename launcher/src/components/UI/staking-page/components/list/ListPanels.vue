@@ -37,7 +37,6 @@
       </div>
       <div
         class="w-2/3 h-full col-start-3 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
-        :class="stakingStore.isGroupListActive ? 'opacity-50 pointer-events-none ' : ''"
       >
         <img
           class="h-6"
