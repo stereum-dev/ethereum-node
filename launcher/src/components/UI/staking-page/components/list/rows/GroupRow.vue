@@ -17,7 +17,7 @@ import { useStakingStore } from '@/store/theStaking';
     <div class="col-start-8 col-end-10 self-center overflow-hidden flex justify-start items-center">
       <span class="text-left ml-2 text-xs text-gray-300">{{ getBalanceSum }}</span>
     </div>
-    <div class="col-start-10 col-span-full bg-[#151618] rounded-full grid grid-cols-4 items-center">
+    <div class="col-start-10 col-span-full bg-[#151618] rounded-full grid grid-cols-3 items-center">
       <div class="col-start-1 col-span-1 justify-self-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
@@ -37,15 +37,15 @@ import { useStakingStore } from '@/store/theStaking';
         />
       </div>
 
-      <div class="col-start-3 col-span-1 justify-self-center">
+      <!-- <div class="col-start-3 col-span-1 justify-self-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150 opacity-30 pointer-events-none"
           src="/img/icon/the-staking/withdraw.png"
           alt="Icon"
           @mousedown.prevent
         />
-      </div>
-      <div class="col-start-4 col-span-1 justify-self-center">
+      </div> -->
+      <div class="col-start-3 col-span-1 justify-self-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/removeGroup.png"

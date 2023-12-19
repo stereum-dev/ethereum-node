@@ -3113,11 +3113,17 @@ rm -rf diskoutput
             const exitMsg = result.data;
             const exitCommand = `docker run --rm --network=stereum curlimages/curl curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${JSON.stringify(
               exitMsg
-            )}'`;
+            )}' -i -s`;
             const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
+
+            log.info(runExitCommand);
+
+            //Error handling
             if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
               throw SSHService.extractExecError(runExitCommand);
-            log.info(runExitCommand);
+            if (!runExitCommand.stdout.includes("200 OK")) {
+              throw "Undexpected Error: " + runExitCommand;
+            }
 
             // if (!runExitCommand.stdout.includes("validator_index")) { // find out "successful msg" and put instead of <validator_index> !!!!
             //   throw "Undexpected Error: " + runExitCommand.stdout;

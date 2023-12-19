@@ -24,14 +24,14 @@
       }}</span>
 
       <button
-        class="w-7 h-7 col-start-24 col-span-full rounded-md flex justify-center items-center cursor-pointer border border-gray-400 bg-[#264b4b]"
+        class="w-7 h-7 col-start-24 col-span-full rounded-md flex justify-center items-center cursor-pointer border border-gray-600 bg-[#222526]"
         @mouseenter="footerStore.cursorLocation = `Back to List`"
         @mouseleave="footerStore.cursorLocation = ''"
         @click="close"
         @mousedown.prevent
       >
         <img
-          class="w-5 h-5 hover:scale-105 active:scale-95 transition-all duration-150"
+          class="w-3 h-3 hover:scale-110 active:scale-95 transition-all duration-150"
           src="/img/icon/the-staking/backtolist.png"
           alt="Back Icon"
         />
