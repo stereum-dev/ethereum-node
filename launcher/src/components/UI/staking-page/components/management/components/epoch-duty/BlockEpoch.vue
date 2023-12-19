@@ -12,7 +12,8 @@
 </template>
 <script setup>
 import TheEpoch from "./TheEpoch";
-defineProps({
+
+const { epoch } = defineProps({
   epoch: {
     type: Object,
     required: true,

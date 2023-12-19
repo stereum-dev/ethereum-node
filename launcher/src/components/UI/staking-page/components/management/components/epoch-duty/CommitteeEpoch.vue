@@ -12,7 +12,8 @@
 </template>
 <script setup>
 import TheEpoch from "./TheEpoch.vue";
-defineProps({
+
+const { epoch } = defineProps({
   epoch: {
     type: Object,
     required: true,
