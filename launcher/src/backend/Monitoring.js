@@ -3122,7 +3122,7 @@ rm -rf diskoutput
 
             const exitResult = JSON.parse(runExitCommand.stdout)
             if (exitResult?.data === undefined) {
-              if (exitResult.code === undefined || exitResult.message === undefined) {
+              if (exitResult?.code === undefined || exitResult?.message === undefined) {
                 throw "Undexpected Error: " + exitResult;
               }
               throw exitResult.code + " " + exitResult.message;
