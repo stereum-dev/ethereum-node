@@ -3113,7 +3113,7 @@ rm -rf diskoutput
               throw result;
             }
             const exitMsg = result.data;
-            const exitCommand = `docker run --rm --network=stereum curlimages/curl curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${exitMsg}'`;
+            const exitCommand = `docker run --rm --network=stereum curlimages/curl curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${JSON.stringify(exitMsg)}'`;
             const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
             if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
               throw SSHService.extractExecError(runExitCommand);
