@@ -1456,10 +1456,6 @@ video {
   height: 8rem;
 }
 
-.h-36{
-  height: 9rem;
-}
-
 .h-4{
   height: 1rem;
 }
@@ -2481,10 +2477,6 @@ video {
   white-space: pre;
 }
 
-.whitespace-pre-line{
-  white-space: pre-line;
-}
-
 .whitespace-pre-wrap{
   white-space: pre-wrap;
 }
@@ -3266,11 +3258,6 @@ video {
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#070708\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(7 7 8 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-b{
