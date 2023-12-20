@@ -3101,6 +3101,7 @@ rm -rf diskoutput
         if (!Array.isArray(pubkey)) {
           pubkey = [pubkey];
         }
+        console.log("typeof ---------", typeof pubkey);
         let results = [];
         for (let i = 0; i < pubkey.length; i++) {
           const ref = StringUtils.createRandomString(); // Create a random string to identify the task
@@ -3121,12 +3122,8 @@ rm -rf diskoutput
             //Error handling
             if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
               throw SSHService.extractExecError(runExitCommand);
-            if (!runExitCommand.stdout.includes("200 OK")) {
-              throw "Undexpected Error: " + runExitCommand;
-            }
-
-            // if (!runExitCommand.stdout.includes("validator_index")) { // find out "successful msg" and put instead of <validator_index> !!!!
-            //   throw "Undexpected Error: " + runExitCommand.stdout;
+            // if (!runExitCommand.stdout.includes("200 OK")) {
+            //   throw "Unexpected Error: " + runExitCommand.stdout;
             // }
 
             // Push successful task
@@ -3136,9 +3133,14 @@ rm -rf diskoutput
             // add pubkey into the runExitCommands' result;
             runExitCommand["pubkey"] = `${pubkey[i]}`;
 
+            // Extract the JSON payload from the stdout
+            const jsonStartIndex = runExitCommand.stdout.indexOf("{");
+            const jsonEndIndex = runExitCommand.stdout.lastIndexOf("}");
+            const stdoutJson = runExitCommand.stdout.substring(jsonStartIndex, jsonEndIndex + 1);
+
             results.push({
               pubkey: runExitCommand.pubkey,
-              code: JSON.parse(runExitCommand.stdout).code,
+              code: JSON.parse(stdoutJson).code,
             });
           } catch (error) {
             this.nodeConnection.taskManager.otherTasksHandler(
@@ -3152,6 +3154,7 @@ rm -rf diskoutput
             return error;
           }
         }
+        console.log("results, ----", results);
         return results;
       }
     } catch (error) {
