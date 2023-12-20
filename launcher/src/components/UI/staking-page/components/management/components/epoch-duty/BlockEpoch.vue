@@ -4,6 +4,7 @@
       class="col-start-1 col-span-1 w-4 h-4 justify-self-center"
       src="/img/icon/the-staking/cube.png"
       alt="Block Icon"
+      @mousedown.prevent
     />
     <div class="col-start-2 col-span-full flex justify-evenly items-center">
       <TheEpoch :duties-number="epoch.proposerDuties" />

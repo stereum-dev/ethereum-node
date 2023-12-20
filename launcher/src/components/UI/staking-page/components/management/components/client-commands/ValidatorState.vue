@@ -2,7 +2,7 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 bg-black rounded-md grid grid-cols-6 grid-rows-1 items-center px-2"
   >
-    <img class="w-5 h-5 col-start-1 col-span-1" :src="getServiceIcon" alt="Service Icon" />
+    <img class="w-5 h-5 col-start-1 col-span-1" :src="getServiceIcon" alt="Service Icon" @mousedown.prevent />
 
     <div class="col-start-2 col-end-5 flex justify-center items-center space-x-1">
       <span class="relative h-4 w-4 rounded-full col-start-2 col-span-1 flex justify-center items-center">
@@ -22,6 +22,7 @@
       class="w-4 col-start-5 col-span-1 justify-self-center"
       src="/img/icon/the-staking/keyIcon.png"
       alt="Key Icon"
+      @mousedown.prevent
     />
     <span class="text-[10px] font-semibold text-center col-start-6 col-span-1" :class="getTextColor"
       >{{ stakingStore.keyNumbers }}

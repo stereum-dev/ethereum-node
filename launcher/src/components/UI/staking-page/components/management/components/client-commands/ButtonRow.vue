@@ -5,7 +5,12 @@ import { ref } from 'vue'; import { useStakingStore } from '@/store/theStaking';
     :class="displayButtonByCondition ? 'pointer-events-none opacity-30 ' : 'cursor-pointer '"
     @click="props.button.events"
   >
-    <img class="col-start-1 col-span-1 row-start-1 w-5 h-5" :src="props.button.icon" alt="Button Icon" />
+    <img
+      class="col-start-1 col-span-1 row-start-1 w-5 h-5"
+      :src="props.button.icon"
+      alt="Button Icon"
+      @mousedown.prevent
+    />
     <span class="col-start-2 col-span-full row-start-1 text-2xs font-semibold text-center uppercase">{{
       props.button.text
     }}</span>

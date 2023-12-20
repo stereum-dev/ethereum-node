@@ -6,6 +6,7 @@
       class="col-start-1 col-span-1 w-3 h-3"
       src="/img/icon/the-staking/predicition-icon.png"
       alt="Prediction Icon"
+      @mousedown.prevent
     />
     <span class="col-start-2 col-end-6 text-[10px] text-gray-300 font-semibold text-center"
       >EPOCH {{ stakingStore.currentEpoch }}# DUTY</span

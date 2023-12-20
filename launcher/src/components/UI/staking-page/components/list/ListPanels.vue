@@ -38,13 +38,7 @@
       <div
         class="w-2/3 h-full col-start-3 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
       >
-        <img
-          class="h-6"
-          src="/img/icon/the-staking/display-name.png"
-          alt="Insert Icon"
-          @click="displayKeyAlias"
-          @mousedown.prevent
-        />
+        <img class="h-6" :src="aliasIcon" alt="Insert Icon" @click="displayKeyAlias" @mousedown.prevent />
       </div>
     </div>
 
@@ -166,6 +160,14 @@ const activePanel = computed(() => {
     };
   }
   return { component: "insert" };
+});
+
+const aliasIcon = computed(() => {
+  if (!stakingStore.isPubkeyVisible) {
+    return "/img/icon/the-staking/display-name.png";
+  } else {
+    return "/img/icon/the-staking/hide.png";
+  }
 });
 
 watchEffect(() => {
