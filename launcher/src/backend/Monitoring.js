@@ -1631,6 +1631,9 @@ export class Monitoring {
 
   // Get storage status of all services
   async getStorageStatus(live = false) {
+    // Define services that should be ignored and NOT queried at all
+    const ignoreServices = ["PrometheusNodeExporterService"];
+
     // By default return cached data (if available)
     if (!live) {
       if (
@@ -1660,6 +1663,9 @@ export class Monitoring {
     var sshcommands = [];
     for (let svc of serviceInfos) {
       if (typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")) {
+        continue;
+      }
+      if (ignoreServices.includes(svc.service)) {
         continue;
       }
       if (Array.isArray(svc.config.volumes) && svc.config.volumes.length) {
@@ -1716,6 +1722,7 @@ export class Monitoring {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
       if (svc) {
         // Prometheus NE does not store data but using "/" as volume, see #1095
+        // Likely not queried at all if defined in ignoreServices (see above)
         if (svc.service === "PrometheusNodeExporterService") {
           //val = 0; // Solution A: Show 0 B as value for Prometheus NE
           return; // Solution B: Do not show Prometheus NE at all in the storage list
