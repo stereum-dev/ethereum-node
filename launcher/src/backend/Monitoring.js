@@ -3141,6 +3141,7 @@ rm -rf diskoutput
             results.push({
               pubkey: runExitCommand.pubkey,
               code: JSON.parse(stdoutJson).code,
+              msg: JSON.parse(stdoutJson).message,
             });
           } catch (error) {
             this.nodeConnection.taskManager.otherTasksHandler(
