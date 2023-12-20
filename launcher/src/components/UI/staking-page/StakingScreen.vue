@@ -527,6 +527,7 @@ const withdrawModalHandler = (key) => {
 };
 
 const withdrawValidatorKey = async () => {
+  stakingStore.withdrawAndExitResponse = null;
   //if single key
   const key = stakingStore.selectedSingleKeyToWithdraw;
   try {
@@ -543,7 +544,7 @@ const withdrawValidatorKey = async () => {
             return item.key;
           }
         })
-        .filter((key) => key !== null);
+        .filter((key) => key !== undefined);
 
       stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
         pubkey: multiKeys,

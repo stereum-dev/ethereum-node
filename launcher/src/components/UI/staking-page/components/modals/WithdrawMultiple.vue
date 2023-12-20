@@ -5,6 +5,7 @@
     :click-outside-text="clickOut"
     :external-close="true"
     :confirm-text="confirmButtonText"
+    :message-text="getDetailsText"
     :is-processing="isProcessing"
     :active-button="activeButton"
     @close-modal="closeModal"
@@ -13,12 +14,46 @@
     <template #content>
       <div
         v-if="displayResponse"
-        class="col-start-2 col-end-12 row-start-3 row-end-6 w-full h-full grid grid-cols-12 grid-rows-5 overflow-x-hidden overflow-y-auto max-h-[182px] bg-[#151618] rounded-lg p-2 gap-y-2"
+        class="col-start-2 col-end-12 row-start-3 row-end-6 w-full h-full flex flex-col justify-start items-center overflow-x-hidden overflow-y-auto max-h-[185px] bg-[#151618] rounded-lg p-2 space-y-2 mt-3"
       >
         <div
-          class="col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center px-3 border border-gray-700 rounded-lg bg-[#111213]"
+          class="w-full h-20 flex flex-col justify-start items-start p-2 border border-gray-700 rounded-lg bg-[#111213] space-y-1 mx-auto"
         >
-          <span class="text-md text-red-400 text-left font-semibold">{{ displayResponse }}</span>
+          <div v-if="getStatus?.success" class="w-full h-full flex justify-center items-center overflow-hidden">
+            <span class="text-md text-teal-700 font-semibold text-center">
+              {{ getStatus.success }} Validator(s) Successfully Exited.</span
+            >
+          </div>
+          <div v-if="getStatus?.failure" class="w-full h-full flex justify-center items-center overflow-hidden">
+            <span class="text-md text-red-500 font-semibold text-center">
+              {{ getStatus.failure }} Validator(s) Failed to exit.</span
+            >
+          </div>
+        </div>
+        <div
+          v-for="(item, index) in responseList.slice(0, -1)"
+          :key="`withdraw-and-exit-${index}`"
+          class="w-full h-20 flex flex-col justify-start items-start p-2 border border-gray-700 rounded-lg bg-[#111213] space-y-1 mx-auto"
+        >
+          <div
+            v-if="item.pubkey && item.code === '200'"
+            class="w-full h-full flex flex-col justify-center items-start overflow-hidden"
+          >
+            <p class="text-sm text-amber-400 text-left font-semibold">
+              {{ useTruncate(item.pubkey, 20, 20) }}:
+              <span class="text-md text-teal-700 font-semibold text-left"> Successfully Exited.</span>
+            </p>
+          </div>
+          <div
+            v-else-if="item.pubkey && item.code !== '200'"
+            class="w-full h-24 flex flex-col justify-center items-start overflow-hidden"
+          >
+            <p class="text-sm text-amber-400 text-left font-semibold">
+              {{ useTruncate(item?.pubkey, 20, 20) }}:
+              <span class="text-md text-red-500 font-semibold text-left">Exit Failed. </span>
+            </p>
+            <span class="text-sm text-gray-400 text-left font-semibold">{{ item.msg }}</span>
+          </div>
         </div>
       </div>
       <div v-else class="col-start-1 col-span-full row-start-2 row-end-6 w-full h-full grid grid-cols-12 grid-rows-5">
@@ -35,7 +70,7 @@
               class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
             />
 
-            <span class="text-sm text-gray-700"> I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES </span>
+            <span class="text-sm text-gray-400"> I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES </span>
           </label>
         </div>
       </div>
@@ -45,12 +80,26 @@
 
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
-import { computed, ref } from "vue";
+import { useDeepClone, useTruncate } from "@/composables/utils";
+import { computed, ref, watch } from "vue";
 
 const emit = defineEmits(["confirmWithdraw"]);
 
 const stakingStore = useStakingStore();
 const clickOut = ref("Click outside to cancel");
+
+const responseList = ref([]);
+
+const getStatus = computed(() => {
+  return responseList.value?.at(-1);
+});
+
+const getDetailsText = computed(() => {
+  let msg;
+  if (displayResponse.value) msg = "Exit Validator Details :";
+
+  return msg;
+});
 
 const getTextMessage = computed(() => {
   return "ARE YOU SURE YOU WANT TO EXIT THE CHAIN WITH THE SELECTED VALIDATOR KEYS? THIS STOPS YOUR VALIDATOR DUTY & CAN NOT BE REVERSED. YOUR FUND ARE ALSO ONLY WITHDRAWABLE, IF THE CHAIN ALLOWS IT.";
@@ -73,9 +122,40 @@ const isProcessing = computed(() => {
 const displayResponse = computed(() => {
   return stakingStore.withdrawAndExitResponse;
 });
+
 const confirmButtonText = computed(() => {
   return stakingStore.withdrawAndExitResponse ? "OK" : "Withdraw & Exit";
 });
+
+const getNumberOfKeys = () => {
+  let successCount = 0;
+  let failureCount = 0;
+
+  displayResponse.value.forEach((item) => {
+    if (item.code === "200") {
+      successCount++;
+    } else {
+      failureCount++;
+    }
+  });
+
+  // Combine the counts with the original displayResponse
+  const combinedResponse = [...useDeepClone(displayResponse.value), { success: successCount, failure: failureCount }];
+
+  // Update the responseList with the combined data
+  responseList.value = combinedResponse;
+};
+
+// Set up the watcher after ensuring the store is properly initialized
+watch(
+  displayResponse,
+  (newValue) => {
+    if (newValue) {
+      getNumberOfKeys();
+    }
+  },
+  { deep: true }
+);
 
 const confirmWithdraw = () => {
   clickOut.value = null;
