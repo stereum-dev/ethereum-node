@@ -83,23 +83,23 @@
         </div>
       </div>
       <div
-        v-else-if="!isSlashingActive && description"
+        v-else-if="!isSlashingActive && getMessage"
         class="w-full col-start-1 col-span-full row-start-3 row-end-6 overflow-hidden flex justify-center items-center"
       >
         <div class="w-2/3 h-fit flex flex-col justify-center items-center space-y-2">
-          <span
-            v-if="description"
-            class="w-full max-h-28 overflow-x-hidden overflow-y-auto text-sm font-semibold text-left whitespace-pre-wrap break-all mx-2 px-6 py-2 bg-[#0d0d0e] rounded-md"
-            :class="getDescriptionClass"
+          <span class="w-full text-lg font-semibold text-left text-gray-300">Import Details :</span>
+          <div
+            class="w-full max-h-28 overflow-x-hidden overflow-y-auto border border-gray-700 rounded-md bg-[#111213] mx-2 p-2 space-y-2"
           >
-            {{ description }}
-          </span>
-          <span
-            v-if="details"
-            class="w-9/12 text-md text-gray-300 font-semibold text-center whitespace-pre-wrap break-all mx-auto"
-          >
-            {{ details }}
-          </span>
+            <div
+              v-for="(line, index) in getMessage"
+              :key="index"
+              class="w-full h-8 border border-gray-700 rounded-md bg-[#242628] p-1 flex justify-center items-center space-x-1"
+              :class="getDescriptionClass(line)"
+            >
+              <span class="text-sm font-semibold text-left whitespace-pre-wrap">{{ line }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </template>
@@ -115,8 +115,6 @@ const emit = defineEmits(["importKey"]);
 //  Props
 
 const stakingStore = useStakingStore();
-let description = ref("");
-let details = ref("");
 const activeButton = ref(false);
 const isSlashingActive = ref(true);
 const pickedSlashing = ref(null);
@@ -125,7 +123,7 @@ const checkProcessing = ref(false);
 const clickOut = ref("Click outside to close");
 
 const getMessage = computed(() => {
-  return stakingStore.importKeyMessage ? stakingStore.importKeyMessage : "";
+  return stakingStore.importKeyMessage.split("\n");
 });
 
 const getActiveButton = computed(() => {
@@ -144,19 +142,19 @@ const getActionButton = computed(() => {
   }
 });
 
-const getDescriptionClass = computed(() => {
+const getDescriptionClass = (line) => {
   let className;
-  if (description.value && description.value.includes("error")) {
+  if (line && line.includes("failed" || "error")) {
     className = "text-red-400";
-  } else if (description.value && description.value.includes("duplicate")) {
+  } else if (line && line.includes("duplicate")) {
     className = "text-amber-400";
-  } else if (description.value && description.value.includes("imported")) {
+  } else if (line && line.includes("imported")) {
     className = "text-teal-400";
   } else {
     className = "text-gray-300";
   }
   return className;
-});
+};
 
 watch(pickedSlashing, (newValue, oldValue) => {
   if (newValue === "yes" && oldValue !== "yes") {
@@ -168,7 +166,6 @@ watch(pickedSlashing, (newValue, oldValue) => {
 
 watch(getMessage, () => {
   if (getMessage.value) {
-    splitedTexts(getMessage.value);
     activeButton.value = true;
     checkProcessing.value = false;
   }
@@ -195,14 +192,6 @@ const handleFileUpload = (event) => {
   }
 };
 
-const splitedTexts = (text) => {
-  text = getMessage.value;
-  const lines = text.split("\n");
-  const lastThreeLinesIndex = lines.length - 3;
-
-  description.value = lines.slice(0, lastThreeLinesIndex).join("\n");
-  details.value = lines.slice(lastThreeLinesIndex).join("\n");
-};
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
 };
