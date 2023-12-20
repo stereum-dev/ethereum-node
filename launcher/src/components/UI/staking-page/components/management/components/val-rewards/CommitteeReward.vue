@@ -12,9 +12,9 @@
       <span class="col-start-2 col-span-full text-[9px] text-amber-300 font-semibold">Reward</span>
     </div>
     <div
-      class="w-full h-full col-start-3 col-span-full rounded-full self-center flex justify-center items-center bg-[#151618]"
+      class="w-full h-full col-start-3 col-span-full rounded-full self-center flex justify-center items-center bg-[#151618] px-1"
     >
-      6546546
+      <span class="text-2xs text-gray-300 font-semibold">333.211213654080808</span>
     </div>
   </div>
 </template>
