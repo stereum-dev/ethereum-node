@@ -3101,7 +3101,6 @@ rm -rf diskoutput
         if (!Array.isArray(pubkey)) {
           pubkey = [pubkey];
         }
-        console.log("typeof ---------", typeof pubkey);
         let results = [];
         for (let i = 0; i < pubkey.length; i++) {
           const ref = StringUtils.createRandomString(); // Create a random string to identify the task
@@ -3152,7 +3151,6 @@ rm -rf diskoutput
             return error;
           }
         }
-        console.log("results, ----", results);
         return results;
       }
     } catch (error) {
