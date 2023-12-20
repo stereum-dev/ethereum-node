@@ -13,7 +13,7 @@
             <span>{{ $t("controlPage.write") }}</span>
           </div>
           <div class="write_val">
-            <span>{{ convertWriteValueToMb }} Mb</span>
+            <span>{{ convertWriteValueToMb }}</span>
           </div>
         </div>
         <div class="disk-speed_value">
@@ -21,7 +21,7 @@
             <span>{{ $t("controlPage.read") }}</span>
           </div>
           <div class="read_val">
-            <span>{{ convertReadValueToMb }} Mb</span>
+            <span>{{ convertReadValueToMb }}</span>
           </div>
         </div>
       </div>
@@ -39,12 +39,18 @@ const readValue = computed(() => controlStore.readValue);
 
 const convertWriteValueToMb = computed(() => {
   const mbValue = writeValue.value / 1024;
-  return Math.floor(mbValue);
+  if (mbValue < 1 && mbValue > 0) {
+    return Math.floor(writeValue.value) + " KB";
+  }
+  return Math.floor(mbValue) + " MB";
 });
 
 const convertReadValueToMb = computed(() => {
   const mbValue = readValue.value / 1024;
-  return Math.floor(mbValue);
+  if (mbValue < 1 && mbValue > 0) {
+    return Math.floor(readValue.value) + " KB";
+  }
+  return Math.floor(mbValue) + " MB";
 });
 </script>
 <style scoped>
