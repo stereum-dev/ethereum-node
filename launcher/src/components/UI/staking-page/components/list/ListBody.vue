@@ -56,7 +56,6 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           :key="key.pubkey"
           :item="key"
           @remove-single="removeSingle"
-          @withdraw-single="withdrawSingle"
           @rename-single="renameSingle"
         />
         <span
@@ -89,7 +88,6 @@ const emit = defineEmits([
   "withdrawGroup",
   "removeGroup",
   "deletePreview",
-  "withdrawSingle",
   "renameSingle",
 ]);
 const stakingStore = useStakingStore();
@@ -207,10 +205,6 @@ const deletePreview = (item) => {
 
 const removeSingle = (item) => {
   emit("removeSingle", item);
-};
-
-const withdrawSingle = (item) => {
-  emit("withdrawSingle", item);
 };
 
 const renameSingle = (item) => {

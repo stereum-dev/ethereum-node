@@ -92,7 +92,7 @@ import { computed } from 'vue';
           src="/img/icon/the-staking/withdraw.png"
           alt="Icon"
           @mousedown.prevent
-          @click="withdrawSingle"
+          @click="withdrawHandler"
         />
       </div>
     </div>
@@ -115,7 +115,6 @@ const props = defineProps({
 const stakingStore = useStakingStore();
 const footerStore = useFooter();
 
-const emit = defineEmits(["removeSingle", "withdrawSingle", "graffitiSingle", "renameKey"]);
 const t = i18n.global.t;
 //Key Status Icons
 const activeStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Active.png";
@@ -210,8 +209,14 @@ const removeSingle = (item) => {
   stakingStore.setActiveModal("removeValidator");
 };
 
-const withdrawSingle = () => {
-  emit("withdrawSingle", props.item);
+const withdrawHandler = () => {
+  if (props.item) {
+    props.item.showExitText = true;
+    stakingStore.selectedSingleKeyToWithdraw = props.item;
+    stakingStore.setActiveModal("withdraw");
+  }
+
+  stakingStore.setActiveModal("withdraw");
 };
 
 const FeeRecepient = (key) => {

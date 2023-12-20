@@ -14,7 +14,6 @@
         @rename-group="renameGroup"
         @withdraw-group="withdrawGroup"
         @rename-single="renameSingle"
-        @withdraw-single="withdrawSingle"
         @delete-preview="deletePreview"
       />
       <ListPanels
@@ -51,7 +50,6 @@ const emit = defineEmits([
   "backList",
   "confirmRename",
   "renameSingle",
-  "withdrawSingle",
   "confirmFeerecepient",
   "deletePreview",
   "resetName",
@@ -97,10 +95,6 @@ const removeSingle = (item) => {
 
 const renameSingle = (item) => {
   emit("renameSingle", item);
-};
-
-const withdrawSingle = (item) => {
-  emit("withdrawSingle", item);
 };
 
 const openGroup = (item) => {

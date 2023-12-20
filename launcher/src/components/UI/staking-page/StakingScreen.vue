@@ -515,14 +515,7 @@ const confirmFeeRecepient = async (item) => {
 // ****** End of Fee Recepient *******
 
 //****** Withdraw & Exit *******
-
-const withdrawModalHandler = (key) => {
-  if (key) {
-    key.showExitText = true;
-    stakingStore.selectedSingleKeyToWithdraw = key;
-    stakingStore.setActiveModal("withdraw");
-  }
-
+const withdrawModalHandler = () => {
   stakingStore.setActiveModal("withdraw");
 };
 
