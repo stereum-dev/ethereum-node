@@ -3122,9 +3122,6 @@ rm -rf diskoutput
             //Error handling
             if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
               throw SSHService.extractExecError(runExitCommand);
-            // if (!runExitCommand.stdout.includes("200 OK")) {
-            //   throw "Unexpected Error: " + runExitCommand.stdout;
-            // }
 
             // Push successful task
             this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
