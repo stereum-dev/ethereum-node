@@ -35,6 +35,8 @@ const displayButtonByCondition = computed(() => {
     props.button.text === "Import Remote Keys"
   ) {
     return true;
+  } else if (stakingStore.keys.length === 0) {
+    return true;
   } else {
     return false;
   }
