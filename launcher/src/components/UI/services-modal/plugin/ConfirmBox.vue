@@ -12,7 +12,7 @@
         @mouseleave="handleMouseLeave"
         @click="confirmPluginClick"
       >
-        <img v-if="imgUrl" style="width: 10%; margin-right: 2%" :src="imgUrl" alt="" />
+        <img v-if="imgUrl || imgUrl !== ''" style="width: 10%; margin-right: 2%" :src="imgUrl" alt="" />
         {{ btnName }}
       </div>
       <div
