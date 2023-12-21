@@ -48,6 +48,8 @@ const displayButtonByCondition = computed(() => {
   if (isSelectedFilterWeb3Signer) {
     if (stakingStore.selectedServiceToFilter?.state === "running" && isImportRemoteButton) {
       return true;
+    } else if (!matchingKeyForService) {
+      return true;
     }
   } else if (noKeys) {
     return true;
