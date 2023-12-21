@@ -2,7 +2,7 @@
   <base-layout>
     <!-- Start Node main layouts -->
     <ChangeAnimation v-if="manageStore.disableConfirmButton" />
-    <div class="w-full h-full grid grid-cols-24 relative">
+    <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
       </div>
