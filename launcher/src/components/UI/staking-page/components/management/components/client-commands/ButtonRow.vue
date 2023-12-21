@@ -29,16 +29,33 @@ const props = defineProps({
 });
 
 const stakingStore = useStakingStore();
+
 const displayButtonByCondition = computed(() => {
-  if (
-    stakingStore.selectedServiceToFilter?.service === "Web3SignerService" &&
-    props.button.text === "Import Remote Keys"
-  ) {
+  //No keys imported
+  const noKeys = stakingStore.keys.length === 0;
+
+  //Web3SignerService is selected in filter
+  const isSelectedFilterWeb3Signer = stakingStore.selectedServiceToFilter?.service === "Web3SignerService";
+
+  // Remote Key btn
+  const isImportRemoteButton = props.button.text === "Import Remote Keys" ? true : false;
+
+  //Imported keys for selected validator service
+  const matchingKeyForService = stakingStore.keys.some(
+    (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config.serviceID
+  );
+
+  if (isSelectedFilterWeb3Signer) {
+    if (stakingStore.selectedServiceToFilter?.state === "running" && isImportRemoteButton) {
+      return true;
+    }
+  } else if (noKeys) {
     return true;
-  } else if (stakingStore.keys.length === 0) {
+  } else if (!matchingKeyForService) {
     return true;
-  } else {
-    return false;
+  } else if (stakingStore.selectedServiceToFilter?.state !== "running") {
+    return true;
   }
+  return false;
 });
 </script>
