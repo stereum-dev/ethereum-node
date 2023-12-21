@@ -60,7 +60,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         />
         <span
           v-if="!getFilteredValidators.length > 0 && !isLoading && !stakingStore.isPreviewListActive"
-          class="text-lg font-bold text-gray-300 text-center uppercase"
+          class="text-lg font-bold text-gray-300 text-center uppercase select-none"
           >No Validator key imported.</span
         >
         <span v-if="searchNotFound" class="text-lg font-bold text-gray-300 text-center uppercase">No Matches.</span>
