@@ -116,7 +116,9 @@ const activeModal = computed(() => {
 watch(
   () => serviceStore.installedServices,
   async () => {
-    const hasValidator = serviceStore.installedServices.some((s) => s.category === "validator");
+    const hasValidator = serviceStore.installedServices.some(
+      (s) => s.category === "validator" && s.state === "running"
+    );
     isStakingDisabled.value = !hasValidator;
   }
 );
