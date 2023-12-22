@@ -23,7 +23,7 @@
 
       <input
         id="input1"
-        v-model="stakingStore.eneterdFeeRecipientAddress"
+        v-model="stakingStore.enteredFeeRecipientAddress"
         class="col-start-2 col-end-11 w-full bg-[#171D22] border px-4 rounded-sm outline-none text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
         type="text"
         autofocus
@@ -63,7 +63,7 @@ const validName = ref("");
 const alertMessage = ref("");
 const isAddressValid = ref(false);
 
-const feeRecepientAddress = computed(() => stakingStore.eneterdFeeRecipientAddress);
+const feeRecepientAddress = computed(() => stakingStore.enteredFeeRecipientAddress);
 
 const inputClass = computed(() => {
   if (!feeRecepientAddress.value) {
@@ -101,7 +101,7 @@ const confirmFeerecepient = () => {
 };
 const cancelFeeRecepient = () => {
   stakingStore.keys.find((key) => key.key === stakingStore.selectKeyForFee.key).selected = false;
-  stakingStore.eneterdFeeRecipientAddress = "";
+  stakingStore.enteredFeeRecipientAddress = "";
   stakingStore.setActivePanel(null);
 };
 </script>

@@ -59,7 +59,7 @@ export const useStakingStore = defineStore("theStaking", {
       selectKeyToRename: null,
       selectKeyForFee: null,
       validatorDisplayName: "",
-      eneterdFeeRecipientAddress: "",
+      enteredFeeRecipientAddress: "",
       feeRecepientAddress: "",
       // ***** End Validator Keys *****
       selectedSingleKeyToWithdraw: null,

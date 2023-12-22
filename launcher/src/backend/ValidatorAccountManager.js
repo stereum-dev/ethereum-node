@@ -252,7 +252,7 @@ export class ValidatorAccountManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout);
 
       if (!data.data) data.data = [];
-      this.writeKeys(data.data.map(key => key.validating_pubkey));
+      this.writeKeys(data.data.map((key) => key.validating_pubkey));
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -313,7 +313,8 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -423,7 +424,6 @@ export class ValidatorAccountManager {
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Set Fee Recipient`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-
       return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
@@ -457,7 +457,6 @@ export class ValidatorAccountManager {
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Fee Recipient`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-
       return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
@@ -530,16 +529,17 @@ export class ValidatorAccountManager {
 
   async writeKeys(keys) {
     //get current keys in yaml file
-    let currentKeys = await this.readKeys()
+    let currentKeys = await this.readKeys();
     if (!currentKeys) {
-      currentKeys = {}
+      currentKeys = {};
     }
 
     //if the argument is an array of keys, add them to the current keys if they don't exist
     if (Array.isArray(keys)) {
-      keys.forEach(key => {
-        if (!currentKeys[key]) currentKeys[key] = { keyName: "", groupName: "", groupID: null, validatorClientID: null }
-      })
+      keys.forEach((key) => {
+        if (!currentKeys[key])
+          currentKeys[key] = { keyName: "", groupName: "", groupID: null, validatorClientID: null };
+      });
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(currentKeys)) + " > /etc/stereum/keys.yaml"
       );
@@ -547,14 +547,14 @@ export class ValidatorAccountManager {
       //if the argument is an object of keys, overwrite the current keys
     } else if (keys) {
       if (!keys.overwrite) {
-        keys = { ...currentKeys, ...keys }
+        keys = { ...currentKeys, ...keys };
       }
-      delete keys.overwrite
+      delete keys.overwrite;
       await this.nodeConnection.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(keys)) + " > /etc/stereum/keys.yaml"
       );
     } else {
-      log.error("INVALID ARGUMENT: keys must be an array or an object")
+      log.error("INVALID ARGUMENT: keys must be an array or an object");
     }
   }
 

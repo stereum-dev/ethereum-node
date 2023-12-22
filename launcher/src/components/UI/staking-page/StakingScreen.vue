@@ -507,21 +507,22 @@ const deletePreviewKey = async (item) => {
 //**** Client Commands Buttons ****
 
 // ****** Fee Recepient *******
-const confirmFeeRecepient = async (item) => {
-  console.log("feeRecepientConfirmHandler", item);
-  if (item) {
+const confirmFeeRecepient = async () => {
+  const key = stakingStore.selectKeyForFee;
+  if (key) {
     await ControlService.setFeeRecipient({
-      serviceID: item.validatorID,
-      pubkey: item.key,
-      address: stakingStore.feeRecepientAddress,
+      serviceID: key.validatorID,
+      pubkey: key.key,
+      address: stakingStore.enteredFeeRecipientAddress,
     });
+    stakingStore.enteredFeeRecipientAddress = "";
   } else {
     await ControlService.deleteFeeRecipient({
-      serviceID: item.validatorID,
-      pubkey: item.key,
+      serviceID: key.validatorID,
+      pubkey: key.key,
     });
   }
-  stakingStore.eneterdFeeRecipientAddress = "";
+  stakingStore.enteredFeeRecipientAddress = "";
   stakingStore.setActivePanel(null);
 };
 
