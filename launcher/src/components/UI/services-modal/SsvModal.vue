@@ -111,8 +111,8 @@
             import-box-title="ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY"
             import-box-placeholder=""
             btn-name="IMPORT"
-            :class="[importBoxModel ? '' : 'disabled']"
-            @importBoxHandler="console.log('confirm 2nd row PluginClick')"
+            :class="[importBoxModel && selectedUncryptedKey ? '' : 'disabled']"
+            @password-box-handler="secondRowBtnHandler"
           />
         </div>
         <div v-if="!importEncryptedKey" class="browserBox">
@@ -191,6 +191,8 @@ export default {
       importEncryptedKey: false,
       importRawOperatorKeyOldMethod: false,
       lastStep: false,
+      selectedUncryptedKey: "",
+      passwordToDecrypt: "",
     };
   },
 
@@ -293,6 +295,7 @@ export default {
   mounted() {
     this.getKeys();
     this.passwordBoxModel = "";
+    this.importBoxModel = "";
   },
   created() {
     this.dataLoading = true;
@@ -411,14 +414,13 @@ export default {
       ) {
         this.lastStep = true;
         console.log("last step", this.lastStep);
-      } else if (
-        this.switchEncryptedKeyGenerator &&
-        this.passGenerateEncryptKeyConfirmed &&
-        this.confirmPassToGenerateOpenInBrowser &&
-        this.lastStep
-      ) {
+      } else if (this.passGenerateEncryptKeyConfirmed && this.lastStep) {
         console.log("mainnet operator dashboard is in the last step");
       }
+    },
+    firstImportBoxHandler() {
+      this.selectedUncryptedKey = this.importBoxModel;
+      console.log("selectedUncryptedKey", this.selectedUncryptedKey);
     },
     switchToGenerateEncryptedKeyPair() {
       this.switchEncryptedKeyGenerator = true;
@@ -450,10 +452,26 @@ export default {
       }
     },
     secondRowBtnHandler() {
-      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator && !this.lastStep) {
         this.downloadBackup();
         this.confirmPassToGenerateOpenInBrowser = true;
         this.lastStep = true;
+      } else if ((!this.importEncryptedKey && this.switchEncryptedKeyGenerator) || this.lastStep) {
+        this.copyHandler();
+        console.log("copy public key");
+      } else if (this.importEncryptedKey && !this.lastStep) {
+        this.passwordToDecrypt = this.passwordBoxModel;
+        this.passwordBoxModel = "";
+        this.importBoxModel = "";
+        this.lastStep = true;
+        this.importEncryptedKey = false;
+        this.passGenerateEncryptKeyConfirmed = true;
+        console.log("go to last step", this.passwordToDecrypt);
+      } else if (this.importRawOperatorKeyOldMethod) {
+        this.switchEncryptedKeyGenerator = true;
+        this.importRawOperatorKeyOldMethod = false;
+        this.selectedUncryptedKey = this.importBoxModel;
+        console.log("merge selected key and selected key is", this.selectedUncryptedKey);
       } else {
         this.importEncryptedKey = true;
       }
@@ -470,6 +488,17 @@ export default {
         this.importRawOperatorKeyOldMethod = true;
         console.log("import raw operator key");
       }
+    },
+    copyHandler() {
+      let toCopy = "dummyyy value to test the copy btn";
+      navigator.clipboard
+        .writeText(toCopy)
+        .then(() => {
+          this.cursorLocation = this.copiedPub;
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
     },
   },
 };
