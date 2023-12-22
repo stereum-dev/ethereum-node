@@ -3063,7 +3063,7 @@ rm -rf diskoutput
         let currentEpoch = Math.floor(currentSlot / epochLength);
         let currentJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.current_justified.epoch);
         let previousJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.previous_justified.epoch);
-        let finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch);
+        let finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch) - 1; // because beacon-API sends previousJustifiedEpoch = finalizedEpoch
 
         // create return data
         currentEpochSlotStatus = {

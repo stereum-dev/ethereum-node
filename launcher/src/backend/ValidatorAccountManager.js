@@ -64,7 +64,7 @@ export class ValidatorAccountManager {
           if (
             latestEpochsResponse.status === 200 &&
             latestEpochsResponse.data.data.length > 0 &&
-            latestEpochsResponse.data.status !== /ERROR:*/
+            latestEpochsResponse.data.status != /ERROR:*/
           ) {
             for (let i = 0; i < 2; i++) {
               if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
@@ -319,7 +319,8 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -689,7 +690,6 @@ export class ValidatorAccountManager {
       return error;
     }
   }
-
 
   formatImportResult(pubkeys, data) {
     let imported = 0;
