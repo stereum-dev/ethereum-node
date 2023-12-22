@@ -74,7 +74,7 @@ import { computed } from 'vue';
           src="/img/icon/the-staking/fee-recepient.png"
           alt="Icon"
           @mousedown.prevent
-          @click="FeeRecepient(props.item)"
+          @click="FeeRecepient"
         />
       </div>
       <div class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
@@ -219,9 +219,9 @@ const withdrawHandler = () => {
   stakingStore.setActiveModal("withdraw");
 };
 
-const FeeRecepient = (key) => {
-  key.selected = true;
-  stakingStore.selectKeyForFee = key;
+const FeeRecepient = () => {
+  props.item.selected = true;
+  stakingStore.selectKeyForFee = props.item;
   stakingStore.setActivePanel(null);
   stakingStore.setActivePanel("fee");
 };

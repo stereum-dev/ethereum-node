@@ -31,14 +31,14 @@ const props = defineProps({
 const stakingStore = useStakingStore();
 
 const displayButtonByCondition = computed(() => {
-  //No keys imported
-  const noKeys = stakingStore.keys.length === 0;
+  const isValidatorFilterRunning =
+    stakingStore.selectedServiceToFilter && stakingStore.selectedServiceToFilter.state === "running";
 
   //Web3SignerService is selected in filter
   const isSelectedFilterWeb3Signer = stakingStore.selectedServiceToFilter?.service === "Web3SignerService";
 
   // Remote Key btn
-  const isImportRemoteButton = props.button.text === "Import Remote Keys" ? true : false;
+  const isImportRemoteButton = props.button.text === "Import Remote Keys";
 
   //Imported keys for selected validator service
   const matchingKeyForService = stakingStore.keys.some(
@@ -46,18 +46,15 @@ const displayButtonByCondition = computed(() => {
   );
 
   if (isSelectedFilterWeb3Signer) {
-    if (stakingStore.selectedServiceToFilter?.state === "running" && isImportRemoteButton) {
-      return true;
-    } else if (!matchingKeyForService) {
+    if (isImportRemoteButton || !matchingKeyForService || !isValidatorFilterRunning) {
       return true;
     }
-  } else if (noKeys) {
-    return true;
-  } else if (!matchingKeyForService) {
-    return true;
-  } else if (stakingStore.selectedServiceToFilter?.state !== "running") {
-    return true;
+  } else if (!isSelectedFilterWeb3Signer) {
+    if (!matchingKeyForService || !isValidatorFilterRunning) {
+      return true;
+    }
   }
+
   return false;
 });
 </script>

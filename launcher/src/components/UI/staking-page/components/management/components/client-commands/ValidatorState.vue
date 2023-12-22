@@ -5,12 +5,12 @@
     <img class="w-5 h-5 col-start-1 col-span-1" :src="getServiceIcon" alt="Service Icon" @mousedown.prevent />
 
     <div class="col-start-2 col-end-5 flex justify-center items-center space-x-1">
-      <span class="relative h-4 w-4 rounded-full col-start-2 col-span-1 flex justify-center items-center">
+      <span class="relative h-3 w-3 rounded-full col-start-2 col-span-1 flex justify-center items-center">
         <span
           class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
           :class="getStateColor"
         ></span>
-        <span class="relative inline-flex rounded-full h-3 w-3" :class="getStateColor"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2" :class="getStateColor"></span>
       </span>
 
       <span class="text-xs font-semibold text-center col-start-3 col-end-5 capitalize" :class="getTextColor">{{
@@ -49,6 +49,8 @@ const getTextColor = computed(() => {
     return "text-green-500";
   } else if (getServiceState.value === "off") {
     return "text-red-500";
+  } else if (getServiceState.value === "restarting") {
+    return "text-amber-400";
   }
 
   return "text-gray-500";
@@ -59,6 +61,8 @@ const getStateColor = computed(() => {
     return "bg-green-400";
   } else if (getServiceState.value === "off") {
     return "bg-red-500";
+  } else if (getServiceState.value === "restarting") {
+    return "bg-amber-400";
   }
 
   return "bg-gray-500";

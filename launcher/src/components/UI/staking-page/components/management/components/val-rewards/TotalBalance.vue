@@ -10,7 +10,7 @@
       <span class="w-1/3 text-[10px] text-amber-300 font-semibold text-center">Total</span>
     </div>
     <div
-      class="w-full h-full col-start-4 col-span-full bg-[#151618] rounded-md overflow-hidden flex justify-center items-center px-1 text-center"
+      class="w-full h-full col-start-4 col-span-full bg-[#151618] rounded-r-md overflow-hidden flex justify-center items-center px-1 text-center"
     >
       <span class="text-[11px] text-gray-300 font-normal self-center text-center">{{ totalBalance }}</span>
     </div>
