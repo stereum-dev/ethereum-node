@@ -39,17 +39,7 @@
 </template>
 
 <script setup>
-const emit = defineEmits(["closeWindow", "confirmAction"]);
-
-const closeModal = () => {
-  emit("closeWindow");
-};
-
-const emitConfirmAction = () => {
-  emit("confirmAction");
-};
-
-defineProps({
+const { icon, altText, mainTitle, messageText, confirmText, subTitle, clickOutsideText } = defineProps({
   icon: String,
   altText: String,
   mainTitle: String,
@@ -59,4 +49,13 @@ defineProps({
   subTitle: String,
   clickOutsideText: String,
 });
+const emit = defineEmits(["closeWindow", "confirmAction"]);
+
+const closeModal = () => {
+  emit("closeWindow");
+};
+
+const emitConfirmAction = () => {
+  emit("confirmAction");
+};
 </script>
