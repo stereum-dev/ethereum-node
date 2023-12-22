@@ -59,7 +59,9 @@ export class ValidatorAccountManager {
           let latestEpochsResponse = await axios.get(
             networks[client.network].dataEndpoint + "/validator/" + pubkey + "/attestations"
           );
+
           if (latestEpochsResponse.status === 200 && latestEpochsResponse.data.data.length > 0) {
+
             for (let i = 0; i < 2; i++) {
               if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
                 isActiveRunning.push(pubkey);

@@ -84,6 +84,15 @@ watchEffect(() => {
   }
 });
 
+watchEffect(() => {
+  if (headerStore.openModalFromNodeAlert) {
+    nodeStore.isLineHidden = true;
+    expertModeClient.value = headerStore.selectedValidatorFromNodeAlert;
+    expertModeClient.value.expertOptionsModal = true;
+    isExpertModeOpen.value = true;
+  }
+});
+
 //Lifecycle Hooks
 onMounted(() => {
   updateConnectionStats();
@@ -170,6 +179,8 @@ const updateNodeStats = async () => {
 const closeExpertMode = () => {
   isExpertModeOpen.value = false;
   nodeStore.isLineHidden = false;
+  headerStore.openModalFromNodeAlert = false;
+  headerStore.selectedValidatorFromNodeAlert = null;
 };
 </script>
 <!-- <script>
