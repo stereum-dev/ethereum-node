@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-const { icon, altText, mainTitle, messageText, confirmText, confirmBtn, subTitle, clickOutsideText } = defineProps({
+const { icon, altText, mainTitle, messageText, confirmText, subTitle, clickOutsideText } = defineProps({
   icon: String,
   altText: String,
   mainTitle: String,
