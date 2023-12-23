@@ -31,49 +31,138 @@
           </div>
         </div>
       </div>
-      <div class="wrapper">
-        <div v-if="dataLoading" class="spinnerBox">
-          <img src="/img/icon/control/spinner.gif" alt="spinner" />
+
+      <!-- <div v-if="dataLoading" class="spinnerBox"> -->
+      <!-- start renew -->
+      <div v-if="dataLoading" class="modal-content">
+        <img src="/img/icon/service-icons/ssv.gif" alt="loading" />
+      </div>
+      <div v-else class="modal-content">
+        <div class="browserBox">
+          <ConfirmBox
+            v-if="
+              (!importRawOperatorKeyOldMethod && !importEncryptedKey && !switchEncryptedKeyGenerator) ||
+              passGenerateEncryptKeyConfirmed ||
+              lastStep
+            "
+            :class="[confirmPassToGenerateCheckForBackup && !lastStep ? 'disabled' : '']"
+            btn-bg-color="#1ba5f8"
+            :top-line="`${
+              !passGenerateEncryptKeyConfirmed
+                ? ' GENERATE ENCRYPTED PAIR'
+                : !lastStep
+                ? 'CONFIRM WARNING'
+                : 'MAINNET OPERATOR DASHBOARD'
+            }`"
+            :bottom-line="`${
+              !passGenerateEncryptKeyConfirmed
+                ? 'The most secure way to run your Operator node, is to generate an Encrypted key pair.'
+                : !lastStep
+                ? 'Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!'
+                : 'Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it. '
+            }`"
+            :btn-name="`${!passGenerateEncryptKeyConfirmed ? 'GENERATE' : !lastStep ? 'CONFIRM' : 'OPEN IN BROSWER'}`"
+            @confirmPluginClick="firstConfirmBtnHndlr"
+          />
+          <ImportBox
+            v-else-if="!switchEncryptedKeyGenerator || (passGenerateEncryptKeyConfirmed && importEncryptedKey)"
+            :btn-bg-color="`#1ba5f8`"
+            :import-box-title="
+              importRawOperatorKeyOldMethod
+                ? 'SELECT AN EXISTING PRIVATE KEY TO IMPORT'
+                : 'SELECT UNENCRYPTED PRIVATE KEY'
+            "
+            import-box-placeholder=""
+            try-again="true"
+            btn-name="SELECT"
+            @importBoxHandler="firstImportBoxHandler"
+          />
+
+          <PasswordBox
+            v-else
+            :btn-bg-color="`#1ba5f8`"
+            :import-box-title="passControlGenerateEncryptKeyTitle"
+            :import-box-placeholder="passControlGenerateEncryptKeyPlaceholder"
+            :try-again="tryAgain"
+            :btn-name="passControlGenerateEncryptKeyBtn"
+            @password-box-handler="passConfirm"
+          />
         </div>
-        <div v-else class="content-box">
-          <frontpage-ssv
-            v-if="pubkeyModalActive"
-            @open-pubkey="operatorModalHandler"
-            @open-secretkey="registerSecretkeyHandler"
-          ></frontpage-ssv>
-          <register-ssv
-            v-if="registerModalActive"
-            :pubkey="pubkey"
-            :secretkey="secretkey"
-            @register-pubkey="registerSsvPubkeyHandler"
-          ></register-ssv>
-          <secretkey-register
-            v-if="registerSecretkeyActive"
-            :ssv-service="ssvService"
-            @insert-key="insertSecretkeyHandler"
-          ></secretkey-register>
-          <ssv-dashboard v-if="ssvDashboardActive" :operator-data="operatorData" :pubkey="pubkey"></ssv-dashboard>
+        <div class="browserBox">
+          <ConfirmBox
+            v-if="!importEncryptedKey"
+            :class="[
+              (!confirmPassToGenerateCheckForBackup && switchEncryptedKeyGenerator) ||
+              (importRawOperatorKeyOldMethod && !importBoxModel) ||
+              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator)
+                ? 'disabled'
+                : '',
+            ]"
+            :btn-bg-color="`${!lastStep ? '#1ba5f8' : '#494949'}`"
+            :top-line="!lastStep ? secondRowTitle : 'COPY PUBLIC OPERATOR KEY'"
+            :bottom-line="!lastStep ? secondRowExplain : 'Secret Operator Key (SK) & Public Operator Key (PK)'"
+            :btn-name="!lastStep ? secondRowBtnName : 'COPY'"
+            :img-url="!lastStep ? '' : '/img/icon/service-icons/copy1.png'"
+            @confirmPluginClick="secondRowBtnHandler"
+          />
+          <PasswordBox
+            v-else
+            :btn-bg-color="`#1ba5f8`"
+            import-box-title="ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY"
+            import-box-placeholder=""
+            btn-name="IMPORT"
+            :class="[importBoxModel && selectedUncryptedKey ? '' : 'disabled']"
+            @password-box-handler="secondRowBtnHandler"
+          />
+        </div>
+        <div v-if="!importEncryptedKey" class="browserBox">
+          <ConfirmBox
+            :class="[
+              (!confirmPassToGenerateOpenInBrowser && switchEncryptedKeyGenerator) ||
+              (importRawOperatorKeyOldMethod && !importBoxModel) ||
+              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator)
+                ? 'disabled'
+                : '',
+            ]"
+            btn-bg-color="#1ba5f8"
+            :top-line="!lastStep ? thirdRowTitle : 'DOWNLOAD BACKUP'"
+            :bottom-line="
+              !lastStep
+                ? thirdRowExplain
+                : 'Download the private key to back it up. Make sure to also write down the password you used for encryption!'
+            "
+            :btn-name="!lastStep ? thirdRowBtnName : 'DOWNLOAD'"
+            @confirmPluginClick="thirdRowBtnHandler"
+          />
         </div>
       </div>
+
+      <!-- end renew -->
     </div>
   </div>
 </template>
 <script>
-import FrontpageSsv from "./FrontpageSsv.vue";
-import RegisterSsv from "./RegisterSsv.vue";
-import SsvDashboard from "./SsvDashboard.vue";
+// import FrontpageSsv from "./FrontpageSsv.vue";
+// import RegisterSsv from "./RegisterSsv.vue";
+// import SsvDashboard from "./SsvDashboard.vue";
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-import SecretkeyRegister from "./SecretkeyRegister.vue";
+// import SecretkeyRegister from "./SecretkeyRegister.vue";
 import axios from "axios";
 import { toRaw } from "vue";
+import ConfirmBox from "./plugin/ConfirmBox.vue";
+import ImportBox from "./plugin/ImportBox.vue";
+import PasswordBox from "./plugin/PasswordBox";
 export default {
   components: {
-    FrontpageSsv,
-    RegisterSsv,
-    SsvDashboard,
-    SecretkeyRegister,
+    // FrontpageSsv,
+    // RegisterSsv,
+    // SsvDashboard,
+    // SecretkeyRegister,
+    ConfirmBox,
+    ImportBox,
+    PasswordBox,
   },
   data() {
     return {
@@ -89,22 +178,132 @@ export default {
       accepted: "",
       secretkey: null,
       dataLoading: true,
+      //new ssv start hereeeeeeeeeeee
+      switchEncryptedKeyGenerator: false,
+      firstPassToGenerate: "",
+      confirmPassToGenerate: "",
+      firstPassToGenerateCheck: false,
+      confirmPassToGenerateCheck: false,
+      confirmPassToGenerateCheckForBackup: false,
+      confirmPassToGenerateOpenInBrowser: false,
+      tryAgain: false,
+      passGenerateEncryptKeyConfirmed: false,
+      importEncryptedKey: false,
+      importRawOperatorKeyOldMethod: false,
+      lastStep: false,
+      selectedUncryptedKey: "",
+      passwordToDecrypt: "",
     };
   },
 
   computed: {
-    ...mapState(useNodeHeader, {
+    ...mapWritableState(useNodeHeader, {
       runningServices: "runningServices",
       operators: "operators",
+      importBoxModel: "importBoxModel",
+      passwordBoxModel: "passwordBoxModel",
     }),
+    //new ssv start hereeeeeeeeeeee
+    passControlGenerateEncryptKeyTitle() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "ENTER A PASSWORD TO GENERATE AN ENCRYPTED KEY PAIR";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "CONFIRM YOUR PASSWORD";
+      } else {
+        return "CONFIRM WARNING";
+      }
+    },
+    passControlGenerateEncryptKeyBtn() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "Generate";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && !this.tryAgain) {
+        return "Confirm";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && this.tryAgain) {
+        return "Try Again";
+      } else {
+        return "";
+      }
+    },
+    passControlGenerateEncryptKeyPlaceholder() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        return "Set your password";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && !this.tryAgain) {
+        return "Confirm your password";
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && this.tryAgain) {
+        return "Passwords do not match, please try again";
+      } else {
+        return "";
+      }
+    },
+    borderForInput() {
+      return this.tryAgain ? "1px solid red" : "none";
+    },
+    secondRowTitle() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator && !this.importRawOperatorKeyOldMethod) {
+        return "DOWNLOAD BACKUP";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "MIGRATE TO ENCRYPTED KEY?";
+      } else {
+        return "COPY PUBLIC OPERATOR KEY";
+      }
+    },
+    secondRowExplain() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
+      } else {
+        return "Import an existing encrypted operator key";
+      }
+    },
+    secondRowBtnName() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "DOWNLOAD";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "MIGRATE";
+      } else {
+        return "IMPORT";
+      }
+    },
+    thirdRowTitle() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "REGISTER NEW OPERATOR";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "IMPORT UNENCRYPTED PRIVATE KEY";
+      } else {
+        return "IMPORT raw (OLD METHOD) Operator Keys";
+      }
+    },
+    thirdRowExplain() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "Register your SSV node as a new operator in the browser";
+      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
+      } else {
+        return "Use an existing operator private key to recover your existing node operator's  processes";
+      }
+    },
+    thirdRowBtnName() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "OPEN IN BROWSER";
+      } else {
+        return "IMPORT";
+      }
+    },
   },
+
   mounted() {
     this.getKeys();
+    this.passwordBoxModel = "";
+    this.importBoxModel = "";
   },
   created() {
     this.dataLoading = true;
   },
   methods: {
+    handleImportBox(value) {
+      this.test = value;
+    },
     operatorModalHandler() {
       this.pubkeyModalActive = false;
       this.registerModalActive = true;
@@ -189,10 +388,128 @@ export default {
       let url = " https://discord.gg/AbYHBfjkDY";
       window.open(url, "_blank");
     },
+
+    //new ssv start hereeeeeeeeeeee
+    firstConfirmBtnHndlr() {
+      if (
+        !this.switchEncryptedKeyGenerator &&
+        !this.passGenerateEncryptKeyConfirmed &&
+        !this.confirmPassToGenerateOpenInBrowser &&
+        !this.lastStep
+      ) {
+        this.switchEncryptedKeyGenerator = true;
+      } else if (
+        this.switchEncryptedKeyGenerator &&
+        this.passGenerateEncryptKeyConfirmed &&
+        !this.confirmPassToGenerateOpenInBrowser &&
+        !this.lastStep
+      ) {
+        this.confirmPassToGenerateCheckForBackup = true;
+        console.log("confirmPassToGenerateCheckForBackup", this.confirmPassToGenerateCheckForBackup);
+      } else if (
+        this.switchEncryptedKeyGenerator &&
+        this.passGenerateEncryptKeyConfirmed &&
+        this.confirmPassToGenerateOpenInBrowser &&
+        !this.lastStep
+      ) {
+        this.lastStep = true;
+        console.log("last step", this.lastStep);
+      } else if (this.passGenerateEncryptKeyConfirmed && this.lastStep) {
+        console.log("mainnet operator dashboard is in the last step");
+      }
+    },
+    firstImportBoxHandler() {
+      this.selectedUncryptedKey = this.importBoxModel;
+      console.log("selectedUncryptedKey", this.selectedUncryptedKey);
+    },
+    switchToGenerateEncryptedKeyPair() {
+      this.switchEncryptedKeyGenerator = true;
+    },
+    passConfirm() {
+      if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        this.firstPassToGenerate = this.passwordBoxModel;
+        this.passwordBoxModel = "";
+        this.firstPassToGenerateCheck = true;
+        this.confirmPassToGenerateCheck = false;
+        console.log("first step to generate pass", this.firstPassToGenerate);
+      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
+        this.confirmPassToGenerate = this.passwordBoxModel;
+        this.passwordBoxModel = "";
+        this.firstPassToGenerateCheck = true;
+        this.confirmPassToGenerateCheck = true;
+
+        if (this.firstPassToGenerate === this.confirmPassToGenerate) {
+          this.passGenerateEncryptKeyConfirmed = true;
+          console.log("second step to generate pass", this.confirmPassToGenerate);
+        } else if (this.firstPassToGenerate !== this.confirmPassToGenerate) {
+          this.firstPassToGenerateCheck = true;
+          this.confirmPassToGenerateCheck = false;
+          this.confirmPassToGenerate = "";
+          this.tryAgain = true;
+        }
+      } else if (this.firstPassToGenerateCheck && this.confirmPassToGenerateCheck) {
+        console.log("hhhhh");
+      }
+    },
+    secondRowBtnHandler() {
+      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator && !this.lastStep) {
+        this.downloadBackup();
+        this.confirmPassToGenerateOpenInBrowser = true;
+        this.lastStep = true;
+      } else if ((!this.importEncryptedKey && this.switchEncryptedKeyGenerator) || this.lastStep) {
+        this.copyHandler();
+        console.log("copy public key");
+      } else if (this.importEncryptedKey && !this.lastStep) {
+        this.passwordToDecrypt = this.passwordBoxModel;
+        this.passwordBoxModel = "";
+        this.importBoxModel = "";
+        this.lastStep = true;
+        this.importEncryptedKey = false;
+        this.passGenerateEncryptKeyConfirmed = true;
+        console.log("go to last step", this.passwordToDecrypt);
+      } else if (this.importRawOperatorKeyOldMethod) {
+        this.switchEncryptedKeyGenerator = true;
+        this.importRawOperatorKeyOldMethod = false;
+        this.selectedUncryptedKey = this.importBoxModel;
+        console.log("merge selected key and selected key is", this.selectedUncryptedKey);
+      } else {
+        this.importEncryptedKey = true;
+      }
+    },
+    downloadBackup() {
+      console.log("download backup");
+    },
+    thirdRowBtnHandler() {
+      if (this.lastStep) {
+        this.downloadBackup();
+      } else if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        console.log("open in browser");
+      } else if (!this.lastStep) {
+        this.importRawOperatorKeyOldMethod = true;
+        console.log("import raw operator key");
+      }
+    },
+    copyHandler() {
+      let toCopy = "dummyyy value to test the copy btn";
+      navigator.clipboard
+        .writeText(toCopy)
+        .then(() => {
+          this.cursorLocation = this.copiedPub;
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
+    },
   },
 };
 </script>
 <style scoped>
+.disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 .flip-box {
   background-color: transparent;
   perspective: 1000px;
@@ -330,7 +647,7 @@ export default {
   margin-right: 15px;
   cursor: pointer;
 }
-.wrapper {
+/*.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -388,5 +705,96 @@ export default {
 .network-icon img {
   width: 68%;
   height: 68%;
+}*/
+.modal-content {
+  width: 100%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: default;
+}
+.browserBox {
+  width: 95%;
+  height: 30%;
+  background-color: #393939;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2%;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.import-btn {
+  width: 27%;
+  height: 50%;
+  background-color: #1ba5f8;
+  text-decoration: none;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #dbdbdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition-duration: all 200ms;
+  position: absolute;
+  right: 2%;
+}
+.import-btn:hover {
+  transition-duration: 100ms;
+  background-color: #1a2e32e6;
+}
+.import-btn:active {
+  transition-duration: 100ms;
+  background-color: #1a2e32e6;
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+}
+.browserBox_import {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.import-title {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-self: flex-start;
+}
+.enrImport {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.enrImport input {
+  width: 95%;
+  height: 50%;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding-left: 10px;
 }
 </style>
