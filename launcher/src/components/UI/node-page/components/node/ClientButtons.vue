@@ -49,7 +49,7 @@ import { useNodeStore } from '@/store/theNode';
     </button>
     <button
       class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="openLog"
+      @click="openLogs"
       @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -113,12 +113,15 @@ const removeLockBtn = t("clientButtons.removeLock");
 const footerStore = useFooter();
 
 const props = defineProps({
-  client: Object,
+  client: {
+    type: Object,
+    default: null,
+  },
 });
 
 const emit = defineEmits([
   "openExpert",
-  "openLog",
+  "openLogs",
   "openDoc",
   "stateHandler",
   "restartHandler",
@@ -140,9 +143,9 @@ const openExpert = () => {
   footerStore.cursorLocation = "";
 };
 
-const openLog = () => {
+const openLogs = () => {
   nodeStore.isLineHidden = true;
-  emit("openLog", props.client);
+  emit("openLogs", props.client);
   footerStore.cursorLocation = "";
 };
 

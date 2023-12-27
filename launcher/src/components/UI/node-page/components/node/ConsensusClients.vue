@@ -16,7 +16,7 @@
       <ClientButtons
         :client="item"
         @open-expert="openExport(item)"
-        @open-log="openLog"
+        @open-logs="openLogs"
         @state-handler="stateHandler"
         @restart-handler="restartHandler"
         @open-doc="openDoc"
@@ -44,7 +44,7 @@ import ClientButtons from "./ClientButtons.vue";
 
 const emit = defineEmits([
   "openExpert",
-  "openLog",
+  "openLogs",
   "openDoc",
   "stateHandler",
   "restartHandler",
@@ -81,8 +81,8 @@ const openExport = (item) => {
   emit("openExpert", item);
 };
 
-const openLog = (item) => {
-  emit("openLog", item);
+const openLogs = (item) => {
+  emit("openLogs", item);
 };
 
 const openDoc = (item) => {

@@ -6,28 +6,18 @@
         <SidebarSection />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
-        <NodeSection @open-expert="openExpertModal" />
-        <ExpertWindow
-          v-if="isExpertModeOpen"
-          :item="expertModeClient"
-          @hide-modal="closeExpertMode"
-        />
+        <NodeSection @open-expert="openExpertModal" @open-logs="openLogsPage" />
+        <ExpertWindow v-if="isExpertModeOpen" :item="expertModeClient" @hide-modal="closeExpertMode" />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection @open-expert="openExpertModal" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <div
-          class="h-[60px] self-center w-full flex flex-col justify-center items-center"
-        >
+        <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
           <button
             class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
             @click="alarmToggle"
-            @mouseenter="
-              footerStore.cursorLocation = nodeStore.infoAlarm
-                ? `stereum tutorials`
-                : `status box`
-            "
+            @mouseenter="footerStore.cursorLocation = nodeStore.infoAlarm ? `stereum tutorials` : `status box`"
             @mouseleave="footerStore.cursorLocation = ''"
           >
             <img class="w-8" src="/img/icon/round-icon.png" alt="information" />
@@ -35,6 +25,7 @@
         </div>
         <AlertSection :info-aralm="nodeStore.infoAlarm" />
       </div>
+      <LogsSection v-if="isLogsPageActive" :client="serviceToLogs" />
     </div>
 
     <!-- End Node main layout -->
@@ -45,6 +36,7 @@ import SidebarSection from "./sections/SidebarSection";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
+import LogsSection from "./sections/LogsSection.vue";
 import { ref, onMounted, onUnmounted, watchEffect } from "vue";
 import ExpertWindow from "./sections/ExpertWindow.vue";
 import { useNodeStore } from "@/store/theNode";
@@ -59,6 +51,8 @@ import { useFooter } from "@/store/theFooter";
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
+const isLogsPageActive = ref(false);
+const serviceToLogs = ref(null);
 // const chckTutorial = "/img/icon/round-icon.png";
 // const returnStatus = "/img/icon/round-icon.png";
 
@@ -123,10 +117,7 @@ const checkForListingKeys = async () => {
     serviceStore.installedServices &&
     serviceStore.installedServices.length > 0 &&
     serviceStore.installedServices.some(
-      (s) =>
-        s.category === "validator" &&
-        s.state === "running" &&
-        (!s.config.keys || !s.config.keys.length > 0)
+      (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
     )
   ) {
     clearInterval(pollingListingKeys);
@@ -140,22 +131,14 @@ const updateConnectionStats = async () => {
   controlStore.ipAddress = stats.ipAddress;
 };
 const updateServiceLogs = async () => {
-  if (
-    serviceStore.installedServices &&
-    serviceStore.installedServices.length > 0 &&
-    headerStore.refresh
-  ) {
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
     const data = await ControlService.getServiceLogs();
     nodeStore.serviceLogs = data;
   }
 };
 const updateServerVitals = async () => {
   try {
-    if (
-      serviceStore.installedServices &&
-      serviceStore.installedServices.length > 0 &&
-      headerStore.refresh
-    ) {
+    if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
       const data = await ControlService.getServerVitals();
       controlStore.cpu = data.cpu;
       controlStore.availDisk = data.availDisk;
@@ -181,6 +164,12 @@ const closeExpertMode = () => {
   nodeStore.isLineHidden = false;
   headerStore.openModalFromNodeAlert = false;
   headerStore.selectedValidatorFromNodeAlert = null;
+};
+
+const openLogsPage = (item) => {
+  console.log("openLogsPage", item);
+  serviceToLogs.value = item;
+  isLogsPageActive.value = true;
 };
 </script>
 <!-- <script>
