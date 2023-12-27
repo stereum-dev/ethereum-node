@@ -19,8 +19,6 @@ export class ValidatorAccountManager {
     this.nodeConnection = nodeConnection;
     this.serviceManager = serviceManager;
     this.batches = [];
-    this.callCount = 0;
-    this.storedKeys = [];
   }
 
   createBatch(files, password, slashingDB, chunkSize = 100) {
@@ -49,7 +47,7 @@ export class ValidatorAccountManager {
       pubkeys = files;
     } else {
       this.batches = [];
-      this.createBatch(files, password, slashingDB, client.service === "Web3SignerService" ? 20 : 100);
+      this.createBatch(files, password, slashingDB, isRemote ? 20 : 100);
       pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
     }
 
@@ -61,11 +59,9 @@ export class ValidatorAccountManager {
           let latestEpochsResponse = await axios.get(
             networks[client.network].dataEndpoint + "/validator/" + pubkey + "/attestations"
           );
-          if (
-            latestEpochsResponse.status === 200 &&
-            latestEpochsResponse.data.data.length > 0 &&
-            latestEpochsResponse.data.status != /ERROR:*/
-          ) {
+
+          if (latestEpochsResponse.status === 200 && latestEpochsResponse.data.data.length > 0) {
+
             for (let i = 0; i < 2; i++) {
               if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
                 isActiveRunning.push(pubkey);
@@ -237,7 +233,7 @@ export class ValidatorAccountManager {
     }
   }
 
-  async listValidators(serviceID, numRunningValidatorService) {
+  async listValidators(serviceID) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Keys`);
     try {
@@ -258,7 +254,7 @@ export class ValidatorAccountManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout);
 
       if (!data.data) data.data = [];
-      await this.storeKeys(data.data, numRunningValidatorService);
+      this.writeKeys(data.data.map((key) => key.validating_pubkey));
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -430,7 +426,6 @@ export class ValidatorAccountManager {
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Set Fee Recipient`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-
       return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
@@ -464,7 +459,6 @@ export class ValidatorAccountManager {
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Fee Recipient`, true, result.stdout);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-
       return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
@@ -535,58 +529,35 @@ export class ValidatorAccountManager {
     }
   }
 
-  async storeKeys(data, numRunningValidatorService) {
-    this.callCount++;
-    if (this.callCount % numRunningValidatorService !== 0 && !isNaN(this.callCount % numRunningValidatorService)) {
-      this.storedKeys.push(...data.map((k) => k.validating_pubkey));
-    } else if (this.callCount % numRunningValidatorService === 0) {
-      this.storedKeys.push(...data.map((k) => k.validating_pubkey));
-      await this.writeKeys(this.storedKeys);
-      this.storedKeys = [];
-      this.callCount = 0;
-    } else if (data.length === 0) {
-      await this.writeKeys(data);
-      this.callCount = 0;
-    }
-  }
-
   async writeKeys(keys) {
-    let obj = keys;
-    if (Array.isArray(keys)) {
-      const existing = await this.readKeys();
-      if (existing) {
-        obj = existing;
-        if (Object.keys(existing).length !== 0) {
-          Object.keys(existing).forEach((key) => {
-            obj = !keys.includes(key) ? {} : obj;
-          });
-        }
-        keys.forEach((key) => {
-          if (existing[key]) {
-            if (typeof existing[key] === "string") {
-              obj[key] = {
-                keyName: existing[key],
-                groupName: "",
-                groupID: null,
-              };
-            } else {
-              obj[key] = existing[key];
-            }
-          } else {
-            obj[key] = {
-              keyName: "",
-              groupName: "",
-              groupID: null,
-            };
-          }
-        });
-      } else {
-        obj = {};
-      }
+    //get current keys in yaml file
+    let currentKeys = await this.readKeys();
+    if (!currentKeys) {
+      currentKeys = {};
     }
-    await this.nodeConnection.sshService.exec(
-      "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(obj)) + " > /etc/stereum/keys.yaml"
-    );
+
+    //if the argument is an array of keys, add them to the current keys if they don't exist
+    if (Array.isArray(keys)) {
+      keys.forEach((key) => {
+        if (!currentKeys[key])
+          currentKeys[key] = { keyName: "", groupName: "", groupID: null, validatorClientID: null };
+      });
+      await this.nodeConnection.sshService.exec(
+        "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(currentKeys)) + " > /etc/stereum/keys.yaml"
+      );
+
+      //if the argument is an object of keys, overwrite the current keys
+    } else if (keys) {
+      if (!keys.overwrite) {
+        keys = { ...currentKeys, ...keys };
+      }
+      delete keys.overwrite;
+      await this.nodeConnection.sshService.exec(
+        "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(keys)) + " > /etc/stereum/keys.yaml"
+      );
+    } else {
+      log.error("INVALID ARGUMENT: keys must be an array or an object");
+    }
   }
 
   async readKeys() {
@@ -659,25 +630,28 @@ export class ValidatorAccountManager {
     return result.stdout.trim();
   }
 
-  async getExitValidatorMessage(pubkey, password, serviceID) {
+  async getExitValidatorMessage(pubkey, serviceID) {
     const ref = StringUtils.createRandomString(); //Create a random string to identify the task
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit msg for ${pubkey.substring(0, 6)}..`);
     try {
       let service = await this.nodeConnection.readServiceConfiguration(serviceID);
-      let data = [];
-      const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit`, data);
+      const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit`, []);
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-      log.info(result);
 
-      if (!result.stdout.includes("validator_index")) {
-        throw "Undexpected Error: " + result.stdout;
+      log.info(result);
+      const data = JSON.parse(result.stdout);
+      if (data.data === undefined) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
+        }
+        throw data.code + " " + data.message;
       }
 
       //Push successful task
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, result.stdout);
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, data);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
 
-      return result;
+      return data;
     } catch (error) {
       this.nodeConnection.taskManager.otherTasksHandler(
         ref,
