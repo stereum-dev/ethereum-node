@@ -2,7 +2,7 @@
   <base-layout>
     <!-- Start Node main layouts -->
     <ChangeAnimation v-if="manageStore.disableConfirmButton" />
-    <div class="w-full h-full grid grid-cols-24 relative select-none">
+    <div class="w-full h-full grid grid-cols-24 relative">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
       </div>
@@ -120,7 +120,6 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
-import { useListKeys } from "@/composables/validators";
 
 const footerStore = useFooter();
 const serviceStore = useServices();
@@ -181,10 +180,6 @@ onUnmounted(() => {
 });
 
 // Methods
-
-const listKeys = async (forceRefresh) => {
-  await useListKeys(forceRefresh);
-};
 
 // Random ID generator
 function generateRandomId() {
@@ -577,7 +572,6 @@ const confirmHandler = async () => {
     manageStore.disableConfirmButton = false;
     manageStore.isLineHidden = false;
   }, 4000);
-  await listKeys(true);
 };
 
 const nukeConfirmation = () => {

@@ -67,6 +67,7 @@
   </div>
 </template>
 <script setup>
+import { defineProps } from "vue";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 

@@ -240,7 +240,7 @@ ipcMain.handle("deleteValidators", async (event, args) => {
 });
 
 ipcMain.handle("listValidators", async (event, args) => {
-  return await validatorAccountManager.listValidators(args);
+  return await validatorAccountManager.listValidators(args.serviceID, args.numRunningValidatorService);
 });
 
 ipcMain.handle("listServices", async () => {
@@ -423,7 +423,7 @@ ipcMain.handle("checkActiveValidators", async (event, args) => {
 });
 
 ipcMain.handle("exitValidatorAccount", async (event, args) => {
-  return await monitoring.exitValidatorAccount(args.pubkey, args.serviceID);
+  return await monitoring.exitValidatorAccount(args.pubkey, args.password, args.serviceID);
 });
 
 ipcMain.handle("exportConfig", async () => {
@@ -492,14 +492,6 @@ ipcMain.handle("removeBeaconchainMonitoring", async (event, args) => {
 
 ipcMain.handle("dumpDockerLogs", async () => {
   return await nodeConnection.dumpDockerLogs();
-});
-
-ipcMain.handle("getCurrentEpochandSlot", async () => {
-  return await monitoring.getCurrentEpochandSlot();
-});
-
-ipcMain.handle("getValidatorDuties", async (event, args) => {
-  return await monitoring.getValidatorDuties(args);
 });
 
 // Scheme must be registered before the app is ready

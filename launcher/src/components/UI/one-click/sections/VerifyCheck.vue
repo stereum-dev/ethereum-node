@@ -34,8 +34,9 @@ const runInstalltion = async () => {
       selectedPreset: installStore.selectedPreset.name,
     });
 
-    await ControlService.startOneClickServices();
-
+    if(installStore.startServicesAfterInstall){
+      await ControlService.startOneClickServices();
+    }
     router.push("/node");
   } catch (err) {
     console.log("Installation Failed: ", err);

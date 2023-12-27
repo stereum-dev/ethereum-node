@@ -63,8 +63,7 @@ export default {
   props: {
     subTasks: {
       type: Array,
-      required: false,
-      default: () => [],
+      required: true,
     },
   },
   data() {

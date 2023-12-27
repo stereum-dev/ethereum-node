@@ -8,7 +8,7 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
-      class="w-[156px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
+      class="w-[160px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
     >
       {{ props.client.name }}
       <span :class="clientStatus"></span>

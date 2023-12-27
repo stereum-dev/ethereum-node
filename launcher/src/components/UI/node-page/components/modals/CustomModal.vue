@@ -59,17 +59,16 @@ const emitConfirmAction = () => {
   emit("confirmAction");
 };
 
-const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, bgColor, btnColor, iconSize } =
-  defineProps({
-    icon: String,
-    altText: String,
-    mainTitle: String,
-    messageText: String,
-    confirmText: String,
-    confirmBtn: Boolean,
-    clickOutsideText: String,
-    bgColor: String,
-    btnColor: String,
-    iconSize: String,
-  });
+defineProps({
+  icon: String,
+  altText: String,
+  mainTitle: String,
+  messageText: String,
+  confirmText: String,
+  confirmBtn: Boolean,
+  clickOutsideText: String,
+  bgColor: String,
+  btnColor: String,
+  iconSize: String,
+});
 </script>
