@@ -39,16 +39,6 @@
 </template>
 
 <script setup>
-const { icon, altText, mainTitle, messageText, confirmText, subTitle, clickOutsideText } = defineProps({
-  icon: String,
-  altText: String,
-  mainTitle: String,
-  messageText: String,
-  confirmText: String,
-  confirmBtn: Boolean,
-  subTitle: String,
-  clickOutsideText: String,
-});
 const emit = defineEmits(["closeWindow", "confirmAction"]);
 
 const closeModal = () => {
@@ -58,4 +48,15 @@ const closeModal = () => {
 const emitConfirmAction = () => {
   emit("confirmAction");
 };
+
+defineProps({
+  icon: String,
+  altText: String,
+  mainTitle: String,
+  messageText: String,
+  confirmText: String,
+  confirmBtn: Boolean,
+  subTitle: String,
+  clickOutsideText: String,
+});
 </script>

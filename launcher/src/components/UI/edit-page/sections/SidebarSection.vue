@@ -7,7 +7,7 @@
         @mouseenter="footerStore.cursorLocation = `${toNode}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-8 h-5" src="/img/icon/manage-node-icons/backtonode.png" alt="Manage Icon" />
+        <img class="w-8" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
       </div>
       <Transition name="slide-fade">
         <router-link
@@ -16,7 +16,7 @@
           class="w-fit h-9 absolute col-span-1 row-start-1 row-end-2 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-between items-center space-x-2 ml-1 transition duration-200 shadow-md shadow-[#23272a] z-50"
           @mouseleave="routerHovered = false"
         >
-          <img class="w-6 h-4 mr-1" src="/img/icon/manage-node-icons/backtonode.png" alt="Manage Icon" />
+          <img class="w-6 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
           <span class="text-sm text-gray-200 font-semibold">{{ $t("sidebarSect.toNode") }}</span>
         </router-link>
       </Transition>

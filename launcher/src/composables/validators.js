@@ -8,12 +8,19 @@ export async function useListKeys(forceRefresh) {
   const serviceStore = useServices();
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
+  let numRunningValidatorService = 0;
 
   let keyStats = [];
   let clients = serviceStore.installedServices.filter(
     (s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService"
   );
-  if ((clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") || forceRefresh) {
+  if (clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") {
+    for (let client of clients) {
+      if (client.state === "running" && client.service.includes("ValidatorService")) {
+        numRunningValidatorService++;
+      }
+    }
+
     for (let client of clients) {
       //if there is already a list of keys ()
       if (
@@ -21,9 +28,10 @@ export async function useListKeys(forceRefresh) {
         client.state === "running"
       ) {
         //refresh validaotr list
-        let result = await ControlService.listValidators(client.config.serviceID);
-
-        if (!client.service.includes("Web3Signer")) {
+        let result = await ControlService.listValidators(client.config.serviceID, numRunningValidatorService);
+        if (
+          !client.service.includes("Web3Signer")
+        ) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
@@ -31,13 +39,6 @@ export async function useListKeys(forceRefresh) {
             })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
-
-          //make sure there are no duplicates
-          let validating_pubkeys = result.data.map(obj => obj.validating_pubkey);
-          result.data = result.data.filter((obj, index) => {
-            return validating_pubkeys.indexOf(obj.validating_pubkey) === index;
-          });
-
         }
 
         //update service config (pinia)
@@ -74,31 +75,14 @@ export async function useListKeys(forceRefresh) {
       }
     }
     let alias = await ControlService.readKeys();
-    let keysToWrite = {};
-    keyStats.forEach((key) => {
-      if (alias[key.key]) {
-        keysToWrite[key.key] = alias[key.key];
-      }
-    });
-    for (let key in alias) {
-      if (keysToWrite[key] === undefined && serviceStore.installedServices.some((s) => s.config?.serviceID === alias[key].validatorID)) {
-        keysToWrite[key] = alias[key];
-      }
-    }
-    keysToWrite.overwrite = true;
-    await ControlService.writeKeys(keysToWrite);
-
     stakingStore.keys = keyStats.map((key) => {
       return {
         ...key,
-        displayName: alias[key.key]?.keyName,
+        displayName: alias[key.key].keyName,
         showGrafitiText: false,
         showCopyText: false,
         showRemoveText: false,
         showExitText: false,
-        selected: false,
-        groupName: alias[key.key]?.groupName,
-        groupID: alias[key.key]?.groupID,
       };
     });
     if (stakingStore.keys && stakingStore.keys.length > 0) useUpdateValidatorStats();
@@ -158,7 +142,6 @@ export async function useUpdateValidatorStats() {
       } else {
         d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
       }
-      key.index = info.validatorindex;
       key.status = info.status;
       key.balance = info.balance / 1000000000;
       key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";
