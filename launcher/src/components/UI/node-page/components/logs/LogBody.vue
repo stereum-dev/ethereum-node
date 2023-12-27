@@ -6,5 +6,4 @@
 </template>
 <script setup>
 import LogSidebar from "./LogSidebar";
-import { ref } from "vue";
 </script>
