@@ -24,10 +24,10 @@
     "log": "打开记录文件",
     "restart": "重启",
     "start": "开始",
-    "resync": "resync",
+    "resync": "重新同步",
     "stop": "停止",
     "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
+    "machineName": "机器名称",
     "clkEdit": "Click to edit your node",
     "clkOn": "Click to turn your node on",
     "clkOff": "Click to turn your node off",
@@ -170,7 +170,7 @@
     "endPoint": "endpoint",
     "data": "data",
     "enteredKeys": "The number of imported validator keys",
-    "ttlBal": "Total balance",
+    "ttlBal": "总余额",
     "finEPOCH": "Finalized EPOCH",
     "pending": "service is pending",
     "off": "Switch off the service",
@@ -399,6 +399,11 @@
     "logOutTitle": "登出",
     "logOutQuestion": "确定想要登出您的服务器节点吗？",
     "logOutBtn": "登出"
+  },
+  "reconnectModal": {
+    "reconnectTitle": "Connection lost",
+    "reconnectMessage": "Check your connection and try again.",
+    "reconnectBtn": "Reconnect"
   },
   "prunningModal": {
     "prunningText": "GETH 在操作时间内使用的存储空间一直增加。 需要多小时来修剪它数据库，删除不必要的数据并释放一些使用过的储存空间。 必须在GETH不运作的时候完成这项工作。开始修建过程您的节点会下线并停止潜在性见证工作。",
