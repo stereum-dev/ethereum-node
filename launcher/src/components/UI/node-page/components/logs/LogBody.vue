@@ -9,9 +9,9 @@
       <div
         v-for="(log, index) in limitedLogs"
         :key="index"
-        :class="`w-full h-full min-h-11 flex justify-start items-center gap-x-2 px-1 py-2 relative cursor-pointer ${
+        :class="`w-full h-full min-h-11 max-h-12 flex justify-start items-center gap-x-2 px-1 py-2 relative cursor-pointer ${
           index % 2 === 0 ? 'bg-[#bcc0c2] text-[#333333]' : 'bg-gray-700 text-[#ffffff]'
-        }  overflow-y-hidden overflow-x-auto whitespace-pre text-nowrap`"
+        }  overflow-y-hidden overflow-x-scroll whitespace-pre text-nowrap`"
         @click="copy(log)"
         @mouseenter="hoveredLogIndex = index"
         @mouseleave="hoveredLogIndex = null"

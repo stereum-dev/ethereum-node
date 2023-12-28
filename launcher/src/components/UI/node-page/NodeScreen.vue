@@ -174,8 +174,8 @@ const closeExpertMode = () => {
 // ********** LOGS **********
 
 const exportLogs = async () => {
-  const data = this.logsList.slice(-150).reverse();
-  const fileName = this.logsItem.name;
+  const data = nodeStore.serviceLogs.slice(-150).reverse();
+  const fileName = nodeStore.clientToLogs.name;
 
   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
 
