@@ -10,7 +10,7 @@
         <ExpertWindow v-if="isExpertModeOpen" :item="expertModeClient" @hide-modal="closeExpertMode" />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection @open-expert="openExpertModal" />
+        <ServiceSection @open-expert="openExpertModal" @open-logs="openLogPage" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">

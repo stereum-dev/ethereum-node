@@ -40,10 +40,10 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, watchEffect, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
-import { useStakingStore } from "@/store/theStaking";
+
 import { useNodeStore } from "@/store/theNode";
 
 const footerStore = useFooter();
