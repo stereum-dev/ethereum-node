@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-12 row-end-13 grid grid-cols-12 grid-rows-1 items-center border border-gray-600 rounded-b-md bg-[#151618] px-1 pr-0"
+    class="w-full h-full min-h-[40px] col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 items-center border border-gray-600 rounded-b-md bg-[#151618] px-1 pr-0"
   >
     <div class="w-full h-full col-start-1 col-end-4 grid grid-cols-3 py-1">
       <div
@@ -48,9 +48,7 @@
       </div>
     </div>
 
-    <div
-      class="w-full h-full col-start-4 col-end-13 row-start-1 grid grid-cols-12 items-center self-center px-1 relative"
-    >
+    <div class="w-full h-full col-start-4 col-end-13 grid grid-cols-12 items-center self-center px-1 relative">
       <component
         :is="activePanel?.component"
         v-bind="activePanel?.props"

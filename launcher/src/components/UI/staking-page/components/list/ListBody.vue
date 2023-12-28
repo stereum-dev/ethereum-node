@@ -1,12 +1,12 @@
 import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 <template>
   <div
-    class="col-start-1 col-span-full row-end-12 overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
+    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : '',
       stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
-        ? 'row-start-2 '
-        : 'row-start-1 rounded-t-md',
+        ? 'row-start-2 row-end-12'
+        : 'row-start-1 row-end-12 rounded-t-md',
     ]"
   >
     <GroupList v-if="stakingStore.isGroupListActive" :is-loading="isLoading" />
@@ -59,11 +59,15 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           @rename-single="renameSingle"
         />
         <span
-          v-if="!getFilteredValidators.length > 0 && !isLoading && !stakingStore.isPreviewListActive"
+          v-if="!getFilteredValidators.length > 0 && !isLoading && !stakingStore.isPreviewListActive && !searchNotFound"
           class="text-lg font-bold text-gray-300 text-center uppercase select-none"
           >No Validator key imported.</span
         >
-        <span v-if="searchNotFound" class="text-lg font-bold text-gray-300 text-center uppercase">No Matches.</span>
+        <span
+          v-if="searchNotFound && getFilteredValidators.length > 0"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
+          >No Matches.</span
+        >
       </div>
     </div>
   </div>
