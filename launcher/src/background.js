@@ -502,6 +502,18 @@ ipcMain.handle("getValidatorDuties", async (event, args) => {
   return await monitoring.getValidatorDuties(args);
 });
 
+ipcMain.handle("getAttestationRewards", async (event, args) => {
+  return await monitoring.getAttestationRewards(args);
+});
+
+ipcMain.handle("getBlockRewards", async (event, args) => {
+  return await monitoring.getBlockRewards(args);
+});
+
+ipcMain.handle("getSyncCommitteeRewards", async (event, args) => {
+  return await monitoring.getSyncCommitteeRewards(args.validators, args.slot);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
