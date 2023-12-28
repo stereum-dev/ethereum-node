@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 bg-[#1c1d1d] p-1">
+  <div class="w-full h-full col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 bg-[#263238] p-1">
     <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center space-x-2">
       <span class="text-sm text-gray-400 font-semibold">Service ID:</span>
       <span class="text-gray-200 text-sm font-semibold">
@@ -18,7 +18,7 @@
     <div
       class="w-full h-full col-start-8 col-span-full flex justify-center items-center border border-gray-400 rounded-md"
     >
-      <div class="w-8 flex justify-evenly items-center px-1 relative bg-[#171D22] rounded-sm">
+      <div class="w-8 flex justify-evenly items-center px-1 relative bg-[#263238] rounded-sm">
         <svg
           aria-hidden="true"
           class="w-5 h-5 text-gray-500 dark:text-gray-400"

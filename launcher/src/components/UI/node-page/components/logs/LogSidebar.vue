@@ -29,7 +29,7 @@
 
         <button
           v-if="hoveredIndex === index"
-          class="w-36 h-9 absolute left-1 py-1 px-2 rounded-md bg-gray-200 border border-gray-500 flex justify-start items-center z-10 space-x-2 animate__animated animate__slideInLeft cursor-pointer"
+          class="w-36 h-9 absolute left-1 py-1 px-2 rounded-md bg-[#caced1] border border-gray-500 flex justify-start items-center z-10 space-x-2 animate__animated animate__slideInLeft cursor-pointer"
           @click="filterByService(item)"
         >
           <img class="w-6" :src="item.icon" :alt="`${item.name} Icon`" />

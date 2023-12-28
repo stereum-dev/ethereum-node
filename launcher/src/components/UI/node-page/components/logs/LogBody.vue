@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-2 row-end-12 grid grid-cols-24 grid-rows-12 bg-[#1f262a]"
+    class="w-full h-full col-start-1 col-span-full row-start-2 row-end-12 grid grid-cols-24 grid-rows-12 bg-[#263238]"
   >
     <LogSidebar />
     <div
@@ -10,7 +10,7 @@
         v-for="(log, index) in limitedLogs"
         :key="index"
         :class="`w-full h-full min-h-11 flex justify-start items-center gap-x-2 px-1 py-2 relative cursor-pointer ${
-          index % 2 === 0 ? 'bg-gray-100 text-gray-700' : 'bg-gray-700 text-gray-100'
+          index % 2 === 0 ? 'bg-[#bcc0c2] text-[#333333]' : 'bg-gray-700 text-[#ffffff]'
         }  overflow-y-hidden overflow-x-auto whitespace-pre text-nowrap`"
         @click="copy(log)"
         @mouseenter="hoveredLogIndex = index"
@@ -66,7 +66,7 @@ const copy = async (log) => {
     isCopied.value = true;
     setTimeout(() => {
       isCopied.value = false;
-    }, 2000);
+    }, 1000);
   } catch (err) {
     console.error("Failed to copy: ", err);
   }
@@ -86,7 +86,7 @@ const copy = async (log) => {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #2f3030;
+  background: #a0a0a0;
   border-radius: 5px;
 }
 
