@@ -15,7 +15,7 @@
       class="w-full h-full self-center bg-gray-300 rounded-sm col-start-6 col-span-1 flex justify-center items-center overflow-hidden"
     >
       <span class="text-[10px] text-gray-800 font-semibold">{{
-        stakingStore.currentSlot % stakingStore.slotsPerEpoch | 0
+        (stakingStore.currentSlot % stakingStore.slotsPerEpoch | 0) + 1
       }}</span>
     </div>
   </div>
