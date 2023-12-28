@@ -400,6 +400,11 @@
     "logOutQuestion": "DÜĞÜM SUNUCUSUNUZDAN ÇIKIŞ YAPMAK İSTEDİĞİNİZDEN EMİN MİSİNİZ?",
     "logOutBtn": "Çıkış yap"
   },
+  "reconnectModal": {
+    "reconnectTitle": "Connection lost",
+    "reconnectMessage": "Check your connection and try again.",
+    "reconnectBtn": "Reconnect"
+  },
   "prunningModal": {
     "prunningText": "GETH'in çalışma süresi boyunca kullandığı depolama alanı BÜYÜR. Geth veritabanını budamak, gereksiz verileri kaldırmak ve kullanılan depolama alanının bir kısmını boşaltmak ÇOK UZUN sürer. Bu Geth çalışmıyorken yapılmalıdır. BUDAMA SÜRECİNİ BAŞLATIRSANIZ DÜĞÜMÜNÜZ ÇEVRİMDIŞI OLACAK VE OLASI ONAY/DOĞRULAMA GÖREVLERİNİ DURDURACAKTIR!",
     "prunningChecked": "METİNİ OKUDUM VE SONUÇLARININ FARKINDAYIM",

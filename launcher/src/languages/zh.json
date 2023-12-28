@@ -400,6 +400,11 @@
     "logOutQuestion": "确定想要登出您的服务器节点吗？",
     "logOutBtn": "登出"
   },
+  "reconnectModal": {
+    "reconnectTitle": "Connection lost",
+    "reconnectMessage": "Check your connection and try again.",
+    "reconnectBtn": "Reconnect"
+  },
   "prunningModal": {
     "prunningText": "GETH 在操作时间内使用的存储空间一直增加。 需要多小时来修剪它数据库，删除不必要的数据并释放一些使用过的储存空间。 必须在GETH不运作的时候完成这项工作。开始修建过程您的节点会下线并停止潜在性见证工作。",
     "prunningChecked": "我已阅读且了解后果",

@@ -400,6 +400,11 @@
     "logOutQuestion": "SIND SIE SICH SICHER DASS SIE SICH VON IHREM NODE SERVER ABMELDEN WOLLEN?",
     "logOutBtn": "Abmelden"
   },
+  "reconnectModal": {
+    "reconnectTitle": "Verbindung verloren",
+    "reconnectMessage": "Überprüfe deine verbindung und versuche es erneut.",
+    "reconnectBtn": "Verbinden"
+  },
   "prunningModal": {
     "prunningText": "GETH verbraucht Speicherplatz, der im Laufe seiner Betriebszeit wächst. Das Löschen unnötiger Daten und das Freigeben von Speicherplatz aus der Geth-Datenbank kann mehrere Stunden dauern. Dies muss durchgeführt werden, wenn Geth nicht ausgeführt wird. WENN DER LÖSCHVORGANG GESTARTET WIRD, WIRD IHR NODE OFFLINE GEHEN UND POTENZIELLE ATTESTATIONSPFLICHTEN NICHT MEHR ERFÜLLEN.",
     "prunningChecked": "ICH HABE DEN TEXT GELESEN UND BIN MIR DEN KONSEQUENZEN BEWUSST",
