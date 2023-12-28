@@ -1,8 +1,10 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-full items-center grid grid-cols-24 grid-rows-12 absolute">
-    <LogsHeader :client="client" />
+  <div
+    class="animate__animated animate__slideInLeft w-full h-full col-start-1 col-span-full items-center grid grid-cols-24 grid-rows-12 absolute"
+  >
+    <LogsHeader :client="client" @close-log="closeLog" />
     <LogsBody :client="client" />
-    <LogsFooter :client="client" />
+    <LogsFooter :client="client" @export-log="exportLog" />
   </div>
 </template>
 
@@ -15,42 +17,21 @@ import LogsFooter from "../components/logs/LogFooter.vue";
 // import { useNodeStore } from "@/store/theNode";
 // import { useServices } from "@/store/services";
 // import { saveAs } from "file-saver";
-// import { ref } from "vue";
 
-const props = defineProps({
+const { client } = defineProps({
   client: {
     type: Object,
     default: null,
   },
 });
 
-// const nodeStore = useNodeStore();
-// const serviceStore = useServices();
+const emit = defineEmits(["close-log", "export-log"]);
 
-// const logsList = ref([]);
-// const openDialog = ref(false);
-// const dialogValue = ref("");
-// const copyIcon = ref("/img/icon/control/ok.png");
+const closeLog = () => {
+  emit("close-log");
+};
 
-// const filteredServiceLogs = () => {
-//   nodeStore.serviceLogs.forEach((i) => {
-//     if (i.config?.serviceID === props.item.config?.serviceID) {
-//       logsList.value = i.logs;
-//     }
-//   });
-// };
-
-// const copy = (e) => {
-//   const copyText = e.target.innerText;
-//   navigator.clipboard.writeText(copyText);
-//   openDialog.value = !openDialog.value;
-//   dialogValue.value = "Copied to clipboard!";
-//   dialogIcon.value = copyIcon;
-//   if (openDialog.value === true) {
-//     setTimeout(() => {
-//       openDialog.value = false;
-//     }, 700);
-//   }
-// };
-//
+const exportLog = () => {
+  emit("export-log");
+};
 </script>
