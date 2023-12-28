@@ -1,3 +1,63 @@
 <template>
-  <div></div>
+  <div class="w-full h-full col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 bg-[#263238] p-1">
+    <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center space-x-2">
+      <span class="text-sm text-gray-400 font-semibold">Service ID:</span>
+      <span class="text-gray-200 text-sm font-semibold">
+        {{ client?.config?.serviceID }}
+      </span>
+    </div>
+    <div class="w-full h-full col-start-7 col-end-8 flex justify-center items-center cursor-pointer">
+      <img
+        class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
+        src="/img/icon/manage-node-icons/log_export.png"
+        alt=""
+        @mousedown.prevent
+        @click="exportLog"
+      />
+    </div>
+    <div
+      class="w-full h-full col-start-8 col-span-full flex justify-center items-center border border-gray-400 rounded-md"
+    >
+      <div class="w-8 flex justify-evenly items-center px-1 relative bg-[#263238] rounded-sm">
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5 text-gray-500 dark:text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </div>
+      <input
+        v-model="nodeStore.searchLogs"
+        type="search"
+        class="z-10 text-gray-400 text-sm rounded-full block w-full px-2 py-1 placeholder-gray-500 bg-transparent"
+        placeholder="Search"
+      />
+    </div>
+  </div>
 </template>
+
+<script setup>
+import { useNodeStore } from "@/store/theNode";
+
+const { client } = defineProps({
+  client: {
+    type: Object,
+    default: null,
+  },
+});
+
+const emit = defineEmits(["export-log"]);
+
+const nodeStore = useNodeStore();
+
+const exportLog = () => {
+  emit("export-log");
+};
+</script>
