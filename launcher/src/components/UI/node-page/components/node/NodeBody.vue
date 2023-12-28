@@ -14,7 +14,7 @@ import { mapState, map } from 'pinia';
     <div class="w-full h-full grid grid-cols-3 pt-8">
       <ExecutionClients
         @open-expert="openExpert"
-        @open-log="openLogsPage"
+        @open-log="openLog"
         @hide-modal="clickOutside"
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
@@ -24,7 +24,7 @@ import { mapState, map } from 'pinia';
       />
       <ConsensusClients
         @open-expert="openExpert"
-        @open-log="openLogsPage"
+        @open-log="openLog"
         @hide-modal="clickOutside"
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
@@ -34,7 +34,7 @@ import { mapState, map } from 'pinia';
       />
       <ValidatorClients
         @open-expert="openExpert"
-        @open-log="openLogsPage"
+        @open-log="openLog"
         @hide-modal="clickOutside"
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
@@ -59,7 +59,7 @@ import { useServices } from "@/store/services";
 import LeaderLine from "leader-line-new";
 import { useStateHandler, useRestartService } from "@/composables/services";
 
-const emit = defineEmits(["openExpert"]);
+const emit = defineEmits(["openExpert", "openLog"]);
 
 // Refs
 const isPluginLogPageActive = ref(false);
@@ -191,9 +191,8 @@ const removeConnectionLines = () => {
   nodeStore.lines = [];
 };
 
-const openLogsPage = (item) => {
-  itemToLogs.value = item;
-  isPluginLogPageActive.value = true;
+const openLog = (item) => {
+  emit("openLog", item);
 };
 
 const closePluginLogsPage = () => {
