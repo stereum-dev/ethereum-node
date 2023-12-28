@@ -400,6 +400,11 @@
     "logOutQuestion": "JSTE SI JISTÝ(Á), ŽE SE CHCETE ODHLÁSIT ZE SVÉHO SERVERU S UZLEM?",
     "logOutBtn": "Odhlásit se"
   },
+  "reconnectModal": {
+    "reconnectTitle": "Connection lost",
+    "reconnectMessage": "Check your connection and try again.",
+    "reconnectBtn": "Reconnect"
+  },
   "prunningModal": {
     "prunningText": "GETH během svého provozu zvětšuje používaný úložný prostor. Vyčištění GETH databáze, odstranění nepotřebných dat a uvolnění části využívaného úložného prostoru, trvá NĚKOLIK HODIN. Tento úkon musí být proveden, když Geth není spuštěný. BĚHEM ČIŠTĚNÍ PROSTORU BUDE VÁŠ UZEL ODPOJEN OD SÍTĚ A NEBUDE MOCI PLNIT POTENCIÁLNÍ POKYNY K ATESTACI.",
     "prunningChecked": "PŘEČETL(A) JSEM TEXT A JSEM SI VĚDOM(Á) NÁSLEDKŮ",
