@@ -54,16 +54,6 @@
   </div>
 </template>
 <script setup>
-// import InsertPanel from "./panels/InsertPanel.vue";
-// import ValidatorPanel from "./panels/ValidatorPanel.vue";
-// import PasswordPanel from "./panels/PasswordPanel.vue";
-// import SearchPanel from "./panels/SearchPanel.vue";
-// import FeePanel from "./panels/FeePanel.vue";
-// import GroupingPanel from "./panels/GroupingPanel.vue";
-// import RenameKey from "./panels/RenameKey.vue";
-// import GraffitiPanel from "./panels/GraffitiPanel.vue";
-// import RemotePanel from "./panels/RemotePanel.vue";
-// import ManualRemote from "./panels/ManualRemote.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, defineAsyncComponent, watchEffect, ref } from "vue";
 
@@ -102,64 +92,6 @@ const activePanel = ref({
   props: {},
   events: {},
 });
-
-// const panels = {
-//   insert: {
-//     component: () => import("./panels/InsertPanel.vue"),
-//     events: {
-//       uploadFile: uploadFile,
-//     },
-//   },
-//   validator: {
-//     component: () => import("./panels/ValidatorPanel.vue"),
-//     events: {
-//       pickValidator: pickValidator,
-//     },
-//   },
-//   password: {
-//     component: () => import("./panels/PasswordPanel.vue"),
-//     events: {
-//       confirmPassword: () => confirmPassword,
-//     },
-//   },
-//   search: {
-//     component: () => import("./panels/SearchPanel.vue"),
-//   },
-//   fee: {
-//     component: () => import("./panels/FeePanel.vue"),
-//     events: {
-//       confirmFeerecepient: () => confirmFeerecepient,
-//     },
-//   },
-//   grouping: {
-//     component: () => import("./panels/GroupingPanel.vue"),
-//     events: {
-//       confirmGrouping: confirmGrouping,
-//     },
-//   },
-//   renameKey: {
-//     component: () => import("./panels/RenameKey.vue"),
-//     events: {
-//       confirmRename: confirmRename,
-//       resetName: resetName,
-//     },
-//   },
-//   graffiti: {
-//     component: () => import("./panels/GraffitiPanel.vue"),
-//     events: {
-//       confirmGraffiti: () => confirmGraffiti,
-//     },
-//   },
-//   remote: {
-//     component: () => import("./panels/RemotePanel.vue"),
-//   },
-//   manualRemote: {
-//     component: () => import("./panels/ManualRemote.vue"),
-//     events: {
-//       confirmRemote: () => confirmRemote,
-//     },
-//   },
-// };
 
 //Computed & Watchers
 
