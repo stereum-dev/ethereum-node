@@ -14,7 +14,39 @@
     <div
       class="w-full h-full col-start-3 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1"
     >
-      <span class="text-2xs text-gray-300 font-semibold">333.211213654080808</span>
+      <span class="text-2xs text-gray-300 font-semibold">{{ totalRewards }}</span>
     </div>
   </div>
 </template>
+<script setup>
+import { useStakingStore } from "@/store/theStaking";
+import { onUnmounted, watchEffect, ref, onMounted } from "vue";
+import ControlService from "@/store/ControlService";
+
+const stakingStore = useStakingStore();
+const intervalID = ref(null);
+const totalRewards = ref(0);
+
+onMounted(() => {
+  getStats();
+});
+
+watchEffect(() => {
+  if (stakingStore.secondsPerSlot > 0 && intervalID.value == null) {
+    intervalID.value = setInterval(() => {
+      getStats();
+    }, stakingStore.secondsPerSlot * stakingStore.slotsPerEpoch * 1000);
+  }
+});
+
+const getStats = () => {
+  ControlService.getAttestationRewards(stakingStore.keys.map((k) => k.index).filter((k) => k)).then((data) => {
+    if (data.rewards?.length > 0)
+      totalRewards.value = data.rewards.map((item) => item.total_rewards).reduce((a, b) => a + b, 0);
+  });
+};
+
+onUnmounted(() => {
+  clearInterval(intervalID.value);
+});
+</script>
