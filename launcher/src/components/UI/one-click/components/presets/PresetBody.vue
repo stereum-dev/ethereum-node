@@ -114,6 +114,7 @@ watch(displayItem, () => {
 //Lifecycle
 
 onMounted(() => {
+  clickStore.installMonitoring = false;
   displayItem.value = "Click to select a network";
   clickStore.presets.forEach((p) => (p.selected = false));
 });
