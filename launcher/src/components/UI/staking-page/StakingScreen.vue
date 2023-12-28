@@ -253,12 +253,13 @@ const importValidatorProcessing = async () => {
     serviceID: stakingStore.selectedValidatorService.config?.serviceID,
     slashingDB: stakingStore.slashingDB?.path || null,
   });
-  stakingStore.setActivePanel(null);
+
   if (
     stakingStore.checkActiveValidatorsResponse.length === 0 ||
     stakingStore.checkActiveValidatorsResponse.includes("Validator check error:\n")
   ) {
     importKey(stakingStore.importEnteredPassword);
+    stakingStore.setActivePanel(null);
     stakingStore.keyFiles = [];
   } else {
     stakingStore.setActiveModal("risk");

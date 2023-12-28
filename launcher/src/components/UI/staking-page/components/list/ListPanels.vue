@@ -49,34 +49,13 @@
     </div>
 
     <div class="w-full h-full col-start-4 col-end-13 grid grid-cols-12 items-center self-center px-1 relative">
-      <component
-        :is="activePanel?.component"
-        v-bind="activePanel?.props"
-        v-on="
-          activePanel?.events
-            ? Object.keys(activePanel?.events).reduce((acc, eventName) => {
-                acc[eventName] = (args) => handleEvent(eventName, args);
-                return acc;
-              }, {})
-            : {}
-        "
-      />
+      <component :is="activePanel.component" v-bind="activePanel.props" v-on="activePanel.events" />
     </div>
   </div>
 </template>
 <script setup>
-import InsertPanel from "./panels/InsertPanel.vue";
-import ValidatorPanel from "./panels/ValidatorPanel.vue";
-import PasswordPanel from "./panels/PasswordPanel.vue";
-import SearchPanel from "./panels/SearchPanel.vue";
-import FeePanel from "./panels/FeePanel.vue";
-import GroupingPanel from "./panels/GroupingPanel.vue";
-import RenameKey from "./panels/RenameKey.vue";
-import GraffitiPanel from "./panels/GraffitiPanel.vue";
-import RemotePanel from "./panels/RemotePanel.vue";
-import ManualRemote from "./panels/ManualRemote.vue";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, watchEffect } from "vue";
+import { computed, defineAsyncComponent, watchEffect, ref } from "vue";
 
 //Emits
 const emit = defineEmits([
@@ -96,75 +75,25 @@ const emit = defineEmits([
 const stakingStore = useStakingStore();
 
 const panels = {
-  insert: {
-    component: InsertPanel,
-    events: {
-      uploadFile: uploadFile,
-    },
-  },
-  validator: {
-    component: ValidatorPanel,
-    events: {
-      pickValidator: pickValidator,
-    },
-  },
-  password: {
-    component: PasswordPanel,
-    events: {
-      confirmPassword: () => confirmPassword,
-    },
-  },
-  search: {
-    component: SearchPanel,
-  },
-  fee: {
-    component: FeePanel,
-    events: {
-      confirmFeerecepient: () => confirmFeerecepient,
-    },
-  },
-  grouping: {
-    component: GroupingPanel,
-    events: {
-      confirmGrouping: confirmGrouping,
-    },
-  },
-  renameKey: {
-    component: RenameKey,
-    events: {
-      confirmRename: confirmRename,
-      resetName: resetName,
-    },
-  },
-  graffiti: {
-    component: GraffitiPanel,
-    events: {
-      confirmGraffiti: () => confirmGraffiti,
-    },
-  },
-  remote: {
-    component: RemotePanel,
-  },
-  manualRemote: {
-    component: ManualRemote,
-    events: {
-      confirmRemote: () => confirmRemote,
-    },
-  },
+  insert: defineAsyncComponent(() => import("./panels/InsertPanel.vue")),
+  validator: defineAsyncComponent(() => import("./panels/ValidatorPanel.vue")),
+  password: defineAsyncComponent(() => import("./panels/PasswordPanel.vue")),
+  search: defineAsyncComponent(() => import("./panels/SearchPanel.vue")),
+  fee: defineAsyncComponent(() => import("./panels/FeePanel.vue")),
+  grouping: defineAsyncComponent(() => import("./panels/GroupingPanel.vue")),
+  renameKey: defineAsyncComponent(() => import("./panels/RenameKey.vue")),
+  graffiti: defineAsyncComponent(() => import("./panels/GraffitiPanel.vue")),
+  remote: defineAsyncComponent(() => import("./panels/RemotePanel.vue")),
+  manualRemote: defineAsyncComponent(() => import("./panels/ManualRemote.vue")),
 };
 
-//Computed & Watchers
-const activePanel = computed(() => {
-  const panelConfig = panels[stakingStore.activePanel] || {};
-  if (panelConfig) {
-    return {
-      component: panelConfig.component || null,
-      props: panelConfig.props || {},
-      events: panelConfig.events || {},
-    };
-  }
-  return { component: "insert" };
+const activePanel = ref({
+  component: "insert",
+  props: {},
+  events: {},
 });
+
+//Computed & Watchers
 
 const aliasIcon = computed(() => {
   if (!stakingStore.isPubkeyVisible) {
@@ -175,49 +104,36 @@ const aliasIcon = computed(() => {
 });
 
 watchEffect(() => {
+  const panelName = stakingStore.activePanel;
+  if (panels[panelName]) {
+    activePanel.value = {
+      component: panels[panelName],
+
+      events: {
+        // Define event handlers for each panel
+        uploadFile: (file) => emit("uploadFile", file),
+        pickValidator: (validator) => emit("pickValidator", validator),
+        confirmPassword: (password) => emit("confirmPassword", password),
+        confirmGrouping: (groupName) => emit("confirmGrouping", groupName),
+        confirmRename: (newName) => emit("confirmRename", newName),
+        resetName: (item) => emit("resetName", item),
+        confirmFeerecepient: (item) => emit("confirmFeerecepient", item),
+        confirmGraffiti: (graffiti) => emit("confirmGraffiti", graffiti),
+        confirmRemote: () => emit("confirmRemote"),
+      },
+    };
+  } else {
+    activePanel.value.component = null;
+  }
+});
+
+watchEffect(() => {
   if (stakingStore.activePanel === null) {
     stakingStore.setActivePanel("insert");
   }
 });
 
 //Methods
-const handleEvent = (eventName, args) => {
-  emit(eventName, args);
-};
-const confirmRemote = () => {
-  handleEvent("confirmRemote");
-};
-
-const confirmGrouping = (groupName) => {
-  handleEvent("confirmGrouping", groupName);
-};
-const confirmFeerecepient = (item) => {
-  handleEvent("confirmFeerecepient", item);
-};
-
-const pickValidator = (service) => {
-  handleEvent("pickValidator", service);
-};
-
-const confirmRename = (newName) => {
-  handleEvent("confirmRename", newName);
-};
-
-const resetName = (item) => {
-  handleEvent("resetName", item);
-};
-
-const uploadFile = (event) => {
-  handleEvent("uploadFile", event);
-};
-
-const confirmPassword = (pass) => {
-  handleEvent("confirmPassword", pass);
-};
-
-const confirmGraffiti = (graffiti) => {
-  handleEvent("confirmGraffiti", graffiti);
-};
 
 const displayKeyAlias = () => {
   stakingStore.isPubkeyVisible = !stakingStore.isPubkeyVisible;
