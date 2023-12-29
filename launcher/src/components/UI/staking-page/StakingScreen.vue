@@ -608,7 +608,7 @@ const deleteRemoteKeys = async (serviceID, keys) => {
 const exportExitMessage = async () => {
   const result = await ControlService.getExitValidatorMessage({
     pubkey: stakingStore.selectedSingleKeyToWithdraw?.key,
-    serviceID: stakingStore.selectedSingleKeyToWithdraw?.validatorClientID,
+    serviceID: stakingStore.selectedSingleKeyToWithdraw?.validatorID,
   });
 
   console.log(result);
