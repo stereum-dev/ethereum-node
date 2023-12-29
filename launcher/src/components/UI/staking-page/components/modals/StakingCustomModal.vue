@@ -22,7 +22,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
         </div>
 
         <slot name="content"></slot>
-        <div class="col-start-1 col-span-full row-start-6 row-span-1 grid grid-cols-12 items-center px-2">
+        <div class="col-start-1 col-span-full row-start-7 row-span-1 grid grid-cols-12 items-center px-2">
           <button
             v-if="props.confirmText === 'Withdraw & Exit'"
             class="col-start-1 col-end-5 ml-4 min-w-[100px] max-h-10 bg-blue-500 px-5 py-2 shadow-xl shadow-[#141516] tracking-wider rounded-full uppercase active:scale-90 transition-all duration-150 flex justify-evenly items-center space-x-2"

@@ -607,18 +607,44 @@ const deleteRemoteKeys = async (serviceID, keys) => {
 };
 
 const exportExitMessage = async () => {
-  const result = await ControlService.getExitValidatorMessage({
-    pubkey: stakingStore.selectedSingleKeyToWithdraw?.key,
-    serviceID: stakingStore.selectedSingleKeyToWithdraw?.validatorID,
-  });
+  try {
+    const key = stakingStore.selectedSingleKeyToWithdraw;
 
-  exportMessage(result);
+    if (key) {
+      const result = await ControlService.getExitValidatorMessage({
+        pubkey: key.key,
+        serviceID: key.validatorID,
+      });
+      saveExitMessage(result, "single");
+    } else {
+      const pubkeys = stakingStore.keys
+        .filter((item) => item.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID)
+        .map((item) => item.key);
+
+      const results = await Promise.all(
+        pubkeys.map(async (key) => {
+          return ControlService.getExitValidatorMessage({
+            pubkey: key,
+            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+          });
+        })
+      );
+
+      saveExitMessage(results, "multiple");
+    }
+  } catch (error) {
+    console.error("Error exporting exit message:", error);
+  }
 };
 
-const exportMessage = (data) => {
-  const fileName = `ExitMessage-${stakingStore.selectedSingleKeyToWithdraw?.config.validatorID}.txt`;
-  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
-  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+const saveExitMessage = (data, type) => {
+  const content =
+    type === "single"
+      ? JSON.stringify(data, null, 2)
+      : data.map((entry) => JSON.stringify(entry, null, 2)).join("\n\n");
+
+  const fileName = type === "single" ? "single_exit_message.txt" : "multiple_exit_messages.txt";
+  const blob = new Blob([content], { type: "application/json;charset=utf-8" });
   saveAs(blob, fileName);
 };
 

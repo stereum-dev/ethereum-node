@@ -631,7 +631,7 @@ export class ValidatorAccountManager {
 
   async getExitValidatorMessage(pubkey, serviceID) {
     const ref = StringUtils.createRandomString(); //Create a random string to identify the task
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit msg for ${pubkey.substring(0, 6)}..`);
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit msg for ${pubkey?.substring(0, 6)}..`);
     try {
       let service = await this.nodeConnection.readServiceConfiguration(serviceID);
       const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit`, []);
@@ -649,7 +649,6 @@ export class ValidatorAccountManager {
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, data);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-      console.log("BACKEND DATAAAAAAA", data);
       return data;
     } catch (error) {
       this.nodeConnection.taskManager.otherTasksHandler(
