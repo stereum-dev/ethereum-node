@@ -10,6 +10,7 @@
     :active-button="activeButton"
     :is-processing="checkProcessing"
     @confirm-action="removeValidator"
+    @export-action="exportRemove"
     @close-modal="closeModal"
   >
     <template #content>
@@ -94,7 +95,7 @@
 import { useStakingStore } from "@/store/theStaking";
 import { computed, ref, onMounted, watchEffect } from "vue";
 
-const emit = defineEmits(["removeValidator"]);
+const emit = defineEmits(["removeValidator", "exportRemove"]);
 
 const stakingStore = useStakingStore();
 const checkProcessing = ref(false);
@@ -116,6 +117,12 @@ onMounted(() => {
 const removeValidator = () => {
   clickOut.value = null;
   emit("removeValidator", stakingStore.selectedKeyToRemove, stakingStore.pickedSlashing);
+  checkProcessing.value = true;
+};
+
+const exportRemove = () => {
+  clickOut.value = null;
+  emit("exportRemove", stakingStore.selectedKeyToRemove, stakingStore.pickedSlashing);
   checkProcessing.value = true;
 };
 

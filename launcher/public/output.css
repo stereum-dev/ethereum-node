@@ -1625,6 +1625,10 @@ video {
   height: 100vh;
 }
 
+.max-h-12{
+  max-height: 3rem;
+}
+
 .max-h-28{
   max-height: 7rem;
 }
@@ -1725,8 +1729,12 @@ video {
   max-height: 100%;
 }
 
-.max-h-12{
-  max-height: 3rem;
+.max-h-10{
+  max-height: 2.5rem;
+}
+
+.max-h-32{
+  max-height: 8rem;
 }
 
 .min-h-11{
@@ -2492,10 +2500,6 @@ video {
 
 .overflow-hidden{
   overflow: hidden;
-}
-
-.overflow-x-auto{
-  overflow-x: auto;
 }
 
 .overflow-y-auto{

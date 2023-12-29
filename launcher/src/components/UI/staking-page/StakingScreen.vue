@@ -96,6 +96,7 @@ const modals = {
     props: {},
     events: {
       removeValidator: () => removeValidatorKeys(),
+      exportRemove: () => removeAndExportKeys(),
     },
   },
   remote: {
@@ -602,6 +603,10 @@ const deleteRemoteKeys = async (serviceID, keys) => {
     data: result,
   });
   return result;
+};
+
+const removeAndExportKeys = async () => {
+  await removeValidatorKeys();
 };
 
 const removeValidatorKeys = async () => {
