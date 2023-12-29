@@ -89,6 +89,7 @@ const modals = {
     component: WithdrawMultiple,
     events: {
       confirmWithdraw: () => withdrawValidatorKey(),
+      exportMessage: () => exportExitMessage(),
     },
   },
   removeValidator: {
@@ -96,7 +97,6 @@ const modals = {
     props: {},
     events: {
       removeValidator: () => removeValidatorKeys(),
-      exportRemove: () => removeAndExportKeys(),
     },
   },
   remote: {
@@ -605,8 +605,13 @@ const deleteRemoteKeys = async (serviceID, keys) => {
   return result;
 };
 
-const removeAndExportKeys = async () => {
-  await removeValidatorKeys();
+const exportExitMessage = async () => {
+  const result = await ControlService.getExitValidatorMessage({
+    pubkey: stakingStore.selectedSingleKeyToWithdraw?.key,
+    serviceID: stakingStore.selectedSingleKeyToWithdraw?.validatorClientID,
+  });
+
+  console.log(result);
 };
 
 const removeValidatorKeys = async () => {

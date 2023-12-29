@@ -61,7 +61,6 @@ export class ValidatorAccountManager {
           );
 
           if (latestEpochsResponse.status === 200 && latestEpochsResponse.data.data.length > 0) {
-
             for (let i = 0; i < 2; i++) {
               if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
                 isActiveRunning.push(pubkey);
@@ -650,7 +649,7 @@ export class ValidatorAccountManager {
       //Push successful task
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, data);
       this.nodeConnection.taskManager.otherTasksHandler(ref);
-
+      console.log("BACKEND DATAAAAAAA", data);
       return data;
     } catch (error) {
       this.nodeConnection.taskManager.otherTasksHandler(
