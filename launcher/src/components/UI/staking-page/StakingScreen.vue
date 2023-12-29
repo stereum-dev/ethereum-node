@@ -57,6 +57,7 @@ import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
 import { useDeepClone } from "@/composables/utils";
 import DisabledSection from "./sections/DisabledSection.vue";
+import { saveAs } from "file-saver";
 
 //Store
 const stakingStore = useStakingStore();
@@ -611,7 +612,14 @@ const exportExitMessage = async () => {
     serviceID: stakingStore.selectedSingleKeyToWithdraw?.validatorClientID,
   });
 
-  console.log(result);
+  exportMessage(result);
+};
+
+const exportMessage = (data) => {
+  const fileName = `ExitMessage-${stakingStore.selectedSingleKeyToWithdraw?.config.validatorID}.txt`;
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+  saveAs(blob, fileName);
 };
 
 const removeValidatorKeys = async () => {
