@@ -18,19 +18,18 @@
       <div class="content">
         <div v-if="!headerStore.generatorPlugin" class="wrapper">
           <div class="browserBox">
-            <div class="title">
-              <span>{{ !headerStore.continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
-              <span>{{
+            <ConfirmBox
+              :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'OPEN OBOL LAUNCHPAD'}`"
+              :bottom-line="`${
                 !headerStore.continueForExistENR
-                  ? "Generate a new ENR to use to create or join an existing cluster"
-                  : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
-              }}</span>
-            </div>
-            <div class="btn-box">
-              <div class="btn" @click="topBlock">
-                {{ !headerStore.continueForExistENR ? "GENERATE" : "OPEN IN BROWSER" }}
-              </div>
-            </div>
+                  ? 'Generate a new ENR to use to create or join an existing cluster'
+                  : 'Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.'
+              }`"
+              :btn-name="`${!headerStore.continueForExistENR ? 'GENERATE' : 'OPEN IN BROWSER'}`"
+              :btn-bg-color="`#192d31`"
+              :btn-name-color="`#2fe4ab`"
+              @confirmPluginClick="topBlock"
+            />
           </div>
 
           <div class="browserBox">
@@ -44,40 +43,38 @@
               </div>
             </div>
             <div v-else class="wrapper" style="flex-direction: row">
-              <div class="title">
-                <span>{{ !headerStore.continueForExistENR ? "CREATE NEW ENR" : "OPEN OBOL LAUNCHPAD" }}</span>
-                <span>{{
+              <ConfirmBox
+                :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'OPEN OBOL LAUNCHPAD'}`"
+                :bottom-line="`${
                   !headerStore.continueForExistENR
-                    ? "Generate a new ENR to use to create or join an existing cluster"
-                    : "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad."
-                }}</span>
-              </div>
-              <div class="btn-box">
-                <div class="btn" style="background: #494949; color: #dbdbdb" @click="copyHandler">
-                  <img style="width: 10%; margin-right: 2%" src="/img/icon/service-icons/copy1.png" alt="" />ENR
-                </div>
-                <div class="btn" style="background: #eb5353; color: #dbdbdb" @click="removeHandler">REMOVE</div>
-              </div>
+                    ? 'Generate a new ENR to use to create or join an existing cluster'
+                    : 'Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.'
+                }`"
+                :btn-name="`COPY`"
+                :second-btn-name="`REMOVE`"
+                :btn-bg-color="`#494949`"
+                :second-btn-bg-color="`#eb5353`"
+                :btn-name-color="`#dbdbdb`"
+                img-url="/img/icon/service-icons/copy1.png"
+                @confirmPluginClick="copyHandler"
+                @secBtnPluginClick="removeHandler"
+              />
             </div>
           </div>
           <div v-if="headerStore.continueForExistENR" class="browserBox">
-            <div v-if="!dkgControl || headerStore.depositFile" class="wrapper" style="flex-direction: row">
-              <div class="title">
-                <span>{{ headerStore.depositFile ? "BACKUP DEPOSIT FILE" : "START THE DKG" }}</span>
-                <span
-                  >{{
-                    headerStore.depositFile
-                      ? "Export your backup deposit file from the server to back it up"
-                      : "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!"
-                  }}
-                </span>
-              </div>
-              <div class="btn-box">
-                <div class="btn" @click="dkgSwitch">
-                  {{ headerStore.depositFile ? "SAVE" : "START" }}
-                </div>
-              </div>
-            </div>
+            <ConfirmBox
+              v-if="!dkgControl || headerStore.depositFile"
+              :top-line="`${headerStore.depositFile ? 'BACKUP DEPOSIT FILE' : 'START THE DKG'}`"
+              :bottom-line="`${
+                headerStore.depositFile
+                  ? 'Export your backup deposit file from the server to back it up'
+                  : 'When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!'
+              }`"
+              :btn-name="`${headerStore.depositFile ? 'SAVE' : 'START'}`"
+              :btn-bg-color="`#192d31`"
+              :btn-name-color="`#2fe4ab`"
+              @confirmPluginClick="dkgSwitch"
+            />
             <div v-else class="browserBox_import">
               <div class="import-title">
                 <span>PASTE THE URL</span>
@@ -98,6 +95,7 @@
 import { useNodeHeader } from "@/store/nodeHeader";
 import EnrGenerator from "./EnrGenerator.vue";
 import { ref, onMounted } from "vue";
+import ConfirmBox from "./plugin/ConfirmBox.vue";
 
 const obolSharonService = ref({});
 const importedENR = ref("");
@@ -311,28 +309,7 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 2%;
 }
-.browserBox .title {
-  width: 70%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.title span:first-child {
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-left: 10px;
-  margin-top: 5px;
-}
-.title span:last-child {
-  color: #dbdbdb;
-  font-size: 0.65rem;
-  font-weight: 400;
-  margin-left: 10px;
-  margin-top: 10px;
-}
+
 .browserBox_import {
   width: 100%;
   height: 100%;
@@ -396,48 +373,6 @@ onMounted(() => {
   background-color: #1a2e32e6;
 }
 .import-btn:active {
-  transition-duration: 100ms;
-  background-color: #1a2e32e6;
-  box-shadow: 1px 1px 10px 1px #171717 inset;
-}
-
-.browserBox .btn-box {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-.browserBox .btn {
-  width: 90%;
-  height: 35%;
-
-  margin-right: 10px;
-  background-color: #192d31;
-  text-decoration: none;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: #2fe4ab;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  transition-duration: all 200ms;
-}
-.browserBox .btn:first-child {
-  margin-top: 15px;
-}
-.browserBox .btn:not(:first-child) {
-  margin-top: 5px;
-}
-.btn:hover {
-  transition-duration: 100ms;
-  background-color: rgba(26, 46, 50, 0.6);
-}
-.btn:active {
   transition-duration: 100ms;
   background-color: #1a2e32e6;
   box-shadow: 1px 1px 10px 1px #171717 inset;

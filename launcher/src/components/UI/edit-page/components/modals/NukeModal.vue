@@ -41,6 +41,9 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 export default {
   emit: ["remove-items", "close-me", "back-to-login"],
   data() {
@@ -95,11 +98,28 @@ export default {
   },
   methods: {
     //dummy method to simulate the nuke process
-    dumpLogs() {
+    async dumpLogs() {
       this.loadingDump = true;
-      setTimeout(() => {
-        this.loadingDump = false;
-      }, 4000);
+      const allLogs = await ControlService.dumpDockerLogs();
+      this.exportLogs(allLogs);
+      this.loadingDump = false;
+    },
+    exportLogs(logs) {
+      try {
+        if (logs.length > 0) {
+          const zip = new JSZip();
+
+          logs.forEach((item) => {
+            zip.file(item.containerId, item.logs.stdout);
+          });
+
+          zip.generateAsync({ type: "blob" }).then(function (blob) {
+            saveAs(blob, "stereum_logs.zip");
+          });
+        }
+      } catch (err) {
+        console.log("Failed exporting config: ", err);
+      }
     },
     //end dummy method
     disableAutoScroll() {

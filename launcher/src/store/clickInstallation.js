@@ -3,9 +3,9 @@ import { defineStore } from "pinia";
 export const useClickInstall = defineStore("clickInstallation", {
   state: () => {
     return {
+      startServicesAfterInstall: false,
       isConfigButtonEnbabled: false,
       installMonitoring: false,
-      startServicesAfterInstall: true,
       relayURL: "",
       checkPointSync: "",
       currentSlide: 0,
@@ -186,7 +186,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://beaconstate.info/",
         },
       ],
-      georli: [
+      goerli: [
         {
           id: 1,
           name: "Sigma Prime",
@@ -288,12 +288,6 @@ export const useClickInstall = defineStore("clickInstallation", {
           name: "EF DevOps",
           icon: "/img/icon/service-icons/ef-devops.png",
           url: "https://checkpoint-sync.holesky.ethpandaops.io",
-        },
-        {
-          id: 4,
-          name: "Flashbots",
-          icon: "/img/icon/click-installation/flashbot-icon.png",
-          url: "https://boost-relay-holesky.flashbots.net/",
         },
       ],
     };

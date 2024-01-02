@@ -155,19 +155,19 @@ jobs:
         shell: bash
 
       - name: Download ubuntu binary from build into dist
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: app-ubuntu-latest
           path: dist
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
       - name: Download windows binary from build into dist
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: app-windows-latest
           path: dist
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
       - name: Download macos binary from build into dist
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: app-macos-latest
           path: dist

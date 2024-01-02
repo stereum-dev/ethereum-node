@@ -400,6 +400,11 @@
     "logOutQuestion": "آیا مطمئن هستید که می خواهید از سرور نود خود خارج شوید?",
     "logOutBtn": "خروج"
   },
+  "reconnectModal": {
+    "reconnectTitle": "Connection lost",
+    "reconnectMessage": "Check your connection and try again.",
+    "reconnectBtn": "Reconnect"
+  },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
     "prunningChecked": "من متن را خواندم و از عواقب آن آگاهم",

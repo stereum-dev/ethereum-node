@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="col-start-4 col-end-7 h-[55px] grid grid-cols-3 grid-rows-2 gap-1 justify-center items-center"
-  >
+  <div class="col-start-4 col-end-7 h-[55px] grid grid-cols-3 grid-rows-2 gap-1 justify-center items-center">
     <button
       v-if="showAddButton"
       class="w-full h-full rounded-md col-start-1 row-start-1 row-span-2 text-xs text-gray-100 p-1 shadow-md shadow-gray-800 border border-gray-500 font-semibold bg-[#264744]"
@@ -22,8 +20,7 @@
         class="text-[12px] text-left text-gray-100 overflow-hidden whitespace-pre"
         :class="{ 'text-gray-500 cursor-not-allowed': !config.status }"
       >
-        {{ config.configName
-        }}<span class="text-[12px] font-semibold ml-1">{{ config.id }}</span>
+        {{ config.configName }}<span class="text-[12px] font-semibold ml-1">{{ config.id }}</span>
       </span>
     </div>
   </div>
@@ -31,7 +28,8 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { watchEffect, ref } from "vue";
-defineProps({
+
+const { list } = defineProps({
   list: {
     type: Array,
     default: () => [],

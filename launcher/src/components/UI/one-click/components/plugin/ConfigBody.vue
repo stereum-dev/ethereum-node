@@ -68,6 +68,7 @@ onMounted(() => {
   getInstallPath();
   sortPlugins();
   selectedPluginsValidation();
+  clickStore.installMonitoring = false;
 });
 
 //Methods

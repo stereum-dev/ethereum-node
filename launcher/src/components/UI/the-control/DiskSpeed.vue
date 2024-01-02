@@ -8,20 +8,54 @@
         <span>{{ $t("controlPage.disk") }}</span>
       </div>
       <div class="disk-speed_valueBox">
-        <div class="disk-speed_value">
+        <div
+          class="disk-speed_value"
+          @mouseenter="
+            footerStore.cursorLocation = `write speed is ${convertWriteValueToMb} ${
+              controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
+                ? 'Kilobyte'
+                : 'MegaByte'
+            }`
+          "
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
           <div class="disk-speed_value_title">
             <span>{{ $t("controlPage.write") }}</span>
           </div>
           <div class="write_val">
-            <span>{{ convertWriteValueToMb }} Mb</span>
+            <span
+              >{{ convertWriteValueToMb }}
+              {{
+                controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
+                  ? "KB"
+                  : "MB"
+              }}</span
+            >
           </div>
         </div>
-        <div class="disk-speed_value">
+        <div
+          class="disk-speed_value"
+          @mouseenter="
+            footerStore.cursorLocation = `read speed is ${convertReadValueToMb} ${
+              controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
+                ? 'Kilobyte'
+                : 'MegaByte'
+            }`
+          "
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
           <div class="disk-speed_value_title">
             <span>{{ $t("controlPage.read") }}</span>
           </div>
           <div class="read_val">
-            <span>{{ convertReadValueToMb }} Mb</span>
+            <span
+              >{{ convertReadValueToMb }}
+              {{
+                controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
+                  ? "KB"
+                  : "MB"
+              }}</span
+            >
           </div>
         </div>
       </div>
@@ -32,18 +66,26 @@
 <script setup>
 import { useControlStore } from "@/store/theControl";
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
 
 const controlStore = useControlStore();
+const footerStore = useFooter();
 const writeValue = computed(() => controlStore.writeValue);
 const readValue = computed(() => controlStore.readValue);
 
 const convertWriteValueToMb = computed(() => {
   const mbValue = writeValue.value / 1024;
+  if (mbValue < 1 && mbValue > 0) {
+    return Math.floor(writeValue.value);
+  }
   return Math.floor(mbValue);
 });
 
 const convertReadValueToMb = computed(() => {
   const mbValue = readValue.value / 1024;
+  if (mbValue < 1 && mbValue > 0) {
+    return Math.floor(readValue.value);
+  }
   return Math.floor(mbValue);
 });
 </script>
