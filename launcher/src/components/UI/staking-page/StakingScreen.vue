@@ -218,8 +218,14 @@ const importKey = async (val) => {
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];
   stakingStore.previewKeys = [];
+
   stakingStore.importEnteredPassword = "";
   stakingStore.forceRefresh = true;
+  if (stakingStore.isDoppelgangerProtectionActive && stakingStore.doppelgangerKeys.length > 0) {
+    setTimeout(() => {
+      stakingStore.setActiveModal(null);
+    }, 10000);
+  }
   await listKeys();
   listGroups();
 };
@@ -261,6 +267,7 @@ const importValidatorProcessing = async () => {
     stakingStore.checkActiveValidatorsResponse.includes("Validator check error:\n")
   ) {
     importKey(stakingStore.importEnteredPassword);
+
     stakingStore.setActivePanel(null);
     stakingStore.keyFiles = [];
   } else {
@@ -471,6 +478,7 @@ const doppelgangerController = async (item) => {
           : "";
 
         stakingStore.doppelgangerStatus = matchedValue === "true" ? true : false;
+        stakingStore.isDoppelgangerProtectionActive = true;
       }
     });
   } catch (error) {
@@ -482,9 +490,8 @@ const doppelgangerController = async (item) => {
 
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
-
-  await doppelgangerController(service);
   stakingStore.setActivePanel("password");
+  await doppelgangerController(service);
 };
 
 //Delete Preview Key

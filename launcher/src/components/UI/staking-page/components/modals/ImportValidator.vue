@@ -202,6 +202,7 @@ const importValidator = () => {
   clickOut.value = null;
   isSlashingActive.value = false;
   checkProcessing.value = true;
+
   emit("importKey");
 };
 
