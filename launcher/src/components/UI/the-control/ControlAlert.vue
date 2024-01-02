@@ -14,7 +14,9 @@
         <div
           class="icon_alarm"
           :class="{
-            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
+            active:
+              stereumUpdate.current !== stereumUpdate.version ||
+              updatedNewUpdates.length > 0,
           }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
@@ -67,7 +69,7 @@
         </div>
         <div v-if="synchronizationError" class="alert-message_red">
           <div class="icon-box">
-            <img src="/img/icon/arrows/SynchronisationIconError.gif" alt="warn_storage" />
+            <img src="/img/icon/control/SyncErrorWithShadow.gif" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message"><span>CLIENT / SERVICE</span></div>
@@ -215,7 +217,9 @@ export default {
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
-        const matchingService = this.installedServices.find((service) => service.name === update.name);
+        const matchingService = this.installedServices.find(
+          (service) => service.name === update.name
+        );
         if (matchingService) {
           return {
             ...update,
@@ -334,8 +338,13 @@ export default {
           if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
             continue;
           }
-          if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
-          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
+          if (!validator.yaml)
+            validator.yaml = await ControlService.getServiceYAML(
+              validator.config.serviceID
+            );
+          const patternIndex = validator.expertOptions.findIndex(
+            (o) => o.title === "Default Fee Recipient"
+          );
           if (patternIndex === -1) {
             continue;
           }
@@ -352,7 +361,8 @@ export default {
           }
         }
         const notSetAddresses = addresses.filter(
-          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
+          (validator) =>
+            validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
       }
