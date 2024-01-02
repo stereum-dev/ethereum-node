@@ -3542,6 +3542,11 @@ video {
   padding-bottom: 2px;
 }
 
+.py-\[3px\]{
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
 .pb-1{
   padding-bottom: 0.25rem;
 }

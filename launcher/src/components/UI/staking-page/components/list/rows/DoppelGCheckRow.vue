@@ -14,8 +14,10 @@ import { computed } from 'vue';
       <span class="text-sm font-semibold text-gray-800 text-left">{{ formattedPubKey }} </span>
     </div>
 
-    <div class="h-full col-start-18 col-span-full flex justify-start items-center">
-      <span class="bg-[#1d1e1f] text-sm font-semibold text-red-500 text-left"> Doppelganger Protection </span>
+    <div class="w-full h-full col-start-18 col-span-full flex justify-center items-center">
+      <span class="w-full bg-[#1d1e1f] rounded-full px-4 py-[3px] text-xs font-semibold text-red-400 text-center">
+        Doppelganger Protection
+      </span>
     </div>
   </div>
 </template>

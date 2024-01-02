@@ -185,33 +185,34 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  console.log("FIRSTTTTTTT", stakingStore.doppelgangerKeys);
-  if (isImporting.value) {
-    return;
-  }
+// watchEffect(() => {
+//   console.log("FIRSTTTTTTT", stakingStore.doppelgangerKeys);
+//   if (isImporting.value) {
+//     return;
+//   }
 
-  if (stakingStore.previewKeys.length > 0) {
-    isImporting.value = true; // Start Importing
-    for (const preview of stakingStore.previewKeys) {
-      const isDuplicate = stakingStore.doppelgangerKeys.some((doppelKey) => doppelKey.pubkey === preview.pubkey);
+//   if (stakingStore.previewKeys.length > 0) {
+//     isImporting.value = true; // Start Importing
+//     for (const preview of stakingStore.previewKeys) {
+//       const isDuplicate = stakingStore.doppelgangerKeys.some((doppelKey) => doppelKey.pubkey === preview.pubkey);
 
-      if (!isDuplicate) {
-        stakingStore.doppelgangerKeys.push({
-          ...preview,
-          serviceID: serviceIDForDbKey.value,
-        });
-      }
-    }
+//       if (!isDuplicate) {
+//         stakingStore.doppelgangerKeys.push({
+//           ...preview,
+//           serviceID: serviceIDForDbKey.value,
+//         });
+//       }
+//     }
 
-    isImporting.value = false; // Stop Importing
-  }
-});
+//     isImporting.value = false; // Stop Importing
+//   }
+// });
 
 watchEffect(() => {
   stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => {
     return !stakingStore.keys.some((key) => key.key === doppelKey.pubkey);
   });
+  console.log("SECOND", stakingStore.doppelgangerKeys);
 });
 
 // Lifecycle Hooks

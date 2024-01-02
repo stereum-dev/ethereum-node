@@ -490,6 +490,9 @@ const doppelgangerController = async (item) => {
 
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
+  stakingStore.doppelgangerKeys = stakingStore.previewKeys.map((key) => {
+    return { ...key, serviceID: service.config?.serviceID };
+  });
   stakingStore.setActivePanel("password");
   await doppelgangerController(service);
 };
@@ -497,6 +500,7 @@ const pickValidatorService = async (service) => {
 //Delete Preview Key
 const deletePreviewKey = async (item) => {
   stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.filename !== item.filename);
+  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((key) => key.filename !== item.filename);
   const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
 
   if (indexItem !== -1) {
