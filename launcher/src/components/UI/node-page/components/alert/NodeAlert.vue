@@ -59,7 +59,7 @@
           </div>
         </div>
       </router-link>
-      <div v-if="cpuAlarm" class="status-message_red">
+      <router-link v-if="cpuAlarm" to="/control" class="status-message_red">
         <div class="message-icon">
           <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
         </div>
@@ -71,7 +71,7 @@
             <span> > {{ cpu }}%</span>
           </div>
         </div>
-      </div>
+      </router-link>
 
       <router-link v-if="synchronizationError" to="/control" class="status-message_red">
         <div class="message-icon">
