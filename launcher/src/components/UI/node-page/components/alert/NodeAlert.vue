@@ -72,9 +72,10 @@
           </div>
         </div>
       </div>
-      <div v-if="synchronizationError" class="status-message_red">
+      <div v-if="true" class="status-message_red">
+        <!-- <div v-if="synchronizationError" class="status-message_red"> -->
         <div class="message-icon">
-          <img src="/img/icon/arrows/SynchronisationIconError.gif" alt="warn_storage" />
+          <img src="/img/icon/control/SyncErrorWithShadow.gif" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -164,6 +165,7 @@
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
+import { useTaskManager } from "@/store/taskManager";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
@@ -187,6 +189,10 @@ export default {
     };
   },
   computed: {
+    ...mapWritableState(useTaskManager, {
+      playbookTasks: "playbookTasks",
+      taskManagerIcons: "taskManagerIcons",
+    }),
     ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
