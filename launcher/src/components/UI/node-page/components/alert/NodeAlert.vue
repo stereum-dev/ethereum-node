@@ -14,9 +14,7 @@
         <div
           class="status-icon"
           :class="{
-            active:
-              stereumUpdate.current !== stereumUpdate.version ||
-              updatedNewUpdates.length > 0,
+            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
           }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
@@ -24,7 +22,7 @@
       </div>
     </div>
     <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md">
-      <div v-if="storageWarning" class="status-message_yellow">
+      <router-link v-if="storageWarning" to="/control" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
         </div>
@@ -34,8 +32,8 @@
           </div>
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
-      </div>
-      <div v-if="cpuWarning" class="status-message_yellow">
+      </router-link>
+      <router-link v-if="cpuWarning" to="/control" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
         </div>
@@ -47,8 +45,8 @@
             <span> > {{ cpu }}%</span>
           </div>
         </div>
-      </div>
-      <div v-for="point in pointStatus" :key="point" class="status-message_yellow">
+      </router-link>
+      <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
         </div>
@@ -60,7 +58,7 @@
             <span> > STATUS: OPEN</span>
           </div>
         </div>
-      </div>
+      </router-link>
       <div v-if="cpuAlarm" class="status-message_red">
         <div class="message-icon">
           <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
@@ -75,7 +73,7 @@
         </div>
       </div>
 
-      <div v-if="synchronizationError" class="status-message_red">
+      <router-link v-if="synchronizationError" to="/control" class="status-message_red">
         <div class="message-icon">
           <img src="/img/icon/control/SyncErrorWithShadow.gif" alt="warn_storage" />
         </div>
@@ -87,7 +85,7 @@
             <span>Synchronization Error</span>
           </div>
         </div>
-      </div>
+      </router-link>
       <div v-if="missedAttest" class="status-message_red">
         <div class="message-icon">
           <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
@@ -240,9 +238,7 @@ export default {
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
-        const matchingService = this.installedServices.find(
-          (service) => service.name === update.name
-        );
+        const matchingService = this.installedServices.find((service) => service.name === update.name);
         if (matchingService) {
           return {
             ...update,
@@ -307,9 +303,7 @@ export default {
       }
     },
     expertHandler(el) {
-      let selectedObject = this.installedServices.find(
-        (obj) => obj.config.serviceID === el
-      );
+      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
       this.selectedValidatorFromNodeAlert = selectedObject;
       this.openModalFromNodeAlert = true;
     },
@@ -328,15 +322,11 @@ export default {
           }
           if (!validator.yaml)
             try {
-              validator.yaml = await ControlService.getServiceYAML(
-                validator.config.serviceID
-              );
+              validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
             } catch (e) {
               console.log("couldn't get service yaml");
             }
-          const patternIndex = validator.expertOptions.findIndex(
-            (o) => o.title === "Default Fee Recipient"
-          );
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
           if (patternIndex === -1 || !validator.yaml) {
             continue;
           }
@@ -358,8 +348,7 @@ export default {
           }
         }
         const notSetAddresses = addresses.filter(
-          (validator) =>
-            validator.address === "0x0000000000000000000000000000000000000000"
+          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
       }
