@@ -14,7 +14,40 @@
     <div
       class="w-full h-full col-start-3 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1"
     >
-      <span class="text-2xs text-gray-300 font-semibold">333.211213654080808</span>
+      <span class="text-2xs text-gray-300 font-semibold">{{ totalRewards }}</span>
     </div>
   </div>
 </template>
+<script setup>
+import { useStakingStore } from "@/store/theStaking";
+import { onUnmounted, watchEffect, ref } from "vue";
+import ControlService from "@/store/ControlService";
+
+const stakingStore = useStakingStore();
+const intervalID = ref(null);
+const lastSlotChecked = ref(0);
+const totalRewards = ref(0);
+
+watchEffect(() => {
+  if (stakingStore.secondsPerSlot > 0 && intervalID.value == null) {
+    intervalID.value = setInterval(() => {
+      if (stakingStore.currentSlot != lastSlotChecked.value) {
+        if (stakingStore.currentSlot % stakingStore.slotsPerEpoch == 0) totalRewards.value = 0;
+        lastSlotChecked.value = stakingStore.currentSlot;
+        ControlService.getSyncCommitteeRewards(
+          stakingStore.keys.map((k) => k.index).filter((k) => k),
+          lastSlotChecked.value
+        ).then((data) => {
+          data.forEach((element) => {
+            totalRewards.value += parseInt(element.reward);
+          });
+        });
+      }
+    }, 1000);
+  }
+});
+
+onUnmounted(() => {
+  clearInterval(intervalID.value);
+});
+</script>

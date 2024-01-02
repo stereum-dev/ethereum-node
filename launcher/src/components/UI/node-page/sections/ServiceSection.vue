@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <ServiceBody @open-expert="openExpert" />
+    <ServiceBody @open-expert="openExpert" @open-logs="openLogs" />
   </div>
 </template>
 <script setup>
@@ -15,7 +15,7 @@ import ServiceBody from "../components/service/ServiceBody.vue";
 import { useServices } from "@/store/services";
 import { computed } from "vue";
 
-const emit = defineEmits(["openExpert"]);
+const emit = defineEmits(["openExpert", "openLogs"]);
 
 const serviceStore = useServices();
 
@@ -27,5 +27,9 @@ const getServices = computed(() => {
 
 const openExpert = (item) => {
   emit("openExpert", item);
+};
+
+const openLogs = (item) => {
+  emit("openLogs", item);
 };
 </script>

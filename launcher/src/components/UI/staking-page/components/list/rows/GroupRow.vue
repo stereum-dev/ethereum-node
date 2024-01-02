@@ -48,10 +48,10 @@ import { useStakingStore } from '@/store/theStaking';
       <div class="col-start-3 col-span-1 justify-self-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/removeGroup.png"
+          src="/img/icon/the-staking/RemoveGroup.png"
           alt="Icon"
           @mousedown.prevent
-          @click="removeGroup(props.item)"
+          @click="removeGroup"
         />
       </div>
     </div>

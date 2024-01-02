@@ -12,7 +12,10 @@
     >
       <span
         class="col-start-1 col-span-1 text-[8px] text-amber-300 font-semibold self-center text-center overflow-hidden"
-        >{{ (stakingStore.currentSlot % stakingStore.slotsPerEpoch | 0) + " / " + stakingStore.slotsPerEpoch }} #</span
+        >{{
+          (stakingStore.currentSlot % stakingStore.slotsPerEpoch | 0) + 1 + " / " + stakingStore.slotsPerEpoch
+        }}
+        #</span
       >
 
       <div class="col-start-2 col-span-full self-center text-center overflow-hidden flex justify-evenly items-center">

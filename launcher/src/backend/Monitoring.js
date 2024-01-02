@@ -426,11 +426,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-            jsonrpc: "2.0",
-            method: rpc_method.trim(),
-            params: rpc_params,
-            id: 1,
-          })
+          jsonrpc: "2.0",
+          method: rpc_method.trim(),
+          params: rpc_params,
+          id: 1,
+        })
         : rpc_method;
 
     // Define default response
@@ -1747,6 +1747,82 @@ export class Monitoring {
     };
   }
 
+  // Get attestation rewards for given validators and epoch
+  async getAttestationRewards(validators) {
+    try {
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+      // Get latest finalized epoch
+      const finalizedResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/states/head/finality_checkpoints");
+      const finalizedEpoch = finalizedResult.data.api_reponse.data.finalized.epoch;
+
+
+      // Get attestation rewards for given validators
+      const attestationResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/rewards/attestations/" + finalizedEpoch, validators, "POST")
+      const rewardsPerValidator = attestationResult.data.api_reponse.data.total_rewards.map(data => { return { ...data, total_rewards: parseInt(data.head) + parseInt(data.source) + parseInt(data.target) + parseInt(data.inactivity) } });
+
+      return { finalized_epoch: finalizedEpoch, rewards: rewardsPerValidator };
+    } catch (error) {
+      log.error("Getting Attestation Rewards Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
+  }
+
+  // Get block rewards for given slot (count them together for whole epoch in frontend)
+  async getBlockRewards(slot) {
+    try {
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+      // Get attestation rewards for given validators
+      const blockResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/rewards/blocks/" + slot)
+      return blockResult.data.api_reponse.data;
+    } catch (error) {
+      log.error("Getting Block Rewards Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
+  }
+
+  // Get Sync Committee for given validators and slot (count them together for whole epoch in frontend)
+  async getSyncCommitteeRewards(validators, slot) {
+    try {
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+      // Get attestation rewards for given validators
+      const blockResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/rewards/sync_committee/" + slot, validators, "POST")
+      return blockResult.data.api_httpcode == 200 ? blockResult.data.api_reponse.data : [];
+    } catch (error) {
+      log.error("Getting Block Rewards Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
+  }
+
   // Get balance status
   async getBalanceStatus() {
     // Get local beacon port from first available consensus client
@@ -2514,8 +2590,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-      ? "str"
-      : "invalid";
+        ? "str"
+        : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2603,7 +2679,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-        serviceInfos[i].config.dependencies.executionClients.length
+          serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({
