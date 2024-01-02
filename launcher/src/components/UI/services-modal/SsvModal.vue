@@ -15,9 +15,17 @@
 
         <div class="flip-box icon-box">
           <div class="flip-box-inner">
-            <img class="flip-box-front" src="/img/icon/service-icons/ssv-network.png" alt="icon" />
+            <img
+              class="flip-box-front"
+              src="/img/icon/service-icons/ssv-network.png"
+              alt="icon"
+            />
 
-            <img class="flip-box-back" src="/img/icon/click-installation/testnet-icon.png" alt="icon" />
+            <img
+              class="flip-box-back"
+              src="/img/icon/click-installation/testnet-icon.png"
+              alt="icon"
+            />
           </div>
         </div>
 
@@ -25,9 +33,21 @@
         <div class="title-box">
           <div class="service-name"><span>ssv.network</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
+            <img
+              src="/img/icon/service-icons/internet.png"
+              alt="icon"
+              @click="openBrowser"
+            />
+            <img
+              src="/img/icon/service-icons/github1.png"
+              alt="icon"
+              @click="openGitHub"
+            />
+            <img
+              src="/img/icon/service-icons/discord.png"
+              alt="icon"
+              @click="openDiscord"
+            />
           </div>
         </div>
       </div>
@@ -52,7 +72,11 @@
             :ssv-service="ssvService"
             @insert-key="insertSecretkeyHandler"
           ></secretkey-register>
-          <ssv-dashboard v-if="ssvDashboardActive" :operator-data="operatorData" :pubkey="pubkey"></ssv-dashboard>
+          <ssv-dashboard
+            v-if="ssvDashboardActive"
+            :operator-data="operatorData"
+            :pubkey="pubkey"
+          ></ssv-dashboard>
         </div>
       </div>
     </div>
@@ -110,7 +134,9 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let ssv = this.runningServices.find((service) => service.service === "SSVNetworkService");
+      let ssv = this.runningServices.find(
+        (service) => service.service === "SSVNetworkService"
+      );
       this.ssvService = ssv;
       let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
       this.secretkey = ssvConfig.ssv_sk;
@@ -118,15 +144,22 @@ export default {
 
       try {
         if (!this.pubkey) {
-          let ssvKeystoreConfig = await ControlService.readSSVKeystoreConfig(ssv.config.serviceID);
+          let ssvKeystoreConfig = await ControlService.readSSVKeystoreConfig(
+            ssv.config.serviceID
+          );
           if (ssvKeystoreConfig.privateKeyFileData.publicKey) {
             this.pubkey = ssvKeystoreConfig.privateKeyFileData.publicKey;
           }
         }
         let network = ssvConfig.network === "goerli" ? "prater" : ssvConfig.network;
-        let response = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/public_key/` + this.pubkey);
+        let response = await axios.get(
+          `https://api.ssv.network/api/v4/${network}/operators/public_key/` + this.pubkey
+        );
         if (!response.data.data)
-          response = await axios.get(`https://api.ssv.network/api/v3/${network}/operators/public_key/` + this.pubkey);
+          response = await axios.get(
+            `https://api.ssv.network/api/v3/${network}/operators/public_key/` +
+              this.pubkey
+          );
         if (response.data.data) {
           this.operatorData = response.data.data;
           this.ssvDashboardActive = true;
