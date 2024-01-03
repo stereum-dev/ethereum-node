@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-2 row-end-12 grid grid-cols-24 grid-rows-12 bg-[#263238]"
+    class="w-full h-full col-start-1 col-span-full row-start-2 row-end-12 grid grid-cols-24 grid-rows-12 bg-[#2d3035]"
   >
     <LogSidebar />
     <div
@@ -10,13 +10,13 @@
         v-for="(log, index) in limitedLogs"
         :key="index"
         :class="`w-full h-full min-h-11 max-h-12 flex justify-start items-center gap-x-2 px-1 py-2 relative cursor-pointer text-[#e6e4e4] ${
-          index % 2 === 0 ? 'bg-[#2f3337] ' : 'bg-[#202225]'
+          index % 2 === 0 ? 'bg-[#495056] ' : 'bg-[#202225]'
         }  overflow-y-hidden overflow-x-scroll whitespace-pre text-nowrap`"
         @click="copy(log)"
         @mouseenter="hoveredLogIndex = index"
         @mouseleave="hoveredLogIndex = null"
       >
-        <span class="text-md font-semibold text-red-500">#{{ logsList.length - index }}</span>
+        <span class="text-sm font-semibold text-gray-400">#{{ logsList.length - index }}</span>
         <span class="text-sm font-semibold">{{ log }}</span>
         <img
           v-if="hoveredLogIndex === index"
