@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      importBoxModel: "",
+      passwordBoxModel: "",
+      selectedValidatorFromNodeAlert: {},
+      openModalFromNodeAlert: false,
       depositFile: false,
       enrIsGenerating: true,
       generatedENR: "",

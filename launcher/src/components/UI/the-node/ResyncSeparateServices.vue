@@ -2,7 +2,9 @@
   <div class="resync-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
-      <div class="resync-icon"><img src="/img/icon/plugin-menu-icons/resync.png" alt="" /></div>
+      <div class="resync-icon">
+        <img src="/img/icon/plugin-menu-icons/resync.png" alt="" />
+      </div>
       <div class="resync-message">
         <div>
           <span>{{ $t("resyncSeparateService.message") }}</span>
@@ -62,8 +64,12 @@
                     <div v-if="selectedIcon !== ''" class="icon-box" @click="tglDropdown">
                       <img :src="selectedIcon" :alt="selectedItem" />
                     </div>
-                    <div v-if="selectedIcon !== ''" class="selected-item" @click="tglDropdown">{{ selectedItem }}</div>
-                    <div v-else class="w-selected" @click="tglDropdown">{{ selectedItem }}</div>
+                    <div v-if="selectedIcon !== ''" class="selected-item" @click="tglDropdown">
+                      {{ selectedItem }}
+                    </div>
+                    <div v-else class="w-selected" @click="tglDropdown">
+                      {{ selectedItem }}
+                    </div>
                     <div class="openURL" @click="handleOpenWindow">
                       <img src="/img/icon/service-icons/internet.png" alt="Internet" />
                     </div>
@@ -137,7 +143,7 @@ export default {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
       mainnet: "mainnet",
-      georli: "georli",
+      goerli: "goerli",
       sepolia: "sepolia",
       gnosis: "gnosis",
     }),
@@ -208,13 +214,16 @@ export default {
           this.selectedLinks = this.mainnet;
           break;
         case 2:
-          this.selectedLinks = this.georli;
+          this.selectedLinks = this.goerli;
           break;
         case 3:
           this.selectedLinks = this.sepolia;
           break;
         case 4:
           this.selectedLinks = this.gnosis;
+          break;
+        case 5:
+          this.selectedLinks = this.holesky;
           break;
         default:
           break;

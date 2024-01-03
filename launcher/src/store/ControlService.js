@@ -206,11 +206,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("deleteValidators", args);
   }
 
-  async listValidators(serviceID, numRunningValidatorService) {
-    return await this.promiseIpc.send("listValidators", {
-      serviceID: serviceID,
-      numRunningValidatorService: numRunningValidatorService,
-    });
+  async listValidators(args) {
+    return await this.promiseIpc.send("listValidators", args);
   }
 
   async listServices() {
@@ -407,7 +404,6 @@ class ControlService extends EventEmitter {
   async exitValidatorAccount(args) {
     return await this.promiseIpc.send("exitValidatorAccount", {
       pubkey: args.pubkey,
-      password: args.password,
       serviceID: args.serviceID,
     });
   }
@@ -461,6 +457,24 @@ class ControlService extends EventEmitter {
   }
   async dumpDockerLogs() {
     return await this.promiseIpc.send("dumpDockerLogs");
+  }
+  async getCurrentEpochandSlot() {
+    return await this.promiseIpc.send("getCurrentEpochandSlot");
+  }
+  async getValidatorDuties(args) {
+    return await this.promiseIpc.send("getValidatorDuties", args);
+  }
+
+  async getAttestationRewards(args) {
+    return await this.promiseIpc.send("getAttestationRewards", args);
+  }
+
+  async getBlockRewards(args) {
+    return await this.promiseIpc.send("getBlockRewards", args);
+  }
+
+  async getSyncCommitteeRewards(validators, slot) {
+    return await this.promiseIpc.send("getSyncCommitteeRewards", { validators, slot });
   }
 }
 if (!instance) {
