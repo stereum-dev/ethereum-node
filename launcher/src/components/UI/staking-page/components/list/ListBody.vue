@@ -172,11 +172,6 @@ const isDropZoneDisabled = computed(() => {
 });
 
 watchEffect(() => {
-  console.log("DOPPEL BEFORE", stakingStore.doppelgangerKeys);
-  console.log("KEYS BEFORE", stakingStore.keys);
-});
-
-watchEffect(() => {
   if (stakingStore.keys.length === 0) {
     isLoading.value = true;
   } else if (stakingStore.keys.length > 0) {
