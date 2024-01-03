@@ -2990,6 +2990,11 @@ video {
   background-color: rgb(28 32 33 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#1d1e1f\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 30 31 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#1d1f20\]{
   --tw-bg-opacity: 1;
   background-color: rgb(29 31 32 / var(--tw-bg-opacity));
@@ -3374,9 +3379,9 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-\[\#1d1e1f\]{
+.bg-\[\#243535\]{
   --tw-bg-opacity: 1;
-  background-color: rgb(29 30 31 / var(--tw-bg-opacity));
+  background-color: rgb(36 53 53 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-b{

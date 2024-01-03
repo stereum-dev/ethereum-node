@@ -490,8 +490,14 @@ const doppelgangerController = async (item) => {
 
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
-  stakingStore.doppelgangerKeys = stakingStore.previewKeys.map((key) => {
-    return { ...key, serviceID: service.config?.serviceID };
+  const existingPubKeys = new Set(stakingStore.doppelgangerKeys.map((key) => key.pubkey));
+  stakingStore.previewKeys.forEach((previewKey) => {
+    if (!existingPubKeys.has(previewKey.pubkey)) {
+      stakingStore.doppelgangerKeys.push({
+        ...previewKey,
+        serviceID: service.config?.serviceID,
+      });
+    }
   });
   stakingStore.setActivePanel("password");
   await doppelgangerController(service);

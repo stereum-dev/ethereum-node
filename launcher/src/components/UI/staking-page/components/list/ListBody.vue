@@ -16,14 +16,17 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       v-else
       ref="dropZoneRef"
       class="w-full h-full max-h-[423px] animate__animated animate__fadeIn"
-      @drop.prevent="onDrop($event)"
-      @dragover.prevent="stakingStore.isOverDropZone = true"
-      @dragleave.prevent="stakingStore.isOverDropZone = false"
+      @drop.prevent="isDropZoneDisabled ? null : onDrop($event)"
+      @dragover.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = true)"
+      @dragleave.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = false)"
     >
       <span
         v-if="stakingStore.isOverDropZone"
         class="w-full h-full self-center justify-self-center flex justify-center items-center text-2xl"
-        :class="stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400'"
+        :class="[
+          stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400',
+          isDropZoneDisabled ? 'cursor-not-allowed ' : '',
+        ]"
         >+</span
       >
       <div
@@ -31,7 +34,13 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto"
       >
         <span
-          v-if="!getFilteredValidators.length > 0 && !isLoading && !stakingStore.isPreviewListActive && !searchNotFound"
+          v-if="
+            !getFilteredValidators.length > 0 &&
+            !isLoading &&
+            !stakingStore.isPreviewListActive &&
+            !searchNotFound &&
+            !filteredDoppelgangerKeys.length
+          "
           class="text-lg font-bold text-gray-300 text-center uppercase select-none"
           >No Validator key imported.</span
         >
@@ -53,15 +62,15 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         />
 
         <DoppelGCheckRow
-          v-for="dpKey in stakingStore.doppelgangerKeys"
+          v-for="key in filteredDoppelgangerKeys"
           v-show="
             stakingStore.doppelgangerKeys.length > 0 &&
             !stakingStore.isPreviewListActive &&
             !isLoading &&
-            stakingStore.selectedServiceToFilter?.config?.serviceID === dpKey.serviceID
+            stakingStore.selectedServiceToFilter?.config?.serviceID === key.serviceID
           "
-          :key="dpKey.pubkey"
-          :item="dpKey"
+          :key="key"
+          :item="key"
         />
 
         <GroupRow
@@ -112,8 +121,6 @@ const emit = defineEmits([
 const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
-const isImporting = ref(false);
-// const searchNotFound = ref(false);
 
 // Computed
 stakingStore.filteredKeys = computed(() => {
@@ -142,10 +149,6 @@ const getCorrectValidatorGroups = computed(() => {
   );
 });
 
-const serviceIDForDbKey = computed(() => {
-  return stakingStore.selectedValidatorService.config?.serviceID;
-});
-
 const searchNotFound = computed(() => {
   return (
     !stakingStore.isPreviewListActive &&
@@ -153,6 +156,24 @@ const searchNotFound = computed(() => {
     stakingStore.searchContent !== "" &&
     stakingStore.filteredKeys.length === 0
   );
+});
+
+const filteredDoppelgangerKeys = computed(() => {
+  return stakingStore.doppelgangerKeys;
+});
+
+const isDropZoneDisabled = computed(() => {
+  const isLoadingOrImporting = isLoading.value || stakingStore.keys.length === 0;
+  const hasDoppelgangerForSelectedService = stakingStore.doppelgangerKeys.some(
+    (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
+  );
+
+  return isLoadingOrImporting || hasDoppelgangerForSelectedService;
+});
+
+watchEffect(() => {
+  console.log("DOPPEL BEFORE", stakingStore.doppelgangerKeys);
+  console.log("KEYS BEFORE", stakingStore.keys);
 });
 
 watchEffect(() => {
@@ -185,35 +206,17 @@ watchEffect(() => {
   }
 });
 
-// watchEffect(() => {
-//   console.log("FIRSTTTTTTT", stakingStore.doppelgangerKeys);
-//   if (isImporting.value) {
-//     return;
-//   }
-
-//   if (stakingStore.previewKeys.length > 0) {
-//     isImporting.value = true; // Start Importing
-//     for (const preview of stakingStore.previewKeys) {
-//       const isDuplicate = stakingStore.doppelgangerKeys.some((doppelKey) => doppelKey.pubkey === preview.pubkey);
-
-//       if (!isDuplicate) {
-//         stakingStore.doppelgangerKeys.push({
-//           ...preview,
-//           serviceID: serviceIDForDbKey.value,
-//         });
-//       }
-//     }
-
-//     isImporting.value = false; // Stop Importing
-//   }
-// });
-
-watchEffect(() => {
-  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => {
-    return !stakingStore.keys.some((key) => key.key === doppelKey.pubkey);
-  });
-  console.log("SECOND", stakingStore.doppelgangerKeys);
-});
+watch(
+  () => stakingStore.keys.length,
+  async (newLength, oldLength) => {
+    if (newLength !== oldLength) {
+      // fetch the latest keys
+      await listKeys();
+      // remove duplicated doppelganger keys
+      removeDuplicatedDoppelgangerKeys();
+    }
+  }
+);
 
 // Lifecycle Hooks
 onMounted(async () => {
@@ -229,17 +232,28 @@ onUnmounted(() => {
 
 // Methods
 
-// const checkKeysAndSearchContent = () => {
-//   if (!stakingStore.searchContent === "") {
-//     stakingStore.filteredKeys = stakingStore.keys;
-//   } else if (stakingStore.searchContent !== "" && stakingStore.filteredKeys.length > 0) {
-//     searchNotFound.value = true;
-//   } else {
-//     stakingStore.filteredKeys = stakingStore.keys.filter((key) =>
-//       key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())
-//     );
-//   }
-// };
+const normalizeKey = (key) => {
+  return key.startsWith("0x") ? key.substring(2) : key;
+};
+
+const removeDuplicatedDoppelgangerKeys = () => {
+  const normalizedKeysSet = new Set(stakingStore.keys.map((k) => normalizeKey(k.key)));
+  let removed = false;
+
+  const filteredDoppelgangerKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => {
+    const isDuplicate = normalizedKeysSet.has(normalizeKey(doppelKey.pubkey));
+    if (isDuplicate) {
+      removed = true;
+    }
+    return !isDuplicate;
+  });
+
+  if (removed) {
+    stakingStore.doppelgangerKeys = filteredDoppelgangerKeys;
+  }
+
+  return removed;
+};
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);

@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 <template>
   <div
-    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate animate__slideInLeft animate__faster bg-gray-400"
+    class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate animate__slideInLeft bg-gray-400"
   >
     <div
       class="w-6 h-6 rounded-full cursor-pointer bg-white col-start-1 col-span-1 self-center overflow-hidden flex justify-center items-center"
