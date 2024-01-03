@@ -3384,6 +3384,16 @@ video {
   background-color: rgb(36 53 53 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#2f3337\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(47 51 55 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#202225\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(32 34 37 / var(--tw-bg-opacity));
+}
+
 .bg-gradient-to-b{
   background-image: -webkit-gradient(linear, left top, left bottom, from(var(--tw-gradient-stops)));
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -3917,6 +3927,11 @@ video {
 .text-yellow-500{
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
+}
+
+.text-\[\#e6e4e4\]{
+  --tw-text-opacity: 1;
+  color: rgb(230 228 228 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-400\/70::-webkit-input-placeholder{

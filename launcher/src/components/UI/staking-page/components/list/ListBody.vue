@@ -205,10 +205,8 @@ watch(
   () => stakingStore.keys.length,
   async (newLength, oldLength) => {
     if (newLength !== oldLength) {
-      // fetch the latest keys
-      await listKeys();
-      // remove duplicated doppelganger keys
       removeDuplicatedDoppelgangerKeys();
+      await listKeys();
     }
   }
 );
