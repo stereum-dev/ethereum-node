@@ -94,7 +94,7 @@
 import { useStakingStore } from "@/store/theStaking";
 import { computed, ref, onMounted, watchEffect } from "vue";
 
-const emit = defineEmits(["removeValidator"]);
+const emit = defineEmits(["removeValidator", "exportRemove"]);
 
 const stakingStore = useStakingStore();
 const checkProcessing = ref(false);

@@ -2,6 +2,7 @@
   <staking-custom-modal
     main-title="Withdraw & Exit Validator Keys"
     title-color="withdraw"
+    height="450"
     :click-outside-text="clickOut"
     :external-close="true"
     :confirm-text="confirmButtonText"
@@ -10,6 +11,7 @@
     :active-button="activeButton"
     @close-modal="closeModal"
     @confirm-action="onConfirmAction"
+    @export-action="exportMessage"
   >
     <template #content>
       <div
@@ -83,7 +85,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone, useTruncate } from "@/composables/utils";
 import { computed, ref, watch } from "vue";
 
-const emit = defineEmits(["confirmWithdraw"]);
+const emit = defineEmits(["confirmWithdraw", "exportMessage"]);
 
 const stakingStore = useStakingStore();
 const clickOut = ref("Click outside to cancel");
@@ -161,6 +163,10 @@ const confirmWithdraw = () => {
   clickOut.value = null;
   buttonClicked.value = true;
   emit("confirmWithdraw");
+};
+
+const exportMessage = () => {
+  emit("exportMessage");
 };
 
 const closeModal = () => {
