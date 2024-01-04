@@ -21,21 +21,35 @@
         </div>
       </div>
       <div class="alert-box_messages overflow-x-hidden overflow-y-auto">
-        <div v-if="storageWarning" class="alert-message_yellow">
+        <div
+          v-if="storageWarning"
+          class="alert-message_yellow"
+          @mouseenter="cursorLocation = `${lowSpace}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <div class="icon-box">
             <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="main-message"><span>LOW STORAGE </span></div>
+            <div class="main-message">
+              <span>{{ lowSpace }}</span>
+            </div>
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </div>
-        <div v-if="cpuWarning" class="alert-message_yellow">
+        <div
+          v-if="cpuWarning"
+          class="alert-message_yellow"
+          @mouseenter="cursorLocation = `cpu ${use}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <div class="icon-box">
             <img src="/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="main-message"><span>CPU USAGE</span></div>
+            <div class="main-message">
+              <span>CPU {{ use }}</span>
+            </div>
             <div class="val-message">
               <span> > {{ cpu }}%</span>
             </div>
@@ -54,35 +68,55 @@
             </div>
           </div>
         </div>
-        <div v-if="cpuAlarm" class="alert-message_red">
+        <div
+          v-if="cpuAlarm"
+          class="alert-message_red"
+          @mouseenter="cursorLocation = `cpu ${use}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <div class="icon-box">
             <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="main-message"><span>CPU USAGE</span></div>
+            <div class="main-message">
+              <span>CPU {{ use }}</span>
+            </div>
             <div class="val-message">
               <span> > {{ cpu }}%</span>
             </div>
           </div>
         </div>
-        <div v-if="synchronizationError" class="alert-message_red">
+        <div
+          v-if="synchronizationError"
+          class="alert-message_red"
+          @mouseenter="cursorLocation = ` ${sync}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <div class="icon-box">
             <img src="/img/icon/control/SyncErrorWithShadow.gif" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message"><span>CLIENT / SERVICE</span></div>
             <div class="val-message">
-              <span>Synchronization Error</span>
+              <span>{{ sync }}</span>
             </div>
           </div>
         </div>
-        <div v-if="errorAlarm" class="alert-message_red" @click="isTaskModalActive = true">
+        <div
+          v-if="errorAlarm"
+          class="alert-message_red"
+          @click="isTaskModalActive = true"
+          @mouseenter="cursorLocation = ` ${taskFail}`"
+          @mouseleave="cursorLocation = ''"
+        >
           <div class="icon-box">
             <img src="/img/icon/control/TaskErrorAlert.png" alt="warn_storage" />
           </div>
 
           <div class="message">
-            <div class="main-message"><span>Task Failed</span></div>
+            <div class="main-message">
+              <span>{{ taskFail }}</span>
+            </div>
           </div>
         </div>
         <div
@@ -170,6 +204,10 @@ export default {
       notSetAddresses: [],
       clkFee: this.$t("nodeAlert.clkFee"),
       clkUpdate: this.$t("nodeAlert.clkUpdate"),
+      lowSpace: this.$t("nodeAlert.lowSpace"),
+      use: this.$t("nodeAlert.use"),
+      sync: this.$t("nodeAlert.sync"),
+      taskFail: this.$t("nodeAlert.taskFail"),
     };
   },
   computed: {
