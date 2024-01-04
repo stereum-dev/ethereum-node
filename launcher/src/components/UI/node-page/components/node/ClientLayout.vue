@@ -135,21 +135,25 @@ const getPercent = () => {
       if (lo > hi) {
         //fonts.orange.push(k);
         syncIcon.value = syncIcons.value[0].icon;
+        controlStore.synchronizationError = true;
         return;
       }
       if (lo < 1 && hi < 1) {
         //fonts.grey.push(k);
         syncIcon.value = syncIcons.value[3].icon;
+        controlStore.synchronizationError = false;
         return;
       }
       if (lo < hi) {
         //fonts.blue.push(k);
         syncIcon.value = syncIcons.value[1].icon;
+        controlStore.synchronizationError = false;
         return;
       }
       if (lo == hi) {
         //fonts.green.push(k);
         syncIcon.value = syncIcons.value[2].icon;
+        controlStore.synchronizationError = false;
         return;
       }
     }
