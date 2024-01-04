@@ -16,22 +16,26 @@
       </div>
       <div class="content">
         <div class="browserBox">
-          <div class="title">
-            <span>{{ $t("serviceModals.localApp") }}</span>
-            <span>{{ $t("serviceModals.localAppText") }}</span>
-          </div>
-          <div class="btn-box">
-            <a class="btn" :href="prometheusService.linkUrl" target="_blank">{{ $t("serviceModals.openBrowser") }}</a>
-          </div>
+          <ConfirmBox
+            :top-line="`${$t('serviceModals.localApp')}`"
+            :bottom-line="`${$t('serviceModals.localAppText')}`"
+            :btn-name="`${$t('serviceModals.openBrowser')}`"
+            :btn-bg-color="`#f37625`"
+            @confirmPluginClick="openLocalApp"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import ConfirmBox from "./plugin/ConfirmBox.vue";
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 export default {
+  components: {
+    ConfirmBox,
+  },
   data() {
     return {
       prometheusService: {},
@@ -60,6 +64,10 @@ export default {
     },
     openGitHub() {
       let url = "https://github.com/prometheus/prometheus";
+      window.open(url, "_blank");
+    },
+    openLocalApp() {
+      let url = this.prometheusService.linkUrl;
       window.open(url, "_blank");
     },
   },
@@ -179,63 +187,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.browserBox .title {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.title span:first-child {
-  color: #dbdbdb;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-left: 10px;
-  margin-top: 5px;
-}
-.title span:last-child {
-  color: #dbdbdb;
-  font-size: 0.65rem;
-  font-weight: 400;
-  margin-left: 10px;
-  margin-top: 10px;
-}
-
-.browserBox .btn-box {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-.browserBox .btn {
-  width: 50%;
-  height: 35%;
-  margin-top: 15px;
-  margin-right: 10px;
-  background-color: #f37625;
-  text-decoration: none;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: #e1e1e1;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  transition-duration: all 200ms;
-}
-.btn:hover {
-  transition-duration: 100ms;
-  background-color: rgb(179, 72, 0);
-}
-.btn:active {
-  box-shadow: 1px 1px 10px 1px #171717 inset;
-  transition-duration: 100ms;
-  background-color: rgb(179, 72, 0);
+  margin-bottom: 2%;
 }
 </style>

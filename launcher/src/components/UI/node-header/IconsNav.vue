@@ -72,6 +72,12 @@
       @click-outside="removeUpdateModal"
     ></update-panel>
 
+    <reconnect-modal
+      v-if="!stereumStatus"
+      @open-logout="logoutModalHandler"
+      @confirm-reconnect="reconnect"
+    ></reconnect-modal>
+
     <logout-modal
       v-if="logoutModalIsActive"
       @close-me="clickToCancelLogout"
@@ -89,6 +95,7 @@ import { useFooter } from "@/store/theFooter";
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "./UpdatePanel.vue";
 import LogoutModal from "./LogoutModal.vue";
+import ReconnectModal from "./ReconnectModal.vue";
 import SupportModal from "./SupportModal.vue";
 import NotifModal from "./NotifModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
@@ -101,6 +108,7 @@ export default {
   components: {
     UpdatePanel,
     LogoutModal,
+    ReconnectModal,
     SupportModal,
     NotifModal,
     TutorialGuide,
@@ -110,6 +118,7 @@ export default {
     return {
       test: true,
       logoutModalIsActive: false,
+      reconnectModalIsActive: false,
       supportModalIsActive: false,
       // notificationModalIsActive: false,
       help: this.$t("headerBtn.help"),
@@ -140,6 +149,7 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      stereumStatus: "stereumStatus",
     }),
   },
 
@@ -216,6 +226,11 @@ export default {
       this.$router.push("/").then(() => {
         location.reload();
       });
+    },
+    async reconnect() {
+      console.log("reconnecting");
+      await ControlService.reconnect();
+      this.refresh = true;
     },
     updateModalHandler() {
       this.displayUpdatePanel = true;

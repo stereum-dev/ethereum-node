@@ -136,12 +136,12 @@ async function useConnectionCheck() {
   const nodeHeaderStore = useNodeHeader();
   const footerStore = useFooter();
 
-  if (!nodeHeaderStore.updating) {
+  if (!nodeHeaderStore.updating && nodeHeaderStore.refresh) {
     let connected = await ControlService.checkConnection();
     if (!connected) {
-      console.log("Reconnecting...");
+      console.log("Connection lost");
+      nodeHeaderStore.refresh = false;
       footerStore.stereumStatus = false;
-      await ControlService.reconnect();
     } else {
       footerStore.stereumStatus = true;
     }

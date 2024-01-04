@@ -96,7 +96,7 @@
           </div>
         </control-plugins>
       </div>
-      <div class="dashboard-container border-4 border-gray-400 bg-black">
+      <div class="dashboard-container border-4 border-gray-500 bg-black rounded-md">
         <control-dashboard></control-dashboard>
       </div>
       <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">

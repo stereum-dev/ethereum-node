@@ -3,9 +3,14 @@
     <div class="h-14 col-start-1 col-end-4 row-start-1 row-span-2 flex justify-center bg-[#1E2429] rounded-md p-1">
       <div class="w-full h-full flex justify-center items-center ml-2">
         <span class="w-full text-[24px] font-bold text-gray-400 uppercase tracking-wider">
-          {{ $t("customInstallation.customInstallationTitle") }}</span
+          {{ t("customInstallation.customInstallationTitle") }}</span
         >
       </div>
     </div>
   </div>
 </template>
+<script setup>
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+</script>

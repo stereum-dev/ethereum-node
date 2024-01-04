@@ -1631,6 +1631,9 @@ export class Monitoring {
 
   // Get storage status of all services
   async getStorageStatus(live = false) {
+    // Define services that should be ignored and NOT queried at all
+    const ignoreServices = ["PrometheusNodeExporterService"];
+
     // By default return cached data (if available)
     if (!live) {
       if (
@@ -1660,6 +1663,9 @@ export class Monitoring {
     var sshcommands = [];
     for (let svc of serviceInfos) {
       if (typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")) {
+        continue;
+      }
+      if (ignoreServices.includes(svc.service)) {
         continue;
       }
       if (Array.isArray(svc.config.volumes) && svc.config.volumes.length) {
@@ -1716,6 +1722,7 @@ export class Monitoring {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
       if (svc) {
         // Prometheus NE does not store data but using "/" as volume, see #1095
+        // Likely not queried at all if defined in ignoreServices (see above)
         if (svc.service === "PrometheusNodeExporterService") {
           //val = 0; // Solution A: Show 0 B as value for Prometheus NE
           return; // Solution B: Do not show Prometheus NE at all in the storage list
@@ -1738,6 +1745,97 @@ export class Monitoring {
       info: "success: storagestatus successfully retrieved",
       data: data,
     };
+  }
+
+  // Get attestation rewards for given validators and epoch
+  async getAttestationRewards(validators) {
+    try {
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+      // Get latest finalized epoch
+      const finalizedResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/states/head/finality_checkpoints");
+      const finalizedEpoch = finalizedResult.data.api_reponse.data.finalized.epoch;
+
+      // Get attestation rewards for given validators
+      const attestationResult = await this.queryBeaconApi(
+        baseURL,
+        "/eth/v1/beacon/rewards/attestations/" + finalizedEpoch,
+        validators,
+        "POST"
+      );
+      const rewardsPerValidator = attestationResult.data.api_reponse.data.total_rewards.map((data) => {
+        return {
+          ...data,
+          total_rewards:
+            parseInt(data.head) + parseInt(data.source) + parseInt(data.target) + parseInt(data.inactivity),
+        };
+      });
+
+      return { finalized_epoch: finalizedEpoch, rewards: rewardsPerValidator };
+    } catch (error) {
+      log.error("Getting Attestation Rewards Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
+  }
+
+  // Get block rewards for given slot (count them together for whole epoch in frontend)
+  async getBlockRewards(slot) {
+    try {
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+      // Get attestation rewards for given validators
+      const blockResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/rewards/blocks/" + slot);
+      return blockResult.data.api_reponse.data;
+    } catch (error) {
+      log.error("Getting Block Rewards Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
+  }
+
+  // Get Sync Committee for given validators and slot (count them together for whole epoch in frontend)
+  async getSyncCommitteeRewards(validators, slot) {
+    try {
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+      // Get attestation rewards for given validators
+      const blockResult = await this.queryBeaconApi(
+        baseURL,
+        "/eth/v1/beacon/rewards/sync_committee/" + slot,
+        validators,
+        "POST"
+      );
+      return blockResult.data.api_httpcode == 200 ? blockResult.data.api_reponse.data : [];
+    } catch (error) {
+      log.error("Getting Block Rewards Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
   }
 
   // Get balance status
@@ -2827,144 +2925,87 @@ rm -rf diskoutput
     return serviceInfos;
   }
 
-  async getValidatorStats(validatorPublicKey) {
+  async getCurrentEpochandSlot() {
     try {
-      const verbose = true;
-      const proposer = false;
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
 
-      const beaconStatus = await this.getBeaconStatus();
-      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      let genesisRes = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/genesis", [], "GET");
+      let specRes = await this.queryBeaconApi(baseURL, "/eth/v1/config/spec", [], "GET");
+      if (genesisRes.code || specRes.code) {
+        throw new Error(`Couldn't get genesis or spec:\n${genesisRes.info}\n${specRes.info}`);
+      }
 
-      const baseURL = `http://localhost:${beaconAPIPort}`;
+      const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = specRes.data.api_reponse.data;
+      const { genesis_time } = genesisRes.data.api_reponse.data;
 
-      const validatorRes = await this.queryBeaconApi(
-        baseURL,
-        `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
-        undefined,
-        "GET"
-      );
-      log.debug(validatorRes);
-
-      const validators_arr = [validatorRes.data.api_reponse.data.index];
-
-      const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
-      const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
-
-      const beaconAPICmdSpec = `curl -s -X GET '${baseURL}/eth/v1/config/spec' -H 'accept: application/json'`;
-      const specRes = await this.nodeConnection.sshService.exec(beaconAPICmdSpec);
-
-      const { SLOTS_PER_EPOCH: slotsPerEpoch, SECONDS_PER_SLOT: secondsPerSlot } = JSON.parse(specRes.stdout).data;
-
-      let output = {};
-
-      const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
       const current_time = Math.floor(Date.now() / 1000);
       const slot_time = secondsPerSlot;
-      const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
+
       const current_slot = Math.floor((current_time - genesis_time) / slot_time);
       const current_epoch = Math.floor(current_slot / slotsPerEpoch);
 
-      output = { currentEpoch: current_epoch, currentSlot: current_slot };
-
-      const res = await this.queryBeaconApi(
-        baseURL,
-        `/eth/v1/validator/duties/attester/${Math.trunc(current_epoch)}`,
-        validators_arr,
-        "POST",
-        {
-          "Content-Type": "application/json",
-        }
-      );
-
-      const res_p = await this.queryBeaconApi(
-        baseURL,
-        `/eth/v1/validator/duties/proposer/${Math.trunc(current_epoch)}`,
-        null,
-        "GET",
-        {
-          "Content-Type": "application/json",
-        }
-      );
-
-      let current_prop = 0;
-      let next_att_slot = 0;
-      let next_prop_slot = 0;
-
-      const attestationDuties = JSON.stringify(res.data.api_reponse);
-      const proposerDuties = JSON.stringify(res_p.data.api_reponse);
-
-      // Handle attestation duties
-      let vidx = attestationDuties.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      let slot = attestationDuties.match(/.*"slot":"?(\d+)"?.*/)[1];
-      if (vidx !== undefined && slot !== undefined) {
-        if (vidx.match(/^[-]?\d+$/) !== null) {
-          if (verbose === true) {
-            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
-            let eta_str = "";
-            if (duty_eta > 0) {
-              eta_str = " ETA: " + duty_eta + " sec";
-            } else if (duty_eta > 0 - slot_time) {
-              eta_str = " ETA: now!";
-            }
-            let slot_idx = slot % slotsPerEpoch;
-            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
-          }
-          if (slot > current_slot) {
-            if (slot < next_att_slot || next_att_slot === 0) {
-              next_att_slot = slot;
-            }
-          }
-        }
-      }
-
-      // Handle proposer duties
-      vidx = proposerDuties.match(/.*"validator_index":"?(\d+)"?.*/)[1];
-      slot = proposerDuties.match(/.*"slot":"?(\d+)"?.*/)[1];
-      if (vidx !== undefined && slot !== undefined) {
-        if (vidx.match(/^[-]?\d+$/) !== null && validators_arr.includes(vidx) === true) {
-          if (verbose === true) {
-            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
-            let eta_str = "";
-            if (duty_eta >= 0) {
-              eta_str = " ETA: " + duty_eta + " sec";
-            } else if (duty_eta > 0 - slot_time) {
-              eta_str = " ETA: now!";
-            }
-            let slot_idx = slot % slotsPerEpoch;
-            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
-          }
-          if (slot > current_slot) {
-            if (slot < next_prop_slot || next_prop_slot === 0) {
-              next_prop_slot = slot;
-            }
-          } else if (slot === current_slot) {
-            current_prop = vidx;
-          }
-        }
-      }
-
-      if (proposer === true) {
-        output = { ...output, nextAttSlot: next_att_slot, nextPropSlot: next_prop_slot };
-      }
-
-      let next_duty_slot;
-      if (next_prop_slot > 0 && next_prop_slot < next_att_slot) {
-        next_duty_slot = next_prop_slot;
-      } else {
-        next_duty_slot = next_att_slot;
-      }
-
-      if (next_duty_slot > 0) {
-        const remaining_slots = next_duty_slot - current_slot - 1;
-
-        const remaining_time = remaining_slots * slot_time + slot_timeout;
-
-        output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
-      }
-
-      return { ...output, currentProp: current_prop, slotsPerEpoch };
+      return { current_epoch, current_slot, secondsPerSlot, slotsPerEpoch };
     } catch (error) {
-      return { error: true, message: "An error occurred in getValidatorStats" };
+      log.error("Getting Epoch and Slot Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : error.info,
+        data: error.data ? error.data : JSON.stringify(error),
+      };
+    }
+  }
+
+  // Fetches the validator duties (proposer and sync) for the given validator indices
+  // Returns an array of validator duties (proposer and sync) for the given validator indices
+  // validatorIndices: array of validator indices
+  async getValidatorDuties(validatorIndices) {
+    try {
+      if (!Array.isArray(validatorIndices)) {
+        throw new Error("Invalid Argument: validatorIndices must be an Array");
+      }
+
+      // Get local beacon port from first available consensus client
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code) {
+        throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
+      }
+      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+
+      const { current_epoch, current_slot } = await this.getCurrentEpochandSlot();
+
+      let proposerDutiesRes = await this.queryBeaconApi(
+        baseURL,
+        "/eth/v1/validator/duties/proposer/" + current_epoch,
+        [],
+        "GET"
+      );
+      let syncDutiesRes = await this.queryBeaconApi(
+        baseURL,
+        "/eth/v1/validator/duties/sync/" + current_epoch,
+        validatorIndices,
+        "POST"
+      );
+
+      return {
+        proposerDuties: proposerDutiesRes.data.api_reponse.data.filter((d) =>
+          validatorIndices.some((i) => i === d.validator_index)
+        ), // filter out duties for validators that are not in the validatorIndices (imported vals) array
+        syncDuties: syncDutiesRes.data.api_reponse.data,
+        currentEpoch: current_epoch,
+        currentSlot: current_slot,
+      };
+    } catch (error) {
+      log.error("Getting Validator Duties Failed:\n" + error);
+      return {
+        code: error.code ? error.code : 1,
+        info: error.message ? error.message : JSON.stringify(error),
+        data: error,
+      };
     }
   }
 
@@ -3003,7 +3044,7 @@ rm -rf diskoutput
           validatorBalances = queryResult.map((key, id) => {
             return {
               id: id,
-              index: key.index,
+              validatorindex: key.index,
               balance: key.balance,
               status: key.validator.slashed === "true" ? "slashed" : key.status.replace(/_.*/, ""),
               pubkey: key.validator.pubkey,
@@ -3056,7 +3097,7 @@ rm -rf diskoutput
         let currentEpoch = Math.floor(currentSlot / epochLength);
         let currentJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.current_justified.epoch);
         let previousJustifiedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.previous_justified.epoch);
-        let finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch);
+        let finalizedEpoch = parseInt(JSON.parse(beaconAPIEpochRunCmd.stdout).data.finalized.epoch) - 1; // because beacon-API sends previousJustifiedEpoch = finalizedEpoch
 
         // create return data
         currentEpochSlotStatus = {
@@ -3149,7 +3190,7 @@ rm -rf diskoutput
     }
   }
 
-  async exitValidatorAccount(pubkey, password, serviceID) {
+  async exitValidatorAccount(pubkey, serviceID) {
     const beaconStatus = await this.getBeaconStatus();
     try {
       if (beaconStatus.code === 0) {
@@ -3158,25 +3199,26 @@ rm -rf diskoutput
         if (!Array.isArray(pubkey)) {
           pubkey = [pubkey];
         }
-        const results = [];
+        let results = [];
         for (let i = 0; i < pubkey.length; i++) {
           const ref = StringUtils.createRandomString(); // Create a random string to identify the task
           this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit Account ${pubkey[i].substring(0, 6)}..`);
           try {
-            const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey[i], password, serviceID);
-            if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-            log.info(result);
-
-            const exitMsg = JSON.stringify(JSON.parse(result.stdout).data);
-            const exitCommand = `docker run --rm --network=stereum curlimages/curl curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${exitMsg}'`;
+            const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey[i], serviceID);
+            if (result.data === undefined) {
+              throw result;
+            }
+            const exitMsg = result.data;
+            const exitCommand = `docker run --rm --network=stereum curlimages/curl curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${JSON.stringify(
+              exitMsg
+            )}' -i -s`;
             const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
-            if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
-              throw SSHService.extractExecError(runExitCommand);
+
             log.info(runExitCommand);
 
-            // if (!runExitCommand.stdout.includes("validator_index")) { // find out "successful msg" and put instead of <validator_index> !!!!
-            //   throw "Undexpected Error: " + runExitCommand.stdout;
-            // }
+            //Error handling
+            if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
+              throw SSHService.extractExecError(runExitCommand);
 
             // Push successful task
             this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
@@ -3184,7 +3226,17 @@ rm -rf diskoutput
 
             // add pubkey into the runExitCommands' result;
             runExitCommand["pubkey"] = `${pubkey[i]}`;
-            results.push(runExitCommand);
+
+            // Extract the JSON payload from the stdout
+            const jsonStartIndex = runExitCommand.stdout.indexOf("{");
+            const jsonEndIndex = runExitCommand.stdout.lastIndexOf("}");
+            const stdoutJson = runExitCommand.stdout.substring(jsonStartIndex, jsonEndIndex + 1);
+
+            results.push({
+              pubkey: runExitCommand.pubkey,
+              code: JSON.parse(stdoutJson).code,
+              msg: JSON.parse(stdoutJson).message,
+            });
           } catch (error) {
             this.nodeConnection.taskManager.otherTasksHandler(
               ref,
