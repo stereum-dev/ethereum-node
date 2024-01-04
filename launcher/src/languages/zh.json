@@ -504,7 +504,9 @@
     "noFee": "没有收费收件人",
     "stereumUpt": "以太坊更新",
     "clkFee": "Service Settings",
-    "clkUpdate": "Click to open update panel"
+    "clkUpdate": "Click to open update panel",
+    "sync": "Synchronization Error",
+    "taskFail": "task failed"
   },
   "restartModalNode": {
     "message": "您确定要吗",
