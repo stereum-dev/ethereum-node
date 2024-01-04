@@ -55,7 +55,7 @@
 </template>
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
-import { computed, defineAsyncComponent, watchEffect, ref } from "vue";
+import { computed, defineAsyncComponent, watchEffect, shallowRef } from "vue";
 
 //Emits
 const emit = defineEmits([
@@ -87,7 +87,7 @@ const panels = {
   manualRemote: defineAsyncComponent(() => import("./panels/ManualRemote.vue")),
 };
 
-const activePanel = ref({
+const activePanel = shallowRef({
   component: "insert",
   props: {},
   events: {},
