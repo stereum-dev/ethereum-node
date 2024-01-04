@@ -1,21 +1,15 @@
 <template>
   <div
-    class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none"
+    class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none relative"
   >
     <div
       class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634]"
     >
       <div
         class="absolute left-1 top-1 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[37px] rounded-br-[37px] rounded-bl-[37px] shadow-md shadow-[#252525]"
-        @pointerdown.prevent.stop
         @mousedown.prevent.stop
       >
-        <SecurityButton
-          :tooltip="tooltip"
-          @mouse-enter="mouseEnter"
-          @access-switch="accessSwitch"
-          @mouse-leave="mouseLeave"
-        />
+        <LogoButton :server-acc="serverAccMange" @access-switch="accessSwitch" @mouse-leave="mouseLeave" />
       </div>
 
       <MainNavbar />
@@ -27,60 +21,40 @@
       <TheFooter />
       <TaskManager />
     </div>
-    <serverAccessManagement v-if="serverAccessManagement" />
+    <!-- <serverAccessManagement v-if="headerStore.serverAccessManagement" /> -->
+    <ServerScreen v-if="headerStore.isServerAccessManagementActive" />
   </div>
 </template>
-<script>
+<script setup>
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
-import SecurityButton from "../UI/node-header/SecurityButton.vue";
-import serverAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
-import { mapWritableState } from "pinia";
+import ServerScreen from "../UI/multi-server/ServerScreen.vue";
+import LogoButton from "../UI/multi-server/components/LogoButton.vue";
+// import SecurityButton from "../UI/node-header/SecurityButton.vue";
+// import serverAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
+import { useI18n } from "vue-i18n";
+import { ref } from "vue";
 
-export default {
-  components: {
-    MainNavbar,
-    TaskManager,
-    TheFooter,
-    SecurityButton,
-    serverAccessManagement,
-  },
-  data() {
-    return {
-      tooltip: false,
-      serverAccMange: this.$t("serverManagement.serverAccMange"),
-    };
-  },
-  computed: {
-    ...mapWritableState(useFooter, {
-      stereumStatus: "stereumStatus",
-      cursorLocation: "cursorLocation",
-    }),
-    ...mapWritableState(useNodeHeader, {
-      serverAccessManagement: "serverAccessManagement",
-    }),
-  },
-  methods: {
-    mouseEnter() {
-      this.tooltip = true;
-      this.cursorLocation = this.serverAccMange;
-    },
+const headerStore = useNodeHeader();
+const footerStore = useFooter();
+const { t } = useI18n();
+const tooltip = ref(false);
+const serverAccMange = t("serverManagement.serverAccMange");
 
-    mouseLeave() {
-      this.tooltip = false;
-      this.cursorLocation = "";
-    },
+const mouseLeave = () => {
+  tooltip.value = false;
+  footerStore.cursorLocation = "";
+};
 
-    accessSwitch() {
-      console.log("accessSwitch");
-      this.serverAccessManagement = !this.serverAccessManagement;
-    },
-  },
+const accessSwitch = () => {
+  console.log("Multi-Server Page");
+  headerStore.isServerAccessManagementActive = !headerStore.isServerAccessManagementActive;
 };
 </script>
+
 <style scoped>
 .server-access-tooltip {
   width: 220%;

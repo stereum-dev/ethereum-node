@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      isServerAccessManagementActive: true,
       importBoxModel: "",
       passwordBoxModel: "",
       selectedValidatorFromNodeAlert: {},
