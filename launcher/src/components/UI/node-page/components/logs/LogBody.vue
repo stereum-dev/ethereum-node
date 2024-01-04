@@ -1,23 +1,23 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-2 row-end-12 grid grid-cols-24 grid-rows-12 bg-[#263238]"
+    class="w-full h-full col-start-1 col-span-full row-start-2 row-end-12 grid grid-cols-24 grid-rows-12 bg-[#2d3035]"
   >
     <LogSidebar />
     <div
-      class="w-full h-full col-start-2 col-span-full row-start-1 row-span-full overflow-x-hidden overflow-y-auto max-h-[409px] p-1 flex flex-col justify-start items-start space-y-1 bg-gray-300"
+      class="w-full h-full col-start-2 col-span-full row-start-1 row-span-full overflow-x-hidden overflow-y-auto max-h-[409px] p-1 flex flex-col justify-start items-start space-y-1 bg-[#202225]"
     >
       <div
         v-for="(log, index) in limitedLogs"
         :key="index"
-        :class="`w-full h-full min-h-11 max-h-12 flex justify-start items-center gap-x-2 px-1 py-2 relative cursor-pointer ${
-          index % 2 === 0 ? 'bg-[#bcc0c2] text-[#333333]' : 'bg-gray-700 text-[#ffffff]'
+        :class="`w-full h-full min-h-11 max-h-12 flex justify-start items-center gap-x-2 px-1 py-2 relative cursor-pointer text-[#e6e4e4] ${
+          index % 2 === 0 ? 'bg-[#495056] ' : 'bg-[#202225]'
         }  overflow-y-hidden overflow-x-scroll whitespace-pre text-nowrap`"
         @click="copy(log)"
         @mouseenter="hoveredLogIndex = index"
         @mouseleave="hoveredLogIndex = null"
       >
-        <span class="text-md font-semibold text-red-500">#{{ logsList.length - index }}</span>
-        <span class="text-md font-semibold">{{ log }}</span>
+        <span class="text-sm font-semibold text-gray-400">#{{ logsList.length - index }}</span>
+        <span class="text-sm font-semibold">{{ log }}</span>
         <img
           v-if="hoveredLogIndex === index"
           class="w-7 h-7 sticky left-[920px] p-1 bg-[#171D22] rounded-md shadow-md shadow-[#191a1b] animate__animated animate__slideInDown cursor-pointer active:scale-90 transition-all ease-in-out duration-150 z-10"
@@ -76,22 +76,24 @@ const copy = async (log) => {
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+  background-color: transparent;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #888;
+  background-color: transparent;
   border-radius: 5px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #a0a0a0;
+  background: #333639;
+
   border-radius: 5px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #1e1f1f;
+  background: #69b3f8;
 }
 </style>

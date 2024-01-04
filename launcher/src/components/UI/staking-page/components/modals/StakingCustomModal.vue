@@ -22,19 +22,28 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
         </div>
 
         <slot name="content"></slot>
-        <div class="w-full flex justify-end text-md font-bold py-3 mt-2 space-y-4 absolute bottom-4 right-2">
+        <div class="col-start-1 col-span-full row-start-7 row-span-1 grid grid-cols-12 items-center px-2">
+          <button
+            v-if="props.confirmText === 'Withdraw & Exit'"
+            class="col-start-1 col-end-5 ml-4 min-w-[100px] max-h-10 bg-blue-500 px-5 py-2 shadow-xl shadow-[#141516] tracking-wider rounded-full uppercase active:scale-90 transition-all duration-150 flex justify-evenly items-center space-x-2"
+            @click="exportAction"
+          >
+            <img class="h-4" src="/img/icon/the-staking/export.png" alt="Export Icon" />
+            <span class="text-sm text-gray-200 font-semibold">Export Message</span>
+          </button>
           <button
             v-if="!props.isProcessing && props.confirmText"
-            class="mr-4 min-w-[100px] px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full uppercase active:scale-90 transition-all duration-150"
+            class="col-start-9 col-span-full mr-4 min-w-[100px] max-h-10 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full uppercase active:scale-90 transition-all duration-150"
             :class="!activeButton ? 'opacity-40 pointer-events-none bg-gray-500' : getButtonColor"
             @click="emitConfirmAction"
           >
             {{ confirmText }}
           </button>
+
           <button
             v-if="props.isProcessing"
             type="button"
-            class="mr-4 min-w-[120px] px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full transition-all duration-150 flex justify-center items-center pointer-events-none uppercase"
+            class="col-start-9 col-span-full mr-4 min-w-[120px] px-5 py-2 text-sm shadow-xl shadow-[#141516] font-semibold tracking-wider text-white rounded-full transition-all duration-150 flex justify-center items-center pointer-events-none uppercase"
             :class="!activeButton ? 'opacity-40 pointer-events-none bg-gray-500' : getButtonColor"
             disabled
           >
@@ -111,7 +120,7 @@ const props = defineProps({
 });
 
 //Emits
-const emit = defineEmits(["closeModal", "confirmAction"]);
+const emit = defineEmits(["closeModal", "confirmAction", "exportAction"]);
 
 //Store
 const stakingStore = useStakingStore();
@@ -175,6 +184,10 @@ const emitConfirmAction = () => {
   if (props.confirmText) {
     emit("confirmAction");
   }
+};
+
+const exportAction = () => {
+  emit("exportAction");
 };
 </script>
 <style scoped>

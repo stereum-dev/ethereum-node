@@ -408,6 +408,13 @@ class ControlService extends EventEmitter {
     });
   }
 
+  async getExitValidatorMessage(args) {
+    return await this.promiseIpc.send("getExitValidatorMessage", {
+      pubkey: args.pubkey,
+      serviceID: args.serviceID,
+    });
+  }
+
   async exportConfig() {
     return await this.promiseIpc.send("exportConfig");
   }

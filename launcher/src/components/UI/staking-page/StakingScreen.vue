@@ -57,6 +57,7 @@ import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
 import { useDeepClone } from "@/composables/utils";
 import DisabledSection from "./sections/DisabledSection.vue";
+import { saveAs } from "file-saver";
 
 //Store
 const stakingStore = useStakingStore();
@@ -89,6 +90,7 @@ const modals = {
     component: WithdrawMultiple,
     events: {
       confirmWithdraw: () => withdrawValidatorKey(),
+      exportMessage: () => exportExitMessage(),
     },
   },
   removeValidator: {
@@ -216,8 +218,14 @@ const importKey = async (val) => {
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];
   stakingStore.previewKeys = [];
+
   stakingStore.importEnteredPassword = "";
   stakingStore.forceRefresh = true;
+  if (stakingStore.isDoppelgangerProtectionActive && stakingStore.doppelgangerKeys.length > 0) {
+    setTimeout(() => {
+      stakingStore.setActiveModal(null);
+    }, 10000);
+  }
   await listKeys();
   listGroups();
 };
@@ -259,6 +267,7 @@ const importValidatorProcessing = async () => {
     stakingStore.checkActiveValidatorsResponse.includes("Validator check error:\n")
   ) {
     importKey(stakingStore.importEnteredPassword);
+
     stakingStore.setActivePanel(null);
     stakingStore.keyFiles = [];
   } else {
@@ -469,6 +478,7 @@ const doppelgangerController = async (item) => {
           : "";
 
         stakingStore.doppelgangerStatus = matchedValue === "true" ? true : false;
+        stakingStore.isDoppelgangerProtectionActive = true;
       }
     });
   } catch (error) {
@@ -480,14 +490,23 @@ const doppelgangerController = async (item) => {
 
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
-
-  await doppelgangerController(service);
+  const existingPubKeys = new Set(stakingStore.doppelgangerKeys.map((key) => key.pubkey));
+  stakingStore.previewKeys.forEach((previewKey) => {
+    if (!existingPubKeys.has(previewKey.pubkey)) {
+      stakingStore.doppelgangerKeys.push({
+        ...previewKey,
+        serviceID: service.config?.serviceID,
+      });
+    }
+  });
   stakingStore.setActivePanel("password");
+  await doppelgangerController(service);
 };
 
 //Delete Preview Key
 const deletePreviewKey = async (item) => {
   stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.filename !== item.filename);
+  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((key) => key.filename !== item.filename);
   const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
 
   if (indexItem !== -1) {
@@ -602,6 +621,48 @@ const deleteRemoteKeys = async (serviceID, keys) => {
     data: result,
   });
   return result;
+};
+
+const exportExitMessage = async () => {
+  try {
+    const key = stakingStore.selectedSingleKeyToWithdraw;
+
+    if (key) {
+      const result = await ControlService.getExitValidatorMessage({
+        pubkey: key.key,
+        serviceID: key.validatorID,
+      });
+      saveExitMessage(result, "single");
+    } else {
+      const pubkeys = stakingStore.keys
+        .filter((item) => item.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID)
+        .map((item) => item.key);
+
+      const results = await Promise.all(
+        pubkeys.map(async (key) => {
+          return ControlService.getExitValidatorMessage({
+            pubkey: key,
+            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+          });
+        })
+      );
+
+      saveExitMessage(results, "multiple");
+    }
+  } catch (error) {
+    console.error("Error exporting exit message:", error);
+  }
+};
+
+const saveExitMessage = (data, type) => {
+  const content =
+    type === "single"
+      ? JSON.stringify(data, null, 2)
+      : data.map((entry) => JSON.stringify(entry, null, 2)).join("\n\n");
+
+  const fileName = type === "single" ? "single_exit_message.txt" : "multiple_exit_messages.txt";
+  const blob = new Blob([content], { type: "application/json;charset=utf-8" });
+  saveAs(blob, fileName);
 };
 
 const removeValidatorKeys = async () => {
