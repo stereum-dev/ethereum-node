@@ -14,9 +14,7 @@
         <div
           class="icon_alarm"
           :class="{
-            active:
-              stereumUpdate.current !== stereumUpdate.version ||
-              updatedNewUpdates.length > 0,
+            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
           }"
         >
           <img src="/img/icon/control/SETTINGS.png" alt="green" />
@@ -78,13 +76,13 @@
             </div>
           </div>
         </div>
-        <div v-if="missedAttest" class="alert-message_red">
+        <div v-if="errorAlarm" class="alert-message_red" @click="isTaskModalActive = true">
           <div class="icon-box">
-            <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
+            <img src="/img/icon/control/TaskErrorAlert.png" alt="warn_storage" />
           </div>
 
           <div class="message">
-            <div class="main-message"><span>MISSED ATTESTATION</span></div>
+            <div class="main-message"><span>Task Failed</span></div>
           </div>
         </div>
         <div
@@ -151,7 +149,7 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-
+import { useTaskManager } from "@/store/taskManager";
 import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
@@ -168,13 +166,17 @@ export default {
       alarm: false,
       notification: false,
       newUpdate: false,
-      missedAttest: false,
+
       notSetAddresses: [],
       clkFee: this.$t("nodeAlert.clkFee"),
       clkUpdate: this.$t("nodeAlert.clkUpdate"),
     };
   },
   computed: {
+    ...mapWritableState(useTaskManager, {
+      errorAlarm: "errorAlarm",
+      isTaskModalActive: "isTaskModalActive",
+    }),
     ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
@@ -217,9 +219,7 @@ export default {
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
-        const matchingService = this.installedServices.find(
-          (service) => service.name === update.name
-        );
+        const matchingService = this.installedServices.find((service) => service.name === update.name);
         if (matchingService) {
           return {
             ...update,
@@ -289,44 +289,6 @@ export default {
     hideExpertMode(el) {
       el.expertOptionsModal = false;
     },
-    // async readService() {
-    //   const validators = this.installedServices.filter((i) => i.category === "validator");
-
-    //   if (validators && validators.length > 0 && validators[0].config) {
-    //     const addresses = [];
-
-    //     for (const validator of validators) {
-    //       if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
-    //         continue;
-    //       }
-    //       if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
-    //       const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
-    //       if (patternIndex === -1) {
-    //         continue;
-    //       }
-    //       const pattern = validator.expertOptions[patternIndex].pattern;
-    //       const match = [...validator.yaml.match(new RegExp(pattern))][2];
-    //       if (match) {
-    //         const address = match;
-    //         addresses.push({
-    //           name: validator.name,
-    //           address: address,
-    //           icon: validator.sIcon,
-    //           serviceID: validator.config.serviceID,
-    //         });
-    //       } else {
-    //         console.error(
-    //           "Could not find default-fee-recipient address in the service YAML for validator:",
-    //           validator.name
-    //         );
-    //       }
-    //     }
-    //     const notSetAddresses = addresses.filter(
-    //       (validator) => validator.address === "0x0000000000000000000000000000000000000000"
-    //     );
-    //     this.notSetAddresses = notSetAddresses;
-    //   }
-    // },
 
     async readService() {
       const validators = this.installedServices.filter((i) => i.category === "validator");
@@ -338,13 +300,8 @@ export default {
           if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
             continue;
           }
-          if (!validator.yaml)
-            validator.yaml = await ControlService.getServiceYAML(
-              validator.config.serviceID
-            );
-          const patternIndex = validator.expertOptions.findIndex(
-            (o) => o.title === "Default Fee Recipient"
-          );
+          if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
           if (patternIndex === -1) {
             continue;
           }
@@ -361,8 +318,7 @@ export default {
           }
         }
         const notSetAddresses = addresses.filter(
-          (validator) =>
-            validator.address === "0x0000000000000000000000000000000000000000"
+          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
       }
@@ -550,6 +506,7 @@ export default {
   border-radius: 5px;
   margin: 2px 0;
   color: #eee;
+  cursor: pointer;
 }
 .alert-message_green {
   display: flex;

@@ -86,13 +86,13 @@
           </div>
         </div>
       </router-link>
-      <div v-if="missedAttest" class="status-message_red">
+      <div v-if="errorAlarm" class="status-message_red" @click="isTaskModalActive = true">
         <div class="message-icon">
-          <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
+          <img src="/img/icon/control/TaskErrorAlert.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
-            <span>{{ $t("nodeAlert.missAttest") }}</span>
+            <span>Task Failed</span>
           </div>
         </div>
       </div>
@@ -190,8 +190,8 @@ export default {
   },
   computed: {
     ...mapWritableState(useTaskManager, {
-      playbookTasks: "playbookTasks",
-      taskManagerIcons: "taskManagerIcons",
+      errorAlarm: "errorAlarm",
+      isTaskModalActive: "isTaskModalActive",
     }),
     ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
@@ -558,16 +558,16 @@ export default {
 }
 
 .message-icon {
-  width: 24%;
-  height: 90%;
+  width: 22%;
+  height: 88%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .message-icon img {
-  width: 88%;
-  height: 99%;
+  width: 87%;
+  height: 90%;
 }
 
 .message-text_container {
