@@ -1,17 +1,22 @@
 import { computed, ref } from 'vue'; import { useFooter } from '@/store/theFooter';
 <template>
   <div
-    class="w-20 h-20 flex justify-center items-center cursor-pointer"
-    @click="buttonHandler"
+    class="w-fit h-fit flex justify-center items-center cursor-pointer"
+    @click="accessHandler"
     @mouseenter="runTooltip"
     @mouseleave="mouseLeave"
   >
-    <img :src="getStatus" class="w-16 h-16" alt="Logo Icon" @mousedown.prevent />
+    <img
+      :src="getStatus"
+      class="w-16 h-16 hover:scale-105 active:scale-95 transition-all duration-300"
+      alt="Logo Icon"
+      @mousedown.prevent
+    />
 
     <div
       v-if="isHovered"
       role="tooltip"
-      class="absolute top-10 right-10 max-w-xs break-words rounded bg-[#1d1f20] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+      class="absolute top-20 left-12 w-56 h-9 rounded bg-[#1d1f20] px-3 py-2 text-center text-sm font-semibold text-white outline-none flex justify-center items-center"
     >
       <span>Server Access Management</span>
     </div>
@@ -32,7 +37,7 @@ const props = defineProps({
 const footerStore = useFooter();
 const isHovered = ref(false);
 
-const emit = defineEmits(["mouseLeave", "buttonHandler"]);
+const emit = defineEmits(["mouseLeave", "accessHandler"]);
 
 const getStatus = computed(() => {
   if (footerStore.stereumStatus) {
@@ -42,8 +47,8 @@ const getStatus = computed(() => {
   }
 });
 
-const buttonHandler = () => {
-  emit("buttonHandler");
+const accessHandler = () => {
+  emit("accessHandler");
 };
 
 const runTooltip = () => {
@@ -52,7 +57,7 @@ const runTooltip = () => {
 
   setTimeout(() => {
     isHovered.value = false;
-  }, 1000);
+  }, 1500);
 };
 
 const mouseLeave = () => {

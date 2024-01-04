@@ -6,23 +6,35 @@
       class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634]"
     >
       <div
-        class="absolute left-1 top-1 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[37px] rounded-br-[37px] rounded-bl-[37px] shadow-md shadow-[#252525]"
+        class="absolute left-0 top-0 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[40px] rounded-br-[40px] rounded-bl-[37px] shadow-md shadow-[#252525]"
         @mousedown.prevent.stop
       >
-        <LogoButton :server-acc="serverAccMange" @access-switch="accessSwitch" @mouse-leave="mouseLeave" />
+        <LogoButton
+          :server-acc="serverAccMange"
+          @access-handler="serverAccessHandler"
+          @mouse-leave="mouseLeave"
+        />
       </div>
 
       <MainNavbar />
     </div>
-    <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E]">
+    <div
+      class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E]"
+    >
       <slot></slot>
     </div>
-    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
+    <div
+      class="w-full h-[30px] rounded-b-lg bg-[#33393E]"
+      @pointerdown.prevent.stop
+      @mousedown.prevent.stop
+    >
       <TheFooter />
       <TaskManager />
     </div>
     <!-- <serverAccessManagement v-if="headerStore.serverAccessManagement" /> -->
-    <ServerScreen v-if="headerStore.isServerAccessManagementActive" />
+    <Transition name="slide-fade">
+      <ServerScreen v-if="headerStore.isServerAccessManagementActive" />
+    </Transition>
   </div>
 </template>
 <script setup>
@@ -49,13 +61,21 @@ const mouseLeave = () => {
   footerStore.cursorLocation = "";
 };
 
-const accessSwitch = () => {
-  console.log("Multi-Server Page");
+const serverAccessHandler = () => {
   headerStore.isServerAccessManagementActive = !headerStore.isServerAccessManagementActive;
 };
 </script>
 
 <style scoped>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.6s ease-in-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-1000px);
+}
 .server-access-tooltip {
   width: 220%;
   height: 50%;

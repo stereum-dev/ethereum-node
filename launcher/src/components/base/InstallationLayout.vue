@@ -8,14 +8,13 @@
     >
       <div
         id="logo"
-        class="absolute left-1 top-1 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[37px] rounded-br-[37px] rounded-bl-[37px] shadow-md shadow-[#252525]"
+        class="absolute left-0 top-0 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[40px] rounded-br-[40px] rounded-bl-[37px] shadow-md shadow-[#252525]"
         @pointerdown.prevent.stop
         @mousedown.prevent.stop
       >
-        <SecurityButton
-          :tooltip="tooltip"
-          @mouse-enter="mouseEnter"
-          @access-switch="accessSwitch"
+        <LogoButton
+          :server-acc="serverAccMange"
+          @access-handler="serverAccessHandler"
           @mouse-leave="mouseLeave"
         />
       </div>
@@ -23,15 +22,23 @@
       <slot></slot>
     </div>
     <TaskManager
-      v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
+      v-if="
+        router.currentRoute.value.fullPath !== '/login' &&
+        router.currentRoute.value.fullPath !== '/welcome'
+      "
     />
-    <ServerAccessManagement v-if="serverAccessManagement && !isRouterLogin" />
+    <!-- <ServerAccessManagement v-if="serverAccessManagement && !isRouterLogin" /> -->
+    <Transition name="slide-fade">
+      <ServerScreen v-if="headerStore.isServerAccessManagementActive" />
+    </Transition>
   </div>
 </template>
 <script setup>
-import SecurityButton from "../UI/node-header/SecurityButton.vue";
+// import SecurityButton from "../UI/node-header/SecurityButton.vue";
+import LogoButton from "../UI/multi-server/components/LogoButton.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
-import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
+import ServerScreen from "../UI/multi-server/ServerScreen.vue";
+// import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
 import { useRouter } from "vue-router";
@@ -66,21 +73,30 @@ watchEffect(() => {
 });
 
 // Methods
-const mouseEnter = () => {
-  tooltip.value = true;
-  footerStore.cursorLocation = serverAccMange.value;
-};
+// const mouseEnter = () => {
+//   tooltip.value = true;
+//   footerStore.cursorLocation = serverAccMange.value;
+// };
 
 const mouseLeave = () => {
   tooltip.value = false;
   footerStore.cursorLocation = "";
 };
 
-const accessSwitch = () => {
-  headerStore.serverAccessManagement = !headerStore.serverAccessManagement;
+const serverAccessHandler = () => {
+  headerStore.isServerAccessManagementActive = !headerStore.isServerAccessManagementActive;
 };
 </script>
 <style scoped>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.6s ease-in-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-1000px);
+}
 #logo {
   animation: logoAnimation 1s ease-in-out forwards;
 }
