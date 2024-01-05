@@ -504,7 +504,9 @@
     "noFee": "žádný příjemce poplatku",
     "stereumUpt": "AKTUALIZACE STEREUM",
     "clkFee": "Service Settings",
-    "clkUpdate": "Klikněte pro otevření panelu aktualizace"
+    "clkUpdate": "Klikněte pro otevření panelu aktualizace",
+    "sync": "Synchronization Error",
+    "taskFail": "task failed"
   },
   "restartModalNode": {
     "message": "jste si jistý(á), že chcete",

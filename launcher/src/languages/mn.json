@@ -504,7 +504,9 @@
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM-ийн ШИНЭЧЛЭЛТ",
     "clkFee": "Service Settings",
-    "clkUpdate": "Шинэчлэх самбарыг нээхийн тулд товшино уу"
+    "clkUpdate": "Шинэчлэх самбарыг нээхийн тулд товшино уу",
+    "sync": "Synchronization Error",
+    "taskFail": "task failed"
   },
   "restartModalNode": {
     "message": "та итгэлтэй байна уу",
