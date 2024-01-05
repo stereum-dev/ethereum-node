@@ -15,22 +15,46 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed } from 'vu
           class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
 
-        <div class="w-full h-full col-start-10 col-span-full row-start-2 row-span-2 flex justify-evenly items-center">
+        <div
+          class="w-full h-full col-start-10 col-span-full row-start-2 row-span-2 flex justify-evenly items-center relative"
+        >
           <img
             class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :src="getTrashImg"
             alt=""
             @mousedown.prevent
-            @mouseenter="hovered = true"
-            @mouseleave="hovered = false"
+            @mouseenter="(hovered = true), (removeHovered = true)"
+            @mouseleave="(hovered = false), (removeHovered = false)"
           />
+
+          <div
+            v-if="removeHovered"
+            class="absolute -top-11 right-5 w-28 break-words rounded bg-[#1d1f20] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+          >
+            <span
+              class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
+            ></span>
+            Remove Server
+          </div>
+
           <img
             class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             src="/img/icon/PLUS_ICON.png"
             alt="icon"
             @mousedown.prevent
+            @mouseenter="addHovered = true"
+            @mouseleave="addHovered = false"
             @click="saveServer"
           />
+          <div
+            v-if="addHovered"
+            class="absolute -top-11 -right-5 w-28 rounded bg-[#1d1f20] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+          >
+            <span
+              class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
+            ></span>
+            Save Server
+          </div>
         </div>
       </div>
       <div class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1">
@@ -483,6 +507,8 @@ import { computed, ref } from "vue";
 
 const hovered = ref(false);
 const useAuthKey = ref("");
+const removeHovered = ref(false);
+const addHovered = ref(false);
 
 const getTrashImg = computed(() => {
   if (hovered.value) {
