@@ -9,7 +9,7 @@
         <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
       </div>
       <div class="balance-box">
-        <div class="balance-value">{{ balance }} GWei</div>
+        <div class="balance-value" :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }">{{ balance }} GWei</div>
         <div class="title">{{ $t("balWid.bal") }}</div>
       </div>
     </div>
@@ -117,8 +117,5 @@ export default {
   font-size: 180%;
   width: 100%;
   height: 50%;
-}
-.balance-value {
-  color: #74fa65;
 }
 </style>

@@ -401,9 +401,9 @@
     "logOutBtn": "Abmelden"
   },
   "reconnectModal": {
-    "reconnectTitle": "Verbindung verloren",
-    "reconnectMessage": "Überprüfe deine verbindung und versuche es erneut.",
-    "reconnectBtn": "Verbinden"
+    "reconnectTitle": "Connection lost",
+    "reconnectMessage": "Check your connection and try again.",
+    "reconnectBtn": "Reconnect"
   },
   "prunningModal": {
     "prunningText": "GETH verbraucht Speicherplatz, der im Laufe seiner Betriebszeit wächst. Das Löschen unnötiger Daten und das Freigeben von Speicherplatz aus der Geth-Datenbank kann mehrere Stunden dauern. Dies muss durchgeführt werden, wenn Geth nicht ausgeführt wird. WENN DER LÖSCHVORGANG GESTARTET WIRD, WIRD IHR NODE OFFLINE GEHEN UND POTENZIELLE ATTESTATIONSPFLICHTEN NICHT MEHR ERFÜLLEN.",
@@ -504,7 +504,9 @@
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
     "clkFee": "Service Settings",
-    "clkUpdate": "Click to open update panel"
+    "clkUpdate": "Click to open update panel",
+    "sync": "Synchronization Error",
+    "taskFail": "task failed"
   },
   "restartModalNode": {
     "message": "are you sure you want to",

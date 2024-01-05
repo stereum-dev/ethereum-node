@@ -504,7 +504,9 @@
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
     "clkFee": "Hizmet Ayarları",
-    "clkUpdate": "Güncelleme panelini açmak için tıklayın"
+    "clkUpdate": "Güncelleme panelini açmak için tıklayın",
+    "sync": "Synchronization Error",
+    "taskFail": "task failed"
   },
   "restartModalNode": {
     "message": "Bunu istediğinize emin misiniz?",
