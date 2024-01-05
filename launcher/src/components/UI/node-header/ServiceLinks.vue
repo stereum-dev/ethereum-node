@@ -88,8 +88,8 @@ export default {
       } else if (serviceName == "FlashbotsMevBoostService") {
         this.showMevboostWindow = true;
       } else if (serviceName == "CharonService") {
-        return;
-        // this.showObolCharonWindow = true;
+        // return;
+        this.showObolCharonWindow = true;
         // console.log("ObolCharonService");
       } else {
         return;
