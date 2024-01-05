@@ -47,12 +47,12 @@ import LogoButton from "../UI/multi-server/components/LogoButton.vue";
 // import serverAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
-import { useI18n } from "vue-i18n";
 import { ref } from "vue";
+import i18n from "../../../../launcher/src/includes/i18n";
 
+const t = i18n.global.t;
 const headerStore = useNodeHeader();
 const footerStore = useFooter();
-const { t } = useI18n();
 const tooltip = ref(false);
 const serverAccMange = t("serverManagement.serverAccMange");
 
