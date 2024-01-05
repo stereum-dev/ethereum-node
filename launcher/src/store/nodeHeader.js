@@ -3,6 +3,8 @@ export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
       isServerAccessManagementActive: false,
+      isServerLoginActive: false,
+      isServerManagementActive: true,
       importBoxModel: "",
       passwordBoxModel: "",
       selectedValidatorFromNodeAlert: {},
