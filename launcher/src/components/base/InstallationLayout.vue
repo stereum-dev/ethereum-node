@@ -12,24 +12,17 @@
         @pointerdown.prevent.stop
         @mousedown.prevent.stop
       >
-        <LogoButton
-          :server-acc="serverAccMange"
-          @access-handler="serverAccessHandler"
-          @mouse-leave="mouseLeave"
-        />
+        <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
       </div>
 
       <slot></slot>
     </div>
     <TaskManager
-      v-if="
-        router.currentRoute.value.fullPath !== '/login' &&
-        router.currentRoute.value.fullPath !== '/welcome'
-      "
+      v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
     />
     <!-- <ServerAccessManagement v-if="serverAccessManagement && !isRouterLogin" /> -->
     <Transition name="slide-fade">
-      <ServerScreen v-if="headerStore.isServerAccessManagementActive" />
+      <ServerScreen v-if="serverStore.isServerAccessManagementActive" />
     </Transition>
   </div>
 </template>
@@ -39,7 +32,7 @@ import LogoButton from "../UI/multi-server/components/LogoButton.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import ServerScreen from "../UI/multi-server/ServerScreen.vue";
 // import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
-import { useNodeHeader } from "@/store/nodeHeader";
+import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 import { useRouter } from "vue-router";
 import { ref, watchEffect, computed } from "vue";
@@ -48,7 +41,7 @@ import i18n from "../../../../launcher/src/includes/i18n";
 const t = i18n.global.t;
 
 const footerStore = useFooter();
-const headerStore = useNodeHeader();
+const serverStore = useServers();
 
 const router = useRouter();
 const isRouterLogin = ref(false);
@@ -69,7 +62,7 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-  serverAccessManagement.value = headerStore.serverAccessManagement;
+  serverAccessManagement.value = serverStore.serverAccessManagement;
 });
 
 // Methods
@@ -84,7 +77,7 @@ const mouseLeave = () => {
 };
 
 const serverAccessHandler = () => {
-  headerStore.isServerAccessManagementActive = !headerStore.isServerAccessManagementActive;
+  serverStore.isServerAccessManagementActive = !serverStore.isServerAccessManagementActive;
 };
 </script>
 <style scoped>

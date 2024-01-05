@@ -9,31 +9,21 @@
         class="absolute left-0 top-0 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[40px] rounded-br-[40px] rounded-bl-[37px] shadow-md shadow-[#252525]"
         @mousedown.prevent.stop
       >
-        <LogoButton
-          :server-acc="serverAccMange"
-          @access-handler="serverAccessHandler"
-          @mouse-leave="mouseLeave"
-        />
+        <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
       </div>
 
       <MainNavbar />
     </div>
-    <div
-      class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E]"
-    >
+    <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E]">
       <slot></slot>
     </div>
-    <div
-      class="w-full h-[30px] rounded-b-lg bg-[#33393E]"
-      @pointerdown.prevent.stop
-      @mousedown.prevent.stop
-    >
+    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
       <TheFooter />
       <TaskManager />
     </div>
     <!-- <serverAccessManagement v-if="headerStore.serverAccessManagement" /> -->
     <Transition name="slide-fade">
-      <ServerScreen v-if="headerStore.isServerAccessManagementActive" />
+      <ServerScreen v-if="serverStore.isServerAccessManagementActive" />
     </Transition>
   </div>
 </template>
@@ -45,13 +35,13 @@ import ServerScreen from "../UI/multi-server/ServerScreen.vue";
 import LogoButton from "../UI/multi-server/components/LogoButton.vue";
 // import SecurityButton from "../UI/node-header/SecurityButton.vue";
 // import serverAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
-import { useNodeHeader } from "@/store/nodeHeader";
 import { useFooter } from "@/store/theFooter";
 import { ref } from "vue";
 import i18n from "../../../../launcher/src/includes/i18n";
+import { useServers } from "@/store/servers";
 
 const t = i18n.global.t;
-const headerStore = useNodeHeader();
+const serverStore = useServers();
 const footerStore = useFooter();
 const tooltip = ref(false);
 const serverAccMange = t("serverManagement.serverAccMange");
@@ -62,7 +52,7 @@ const mouseLeave = () => {
 };
 
 const serverAccessHandler = () => {
-  headerStore.isServerAccessManagementActive = !headerStore.isServerAccessManagementActive;
+  serverStore.isServerAccessManagementActive = !serverStore.isServerAccessManagementActive;
 };
 </script>
 
