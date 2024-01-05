@@ -121,16 +121,6 @@ export const useNodeManage = defineStore("nodeManage", {
           isRemoved: false,
           freeCensorship: false,
         },
-        {
-          icon: "/img/icon/click-installation/relayoor.png",
-          name: "Relayooor's",
-          mainnet:
-            "https://0x84e78cb2ad883861c9eeeb7d1b22a8e02332637448f84144e245d20dff1eb97d7abdde96d4e7f80934e5554e11915c56@relayooor.wtf",
-          id: 11,
-          isSelected: false,
-          isRemoved: false,
-          freeCensorship: true,
-        },
       ],
       newConfiguration: [],
       selectedItemToRemove: [],
