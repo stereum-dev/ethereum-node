@@ -24,6 +24,15 @@
             @confirmPluginClick="openLocalApp"
           />
         </div>
+        <div v-if="refreshStereum" class="browserBox">
+          <ConfirmBox
+            :top-line="`Oops! Something Went Wrong`"
+            :bottom-line="`Something went wrong. Please click the refresh button and try again.`"
+            :btn-name="`refresh`"
+            :btn-bg-color="`#f37625`"
+            @confirmPluginClick="stereumRefresher"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -40,6 +49,7 @@ export default {
     return {
       prometheusService: {},
       isprometheusAvailable: false,
+      refreshStereum: false,
     };
   },
 
@@ -67,8 +77,17 @@ export default {
       window.open(url, "_blank");
     },
     openLocalApp() {
-      let url = this.prometheusService.linkUrl;
-      window.open(url, "_blank");
+      if (this.prometheusService.linkUrl === "http://localhost:undefined") {
+        this.refreshStereum = true;
+      } else {
+        console.log(this.prometheusService.linkUrl);
+        let url = this.prometheusService.linkUrl;
+        window.open(url, "_blank");
+      }
+    },
+    stereumRefresher() {
+      this.refreshStereum = false;
+      window.location.reload();
     },
   },
 };
