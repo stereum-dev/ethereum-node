@@ -83,15 +83,14 @@ export default {
     },
     openLocalApp() {
       if (this.grafanaService.linkUrl === "http://localhost:undefined") {
-        console.log("No local app available");
         this.refreshStereum = true;
       } else {
         let url = this.grafanaService.linkUrl;
         window.open(url, "_blank");
-        console.log(this.grafanaService.linkUrl);
       }
     },
     stereumRefresher() {
+      this.refreshStereum = false;
       window.location.reload();
     },
   },
