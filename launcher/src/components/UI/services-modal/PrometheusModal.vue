@@ -67,8 +67,15 @@ export default {
       window.open(url, "_blank");
     },
     openLocalApp() {
-      let url = this.prometheusService.linkUrl;
-      window.open(url, "_blank");
+      // let url = this.prometheusService.linkUrl;
+      // window.open(url, "_blank");
+      if (this.prometheusService.linkUrl === "http://localhost:undefined") {
+        console.log("No local app available");
+        //window.location.reload();
+        return;
+      } else {
+        console.log(this.prometheusService.linkUrl);
+      }
     },
   },
 };

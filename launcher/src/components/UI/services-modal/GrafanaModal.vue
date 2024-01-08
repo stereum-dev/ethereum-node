@@ -24,6 +24,15 @@
             @confirmPluginClick="openLocalApp"
           />
         </div>
+        <div v-if="refreshStereum" class="browserBox">
+          <ConfirmBox
+            :top-line="`Oops! Something Went Wrong`"
+            :bottom-line="`Something went wrong. Please click the refresh button and try again.`"
+            :btn-name="`refresh`"
+            :btn-bg-color="`#f37625`"
+            @confirmPluginClick="stereumRefresher"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -42,6 +51,7 @@ export default {
     return {
       grafanaService: {},
       isGrafanaAvailable: false,
+      refreshStereum: false,
     };
   },
 
@@ -72,8 +82,17 @@ export default {
       window.open(url, "_blank");
     },
     openLocalApp() {
-      let url = this.grafanaService.linkUrl;
-      window.open(url, "_blank");
+      if (this.grafanaService.linkUrl === "http://localhost:undefined") {
+        console.log("No local app available");
+        this.refreshStereum = true;
+      } else {
+        let url = this.grafanaService.linkUrl;
+        window.open(url, "_blank");
+        console.log(this.grafanaService.linkUrl);
+      }
+    },
+    stereumRefresher() {
+      window.location.reload();
     },
   },
 };
@@ -203,5 +222,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2%;
+  flex-direction: column;
 }
 </style>
