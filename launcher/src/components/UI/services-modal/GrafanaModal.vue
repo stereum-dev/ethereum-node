@@ -1,6 +1,9 @@
 <template>
-  <div class="service-modal_parent">
-    <div class="bg-dark" @click="$emit('closeWindow')"></div>
+  <div class="flex justify-center items-center absolute left-0 top-0 w-full h-full">
+    <div
+      class="absolute left-0 top-0 w-full h-full bg-black opacity-50 z-10 cursor-default"
+      @click="$emit('closeWindow')"
+    ></div>
     <div class="browser-modal">
       <div class="grafana-header">
         <div class="icon-box">
@@ -38,89 +41,45 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapWritableState } from "pinia";
+<script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useNodeStore } from "@/store/theNode";
-import ConfirmBox from "./plugin/ConfirmBox.vue";
-export default {
-  components: {
-    ConfirmBox,
-  },
-  data() {
-    return {
-      grafanaService: {},
-      isGrafanaAvailable: false,
-      refreshStereum: false,
-    };
-  },
 
-  computed: {
-    ...mapState(useNodeHeader, {
-      runningServices: "runningServices",
-    }),
-    ...mapWritableState(useNodeStore, {
-      hideConnectedLines: "hideConnectedLines",
-    }),
-  },
-  mounted() {
-    this.filterGrafanaService();
-  },
-  methods: {
-    filterGrafanaService() {
-      this.runningServices.forEach((item) => {
-        if (item.name === "Grafana") this.grafanaService = item;
-      });
-      this.isGrafanaAvailable = true;
-    },
-    openBrowser() {
-      let url = "https://grafana.com/";
-      window.open(url, "_blank");
-    },
-    openGitHub() {
-      let url = "https://github.com/grafana/grafana";
-      window.open(url, "_blank");
-    },
-    openLocalApp() {
-      if (this.grafanaService.linkUrl === "http://localhost:undefined") {
-        this.refreshStereum = true;
-      } else {
-        let url = this.grafanaService.linkUrl;
-        window.open(url, "_blank");
-      }
-    },
-    stereumRefresher() {
-      this.refreshStereum = false;
-      window.location.reload();
-    },
-  },
+import ConfirmBox from "./plugin/ConfirmBox.vue";
+import { ref, onMounted } from "vue";
+
+const headerStore = useNodeHeader();
+
+const grafanaService = ref({});
+const isGrafanaAvailable = ref(false);
+
+onMounted(() => {
+  filterGrafanaService();
+});
+
+const filterGrafanaService = () => {
+  headerStore.runningServices.forEach((item) => {
+    if (item.name === "Grafana") grafanaService.value = item;
+  });
+  isGrafanaAvailable.value = true;
+};
+
+const openBrowser = () => {
+  let url = "https://grafana.com/";
+  window.open(url, "_blank");
+};
+
+const openGitHub = () => {
+  let url = "https://github.com/grafana/grafana";
+  window.open(url, "_blank");
+};
+
+const openLocalApp = () => {
+  let url = grafanaService.value.linkUrl;
+  window.open(url, "_blank");
 };
 </script>
 
 <style scoped>
-.service-modal_parent {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.bg-dark {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0);
-  opacity: 0.5;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 102;
-  cursor: default;
-}
-
 .browser-modal {
   width: 60%;
   height: 80%;
