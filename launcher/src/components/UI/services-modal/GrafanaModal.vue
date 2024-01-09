@@ -81,7 +81,6 @@ const openLocalApp = () => {
 
 <style scoped>
 .browser-modal {
-  @apply w-3/5 h-4/5 bg-[#212122] border-4 border-gray-600 rounded-[30px] flex flex-col justify-start items-center absolute top-9 z-105 cursor-default;
   width: 60%;
   height: 80%;
   background-color: #212122;
