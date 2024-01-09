@@ -1,6 +1,9 @@
 <template>
   <div class="flex justify-center items-center absolute left-0 top-0 w-full h-full">
-    <div class="bg-dark" @click="$emit('closeWindow')"></div>
+    <div
+      class="absolute left-0 top-0 w-full h-full bg-black opacity-50 z-10 cursor-default"
+      @click="$emit('closeWindow')"
+    ></div>
     <div class="browser-modal">
       <div class="grafana-header">
         <div class="icon-box">
@@ -77,30 +80,8 @@ const openLocalApp = () => {
 </script>
 
 <style scoped>
-.service-modal_parent {
-  @apply flex
-  justify-center
-  items-center
-  absolute
-  left-0
-  top-0
-  w-full
-  h-full;
-}
-
-.bg-dark {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0);
-  opacity: 0.5;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 102;
-  cursor: default;
-}
-
 .browser-modal {
+  @apply w-3/5 h-4/5 bg-[#212122] border-4 border-gray-600 rounded-[30px] flex flex-col justify-start items-center absolute top-9 z-105 cursor-default;
   width: 60%;
   height: 80%;
   background-color: #212122;
