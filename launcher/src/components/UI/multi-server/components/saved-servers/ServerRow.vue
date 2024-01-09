@@ -1,8 +1,8 @@
 import { ref, computed } from 'vue';
 <template>
   <div
-    class="w-full h-[55px] scale-95 rounded-md px-2 py-1 shadow-md shadow-[#29292c] grid grid-cols-12 gap-x-2 cursor-pointer transition-all duration-100 ease-in-out hover:scale-100 active:scale-95"
-    :class="props.server.isConnected ? 'bg-[#336666]' : 'bg-gray-200'"
+    class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#29292c] grid grid-cols-12 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out hover:scale-100"
+    :class="props.server.isConnected ? 'bg-[#336666] scale-100' : 'bg-gray-200 scale-95'"
     @mouseenter="hovered = true"
     @click="pickServer"
   >
