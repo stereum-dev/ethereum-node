@@ -9,7 +9,7 @@
         v-model="password"
         type="text"
         :name="password"
-        class="col-start-1 col-end-11 w-full h-full text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border"
+        class="col-start-1 col-end-11 w-full h-full text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
         :class="error ? 'border-red-500' : 'border-transparent'"
         placeholder="Enter a new password"
         @input="handleInput"

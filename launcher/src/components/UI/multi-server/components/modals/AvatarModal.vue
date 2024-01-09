@@ -1,14 +1,14 @@
 import { ref } from 'vue';
 <template>
   <div
-    class="absolute -top-14 left-2 w-[350px] h-[150px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-lg shadow-lg overflow-hidden grid grid-cols-4 grid-rows-3 gap-2 p-2"
+    class="absolute -top-20 -left-1 w-[380px] h-[200px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-lg shadow-lg overflow-hidden grid grid-cols-5 grid-rows-4 gap-2 p-2"
     :class="serverStore.isAvatarBoxActive ? 'animate__fadeInDown' : 'animate__fadeOutUp'"
     @mouseleave="serverStore.isAvatarBoxActive = false"
   >
     <img
       v-for="avatar in serverStore.avatars"
-      :key="avatar.name"
-      class="w-7 h-7 rounded-full justify-self-center self-center bg-teal-300 col-span-1 row-span-1 p-[2px] shadow-md shadow-[#3a3a3b] hover:shadow-lg hover:shadow-[#3a3a3b] hover:scale-110 transition-all duration-150 cursor-pointer"
+      :key="avatar.id"
+      class="w-8 h-8 rounded-full justify-self-center self-center col-span-1 row-span-1 shadow-md shadow-[#3a3a3b] hover:shadow-lg hover:shadow-[#3a3a3b] hover:scale-110 transition-all duration-150 cursor-pointer"
       :src="avatar.img"
       alt="Avatar"
       @click="pickAvatar(avatar)"

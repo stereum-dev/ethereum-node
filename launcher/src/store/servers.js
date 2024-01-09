@@ -10,54 +10,26 @@ export const useServers = defineStore("servers", {
       selectedAvatar: null,
       newPassword: "",
       avatars: [
-        {
-          name: "Centos",
-          img: "/avatar/centos.png",
-        },
-        {
-          name: "Debian",
-          img: "/avatar/debian.png",
-        },
-        {
-          name: "Ubuntu",
-          img: "/avatar/ubuntu.png",
-        },
-        {
-          name: "Linux",
-          img: "/avatar/linux.png",
-        },
-        {
-          name: "Fedora",
-          img: "/avatar/fedora.png",
-        },
-        {
-          name: "Lion",
-          img: "/avatar/lion.png",
-        },
-        {
-          name: "Panda",
-          img: "/avatar/panda.png",
-        },
-        {
-          name: "Dog",
-          img: "/avatar/dog.png",
-        },
-        {
-          name: "Dog-1",
-          img: "/avatar/dog-1.png",
-        },
-        {
-          name: "Dog-2",
-          img: "/avatar/dog-2.png",
-        },
-        {
-          name: "Footprint",
-          img: "/avatar/footprint.png",
-        },
-        {
-          name: "Dog-2",
-          img: "/avatar/dog-2.png",
-        },
+        { id: 1, img: "/avatar/server_selection_1.png" },
+        { id: 2, img: "/avatar/server_selection_2.png" },
+        { id: 3, img: "/avatar/server_selection_3.png" },
+        { id: 4, img: "/avatar/server_selection_4.png" },
+        { id: 5, img: "/avatar/server_selection_5.png" },
+        { id: 6, img: "/avatar/server_selection_6.png" },
+        { id: 7, img: "/avatar/server_selection_7.png" },
+        { id: 8, img: "/avatar/server_selection_8.png" },
+        { id: 9, img: "/avatar/server_selection_9.png" },
+        { id: 10, img: "/avatar/server_selection_10.png" },
+        { id: 11, img: "/avatar/server_selection_11.png" },
+        { id: 12, img: "/avatar/server_selection_12.png" },
+        { id: 13, img: "/avatar/server_selection_13.png" },
+        { id: 14, img: "/avatar/server_selection_14.png" },
+        { id: 15, img: "/avatar/server_selection_15.png" },
+        { id: 16, img: "/avatar/server_selection_16.png" },
+        { id: 17, img: "/avatar/server_selection_17.png" },
+        { id: 18, img: "/avatar/server_selection_18.png" },
+        { id: 19, img: "/avatar/server_selection_19.png" },
+        { id: 20, img: "/avatar/server_selection_20.png" },
       ],
       servers: [
         {
