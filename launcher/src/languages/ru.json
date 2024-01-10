@@ -403,6 +403,7 @@
   "reconnectModal": {
     "reconnectTitle": "Connection lost",
     "reconnectMessage": "Check your connection and try again.",
+    "reconnectingMessage": "Reconnecting...",
     "reconnectBtn": "Reconnect"
   },
   "prunningModal": {
