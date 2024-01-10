@@ -159,7 +159,6 @@ watch(currentSlide, (val) => {
       installStore.btnActive = true;
     }
   }
-  console.log(val);
 });
 
 // Lifecycle hooks
