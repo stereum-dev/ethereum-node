@@ -3,10 +3,14 @@ import { defineStore } from "pinia";
 export const useServers = defineStore("servers", {
   state: () => {
     return {
+      refreshServers: false,
+      savedServers: [],
+      selectedServerConnection: null,
       isServerAccessManagementActive: false,
       isServerLoginActive: false,
       isServerManagementActive: true,
       selectedServerToConnect: null,
+      isAvatarModalActive: false,
       selectedAvatar: null,
       newPassword: "",
       avatars: [

@@ -7,7 +7,7 @@
       <ManagementBox v-if="serverStore.isServerManagementActive" @change-password="changePassword" />
     </div>
     <div class="col-start-11 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12">
-      <SavedServers @pick-server="pickServer" @server-login="openLoginForm" />
+      <SavedServers @select-server="selectServer" @server-login="openLoginForm" />
     </div>
   </div>
 </template>
@@ -18,12 +18,12 @@ import SavedServers from "./saved-servers/SavedServers.vue";
 import LoginBox from "./login-form/LoginBox.vue";
 import { useServers } from "@/store/servers";
 
-const emit = defineEmits(["pickServer", "serverLogin", "changePassword"]);
+const emit = defineEmits(["selectServer", "serverLogin", "changePassword"]);
 
 const serverStore = useServers();
 
-const pickServer = (server) => {
-  emit("pickServer", server);
+const selectServer = (server) => {
+  emit("selectServer", server);
 };
 
 const openLoginForm = () => {

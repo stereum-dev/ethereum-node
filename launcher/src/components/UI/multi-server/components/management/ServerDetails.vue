@@ -16,11 +16,11 @@
     </div>
     <div class="col-start-2 col-span-1 row-start-2 row-span-1 flex flex-col justify-start items-start">
       <p class="text-xs text-gray-300 font-semibold uppercase">PORT</p>
-      <span class="text-xs text-amber-300 font-semibold text-left">{{ serverName }}</span>
+      <span class="text-xs text-amber-300 font-semibold text-left">{{ port }}</span>
     </div>
     <div class="col-start-2 col-span-1 row-start-3 row-span-1 flex flex-col justify-start items-start">
       <p class="text-xs text-gray-300 font-semibold uppercase">USERNAME</p>
-      <span class="text-xs text-amber-300 font-semibold text-left">{{ serverName }}</span>
+      <span class="text-xs text-amber-300 font-semibold text-left">{{ userName }}</span>
     </div>
     <div class="col-start-1 col-span-1 row-start-3 row-span-1 flex justify-start items-start relative space-x-1">
       <img
@@ -29,8 +29,8 @@
         alt="Avatar"
         @click="avatarModal"
       />
-      <p class="text-xs text-gray-300 font-semibold uppercase pt-1">Choose Avatar</p>
-      <AvatarModal @pick-avatar="pickSererAvatar" />
+      <p class="text-xs text-gray-300 font-semibold uppercase pt-1">Change Avatar</p>
+      <AvatarModal v-if="serverStore.isAvatarModalActive" @pick-avatar="setServerAvatar" />
     </div>
 
     <ChangePassword @change-password="changePassword" />
@@ -49,11 +49,19 @@ const emit = defineEmits(["changePassword"]);
 const controlStore = useControlStore();
 const serverStore = useServers();
 
+const userName = computed(() => {
+  return serverStore.selectedServerConnection?.user;
+});
+
+const port = computed(() => {
+  return serverStore.selectedServerConnection?.port !== "" ? serverStore.selectedServerConnection?.port : 22;
+});
+
 const selectedAvatar = computed(() => {
-  if (serverStore.selectedAvatar?.img) {
-    return serverStore.selectedAvatar?.img;
+  if (serverStore.selectedAvatar) {
+    return serverStore.selectedAvatar;
   } else {
-    return "/avatar/server_selection_1.png";
+    return serverStore.selectedServerConnection?.avatar;
   }
 });
 
@@ -64,6 +72,7 @@ onMounted(() => {
 //Methods
 const updateConnectionStats = async () => {
   const stats = await ControlService.getConnectionStats();
+
   controlStore.ServerName = stats.ServerName;
   controlStore.ipAddress = stats.ipAddress;
 };
@@ -73,11 +82,28 @@ const changePassword = (newPassword) => {
 };
 
 const avatarModal = () => {
-  serverStore.isAvatarBoxActive = !serverStore.isAvatarBoxActive;
+  serverStore.isAvatarModalActive = !serverStore.isAvatarModalActive;
 };
 
-const pickSererAvatar = (avatar) => {
+const setServerAvatar = async (avatar) => {
   serverStore.selectedAvatar = avatar;
-  serverStore.isAvatarBoxActive = false;
+  serverStore.isAvatarModalActive = false;
+  const savedServers = await ControlService.readConfig();
+
+  // Update the avatar in the savedConnections array
+  const updatedConnections = savedServers.savedConnections.map((item) => {
+    if (item.host === controlStore.ipAddress) {
+      return { ...item, avatar: avatar };
+    }
+    return item;
+  });
+
+  // Update the config with the new connections array
+  const updatedConfig = {
+    ...savedServers,
+    savedConnections: updatedConnections,
+  };
+  serverStore.refreshServers = true;
+  await ControlService.writeConfig(updatedConfig);
 };
 </script>

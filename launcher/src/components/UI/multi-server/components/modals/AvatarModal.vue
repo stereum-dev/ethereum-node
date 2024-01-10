@@ -1,9 +1,9 @@
 import { ref } from 'vue';
 <template>
   <div
-    class="absolute -top-20 -left-1 w-[380px] h-[200px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-lg shadow-lg overflow-hidden grid grid-cols-5 grid-rows-4 gap-2 p-2"
-    :class="serverStore.isAvatarBoxActive ? 'animate__fadeInDown' : 'animate__fadeOutUp'"
-    @mouseleave="serverStore.isAvatarBoxActive = false"
+    class="absolute -top-20 -left-[7px] w-[380px] h-[200px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-lg shadow-lg overflow-hidden grid grid-cols-5 grid-rows-4 gap-2 p-2"
+    :class="serverStore.isAvatarModalActive ? 'animate__fadeInDown' : 'animate__fadeOutUp'"
+    @mouseleave="serverStore.isAvatarModalActive = false"
   >
     <img
       v-for="avatar in serverStore.avatars"
@@ -32,6 +32,6 @@ const emit = defineEmits(["pickAvatar"]);
 const serverStore = useServers();
 
 const pickAvatar = (avatar) => {
-  emit("pickAvatar", avatar);
+  emit("pickAvatar", avatar.img);
 };
 </script>

@@ -5,14 +5,14 @@
     </div>
 
     <div
-      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center px-1 py-3 bg-slate-800 rounded-md space-y-2"
+      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-3 bg-slate-800 rounded-md space-y-2"
     >
       <ServerRow
-        v-for="(server, index) in serverStore.servers"
+        v-for="(server, index) in servers"
         :key="server.name"
         :idx="index"
         :server="server"
-        @pick-server="pickServer"
+        @select-server="selectServer"
       />
     </div>
     <button
@@ -30,14 +30,45 @@
 </template>
 <script setup>
 import ServerRow from "./ServerRow.vue";
+import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
+import { useControlStore } from "@/store/theControl";
+import { onMounted, computed, watch } from "vue";
 
-const emit = defineEmits(["pickServer", "serverLogin"]);
+const emit = defineEmits(["selectServer", "serverLogin"]);
 
 const serverStore = useServers();
+const controlStore = useControlStore();
 
-const pickServer = (server) => {
-  emit("pickServer", server);
+const servers = computed(() => {
+  return serverStore.savedServers.savedConnections;
+});
+
+watch(
+  () => serverStore.refreshServers,
+  async () => {
+    await loadStoredConnections();
+  }
+);
+
+//Lifecycle Hooks
+
+onMounted(async () => {
+  await loadStoredConnections();
+});
+
+//Methods
+
+const loadStoredConnections = async () => {
+  serverStore.savedServers = await ControlService.readConfig();
+  serverStore.selectedServerConnection = serverStore.savedServers.savedConnections.find(
+    (item) => item.host === controlStore.ipAddress
+  );
+  serverStore.refreshServers = false;
+};
+
+const selectServer = (server) => {
+  emit("selectServer", server);
 };
 
 const serverLogin = () => {

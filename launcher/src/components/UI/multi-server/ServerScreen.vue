@@ -4,7 +4,7 @@ import ServerHeader from './components/ServerHeader.vue';
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-gray-700 z-10 p-2 rounded-md divide-y-2 divide-gray-500"
   >
     <ServerHeader />
-    <ServerBody @pick-server="setServerConnection" @change-password="changePassword" />
+    <ServerBody @select-server="serverHandler" @change-password="changePassword" />
   </div>
 </template>
 
@@ -19,7 +19,6 @@ import { useServers } from "@/store/servers";
 const controlStore = useControlStore();
 const serverStore = useServers();
 
-const selectedConnection = ref({});
 const keys = ref([]);
 const confirmIndexDelete = ref([]);
 const chngPassword = ref(false);
@@ -37,9 +36,14 @@ onMounted(async () => {
   await readSSHKeyFile();
 });
 
-const setServerConnection = (server) => {
-  serverStore.servers.forEach((s) => (s.isConnected = false));
-  server.isConnected = true;
+const serverHandler = (server) => {
+  if (serverStore.selectedServerConnection?.name === server.name) {
+    serverStore.isServerLoginActive = false;
+    serverStore.isServerManagementActive = true;
+  } else {
+    serverStore.isServerManagementActive = false;
+    serverStore.isServerLoginActive = true;
+  }
 };
 
 const readSSHKeyFile = async () => {
@@ -53,7 +57,21 @@ const formatKey = (key) => {
 
 const loadStoredConnections = async () => {
   const savedConnections = await ControlService.readConfig();
-  selectedConnection.value = savedConnections.savedConnections.find((item) => item.host === controlStore.ipAddress);
+  serverStore.selectedServerConnection = savedConnections.savedConnections.find(
+    (item) => item.host === controlStore.ipAddress
+  );
+};
+
+const setServerAvatar = async () => {
+  const savedServers = await ControlService.readConfig();
+  savedServers.savedConnections.map((item) => {
+    if (item.host === controlStore.ipAddress) {
+      return {
+        ...item,
+        avatar: serverStore.selectedAvatar.avatar,
+      };
+    }
+  });
 };
 
 const addKey = (newKeys) => {

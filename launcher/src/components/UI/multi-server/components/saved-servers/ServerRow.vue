@@ -1,24 +1,33 @@
 import { ref, computed } from 'vue';
 <template>
   <div
-    class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#29292c] grid grid-cols-12 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out hover:scale-100"
-    :class="props.server.isConnected ? 'bg-[#336666] scale-100' : 'bg-gray-200 scale-95'"
+    class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-12 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline hover:outline-blue-600"
+    :class="connectedServer ? 'bg-[#336666] border border-teal-300 ' : 'bg-gray-200 '"
     @mouseenter="hovered = true"
-    @click="pickServer"
+    @click="selectServer"
   >
+    <div
+      v-if="serverStore.refreshServers"
+      class="col-start-1 col-span-1 self-center mx-auto h-[38px] w-[38px] flex-none rounded-full bg-gray-50"
+    >
+      <span class="animate-spin border-2 border-gray-300 border-t-blue-600 border-r-blue-600 bg-transparent"></span>
+    </div>
+
     <img
-      class="col-start-1 col-span-1 self-center mx-auto h-10 w-10 flex-none rounded-full bg-gray-50"
-      :src="props.server.icon"
-      alt=""
+      v-else
+      class="col-start-1 col-span-1 self-center mx-auto h-[35px] w-[35px] flex-none rounded-full bg-gray-50"
+      :src="serverAvatar"
+      alt="Server Avatar"
+      @click="avatarModalHandler"
     />
     <div
       class="col-start-2 col-span-full flex flex-col justify-center items-start"
-      :class="props.server.isConnected ? 'text-gray-100' : 'text-gray-800'"
+      :class="connectedServer ? 'text-gray-100' : 'text-gray-800'"
     >
-      <p class="leading-6" :class="hovered ? 'text-sm' : 'text-xs'">
+      <p class="leading-6 text-xs font-semibold">
         {{ getServerNumber }}
       </p>
-      <p class="font-semibold" :class="hovered ? 'text-md' : 'text-sm'">
+      <p class="font-semibold text-md">
         {{ props.server.name }}
       </p>
     </div>
@@ -27,6 +36,7 @@ import { ref, computed } from 'vue';
 
 <script setup>
 import { ref, computed } from "vue";
+import { useServers } from "@/store/servers";
 
 const props = defineProps({
   server: {
@@ -39,7 +49,13 @@ const props = defineProps({
   },
 });
 
+const avatarModalHandler = () => {
+  if (serverStore.selectedServerConnection?.name === props.server?.name) serverStore.isAvatarModalActive = true;
+};
+
 const emit = defineEmits(["pickServer"]);
+
+const serverStore = useServers();
 
 const hovered = ref(false);
 
@@ -47,7 +63,17 @@ const getServerNumber = computed(() => {
   return `SERVER #${props.idx + 1}`;
 });
 
-const pickServer = () => {
-  emit("pickServer", props.server);
+const serverAvatar = computed(() => {
+  if (props.server.avatar) return props.server.avatar;
+  else return "/avatar/server_selection_1.png";
+});
+
+const connectedServer = computed(() => {
+  if (serverStore.selectedServerConnection?.name === props.server.name) return true;
+  else return false;
+});
+
+const selectServer = () => {
+  emit("selectServer", props.server);
 };
 </script>
