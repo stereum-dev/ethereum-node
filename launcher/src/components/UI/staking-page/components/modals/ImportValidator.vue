@@ -1,6 +1,7 @@
 <template>
   <staking-custom-modal
     main-title="Import Validator Key"
+    height="450"
     :confirm-text="getActionButton === importValidator ? 'import' : 'ok'"
     :active-button="getActiveButton"
     :is-processing="checkProcessing"
@@ -9,9 +10,10 @@
   >
     <template #content>
       <div
+        v-if="isSlashingActive"
         class="w-full col-start-1 col-span-full row-start-2 row-span-1 overflow-hidden flex justify-center items-center"
       >
-        <div v-if="isSlashingActive" class="flex justify-center items-center space-x-2">
+        <div class="flex justify-center items-center space-x-2">
           <span
             class="w-4 h-4 rounded-full shadow-lg shadow-[#111010]"
             :class="stakingStore.doppelgangerStatus ? 'bg-green-500' : 'bg-red-500'"
@@ -66,12 +68,12 @@
       </div>
       <div
         v-else-if="!activeButton && !isSlashingActive"
-        class="w-full col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-3 grid-rows-3 items-center overflow-hidden"
+        class="w-full col-start-1 col-span-full row-start-3 row-end-6 grid grid-cols-3 grid-rows-3 items-center overflow-hidden"
       >
         <div
           class="w-full col-start-1 col-span-full row-start-1 row-end-3 flex justify-start items-center overflow-hidden"
         >
-          <img class="h-28 sliding-animation" src="/animation/staking/alice.gif" alt="Animation" />
+          <img class="h-24 sliding-animation" src="/animation/staking/alice.gif" alt="Animation" />
         </div>
         <div
           class="w-full h-10 col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center overflow-hidden p-2 space-x-1"
@@ -84,12 +86,12 @@
       </div>
       <div
         v-else-if="!isSlashingActive && getMessage"
-        class="w-full col-start-1 col-span-full row-start-3 row-end-6 overflow-hidden flex justify-center items-center"
+        class="w-full col-start-2 col-end-12 row-start-2 row-end-6 overflow-hidden flex justify-center items-center"
       >
-        <div class="w-2/3 h-fit flex flex-col justify-center items-center space-y-2">
+        <div class="w-full h-fit flex flex-col justify-center items-center space-y-2">
           <span class="w-full text-lg font-semibold text-left text-gray-300">Import Details :</span>
           <div
-            class="w-full max-h-28 overflow-x-hidden overflow-y-auto border border-gray-700 rounded-md bg-[#111213] mx-2 p-2 space-y-2"
+            class="w-full max-h-32 overflow-x-hidden overflow-y-auto border border-gray-700 rounded-md bg-[#111213] mx-2 p-2 space-y-2"
           >
             <div
               v-for="(line, index) in getMessage"
@@ -200,6 +202,7 @@ const importValidator = () => {
   clickOut.value = null;
   isSlashingActive.value = false;
   checkProcessing.value = true;
+
   emit("importKey");
 };
 
@@ -216,13 +219,13 @@ const okHandler = async () => {
 
 @keyframes slide-in-out {
   0% {
-    transform: translateX(-100%) translateY(-10px);
+    transform: translateX(-100%) translateY(-5px);
   }
   50% {
-    transform: translateX(270px) translateY(10px);
+    transform: translateX(270px) translateY(-5px);
   }
   100% {
-    transform: translateX(580px) translateY(-10px);
+    transform: translateX(580px) translateY(-5px);
   }
 }
 .dot1,

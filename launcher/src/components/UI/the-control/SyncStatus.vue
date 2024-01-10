@@ -170,6 +170,7 @@ export default {
     ...mapWritableState(useControlStore, {
       consensusName: "consensusName",
       pageNumber: "pageNumber",
+      synchronizationError: "synchronizationError",
     }),
     errorIco() {
       return this.syncIco[0].icon;
@@ -245,14 +246,18 @@ export default {
     },
     syncSituation() {
       if (this.syncIcoError) {
+        this.synchronizationError = true;
         return this.errorIco;
       }
       if (this.syncIcoUnknown) {
+        this.synchronizationError = false;
         return this.unknownIco;
       }
       if (this.syncIcoSituation) {
+        this.synchronizationError = false;
         return this.activeIco;
       }
+      this.synchronizationError = false;
       return this.synchedIco;
     },
     refresh(instant = false, loadPage = "") {

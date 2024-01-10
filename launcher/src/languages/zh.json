@@ -24,10 +24,10 @@
     "log": "打开记录文件",
     "restart": "重启",
     "start": "开始",
-    "resync": "resync",
+    "resync": "重新同步",
     "stop": "停止",
     "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
+    "machineName": "机器名称",
     "clkEdit": "Click to edit your node",
     "clkOn": "Click to turn your node on",
     "clkOff": "Click to turn your node off",
@@ -170,7 +170,7 @@
     "endPoint": "endpoint",
     "data": "data",
     "enteredKeys": "The number of imported validator keys",
-    "ttlBal": "Total balance",
+    "ttlBal": "总余额",
     "finEPOCH": "Finalized EPOCH",
     "pending": "service is pending",
     "off": "Switch off the service",
@@ -504,7 +504,9 @@
     "noFee": "没有收费收件人",
     "stereumUpt": "以太坊更新",
     "clkFee": "Service Settings",
-    "clkUpdate": "Click to open update panel"
+    "clkUpdate": "Click to open update panel",
+    "sync": "Synchronization Error",
+    "taskFail": "task failed"
   },
   "restartModalNode": {
     "message": "您确定要吗",
