@@ -4,7 +4,11 @@
   >
     <div class="col-start-1 col-end-11 row-start-1 row-span-full p-1 pl-0 grid grid-cols-12 grid-rows-12">
       <LoginBox v-if="serverStore.isServerLoginActive" />
-      <ManagementBox v-if="serverStore.isServerManagementActive" @change-password="changePassword" />
+      <ManagementBox
+        v-if="serverStore.isServerManagementActive"
+        @change-password="changePassword"
+        @set-avatar="setServerAvatar"
+      />
     </div>
     <div class="col-start-11 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12">
       <SavedServers @select-server="selectServer" @server-login="openLoginForm" />
@@ -16,11 +20,36 @@
 import ManagementBox from "./management/ManagementBox.vue";
 import SavedServers from "./saved-servers/SavedServers.vue";
 import LoginBox from "./login-form/LoginBox.vue";
+import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
+import { useControlStore } from "@/store/theControl";
 
 const emit = defineEmits(["selectServer", "serverLogin", "changePassword"]);
 
 const serverStore = useServers();
+const controlStore = useControlStore();
+
+const setServerAvatar = async (avatar) => {
+  serverStore.selectedAvatar = avatar;
+  serverStore.isAvatarModalActive = false;
+  const savedServers = await ControlService.readConfig();
+
+  // Update the avatar in the savedConnections array
+  const updatedConnections = savedServers.savedConnections.map((item) => {
+    if (item.host === controlStore.ipAddress) {
+      return { ...item, avatar: avatar };
+    }
+    return item;
+  });
+
+  // Update the config with the new connections array
+  const updatedConfig = {
+    ...savedServers,
+    savedConnections: updatedConnections,
+  };
+  serverStore.refreshServers = true;
+  await ControlService.writeConfig(updatedConfig);
+};
 
 const selectServer = (server) => {
   emit("selectServer", server);

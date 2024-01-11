@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-end-6 bg-[#1b1b1d] rounded-md grid grid-cols-2 grid-rows-4 p-2 relative"
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-end-8 bg-[#1b1b1d] rounded-md grid grid-cols-2 grid-rows-5 p-2 relative"
   >
     <div class="col-start-1 col-span-1 row-start-1 row-span-1 flex flex-col justify-start items-start">
       <p class="text-xs text-gray-300 font-semibold uppercase">Server Name</p>
@@ -30,7 +30,7 @@
         @click="avatarModal"
       />
       <p class="text-xs text-gray-300 font-semibold uppercase pt-1">Change Avatar</p>
-      <AvatarModal v-if="serverStore.isAvatarModalActive" @pick-avatar="setServerAvatar" />
+      <AvatarModal v-if="serverStore.isAvatarModalActive" @pick-avatar="setAvatar" />
     </div>
 
     <ChangePassword @change-password="changePassword" />
@@ -44,7 +44,7 @@ import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 import { useServers } from "@/store/servers";
 
-const emit = defineEmits(["changePassword"]);
+const emit = defineEmits(["changePassword", "setAvatar"]);
 
 const controlStore = useControlStore();
 const serverStore = useServers();
@@ -81,29 +81,11 @@ const changePassword = (newPassword) => {
   emit("changePassword", newPassword);
 };
 
-const avatarModal = () => {
-  serverStore.isAvatarModalActive = !serverStore.isAvatarModalActive;
+const setAvatar = (avatar) => {
+  emit("setAvatar", avatar);
 };
 
-const setServerAvatar = async (avatar) => {
-  serverStore.selectedAvatar = avatar;
-  serverStore.isAvatarModalActive = false;
-  const savedServers = await ControlService.readConfig();
-
-  // Update the avatar in the savedConnections array
-  const updatedConnections = savedServers.savedConnections.map((item) => {
-    if (item.host === controlStore.ipAddress) {
-      return { ...item, avatar: avatar };
-    }
-    return item;
-  });
-
-  // Update the config with the new connections array
-  const updatedConfig = {
-    ...savedServers,
-    savedConnections: updatedConnections,
-  };
-  serverStore.refreshServers = true;
-  await ControlService.writeConfig(updatedConfig);
+const avatarModal = () => {
+  serverStore.isAvatarModalActive = !serverStore.isAvatarModalActive;
 };
 </script>
