@@ -11,7 +11,7 @@
       >
       <input
         id="new"
-        v-model="password"
+        v-model="serverStore.newPassword"
         type="password"
         :name="password"
         class="col-start-1 col-end-11 row-start-2 row-span-1 w-full h-full text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
@@ -33,7 +33,7 @@
       >
         <input
           id="pass"
-          v-model="verifyPassword"
+          v-model="serverStore.verifyPassword"
           type="password"
           :name="verifyPassword"
           class="col-start-1 col-end-11 w-full h-full text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
@@ -61,9 +61,11 @@
 
 <script setup>
 import { ref } from "vue";
+import { useServers } from "@/store/servers";
 
 const emit = defineEmits(["changePassword"]);
 
+const serverStore = useServers();
 const password = ref("");
 const verifyPassword = ref("");
 const error = ref(false);
@@ -95,8 +97,8 @@ const changePassword = () => {
 };
 
 const denyPassChange = () => {
-  password.value = "";
-  verifyPassword.value = "";
+  serverStore.newPassword.value = "";
+  serverStore.verifyPassword.value = "";
   error.value = false;
   errorMessage.value = "";
 };

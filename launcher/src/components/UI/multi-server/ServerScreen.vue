@@ -4,7 +4,7 @@ import ServerHeader from './components/ServerHeader.vue';
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-gray-700 z-10 p-2 rounded-md divide-y-2 divide-gray-500"
   >
     <ServerHeader />
-    <ServerBody @select-server="serverHandler" @change-password="changePassword" />
+    <ServerBody @select-server="serverHandler" @change-password="acceptChangePass" />
   </div>
 </template>
 
@@ -21,15 +21,9 @@ const serverStore = useServers();
 
 const keys = ref([]);
 const confirmIndexDelete = ref([]);
-const chngPassword = ref(false);
-const newPass = ref("");
-const comparePass = ref([]);
 const keyLocation = ref("");
-const acceptedPass = ref("");
-const passChk = ref(false);
 
 const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
-const controlPass = computed(() => (passChk.value ? "denyPass" : ""));
 
 onMounted(async () => {
   await loadStoredConnections();
@@ -99,37 +93,11 @@ const generateModal = () => {
   controlStore.generateModalShow = !controlStore.generateModalShow;
 };
 
-const changePassword = (newPassword) => {
-  console.log(newPassword);
+const acceptChangePass = async (pass) => {
+  console.log(pass);
+  await ControlService.changePassword(pass);
   serverStore.newPassword = "";
-};
-
-const acceptChangePass = async () => {
-  if (newPass.value === "") {
-    passmessage.value = t("serverManagement.passmessage");
-  } else {
-    if (comparePass.value.length < 1) {
-      comparePass.value.push(newPass.value);
-      newPass.value = "";
-      passmessage.value = t("serverManagement.confirmPass");
-      passChk.value = false;
-    } else {
-      const passwordEqual = comparePass.value.every((item) => item === newPass.value);
-      if (passwordEqual) {
-        acceptedPass.value = newPass.value;
-        chngPassword.value = false;
-        newPass.value = "";
-        comparePass.value = [];
-        passChk.value = false;
-        await ControlService.changePassword(acceptedPass.value);
-      } else {
-        newPass.value = "";
-        passmessage.value = "The passwords do not match";
-        comparePass.value = [];
-        passChk.value = true;
-      }
-    }
-  }
+  serverStore.verifyPassword = "";
 };
 
 const previewFiles = async (event) => {

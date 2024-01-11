@@ -59,7 +59,7 @@ const avatarModalHandler = () => {
   if (serverStore.selectedServerConnection?.name === props.server?.name) serverStore.isAvatarModalActive = true;
 };
 
-const emit = defineEmits(["pickServer"]);
+const emit = defineEmits(["selectServer"]);
 
 const serverStore = useServers();
 

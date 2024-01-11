@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 export const useServers = defineStore("servers", {
   state: () => {
     return {
+      newPassword: "",
+      verifyPassword: "",
       refreshServers: false,
       savedServers: [],
       selectedServerConnection: null,
@@ -12,7 +14,7 @@ export const useServers = defineStore("servers", {
       selectedServerToConnect: null,
       isAvatarModalActive: false,
       selectedAvatar: null,
-      newPassword: "",
+
       avatars: [
         { id: 1, img: "/avatar/server_selection_1.png" },
         { id: 2, img: "/avatar/server_selection_2.png" },
