@@ -4,7 +4,12 @@ import ServerHeader from './components/ServerHeader.vue';
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-gray-700 z-10 p-2 rounded-md divide-y-2 divide-gray-500"
   >
     <ServerHeader />
-    <ServerBody @select-server="serverHandler" @change-password="acceptChangePass" />
+    <ServerBody
+      @select-server="serverHandler"
+      @change-password="acceptChangePass"
+      @file-upload="addExistingKeyHandler"
+      @delete-key="confirmDelete"
+    />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
   </div>
 </template>
@@ -32,6 +37,18 @@ onMounted(async () => {
   await readSSHKeyFile();
 });
 
+//Methods
+
+//Load stored connections
+
+const loadStoredConnections = async () => {
+  const savedConnections = await ControlService.readConfig();
+  serverStore.selectedServerConnection = savedConnections.savedConnections.find(
+    (item) => item.host === controlStore.ipAddress
+  );
+};
+
+//Click handling on a server in the saved servers list
 const serverHandler = (server) => {
   if (serverStore.selectedServerConnection?.name === server.name) {
     serverStore.isServerLoginActive = false;
@@ -42,8 +59,25 @@ const serverHandler = (server) => {
   }
 };
 
+//Change password handling
+
+const acceptChangePass = async (pass) => {
+  try {
+    serverStore.passResponse = await ControlService.changePassword(pass);
+    if (serverStore.passResponse !== "") {
+      serverStore.isPasswordChanged = true;
+    }
+    serverStore.newPassword = "";
+    serverStore.verifyPassword = "";
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+//SSH Key Management
+
 const readSSHKeyFile = async () => {
-  keys.value = await ControlService.readSSHKeyFile();
+  serverStore.sshKeys = await ControlService.readSSHKeyFile();
 };
 
 const formatKey = (key) => {
@@ -51,34 +85,10 @@ const formatKey = (key) => {
   return `${keyArray[0]} ... ${keyArray.pop()}`;
 };
 
-const loadStoredConnections = async () => {
-  const savedConnections = await ControlService.readConfig();
-  serverStore.selectedServerConnection = savedConnections.savedConnections.find(
-    (item) => item.host === controlStore.ipAddress
-  );
-};
-
-const setServerAvatar = async () => {
-  const savedServers = await ControlService.readConfig();
-  savedServers.savedConnections.map((item) => {
-    if (item.host === controlStore.ipAddress) {
-      return {
-        ...item,
-        avatar: serverStore.selectedAvatar.avatar,
-      };
-    }
-  });
-};
-
-const addKey = (newKeys) => {
-  keys.value = newKeys;
-};
-
 const confirmDelete = async (key) => {
-  await ControlService.writeSSHKeyFile(keys.value.filter((item) => item !== key));
-  await readSSHKeyFile();
-  confirmIndexDelete.value = [];
-  confirmIndex.value = null;
+  console.log(key);
+  // await ControlService.writeSSHKeyFile(keys.value.filter((item) => item !== key));
+  // await readSSHKeyFile();
 };
 
 const confirmKeyIndex = (index) => {
@@ -91,31 +101,55 @@ const cancelKeyIndex = (index) => {
   confirmIndex.value = null;
 };
 
-const generateModal = () => {
-  controlStore.generateModalShow = !controlStore.generateModalShow;
-};
-
-const acceptChangePass = async (pass) => {
-  console.log(pass);
-  serverStore.passResponse = await ControlService.changePassword(pass);
-  console.log(serverStore.passResponse);
-  if (serverStore.passResponse !== "") {
-    serverStore.isPasswordChanged = true;
-  }
-  serverStore.newPassword = "";
-  serverStore.verifyPassword = "";
-};
-
-const previewFiles = async (event) => {
+const addExistingKeyHandler = async (event) => {
   const Path = event.target.files[0].path;
+  console.log(Path);
   let pathString = new String(Path);
   let result = pathString.toString();
   keyLocation.value = result;
+  console.log(keyLocation.value);
   await ControlService.AddExistingSSHKey(keyLocation.value);
   await readSSHKeyFile();
 };
 
-const openUploadHandler = () => {
-  document.querySelector('input[type="file"]').click();
+// const deleteKey = async (key) => {
+//   await ControlService.writeSSHKeyFile(keys.value.filter((item) => item !== key));
+//   await readSSHKeyFile();
+// };
+
+const generateKey = async () => {
+  if (this.sshPass !== this.reEnterSshPass) {
+    alert("The passwords do not match");
+    this.sshPass = "";
+    this.reEnterSshPass = "";
+    this.passControl = true;
+  } else {
+    const data = {
+      keyType: this.keyType,
+      pickPath: this.pickPath,
+      passphrase: this.sshPass,
+      bits: this.bitAmount,
+      cipher: this.specifyCipher,
+    };
+    const keys = await ControlService.generateSSHKeyPair(data);
+    this.$emit("generate-key", keys);
+    this.generateModalShow = false;
+  }
+};
+
+const openDirectoryPicker = async () => {
+  try {
+    const paths = await ControlService.openDirectoryDialog(
+      useDeepClone({ properties: ["openDirectory", "createDirectory"] })
+    );
+    this.pickPath = paths[0];
+  } catch (error) {
+    // Handle case when user cancels directory picker
+    if (error.name === "AbortError") {
+      this.pickPath = "";
+    } else {
+      console.error("Error picking directory:", error);
+    }
+  }
 };
 </script>

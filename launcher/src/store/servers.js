@@ -39,50 +39,23 @@ export const useServers = defineStore("servers", {
         { id: 19, img: "/avatar/server_selection_19.png" },
         { id: 20, img: "/avatar/server_selection_20.png" },
       ],
-      servers: [
-        {
-          name: "Stereum Server",
-          ip: "115.35.01.65",
-          port: "25565",
-          isConnected: false,
-          isSelected: false,
-          icon: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        },
-        {
-          name: "Hetzner Server",
-          ip: "115.35.01.65",
-          port: "25565",
-          isConnected: false,
-          isSelected: false,
-          icon: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        },
+
+      //SSH Key
+      isGenerateModalActive: false,
+      sshKeys: [],
+      keyTypes: ["RSA", "ECDSA", "ED25519"],
+      specifyCipherItems: [
+        "3des-cbc",
+        "aes128-cbc",
+        "aes192-cbc",
+        "aes256-cbc",
+        "aes128-ctr",
+        "aes192-ctr",
+        "aes256-ctr",
+        "aes128-gcm@openssh.com",
+        "aes256-gcm@openssh.com",
       ],
     };
   },
-  actions: {
-    setServerConnection() {
-      this.servers.forEach((server) => {
-        if (server.name !== this.selectedServerToConnect.name) {
-          server.isConnected = false;
-        }
-        server.isConnected = true;
-      });
-    },
-
-    setServerDisconnection() {
-      this.servers.forEach((server) => {
-        if (server.name === this.selectedServerToConnect.name) {
-          server.isConnected = false;
-        }
-      });
-    },
-
-    setNewPassword(server) {
-      this.servers.forEach((s) => {
-        if (s.name === server.name) {
-          s.password = this.newPassword;
-        }
-      });
-    },
-  },
+  actions: {},
 });

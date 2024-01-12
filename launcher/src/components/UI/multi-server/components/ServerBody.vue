@@ -8,6 +8,8 @@
         v-if="serverStore.isServerManagementActive"
         @change-password="changePassword"
         @set-avatar="setServerAvatar"
+        @file-upload="fileUpload"
+        @delete-key="deleteKey"
       />
     </div>
     <div class="col-start-11 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12">
@@ -24,7 +26,7 @@ import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
 
-const emit = defineEmits(["selectServer", "serverLogin", "changePassword"]);
+const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
@@ -62,5 +64,13 @@ const openLoginForm = () => {
 
 const changePassword = (newPassword) => {
   emit("changePassword", newPassword);
+};
+
+const fileUpload = (file) => {
+  emit("fileUpload", file);
+};
+
+const deleteKey = (key) => {
+  emit("deleteKey", key);
 };
 </script>
