@@ -204,7 +204,6 @@ export default {
   },
   mounted() {
     this.syncControler();
-    console.log(this.installedServicesController);
   },
   unmounted() {
     if (this.refresher) clearTimeout(this.refresher);
@@ -411,8 +410,8 @@ export default {
       this.clients = clients;
       for (let k in clients) {
         const item = clients[k];
-        if (item.type == "consensus") {
-          this.consensusName = item.title;
+        if (item?.type == "consensus") {
+          this.consensusName = item?.title;
           this.consensusFirstVal = item.frstVal;
           this.consensusSecondVal = item.scndVal;
           this.consensusClass = item.style;
@@ -422,7 +421,7 @@ export default {
             this.consensusText = this.displayConsensusPer + "% " + this.consensusText;
           }
         } else {
-          this.executionName = item.title;
+          this.executionName = item?.title;
           this.executionFirstVal = item.frstVal;
           this.executionSecondVal = item.scndVal;
           this.executionClass = item.style;

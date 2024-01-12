@@ -18,7 +18,10 @@
           <div class="square-3 square"></div>
         </div>
       </div>
-      <no-data v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"></no-data>
+      <no-data
+        v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"
+        :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+      />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows">
@@ -211,7 +214,7 @@ export default {
       this.checkArray(this.installedServices);
       this.serviceStateController(this.consensusName, "consensusClientIsOff");
       this.serviceStateController("prometheus", "prometheusIsOff");
-      console.log(this.consensusClientIsOff, this.prometheusIsOff);
+      console.log(this.installedServicesController);
     },
     pageNumber() {
       clearInterval(this.polling);
@@ -259,38 +262,28 @@ export default {
       this[stateProperty] = isServiceOff;
     },
     checkArray(arr) {
-      let hasConsensus = false;
+      const foundCategories = new Set();
       let hasPrometheus = false;
-      let hasExecution = false;
 
       for (let obj of arr) {
-        if (obj.category === "consensus") {
-          hasConsensus = true;
-        }
-        if (obj.category === "execution") {
-          hasExecution = true;
+        if (obj.category === "consensus" || obj.category === "execution") {
+          foundCategories.add(obj.category);
         }
         if (obj.name === "Prometheus") {
           hasPrometheus = true;
         }
       }
 
-      if (!hasConsensus && !hasPrometheus && !hasExecution) {
-        this.installedServicesController = "consensus, execution and Prometheus";
-      } else if (!hasConsensus && !hasExecution) {
-        this.installedServicesController = "consensus and execution";
-      } else if (!hasConsensus && !hasPrometheus) {
-        this.installedServicesController = "consensus and Prometheus";
-      } else if (!hasConsensus) {
-        this.installedServicesController = "consensus";
-      } else if (!hasPrometheus) {
-        this.installedServicesController = "Prometheus";
-      } else if (!hasExecution) {
-        this.installedServicesController = "execution";
-      } else {
-        this.installedServicesController = ""; // Only set to empty string if none of the above conditions are met
+      const categories = ["consensus", "execution"];
+      const missingCategories = categories.filter((category) => !foundCategories.has(category));
+
+      if (!hasPrometheus) {
+        missingCategories.push("Prometheus");
       }
+
+      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
     },
+
     refreshTimer() {
       if (this.currentNetwork.id === 4) {
         this.polling = setInterval(() => {
