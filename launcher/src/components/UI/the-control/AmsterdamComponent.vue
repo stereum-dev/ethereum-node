@@ -20,7 +20,7 @@
       </div>
       <no-data
         v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"
-        :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+        :service-cat="installedServicesController !== '' ? 'install' : prometheusIsOff ? 'prometheus' : ''"
       />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
@@ -204,17 +204,13 @@ export default {
       }
       return false;
     },
-    nodataFlagControl() {
-      return this.flagController();
-    },
   },
 
   watch: {
     installedServices() {
-      this.checkArray(this.installedServices);
+      this.serviceController(this.installedServices);
       this.serviceStateController(this.consensusName, "consensusClientIsOff");
       this.serviceStateController("prometheus", "prometheusIsOff");
-      console.log(this.installedServicesController);
     },
     pageNumber() {
       clearInterval(this.polling);
@@ -261,7 +257,7 @@ export default {
 
       this[stateProperty] = isServiceOff;
     },
-    checkArray(arr) {
+    serviceController(arr) {
       const foundCategories = new Set();
       let hasPrometheus = false;
 
@@ -304,15 +300,7 @@ export default {
       clearInterval(this.polling);
       this.currentEpochSlot(this.consensusName);
     },
-    flagController() {
-      if (this.flag === false && this.currentResult.beaconStatus !== 0) {
-        this.noDataFlag = true;
-        return true;
-      } else if (this.currentResult.beaconStatus === 0) {
-        this.noDataFlag = false;
-        return false;
-      }
-    },
+
     dialogOpen(arg1, arg2, arg3) {
       this.dialog = true;
       this.epoch = arg1;

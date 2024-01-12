@@ -13,7 +13,9 @@
       </div>
       <div v-else class="bottom-part">
         <div class="comment-part">
-          <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
+          <span class="comment-row1"
+            >{{ footerStore.installedServicesController !== "" ? $t("noData.turnOn") : "Please check the service" }}
+          </span>
           <span class="comment-row2">{{ footerStore.installedServicesController }}</span>
         </div>
       </div>
