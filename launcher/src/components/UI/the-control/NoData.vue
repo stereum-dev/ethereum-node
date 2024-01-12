@@ -14,7 +14,7 @@
       <div v-else class="bottom-part">
         <div class="comment-part">
           <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
-          <span class="comment-row2">consensus client</span>
+          <span class="comment-row2">{{ footerStore.installedServicesController }}</span>
         </div>
       </div>
     </div>
@@ -22,6 +22,7 @@
 </template>
 <script>
 import { ref } from "vue";
+import { useFooter } from "@/store/theFooter";
 
 export default {
   props: {
@@ -32,8 +33,10 @@ export default {
   },
   setup(props) {
     const serviceName = ref(props.serviceCat);
+    const footerStore = useFooter();
     return {
       serviceName,
+      footerStore,
     };
   },
 };
@@ -130,7 +133,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 70%;
+  font-size: 50%;
   font-weight: 700;
 }
 .icon-part {

@@ -9,7 +9,10 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
+        <no-data
+          v-if="noDataLayerShow || installedServicesController !== ''"
+          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+        ></no-data>
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
@@ -159,6 +162,7 @@ export default {
       title: "title",
       first: "first",
       second: "second",
+      installedServicesController: "installedServicesController",
     }),
     ...mapState(useControlStore, {
       code: "code",
@@ -172,6 +176,7 @@ export default {
       pageNumber: "pageNumber",
       synchronizationError: "synchronizationError",
     }),
+
     errorIco() {
       return this.syncIco[0].icon;
     },
@@ -199,6 +204,7 @@ export default {
   },
   mounted() {
     this.syncControler();
+    console.log(this.installedServicesController);
   },
   unmounted() {
     if (this.refresher) clearTimeout(this.refresher);
@@ -410,8 +416,8 @@ export default {
           this.consensusFirstVal = item.frstVal;
           this.consensusSecondVal = item.scndVal;
           this.consensusClass = item.style;
-          this.consensuColor = this.clientInfo[item.style].color;
-          this.consensusText = this.clientInfo[item.style].text;
+          this.consensuColor = this.clientInfo[item.style]?.color;
+          this.consensusText = this.clientInfo[item.style]?.text;
           if (item.style == "clientblue") {
             this.consensusText = this.displayConsensusPer + "% " + this.consensusText;
           }
@@ -420,8 +426,8 @@ export default {
           this.executionFirstVal = item.frstVal;
           this.executionSecondVal = item.scndVal;
           this.executionClass = item.style;
-          this.executionColor = this.clientInfo[item.style].color;
-          this.executionText = this.clientInfo[item.style].text;
+          this.executionColor = this.clientInfo[item.style]?.color;
+          this.executionText = this.clientInfo[item.style]?.text;
           if (item.style == "clientblue") {
             this.executionText = this.displayExecutionPer + "% " + this.executionText;
           }

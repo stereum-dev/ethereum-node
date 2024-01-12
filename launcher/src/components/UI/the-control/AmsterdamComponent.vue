@@ -18,7 +18,7 @@
           <div class="square-3 square"></div>
         </div>
       </div>
-      <no-data v-else-if="nodataFlagControl"></no-data>
+      <no-data v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"></no-data>
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows">
@@ -109,6 +109,7 @@ import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
+import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 import NoData from "./NoData.vue";
 
@@ -129,11 +130,17 @@ export default {
       proposed: [],
       polling: {},
       loadingStrater: false,
+      prometheusIsOff: false,
+      consensusClientIsOff: false,
     };
   },
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
+    }),
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -143,6 +150,7 @@ export default {
       epoch: "epoch",
       slot: "slot",
       status: "status",
+      installedServicesController: "installedServicesController",
     }),
     ...mapWritableState(useControlStore, {
       currentSlotData: "currentSlotData",
@@ -170,7 +178,17 @@ export default {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     },
     flag() {
-      if (this.currentResult === undefined) {
+      if (
+        this.installedServicesController === "consensus" ||
+        this.installedServicesController === "Prometheus" ||
+        this.installedServicesController === "consensus and Prometheus"
+      ) {
+        return false;
+      } else if (this.consensusClientIsOff === true) {
+        return false;
+      } else if (this.prometheusIsOff === true) {
+        return false;
+      } else if (this.currentResult === undefined) {
         return true;
       } else if (this.currentResult.beaconStatus === undefined) {
         return true;
@@ -189,6 +207,12 @@ export default {
   },
 
   watch: {
+    installedServices() {
+      this.checkArray(this.installedServices);
+      this.serviceStateController(this.consensusName, "consensusClientIsOff");
+      this.serviceStateController("prometheus", "prometheusIsOff");
+      console.log(this.consensusClientIsOff, this.prometheusIsOff);
+    },
     pageNumber() {
       clearInterval(this.polling);
       this.loadingStrater = true;
@@ -222,6 +246,51 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    serviceStateController(serviceName, stateProperty) {
+      let isServiceOff = true; // Default to true, assuming the service is off
+
+      for (let service of this.installedServices) {
+        if (service.name.toLowerCase() === serviceName.toLowerCase()) {
+          isServiceOff = service.state === "exited";
+          break; // Exit the loop as we've found the service
+        }
+      }
+
+      this[stateProperty] = isServiceOff;
+    },
+    checkArray(arr) {
+      let hasConsensus = false;
+      let hasPrometheus = false;
+      let hasExecution = false;
+
+      for (let obj of arr) {
+        if (obj.category === "consensus") {
+          hasConsensus = true;
+        }
+        if (obj.category === "execution") {
+          hasExecution = true;
+        }
+        if (obj.name === "Prometheus") {
+          hasPrometheus = true;
+        }
+      }
+
+      if (!hasConsensus && !hasPrometheus && !hasExecution) {
+        this.installedServicesController = "consensus, execution and Prometheus";
+      } else if (!hasConsensus && !hasExecution) {
+        this.installedServicesController = "consensus and execution";
+      } else if (!hasConsensus && !hasPrometheus) {
+        this.installedServicesController = "consensus and Prometheus";
+      } else if (!hasConsensus) {
+        this.installedServicesController = "consensus";
+      } else if (!hasPrometheus) {
+        this.installedServicesController = "Prometheus";
+      } else if (!hasExecution) {
+        this.installedServicesController = "execution";
+      } else {
+        this.installedServicesController = ""; // Only set to empty string if none of the above conditions are met
+      }
+    },
     refreshTimer() {
       if (this.currentNetwork.id === 4) {
         this.polling = setInterval(() => {
