@@ -174,7 +174,6 @@ export default {
   mounted() {
     this.getqrcode();
     this.beaconChainConnectionController();
-    console.log("this.installedValidators", this.installedValidators);
   },
   methods: {
     BeaconchainBtnHandling() {
