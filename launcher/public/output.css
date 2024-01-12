@@ -964,6 +964,38 @@ video {
   top: -2px;
 }
 
+.left-3{
+  left: 0.75rem;
+}
+
+.left-5{
+  left: 1.25rem;
+}
+
+.left-6{
+  left: 1.5rem;
+}
+
+.top-24{
+  top: 6rem;
+}
+
+.left-7{
+  left: 1.75rem;
+}
+
+.top-\[7rem\]{
+  top: 7rem;
+}
+
+.left-\[6rem\]{
+  left: 6rem;
+}
+
+.left-\[1\.3rem\]{
+  left: 1.3rem;
+}
+
 .-z-10{
   z-index: -10;
 }
@@ -5013,6 +5045,11 @@ html body {
 .hover\:bg-teal-800:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(17 94 89 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-teal-950:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(4 47 46 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-opacity-10:hover{

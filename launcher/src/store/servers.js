@@ -5,6 +5,8 @@ export const useServers = defineStore("servers", {
     return {
       newPassword: "",
       verifyPassword: "",
+      isPasswordChanged: false,
+      passResponse: "",
       refreshServers: false,
       savedServers: [],
       selectedServerConnection: null,

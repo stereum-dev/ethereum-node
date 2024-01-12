@@ -20,7 +20,7 @@
         @input="handleInput"
       />
     </div>
-    <div class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-2">
+    <div class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
       <label
         for="pass"
         :class="{ 'text-red-500': error, 'text-gray-300': !error }"
@@ -29,27 +29,27 @@
         {{ error ? errorMessage : "Verify Password" }}
       </label>
       <div
-        class="col-start-1 col-span-full row-start-2 row-span-1 w-full h-full bg-gray-800 rounded-l-md grid grid-cols-12"
+        class="col-start-1 col-span-full row-start-2 row-span-2 w-full h-full bg-gray-800 rounded-l-md grid grid-cols-12 items-center"
       >
         <input
           id="pass"
           v-model="serverStore.verifyPassword"
           type="password"
           :name="verifyPassword"
-          class="col-start-1 col-end-11 w-full h-full text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
+          class="col-start-1 col-end-11 w-full h-6 text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
           :class="error ? 'border-red-500' : 'border-transparent'"
           placeholder="Enter a new password"
           @input="handleInput"
           @keydown.enter="changePassword"
         />
         <img
-          class="col-start-11 col-span-1 w-6 h-full justify-self-end self-center flex items-center justify-center rounded-sm bg-teal-500 hover:bg-teal-800 p-[3px] shadow-md shadow-black active:shadow-none hover:scale-105 active:scale-95 transition duration-150 ease-in-out cursor-pointer"
+          class="col-start-11 col-span-1 w-6 h-6 justify-self-end self-center flex items-center justify-center rounded-sm bg-teal-500 hover:bg-teal-800 p-[3px] shadow-md shadow-black active:shadow-none hover:scale-105 active:scale-95 transition duration-150 ease-in-out cursor-pointer"
           src="/img/icon/access-management/check.png"
           alt="Confirm"
           @click="changePassword"
         />
         <img
-          class="col-start-12 col-span-1 w-6 h-full justify-self-center self-center flex items-center justify-center rounded-sm bg-gray-300 shadow-md shadow-black active:shadow-none hover:scale-105 active:scale-95 transition duration-150 ease-in-out cursor-pointer"
+          class="col-start-12 col-span-1 w-6 h-6 justify-self-center self-center flex items-center justify-center rounded-sm bg-gray-300 shadow-md shadow-black active:shadow-none hover:scale-105 active:scale-95 transition duration-150 ease-in-out cursor-pointer"
           src="/img/icon/access-management/close.png"
           alt="Cancel"
           @click="denyPassChange"
@@ -81,24 +81,24 @@ const handleInput = () => {
 };
 
 const changePassword = () => {
-  if (!isPasswordValid(password.value) || !isPasswordValid(verifyPassword.value)) {
+  if (!isPasswordValid(serverStore.newPassword) || !isPasswordValid(serverStore.verifyPassword)) {
     error.value = true;
-    errorMessage.value = "Password must be at least 8 characters and not contain spaces.";
+    errorMessage.value = "Password must be at least 8 characters and not contain spaces";
     return;
   }
 
-  if (password.value !== verifyPassword.value) {
+  if (serverStore.newPassword !== serverStore.verifyPassword) {
     error.value = true;
-    errorMessage.value = "Passwords do not match.";
+    errorMessage.value = "Passwords do not match";
     return;
   }
 
-  emit("changePassword", password.value.trim());
+  emit("changePassword", serverStore.newPassword.trim());
 };
 
 const denyPassChange = () => {
-  serverStore.newPassword.value = "";
-  serverStore.verifyPassword.value = "";
+  serverStore.newPassword = "";
+  serverStore.verifyPassword = "";
   error.value = false;
   errorMessage.value = "";
 };

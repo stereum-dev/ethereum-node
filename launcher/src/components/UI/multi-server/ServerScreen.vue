@@ -5,12 +5,14 @@ import ServerHeader from './components/ServerHeader.vue';
   >
     <ServerHeader />
     <ServerBody @select-server="serverHandler" @change-password="acceptChangePass" />
+    <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
   </div>
 </template>
 
 <script setup>
 import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
+import PasswordModal from "./components/modals/PasswordModal.vue";
 import { ref, onMounted, computed } from "vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
@@ -23,7 +25,7 @@ const keys = ref([]);
 const confirmIndexDelete = ref([]);
 const keyLocation = ref("");
 
-const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
+// const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
 
 onMounted(async () => {
   await loadStoredConnections();
@@ -95,7 +97,11 @@ const generateModal = () => {
 
 const acceptChangePass = async (pass) => {
   console.log(pass);
-  await ControlService.changePassword(pass);
+  serverStore.passResponse = await ControlService.changePassword(pass);
+  console.log(serverStore.passResponse);
+  if (serverStore.passResponse !== "") {
+    serverStore.isPasswordChanged = true;
+  }
   serverStore.newPassword = "";
   serverStore.verifyPassword = "";
 };
