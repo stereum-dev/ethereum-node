@@ -4,7 +4,11 @@
   >
     <div class="col-start-1 col-span-1 row-start-1 row-span-1 flex flex-col justify-start items-start">
       <p class="text-xs text-gray-300 font-semibold uppercase">Server Name</p>
-      <span class="text-xs text-amber-300 font-semibold text-left">{{ controlStore.ServerName }}</span>
+      <span class="text-xs text-amber-300 font-semibold text-left">{{
+        serverStore.selectedServerConnection?.name
+          ? serverStore.selectedServerConnection?.name
+          : controlStore.ServerName
+      }}</span>
     </div>
     <div class="col-start-2 col-span-1 row-start-1 row-span-1 flex flex-col justify-start items-start">
       <p class="text-xs text-gray-300 font-semibold uppercase">Machine Name</p>
@@ -61,7 +65,7 @@ const selectedAvatar = computed(() => {
   if (serverStore.selectedAvatar) {
     return serverStore.selectedAvatar;
   } else {
-    return serverStore.selectedServerConnection?.avatar;
+    return "/avatar/server_selection_1.png";
   }
 });
 
