@@ -27,6 +27,7 @@ import { NotificationService } from "./ethereum-services/NotificationService";
 import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
+import { AuthenticatorService } from "./ethereum-services/AuthenticatorService";
 import YAML from "yaml";
 
 const log = require("electron-log");
@@ -149,7 +150,10 @@ export class ServiceManager {
               services.push(KeysAPIService.buildByConfiguration(config));
             } else if (config.service == "CharonService") {
               services.push(CharonService.buildByConfiguration(config));
+            } else if (config.service == "AuthenticatorService") {
+              services.push(AuthenticatorService.buildByConfiguration(config));
             }
+
           } else {
             log.error("found configuration without service!");
             log.error(config);
@@ -917,6 +921,9 @@ export class ServiceManager {
       case "CharonService":
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
         return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
+
+      case "AuthenticatorService":
+        return AuthenticatorService.buildByUserInput(args.network);
     }
   }
 
