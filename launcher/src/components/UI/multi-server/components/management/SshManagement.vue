@@ -47,7 +47,7 @@ const uniqueSshKeys = computed(() => {
     }
 
     // Extract the last 50 characters of the key
-    const keyEnd = keyString.length >= 50 ? useTruncate(keyString, 0, 45) : keyString;
+    const keyEnd = keyString.length >= 50 ? useTruncate(keyString, 0, 40) : keyString;
 
     uniqueKeys.add(keyEnd);
   });

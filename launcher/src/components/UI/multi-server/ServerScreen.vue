@@ -18,7 +18,7 @@ import ServerHeader from './components/ServerHeader.vue';
 import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 import { useServers } from "@/store/servers";
@@ -26,8 +26,6 @@ import { useServers } from "@/store/servers";
 const controlStore = useControlStore();
 const serverStore = useServers();
 
-const keys = ref([]);
-const confirmIndexDelete = ref([]);
 const keyLocation = ref("");
 
 // const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
@@ -80,30 +78,17 @@ const readSSHKeyFile = async () => {
   serverStore.sshKeys = await ControlService.readSSHKeyFile();
 };
 
-const formatKey = (key) => {
-  let keyArray = key.split(" ");
-  return `${keyArray[0]} ... ${keyArray.pop()}`;
-};
-
 const confirmDelete = async (key) => {
-  console.log(key);
-  // await ControlService.writeSSHKeyFile(keys.value.filter((item) => item !== key));
-  // await readSSHKeyFile();
-};
-
-const confirmKeyIndex = (index) => {
-  confirmIndexDelete.value[index] = true;
-  confirmIndex.value = index;
-};
-
-const cancelKeyIndex = (index) => {
-  confirmIndexDelete.value[index] = false;
-  confirmIndex.value = null;
+  try {
+    await ControlService.writeSSHKeyFile(serverStore.sshKeys.filter((item) => item !== key));
+    await readSSHKeyFile();
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const addExistingKeyHandler = async (event) => {
   const Path = event.target.files[0].path;
-  console.log(Path);
   let pathString = new String(Path);
   let result = pathString.toString();
   keyLocation.value = result;
@@ -111,11 +96,6 @@ const addExistingKeyHandler = async (event) => {
   await ControlService.AddExistingSSHKey(keyLocation.value);
   await readSSHKeyFile();
 };
-
-// const deleteKey = async (key) => {
-//   await ControlService.writeSSHKeyFile(keys.value.filter((item) => item !== key));
-//   await readSSHKeyFile();
-// };
 
 const generateKey = async () => {
   if (this.sshPass !== this.reEnterSshPass) {

@@ -64,8 +64,10 @@ const port = computed(() => {
 const selectedAvatar = computed(() => {
   if (serverStore.selectedAvatar) {
     return serverStore.selectedAvatar;
+  } else if (!serverStore.selectedAvatar && serverStore.selectedServerConnection?.avatar) {
+    return serverStore.selectedServerConnection?.avatar;
   } else {
-    return "/avatar/server_selection_1.png";
+    return "/avatar/default.png";
   }
 });
 
