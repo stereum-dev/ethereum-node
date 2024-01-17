@@ -10,7 +10,11 @@ import { computed } from 'vue';
         class="w-4 h-4 rounded-full animate-spin border border-blue-500 border-b-transparent border-r-transparent"
       ></span>
     </div>
-    <div class="col-start-2 col-end-16 w-full rounded-full self-center overflow-hidden flex justify-start items-center">
+    <div
+      class="col-start-2 col-end-16 w-full rounded-full self-center overflow-hidden flex justify-start items-center"
+      @mouseenter="footerStore.cursorLocation = `${props.item.pubkey} `"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
       <span class="text-sm font-semibold text-gray-800 text-left">{{ formattedPubKey }} </span>
     </div>
 
@@ -24,6 +28,9 @@ import { computed } from 'vue';
 
 <script setup>
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+const footerStore = useFooter();
 
 import { useTruncate } from "@/composables/utils";
 const props = defineProps({
