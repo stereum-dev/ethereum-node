@@ -3,6 +3,18 @@ import { defineStore } from "pinia";
 export const useServers = defineStore("servers", {
   state: () => {
     return {
+      //Connection
+      connectingAnimActive: false,
+      connectingProcess: false,
+      errorMsgExists: false,
+      error: "",
+      alertBox: false,
+      connections: [],
+      selectedName: "",
+      isRemoveModalActive: false,
+      showPassword: false,
+
+      //Server Management
       newPassword: "",
       verifyPassword: "",
       isPasswordChanged: false,
@@ -41,6 +53,7 @@ export const useServers = defineStore("servers", {
       ],
 
       //SSH Key
+      internalLoginState: false,
       isGenerateModalActive: false,
       sshKeys: [],
       keyTypes: ["RSA", "ECDSA", "ED25519"],
@@ -55,6 +68,16 @@ export const useServers = defineStore("servers", {
         "aes128-gcm@openssh.com",
         "aes256-gcm@openssh.com",
       ],
+      loginState: {
+        hostName: "",
+        ip: "",
+        port: "",
+        username: "",
+        password: "",
+        keyPath: "",
+        passphrase: "",
+        useAuth: false,
+      },
     };
   },
   actions: {},
