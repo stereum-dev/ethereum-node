@@ -200,7 +200,7 @@ const getKeyState = computed(() => {
       return depositStatusIcon;
   }
 });
-console.log(props.item);
+
 const formattedPubKey = computed(() => {
   const pubkey = props.item.key;
   if (pubkey && pubkey.length > 20) {

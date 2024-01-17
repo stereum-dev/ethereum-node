@@ -206,7 +206,13 @@
     "renameVal": "rename the validator key",
     "removVal": "remove the validator key",
     "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter"
+    "waitEnt": "You have to wait for the validator keys to enter",
+    "grpNam": "group name is",
+    "keyNumGrp": "Number of Contained Keys",
+    "grpBal": "group balance",
+    "openGrp": "open Group",
+    "renameGrp": "rename the group",
+    "removGrp": "remove the group"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
