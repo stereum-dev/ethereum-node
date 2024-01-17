@@ -88,7 +88,7 @@ export const useServerLogin = () => {
         passphrase: serverStore.loginState.passphrase,
         signal: abortController.signal,
       });
-      serverStore.connectingProcess = false;
+
       if (abortController.signal.aborted) {
         return;
       }

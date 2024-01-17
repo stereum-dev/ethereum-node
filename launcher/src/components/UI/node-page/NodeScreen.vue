@@ -160,6 +160,7 @@ const openExpertModal = (item) => {
   expertModeClient.value.expertOptionsModal = true;
   isExpertModeOpen.value = true;
 };
+
 const updateNodeStats = async () => {
   await useRefreshNodeStats();
   nodeStore.isLineHidden = false;

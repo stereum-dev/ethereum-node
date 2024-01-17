@@ -2999,11 +2999,6 @@ video {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
-.border-gray-50{
-  --tw-border-opacity: 1;
-  border-color: rgb(249 250 251 / var(--tw-border-opacity));
-}
-
 .border-b-transparent{
   border-bottom-color: transparent;
 }
@@ -3027,14 +3022,14 @@ video {
   border-right-color: transparent;
 }
 
-.border-t-blue-600{
-  --tw-border-opacity: 1;
-  border-top-color: rgb(37 99 235 / var(--tw-border-opacity));
-}
-
 .border-r-white{
   --tw-border-opacity: 1;
   border-right-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
+.border-t-blue-600{
+  --tw-border-opacity: 1;
+  border-top-color: rgb(37 99 235 / var(--tw-border-opacity));
 }
 
 .bg-\[\#0d0d0e\]{

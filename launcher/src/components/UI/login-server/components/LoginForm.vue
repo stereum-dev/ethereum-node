@@ -333,11 +333,11 @@ const scannedCounter = ref(0);
 const btnSearchState = ref("search");
 const ipScanModal = ref(false);
 const devices = ref([]);
-const foundIp = ref("Searching..."); // Adjust the initial value as needed
-const sshPort = ref(null);
-const keyAuth = ref(false);
-const link = ref("stereumLogoExtern.png");
-const stereumVersions = ref({});
+const foundIp = ref("Searching...");
+// const sshPort = ref(null);
+// const keyAuth = ref(false);
+// const link = ref("stereumLogoExtern.png");
+// const stereumVersions = ref({});
 const noIpFound = ref("No IP found");
 const hovered = ref(false);
 
@@ -436,119 +436,6 @@ const previewFiles = (event) => {
   let result = pathString.toString();
   controlStore.keyPath = result;
 };
-
-// const getStorableConnections = () => {
-//   const storableConnections = [];
-//   serverStore.connections.forEach((e) => {
-//     storableConnections.push({
-//       name: e.name,
-//       host: e.host,
-//       user: e.user,
-//       port: e.port,
-//       keylocation: e.keylocation,
-//       useAuthKey: e.useAuthKey,
-//     });
-//   });
-//   return storableConnections;
-// };
-
-// const setSelectedConnection = (event) => {
-//   serverStore.selectedServerConnection = serverStore.connections.find((obj) => obj.name === event.target.value);
-//   serverStore.loginState.hostName = serverStore.selectedServerConnection.name;
-//   serverStore.loginState.ip = serverStore.selectedServerConnection.host;
-//   serverStore.loginState.username = serverStore.selectedServerConnection.user;
-//   serverStore.loginState.port = serverStore.selectedServerConnection.port;
-//   serverStore.loginState.keyPath = serverStore.selectedServerConnection.keylocation;
-//   serverStore.loginState.useAuth = serverStore.selectedServerConnection.useAuthKey;
-//   keyAuth.value = serverStore.selectedServerConnection.useAuthKey;
-//   serverStore.loginState.password = "";
-//   serverStore.loginState.passphrase = "";
-// };
-
-// const deleteServer = async () => {
-//   const currSelected = serverStore.selectedServerConnection.name;
-
-//   const storageSavedConnections = await ControlService.readConfig();
-//   let savedConnections = storageSavedConnections.savedConnections || [];
-
-//   serverStore.connections = serverStore.connections.filter((conn) => currSelected !== conn.name);
-//   savedConnections = savedConnections.filter((conn) => currSelected !== conn.name);
-
-//   const updatedConfig = {
-//     ...storageSavedConnections,
-//     savedConnections: savedConnections,
-//   };
-//   await ControlService.writeConfig(updatedConfig);
-
-//   await loadStoredConnections();
-
-//   resetServerStoreLoginState();
-//   serverStore.isRemoveModalActive = false;
-// };
-
-// const resetServerStoreLoginState = () => {
-//   serverStore.loginState.hostName = "";
-//   serverStore.loginState.ip = "";
-//   serverStore.loginState.username = "";
-//   serverStore.loginState.port = "";
-//   serverStore.loginState.password = "";
-//   serverStore.loginState.keyPath = "";
-//   serverStore.loginState.useAuth = false;
-//   keyAuth.value = false;
-//   serverStore.loginState.passphrase = "";
-// };
-
-// const createConnection = () => {
-//   return {
-//     name: serverStore.loginState.hostName,
-//     host: serverStore.loginState.ip,
-//     user: serverStore.loginState.username,
-//     port: serverStore.loginState.port,
-//     keylocation: serverStore.loginState.keyPath,
-//     useAuthKey: serverStore.loginState.useAuth,
-//   };
-// };
-
-// const loadStoredConnections = async () => {
-//   const storageSavedConnections = await ControlService.readConfig();
-//   let savedConnections = [];
-//   if (storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
-//     savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
-//   }
-//   serverStore.connections = savedConnections;
-// };
-
-// const writeSettings = async () => {
-//   const config = await ControlService.readConfig();
-//   ControlService.writeConfig({
-//     ...config,
-//     savedConnections: getStorableConnections(),
-//   });
-// };
-
-// const addNewServer = () => {
-//   const newConnection = createConnection();
-//   if (newConnection.name !== "" && newConnection.host !== "" && newConnection.user !== "") {
-//     const existingConnectionIndex = serverStore.connections.findIndex(
-//       (connection) => connection.name == serverStore.loginState.hostName
-//     );
-
-//     if (existingConnectionIndex === -1) {
-//       serverStore.connections.push(newConnection);
-//     } else {
-//       serverStore.connections[existingConnectionIndex] = newConnection;
-//     }
-
-//     serverStore.selectedServerConnection = newConnection;
-//     serverStore.selectedName = newConnection.name;
-//     writeSettings();
-//   } else {
-//     serverStore.alertBox = true;
-//     setTimeout(() => {
-//       serverStore.alertBox = false;
-//     }, 1500);
-//   }
-// };
 
 const closeErrorDialog = () => {
   serverStore.errorMsgExists = false;

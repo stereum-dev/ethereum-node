@@ -1,4 +1,4 @@
-import { V2_MetaFunction } from "@remix-run/react"; import { computed } from 'vue';
+import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch, watchEffect } from 'vue';
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full flex justify-center items-center">
     <form class="w-full h-full grid grid-cols-12 grid-rows-7 space-y-1">
@@ -214,14 +214,16 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed } from 'vu
       </div>
 
       <div class="col-start-1 col-span-full row-start-7 row-span-1 flex justify-center items-center px-2 py-1">
-        <button
-          v-if="serverStore.connectingProcess"
-          class="w-full h-8 bg-teal-700 text-gray-700 font-bold py-1 px-4 rounded-md pointer-events-none opacity-50"
-          type="button"
+        <div
+          v-if="!serverStore.connectingProcess"
+          class="w-full h-8 bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center"
         >
-          <span class="animate-spin h-5 w-5 mr-3 border border-gray-50 rounded-full border-r border-r-white"></span>
-          Login
-        </button>
+          <svg
+            class="animate-spin h-5 w-5 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full"
+            viewBox="0 0 24 24"
+          ></svg>
+          Connecting . . .
+        </div>
         <button
           v-else
           class="w-full h-8 bg-gray-200 hover:bg-teal-700 text-gray-700 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100"
@@ -236,20 +238,17 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed } from 'vu
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import ControlService from "@/store/ControlService";
 import { useServerLogin } from "@/composables/useLogin";
-
-const props = defineProps({
-  server: {
-    type: Object,
-    required: true,
-  },
-});
+import { useRouter } from "vue-router";
+import { useControlStore } from "@/store/theControl";
 
 const serverStore = useServers();
-const { login, add, remove, loadStoredConnections, setSelectedConnection } = useServerLogin();
+const controlStore = useControlStore();
+const router = useRouter();
+const { login, add, remove, loadStoredConnections } = useServerLogin();
 
 const hovered = ref(false);
 const removeHovered = ref(false);
@@ -271,6 +270,38 @@ const useSSHKey = computed(() => {
     return false;
   }
 });
+
+watchEffect(() => {
+  if (serverStore.connectExistingServer) {
+    serverStore.loginState.hostName = serverStore.selectedServerToConnect.name;
+    serverStore.loginState.ip = serverStore.selectedServerToConnect.host;
+    serverStore.loginState.port = serverStore.selectedServerToConnect.port;
+    serverStore.loginState.username = serverStore.selectedServerToConnect.user;
+    serverStore.loginState.useAuth = serverStore.selectedServerToConnect.useAuthKey;
+    serverStore.loginState.keyPath = serverStore.selectedServerToConnect.keylocation;
+    serverStore.loginState.password = "";
+    serverStore.loginState.passphrase = "";
+  } else {
+    serverStore.selectedServerToConnect = null;
+    serverStore.loginState.hostName = "";
+    serverStore.loginState.ip = "";
+    serverStore.loginState.port = "";
+    serverStore.loginState.username = "";
+    serverStore.loginState.useAuth = false;
+    serverStore.loginState.keyPath = "";
+    serverStore.loginState.password = "";
+    serverStore.loginState.passphrase = "";
+  }
+});
+
+// Lifecycle
+
+onMounted(async () => {
+  await loadStoredConnections();
+  await updateConnectionStats();
+});
+
+// Methods
 
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
@@ -294,10 +325,25 @@ const changeLabel = () => {
     serverStore.loginState.password = "";
   }
 };
+const loggingOut = async () => {
+  router.push("/node").then(() => {
+    location.reload();
+  });
+  await ControlService.logout();
+};
+const updateConnectionStats = async () => {
+  const stats = await ControlService.getConnectionStats();
+  controlStore.ServerName = stats.ServerName;
+  controlStore.ipAddress = stats.ipAddress;
+};
 
 const internalLogin = async () => {
-  await ControlService.logout();
+  serverStore.connectingProcess = true;
+  loggingOut();
   await login();
+  console.log("After Login");
+  window.location.reload();
+  serverStore.connectingProcess = false;
 };
 
 const saveServer = async () => {

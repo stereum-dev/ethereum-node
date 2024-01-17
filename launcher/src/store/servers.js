@@ -78,6 +78,10 @@ export const useServers = defineStore("servers", {
         passphrase: "",
         useAuth: false,
       },
+
+      //Form
+      addNewServer: false,
+      connectExistingServer: false,
     };
   },
   actions: {},

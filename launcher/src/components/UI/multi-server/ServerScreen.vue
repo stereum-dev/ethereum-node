@@ -52,6 +52,11 @@ const serverHandler = (server) => {
     serverStore.isServerLoginActive = false;
     serverStore.isServerManagementActive = true;
   } else {
+    if (serverStore.addNewServer) {
+      serverStore.addNewServer = false;
+    }
+    serverStore.connectExistingServer = true;
+    serverStore.selectedServerToConnect = server;
     serverStore.isServerManagementActive = false;
     serverStore.isServerLoginActive = true;
   }

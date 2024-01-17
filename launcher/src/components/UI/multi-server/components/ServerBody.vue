@@ -13,7 +13,7 @@
       />
     </div>
     <div class="col-start-11 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12">
-      <SavedServers @select-server="selectServer" @server-login="openLoginForm" />
+      <SavedServers @select-server="selectServer" @server-login="addNewServer" />
     </div>
   </div>
 </template>
@@ -57,7 +57,13 @@ const selectServer = (server) => {
   emit("selectServer", server);
 };
 
-const openLoginForm = () => {
+const addNewServer = () => {
+  console.log("addNewServer button clicked");
+  if (serverStore.connectExistingServer) {
+    serverStore.connectExistingServer = false;
+    serverStore.selectServerToConnect = null;
+  }
+  serverStore.addNewServer = true;
   serverStore.isServerLoginActive = true;
   serverStore.isServerManagementActive = false;
 };
