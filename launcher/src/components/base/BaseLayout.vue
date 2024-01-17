@@ -21,7 +21,6 @@
       <TheFooter />
       <TaskManager />
     </div>
-    <!-- <serverAccessManagement v-if="headerStore.serverAccessManagement" /> -->
     <Transition name="slide-fade">
       <ServerScreen v-if="serverStore.isServerAccessManagementActive" />
     </Transition>
@@ -33,8 +32,6 @@ import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
 import ServerScreen from "../UI/multi-server/ServerScreen.vue";
 import LogoButton from "../UI/multi-server/components/LogoButton.vue";
-// import SecurityButton from "../UI/node-header/SecurityButton.vue";
-// import serverAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useFooter } from "@/store/theFooter";
 import { ref } from "vue";
 import i18n from "../../../../launcher/src/includes/i18n";

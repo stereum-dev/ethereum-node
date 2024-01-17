@@ -25,11 +25,24 @@ import LoginBox from "./login-form/LoginBox.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
+import { watch } from "vue";
 
 const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
+
+watch(
+  () => serverStore.selectedServerConnection,
+  async (newVal) => {
+    if (newVal) {
+      serverStore.isServerLoginActive = false;
+      serverStore.isServerManagementActive = true;
+    }
+  }
+);
+
+//Methods
 
 const setServerAvatar = async (avatar) => {
   serverStore.selectedAvatar = avatar;
@@ -58,7 +71,6 @@ const selectServer = (server) => {
 };
 
 const addNewServer = () => {
-  console.log("addNewServer button clicked");
   if (serverStore.connectExistingServer) {
     serverStore.connectExistingServer = false;
     serverStore.selectServerToConnect = null;

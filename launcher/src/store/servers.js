@@ -53,6 +53,11 @@ export const useServers = defineStore("servers", {
       ],
 
       //SSH Key
+      savePath: "",
+      sshPassword: "",
+      selectedCyper: "",
+      bitAmount: "",
+      selectedKeyType: "",
       internalLoginState: false,
       isGenerateModalActive: false,
       sshKeys: [],

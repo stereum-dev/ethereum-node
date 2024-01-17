@@ -8,7 +8,7 @@
     <div class="w-full h-full col-start-1 col-span-full row-start-2 row-span-3 flex justify-evenly items-center">
       <button
         class="min-w-[150px] h-6 bg-teal-700 hover:bg-teal-800 border-2 border-gray-300 rounded-full px-2 flex justify-center items-center active:scale-95 shadow-lg shadow-black transition duration-150 ease-in-out"
-        @click="generateModalHandler"
+        @click="generateModal"
       >
         <span class="text-xs font-semibold text-gray-300">CREATE A NEW KEY</span>
       </button>
@@ -55,7 +55,7 @@ const uniqueSshKeys = computed(() => {
   return Array.from(uniqueKeys);
 });
 
-const generateModalHandler = () => {
+const generateModal = () => {
   serverStore.isGenerateModalActive = true;
 };
 

@@ -20,18 +20,15 @@
     <TaskManager
       v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
     />
-    <!-- <ServerAccessManagement v-if="serverAccessManagement && !isRouterLogin" /> -->
     <Transition name="slide-fade">
       <ServerScreen v-if="serverStore.isServerAccessManagementActive" />
     </Transition>
   </div>
 </template>
 <script setup>
-// import SecurityButton from "../UI/node-header/SecurityButton.vue";
 import LogoButton from "../UI/multi-server/components/LogoButton.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import ServerScreen from "../UI/multi-server/ServerScreen.vue";
-// import ServerAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 import { useRouter } from "vue-router";

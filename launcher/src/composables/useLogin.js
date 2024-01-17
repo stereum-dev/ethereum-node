@@ -106,6 +106,7 @@ export const useServerLogin = () => {
 
     serverStore.connectingProcess = false;
     serverStore.isServerAccessManagementActive = false;
+
     if (res) {
       router.push("/node");
     } else {

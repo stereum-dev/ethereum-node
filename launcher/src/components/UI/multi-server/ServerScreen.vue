@@ -11,6 +11,11 @@ import ServerHeader from './components/ServerHeader.vue';
       @delete-key="confirmDelete"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
+    <GenerateKey
+      v-if="serverStore.isGenerateModalActive"
+      @close-modal="closeGenerateModal"
+      @generate-key="generateKeyHandler"
+    />
   </div>
 </template>
 
@@ -18,6 +23,7 @@ import ServerHeader from './components/ServerHeader.vue';
 import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
+import GenerateKey from "./components/modals/GenerateKey.vue";
 import { ref, onMounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
@@ -102,24 +108,21 @@ const addExistingKeyHandler = async (event) => {
   await readSSHKeyFile();
 };
 
-const generateKey = async () => {
-  if (this.sshPass !== this.reEnterSshPass) {
-    alert("The passwords do not match");
-    this.sshPass = "";
-    this.reEnterSshPass = "";
-    this.passControl = true;
-  } else {
-    const data = {
-      keyType: this.keyType,
-      pickPath: this.pickPath,
-      passphrase: this.sshPass,
-      bits: this.bitAmount,
-      cipher: this.specifyCipher,
-    };
-    const keys = await ControlService.generateSSHKeyPair(data);
-    this.$emit("generate-key", keys);
-    this.generateModalShow = false;
-  }
+const closeGenerateModal = () => {
+  serverStore.isGenerateModalActive = false;
+};
+
+const generateKeyHandler = async () => {
+  const data = {
+    keyType: serverStore.selectedKeyType,
+    pickPath: serverStore.savePath,
+    passphrase: serverStore.sshPassword,
+    bits: serverStore.bitAmount,
+    cipher: serverStore.selectedCyper,
+  };
+  const keys = await ControlService.generateSSHKeyPair(data);
+  await ControlService.writeSSHKeyFile(keys);
+  serverStore.isGenerateModalActive = false;
 };
 
 const openDirectoryPicker = async () => {
@@ -127,11 +130,11 @@ const openDirectoryPicker = async () => {
     const paths = await ControlService.openDirectoryDialog(
       useDeepClone({ properties: ["openDirectory", "createDirectory"] })
     );
-    this.pickPath = paths[0];
+    serverStore.savePath = paths[0];
   } catch (error) {
     // Handle case when user cancels directory picker
     if (error.name === "AbortError") {
-      this.pickPath = "";
+      serverStore.savePath = "";
     } else {
       console.error("Error picking directory:", error);
     }

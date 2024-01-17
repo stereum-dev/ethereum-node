@@ -5,7 +5,7 @@
     </div>
 
     <div
-      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-3 bg-slate-800 rounded-md space-y-2"
+      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-3 bg-[#1b1b1d] rounded-md space-y-2"
     >
       <ServerRow
         v-for="(server, index) in servers"

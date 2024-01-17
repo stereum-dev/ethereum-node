@@ -242,12 +242,9 @@ import { computed, ref, onMounted, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import ControlService from "@/store/ControlService";
 import { useServerLogin } from "@/composables/useLogin";
-import { useRouter } from "vue-router";
-import { useControlStore } from "@/store/theControl";
 
 const serverStore = useServers();
-const controlStore = useControlStore();
-const router = useRouter();
+
 const { login, add, remove, loadStoredConnections } = useServerLogin();
 
 const hovered = ref(false);
