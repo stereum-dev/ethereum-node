@@ -183,9 +183,10 @@
   },
   "displayValidator": {
     "pk": "Public Key",
+    "rm": "Remote key",
     "service": "SERVICE",
     "active": "ACTIVE SINCE",
-    "state": "STATE",
+    "state": "Status Indicator",
     "balance": "BALANCE",
     "option": "OPTIONS",
     "importKey": "Importing validator key(s)",
