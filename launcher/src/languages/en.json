@@ -212,7 +212,10 @@
     "grpBal": "group balance",
     "openGrp": "open Group",
     "renameGrp": "rename the group",
-    "removGrp": "remove the group"
+    "removGrp": "remove the group",
+    "inserValidator": "insert validator key",
+    "backList": "back to list",
+    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
