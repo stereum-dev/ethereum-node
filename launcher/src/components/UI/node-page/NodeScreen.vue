@@ -58,6 +58,7 @@ import { saveAs } from "file-saver";
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
 const isLogsPageActive = ref(false);
+const refreshStats = ref(false);
 
 // const chckTutorial = "/img/icon/round-icon.png";
 // const returnStatus = "/img/icon/round-icon.png";
@@ -93,9 +94,21 @@ watchEffect(() => {
   }
 });
 
+watchEffect(() => {
+  if (refreshStats.value) {
+    updateConnectionStats();
+    refreshStats.value = false;
+  }
+});
+
 //Lifecycle Hooks
 onMounted(() => {
+  setTimeout(() => {
+    refreshStats.value = true;
+  }, 2000);
+
   updateConnectionStats();
+
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals

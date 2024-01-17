@@ -5,7 +5,6 @@ import { useRouter } from "vue-router";
 export const useServerLogin = () => {
   const serverStore = useServers();
   const router = useRouter();
-  serverStore.connectingProcess = true;
 
   const getStorableConnections = () => {
     const storableConnections = [];
@@ -93,6 +92,7 @@ export const useServerLogin = () => {
         return;
       }
     } catch (err) {
+      console.log("err: ", err);
       serverStore.connectingAnimActive = false;
       serverStore.errorMsgExists = true;
       serverStore.error = "Connection refused, please try again.";
@@ -102,7 +102,11 @@ export const useServerLogin = () => {
       return;
     }
 
-    if (await ControlService.checkStereumInstallation()) {
+    const res = await ControlService.checkStereumInstallation();
+
+    serverStore.connectingProcess = false;
+    serverStore.isServerAccessManagementActive = false;
+    if (res) {
       router.push("/node");
     } else {
       router.push("/welcome");

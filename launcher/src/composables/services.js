@@ -28,7 +28,13 @@ export async function useFrontendServices() {
   const allServices = JSON.parse(JSON.stringify(serviceStore.allServices));
   if (nodeHeaderStore.refresh) {
     if (await useConnectionCheck()) {
-      let services = await ControlService.refreshServiceInfos();
+      let services;
+      try {
+        services = await ControlService.refreshServiceInfos();
+      } catch (error) {
+        console.log(error);
+        return;
+      }
       if (services && services.length != 0 && nodeHeaderStore.refresh) {
         let otherServices = [];
         let needForTunnel = [];

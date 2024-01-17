@@ -214,8 +214,16 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
       </div>
 
       <div class="col-start-1 col-span-full row-start-7 row-span-1 flex justify-center items-center px-2 py-1">
-        <div
+        <button
           v-if="!serverStore.connectingProcess"
+          class="w-full h-8 bg-gray-200 hover:bg-teal-700 text-gray-700 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100"
+          type="button"
+          @click="internalLogin"
+        >
+          Login
+        </button>
+        <div
+          v-else
           class="w-full h-8 bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center"
         >
           <svg
@@ -224,14 +232,6 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           ></svg>
           Connecting . . .
         </div>
-        <button
-          v-else
-          class="w-full h-8 bg-gray-200 hover:bg-teal-700 text-gray-700 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100"
-          type="button"
-          @click="internalLogin"
-        >
-          Login
-        </button>
       </div>
     </form>
   </div>
@@ -298,7 +298,6 @@ watchEffect(() => {
 
 onMounted(async () => {
   await loadStoredConnections();
-  await updateConnectionStats();
 });
 
 // Methods
@@ -325,25 +324,12 @@ const changeLabel = () => {
     serverStore.loginState.password = "";
   }
 };
-const loggingOut = async () => {
-  router.push("/node").then(() => {
-    location.reload();
-  });
-  await ControlService.logout();
-};
-const updateConnectionStats = async () => {
-  const stats = await ControlService.getConnectionStats();
-  controlStore.ServerName = stats.ServerName;
-  controlStore.ipAddress = stats.ipAddress;
-};
 
 const internalLogin = async () => {
   serverStore.connectingProcess = true;
-  loggingOut();
+  await ControlService.logout();
+
   await login();
-  console.log("After Login");
-  window.location.reload();
-  serverStore.connectingProcess = false;
 };
 
 const saveServer = async () => {
