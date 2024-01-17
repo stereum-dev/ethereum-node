@@ -215,7 +215,11 @@
     "removGrp": "remove the group",
     "inserValidator": "insert validator key",
     "backList": "back to list",
-    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT"
+    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT",
+    "crteGrp": "create a new group",
+    "openSrch": "search for a validator key or group",
+    "showValKey": "show validator keys",
+    "showKeyNam": "show key names"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
