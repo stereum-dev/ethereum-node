@@ -269,10 +269,6 @@ const typesAmount = computed(() => {
 
 //Methods
 
-const openFilePicker = () => {
-  fileInput.value.click();
-};
-
 const handleFileChosen = (event) => {
   if (event.target.files && event.target.files[0]) {
     const files = event.target.files;

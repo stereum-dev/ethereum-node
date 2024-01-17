@@ -124,20 +124,4 @@ const generateKeyHandler = async () => {
   await ControlService.writeSSHKeyFile(keys);
   serverStore.isGenerateModalActive = false;
 };
-
-const openDirectoryPicker = async () => {
-  try {
-    const paths = await ControlService.openDirectoryDialog(
-      useDeepClone({ properties: ["openDirectory", "createDirectory"] })
-    );
-    serverStore.savePath = paths[0];
-  } catch (error) {
-    // Handle case when user cancels directory picker
-    if (error.name === "AbortError") {
-      serverStore.savePath = "";
-    } else {
-      console.error("Error picking directory:", error);
-    }
-  }
-};
 </script>
