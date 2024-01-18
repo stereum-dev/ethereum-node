@@ -4,21 +4,34 @@ import { useStakingStore } from '@/store/theStaking';
     class="w-full h-8 bg-[#336666] rounded-full grid grid-cols-12 p-1 animate__animated"
     :class="isRemoveActive ? 'animate__slideOutRight animate__faster ' : 'animate__slideInLeft animate__delay-0.5s'"
   >
-    <div class="col-start-1 col-end-5 self-center overflow-hidden flex justify-start items-center">
+    <div
+      class="col-start-1 col-end-5 self-center overflow-hidden flex justify-start items-center"
+      @mouseenter="footerStore.cursorLocation = `${grpNam} ${groupName}`"
+    >
       <img class="w-6" src="/img/icon/the-staking/newfolder-icon.png" alt="Folder Icon" @mousedown.prevent />
       <span class="text-center text-xs text-gray-300 ml-1 overflow-hidden">{{ groupName }}</span>
     </div>
     <div
       class="col-start-5 col-end-8 self-center text-center text-sm text-gray-300 overflow-hidden flex justify-center items-center"
+      @mouseenter="footerStore.cursorLocation = `${keyNumGrp}`"
+      @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="">{{ `Contains ${getkeyNumbers} key (s)` }}</span>
     </div>
 
-    <div class="col-start-8 col-end-10 self-center overflow-hidden flex justify-start items-center">
+    <div
+      class="col-start-8 col-end-10 self-center overflow-hidden flex justify-start items-center"
+      @mouseenter="footerStore.cursorLocation = `${grpBal} `"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
       <span class="text-left ml-2 text-xs text-gray-300">{{ getBalanceSum }}</span>
     </div>
     <div class="col-start-10 col-span-full bg-[#151618] rounded-full grid grid-cols-3 items-center">
-      <div class="col-start-1 col-span-1 justify-self-center">
+      <div
+        class="col-start-1 col-span-1 justify-self-center"
+        @mouseenter="footerStore.cursorLocation = `${openGrp}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/open-group.png"
@@ -27,7 +40,11 @@ import { useStakingStore } from '@/store/theStaking';
           @click="openGroup(props.item)"
         />
       </div>
-      <div class="col-start-2 col-span-1 justify-self-center">
+      <div
+        class="col-start-2 col-span-1 justify-self-center"
+        @mouseenter="footerStore.cursorLocation = `${renameGrp}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/rename-group.png"
@@ -45,7 +62,11 @@ import { useStakingStore } from '@/store/theStaking';
           @mousedown.prevent
         />
       </div> -->
-      <div class="col-start-3 col-span-1 justify-self-center">
+      <div
+        class="col-start-3 col-span-1 justify-self-center"
+        @mouseenter="footerStore.cursorLocation = `${removGrp}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/the-staking/RemoveGroup.png"
@@ -61,6 +82,12 @@ import { useStakingStore } from '@/store/theStaking';
 <script setup>
 import { computed, ref } from "vue";
 import { useStakingStore } from "@/store/theStaking";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const footerStore = useFooter();
 
 const props = defineProps({
   item: {
@@ -68,6 +95,13 @@ const props = defineProps({
     required: true,
   },
 });
+
+const grpNam = t("displayValidator.grpNam");
+const keyNumGrp = t("displayValidator.keyNumGrp");
+const grpBal = t("displayValidator.grpBal");
+const openGrp = t("displayValidator.openGrp");
+const renameGrp = t("displayValidator.renameGrp");
+const removGrp = t("displayValidator.removGrp");
 
 const stakingStore = useStakingStore();
 

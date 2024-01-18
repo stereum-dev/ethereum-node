@@ -14,6 +14,8 @@
           alt="Group Icon"
           @click="removeGroup"
           @mousedown.prevent
+          @mouseenter="footerStore.cursorLocation = `${removGrp}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
         <img
           v-else
@@ -22,6 +24,8 @@
           alt="Group Icon"
           @click="groupingPanel"
           @mousedown.prevent
+          @mouseenter="footerStore.cursorLocation = `${crteGrp}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
       </div>
       <div
@@ -29,6 +33,8 @@
         :class="
           stakingStore.isGroupListActive || stakingStore.isPreviewListActive ? 'opacity-50 pointer-events-none ' : ''
         "
+        @mouseenter="footerStore.cursorLocation = `${openSrch}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img
           class="h-6"
@@ -43,6 +49,8 @@
         :class="
           stakingStore.isGroupListActive || stakingStore.isPreviewListActive ? 'opacity-50 pointer-events-none ' : ''
         "
+        @mouseenter="footerStore.cursorLocation = `${nameNumber}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="h-6" :src="aliasIcon" alt="Insert Icon" @click="displayKeyAlias" @mousedown.prevent />
       </div>
@@ -56,6 +64,18 @@
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
 import { computed, defineAsyncComponent, watchEffect, shallowRef } from "vue";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const footerStore = useFooter();
+
+const crteGrp = t("displayValidator.crteGrp");
+const removGrp = t("displayValidator.removGrp");
+const openSrch = t("displayValidator.openSrch");
+const showValKey = t("displayValidator.showValKey");
+const showKeyNam = t("displayValidator.showKeyNam");
 
 //Emits
 const emit = defineEmits([
@@ -103,6 +123,14 @@ const aliasIcon = computed(() => {
   }
 });
 
+const nameNumber = computed(() => {
+  if (!stakingStore.isPubkeyVisible) {
+    return showValKey;
+  } else {
+    return showKeyNam;
+  }
+});
+
 watchEffect(() => {
   const panelName = stakingStore.activePanel;
   if (panels[panelName]) {
@@ -137,6 +165,10 @@ watchEffect(() => {
 
 const displayKeyAlias = () => {
   stakingStore.isPubkeyVisible = !stakingStore.isPubkeyVisible;
+  footerStore.cursorLocation = "";
+  !stakingStore.isPubkeyVisible
+    ? (footerStore.cursorLocation = `${showValKey}`)
+    : (footerStore.cursorLocation = `${showKeyNam}`);
 };
 
 const groupingPanel = () => {
