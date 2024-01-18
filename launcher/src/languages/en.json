@@ -234,7 +234,9 @@
     "numValidator": "number imported validator keys",
     "attestReward": "attestation reward",
     "blockProdreward": "block production rewards",
-    "syncCommitteeReward": "sync committee rewards"
+    "syncCommitteeReward": "sync committee rewards",
+    "ttlKeys": "total keys",
+    "ttlBal": "total balance"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
