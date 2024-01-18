@@ -233,7 +233,8 @@
     "valStat": "validator state",
     "numValidator": "number imported validator keys",
     "attestReward": "attestation reward",
-    "blockProdreward": "block production rewards"
+    "blockProdreward": "block production rewards",
+    "syncCommitteeReward": "sync committee rewards"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
