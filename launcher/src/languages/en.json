@@ -232,7 +232,8 @@
     "valClint": "validator client",
     "valStat": "validator state",
     "numValidator": "number imported validator keys",
-    "attestReward": "attestation reward"
+    "attestReward": "attestation reward",
+    "blockProdreward": "block production rewards"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
