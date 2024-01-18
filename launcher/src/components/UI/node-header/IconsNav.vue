@@ -138,6 +138,7 @@ export default {
       osUpdating: "osUpdating",
       searchingForOsUpdates: "searchingForOsUpdates",
       refresh: "refresh",
+      reconnecting: "reconnecting",
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
@@ -229,7 +230,9 @@ export default {
     },
     async reconnect() {
       console.log("reconnecting");
+      this.reconnecting = true;
       await ControlService.reconnect();
+      this.reconnecting = false;
       this.refresh = true;
     },
     updateModalHandler() {
