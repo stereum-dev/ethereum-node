@@ -228,7 +228,10 @@
     "graffitiPanel": "change graffiti for all keys in the validator client",
     "removeMultiple": "remove all keys from the validator client",
     "withdrawMultiple": "exit & withdraw all keys from the validator client",
-    "importRemote": "import remote keys into the validator client"
+    "importRemote": "import remote keys into the validator client",
+    "valClint": "validator client",
+    "valStat": "validator state",
+    "numValidator": "number imported validator keys"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
