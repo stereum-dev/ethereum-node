@@ -1,10 +1,10 @@
 <template>
-  <div id="my-modal" class="fixed inset-0 overflow-y-auto h-full w-full">
-    <div class="absolute inset-0 bg-black bg-opacity-80" @click="closeModal"></div>
+  <div id="my-modal" class="w-screen h-screen fixed inset-0">
+    <div class="absolute inset-0 bg-black bg-opacity-80 z-10 rounded-md" @click="closeModal"></div>
     <div class="relative top-20 mx-auto px-5 py-2 border w-3/5 rounded-[35px] bg-[#1c1d1d] shadow-xl shadow-black z-30">
       <div class="mt-1 text-center">
         <h3 class="text-xl leading-6 font-semibold text-amber-500 uppercase">Generate SSH Key</h3>
-        <form class="mt-2 grid grid-cols-12 grid-rows-8 items-center gap-y-2" @click.prevent.stop="generateKey">
+        <form class="mt-2 grid grid-cols-12 grid-rows-8 items-center gap-y-2" @click.prevent="generateKey">
           <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 items-center">
             <span
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
@@ -240,7 +240,7 @@ import { useServers } from "@/store/servers";
 import { useDeepClone } from "@/composables/utils";
 import ControlService from "@/store/ControlService";
 
-const emit = defineEmits(["closeModal"]);
+const emit = defineEmits(["closeModal", "generateKey"]);
 
 const serverStore = useServers();
 
@@ -272,7 +272,6 @@ const typesAmount = computed(() => {
 const handleFileChosen = (event) => {
   if (event.target.files && event.target.files[0]) {
     const files = event.target.files;
-    // Get the directory path from the selected file
     const path = files[0].webkitRelativePath.split("/")[0];
     serverStore.savePath = path;
   }
