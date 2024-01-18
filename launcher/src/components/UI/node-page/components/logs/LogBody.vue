@@ -16,7 +16,7 @@
         @mouseenter="hoveredLogIndex = index"
         @mouseleave="hoveredLogIndex = null"
       >
-        <span class="text-sm font-semibold text-gray-400">#{{ logsList.length - index }}</span>
+        <span class="text-sm font-semibold text-gray-400">#{{ 150 - index }}</span>
         <span class="text-sm font-semibold">{{ log }}</span>
         <img
           v-if="hoveredLogIndex === index"
@@ -59,6 +59,8 @@ const limitedLogs = computed(() => {
       : logsList.value;
   return allLogs.slice(-150).reverse();
 });
+
+//Methods
 
 const copy = async (log) => {
   try {

@@ -792,6 +792,10 @@ video {
   top: -5rem;
 }
 
+.-top-8{
+  top: -2rem;
+}
+
 .-top-\[90px\]{
   top: -90px;
 }
@@ -1919,6 +1923,10 @@ video {
 
 .w-3\/5{
   width: 60%;
+}
+
+.w-32{
+  width: 8rem;
 }
 
 .w-36{

@@ -2873,7 +2873,7 @@ rm -rf diskoutput
       {
         logs_since: null,
         logs_until: null,
-        logs_tail: 150,
+        logs_tail: null,
         logs_ts: null,
         service_name: null,
       },

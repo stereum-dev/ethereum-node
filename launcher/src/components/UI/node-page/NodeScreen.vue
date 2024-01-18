@@ -187,12 +187,17 @@ const closeExpertMode = () => {
 };
 // ********** LOGS **********
 
-const exportLogs = async () => {
-  const data = nodeStore.serviceLogs.slice(-150).reverse();
-  const fileName = nodeStore.clientToLogs.name;
+const exportLogs = async (client) => {
+  const currentService = nodeStore.serviceLogs.find(
+    (service) => service.config?.serviceID === client.config?.serviceID
+  );
+
+  const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
+
+  // Select the data based on the condition
+  const data = nodeStore.exportLogs ? currentService.logs.slice(-150).reverse() : currentService.logs.reverse();
 
   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
-
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
 };
@@ -207,17 +212,6 @@ const closeLogPage = () => {
   isLogsPageActive.value = false;
 };
 </script>
-<!-- <script>
-import { mapWritableState } from "pinia";
-import { useFooter } from "@/store/theFooter";
-export default {
-  computed: {
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-    }),
-  },
-};
-</script> -->
 
 <style scoped>
 .info-button {

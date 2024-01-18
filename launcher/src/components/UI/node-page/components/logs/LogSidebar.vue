@@ -64,6 +64,7 @@ watch(currentService, (newService) => {
   if (selectedService) {
     nodeStore.clientToLogs = selectedService;
   }
+  console.log("currentService", currentService);
 });
 
 //Methods
