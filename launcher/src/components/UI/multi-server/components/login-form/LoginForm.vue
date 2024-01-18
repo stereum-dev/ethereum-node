@@ -327,6 +327,8 @@ const internalLogin = async () => {
   await ControlService.logout();
 
   await login();
+  serverStore.connectingProcess = false;
+  serverStore.isServerAccessManagementActive = false;
 };
 
 const saveServer = async () => {

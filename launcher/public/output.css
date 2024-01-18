@@ -1100,6 +1100,10 @@ video {
   grid-column-start: 9;
 }
 
+.col-start-14{
+  grid-column-start: 14;
+}
+
 .col-end-10{
   grid-column-end: 10;
 }
@@ -1182,6 +1186,10 @@ video {
 
 .col-end-9{
   grid-column-end: 9;
+}
+
+.col-end-14{
+  grid-column-end: 14;
 }
 
 .row-span-1{
@@ -2497,6 +2505,12 @@ video {
 
 .gap-y-5{
   row-gap: 1.25rem;
+}
+
+.gap-x-1{
+  -webkit-column-gap: 0.25rem;
+     -moz-column-gap: 0.25rem;
+          column-gap: 0.25rem;
 }
 
 .space-x-1 > :not([hidden]) ~ :not([hidden]){

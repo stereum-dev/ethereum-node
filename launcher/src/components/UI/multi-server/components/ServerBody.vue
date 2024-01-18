@@ -1,8 +1,10 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-24 grid-rows-12 p-2 divide-x-2 divide-gray-500"
+    class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-24 grid-rows-12 p-2 gap-x-1"
   >
-    <div class="col-start-1 col-end-11 row-start-1 row-span-full p-1 pl-0 grid grid-cols-12 grid-rows-12">
+    <div
+      class="col-start-14 col-span-full row-start-1 row-span-full p-1 pl-0 grid grid-cols-12 grid-rows-12 bg-[#1b1b1d] rounded-md"
+    >
       <LoginBox v-if="serverStore.isServerLoginActive" />
       <ManagementBox
         v-if="serverStore.isServerManagementActive"
@@ -12,7 +14,9 @@
         @delete-key="deleteKey"
       />
     </div>
-    <div class="col-start-11 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12">
+    <div
+      class="col-start-1 col-end-14 row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b1b1d] rounded-md"
+    >
       <SavedServers @select-server="selectServer" @server-login="addNewServer" />
     </div>
   </div>

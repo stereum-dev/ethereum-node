@@ -22,7 +22,6 @@ export const useServerLogin = () => {
   };
 
   const setSelectedConnection = (connection) => {
-    console.log("setSelectedConnection", connection);
     serverStore.selectedServerConnection = serverStore.connections.find((obj) => obj.name === connection.name);
     serverStore.loginState.hostName = serverStore.selectedServerConnection.name;
     serverStore.loginState.ip = serverStore.selectedServerConnection.host;
@@ -104,9 +103,6 @@ export const useServerLogin = () => {
     }
 
     const res = await ControlService.checkStereumInstallation();
-
-    serverStore.connectingProcess = false;
-    serverStore.isServerAccessManagementActive = false;
 
     if (res) {
       router.push("/node");
