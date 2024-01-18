@@ -105,7 +105,9 @@ export const useServerLogin = () => {
     const res = await ControlService.checkStereumInstallation();
 
     if (res) {
-      router.push("/node");
+      router.push("/node").then(() => {
+        window.location.reload();
+      });
     } else {
       router.push("/welcome");
     }

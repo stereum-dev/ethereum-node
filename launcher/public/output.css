@@ -1040,6 +1040,10 @@ video {
   grid-column-start: 13;
 }
 
+.col-start-14{
+  grid-column-start: 14;
+}
+
 .col-start-15{
   grid-column-start: 15;
 }
@@ -1100,10 +1104,6 @@ video {
   grid-column-start: 9;
 }
 
-.col-start-14{
-  grid-column-start: 14;
-}
-
 .col-end-10{
   grid-column-end: 10;
 }
@@ -1118,6 +1118,10 @@ video {
 
 .col-end-13{
   grid-column-end: 13;
+}
+
+.col-end-14{
+  grid-column-end: 14;
 }
 
 .col-end-15{
@@ -1186,10 +1190,6 @@ video {
 
 .col-end-9{
   grid-column-end: 9;
-}
-
-.col-end-14{
-  grid-column-end: 14;
 }
 
 .row-span-1{
@@ -2479,6 +2479,12 @@ video {
   gap: 1.25rem;
 }
 
+.gap-x-1{
+  -webkit-column-gap: 0.25rem;
+     -moz-column-gap: 0.25rem;
+          column-gap: 0.25rem;
+}
+
 .gap-x-2{
   -webkit-column-gap: 0.5rem;
      -moz-column-gap: 0.5rem;
@@ -2505,12 +2511,6 @@ video {
 
 .gap-y-5{
   row-gap: 1.25rem;
-}
-
-.gap-x-1{
-  -webkit-column-gap: 0.25rem;
-     -moz-column-gap: 0.25rem;
-          column-gap: 0.25rem;
 }
 
 .space-x-1 > :not([hidden]) ~ :not([hidden]){
@@ -2571,12 +2571,6 @@ video {
   --tw-divide-x-reverse: 0;
   border-right-width: calc(1px * var(--tw-divide-x-reverse));
   border-left-width: calc(1px * calc(1 - var(--tw-divide-x-reverse)));
-}
-
-.divide-x-2 > :not([hidden]) ~ :not([hidden]){
-  --tw-divide-x-reverse: 0;
-  border-right-width: calc(2px * var(--tw-divide-x-reverse));
-  border-left-width: calc(2px * calc(1 - var(--tw-divide-x-reverse)));
 }
 
 .divide-y > :not([hidden]) ~ :not([hidden]){
