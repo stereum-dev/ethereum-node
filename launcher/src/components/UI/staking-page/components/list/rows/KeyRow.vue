@@ -32,11 +32,11 @@ import { computed } from 'vue';
       @mousedown.prevent
     />
     <span
-      class="col-start-11 col-end-13 self-center text-center text-xs text-gray-300 overflow-hidden"
+      class="col-start-11 col-end-14 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
       >{{ props.item.activeSince }}</span
     >
-    <div class="w-full col-start-13 col-end-15 self-center overflow-hidden flex justify-center items-center">
+    <div class="w-full col-start-14 col-end-15 self-center overflow-hidden flex justify-center items-center">
       <img class="w-6 h-6" :src="getKeyState" alt="icon" @mousedown.prevent />
     </div>
 
