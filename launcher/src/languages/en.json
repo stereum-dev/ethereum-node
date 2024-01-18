@@ -219,7 +219,9 @@
     "crteGrp": "create a new group",
     "openSrch": "search for a validator key or group",
     "showValKey": "show validator keys",
-    "showKeyNam": "show key names"
+    "showKeyNam": "show key names",
+    "upcomingSync": "upcoming sync committee duties",
+    "upcomingBlocProd": "upcoming block production duties"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
