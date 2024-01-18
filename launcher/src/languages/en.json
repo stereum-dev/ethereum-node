@@ -231,7 +231,8 @@
     "importRemote": "import remote keys into the validator client",
     "valClint": "validator client",
     "valStat": "validator state",
-    "numValidator": "number imported validator keys"
+    "numValidator": "number imported validator keys",
+    "attestReward": "attestation reward"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
