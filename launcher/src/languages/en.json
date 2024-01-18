@@ -221,7 +221,14 @@
     "showValKey": "show validator keys",
     "showKeyNam": "show key names",
     "upcomingSync": "upcoming sync committee duties",
-    "upcomingBlocProd": "upcoming block production duties"
+    "upcomingBlocProd": "upcoming block production duties",
+    "clentSel": "client selected",
+    "selValClint": "selected validator client",
+    "upcomEpochDuti": "upcoming epoch duties",
+    "graffitiPanel": "change graffiti for all keys in the validator client",
+    "removeMultiple": "remove all keys from the validator client",
+    "withdrawMultiple": "exit & withdraw all keys from the validator client",
+    "importRemote": "import remote keys into the validator client"
   },
   "enterPass": {
     "enterPass": "ENTER PASSWORD & IMPORT"
