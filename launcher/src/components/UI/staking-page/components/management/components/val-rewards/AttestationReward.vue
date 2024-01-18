@@ -1,6 +1,8 @@
 <template>
   <div
     class="w-full h-full max-h-6 col-start-1 col-span-full row-start-3 row-span-1 border border-gray-500 rounded-full grid grid-cols-6 bg-[#313539] items-center p-[1px]"
+    @mouseenter="footerStore.cursorLocation = `${attestReward}`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]">
       <img
@@ -22,6 +24,14 @@
 import { useStakingStore } from "@/store/theStaking";
 import { onUnmounted, watchEffect, ref, onMounted } from "vue";
 import ControlService from "@/store/ControlService";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const footerStore = useFooter();
+
+const attestReward = t("displayValidator.attestReward");
 
 const stakingStore = useStakingStore();
 const intervalID = ref(null);
