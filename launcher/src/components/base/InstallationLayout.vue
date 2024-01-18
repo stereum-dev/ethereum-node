@@ -21,7 +21,7 @@
       v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
     />
     <Transition name="slide-fade">
-      <ServerScreen v-if="serverStore.isServerAccessManagementActive" />
+      <ServerScreen v-if="serverStore.isServerAccessManagementActive && router.currentRoute.value.path !== '/login'" />
     </Transition>
   </div>
 </template>
@@ -41,7 +41,7 @@ const footerStore = useFooter();
 const serverStore = useServers();
 
 const router = useRouter();
-const isRouterLogin = ref(false);
+
 const serverAccessManagement = ref(false);
 const tooltip = ref(false);
 
@@ -50,23 +50,12 @@ const serverAccMange = computed(() => {
 });
 
 //Computed
-watchEffect(() => {
-  if (router.currentRoute.value.path === "/login") {
-    isRouterLogin.value = true;
-  } else {
-    isRouterLogin.value = false;
-  }
-});
 
 watchEffect(() => {
   serverAccessManagement.value = serverStore.serverAccessManagement;
 });
 
 // Methods
-// const mouseEnter = () => {
-//   tooltip.value = true;
-//   footerStore.cursorLocation = serverAccMange.value;
-// };
 
 const mouseLeave = () => {
   tooltip.value = false;

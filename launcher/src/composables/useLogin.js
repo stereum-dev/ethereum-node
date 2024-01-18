@@ -21,8 +21,9 @@ export const useServerLogin = () => {
     return storableConnections;
   };
 
-  const setSelectedConnection = (event) => {
-    serverStore.selectedServerConnection = serverStore.connections.find((obj) => obj.name === event.target.value);
+  const setSelectedConnection = (connection) => {
+    console.log("setSelectedConnection", connection);
+    serverStore.selectedServerConnection = serverStore.connections.find((obj) => obj.name === connection.name);
     serverStore.loginState.hostName = serverStore.selectedServerConnection.name;
     serverStore.loginState.ip = serverStore.selectedServerConnection.host;
     serverStore.loginState.username = serverStore.selectedServerConnection.user;

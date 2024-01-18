@@ -46,10 +46,14 @@
             <select
               v-model="serverStore.selectedName"
               class="w-full h-full rounded-full px-2 text-md text-gray-800 font-semibold"
-              @change="setSelectedConnection($event)"
             >
               <option value="" disabled>Select your Server-Connection</option>
-              <option v-for="connection in serverStore.connections" :key="connection.name" :value="connection.name">
+              <option
+                v-for="connection in serverStore.connections"
+                :key="connection.name"
+                :value="connection.name"
+                @click="setSelectedConnection(connection)"
+              >
                 {{ connection.name }}
               </option>
             </select>
@@ -158,97 +162,99 @@
             required
           />
         </div>
-
-        <div
-          v-if="serverStore.selectedServerConnection?.useAuthKey"
-          class="col-start-1 col-span-full row-start-5 row-span-2 gap-y-2 grid grid-cols-12 grid-rows-2"
-        >
+        <Transition name="slide-up">
           <div
-            class="w-full col-start-1 col-span-full row-start-1 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
+            v-if="serverStore.loginState.useAuth"
+            class="col-start-1 col-span-full row-start-5 row-span-2 gap-y-2 grid grid-cols-12 grid-rows-2"
+          >
+            <div
+              class="w-full col-start-1 col-span-full row-start-1 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
+              :class="{
+                errors: serverStore.loginState.useAuth
+                  ? !serverStore.loginState.keyPath
+                  : !serverStore.loginState.password,
+              }"
+            >
+              <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+                $t("formsetup.keylocation")
+              }}</span>
+
+              <input
+                v-model="serverStore.loginState.keyPath"
+                class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
+                type="text"
+                name="keylocation"
+                required
+              />
+              <label
+                for="file_input"
+                class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
+              >
+                <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
+                <img class="w-4 h-4" src="/img/icon/form-setup/plus.png" />
+              </label>
+            </div>
+            <div
+              class="w-full col-start-1 col-span-full row-start-2 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
+              :class="{
+                errors: serverStore.loginState.useAuth
+                  ? !serverStore.loginState.keyPath
+                  : !serverStore.loginState.passphrase,
+              }"
+            >
+              <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+                $t("formsetup.KeyPassphrase")
+              }}</span>
+              <input
+                v-model="serverStore.loginState.passphrase"
+                class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
+                :class="{
+                  notFilled: !serverStore.loginState.passphrase,
+                  isFilled: serverStore.loginState.passphrase,
+                }"
+                :type="inputType"
+                name="passphrase"
+              />
+              <div
+                class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer px-1"
+                @click="toggleShowPassword"
+              >
+                <img class="w-6 h-6" src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
+              </div>
+            </div>
+          </div>
+          <div
+            v-else
+            class="w-full col-start-1 col-span-full row-start-5 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
             :class="{
-              errors: serverStore.loginState.keyAuth
-                ? !serverStore.loginState.keyPath
+              errors: serverStore.loginState.useAuth
+                ? !serverStore.loginState.useAuth
                 : !serverStore.loginState.password,
             }"
           >
-            <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
-              $t("formsetup.keylocation")
+            <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
+              $t("formsetup.password")
             }}</span>
 
             <input
-              v-model="serverStore.loginState.keyPath"
+              v-model="serverStore.loginState.password"
               class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
-              type="text"
+              :class="{
+                notFilled: !serverStore.loginState.password,
+                isFilled: serverStore.loginState.password,
+              }"
+              :type="inputType"
               name="keylocation"
               required
             />
-            <label
-              for="file_input"
-              class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
-            >
-              <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
-              <img class="w-4 h-4" src="/img/icon/form-setup/plus.png" />
-            </label>
-          </div>
-          <div
-            class="w-full col-start-1 col-span-full row-start-2 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
-            :class="{
-              errors: serverStore.loginState.keyAuth
-                ? !serverStore.loginState.keyPath
-                : !serverStore.loginState.passphrase,
-            }"
-          >
-            <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
-              $t("formsetup.KeyPassphrase")
-            }}</span>
-            <input
-              v-model="serverStore.loginState.passphrase"
-              class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
-              :class="{
-                notFilled: !serverStore.loginState.passphrase,
-                isFilled: serverStore.loginState.passphrase,
-              }"
-              :type="inputType"
-              name="passphrase"
-            />
             <div
-              class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer px-1"
+              class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer"
               @click="toggleShowPassword"
             >
               <img class="w-6 h-6" src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
             </div>
           </div>
-        </div>
-        <div
-          v-else
-          class="w-full col-start-1 col-span-full row-start-5 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
-          :class="{
-            errors: serverStore.loginState.keyAuth ? !serverStore.loginState.keyPath : !serverStore.loginState.password,
-          }"
-        >
-          <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
-            $t("formsetup.password")
-          }}</span>
-
-          <input
-            v-model="serverStore.loginState.password"
-            class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
-            :class="{
-              notFilled: !serverStore.loginState.password,
-              isFilled: serverStore.loginState.password,
-            }"
-            :type="inputType"
-            name="keylocation"
-            required
-          />
-          <div
-            class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer"
-            @click="toggleShowPassword"
-          >
-            <img class="w-6 h-6" src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
-          </div>
-        </div>
-
+        </Transition>
         <div
           class="w-full h-8 col-start-5 col-span-4 justify-self-center self-end row-start-7 row-span-1 bg-[#1a2e2c] p-1 rounded-full flex justify-between items-center"
         >
@@ -317,13 +323,11 @@ import RemoveModal from "./RemoveModal.vue";
 import ErrorModal from "./ErrorModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
-import { useControlStore } from "@/store/theControl";
 
 import { ref, computed, watch, onBeforeMount, watchEffect } from "vue";
 import { useServerLogin } from "@/composables/useLogin";
 
 const serverStore = useServers();
-const controlStore = useControlStore();
 
 const { login, add, remove, loadStoredConnections, setSelectedConnection } = useServerLogin();
 
@@ -335,7 +339,6 @@ const ipScanModal = ref(false);
 const devices = ref([]);
 const foundIp = ref("Searching...");
 // const sshPort = ref(null);
-// const keyAuth = ref(false);
 // const link = ref("stereumLogoExtern.png");
 // const stereumVersions = ref({});
 const noIpFound = ref("No IP found");
@@ -371,20 +374,26 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  if (serverStore.selectedName === "") {
-    serverStore.loginState.hostName = "";
-    serverStore.loginState.ip = "";
-    serverStore.loginState.username = "";
-    serverStore.loginState.port = "";
-    serverStore.loginState.keyPath = "";
+watch(
+  () => serverStore.selectedName,
+  (newVal) => {
+    const selectedConnection = serverStore.connections.find((c) => c.name === newVal);
+    if (selectedConnection) {
+      serverStore.loginState.hostName = selectedConnection.name;
+      serverStore.loginState.ip = selectedConnection.host;
+      serverStore.loginState.username = selectedConnection.user;
+      serverStore.loginState.port = selectedConnection.port;
+      serverStore.loginState.keyPath = selectedConnection.keylocation;
+      serverStore.loginState.useAuth = selectedConnection.useAuthKey;
+    }
   }
-});
+);
 
 //Lifecycle Hooks
 onBeforeMount(async () => {
   await loadStoredConnections();
 });
+
 //Methods
 
 const changeLabel = () => {
@@ -434,7 +443,7 @@ const previewFiles = (event) => {
   const Path = event.target.files[0].path;
   let pathString = new String(Path);
   let result = pathString.toString();
-  controlStore.keyPath = result;
+  serverStore.loginState.keyPath = result;
 };
 
 const closeErrorDialog = () => {

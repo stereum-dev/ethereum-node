@@ -184,6 +184,9 @@ const selectKey = (key) => {
 };
 
 const renameKey = (key) => {
+  stakingStore.keys.forEach((item) => {
+    item.selected = false;
+  });
   key.selected = true;
   stakingStore.selectKeyToRename = key;
   stakingStore.setActivePanel("renameKey");
