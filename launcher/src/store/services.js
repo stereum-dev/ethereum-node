@@ -1178,7 +1178,7 @@ export const useServices = defineStore("services", {
           name: "ExternalConnection",
           service: "ExternalConnection",
           category: "external",
-          displayCategory: "csc",
+          displayCategory: "ext",
           displayTooltip: false,
           displayPluginMenu: false,
           serviceIsPending: false,

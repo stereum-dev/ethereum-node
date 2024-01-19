@@ -1,6 +1,6 @@
 <template>
   <custom-modal
-    :main-title="`${client.name} - ${client.category}`"
+    :main-title="client.name === 'ExternalConnection' ? `${client.name}` : `${client.name} - ${client.category}`"
     :client="client"
     :sub-title="getSubTitles"
     :confirm-text="getConfirmText"
@@ -59,7 +59,8 @@ const getConfirmText = computed(() => {
       text = "confirm";
     } else if (
       props.client.category === "consensus" ||
-      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service))
+      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service)) ||
+      props.client.category === "external"
     ) {
       text = "next";
     } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
@@ -100,7 +101,8 @@ const confirmInstall = () => {
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||
-    (props.client.category === "validator" && getConfirmText.value === "next")
+    (props.client.category === "validator" && getConfirmText.value === "next") ||
+    (props.client.category === "external" && getConfirmText.value === "next")
   ) {
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;

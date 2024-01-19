@@ -20,6 +20,43 @@ import { onMounted } from 'vue';
         <SyncCarousel :properties="props.properties" />
       </div>
     </div>
+
+    <div v-if="client.category === 'external'" class="w-full flex justify-center items-center">
+      <div class="w-full grid grid-cols-12 items-center text-md">
+        <img class="col-start-1 w-8" src="/img/icon/plugin-icons/Other/external_source.png" alt="Path Icon" />
+        <span class="col-start-2 col-span-3 text-gray-400 text-left">External Source</span>
+        <input
+          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
+          type="text"
+          autofocus
+        />
+      </div>
+    </div>
+
+    <div v-if="client.category === 'external'" class="w-full flex justify-center items-center">
+      <div class="w-full grid grid-cols-12 items-center text-md">
+        <img class="col-start-1 w-8" src="/img/icon/plugin-icons/Other/external_category.png" alt="Path Icon" />
+        <span class="col-start-2 col-span-3 text-gray-400 text-left">CATEGORY</span>
+        <label for="dropdown"></label>
+        <select id="dropdown" v-model="selectedOption">
+          <option value="option1">Consensus</option>
+          <option value="option2">Execution</option>
+        </select>
+      </div>
+    </div>
+
+    <div v-if="client.category === 'external'" class="w-full flex justify-center items-center">
+      <div class="w-full grid grid-cols-12 items-center text-md">
+        <img class="col-start-1 w-8" src="/img/icon/plugin-icons/Other/external_jwt_token.png" alt="Path Icon" />
+        <span class="col-start-2 col-span-3 text-gray-400 text-left">JWT TOKEN</span>
+        <input
+          :disabled="shouldDisableInput"
+          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
+          type="text"
+          autofocus
+        />
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
