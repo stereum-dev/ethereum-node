@@ -176,6 +176,12 @@ const toggleConnection = (option) => {
 
 const getConnectionOptions = () => {
   switch (props.client.category) {
+    case "external":
+      if (manageStore.catDefult == "consensus") {
+        return manageStore.newConfiguration.filter((e) => e.category === "validator");
+      } else {
+        return manageStore.newConfiguration.filter((e) => e.category === "consensus");
+      }
     case "execution":
       return [];
     case "consensus":
@@ -195,6 +201,7 @@ const getConnectionOptions = () => {
       if (props.client.service === "FlashbotsMevBoostService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
+
       break;
     default:
       return [];

@@ -4,7 +4,7 @@
     :client="client"
     :sub-title="getSubTitles"
     :confirm-text="getConfirmText"
-    :disabled-button="disabledButton"
+    :disabled-button="disabledButton || client.name === 'ExternalConnection' ? externalConnectionConfirmBtn : false"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmInstall"
@@ -88,6 +88,21 @@ const getSubTitles = computed(() => {
   return text;
 });
 
+const externalConnectionConfirmBtn = computed(() => {
+  if (manageStore.externalSource == "" && manageStore.catDefult == "select a category") {
+    return true;
+  } else if (manageStore.externalSource == "" && manageStore.catDefult !== "select a category") {
+    return true;
+  } else if (manageStore.externalSource !== "" && manageStore.catDefult == "select a category") {
+    return true;
+  } else if (manageStore.externalSource !== "" && manageStore.catDefult == "execution" && manageStore.jwtToken == "") {
+    return true;
+  } else if (manageStore.externalSource !== "" && manageStore.catDefult == "execution" && manageStore.jwtToken !== "") {
+    return false;
+  }
+  return false;
+});
+
 //Lifecycle Hooks
 onMounted(() => {
   isAddPanelActivated.value = true;
@@ -101,8 +116,7 @@ const confirmInstall = () => {
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||
-    (props.client.category === "validator" && getConfirmText.value === "next") ||
-    (props.client.category === "external" && getConfirmText.value === "next")
+    (props.client.category === "validator" && getConfirmText.value === "next")
   ) {
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;
@@ -122,6 +136,9 @@ const confirmInstall = () => {
   ) {
     isAddPanelActivated.value = false;
     isRelaysActivated.value = false;
+    isModifyActivated.value = true;
+  } else if (props.client.category === "external" && getConfirmText.value === "next") {
+    isAddPanelActivated.value = false;
     isModifyActivated.value = true;
   }
 };

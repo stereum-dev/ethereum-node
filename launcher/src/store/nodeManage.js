@@ -205,6 +205,9 @@ export const useNodeManage = defineStore("nodeManage", {
       currentNetwork: {},
       selectedNetwork: null,
       configNetwork: {},
+      catDefult: "select a category",
+      externalSource: "",
+      jwtToken: "",
     };
   },
   getters: {},
