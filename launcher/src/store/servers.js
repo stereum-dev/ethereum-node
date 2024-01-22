@@ -11,12 +11,12 @@ export const useServers = defineStore("servers", {
       alertBox: false,
       connections: [],
       selectedName: "",
-      isRemoveModalActive: false,
       showPassword: false,
 
       //Server Management
       newPassword: "",
       verifyPassword: "",
+      isChangingPasswordActive: false,
       isPasswordChanged: false,
       passResponse: "",
       refreshServers: false,
@@ -27,6 +27,8 @@ export const useServers = defineStore("servers", {
       isServerManagementActive: true,
       selectedServerToConnect: null,
       isAvatarModalActive: false,
+      isRemoveModalActive: false,
+      isRemoveProcessing: false,
       selectedAvatar: null,
 
       avatars: [

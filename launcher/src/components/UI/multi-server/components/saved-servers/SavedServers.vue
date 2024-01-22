@@ -8,7 +8,7 @@
       class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-3 bg-black rounded-md space-y-2"
     >
       <ServerRow
-        v-for="(server, index) in servers"
+        v-for="(server, index) in serverStore.savedServers.savedConnections"
         :key="server.name"
         :idx="index"
         :server="server"
@@ -33,16 +33,12 @@ import ServerRow from "./ServerRow.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { onMounted, computed, watch } from "vue";
+import { onMounted, watch } from "vue";
 
 const emit = defineEmits(["selectServer", "serverLogin"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
-
-const servers = computed(() => {
-  return serverStore.savedServers.savedConnections;
-});
 
 watch(
   () => serverStore.refreshServers,
@@ -61,9 +57,11 @@ onMounted(async () => {
 
 const loadStoredConnections = async () => {
   serverStore.savedServers = await ControlService.readConfig();
+
   serverStore.selectedServerConnection = serverStore.savedServers.savedConnections.find(
     (item) => item.host === controlStore.ipAddress
   );
+
   serverStore.refreshServers = false;
 };
 

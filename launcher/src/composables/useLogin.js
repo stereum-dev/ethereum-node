@@ -106,7 +106,7 @@ export const useServerLogin = () => {
 
     if (res) {
       router.push("/node").then(() => {
-        window.location.reload();
+        location.reload();
       });
     } else {
       router.push("/welcome");
@@ -129,6 +129,7 @@ export const useServerLogin = () => {
       serverStore.selectedServerConnection = newConnection;
       serverStore.selectedName = newConnection.name;
       writeSettings();
+      serverStore.refreshServers = true;
     } else {
       serverStore.alertBox = true;
       setTimeout(() => {
@@ -138,13 +139,12 @@ export const useServerLogin = () => {
   };
 
   const remove = async () => {
-    const currSelected = serverStore.selectedServerConnection.name;
-
     const storageSavedConnections = await ControlService.readConfig();
     let savedConnections = storageSavedConnections.savedConnections || [];
+    const server = serverStore.selectedServerToConnect;
 
-    serverStore.connections = serverStore.connections.filter((conn) => currSelected !== conn.name);
-    savedConnections = savedConnections.filter((conn) => currSelected !== conn.name);
+    serverStore.connections = serverStore.connections.filter((conn) => conn.name !== server.name);
+    savedConnections = savedConnections.filter((conn) => conn.name !== server.name);
 
     const updatedConfig = {
       ...storageSavedConnections,
@@ -155,7 +155,6 @@ export const useServerLogin = () => {
     await loadStoredConnections();
 
     resetServerStoreLoginState();
-    serverStore.isRemoveModalActive = false;
   };
 
   return {

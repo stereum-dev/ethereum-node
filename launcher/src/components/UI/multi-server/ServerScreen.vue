@@ -16,6 +16,12 @@ import ServerHeader from './components/ServerHeader.vue';
       @close-modal="closeGenerateModal"
       @generate-key="generateKeyHandler"
     />
+    <RemoveModal
+      v-if="serverStore.isRemoveModalActive"
+      @remove-handler="removeServerHandler"
+      @close-window="closeWindow"
+    />
+    <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
   </div>
 </template>
 
@@ -28,9 +34,13 @@ import { ref, onMounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 import { useServers } from "@/store/servers";
+import RemoveModal from "./components/modals/RemoveModal.vue";
+import ErrorModal from "./components/modals/ErrorModal.vue";
+import { useServerLogin } from "@/composables/useLogin";
 
 const controlStore = useControlStore();
 const serverStore = useServers();
+const { remove } = useServerLogin();
 
 const keyLocation = ref("");
 
@@ -81,6 +91,23 @@ const acceptChangePass = async (pass) => {
   } catch (err) {
     console.log(err);
   }
+};
+//Remove server handling
+
+const closeWindow = () => {
+  serverStore.isRemoveModalActive = false;
+};
+
+const removeServerHandler = async () => {
+  serverStore.isRemoveProcessing = true;
+  serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
+    (item) =>
+      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
+  );
+
+  await remove();
+  serverStore.isRemoveProcessing = false;
+  serverStore.isRemoveModalActive = false;
 };
 
 //SSH Key Management

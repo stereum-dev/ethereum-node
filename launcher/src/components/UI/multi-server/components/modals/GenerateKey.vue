@@ -4,7 +4,7 @@
     <div class="relative top-20 mx-auto px-5 py-2 border w-3/5 rounded-[35px] bg-[#1c1d1d] shadow-xl shadow-black z-30">
       <div class="mt-1 text-center">
         <h3 class="text-xl leading-6 font-semibold text-amber-500 uppercase">Generate SSH Key</h3>
-        <form class="mt-2 grid grid-cols-12 grid-rows-8 items-center gap-y-2" @click.prevent="generateKey">
+        <form class="mt-2 grid grid-cols-12 grid-rows-8 items-center gap-y-2">
           <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 items-center">
             <span
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
@@ -107,7 +107,6 @@
 
               <span
                 class="absolute inset-y-0 start-0 z-10 m-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:start-6 peer-checked:text-green-600"
-                @click="expertOptions = !expertOptions"
               >
                 <svg
                   data-unchecked-icon
@@ -154,7 +153,6 @@
                 :class="{
                   'opacity-50 pointer-events-none cursor-not-allowed': !expertOptions,
                 }"
-                :disabled="!expertOptions"
                 @click="isCustomCyperActive = !isCustomCyperActive"
               >
                 <span class="text-center font-semibold">{{ serverStore.selectedCyper || "USE A CUSTOM CYPER" }}</span>
@@ -192,7 +190,6 @@
                 :class="{
                   'opacity-50 pointer-events-none cursor-not-allowed': !expertOptions,
                 }"
-                :disabled="!expertOptions"
                 @click="isSpecifyAmountActive = !isSpecifyAmountActive"
               >
                 <span class="text-center font-semibold">{{ serverStore.bitAmount || "SPECIFY SSH BIT AMOUNT" }}</span>
@@ -224,6 +221,11 @@
             <button
               class="h-9 col-start-9 col-span-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline shadow-md shadow-black active:scale-95"
               type="button"
+              :class="{
+                'opacity-50 pointer-events-none cursor-not-allowed': isDisabled,
+              }"
+              :disabled="isDisabled"
+              @click="generateKey"
             >
               GENERATE
             </button>
@@ -235,7 +237,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import { useDeepClone } from "@/composables/utils";
 import ControlService from "@/store/ControlService";
@@ -249,6 +251,7 @@ const isOpen = ref(false);
 const isSpecifyAmountActive = ref(false);
 const isCustomCyperActive = ref(false);
 const fileInput = ref(null);
+const isDisabled = ref(true);
 
 // serverStore.savePath: "",
 // serverStore.sshPassword: "",
@@ -267,7 +270,16 @@ const typesAmount = computed(() => {
   return [];
 });
 
+watchEffect(() => {
+  if (serverStore.selectedKeyType !== "" && serverStore.savePath !== "") {
+    isDisabled.value = false;
+  }
+});
+
 //Methods
+watchEffect(() => {
+  console.log(expertOptions.value);
+});
 
 const handleFileChosen = (event) => {
   if (event.target.files && event.target.files[0]) {
@@ -311,8 +323,9 @@ const closeModal = () => {
 };
 
 const generateKey = () => {
-  if (serverStore.selectedKeyType !== "" && serverStore.savePath !== "") {
-    emit("generateKey");
+  if (serverStore.selectedKeyType === "" || serverStore.savePath === "") {
+    return;
   }
+  emit("generateKey");
 };
 </script>
