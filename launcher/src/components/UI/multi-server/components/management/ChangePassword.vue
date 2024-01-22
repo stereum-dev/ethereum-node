@@ -72,7 +72,7 @@
         class="w-full h-8 bg-teal-700 hover:bg-teal-900 text-gray-200 font-semibold py-1 px-4 rounded-md flex justify-center items-center cursor-pointer space-x-2 transition-all duration-200 ease-in-out active:scale-95 shadow-lg shadow-black active:shadow-none"
         @click="serverStore.isChangingPasswordActive = true"
       >
-        <span class="text-xs uppercase font-semibold">Change Password</span>
+        <span class="text-2xs uppercase font-semibold">Change Password</span>
       </button>
     </div>
   </div>
