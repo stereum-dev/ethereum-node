@@ -2367,6 +2367,10 @@ video {
   grid-template-columns: repeat(9, minmax(0, 1fr));
 }
 
+.grid-cols-10{
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
 .grid-rows-1{
   grid-template-rows: repeat(1, minmax(0, 1fr));
 }
@@ -3184,6 +3188,11 @@ video {
 .bg-\[\#202225\]{
   --tw-bg-opacity: 1;
   background-color: rgb(32 34 37 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#202632\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(32 38 50 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#212629\]{
@@ -4998,6 +5007,11 @@ html body {
 .hover\:bg-teal-950:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(4 47 46 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-teal-900:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(19 78 74 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-opacity-10:hover{

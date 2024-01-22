@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 <template>
   <div
-    class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-12 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
+    class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
     :class="connectedServer ? 'bg-[#336666] border border-teal-300 ' : 'bg-gray-200 '"
     @mouseenter="hovered = true"
     @click="selectServer"
@@ -15,13 +15,13 @@ import { ref, computed } from 'vue';
 
     <img
       v-else
-      class="col-start-1 col-span-1 self-center mx-auto h-[35px] w-[35px] flex-none rounded-full bg-gray-50"
+      class="col-start-1 col-span-1 self-center mx-auto w-full flex-none rounded-full bg-gray-50 border border-gray-300 shadow-sm shadow-[#1f2021]"
       :src="serverAvatar"
       alt="Server Avatar"
       @click="avatarModalHandler"
     />
     <div
-      class="col-start-2 col-end-12 flex flex-col justify-center items-start ml-2"
+      class="col-start-2 col-end-10 flex flex-col justify-center items-start ml-2"
       :class="connectedServer ? 'text-gray-100' : 'text-gray-800'"
     >
       <p class="leading-6 text-2xs font-semibold">
@@ -33,7 +33,7 @@ import { ref, computed } from 'vue';
     </div>
     <img
       v-if="connectedServer"
-      class="col-start-12 cil-span-1 w-full self-center"
+      class="col-start-10 cil-span-1 w-full self-center"
       src="/img/icon/access-management/check.png"
       alt="Check Icon"
     />
