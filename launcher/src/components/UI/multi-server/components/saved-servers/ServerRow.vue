@@ -33,7 +33,7 @@ import { ref, computed } from 'vue';
     </div>
     <img
       v-if="connectedServer"
-      class="col-start-10 cil-span-1 w-full self-center"
+      class="col-start-10 col-span-1 w-5 self-center"
       src="/img/icon/access-management/check.png"
       alt="Check Icon"
     />

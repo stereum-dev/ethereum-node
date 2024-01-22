@@ -33,7 +33,11 @@
       </div>
     </div>
     <div class="col-start-4 col-end-22 row-start-3 row-end-11 bg-[#1a2e2c] rounded-lg p-4">
-      <RemoveModal v-if="serverStore.isRemoveModalActive" @remove-handler="remove" @close-window="closeRemoveModal" />
+      <RemoveModal
+        v-if="serverStore.isRemoveModalActive"
+        @remove-handler="removeServerHandler"
+        @close-window="closeRemoveModal"
+      />
       <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
       <form
         class="w-full h-full p-1 bg-[#305c59] col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7 gap-y-2"
@@ -47,13 +51,8 @@
               v-model="serverStore.selectedName"
               class="w-full h-full rounded-full px-2 text-md text-gray-800 font-semibold"
             >
-              <option value="" disabled>Select your Server-Connection</option>
-              <option
-                v-for="connection in serverStore.connections"
-                :key="connection.name"
-                :value="connection.name"
-                @click="setSelectedConnection(connection)"
-              >
+              <option value="" disabled selected>Select your Server-Connection</option>
+              <option v-for="connection in serverStore.connections" :key="connection.name" :value="connection.name">
                 {{ connection.name }}
               </option>
             </select>
@@ -329,7 +328,7 @@ import { useServerLogin } from "@/composables/useLogin";
 
 const serverStore = useServers();
 
-const { login, add, remove, loadStoredConnections, setSelectedConnection } = useServerLogin();
+const { login, add, remove, loadStoredConnections } = useServerLogin();
 
 //State
 const abortController = ref(new AbortController());
@@ -456,6 +455,12 @@ const closeRemoveModal = () => {
 
 const removeModalHandler = () => {
   serverStore.isRemoveModalActive = true;
+};
+
+const removeServerHandler = async () => {
+  serverStore.selectedServerToConnect = serverStore.connections.find((c) => c.name === serverStore.selectedName);
+  await remove();
+  serverStore.isRemoveModalActive = false;
 };
 
 const cancelLogin = () => {
