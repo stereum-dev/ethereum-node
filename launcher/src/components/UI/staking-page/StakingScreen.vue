@@ -388,8 +388,7 @@ const renameGroup = (item) => {
 
 //Withdraw Group
 
-const withdrawGroup = (item) => {
-  console.log(item);
+const withdrawGroup = () => {
   stakingStore.setActivePanel("password");
 };
 

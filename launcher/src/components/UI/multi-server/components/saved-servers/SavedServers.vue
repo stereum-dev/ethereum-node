@@ -1,14 +1,46 @@
 <template>
-  <div class="col-start-1 col-span-full row-start-1 row-span-full p-2 pr-0 grid grid-cols-12 grid-rows-12 items-center">
-    <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
-      <span class="text-md text-gray-200 text-left font-semibold uppercase">SAVED SERVER CONNECTIONS</span>
+  <div class="col-start-1 col-span-full row-start-1 row-span-full p-2 grid grid-cols-12 grid-rows-12 items-center">
+    <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
+      <span class="text-sm text-gray-200 text-left font-semibold uppercase">SAVED SERVER CONNECTIONS</span>
+    </div>
+    <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
+      <label for="Search" class="sr-only"> Search </label>
+
+      <input
+        id="Search"
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search for..."
+        class="w-full h-8 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm px-2"
+      />
+
+      <span class="absolute inset-y-0 end-0 grid w-10 place-content-center">
+        <button type="button" class="text-gray-600 hover:text-gray-700">
+          <span class="sr-only">Search</span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-4 w-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+            />
+          </svg>
+        </button>
+      </span>
     </div>
 
     <div
       class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-3 bg-black rounded-md space-y-2"
     >
       <ServerRow
-        v-for="(server, index) in serverStore.savedServers.savedConnections"
+        v-for="(server, index) in filteredServers"
         :key="server.name"
         :idx="index"
         :server="server"
@@ -16,7 +48,7 @@
       />
     </div>
     <button
-      class="w-full h-[50px] col-start-2 col-end-12 row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-center items-center shadow-md shadow-[#29292c] hover:scale-105 active:scale-100 cursor-pointer space-x-4 transition-all duration-200 ease-in-out"
+      class="w-full h-[50px] col-start-1 col-span-full row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer space-x-4 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
       @click="serverLogin"
     >
       <img
@@ -24,7 +56,7 @@
         src="/img/icon/form-setup/plus.png"
         alt="Add Icon"
       />
-      <span class="text-sm text-gray-800 text-left uppercase font-bold">ADD A NEW SERVER CONNECTION</span>
+      <span class="text-sm text-left uppercase font-bold">ADD A NEW SERVER CONNECTION</span>
     </button>
   </div>
 </template>
@@ -33,12 +65,22 @@ import ServerRow from "./ServerRow.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { onMounted, watch } from "vue";
+import { onMounted, watch, ref, computed } from "vue";
 
 const emit = defineEmits(["selectServer", "serverLogin"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
+const searchQuery = ref("");
+
+const filteredServers = computed(() => {
+  if (!searchQuery.value) {
+    return serverStore.savedServers.savedConnections;
+  }
+  return serverStore.savedServers.savedConnections.filter((server) =>
+    server.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
 watch(
   () => serverStore.refreshServers,

@@ -46,8 +46,6 @@ const group = computed(() => {
   return stakingStore.currentGroup;
 });
 
-console.log(group.value);
-
 const activeButton = computed(() => {
   if (stakingStore.currentGroup) {
     return true;
