@@ -116,14 +116,24 @@ export class Monitoring {
       nodeConnection = this.nodeConnection;
     }
     if (nodeConnection.sshService.connected) {
-      let settings;
       try {
-        settings = await nodeConnection.sshService.exec("ls /etc/stereum");
+        const settings = await nodeConnection.sshService.exec("ls /etc/stereum");
+
+        // Return true if stdout includes "stereum.yaml"
+        if (settings?.stdout && settings.stdout.includes("stereum.yaml")) {
+          return true;
+        }
+
+        // Return false if stderr includes "No such file or directory"
+        if (settings?.stderr && settings.stderr.includes("No such file or directory")) {
+          return false;
+        }
       } catch (err) {
         log.debug("checking stereum installation failed:", err);
       }
-      if (settings?.stdout.includes("stereum.yaml")) return true;
     }
+
+    // Default return false if none of the above conditions are met
     return false;
   }
 
@@ -2863,7 +2873,7 @@ rm -rf diskoutput
       {
         logs_since: null,
         logs_until: null,
-        logs_tail: 150,
+        logs_tail: null,
         logs_ts: null,
         service_name: null,
       },
