@@ -1252,7 +1252,7 @@ export const useServices = defineStore("services", {
           addPanel: false,
           category: "service",
           path: "/authenticator",
-          icon: "/img/icon/plugin-icons/Other/GoogleAuthenticator2FA-s.png",
+          icon: "/img/icon/plugin-icons/Other/GoogleAuthenticator2FA.png",
           sIcon: "/img/icon/plugin-icons/Other/GoogleAuthenticator2FA-s.png",
           hIcon: "/img/icon/plugin-icons/Other/GoogleAuthenticator2FA-s.png",
           linkUrl: "",

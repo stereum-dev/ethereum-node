@@ -14,67 +14,41 @@
           </div>
         </div>
       </div>
-      <div v-if="!setupPage && !generationPage && !configurePage" class="content">
+      <div class="content">
         <div class="browserBox">
           <ConfirmBox
-            :top-line="`${$t('authenticatorModal.newSetupTitel')}`"
-            :bottom-line="`${$t('authenticatorModal.newSetupText')}`"
-            :btn-name="`${$t('authenticatorModal.newSetupButton')}`"
-            :btn-bg-color="`#f37625`"
-            @confirmPluginClick="openSetup"
+            :top-line="`${topConfirmBox.topLine}`"
+            :bottom-line="`${topConfirmBox.bottomLine}`"
+            :btn-name="`${topConfirmBox.btnName}`"
+            :btn-bg-color="`#A0A0A0`"
+            @confirmPluginClick="topConfirmBoxClick"
           />
         </div>
-        <div class="browserBox">
+        <div v-if="!setupPage || (!generationPage && !setupPage)" class="browserBox">
           <ConfirmBox
+            v-if="!generationPage"
             :top-line="`${$t('authenticatorModal.importTitel')}`"
             :bottom-line="`${$t('authenticatorModal.importText')}`"
             :btn-name="`${$t('authenticatorModal.importButton')}`"
-            :btn-bg-color="`#f37625`"
+            :btn-bg-color="`#A0A0A0`"
             @confirmPluginClick="openLocalApp"
+          /><AuthContainer
+            v-else
+            :secret-key="secretKey"
+            :varification-code="varificationCode"
+            :barcode="authBarcode"
+            @save-click="saveScratch"
           />
         </div>
-      </div>
-      <div v-if="setupPage" class="content">
-        <div class="browserBox">
-          <ConfirmBox
-            :top-line="`${$t('authenticatorModal.resetTitel')}`"
-            :bottom-line="`${$t('authenticatorModal.resetText')}`"
-            :btn-name="`${$t('authenticatorModal.resetButton')}`"
-            :btn-bg-color="`#f37625`"
-            @confirmPluginClick="openSetup"
-          />
+        <div v-if="setupPage || generationPage" class="checkContainer">
+          <checkContainer :title="`${checkContainer.title}`" @update="handleCheckboxUpdate" />
         </div>
-        <div class="check-box">
-          <label for="checkbox">
-            {{ $t('authenticatorModal.timedTokens') }}
-            <input id="checkbox" v-model="isChecked" type="checkbox" />
-          </label>
+        <div v-if="false" class="checkContainer">
+          <checkContainer :title="`${checkContainer.title}`" @update="handleCheckboxUpdate" />
         </div>
-        
-          <ConfirmBox
-            :btn-name="`${$t('authenticatorModal.generateKeyButton')}`"
-            :btn-bg-color="`#f37625`"
-            @confirmPluginClick="openGeneration"
-          />
-        
-      </div>
-      <div v-if="generationPage" class="content">
-        <div class="browserBox">
-          <ConfirmBox
-            :top-line="`${$t('authenticatorModal.backupTitel')}`"
-            :bottom-line="`${$t('authenticatorModal.backupText')}`"
-            :btn-name="`${$t('authenticatorModal.backupButton')}`"
-            :btn-bg-color="`#f37625`"
-            @confirmPluginClick="openSetup"
-          />
+        <div v-if="setupPage || generationPage" class="btn-auth" @click="mainBtnClick">
+          {{ mainBtnContent.btnName }}
         </div>
-        
-          <ConfirmBox
-            :btn-name="`${$t('authenticatorModal.generateKeyButton')}`"
-            :btn-bg-color="`#f37625`"
-            @confirmPluginClick="open"
-          />
-        
       </div>
     </div>
   </div>
@@ -85,9 +59,13 @@ import { mapState, mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeStore } from "@/store/theNode";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
+import checkContainer from "./plugin/CheckContainer.vue";
+import AuthContainer from "./plugin/AuthContainer.vue";
 export default {
   components: {
     ConfirmBox,
+    checkContainer,
+    AuthContainer,
   },
   data() {
     return {
@@ -96,6 +74,12 @@ export default {
       setupPage: false,
       generationPage: false,
       configurePage: false,
+      secretKey: "H6pGFVFBPDM2FSTD", //dummy key
+      varificationCode: "123456", //dummy code
+      authBarcode: "/img/icon/header-icons/dummyQR.png", //dummy barcode
+      //check points for the check box
+      authKeyTimeBase: false,
+      confirmSuccessAuth: false,
     };
   },
 
@@ -106,14 +90,78 @@ export default {
     ...mapWritableState(useNodeStore, {
       hideConnectedLines: "hideConnectedLines",
     }),
+    topConfirmBox() {
+      if (!this.setupPage && !this.generationPage) {
+        return {
+          topLine: `${this.$t("authenticatorModal.newSetupTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.newSetupText")}`,
+          btnName: `${this.$t("authenticatorModal.newSetupButton")}`,
+          btnBgColor: `#A0A0A0`,
+        };
+      } else if (this.setupPage && !this.generationPage) {
+        return {
+          topLine: `${this.$t("authenticatorModal.resetTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.resetText")}`,
+          btnName: `${this.$t("authenticatorModal.resetButton")}`,
+          btnBgColor: `#A0A0A0`,
+        };
+      } else if (!this.setupPage && this.generationPage) {
+        return {
+          topLine: `${this.$t("authenticatorModal.backupTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.backupText")}`,
+          btnName: `${this.$t("authenticatorModal.setupButton")}`,
+          btnBgColor: `#A0A0A0`,
+        };
+      } else {
+        return {
+          topLine: `${this.$t("authenticatorModal.setupTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.setupText")}`,
+          btnName: `${this.$t("authenticatorModal.setupButton")}`,
+          btnBgColor: `#A0A0A0`,
+        };
+      }
+    },
+    checkContainer() {
+      if (this.setupPage || !this.generationPage) {
+        return {
+          title: `${this.$t("authenticatorModal.timedTokens")}`,
+        };
+      } else if (!this.setupPage && this.generationPage) {
+        return {
+          title: `${this.$t("authenticatorModal.confirmText")}`,
+        };
+      } else {
+        return {
+          title: `${this.$t("authenticatorModal.timedTokens")}`,
+        };
+      }
+    },
+    mainBtnContent() {
+      if (this.setupPage && !this.generationPage) {
+        return { btnName: `${this.$t("authenticatorModal.generateKeyButton")}` };
+      } else {
+        return {
+          btnName: `${this.$t("authenticatorModal.setupButton")}`,
+        };
+      }
+    },
   },
   mounted() {
     this.filterAuthenticatorService();
   },
   methods: {
+    handleCheckboxUpdate(value) {
+      if (this.setupPage || !this.generationPage) {
+        this.authKeyTimeBase = value;
+        console.log("auth key", this.authKeyTimeBase);
+      } else if (!this.setupPage && this.generationPage) {
+        this.confirmSuccessAuth = value;
+        console.log("confirm", this.confirmSuccessAuth);
+      }
+    },
     filterAuthenticatorService() {
       this.runningServices.forEach((item) => {
-        if (item.name === "Authenticator") this.authenticatorService = item;
+        if (item.name === "Google Authenticator") this.authenticatorService = item;
       });
       this.isAuthenticatorAvailable = true;
     },
@@ -125,16 +173,24 @@ export default {
       let url = "https://github.com/authenticator/authenticator";
       window.open(url, "_blank");
     },
-    openSetup() {
-      this.setupPage = true;
+    topConfirmBoxClick() {
+      if (!this.setupPage && this.generationPage) {
+        //generation func have to be added
+        console.log("generation");
+      } else if (this.setupPage && !this.generationPage) {
+        this.setupPage = false;
+      } else if (!this.setupPage && !this.generationPage) {
+        this.setupPage = true;
+      }
     },
-    openGeneration() {
-      this.setupPage = false;
-      this.generationPage = true;
+    mainBtnClick() {
+      if (this.setupPage) {
+        this.generationPage = true;
+        this.setupPage = false;
+      }
     },
-    openConfigure() {
-      this.generationPage = false;
-      this.configurePage = true;
+    saveScratch() {
+      console.log("save scratch");
     },
   },
 };
@@ -170,7 +226,7 @@ export default {
   background-color: #212122;
   border: 5px solid rgb(161, 161, 161);
   border-radius: 30px;
-  position: absolute;
+  position: relative absolute;
   top: 9%;
   display: flex;
   flex-direction: column;
@@ -265,7 +321,18 @@ export default {
   align-items: center;
   margin-bottom: 2%;
 }
-
+.checkContainer {
+  width: 95%;
+  height: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #393939;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 10px;
+  margin-bottom: 2%;
+}
 .check-box {
   width: 90%;
   height: 35%;
@@ -298,5 +365,27 @@ export default {
   align-self: center;
   cursor: pointer;
   outline: none;
+}
+.btn-auth {
+  width: 15%;
+  height: 8%;
+  background-color: #a0a0a0;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2%;
+  cursor: pointer;
+  position: absolute;
+  bottom: 10%;
+  color: #dbdbdb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.btn-auth:active {
+  box-shadow: 1px 1px 10px 1px #171717 inset;
 }
 </style>
