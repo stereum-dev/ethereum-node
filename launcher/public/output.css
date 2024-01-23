@@ -2119,6 +2119,10 @@ video {
   min-width: 150px;
 }
 
+.min-w-\[170px\]{
+  min-width: 170px;
+}
+
 .max-w-\[160px\]{
   max-width: 160px;
 }
@@ -3974,6 +3978,14 @@ video {
 
 .leading-tight{
   line-height: 1.25;
+}
+
+.leading-5{
+  line-height: 1.25rem;
+}
+
+.leading-8{
+  line-height: 2rem;
 }
 
 .tracking-wide{

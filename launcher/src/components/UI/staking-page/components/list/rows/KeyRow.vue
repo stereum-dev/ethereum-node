@@ -22,19 +22,19 @@ import { computed } from 'vue';
       </div>
     </div>
     <div
-      class="col-start-2 col-end-9 self-center overflow-hidden flex justify-start items-center"
+      class="col-start-2 col-end-8 self-center overflow-hidden flex justify-start items-center"
       @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span
-        class="text-center font-semibold text-sm ml-1"
+        class="text-center font-semibold text-xs"
         :class="props.item?.selected ? 'text-gray-800' : 'text-gray-300'"
         >{{ displayText }}</span
       >
     </div>
 
     <img
-      class="w-6 h-6 col-start-9 col-end-10 self-center mx-auto"
+      class="w-6 h-6 col-start-8 col-span-1 self-center mx-auto"
       :src="props.item?.icon"
       alt="Client Icon"
       @mousedown.prevent
@@ -42,7 +42,7 @@ import { computed } from 'vue';
       @mouseleave="footerStore.cursorLocation = ''"
     />
     <span
-      class="col-start-10 col-end-13 self-center text-center text-xs text-gray-300 overflow-hidden"
+      class="col-start-9 col-end-12 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
       @mouseenter="footerStore.cursorLocation = `${activeExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -50,15 +50,15 @@ import { computed } from 'vue';
     >
 
     <div
-      class="w-full col-start-13 col-end-14 self-center overflow-hidden flex justify-center items-center"
+      class="w-full col-start-12 col-end-13 self-center overflow-hidden flex justify-center items-center"
       @mouseenter="footerStore.cursorLocation = `${state}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img class="w-full p-[2px]" :src="getKeyState" alt="icon" @mousedown.prevent />
+      <img class="w-6 h-6" :src="getKeyState" alt="icon" @mousedown.prevent />
     </div>
 
     <span
-      class="col-start-14 col-end-18 self-center text-center text-xs text-gray-300 overflow-hidden"
+      class="col-start-13 col-end-17 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
       @mouseenter="footerStore.cursorLocation = `${balExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
