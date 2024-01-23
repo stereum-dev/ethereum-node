@@ -32,7 +32,6 @@
 import SshRow from "./SshRow.vue";
 import { useServers } from "@/store/servers";
 import { computed } from "vue";
-import { useTruncate } from "@/composables/utils";
 
 const emit = defineEmits(["fileUpload", "deleteKey"]);
 
@@ -46,10 +45,7 @@ const uniqueSshKeys = computed(() => {
       return;
     }
 
-    // Extract the last 50 characters of the key
-    const keyEnd = keyString.length >= 50 ? useTruncate(keyString, 0, 40) : keyString;
-
-    uniqueKeys.add(keyEnd);
+    uniqueKeys.add(keyString);
   });
 
   return Array.from(uniqueKeys);

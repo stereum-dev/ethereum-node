@@ -117,6 +117,7 @@ const readSSHKeyFile = async () => {
 };
 
 const confirmDelete = async (key) => {
+  serverStore.sshKeys = serverStore.sshKeys.filter((item) => item !== key);
   try {
     await ControlService.writeSSHKeyFile(serverStore.sshKeys.filter((item) => item !== key));
     await readSSHKeyFile();

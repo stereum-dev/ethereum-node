@@ -316,18 +316,14 @@ onMounted(async () => {
 });
 
 // Methods
-
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
-    const allowedExtensions = [".pem", ".key"];
-    const fileExtension = selectedFile.name.slice(((selectedFile.name.lastIndexOf(".") - 1) >>> 0) + 2);
-
-    if (allowedExtensions.includes("." + fileExtension.toLowerCase())) {
-      serverStore.loginState.keyPath = selectedFile.name;
+    if (selectedFile.size > 0) {
+      serverStore.loginState.keyPath = selectedFile.path;
     } else {
       serverStore.loginState.keyPath = "";
-      message.value = "Please select a valid SSH key file.";
+      message.value = "Selected file is empty.";
     }
   } else {
     serverStore.loginState.keyPath = "";
