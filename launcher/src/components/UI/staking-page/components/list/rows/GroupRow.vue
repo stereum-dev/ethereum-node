@@ -37,7 +37,7 @@ import { useStakingStore } from '@/store/theStaking';
           src="/img/icon/the-staking/open-group.png"
           alt="Icon"
           @mousedown.prevent
-          @click="openGroup(props.item)"
+          @click="openGroup"
         />
       </div>
       <div
@@ -50,7 +50,7 @@ import { useStakingStore } from '@/store/theStaking';
           src="/img/icon/the-staking/rename-group.png"
           alt="Icon"
           @mousedown.prevent
-          @click="renameGroup(props.item)"
+          @click="renameGroup"
         />
       </div>
 
@@ -126,16 +126,16 @@ const groupName = computed(() => {
 
 const emit = defineEmits(["openGroup", "renameGroup", "withdrawGroup", "removeGroup"]);
 
-const openGroup = (item) => {
-  emit("openGroup", item);
+const openGroup = () => {
+  emit("openGroup", props.item);
 };
 
-const renameGroup = (item) => {
-  emit("renameGroup", item);
+const renameGroup = () => {
+  emit("renameGroup", props.item);
 };
 
-const removeGroup = (item) => {
-  stakingStore.currentGroup = item;
+const removeGroup = () => {
+  stakingStore.currentGroup = props.item;
   stakingStore.setActiveModal("removeGroup");
 };
 </script>

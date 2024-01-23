@@ -22,7 +22,9 @@ import ServerDetails from "./components/ServerDetails.vue";
 import ControlService from "@/store/ControlService";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { useServers } from "@/store/servers";
 
+const serverStore = useServers();
 //Router
 const router = useRouter();
 
@@ -42,6 +44,7 @@ const logoutModalHandler = () => {
 };
 
 const loggingOut = async () => {
+  serverStore.connectingAnimActive = false;
   isProcessing.value = true;
   router.push("/login").then(() => {
     location.reload();

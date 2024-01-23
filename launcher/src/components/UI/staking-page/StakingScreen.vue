@@ -81,7 +81,7 @@ const modals = {
   },
   removeGroup: {
     component: RemoveGroup,
-    props: {},
+
     events: {
       removeGroup: () => removeGroupConfirm(stakingStore.currentGroup),
     },

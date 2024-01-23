@@ -42,17 +42,19 @@ import { computed } from 'vue';
       @mouseleave="footerStore.cursorLocation = ''"
     />
     <span
-      class="col-start-11 col-end-13 self-center text-center text-xs text-gray-300 overflow-hidden"
+      class="col-start-11 col-end-14 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
       @mouseenter="footerStore.cursorLocation = `${activeExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
       >{{ props.item.activeSince }}</span
     >
+
     <div
       class="w-full col-start-13 col-end-15 self-center overflow-hidden flex justify-center items-center"
       @mouseenter="footerStore.cursorLocation = `${state}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
+
       <img class="w-6 h-6" :src="getKeyState" alt="icon" @mousedown.prevent />
     </div>
 
@@ -233,6 +235,9 @@ const selectKey = (key) => {
 };
 
 const renameKey = (key) => {
+  stakingStore.keys.forEach((item) => {
+    item.selected = false;
+  });
   key.selected = true;
   stakingStore.selectKeyToRename = key;
   stakingStore.setActivePanel("renameKey");

@@ -224,7 +224,7 @@ export default {
     async loggingOut() {
       this.refresh = false;
       await ControlService.logout();
-      this.$router.push("/").then(() => {
+      this.$router.push("/login").then(() => {
         location.reload();
       });
     },
