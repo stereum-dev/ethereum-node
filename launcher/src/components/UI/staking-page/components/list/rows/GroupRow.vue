@@ -5,14 +5,14 @@ import { useStakingStore } from '@/store/theStaking';
     :class="isRemoveActive ? 'animate__slideOutRight animate__faster ' : 'animate__slideInLeft animate__delay-0.5s'"
   >
     <div
-      class="col-start-1 col-end-5 self-center overflow-hidden flex justify-start items-center"
+      class="col-start-1 col-end-4 self-center overflow-hidden flex justify-start items-center"
       @mouseenter="footerStore.cursorLocation = `${grpNam} ${groupName}`"
     >
       <img class="w-6" src="/img/icon/the-staking/newfolder-icon.png" alt="Folder Icon" @mousedown.prevent />
-      <span class="text-center text-xs text-gray-300 ml-1 overflow-hidden">{{ groupName }}</span>
+      <span class="text-center text-sm text-gray-300 ml-1 overflow-hidden">{{ groupName }}</span>
     </div>
     <div
-      class="col-start-5 col-end-8 self-center text-center text-sm text-gray-300 overflow-hidden flex justify-center items-center"
+      class="col-start-4 col-end-7 self-center text-center text-sm text-gray-300 overflow-hidden flex justify-start items-center"
       @mouseenter="footerStore.cursorLocation = `${keyNumGrp}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -20,11 +20,11 @@ import { useStakingStore } from '@/store/theStaking';
     </div>
 
     <div
-      class="col-start-8 col-end-10 self-center overflow-hidden flex justify-start items-center"
+      class="col-start-7 col-end-10 self-center overflow-hidden flex justify-start items-center"
       @mouseenter="footerStore.cursorLocation = `${grpBal} `"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span class="text-left ml-2 text-xs text-gray-300">{{ getBalanceSum }}</span>
+      <span class="text-left font-semibold text-xs text-amber-300 leading-8">{{ getBalanceSum }}</span>
     </div>
     <div class="col-start-10 col-span-full bg-[#151618] rounded-full grid grid-cols-3 items-center">
       <div
