@@ -7,17 +7,17 @@
     </div>
     <div class="w-full h-full col-start-1 col-span-full row-start-2 row-span-3 flex justify-evenly items-center">
       <button
-        class="min-w-[150px] h-6 bg-teal-700 hover:bg-teal-900 rounded-full px-2 flex justify-center items-center active:scale-95 shadow-lg shadow-black transition duration-150 ease-in-out"
+        class="min-w-[170px] h-6 bg-teal-700 hover:bg-teal-900 rounded-full px-2 flex justify-center items-center active:scale-95 active:shadow-none shadow-lg shadow-black transition duration-150 ease-in-out"
         @click="generateModal"
       >
-        <span class="text-2xs font-semibold text-gray-300">CREATE A NEW KEY</span>
+        <span class="text-[12px] font-semibold text-gray-100">CREATE A NEW KEY</span>
       </button>
       <label
         for="ssh"
-        class="min-w-[150px] h-6 bg-teal-700 hover:bg-teal-900 rounded-full px-2 flex justify-center items-center active:scale-95 shadow-lg shadow-black transition duration-150 ease-in-out cursor-pointer"
+        class="min-w-[170px] h-6 bg-teal-700 hover:bg-teal-900 rounded-full px-2 flex justify-center items-center active:scale-95 active:shadow-none shadow-lg shadow-black transition duration-150 ease-in-out cursor-pointer"
       >
         <input id="ssh" type="file" name="sshFile" accept=".pub" class="hidden" @change="fileUpload" />
-        <span class="text-2xs font-semibold text-gray-300"> ADD AN EXISTING KEY</span>
+        <span class="text-[12px] font-semibold text-gray-100"> ADD AN EXISTING KEY</span>
       </label>
     </div>
     <div
