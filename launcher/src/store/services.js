@@ -1175,8 +1175,8 @@ export const useServices = defineStore("services", {
         },
         {
           id: 27,
-          name: "ExternalConnection",
-          service: "ExternalConnection",
+          name: "ExternalService",
+          service: "ExternalService",
           category: "external",
           displayCategory: "ext",
           displayTooltip: false,

@@ -27,7 +27,13 @@ import { NotificationService } from "./ethereum-services/NotificationService";
 import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
+import { ExternalService } from "./ethereum-services/ExternalService";
 import YAML from "yaml";
+// import { useServices } from "../store/services";
+
+// const servicesStore = useServices();
+
+// console.log("object, ", servicesStore.allServices);
 
 const log = require("electron-log");
 
@@ -149,6 +155,8 @@ export class ServiceManager {
               services.push(KeysAPIService.buildByConfiguration(config));
             } else if (config.service == "CharonService") {
               services.push(CharonService.buildByConfiguration(config));
+            } else if (config.service == "ExternalService") {
+              services.push(ExternalService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -917,6 +925,10 @@ export class ServiceManager {
       case "CharonService":
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
         return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
+
+      case "ExternalService":
+        ports = [];
+        return ExternalService.buildByUserInput(args.network, args.installDir + "/external");
     }
   }
 
@@ -1497,7 +1509,7 @@ export class ServiceManager {
       LodestarValidatorService: "--monitoring.endpoint=",
       LodestarBeaconService: "--monitoring.endpoint=",
     };
- 
+
     let metricsExporterAdded = false;
 
     switch (selectedValidator.service) {
@@ -1584,7 +1596,7 @@ export class ServiceManager {
       await this.manageServiceState(metricsExporter.id, "started");
     }
   }
-  
+
   async addMetricsExporter(services) {
     try {
       let installTask = [];
@@ -1622,7 +1634,7 @@ export class ServiceManager {
     }
   }
 
-  async removeBeaconchainMonitoring(data){
+  async removeBeaconchainMonitoring(data) {
     let metricsCommandIndex;
     let metricsExporterRemoveID = null;
     let linkedMetricsExporter;
@@ -1647,7 +1659,9 @@ export class ServiceManager {
       case "TekuValidatorService":
       case "LodestarValidatorService":
         await this.manageServiceState(selectedValidator.id, "stopped");
-        metricsCommandIndex = selectedValidator.command.findIndex((c) => c.includes(metricsExporterCommands[selectedValidator.service]));
+        metricsCommandIndex = selectedValidator.command.findIndex((c) =>
+          c.includes(metricsExporterCommands[selectedValidator.service])
+        );
         if (metricsCommandIndex > -1) {
           selectedValidator.command.splice(metricsCommandIndex, 1);
         }
@@ -1664,7 +1678,9 @@ export class ServiceManager {
       case "TekuBeaconService":
       case "LodestarBeaconService":
         await this.manageServiceState(firstConsensusClient.id, "stopped");
-        metricsCommandIndex = firstConsensusClient.command.findIndex((c) => c.includes(metricsExporterCommands[firstConsensusClient.service]));
+        metricsCommandIndex = firstConsensusClient.command.findIndex((c) =>
+          c.includes(metricsExporterCommands[firstConsensusClient.service])
+        );
         if (metricsCommandIndex > -1) {
           firstConsensusClient.command.splice(metricsCommandIndex, 1);
         }
@@ -1676,15 +1692,15 @@ export class ServiceManager {
         metricsExporterRemoveID = firstConsensusClient.id;
         break;
     }
-    if(metricsExporterRemoveID != null){
+    if (metricsExporterRemoveID != null) {
       let metricsExporters = services.filter((services) => services.service == "MetricsExporterService");
       metricsExporters.forEach((metricsExporter) => {
         let IDIndex = metricsExporter.command.findIndex((c) => c.includes(metricsExporterRemoveID));
         if (IDIndex > -1) {
           linkedMetricsExporter = metricsExporter;
         }
-      })
-    
+      });
+
       await this.nodeConnection.runPlaybook("Delete Service", {
         stereum_role: "delete-service",
         service: linkedMetricsExporter.id,

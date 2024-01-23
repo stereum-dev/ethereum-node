@@ -1,10 +1,10 @@
 <template>
   <custom-modal
-    :main-title="client.name === 'ExternalConnection' ? `${client.name}` : `${client.name} - ${client.category}`"
+    :main-title="client.name === 'ExternalService' ? `${client.name}` : `${client.name} - ${client.category}`"
     :client="client"
     :sub-title="getSubTitles"
     :confirm-text="getConfirmText"
-    :disabled-button="disabledButton || client.name === 'ExternalConnection' ? externalConnectionConfirmBtn : false"
+    :disabled-button="disabledButton || client.name === 'ExternalService' ? externalServiceConfirmBtn : false"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmInstall"
@@ -88,7 +88,7 @@ const getSubTitles = computed(() => {
   return text;
 });
 
-const externalConnectionConfirmBtn = computed(() => {
+const externalServiceConfirmBtn = computed(() => {
   if (manageStore.externalSource == "" && manageStore.catDefult == "select a category") {
     return true;
   } else if (manageStore.externalSource == "" && manageStore.catDefult !== "select a category") {
