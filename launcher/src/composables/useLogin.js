@@ -103,13 +103,12 @@ export const useServerLogin = () => {
     }
 
     const res = await ControlService.checkStereumInstallation();
+    const routePath = res ? "/node" : "/welcome";
 
-    if (res) {
-      router.push("/node").then(() => {
-        location.reload();
-      });
+    if (serverStore.connectingProcess) {
+      router.push(routePath).then(() => location.reload());
     } else {
-      router.push("/welcome");
+      router.push(routePath);
     }
   };
 

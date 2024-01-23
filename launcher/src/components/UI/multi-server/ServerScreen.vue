@@ -127,13 +127,23 @@ const confirmDelete = async (key) => {
 };
 
 const addExistingKeyHandler = async (event) => {
-  const Path = event.target.files[0].path;
-  let pathString = new String(Path);
-  let result = pathString.toString();
-  keyLocation.value = result;
-  console.log(keyLocation.value);
-  await ControlService.AddExistingSSHKey(keyLocation.value);
-  await readSSHKeyFile();
+  const file = event.target.files[0];
+
+  if (file) {
+    const filePath = file.path;
+    const fileExtension = filePath.split(".").pop();
+
+    if (fileExtension.toLowerCase() === "pub") {
+      let pathString = new String(filePath);
+      let result = pathString.toString();
+      keyLocation.value = result;
+      console.log(keyLocation.value);
+      await ControlService.AddExistingSSHKey(keyLocation.value);
+      await readSSHKeyFile();
+    } else {
+      console.error("The selected file does not have a .pub extension.");
+    }
+  }
 };
 
 const closeGenerateModal = () => {

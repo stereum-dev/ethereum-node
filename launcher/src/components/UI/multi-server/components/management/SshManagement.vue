@@ -16,14 +16,14 @@
         for="ssh"
         class="min-w-[150px] h-6 bg-teal-700 hover:bg-teal-900 rounded-full px-2 flex justify-center items-center active:scale-95 shadow-lg shadow-black transition duration-150 ease-in-out cursor-pointer"
       >
-        <input id="ssh" type="file" name="sshFile" class="hidden" @change="fileUpload" />
+        <input id="ssh" type="file" name="sshFile" accept=".pub" class="hidden" @change="fileUpload" />
         <span class="text-2xs font-semibold text-gray-300"> ADD AN EXISTING KEY</span>
       </label>
     </div>
     <div
       class="w-full h-full max-h-[105px] overflow-x-hidden overflow-y-auto col-start-1 col-span-full row-start-5 row-span-full border border-gray-500 rounded-md flex flex-col justify-start items-center p-1 space-y-1 bg-black"
     >
-      <SshRow v-for="key in uniqueSshKeys" :key="key" :item="key" @delete-key="deleteKey" />
+      <SshRow v-for="key in serverStore.sshKeys" :key="key" :item="key" @delete-key="deleteKey" />
     </div>
   </div>
 </template>
@@ -31,25 +31,10 @@
 <script setup>
 import SshRow from "./SshRow.vue";
 import { useServers } from "@/store/servers";
-import { computed } from "vue";
 
 const emit = defineEmits(["fileUpload", "deleteKey"]);
 
 const serverStore = useServers();
-
-const uniqueSshKeys = computed(() => {
-  const uniqueKeys = new Set();
-  serverStore.sshKeys.forEach((keyString) => {
-    if (typeof keyString !== "string") {
-      console.warn("Non-string SSH key encountered:", keyString);
-      return;
-    }
-
-    uniqueKeys.add(keyString);
-  });
-
-  return Array.from(uniqueKeys);
-});
 
 const generateModal = () => {
   serverStore.isGenerateModalActive = true;

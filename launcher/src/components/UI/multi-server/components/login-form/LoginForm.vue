@@ -372,11 +372,11 @@ const changeLabel = () => {
 };
 
 const internalLogin = async () => {
+  serverStore.connectingProcess = true;
   if (!validateServerName() || !validateIPorHostname() || !validateUsername()) {
     return;
   }
 
-  serverStore.connectingProcess = true;
   await ControlService.logout();
   await login();
   serverStore.connectingProcess = false;

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-screen h-screen border-2 border-slate-500 rounded-lg bg-[#336666] flex flex-col justify-evenly items-center"
+    class="w-screen h-screen border-2 box-border border-slate-500 rounded-lg bg-[#336666] flex flex-col justify-evenly items-center"
   >
     <div
       class="w-full h-full bg-no-repeat bg-center bg-contain bg-fixed grid grid-cols-24 grid-rows-12"
@@ -16,13 +16,16 @@
       </div>
 
       <slot></slot>
+
+      <Transition name="slide-fade">
+        <ServerScreen
+          v-if="serverStore.isServerAccessManagementActive && router.currentRoute.value.path !== '/login'"
+        />
+      </Transition>
     </div>
     <TaskManager
       v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
     />
-    <Transition name="slide-fade">
-      <ServerScreen v-if="serverStore.isServerAccessManagementActive && router.currentRoute.value.path !== '/login'" />
-    </Transition>
   </div>
 </template>
 <script setup>

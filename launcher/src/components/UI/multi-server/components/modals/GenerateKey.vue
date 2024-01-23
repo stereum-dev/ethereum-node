@@ -1,6 +1,6 @@
 <template>
-  <div id="my-modal" class="w-screen h-screen fixed inset-0">
-    <div class="absolute inset-0 bg-black bg-opacity-80 z-10 rounded-md" @click="closeModal"></div>
+  <div class="w-full h-full absolute inset-0 border-none">
+    <div class="w-full h-full absolute inset-0 bg-black bg-opacity-80 z-10 rounded-md" @click="closeModal"></div>
     <div class="relative top-20 mx-auto px-5 py-2 border w-3/5 rounded-[35px] bg-[#1c1d1d] shadow-xl shadow-black z-30">
       <div class="mt-1 text-center">
         <h3 class="text-xl leading-6 font-semibold text-amber-500 uppercase">Generate SSH Key</h3>
@@ -67,7 +67,6 @@
                     >+</span
                   >
                 </div>
-                <input id="keypath-file" ref="fileInput" type="file" class="hidden" @change="handleFileChosen" />
               </label>
             </div>
           </div>
@@ -250,7 +249,6 @@ const expertOptions = ref(false);
 const isOpen = ref(false);
 const isSpecifyAmountActive = ref(false);
 const isCustomCyperActive = ref(false);
-const fileInput = ref(null);
 const isDisabled = ref(true);
 
 // serverStore.savePath: "",
@@ -277,17 +275,7 @@ watchEffect(() => {
 });
 
 //Methods
-watchEffect(() => {
-  console.log(expertOptions.value);
-});
 
-const handleFileChosen = (event) => {
-  if (event.target.files && event.target.files[0]) {
-    const files = event.target.files;
-    const path = files[0].webkitRelativePath.split("/")[0];
-    serverStore.savePath = path;
-  }
-};
 const selectKeyType = (type) => {
   serverStore.selectedKeyType = type;
   isOpen.value = false;
