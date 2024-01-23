@@ -1,7 +1,7 @@
 <template>
   <div class="col-start-1 col-span-full row-start-1 row-span-full p-2 grid grid-cols-12 grid-rows-12 items-center">
     <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
-      <span class="text-md text-gray-200 text-left font-semibold uppercase">SAVED SERVER CONNECTIONS</span>
+      <span class="text-sm text-gray-200 text-left font-semibold uppercase">SAVED SERVER CONNECTIONS</span>
     </div>
     <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
       <label for="Search" class="sr-only"> Search </label>

@@ -178,6 +178,7 @@ const handleFiles = (files) => {
 
 const uploadValidatorKey = (event) => {
   let uploadedFiles = event.target.files;
+  console.log(uploadedFiles);
   if (!stakingStore.keyFiles.includes(uploadedFiles[0]["name"]) && uploadedFiles[0]["type"] === "application/json") {
     stakingStore.previewKeys = [];
     handleFiles(uploadedFiles);
