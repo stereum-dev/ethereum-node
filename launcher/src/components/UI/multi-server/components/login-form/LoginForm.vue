@@ -85,7 +85,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           id="port"
           v-model="serverStore.loginState.port"
           type="text"
-          placeholder="4000"
+          placeholder="22"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
