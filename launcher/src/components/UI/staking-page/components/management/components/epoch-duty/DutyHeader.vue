@@ -1,6 +1,8 @@
 <template>
   <div
     class="h-full col-start-1 col-span-full row-start-1 row-span-1 bg-black rounded-md grid grid-cols-6 p-[2px] items-center"
+    @mouseenter="footerStore.cursorLocation = `${upcomEpochDuti}`"
+    @mouseleave="footerStore.cursorLocation = ''"
   >
     <img
       class="col-start-1 col-span-1 w-3 h-3"
@@ -22,6 +24,15 @@
 </template>
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
+
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const footerStore = useFooter();
+
+const upcomEpochDuti = t("displayValidator.upcomEpochDuti");
 
 const stakingStore = useStakingStore();
 </script>

@@ -2,9 +2,20 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 bg-black rounded-md grid grid-cols-6 grid-rows-1 items-center px-2"
   >
-    <img class="w-5 h-5 col-start-1 col-span-1" :src="getServiceIcon" alt="Service Icon" @mousedown.prevent />
+    <img
+      class="w-5 h-5 col-start-1 col-span-1"
+      :src="getServiceIcon"
+      alt="Service Icon"
+      @mousedown.prevent
+      @mouseenter="footerStore.cursorLocation = `${valClint}`"
+      @mouseleave="footerStore.cursorLocation = ''"
+    />
 
-    <div class="col-start-2 col-end-5 flex justify-center items-center space-x-1">
+    <div
+      class="col-start-2 col-end-5 flex justify-center items-center space-x-1"
+      @mouseenter="footerStore.cursorLocation = `${valStat}`"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
       <span class="relative h-3 w-3 rounded-full col-start-2 col-span-1 flex justify-center items-center">
         <span
           class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
@@ -24,7 +35,11 @@
       alt="Key Icon"
       @mousedown.prevent
     />
-    <span class="text-[10px] font-semibold text-center col-start-6 col-span-1" :class="getTextColor"
+    <span
+      class="text-[10px] font-semibold text-center col-start-6 col-span-1"
+      :class="getTextColor"
+      @mouseenter="footerStore.cursorLocation = `${numValidator}`"
+      @mouseleave="footerStore.cursorLocation = ''"
       >{{ stakingStore.keyNumbers }}
     </span>
   </div>
@@ -33,6 +48,16 @@
 <script setup>
 import { computed, watch } from "vue";
 import { useStakingStore } from "@/store/theStaking";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const footerStore = useFooter();
+
+const valClint = t("displayValidator.valClint");
+const valStat = t("displayValidator.valStat");
+const numValidator = t("displayValidator.numValidator");
 
 const stakingStore = useStakingStore();
 

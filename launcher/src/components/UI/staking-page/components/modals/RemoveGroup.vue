@@ -9,7 +9,7 @@
     @confirm-action="removeGroup"
   >
     <template #content>
-      <div class="col-start-1 col-span-full row-start-4 row-end-5 w-full h-full grid grid-cols-12 grid-rows-2">
+      <div class="col-start-1 col-span-full row-start-4 row-end-6 w-full h-full grid grid-cols-12 grid-rows-3">
         <div class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-1 flex justify-start items-center px-1">
           <span class="w-fit text-sm font-semibold text-left text-gray-400">Group ID: </span>
           <span class="w-fit text-amber-400 text-md font-semibold ml-5">{{ group.id }}</span>
@@ -19,6 +19,14 @@
         >
           <span class="w-fit text-sm font-semibold text-left text-gray-400">Group Name:</span>
           <span class="w-fit text-amber-400 text-md font-semibold ml-5">{{ group.name }}</span>
+        </div>
+        <div
+          class="w-full h-full col-start-3 col-end-11 row-start-3 row-span-1 text-sm text-left text-gray-300 flex justify-start items-center px-1"
+        >
+          <span class="w-fit text-sm font-semibold text-left text-gray-400">Keys:</span>
+          <span class="w-fit text-amber-400 text-md font-semibold ml-5">{{
+            `Contains ${group.keys.length} key(s)`
+          }}</span>
         </div>
       </div>
     </template>
@@ -37,6 +45,8 @@ const clickOut = ref("Click outside to cancel");
 const group = computed(() => {
   return stakingStore.currentGroup;
 });
+
+console.log(group.value);
 
 const activeButton = computed(() => {
   if (stakingStore.currentGroup) {

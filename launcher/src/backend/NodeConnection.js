@@ -1181,6 +1181,7 @@ export class NodeConnection {
     await this.closeTunnels();
     this.os = null;
     this.osv = null;
+    console.log("logged out");
   }
 
   async restartServer() {

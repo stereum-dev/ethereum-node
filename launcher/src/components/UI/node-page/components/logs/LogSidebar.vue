@@ -40,11 +40,18 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 
 import { useNodeStore } from "@/store/theNode";
+
+const props = defineProps({
+  client: {
+    type: Object,
+    default: null,
+  },
+});
 
 const footerStore = useFooter();
 const serviceStore = useServices();
@@ -64,6 +71,10 @@ watch(currentService, (newService) => {
   if (selectedService) {
     nodeStore.clientToLogs = selectedService;
   }
+});
+
+onMounted(() => {
+  currentService.value = props.client.config?.serviceID;
 });
 
 //Methods

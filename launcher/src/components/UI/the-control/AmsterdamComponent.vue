@@ -18,7 +18,10 @@
           <div class="square-3 square"></div>
         </div>
       </div>
-      <no-data v-else-if="nodataFlagControl"></no-data>
+      <no-data
+        v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"
+        :service-cat="installedServicesController !== '' ? 'install' : prometheusIsOff ? 'prometheus' : ''"
+      />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows">
@@ -109,6 +112,7 @@ import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
+import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 import NoData from "./NoData.vue";
 
@@ -129,11 +133,17 @@ export default {
       proposed: [],
       polling: {},
       loadingStrater: false,
+      prometheusIsOff: false,
+      consensusClientIsOff: false,
     };
   },
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
+    }),
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -143,6 +153,7 @@ export default {
       epoch: "epoch",
       slot: "slot",
       status: "status",
+      installedServicesController: "installedServicesController",
     }),
     ...mapWritableState(useControlStore, {
       currentSlotData: "currentSlotData",
@@ -170,7 +181,17 @@ export default {
       return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
     },
     flag() {
-      if (this.currentResult === undefined) {
+      if (
+        this.installedServicesController === "consensus" ||
+        this.installedServicesController === "Prometheus" ||
+        this.installedServicesController === "consensus and Prometheus"
+      ) {
+        return false;
+      } else if (this.consensusClientIsOff === true) {
+        return false;
+      } else if (this.prometheusIsOff === true) {
+        return false;
+      } else if (this.currentResult === undefined) {
         return true;
       } else if (this.currentResult.beaconStatus === undefined) {
         return true;
@@ -183,12 +204,14 @@ export default {
       }
       return false;
     },
-    nodataFlagControl() {
-      return this.flagController();
-    },
   },
 
   watch: {
+    installedServices() {
+      this.serviceController(this.installedServices);
+      this.serviceStateController(this.consensusName, "consensusClientIsOff");
+      this.serviceStateController("prometheus", "prometheusIsOff");
+    },
     pageNumber() {
       clearInterval(this.polling);
       this.loadingStrater = true;
@@ -222,6 +245,41 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
+    serviceStateController(serviceName, stateProperty) {
+      let isServiceOff = true; // Default to true, assuming the service is off
+
+      for (let service of this.installedServices) {
+        if (service.name.toLowerCase() === serviceName.toLowerCase()) {
+          isServiceOff = service.state === "exited";
+          break; // Exit the loop as we've found the service
+        }
+      }
+
+      this[stateProperty] = isServiceOff;
+    },
+    serviceController(arr) {
+      const foundCategories = new Set();
+      let hasPrometheus = false;
+
+      for (let obj of arr) {
+        if (obj.category === "consensus" || obj.category === "execution") {
+          foundCategories.add(obj.category);
+        }
+        if (obj.name === "Prometheus") {
+          hasPrometheus = true;
+        }
+      }
+
+      const categories = ["consensus", "execution"];
+      const missingCategories = categories.filter((category) => !foundCategories.has(category));
+
+      if (!hasPrometheus) {
+        missingCategories.push("Prometheus");
+      }
+
+      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
+    },
+
     refreshTimer() {
       if (this.currentNetwork.id === 4) {
         this.polling = setInterval(() => {
@@ -242,15 +300,7 @@ export default {
       clearInterval(this.polling);
       this.currentEpochSlot(this.consensusName);
     },
-    flagController() {
-      if (this.flag === false && this.currentResult.beaconStatus !== 0) {
-        this.noDataFlag = true;
-        return true;
-      } else if (this.currentResult.beaconStatus === 0) {
-        this.noDataFlag = false;
-        return false;
-      }
-    },
+
     dialogOpen(arg1, arg2, arg3) {
       this.dialog = true;
       this.epoch = arg1;

@@ -11,10 +11,16 @@ import IconsNav from "./IconsNav.vue";
 import ServiceLinks from "./ServiceLinks.vue";
 import { useFrontendServices } from "@/composables/services";
 import { onBeforeUnmount, onMounted } from "vue";
+import { useServices } from "@/store/services";
 let intervalID;
 
+const serviceStore = useServices();
+
 onMounted(() => {
-  useFrontendServices();
+  if (serviceStore.installedServices.length) {
+    useFrontendServices();
+  }
+
   intervalID = setInterval(useFrontendServices, 2000); //refresh services
 });
 

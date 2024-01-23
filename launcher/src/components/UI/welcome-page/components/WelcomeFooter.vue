@@ -87,19 +87,3 @@ const checkOsRequirements = async () => {
   display(osResponse, suResponse);
 };
 </script>
-
-<style scoped>
-.dot-flashing {
-  @apply relative top-[-2px] w-5 h-5 self-end ml-4 border-2 border-[#262626] bg-[#262626] rounded-full animate-dotFlashing;
-}
-
-@keyframes dotFlashing {
-  0%,
-  100% {
-    background-color: #262626;
-  }
-  50% {
-    background-color: #2b2b2b;
-  }
-}
-</style>

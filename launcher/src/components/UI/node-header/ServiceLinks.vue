@@ -93,8 +93,8 @@ export default {
       } else if (serviceName == "AuthenticatorService") {
         this.showAuthenticatorWindow = true;
       } else if (serviceName == "CharonService") {
-        return;
-        // this.showObolCharonWindow = true;
+        // return;
+        this.showObolCharonWindow = true;
         // console.log("ObolCharonService");
       } else {
         return;

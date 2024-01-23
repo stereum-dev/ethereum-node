@@ -31,7 +31,7 @@ const closeLog = () => {
   emit("close-log");
 };
 
-const exportLog = () => {
-  emit("export-log");
+const exportLog = (item) => {
+  emit("export-log", item);
 };
 </script>

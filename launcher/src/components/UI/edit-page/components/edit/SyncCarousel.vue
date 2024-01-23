@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center relative gap-x-2">
+  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2">
     <Carousel
       ref="carousel"
       v-model="currentSlide"
@@ -10,14 +10,20 @@
       snap-align="center"
     >
       <slide v-for="(item, index) in installStore.syncType" :key="index" aria-current="0">
-        <div class="w-full h-full bg-[#33393e] flex justify-center items-center border border-gray-600 rounded-lg">
+        <div
+          class="w-11/12 h-full bg-[#33393e] flex justify-center items-center border border-gray-600 rounded-lg"
+          :style="{ 'pointer-events': getCategory === 'execution' ? 'none' : '' }"
+        >
           <div v-if="item.name === 'genesis'" class="w-full h-full flex justify-evenly items-center p-1">
             <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1">
               <span class="w-full font-semibold text-md uppercase">{{ item.name }}</span>
               <span class="w-full font-semibold text-md uppercase text-teal-600">{{ item.type }}</span>
             </div>
           </div>
-          <div v-else-if="item.type === 'custom source'" class="w-full h-full flex justify-evenly items-center p-1">
+          <div
+            v-else-if="item.type === 'custom source' && getCategory !== 'execution'"
+            class="w-full h-full flex justify-evenly items-center p-1"
+          >
             <div class="w-1/3 h-full flex flex-col justify-evenly items-center">
               <span class="text-sm text-gray-400 capitalize">{{ item.name }}</span>
               <span class="text-xs font-semibold uppercase text-teal-600">{{ item.type }}</span>
@@ -31,7 +37,10 @@
               />
             </div>
           </div>
-          <div v-else-if="item.type === 'recommended'" class="w-full h-full flex justify-evenly items-center">
+          <div
+            v-else-if="item.type === 'recommended' && getCategory !== 'execution'"
+            class="w-full h-full flex justify-evenly items-center"
+          >
             <div class="w-1/3 h-full flex flex-col justify-evenly items-center">
               <span class="text-sm text-gray-400 capitalize">{{ item.name }}</span>
               <span class="text-xs font-semibold uppercase text-teal-600">{{ item.type }}</span>
@@ -67,9 +76,7 @@
         </div>
       </slide>
 
-      <template #addons>
-        <navigation />
-      </template>
+      <template #addons><navigation v-if="getCategory !== 'execution'" /> </template>
     </Carousel>
 
     <Transition name="slide">
@@ -101,7 +108,7 @@
 </template>
 <script setup>
 import ControlService from "@/store/ControlService";
-import { ref, watch, onMounted, onBeforeMount } from "vue";
+import { ref, watch, onMounted, onBeforeMount, computed } from "vue";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "@/store/nodeManage";
 import "vue3-carousel/dist/carousel.css";
@@ -111,6 +118,13 @@ import { useRouter } from "vue-router";
 const installStore = useClickInstall();
 const manageStore = useNodeManage();
 const router = useRouter();
+
+const props = defineProps({
+  cat: {
+    type: String,
+    default: null,
+  },
+});
 
 // Data
 const carousel = ref(null);
@@ -122,6 +136,10 @@ const prevVal = ref(0);
 const selectedIcon = ref("");
 
 // Computed properties
+
+const getCategory = computed(() => {
+  return props.cat;
+});
 
 // Watchers
 watch(currentSlide, (val) => {
@@ -145,7 +163,7 @@ watch(currentSlide, (val) => {
 
 // Lifecycle hooks
 onBeforeMount(() => {
-  currentSlide.value = 3;
+  currentSlide.value = 2;
 });
 
 onMounted(() => {
@@ -196,7 +214,6 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
-
   const networkLinks = {
     1: installStore.mainnet,
     2: installStore.goerli,
@@ -206,7 +223,6 @@ const setSelectedLinks = () => {
   };
 
   selectedLinks.value = networkLinks[manageStore.currentNetwork?.id] || [];
-
 };
 </script>
 

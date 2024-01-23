@@ -14,6 +14,7 @@ export const useFooter = defineStore("theFooter", {
       title: "",
       first: "",
       second: "",
+      installedServicesController: "",
     };
   },
   getters: {},

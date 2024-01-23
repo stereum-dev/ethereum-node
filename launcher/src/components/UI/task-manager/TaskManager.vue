@@ -58,7 +58,7 @@ export default {
   data() {
     return {
       intervalId: null,
-      isTaskModalActive: false,
+      // isTaskModalActive: false,
       showDropDownList: false,
       isTaskFailed: false,
       isTaskSuccess: false,
@@ -77,6 +77,8 @@ export default {
       installIconSrc: "installIconSrc",
       UpdatedSubtasks: "UpdatedSubtasks",
       stopIntervalForModal: "stopIntervalForModal",
+      errorAlarm: "errorAlarm",
+      isTaskModalActive: "isTaskModalActive",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -95,6 +97,13 @@ export default {
     },
   },
   watch: {
+    Tasks() {
+      if (this.Tasks.some((task) => task.status === "failed")) {
+        this.errorAlarm = true;
+      } else {
+        this.errorAlarm = false;
+      }
+    },
     showDropDownList(newValue) {
       if (newValue == true && !this.stopIntervalForModal) {
         this.intervalId = setInterval(() => {

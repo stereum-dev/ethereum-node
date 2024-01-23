@@ -1,6 +1,6 @@
 <template>
   <div class="balance-parent">
-    <NoData v-if="noDataFlag" />
+    <NoData v-if="installedServicesController !== ''" service-cat="install" />
     <div v-else class="wrapper">
       <div class="finalized-box">
         <div class="finalized-value" @mouseenter="cursorLocation = `${finEPOCH} `" @mouseleave="cursorLocation = ''">
@@ -9,7 +9,7 @@
         <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
       </div>
       <div class="balance-box">
-        <div class="balance-value">{{ balance }} GWei</div>
+        <div class="balance-value" :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }">{{ balance }} GWei</div>
         <div class="title">{{ $t("balWid.bal") }}</div>
       </div>
     </div>
@@ -39,6 +39,7 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      installedServicesController: "installedServicesController",
     }),
   },
 
@@ -117,8 +118,5 @@ export default {
   font-size: 180%;
   width: 100%;
   height: 50%;
-}
-.balance-value {
-  color: #74fa65;
 }
 </style>

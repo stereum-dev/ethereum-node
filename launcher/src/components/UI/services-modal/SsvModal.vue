@@ -15,9 +15,17 @@
 
         <div class="flip-box icon-box">
           <div class="flip-box-inner">
-            <img class="flip-box-front" src="/img/icon/service-icons/ssv-network.png" alt="icon" />
+            <img
+              class="flip-box-front"
+              src="/img/icon/service-icons/ssv-network.png"
+              alt="icon"
+            />
 
-            <img class="flip-box-back" src="/img/icon/click-installation/testnet-icon.png" alt="icon" />
+            <img
+              class="flip-box-back"
+              src="/img/icon/click-installation/testnet-icon.png"
+              alt="icon"
+            />
           </div>
         </div>
 
@@ -25,9 +33,21 @@
         <div class="title-box">
           <div class="service-name"><span>ssv.network</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
+            <img
+              src="/img/icon/service-icons/internet.png"
+              alt="icon"
+              @click="openBrowser"
+            />
+            <img
+              src="/img/icon/service-icons/github1.png"
+              alt="icon"
+              @click="openGitHub"
+            />
+            <img
+              src="/img/icon/service-icons/discord.png"
+              alt="icon"
+              @click="openDiscord"
+            />
           </div>
         </div>
       </div>
@@ -41,7 +61,9 @@
         <div class="browserBox">
           <ConfirmBox
             v-if="
-              (!importRawOperatorKeyOldMethod && !importEncryptedKey && !switchEncryptedKeyGenerator) ||
+              (!importRawOperatorKeyOldMethod &&
+                !importEncryptedKey &&
+                !switchEncryptedKeyGenerator) ||
               passGenerateEncryptKeyConfirmed ||
               lastStep
             "
@@ -61,11 +83,20 @@
                 ? 'Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!'
                 : 'Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it. '
             }`"
-            :btn-name="`${!passGenerateEncryptKeyConfirmed ? 'GENERATE' : !lastStep ? 'CONFIRM' : 'OPEN IN BROSWER'}`"
+            :btn-name="`${
+              !passGenerateEncryptKeyConfirmed
+                ? 'GENERATE'
+                : !lastStep
+                ? 'CONFIRM'
+                : 'OPEN IN BROSWER'
+            }`"
             @confirmPluginClick="firstConfirmBtnHndlr"
           />
           <ImportBox
-            v-else-if="!switchEncryptedKeyGenerator || (passGenerateEncryptKeyConfirmed && importEncryptedKey)"
+            v-else-if="
+              !switchEncryptedKeyGenerator ||
+              (passGenerateEncryptKeyConfirmed && importEncryptedKey)
+            "
             :btn-bg-color="`#1ba5f8`"
             :import-box-title="
               importRawOperatorKeyOldMethod
@@ -94,13 +125,19 @@
             :class="[
               (!confirmPassToGenerateCheckForBackup && switchEncryptedKeyGenerator) ||
               (importRawOperatorKeyOldMethod && !importBoxModel) ||
-              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator)
+              (!importEncryptedKey &&
+                !passGenerateEncryptKeyConfirmed &&
+                switchEncryptedKeyGenerator)
                 ? 'disabled'
                 : '',
             ]"
             :btn-bg-color="`${!lastStep ? '#1ba5f8' : '#494949'}`"
             :top-line="!lastStep ? secondRowTitle : 'COPY PUBLIC OPERATOR KEY'"
-            :bottom-line="!lastStep ? secondRowExplain : 'Secret Operator Key (SK) & Public Operator Key (PK)'"
+            :bottom-line="
+              !lastStep
+                ? secondRowExplain
+                : 'Secret Operator Key (SK) & Public Operator Key (PK)'
+            "
             :btn-name="!lastStep ? secondRowBtnName : 'COPY'"
             :img-url="!lastStep ? '' : '/img/icon/service-icons/copy1.png'"
             @confirmPluginClick="secondRowBtnHandler"
@@ -120,7 +157,9 @@
             :class="[
               (!confirmPassToGenerateOpenInBrowser && switchEncryptedKeyGenerator) ||
               (importRawOperatorKeyOldMethod && !importBoxModel) ||
-              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator)
+              (!importEncryptedKey &&
+                !passGenerateEncryptKeyConfirmed &&
+                switchEncryptedKeyGenerator)
                 ? 'disabled'
                 : '',
             ]"
@@ -216,9 +255,17 @@ export default {
     passControlGenerateEncryptKeyBtn() {
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
         return "Generate";
-      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && !this.tryAgain) {
+      } else if (
+        this.firstPassToGenerateCheck &&
+        !this.confirmPassToGenerateCheck &&
+        !this.tryAgain
+      ) {
         return "Confirm";
-      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && this.tryAgain) {
+      } else if (
+        this.firstPassToGenerateCheck &&
+        !this.confirmPassToGenerateCheck &&
+        this.tryAgain
+      ) {
         return "Try Again";
       } else {
         return "";
@@ -227,9 +274,17 @@ export default {
     passControlGenerateEncryptKeyPlaceholder() {
       if (!this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck) {
         return "Set your password";
-      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && !this.tryAgain) {
+      } else if (
+        this.firstPassToGenerateCheck &&
+        !this.confirmPassToGenerateCheck &&
+        !this.tryAgain
+      ) {
         return "Confirm your password";
-      } else if (this.firstPassToGenerateCheck && !this.confirmPassToGenerateCheck && this.tryAgain) {
+      } else if (
+        this.firstPassToGenerateCheck &&
+        !this.confirmPassToGenerateCheck &&
+        this.tryAgain
+      ) {
         return "Passwords do not match, please try again";
       } else {
         return "";
@@ -239,9 +294,17 @@ export default {
       return this.tryAgain ? "1px solid red" : "none";
     },
     secondRowTitle() {
-      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator && !this.importRawOperatorKeyOldMethod) {
+      if (
+        !this.importEncryptedKey &&
+        this.switchEncryptedKeyGenerator &&
+        !this.importRawOperatorKeyOldMethod
+      ) {
         return "DOWNLOAD BACKUP";
-      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+      } else if (
+        this.importRawOperatorKeyOldMethod &&
+        !this.importEncryptedKey &&
+        !this.switchEncryptedKeyGenerator
+      ) {
         return "MIGRATE TO ENCRYPTED KEY?";
       } else {
         return "COPY PUBLIC OPERATOR KEY";
@@ -250,7 +313,11 @@ export default {
     secondRowExplain() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "Use an existing operator private key to recover your existing node operator's  processes";
-      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+      } else if (
+        this.importRawOperatorKeyOldMethod &&
+        !this.importEncryptedKey &&
+        !this.switchEncryptedKeyGenerator
+      ) {
         return "Use an existing operator private key to recover your existing node operator's  processes";
       } else {
         return "Import an existing encrypted operator key";
@@ -259,7 +326,11 @@ export default {
     secondRowBtnName() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "DOWNLOAD";
-      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+      } else if (
+        this.importRawOperatorKeyOldMethod &&
+        !this.importEncryptedKey &&
+        !this.switchEncryptedKeyGenerator
+      ) {
         return "MIGRATE";
       } else {
         return "IMPORT";
@@ -268,7 +339,11 @@ export default {
     thirdRowTitle() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "REGISTER NEW OPERATOR";
-      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+      } else if (
+        this.importRawOperatorKeyOldMethod &&
+        !this.importEncryptedKey &&
+        !this.switchEncryptedKeyGenerator
+      ) {
         return "IMPORT UNENCRYPTED PRIVATE KEY";
       } else {
         return "IMPORT raw (OLD METHOD) Operator Keys";
@@ -277,7 +352,11 @@ export default {
     thirdRowExplain() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "Register your SSV node as a new operator in the browser";
-      } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
+      } else if (
+        this.importRawOperatorKeyOldMethod &&
+        !this.importEncryptedKey &&
+        !this.switchEncryptedKeyGenerator
+      ) {
         return "Use an existing operator private key to recover your existing node operator's  processes";
       } else {
         return "Use an existing operator private key to recover your existing node operator's  processes";
@@ -309,7 +388,9 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let ssv = this.runningServices.find((service) => service.service === "SSVNetworkService");
+      let ssv = this.runningServices.find(
+        (service) => service.service === "SSVNetworkService"
+      );
       this.ssvService = ssv;
       let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
       this.secretkey = ssvConfig.ssv_sk;
@@ -317,15 +398,22 @@ export default {
 
       try {
         if (!this.pubkey) {
-          let ssvKeystoreConfig = await ControlService.readSSVKeystoreConfig(ssv.config.serviceID);
+          let ssvKeystoreConfig = await ControlService.readSSVKeystoreConfig(
+            ssv.config.serviceID
+          );
           if (ssvKeystoreConfig.privateKeyFileData.publicKey) {
             this.pubkey = ssvKeystoreConfig.privateKeyFileData.publicKey;
           }
         }
         let network = ssvConfig.network === "goerli" ? "prater" : ssvConfig.network;
-        let response = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/public_key/` + this.pubkey);
+        let response = await axios.get(
+          `https://api.ssv.network/api/v4/${network}/operators/public_key/` + this.pubkey
+        );
         if (!response.data.data)
-          response = await axios.get(`https://api.ssv.network/api/v3/${network}/operators/public_key/` + this.pubkey);
+          response = await axios.get(
+            `https://api.ssv.network/api/v3/${network}/operators/public_key/` +
+              this.pubkey
+          );
         if (response.data.data) {
           this.operatorData = response.data.data;
           this.ssvDashboardActive = true;
@@ -405,7 +493,10 @@ export default {
         !this.lastStep
       ) {
         this.confirmPassToGenerateCheckForBackup = true;
-        console.log("confirmPassToGenerateCheckForBackup", this.confirmPassToGenerateCheckForBackup);
+        console.log(
+          "confirmPassToGenerateCheckForBackup",
+          this.confirmPassToGenerateCheckForBackup
+        );
       } else if (
         this.switchEncryptedKeyGenerator &&
         this.passGenerateEncryptKeyConfirmed &&
@@ -452,11 +543,18 @@ export default {
       }
     },
     secondRowBtnHandler() {
-      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator && !this.lastStep) {
+      if (
+        !this.importEncryptedKey &&
+        this.switchEncryptedKeyGenerator &&
+        !this.lastStep
+      ) {
         this.downloadBackup();
         this.confirmPassToGenerateOpenInBrowser = true;
         this.lastStep = true;
-      } else if ((!this.importEncryptedKey && this.switchEncryptedKeyGenerator) || this.lastStep) {
+      } else if (
+        (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) ||
+        this.lastStep
+      ) {
         this.copyHandler();
         console.log("copy public key");
       } else if (this.importEncryptedKey && !this.lastStep) {

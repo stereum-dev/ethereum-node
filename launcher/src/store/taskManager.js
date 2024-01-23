@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 export const useTaskManager = defineStore("taskManager", {
   state: () => {
     return {
+      isTaskModalActive: false,
+      errorAlarm: false,
       UpdatedSubtasks: [],
       stopIntervalForModal: false,
       playbookTasks: [],

@@ -24,7 +24,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "@heroicons/vue": "^2.0.18",
-    "@sapien99/vue-cli-plugin-electron-builder-notarize": "^1.0.2",
+    "@sapien99/vue-cli-plugin-electron-builder-notarize": "^1.1.0",
     "@vue-hero-icons/outline": "^1.7.2",
     "@vue-hero-icons/solid": "^1.7.2",
     "@vue/cli": "^5.0.8",

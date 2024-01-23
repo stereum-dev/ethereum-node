@@ -1,11 +1,11 @@
 <template>
   <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto mt-4">
     <div class="w-full flex flex-col justify-between items-center space-y-1">
-      <span class="w-full text-left text-teal-700 font-semibold">Switch To</span>
+      <span class="w-11/12 text-left text-teal-700 font-semibold">Switch To</span>
       <div class="w-full relative py-2">
         <button
           aria-expanded="false"
-          class="w-full h-[40px] border border-gray-500 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-2 justify-center relative"
+          class="w-11/12 h-[40px] mx-auto border border-gray-500 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-2 justify-center relative"
           @click="switchDropdownOpen = !switchDropdownOpen"
         >
           <img
@@ -28,7 +28,7 @@
         <Transition name="slide-fade">
           <ul
             v-show="switchDropdownOpen"
-            class="transition-all max-h-[200px] duration-400 ease-in-out absolute bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-full z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
+            class="right-4 transition-all max-h-[200px] duration-400 ease-in-out absolute bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-11/12 z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
           >
             <li
               v-for="service in getServices"
@@ -52,6 +52,7 @@
       <SyncCarousel
         v-if="isSyncingActived && (client.category === 'execution' || client.category === 'consensus')"
         :properties="properties"
+        :cat="client.category"
       />
     </div>
   </div>

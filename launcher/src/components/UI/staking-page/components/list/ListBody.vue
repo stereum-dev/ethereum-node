@@ -15,24 +15,44 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
     <div
       v-else
       ref="dropZoneRef"
-      class="w-full h-full animate__animated animate__fadeIn"
-      @drop.prevent="onDrop($event)"
-      @dragover.prevent="stakingStore.isOverDropZone = true"
-      @dragleave.prevent="stakingStore.isOverDropZone = false"
+      class="w-full h-full max-h-[423px] animate__animated animate__fadeIn"
+      @drop.prevent="isDropZoneDisabled ? null : onDrop($event)"
+      @dragover.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = true)"
+      @dragleave.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = false)"
     >
       <span
         v-if="stakingStore.isOverDropZone"
         class="w-full h-full self-center justify-self-center flex justify-center items-center text-2xl"
-        :class="stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400'"
+        :class="[
+          stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400',
+          isDropZoneDisabled ? 'cursor-not-allowed ' : '',
+        ]"
         >+</span
       >
       <div
         v-if="!stakingStore.isOverDropZone"
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto"
       >
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading && !noKey" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading && !noKey" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading && !noKey" />
+        <span
+          v-if="
+            !getFilteredValidators.length > 0 &&
+            !isLoading &&
+            !stakingStore.isPreviewListActive &&
+            !searchNotFound &&
+            !filteredDoppelgangerKeys.length
+          "
+          class="text-lg font-bold text-gray-300 text-center uppercase select-none"
+          >No Validator key imported.</span
+        >
+        <span
+          v-if="searchNotFound && getFilteredValidators.length > 0"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
+          >No Matches.</span
+        >
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
           v-show="stakingStore.isPreviewListActive && !isLoading"
@@ -40,6 +60,19 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           :item="item"
           @delete-preview="deletePreview"
         />
+
+        <DoppelGCheckRow
+          v-for="key in filteredDoppelgangerKeys"
+          v-show="
+            stakingStore.doppelgangerKeys.length > 0 &&
+            !stakingStore.isPreviewListActive &&
+            !isLoading &&
+            stakingStore.selectedServiceToFilter?.config?.serviceID === key.serviceID
+          "
+          :key="key"
+          :item="key"
+        />
+
         <GroupRow
           v-for="group in getCorrectValidatorGroups"
           v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0 && !isLoading"
@@ -58,16 +91,6 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           @remove-single="removeSingle"
           @rename-single="renameSingle"
         />
-        <span
-          v-if="!getFilteredValidators.length > 0 && !isLoading && !stakingStore.isPreviewListActive && !searchNotFound"
-          class="text-lg font-bold text-gray-300 text-center uppercase select-none"
-          >No Validator key imported.</span
-        >
-        <span
-          v-if="searchNotFound && getFilteredValidators.length > 0"
-          class="text-lg font-bold text-gray-300 text-center uppercase"
-          >No Matches.</span
-        >
       </div>
     </div>
   </div>
@@ -77,6 +100,7 @@ import KeyRow from "./rows/KeyRow.vue";
 import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
 import SkeletonRow from "./rows/SkeletonRow.vue";
+import DoppelGCheckRow from "./rows/DoppelGCheckRow.vue";
 import GroupList from "./GroupList.vue";
 import RemoteList from "./RemoteList.vue";
 import { useListGroups } from "@/composables/groups";
@@ -97,8 +121,6 @@ const emit = defineEmits([
 const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
-const noKey = ref(false);
-// const searchNotFound = ref(false);
 
 // Computed
 stakingStore.filteredKeys = computed(() => {
@@ -136,16 +158,29 @@ const searchNotFound = computed(() => {
   );
 });
 
+const filteredDoppelgangerKeys = computed(() => {
+  return stakingStore.doppelgangerKeys;
+});
+
+const isDropZoneDisabled = computed(() => {
+  const isLoadingOrImporting = isLoading.value || stakingStore.keys.length === 0;
+  const hasDoppelgangerForSelectedService = stakingStore.doppelgangerKeys.some(
+    (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
+  );
+
+  return isLoadingOrImporting || hasDoppelgangerForSelectedService;
+});
+
 watchEffect(() => {
   if (stakingStore.keys.length === 0) {
     isLoading.value = true;
   } else if (stakingStore.keys.length > 0) {
     isLoading.value = false;
   }
+
   setTimeout(() => {
-    if (stakingStore.keys.length === 0) {
+    if (isLoading.value) {
       isLoading.value = false;
-      noKey.value = true;
     }
   }, 5000);
 });
@@ -156,6 +191,7 @@ watch(
     await listGroups();
   }
 );
+
 watchEffect(() => {
   if (!stakingStore.isPreviewListActive) {
     isLoading.value = true;
@@ -164,6 +200,16 @@ watchEffect(() => {
     }, 6000);
   }
 });
+
+watch(
+  () => stakingStore.keys.length,
+  async (newLength, oldLength) => {
+    if (newLength !== oldLength) {
+      await listKeys();
+      removeDuplicatedDoppelgangerKeys();
+    }
+  }
+);
 
 // Lifecycle Hooks
 onMounted(async () => {
@@ -179,17 +225,28 @@ onUnmounted(() => {
 
 // Methods
 
-// const checkKeysAndSearchContent = () => {
-//   if (!stakingStore.searchContent === "") {
-//     stakingStore.filteredKeys = stakingStore.keys;
-//   } else if (stakingStore.searchContent !== "" && stakingStore.filteredKeys.length > 0) {
-//     searchNotFound.value = true;
-//   } else {
-//     stakingStore.filteredKeys = stakingStore.keys.filter((key) =>
-//       key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())
-//     );
-//   }
-// };
+const normalizeKey = (key) => {
+  return key.startsWith("0x") ? key.substring(2) : key;
+};
+
+const removeDuplicatedDoppelgangerKeys = () => {
+  const normalizedKeysSet = new Set(stakingStore.keys.map((k) => normalizeKey(k.key)));
+  let removed = false;
+
+  const filteredDoppelgangerKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => {
+    const isDuplicate = normalizedKeysSet.has(normalizeKey(doppelKey.pubkey));
+    if (isDuplicate) {
+      removed = true;
+    }
+    return !isDuplicate;
+  });
+
+  if (removed) {
+    stakingStore.doppelgangerKeys = filteredDoppelgangerKeys;
+  }
+
+  return removed;
+};
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
@@ -237,5 +294,19 @@ const withdrawGroup = (item) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 5px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2c9c9e;
+  border-radius: 10px;
 }
 </style>

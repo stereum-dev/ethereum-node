@@ -8,7 +8,10 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
+        <no-data
+          v-if="noDataLayerShow || installedServicesController !== ''"
+          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+        />
         <div v-show="p2pItemsShow" class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
@@ -51,6 +54,7 @@
 <script>
 import { mapState } from "pinia";
 import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
 import NoData from "./NoData.vue";
 export default {
   components: { NoData },
@@ -86,6 +90,9 @@ export default {
     ...mapState(useControlStore, {
       code: "code",
       p2pstatus: "p2pstatus",
+    }),
+    ...mapState(useFooter, {
+      installedServicesController: "installedServicesController",
     }),
     defaultIco() {
       return this.p2pIco[0].icon;

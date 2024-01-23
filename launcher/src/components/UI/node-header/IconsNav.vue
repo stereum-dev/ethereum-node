@@ -138,6 +138,7 @@ export default {
       osUpdating: "osUpdating",
       searchingForOsUpdates: "searchingForOsUpdates",
       refresh: "refresh",
+      reconnecting: "reconnecting",
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
@@ -223,13 +224,15 @@ export default {
     async loggingOut() {
       this.refresh = false;
       await ControlService.logout();
-      this.$router.push("/").then(() => {
+      this.$router.push("/login").then(() => {
         location.reload();
       });
     },
     async reconnect() {
       console.log("reconnecting");
+      this.reconnecting = true;
       await ControlService.reconnect();
+      this.reconnecting = false;
       this.refresh = true;
     },
     updateModalHandler() {

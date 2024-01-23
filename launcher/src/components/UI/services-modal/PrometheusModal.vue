@@ -24,53 +24,64 @@
             @confirmPluginClick="openLocalApp"
           />
         </div>
+        <div v-if="refreshStereum" class="browserBox">
+          <ConfirmBox
+            :top-line="`Oops! Something Went Wrong`"
+            :bottom-line="`Something went wrong. Please click the refresh button and try again.`"
+            :btn-name="`refresh`"
+            :btn-bg-color="`#f37625`"
+            @confirmPluginClick="stereumRefresher"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import ConfirmBox from "./plugin/ConfirmBox.vue";
-import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-export default {
-  components: {
-    ConfirmBox,
-  },
-  data() {
-    return {
-      prometheusService: {},
-      isprometheusAvailable: false,
-    };
-  },
+import { ref, onMounted } from "vue";
 
-  computed: {
-    ...mapState(useNodeHeader, {
-      runningServices: "runningServices",
-    }),
-  },
-  mounted() {
-    this.filterprometheusService();
-  },
-  methods: {
-    filterprometheusService() {
-      this.runningServices.forEach((item) => {
-        if (item.name === "Prometheus") this.prometheusService = item;
-      });
-      this.isprometheusAvailable = true;
-    },
-    openBrowser() {
-      let url = "https://prometheus.io/";
-      window.open(url, "_blank");
-    },
-    openGitHub() {
-      let url = "https://github.com/prometheus/prometheus";
-      window.open(url, "_blank");
-    },
-    openLocalApp() {
-      let url = this.prometheusService.linkUrl;
-      window.open(url, "_blank");
-    },
-  },
+const prometheusService = ref({});
+const isprometheusAvailable = ref(false);
+const refreshStereum = ref(false);
+
+const headerStore = useNodeHeader();
+
+onMounted(() => {
+  filterprometheusService();
+});
+
+const filterprometheusService = () => {
+  headerStore.runningServices.forEach((item) => {
+    if (item.name === "Prometheus") prometheusService.value = item;
+  });
+  isprometheusAvailable.value = true;
+};
+
+const openBrowser = () => {
+  let url = "https://prometheus.io/";
+  window.open(url, "_blank");
+};
+
+const openGitHub = () => {
+  let url = "https://github.com/prometheus/prometheus";
+  window.open(url, "_blank");
+};
+
+const openLocalApp = () => {
+  if (prometheusService.value.linkUrl === "http://localhost:undefined") {
+    refreshStereum.value = true;
+  } else {
+    console.log(prometheusService.value.linkUrl);
+    let url = prometheusService.value.linkUrl;
+    window.open(url, "_blank");
+  }
+};
+
+const stereumRefresher = () => {
+  refreshStereum.value = false;
+  window.location.reload();
 };
 </script>
 <style scoped>

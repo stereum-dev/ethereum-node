@@ -68,6 +68,7 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.apple_id_password }}
           TEAM_SHORT_NAME: ${{ secrets.team_short_name }}
           APP_ID: "com.stereum.launcher"
+          TEAM_ID: ${{ secrets.team_id }}
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
 
       - name: Verify Signing using Signtool on windows-latest

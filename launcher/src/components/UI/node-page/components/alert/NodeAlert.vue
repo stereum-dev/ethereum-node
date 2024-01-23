@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md">
-      <div v-if="storageWarning" class="status-message_yellow">
+      <router-link v-if="storageWarning" to="/control" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
         </div>
@@ -32,8 +32,8 @@
           </div>
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
-      </div>
-      <div v-if="cpuWarning" class="status-message_yellow">
+      </router-link>
+      <router-link v-if="cpuWarning" to="/control" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
         </div>
@@ -45,8 +45,8 @@
             <span> > {{ cpu }}%</span>
           </div>
         </div>
-      </div>
-      <div v-for="point in pointStatus" :key="point" class="status-message_yellow">
+      </router-link>
+      <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow">
         <div class="message-icon">
           <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
         </div>
@@ -58,8 +58,8 @@
             <span> > STATUS: OPEN</span>
           </div>
         </div>
-      </div>
-      <div v-if="cpuAlarm" class="status-message_red">
+      </router-link>
+      <router-link v-if="cpuAlarm" to="/control" class="status-message_red">
         <div class="message-icon">
           <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
         </div>
@@ -71,14 +71,28 @@
             <span> > {{ cpu }}%</span>
           </div>
         </div>
-      </div>
-      <div v-if="missedAttest" class="status-message_red">
+      </router-link>
+
+      <router-link v-if="synchronizationError" to="/control" class="status-message_red">
         <div class="message-icon">
-          <img src="/img/icon/control/key-rot.png" alt="warn_storage" />
+          <img src="/img/icon/control/SyncErrorWithShadow.gif" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
-            <span>{{ $t("nodeAlert.missAttest") }}</span>
+            <span>CLIENT / SERVICE</span>
+          </div>
+          <div class="val-message">
+            <span>Synchronization Error</span>
+          </div>
+        </div>
+      </router-link>
+      <div v-if="errorAlarm" class="status-message_red" @click="isTaskModalActive = true">
+        <div class="message-icon">
+          <img src="/img/icon/control/TaskErrorAlert.png" alt="warn_storage" />
+        </div>
+        <div class="message-text_container">
+          <div class="main-message">
+            <span>Task Failed</span>
           </div>
         </div>
       </div>
@@ -151,6 +165,7 @@
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 import { mapWritableState } from "pinia";
+import { useTaskManager } from "@/store/taskManager";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
@@ -174,10 +189,15 @@ export default {
     };
   },
   computed: {
+    ...mapWritableState(useTaskManager, {
+      errorAlarm: "errorAlarm",
+      isTaskModalActive: "isTaskModalActive",
+    }),
     ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
+      synchronizationError: "synchronizationError",
     }),
     ...mapWritableState(useNodeHeader, {
       stereumUpdate: "stereumUpdate",
@@ -538,16 +558,16 @@ export default {
 }
 
 .message-icon {
-  width: 24%;
-  height: 90%;
+  width: 22%;
+  height: 88%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .message-icon img {
-  width: 88%;
-  height: 99%;
+  width: 87%;
+  height: 90%;
 }
 
 .message-text_container {
@@ -567,7 +587,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   font-size: 50%;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
 }
 .main-message-rpc {
@@ -587,7 +607,7 @@ export default {
   height: 35%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 50%;
+  font-size: 45%;
   font-weight: 700;
   text-transform: uppercase;
 }

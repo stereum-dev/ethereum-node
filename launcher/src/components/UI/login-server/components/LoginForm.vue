@@ -13,12 +13,12 @@
       @close-ipscan="ipScanModal = false"
       @btn-function="scanFunction"
     />
-    <div v-if="alertBox" class="alert animate__animated animate__flipInX">
+    <div v-if="serverStore.alertBox" class="alert animate__animated animate__flipInX">
       {{ $t("formsetup.fillFields") }}
     </div>
 
     <div
-      v-if="connectingAnimActive"
+      v-if="serverStore.connectingAnimActive"
       class="col-start-1 col-span-full row-start-1 row-span-full flex flex-col justify-center items-center z-20"
     >
       <div class="w-full h-full absolute inset-0 bg-black rounded-md opacity-80"></div>
@@ -33,30 +33,33 @@
       </div>
     </div>
     <div class="col-start-4 col-end-22 row-start-3 row-end-11 bg-[#1a2e2c] rounded-lg p-4">
-      <RemoveModal v-if="bDialogVisible" @remove-handler="baseDialogDelete" @close-window="hideBDialog" />
-      <ErrorModal v-if="errorMsgExists" :description="error" @close-window="closeErrorDialog" />
+      <RemoveModal
+        v-if="serverStore.isRemoveModalActive"
+        @remove-handler="removeServerHandler"
+        @close-window="closeRemoveModal"
+      />
+      <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
       <form
         class="w-full h-full p-1 bg-[#305c59] col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-7 gap-y-2"
-        @submit.prevent.stop="login"
+        @submit.prevent="login"
       >
         <div
           class="w-full col-start-1 col-span-full row-start-1 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
         >
           <div class="col-start-1 col-span-10 h-full">
             <select
-              v-model="selectedName"
+              v-model="serverStore.selectedName"
               class="w-full h-full rounded-full px-2 text-md text-gray-800 font-semibold"
-              @change="setSelectedConnection($event)"
             >
-              <option value="" disabled>Select your Server-Connection</option>
-              <option v-for="connection in connections" :key="connection.name" :value="connection.name">
+              <option value="" disabled selected>Select your Server-Connection</option>
+              <option v-for="connection in serverStore.connections" :key="connection.name" :value="connection.name">
                 {{ connection.name }}
               </option>
             </select>
           </div>
           <div
             class="w-8 h-8 bg-slate-500 rounded-full flex justify-center items-center cursor-pointer hover:bg-slate-400 justify-self-end"
-            @click.prevent="addModel"
+            @click.prevent="add"
           >
             <img
               class="w-6 h-6 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200"
@@ -67,13 +70,13 @@
           </div>
           <div
             class="w-8 h-8 bg-slate-500 rounded-full flex justify-center items-center cursor-pointer hover:bg-slate-400 justify-self-end"
-            @click.prevent="showBDialog"
-            @mouseover="mouseOver('over')"
-            @mouseleave="mouseOver('leave')"
+            @click.prevent="removeModalHandler"
+            @mouseenter="hovered = true"
+            @mouseleave="hovered = false"
           >
             <img
               class="w-6 h-6 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200"
-              :src="imgTrash"
+              :src="getTrashImg"
               alt=""
               @mousedown.prevent
             />
@@ -81,27 +84,26 @@
         </div>
         <div
           class="w-full col-start-1 col-span-full row-start-2 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
-          :class="{ errors: !model.name.isFilled }"
+          :class="{ errors: !serverStore.loginState?.hostName }"
         >
           <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
             $t("formsetup.servername")
           }}</span>
 
           <input
-            v-model="model.name.value"
+            v-model="serverStore.loginState.hostName"
             class="col-start-4 col-span-full w-full h-full rounded-full px-2"
             :class="{
-              notFilled: !model.host.isFilled,
-              isFilled: model.host.isFilled,
+              notFilled: !serverStore.loginState.hostName,
+              isFilled: serverStore.loginState.hostName,
             }"
             name="servername"
             type="text"
-            @blur="checkInput(model.name)"
           />
         </div>
         <div
           class="w-full col-start-1 col-span-full row-start-3 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
-          :class="{ errors: !model.host.isFilled }"
+          :class="{ errors: !serverStore.loginState.ip }"
         >
           <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
             $t("formsetup.iphost")
@@ -114,35 +116,33 @@
             <img class="w-4 h-4 hover:scale-110 active:scale-100" src="/img/icon/form-setup/local-lan.png" alt="" />
           </div>
           <input
-            v-model="model.host.value"
+            v-model="serverStore.loginState.ip"
             class="col-start-5 col-span-7 w-full h-full rounded-l-full border-r border-gray-400 px-2"
             :class="{
-              notFilled: !model.host.isFilled,
-              isFilled: model.host.isFilled,
+              notFilled: !serverStore.loginState.ip,
+              isFilled: serverStore.loginState.ip,
             }"
             name="host"
             type="text"
             required
-            @blur="checkInput(model.host)"
           />
           <input
-            v-model="model.port.value"
+            v-model="serverStore.loginState.port"
             class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer px-1"
             :class="{
-              notFilled: !model.port.isFilled,
-              isFilled: model.port.isFilled,
+              notFilled: !serverStore.loginState.port,
+              isFilled: serverStore.loginState.port,
             }"
             type="text"
             placeholder="22"
             optional
-            @blur="checkInput(model.port)"
           />
         </div>
         <div
           class="w-full col-start-1 col-span-full row-start-4 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full"
           :class="{
-            errors: !model.user.isFilled,
-            isFilled: model.user.isFilled,
+            errors: !serverStore.loginState.username,
+            isFilled: serverStore.loginState.username,
           }"
         >
           <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
@@ -150,28 +150,28 @@
           }}</span>
 
           <input
-            v-model="model.user.value"
+            v-model="serverStore.loginState.username"
             class="col-start-4 col-span-full w-full h-full rounded-full px-2"
             :class="{
-              notFilled: !model.user.isFilled,
-              isFilled: model.user.isFilled,
+              notFilled: !serverStore.loginState.username,
+              isFilled: serverStore.loginState.username,
             }"
             type="text"
             name="user"
             required
-            @blur="checkInput(model.user)"
           />
         </div>
-
         <Transition name="slide-up">
           <div
-            v-if="keyAuth"
+            v-if="serverStore.loginState.useAuth"
             class="col-start-1 col-span-full row-start-5 row-span-2 gap-y-2 grid grid-cols-12 grid-rows-2"
           >
             <div
               class="w-full col-start-1 col-span-full row-start-1 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
               :class="{
-                errors: keyAuth ? !model.keylocation.isFilled : !model.pass.isFilled,
+                errors: serverStore.loginState.useAuth
+                  ? !serverStore.loginState.keyPath
+                  : !serverStore.loginState.password,
               }"
             >
               <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
@@ -179,40 +179,40 @@
               }}</span>
 
               <input
-                v-model="model.keylocation.value"
+                v-model="serverStore.loginState.keyPath"
                 class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
                 type="text"
                 name="keylocation"
                 required
-                @blur="checkInput(model.keylocation)"
               />
-              <div
+              <label
+                for="file_input"
                 class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
-                @click="openUploadHandler"
               >
-                <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
+                <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
                 <img class="w-4 h-4" src="/img/icon/form-setup/plus.png" />
-              </div>
+              </label>
             </div>
             <div
               class="w-full col-start-1 col-span-full row-start-2 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
               :class="{
-                errors: keyAuth ? !model.keylocation.isFilled : !model.passphrase.isFilled,
+                errors: serverStore.loginState.useAuth
+                  ? !serverStore.loginState.keyPath
+                  : !serverStore.loginState.passphrase,
               }"
             >
               <span class="col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
                 $t("formsetup.KeyPassphrase")
               }}</span>
               <input
-                v-model="model.passphrase.value"
+                v-model="serverStore.loginState.passphrase"
                 class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
                 :class="{
-                  notFilled: !model.passphrase.isFilled,
-                  isFilled: model.passphrase.isFilled,
+                  notFilled: !serverStore.loginState.passphrase,
+                  isFilled: serverStore.loginState.passphrase,
                 }"
                 :type="inputType"
                 name="passphrase"
-                @blur="checkInput(model.passphrase)"
               />
               <div
                 class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer px-1"
@@ -226,7 +226,9 @@
             v-else
             class="w-full col-start-1 col-span-full row-start-5 row-span-1 h-12 bg-[#1a2e2c] p-2 grid grid-cols-12 rounded-full cursor-default"
             :class="{
-              errors: keyAuth ? !model.keylocation.isFilled : !model.pass.isFilled,
+              errors: serverStore.loginState.useAuth
+                ? !serverStore.loginState.useAuth
+                : !serverStore.loginState.password,
             }"
           >
             <span class="w-full col-start-1 col-span-3 text-sm text-gray-300 font-semibold self-center pl-2">{{
@@ -234,16 +236,15 @@
             }}</span>
 
             <input
-              v-model="model.pass.value"
+              v-model="serverStore.loginState.password"
               class="col-start-4 col-span-8 w-full h-full rounded-l-full px-2"
               :class="{
-                notFilled: !model.pass.isFilled,
-                isFilled: model.pass.isFilled,
+                notFilled: !serverStore.loginState.password,
+                isFilled: serverStore.loginState.password,
               }"
               :type="inputType"
               name="keylocation"
               required
-              @blur="checkInput(model.pass)"
             />
             <div
               class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer"
@@ -264,7 +265,7 @@
           >
             <input
               id="AcceptConditions"
-              v-model="model.useAuthKey"
+              v-model="serverStore.loginState.useAuth"
               type="checkbox"
               class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden"
               @change="changeLabel"
@@ -315,316 +316,158 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import IpScanModal from "./IpScanModal.vue";
 import RemoveModal from "./RemoveModal.vue";
 import ErrorModal from "./ErrorModal.vue";
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
-import { useClickInstall } from "@/store/clickInstallation";
-import { useNodeHeader } from "@/store/nodeHeader";
-import { useServices } from "@/store/services";
+import { useServers } from "@/store/servers";
 
-export default {
-  name: "FormSetup",
-  components: { RemoveModal, IpScanModal, ErrorModal },
-  emits: ["page"],
-  data() {
-    return {
-      abortController: new AbortController(),
-      scannedCounter: 0,
-      btnSearchState: "search",
-      ipScanModal: false,
-      devices: [],
-      foundIp: this.$t("ipScanModal.clickSearch"),
-      alertBox: false,
-      sshPort: null,
-      keyAuth: false,
-      link: "stereumLogoExtern.png",
-      connectingAnimActive: false,
-      stereumVersions: {},
-      connections: [],
-      error: "",
-      errorMsgExists: false,
-      selectedName: "",
-      bDialogVisible: false,
-      showPassword: false,
-      noIpFound: this.$t("ipScanModal.noIpFound"),
-      model: {
-        name: { value: "", isFilled: true },
-        host: { value: "", isFilled: true },
-        user: { value: "", isFilled: true },
-        port: { value: "", isFilled: true },
-        pass: { value: "", isFilled: true },
-        keylocation: { value: "", isFilled: true },
-        passphrase: { value: "", isFilled: true },
-        useAuthKey: false,
-      },
-      imgTrash: "./img/icon/TRASH_CAN.png",
-    };
-  },
+import { ref, computed, watch, onBeforeMount, watchEffect } from "vue";
+import { useServerLogin } from "@/composables/useLogin";
 
-  computed: {
-    inputType() {
-      return this.showPassword ? "text" : "password";
-    },
-    ...mapWritableState(useClickInstall, {
-      plugins: "presets",
-      selectedPreset: "selectedPreset",
-    }),
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-      runningServices: "runningServices",
-      allServices: "allServices",
-    }),
-    ...mapWritableState(useNodeHeader, {
-      headerServices: "runningServices",
-    }),
-    labelView() {
-      if (this.model.keylocation.value === "") {
-        return "";
-      } else {
-        return this.model.keylocation.value;
-      }
-    },
-  },
+const serverStore = useServers();
 
-  watch: {
-    devices() {
-      if (this.devices.length < 1) {
-        this.foundIp = this.noIpFound;
-        this.btnSearchState = "search";
-      } else if (this.devices.length == 1) {
-        this.foundIp = this.devices[0].ip;
-        this.btnSearchState = "copy";
-      }
-    },
-  },
-  created() {
-    this.loadStoredConnections();
-  },
-  methods: {
-    scanFunction() {
-      if (this.scannedCounter == 0 && this.btnSearchState === "search") {
-        this.scannedCounter++;
-        this.startScaning();
-      } else if (this.btnSearchState === "search") {
-        this.startScaning();
-      } else if (this.btnSearchState === "pending") {
-        return "";
-      } else if (this.btnSearchState === "copy") {
-        this.copyIp(this.foundIp);
-      }
-      return "";
-    },
-    async copyIp(arg) {
-      await navigator.clipboard.writeText(arg);
-    },
-    startScaning() {
-      this.btnSearchState = "pending";
-      this.foundIp = "Searching...";
-      this.IpScanLan1();
-    },
-    async IpScanLan1() {
-      try {
-        let res = await ControlService.IpScanLan();
-        this.devices = res;
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    },
+const { login, add, remove, loadStoredConnections } = useServerLogin();
 
-    toggleShowPassword() {
-      this.showPassword = !this.showPassword;
-    },
-    openUploadHandler() {
-      this.$refs.fileInput.click();
-    },
-    //path picker from the file input
-    previewFiles(event) {
-      const Path = event.target.files[0].path;
-      let pathString = new String(Path);
-      let result = pathString.toString();
-      this.model.keylocation.value = result;
-    },
-    //finish
-    changeLabel() {
-      this.keyAuth = !this.keyAuth;
-      if (this.keyAuth === true) {
-        this.model.pass.value = "";
-      } else {
-        this.model.keylocation.value = "";
-      }
-    },
-    setSelectedConnection(event) {
-      this.selectedConnection = this.connections.find((obj) => obj.name === event.target.value);
-      this.model.name.value = this.selectedConnection.name;
-      this.model.host.value = this.selectedConnection.host;
-      this.model.user.value = this.selectedConnection.user;
-      this.model.port.value = this.selectedConnection.port;
-      this.model.keylocation.value = this.selectedConnection.keylocation;
-      this.model.useAuthKey = this.selectedConnection.useAuthKey;
-      this.keyAuth = this.selectedConnection.useAuthKey;
-      this.model.pass.value = "";
-      this.model.passphrase.value = "";
-    },
-    addModel() {
-      const newConnection = this.createConnection();
-      if (newConnection.name !== "" && newConnection.host !== "" && newConnection.user !== "") {
-        if (!this.connections.find((connection) => connection.name == this.model.name.value)) {
-          this.connections.push(newConnection);
-          this.selectedConnection = newConnection;
-          this.selectedName = this.selectedConnection.name;
-          this.writeSettings();
-        } else if (this.connections.find((connection) => connection.name == this.model.name.value)) {
-          const index = this.connections.findIndex((connection) => connection.name == this.model.name.value);
-          this.connections[index] = newConnection;
-          this.selectedConnection = newConnection;
-          this.selectedName = this.selectedConnection.name;
-          this.writeSettings();
-        }
-      } else {
-        this.alertBox = true;
-        setTimeout(() => {
-          this.alertBox = false;
-        }, 1500);
-      }
-    },
-    getstorableConnections() {
-      const storableConnections = [];
-      this.connections.forEach((e) => {
-        storableConnections.push({
-          name: e.name,
-          host: e.host,
-          user: e.user,
-          port: e.port,
-          keylocation: e.keylocation,
-          useAuthKey: e.useAuthKey,
-        });
-      });
-      return storableConnections;
-    },
-    deleteModel: async function () {
-      const currSelected = this.selectedConnection.name;
-      this.connections = this.connections.filter(function (conn) {
-        return currSelected != conn.name;
-      });
-      await this.writeSettings();
-      await this.loadStoredConnections();
-      this.model.name.value = "";
-      this.model.host.value = "";
-      this.model.user.value = "";
-      this.model.port.value = "";
-      this.model.pass.value = "";
-      this.model.keylocation.value = "";
-      this.model.useAuthKey = false;
-      this.keyAuth = false;
-      this.model.passphrase.value = "";
-    },
-    createConnection() {
-      return {
-        name: this.model.name.value,
-        host: this.model.host.value,
-        user: this.model.user.value,
-        port: this.model.port.value,
-        keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey,
-      };
-    },
-    loadStoredConnections: async function () {
-      const storageSavedConnections = await ControlService.readConfig();
-      let savedConnections = [];
-      if (storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
-        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
-      }
-      this.connections = savedConnections;
-    },
-    writeSettings: async function () {
-      const config = await ControlService.readConfig();
-      ControlService.writeConfig({
-        ...config,
-        savedConnections: this.getstorableConnections(),
-      });
-    },
-    checkInput(model) {
-      if (model.value == "") {
-        model.isFilled = false;
-      } else {
-        model.isFilled = true;
-      }
-    },
+//State
+const abortController = ref(new AbortController());
+const scannedCounter = ref(0);
+const btnSearchState = ref("search");
+const ipScanModal = ref(false);
+const devices = ref([]);
+const foundIp = ref("Searching...");
+// const sshPort = ref(null);
+// const link = ref("stereumLogoExtern.png");
+// const stereumVersions = ref({});
+const noIpFound = ref("No IP found");
+const hovered = ref(false);
 
-    mouseOver(val) {
-      if (val === "over") {
-        this.imgTrash = "./img/icon/TRASH_CAN2.png";
-      } else {
-        this.imgTrash = "./img/icon/TRASH_CAN.png";
-      }
-    },
-    showBDialog() {
-      this.bDialogVisible = true;
-    },
-    hideBDialog() {
-      this.bDialogVisible = false;
-    },
-    hideDialog() {
-      this.dialogVisible = false;
-    },
-    baseDialogDelete() {
-      this.bDialogVisible = false;
-      this.deleteModel();
-    },
-    closeErrorDialog() {
-      this.error = "";
-      this.errorMsgExists = false;
-      this.$router.push("/");
-    },
-    // checkErrorMessage() {
-    //   if (this.error.length > 0) {
-    //     return true;
-    //   }
-    // },
-    login: async function () {
-      this.abortController = new AbortController();
-      this.connectingAnimActive = true;
-      try {
-        await ControlService.connect({
-          host: this.model.host.value,
-          user: this.model.user.value,
-          port: this.model.port.value,
-          password: this.model.pass.value,
-          sshKeyAuth: this.model.useAuthKey,
-          keyfileLocation: this.model.keylocation.value,
-          passphrase: this.model.passphrase.value,
-          signal: this.abortController.signal,
-        });
+//Computed & Watch
+const getTrashImg = computed(() => {
+  if (hovered.value) {
+    return "./img/icon/TRASH_CAN2.png";
+  } else {
+    return "./img/icon/TRASH_CAN.png";
+  }
+});
 
-        if (this.abortController.signal.aborted) return;
-      } catch (err) {
-        this.connectingAnimActive = false;
-        this.errorMsgExists = true;
-        this.error = "Connection refused, please try again.";
-        this.model.pass.value = "";
-        if (typeof err === "string" && new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(err.toLowerCase())) {
-          this.error = "You need to change your password first";
-        }
-        return;
-      }
-      if (await ControlService.checkStereumInstallation()) {
-        this.$router.push("/node");
-      } else {
-        this.$router.push("/welcome");
-      }
-    },
-    cancelLogin() {
-      if (this.abortController) {
-        this.abortController.abort();
-      }
-      this.connectingAnimActive = false;
-      this.errorMsgExists = false;
-      this.model.pass.value = "";
-    },
-  },
+const inputType = computed(() => {
+  return serverStore.showPassword ? "text" : "password";
+});
+
+watch(devices, () => {
+  console.log("devices", devices.value);
+  if (devices.value.length < 1) {
+    foundIp.value = noIpFound.value;
+    btnSearchState.value = "search";
+  } else if (devices.value.length == 1) {
+    foundIp.value = devices.value[0].ip;
+    btnSearchState.value = "copy";
+  }
+});
+
+watchEffect(() => {
+  if (serverStore.loginState.useAuth) {
+    serverStore.loginState.password = "";
+  }
+});
+
+watch(
+  () => serverStore.selectedName,
+  (newVal) => {
+    const selectedConnection = serverStore.connections.find((c) => c.name === newVal);
+    if (selectedConnection) {
+      serverStore.loginState.hostName = selectedConnection.name;
+      serverStore.loginState.ip = selectedConnection.host;
+      serverStore.loginState.username = selectedConnection.user;
+      serverStore.loginState.port = selectedConnection.port;
+      serverStore.loginState.keyPath = selectedConnection.keylocation;
+      serverStore.loginState.useAuth = selectedConnection.useAuthKey;
+    }
+  }
+);
+
+//Lifecycle Hooks
+onBeforeMount(async () => {
+  await loadStoredConnections();
+});
+
+//Methods
+
+const changeLabel = () => {
+  if (serverStore.loginState.useAuth) {
+    serverStore.loginState.password = "";
+  }
+};
+
+const scanFunction = () => {
+  if (scannedCounter.value === 0 && btnSearchState.value === "search") {
+    scannedCounter.value++;
+    startScanning();
+  } else if (btnSearchState.value === "search") {
+    startScanning();
+  } else if (btnSearchState.value === "pending") {
+    return "";
+  } else if (btnSearchState.value === "copy") {
+    copyIp(foundIp.value);
+  }
+  return "";
+};
+
+const copyIp = async (arg) => {
+  await navigator.clipboard.writeText(arg);
+};
+
+const startScanning = async () => {
+  btnSearchState.value = "pending";
+  foundIp.value = "Searching...";
+  await IpScanLan1();
+};
+
+const IpScanLan1 = async () => {
+  try {
+    let res = await ControlService.IpScanLan();
+    devices.value = res;
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+};
+
+const toggleShowPassword = () => {
+  serverStore.showPassword = !serverStore.showPassword;
+};
+
+const previewFiles = (event) => {
+  const Path = event.target.files[0].path;
+  let pathString = new String(Path);
+  let result = pathString.toString();
+  serverStore.loginState.keyPath = result;
+};
+
+const closeErrorDialog = () => {
+  serverStore.errorMsgExists = false;
+};
+
+const closeRemoveModal = () => {
+  serverStore.isRemoveModalActive = false;
+};
+
+const removeModalHandler = () => {
+  serverStore.isRemoveModalActive = true;
+};
+
+const removeServerHandler = async () => {
+  serverStore.selectedServerToConnect = serverStore.connections.find((c) => c.name === serverStore.selectedName);
+  await remove();
+  serverStore.isRemoveModalActive = false;
+};
+
+const cancelLogin = () => {
+  abortController.value.abort();
+  serverStore.connectingAnimActive = false;
+  serverStore.loginState.password = "";
+  serverStore.loginState.passphrase = "";
 };
 </script>
 <style scoped>

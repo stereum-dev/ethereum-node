@@ -155,7 +155,9 @@ export default {
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
-      return copyOfInstalledServices.filter((obj) => obj.category === "validator");
+      return copyOfInstalledServices.filter(
+        (obj) => obj.category === "validator" && obj.name !== "ssv.network" && obj.name !== "Obol Charon"
+      );
     },
     installedMetricsExporter() {
       const copyOfInstalledServices = [...this.installedServices];

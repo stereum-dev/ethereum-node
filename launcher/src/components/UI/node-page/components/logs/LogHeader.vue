@@ -1,18 +1,20 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-end-2 grid grid-cols-12 bg-[#263238]">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-end-2 grid grid-cols-12 bg-[#2d3035] border-b border-gray-500"
+  >
     <div class="w-full h-full col-start-2 col-end-5 flex justify-start items-center space-x-2">
       <img class="w-7 h-7" :src="client.sIcon" alt="Service Icon" @mousedown.prevent />
       <div class="text-gray-200 text-lg font-semibold">{{ client.name }}</div>
     </div>
     <div class="w-full h-full col-start-5 col-end-8 flex justify-center items-center space-x-2">
       <span class="text-sm text-[#dee3e3] font-semibold">Category:</span>
-      <span class="text-amber-300 text-md font-semibold capitalize">
+      <span class="text-amber-200 text-md font-semibold capitalize">
         {{ client?.category }}
       </span>
     </div>
     <div class="w-full h-full col-start-8 col-end-11 flex justify-center items-center space-x-2">
       <span class="text-sm text-[#dee3e3] font-semibold">Version:</span>
-      <span class="text-amber-300 text-md font-semibold">
+      <span class="text-amber-200 text-md font-semibold">
         {{ client?.config?.imageVersion }}
       </span>
     </div>

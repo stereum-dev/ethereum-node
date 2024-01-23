@@ -426,6 +426,10 @@ ipcMain.handle("exitValidatorAccount", async (event, args) => {
   return await monitoring.exitValidatorAccount(args.pubkey, args.serviceID);
 });
 
+ipcMain.handle("getExitValidatorMessage", async (event, args) => {
+  return await validatorAccountManager.getExitValidatorMessage(args.pubkey, args.serviceID);
+});
+
 ipcMain.handle("exportConfig", async () => {
   return await serviceManager.exportConfig();
 });

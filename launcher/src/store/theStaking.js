@@ -20,6 +20,8 @@ export const useStakingStore = defineStore("theStaking", {
       importKeyMessage: "",
       checkActiveValidatorsResponse: [],
       previewKeys: [],
+      doppelgangerKeys: [],
+      isDoppelgangerProtectionActive: false,
       keyNumbers: 0,
       //***** End Staking List
 
@@ -75,6 +77,7 @@ export const useStakingStore = defineStore("theStaking", {
       selectedValidatorService: {},
       totalBalance: 0,
       keys: [],
+      keyFiles: [],
       keyImages: [],
       forceRefresh: false,
       storedValidatorKeys: [],
@@ -83,7 +86,7 @@ export const useStakingStore = defineStore("theStaking", {
       importRemoteKeysActive: false,
       display: true,
       isDragOver: false,
-      keyFiles: [],
+
       dragStep: false,
       clickService: false,
       modalGuide: false,
