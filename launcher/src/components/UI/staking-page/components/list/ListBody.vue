@@ -52,6 +52,13 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
 
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
