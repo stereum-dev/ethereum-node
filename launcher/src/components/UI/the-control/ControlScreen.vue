@@ -34,15 +34,17 @@
                     <span>{{ item.category }}</span>
                   </div>
                 </div>
-                <div
-                  v-if="
-                    item.service !== 'ExternalExecutionService' &&
-                    item.service !== 'ExternalConsensusService'
-                  "
-                  class="service-edit"
-                >
+                <div class="service-edit">
                   <div class="edit-box">
-                    <div class="icon-bg">
+                    <div
+                      class="icon-bg"
+                      :class="
+                        item.service !== 'ExternalExecutionService' ||
+                        item.service !== 'ExternalConsensusService'
+                          ? 'pointer-events-none opacity-80 '
+                          : ''
+                      "
+                    >
                       <div class="power-icon">
                         <img
                           v-if="item.isServicePending"
