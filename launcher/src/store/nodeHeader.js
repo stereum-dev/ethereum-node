@@ -41,6 +41,8 @@ export const useNodeHeader = defineStore("nodeHeader", {
       deactivateBtnToWaitForLogs: false,
 
       runningServices: [],
+      varificationCode: "",
+      validVarificationCode: "",
       refresh: true,
       stereumUpdate: {},
       searchingForUpdates: false,

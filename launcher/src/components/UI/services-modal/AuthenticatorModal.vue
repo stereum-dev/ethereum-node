@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapState, mapWritableState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeStore } from "@/store/theNode";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
@@ -84,8 +84,10 @@ export default {
   },
 
   computed: {
-    ...mapState(useNodeHeader, {
+    ...mapWritableState(useNodeHeader, {
       runningServices: "runningServices",
+      varificationCode: "varificationCode",
+      validVarificationCode: "validVarificationCode",
     }),
     ...mapWritableState(useNodeStore, {
       hideConnectedLines: "hideConnectedLines",
@@ -187,6 +189,8 @@ export default {
       if (this.setupPage) {
         this.generationPage = true;
         this.setupPage = false;
+        this.validVarificationCode = "111111"; //dummy valid code for the test
+        console.log("valid code", this.validVarificationCode);
       }
     },
     saveScratch() {

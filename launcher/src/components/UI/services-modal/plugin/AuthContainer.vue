@@ -9,13 +9,11 @@
       </div>
       <div class="info-row">
         <span>{{ $t("authenticatorModal.codeText") }}</span>
-        <div class="val-part" @click="copy('varificationCode')">
-          {{ codeCopied ? "COPIED" : varificationCode }}
-        </div>
+        <input v-model="varificationCode" type="text" class="val-part" />
       </div>
       <div class="info-row">
         <span>{{ $t("authenticatorModal.saveText") }}</span>
-        <div class="save-btn" @click="saveClick">
+        <div :class="['save-btn', checkSave]" @click="saveClick">
           {{ $t("authenticatorModal.saveButton") }}
         </div>
       </div>
@@ -27,16 +25,18 @@
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   props: {
     secretKey: {
       type: String,
       default: "",
     },
-    varificationCode: {
-      type: String,
-      default: "",
-    },
+    // varificationCode: {
+    //   type: String,
+    //   default: "",
+    // },
     barcode: {
       type: String,
       default: "",
@@ -47,6 +47,15 @@ export default {
       secretCopied: false,
       codeCopied: false,
     };
+  },
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      varificationCode: "varificationCode",
+      validVarificationCode: "validVarificationCode",
+    }),
+    checkSave() {
+      return this.validVarificationCode === this.varificationCode ? "" : "disable-save";
+    },
   },
   methods: {
     async copy(type) {
@@ -61,13 +70,21 @@ export default {
       }
     },
     saveClick() {
-      this.$emit("saveClick");
+      if (this.checkSave !== "disable-save") {
+        this.$emit("saveClick");
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+.disable-save {
+  background: rgb(51, 102, 102, 0.5) !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
 .auth-parent {
   display: flex;
   align-items: center;
@@ -133,6 +150,7 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 15px;
+  text-align: center;
 }
 .save-btn {
   color: #eee;
