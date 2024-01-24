@@ -64,8 +64,16 @@ const properties = ref({
 const getConfirmText = computed(() => {
   let text = "";
   if (isAddPanelActivated.value) {
-    if (props.client.category === "execution") {
+    if (
+      props.client.category === "execution" &&
+      props.client.service !== "ExternalExecutionService"
+    ) {
       text = "confirm";
+    } else if (
+      props.client.category === "execution" &&
+      props.client.service === "ExternalExecutionService"
+    ) {
+      text = "next";
     } else if (
       props.client.category === "consensus" ||
       (props.client.category === "validator" && !/Web3Signer/.test(props.client.service))
@@ -104,7 +112,7 @@ const getSubTitles = computed(() => {
 
 const externalServiceConfirmBtn = computed(() => {
   if (props.client.service === "ExternalExecutionService") {
-    return manageStore.externalSource === "" && manageStore.jwtToken === "";
+    return manageStore.externalSource === "" || manageStore.jwtToken === "";
   } else if (props.client.service === "ExternalConsensusService") {
     return manageStore.externalSource === "";
   }
@@ -124,7 +132,9 @@ const confirmInstall = () => {
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||
-    (props.client.category === "validator" && getConfirmText.value === "next")
+    (props.client.category === "validator" && getConfirmText.value === "next") ||
+    (props.client.service === "ExternalExecutionService" &&
+      getConfirmText.value === "next")
   ) {
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;
