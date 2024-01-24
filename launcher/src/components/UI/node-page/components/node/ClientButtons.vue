@@ -5,7 +5,10 @@ import { useNodeStore } from '@/store/theNode';
     @pointerdown.prevent.stop
   >
     <div
-      v-if="props.client.service !== 'ExternalService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md"
     >
       <button
@@ -54,7 +57,10 @@ import { useNodeStore } from '@/store/theNode';
       </button>
     </div>
     <button
-      v-if="props.client.service !== 'ExternalService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="col-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="restartHandler"
       @mouseenter="footerStore.cursorLocation = `${restart}`"
@@ -68,7 +74,7 @@ import { useNodeStore } from '@/store/theNode';
     </button>
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
-      :class="props.client.service === 'ExternalService' ? 'col-start-1' : 'col-start-3'"
+      :class="props.client.name === 'External' ? 'col-start-1' : 'col-start-3'"
       @click="openExpert"
       @mouseenter="footerStore.cursorLocation = `${expert}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -80,7 +86,10 @@ import { useNodeStore } from '@/store/theNode';
       />
     </button>
     <button
-      v-if="props.client.service !== 'ExternalService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openLog"
       @mouseenter="footerStore.cursorLocation = `${logs}`"
@@ -93,7 +102,10 @@ import { useNodeStore } from '@/store/theNode';
       />
     </button>
     <button
-      v-if="props.client.service !== 'ExternalService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openDoc"
       @mouseenter="footerStore.cursorLocation = `${docs}`"
@@ -108,7 +120,8 @@ import { useNodeStore } from '@/store/theNode';
     <button
       v-if="
         props.client.category !== 'validator' &&
-        props.client.service !== 'ExternalService'
+        (props.client.service !== 'ExternalExecutionService' ||
+          props.client.service !== 'ExternalConsensusService')
       "
       class="col-start-3 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openResync"

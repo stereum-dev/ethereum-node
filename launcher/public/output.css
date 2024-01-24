@@ -908,10 +908,6 @@ video {
   right: 1.25rem;
 }
 
-.right-8{
-  right: 2rem;
-}
-
 .right-\[10\.5rem\]{
   right: 10.5rem;
 }
@@ -954,10 +950,6 @@ video {
 
 .top-5{
   top: 1.25rem;
-}
-
-.top-9{
-  top: 2.25rem;
 }
 
 .top-\[-18px\]{
@@ -2630,10 +2622,6 @@ video {
 .self-center{
   -ms-flex-item-align: center;
       align-self: center;
-}
-
-.justify-self-auto{
-  justify-self: auto;
 }
 
 .justify-self-start{

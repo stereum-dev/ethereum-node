@@ -187,12 +187,12 @@ const toggleConnection = (option) => {
 const getConnectionOptions = () => {
   switch (props.client.category) {
     case "execution":
-      if (props.client.service === "ExternalService") {
+      if (props.client.service === "ExternalExecutionService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
       return [];
     case "consensus":
-      if (props.client.service === "ExternalService") {
+      if (props.client.service === "ExternalConsensusService") {
         return manageStore.newConfiguration.filter((e) => e.category === "validator");
       }
       return manageStore.newConfiguration.filter((e) => e.category === "execution");
