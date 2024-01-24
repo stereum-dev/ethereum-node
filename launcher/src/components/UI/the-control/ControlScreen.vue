@@ -26,13 +26,7 @@
                     'plugins-restarting-state': item.state == 'restarting',
                   }"
                 ></div>
-                <div
-                  v-if="
-                    item.service !== 'ExternalExecutionService' &&
-                    item.service !== 'ExternalConsensusService'
-                  "
-                  class="plugins-row-content"
-                >
+                <div class="plugins-row-content">
                   <div class="row-plugin-name">
                     <span>{{ item.name }}</span>
                   </div>
@@ -40,7 +34,13 @@
                     <span>{{ item.category }}</span>
                   </div>
                 </div>
-                <div class="service-edit">
+                <div
+                  v-if="
+                    item.service !== 'ExternalExecutionService' &&
+                    item.service !== 'ExternalConsensusService'
+                  "
+                  class="service-edit"
+                >
                   <div class="edit-box">
                     <div class="icon-bg">
                       <div class="power-icon">
