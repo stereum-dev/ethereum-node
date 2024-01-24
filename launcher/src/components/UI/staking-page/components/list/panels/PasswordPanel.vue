@@ -60,6 +60,7 @@ const cancelPassword = () => {
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel(null);
   stakingStore.previewKeys = [];
+  stakingStore.doppelgangerKeys = [];
 };
 
 const confirmPassword = () => {
