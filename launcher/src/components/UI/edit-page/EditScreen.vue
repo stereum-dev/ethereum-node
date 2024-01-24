@@ -154,9 +154,6 @@ const nukeModalComponent = ref();
 
 // Computed & Watcher
 
-console.log("Config", manageStore.newConfiguration);
-console.log("INSTALL", serviceStore.installedServices);
-
 onMounted(() => {
   if (manageStore.currentNetwork.id)
     manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
