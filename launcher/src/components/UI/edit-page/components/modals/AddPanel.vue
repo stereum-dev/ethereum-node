@@ -1,18 +1,10 @@
 import { onMounted, watch } from 'vue';
 <template>
-  <div
-    class="w-full h-full flex flex-col justify-evenly items-center mx-auto px-4 py-2 space-y-2 mt-6 relative"
-  >
+  <div class="w-full h-full flex flex-col justify-evenly items-center mx-auto px-4 py-2 space-y-2 mt-6 relative">
     <div class="w-full flex justify-center items-center">
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img
-          class="col-start-1 w-8"
-          src="/img/icon/manage-node-icons/folder.png"
-          alt="Path Icon"
-        />
-        <span class="col-start-2 col-span-3 text-gray-400 text-left"
-          >Installation Path</span
-        >
+        <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/folder.png" alt="Path Icon" />
+        <span class="col-start-2 col-span-3 text-gray-400 text-left">Installation Path</span>
         <input
           v-model="props.properties.installDir"
           class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
@@ -22,40 +14,23 @@ import { onMounted, watch } from 'vue';
       </div>
     </div>
     <div
-      v-if="
-        client.category === 'consensus' && client.service !== 'ExternalConsensusService'
-      "
+      v-if="client.category === 'consensus' && client.service !== 'ExternalConsensusService'"
       class="w-full flex justify-center items-center"
     >
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img
-          class="w-8 col-start-1"
-          src="/img/icon/manage-node-icons/sync.gif"
-          alt="Sync Icon"
-        />
-        <span class="col-start-2 col-span-3 text-gray-400 text-md text-left"
-          >Sync Mode</span
-        >
+        <img class="w-8 col-start-1" src="/img/icon/manage-node-icons/sync.gif" alt="Sync Icon" />
+        <span class="col-start-2 col-span-3 text-gray-400 text-md text-left">Sync Mode</span>
         <SyncCarousel :properties="props.properties" />
       </div>
     </div>
 
     <div
-      v-if="
-        props.client.service !== 'ExternalExecutionService' ||
-        props.client.service !== 'ExternalConsensusService'
-      "
+      v-if="props.client.service === 'ExternalExecutionService' || props.client.service === 'ExternalConsensusService'"
       class="w-full flex justify-center items-center"
     >
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img
-          class="col-start-1 w-8"
-          src="/img/icon/manage-node-icons/external-source.png"
-          alt="Path Icon"
-        />
-        <span class="col-start-2 col-span-3 text-gray-400 text-left"
-          >External Source</span
-        >
+        <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/external-source.png" alt="Path Icon" />
+        <span class="col-start-2 col-span-3 text-gray-400 text-left">External Source</span>
         <input
           v-model="manageStore.externalSource"
           class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
@@ -66,17 +41,11 @@ import { onMounted, watch } from 'vue';
     </div>
 
     <div
-      v-if="
-        client.service === 'ExternalExecutionService' && client.category == 'execution'
-      "
+      v-if="client.service === 'ExternalExecutionService' && client.category == 'execution'"
       class="w-full flex justify-center items-center"
     >
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img
-          class="col-start-1 w-8"
-          src="/img/icon/manage-node-icons/JWTTokenIcon.png"
-          alt="Path Icon"
-        />
+        <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/JWTTokenIcon.png" alt="Path Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-left">JWT TOKEN</span>
         <input
           v-model="manageStore.jwtToken"
@@ -124,9 +93,7 @@ onMounted(() => {
 const getInstallPath = async () => {
   let largestVolumePath = await ControlService.getLargestVolumePath();
   if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
-  const stereumInstallationPath = [largestVolumePath, "/stereum"]
-    .join("/")
-    .replace(/\/{2,}/, "/");
+  const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
   props.properties.installDir = stereumInstallationPath;
 };
 </script>
