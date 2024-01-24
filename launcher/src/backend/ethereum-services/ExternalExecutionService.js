@@ -1,9 +1,9 @@
 import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
-export class ExternalService extends NodeService {
+export class ExternalExecutionService extends NodeService {
   static buildByUserInput(network, dir) {
-    const service = new ExternalService();
+    const service = new ExternalExecutionService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
     const dataDir = "/opt/app/data";
@@ -14,7 +14,7 @@ export class ExternalService extends NodeService {
     ];
 
     service.init(
-      "ExternalService", // service
+      "ExternalExecutionService", // service
       service.id, // id
       1, // configVersion
       "hyperledger/besu", // image
@@ -58,7 +58,7 @@ export class ExternalService extends NodeService {
   }
 
   static buildByConfiguration(config) {
-    const service = new ExternalService();
+    const service = new ExternalExecutionService();
 
     service.initByConfig(config);
 

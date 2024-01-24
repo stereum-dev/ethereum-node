@@ -27,7 +27,8 @@ import { NotificationService } from "./ethereum-services/NotificationService";
 import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
-import { ExternalService } from "./ethereum-services/ExternalService";
+import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
+import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
 import YAML from "yaml";
 // import { useServices } from "../store/services";
 
@@ -155,8 +156,10 @@ export class ServiceManager {
               services.push(KeysAPIService.buildByConfiguration(config));
             } else if (config.service == "CharonService") {
               services.push(CharonService.buildByConfiguration(config));
-            } else if (config.service == "ExternalService") {
-              services.push(ExternalService.buildByConfiguration(config));
+            } else if (config.service == "ExternalConsensusService") {
+              services.push(ExternalConsensusService.buildByConfiguration(config));
+            } else if (config.service == "ExternalExecutionService") {
+              services.push(ExternalExecutionService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -926,9 +929,12 @@ export class ServiceManager {
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
         return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
 
-      case "ExternalService":
+      case "ExternalExecutionService":
         ports = [];
-        return ExternalService.buildByUserInput(args.network, args.installDir + "/external");
+        return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution");
+      case "ExternalConsensusService":
+        ports = [];
+        return ExternalConsensusService.buildByUserInput(args.network, args.installDir + "/externalConsensus");
     }
   }
 
