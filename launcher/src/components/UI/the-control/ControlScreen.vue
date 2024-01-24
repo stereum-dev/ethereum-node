@@ -37,13 +37,11 @@
                 <div class="service-edit">
                   <div class="edit-box">
                     <div
-                      class="icon-bg"
-                      :class="
-                        item.service !== 'ExternalExecutionService' ||
+                      v-if="
+                        item.service !== 'ExternalExecutionService' &&
                         item.service !== 'ExternalConsensusService'
-                          ? 'pointer-events-none opacity-80 '
-                          : ''
                       "
+                      class="icon-bg"
                     >
                       <div class="power-icon">
                         <img
