@@ -235,6 +235,10 @@ export default {
       this.enableRateLimit = value;
       console.log("rate limit", this.enableRateLimit);
     },
+    handleRateLimitPage(value) {
+      this.rateLimitPage = value;
+      console.log("rate limit", this.rateLimitPage);
+    },
     filterAuthenticatorService() {
       this.runningServices.forEach((item) => {
         if (item.name === "Google Authenticator") this.authenticatorService = item;
