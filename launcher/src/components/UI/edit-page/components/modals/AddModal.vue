@@ -1,18 +1,10 @@
 <template>
   <custom-modal
-    :main-title="
-      client.name === 'ExternalService'
-        ? `${client.name}`
-        : `${client.name} - ${client.category}`
-    "
+    :main-title="`${client.name} - ${client.category}`"
     :client="client"
     :sub-title="getSubTitles"
     :confirm-text="getConfirmText"
-    :disabled-button="
-      disabledButton || client.name === 'ExternalService'
-        ? externalServiceConfirmBtn
-        : false
-    "
+    :disabled-button="disabledButton || externalServiceConfirmBtn"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmInstall"
@@ -76,9 +68,7 @@ const getConfirmText = computed(() => {
       text = "confirm";
     } else if (
       props.client.category === "consensus" ||
-      (props.client.category === "validator" &&
-        !/Web3Signer/.test(props.client.service)) ||
-      props.client.category === "external"
+      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service))
     ) {
       text = "next";
     } else if (
@@ -113,30 +103,10 @@ const getSubTitles = computed(() => {
 });
 
 const externalServiceConfirmBtn = computed(() => {
-  if (manageStore.externalSource == "" && manageStore.catDefult == "select a category") {
-    return true;
-  } else if (
-    manageStore.externalSource == "" &&
-    manageStore.catDefult !== "select a category"
-  ) {
-    return true;
-  } else if (
-    manageStore.externalSource !== "" &&
-    manageStore.catDefult == "select a category"
-  ) {
-    return true;
-  } else if (
-    manageStore.externalSource !== "" &&
-    manageStore.catDefult == "execution" &&
-    manageStore.jwtToken == ""
-  ) {
-    return true;
-  } else if (
-    manageStore.externalSource !== "" &&
-    manageStore.catDefult == "execution" &&
-    manageStore.jwtToken !== ""
-  ) {
-    return false;
+  if (props.client.service === "ExternalExecutionService") {
+    return manageStore.externalSource === "" && manageStore.jwtToken === "";
+  } else if (props.client.service === "ExternalConsensusService") {
+    return manageStore.externalSource === "";
   }
   return false;
 });
@@ -174,9 +144,6 @@ const confirmInstall = () => {
   ) {
     isAddPanelActivated.value = false;
     isRelaysActivated.value = false;
-    isModifyActivated.value = true;
-  } else if (props.client.category === "external" && getConfirmText.value === "next") {
-    isAddPanelActivated.value = false;
     isModifyActivated.value = true;
   }
 };

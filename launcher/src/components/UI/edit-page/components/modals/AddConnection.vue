@@ -155,8 +155,6 @@ const props = defineProps({
   },
 });
 
-console.log(props.properties);
-
 //Stores
 const manageStore = useNodeManage();
 
