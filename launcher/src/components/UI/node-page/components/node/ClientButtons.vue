@@ -6,7 +6,7 @@ import { useNodeStore } from '@/store/theNode';
   >
     <div
       v-if="
-        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalExecutionService' &&
         props.client.service !== 'ExternalConsensusService'
       "
       class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md"
@@ -58,7 +58,7 @@ import { useNodeStore } from '@/store/theNode';
     </div>
     <button
       v-if="
-        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalExecutionService' &&
         props.client.service !== 'ExternalConsensusService'
       "
       class="col-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
@@ -87,7 +87,7 @@ import { useNodeStore } from '@/store/theNode';
     </button>
     <button
       v-if="
-        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalExecutionService' &&
         props.client.service !== 'ExternalConsensusService'
       "
       class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
@@ -103,7 +103,7 @@ import { useNodeStore } from '@/store/theNode';
     </button>
     <button
       v-if="
-        props.client.service !== 'ExternalExecutionService' ||
+        props.client.service !== 'ExternalExecutionService' &&
         props.client.service !== 'ExternalConsensusService'
       "
       class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
@@ -120,8 +120,8 @@ import { useNodeStore } from '@/store/theNode';
     <button
       v-if="
         props.client.category !== 'validator' &&
-        (props.client.service !== 'ExternalExecutionService' ||
-          props.client.service !== 'ExternalConsensusService')
+        props.client.service !== 'ExternalExecutionService' &&
+        props.client.service !== 'ExternalConsensusService'
       "
       class="col-start-3 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openResync"
