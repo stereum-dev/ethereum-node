@@ -1175,10 +1175,10 @@ export const useServices = defineStore("services", {
         },
         {
           id: 27,
-          name: "ExternalService",
+          name: "External",
           service: "ExternalService",
-          category: "external",
-          displayCategory: "ext",
+          category: "consensus",
+          displayCategory: "csc",
           displayTooltip: false,
           displayPluginMenu: false,
           serviceIsPending: false,
