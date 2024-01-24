@@ -24,13 +24,17 @@
             @confirmPluginClick="topConfirmBoxClick"
           />
         </div>
-        <div v-if="!setupPage || (!generationPage && !setupPage)" class="browserBox">
+        <div v-if="secondRowVisible" class="browserBox">
           <ConfirmBox
             v-if="!generationPage"
-            :top-line="`${$t('authenticatorModal.importTitel')}`"
-            :bottom-line="`${$t('authenticatorModal.importText')}`"
-            :btn-name="`${$t('authenticatorModal.importButton')}`"
-            :btn-bg-color="`#A0A0A0`"
+            :top-line="`${configured2fa ? $t('authenticatorModal.removeTitel') : $t('authenticatorModal.importTitel')}`"
+            :bottom-line="`${
+              configured2fa ? $t('authenticatorModal.removeText') : $t('authenticatorModal.importText')
+            }`"
+            :btn-name="`${
+              configured2fa ? $t('authenticatorModal.removeButton') : $t('authenticatorModal.importButton')
+            }`"
+            :btn-bg-color="`${configured2fa ? '#ff0000' : '#A0A0A0'}`"
             @confirmPluginClick="openLocalApp"
           /><AuthContainer
             v-else
@@ -40,13 +44,13 @@
             @save-click="saveScratch"
           />
         </div>
-        <div v-if="setupPage || generationPage" class="checkContainer">
+        <div v-if="setupPage || generationPage || setupConfirmPage" class="checkContainer">
           <checkContainer :title="`${checkContainer.title}`" @update="handleCheckboxUpdate" />
         </div>
-        <div v-if="false" class="checkContainer">
-          <checkContainer :title="`${checkContainer.title}`" @update="handleCheckboxUpdate" />
+        <div v-if="setupConfirmPage" class="checkContainer">
+          <checkContainer :title="`${$t('authenticatorModal.rateLimit')}`" @update="handleRateLimitPage" />
         </div>
-        <div v-if="setupPage || generationPage" class="btn-auth" @click="mainBtnClick">
+        <div v-if="setupPage || generationPage || setupConfirmPage" class="btn-auth" @click="mainBtnClick">
           {{ mainBtnContent.btnName }}
         </div>
       </div>
@@ -74,8 +78,11 @@ export default {
       setupPage: false,
       generationPage: false,
       configurePage: false,
+      configured2fa: false,
+      setupConfirmPage: false,
+      rateLimitPage: false,
+      orginalGenerationTimeLimit: false,
       secretKey: "H6pGFVFBPDM2FSTD", //dummy key
-      varificationCode: "123456", //dummy code
       authBarcode: "/img/icon/header-icons/dummyQR.png", //dummy barcode
       //check points for the check box
       authKeyTimeBase: false,
@@ -92,55 +99,92 @@ export default {
     ...mapWritableState(useNodeStore, {
       hideConnectedLines: "hideConnectedLines",
     }),
+    secondRowVisible() {
+      if (!this.setupConfirmPage && this.generationPage && !this.setupPage && !this.configured2fa) {
+        return true;
+      } else if (!this.setupConfirmPage && !this.generationPage && !this.setupPage && !this.configured2fa) {
+        return true;
+      } else if (this.configured2fa && !this.setupConfirmPage && !this.generationPage && !this.setupPage) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     topConfirmBox() {
-      if (!this.setupPage && !this.generationPage) {
+      if (!this.setupPage && !this.generationPage && !this.setupConfirmPage && !this.configured2fa) {
         return {
           topLine: `${this.$t("authenticatorModal.newSetupTitel")}`,
           bottomLine: `${this.$t("authenticatorModal.newSetupText")}`,
           btnName: `${this.$t("authenticatorModal.newSetupButton")}`,
           btnBgColor: `#A0A0A0`,
         };
-      } else if (this.setupPage && !this.generationPage) {
+      } else if (this.setupPage && !this.generationPage && !this.setupConfirmPage && !this.configured2fa) {
         return {
           topLine: `${this.$t("authenticatorModal.resetTitel")}`,
           bottomLine: `${this.$t("authenticatorModal.resetText")}`,
           btnName: `${this.$t("authenticatorModal.resetButton")}`,
           btnBgColor: `#A0A0A0`,
         };
-      } else if (!this.setupPage && this.generationPage) {
+      } else if (!this.setupPage && this.generationPage && !this.setupConfirmPage && !this.configured2fa) {
         return {
           topLine: `${this.$t("authenticatorModal.backupTitel")}`,
           bottomLine: `${this.$t("authenticatorModal.backupText")}`,
-          btnName: `${this.$t("authenticatorModal.setupButton")}`,
+          btnName: `${this.$t("authenticatorModal.backupButton")}`,
+          btnBgColor: `#A0A0A0`,
+        };
+      } else if (this.setupConfirmPage || (!this.setupPage && !this.generationPage && !this.configured2fa)) {
+        return {
+          topLine: `${this.$t("authenticatorModal.resetTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.resetText")}`,
+          btnName: `${this.$t("authenticatorModal.resetButton")}`,
+          btnBgColor: `#A0A0A0`,
+        };
+      } else if (!this.setupPage && !this.generationPage && !this.setupConfirmPage && this.configured2fa) {
+        return {
+          topLine: `${this.$t("authenticatorModal.configureTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.configureText")}`,
+          btnName: `${this.$t("authenticatorModal.configureButton")}`,
           btnBgColor: `#A0A0A0`,
         };
       } else {
         return {
-          topLine: `${this.$t("authenticatorModal.setupTitel")}`,
-          bottomLine: `${this.$t("authenticatorModal.setupText")}`,
-          btnName: `${this.$t("authenticatorModal.setupButton")}`,
+          topLine: `${this.$t("authenticatorModal.resetTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.resetText")}`,
+          btnName: `${this.$t("authenticatorModal.resetButton")}`,
           btnBgColor: `#A0A0A0`,
         };
       }
     },
     checkContainer() {
-      if (this.setupPage || !this.generationPage) {
+      if (this.setupPage || (!this.generationPage && !this.setupConfirmPage)) {
         return {
           title: `${this.$t("authenticatorModal.timedTokens")}`,
         };
-      } else if (!this.setupPage && this.generationPage) {
+      } else if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
         return {
           title: `${this.$t("authenticatorModal.confirmText")}`,
         };
+      } else if (!this.setupPage && !this.generationPage && this.setupConfirmPage) {
+        return {
+          title: `${this.$t("authenticatorModal.increaseTime")}`,
+        };
       } else {
         return {
-          title: `${this.$t("authenticatorModal.timedTokens")}`,
+          title: `${this.$t("authenticatorModal.rateLimit")}`,
         };
       }
     },
     mainBtnContent() {
       if (this.setupPage && !this.generationPage) {
         return { btnName: `${this.$t("authenticatorModal.generateKeyButton")}` };
+      } else if (!this.setupPage && this.generationPage) {
+        return {
+          btnName: `${this.$t("authenticatorModal.setupButton")}`,
+        };
+      } else if (!this.setupPage && !this.generationPage && this.setupConfirmPage) {
+        return {
+          btnName: `${this.$t("authenticatorModal.configureConfirmButton")}`,
+        };
       } else {
         return {
           btnName: `${this.$t("authenticatorModal.setupButton")}`,
@@ -153,13 +197,20 @@ export default {
   },
   methods: {
     handleCheckboxUpdate(value) {
-      if (this.setupPage || !this.generationPage) {
+      if (this.setupPage || (!this.generationPage && !this.setupConfirmPage)) {
         this.authKeyTimeBase = value;
-        console.log("auth key", this.authKeyTimeBase);
+        console.log("auth key", this.authKeyTimeBase && !this.setupConfirmPage);
       } else if (!this.setupPage && this.generationPage) {
         this.confirmSuccessAuth = value;
         console.log("confirm", this.confirmSuccessAuth);
+      } else if (!this.setupPage && !this.generationPage && this.setupConfirmPage) {
+        this.orginalGenerationTimeLimit = value;
+        console.log("orginal Generation Time Limit", this.orginalGenerationTimeLimit);
       }
+    },
+    handleRateLimitPage(value) {
+      this.rateLimitPage = value;
+      console.log("rate limit", this.rateLimitPage);
     },
     filterAuthenticatorService() {
       this.runningServices.forEach((item) => {
@@ -176,11 +227,15 @@ export default {
       window.open(url, "_blank");
     },
     topConfirmBoxClick() {
-      if (!this.setupPage && this.generationPage) {
+      if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
         //generation func have to be added
-        console.log("generation");
-      } else if (this.setupPage && !this.generationPage) {
+        console.log("back to gene");
+      } else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
         this.setupPage = false;
+        this.generationPage = false;
+        this.validVarificationCode = "";
+        this.varificationCode = "";
+        this.setupConfirmPage = false;
       } else if (!this.setupPage && !this.generationPage) {
         this.setupPage = true;
       }
@@ -191,6 +246,17 @@ export default {
         this.setupPage = false;
         this.validVarificationCode = "111111"; //dummy valid code for the test
         console.log("valid code", this.validVarificationCode);
+      } else if (this.generationPage && !this.setupPage) {
+        console.log("setup");
+        this.setupConfirmPage = true;
+        this.generationPage = false;
+        this.setupPage = false;
+      } else if (!this.generationPage && !this.setupPage && this.setupConfirmPage) {
+        console.log("configue");
+        this.configured2fa = true;
+        this.setupConfirmPage = false;
+        this.generationPage = false;
+        this.setupPage = false;
       }
     },
     saveScratch() {

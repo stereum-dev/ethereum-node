@@ -33,10 +33,6 @@ export default {
       type: String,
       default: "",
     },
-    // varificationCode: {
-    //   type: String,
-    //   default: "",
-    // },
     barcode: {
       type: String,
       default: "",
@@ -56,6 +52,9 @@ export default {
     checkSave() {
       return this.validVarificationCode === this.varificationCode ? "" : "disable-save";
     },
+  },
+  mounted() {
+    this.varificationCode = "";
   },
   methods: {
     async copy(type) {
