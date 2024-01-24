@@ -1,17 +1,34 @@
 <template>
   <custom-modal
-    :main-title="client.name === 'ExternalService' ? `${client.name}` : `${client.name} - ${client.category}`"
+    :main-title="
+      client.name === 'ExternalService'
+        ? `${client.name}`
+        : `${client.name} - ${client.category}`
+    "
     :client="client"
     :sub-title="getSubTitles"
     :confirm-text="getConfirmText"
-    :disabled-button="disabledButton || client.name === 'ExternalService' ? externalServiceConfirmBtn : false"
+    :disabled-button="
+      disabledButton || client.name === 'ExternalService'
+        ? externalServiceConfirmBtn
+        : false
+    "
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmInstall"
   >
     <template #content>
-      <AddPanel v-if="isAddPanelActivated" ref="addPanelComponent" :client="client" :properties="properties" />
-      <MevboostRelays v-if="isRelaysActivated" :client="client" :properties="properties" />
+      <AddPanel
+        v-if="isAddPanelActivated"
+        ref="addPanelComponent"
+        :client="client"
+        :properties="properties"
+      />
+      <MevboostRelays
+        v-if="isRelaysActivated"
+        :client="client"
+        :properties="properties"
+      />
       <AddConnection v-if="isModifyActivated" :client="client" :properties="properties" />
     </template>
   </custom-modal>
@@ -59,13 +76,20 @@ const getConfirmText = computed(() => {
       text = "confirm";
     } else if (
       props.client.category === "consensus" ||
-      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service)) ||
+      (props.client.category === "validator" &&
+        !/Web3Signer/.test(props.client.service)) ||
       props.client.category === "external"
     ) {
       text = "next";
-    } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
+    } else if (
+      props.client.category === "service" &&
+      props.client.service !== "FlashbotsMevBoostService"
+    ) {
       text = "confirm";
-    } else if (props.client.category === "service" && props.client.service === "FlashbotsMevBoostService") {
+    } else if (
+      props.client.category === "service" &&
+      props.client.service === "FlashbotsMevBoostService"
+    ) {
       text = "next";
     }
   } else if (isRelaysActivated.value) {
@@ -91,13 +115,27 @@ const getSubTitles = computed(() => {
 const externalServiceConfirmBtn = computed(() => {
   if (manageStore.externalSource == "" && manageStore.catDefult == "select a category") {
     return true;
-  } else if (manageStore.externalSource == "" && manageStore.catDefult !== "select a category") {
+  } else if (
+    manageStore.externalSource == "" &&
+    manageStore.catDefult !== "select a category"
+  ) {
     return true;
-  } else if (manageStore.externalSource !== "" && manageStore.catDefult == "select a category") {
+  } else if (
+    manageStore.externalSource !== "" &&
+    manageStore.catDefult == "select a category"
+  ) {
     return true;
-  } else if (manageStore.externalSource !== "" && manageStore.catDefult == "execution" && manageStore.jwtToken == "") {
+  } else if (
+    manageStore.externalSource !== "" &&
+    manageStore.catDefult == "execution" &&
+    manageStore.jwtToken == ""
+  ) {
     return true;
-  } else if (manageStore.externalSource !== "" && manageStore.catDefult == "execution" && manageStore.jwtToken !== "") {
+  } else if (
+    manageStore.externalSource !== "" &&
+    manageStore.catDefult == "execution" &&
+    manageStore.jwtToken !== ""
+  ) {
     return false;
   }
   return false;
