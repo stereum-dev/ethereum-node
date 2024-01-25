@@ -590,8 +590,11 @@ const nukeConfirmation = () => {
 };
 const backToLogin = async () => {
   serverStore.connectingAnimActive = false;
+
+  router.push("/login").then(() => {
+    location.reload();
+  });
   await ControlService.logout();
-  router.push("/login");
 };
 
 const closeNetworkModal = () => {
