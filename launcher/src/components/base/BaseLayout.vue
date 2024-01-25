@@ -22,7 +22,15 @@
       <TaskManager />
     </div>
     <Transition name="slide-fade">
-      <ServerScreen v-if="serverStore.isServerAccessManagementActive" />
+      <ServerScreen
+        v-if="
+          serverStore.isServerAccessManagementActive &&
+          router.currentRoute.value.fullPath !== '/config/play' &&
+          router.currentRoute.value.fullPath !== '/oneClick/play' &&
+          router.currentRoute.value.fullPath !== '/custom/play' &&
+          router.currentRoute.value.fullPath !== '/login'
+        "
+      />
     </Transition>
   </div>
 </template>
@@ -36,10 +44,12 @@ import { useFooter } from "@/store/theFooter";
 import { ref } from "vue";
 import i18n from "../../../../launcher/src/includes/i18n";
 import { useServers } from "@/store/servers";
+import { useRouter } from "vue-router";
 
 const t = i18n.global.t;
 const serverStore = useServers();
 const footerStore = useFooter();
+const router = useRouter();
 const tooltip = ref(false);
 const serverAccMange = t("serverManagement.serverAccMange");
 
