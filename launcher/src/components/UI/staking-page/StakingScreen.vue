@@ -214,6 +214,7 @@ const importKey = async (val) => {
   stakingStore.importKeyMessage = await ControlService.importKey(
     stakingStore.selectedValidatorService.config.serviceID
   );
+  console.log(stakingStore.importKeyMessage);
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];
@@ -272,6 +273,7 @@ const importValidatorProcessing = async () => {
     stakingStore.keyFiles = [];
   } else {
     stakingStore.setActiveModal("risk");
+    stakingStore.doppelgangerKeys = [];
     console.log("error: there are active validators");
   }
 };

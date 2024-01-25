@@ -122,6 +122,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import { useListKeys } from "@/composables/validators";
+import { useServers } from "@/store/servers";
 
 const footerStore = useFooter();
 const serviceStore = useServices();
@@ -143,6 +144,8 @@ const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
+
+const serverStore = useServers();
 
 // Computed & Watcher
 
@@ -586,8 +589,12 @@ const nukeConfirmation = () => {
   destroyNode();
 };
 const backToLogin = async () => {
+  serverStore.connectingAnimActive = false;
+
+  router.push("/login").then(() => {
+    location.reload();
+  });
   await ControlService.logout();
-  router.push("/");
 };
 
 const closeNetworkModal = () => {
