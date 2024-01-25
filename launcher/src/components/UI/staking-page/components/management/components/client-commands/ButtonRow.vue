@@ -50,7 +50,7 @@ const displayButtonByCondition = computed(() => {
       return true;
     }
   } else if (!isSelectedFilterWeb3Signer) {
-    if (!matchingKeyForService || !isValidatorFilterRunning) {
+    if ((!matchingKeyForService || !isValidatorFilterRunning) && !isImportRemoteButton) {
       return true;
     }
   }
