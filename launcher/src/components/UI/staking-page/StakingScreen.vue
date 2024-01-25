@@ -81,7 +81,7 @@ const modals = {
   },
   removeGroup: {
     component: RemoveGroup,
-    props: {},
+
     events: {
       removeGroup: () => removeGroupConfirm(stakingStore.currentGroup),
     },
@@ -388,8 +388,7 @@ const renameGroup = (item) => {
 
 //Withdraw Group
 
-const withdrawGroup = (item) => {
-  console.log(item);
+const withdrawGroup = () => {
   stakingStore.setActivePanel("password");
 };
 

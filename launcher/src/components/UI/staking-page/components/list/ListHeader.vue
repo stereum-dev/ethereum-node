@@ -6,7 +6,7 @@
       v-if="stakingStore.isPreviewListActive"
       class="w-full h-full col-start-1 col-span-full flex justify-center items-center rounded-t-md bg-[#17A2B8] space-x-4"
     >
-      <span class="text-md font-semibold text-gray-200 uppercase">{{ $("displayValidator.inserValidator") }}}}</span>
+      <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("displayValidator.inserValidator") }}</span>
       <img class="w-4 h-5" src="/img/icon/the-staking/black-key.png" alt="icon" />
     </div>
     <div

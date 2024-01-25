@@ -1,5 +1,5 @@
 import { useStakingStore } from "@/store/theStaking";
-import ControlService from "@/store/ControlService"; // Adjust the import path accordingly
+import ControlService from "@/store/ControlService";
 
 export const useListGroups = () => {
   const stakingStore = useStakingStore();

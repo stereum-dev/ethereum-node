@@ -8,13 +8,39 @@
         {{ client?.config?.serviceID }}
       </span>
     </div>
-    <div class="w-full h-full col-start-7 col-end-8 flex justify-center items-center cursor-pointer">
+    <div class="w-full h-full col-start-6 col-end-7 flex justify-end items-center cursor-pointer relative">
+      <div
+        v-if="isAllHovered"
+        class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md"
+      >
+        <span class="text-xs text-gray-200 font-semibold">Export All Logs</span>
+      </div>
+
+      <img
+        class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
+        src="/img/icon/node-icons/all-logs.png"
+        alt=""
+        @mousedown.prevent
+        @click="exportAllLogs"
+        @mouseenter="isAllHovered = true"
+        @mouseleave="isAllHovered = false"
+      />
+    </div>
+    <div class="w-full h-full col-start-7 col-end-8 flex justify-start items-center cursor-pointer ml-2 relative">
+      <div
+        v-if="is150Hovered"
+        class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md"
+      >
+        <span class="text-xs text-gray-200 font-semibold">Export 150 Logs</span>
+      </div>
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
         src="/img/icon/manage-node-icons/log_export.png"
         alt=""
         @mousedown.prevent
-        @click="exportLog"
+        @click="exportLogs"
+        @mouseenter="is150Hovered = true"
+        @mouseleave="is150Hovered = false"
       />
     </div>
     <div
@@ -47,8 +73,9 @@
 
 <script setup>
 import { useNodeStore } from "@/store/theNode";
+import { ref } from "vue";
 
-const { client } = defineProps({
+const props = defineProps({
   client: {
     type: Object,
     default: null,
@@ -59,7 +86,18 @@ const emit = defineEmits(["export-log"]);
 
 const nodeStore = useNodeStore();
 
-const exportLog = () => {
-  emit("export-log");
+const isAllHovered = ref(false);
+const is150Hovered = ref(false);
+
+const exportAllLogs = () => {
+  nodeStore.exportLogs = false;
+  nodeStore.exportAllLogs = true;
+  emit("export-log", props.client);
+};
+
+const exportLogs = () => {
+  nodeStore.exportAllLogs = false;
+  nodeStore.exportLogs = true;
+  emit("export-log", props.client);
 };
 </script>
