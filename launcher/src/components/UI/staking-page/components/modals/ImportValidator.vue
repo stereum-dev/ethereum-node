@@ -146,7 +146,7 @@ const getActionButton = computed(() => {
 
 const getDescriptionClass = (line) => {
   let className;
-  if (line && line.includes("failed" || "error" || "invalid")) {
+  if (line && line.includes("failed" || "error" || "invalid" || "incorrect")) {
     stakingStore.doppelgangerKeys = [];
     className = "text-red-400";
   } else if (line && line.includes("duplicate")) {
