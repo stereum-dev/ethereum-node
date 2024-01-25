@@ -152,7 +152,7 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       confirmChanges: [],
-      disableConfirmButton: true,
+      disableConfirmButton: false,
       displayNetworkList: false,
       networkList: [
         {
