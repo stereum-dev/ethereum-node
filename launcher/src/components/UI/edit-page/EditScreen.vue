@@ -587,7 +587,7 @@ const nukeConfirmation = () => {
 };
 const backToLogin = async () => {
   await ControlService.logout();
-  router.push("/");
+  router.push("/login");
 };
 
 const closeNetworkModal = () => {
