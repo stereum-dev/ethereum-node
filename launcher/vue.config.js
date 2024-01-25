@@ -51,5 +51,6 @@ module.exports = {
     config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.esm-bundler.js");
     config.module.rule("vue").use("vue-loader").loader("vue-loader");
     config.module.rule("css").use("css-loader").loader("css-loader");
+
   },
 };
