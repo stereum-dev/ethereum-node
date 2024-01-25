@@ -50,15 +50,15 @@ export async function useFrontendServices() {
             );
           } else {
             oldService = allServices.find((s) => s.service === service.service);
-            if (oldService.tunnelLink) needForTunnel.push(oldService);
+            if (oldService?.tunnelLink) needForTunnel.push(oldService);
           }
-          if (oldService.config.keys) {
+          if (oldService?.config.keys) {
             oldService.config = {
-              ...service.config,
-              keys: oldService.config.keys,
+              ...service?.config,
+              keys: oldService?.config.keys,
             };
           } else {
-            oldService.config = service.config;
+            oldService.config = service?.config;
           }
           oldService.state = service.state;
           if (

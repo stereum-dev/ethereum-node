@@ -139,10 +139,10 @@ const closeModal = () => {
 watchEffect(() => {
   if (stakingStore.removeResponse) {
     stakingStore.removeResponse.forEach((item) => {
-      if (item.name === "local" && item.data.data.length > 0) {
+      if (item.name === "local" && item.data.data?.length > 0) {
         localKeyNo.value = item.data?.data?.length;
-      } else if (item.name === "remote" && item.data.data.length > 0) {
-        remoteKeyNo.value = item.data.data.length;
+      } else if (item.name === "remote" && item.data.data?.length > 0) {
+        remoteKeyNo.value = item.data.data?.length;
       }
     });
   }

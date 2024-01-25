@@ -1,4 +1,5 @@
-const path = require("path");
+// const path = require("path");
+
 module.exports = {
   devServer: {
     proxy: {
@@ -18,8 +19,8 @@ module.exports = {
       externals: ["ssh2"],
       builderOptions: {
         directories: {
-          "output": "dist/${platform}"
-        },        
+          output: "dist/${platform}",
+        },
         appId: "com.stereum.launcher",
         productName: "Stereum-Launcher",
         afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize",
@@ -27,27 +28,35 @@ module.exports = {
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
-        linux: {                    
+        linux: {
           target: "AppImage",
-          artifactName: "Stereum-Launcher-${version}.${ext}"
+          artifactName: "Stereum-Launcher-${version}.${ext}",
         },
-        mac: {          
+        mac: {
           hardenedRuntime: true,
           entitlements:
             "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
           gatekeeperAssess: false,
-          artifactName: "Stereum-Launcher-${version}.${ext}"
+          artifactName: "Stereum-Launcher-${version}.${ext}",
         },
         win: {
           sign: "./customsign.js", // use custom sign hook on windows
-          artifactName: "Stereum-Launcher-Setup-${version}.${ext}"
+          artifactName: "Stereum-Launcher-Setup-${version}.${ext}",
         },
       },
     },
   },
-  chainWebpack: (config) => {
-    config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.cjs.js");
 
-    config.module.rule("vue").use("vue-loader", "css-loader");
+  chainWebpack: (config) => {
+    config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.esm-bundler.js");
+    config.module.rule("vue").use("vue-loader").loader("vue-loader");
+    config.module.rule("css").use("css-loader").loader("css-loader");
+    config.plugin("define").tap((definitions) => {
+      Object.assign(definitions[0], {
+        __VUE_PROD_DEVTOOLS__: "false",
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false",
+      });
+      return definitions;
+    });
   },
 };
