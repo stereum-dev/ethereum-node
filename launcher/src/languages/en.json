@@ -225,74 +225,39 @@
     "insertText": "CLICK OR DRAG TO INSERT KEY"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?"
   },
   "removeMultiModal": {
     "sure": "Are you sure you want to remove this key from your machine?",
     "slashing": "With Slashing Protection Database?",
-    "remove": "Remove",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "remove": "Remove"
   },
   "removeMultipleValidators": {
     "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
   },
   "timeReward": {
     "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "ATTESTATION",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
-  },
-  "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIDATOR",
-    "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "validators": "VALIDATORS"
   },
   "installOption": {
-    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "BACK",
-    "install": "INSTALL",
-    "placeHoldrer": "choose a network"
-  },
-  "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "install": "INSTALL"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
     "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "CHOSEN NETWORK",
-    "chosen": "CHOSEN NETWORK",
     "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "INSTALLED SERVICES",
-    "addOpt": "ADDITIONAL OPTIONS",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "BACK",
-    "next": "NEXT"
+    "instMonit": "Install Monitoring?"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
     "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
     "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
     "developers": "DEVELOPERS",
     "testers": "TESTERS"
   },
