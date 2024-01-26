@@ -21,7 +21,15 @@
       v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
     />
     <Transition name="slide-fade">
-      <ServerScreen v-if="serverStore.isServerAccessManagementActive && router.currentRoute.value.path !== '/login'" />
+      <ServerScreen
+        v-if="
+          serverStore.isServerAccessManagementActive &&
+          router.currentRoute.value.fullPath !== '/config/play' &&
+          router.currentRoute.value.fullPath !== '/oneClick/play' &&
+          router.currentRoute.value.fullPath !== '/custom/play' &&
+          router.currentRoute.value.fullPath !== '/login'
+        "
+      />
     </Transition>
   </div>
 </template>

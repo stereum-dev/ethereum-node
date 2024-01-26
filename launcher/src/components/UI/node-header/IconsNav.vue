@@ -104,6 +104,7 @@ import { useServices } from "../../../store/services";
 import { useUpdateCheck } from "@/composables/version";
 import TutorialGuide from "../the-node/TutorialGuide.vue";
 import StakeGuide from "../the-node/StakeGuide.vue";
+import { useServers } from "@/store/servers";
 export default {
   components: {
     UpdatePanel,
@@ -151,6 +152,9 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
       stereumStatus: "stereumStatus",
+    }),
+    ...mapWritableState(useServers, {
+      connectingAnimActive: "connectingAnimActive",
     }),
   },
 
@@ -222,6 +226,7 @@ export default {
       this.logoutModalIsActive = true;
     },
     async loggingOut() {
+      this.connectingAnimActive = false;
       this.refresh = false;
       await ControlService.logout();
       this.$router.push("/login").then(() => {

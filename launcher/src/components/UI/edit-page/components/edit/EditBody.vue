@@ -9,7 +9,7 @@
       ]"
     >
       <div
-        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold z-20"
+        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
       >
         <span class="col-start-1 justify-self-center self-center">Execution Clients</span>
         <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>
@@ -19,7 +19,8 @@
         ref="dropZoneRef"
         class="w-full h-full max-h-[428px] grid grid-cols-3 pt-5 z-10"
         :class="{
-          'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto': activateScrollBar,
+          'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto':
+            activateScrollBar,
         }"
         @drop="onDrop($event)"
         @dragover.prevent="isOverDropZone = true"
@@ -104,15 +105,9 @@ const displayDropZone = computed(() => {
 });
 
 const activateScrollBar = computed(() => {
-  const validators = manageStore.newConfiguration.filter(
-    (service) => service.category === "validator"
-  );
-  const consensus = manageStore.newConfiguration.filter(
-    (service) => service.category === "consensus"
-  );
-  const execution = manageStore.newConfiguration.filter(
-    (service) => service.category === "execution"
-  );
+  const validators = manageStore.newConfiguration.filter((service) => service.category === "validator");
+  const consensus = manageStore.newConfiguration.filter((service) => service.category === "consensus");
+  const execution = manageStore.newConfiguration.filter((service) => service.category === "execution");
   if (validators.length > 3 || consensus.length > 3 || execution.length > 3) {
     return true;
   } else {
@@ -133,12 +128,7 @@ watchEffect(
 
 const oneWayConnection = (start, end, startSocket, endSocket) => {
   if (start && end) {
-    let newLine = new LeaderLine(
-      start,
-      end,
-      { dash: { animation: true } },
-      { hide: true }
-    );
+    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
     newLine.position();
     newLine.setOptions({
       size: 2,
@@ -160,9 +150,7 @@ const lineDrawHandler = (item) => {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
             s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some(
-              (d) => d.id === item.config?.serviceID
-            )
+            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
         );
         dependencies.forEach((d) => {
           if (d.category === "consensus") {
@@ -179,12 +167,8 @@ const lineDrawHandler = (item) => {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
             (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some(
-                (d) => d.id === item.config?.serviceID
-              )) ||
-            item.config?.dependencies?.executionClients.some(
-              (d) => d.id === s.config?.serviceID
-            )
+              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
+            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -207,15 +191,9 @@ const lineDrawHandler = (item) => {
       case "validator": {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
-            item.config?.dependencies?.executionClients.some(
-              (d) => d.id === s.config?.serviceID
-            ) ||
-            item.config?.dependencies?.consensusClients.some(
-              (d) => d.id === s.config?.serviceID
-            ) ||
-            s.config?.dependencies?.consensusClients.some(
-              (d) => d.id === item.config?.serviceID
-            )
+            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
+            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
+            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
