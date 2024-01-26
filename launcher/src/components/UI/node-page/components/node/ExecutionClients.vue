@@ -22,6 +22,7 @@
         @open-doc="openDoc"
         @open-resync="openResync(item)"
         @open-pruning="openPruning"
+        @copy-jwt="copyJwt"
       />
       <TransitionGroup name="fadeModal">
         <ResyncModal
@@ -54,6 +55,7 @@ const emit = defineEmits([
   "restartHandler",
   "mouseOver",
   "mouseLeave",
+  "copyJwt",
 ]);
 
 //Refs
@@ -114,6 +116,10 @@ const stateHandler = (item) => {
 
 const restartHandler = (item) => {
   emit("restartHandler", item);
+};
+
+const copyJwt = (item) => {
+  emit("copyJwt", item);
 };
 </script>
 

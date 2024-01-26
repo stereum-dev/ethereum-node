@@ -21,6 +21,7 @@ import { mapState, map } from 'pinia';
         @open-doc="openDocs"
         @mouse-over="lineDrawHandler"
         @mouse-leave="removeConnectionLines"
+        @copy-jwt="copyJwt"
       />
       <ConsensusClients
         @open-expert="openExpert"
@@ -211,6 +212,12 @@ const openDocs = (item) => {
 
 const openExpert = (item) => {
   emit("openExpert", item);
+};
+
+const copyJwt = (item) => {
+  item.config?.volumes.forEach((v) => {
+    console.log(v.destinationPath);
+  });
 };
 </script>
 
