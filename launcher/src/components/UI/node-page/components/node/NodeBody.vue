@@ -218,6 +218,8 @@ const copyJwt = (item) => {
   item.config?.volumes.forEach((v) => {
     console.log(v.destinationPath);
   });
+  // const output = await your func
+  //  navigator.clipboard.writeText(output);
 };
 </script>
 
