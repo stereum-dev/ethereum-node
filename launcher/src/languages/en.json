@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "NAME",
-    "edit": "Manage node",
-    "loading": "loading new states",
-    "turnOn": "Turn Node on",
-    "turnOff": "Turn Node off",
-    "log": "Open Logs",
-    "restart": "Restart",
-    "start": "start",
-    "resync": "resync",
-    "stop": "stop",
-    "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "NAME"
   },
   "pagesnav": {
-    "node": "NODE",
-    "control": "CONTROL",
     "staking": "STAKING"
   },
   "supportModal": {
     "support": "support",
     "supportText": "The fastest way to reach a person for support is to join our Discord server!",
     "bugReport": "BUG REPORT",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "or write an email to:",
     "docsTitle": "chain docs",
     "docsText": "A handy link to the network logs' documentation for your selected node configuration."
@@ -60,11 +39,9 @@
     "update": "UPDATE",
     "launcherVersion": "Launcher Version",
     "nodeVersion": "Node Version",
-    "lane": "Stereum - Testing Lane",
     "on": "on",
     "off": "off",
     "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
     "manual": "MANUAL",
     "auto": "AUTO",
     "sxConf": "Export Config",
@@ -76,12 +53,7 @@
   },
   "nodeSidebarVideo": {
     "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "migrate": "Nodes Migration",
     "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO",
     "written": "Written Guides",
     "video": "Video Guides"
   },
@@ -99,12 +71,7 @@
   },
   "modifyPanel": {
     "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
     "nukeNode": "NUKE NODE"
-  },
-  "sidebarManage": {
-    "filter": "Filter..."
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +92,7 @@
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
     "all": "update all",
-    "osTitle": "server os updates",
-    "availableUpdates": "updates",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "server os updates"
   },
   "controlPage": {
     "node": "NODE",
