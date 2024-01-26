@@ -56,6 +56,7 @@ import ValidatorClients from "./ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
+import ControlService from "@/store/ControlService";
 
 import LeaderLine from "leader-line-new";
 import { useStateHandler, useRestartService } from "@/composables/services";
@@ -214,12 +215,15 @@ const openExpert = (item) => {
   emit("openExpert", item);
 };
 
-const copyJwt = (item) => {
-  item.config?.volumes.forEach((v) => {
-    console.log(v.destinationPath);
+const copyJwt = async (item) => {
+  let volume = "";
+  item.config?.volumes.forEach((vol) => {
+    if (vol.destinationPath.endsWith("/engine.jwt")) {
+      volume = vol.destinationPath;
+    }
   });
-  // const output = await your func
-  //  navigator.clipboard.writeText(output);
+  const result = await ControlService.copyExecutionJWT(volume);
+  navigator.clipboard.writeText(result);
 };
 </script>
 

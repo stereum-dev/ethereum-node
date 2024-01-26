@@ -1722,4 +1722,10 @@ export class ServiceManager {
       });
     }
   }
+
+  async copyExecutionJWT(volume) {
+    let jwtContent = "";
+    jwtContent = await this.nodeConnection.sshService.exec(`cat ${volume}`);
+    return jwtContent.stdout;
+  }
 }

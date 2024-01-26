@@ -522,6 +522,10 @@ ipcMain.handle("getExternalSourceJWT", async (event, args) => {
   return await serviceManager.getExternalSourceJWT(args);
 });
 
+ipcMain.handle("copyExecutionJWT", async (event, args) => {
+  return await serviceManager.copyExecutionJWT(args);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
