@@ -480,6 +480,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getBlockRewards", args);
   }
 
+  async getExternalSourceJWT(args) {
+    return await this.promiseIpc.send("getExternalSourceJWT", args);
+  }
+
   async getSyncCommitteeRewards(validators, slot) {
     return await this.promiseIpc.send("getSyncCommitteeRewards", { validators, slot });
   }

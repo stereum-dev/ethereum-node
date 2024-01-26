@@ -717,6 +717,13 @@ export class NodeConnection {
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
     try {
+      if (serviceConfiguration.service === "ExternalConsensusService") {
+        let dir = serviceConfiguration.volumes[0].split("/").slice(0, -1).join("/");
+        configStatus = await this.sshService.exec(
+          `mkdir ${dir} && touch ${dir}/link.txt && echo -e "haha" > ${dir}/link.txt`
+        );
+      }
+
       configStatus = await this.sshService.exec(
         "echo -e " +
           StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +

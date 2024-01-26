@@ -369,9 +369,14 @@ export class ServiceManager {
 
     await Promise.all(
       modifiedServices.map(async (service) => {
+        // if (external) {} else {}
         await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
       })
     );
+  }
+
+  async getExternalSourceJWT(exConParam) {
+    console.log("exConParam", exConParam);
   }
 
   addDependencies(service, dependencies, ssvConfig) {
@@ -1203,6 +1208,7 @@ export class ServiceManager {
 
     await Promise.all(
       newServices.map(async (service) => {
+        console.log("add services build configuration: ------", service);
         await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
       })
     );

@@ -518,6 +518,10 @@ ipcMain.handle("getSyncCommitteeRewards", async (event, args) => {
   return await monitoring.getSyncCommitteeRewards(args.validators, args.slot);
 });
 
+ipcMain.handle("getExternalSourceJWT", async (event, args) => {
+  return await serviceManager.getExternalSourceJWT(args);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
