@@ -712,18 +712,11 @@ export class NodeConnection {
    *
    * @param serviceConfiguration servicd configuration to write to the node
    */
-  async writeServiceConfiguration(serviceConfiguration) {
+  async writeServiceConfiguration(serviceConfiguration, extSource, extJWT) {
     let configStatus;
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
     try {
-      if (serviceConfiguration.service === "ExternalConsensusService") {
-        let dir = serviceConfiguration.volumes[0].split("/").slice(0, -1).join("/");
-        configStatus = await this.sshService.exec(
-          `mkdir ${dir} && touch ${dir}/link.txt && echo -e "haha" > ${dir}/link.txt`
-        );
-      }
-
       configStatus = await this.sshService.exec(
         "echo -e " +
           StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
@@ -731,6 +724,17 @@ export class NodeConnection {
           serviceConfiguration.id +
           ".yaml"
       );
+      if (serviceConfiguration.service.includes("External")) {
+        let extConnDir = serviceConfiguration.volumes[0].split("/").slice(0, -1).join("/");
+        configStatus =
+          serviceConfiguration.service.includes("Consensus") && extSource !== ""
+            ? await this.sshService.exec(
+                `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${extSource} > ${extConnDir}/link.txt`
+              )
+            : await this.sshService.exec(
+                `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${extSource} > ${extConnDir}/link.txt && touch ${extConnDir}/engine.jwt && echo -e ${extJWT} > ${extConnDir}/engine.jwt`
+              );
+      }
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + serviceConfiguration.service + " config",

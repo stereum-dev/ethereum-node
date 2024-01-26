@@ -575,11 +575,11 @@ const destroyNode = async () => {
 const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
   if (manageStore.jwtToken || manageStore.externalSource) {
-    const exConParam = {
-      jwtToken: manageStore.jwtToken,
-      externalSource: manageStore.externalSource,
+    const extConnParams = {
+      extSource: manageStore.externalSource,
+      extJWT: manageStore.jwtToken,
     };
-    await ControlService.getExternalSourceJWT(exConParam);
+    await ControlService.getExternalSourceJWT(extConnParams);
   }
   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
   setTimeout(() => {

@@ -30,13 +30,9 @@ import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
 import YAML from "yaml";
-// import { useServices } from "../store/services";
-
-// const servicesStore = useServices();
-
-// console.log("object, ", servicesStore.allServices);
 
 const log = require("electron-log");
+let extConnParam = "";
 
 async function Sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -369,14 +365,9 @@ export class ServiceManager {
 
     await Promise.all(
       modifiedServices.map(async (service) => {
-        // if (external) {} else {}
         await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
       })
     );
-  }
-
-  async getExternalSourceJWT(exConParam) {
-    console.log("exConParam", exConParam);
   }
 
   addDependencies(service, dependencies, ssvConfig) {
@@ -1205,11 +1196,19 @@ export class ServiceManager {
       }
       if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
     });
-
     await Promise.all(
       newServices.map(async (service) => {
-        console.log("add services build configuration: ------", service);
-        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+        if (service.service.includes("External") && Object.keys(extConnParam).length > 0) {
+          service.service.includes("Consensus")
+            ? await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration(), extConnParam.extSource)
+            : await this.nodeConnection.writeServiceConfiguration(
+                service.buildConfiguration(),
+                extConnParam.extSource,
+                extConnParam.extJWT
+              );
+        } else {
+          await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+        }
       })
     );
     await this.createKeystores(
@@ -1220,6 +1219,10 @@ export class ServiceManager {
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
     await this.initKeysAPI(newServices.filter((s) => s.service === "KeysAPIService"));
     return ELInstalls.concat(CLInstalls, VLInstalls);
+  }
+
+  async getExternalSourceJWT(extConnParams) {
+    extConnParam = extConnParams;
   }
 
   //make sure there are no double tasks (for example: TekuBeaconService, TekuValidatorService share the same id)
