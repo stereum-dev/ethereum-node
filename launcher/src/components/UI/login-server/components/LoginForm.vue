@@ -18,7 +18,7 @@
     </div>
 
     <div
-      v-if="serverStore.connectingAnimActive"
+      v-if="serverStore.connectingAnimActive && router.currentRoute.value.name !== 'login'"
       class="col-start-1 col-span-full row-start-1 row-span-full flex flex-col justify-center items-center z-20"
     >
       <div class="w-full h-full absolute inset-0 bg-black rounded-md opacity-80"></div>
@@ -325,9 +325,10 @@ import { useServers } from "@/store/servers";
 
 import { ref, computed, watch, onBeforeMount, watchEffect } from "vue";
 import { useServerLogin } from "@/composables/useLogin";
+import { useRouter } from "vue-router";
 
 const serverStore = useServers();
-
+const router = useRouter();
 const { login, add, remove, loadStoredConnections } = useServerLogin();
 
 //State

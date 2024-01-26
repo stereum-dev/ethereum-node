@@ -1,7 +1,7 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
-    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
+
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
@@ -96,6 +96,7 @@
       />
       <!-- End Nuke Modal -->
     </TransitionGroup>
+    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
   </base-layout>
 </template>
 <script setup>
@@ -121,6 +122,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import { useListKeys } from "@/composables/validators";
+import { useServers } from "@/store/servers";
 
 const footerStore = useFooter();
 const serviceStore = useServices();
@@ -142,6 +144,8 @@ const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
+
+const serverStore = useServers();
 
 // Computed & Watcher
 
@@ -585,8 +589,12 @@ const nukeConfirmation = () => {
   destroyNode();
 };
 const backToLogin = async () => {
+  serverStore.connectingAnimActive = false;
+
+  router.push("/login").then(() => {
+    location.reload();
+  });
   await ControlService.logout();
-  router.push("/");
 };
 
 const closeNetworkModal = () => {
