@@ -123,7 +123,6 @@ import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import { useListKeys } from "@/composables/validators";
 import { useServers } from "@/store/servers";
-import { coreKnownTags } from "yaml/dist/schema/tags";
 
 const footerStore = useFooter();
 const serviceStore = useServices();
