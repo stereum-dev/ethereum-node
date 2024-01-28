@@ -175,7 +175,7 @@ export class ServiceManager {
               return services.find((dependency) => dependency.id === client.id);
             });
           }
-          if (service.dependencies.validatorClients.length > 0) {
+          if (service.dependencies.validatorClients?.length > 0) {
             service.dependencies.validatorClients = service.dependencies.validatorClients.map((client) => {
               return services.find((dependency) => dependency.id === client.id);
             });
