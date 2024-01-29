@@ -262,18 +262,12 @@
     "testers": "TESTERS"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
     "name": "NAME",
     "cat": "CATEGORY",
     "path": "PATH"
   },
   "warningModal": {
     "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
-  },
-  "tutorialBox": {
-    "video": "video",
-    "walkthrough": "walkthrough",
-    "textGuide": "written guide"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTER A NEW OPERATOR",
@@ -324,9 +318,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
   },
   "mevboostConfig": {
     "availRelays": "AVAILABLE BLOCK RELAYS",
@@ -347,10 +339,6 @@
     "chooseFile": "Choose File",
     "continue": "Continue"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
-  },
   "logOutModal": {
     "logOutTitle": "LOG-OUT",
     "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
@@ -369,7 +357,6 @@
     "close": "click outside to close"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
     "restartMessage": "your node might go offline while doing so!",
     "restart": "restart",
     "confirmMessage": "Are you sure you want turn your node"
@@ -409,8 +396,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   },
   "blockProduct": {
     "status": "STATUS",
@@ -456,7 +442,6 @@
   },
   "nodeAlert": {
     "lowSpace": "LOW STORAGE",
-    "missAttest": "MISSED ATTESTATION",
     "use": "USAGE",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
@@ -464,10 +449,6 @@
     "clkUpdate": "Click to open update panel",
     "sync": "Synchronization Error",
     "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -529,8 +510,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -541,7 +521,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Remove",
     "close": "click outside to close"
   },
@@ -644,9 +623,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
