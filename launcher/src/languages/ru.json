@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "НАЗВАНИЕ",
-    "edit": "Manage node",
-    "loading": "загрузка новых состояний",
-    "turnOn": "Вкл узел",
-    "turnOff": "Выкл узел",
-    "log": "Открыть журналы",
-    "restart": "Перезапуск",
-    "start": "начать",
-    "resync": "ресинх",
-    "stop": "остановить",
-    "machineIp": "IP-адрес машины",
-    "machineName": "Название машины",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Кликните, чтобы открыть панель, чтобы журнал для клиентов и служб был доступен вам отдельно",
-    "clkSwitch": "Кликните мышью, чтобы открыть панель и сделать доступным включение/выключение клиентов и услуг по отдельности",
-    "clkRestart": "Кликните, чтобы открыть панель, позволяющую перезапускать клиенты и службы по отдельности",
-    "clkResync": "Кликните, чтобы открыть панель, на которой можно отдельно синхронизировать клиентов"
+    "servername": "НАЗВАНИЕ"
   },
   "pagesnav": {
-    "node": "УЗЕЛ",
-    "control": "УПРАВЛЕНИЕ",
     "staking": "СТАКИРОВКА"
   },
   "supportModal": {
     "support": "поддержка",
     "supportText": "Самый быстрый способ связаться с человеком для получения поддержки - присоединиться к нашему Discord серверу!",
     "bugReport": "СООБЩИТЬ ОБ ОШИБКЕ",
-    "bugRepText": "Пожалуйста, найдите время, чтобы написать о проблеме, и позвольте нам сделать Stereum лучше!",
     "emailText": "или напишите на электронную почту:",
     "docsTitle": "цепные документы",
     "docsText": "Удобная ссылка на документацию по сетевым журналам для выбранной конфигурации узла."
@@ -60,11 +39,9 @@
     "update": "ОБНОВЛЕНИЕ",
     "launcherVersion": "Версия лаунчера",
     "nodeVersion": "Версия узла",
-    "lane": "Stereum - Испытательный переулок",
     "on": "on",
     "off": "off",
     "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
     "manual": "MANUAL",
     "auto": "AUTO",
     "sxConf": "Export Config",
@@ -76,12 +53,7 @@
   },
   "nodeSidebarVideo": {
     "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "migrate": "Nodes Migration",
     "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO",
     "written": "Written Guides",
     "video": "Video Guides"
   },
@@ -99,12 +71,7 @@
   },
   "modifyPanel": {
     "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
     "nukeNode": "NUKE NODE"
-  },
-  "sidebarManage": {
-    "filter": "Filter..."
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +92,7 @@
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
     "all": "update all",
-    "osTitle": "server os updates",
-    "availableUpdates": "обновления",
-    "searchVersion": "Поиск доступных обновлений",
-    "updtBtn": "кликните, чтобы обновить",
-    "updtAllPlugin": "обновить все плагины",
-    "autoUpt": "автоматическое обновление",
-    "manualUpt": "ручное обновление",
-    "chngAppr": "Изменения будут применены"
+    "osTitle": "server os updates"
   },
   "controlPage": {
     "node": "УЗЕЛ",
@@ -265,90 +225,49 @@
     "insertText": "CLICK OR DRAG TO INSERT KEY"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?"
   },
   "removeMultiModal": {
     "sure": "Are you sure you want to remove this key from your machine?",
     "slashing": "With Slashing Protection Database?",
-    "remove": "Remove",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "remove": "Remove"
   },
   "removeMultipleValidators": {
     "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
   },
   "timeReward": {
     "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "ATTESTATION",
-    "missed": "ПОТЕРЯНО",
-    "aggregations": "СОГЛАШЕНИЯ",
-    "slashed": "СРЕШЕНО"
-  },
-  "validatorsBox": {
-    "date": "ДАТА",
-    "validator": "ВАЛИДАТОР",
-    "attestRate": "ATTEST.RATE",
-    "reward": "НАГРАДА"
+    "validators": "VALIDATORS"
   },
   "installOption": {
-    "installText": "ВЫБЕРИТЕ ВАРИАНТ ИСПОЛЬЗОВАНИЯ И СЕТЬ. ПОСЛЕ ВЫБОРА И ПРИ НАЖАТИИ КНОПКИ \"НАЧАТЬ\" БУДЕТ ПРОИЗВЕДЕН СЛУЧАЙНЫЙ ВЫБОР КЛИЕНТА ДЛЯ ОБСЛУЖИВАНИЯ ВАШЕГО СЦЕНАРИЯ ИСПОЛЬЗОВАНИЯ",
     "back": "НАЗАД",
-    "install": "УСТАНОВИТЬ",
-    "placeHoldrer": "выберите сеть"
-  },
-  "removeModal": {
-    "removeText": "Все службы будут удалены.",
-    "sure": "Вы уверены?"
+    "install": "УСТАНОВИТЬ"
   },
   "installitionMenu": {
-    "welcome": "ДОБРО ПОЖАЛОВАТЬ",
-    "installText": "НА ЭТОМ ШАГЕ ВЫ ВЫБИРАЕТЕ СПОСОБ УСТАНОВКИ УЗЛА. ЕСЛИ ВАМ НУЖНА ПОМОЩЬ В НАСТРОЙКЕ, ПРИСОЕДИНЯЙТЕСЬ К DISCORD СЕРВЕРУ - МЫ БУДЕМ РАДЫ ПОМОЧЬ ВАМ",
     "osCheck": "ПРОВЕРКА ПОДДЕРЖКИ ОПЕРАЦИОННОЙ СИСТЕМЫ ВАШЕГО СЕРВЕРА",
     "osSupported": "ЯВЛЯЕТСЯ ПОДДЕРЖИВАЕМОЙ ОС"
   },
   "pluginName": {
-    "option": "ВЫБЕРИТЕ СЕТЬ",
-    "chosen": "ВЫБЕРИТЕ СЕТЬ",
     "path": "ПУТЬ УСТАНОВКИ",
-    "syncClient": "СИНХРОНИЗИРУЕТ КЛИЕНТА С НАЧАЛОМ ЦЕПОЧКИ",
-    "plugin": "УСТАНОВЛЕННЫЕ СЛУЖБЫ",
-    "addOpt": "ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "КОНТРОЛЬ",
-    "instMonit": "Установить контроль?",
-    "back": "НАЗАД",
-    "next": "СЛЕДУЮЩЕЕ"
+    "instMonit": "Установить контроль?"
   },
   "creditPanel": {
-    "creditTitle": "ТИТРЫ - ФИНАНСОВЫЕ ВКЛАДЧИКИ",
-    "fincialTitle": "ВНЕСИТЕ СВОЕ ИМЯ В СПИСОК! СПАСИБО ЗА ПОДДЕРЖКУ РАЗРАБОТКИ!",
-    "technicPage": "ТЕХНИЧЕСКИЙ ВКЛАД",
     "techTitle": "ТИТРЫ - ТЕХНИЧЕСКИЙ ВКЛАД",
     "techText": "ЗАРАБОТАЙТЕ GITPOAP! УЗНАЙТЕ, КАК ПРИНЯТЬ УЧАСТИЕ В ПРОЕКТЕ, ПОСЕТИВ НАШ GITHUB!",
     "financialPage": "ФИНАНСОВЫЙ ВКЛАД",
-    "gitcoinList": "ПОЛНЫЙ СПИСОК GITCOIN",
     "developers": "РАЗРАБОТЧИКИ",
     "testers": "ТЕСТЕРЫ"
   },
   "verifyInstallation": {
-    "verifyTitle": "ПОДТВЕРДИТЬ И УСТАНОВИТЬ",
     "name": "НАЗВАНИЕ",
     "cat": "КАТЕГОРИЯ",
     "path": "ПУТЬ"
   },
   "warningModal": {
     "warningText": "Мы рекомендуем дождаться окончания первоначальной установки, прежде чем вносить дальнейшие изменения"
-  },
-  "tutorialBox": {
-    "video": "видео",
-    "walkthrough": "прохождение",
-    "textGuide": "письменное руководство"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "РЕГИСТРАЦИЯ НОВОГО ОПЕРАТОРА",
@@ -399,9 +318,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
   },
   "mevboostConfig": {
     "availRelays": "AVAILABLE BLOCK RELAYS",
@@ -422,10 +339,6 @@
     "chooseFile": "Choose File",
     "continue": "Continue"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
-  },
   "logOutModal": {
     "logOutTitle": "LOG-OUT",
     "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
@@ -444,7 +357,6 @@
     "close": "кликните снаружи, чтобы закрыть"
   },
   "restartModal": {
-    "restarQ": "Вы уверены что хотите перезапустить?",
     "restartMessage": "ваш узел может выйти из сети, пока это делается!",
     "restart": "перезапуск",
     "confirmMessage": "Вы уверены что хотите включить ваш узел"
@@ -484,8 +396,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   },
   "blockProduct": {
     "status": "STATUS",
@@ -531,7 +442,6 @@
   },
   "nodeAlert": {
     "lowSpace": "LOW STORAGE",
-    "missAttest": "MISSED ATTESTATION",
     "use": "USAGE",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
@@ -539,10 +449,6 @@
     "clkUpdate": "Click to open update panel",
     "sync": "Synchronization Error",
     "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -604,8 +510,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -616,7 +521,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Remove",
     "close": "click outside to close"
   },
@@ -719,9 +623,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",

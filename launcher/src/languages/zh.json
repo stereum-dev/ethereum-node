@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "名称",
-    "edit": "Manage node",
-    "loading": "加载新状态",
-    "turnOn": "开启节点",
-    "turnOff": "关闭节点",
-    "log": "打开记录文件",
-    "restart": "重启",
-    "start": "开始",
-    "resync": "重新同步",
-    "stop": "停止",
-    "machineIp": "Machine IP Address",
-    "machineName": "机器名称",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "名称"
   },
   "pagesnav": {
-    "node": "节点",
-    "control": "控制器",
     "staking": "权益质押"
   },
   "supportModal": {
     "support": "客户服务",
     "supportText": "想最快方式联系技术客服, 请加入Discord服务器!",
     "bugReport": "漏洞报告",
-    "bugRepText": "请花时间提出您的评价，让Stereum变得更好！",
     "emailText": "或请发邮件到以下邮箱",
     "docsTitle": "链码",
     "docsText": "您所选节点配置网络记录文档的链接。"
@@ -60,11 +39,9 @@
     "update": "更新",
     "launcherVersion": "启动器版本:",
     "nodeVersion": "节点版本",
-    "lane": "Stereum - 测试方式",
     "on": "开",
     "off": "关闭",
     "updateConfig": "更新配置",
-    "servicePlugin": "插件/服务更新配置",
     "manual": "手动更新",
     "auto": "自动更新",
     "sxConf": "Export Config",
@@ -76,12 +53,7 @@
   },
   "nodeSidebarVideo": {
     "stake": "使用 32 ETH",
-    "ssv": "使用 ssv.网络",
-    "alert": "手机应用上的提醒",
-    "switchC": "切换客户",
-    "migrate": "节点转移",
     "rpc": "RPC 连接",
-    "gnoStake": "使用 1GNO",
     "written": "Written Guides",
     "video": "Video Guides"
   },
@@ -99,12 +71,7 @@
   },
   "modifyPanel": {
     "backNode": "回到节点",
-    "addPreset": "添加单击按钮",
-    "changeNetwork": "更改网络",
     "nukeNode": "删除节点"
-  },
-  "sidebarManage": {
-    "filter": "过滤器..."
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +92,7 @@
     "serviceDesc": "已安装选择插件的更新",
     "availablePlugin": "可使用插件更新",
     "all": "全部更新",
-    "osTitle": "更新服务器",
-    "availableUpdates": "更新",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "更新服务器"
   },
   "controlPage": {
     "node": "节点",
@@ -265,90 +225,49 @@
     "insertText": "点击或拖动以输入密钥"
   },
   "removeSingleModal": {
-    "question": "您是否要下载您的消减数据？",
-    "description": "您可以验证器密钥输入来确保安全当您迁移密钥",
-    "btn": "選取路徑"
+    "question": "您是否要下载您的消减数据？"
   },
   "removeMultiModal": {
     "sure": "确定要从您的机器中删除此密钥吗？",
     "slashing": "使用消减保护数据库？",
-    "remove": "删除",
-    "path": "选择一个路径保存导出的消减得币 ",
-    "writePath": "请写下您的路劲"
+    "remove": "删除"
   },
   "removeMultipleValidators": {
     "sureText": "您确定要删除所有验证器密钥吗？"
   },
   "timeReward": {
     "totalText": "总余额：",
-    "validators": "验证器",
-    "proposed": "已建议",
-    "attestRate": "证明率",
-    "attention": "见证消息",
-    "missed": "已错过",
-    "aggregations": "协议",
-    "slashed": "罚没"
-  },
-  "validatorsBox": {
-    "date": "日期",
-    "validator": "验证者",
-    "attestRate": "认证比率",
-    "reward": "奖品"
+    "validators": "验证器"
   },
   "installOption": {
-    "installText": "选择您的目的和网络。选择并按下开始以后将会给您提供服务",
     "back": "回去",
-    "install": "安装",
-    "placeHoldrer": "选择网络"
-  },
-  "removeModal": {
-    "removeText": "将删除所有服务。",
-    "sure": "您确定吗？"
+    "install": "安装"
   },
   "installitionMenu": {
-    "welcome": "欢迎使用",
-    "installText": "在此步骤您可选择怎样安装您的节点。 如果您需要帮，请加入我们的 DISCORD - 我们很乐意帮助。",
     "osCheck": "在检查如果您的服务器需要支持",
     "osSupported": "支持的操作系统"
   },
   "pluginName": {
-    "option": "选择网络",
-    "chosen": "选择网络",
     "path": "安装路劲",
-    "syncClient": "由原始区块链同步您的客户端",
-    "plugin": "安装服务器",
-    "addOpt": "附加选项",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "回去",
-    "next": "下一步"
+    "instMonit": "Install Monitoring?"
   },
   "creditPanel": {
-    "creditTitle": "财务贡献者",
-    "fincialTitle": "把您的名字列在名单上！谢谢您支持！",
-    "technicPage": "技术贡献者",
     "techTitle": "CREDITS - 技术贡献者",
     "techText": "注意一个GITPOAP！通过查看我们的GITHUB来了解！",
     "financialPage": "财务贡献者",
-    "gitcoinList": "GITCOIN 完整名单",
     "developers": "开发队伍",
     "testers": "测试人员"
   },
   "verifyInstallation": {
-    "verifyTitle": "验证和安装",
     "name": "名称",
     "cat": "类别",
     "path": "路径"
   },
   "warningModal": {
     "warningText": "建议您稍等直到完成重要安装再应用更多修改"
-  },
-  "tutorialBox": {
-    "video": "视频",
-    "walkthrough": "攻略",
-    "textGuide": "编写指南"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "注册一个新的操作者",
@@ -399,9 +318,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "定制安装",
-    "customInstallationText": "此模式是为更高级的用户设计的，要求您了解客户端如何相互作用。 您必须选择、安装和连接您的节点的每个部分到使用介面，然后才能正常运作！",
-    "chooseWhereToInstall": "选择您想要加以太坊到哪里",
-    "installationPath": "安装路劲"
+    "customInstallationText": "此模式是为更高级的用户设计的，要求您了解客户端如何相互作用。 您必须选择、安装和连接您的节点的每个部分到使用介面，然后才能正常运作！"
   },
   "mevboostConfig": {
     "availRelays": "可用方块中继",
@@ -422,10 +339,6 @@
     "chooseFile": "选择文件",
     "continue": "继续"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "没有安装验证器客户端！",
-    "disabledStakingMessage": "安装至少一个验证器客户端来激活导入验证器密钥。"
-  },
   "logOutModal": {
     "logOutTitle": "登出",
     "logOutQuestion": "确定想要登出您的服务器节点吗？",
@@ -444,7 +357,6 @@
     "close": "click outside to close"
   },
   "restartModal": {
-    "restarQ": "你确认要重启吗？",
     "restartMessage": "您的节点可因此操作离线！",
     "restart": "重启",
     "confirmMessage": "您确定要转向您的节点"
@@ -484,8 +396,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "测试测试"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   },
   "blockProduct": {
     "status": "状态",
@@ -531,7 +442,6 @@
   },
   "nodeAlert": {
     "lowSpace": "LOW STORAGE",
-    "missAttest": "错过见证消息",
     "use": "使用",
     "noFee": "没有收费收件人",
     "stereumUpt": "以太坊更新",
@@ -539,10 +449,6 @@
     "clkUpdate": "Click to open update panel",
     "sync": "Synchronization Error",
     "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "您确定要吗",
-    "close": "点击外部关闭"
   },
   "resyncModal": {
     "message": "您的客户端将区块链数据存储在您的服务器上所以您的节点可为网络服务。 这对于您的节点的币安质押中提升其证明工作是必要的。 通过使用此选项来删除您的客户端数据，并使用该选择同步您的节点。",
@@ -604,8 +510,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -616,7 +521,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "删除",
     "close": "点击外部关闭"
   },
@@ -719,9 +623,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",

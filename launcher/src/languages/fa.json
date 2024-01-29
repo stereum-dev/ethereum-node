@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "نام",
-    "edit": "Manage node",
-    "loading": "بارگیری حالت های جدید",
-    "turnOn": "روشن کردن Node",
-    "turnOff": "خاموش کردن Node",
-    "log": "باز کردن گزارشات",
-    "restart": "راه اندازی مجدد",
-    "start": "شروع",
-    "resync": "resync",
-    "stop": "توقف",
-    "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "نام"
   },
   "pagesnav": {
-    "node": "نود",
-    "control": "کنترل",
     "staking": "استیک"
   },
   "supportModal": {
     "support": "پشتیبانی",
     "supportText": "سریعترین راه برای دسترسی به یک شخص برای پشتیبانی، پیوستن به سرور دیسکورد ما است",
     "bugReport": "گزارش خطا",
-    "bugRepText": "لطفاً برای نوشتن این موضوع کمی وقت بگذارید و اجازه دهید استریوم را بهتر کنیم!",
     "emailText": "یا ایمیل بنویسید به آدرس",
     "docsTitle": "مستندات chain",
     "docsText": "یک پیوند مفید به مستندات گزارش های شبکه برای پیکربندی Node انتخابی شما."
@@ -60,11 +39,9 @@
     "update": "بروزرسانی",
     "launcherVersion": "نسخه لانچر",
     "nodeVersion": "NODE نسخه",
-    "lane": "استریوم - تست مسیر",
     "on": "روشن",
     "off": "خاموش",
     "updateConfig": "پیکربندی به روز رسانی استریوم",
-    "servicePlugin": "پیکربندی به روز رسانی پلاگین / سرویس",
     "manual": "دستی",
     "auto": "اتوماتیک",
     "sxConf": "Export Config",
@@ -76,12 +53,7 @@
   },
   "nodeSidebarVideo": {
     "stake": "استیک با ۳۲ اتریوم",
-    "ssv": " ssvاستفاده از شبکه",
-    "alert": "اخطارها در موبایل",
-    "switchC": "انتخاب کاربر",
-    "migrate": "انتقال Node ها",
     "rpc": "اتصال RPC",
-    "gnoStake": "استیک با 1 GNOSIS",
     "written": "Written Guides",
     "video": "Video Guides"
   },
@@ -99,12 +71,7 @@
   },
   "modifyPanel": {
     "backNode": " NODE بازگشت به",
-    "addPreset": "اضافه کردن پیش فرض ۱ کلیک",
-    "changeNetwork": "تغییر شبکه",
     "nukeNode": "NODE از بین بردن "
-  },
-  "sidebarManage": {
-    "filter": "فیلترکردن"
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +92,7 @@
     "serviceDesc": "انتخاب بروز رسانی برای پلاگین های نصب شده",
     "availablePlugin": "بروزرسانی برای پلاگین های موجود",
     "all": "بروزرسانی همه چیز",
-    "osTitle": "بروزرسانی سیستم عامل سرور",
-    "availableUpdates": "به‌روزرسانی‌ها",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "بروزرسانی سیستم عامل سرور"
   },
   "controlPage": {
     "node": "نود",
@@ -265,90 +225,49 @@
     "insertText": "برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید "
   },
   "removeSingleModal": {
-    "question": "آیا می خواهید پایگاه داده slashing خود را دانلود کنید?",
-    "description": "برای اطمینان از ایمنی اضافی هنگام انتقال کلیدهایتان، می‌توانید این مورد را با کلیدهای اعتبارسنجی خود وارد کنید",
-    "btn": "انتخاب مسیر"
+    "question": "آیا می خواهید پایگاه داده slashing خود را دانلود کنید?"
   },
   "removeMultiModal": {
     "sure": "آیا مطمئن هستید که می خواهید این محصول را از فهرست دستگاه خود حذف کنید؟",
     "slashing": "با پایگاه داده حفاظت Slashing؟",
-    "remove": "حذف  کردن",
-    "path": "مسیری را برای ذخیره پایگاه داده اسلش صادر شده انتخاب کنید",
-    "writePath": "لطفا مسیر خود را بنویسید"
+    "remove": "حذف  کردن"
   },
   "removeMultipleValidators": {
     "sureText": "آیا مطمئن هستید که می خواهید همه کلیدهای اعتبار سنجی را از این ماشین حذف کنید؟"
   },
   "timeReward": {
     "totalText": "کل موجودی",
-    "validators": "تایید کننده",
-    "proposed": "پیشنهاد شده",
-    "attestRate": "نرخ تصدیق",
-    "attention": "تصدیق",
-    "missed": "از دست رفته",
-    "aggregations": "تراکم",
-    "slashed": "شکاف ها"
-  },
-  "validatorsBox": {
-    "date": "تاریخ",
-    "validator": "تایید کننده",
-    "attestRate": "نرخ تصدیق",
-    "reward": "پاداش"
+    "validators": "تایید کننده"
   },
   "installOption": {
-    "installText": "مورد استفاده و شبکه خود را انتخاب کنید. پس از انتخاب و فشار دادن شروع، یک انتخاب تصادفی کلاینت برای سرویس دهی به مورد استفاده شما انجام می شود",
     "back": "بازگشت",
-    "install": "نصب",
-    "placeHoldrer": "یک شبکه را انتخاب کنید"
-  },
-  "removeModal": {
-    "removeText": ".تمام خدمات حذف خواهد شد",
-    "sure": "آیا مطمئن هستید؟"
+    "install": "نصب"
   },
   "installitionMenu": {
-    "welcome": "خوش آمدید",
-    "installText": "در این مرحله شما نحوه نصب نود خود را انتخاب می کنید. اگر در راه‌اندازی به کمک نیاز دارید، به دیسکورد ما بپیوندید - خوشحال می‌شویم به شما کمک کنیم",
     "osCheck": "بررسی اینکه آیا سیستم عامل سرور شما پشتیبانی می شود یا خیر",
     "osSupported": "یک سیستم عامل پشتیبانی شده است"
   },
   "pluginName": {
-    "option": "شبکه انتخاب شده",
-    "chosen": "شبکه انتخاب شده",
     "path": "مسیر نصب",
-    "syncClient": "کلاینت خود را از ابتدای زنجیره همگام سازی می کند",
-    "plugin": "خدمات نصب شده",
-    "addOpt": "ADDITIONAL OPTIONS",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "بازگشت",
-    "next": "بعدی"
+    "instMonit": "Install Monitoring?"
   },
   "creditPanel": {
-    "creditTitle": "اعتبارات - مشارکت کنندگان مالی",
-    "fincialTitle": "نام خود را در لیست قرار دهید! از شما برای حمایت از توسعه متشکریم!",
-    "technicPage": "مشارکت فنی",
     "techTitle": "اعتبارات - مشارکت کنندگان فنی",
     "techText": "یک GITPOAP کسب کنید! با بازدید از GITHUB ما یاد بگیرید که چگونه درگیر شوید!",
     "financialPage": "مشارکت مالی",
-    "gitcoinList": "لیست کامل GITCOIN",
     "developers": "توسعه دهندگان",
     "testers": "آزمایش کننده ها"
   },
   "verifyInstallation": {
-    "verifyTitle": "تأیید و نصب کنید",
     "name": "نام",
     "cat": "دسته بندی",
     "path": "مسیر"
   },
   "warningModal": {
     "warningText": "ما به شما توصیه می کنیم قبل از اعمال تغییرات بیشتر صبر کنید تا نصب اولیه انجام شود"
-  },
-  "tutorialBox": {
-    "video": "ویدیو",
-    "walkthrough": "نگاهی می اندازم",
-    "textGuide": "راهنمای نوشته شده"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "یک اپراتور جدید را ثبت کنید",
@@ -399,9 +318,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
   },
   "mevboostConfig": {
     "availRelays": "AVAILABLE BLOCK RELAYS",
@@ -422,10 +339,6 @@
     "chooseFile": "Choose File",
     "continue": "ادامه"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "ولیدیتور کلاینت نصب نشده است!",
-    "disabledStakingMessage": "حداقل یک ولیدیتور کلاینت نصب کنید که وارد کردن کلیدهای ولیدیتور فعال شود."
-  },
   "logOutModal": {
     "logOutTitle": "خروج",
     "logOutQuestion": "آیا مطمئن هستید که می خواهید از سرور نود خود خارج شوید?",
@@ -444,7 +357,6 @@
     "close": "برای خروج بیرون از کادر کلیک کنید"
   },
   "restartModal": {
-    "restarQ": "آیا مطمئن هستید که می خواهید راه‌اندازی مجدد کنید?",
     "restartMessage": "your node might go offline while doing so!",
     "restart": "راه اندازی مجدد",
     "confirmMessage": "Are you sure you want turn your node"
@@ -484,8 +396,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   },
   "blockProduct": {
     "status": "STATUS",
@@ -531,7 +442,6 @@
   },
   "nodeAlert": {
     "lowSpace": "LOW STORAGE",
-    "missAttest": "MISSED ATTESTATION",
     "use": "USAGE",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
@@ -539,10 +449,6 @@
     "clkUpdate": "Click to open update panel",
     "sync": "Synchronization Error",
     "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -604,8 +510,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -616,7 +521,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Remove",
     "close": "click outside to close"
   },
@@ -719,9 +623,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
