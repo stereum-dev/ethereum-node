@@ -688,5 +688,30 @@
     "trnOn": "Turn your node on",
     "trnOff": "Turn your node off",
     "expNode": "Export your Node Configuration"
+  },
+  "customAnim": {
+    "processing": "Processing"
+  },
+  "customFooter": {
+    "back": "BACK",
+    "next": "NEXT"
+  },
+  "configDetails": {
+    "addConfig": "Add Config"
+  },
+  "editBody": {
+    "executionClient": "Execution Client",
+    "consensusClient": "Consensus Client",
+    "validator": "Validator"
+  },
+  "editModals": {
+    "noAvailService": "There is no available service",
+    "executionClients": "Execution Clients",
+    "consensusClients": "Consensus Clients",
+    "validatorClients": "Validator Clients",
+    "installationPath": "Installation Path",
+    "syncMode": "Sync Mode",
+    "serviceId": "Service ID",
+    "serviceCat": "Service Category"
   }
 }

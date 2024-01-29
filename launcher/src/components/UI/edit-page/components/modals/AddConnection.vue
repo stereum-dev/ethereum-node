@@ -1,7 +1,9 @@
 import { onMounted, computed } from 'vue';
 <template>
   <div v-if="!manageStore.newConfiguration.length > 0" class="mt-4 flex justify-center items-center">
-    <p class="text-md text-gray-400 font-semibold">There is no available service</p>
+    <p class="text-md text-gray-400 font-semibold">
+      {{ $t("editModals.noAvailService") }}
+    </p>
   </div>
   <div v-else class="w-full mt-4 flex justify-center items-center box-border">
     <div
@@ -9,7 +11,7 @@ import { onMounted, computed } from 'vue';
       class="w-1/3 h-[280px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-2">
-        <span class="text-lg font-semibold text-gray-500">Consensus Clients</span>
+        <span class="text-lg font-semibold text-gray-500">{{ $t("editModals.consensusClients") }}</span>
       </div>
       <div
         class="w-full h-[250px] overflow-y-auto overflow-x-hidden flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
@@ -50,7 +52,7 @@ import { onMounted, computed } from 'vue';
       class="w-1/3 h-[280px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-2">
-        <span class="text-lg font-semibold text-gray-500">Execution Clients</span>
+        <span class="text-lg font-semibold text-gray-500">{{ $t("editModals.executionClients") }}</span>
       </div>
       <div
         class="w-full h-[250px] overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
@@ -91,7 +93,7 @@ import { onMounted, computed } from 'vue';
       class="w-1/3 h-[280px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-2">
-        <span class="text-lg font-semibold text-gray-500">Validator Clients</span>
+        <span class="text-lg font-semibold text-gray-500">{{ $t("editModals.validatorClients") }}</span>
       </div>
       <div
         class="w-full h-[250px] flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1 overflow-x-hidden overflow-y-auto"
