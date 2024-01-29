@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "НЭР",
-    "edit": "Manage node",
-    "loading": "loading new states",
-    "turnOn": "Node-г асаах",
-    "turnOff": "Node-г унтраах",
-    "log": "Open Logs",
-    "restart": "Restart",
-    "start": "start",
-    "resync": "resync",
-    "stop": "stop",
-    "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "НЭР"
   },
   "pagesnav": {
-    "node": "НӨҮД",
-    "control": "УДИРДЛАГА",
     "staking": "СТЭЙКИНГ"
   },
   "supportModal": {
     "support": "тусламж",
     "supportText": "Тусламж авах хүнтэй холбогдох хамгийн хурдан арга бол манай Discord серверт нэгдэх юм!",
     "bugReport": "АЛДААГ МЭДЭЭЛЛЭХ",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:",
     "docsTitle": "chain docs",
     "docsText": "A handy link to the network logs' documentation for your selected node configuration."
@@ -60,11 +39,9 @@
     "update": "ШИНЭЧЛЭЛТ",
     "launcherVersion": "Лаунчэрийн Хувилбар",
     "nodeVersion": "Нөүдийн Хувилбар",
-    "lane": "Стереум - Тестлэх Зам",
     "on": "асаах",
     "off": "унтраах",
     "updateConfig": "Стереум Шинэчлэлт Тохиргоо",
-    "servicePlugin": "Плаг-ин / Сервис Шинэчлэлт Тохиргоо",
     "manual": "ГАР АЖИЛЛАГАА",
     "auto": "АВТОМАТ",
     "sxConf": "Export Config",
@@ -76,12 +53,7 @@
   },
   "nodeSidebarVideo": {
     "stake": "32 ETH - тай стэйк хийх",
-    "ssv": "ssv.сүлжээг хэрэглэх",
-    "alert": "Мобайл апп дээрх сэрэмжлүүлэг",
-    "switchC": "Клайнтуудийг солих",
-    "migrate": "Nodes Migration",
     "rpc": "RPC Холболт",
-    "gnoStake": "STAKE WITH 1 GNO",
     "written": "Written Guides",
     "video": "Video Guides"
   },
@@ -99,12 +71,7 @@
   },
   "modifyPanel": {
     "backNode": "НӨҮД рүү буцах",
-    "addPreset": "УРЬДААС ТОГТООСОН 1 ТОВШИЛТИЙГ НЭМЭХ",
-    "changeNetwork": "СҮЛЖЭЭГ СОЛИХ",
     "nukeNode": "ЦӨМ НӨҮД"
-  },
-  "sidebarManage": {
-    "filter": "Шүүлтүүр..."
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +92,7 @@
     "serviceDesc": "ПЛАГ-ИН-үүдийн суулгасан сонголтын шинэчлэлтүүд",
     "availablePlugin": "БОЛОМЖИТ ПЛАГ-ИН ШИНЭЧЛЭЛТҮҮД",
     "all": "бүгдийг шинэчлэх",
-    "osTitle": "server os updates",
-    "availableUpdates": "updates",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "server os updates"
   },
   "controlPage": {
     "node": "НӨҮД",
@@ -265,90 +225,49 @@
     "insertText": "ТҮЛХҮҮР ОРУУЛАХ БОЛ ТОВШИХ БУЮУ ЧИРНЭ ҮҮ"
   },
   "removeSingleModal": {
-    "question": "ТА СЛЭЙШИНГ ӨГӨГДЛИЙН САНГАА ТАТАЖ АВАХ УУ?",
-    "description": "Та ҮҮНИЙГ ВАЛИДАТОР ТҮЛХҮҮРҮҮДЭЭ ШИЛЖҮҮЛЭХ ҮЕДЭЭ НЭМЭЛТ АЮУЛГҮЙ БАЙДЛЫГ БАТАЛГААЖУУЛАХЫН ТУЛД ВАЛИДАТОР ТҮЛХҮҮРҮҮДТЭЙГЭЭ ХАМТ ИМПОРТЛОХ БОЛОМЖТОЙ",
-    "btn": "зам сонгох"
+    "question": "ТА СЛЭЙШИНГ ӨГӨГДЛИЙН САНГАА ТАТАЖ АВАХ УУ?"
   },
   "removeMultiModal": {
     "sure": "Are you sure you want to remove this key from your machine?",
     "slashing": "With Slashing Protection Database?",
-    "remove": "Хасах",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "remove": "Хасах"
   },
   "removeMultipleValidators": {
     "sureText": "Та ЭНЭ МАШИНААС Бүх Валидатор түлхүүрүүдийг хасахдаа итгэлтэй байна уу?"
   },
   "timeReward": {
     "totalText": "-НИЙ НИЙТ БАЛАНС",
-    "validators": "ВАЛИДАТОРУУД",
-    "proposed": "САНАЛ БОЛГОСОН",
-    "attestRate": "БАТАЛГААЖУУЛАЛТЫН ҮНЭЛГЭЭ",
-    "attention": "БАТАЛГААЖУУЛАЛТ",
-    "missed": "АЛДСАН",
-    "aggregations": "НЭГТГЭЛҮҮД",
-    "slashed": "СЛЭЙШИД"
-  },
-  "validatorsBox": {
-    "date": "ОГНОО",
-    "validator": "ВАЛИДАТОР",
-    "attestRate": "ATTEST.RATE",
-    "reward": "ШАГНАЛ"
+    "validators": "ВАЛИДАТОРУУД"
   },
   "installOption": {
-    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "БУЦАХ",
-    "install": "СУУЛГАХ",
-    "placeHoldrer": "сүлжээ сонгох"
-  },
-  "removeModal": {
-    "removeText": "Бүх сервисүүд устгагдах болно.",
-    "sure": "Та итгэлтэй байна уу?"
+    "install": "СУУЛГАХ"
   },
   "installitionMenu": {
-    "welcome": "ТАВТАЙ МОРИЛНО УУ",
-    "installText": "ЭНЭ АЛХАМД ТА НӨҮД-ӨӨ ХЭРХЭН СУУЛГАХЫГ ХҮСЭЖ БАЙГААГАА СОНГОХ БОЛНО. ХЭРВЭЭ ТАНД ТУСЛАМЖ ХЭРЭГТЭЙ БОЛ МАНАЙ DISCORD СУВАГТ НЭГДЭЭРЭЙ - БИД ТАНД ТУСЛАХДАА БАЯРТАЙ БАЙХ БОЛНО",
     "osCheck": "ТАНЫ СЕРВЕРИЙН ҮЙЛДЛИЙН СИСТЕМИЙГ ДЭМЖИЖ БАЙГАА ЭСЭХИЙГ ШАЛГАЖ БАЙНА",
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "CHOSEN NETWORK",
-    "chosen": "СОНГОГДСОН СҮЛЖЭЭ",
     "path": "СУУЛГАХ ЗАМ",
-    "syncClient": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
-    "plugin": "СУУЛГАСАН СЕРВИСҮҮД",
-    "addOpt": "ADDITIONAL OPTIONS",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MОНИТОРИНГ",
-    "instMonit": "Мониторинг суулгах уу?",
-    "back": "БУЦАХ",
-    "next": "ДАРААГИЙНХ"
+    "instMonit": "Мониторинг суулгах уу?"
   },
   "creditPanel": {
-    "creditTitle": "НЭР ДУРЬДАЛТ - САНХҮҮГИЙН ХУВЬ НЭМЭР ОРУУЛАГЧИД",
-    "fincialTitle": "ЖАГСААЛТАНД НЭРЭЭ ОРУУЛЦГААЯ! ХӨГЖҮҮЛЭЛТИЙГ ДЭМЖИЖ БАЙГАА ТАНД БАЯРЛАЛАА!",
-    "technicPage": "ТЕХНИКИЙН ХУВЬ НЭМЭР",
     "techTitle": "НЭР ДУРДАЛТ - ТЕХНИКИЙН ХУВЬ НЭМЭР ОРУУЛАГЧИД",
     "techText": "ГИТПОАП ОЛОХ! МАНАЙ ГИТХАБААР ЗОЧИЛЖ ХЭРХЭН ОРОЛЦОХ ТАЛААР СУРАЛЦААРАЙ!",
     "financialPage": "САНХҮҮГИЙН ХУВЬ НЭМЭР",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
     "developers": "DEVELOPERS",
     "testers": "TESTERS"
   },
   "verifyInstallation": {
-    "verifyTitle": "БАТЛАХ & СУУЛГАХ",
     "name": "НЭР",
     "cat": "АНГИЛАЛ",
     "path": "ЗАМ"
   },
   "warningModal": {
     "warningText": "Нэмэлт өөрчлөлт оруулахаасаа өмнө анхны суулгах үйл явц \"инстал\" дуустал хүлээхийг зөвлөж байна"
-  },
-  "tutorialBox": {
-    "video": "video",
-    "walkthrough": "walkthrough",
-    "textGuide": "written guide"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTER A NEW OPERATOR",
@@ -399,9 +318,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
   },
   "mevboostConfig": {
     "availRelays": "AVAILABLE BLOCK RELAYS",
@@ -422,10 +339,6 @@
     "chooseFile": "Файлаа сонгоно уу",
     "continue": "Үргэлжлүүлэх"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
-  },
   "logOutModal": {
     "logOutTitle": "СИСТЕМЭЭС-ГАРАХ",
     "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
@@ -444,7 +357,6 @@
     "close": "хаахын тулд гадна талд товшино уу"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
     "restartMessage": "your node might go offline while doing so!",
     "restart": "дахин ачааллах",
     "confirmMessage": "Are you sure you want turn your node"
@@ -484,8 +396,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Дууслаа баяр хүргэе!",
     "clickPass": "Энд дарж нууц үгээ оруулаад баталгаажуулна уу.",
-    "noSlash": "Хэрэв танд өмнөх Нөүд-с Slashing Protection Database байхгүй бол \"Үгүй\" гэснийг сонгоно уу",
-    "test": "testtesttestte"
+    "noSlash": "Хэрэв танд өмнөх Нөүд-с Slashing Protection Database байхгүй бол \"Үгүй\" гэснийг сонгоно уу"
   },
   "blockProduct": {
     "status": "СТАТУС",
@@ -531,7 +442,6 @@
   },
   "nodeAlert": {
     "lowSpace": "БАГА САНАХ ОЙ",
-    "missAttest": "MISSED ATTESTATION",
     "use": "ХЭРЭГЛЭЭ",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM-ийн ШИНЭЧЛЭЛТ",
@@ -539,10 +449,6 @@
     "clkUpdate": "Шинэчлэх самбарыг нээхийн тулд товшино уу",
     "sync": "Synchronization Error",
     "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "та итгэлтэй байна уу",
-    "close": "хаахын тулд гадна талд товшино уу"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -604,8 +510,7 @@
   },
   "uploadConfig": {
     "message": "Энэ сонголтоор та өөрийн нөүдийн тохиргоог сэргээхийн тулд ашиглагдаж байсан Stereum тохиргооны файлыг импортлох боломжтой.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Тохируулгын файл"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -616,7 +521,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Устгах",
     "close": "хаахын тулд гадна талд товшино уу"
   },
@@ -719,9 +623,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Хаахын тулд гадна талд товшино уу",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Хаахын тулд гадна талд товшино уу"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
