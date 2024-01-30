@@ -724,5 +724,10 @@
     "selectClient": "Select a Client From List",
     "switchClient": "switch client",
     "selectClientToReplace": "Select a client to replace the"
+  },
+  "editPageServices": {
+    "services": "Services",
+    "service": "Service",
+    "delete": "Delete"
   }
 }
