@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "AD",
-    "edit": "Manage node",
-    "loading": "yeni durum yükleniyor",
-    "turnOn": "Düğüm Çalıştır",
-    "turnOff": "Düğüm Durdur",
-    "log": "Günlükleri Aç",
-    "restart": "Yeniden Başlat",
-    "start": "başlat",
-    "resync": "resync",
-    "stop": "durdur",
-    "machineIp": "Makine IP Adresi",
-    "machineName": "Makine Adı",
-    "clkEdit": "Düğümünüzü düzenlemek için tıklayın",
-    "clkOn": "Düğümünüzü açmak için tıklayın",
-    "clkOff": "Düğümünüzü kapatmak için tıklayın",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "AD"
   },
   "pagesnav": {
-    "node": "DÜĞÜM",
-    "control": "KONTROL",
     "staking": "STAKING"
   },
   "supportModal": {
     "support": "DESTEK",
     "supportText": "Destek için bir kişiye ulaşmanın en hızlı yolu Discord sunucumuza katılmaktır!",
     "bugReport": "HATA RAPORLA",
-    "bugRepText": "Lütfen bir sorun yazmak için zaman ayırın ve Stereum'u daha iyi hale getirmemize yardımcı olun!",
     "emailText": "veya şu adrese bir e-posta yazın:",
     "docsTitle": "zincir dökümanları",
     "docsText": "Seçtiğiniz düğüm yapılandırması için ağ günlüklerinin belgelerine kullanışlı bir bağlantı."
@@ -60,11 +39,9 @@
     "update": "GÜNCELLE",
     "launcherVersion": "Launcher Sürümü",
     "nodeVersion": "Düğüm Versiyonu",
-    "lane": "Stereum - Test Yolu",
     "on": "aç",
     "off": "kapat",
     "updateConfig": "Steum Güncelleme Yapılandırması",
-    "servicePlugin": "Eklenti / Hizmet Güncelleme Yapılandırması",
     "manual": "EL İLE",
     "auto": "OTOMATİK",
     "sxConf": "Yapılandırmayı Dışa Aktar",
@@ -76,12 +53,7 @@
   },
   "nodeSidebarVideo": {
     "stake": "32 ETH Stake edin",
-    "ssv": "ssv.network kullan",
-    "alert": "Mobil uygulama için uyarıları aç",
-    "switchC": "İstemci Değiştir",
-    "migrate": "Düğüm Geçişi",
     "rpc": "RPC Bağlantısı",
-    "gnoStake": "1 GNO STAKE EDİN",
     "written": "Yazılı Rehberler",
     "video": "Videolu Rehberler"
   },
@@ -99,12 +71,7 @@
   },
   "modifyPanel": {
     "backNode": "DÜĞÜME geri dön",
-    "addPreset": "1 TIKLAMA İLE ÖN AYARLATI EKLE",
-    "changeNetwork": "AĞ DEĞİŞTİR",
     "nukeNode": "DÜĞÜMÜ İMHA ET!"
-  },
-  "sidebarManage": {
-    "filter": "Filtre..."
   },
   "changeConfirm": {
     "confirm": "DEĞİŞİKLİKLERİ ONAYLA",
@@ -125,14 +92,7 @@
     "serviceDesc": "Yüklü eklentiler için güncellemeler",
     "availablePlugin": "KULLANILABİLİR EKLENTİ GÜNCELLEMELERİ",
     "all": "tamamını güncelle",
-    "osTitle": "sunucu işletim sistemi güncellemeleri",
-    "availableUpdates": "güncellemeler",
-    "searchVersion": "Kullanılabilir sürüm güncellemelerini arayın",
-    "updtBtn": "Güncellemek için tıklayın",
-    "updtAllPlugin": "Tüm eklentileri güncelle",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "sunucu işletim sistemi güncellemeleri"
   },
   "controlPage": {
     "node": "DÜĞÜM",
@@ -265,90 +225,49 @@
     "insertText": "ANAHTAR EKLEMEK İÇİN TIKLAYIN VEYA SÜRÜKLEYİN"
   },
   "removeSingleModal": {
-    "question": "SLASHING VERİTABANINIZI İNDİRMEK İSTER MİSİNİZ?",
-    "description": "ANAHTARLARINIZIN GEÇİŞİNİ YAPARKEN EK GÜVENLİĞİNİZİ SAĞLAMAK İÇİN BUNU DOĞRULAYICI ANAHTARLARINIZLA İÇE AKTARABİLİRSİNİZ",
-    "btn": "yol seçin"
+    "question": "SLASHING VERİTABANINIZI İNDİRMEK İSTER MİSİNİZ?"
   },
   "removeMultiModal": {
     "sure": "Bu anahtarı sunucunuzdan kaldırmak istediğinize emin misiniz?",
     "slashing": "Slashing Koruma Veritabanı ile mi?",
-    "remove": "Sil",
-    "path": "dışa aktarılan slashing veritabanını kaydetmek için bir yer seçin",
-    "writePath": "Lütfen yeri yazınız"
+    "remove": "Sil"
   },
   "removeMultipleValidators": {
     "sureText": "BU MAKİNEDEN Tüm Doğrulayıcı anahtarlarını kaldırmak istediğinizden emin misiniz?"
   },
   "timeReward": {
     "totalText": "TOPLAM BAKİYESİ",
-    "validators": "DOĞRULAYICI",
-    "proposed": "ÖNERİLEN",
-    "attestRate": "TASDİK ORANI",
-    "attention": "ONAYLAMA",
-    "missed": "KAÇIRILDI",
-    "aggregations": "TOPLAMALAR",
-    "slashed": "SLASHED"
-  },
-  "validatorsBox": {
-    "date": "TARİH",
-    "validator": "DOĞRULAYICI",
-    "attestRate": "TASDİK.ORANI",
-    "reward": "ÖDÜL"
+    "validators": "DOĞRULAYICI"
   },
   "installOption": {
-    "installText": "KULLANIM DURUMUNUZU VE AĞINIZI SEÇİN. SEÇİM YAPIP BAŞLATTIKTAN SONRA, KULLANIM DURUMUNUZA HİZMET VERMEK İÇİN RASTGELE BİR İSTEMCİ SEÇİMİ YAPILACAKTIR",
     "back": "GERİ",
-    "install": "YÜKLE",
-    "placeHoldrer": "ağ seçiniz"
-  },
-  "removeModal": {
-    "removeText": "Bütün servisler kaldırılacak.",
-    "sure": "Emin misin?"
+    "install": "YÜKLE"
   },
   "installitionMenu": {
-    "welcome": "HOŞGELDİNİZ",
-    "installText": "BU ADIMDA DÜĞÜMÜNÜZÜ NASIL KURMAK İSTEDİĞİNİZİ SEÇERSİNİZ. KURULUMLA İLGİLİ YARDIMA İHTİYACINIZ VARSA, DİSCORD'UMUZA KATILIN - SİZE YARDIMCI OLMAK BİZİ MUTLU EDER",
     "osCheck": "SUNUCU İŞLETİM SİSTEMİ DESTEĞİ KONTROL EDİLİYOR",
     "osSupported": "DESTEKLENEN İŞLETİM SİSTEMİ"
   },
   "pluginName": {
-    "option": "SEÇİLEN AĞ",
-    "chosen": "SEÇİLEN AĞ",
     "path": "KURULUM DİZİNİ",
-    "syncClient": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
-    "plugin": "KURULAN SERVİSLER",
-    "addOpt": "ADDITIONAL OPTIONS",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "GERİ",
-    "next": "SONRAKİ"
+    "instMonit": "Install Monitoring?"
   },
   "creditPanel": {
-    "creditTitle": "KATKIDA BULUNANLAR - MADDİ KATKI SAĞLAYANLAR",
-    "fincialTitle": "İSİMİNİZİ LİSTEYE YAZIN! GELİŞTİRMEYİ DESTEKLEDİĞİNİZ İÇİN TEŞEKKÜRLER!",
-    "technicPage": "TEKNİK KATKI SAĞLAYANLAR",
     "techTitle": "KATKIDA BULUNANLAR - TEKNİK KATKI SAĞLAYANLAR",
     "techText": "GİTPOAP KAZANIN! GITHUB SAYFAMIZI ZİYARET EDEREK NASIL KAZANILACAĞINI ÖĞRENİN!",
     "financialPage": "FİNANSAL KATKI SAĞLAYANLAR",
-    "gitcoinList": "GITCOIN TAM LİSTESİ",
     "developers": "GELİŞTİRİCİLER",
     "testers": "TEST EDENLER"
   },
   "verifyInstallation": {
-    "verifyTitle": "DOĞRULA & YÜKLE",
     "name": "AD",
     "cat": "KATEGORİ",
     "path": "DİZİN"
   },
   "warningModal": {
     "warningText": "Daha fazla değişiklik yapmadan önce ilk kurulumun tamamlanmasını beklemenizi öneririz"
-  },
-  "tutorialBox": {
-    "video": "video",
-    "walkthrough": "İzlenecek yol",
-    "textGuide": "Yazılı rehber"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "YENİ BİR OPERATÖR KAYDI",
@@ -399,9 +318,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "ÖZEL KURULUM",
-    "customInstallationText": "Bu mod, daha ileri düzey kullanıcılar içindir ve istemcilerin birbirleriyle nasıl etkileşime girdiğini anlamanızı gerektirir. İşlevsel hale gelmeden önce düğümünüzün her bir parçasını kullanıcı arayüzü ile kendiniz seçmeli, kurmalı ve bağlamalısınız!",
-    "chooseWhereToInstall": "STEREUM'U NEREYE KURMAK İSTEDİĞİNİZİ SEÇİN",
-    "installationPath": "KURULUM DİZİNİ"
+    "customInstallationText": "Bu mod, daha ileri düzey kullanıcılar içindir ve istemcilerin birbirleriyle nasıl etkileşime girdiğini anlamanızı gerektirir. İşlevsel hale gelmeden önce düğümünüzün her bir parçasını kullanıcı arayüzü ile kendiniz seçmeli, kurmalı ve bağlamalısınız!"
   },
   "mevboostConfig": {
     "availRelays": "MEVCUT BLOK RÖLELERİ",
@@ -422,10 +339,6 @@
     "chooseFile": "Dosya Seç",
     "continue": "Devam Et"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "Yüklü doğrulayıcı istemci yok!",
-    "disabledStakingMessage": "Doğrulayıcı anahtarlarını içe aktarmayı etkinleştirmek için en az bir doğrulayıcı istemci kurun."
-  },
   "logOutModal": {
     "logOutTitle": "ÇIKIŞ YAP",
     "logOutQuestion": "DÜĞÜM SUNUCUSUNUZDAN ÇIKIŞ YAPMAK İSTEDİĞİNİZDEN EMİN MİSİNİZ?",
@@ -444,7 +357,6 @@
     "close": "click outside to close"
   },
   "restartModal": {
-    "restarQ": "Yeniden başlatmak istediğinizden emin misiniz?",
     "restartMessage": "bunu yaparken düğümünüz çevrimdışı olabilir!",
     "restart": "yeniden başlat",
     "confirmMessage": "Düğümünüzü çevirmek istediğinizden emin misiniz?"
@@ -484,8 +396,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Parolanızı girmek ve onaylamak için lütfen buraya tıklayın.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   },
   "blockProduct": {
     "status": "STATUS",
@@ -531,7 +442,6 @@
   },
   "nodeAlert": {
     "lowSpace": "DÜŞÜK DEPOLAMA",
-    "missAttest": "MISSED ATTESTATION",
     "use": "KULLANIMI",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
@@ -539,10 +449,6 @@
     "clkUpdate": "Güncelleme panelini açmak için tıklayın",
     "sync": "Synchronization Error",
     "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "Bunu istediğinize emin misiniz?",
-    "close": "Kapatmak için pencere dışında bir yere tıklayın"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -604,8 +510,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Yapılandırma dosyası"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -616,7 +521,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Kaldır",
     "close": "click outside to close"
   },
@@ -719,9 +623,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "IP adresi bulunamadı",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",

@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "JMÉNO",
-    "edit": "Manage node",
-    "loading": "načítání nových stavů",
-    "turnOn": "Zapnout uzel",
-    "turnOff": "Vypnout uzel",
-    "log": "Otevřít záznamy",
-    "restart": "Restartovat",
-    "start": "začít",
-    "resync": "znovu synchronizovat",
-    "stop": "zastavit",
-    "machineIp": "IP adresa zařízení",
-    "machineName": "Název zařízení",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Klikněte pro otevření panelu, abyste měli přístup k záznamům pro klienty a služby zvlášť",
-    "clkSwitch": "Klikněte pro otevření panelu, aby bylo možné přepínat klienty a služby zvlášť",
-    "clkRestart": "Klikněte pro otevření panelu, abyste mohli restartovat klienty a služby zvlášť",
-    "clkResync": "Klikněte pro otevření panelu, abyste mohl(a) synchronizovat klienty zvlášť"
+    "servername": "JMÉNO"
   },
   "pagesnav": {
-    "node": "UZEL",
-    "control": "OVLÁDÁNÍ",
     "staking": "STAKOVÁNÍ"
   },
   "supportModal": {
     "support": "podpora",
     "supportText": "Nejrychlejší způsob, jak kontaktovat podporu, je připojení se k našemu Discord serveru!",
     "bugReport": "NAHLÁSIT CHYBU",
-    "bugRepText": "Prosím, věnujte čas sepsání problému a pomozte nám vylepšit Stereum!",
     "emailText": "nebo napište e-mail na:",
     "docsTitle": "dokumentace řetězce",
     "docsText": "Užitečný odkaz na dokumentaci síťových záznamů pro vámi vybranou konfiguraci uzlu."
@@ -60,11 +39,9 @@
     "update": "AKTUALIZOVAT",
     "launcherVersion": "Verze spouštěče",
     "nodeVersion": "Verze uzlu",
-    "lane": "Stereum - Testovací cesta",
     "on": "zapnuto",
     "off": "vypnuto",
     "updateConfig": "Konfigurace aktualizace Stereum",
-    "servicePlugin": "Konfigurace aktualizace plug-inů / služeb",
     "manual": "MANUÁLNÍ",
     "auto": "AUTOMATICKÉ",
     "sxConf": "Exportovat konfiguraci",
@@ -76,12 +53,7 @@
   },
   "nodeSidebarVideo": {
     "stake": "Stakujte s 32 ETH",
-    "ssv": "Použit ssv.network",
-    "alert": "Upozornění v mobilní aplikaci",
-    "switchC": "Přepnout klienty",
-    "migrate": "Migrace uzlů",
     "rpc": "RPC připojení",
-    "gnoStake": "STAKUJTE S 1 GNO",
     "written": "Written Guides",
     "video": "Video Guides"
   },
@@ -99,12 +71,7 @@
   },
   "modifyPanel": {
     "backNode": "zpět k UZLU",
-    "addPreset": "PŘIDAT PŘEDNASTAVENÍ NA JEDEN KLIK",
-    "changeNetwork": "ZMĚNIT SÍŤ",
     "nukeNode": "ODSTRANIT UZEL"
-  },
-  "sidebarManage": {
-    "filter": "Filtrovat..."
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +92,7 @@
     "serviceDesc": "Aktualizace pro nainstalovaný výběr PLUGINů",
     "availablePlugin": "DOSTUPNÉ AKTUALIZACE PLUGINŮ",
     "all": "aktualizovat vše",
-    "osTitle": "aktualizace operačního systému serveru",
-    "availableUpdates": "aktualizace",
-    "searchVersion": "Vyhledat dostupné aktualizace",
-    "updtBtn": "klikněte pro aktualizaci",
-    "updtAllPlugin": "aktualizovat všechny pluginy",
-    "autoUpt": "aktualizace je automatická",
-    "manualUpt": "aktualizace je manuální",
-    "chngAppr": "Změny, které budou aplikovány"
+    "osTitle": "aktualizace operačního systému serveru"
   },
   "controlPage": {
     "node": "UZEL",
@@ -265,90 +225,49 @@
     "insertText": "PRO VLOŽENÍ KLIKNĚTE NEBO PŘETÁHNĚTE KLÍČ"
   },
   "removeSingleModal": {
-    "question": "CHCETE SI STÁHNOUT VAŠI DATABÁZI SLASHING UDÁLOSTÍ?",
-    "description": "Můžete to IMPORTOVAT S VAŠIMI KLÍČI VALIDÁTORŮ, ABYSTE ZAJISTILI DODATEČNOU BEZPEČNOST PŘI MIGRACI VAŠICH KLÍČŮ",
-    "btn": "vybrat cestu"
+    "question": "CHCETE SI STÁHNOUT VAŠI DATABÁZI SLASHING UDÁLOSTÍ?"
   },
   "removeMultiModal": {
     "sure": "Jste si jistý(á), že chcete odstranit tento klíč z vašeho zařízení?",
     "slashing": "S databází pro ochranu proti slashingu?",
-    "remove": "Odstranit",
-    "path": "vyberte cestu, kam chcete uložit exportovanou databázi pro ochranu proti slashingu ",
-    "writePath": "Napište prosím cestu, kam chcete uložit soubor"
+    "remove": "Odstranit"
   },
   "removeMultipleValidators": {
     "sureText": "Jste si jistý(á), že chcete odstranit všechny klíče validátora Z TOHOTO ZAŘÍZENÍ?"
   },
   "timeReward": {
     "totalText": "CELKOVÝ ZŮSTATEK",
-    "validators": "VALIDÁTOŘI",
-    "proposed": "NAVRHOVANÉ",
-    "attestRate": "MÍRA ATESTACE",
-    "attention": "ATESTACE",
-    "missed": "NEPLNĚNÉ",
-    "aggregations": "AGREGACE",
-    "slashed": "SLASHNUT"
-  },
-  "validatorsBox": {
-    "date": "DATUM",
-    "validator": "VALIDÁTOR",
-    "attestRate": "MÍRA ATESTACÍ",
-    "reward": "ODMĚNA"
+    "validators": "VALIDÁTOŘI"
   },
   "installOption": {
-    "installText": "VYBERTE VÁŠ PŘÍPAD POUŽITÍ A SÍŤ. PO VÝBĚRU A STISKNUTÍ TLAČÍTKA \"START\" BUDE NÁHODNĚ VYBRÁN KLIENT, KTERÝ BUDE SLUŽIT VAŠEMU PŘÍPADU POUŽITÍ",
     "back": "ZPĚT",
-    "install": "INSTALOVAT",
-    "placeHoldrer": "vyberte síť"
-  },
-  "removeModal": {
-    "removeText": "Všechny služby budou odstraněny.",
-    "sure": "Jste si jistý(á)?"
+    "install": "INSTALOVAT"
   },
   "installitionMenu": {
-    "welcome": "VÍTEJTE",
-    "installText": "V TÉTO FÁZI SI VYBERETE, JAK CHCETE NAINSTALOVAT VÁŠ UZEL. POKUD POTŘEBUJETE POMOC S NASTAVENÍM, PŘIPOJTE SE K NAŠEMU DISCORDU - RÁDI VÁM POMOŽEME",
     "osCheck": "KONTROLA, ZDA JE OPERAČNÍ SYSTÉM VAŠEHO SERVERU PODPOROVÁN",
     "osSupported": "JE PODPOROVANÝM OPERAČNÍM SYSTÉMEM"
   },
   "pluginName": {
-    "option": "VYBRANÁ SÍŤ",
-    "chosen": "VYBRANÁ SÍŤ",
     "path": "CESTA INSTALACE",
-    "syncClient": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
-    "plugin": "NAINSTALOVANÉ SLUŽBY",
-    "addOpt": "DALŠÍ MOŽNOSTI",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITOROVÁNÍ",
-    "instMonit": "Instalovat monitorování?",
-    "back": "ZPĚT",
-    "next": "DALŠÍ"
+    "instMonit": "Instalovat monitorování?"
   },
   "creditPanel": {
-    "creditTitle": "KREDITY - FINANČNÍ PŘISPĚVATELÉ",
-    "fincialTitle": "DOSTAŇTE SVÉ JMÉNO NA SEZNAM! DĚKUJEME ZA PODPORU VÝVOJE!",
-    "technicPage": "TECHNICKÝ PŘÍSPĚVEK",
     "techTitle": "KREDITY - TECHNIČTÍ PŘÍSPĚVATELÉ",
     "techText": "ZÍSKEJTE GITPOAP! NAVŠTIVTE NÁŠ GITHUB, KDE SE DOZVÍTE, JAK SE ZAPOJIT!",
     "financialPage": "FINANČNÍ PŘÍSPĚVEK",
-    "gitcoinList": "GITCOIN ÚPLNÝ SEZNAM",
     "developers": "VÝVOJÁŘI",
     "testers": "TESTEŘI"
   },
   "verifyInstallation": {
-    "verifyTitle": "OVĚŘIT A INSTALOVAT",
     "name": "JMÉNO",
     "cat": "KATEGORIE",
     "path": "CESTA"
   },
   "warningModal": {
     "warningText": "Před provedením dalších změn doporučujeme počkat, než bude dokončena počáteční instalace"
-  },
-  "tutorialBox": {
-    "video": "video",
-    "walkthrough": "průvodce",
-    "textGuide": "psaný průvodce"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTRUJTE NOVÉHO OPERÁTORA",
@@ -399,9 +318,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "VLASTNÍ INSTALACE",
-    "customInstallationText": "Tento režim je určen pro pokročilejší uživatele a vyžaduje znalost toho, jak mezi sebou klienti vzájemně interagují. Budete muset vybírat, instalovat a propojovat každou část svého uzlu s uživatelským rozhraním sami!",
-    "chooseWhereToInstall": "VYBERTE, KDE CHCETE STEREUM NAINSTALOVAT",
-    "installationPath": "CESTA INSTALACE"
+    "customInstallationText": "Tento režim je určen pro pokročilejší uživatele a vyžaduje znalost toho, jak mezi sebou klienti vzájemně interagují. Budete muset vybírat, instalovat a propojovat každou část svého uzlu s uživatelským rozhraním sami!"
   },
   "mevboostConfig": {
     "availRelays": "DOSTUPNÉ BLOKOVÉ RELAYE",
@@ -422,10 +339,6 @@
     "chooseFile": "Vybrat soubor",
     "continue": "Pokračovat"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "Není nainstalován žádný klient validátora!",
-    "disabledStakingMessage": "Nainstalujte alespoň jednoho klienta validátora pro aktivaci importu klíčů validátora."
-  },
   "logOutModal": {
     "logOutTitle": "ODHLÁSIT SE",
     "logOutQuestion": "JSTE SI JISTÝ(Á), ŽE SE CHCETE ODHLÁSIT ZE SVÉHO SERVERU S UZLEM?",
@@ -444,7 +357,6 @@
     "close": "klikněte mimo pro zavření"
   },
   "restartModal": {
-    "restarQ": "Jste si jistý(á), že chcete provést restart?",
     "restartMessage": "váš uzel se může během tohoto procesu odpojit!",
     "restart": "restartovat",
     "confirmMessage": "Jste si jistý(á), že chcete vypnout váš uzel"
@@ -484,8 +396,7 @@
     "clickIcon": "Klikněte na ikonu vašeho klienta validátora",
     "cong": "Blahopřejeme, hotovo!",
     "clickPass": "Prosím, klikněte zde pro zadání vašeho hesla a potvrzení.",
-    "noSlash": "Vyberte \"Ne\" pokud nemáte žádnou databázi pro ochranu proti slashingu z předchozího uzlu",
-    "test": "testtesttestte"
+    "noSlash": "Vyberte \"Ne\" pokud nemáte žádnou databázi pro ochranu proti slashingu z předchozího uzlu"
   },
   "blockProduct": {
     "status": "STAV",
@@ -531,7 +442,6 @@
   },
   "nodeAlert": {
     "lowSpace": "NÍZKÁ KAPACITA ÚLOŽIŠTĚ",
-    "missAttest": "ZMEŠKANÁ ATESTACE",
     "use": "POUŽITÍ",
     "noFee": "žádný příjemce poplatku",
     "stereumUpt": "AKTUALIZACE STEREUM",
@@ -539,10 +449,6 @@
     "clkUpdate": "Klikněte pro otevření panelu aktualizace",
     "sync": "Synchronization Error",
     "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "jste si jistý(á), že chcete",
-    "close": "klikněte mimo pro zavření"
   },
   "resyncModal": {
     "message": "VÁŠ KLIENT UCHOVÁVÁ DATA BLOKCHAINU NA VAŠEM SERVERU. DÍKY TOMU VÁŠ UZEL MŮŽE PLNIT POVINOSTI V SÍTI. Je to nezbytné pro to, aby váš uzel PLNIL SVOU ÚLOHU ATESTOVÁNÍ V STAKINGU. POUŽITÍ TÉTO VOLBY BUDE ZNAMENAT VYMAZÁNÍ AKTUÁLNÍCH DAT BLOKCHAINU VÁŠEHO KLIENTA A POUŽITÍ VYBRANÉ VOLBY JAKO ZDROJE PRO \n OPĚTOVNÉ ZSYNCHRONIZACI VAŠEHO UZLU.",
@@ -604,8 +510,7 @@
   },
   "uploadConfig": {
     "message": "S touto možností instalace můžete importovat použitý konfigurační soubor Stereum pro zkopírování nastavení vašeho uzlu.",
-    "selectConfig": "VYBERTE KONFIGURAČNÍ SOUBOR STEREUM, ABYSTE HO NAHRÁLI",
-    "configFile": "Konfigurační soubor"
+    "selectConfig": "VYBERTE KONFIGURAČNÍ SOUBOR STEREUM, ABYSTE HO NAHRÁLI"
   },
   "fastSync": {
     "header": "Nastavte, jak budou klienti uzlu synchronizovat svá data blockchainu.",
@@ -616,7 +521,6 @@
     "message": "Po nainstalování vašeho uzlu se vaši klienti začnou synchronizovat se zvoleným zdrojem synchronizace. Tento proces může trvat několik hodin nebo dní. Obvykle se nejprve synchronizuje klient pro konsensus a poté klient pro exekuci."
   },
   "deleteModal": {
-    "message": "Chcete odstranit uložené připojení?",
     "rem": "Odstranit",
     "close": "klikněte mimo pro zavření"
   },
@@ -719,9 +623,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
