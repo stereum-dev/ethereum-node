@@ -175,6 +175,11 @@ export class ServiceManager {
               return services.find((dependency) => dependency.id === client.id);
             });
           }
+          if (service.dependencies.validatorClients?.length > 0) {
+            service.dependencies.validatorClients = service.dependencies.validatorClients.map((client) => {
+              return services.find((dependency) => dependency.id === client.id);
+            });
+          }
           if (service.dependencies.mevboost.length > 0) {
             service.dependencies.mevboost = service.dependencies.mevboost.map((client) => {
               return services.find((dependency) => dependency.id === client.id);
@@ -927,10 +932,18 @@ export class ServiceManager {
 
       case "ExternalExecutionService":
         ports = [];
-        return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution");
+        return ExternalExecutionService.buildByUserInput(
+          args.network,
+          args.installDir + "/externalExecution",
+          args.consensusClients
+        );
       case "ExternalConsensusService":
         ports = [];
-        return ExternalConsensusService.buildByUserInput(args.network, args.installDir + "/externalConsensus");
+        return ExternalConsensusService.buildByUserInput(
+          args.network,
+          args.installDir + "/externalConsensus",
+          args.validatorClients
+        );
     }
   }
 
@@ -1057,6 +1070,18 @@ export class ServiceManager {
     let newServices = [];
     let ELInstalls = tasks.filter((t) => t.service.category === "execution");
     ELInstalls.forEach((t) => {
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      if (t.data.consensusClients.length > 0) {
+        t.data.consensusClients = t.data.consensusClients.map((cc) => {
+          let id = cc.config ? cc.config.serviceID : cc.id;
+          if (id) {
+            return services.find((s) => s.id === id);
+          }
+          id = CLInstalls.find((cl) => cl.service.id === cc.id).service.config.serviceID;
+          return newServices.find((s) => s.id === id);
+        });
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
       newServices.push(service);
@@ -1073,6 +1098,18 @@ export class ServiceManager {
           return newServices.find((s) => s.id === id);
         });
       }
+      // //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      // if (t.data.validatortClients.length > 0) {
+      //   t.data.validatortClients = t.data.validatortClients.map((vc) => {
+      //     let id = vc.config ? vc.config.serviceID : vc.id;
+      //     if (id) {
+      //       return services.find((s) => s.id === id);
+      //     }
+      //     id = ELInstalls.find((el) => el.service.id === vc.id).service.config.serviceID;
+      //     return newServices.find((s) => s.id === id);
+      //   });
+      // }
+      // //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
       newServices.push(service);

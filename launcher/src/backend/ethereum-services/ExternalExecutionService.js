@@ -25,8 +25,8 @@ export class ExternalExecutionService extends NodeService {
       volumes, // volumes
       null, // user
       network, // network
-      // executionClients
-      consensusClients
+      null, // executionClients
+      consensusClients // consensusClient
     );
     return service;
   }

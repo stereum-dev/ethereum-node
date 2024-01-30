@@ -21,9 +21,10 @@ export class ExternalConsensusService extends NodeService {
       volumes, // volumes
       null, // user
       network, // network
-      // executionClients
-      // consensusClients
-      validatorClients
+      null, // executionClients
+      null, // consensusClients
+      validatorClients, // validator Client
+      null // mevboost
     );
     return service;
   }
