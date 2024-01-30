@@ -712,6 +712,17 @@
     "installationPath": "Installation Path",
     "syncMode": "Sync Mode",
     "serviceId": "Service ID",
-    "serviceCat": "Service Category"
+    "serviceCat": "Service Category",
+    "modifyConnection": "Modify Connection",
+    "confirm": "Confirm",
+    "clckOutside": "Click outside to close",
+    "switchNetwork": "Switch Network",
+    "selectNetwork": "Select a network to replace the",
+    "switchTo": "Switch To",
+    "trnOn": "Turn on",
+    "trnOff": "Turn off",
+    "selectClient": "Select a Client From List",
+    "switchClient": "switch client",
+    "selectClientToReplace": "Select a client to replace the"
   }
 }

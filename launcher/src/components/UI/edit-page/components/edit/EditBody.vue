@@ -13,7 +13,7 @@
       >
         <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>
         <span class="col-start-2 justify-self-center self-center">{{ $t("editBody.consensusClient") }}</span>
-        <span class="col-start-3 justify-self-center self-center">{{ $("editBody.validator") }}</span>
+        <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }}</span>
       </div>
       <div
         ref="dropZoneRef"

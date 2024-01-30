@@ -2,9 +2,9 @@
   <custom-modal
     :main-title="mainTitleHandler"
     :client="client"
-    sub-title="Modify Connection"
-    confirm-text="Confirm"
-    click-outside-text="Click outside to cancel"
+    :sub-title="`${$t('editModals.modifyConnection')}`"
+    :confirm-text="`${$t('editModals.confirm')}`"
+    :click-outside-text="`${$t('editModals.clckOutside')}`"
     @close-window="closeWindow"
     @confirm-action="confirmModify"
   >

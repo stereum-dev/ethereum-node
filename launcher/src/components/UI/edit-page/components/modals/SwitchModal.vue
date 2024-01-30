@@ -2,14 +2,16 @@
   <custom-modal
     :main-title="`${client.name} - ${client.category}`"
     :client="client"
-    sub-title="Switch Client"
-    :message-text="`Select a client to replace the ${client.name}.`"
-    confirm-text="Confirm"
-    click-outside-text="Click outside to cancel"
+    :sub-title="`${$t('editModals.switchClient')}`"
+    :message-text="`${$t('editModals.selectClientToReplace')} ${client.name}.`"
+    :confirm-text="`${$t('editModals.confirm')}`"
+    :click-outside-text="`${$t('editModals.clckOutside')}`"
     @close-window="closeWindow"
     @confirm-action="switchConfirm"
   >
-    <template #content> <SwitchContent :client="client" :properties="properties" /> </template>
+    <template #content>
+      <SwitchContent :client="client" :properties="properties" />
+    </template>
   </custom-modal>
 </template>
 <script setup>
