@@ -102,14 +102,14 @@ import { useNodeStore } from '@/store/theNode';
       <img src="/img/icon/node-icons/pruning.png" alt="icon" class="active:scale-95" />
     </button>
     <button
-      v-if="props.client.category == 'execution'"
+      v-if="props.client.category == 'execution' && props.client.service !== 'ExternalExecutionService'"
       class="row-start-3 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       :class="props.client.service == 'GethService' ? 'col-start-2' : 'col-start-1'"
       @click="copyJwt"
       @mouseenter="footerStore.cursorLocation = `${copyToken}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/service-icons/copy1.png" alt="icon" class="w-4 h-4 active:scale-95" />
+      <img src="/img/icon/node-icons/jwtCopy.png" alt="icon" class="w-4 h-4 active:scale-95" />
     </button>
     <slot></slot>
   </div>
