@@ -217,7 +217,7 @@ ipcMain.handle("getServiceConfig", async (event, args) => {
 });
 
 ipcMain.handle("writeServiceConfig", async (event, args) => {
-  return await nodeConnection.writeServiceConfiguration(args.serviceConfiguration, args.extSource, args.extJWT);
+  return await nodeConnection.writeServiceConfiguration(args.serviceConfiguration);
 });
 
 ipcMain.handle("getServiceYAML", async (event, args) => {

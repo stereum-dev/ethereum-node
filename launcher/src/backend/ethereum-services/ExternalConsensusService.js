@@ -1,8 +1,16 @@
 import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
+const envMap = new WeakMap();
 
 export class ExternalConsensusService extends NodeService {
-  static buildByUserInput(network, dir, validatorClients) {
+  static get env() {
+    return envMap.get(this);
+  }
+
+  static set env(val) {
+    envMap.set(this, val);
+  }
+  static buildByUserInput(network, dir) {
     const service = new ExternalConsensusService();
     service.setId();
 
@@ -16,17 +24,28 @@ export class ExternalConsensusService extends NodeService {
       null, // imageVersion
       [], // command
       [], // entrypoint
-      {}, // env
+      ExternalConsensusService.env, // env
       [], // ports
       volumes, // volumes
       null, // user
       network, // network
       null, // executionClients
       null, // consensusClients
-      validatorClients, // validator Client
       null // mevboost
     );
     return service;
+  }
+
+  buildConsensusClientHttpEndpointUrl(val) {
+    return val;
+  }
+
+  buildConsensusClientEndpoint(val) {
+    return val;
+  }
+
+  buildConsensusClientGateway(val) {
+    return val;
   }
 
   static buildByConfiguration(config) {

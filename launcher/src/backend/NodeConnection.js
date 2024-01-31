@@ -712,7 +712,7 @@ export class NodeConnection {
    *
    * @param serviceConfiguration servicd configuration to write to the node
    */
-  async writeServiceConfiguration(serviceConfiguration, extSource, extJWT) {
+  async writeServiceConfiguration(serviceConfiguration) {
     let configStatus;
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
@@ -724,17 +724,6 @@ export class NodeConnection {
           serviceConfiguration.id +
           ".yaml"
       );
-      if (serviceConfiguration.service.includes("External")) {
-        let extConnDir = serviceConfiguration.volumes[0].split("/").slice(0, -1).join("/");
-        configStatus =
-          serviceConfiguration.service.includes("Consensus") && extSource !== ""
-            ? await this.sshService.exec(
-                `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${extSource} > ${extConnDir}/link.txt`
-              )
-            : await this.sshService.exec(
-                `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${extSource} > ${extConnDir}/link.txt && touch ${extConnDir}/engine.jwt && echo -e ${extJWT} > ${extConnDir}/engine.jwt`
-              );
-      }
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + serviceConfiguration.service + " config",

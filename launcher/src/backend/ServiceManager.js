@@ -175,11 +175,6 @@ export class ServiceManager {
               return services.find((dependency) => dependency.id === client.id);
             });
           }
-          if (service.dependencies.validatorClients?.length > 0) {
-            service.dependencies.validatorClients = service.dependencies.validatorClients.map((client) => {
-              return services.find((dependency) => dependency.id === client.id);
-            });
-          }
           if (service.dependencies.mevboost.length > 0) {
             service.dependencies.mevboost = service.dependencies.mevboost.map((client) => {
               return services.find((dependency) => dependency.id === client.id);
@@ -376,17 +371,22 @@ export class ServiceManager {
   }
 
   addDependencies(service, dependencies, ssvConfig) {
+    let extServiceLink = dependencies.filter((d) => d.service.includes("External"));
     let command = "";
     let filter;
 
     switch (service.service.replace(/(Beacon|Validator|Service)/gm, "")) {
       case "Lighthouse":
         if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          filter = extServiceLink.some((service) => service.service === "ExternalExecutionService")
+            ? (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl(e.env.link)
+            : (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
           command = "--execution-endpoint=";
         }
         if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+          filter = filter = extServiceLink.some((service) => service.service === "ExternalConsensusService")
+            ? (e) => e.buildConsensusClientHttpEndpointUrl(e.env.link)
+            : (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beacon-nodes=";
         }
         break;
@@ -452,15 +452,19 @@ export class ServiceManager {
 
     if (service.service.includes("Beacon")) {
       service.dependencies.executionClients = dependencies;
-      let volumes = dependencies.map(
-        (client) =>
-          new ServiceVolume(
-            client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath,
-            "/engine.jwt"
-          )
-      );
+
       service.volumes = service.volumes.filter((v) => v.destinationPath.includes(service.id));
-      service.volumes = service.volumes.concat(volumes);
+
+      service.volumes = service.volumes.concat(
+        dependencies.map((client) => {
+          let destinationPath =
+            client.service === "ExternalExecutionService"
+              ? client.volumes.find((vol) => vol.destinationPath.includes("/engine.jwt")).destinationPath
+              : client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+
+          return new ServiceVolume(destinationPath, "/engine.jwt");
+        })
+      );
     } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
       service.dependencies.consensusClients = dependencies;
     }
@@ -932,18 +936,10 @@ export class ServiceManager {
 
       case "ExternalExecutionService":
         ports = [];
-        return ExternalExecutionService.buildByUserInput(
-          args.network,
-          args.installDir + "/externalExecution",
-          args.consensusClients
-        );
+        return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution");
       case "ExternalConsensusService":
         ports = [];
-        return ExternalConsensusService.buildByUserInput(
-          args.network,
-          args.installDir + "/externalConsensus",
-          args.validatorClients
-        );
+        return ExternalConsensusService.buildByUserInput(args.network, args.installDir + "/externalConsensus");
     }
   }
 
@@ -1062,6 +1058,21 @@ export class ServiceManager {
         this.nodeConnection.sshService.exec(
           `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
         );
+      } else if (service.service.includes("External")) {
+        service.env = { link: extConnParam.extSource };
+        const extConnDir = service.volumes
+          .find((vol) => vol.servicePath === "")
+          .destinationPath.split("/")
+          .slice(0, -1)
+          .join("/");
+        await this.nodeConnection.sshService.exec(
+          `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${extConnParam.extSource} > ${extConnDir}/link.txt`
+        );
+        if (service.service.includes("Execution")) {
+          await this.nodeConnection.sshService.exec(
+            `touch ${extConnDir}/engine.jwt && echo -e ${extConnParam.extJWT} > ${extConnDir}/engine.jwt`
+          );
+        }
       }
     }
   }
@@ -1070,18 +1081,6 @@ export class ServiceManager {
     let newServices = [];
     let ELInstalls = tasks.filter((t) => t.service.category === "execution");
     ELInstalls.forEach((t) => {
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-      if (t.data.consensusClients.length > 0) {
-        t.data.consensusClients = t.data.consensusClients.map((cc) => {
-          let id = cc.config ? cc.config.serviceID : cc.id;
-          if (id) {
-            return services.find((s) => s.id === id);
-          }
-          id = CLInstalls.find((cl) => cl.service.id === cc.id).service.config.serviceID;
-          return newServices.find((s) => s.id === id);
-        });
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
       newServices.push(service);
@@ -1098,18 +1097,6 @@ export class ServiceManager {
           return newServices.find((s) => s.id === id);
         });
       }
-      // //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-      // if (t.data.validatortClients.length > 0) {
-      //   t.data.validatortClients = t.data.validatortClients.map((vc) => {
-      //     let id = vc.config ? vc.config.serviceID : vc.id;
-      //     if (id) {
-      //       return services.find((s) => s.id === id);
-      //     }
-      //     id = ELInstalls.find((el) => el.service.id === vc.id).service.config.serviceID;
-      //     return newServices.find((s) => s.id === id);
-      //   });
-      // }
-      // //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
       newServices.push(service);
@@ -1233,25 +1220,19 @@ export class ServiceManager {
       }
       if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
     });
-    await Promise.all(
-      newServices.map(async (service) => {
-        if (service.service.includes("External") && Object.keys(extConnParam).length > 0) {
-          service.service.includes("Consensus")
-            ? await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration(), extConnParam.extSource)
-            : await this.nodeConnection.writeServiceConfiguration(
-                service.buildConfiguration(),
-                extConnParam.extSource,
-                extConnParam.extJWT
-              );
-        } else {
-          await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
-        }
-      })
-    );
     await this.createKeystores(
       newServices.filter(
-        (s) => s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork")
+        (s) =>
+          s.service.includes("Teku") ||
+          s.service.includes("Nimbus") ||
+          s.service.includes("SSVNetwork") ||
+          s.service.includes("External")
       )
+    );
+    await Promise.all(
+      newServices.map(async (service) => {
+        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      })
     );
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
     await this.initKeysAPI(newServices.filter((s) => s.service === "KeysAPIService"));
