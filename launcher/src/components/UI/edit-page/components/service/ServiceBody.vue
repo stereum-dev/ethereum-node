@@ -16,7 +16,7 @@
       <div
         v-for="item in getServices"
         :key="item"
-        class="w-full max-h-[78px] grid grid-cols-2 py-2 rounded-md border border-gray-600 shadow-md mx-auto"
+        class="w-full max-h-[78px] grid grid-cols-2 p-2 rounded-md border border-gray-600 shadow-md mx-auto"
         :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
         style="cursor: default"
         @mouseenter="footerStore.cursorLocation = `${item.name} service`"
@@ -41,7 +41,12 @@
             @mouseenter="footerStore.cursorLocation = `delete ${item.name} service`"
             @mouseleave="footerStore.cursorLocation = ''"
           >
-            <img class="w-5 z-10" src="/img/icon/manage-node-icons/trash.png" alt="" @mousedown.prevent.stop />
+            <img
+              class="w-5 z-10 cursor-pointer"
+              src="/img/icon/manage-node-icons/trash.png"
+              alt=""
+              @mousedown.prevent.stop
+            />
           </div>
         </div>
       </div>
