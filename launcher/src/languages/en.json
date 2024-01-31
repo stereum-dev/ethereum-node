@@ -777,6 +777,11 @@
     "bitAmount": "BIT AMOUNT",
     "useCostumCypher": "USE CUSTOM CYPHER",
     "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
-    "gen": "GENERATE"
+    "gen": "GENERATE",
+    "saveServerCon": "SAVED SERVER CONNECTIONS",
+    "serch": "Search",
+    "serchFor": "Search for...",
+    "addServer": "ADD A NEW SERVER CONNECTION",
+    "serverAccMang": "Server Access Management"
   }
 }
