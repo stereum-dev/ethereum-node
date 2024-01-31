@@ -4,7 +4,7 @@
     <div class="relative top-20 mx-auto px-5 py-2 border w-3/5 rounded-[35px] bg-[#1c1d1d] shadow-xl shadow-black z-30">
       <div class="mt-1 text-center">
         <h3 class="text-xl leading-6 font-semibold text-amber-500 uppercase">
-          {{ $("multiServer.genSshKey") }}
+          {{ $t("multiServer.genSshKey") }}
         </h3>
         <form class="mt-2 grid grid-cols-12 grid-rows-8 items-center gap-y-2">
           <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 items-center">
@@ -81,6 +81,7 @@
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
               >{{ $t("multiServer.sshPass") }}</label
             >
+
             <input
               id="sshPassword"
               v-model="serverStore.sshPassword"
@@ -95,7 +96,7 @@
             <span
               class="col-start-1 col-end-8 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
             >
-              {{ t("multiServer.unlockExpertOptions") }}</span
+              {{ $t("multiServer.unlockExpertOptions") }}</span
             >
             <label
               for="AcceptConditions"

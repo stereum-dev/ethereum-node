@@ -5,7 +5,7 @@ import { ref } from 'vue';
     :class="serverStore.isPasswordChanged ? 'animate__fadeInDown' : 'animate__fadeOutUp'"
   >
     <p class="col-start-1 col-span-full row-start-1 row-span-1 text-center text-md font-bold text-gray-700 uppercase">
-      Change Password
+      {{ $t("multiServer.chngPass") }}
     </p>
     <div class="col-start-1 col-span-full row-start-2 row-span-2 flex justify-center items-center space-x-2">
       <img
@@ -21,7 +21,7 @@ import { ref } from 'vue';
       class="col-start-4 col-span-full row-start-4 row-span-1 rounded-md bg-teal-800 hover:bg-teal-950 active:scale-95 text-gray-100 uppercase font-semibold"
       @click="serverStore.isPasswordChanged = false"
     >
-      ok
+      {{ $t("multiServer.ok") }}
     </button>
   </div>
 </template>
