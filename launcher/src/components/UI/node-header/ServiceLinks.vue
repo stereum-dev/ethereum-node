@@ -15,7 +15,7 @@
       <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
       <ssv-modal v-if="showSsvWindow" @close-window="closeServiceBrowser"></ssv-modal>
       <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser" />
-      <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser"></mevboost-modal>
+      <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser" />
       <ObolModal v-if="showObolCharonWindow" @close-window="closeServiceBrowser" />
     </div>
     <div class="arrow-box">

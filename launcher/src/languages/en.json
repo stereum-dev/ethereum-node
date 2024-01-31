@@ -305,7 +305,11 @@
     "pageTitle": "PLUG-IN LOGS",
     "noLogFound": "No log found in the list",
     "clickCopy": "Double Click to Copy Logs",
-    "serviceId": "service id"
+    "serviceId": "Service ID:",
+    "exportAll": "Export All Logs",
+    "export150": "Export 150 Logs",
+    "cat": "Category:",
+    "ver": "Version:"
   },
   "serviceModals": {
     "localApp": "LOCAL APPLICATION",
@@ -359,7 +363,8 @@
   "restartModal": {
     "restartMessage": "your node might go offline while doing so!",
     "restart": "restart",
-    "confirmMessage": "Are you sure you want turn your node"
+    "confirmMessage": "Are you sure you want turn your node",
+    "areYouSure": "are you sure you want to"
   },
   "nukeModal": {
     "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
@@ -448,7 +453,9 @@
     "clkFee": "Service Settings",
     "clkUpdate": "Click to open update panel",
     "sync": "Synchronization Error",
-    "taskFail": "task failed"
+    "taskFail": "Task Failed",
+    "stats": "STATUS: OPEN",
+    "clientService": "CLIENT / SERVICE"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -588,7 +595,11 @@
     "availableUpdt": "New update is available",
     "updtPan": "update panel",
     "setting": "Stereum settings",
-    "logOutBtn": "Log out"
+    "logOutBtn": "Log out",
+    "rem": "REMOVE",
+    "node": "NODE",
+    "control": "CONTROL",
+    "staking": "STAKING"
   },
   "switchNetwork": {
     "message": "This is the current network, you can click to select another network"
@@ -723,7 +734,7 @@
     "trnOff": "Turn off",
     "selectClient": "Select a Client From List",
     "switchClient": "switch client",
-    "selectClientToReplace": "Select a client to replace the"
+    "selectNet": "Select Network"
   },
   "editPageServices": {
     "services": "Services",
