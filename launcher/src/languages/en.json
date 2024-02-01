@@ -55,7 +55,9 @@
     "stake": "Stake with 32 ETH",
     "rpc": "RPC Connection",
     "written": "Written Guides",
-    "video": "Video Guides"
+    "video": "Video Guides",
+    "stereumTutorial": "stereum tutorials",
+    "statBox": "status box"
   },
   "pluginZone": {
     "client": "client"
