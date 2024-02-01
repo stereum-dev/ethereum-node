@@ -38,6 +38,7 @@
     </transition>
   </base-layout>
 </template>
+
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
 import ListSection from "./sections/ListSection";

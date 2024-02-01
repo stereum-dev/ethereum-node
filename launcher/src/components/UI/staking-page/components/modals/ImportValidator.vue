@@ -42,7 +42,7 @@
                 class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                 :class="{ 'bg-blue-500': pickedSlashing === 'yes' }"
               ></span>
-              <span class="text-gray-200 font-semibold text-center">YES</span>
+              <span class="text-gray-200 font-semibold text-center">{{ $t("stakingPage.yes") }}</span>
             </label>
           </div>
 
@@ -54,7 +54,7 @@
                 class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                 :class="{ 'bg-blue-500': pickedSlashing === 'no' }"
               ></span>
-              <span class="text-gray-200 font-semibold text-center">NO</span>
+              <span class="text-gray-200 font-semibold text-center">{{ $t("stakingPage.no") }}</span>
             </label>
           </div>
         </fieldset>
@@ -62,7 +62,7 @@
         <div v-if="pickedSlashing === 'yes'">
           <input ref="fileInput" type="file" accept=".json" class="hidden" @change="handleFileUpload" />
           <span class="col-start-1 col-end-5 row-start-1 row-span-1 text-center text-sm font-semibold text-gray-300">{{
-            stakingStore.slashingDB ? stakingStore.slashingDB.name : "No file selected"
+            stakingStore.slashingDB ? stakingStore.slashingDB.name : `${$t("stakingPage.noFile")}`
           }}</span>
         </div>
       </div>
@@ -78,7 +78,7 @@
         <div
           class="w-full h-10 col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center overflow-hidden p-2 space-x-1"
         >
-          <span class="text-2xl text-amber-500 font-semibold">Importing</span>
+          <span class="text-2xl text-amber-500 font-semibold">{{ $t("stakingPage.imp") }}</span>
           <span class="text-2xl text-amber-500 font-semibold dot1">.</span>
           <span class="text-2xl text-amber-500 font-semibold dot2">.</span>
           <span class="text-2xl text-amber-500 font-semibold dot3">.</span>
@@ -89,7 +89,7 @@
         class="w-full col-start-2 col-end-12 row-start-2 row-end-6 overflow-hidden flex justify-center items-center"
       >
         <div class="w-full h-fit flex flex-col justify-center items-center space-y-2">
-          <span class="w-full text-lg font-semibold text-left text-gray-300">Import Details :</span>
+          <span class="w-full text-lg font-semibold text-left text-gray-300">{{ $t("stakingPage.impDet") }}</span>
           <div
             class="w-full max-h-32 overflow-x-hidden overflow-y-auto border border-gray-700 rounded-md bg-[#111213] mx-2 p-2 space-y-2"
           >
