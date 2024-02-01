@@ -82,11 +82,11 @@ const jwtToken = ref("");
 //Computed & Watcher
 
 watchEffect(() => {
-  props.client.source = sourceLink.value;
+  props.client.config.source = sourceLink.value;
 });
 
 watchEffect(() => {
-  props.client.jwtToken = jwtToken.value;
+  props.client.config.jwtToken = jwtToken.value;
 });
 
 //Lifecycle Hooks

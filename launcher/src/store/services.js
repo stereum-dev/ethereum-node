@@ -1186,7 +1186,7 @@ export const useServices = defineStore("services", {
           modifierPanel: false,
           replacePanel: false,
           path: "/external",
-          source: "",
+
           linkUrl: "",
           docsUrl: "",
           icon: require("/public/img/icon/plugin-icons/Other/consensusExternal.png"),
@@ -1240,6 +1240,7 @@ export const useServices = defineStore("services", {
             ports: [],
             volumes: [],
             network: "",
+            source: "",
           },
         },
         {
@@ -1255,8 +1256,7 @@ export const useServices = defineStore("services", {
           modifierPanel: false,
           replacePanel: false,
           path: "/external",
-          source: "",
-          jwtToken: "",
+
           linkUrl: "",
           docsUrl: "",
           icon: require("/public/img/icon/plugin-icons/Other/executionExternal.png"),
@@ -1310,6 +1310,8 @@ export const useServices = defineStore("services", {
             ports: [],
             volumes: [],
             network: "",
+            source: "",
+            jwtToken: "",
           },
         },
       ],

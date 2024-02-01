@@ -91,9 +91,9 @@ const getSubTitles = computed(() => {
 
 const externalServiceConfirmBtn = computed(() => {
   if (props.client.service === "ExternalExecutionService") {
-    return props.client.source === "" || props.client.jwtToken === "";
+    return props.client.config.source === "" || props.client.config.jwtToken === "";
   } else if (props.client.service === "ExternalConsensusService") {
-    return props.client.source === "";
+    return props.client.config.source === "";
   }
   return false;
 });

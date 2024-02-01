@@ -119,9 +119,7 @@ const getPercent = () => {
   const syncResult = useDeepClone(controlStore.syncstatus);
   if (syncResult.code === 0) {
     const flatArray = syncResult.data.flat();
-    let data = flatArray.find(
-      (e) => e.title.toLowerCase() === props.client.name.toLowerCase()
-    );
+    let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());
 
     if (data) {
       const lo = parseInt(data.frstVal);
@@ -169,8 +167,8 @@ const clientStatus = computed(() => {
   } else if (props.client.state === "restarting") {
     return "w-5 h-[16px] bg-orange-500 border border-orange-500 rounded-r-full";
   } else if (
-    props.client.service !== "ExternalExecutionService" ||
-    props.client.service !== "ExternalConsensusService"
+    props.client.service === "ExternalExecutionService" ||
+    props.client.service === "ExternalConsensusService"
   ) {
     return "w-5 h-[16px] bg-gray-400 border border-gray-400 rounded-r-full";
   }
