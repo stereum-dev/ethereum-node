@@ -1,4 +1,4 @@
-import { onMounted, watch } from 'vue';
+import { onMounted, watch, onUnmounted, ref } from 'vue';
 <template>
   <div class="w-full h-full flex flex-col justify-evenly items-center mx-auto px-4 py-2 space-y-2 mt-6 relative">
     <div class="w-full flex justify-center items-center">
@@ -32,7 +32,7 @@ import { onMounted, watch } from 'vue';
         <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/external-source.png" alt="Path Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-left">External Source</span>
         <input
-          v-model="manageStore.externalSource"
+          v-model="sourceLink"
           class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
           type="text"
           autofocus
@@ -48,7 +48,7 @@ import { onMounted, watch } from 'vue';
         <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/JWTTokenIcon.png" alt="Path Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-left">JWT TOKEN</span>
         <input
-          v-model="manageStore.jwtToken"
+          v-model="jwtToken"
           class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
           type="text"
           autofocus
@@ -59,10 +59,10 @@ import { onMounted, watch } from 'vue';
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import SyncCarousel from "../edit/SyncCarousel";
 import ControlService from "@/store/ControlService";
-import { useNodeManage } from "@/store/nodeManage";
+// import { useNodeManage } from "@/store/nodeManage";
 
 const props = defineProps({
   client: {
@@ -75,15 +75,25 @@ const props = defineProps({
   },
 });
 
-const manageStore = useNodeManage();
+// const manageStore = useNodeManage();
+const sourceLink = ref("");
+const jwtToken = ref("");
 
 //Computed & Watcher
+
+watchEffect(() => {
+  props.client.source = sourceLink.value;
+});
+
+watchEffect(() => {
+  props.client.jwtToken = jwtToken.value;
+});
 
 //Lifecycle Hooks
 
 onMounted(() => {
-  manageStore.externalSource = "";
-  manageStore.jwtToken = "";
+  sourceLink.value = "";
+  jwtToken.value = "";
   props.properties.installDir = "";
   getInstallPath();
 });

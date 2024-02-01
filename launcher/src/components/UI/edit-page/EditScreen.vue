@@ -405,6 +405,7 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
+  console.log("addServiceHandler", item);
   manageStore.isLineHidden = true;
   manageStore.confirmChanges.push({
     id: randomId,
@@ -508,7 +509,7 @@ const openInfoModal = (item) => {
   clientForInfo.value = item;
   isInfoModalOpen.value = true;
 };
-
+console.log(manageStore.confirmChanges);
 const destroyNode = async () => {
   manageStore.isLineHidden = true;
   try {
@@ -574,13 +575,19 @@ const destroyNode = async () => {
 };
 const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
-  if (manageStore.jwtToken || manageStore.externalSource) {
-    const extConnParams = {
-      extSource: manageStore.externalSource,
-      extJWT: manageStore.jwtToken,
-    };
-    await ControlService.getExternalSourceJWT(extConnParams);
-  }
+  // if (manageStore.jwtToken || manageStore.externalSource) {
+  //   const extConnParams = {
+  //     extSource: manageStore.externalSource,
+  //     extJWT: manageStore.jwtToken,
+  //   };
+  //   await ControlService.getExternalSourceJWT(extConnParams);
+  // }
+  // if (manageStore.externalSource && !manageStore.jwtToken) {
+  //   extConnParams = {
+  //     extSource: manageStore.externalSource,
+  //   };
+  // }
+
   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
   setTimeout(() => {
     manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));

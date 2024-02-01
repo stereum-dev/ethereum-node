@@ -91,9 +91,9 @@ const getSubTitles = computed(() => {
 
 const externalServiceConfirmBtn = computed(() => {
   if (props.client.service === "ExternalExecutionService") {
-    return manageStore.externalSource === "" || manageStore.jwtToken === "";
+    return props.client.source === "" || props.client.jwtToken === "";
   } else if (props.client.service === "ExternalConsensusService") {
-    return manageStore.externalSource === "";
+    return props.client.source === "";
   }
   return false;
 });
@@ -108,6 +108,7 @@ onMounted(() => {
 const confirmInstall = () => {
   if (getConfirmText.value === "confirm") {
     props.client.addPanel = false;
+    console.log(properties.value);
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||
