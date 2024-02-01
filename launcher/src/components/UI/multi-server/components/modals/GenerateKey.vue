@@ -3,19 +3,23 @@
     <div class="w-full h-full absolute inset-0 bg-black bg-opacity-80 z-10 rounded-md" @click="closeModal"></div>
     <div class="relative top-20 mx-auto px-5 py-2 border w-3/5 rounded-[35px] bg-[#1c1d1d] shadow-xl shadow-black z-30">
       <div class="mt-1 text-center">
-        <h3 class="text-xl leading-6 font-semibold text-amber-500 uppercase">Generate SSH Key</h3>
+        <h3 class="text-xl leading-6 font-semibold text-amber-500 uppercase">
+          {{ $t("multiServer.genSshKey") }}
+        </h3>
         <form class="mt-2 grid grid-cols-12 grid-rows-8 items-center gap-y-2">
           <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 items-center">
             <span
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-              >Key Type</span
+              >{{ $t("multiServer.keyType") }}</span
             >
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
                 class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
                 @click="isOpen = !isOpen"
               >
-                <span class="text-center font-semibold">{{ serverStore.selectedKeyType || "Select Key Type" }}</span>
+                <span class="text-center font-semibold">{{
+                  serverStore.selectedKeyType || `${$t("multiServer.selectKeyType")}`
+                }}</span>
                 <span class="float-right">
                   <svg class="w-4 h-4 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -44,7 +48,7 @@
               for="savePath"
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
             >
-              Save Path
+              {{ $t("multiServer.savePath") }}
             </label>
             <div class="col-start-4 col-span-8 relative bg-gray-100 rounded-l-md">
               <input
@@ -75,14 +79,15 @@
             <label
               for="sshPassword"
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-              >SSH Password</label
+              >{{ $t("multiServer.sshPass") }}</label
             >
+
             <input
               id="sshPassword"
               v-model="serverStore.sshPassword"
               type="text"
               class="col-start-4 col-span-full h-7 shadow border rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="DEFINE AN OPTIONAL SSH PASSWORD"
+              :placeholder="`${$t('multiServer.optionalSshPass')}`"
             />
           </div>
 
@@ -91,7 +96,7 @@
             <span
               class="col-start-1 col-end-8 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
             >
-              UNLOCK EXPERT OPTIONS</span
+              {{ $t("multiServer.unlockExpertOptions") }}</span
             >
             <label
               for="AcceptConditions"
@@ -144,7 +149,7 @@
           <div class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 items-center">
             <span
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-              >SPECIFY CYPHER</span
+              >{{ $t("multiServer.specCypher") }}</span
             >
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
@@ -154,7 +159,9 @@
                 }"
                 @click="isCustomCyperActive = !isCustomCyperActive"
               >
-                <span class="text-center font-semibold">{{ serverStore.selectedCyper || "USE A CUSTOM CYPER" }}</span>
+                <span class="text-center font-semibold">{{
+                  serverStore.selectedCyper || `${$t("multiServer.useCostumCypher")}`
+                }}</span>
                 <span class="float-right">
                   <svg class="w-4 h-4 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -181,7 +188,7 @@
           <div class="col-start-1 col-span-full row-start-6 row-span-1 grid grid-cols-12 items-center">
             <span
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-              >BIT AMOUNT</span
+              >{{ $t("multiServer.bitAmount") }}</span
             >
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
@@ -191,7 +198,9 @@
                 }"
                 @click="isSpecifyAmountActive = !isSpecifyAmountActive"
               >
-                <span class="text-center font-semibold">{{ serverStore.bitAmount || "SPECIFY SSH BIT AMOUNT" }}</span>
+                <span class="text-center font-semibold">{{
+                  serverStore.bitAmount || `${$t("multiServer.specSshBitAmount")}`
+                }}</span>
                 <span class="float-right">
                   <svg class="w-4 h-4 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -226,7 +235,7 @@
               :disabled="isDisabled"
               @click="generateKey"
             >
-              GENERATE
+              {{ $t("multiServer.gen") }}
             </button>
           </div>
         </form>

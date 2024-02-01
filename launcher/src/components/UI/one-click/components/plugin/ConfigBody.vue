@@ -7,12 +7,12 @@ import { ref, computed, onMounted, watch } from 'vue';
       <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-2 gap-1">
         <div class="w-full h-10 col-start-1 col-span-1 flex justify-center items-center">
           <div class="w-full h-8 border border-gray-600 rounded-md p-1 flex justify-center items-center">
-            <span class="text-center text-gray-400 text-md font-normal"> INSTALLED SERVICES</span>
+            <span class="text-center text-gray-400 text-md font-normal">{{ $t("oneClick.installedService") }}</span>
           </div>
         </div>
         <div class="w-full h-10 col-start-2 col-span-1 flex justify-center items-center relative">
           <div class="w-full h-8 border border-gray-600 rounded-md p-1 flex flex-col justify-between items-center">
-            <span class="text-center text-gray-400 text-md font-normal">ADDITIONAL OPTIONS</span>
+            <span class="text-center text-gray-400 text-md font-normal">{{ $t("oneClick.addOption") }}</span>
           </div>
         </div>
       </div>

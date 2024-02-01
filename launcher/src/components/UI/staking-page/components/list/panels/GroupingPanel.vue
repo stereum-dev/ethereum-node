@@ -8,7 +8,7 @@
       class="absolute -top-[90px] left-14 w-2/3 max-h-36 rounded border-s-4 p-4 z-50 bg-red-100 border-red-400"
     >
       <div class="flex items-center gap-2 text-red-800">
-        <strong class="block font-medium"> Something went wrong </strong>
+        <strong class="block font-medium">{{ $t("stakingPage.somethingWrong") }}</strong>
       </div>
 
       <p class="mt-2 text-sm text-red-700">{{ alertMessage }}</p>
@@ -28,7 +28,7 @@
         type="text"
         autofocus
         :class="inputClass"
-        placeholder="Write here your group name"
+        :placeholder="`${$t('stakingPage.writeGrpName')}`"
         @change="changeActive"
       />
 

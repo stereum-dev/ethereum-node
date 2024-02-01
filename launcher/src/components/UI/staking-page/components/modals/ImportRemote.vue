@@ -12,14 +12,12 @@
         <div
           class="w-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center overflow-hidden p-2 space-x-1"
         >
-          <span class="text-md text-gray-200 text-center font-semibold"
-            >Please wait until the remote key is imported.</span
-          >
+          <span class="text-md text-gray-200 text-center font-semibold">{{ $t("stakingPage.pleaseWait") }}</span>
         </div>
         <div
           class="w-full h-10 col-start-1 col-span-full row-start-4 row-span-1 flex justify-center items-center overflow-hidden p-2 space-x-1"
         >
-          <span class="text-2xl text-amber-500 font-semibold">Importing</span>
+          <span class="text-2xl text-amber-500 font-semibold">{{ $t("stakingPage.imp") }}</span>
           <span class="text-2xl text-amber-500 font-semibold dot1">.</span>
           <span class="text-2xl text-amber-500 font-semibold dot2">.</span>
           <span class="text-2xl text-amber-500 font-semibold dot3">.</span>

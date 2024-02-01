@@ -10,6 +10,7 @@
     <ServiceBody @open-expert="openExpert" @open-logs="openLogs" />
   </div>
 </template>
+
 <script setup>
 import ServiceBody from "../components/service/ServiceBody.vue";
 import { useServices } from "@/store/services";

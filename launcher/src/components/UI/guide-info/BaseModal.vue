@@ -4,7 +4,9 @@
       <div class="modal-items">
         <slot></slot>
       </div>
-      <button class="close-btn" @click="$emit('closeMe')">Close</button>
+      <button class="close-btn" @click="$emit('closeMe')">
+        {{ $t("guideInfo.close") }}
+      </button>
     </div>
   </div>
 </template>

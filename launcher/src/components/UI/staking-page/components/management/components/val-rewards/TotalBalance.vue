@@ -11,7 +11,7 @@
         <img class="w-4 -rotate-90" src="/img/icon/the-staking/keyIcon.png" alt="Key Icon" @mousedown.prevent />
         <span class="w-full text-[12px] text-green-600 font-semibold text-center">{{ totalKeys }}</span>
       </div>
-      <span class="w-1/3 text-[10px] text-amber-300 font-semibold text-center">Total</span>
+      <span class="w-1/3 text-[10px] text-amber-300 font-semibold text-center">{{ $t("stakingPage.ttl") }}</span>
     </div>
     <div
       class="w-full h-full col-start-4 col-span-full bg-[#151618] rounded-r-md overflow-hidden flex justify-center items-center px-1 text-center"
