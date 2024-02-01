@@ -370,20 +370,20 @@ export class ServiceManager {
   }
 
   addDependencies(service, dependencies, ssvConfig) {
-    let extServiceLink = dependencies.filter((d) => d.service.includes("External"));
+    let extServices = dependencies.filter((d) => d.service.includes("External"));
     let command = "";
     let filter;
 
     switch (service.service.replace(/(Beacon|Validator|Service)/gm, "")) {
       case "Lighthouse":
         if (service.service.includes("Beacon")) {
-          filter = extServiceLink.some((service) => service.service === "ExternalExecutionService")
+          filter = extServices.some((service) => service.service === "ExternalExecutionService")
             ? (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl(e.env.link)
             : (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
           command = "--execution-endpoint=";
         }
         if (service.service.includes("Validator")) {
-          filter = filter = extServiceLink.some((service) => service.service === "ExternalConsensusService")
+          filter = extServices.some((service) => service.service === "ExternalConsensusService")
             ? (e) => e.buildConsensusClientHttpEndpointUrl(e.env.link)
             : (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beacon-nodes=";
@@ -391,11 +391,15 @@ export class ServiceManager {
         break;
       case "Prysm":
         if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          filter = extServices.some((service) => service.service === "ExternalExecutionService")
+            ? (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl(e.env.link)
+            : (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
           command = "--execution-endpoint=";
         }
         if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientEndpoint();
+          filter = extServices.some((service) => service.service === "ExternalConsensusService")
+            ? (e) => e.buildConsensusClientHttpEndpointUrl(e.env.link)
+            : (e) => e.buildConsensusClientEndpoint();
           command = "--beacon-rpc-provider=";
           service.command = this.addCommandConnection(service, command, dependencies, filter);
           filter = (e) => e.buildConsensusClientGateway();
@@ -404,36 +408,50 @@ export class ServiceManager {
         break;
       case "Lodestar":
         if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          filter = extServices.some((service) => service.service === "ExternalExecutionService")
+            ? (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl(e.env.link)
+            : (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
           command = "--execution.urls=";
         }
         if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+          filter = extServices.some((service) => service.service === "ExternalConsensusService")
+            ? (e) => e.buildConsensusClientHttpEndpointUrl(e.env.link)
+            : (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beaconNodes=";
         }
         break;
       case "Nimbus":
         if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl();
+          filter = extServices.some((service) => service.service === "ExternalExecutionService")
+            ? (e) => e.buildExecutionClientEngineRPCWsEndpointUrl(e.env.link)
+            : (e) => e.buildExecutionClientEngineRPCWsEndpointUrl();
           command = "--web3-url=";
         }
         if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+          filter = extServices.some((service) => service.service === "ExternalConsensusService")
+            ? (e) => e.buildConsensusClientHttpEndpointUrl(e.env.link)
+            : (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beacon-node=";
         }
         break;
       case "Teku":
         if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          filter = extServices.some((service) => service.service === "ExternalExecutionService")
+            ? (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl(e.env.link)
+            : (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
           command = "--ee-endpoint=";
         }
         if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+          filter = extServices.some((service) => service.service === "ExternalConsensusService")
+            ? (e) => e.buildConsensusClientHttpEndpointUrl(e.env.link)
+            : (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beacon-node-api-endpoint=";
         }
         break;
       case "Charon":
-        filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+        filter = filter = extServices.some((service) => service.service === "ExternalConsensusService")
+          ? (e) => e.buildConsensusClientHttpEndpointUrl(e.env.link)
+          : (e) => e.buildConsensusClientHttpEndpointUrl();
         command = "--beacon-node-endpoints=";
         break;
       case "FlashbotsMevBoost":

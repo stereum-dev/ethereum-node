@@ -17,9 +17,13 @@ export class TekuBeaconService extends NodeService {
 
     const executionLayer = executionClients
       .map((client) => {
-        const elJWTDir = client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+        const elJWTDir = client.volumes.find(
+          (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
+        ).destinationPath;
         volumes.push(new ServiceVolume(elJWTDir, JWTDir));
-        return client.buildExecutionClientEngineRPCHttpEndpointUrl();
+        return client.service.includes("ExternalExecutionService")
+          ? client.buildExecutionClientEngineRPCHttpEndpointUrl(client.env.link)
+          : client.buildExecutionClientEngineRPCHttpEndpointUrl();
       })
       .join();
 

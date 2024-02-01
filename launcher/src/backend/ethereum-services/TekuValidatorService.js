@@ -12,7 +12,9 @@ export class TekuValidatorService extends NodeService {
 
     const beaconNodes = consensusClients
       .map((client) => {
-        return client.buildConsensusClientHttpEndpointUrl();
+        return client.service.includes("ExternalConsensusService")
+          ? client.buildConsensusClientHttpEndpointUrl(client.env.link)
+          : client.buildConsensusClientHttpEndpointUrl();
       })
       .join();
 
