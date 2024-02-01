@@ -24,7 +24,7 @@ export class PrysmValidatorService extends NodeService {
 
     const provider = consensusClients
       .map((client) => {
-        return client.service.includes("ExternalConsensusService")
+        return client.service?.includes("ExternalConsensusService")
           ? client.buildConsensusClientEndpoint(client.env.link)
           : client.buildConsensusClientEndpoint();
       })

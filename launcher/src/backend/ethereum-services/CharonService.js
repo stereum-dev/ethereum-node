@@ -12,7 +12,7 @@ export class CharonService extends NodeService {
 
     const beaconNodes = consensusClients
       .map((client) => {
-        return client.service.includes("ExternalConsensusService")
+        return client.service?.includes("ExternalConsensusService")
           ? client.buildConsensusClientHttpEndpointUrl(client.env.link)
           : client.buildConsensusClientHttpEndpointUrl();
       })
