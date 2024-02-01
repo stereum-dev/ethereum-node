@@ -405,43 +405,39 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
-  // if(item.client.service === "ExternalExecutionService" || item.client.service === "ExternalConsensusService") {
-  //   manageStore.confirmChanges.push({
-  //     id: randomId,
-  //     content: "INSTALL",
-  //     contentIcon: "/img/icon/manage-node-icons/install.png",
-  //     service: item.client,
-
-  //     data: {
-  //       network: manageStore.configNetwork.network,
-  //       installDir: item.installDir ? item.installDir : "/opt/stereum",
-  //       executionClients: item.executionClients,
-  //       consensusClients: item.consensusClients,
-  //       relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-  //       checkpointURL: item.checkPointSyncUrl ? item.checkPointSyncUrl : false,
-  //     },
-  //   });
-  // }
-
-  let dataObject = {
-    network: manageStore.configNetwork.network,
-    installDir: item.installDir || "/opt/stereum",
-    executionClients: item.executionClients,
-    consensusClients: item.consensusClients,
-    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-    checkpointURL: item.checkPointSyncUrl || false,
-  };
-
-  item.client.service === "ExternalExecutionService"
-    ? (dataObject = {
-        ...dataObject,
-        source: item.config.source,
-        jwtToken: item.config.jwtToken,
-      })
-    : (dataObject = {
-        ...dataObject,
-        source: item.config.source,
-      });
+  let dataObject;
+  if (item.client.service === "ExternalExecutionService") {
+    dataObject = {
+      network: manageStore.configNetwork.network,
+      installDir: item.installDir || "/opt/stereum",
+      executionClients: item.executionClients,
+      consensusClients: item.consensusClients,
+      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+      checkpointURL: item.checkPointSyncUrl || false,
+      source: item.client.config?.source,
+      jwtToken: item.client.config?.jwtToken,
+    };
+  } else if (item.client.service === "ExternalConsensusService") {
+    dataObject = {
+      network: manageStore.configNetwork.network,
+      installDir: item.installDir || "/opt/stereum",
+      executionClients: item.executionClients,
+      consensusClients: item.consensusClients,
+      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+      checkpointURL: item.checkPointSyncUrl || false,
+      source: item.client.config?.source,
+    };
+  } else {
+    dataObject = {
+      network: manageStore.configNetwork.network,
+      installDir: item.installDir || "/opt/stereum",
+      executionClients: item.executionClients,
+      consensusClients: item.consensusClients,
+      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+      checkpointURL: item.checkPointSyncUrl || false,
+    };
+  }
+  console.log("dataObject", dataObject);
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
