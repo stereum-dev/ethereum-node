@@ -4,6 +4,7 @@
     <NodeBody @open-expert="openExpert" @open-log="openLog" />
   </div>
 </template>
+
 <script setup>
 import NodeHeader from "../components/node/NodeHeader.vue";
 import NodeBody from "../components/node/NodeBody.vue";

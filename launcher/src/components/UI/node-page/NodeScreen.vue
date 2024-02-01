@@ -17,7 +17,11 @@
           <button
             class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
             @click="alarmToggle"
-            @mouseenter="footerStore.cursorLocation = nodeStore.infoAlarm ? `stereum tutorials` : `status box`"
+            @mouseenter="
+              footerStore.cursorLocation = nodeStore.infoAlarm
+                ? `${$t('nodeSidebarVideo.stereumTutorial')}`
+                : `${$t('nodeSidebarVideo.statBox')}`
+            "
             @mouseleave="footerStore.cursorLocation = ''"
           >
             <img class="w-8" src="/img/icon/round-icon.png" alt="information" />

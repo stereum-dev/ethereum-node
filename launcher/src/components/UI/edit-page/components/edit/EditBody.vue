@@ -11,9 +11,9 @@
       <div
         class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
       >
-        <span class="col-start-1 justify-self-center self-center">Execution Clients</span>
-        <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>
-        <span class="col-start-3 justify-self-center self-center">Validator</span>
+        <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>
+        <span class="col-start-2 justify-self-center self-center">{{ $t("editBody.consensusClient") }}</span>
+        <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }}</span>
       </div>
       <div
         ref="dropZoneRef"

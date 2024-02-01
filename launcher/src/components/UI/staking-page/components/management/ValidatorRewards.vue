@@ -10,7 +10,6 @@
     <BlockReward />
   </div>
 </template>
-
 <script setup>
 import EpochSlot from "./components/val-rewards/EpochSlot.vue";
 import TotalBalance from "./components/val-rewards/TotalBalance.vue";

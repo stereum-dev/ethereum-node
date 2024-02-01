@@ -5,7 +5,6 @@
     <VerifyFooter @start-installing="runInstalltion" />
   </div>
 </template>
-
 <script setup>
 import VerifyHeader from "../components/verify/VerifyHeader.vue";
 import VerifyBody from "../components/verify/VerifyBody.vue";

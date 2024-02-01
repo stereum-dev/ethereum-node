@@ -5,6 +5,7 @@
     <MevboostFooter />
   </div>
 </template>
+
 <script setup>
 import MevboostHeader from "../components/mevboost/MevboostHeader.vue";
 import MevboostBody from "../components/mevboost/MevboostBody.vue";

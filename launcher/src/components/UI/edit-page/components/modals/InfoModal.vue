@@ -13,14 +13,14 @@
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
             <img class="col-start-1 w-7 h-7" src="/img/icon/manage-node-icons/plugin-item-icon.png" alt="Client Icon" />
-            <span class="col-start-2 col-span-3 text-gray-400 text-left">Service ID</span>
+            <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.serviceId") }}</span>
             <span class="col-start-6 col-end-13 text-amber-600 text-center">{{ client.config.serviceID }}</span>
           </div>
         </div>
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
             <img class="col-start-1 w-7 h-7" src="/img/icon/manage-node-icons/category.png" alt="Client Icon" />
-            <span class="col-start-2 col-span-3 text-gray-400 text-left">Service Category</span>
+            <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.serviceCat") }}</span>
             <span
               v-if="client.category !== 'service'"
               class="col-start-6 col-end-13 text-lg text-gray-400 font-semibold text-center capitalize"
@@ -36,7 +36,7 @@
           <div v-if="getConnectedExecution" class="w-full flex justify-center items-center">
             <div class="w-full grid grid-cols-12 items-center text-md">
               <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
-              <span class="col-start-2 col-span-3 text-gray-400 text-left">Execution Client</span>
+              <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editBody.executionClient") }}</span>
               <div
                 class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
               >
@@ -49,7 +49,7 @@
           <div v-if="getConnectedConsensus" class="w-full flex justify-center items-center">
             <div class="w-full grid grid-cols-12 items-center text-md">
               <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
-              <span class="col-start-2 col-span-3 text-gray-400 text-left">Consensus Client</span>
+              <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editBody.consensusClient") }}</span>
               <div
                 class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
               >

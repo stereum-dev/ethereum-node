@@ -3,7 +3,7 @@
     class="w-full h-full col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 bg-[#2d3035] border-t border-gray-500 p-1"
   >
     <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center space-x-2">
-      <span class="text-sm text-gray-400 font-semibold">Service ID:</span>
+      <span class="text-sm text-gray-400 font-semibold">{{ $t("pluginLogs.serviceId") }}</span>
       <span class="text-amber-200 text-sm font-semibold">
         {{ client?.config?.serviceID }}
       </span>
@@ -13,7 +13,7 @@
         v-if="isAllHovered"
         class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md"
       >
-        <span class="text-xs text-gray-200 font-semibold">Export All Logs</span>
+        <span class="text-xs text-gray-200 font-semibold">{{ $t("pluginLogs.exportAll") }}</span>
       </div>
 
       <img
@@ -31,7 +31,7 @@
         v-if="is150Hovered"
         class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md"
       >
-        <span class="text-xs text-gray-200 font-semibold">Export 150 Logs</span>
+        <span class="text-xs text-gray-200 font-semibold">{{ $t("pluginLogs.export150") }}</span>
       </div>
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"

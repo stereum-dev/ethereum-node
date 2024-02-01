@@ -7,13 +7,13 @@
       <div class="text-gray-200 text-lg font-semibold">{{ client.name }}</div>
     </div>
     <div class="w-full h-full col-start-5 col-end-8 flex justify-center items-center space-x-2">
-      <span class="text-sm text-[#dee3e3] font-semibold">Category:</span>
+      <span class="text-sm text-[#dee3e3] font-semibold">{{ $t("pluginLogs.cat") }}</span>
       <span class="text-amber-200 text-md font-semibold capitalize">
         {{ client?.category }}
       </span>
     </div>
     <div class="w-full h-full col-start-8 col-end-11 flex justify-center items-center space-x-2">
-      <span class="text-sm text-[#dee3e3] font-semibold">Version:</span>
+      <span class="text-sm text-[#dee3e3] font-semibold">{{ $t("pluginLogs.ver") }}</span>
       <span class="text-amber-200 text-md font-semibold">
         {{ client?.config?.imageVersion }}
       </span>

@@ -1,10 +1,10 @@
 <template>
   <staking-custom-modal
-    main-title="Remove Validator Key(s)"
+    :main-title="`${$t('stakingPage.remValKey')}`"
     title-color="remove"
-    message-text="Are you sure you want to remove this Key(s)?"
+    :message-text="`${$t('stakingPage.areXouSure')}`"
     :click-outside-text="clickOut"
-    confirm-text="remove"
+    :confirm-text="`${$t('serviceModal.rem')}`"
     height="450"
     :external-close="true"
     :active-button="activeButton"
@@ -42,7 +42,7 @@
             v-if="stakingStore.removeKeys.length === 0 && stakingStore.removeResponse.length > 0 && remoteKeyNo"
             class="h-7 w-full col-start-1 col-span-full row-span-1 flex flex-col justify-center items-center px-3 rounded-md bg-[#242628] p-1 gap-y-1 mx-1"
           >
-            <span v-if="remoteKeyNo" class="text-sm text-red-400 text-left font-semibold">{{
+            <span v-if="remoteKeyNo" div class="text-sm text-red-400 text-left font-semibold">{{
               `${remoteKeyNo} remote key(s) deleted `
             }}</span>
           </div>
@@ -64,7 +64,7 @@
                   class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                   :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'yes' }"
                 ></span>
-                <span class="text-gray-200 font-semibold text-center">YES</span>
+                <span class="text-gray-200 font-semibold text-center">{{ $t("stakingPage.yes") }}</span>
               </label>
             </div>
 
@@ -80,7 +80,7 @@
                   class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                   :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'no' }"
                 ></span>
-                <span class="text-gray-200 font-semibold text-center">NO</span>
+                <span class="text-gray-200 font-semibold text-center">{{ $t("stakingPage.no") }}</span>
               </label>
             </div>
           </fieldset>

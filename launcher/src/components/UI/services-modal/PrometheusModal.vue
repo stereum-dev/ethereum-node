@@ -26,8 +26,8 @@
         </div>
         <div v-if="refreshStereum" class="browserBox">
           <ConfirmBox
-            :top-line="`Oops! Something Went Wrong`"
-            :bottom-line="`Something went wrong. Please click the refresh button and try again.`"
+            :top-line="`${$t('serviceModals.oops')}`"
+            :bottom-line="`${$t('serviceModals.wentWrong')}`"
             :btn-name="`refresh`"
             :btn-bg-color="`#f37625`"
             @confirmPluginClick="stereumRefresher"
