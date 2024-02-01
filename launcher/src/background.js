@@ -518,10 +518,6 @@ ipcMain.handle("getSyncCommitteeRewards", async (event, args) => {
   return await monitoring.getSyncCommitteeRewards(args.validators, args.slot);
 });
 
-ipcMain.handle("getExternalSourceJWT", async (event, args) => {
-  return await serviceManager.getExternalSourceJWT(args);
-});
-
 ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
 });

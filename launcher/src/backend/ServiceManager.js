@@ -32,7 +32,6 @@ import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionS
 import YAML from "yaml";
 
 const log = require("electron-log");
-let extConnParam = "";
 
 async function Sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -714,7 +713,7 @@ export class ServiceManager {
     }
   }
 
-  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays
+  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays, // for external -> source, jwtToken
   getService(name, args) {
     let ports;
     let service;
@@ -938,10 +937,19 @@ export class ServiceManager {
 
       case "ExternalExecutionService":
         ports = [];
-        return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution");
+        return ExternalExecutionService.buildByUserInput(
+          args.network,
+          args.installDir + "/externalExecution",
+          args.source,
+          args.jwtToken
+        );
       case "ExternalConsensusService":
         ports = [];
-        return ExternalConsensusService.buildByUserInput(args.network, args.installDir + "/externalConsensus");
+        return ExternalConsensusService.buildByUserInput(
+          args.network,
+          args.installDir + "/externalConsensus",
+          args.source
+        );
     }
   }
 
@@ -1061,18 +1069,17 @@ export class ServiceManager {
           `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
         );
       } else if (service.service.includes("External")) {
-        service.env = { link: extConnParam.extSource };
         const extConnDir = service.volumes
-          .find((vol) => vol.servicePath === "")
+          .find((vol) => vol.destinationPath.includes("link.txt"))
           .destinationPath.split("/")
           .slice(0, -1)
           .join("/");
         await this.nodeConnection.sshService.exec(
-          `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${extConnParam.extSource} > ${extConnDir}/link.txt`
+          `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${service.env.link} > ${extConnDir}/link.txt`
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(
-            `touch ${extConnDir}/engine.jwt && echo -e ${extConnParam.extJWT} > ${extConnDir}/engine.jwt`
+            `touch ${extConnDir}/engine.jwt && echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`
           );
         }
       }
@@ -1239,10 +1246,6 @@ export class ServiceManager {
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
     await this.initKeysAPI(newServices.filter((s) => s.service === "KeysAPIService"));
     return ELInstalls.concat(CLInstalls, VLInstalls);
-  }
-
-  async getExternalSourceJWT(extConnParams) {
-    extConnParam = extConnParams;
   }
 
   //make sure there are no double tasks (for example: TekuBeaconService, TekuValidatorService share the same id)

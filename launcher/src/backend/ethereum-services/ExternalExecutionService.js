@@ -1,16 +1,8 @@
 import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
-const envMap = new WeakMap();
 export class ExternalExecutionService extends NodeService {
-  static get env() {
-    return envMap.get(this);
-  }
-
-  static set env(val) {
-    envMap.set(this, val);
-  }
-  static buildByUserInput(network, dir) {
+  static buildByUserInput(network, dir, source, jwtToken) {
     const service = new ExternalExecutionService();
     service.setId();
 
@@ -28,7 +20,7 @@ export class ExternalExecutionService extends NodeService {
       "", // imageVersion
       [], // command
       [], // entrypoint
-      ExternalExecutionService.env, // env
+      { link: source, jwtToken: jwtToken }, // env
       [], // ports
       volumes, // volumes
       null, // user
