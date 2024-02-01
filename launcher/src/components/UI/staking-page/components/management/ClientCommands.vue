@@ -8,7 +8,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import ButtonBox from "./components/client-commands/ButtonBox.vue";
 import ValidatorState from "./components/client-commands/ValidatorState.vue";

@@ -1,7 +1,7 @@
 <template>
   <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto mt-4">
     <div class="w-full flex flex-col justify-between items-center space-y-1">
-      <span class="w-11/12 text-left text-teal-700 font-semibold">Switch To</span>
+      <span class="w-11/12 text-left text-teal-700 font-semibold">{{ $t("editModals.switchTo") }}</span>
       <div class="w-full relative py-2">
         <button
           aria-expanded="false"
@@ -14,7 +14,9 @@
             :src="properties.itemToInstall?.sIcon"
             alt="Client Icon"
           />
-          <span>{{ properties.itemToInstall ? properties.itemToInstall.name : "Select a Client From List" }}</span>
+          <span>{{
+            properties.itemToInstall ? properties.itemToInstall.name : `${$t("editModals.selectClient")}`
+          }}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-5 h-5 inline ml-1 absolute right-1 text-gray-400"

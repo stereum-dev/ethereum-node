@@ -5,7 +5,6 @@
     <ConfigFooter />
   </div>
 </template>
-
 <script setup>
 import ConfigHeader from "../components/plugin/ConfigHeader.vue";
 import ConfigBody from "../components/plugin/ConfigBody.vue";

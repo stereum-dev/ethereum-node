@@ -6,7 +6,7 @@
     <div
       class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-[10px] font-semibold z-10"
     >
-      <span>Services </span>
+      <span>{{ $t("editPageServices.services") }}} </span>
     </div>
     <div
       ref="service"
@@ -19,7 +19,7 @@
         class="w-full max-h-[78px] grid grid-cols-2 py-2 rounded-md border border-gray-600 shadow-md mx-auto"
         :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
         style="cursor: default"
-        @mouseenter="footerStore.cursorLocation = `${item.name} service`"
+        @mouseenter="footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <ServiceLayout :client="item" />
@@ -38,7 +38,11 @@
               'pointer-events-none': item.isRemoveProcessing,
             }"
             @click="deleteService(item)"
-            @mouseenter="footerStore.cursorLocation = `delete ${item.name} service`"
+            @mouseenter="
+              footerStore.cursorLocation = `${$t('editPageServices.delete')} ${item.name} ${$t(
+                'editPageServices.service'
+              )}`
+            "
             @mouseleave="footerStore.cursorLocation = ''"
           >
             <img class="w-5 z-10" src="/img/icon/manage-node-icons/trash.png" alt="" @mousedown.prevent.stop />

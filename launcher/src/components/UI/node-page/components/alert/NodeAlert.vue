@@ -55,7 +55,7 @@
             <span>{{ point }}</span>
           </div>
           <div class="val-message">
-            <span> > STATUS: OPEN</span>
+            <span> > {{ $t("nodeAlert.stats") }}</span>
           </div>
         </div>
       </router-link>
@@ -79,10 +79,10 @@
         </div>
         <div class="message-text_container">
           <div class="main-message">
-            <span>CLIENT / SERVICE</span>
+            <span>{{ $t("nodeAlert.clientService") }}</span>
           </div>
           <div class="val-message">
-            <span>Synchronization Error</span>
+            <span>{{ $t("nodeAlert.sync") }}</span>
           </div>
         </div>
       </router-link>
@@ -92,7 +92,7 @@
         </div>
         <div class="message-text_container">
           <div class="main-message">
-            <span>Task Failed</span>
+            <span>{{ $t("nodeAlert.taskFail") }}</span>
           </div>
         </div>
       </div>

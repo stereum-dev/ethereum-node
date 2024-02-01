@@ -1,7 +1,7 @@
 <template>
   <custom-modal
-    main-title="REMOVE SERVER"
-    message-text="Are you sure you want to remove it?"
+    :main-title="t('loginServer.removeServer')"
+    :message-text="t('loginServer.removeServerText')"
     :confirm-text="t('deleteModal.rem')"
     :click-outside-text="t('deleteModal.close')"
     @close-window="closeWindow"
@@ -9,10 +9,10 @@
   >
     <template #content>
       <div class="w-2/3 flex justify-center items-center mx-auto p-2 mt-20">
-        <span v-if="serverStore.isRemoveProcessing" class="text-2xl text-amber-500 font-bold text-center"
-          >Please wait . . .</span
-        >
-        <span v-else class="text-lg text-gray-300 font-semibold text-center">Your server will be removed.</span>
+        <span v-if="serverStore.isRemoveProcessing" class="text-2xl text-amber-500 font-bold text-center">{{
+          $t("loginServer.wait")
+        }}</span>
+        <span v-else class="text-lg text-gray-300 font-semibold text-center">{{ $t("loginServer.serverRem") }}</span>
       </div>
     </template>
   </custom-modal>

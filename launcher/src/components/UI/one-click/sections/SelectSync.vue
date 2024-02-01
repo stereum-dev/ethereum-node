@@ -5,7 +5,7 @@
     <SyncFooter />
   </div>
 </template>
-//
+
 <script setup>
 import SyncHeader from "../components/sync/SyncHeader.vue";
 import SyncBody from "../components/sync/SyncBody.vue";

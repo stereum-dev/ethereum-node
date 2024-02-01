@@ -4,7 +4,7 @@ import { onMounted } from 'vue';
     <div class="w-full flex justify-center items-center">
       <div class="w-full grid grid-cols-12 items-center text-md">
         <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/folder.png" alt="Path Icon" />
-        <span class="col-start-2 col-span-3 text-gray-400 text-left">Installation Path</span>
+        <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.installationPath") }}</span>
         <input
           v-model="props.properties.installDir"
           class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
@@ -16,7 +16,7 @@ import { onMounted } from 'vue';
     <div v-if="client.category === 'consensus'" class="w-full flex justify-center items-center">
       <div class="w-full grid grid-cols-12 items-center text-md">
         <img class="w-8 col-start-1" src="/img/icon/manage-node-icons/sync.gif" alt="Sync Icon" />
-        <span class="col-start-2 col-span-3 text-gray-400 text-md text-left">Sync Mode</span>
+        <span class="col-start-2 col-span-3 text-gray-400 text-md text-left">{{ $t("editModals.syncMode") }}</span>
         <SyncCarousel :properties="props.properties" />
       </div>
     </div>
