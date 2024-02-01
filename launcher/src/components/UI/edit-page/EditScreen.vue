@@ -405,39 +405,22 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
-  let dataObject;
+  let dataObject = {
+    network: manageStore.configNetwork.network,
+    installDir: item.installDir || "/opt/stereum",
+    executionClients: item.executionClients,
+    consensusClients: item.consensusClients,
+    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+    checkpointURL: item.checkPointSyncUrl || false,
+  };
+
   if (item.client.service === "ExternalExecutionService") {
-    dataObject = {
-      network: manageStore.configNetwork.network,
-      installDir: item.installDir || "/opt/stereum",
-      executionClients: item.executionClients,
-      consensusClients: item.consensusClients,
-      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-      checkpointURL: item.checkPointSyncUrl || false,
-      source: item.client.config?.source,
-      jwtToken: item.client.config?.jwtToken,
-    };
+    dataObject.source = item.client.config?.source;
+    dataObject.jwtToken = item.client.config?.jwtToken;
   } else if (item.client.service === "ExternalConsensusService") {
-    dataObject = {
-      network: manageStore.configNetwork.network,
-      installDir: item.installDir || "/opt/stereum",
-      executionClients: item.executionClients,
-      consensusClients: item.consensusClients,
-      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-      checkpointURL: item.checkPointSyncUrl || false,
-      source: item.client.config?.source,
-    };
-  } else {
-    dataObject = {
-      network: manageStore.configNetwork.network,
-      installDir: item.installDir || "/opt/stereum",
-      executionClients: item.executionClients,
-      consensusClients: item.consensusClients,
-      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-      checkpointURL: item.checkPointSyncUrl || false,
-    };
+    dataObject.source = item.client.config?.source;
   }
-  console.log("dataObject", dataObject);
+
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
