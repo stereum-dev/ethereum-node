@@ -77,13 +77,13 @@ const props = defineProps({
 
 const manageStore = useNodeManage();
 
-manageStore.externalSource = "";
-
 //Computed & Watcher
 
 //Lifecycle Hooks
 
 onMounted(() => {
+  manageStore.externalSource = "";
+  manageStore.jwtToken = "";
   props.properties.installDir = "";
   getInstallPath();
 });
