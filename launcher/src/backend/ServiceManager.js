@@ -555,7 +555,9 @@ export class ServiceManager {
 
   removeDependencies(service, serviceToDelete) {
     //update command
-    service.command = this.removeCommandConnection(service.command, serviceToDelete.id);
+    service.command = serviceToDelete.service.includes("External")
+      ? this.removeCommandConnection(service.command, serviceToDelete.env.link)
+      : this.removeCommandConnection(service.command, serviceToDelete.id);
 
     //update volumes
     service.volumes = service.volumes.filter((v) => !v.destinationPath.includes(serviceToDelete.id));
