@@ -42,12 +42,12 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
             !filteredDoppelgangerKeys.length
           "
           class="text-lg font-bold text-gray-300 text-center uppercase select-none"
-          >No Validator key imported.</span
+          >{{ $t("stakingPage.noVal") }}</span
         >
         <span
           v-if="searchNotFound && getFilteredValidators.length > 0"
           class="text-lg font-bold text-gray-300 text-center uppercase"
-          >No Matches.</span
+          >{{ $t("stakingPage.noMatch") }}</span
         >
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />

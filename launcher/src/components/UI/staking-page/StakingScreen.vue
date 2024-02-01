@@ -38,6 +38,7 @@
     </transition>
   </base-layout>
 </template>
+
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
 import ListSection from "./sections/ListSection";
@@ -527,7 +528,7 @@ const deletePreviewKey = async (item) => {
 
 //**** Client Commands Buttons ****
 
-// ****** Fee Recepient *******
+// ****** Fee Recipient *******
 const confirmFeeRecepient = async () => {
   const key = stakingStore.selectKeyForFee;
   if (key) {
@@ -547,7 +548,7 @@ const confirmFeeRecepient = async () => {
   stakingStore.setActivePanel(null);
 };
 
-// ****** End of Fee Recepient *******
+// ****** End of Fee Recipient *******
 
 //****** Withdraw & Exit *******
 const withdrawModalHandler = () => {

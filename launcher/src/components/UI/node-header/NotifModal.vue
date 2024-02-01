@@ -110,7 +110,7 @@
               </div>
             </div>
             <div class="apply-btn" @click="BeaconchainBtnHandling">
-              {{ readyToRemove ? "REMOVE" : $t("notifModal.apply") }}
+              {{ readyToRemove ? `${$t("headerBtn.rem")}` : $t("notifModal.apply") }}
             </div>
           </div>
         </div>

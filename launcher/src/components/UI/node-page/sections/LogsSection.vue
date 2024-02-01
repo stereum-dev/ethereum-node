@@ -8,7 +8,6 @@
   </div>
 </template>
 
-//
 <script setup>
 import LogsHeader from "../components/logs/LogHeader.vue";
 import LogsBody from "../components/logs/LogBody.vue";

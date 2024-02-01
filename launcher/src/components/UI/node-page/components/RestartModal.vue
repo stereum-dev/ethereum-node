@@ -6,7 +6,7 @@
         <img :src="icon" alt="restart warning" />
       </div>
       <div class="restart-question">
-        <span>are you sure you want to {{ title }}?</span>
+        <span>{{ $t("restartModal.areYouSure") }} {{ title }}?</span>
       </div>
       <div class="nameId">
         <span class="service-name">{{ service.name }}</span>

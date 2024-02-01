@@ -19,13 +19,17 @@
         <div v-if="!headerStore.generatorPlugin" class="wrapper">
           <div class="browserBox">
             <ConfirmBox
-              :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'OPEN OBOL LAUNCHPAD'}`"
+              :top-line="`${
+                !headerStore.continueForExistENR ? `${$t('serviceModal.createEnr')}` : `${$t('serviceModal.openObol')}`
+              }`"
               :bottom-line="`${
                 !headerStore.continueForExistENR
-                  ? 'Generate a new ENR to use to create or join an existing cluster'
-                  : 'Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.'
+                  ? `${$t('serviceModal.generateEnrToJoin')}`
+                  : `${$t('serviceModal.joinCluster')}`
               }`"
-              :btn-name="`${!headerStore.continueForExistENR ? 'GENERATE' : 'OPEN IN BROWSER'}`"
+              :btn-name="`${
+                !headerStore.continueForExistENR ? `${$t('multiServer.gen')}` : `${$t('serviceModal.openBrowser')}`
+              }`"
               :btn-bg-color="`#192d31`"
               :btn-name-color="`#2fe4ab`"
               @confirmPluginClick="topBlock"
@@ -35,23 +39,29 @@
           <div class="browserBox">
             <div v-if="!headerStore.continueForExistENR" class="browserBox_import">
               <div class="import-title">
-                <span>IMPORT EXISTING ENR</span>
+                <span>{{ $t("serviceModal.importEnr") }}</span>
               </div>
               <div class="enrImport">
-                <input v-model="importedENR" type="text" placeholder="Enter ENR" />
-                <div class="import-btn" @click="enrImport">import</div>
+                <input v-model="importedENR" type="text" :placeholder="`${$t('serviceModal.entrEnr')}`" />
+                <div class="import-btn" @click="enrImport">
+                  {{ $t("serviceModal.import") }}
+                </div>
               </div>
             </div>
             <div v-else class="wrapper" style="flex-direction: row">
               <ConfirmBox
-                :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'OPEN OBOL LAUNCHPAD'}`"
+                :top-line="`${
+                  !headerStore.continueForExistENR
+                    ? `${$t('serviceModal.createEnr')}`
+                    : `${$t('serviceModal.openObol')}`
+                }`"
                 :bottom-line="`${
                   !headerStore.continueForExistENR
-                    ? 'Generate a new ENR to use to create or join an existing cluster'
-                    : 'Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.'
+                    ? `${$t('serviceModal.generateEnrToJoin')}`
+                    : `${$t('serviceModal.joinCluster')}`
                 }`"
-                :btn-name="`COPY`"
-                :second-btn-name="`REMOVE`"
+                :btn-name="`${$t('serviceModal.copy')}`"
+                :second-btn-name="`${$t('serviceModal.rem')}`"
                 :btn-bg-color="`#494949`"
                 :second-btn-bg-color="`#eb5353`"
                 :btn-name-color="`#dbdbdb`"
@@ -64,24 +74,26 @@
           <div v-if="headerStore.continueForExistENR" class="browserBox">
             <ConfirmBox
               v-if="!dkgControl || headerStore.depositFile"
-              :top-line="`${headerStore.depositFile ? 'BACKUP DEPOSIT FILE' : 'START THE DKG'}`"
-              :bottom-line="`${
-                headerStore.depositFile
-                  ? 'Export your backup deposit file from the server to back it up'
-                  : 'When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!'
+              :top-line="`${
+                headerStore.depositFile ? `${$t('serviceModal.backUpFile')}` : `${$t('serviceModal.startDkg')}`
               }`"
-              :btn-name="`${headerStore.depositFile ? 'SAVE' : 'START'}`"
+              :bottom-line="`${
+                headerStore.depositFile ? `${$t('serviceModal.exportBackup')}` : `${$t('serviceModal.allEnrSign')}`
+              }`"
+              :btn-name="`${headerStore.depositFile ? `${$t('addModifyPanel.save')}` : `${$t('serviceModal.srart')}`}`"
               :btn-bg-color="`#192d31`"
               :btn-name-color="`#2fe4ab`"
               @confirmPluginClick="dkgSwitch"
             />
             <div v-else class="browserBox_import">
               <div class="import-title">
-                <span>PASTE THE URL</span>
+                <span>{{ $t("serviceModal.pasteUrl") }}</span>
               </div>
               <div class="enrImport">
-                <input v-model="startDKG" type="text" placeholder="Enter URL" />
-                <div class="import-btn" @click="dkgImporter">start</div>
+                <input v-model="startDKG" type="text" :placeholder="`${$t('serviceModal.entrUrl')}`" />
+                <div class="import-btn" @click="dkgImporter">
+                  {{ $t("serviceModal.srart") }}
+                </div>
               </div>
             </div>
           </div>

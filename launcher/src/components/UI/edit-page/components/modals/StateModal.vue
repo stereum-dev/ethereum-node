@@ -36,16 +36,18 @@
             class="mb-2 md:mb-0 bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-green-600"
             @click="$emit('turnOn')"
           >
-            Turn on
+            {{ $t("editModals.trnOn") }}
           </button>
           <button
             v-else
             class="mb-2 md:mb-0 bg-red-500 border border-red-500 px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-full hover:shadow-lg hover:bg-red-600"
             @click="$emit('turnOff')"
           >
-            Turn off
+            {{ $t("editModals.trnOff") }}
           </button>
-          <span class="text-xs flex justify-center items-center text-red-500 mx-auto">click outside to close</span>
+          <span class="text-xs flex justify-center items-center text-red-500 mx-auto">{{
+            $t("editModals.clckOutside")
+          }}</span>
         </div>
       </div>
     </div>

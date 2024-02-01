@@ -5,7 +5,7 @@
     <div
       class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
     >
-      <span class="self-center">Services </span>
+      <span class="self-center">{{ $t("editPageServices.services") }} </span>
     </div>
     <div
       ref="service"

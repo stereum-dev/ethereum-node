@@ -7,13 +7,13 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           for="servername"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold"
           :class="serverNameError ? 'text-red-500' : 'text-gray-300'"
-          >{{ serverNameError ? serverNameError : "Server Name" }}</label
+          >{{ serverNameError ? serverNameError : `${$t("multiServer.serverName")}` }}</label
         >
         <input
           id="servername"
           v-model="serverStore.loginState.hostName"
           type="text"
-          placeholder="Server Name"
+          :placeholder="`${$t('multiServer.serverName')}`"
           class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
         />
 
@@ -37,7 +37,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
             <span
               class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
             ></span>
-            Remove Server
+            {{ $t("loginServer.removeServer") }}
           </div>
 
           <img
@@ -57,7 +57,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
             <span
               class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
             ></span>
-            Save Server
+            {{ $t("multiServer.saveServer") }}
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <label
           for="hostname"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
-          >IP or Hostname</label
+          >{{ $t("multiServer.ipOrHost") }}</label
         >
         <input
           id="hostname"
@@ -79,7 +79,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <label
           for="port"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
-          >Port</label
+          >{{ $t("multiServer.port") }}</label
         >
         <input
           id="port"
@@ -94,7 +94,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           for="username"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold mb-2"
           :class="usernameError ? 'text-red-500' : 'text-gray-300'"
-          >{{ usernameError ? usernameError : "Username" }}</label
+          >{{ usernameError ? usernameError : `${$t("multiServer.userName")}` }}</label
         >
         <input
           id="username"
@@ -162,7 +162,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <label
           for="password"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
-          >Password</label
+          >{{ $t("multiServer.pass") }}</label
         >
         <input
           id="password"
@@ -178,7 +178,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           for="keypath"
           class="col-start-1 col-end-12 row-start-1 row-span-1 block text-xs font-bold"
           :class="message ? 'text-red-500' : 'text-gray-300'"
-          >{{ message ? message : "Key Path" }}</label
+          >{{ message ? message : `${$t("multiServer.keyPath")}` }}</label
         >
         <input
           id="keypath"
@@ -205,7 +205,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <label
           for="password"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
-          >Password</label
+          >{{ $t("multiServer.pass") }}</label
         >
         <input
           id="password"
@@ -223,7 +223,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           type="button"
           @click="internalLogin"
         >
-          Login
+          {{ $t("multiServer.login") }}
         </button>
         <div
           v-else
@@ -233,7 +233,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
             class="animate-spin h-5 w-5 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full"
             viewBox="0 0 24 24"
           ></svg>
-          Connecting . . .
+          {{ $t("multiServer.conecting") }}
         </div>
       </div>
     </form>
