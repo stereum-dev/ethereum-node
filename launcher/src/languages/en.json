@@ -879,5 +879,13 @@
     "successExit": "Successfully Exited.",
     "exitFailed": "Exit Failed.",
     "readConeq": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES"
+  },
+  "welcomePage": {
+    "logedOut": "You will be logged out of the Stereum Launcher. You will need to log back in to access your node.",
+    "logOut": "Logging out",
+    "logOutMsg": "Are you sure you want to log out?",
+    "logOutBtn": "Logout",
+    "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
+    "welcomeStereum": "Welcome to Stereum"
   }
 }
