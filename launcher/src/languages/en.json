@@ -138,7 +138,9 @@
     "off": "Switch off the service",
     "on": "Switch on the service",
     "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "restart": "restart the service",
+    "currentEpoch": "Current EPOCH",
+    "currentSlot": "Current SLOT"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
