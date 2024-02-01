@@ -582,19 +582,6 @@ const destroyNode = async () => {
 };
 const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
-  // if (manageStore.jwtToken || manageStore.externalSource) {
-  //   const extConnParams = {
-  //     extSource: manageStore.externalSource,
-  //     extJWT: manageStore.jwtToken,
-  //   };
-  //   await ControlService.getExternalSourceJWT(extConnParams);
-  // }
-  // if (manageStore.externalSource && !manageStore.jwtToken) {
-  //   extConnParams = {
-  //     extSource: manageStore.externalSource,
-  //   };
-  // }
-
   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
   setTimeout(() => {
     manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
