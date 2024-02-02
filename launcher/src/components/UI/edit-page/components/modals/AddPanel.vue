@@ -62,7 +62,6 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
 import { onMounted, ref, watchEffect } from "vue";
 import SyncCarousel from "../edit/SyncCarousel";
 import ControlService from "@/store/ControlService";
-// import { useNodeManage } from "@/store/nodeManage";
 
 const props = defineProps({
   client: {
@@ -75,7 +74,6 @@ const props = defineProps({
   },
 });
 
-// const manageStore = useNodeManage();
 const sourceLink = ref("");
 const jwtToken = ref("");
 

@@ -31,21 +31,22 @@ export class ExternalExecutionService extends NodeService {
     return service;
   }
 
-  buildExecutionClientHttpEndpointUrl(val) {
-    return val;
+  buildExecutionClientHttpEndpointUrl() {
+    return this.env.link === "" || typeof this.env.link === "undefined" ? "" : this.env.link;
   }
 
-  buildExecutionClientWsEndpointUrl(val) {
-    return val;
+  buildExecutionClientWsEndpointUrl() {
+    return this.env.link === "" || typeof this.env.link === "undefined" ? "" : this.env.link;
   }
 
-  buildExecutionClientEngineRPCHttpEndpointUrl(val) {
-    return val;
+  buildExecutionClientEngineRPCHttpEndpointUrl() {
+    return this.env.link === "" || typeof this.env.link === "undefined" ? "" : this.env.link;
   }
 
-  buildExecutionClientEngineRPCWsEndpointUrl(val) {
-    return val;
+  buildExecutionClientEngineRPCWsEndpointUrl() {
+    return this.env.link === "" || typeof this.env.link === "undefined" ? "" : this.env.link;
   }
+
   static buildByConfiguration(config) {
     const service = new ExternalExecutionService();
 

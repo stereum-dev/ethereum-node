@@ -21,9 +21,7 @@ export class NimbusBeaconService extends NodeService {
           (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
         ).destinationPath;
         volumes.push(new ServiceVolume(elJWTDir, JWTDir));
-        return client.service?.includes("ExternalExecutionService")
-          ? client.buildExecutionClientEngineRPCWsEndpointUrl(client.env.link)
-          : client.buildExecutionClientEngineRPCWsEndpointUrl();
+        return client.buildExecutionClientEngineRPCWsEndpointUrl();
       })
       .join();
 

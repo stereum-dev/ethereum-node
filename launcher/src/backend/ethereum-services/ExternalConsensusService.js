@@ -28,16 +28,16 @@ export class ExternalConsensusService extends NodeService {
     return service;
   }
 
-  buildConsensusClientHttpEndpointUrl(val) {
-    return val;
+  buildConsensusClientHttpEndpointUrl() {
+    return this.env.link === "" || typeof this.env.link === "undefined" ? "" : this.env.link;
   }
 
-  buildConsensusClientEndpoint(val) {
-    return val;
+  buildConsensusClientEndpoint() {
+    return this.env.link === "" || typeof this.env.link === "undefined" ? "" : this.env.link;
   }
 
-  buildConsensusClientGateway(val) {
-    return val;
+  buildConsensusClientGateway() {
+    return this.env.link === "" || typeof this.env.link === "undefined" ? "" : this.env.link;
   }
 
   static buildByConfiguration(config) {

@@ -20,9 +20,7 @@ export class LighthouseValidatorService extends NodeService {
 
     const eth2Nodes = consensusClients
       .map((client) => {
-        return client.service?.includes("ExternalConsensusService")
-          ? client.buildConsensusClientHttpEndpointUrl(client.env.link)
-          : client.buildConsensusClientHttpEndpointUrl();
+        return client.buildConsensusClientHttpEndpointUrl();
       })
       .join();
 

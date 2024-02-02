@@ -108,7 +108,6 @@ onMounted(() => {
 const confirmInstall = () => {
   if (getConfirmText.value === "confirm") {
     props.client.addPanel = false;
-    console.log(properties.value);
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||

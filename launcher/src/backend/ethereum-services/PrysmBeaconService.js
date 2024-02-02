@@ -32,9 +32,7 @@ export class PrysmBeaconService extends NodeService {
           (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
         ).destinationPath;
         volumes.push(new ServiceVolume(elJWTDir, JWTDir));
-        return client.service?.includes("ExternalExecutionService")
-          ? client.buildExecutionClientEngineRPCHttpEndpointUrl(client.env.link)
-          : client.buildExecutionClientEngineRPCHttpEndpointUrl();
+        return client.buildExecutionClientEngineRPCHttpEndpointUrl();
       })
       .join();
 
