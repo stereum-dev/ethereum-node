@@ -1,6 +1,6 @@
 <template>
   <div
-    class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-2 items-center gap-1 relative mt-1"
+    class="col-start-2 col-span-1 row-start-1 row-span-full grid grid-cols-3 grid-rows-2 items-center gap-1 relative mt-1 mr-1"
     @pointerdown.prevent.stop
   >
     <div class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md">
