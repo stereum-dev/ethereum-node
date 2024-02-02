@@ -1224,6 +1224,12 @@ export class ServiceManager {
       }
       if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
     });
+
+    await Promise.all(
+      newServices.map(async (service) => {
+        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      })
+    );
     await this.createKeystores(
       newServices.filter(
         (s) =>
@@ -1232,11 +1238,6 @@ export class ServiceManager {
           s.service.includes("SSVNetwork") ||
           s.service.includes("External")
       )
-    );
-    await Promise.all(
-      newServices.map(async (service) => {
-        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
-      })
     );
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
     await this.initKeysAPI(newServices.filter((s) => s.service === "KeysAPIService"));
