@@ -15,7 +15,7 @@
       <div
         v-for="item in getServices"
         :key="item"
-        class="max-h-[70px] max-w-[160px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md mt-8"
+        class="max-h-[70px] max-w-[160px] grid grid-cols-2 py-2 items-center rounded-md border border-gray-700 bg-[#212629] shadow-md mt-8"
       >
         <ServiceLayout :client="item" />
         <ServiceButtons
