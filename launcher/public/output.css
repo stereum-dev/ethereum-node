@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.0 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -5217,11 +5217,11 @@ html body {
   }
 }
 
-:is(:where([dir="rtl"]) .rtl\:left-0){
+.rtl\:left-0:where([dir="rtl"], [dir="rtl"] *){
   left: 0px;
 }
 
-:is(:where([dir="rtl"]) .rtl\:right-auto){
+.rtl\:right-auto:where([dir="rtl"], [dir="rtl"] *){
   right: auto;
 }
 

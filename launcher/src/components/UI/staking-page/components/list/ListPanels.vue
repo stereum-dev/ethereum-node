@@ -177,9 +177,9 @@ const groupingPanel = () => {
   stakingStore.isGroupingAllowed = true;
 };
 const removeGroup = () => {
-  stakingStore.isGroupListActive = false;
-  stakingStore.setActivePanel("insert");
   if (stakingStore.currentGroup) {
+    stakingStore.isGroupListActive = false;
+    stakingStore.setActivePanel("insert");
     emit("removeGroup", stakingStore.currentGroup);
   }
 };
