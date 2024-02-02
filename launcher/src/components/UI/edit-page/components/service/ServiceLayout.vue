@@ -10,7 +10,7 @@
       {{ client.name }}
       <span class="w-5 h-4 bg-green-500 border border-green-500 rounded-r-full"></span>
     </div> -->
-    <div class="w-full flex justify-start items-center mt-1">
+    <div class="w-full flex justify-start items-center">
       <img class="w-10" :src="client.sIcon" alt="icon" />
     </div>
   </div>

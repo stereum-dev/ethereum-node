@@ -1,31 +1,33 @@
 <template>
-  <div
-    class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] relative hover:scroll-auto overflow-y-auto"
-  >
+  <div class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] grid grid-cols-6 grid-rows-15">
     <div
-      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
+      class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
     >
       <span class="self-center">{{ $t("editPageServices.services") }} </span>
     </div>
     <div
       ref="service"
-      style="padding-right: 0 !important"
-      class="h-full max-h-[430px] flex flex-col space-y-4 items-center pt-2 px-1 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
+      class="col-start-1 col-span-full row-start-2 row-span-full flex flex-col justify-start space-y-2 items-center overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent px-1"
     >
       <div
         v-for="item in getServices"
         :key="item"
-        class="max-h-[70px] max-w-[160px] grid grid-cols-2 py-2 rounded-md border border-gray-700 bg-[#212629] shadow-md mt-8"
+        class="h-[90px] w-full grid grid-cols-2 grid-rows-5 items-center rounded-md border border-gray-700 border-t-0"
       >
-        <ServiceLayout :client="item" />
-        <ServiceButtons
-          :client="item"
-          @handle-state="useStateHandler"
-          @restart-service="useRestartService"
-          @open-expert="openExpert(item)"
-          @open-logs="openLogs"
-          @open-docs="openDocs"
-        />
+        <ClientStatus :client="item" />
+        <div
+          class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-2 grid-rows-2 bg-[#212629] shadow-md mx-auto"
+        >
+          <ServiceLayout :client="item" />
+          <ServiceButtons
+            :client="item"
+            @handle-state="useStateHandler"
+            @restart-service="useRestartService"
+            @open-expert="openExpert(item)"
+            @open-logs="openLogs"
+            @open-docs="openDocs"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -36,6 +38,7 @@ import { useStateHandler, useRestartService } from "@/composables/services";
 import { useServices } from "@/store/services";
 import ServiceLayout from "./ServiceLayout.vue";
 import ServiceButtons from "./ServiceButtons.vue";
+import ClientStatus from "./ClientStatus.vue";
 import { computed } from "vue";
 
 const emit = defineEmits(["openExpert", "openLogs"]);

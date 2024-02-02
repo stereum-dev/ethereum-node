@@ -12,6 +12,9 @@ module.exports = {
         7: "repeat(7 , minmax(0,1fr))",
         8: "repeat(8 , minmax(0,1fr))",
         12: "repeat(12 , minmax(0,1fr))",
+        13: "repeat(13 , minmax(0,1fr))",
+        14: "repeat(14 , minmax(0,1fr))",
+        15: "repeat(15 , minmax(0,1fr))",
       },
 
       gridTemplateColumns: {
@@ -56,6 +59,7 @@ module.exports = {
         11: "11",
         12: "12",
         13: "13",
+        14: "14",
       },
       gridRowEnd: {
         6: "6",
@@ -66,6 +70,7 @@ module.exports = {
         11: "11",
         12: "12",
         13: "13",
+        14: "14",
       },
     },
   },
