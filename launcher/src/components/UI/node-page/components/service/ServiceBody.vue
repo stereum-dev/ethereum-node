@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] relative hover:scroll-auto overflow-y-auto"
+    class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] relative hover:scroll-auto overflow-y-auto px-2"
   >
     <div
       class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
@@ -10,7 +10,7 @@
     <div
       ref="service"
       style="padding-right: 0 !important"
-      class="h-full max-h-[430px] flex flex-col space-y-4 items-center pt-2 px-1 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
+      class="h-full max-h-[430px] flex flex-col space-y-4 items-center pt-2 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
     >
       <div
         v-for="item in getServices"

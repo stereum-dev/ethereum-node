@@ -8,12 +8,12 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
-      class="w-[156px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
+      class="w-[147px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
     >
       {{ props.client.name }}
       <span :class="clientStatus"></span>
     </div>
-    <div class="flex justify-center items-center">
+    <div class="flex justify-start items-center pl-2">
       <img class="w-3/5" :src="props.client.sIcon" alt="icon" />
     </div>
   </div>
