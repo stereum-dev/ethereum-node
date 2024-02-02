@@ -22,6 +22,7 @@
         @delete-preview="deletePreviewKey"
         @confirm-graffiti="confirmEnteredGrafiti"
         @confirm-remote="confirmImportRemoteKeys"
+        @remove-group="removeGroupConfirm"
       />
       <ManagementSection
         @graffiti-panel="graffitiPanelHandler"
@@ -215,7 +216,7 @@ const importKey = async (val) => {
   stakingStore.importKeyMessage = await ControlService.importKey(
     stakingStore.selectedValidatorService.config.serviceID
   );
-  console.log(stakingStore.importKeyMessage);
+
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];

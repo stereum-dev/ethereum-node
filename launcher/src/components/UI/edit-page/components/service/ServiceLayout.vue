@@ -4,13 +4,13 @@
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div
+    <!-- <div
       class="w-[155px] h-4 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-gray-300 font-semibold text-[10px] capitalize"
     >
       {{ client.name }}
       <span class="w-5 h-4 bg-green-500 border border-green-500 rounded-r-full"></span>
-    </div>
-    <div class="w-full flex justify-center items-center mt-1">
+    </div> -->
+    <div class="w-full flex justify-start items-center">
       <img class="w-10" :src="client.sIcon" alt="icon" />
     </div>
   </div>

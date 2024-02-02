@@ -10,29 +10,29 @@
     </div>
     <div
       ref="service"
-      class="h-full max-h-[430px] flex flex-col space-y-4 items-center pt-10 px-1 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
+      class="h-full max-h-[430px] flex flex-col space-y-2 items-center justify-start pt-8 px-1 overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent"
       :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
     >
       <div
         v-for="item in getServices"
         :key="item"
-        class="w-full max-h-[78px] grid grid-cols-2 py-2 rounded-md border border-gray-600 shadow-md mx-auto"
+        class="w-full max-h-[78px] grid grid-cols-2 p-2 rounded-md border border-gray-600 shadow-md mx-auto"
         :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
         style="cursor: default"
         @mouseenter="footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <ServiceLayout :client="item" />
-        <div class="w-full h-full grid grid-cols-2">
+        <div class="w-full h-full grid grid-cols-2 items-center">
           <div
             v-if="item.service === 'FlashbotsMevBoostService' && !item.isRemoveProcessing"
-            class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1 hover:border-gray-300"
+            class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 hover:border-gray-300"
             @click="changeConnection(item)"
           >
             <img class="w-5 z-10" src="/img/icon/manage-node-icons/connection.png" alt="" @mousedown.prevent.stop />
           </div>
           <div
-            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 mt-1"
+            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200"
             :class="{
               'border-red-500': item.displayTooltip,
               'pointer-events-none': item.isRemoveProcessing,

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.0 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -1693,6 +1693,22 @@ video {
   height: 100vh;
 }
 
+.h-\[80px\]{
+  height: 80px;
+}
+
+.h-\[90px\]{
+  height: 90px;
+}
+
+.h-\[21px\]{
+  height: 21px;
+}
+
+.h-\[18px\]{
+  height: 18px;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -1815,6 +1831,10 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-\[80px\]{
+  max-height: 80px;
 }
 
 .min-h-11{
@@ -1985,16 +2005,16 @@ video {
   width: 120px;
 }
 
+.w-\[147px\]{
+  width: 147px;
+}
+
 .w-\[150px\]{
   width: 150px;
 }
 
 .w-\[155px\]{
   width: 155px;
-}
-
-.w-\[156px\]{
-  width: 156px;
 }
 
 .w-\[15px\]{
@@ -2087,6 +2107,10 @@ video {
   width: 100vw;
 }
 
+.w-\[154px\]{
+  width: 154px;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -2103,8 +2127,8 @@ video {
   min-width: 50px;
 }
 
-.max-w-\[160px\]{
-  max-width: 160px;
+.max-w-\[145px\]{
+  max-width: 145px;
 }
 
 .max-w-\[180px\]{
@@ -2371,6 +2395,10 @@ video {
   grid-template-rows: repeat(12 , minmax(0,1fr));
 }
 
+.grid-rows-14{
+  grid-template-rows: repeat(14 , minmax(0,1fr));
+}
+
 .grid-rows-2{
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
@@ -2397,6 +2425,10 @@ video {
 
 .grid-rows-8{
   grid-template-rows: repeat(8 , minmax(0,1fr));
+}
+
+.grid-rows-15{
+  grid-template-rows: repeat(15 , minmax(0,1fr));
 }
 
 .flex-col{
@@ -2860,6 +2892,10 @@ video {
 
 .border-t-2{
   border-top-width: 2px;
+}
+
+.border-t-0{
+  border-top-width: 0px;
 }
 
 .border-dashed{
@@ -3800,14 +3836,6 @@ video {
   padding-top: 0.25rem;
 }
 
-.pt-10{
-  padding-top: 2.5rem;
-}
-
-.pt-2{
-  padding-top: 0.5rem;
-}
-
 .pt-20{
   padding-top: 5rem;
 }
@@ -3822,6 +3850,10 @@ video {
 
 .pt-8{
   padding-top: 2rem;
+}
+
+.pt-2{
+  padding-top: 0.5rem;
 }
 
 .text-left{
@@ -5217,11 +5249,11 @@ html body {
   }
 }
 
-:is(:where([dir="rtl"]) .rtl\:left-0){
+.rtl\:left-0:where([dir="rtl"], [dir="rtl"] *){
   left: 0px;
 }
 
-:is(:where([dir="rtl"]) .rtl\:right-auto){
+.rtl\:right-auto:where([dir="rtl"], [dir="rtl"] *){
   right: auto;
 }
 
