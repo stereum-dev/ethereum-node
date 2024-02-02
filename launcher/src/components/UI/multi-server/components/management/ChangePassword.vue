@@ -11,7 +11,7 @@
           for="new"
           :class="{ 'text-red-500': error, 'text-gray-300': !error }"
           class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-semibold h-fit"
-          >New Password</label
+          >{{ $t("multiServer.newPass") }}</label
         >
         <input
           id="new"
@@ -20,7 +20,7 @@
           :name="password"
           class="col-start-1 col-end-11 row-start-2 row-span-1 w-full h-6 text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
           :class="error ? 'border-red-500' : 'border-transparent'"
-          placeholder="Enter a new password"
+          :placeholder="`${$t('multiServer.EnterNewPass')}`"
           @input="handleInput"
         />
       </div>
@@ -32,7 +32,7 @@
           :class="{ 'text-red-500': error, 'text-gray-300': !error }"
           class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-semibold"
         >
-          {{ error ? errorMessage : "Verify Password" }}
+          {{ error ? errorMessage : `${$t("multiServer.verifyPass")}` }}
         </label>
         <div
           class="col-start-1 col-span-full row-start-2 row-span-2 w-full h-full bg-gray-800 rounded-l-md grid grid-cols-12 items-center"
@@ -44,7 +44,7 @@
             :name="verifyPassword"
             class="col-start-1 col-end-11 w-full h-6 text-xs bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
             :class="error ? 'border-red-500' : 'border-transparent'"
-            placeholder="Enter a new password"
+            :placeholder="`${$t('multiServer.EnterNewPass')}`"
             @input="handleInput"
             @keydown.enter="changePassword"
           />
@@ -67,12 +67,12 @@
       v-else
       class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-1 flex flex-col justify-start items-start space-y-2"
     >
-      <span class="text-gray-300 text-xs font-semibold uppercase">Change / Reset Password</span>
+      <span class="text-gray-300 text-xs font-semibold uppercase">{{ $t("multiServer.chngResPass") }}</span>
       <button
         class="w-full h-full bg-teal-700 hover:bg-teal-900 text-gray-200 font-semibold py-1 px-4 rounded-md flex justify-center items-center cursor-pointer space-x-2 transition-all duration-200 ease-in-out active:scale-95 shadow-lg shadow-black active:shadow-none"
         @click="serverStore.isChangingPasswordActive = true"
       >
-        <span class="text-[12px] uppercase font-semibold text-gray-100">Change Password</span>
+        <span class="text-[12px] uppercase font-semibold text-gray-100">{{ $t("multiServer.chngPass") }}</span>
       </button>
     </div>
   </div>

@@ -20,7 +20,7 @@
       </div>
       <div v-else class="message-box">
         <p class="msg-title">
-          Processing
+          {{ $t("customAnim.processing") }}
           <span class="dot-flashing"></span>
         </p>
       </div>

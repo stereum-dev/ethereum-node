@@ -1,22 +1,22 @@
 <template>
   <div class="col-start-1 col-span-full row-start-1 row-span-full p-2 grid grid-cols-12 grid-rows-12 items-center">
     <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
-      <span class="text-sm text-gray-200 text-left font-semibold uppercase">SAVED SERVER CONNECTIONS</span>
+      <span class="text-sm text-gray-200 text-left font-semibold uppercase">{{ $t("multiServer.saveServerCon") }}</span>
     </div>
     <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
-      <label for="Search" class="sr-only"> Search </label>
+      <label for="Search" class="sr-only"> {{ $t("multiServer.serch") }} </label>
 
       <input
         id="Search"
         v-model="searchQuery"
         type="text"
-        placeholder="Search for..."
+        :placeholder="`${$t('multiServer.serchFor')}`"
         class="w-full h-8 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm px-2"
       />
 
       <span class="absolute inset-y-0 end-0 grid w-10 place-content-center">
         <button type="button" class="text-gray-600 hover:text-gray-700">
-          <span class="sr-only">Search</span>
+          <span class="sr-only">{{ $t("multiServer.serch") }} </span>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +56,7 @@
         src="/img/icon/form-setup/plus.png"
         alt="Add Icon"
       />
-      <span class="text-sm text-left uppercase font-bold">ADD A NEW SERVER CONNECTION</span>
+      <span class="text-sm text-left uppercase font-bold">{{ $t("multiServer.addServer") }}</span>
     </button>
   </div>
 </template>

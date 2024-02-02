@@ -11,7 +11,9 @@
         alt="Block Icon"
         @mousedown.prevent
       />
-      <span class="col-start-2 col-span-full text-[9px] text-amber-300 font-semibold">Reward</span>
+      <span class="col-start-2 col-span-full text-[9px] text-amber-300 font-semibold">{{
+        $t("stakingPage.reward")
+      }}</span>
     </div>
     <div
       class="w-full h-full col-start-3 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1"

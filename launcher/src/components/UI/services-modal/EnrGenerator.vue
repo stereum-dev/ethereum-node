@@ -2,7 +2,9 @@
   <div class="obol-modal-plugin_parent">
     <div class="obol-modal-plugin_header">
       <span>{{
-        headerStore.distrubutedValidatorGenerator ? "DISTRIBUTED VALIDATOR GENERATION" : "GENERATING NEW ENR"
+        headerStore.distrubutedValidatorGenerator
+          ? `${$t("serviceModal.distributedValidator")}`
+          : `${$t("serviceModal.generateEnr")}`
       }}</span>
     </div>
     <div
@@ -40,7 +42,6 @@ const enrGeneratedContinue = ref(false);
 const dummmmmmmy = ref([]);
 const backupDistributedValidator = ref(false);
 const distrubutedValidatorAnimation = ref("url('./img/icon/service-icons/obol_animation.gif')");
-// const nukeNode = ref("url('./img/icon/service-icons/obol_animation.gif')");
 const distributedCompleted = ref(false);
 
 const headerStore = useNodeHeader();

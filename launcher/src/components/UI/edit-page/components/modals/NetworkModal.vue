@@ -2,10 +2,10 @@
   <custom-modal
     :main-title="network.name"
     :client="manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork"
-    sub-title="Switch Network"
-    :message-text="`Select a network to replace the ${network.name}.`"
-    confirm-text="Confirm"
-    click-outside-text="Click outside to cancel"
+    :sub-title="`${$t('editModals.switchNetwork')}`"
+    :message-text="`${$t('editModals.selectNetwork')} ${network.name}.`"
+    :confirm-text="`${$t('editModals.confirm')}`"
+    :click-outside-text="`${$t('editModals.clckOutside')}`"
     @close-window="closeWindow"
     @confirm-action="switchConfirm"
   >

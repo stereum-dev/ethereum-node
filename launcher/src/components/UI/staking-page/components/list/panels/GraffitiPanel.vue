@@ -9,9 +9,9 @@
       aria-live="assertive"
     >
       <div class="flex items-center gap-2 text-red-800">
-        <strong class="block font-medium"> Something went wrong </strong>
+        <strong class="block font-medium">{{ $t("stakingPage.somethingWrong") }}</strong>
       </div>
-      <p class="mt-2 text-sm text-red-700">Entered Graffiti Not Valid.</p>
+      <p class="mt-2 text-sm text-red-700">{{ $t("stakingPage.enteredGraffitti") }}</p>
     </div>
     <div class="w-full h-full grid grid-cols-12 grid-rows-1 py-[2px]">
       <img

@@ -61,6 +61,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
 import { computed, defineAsyncComponent, watchEffect, shallowRef } from "vue";

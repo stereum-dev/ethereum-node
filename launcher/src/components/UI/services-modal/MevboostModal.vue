@@ -48,7 +48,7 @@
             <p>{{ $t("serviceModals.blockRelTxt") }}.</p>
           </div>
           <div class="btn-box">
-            <span class="openBtn" @click="displayRelaysBlock">OPEN</span>
+            <span class="openBtn" @click="displayRelaysBlock">{{ $t("serviceModal.open") }}</span>
           </div>
         </div>
       </div>
