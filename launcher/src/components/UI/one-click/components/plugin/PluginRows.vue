@@ -15,7 +15,7 @@
       </div>
       <change-modal v-if="plugin.openReplaceModal" :client="plugin">
         <div
-          v-for="(item, idx) in props.filteredPlugin"
+          v-for="(item, idx) in existingPluginsToReplace"
           :key="idx"
           class="col-span-1 w-9 h-9 flex justify-center items-center relative rounded-md p-1 justify-self-center self-center hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer active:scale-100"
           :class="item.replacePanel ? 'bg-teal-500' : 'bg-[#191c21]'"
@@ -39,6 +39,7 @@
 import ChangeModal from "../modals/ChangeModal.vue";
 import { useServices } from "@/store/services";
 import { useClickInstall } from "@/store/clickInstallation";
+import { computed } from "vue";
 
 const props = defineProps({
   filteredPlugin: Array,
@@ -48,6 +49,12 @@ const emit = defineEmits(["changeHandler", "pluginExchange"]);
 
 const clickStore = useClickInstall();
 const serviceStore = useServices();
+
+const existingPluginsToReplace = computed(() => {
+  return props.filteredPlugin.filter((i) => {
+    return i.service !== "ExternalExecutionService" && i.service !== "ExternalConsensusService";
+  });
+});
 
 const runningTooltip = (el) => {
   serviceStore.allServices.filter((i) => {

@@ -22,7 +22,9 @@ export class LighthouseBeaconService extends NodeService {
     // eth1 nodes
     const eth1Nodes = executionClients
       .map((client) => {
-        const elJWTDir = client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+        const elJWTDir = client.volumes.find(
+          (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
+        ).destinationPath;
         volumes.push(new ServiceVolume(elJWTDir, JWTDir));
         return client.buildExecutionClientEngineRPCHttpEndpointUrl();
       })
@@ -105,8 +107,9 @@ export class LighthouseBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${
+      this.id
+    }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

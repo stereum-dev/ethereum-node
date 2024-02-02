@@ -13,7 +13,11 @@
               <img src="/img/icon/manage-node-icons/white-arrow-up.png" alt="" />
             </div>
             <div ref="pluginsTable" class="plugins-table">
-              <div v-for="(item, index) in installedServices" :key="index" class="plugins-row">
+              <div
+                v-for="(item, index) in installedServices"
+                :key="index"
+                class="plugins-row"
+              >
                 <div
                   class="plugins-pending-state"
                   :class="{
@@ -32,7 +36,13 @@
                 </div>
                 <div class="service-edit">
                   <div class="edit-box">
-                    <div class="icon-bg">
+                    <div
+                      v-if="
+                        item.service !== 'ExternalExecutionService' &&
+                        item.service !== 'ExternalConsensusService'
+                      "
+                      class="icon-bg"
+                    >
                       <div class="power-icon">
                         <img
                           v-if="item.isServicePending"
@@ -99,7 +109,9 @@
       <div class="dashboard-container border-4 border-gray-500 bg-black rounded-md">
         <control-dashboard></control-dashboard>
       </div>
-      <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
+      <div
+        class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2"
+      >
         <control-alert @expert-handler="expertModeHandlerAlert"></control-alert>
       </div>
     </div>
@@ -162,7 +174,9 @@ export default {
       dialog: "dialog",
     }),
     isAnyConsensusRunning() {
-      const consensusServices = this.installedServices.filter((item) => item.category === "consensus");
+      const consensusServices = this.installedServices.filter(
+        (item) => item.category === "consensus"
+      );
 
       if (consensusServices.length === 0) {
         return false;
