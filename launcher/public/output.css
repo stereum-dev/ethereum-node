@@ -2359,6 +2359,10 @@ video {
   grid-template-columns: repeat(9, minmax(0, 1fr));
 }
 
+.grid-cols-8{
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
 .grid-rows-1{
   grid-template-rows: repeat(1, minmax(0, 1fr));
 }
@@ -3574,6 +3578,11 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#336363\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(51 99 99 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
 }
@@ -3908,6 +3917,11 @@ video {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-3xl{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .font-bold{
