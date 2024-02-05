@@ -405,20 +405,28 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
-  manageStore.isLineHidden = true;
+  let dataObject = {
+    network: manageStore.configNetwork.network,
+    installDir: item.installDir || "/opt/stereum",
+    executionClients: item.executionClients,
+    consensusClients: item.consensusClients,
+    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+    checkpointURL: item.checkPointSyncUrl || false,
+  };
+
+  if (item.client.service === "ExternalExecutionService") {
+    dataObject.source = item.client.config?.source;
+    dataObject.jwtToken = item.client.config?.jwtToken;
+  } else if (item.client.service === "ExternalConsensusService") {
+    dataObject.source = item.client.config?.source;
+  }
+
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
     contentIcon: "/img/icon/manage-node-icons/install.png",
     service: item.client,
-    data: {
-      network: manageStore.configNetwork.network,
-      installDir: item.installDir ? item.installDir : "/opt/stereum",
-      executionClients: item.executionClients,
-      consensusClients: item.consensusClients,
-      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-      checkpointURL: item.checkPointSyncUrl ? item.checkPointSyncUrl : false,
-    },
+    data: dataObject,
   });
 };
 

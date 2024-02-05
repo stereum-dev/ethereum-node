@@ -45,7 +45,12 @@
             "
             @mouseleave="footerStore.cursorLocation = ''"
           >
-            <img class="w-5 z-10" src="/img/icon/manage-node-icons/trash.png" alt="" @mousedown.prevent.stop />
+            <img
+              class="w-5 z-10 cursor-pointer"
+              src="/img/icon/manage-node-icons/trash.png"
+              alt=""
+              @mousedown.prevent.stop
+            />
           </div>
         </div>
       </div>
