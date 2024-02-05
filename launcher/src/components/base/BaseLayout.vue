@@ -10,20 +10,30 @@
         :class="logoDisabled ? 'pointer-events-none ' : ''"
         @mousedown.prevent.stop
       >
-        <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
+        <LogoButton
+          :server-acc="serverAccMange"
+          @access-handler="serverAccessHandler"
+          @mouse-leave="mouseLeave"
+        />
       </div>
 
       <MainNavbar />
     </div>
-    <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative">
+    <div
+      class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative"
+    >
       <slot></slot>
     </div>
-    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
+    <div
+      class="w-full h-[30px] rounded-b-lg bg-[#33393E]"
+      @pointerdown.prevent.stop
+      @mousedown.prevent.stop
+    >
       <TheFooter />
       <TaskManager />
     </div>
     <Transition name="slide-fade">
-      <ServerScreen
+      <MultiServerScreen
         v-if="
           serverStore.isServerAccessManagementActive &&
           router.currentRoute.value.fullPath !== '/config/play' &&
@@ -39,8 +49,8 @@
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
-import ServerScreen from "../UI/multi-server/ServerScreen.vue";
-import LogoButton from "../UI/multi-server/components/LogoButton.vue";
+import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
+import LogoButton from "../UI/server-management/components/LogoButton.vue";
 import { useFooter } from "@/store/theFooter";
 import { ref, computed } from "vue";
 import i18n from "../../../../launcher/src/includes/i18n";

@@ -12,16 +12,23 @@
         @pointerdown.prevent.stop
         @mousedown.prevent.stop
       >
-        <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
+        <LogoButton
+          :server-acc="serverAccMange"
+          @access-handler="serverAccessHandler"
+          @mouse-leave="mouseLeave"
+        />
       </div>
 
       <slot></slot>
     </div>
     <TaskManager
-      v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
+      v-if="
+        router.currentRoute.value.fullPath !== '/login' &&
+        router.currentRoute.value.fullPath !== '/welcome'
+      "
     />
     <Transition name="slide-fade">
-      <ServerScreen
+      <MultiServerScreen
         v-if="
           serverStore.isServerAccessManagementActive &&
           router.currentRoute.value.fullPath !== '/config/play' &&
@@ -34,9 +41,9 @@
   </div>
 </template>
 <script setup>
-import LogoButton from "../UI/multi-server/components/LogoButton.vue";
+import LogoButton from "../UI/server-management/components/LogoButton.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
-import ServerScreen from "../UI/multi-server/ServerScreen.vue";
+import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 import { useRouter } from "vue-router";
