@@ -1,8 +1,10 @@
 <template>
-  <div class="col-start-2 col-end-3 gap-y-5 pt-4 pb-2 grid grid-flow-row auto-rows-max relative">
+  <div
+    class="col-start-2 col-end-3 gap-y-5 pt-4 pb-2 grid grid-flow-row auto-rows-max relative"
+  >
     <div
       v-for="item in getConsensus"
-      :key="item.config.serviceID"
+      :key="item.config.serviceID + item.id"
       :ref="
         (el) => {
           item.ref = el;
@@ -37,7 +39,14 @@ import GeneralMenu from "./GeneralMenu.vue";
 import { computed } from "vue";
 
 //Props & Emits
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
+const emit = defineEmits([
+  "deleteService",
+  "switchClient",
+  "modifyService",
+  "infoModal",
+  "mouseOver",
+  "mouseLeave",
+]);
 
 //Refs
 

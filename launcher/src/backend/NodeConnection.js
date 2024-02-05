@@ -146,7 +146,7 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error("not implemented yet");
     } else if (this.os == nodeOS.ubuntu) {
-      log.debug("procede on ubuntu");
+      log.debug("proceed on ubuntu");
       this.taskManager.otherSubTasks.push({
         name: "Check OS",
         otherRunRef: ref,
@@ -170,7 +170,7 @@ export class NodeConnection {
           otherRunRef: ref,
           status: false,
           data:
-            "This error might occur beacuse of a missing interaction. Running this command manually may fix this problem: apt update && apt install -y software-properties-common && add-apt-repository --yes --update ppa:ansible/ansible && apt install -y pip ansible tar gzip wget git \n\n\nError: " +
+            "This error might occur because of a missing interaction. Running this command manually may fix this problem: apt update && apt install -y software-properties-common && add-apt-repository --yes --update ppa:ansible/ansible && apt install -y pip ansible tar gzip wget git \n\n\nError: " +
             installPkgResult.stderr,
         });
         this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });

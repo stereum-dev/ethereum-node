@@ -22,6 +22,7 @@
         @delete-preview="deletePreviewKey"
         @confirm-graffiti="confirmEnteredGrafiti"
         @confirm-remote="confirmImportRemoteKeys"
+        @remove-group="removeGroupConfirm"
       />
       <ManagementSection
         @graffiti-panel="graffitiPanelHandler"
@@ -215,7 +216,7 @@ const importKey = async (val) => {
   stakingStore.importKeyMessage = await ControlService.importKey(
     stakingStore.selectedValidatorService.config.serviceID
   );
-  console.log(stakingStore.importKeyMessage);
+
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];
@@ -528,7 +529,7 @@ const deletePreviewKey = async (item) => {
 
 //**** Client Commands Buttons ****
 
-// ****** Fee Recepient *******
+// ****** Fee Recipient *******
 const confirmFeeRecepient = async () => {
   const key = stakingStore.selectKeyForFee;
   if (key) {
@@ -548,7 +549,7 @@ const confirmFeeRecepient = async () => {
   stakingStore.setActivePanel(null);
 };
 
-// ****** End of Fee Recepient *******
+// ****** End of Fee Recipient *******
 
 //****** Withdraw & Exit *******
 const withdrawModalHandler = () => {

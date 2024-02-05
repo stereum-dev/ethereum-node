@@ -55,7 +55,9 @@
     "stake": "使用 32 ETH",
     "rpc": "RPC 连接",
     "written": "Written Guides",
-    "video": "Video Guides"
+    "video": "Video Guides",
+    "stereumTutorial": "stereum tutorials",
+    "statBox": "status box"
   },
   "pluginZone": {
     "client": "客户"
@@ -136,7 +138,9 @@
     "off": "Switch off the service",
     "on": "Switch on the service",
     "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "restart": "restart the service",
+    "currentEpoch": "Current EPOCH",
+    "currentSlot": "Current SLOT"
   },
   "taskManager": {
     "clickDisplay": "点击任务显示"
@@ -203,7 +207,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "输入您的验证密码及使用此秘钥退出区块链",
-    "confirm": "确认"
+    "confirm": "CONFIRM"
   },
   "exitValidatorModal": {
     "modalMessage": "您确定要使用已选择的验证密钥退出区块链吗？这将停止您的验证操作且不可撤销。 您的资金也只有在链条允许的情况下才可提款。",
@@ -305,7 +309,11 @@
     "pageTitle": "插件日记",
     "noLogFound": "在列表中找不到日记",
     "clickCopy": "双击复制日记",
-    "serviceId": "服务器账号"
+    "serviceId": "Service ID:",
+    "exportAll": "Export All Logs",
+    "export150": "Export 150 Logs",
+    "cat": "Category:",
+    "ver": "Version:"
   },
   "serviceModals": {
     "localApp": "应用",
@@ -329,7 +337,7 @@
     "syncMessage": "由原始区块链同步您的客户端",
     "portused": "已使用端口",
     "cancel": "取消",
-    "save": "保存",
+    "save": "SAVE",
     "add": "添加",
     "clickAndAdd": "点击ADD"
   },
@@ -359,7 +367,8 @@
   "restartModal": {
     "restartMessage": "您的节点可因此操作离线！",
     "restart": "重启",
-    "confirmMessage": "您确定要转向您的节点"
+    "confirmMessage": "您确定要转向您的节点",
+    "areYouSure": "are you sure you want to"
   },
   "nukeModal": {
     "nukeQ": "是否确认要从系统中删除以太坊和所有服务器？",
@@ -448,7 +457,9 @@
     "clkFee": "Service Settings",
     "clkUpdate": "Click to open update panel",
     "sync": "Synchronization Error",
-    "taskFail": "task failed"
+    "taskFail": "Task Failed",
+    "stats": "STATUS: OPEN",
+    "clientService": "CLIENT / SERVICE"
   },
   "resyncModal": {
     "message": "您的客户端将区块链数据存储在您的服务器上所以您的节点可为网络服务。 这对于您的节点的币安质押中提升其证明工作是必要的。 通过使用此选项来删除您的客户端数据，并使用该选择同步您的节点。",
@@ -588,7 +599,11 @@
     "availableUpdt": "New update is available",
     "updtPan": "update panel",
     "setting": "Stereum settings",
-    "logOutBtn": "Log out"
+    "logOutBtn": "Log out",
+    "rem": "REMOVE",
+    "node": "NODE",
+    "control": "CONTROL",
+    "staking": "STAKING"
   },
   "switchNetwork": {
     "message": "This is the current network, you can click to select another network"
@@ -688,5 +703,189 @@
     "trnOn": "Turn your node on",
     "trnOff": "Turn your node off",
     "expNode": "Export your Node Configuration"
+  },
+  "customAnim": {
+    "processing": "Processing"
+  },
+  "customFooter": {
+    "back": "BACK",
+    "next": "NEXT"
+  },
+  "configDetails": {
+    "addConfig": "Add Config"
+  },
+  "editBody": {
+    "executionClient": "Execution Client",
+    "consensusClient": "Consensus Client",
+    "validator": "Validator"
+  },
+  "editModals": {
+    "noAvailService": "There is no available service",
+    "executionClients": "Execution Clients",
+    "consensusClients": "Consensus Clients",
+    "validatorClients": "Validator Clients",
+    "installationPath": "Installation Path",
+    "syncMode": "Sync Mode",
+    "serviceId": "Service ID",
+    "serviceCat": "Service Category",
+    "modifyConnection": "Modify Connection",
+    "confirm": "Confirm",
+    "clckOutside": "Click outside to close",
+    "switchNetwork": "Switch Network",
+    "selectNetwork": "Select a network to replace the",
+    "switchTo": "Switch To",
+    "trnOn": "Turn on",
+    "trnOff": "Turn off",
+    "selectClient": "Select a Client From List",
+    "switchClient": "switch client",
+    "selectNet": "Select Network"
+  },
+  "editPageServices": {
+    "services": "Services",
+    "service": "Service",
+    "delete": "Delete"
+  },
+  "guideInfo": {
+    "close": "Close"
+  },
+  "ImportConfigHeader": {
+    "toImport": "To import",
+    "rem": "Remove"
+  },
+  "loginServer": {
+    "wait": "Please wait . . .",
+    "chckServerDetails": "Please check your server details.",
+    "serverRem": "Your server will be removed.",
+    "removeServer": "REMOVE SERVER",
+    "removeServerText": "Are you sure you want to remove it?"
+  },
+  "multiServer": {
+    "serverName": "Server Name",
+    "saveServer": "Save Server",
+    "ipOrHost": "IP or Hostname",
+    "port": "Port",
+    "userName": "Username",
+    "pass": "Password",
+    "keyPath": "Key Path",
+    "login": "Login",
+    "conecting": "Connecting . . .",
+    "newPass": "New Password",
+    "EnterNewPass": "Enter New Password",
+    "verifyPass": "Verify Password",
+    "chngResPass": "Change / Reset Password",
+    "chngPass": "Change Password",
+    "machineName": "Machine Name",
+    "chngAvatar": "Change Avatar",
+    "sshkeyMang": "SSH KEY MANAGEMENT",
+    "createNewKey": "CREATE A NEW KEY",
+    "addExistingKey": "ADD AN EXISTING KEY",
+    "loginFailed": "Login Failed",
+    "ok": "OK",
+    "genSshKey": "Generate SSH Key",
+    "keyType": "Key Type",
+    "selectKeyType": "Select Key Type",
+    "sshPass": "SSH Password",
+    "unlockExpertOptions": "UNLOCK EXPERT OPTIONS",
+    "optionalSshPass": "DEFINE AN OPTIONAL SSH PASSWORD",
+    "savePath": "SAVE PATH",
+    "specCypher": "SPECIFY CYPHER",
+    "bitAmount": "BIT AMOUNT",
+    "useCostumCypher": "USE CUSTOM CYPHER",
+    "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
+    "gen": "GENERATE",
+    "saveServerCon": "SAVED SERVER CONNECTIONS",
+    "serch": "Search",
+    "serchFor": "Search for...",
+    "addServer": "ADD A NEW SERVER CONNECTION",
+    "serverAccMang": "Server Access Management"
+  },
+  "oneClick": {
+    "installedService": "INSTALLED SERVICES",
+    "addOption": "ADDITIONAL OPTIONS",
+    "chooseNetwork": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "oneClckInstall": "ONE-CLICK INSTALLATION",
+    "setNodeClient": "Set how the Node clients where synchronize their blockchain data from",
+    "process": "Processing"
+  },
+  "serviceModal": {
+    "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
+    "generateEnr": "GENERATING NEW ENR",
+    "open": "OPEN",
+    "createEnr": "CREATE NEW ENR",
+    "openObol": "OPEN OBOL LAUNCHPAD",
+    "generateEnrToJoin": "Generate a new ENR to use to create or join an existing cluster",
+    "joinCluster": "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.",
+    "openBrowser": "OPEN IN BROWSER",
+    "importEnr": "IMPORT EXISTING ENR",
+    "entrEnr": "Enter ENR",
+    "import": "import",
+    "copy": "COPY",
+    "rem": "REMOVE",
+    "backUpFile": "BACKUP DEPOSIT FILE",
+    "startDkg": "START THE DKG",
+    "exportBackup": "Export your backup deposit file from the server to back it up",
+    "allEnrSign": "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!",
+    "srart": "START",
+    "pasteUrl": "PASTE THE URL",
+    "entrUrl": "Enter URL",
+    "oops": "Oops! Something Went Wrong",
+    "wentWrong": "Something went wrong. Please click the refresh button and try again.",
+    "pubKey": "Public operator key",
+    "genPair": "GENERATE ENCRYPTED PAIR",
+    "confWarning": "CONFIRM WARNING",
+    "opDash": "MAINNET OPERATOR DASHBOARD",
+    "runOp": "The most secure way to run your Operator node, is to generate an Encrypted key pair.",
+    "dnldBackup": "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!",
+    "showPerformance": "Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it.",
+    "copyKey": "COPY PUBLIC OPERATOR KEY",
+    "skPk": "Secret Operator Key (SK) & Public Operator Key (PK)",
+    "selPk": "SELECT AN EXISTING PRIVATE KEY TO IMPORT",
+    "selEnc": "SELECT UNENCRYPTED PRIVATE KEY",
+    "sel": "SELECT",
+    "dnldBk": "DOWNLOAD BACKUP",
+    "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
+    "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
+    "dl": "DOWNLOAD",
+    "imp": "IMPORT"
+  },
+  "stakingPage": {
+    "somethingWrong": "Something went wrong",
+    "enteredGraffitti": "Entered Graffiti Not Valid.",
+    "writeGrpName": "Write here your group name",
+    "noVal": "No Validator key imported.",
+    "noMatch": "No Matches.",
+    "reward": "Reward",
+    "ttl": "Total",
+    "pleaseWait": "Please wait until the remote key is imported.",
+    "imp": "Importing",
+    "yes": "YES",
+    "no": "NO",
+    "noFile": "No file selected",
+    "impDet": "Import Details :",
+    "grpId": "Group ID:",
+    "grpNam": "Group Name:",
+    "keys": "Keys:",
+    "remGrp": "Remove Group",
+    "areYouSure": "Are you sure you want to remove this group?",
+    "remValKey": "Remove Validator Key(s)",
+    "areXouSure": "Are you sure you want to remove this Key(s)?",
+    "stopImport": " Otherwise, click outside to stop importing.",
+    "expMsg": "Export Message",
+    "riskWarning": "Risk Warning",
+    "process": "Processing...",
+    "withdrawExit": "Withdraw & Exit Validator Keys",
+    "vldExited": "Validator(s) Successfully Exited.",
+    "vldFailed": "Validator(s) Failed to exit.",
+    "successExit": "Successfully Exited.",
+    "exitFailed": "Exit Failed.",
+    "readConeq": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES"
+  },
+  "welcomePage": {
+    "logedOut": "You will be logged out of the Stereum Launcher. You will need to log back in to access your node.",
+    "logOut": "Logging out",
+    "logOutMsg": "Are you sure you want to log out?",
+    "logOutBtn": "Logout",
+    "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
+    "welcomeStereum": "Welcome to Stereum"
   }
 }

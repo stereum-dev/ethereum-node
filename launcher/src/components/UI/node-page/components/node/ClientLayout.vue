@@ -166,6 +166,11 @@ const clientStatus = computed(() => {
     return "w-5 h-[16px] bg-green-500 border border-green-500 rounded-r-full";
   } else if (props.client.state === "restarting") {
     return "w-5 h-[16px] bg-orange-500 border border-orange-500 rounded-r-full";
+  } else if (
+    props.client.service === "ExternalExecutionService" ||
+    props.client.service === "ExternalConsensusService"
+  ) {
+    return "w-5 h-[16px] bg-gray-400 border border-gray-400 rounded-r-full";
   }
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
 });
