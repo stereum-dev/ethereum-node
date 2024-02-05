@@ -115,6 +115,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
 import { onMounted, ref, watchEffect } from "vue";
 import SyncCarousel from "../edit/SyncCarousel";
 import ControlService from "@/store/ControlService";
+import { useNodeManage } from "@/store/nodeManage";
 
 const props = defineProps({
   client: {
@@ -127,6 +128,7 @@ const props = defineProps({
   },
 });
 
+const manageStore = useNodeManage();
 const sourceLink = ref("");
 const jwtToken = ref("");
 const gateway = ref("");
@@ -138,10 +140,8 @@ const services = ["prysm", "lighthouse", "teku", "nimbus", "lodestar"];
 
 watchEffect(() => {
   props.client.config.source = sourceLink.value;
-});
-
-watchEffect(() => {
   props.client.config.jwtToken = jwtToken.value;
+  props.client.config.gateway = gateway.value;
 });
 
 //Lifecycle Hooks
@@ -163,6 +163,7 @@ const dropdown = () => {
 
 const pickService = (service) => {
   selectedService.value = service;
+  manageStore.ExternalConsensusSelectedService = service;
   dropdown();
 };
 
