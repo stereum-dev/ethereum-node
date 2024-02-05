@@ -275,7 +275,7 @@ const useSSHKey = computed(() => {
 });
 
 const addButtonDisabled = computed(() => {
-  const existingServer = serverStore.savedServers.savedConnections.some(
+  const existingServer = serverStore.savedServers?.savedConnections?.some(
     (item) => item.host === serverStore.selectedServerToConnect?.host
   );
 

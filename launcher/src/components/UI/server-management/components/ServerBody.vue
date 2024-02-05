@@ -5,9 +5,9 @@
     <div
       class="col-start-14 col-span-full row-start-1 row-span-full p-1 pl-0 grid grid-cols-12 grid-rows-12 bg-[#1b1b1d] rounded-md"
     >
-      <LoginBox v-if="serverStore.isServerLoginActive" />
+      <LoginBox v-if="isLoginActive" />
       <ManagementBox
-        v-if="serverStore.isServerManagementActive"
+        v-if="isManagementActive"
         @change-password="changePassword"
         @set-avatar="setServerAvatar"
         @file-upload="fileUpload"
@@ -29,12 +29,17 @@ import LoginBox from "./login-form/LoginBox.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { watch } from "vue";
+import { watch, computed } from "vue";
+import { useRoute } from "vue-router";
 
 const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
+const route = useRoute();
+
+const isLoginActive = computed(() => route.path === "/login" || serverStore.isServerLoginActive);
+const isManagementActive = computed(() => route.path !== "/login" && serverStore.isServerManagementActive);
 
 watch(
   () => serverStore.selectedServerConnection,

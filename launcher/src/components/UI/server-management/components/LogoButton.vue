@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'; import { useFooter } from '@/store/theFooter';
 <template>
   <div
-    class="w-fit h-fit flex justify-center items-center cursor-pointer"
+    class="w-fit h-fit flex justify-center items-center cursor-pointer z-10"
     @click="accessHandler"
     @mouseenter="runTooltip"
     @mouseleave="mouseLeave"

@@ -1,6 +1,7 @@
-import MultiServerScreen from './MultiServerScreen.vue';
 <template>
-  <MultiServerScreen />
+  <installation-layout>
+    <MultiServerScreen />
+  </installation-layout>
 </template>
 <script setup>
 import MultiServerScreen from "./MultiServerScreen.vue";

@@ -12,20 +12,13 @@
         @pointerdown.prevent.stop
         @mousedown.prevent.stop
       >
-        <LogoButton
-          :server-acc="serverAccMange"
-          @access-handler="serverAccessHandler"
-          @mouse-leave="mouseLeave"
-        />
+        <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
       </div>
 
       <slot></slot>
     </div>
     <TaskManager
-      v-if="
-        router.currentRoute.value.fullPath !== '/login' &&
-        router.currentRoute.value.fullPath !== '/welcome'
-      "
+      v-if="router.currentRoute.value.fullPath !== '/login' && router.currentRoute.value.fullPath !== '/welcome'"
     />
     <Transition name="slide-fade">
       <MultiServerScreen
