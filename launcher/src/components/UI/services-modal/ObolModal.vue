@@ -4,7 +4,7 @@
     <div class="browser-modal">
       <div class="obol_charon-header">
         <div class="icon-box">
-          <img :src="obolSharonService.icon" alt="icon" />
+          <img src="/img/icon/plugin-icons/validator/ObolCharon.png" alt="icon" />
         </div>
         <div class="title-box">
           <div class="service-name"><span>obol</span></div>
@@ -15,7 +15,10 @@
           </div>
         </div>
       </div>
-      <div class="content">
+      <div v-if="isLoading">
+        <img src="/img/icon/service-icons/obol_animation.gif" alt="icon" />
+      </div>
+      <div v-else class="content">
         <div v-if="!headerStore.generatorPlugin" class="wrapper">
           <div class="browserBox">
             <ConfirmBox
@@ -44,11 +47,11 @@
             </div>
             <div v-else class="wrapper" style="flex-direction: row">
               <ConfirmBox
-                :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'OPEN OBOL LAUNCHPAD'}`"
+                :top-line="`${!headerStore.continueForExistENR ? 'CREATE NEW ENR' : 'YOUR ENR'}`"
                 :bottom-line="`${
                   !headerStore.continueForExistENR
                     ? 'Generate a new ENR to use to create or join an existing cluster'
-                    : 'Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.'
+                    : 'Copy your public ENR to paste it into the launchpad, or delete your current key-pair to generate a new one'
                 }`"
                 :btn-name="`COPY`"
                 :second-btn-name="`REMOVE`"
@@ -77,16 +80,16 @@
             />
             <div v-else class="browserBox_import">
               <div class="import-title">
-                <span>PASTE THE URL</span>
+                <span>PASTE FULL COMMAND OR URL TO YOUR CLUSTER DEFINITION</span>
               </div>
               <div class="enrImport">
-                <input v-model="startDKG" type="text" placeholder="Enter URL" />
+                <input v-model="clusterDefinition" type="text" placeholder="Enter Command or URL" />
                 <div class="import-btn" @click="dkgImporter">start</div>
               </div>
             </div>
           </div>
         </div>
-        <div v-else class="wrapper"><EnrGenerator /></div>
+        <div v-else class="wrapper"><EnrGenerator :cluster-definition="clusterDefinition" /></div>
       </div>
     </div>
   </div>
@@ -95,20 +98,15 @@
 import { useNodeHeader } from "@/store/nodeHeader";
 import EnrGenerator from "./EnrGenerator.vue";
 import { ref, onMounted } from "vue";
-import ConfirmBox from "./plugin/ConfirmBox.vue";
+import ConfirmBox from "./plugin/ConfirmBox";
+import ControlService from "@/store/ControlService";
 
-const obolSharonService = ref({});
 const importedENR = ref("");
-const startDKG = ref("");
+const clusterDefinition = ref("");
 const dkgControl = ref(false);
+const isLoading = ref(true);
 
 const headerStore = useNodeHeader();
-
-const filterObolSharonService = () => {
-  headerStore.runningServices.forEach((item) => {
-    if (item.name === "Obol Charon") obolSharonService.value = item;
-  });
-};
 
 const openBrowser = () => {
   let url = "https://obol.tech/";
@@ -133,7 +131,7 @@ const topBlock = () => {
     headerStore.generatedENR = "";
     headerStore.distrubutedValidatorGenerator = false;
   } else {
-    let url = "https://goerli.launchpad.obol.tech/";
+    let url = "https://holesky.launchpad.obol.tech/";
     window.open(url, "_blank");
   }
 };
@@ -158,17 +156,43 @@ const copyHandler = () => {
 };
 
 const removeHandler = () => {
-  headerStore.generatedENR = "";
-  headerStore.continueForExistENR = false;
-  headerStore.depositFile = false;
+  //returns true if successful otherwise false
+  ControlService.removeObolENR().then((res) => {
+    if (res) {
+      headerStore.generatedENR = "";
+      headerStore.continueForExistENR = false;
+      headerStore.depositFile = false;
+    }
+  });
 };
 
-const dkgSwitch = () => {
-  dkgControl.value = true;
+const openDirectoryPicker = async () => {
+  try {
+    const paths = await ControlService.openDirectoryDialog({ properties: ["openDirectory", "createDirectory"] });
+    return paths[0];
+  } catch (error) {
+    // Handle case when user cancels directory picker
+    if (error.name === "AbortError") {
+      return "";
+    } else {
+      console.error("Error picking directory:", error);
+    }
+  }
+};
+
+const dkgSwitch = async () => {
+  if (headerStore.depositFile) {
+    const path = await openDirectoryPicker();
+    if (path) {
+      ControlService.downloadObolBackup(path);
+    }
+  } else {
+    dkgControl.value = true;
+  }
 };
 
 const dkgImporter = () => {
-  if (!startDKG.value) {
+  if (!clusterDefinition.value) {
     console.log("please enter url");
   } else {
     headerStore.enrIsGenerating = false;
@@ -178,10 +202,30 @@ const dkgImporter = () => {
   }
 };
 
-onMounted(() => {
-  filterObolSharonService();
+onMounted(async () => {
   headerStore.generatorPlugin = false;
   headerStore.distrubutedValidatorGenerator = false;
+  headerStore.continueForExistENR = false;
+
+  //check existing files
+  const content = await ControlService.checkObolContent();
+  //if there is a private key, then get public enr
+  if (content.privateKey) {
+    ControlService.getObolENRPublicKey().then((res) => {
+      headerStore.generatedENR = res;
+    });
+  }
+  //check if ready for DKG
+  headerStore.continueForExistENR = content.privateKey;
+  //check if ready for operation
+  headerStore.depositFile =
+    content.privateKey &&
+    content.clusterDefinition &&
+    content.depositData &&
+    content.clusterLock &&
+    content.validatorKeys;
+
+  isLoading.value = false;
 });
 </script>
 
