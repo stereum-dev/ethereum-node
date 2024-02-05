@@ -7,7 +7,9 @@
       <span>PEER TO PEER NETWORK</span>
     </div>
     <div class="np2p-rowsbox">
-      <div class="service-rox"></div>
+      <div v-for="(item, index) in peerRows(selectedService)" :key="index" class="service-rox">
+        {{ item.name }}
+      </div>
     </div>
     <div class="service-selction">
       <div
@@ -29,17 +31,27 @@
 </template>
 <script setup>
 import { useControlStore } from "@/store/theControl";
+import { useServices } from "@/store/services";
+
 import { ref } from "vue";
 
+const serviceStore = useServices();
 const controlStore = useControlStore();
+
 const selectedService = ref("consensus");
 const consensus = ref("consensus");
 const execution = ref("execution");
 
 const selectService = (service) => {
   selectedService.value = service;
-  console.log(selectedService.value);
 };
+
+const peerRows = (arg) => {
+  console.log(serviceStore.allServices.filter((item) => item.category.toLowerCase() === arg));
+  return serviceStore.allServices.filter((item) => item.category.toLowerCase() === arg);
+};
+
+console.log(serviceStore.allServices.filter((item) => item.category.toLowerCase() === "consensus"));
 </script>
 
 <style scoped>
@@ -81,11 +93,12 @@ const selectService = (service) => {
 }
 .np2p-rowsbox {
   width: 50%;
-  height: 100%;
+  height: 95%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  overflow-y: auto;
 }
 .service-rox {
   display: flex;
