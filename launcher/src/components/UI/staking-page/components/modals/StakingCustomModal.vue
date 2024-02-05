@@ -29,7 +29,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
             @click="exportAction"
           >
             <img class="h-4" src="/img/icon/the-staking/export.png" alt="Export Icon" />
-            <span class="text-sm text-gray-200 font-semibold">Export Message</span>
+            <span class="text-sm text-gray-200 font-semibold">{{ $("stakingPage.expMsg") }}</span>
           </button>
           <button
             v-if="!props.isProcessing && props.confirmText"
@@ -48,7 +48,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
             disabled
           >
             <span class="animate-spinGrow h-5 w-5 mr-2 rounded-full border-2"></span>
-            Processing...
+            {{ $t("stakingPage.process") }}
           </button>
         </div>
         <span class="absolute bottom-1 left-[40%] text-xs flex justify-center items-center text-red-500 mx-auto">{{

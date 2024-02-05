@@ -8,11 +8,11 @@
     <div v-else class="wrapper">
       <div class="epoch-box">
         <div class="box_value">{{ currentResult.currentEpoch }}</div>
-        <div class="box_title">Current EPOCH</div>
+        <div class="box_title">{{ $t("controlPage.currentEpoch") }}</div>
       </div>
       <div class="slot-box">
         <div class="box_value">{{ currentResult.currentSlot }}</div>
-        <div class="box_title">Current SLOT</div>
+        <div class="box_title">{{ $t("controlPage.currentSlot") }}</div>
       </div>
     </div>
   </div>

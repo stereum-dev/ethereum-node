@@ -1,7 +1,10 @@
 import { useNodeStore } from '@/store/theNode';
 <template>
   <div class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-3 gap-1 p-1 relative" @pointerdown.prevent.stop>
-    <div class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md">
+    <div
+      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
+      class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md"
+    >
       <button v-if="props.client.serviceIsPending" type="button" class="w-full h-full rounded-md disabled">
         <img src="/img/icon/arrows/loading.png" alt="icon" class="w-4 animate-spin" />
       </button>
@@ -32,6 +35,7 @@ import { useNodeStore } from '@/store/theNode';
       </button>
     </div>
     <button
+      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
       class="col-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="restartHandler"
       @mouseenter="footerStore.cursorLocation = `${restart}`"
@@ -40,7 +44,8 @@ import { useNodeStore } from '@/store/theNode';
       <img src="/img/icon/plugin-menu-icons/restart.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
-      class="col-start-3 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
+      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
+      :class="props.client.name === 'External' ? 'col-start-1' : 'col-start-3'"
       @click="openExpert"
       @mouseenter="footerStore.cursorLocation = `${expert}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -48,6 +53,7 @@ import { useNodeStore } from '@/store/theNode';
       <img src="/img/icon/plugin-menu-icons/setting2.png" alt="icon" class="w-8 active:scale-95" />
     </button>
     <button
+      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
       class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openLog"
       @mouseenter="footerStore.cursorLocation = `${logs}`"
@@ -56,6 +62,7 @@ import { useNodeStore } from '@/store/theNode';
       <img src="/img/icon/node-icons/log-command.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
+      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
       class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openDoc"
       @mouseenter="footerStore.cursorLocation = `${docs}`"
@@ -64,7 +71,11 @@ import { useNodeStore } from '@/store/theNode';
       <img src="/img/icon/node-icons/plugin-docs.png" alt="icon" class="w-5 active:scale-95" />
     </button>
     <button
-      v-if="props.client.category !== 'validator'"
+      v-if="
+        props.client.category !== 'validator' &&
+        props.client.service !== 'ExternalExecutionService' &&
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="col-start-3 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openResync"
       @mouseenter="footerStore.cursorLocation = `${resync}`"
@@ -90,6 +101,16 @@ import { useNodeStore } from '@/store/theNode';
     >
       <img src="/img/icon/node-icons/pruning.png" alt="icon" class="active:scale-95" />
     </button>
+    <button
+      v-if="props.client.category == 'execution' && props.client.service !== 'ExternalExecutionService'"
+      class="row-start-3 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      :class="props.client.service == 'GethService' ? 'col-start-2' : 'col-start-1'"
+      @click="copyJwt"
+      @mouseenter="footerStore.cursorLocation = `${copyToken}`"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
+      <img src="/img/icon/node-icons/jwtCopy.png" alt="icon" class="w-4 h-4 active:scale-95" />
+    </button>
     <slot></slot>
   </div>
 </template>
@@ -108,6 +129,7 @@ const pruning = t("clientButtons.pruning");
 const expert = t("clientButtons.settings");
 const logs = t("clientButtons.logs");
 const docs = t("clientButtons.docs");
+const copyToken = "Copy JWT Token";
 const removeLockBtn = t("clientButtons.removeLock");
 
 const footerStore = useFooter();
@@ -124,6 +146,7 @@ const emit = defineEmits([
   "restartHandler",
   "openResync",
   "openPruning",
+  "copyJwt",
 ]);
 
 const nodeStore = useNodeStore();
@@ -171,6 +194,11 @@ const openResync = () => {
 const openPruning = () => {
   nodeStore.isLineHidden = true;
   emit("openPruning", props.client);
+  footerStore.cursorLocation = "";
+};
+
+const copyJwt = () => {
+  emit("copyJwt", props.client);
   footerStore.cursorLocation = "";
 };
 </script>

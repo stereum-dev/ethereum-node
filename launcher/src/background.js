@@ -552,6 +552,10 @@ ipcMain.handle("getObolDKGLogs", async () => {
 
 ipcMain.handle("downloadObolBackup", async (event, args) => {
   return await validatorAccountManager.downloadObolBackup(args);
+
+ipcMain.handle("copyExecutionJWT", async (event, args) => {
+  return await serviceManager.copyExecutionJWT(args);
+
 });
 
 // Scheme must be registered before the app is ready

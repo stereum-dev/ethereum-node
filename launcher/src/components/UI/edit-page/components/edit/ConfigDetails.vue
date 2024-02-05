@@ -9,7 +9,7 @@
       }"
       :disabled="buttonDisabled"
     >
-      Add Config
+      {{ $t("configDetails.addConfig") }}
     </button>
     <div
       v-for="config in list"

@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "NAME",
-    "edit": "Manage node",
-    "loading": "lade neuen Status",
-    "turnOn": "Node einschalten",
-    "turnOff": "Node ausschalten",
-    "log": "Log öffnen",
-    "restart": "Neustart",
-    "start": "Start",
-    "resync": "resync",
-    "stop": "Stop",
-    "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "NAME"
   },
   "pagesnav": {
-    "node": "NODE",
-    "control": "KONTROLLE",
     "staking": "STAKING"
   },
   "supportModal": {
     "support": "Hilfestellung",
     "supportText": "Der schnellste Weg, um eine Person für Support zu erreichen, ist unserem Discord Server beizutreten!",
     "bugReport": "BUG BERICHTE",
-    "bugRepText": "Bitte nehmen Sie sich die Zeit das Problem auf Github festzuhalten und lassen Sie uns Stereum gemeinsam besser machen!",
     "emailText": "oder eine E-Mail schreiben an:",
     "docsTitle": "Dokumentation",
     "docsText": "Ein praktischer Link zur Dokumentation des Netzwerkprotokolls für die ausgewählte Node-Konfiguration."
@@ -60,11 +39,9 @@
     "update": "UPDATE",
     "launcherVersion": "Launcher Version",
     "nodeVersion": "Node Version",
-    "lane": "Stereum - Testquelle",
     "on": "ein",
     "off": "aus",
     "updateConfig": "Stereum Update Konfiguration",
-    "servicePlugin": "Plug-in / Service Update Konfiguration",
     "manual": "MANUELL",
     "auto": "AUTO",
     "sxConf": "Export Config",
@@ -76,14 +53,11 @@
   },
   "nodeSidebarVideo": {
     "stake": "Staken mit 32 ETH",
-    "ssv": "SSV Network verwenden",
-    "alert": "Mobile App Benachrichtigungen",
-    "switchC": "Clients wechseln",
-    "migrate": "Node Migration",
     "rpc": "RPC Connection",
-    "gnoStake": "MIT 1 GNO STAKEN",
     "written": "Written Guides",
-    "video": "Video Guides"
+    "video": "Video Guides",
+    "stereumTutorial": "stereum tutorials",
+    "statBox": "status box"
   },
   "pluginZone": {
     "client": "client"
@@ -99,12 +73,7 @@
   },
   "modifyPanel": {
     "backNode": "zurück zu NODE",
-    "addPreset": "1 KLICK-PRESET hinzufügen",
-    "changeNetwork": "NETZWERK ÄNDERN",
     "nukeNode": "NUKE NODE"
-  },
-  "sidebarManage": {
-    "filter": "Filter..."
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +94,7 @@
     "serviceDesc": "Updates für die installierte Auswahl von PLUG-INs",
     "availablePlugin": "VERFÜGBARE PLUG-IN UPDATES",
     "all": "Alle aktualisieren",
-    "osTitle": "Server OS Updates",
-    "availableUpdates": "Updates",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "Server OS Updates"
   },
   "controlPage": {
     "node": "NODE",
@@ -176,16 +138,19 @@
     "off": "Switch off the service",
     "on": "Switch on the service",
     "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "restart": "restart the service",
+    "currentEpoch": "Current EPOCH",
+    "currentSlot": "Current SLOT"
   },
   "taskManager": {
     "clickDisplay": "Klicke auf Aufgaben zum Anzeigen"
   },
   "displayValidator": {
     "pk": "Öffentlicher Schlüssel",
+    "rm": "Remote key",
     "service": "SERVICE",
     "active": "AKTIV SEIT",
-    "state": "ZUSTAND",
+    "state": "Status Indicator",
     "balance": "KONTOSTAND",
     "option": "OPTIONEN",
     "importKey": "Importiere Validatorschlüssel",
@@ -205,14 +170,44 @@
     "renameVal": "rename the validator key",
     "removVal": "remove the validator key",
     "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter"
+    "waitEnt": "You have to wait for the validator keys to enter",
+    "grpNam": "group name is",
+    "keyNumGrp": "Number of Contained Keys",
+    "grpBal": "group balance",
+    "openGrp": "open Group",
+    "renameGrp": "rename the group",
+    "removGrp": "remove the group",
+    "inserValidator": "insert validator key",
+    "backList": "back to list",
+    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT",
+    "crteGrp": "create a new group",
+    "openSrch": "search for a validator key or group",
+    "showValKey": "show validator keys",
+    "showKeyNam": "show key names",
+    "upcomingSync": "upcoming sync committee duties",
+    "upcomingBlocProd": "upcoming block production duties",
+    "clentSel": "client selected",
+    "selValClint": "selected validator client",
+    "upcomEpochDuti": "upcoming epoch duties",
+    "graffitiPanel": "change graffiti for all keys in the validator client",
+    "removeMultiple": "remove all keys from the validator client",
+    "withdrawMultiple": "exit & withdraw all keys from the validator client",
+    "importRemote": "import remote keys into the validator client",
+    "valClint": "validator client",
+    "valStat": "validator state",
+    "numValidator": "number imported validator keys",
+    "attestReward": "attestation reward",
+    "blockProdreward": "block production rewards",
+    "syncCommitteeReward": "sync committee rewards",
+    "ttlKeys": "total keys",
+    "ttlBal": "total balance"
   },
   "enterPass": {
     "enterPass": "PASSWORT EINGEBEN & IMPORTIEREN"
   },
   "exitMultipleValidator": {
     "passMessage": "GEBEN SIE IHR VALIDATOR PASSWORT EIN UM IHR STAKING KONTO AUFZULÖSEN...",
-    "confirm": "Bestätigen"
+    "confirm": "CONFIRM"
   },
   "exitValidatorModal": {
     "modalMessage": "Sind Sie sicher, dass Sie die Blockchain mit den ausgewählten Validatorschlüsseln verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
@@ -234,90 +229,49 @@
     "insertText": "KLICKEN ODER ZIEHEN UM DEN KEY EINZUFÜGEN"
   },
   "removeSingleModal": {
-    "question": "WOLLEN SIE DIE SLASHING DATABASE DOWNLOADEN?",
-    "description": "DU KANNST DIES MIT DEINEN VALIDATOR KEYS IMPORTIEREN UM FÜR ZUSÄTZLICHE SICHERHEIT BEIM MIGRIEREN DEINER KEYS ZU SORGEN",
-    "btn": "Pfad wählen"
+    "question": "WOLLEN SIE DIE SLASHING DATABASE DOWNLOADEN?"
   },
   "removeMultiModal": {
     "sure": "Möchten Sie diesen Validator Key von Ihrer Maschine entfernen?",
     "slashing": "Mit Slashing Protection Database?",
-    "remove": "Entfernen",
-    "path": "Wählen einen Pfad zum Speicheren der Slashing Protection Database",
-    "writePath": "Bitte notiere dir den Pfad"
+    "remove": "Entfernen"
   },
   "removeMultipleValidators": {
     "sureText": "Sind Sie sicher, dass Sie alle Validatorschlüssel von DIESER MACHINE entfernen möchten?"
   },
   "timeReward": {
     "totalText": "GESAMTE BILANZ VON",
-    "validators": "VALIDATOREN",
-    "proposed": "VORGESCHLAGEN",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "ATTESTATION",
-    "missed": "VERPASST",
-    "aggregations": "AGREGIERUNGEN",
-    "slashed": "SLASHED"
-  },
-  "validatorsBox": {
-    "date": "DATUM",
-    "validator": "VALIDATOR",
-    "attestRate": "ATTEST.RATE",
-    "reward": "BELOHNUNG"
+    "validators": "VALIDATOREN"
   },
   "installOption": {
-    "installText": "WÄHLEN SIE IHREN ANWENDUNGSFALL UND NETZWERK. NACH DER AUSWAHL WIRD EINE ZUFÄLLIGE CLIENT AUSWAHL GETÄTIGT",
     "back": "ZURÜCK",
-    "install": "INSTALLIEREN",
-    "placeHoldrer": "Netzwerk auswählen"
-  },
-  "removeModal": {
-    "removeText": "Alle Services werden entfernt.",
-    "sure": "Sind Sie sicher?"
+    "install": "INSTALLIEREN"
   },
   "installitionMenu": {
-    "welcome": "WILLKOMMEN",
-    "installText": "IN DIESEM SCHRITT ENTSCHEIDEN SIE, WIE SIE IHRE NODE INSTALLIEREN MÖCHTEN. WENN SIE HILFE BRAUCHEN BEIM AUFSETZEN, TRETTEN SIE UNSEREM DISCORD SERVER BEI - WIR HELFEN IHNEN GERNE AUS",
     "osCheck": "ÜBERPRÜFE OB DAS OS UNTERSTÜTZT WIRD",
     "osSupported": "IST EIN UNTERSTÜTZTES OPERATING SYSTEM"
   },
   "pluginName": {
-    "option": "AUSGEWÄHLTES NETWERK",
-    "chosen": "NETZWERK ÄNDERN",
     "path": "INSTALLATIONSPFAD",
-    "syncClient": "SYNCHRONISIERT IHREN CLIENT VOM BEGINN DER BLOCKCHAIN AN",
-    "plugin": "INSTALLIERTE DIENSTE",
-    "addOpt": "ADDITIONAL OPTIONS",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "ZURÜCK",
-    "next": "WEITER"
+    "instMonit": "Install Monitoring?"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANZIELLE SPENDEN",
-    "fincialTitle": "SETZE DEINEN NAMEN AUF DIE LISTE! DANKE FÜR DIE UNTERSTÜTZUNG BEI DER ENTWICKLUNG!",
-    "technicPage": "TECHNISCHE BEITRÄGE",
     "techTitle": "CREDITS - TECHNISCHE BEITRÄGE",
     "techText": "VERDIENE EINEN GITPOAP! BRINGE DICH EIN INDEM DU UNSEREN GITHUB BESUCHST!",
     "financialPage": "FINANZIELLE SPENDEN",
-    "gitcoinList": "GITCOIN KOMPLETTE LISTE",
     "developers": "ENTWICKLER",
     "testers": "TESTER"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFIZIEREN & INSTALLIEREN",
     "name": "NAME",
     "cat": "KATEGORIE",
     "path": "PFAD"
   },
   "warningModal": {
     "warningText": "Wir empfehlen Ihnen, zu warten, bis die erste Installation abgeschlossen ist, bevor Sie weitere Änderungen vornehmen"
-  },
-  "tutorialBox": {
-    "video": "Video",
-    "walkthrough": "Begleitanleitung",
-    "textGuide": "Schriftliche Anleitung"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "NEUEN OPERATOR REGISIEREN",
@@ -355,7 +309,11 @@
     "pageTitle": "PLUG-IN LOGS",
     "noLogFound": "Keine Einträge in den Logs gefunden",
     "clickCopy": "Doppelklicken zum kopieren",
-    "serviceId": "Service-ID"
+    "serviceId": "Service ID:",
+    "exportAll": "Export All Logs",
+    "export150": "Export 150 Logs",
+    "cat": "Category:",
+    "ver": "Version:"
   },
   "serviceModals": {
     "localApp": "LOKALE ANWENDUNG",
@@ -368,9 +326,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "Dieser Modus ist für fortgeschrittene Benutzer gedacht und erfordert ein Verständnis dafür, wie die Clients miteinander interagieren. Sie müssen alle Teile Ihres Node selbst auswählen, installieren und mit der Benutzeroberfläche verbinden, bevor die Node funktionell ist!",
-    "chooseWhereToInstall": "WÄHLEN SIE AUS WOHIN SIE STEREUM INSTALLIEREN WOLLEN",
-    "installationPath": "INSTALLATIONSPFAD"
+    "customInstallationText": "Dieser Modus ist für fortgeschrittene Benutzer gedacht und erfordert ein Verständnis dafür, wie die Clients miteinander interagieren. Sie müssen alle Teile Ihres Node selbst auswählen, installieren und mit der Benutzeroberfläche verbinden, bevor die Node funktionell ist!"
   },
   "mevboostConfig": {
     "availRelays": "VERFÜGBARE BLOCK RELAYS",
@@ -381,7 +337,7 @@
     "syncMessage": "SYNCHRONISIERT IHREN CLIENT VOM BEGINN DER BLOCKCHAIN AN",
     "portused": "PORT BENUTZT",
     "cancel": "Abbrechen",
-    "save": "Speichern",
+    "save": "SAVE",
     "add": "ADDEN",
     "clickAndAdd": "Klicken Sie auf \"ADDEN\""
   },
@@ -391,10 +347,6 @@
     "chooseFile": "Datei auswählen",
     "continue": "Fortsetzen"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "Es ist kein Validator-Client installiert!",
-    "disabledStakingMessage": "Installieren Sie mindestens einen Validator-Client, um den Import von Validator-Schlüsseln zu aktivieren."
-  },
   "logOutModal": {
     "logOutTitle": "ABMELDEN",
     "logOutQuestion": "SIND SIE SICH SICHER DASS SIE SICH VON IHREM NODE SERVER ABMELDEN WOLLEN?",
@@ -403,6 +355,7 @@
   "reconnectModal": {
     "reconnectTitle": "Connection lost",
     "reconnectMessage": "Check your connection and try again.",
+    "reconnectingMessage": "Reconnecting...",
     "reconnectBtn": "Reconnect"
   },
   "prunningModal": {
@@ -412,10 +365,10 @@
     "close": "click outside to close"
   },
   "restartModal": {
-    "restarQ": "Sind Sie sich sicher, dass Sie neu starten wollen?",
     "restartMessage": "Ihre Node kann dabei offline gehen!",
     "restart": "Neustart",
-    "confirmMessage": "Bist du sicher, dass du deine Node [...] möchtest?"
+    "confirmMessage": "Bist du sicher, dass du deine Node [...] möchtest?",
+    "areYouSure": "are you sure you want to"
   },
   "nukeModal": {
     "nukeQ": "Sind Sie sicher, dass Sie STEREUM & ALLE DIENSTE VON DEM SERVER entfernen möchten?",
@@ -452,8 +405,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   },
   "blockProduct": {
     "status": "STATUS",
@@ -499,18 +451,15 @@
   },
   "nodeAlert": {
     "lowSpace": "LOW STORAGE",
-    "missAttest": "MISSED ATTESTATION",
     "use": "USAGE",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
     "clkFee": "Service Settings",
     "clkUpdate": "Click to open update panel",
     "sync": "Synchronization Error",
-    "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
+    "taskFail": "Task Failed",
+    "stats": "STATUS: OPEN",
+    "clientService": "CLIENT / SERVICE"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -572,8 +521,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -584,7 +532,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Remove",
     "close": "click outside to close"
   },
@@ -652,7 +599,11 @@
     "availableUpdt": "New update is available",
     "updtPan": "update panel",
     "setting": "Stereum settings",
-    "logOutBtn": "Log out"
+    "logOutBtn": "Log out",
+    "rem": "REMOVE",
+    "node": "NODE",
+    "control": "CONTROL",
+    "staking": "STAKING"
   },
   "switchNetwork": {
     "message": "This is the current network, you can click to select another network"
@@ -687,9 +638,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
@@ -754,5 +703,189 @@
     "trnOn": "Turn your node on",
     "trnOff": "Turn your node off",
     "expNode": "Export your Node Configuration"
+  },
+  "customAnim": {
+    "processing": "Processing"
+  },
+  "customFooter": {
+    "back": "BACK",
+    "next": "NEXT"
+  },
+  "configDetails": {
+    "addConfig": "Add Config"
+  },
+  "editBody": {
+    "executionClient": "Execution Client",
+    "consensusClient": "Consensus Client",
+    "validator": "Validator"
+  },
+  "editModals": {
+    "noAvailService": "There is no available service",
+    "executionClients": "Execution Clients",
+    "consensusClients": "Consensus Clients",
+    "validatorClients": "Validator Clients",
+    "installationPath": "Installation Path",
+    "syncMode": "Sync Mode",
+    "serviceId": "Service ID",
+    "serviceCat": "Service Category",
+    "modifyConnection": "Modify Connection",
+    "confirm": "Confirm",
+    "clckOutside": "Click outside to close",
+    "switchNetwork": "Switch Network",
+    "selectNetwork": "Select a network to replace the",
+    "switchTo": "Switch To",
+    "trnOn": "Turn on",
+    "trnOff": "Turn off",
+    "selectClient": "Select a Client From List",
+    "switchClient": "switch client",
+    "selectNet": "Select Network"
+  },
+  "editPageServices": {
+    "services": "Services",
+    "service": "Service",
+    "delete": "Delete"
+  },
+  "guideInfo": {
+    "close": "Close"
+  },
+  "ImportConfigHeader": {
+    "toImport": "To import",
+    "rem": "Remove"
+  },
+  "loginServer": {
+    "wait": "Please wait . . .",
+    "chckServerDetails": "Please check your server details.",
+    "serverRem": "Your server will be removed.",
+    "removeServer": "REMOVE SERVER",
+    "removeServerText": "Are you sure you want to remove it?"
+  },
+  "multiServer": {
+    "serverName": "Server Name",
+    "saveServer": "Save Server",
+    "ipOrHost": "IP or Hostname",
+    "port": "Port",
+    "userName": "Username",
+    "pass": "Password",
+    "keyPath": "Key Path",
+    "login": "Login",
+    "conecting": "Connecting . . .",
+    "newPass": "New Password",
+    "EnterNewPass": "Enter New Password",
+    "verifyPass": "Verify Password",
+    "chngResPass": "Change / Reset Password",
+    "chngPass": "Change Password",
+    "machineName": "Machine Name",
+    "chngAvatar": "Change Avatar",
+    "sshkeyMang": "SSH KEY MANAGEMENT",
+    "createNewKey": "CREATE A NEW KEY",
+    "addExistingKey": "ADD AN EXISTING KEY",
+    "loginFailed": "Login Failed",
+    "ok": "OK",
+    "genSshKey": "Generate SSH Key",
+    "keyType": "Key Type",
+    "selectKeyType": "Select Key Type",
+    "sshPass": "SSH Password",
+    "unlockExpertOptions": "UNLOCK EXPERT OPTIONS",
+    "optionalSshPass": "DEFINE AN OPTIONAL SSH PASSWORD",
+    "savePath": "SAVE PATH",
+    "specCypher": "SPECIFY CYPHER",
+    "bitAmount": "BIT AMOUNT",
+    "useCostumCypher": "USE CUSTOM CYPHER",
+    "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
+    "gen": "GENERATE",
+    "saveServerCon": "SAVED SERVER CONNECTIONS",
+    "serch": "Search",
+    "serchFor": "Search for...",
+    "addServer": "ADD A NEW SERVER CONNECTION",
+    "serverAccMang": "Server Access Management"
+  },
+  "oneClick": {
+    "installedService": "INSTALLED SERVICES",
+    "addOption": "ADDITIONAL OPTIONS",
+    "chooseNetwork": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "oneClckInstall": "ONE-CLICK INSTALLATION",
+    "setNodeClient": "Set how the Node clients where synchronize their blockchain data from",
+    "process": "Processing"
+  },
+  "serviceModal": {
+    "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
+    "generateEnr": "GENERATING NEW ENR",
+    "open": "OPEN",
+    "createEnr": "CREATE NEW ENR",
+    "openObol": "OPEN OBOL LAUNCHPAD",
+    "generateEnrToJoin": "Generate a new ENR to use to create or join an existing cluster",
+    "joinCluster": "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.",
+    "openBrowser": "OPEN IN BROWSER",
+    "importEnr": "IMPORT EXISTING ENR",
+    "entrEnr": "Enter ENR",
+    "import": "import",
+    "copy": "COPY",
+    "rem": "REMOVE",
+    "backUpFile": "BACKUP DEPOSIT FILE",
+    "startDkg": "START THE DKG",
+    "exportBackup": "Export your backup deposit file from the server to back it up",
+    "allEnrSign": "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!",
+    "srart": "START",
+    "pasteUrl": "PASTE THE URL",
+    "entrUrl": "Enter URL",
+    "oops": "Oops! Something Went Wrong",
+    "wentWrong": "Something went wrong. Please click the refresh button and try again.",
+    "pubKey": "Public operator key",
+    "genPair": "GENERATE ENCRYPTED PAIR",
+    "confWarning": "CONFIRM WARNING",
+    "opDash": "MAINNET OPERATOR DASHBOARD",
+    "runOp": "The most secure way to run your Operator node, is to generate an Encrypted key pair.",
+    "dnldBackup": "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!",
+    "showPerformance": "Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it.",
+    "copyKey": "COPY PUBLIC OPERATOR KEY",
+    "skPk": "Secret Operator Key (SK) & Public Operator Key (PK)",
+    "selPk": "SELECT AN EXISTING PRIVATE KEY TO IMPORT",
+    "selEnc": "SELECT UNENCRYPTED PRIVATE KEY",
+    "sel": "SELECT",
+    "dnldBk": "DOWNLOAD BACKUP",
+    "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
+    "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
+    "dl": "DOWNLOAD",
+    "imp": "IMPORT"
+  },
+  "stakingPage": {
+    "somethingWrong": "Something went wrong",
+    "enteredGraffitti": "Entered Graffiti Not Valid.",
+    "writeGrpName": "Write here your group name",
+    "noVal": "No Validator key imported.",
+    "noMatch": "No Matches.",
+    "reward": "Reward",
+    "ttl": "Total",
+    "pleaseWait": "Please wait until the remote key is imported.",
+    "imp": "Importing",
+    "yes": "YES",
+    "no": "NO",
+    "noFile": "No file selected",
+    "impDet": "Import Details :",
+    "grpId": "Group ID:",
+    "grpNam": "Group Name:",
+    "keys": "Keys:",
+    "remGrp": "Remove Group",
+    "areYouSure": "Are you sure you want to remove this group?",
+    "remValKey": "Remove Validator Key(s)",
+    "areXouSure": "Are you sure you want to remove this Key(s)?",
+    "stopImport": " Otherwise, click outside to stop importing.",
+    "expMsg": "Export Message",
+    "riskWarning": "Risk Warning",
+    "process": "Processing...",
+    "withdrawExit": "Withdraw & Exit Validator Keys",
+    "vldExited": "Validator(s) Successfully Exited.",
+    "vldFailed": "Validator(s) Failed to exit.",
+    "successExit": "Successfully Exited.",
+    "exitFailed": "Exit Failed.",
+    "readConeq": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES"
+  },
+  "welcomePage": {
+    "logedOut": "You will be logged out of the Stereum Launcher. You will need to log back in to access your node.",
+    "logOut": "Logging out",
+    "logOutMsg": "Are you sure you want to log out?",
+    "logOutBtn": "Logout",
+    "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
+    "welcomeStereum": "Welcome to Stereum"
   }
 }

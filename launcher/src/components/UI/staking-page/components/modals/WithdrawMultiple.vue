@@ -1,6 +1,6 @@
 <template>
   <staking-custom-modal
-    main-title="Withdraw & Exit Validator Keys"
+    :main-title="`${$t('stakingPage.withdrawExit')}`"
     title-color="withdraw"
     height="450"
     :click-outside-text="clickOut"
@@ -23,12 +23,12 @@
         >
           <div v-if="getStatus?.success" class="w-full h-full flex justify-center items-center overflow-hidden">
             <span class="text-md text-teal-700 font-semibold text-center">
-              {{ getStatus.success }} Validator(s) Successfully Exited.</span
+              {{ getStatus.success }} {{ $("stakingPage.vldExited") }}</span
             >
           </div>
           <div v-if="getStatus?.failure" class="w-full h-full flex justify-center items-center overflow-hidden">
             <span class="text-md text-red-500 font-semibold text-center">
-              {{ getStatus.failure }} Validator(s) Failed to exit.</span
+              {{ getStatus.failure }} {{ $t("stakingPage.vldFailed") }}</span
             >
           </div>
         </div>
@@ -43,7 +43,7 @@
           >
             <p class="text-sm text-amber-400 text-left font-semibold">
               {{ useTruncate(item.pubkey, 20, 20) }}:
-              <span class="text-md text-teal-700 font-semibold text-left"> Successfully Exited.</span>
+              <span class="text-md text-teal-700 font-semibold text-left"> {{ $t("stakingPage.successExit") }}</span>
             </p>
           </div>
           <div
@@ -52,7 +52,7 @@
           >
             <p class="text-sm text-amber-400 text-left font-semibold">
               {{ useTruncate(item?.pubkey, 20, 20) }}:
-              <span class="text-md text-red-500 font-semibold text-left">Exit Failed. </span>
+              <span class="text-md text-red-500 font-semibold text-left">{{ $t("stakingPage.exitFailed") }}</span>
             </p>
             <span class="text-sm text-gray-400 text-left font-semibold">{{ item.msg }}</span>
           </div>
@@ -72,7 +72,7 @@
               class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
             />
 
-            <span class="text-sm text-gray-400"> I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES </span>
+            <span class="text-sm text-gray-400">{{ $t("stakingPage.readConeq") }}</span>
           </label>
         </div>
       </div>

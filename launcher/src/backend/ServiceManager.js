@@ -27,6 +27,8 @@ import { NotificationService } from "./ethereum-services/NotificationService";
 import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
+import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
+import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
 import YAML from "yaml";
 
 const log = require("electron-log");
@@ -149,6 +151,10 @@ export class ServiceManager {
               services.push(KeysAPIService.buildByConfiguration(config));
             } else if (config.service == "CharonService") {
               services.push(CharonService.buildByConfiguration(config));
+            } else if (config.service == "ExternalConsensusService") {
+              services.push(ExternalConsensusService.buildByConfiguration(config));
+            } else if (config.service == "ExternalExecutionService") {
+              services.push(ExternalExecutionService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -440,15 +446,19 @@ export class ServiceManager {
 
     if (service.service.includes("Beacon")) {
       service.dependencies.executionClients = dependencies;
-      let volumes = dependencies.map(
-        (client) =>
-          new ServiceVolume(
-            client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath,
-            "/engine.jwt"
-          )
-      );
+
       service.volumes = service.volumes.filter((v) => v.destinationPath.includes(service.id));
-      service.volumes = service.volumes.concat(volumes);
+
+      service.volumes = service.volumes.concat(
+        dependencies.map((client) => {
+          let destinationPath =
+            client.service === "ExternalExecutionService"
+              ? client.volumes.find((vol) => vol.destinationPath.includes("/engine.jwt")).destinationPath
+              : client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+
+          return new ServiceVolume(destinationPath, "/engine.jwt");
+        })
+      );
     } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
       service.dependencies.consensusClients = dependencies;
     }
@@ -539,7 +549,9 @@ export class ServiceManager {
 
   removeDependencies(service, serviceToDelete) {
     //update command
-    service.command = this.removeCommandConnection(service.command, serviceToDelete.id);
+    service.command = serviceToDelete.service.includes("External")
+      ? this.removeCommandConnection(service.command, serviceToDelete.env.link)
+      : this.removeCommandConnection(service.command, serviceToDelete.id);
 
     //update volumes
     service.volumes = service.volumes.filter((v) => !v.destinationPath.includes(serviceToDelete.id));
@@ -696,7 +708,7 @@ export class ServiceManager {
     }
   }
 
-  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays
+  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays, // for external -> source, jwtToken
   getService(name, args) {
     let ports;
     let service;
@@ -917,6 +929,22 @@ export class ServiceManager {
       case "CharonService":
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
         return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
+
+      case "ExternalExecutionService":
+        ports = [];
+        return ExternalExecutionService.buildByUserInput(
+          args.network,
+          args.installDir + "/externalExecution",
+          args.source,
+          args.jwtToken
+        );
+      case "ExternalConsensusService":
+        ports = [];
+        return ExternalConsensusService.buildByUserInput(
+          args.network,
+          args.installDir + "/externalConsensus",
+          args.source
+        );
     }
   }
 
@@ -1035,6 +1063,20 @@ export class ServiceManager {
         this.nodeConnection.sshService.exec(
           `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
         );
+      } else if (service.service.includes("External")) {
+        const extConnDir = service.volumes
+          .find((vol) => vol.destinationPath.includes("link.txt"))
+          .destinationPath.split("/")
+          .slice(0, -1)
+          .join("/");
+        await this.nodeConnection.sshService.exec(
+          `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${service.env.link} > ${extConnDir}/link.txt`
+        );
+        if (service.service.includes("Execution")) {
+          await this.nodeConnection.sshService.exec(
+            `touch ${extConnDir}/engine.jwt && echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`
+          );
+        }
       }
     }
   }
@@ -1190,7 +1232,11 @@ export class ServiceManager {
     );
     await this.createKeystores(
       newServices.filter(
-        (s) => s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork")
+        (s) =>
+          s.service.includes("Teku") ||
+          s.service.includes("Nimbus") ||
+          s.service.includes("SSVNetwork") ||
+          s.service.includes("External")
       )
     );
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
@@ -1497,7 +1543,7 @@ export class ServiceManager {
       LodestarValidatorService: "--monitoring.endpoint=",
       LodestarBeaconService: "--monitoring.endpoint=",
     };
- 
+
     let metricsExporterAdded = false;
 
     switch (selectedValidator.service) {
@@ -1584,7 +1630,7 @@ export class ServiceManager {
       await this.manageServiceState(metricsExporter.id, "started");
     }
   }
-  
+
   async addMetricsExporter(services) {
     try {
       let installTask = [];
@@ -1622,7 +1668,7 @@ export class ServiceManager {
     }
   }
 
-  async removeBeaconchainMonitoring(data){
+  async removeBeaconchainMonitoring(data) {
     let metricsCommandIndex;
     let metricsExporterRemoveID = null;
     let linkedMetricsExporter;
@@ -1647,7 +1693,9 @@ export class ServiceManager {
       case "TekuValidatorService":
       case "LodestarValidatorService":
         await this.manageServiceState(selectedValidator.id, "stopped");
-        metricsCommandIndex = selectedValidator.command.findIndex((c) => c.includes(metricsExporterCommands[selectedValidator.service]));
+        metricsCommandIndex = selectedValidator.command.findIndex((c) =>
+          c.includes(metricsExporterCommands[selectedValidator.service])
+        );
         if (metricsCommandIndex > -1) {
           selectedValidator.command.splice(metricsCommandIndex, 1);
         }
@@ -1664,7 +1712,9 @@ export class ServiceManager {
       case "TekuBeaconService":
       case "LodestarBeaconService":
         await this.manageServiceState(firstConsensusClient.id, "stopped");
-        metricsCommandIndex = firstConsensusClient.command.findIndex((c) => c.includes(metricsExporterCommands[firstConsensusClient.service]));
+        metricsCommandIndex = firstConsensusClient.command.findIndex((c) =>
+          c.includes(metricsExporterCommands[firstConsensusClient.service])
+        );
         if (metricsCommandIndex > -1) {
           firstConsensusClient.command.splice(metricsCommandIndex, 1);
         }
@@ -1676,19 +1726,25 @@ export class ServiceManager {
         metricsExporterRemoveID = firstConsensusClient.id;
         break;
     }
-    if(metricsExporterRemoveID != null){
+    if (metricsExporterRemoveID != null) {
       let metricsExporters = services.filter((services) => services.service == "MetricsExporterService");
       metricsExporters.forEach((metricsExporter) => {
         let IDIndex = metricsExporter.command.findIndex((c) => c.includes(metricsExporterRemoveID));
         if (IDIndex > -1) {
           linkedMetricsExporter = metricsExporter;
         }
-      })
-    
+      });
+
       await this.nodeConnection.runPlaybook("Delete Service", {
         stereum_role: "delete-service",
         service: linkedMetricsExporter.id,
       });
     }
+  }
+
+  async copyExecutionJWT(volume) {
+    let jwtContent = "";
+    jwtContent = await this.nodeConnection.sshService.exec(`cat ${volume}`);
+    return jwtContent.stdout;
   }
 }

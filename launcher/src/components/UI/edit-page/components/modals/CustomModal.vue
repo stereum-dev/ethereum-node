@@ -1,9 +1,9 @@
 import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vue';
 <template>
   <div
-    class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
+    class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover rounded-lg"
   >
-    <div class="absolute bg-black opacity-80 inset-0 z-0" @click="closeModal"></div>
+    <div class="absolute bg-black opacity-80 inset-0 z-0 rounded-lg" @click="closeModal"></div>
     <div
       class="w-2/3 min-h-[450px] py-1 px-2 relative mx-auto my-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-400"
     >

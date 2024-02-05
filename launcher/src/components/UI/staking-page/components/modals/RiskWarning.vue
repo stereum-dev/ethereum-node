@@ -1,6 +1,6 @@
 <template>
   <staking-custom-modal
-    main-title="Risk Warning"
+    :main-title="`${$t('stakingPage.riskWarning')}`"
     title-color="remove"
     :click-outside-text="clickOut"
     :confirm-text="getBtnText"
@@ -25,7 +25,7 @@
         </div>
         <div class="col-start-2 col-end-7 row-start-4 row-span-1 flex justify-center items-center">
           <span class="text-sm text-gray-300 text-left font-semibold">
-            Otherwise, click outside to stop importing.
+            {{ $t("stakingPage.stopImport") }}
           </span>
         </div>
       </div>

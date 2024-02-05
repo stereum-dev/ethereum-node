@@ -104,6 +104,7 @@ import { useServices } from "../../../store/services";
 import { useUpdateCheck } from "@/composables/version";
 import TutorialGuide from "../the-node/TutorialGuide.vue";
 import StakeGuide from "../the-node/StakeGuide.vue";
+import { useServers } from "@/store/servers";
 export default {
   components: {
     UpdatePanel,
@@ -138,6 +139,7 @@ export default {
       osUpdating: "osUpdating",
       searchingForOsUpdates: "searchingForOsUpdates",
       refresh: "refresh",
+      reconnecting: "reconnecting",
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
       stakeGuide: "stakeGuide",
@@ -150,6 +152,9 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
       stereumStatus: "stereumStatus",
+    }),
+    ...mapWritableState(useServers, {
+      connectingAnimActive: "connectingAnimActive",
     }),
   },
 
@@ -221,15 +226,18 @@ export default {
       this.logoutModalIsActive = true;
     },
     async loggingOut() {
+      this.connectingAnimActive = false;
       this.refresh = false;
       await ControlService.logout();
-      this.$router.push("/").then(() => {
+      this.$router.push("/login").then(() => {
         location.reload();
       });
     },
     async reconnect() {
       console.log("reconnecting");
+      this.reconnecting = true;
       await ControlService.reconnect();
+      this.reconnecting = false;
       this.refresh = true;
     },
     updateModalHandler() {

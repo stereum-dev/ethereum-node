@@ -1,7 +1,7 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
-    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
+
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
@@ -96,6 +96,7 @@
       />
       <!-- End Nuke Modal -->
     </TransitionGroup>
+    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
   </base-layout>
 </template>
 <script setup>
@@ -121,6 +122,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import { useListKeys } from "@/composables/validators";
+import { useServers } from "@/store/servers";
 
 const footerStore = useFooter();
 const serviceStore = useServices();
@@ -142,6 +144,8 @@ const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
+
+const serverStore = useServers();
 
 // Computed & Watcher
 
@@ -401,20 +405,28 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
-  manageStore.isLineHidden = true;
+  let dataObject = {
+    network: manageStore.configNetwork.network,
+    installDir: item.installDir || "/opt/stereum",
+    executionClients: item.executionClients,
+    consensusClients: item.consensusClients,
+    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+    checkpointURL: item.checkPointSyncUrl || false,
+  };
+
+  if (item.client.service === "ExternalExecutionService") {
+    dataObject.source = item.client.config?.source;
+    dataObject.jwtToken = item.client.config?.jwtToken;
+  } else if (item.client.service === "ExternalConsensusService") {
+    dataObject.source = item.client.config?.source;
+  }
+
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
     contentIcon: "/img/icon/manage-node-icons/install.png",
     service: item.client,
-    data: {
-      network: manageStore.configNetwork.network,
-      installDir: item.installDir ? item.installDir : "/opt/stereum",
-      executionClients: item.executionClients,
-      consensusClients: item.consensusClients,
-      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-      checkpointURL: item.checkPointSyncUrl ? item.checkPointSyncUrl : false,
-    },
+    data: dataObject,
   });
 };
 
@@ -585,8 +597,12 @@ const nukeConfirmation = () => {
   destroyNode();
 };
 const backToLogin = async () => {
+  serverStore.connectingAnimActive = false;
+
+  router.push("/login").then(() => {
+    location.reload();
+  });
   await ControlService.logout();
-  router.push("/");
 };
 
 const closeNetworkModal = () => {

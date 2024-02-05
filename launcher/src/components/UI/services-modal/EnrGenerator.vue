@@ -2,7 +2,9 @@
   <div class="obol-modal-plugin_parent">
     <div class="obol-modal-plugin_header">
       <span>{{
-        headerStore.distrubutedValidatorGenerator ? "DISTRIBUTED VALIDATOR GENERATION" : "GENERATING NEW ENR"
+        headerStore.distrubutedValidatorGenerator
+          ? `${$t("serviceModal.distributedValidator")}`
+          : `${$t("serviceModal.generateEnr")}`
       }}</span>
     </div>
     <div

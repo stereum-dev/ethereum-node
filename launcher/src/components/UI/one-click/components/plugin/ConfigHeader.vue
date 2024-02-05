@@ -4,7 +4,7 @@
       <img
         class="w-[50px] h-[50px] col-start-1 col-span-2 row-start-1 row-span-2 z-10 self-center"
         :src="selectedPreset?.icon"
-        alt="Preset Icon"
+        :alt="`${network?.name} Icon`"
       />
       <div class="w-full h-full flex justify-center items-center ml-4">
         <span class="w-full text-[24px] font-bold text-gray-400 uppercase tracking-wider">
@@ -22,7 +22,7 @@
       <img
         class="w-[50px] h-[50px] col-start-1 col-span-2 row-start-1 row-span-2 z-10 self-center"
         :src="network?.icon"
-        alt="Preset Icon"
+        :alt="`${network?.name} Icon`"
       />
     </div>
   </div>

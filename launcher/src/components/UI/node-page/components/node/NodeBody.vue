@@ -7,9 +7,9 @@ import { mapState, map } from 'pinia';
     <div
       class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
     >
-      <span class="col-start-1 justify-self-center self-center">Execution Clients</span>
-      <span class="col-start-2 justify-self-center self-center">Consensus Clients</span>
-      <span class="col-start-3 justify-self-center self-center">Validator </span>
+      <span class="col-start-1 justify-self-center self-center">{{ $t("editModals.executionClients") }}</span>
+      <span class="col-start-2 justify-self-center self-center">{{ $t("editModals.consensusClients") }}</span>
+      <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }} </span>
     </div>
     <div class="w-full h-full grid grid-cols-3 pt-8">
       <ExecutionClients
@@ -21,6 +21,7 @@ import { mapState, map } from 'pinia';
         @open-doc="openDocs"
         @mouse-over="lineDrawHandler"
         @mouse-leave="removeConnectionLines"
+        @copy-jwt="copyJwt"
       />
       <ConsensusClients
         @open-expert="openExpert"
@@ -55,6 +56,7 @@ import ValidatorClients from "./ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
+import ControlService from "@/store/ControlService";
 
 import LeaderLine from "leader-line-new";
 import { useStateHandler, useRestartService } from "@/composables/services";
@@ -211,6 +213,17 @@ const openDocs = (item) => {
 
 const openExpert = (item) => {
   emit("openExpert", item);
+};
+
+const copyJwt = async (item) => {
+  let volume = "";
+  item.config?.volumes.forEach((vol) => {
+    if (vol.destinationPath.endsWith("/engine.jwt")) {
+      volume = vol.destinationPath;
+    }
+  });
+  const result = await ControlService.copyExecutionJWT(volume);
+  navigator.clipboard.writeText(result);
 };
 </script>
 

@@ -1,18 +1,18 @@
 <template>
   <custom-modal
-    main-title="Logging out"
-    message-text="Are you sure you want to log out?"
-    confirm-text="Logout"
-    click-outside-text="Click outside to cancel"
+    :main-title="`${$t('welcomePage.logOut')}`"
+    :message-text="`${$t('welcomePage.logOutMsg')}`"
+    :confirm-text="`${$t('welcomePage.logOutBtn')}`"
+    :click-outside-text="`${$t('ipScanModal.clockClose')}`"
     @close-window="closeWindow"
     @confirm-action="logoutHandler"
   >
     <template #content>
       <div class="w-2/3 flex justify-center items-center mx-auto p-2 mt-20">
-        <span v-if="props.process" class="text-2xl text-amber-500 font-bold text-center">Please wait . . .</span>
-        <span v-else class="text-lg text-gray-300 font-semibold text-center"
-          >You will be logged out of the Stereum Launcher. You will need to log back in to access your node.</span
-        >
+        <span v-if="props.process" class="text-2xl text-amber-500 font-bold text-center">{{
+          $t("loginServer.wait")
+        }}</span>
+        <span v-else class="text-lg text-gray-300 font-semibold text-center">{{ $("welcomePage.logedOut") }}</span>
       </div>
     </template>
   </custom-modal>

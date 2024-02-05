@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "JMÉNO",
-    "edit": "Manage node",
-    "loading": "načítání nových stavů",
-    "turnOn": "Zapnout uzel",
-    "turnOff": "Vypnout uzel",
-    "log": "Otevřít záznamy",
-    "restart": "Restartovat",
-    "start": "začít",
-    "resync": "znovu synchronizovat",
-    "stop": "zastavit",
-    "machineIp": "IP adresa zařízení",
-    "machineName": "Název zařízení",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Klikněte pro otevření panelu, abyste měli přístup k záznamům pro klienty a služby zvlášť",
-    "clkSwitch": "Klikněte pro otevření panelu, aby bylo možné přepínat klienty a služby zvlášť",
-    "clkRestart": "Klikněte pro otevření panelu, abyste mohli restartovat klienty a služby zvlášť",
-    "clkResync": "Klikněte pro otevření panelu, abyste mohl(a) synchronizovat klienty zvlášť"
+    "servername": "JMÉNO"
   },
   "pagesnav": {
-    "node": "UZEL",
-    "control": "OVLÁDÁNÍ",
     "staking": "STAKOVÁNÍ"
   },
   "supportModal": {
     "support": "podpora",
     "supportText": "Nejrychlejší způsob, jak kontaktovat podporu, je připojení se k našemu Discord serveru!",
     "bugReport": "NAHLÁSIT CHYBU",
-    "bugRepText": "Prosím, věnujte čas sepsání problému a pomozte nám vylepšit Stereum!",
     "emailText": "nebo napište e-mail na:",
     "docsTitle": "dokumentace řetězce",
     "docsText": "Užitečný odkaz na dokumentaci síťových záznamů pro vámi vybranou konfiguraci uzlu."
@@ -60,11 +39,9 @@
     "update": "AKTUALIZOVAT",
     "launcherVersion": "Verze spouštěče",
     "nodeVersion": "Verze uzlu",
-    "lane": "Stereum - Testovací cesta",
     "on": "zapnuto",
     "off": "vypnuto",
     "updateConfig": "Konfigurace aktualizace Stereum",
-    "servicePlugin": "Konfigurace aktualizace plug-inů / služeb",
     "manual": "MANUÁLNÍ",
     "auto": "AUTOMATICKÉ",
     "sxConf": "Exportovat konfiguraci",
@@ -76,14 +53,11 @@
   },
   "nodeSidebarVideo": {
     "stake": "Stakujte s 32 ETH",
-    "ssv": "Použit ssv.network",
-    "alert": "Upozornění v mobilní aplikaci",
-    "switchC": "Přepnout klienty",
-    "migrate": "Migrace uzlů",
     "rpc": "RPC připojení",
-    "gnoStake": "STAKUJTE S 1 GNO",
     "written": "Written Guides",
-    "video": "Video Guides"
+    "video": "Video Guides",
+    "stereumTutorial": "stereum tutorials",
+    "statBox": "status box"
   },
   "pluginZone": {
     "client": "klient"
@@ -99,12 +73,7 @@
   },
   "modifyPanel": {
     "backNode": "zpět k UZLU",
-    "addPreset": "PŘIDAT PŘEDNASTAVENÍ NA JEDEN KLIK",
-    "changeNetwork": "ZMĚNIT SÍŤ",
     "nukeNode": "ODSTRANIT UZEL"
-  },
-  "sidebarManage": {
-    "filter": "Filtrovat..."
   },
   "changeConfirm": {
     "confirm": "CONFIRM CHANGES",
@@ -125,14 +94,7 @@
     "serviceDesc": "Aktualizace pro nainstalovaný výběr PLUGINů",
     "availablePlugin": "DOSTUPNÉ AKTUALIZACE PLUGINŮ",
     "all": "aktualizovat vše",
-    "osTitle": "aktualizace operačního systému serveru",
-    "availableUpdates": "aktualizace",
-    "searchVersion": "Vyhledat dostupné aktualizace",
-    "updtBtn": "klikněte pro aktualizaci",
-    "updtAllPlugin": "aktualizovat všechny pluginy",
-    "autoUpt": "aktualizace je automatická",
-    "manualUpt": "aktualizace je manuální",
-    "chngAppr": "Změny, které budou aplikovány"
+    "osTitle": "aktualizace operačního systému serveru"
   },
   "controlPage": {
     "node": "UZEL",
@@ -176,16 +138,19 @@
     "off": "Vypnout službu",
     "on": "Zapnout službu",
     "settingService": "Nastavení služby",
-    "restart": "restartovat službu"
+    "restart": "restartovat službu",
+    "currentEpoch": "Current EPOCH",
+    "currentSlot": "Current SLOT"
   },
   "taskManager": {
     "clickDisplay": "Klikněte na úkoly pro zobrazení"
   },
   "displayValidator": {
     "pk": "Veřejný klíč",
+    "rm": "Remote key",
     "service": "SLUŽBA",
     "active": "AKTIVNÍ OD",
-    "state": "STAV",
+    "state": "Status Indicator",
     "balance": "ZŮSTATEK",
     "option": "MOŽNOSTI",
     "importKey": "Importování klíč(ů) validátoru",
@@ -205,14 +170,44 @@
     "renameVal": "přejmenovat klíč validátora",
     "removVal": "odstranit klíč validátora",
     "exitChain": "opustit řetězec s vybranými klíči",
-    "waitEnt": "Pro zadání ověřovacích klíčů musíte počkat"
+    "waitEnt": "Pro zadání ověřovacích klíčů musíte počkat",
+    "grpNam": "group name is",
+    "keyNumGrp": "Number of Contained Keys",
+    "grpBal": "group balance",
+    "openGrp": "open Group",
+    "renameGrp": "rename the group",
+    "removGrp": "remove the group",
+    "inserValidator": "insert validator key",
+    "backList": "back to list",
+    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT",
+    "crteGrp": "create a new group",
+    "openSrch": "search for a validator key or group",
+    "showValKey": "show validator keys",
+    "showKeyNam": "show key names",
+    "upcomingSync": "upcoming sync committee duties",
+    "upcomingBlocProd": "upcoming block production duties",
+    "clentSel": "client selected",
+    "selValClint": "selected validator client",
+    "upcomEpochDuti": "upcoming epoch duties",
+    "graffitiPanel": "change graffiti for all keys in the validator client",
+    "removeMultiple": "remove all keys from the validator client",
+    "withdrawMultiple": "exit & withdraw all keys from the validator client",
+    "importRemote": "import remote keys into the validator client",
+    "valClint": "validator client",
+    "valStat": "validator state",
+    "numValidator": "number imported validator keys",
+    "attestReward": "attestation reward",
+    "blockProdreward": "block production rewards",
+    "syncCommitteeReward": "sync committee rewards",
+    "ttlKeys": "total keys",
+    "ttlBal": "total balance"
   },
   "enterPass": {
     "enterPass": "ZADEJTE HESLO A IMPORTUJTE"
   },
   "exitMultipleValidator": {
     "passMessage": "ZADEJTE HESLO VAŠEHO VALIDÁTORU PRO OPUŠTĚNÍ ŘETĚZCE S TÍMTO KLÍČEM...",
-    "confirm": "Potvrdit"
+    "confirm": "CONFIRM"
   },
   "exitValidatorModal": {
     "modalMessage": "Jste si jistý(á), že chcete opustit řetězec S VYBRANÝMI KLÍČI validátora? Tímto zastavíte své povinnosti validátora a tento krok NELZE vrátit zpět. Vaše finanční prostředky budou vybratelné pouze, pokud to řetězec umožňí.",
@@ -234,90 +229,49 @@
     "insertText": "PRO VLOŽENÍ KLIKNĚTE NEBO PŘETÁHNĚTE KLÍČ"
   },
   "removeSingleModal": {
-    "question": "CHCETE SI STÁHNOUT VAŠI DATABÁZI SLASHING UDÁLOSTÍ?",
-    "description": "Můžete to IMPORTOVAT S VAŠIMI KLÍČI VALIDÁTORŮ, ABYSTE ZAJISTILI DODATEČNOU BEZPEČNOST PŘI MIGRACI VAŠICH KLÍČŮ",
-    "btn": "vybrat cestu"
+    "question": "CHCETE SI STÁHNOUT VAŠI DATABÁZI SLASHING UDÁLOSTÍ?"
   },
   "removeMultiModal": {
     "sure": "Jste si jistý(á), že chcete odstranit tento klíč z vašeho zařízení?",
     "slashing": "S databází pro ochranu proti slashingu?",
-    "remove": "Odstranit",
-    "path": "vyberte cestu, kam chcete uložit exportovanou databázi pro ochranu proti slashingu ",
-    "writePath": "Napište prosím cestu, kam chcete uložit soubor"
+    "remove": "Odstranit"
   },
   "removeMultipleValidators": {
     "sureText": "Jste si jistý(á), že chcete odstranit všechny klíče validátora Z TOHOTO ZAŘÍZENÍ?"
   },
   "timeReward": {
     "totalText": "CELKOVÝ ZŮSTATEK",
-    "validators": "VALIDÁTOŘI",
-    "proposed": "NAVRHOVANÉ",
-    "attestRate": "MÍRA ATESTACE",
-    "attention": "ATESTACE",
-    "missed": "NEPLNĚNÉ",
-    "aggregations": "AGREGACE",
-    "slashed": "SLASHNUT"
-  },
-  "validatorsBox": {
-    "date": "DATUM",
-    "validator": "VALIDÁTOR",
-    "attestRate": "MÍRA ATESTACÍ",
-    "reward": "ODMĚNA"
+    "validators": "VALIDÁTOŘI"
   },
   "installOption": {
-    "installText": "VYBERTE VÁŠ PŘÍPAD POUŽITÍ A SÍŤ. PO VÝBĚRU A STISKNUTÍ TLAČÍTKA \"START\" BUDE NÁHODNĚ VYBRÁN KLIENT, KTERÝ BUDE SLUŽIT VAŠEMU PŘÍPADU POUŽITÍ",
     "back": "ZPĚT",
-    "install": "INSTALOVAT",
-    "placeHoldrer": "vyberte síť"
-  },
-  "removeModal": {
-    "removeText": "Všechny služby budou odstraněny.",
-    "sure": "Jste si jistý(á)?"
+    "install": "INSTALOVAT"
   },
   "installitionMenu": {
-    "welcome": "VÍTEJTE",
-    "installText": "V TÉTO FÁZI SI VYBERETE, JAK CHCETE NAINSTALOVAT VÁŠ UZEL. POKUD POTŘEBUJETE POMOC S NASTAVENÍM, PŘIPOJTE SE K NAŠEMU DISCORDU - RÁDI VÁM POMOŽEME",
     "osCheck": "KONTROLA, ZDA JE OPERAČNÍ SYSTÉM VAŠEHO SERVERU PODPOROVÁN",
     "osSupported": "JE PODPOROVANÝM OPERAČNÍM SYSTÉMEM"
   },
   "pluginName": {
-    "option": "VYBRANÁ SÍŤ",
-    "chosen": "VYBRANÁ SÍŤ",
     "path": "CESTA INSTALACE",
-    "syncClient": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
-    "plugin": "NAINSTALOVANÉ SLUŽBY",
-    "addOpt": "DALŠÍ MOŽNOSTI",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITOROVÁNÍ",
-    "instMonit": "Instalovat monitorování?",
-    "back": "ZPĚT",
-    "next": "DALŠÍ"
+    "instMonit": "Instalovat monitorování?"
   },
   "creditPanel": {
-    "creditTitle": "KREDITY - FINANČNÍ PŘISPĚVATELÉ",
-    "fincialTitle": "DOSTAŇTE SVÉ JMÉNO NA SEZNAM! DĚKUJEME ZA PODPORU VÝVOJE!",
-    "technicPage": "TECHNICKÝ PŘÍSPĚVEK",
     "techTitle": "KREDITY - TECHNIČTÍ PŘÍSPĚVATELÉ",
     "techText": "ZÍSKEJTE GITPOAP! NAVŠTIVTE NÁŠ GITHUB, KDE SE DOZVÍTE, JAK SE ZAPOJIT!",
     "financialPage": "FINANČNÍ PŘÍSPĚVEK",
-    "gitcoinList": "GITCOIN ÚPLNÝ SEZNAM",
     "developers": "VÝVOJÁŘI",
     "testers": "TESTEŘI"
   },
   "verifyInstallation": {
-    "verifyTitle": "OVĚŘIT A INSTALOVAT",
     "name": "JMÉNO",
     "cat": "KATEGORIE",
     "path": "CESTA"
   },
   "warningModal": {
     "warningText": "Před provedením dalších změn doporučujeme počkat, než bude dokončena počáteční instalace"
-  },
-  "tutorialBox": {
-    "video": "video",
-    "walkthrough": "průvodce",
-    "textGuide": "psaný průvodce"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTRUJTE NOVÉHO OPERÁTORA",
@@ -355,7 +309,11 @@
     "pageTitle": "PLUG-IN ZÁZNAMY",
     "noLogFound": "V seznamu nebyl nalezen žádný záznam",
     "clickCopy": "Dvakrát klikněte pro zkopírování záznamů",
-    "serviceId": "id služby"
+    "serviceId": "Service ID:",
+    "exportAll": "Export All Logs",
+    "export150": "Export 150 Logs",
+    "cat": "Category:",
+    "ver": "Version:"
   },
   "serviceModals": {
     "localApp": "MÍSTNÍ APLIKACE",
@@ -368,9 +326,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "VLASTNÍ INSTALACE",
-    "customInstallationText": "Tento režim je určen pro pokročilejší uživatele a vyžaduje znalost toho, jak mezi sebou klienti vzájemně interagují. Budete muset vybírat, instalovat a propojovat každou část svého uzlu s uživatelským rozhraním sami!",
-    "chooseWhereToInstall": "VYBERTE, KDE CHCETE STEREUM NAINSTALOVAT",
-    "installationPath": "CESTA INSTALACE"
+    "customInstallationText": "Tento režim je určen pro pokročilejší uživatele a vyžaduje znalost toho, jak mezi sebou klienti vzájemně interagují. Budete muset vybírat, instalovat a propojovat každou část svého uzlu s uživatelským rozhraním sami!"
   },
   "mevboostConfig": {
     "availRelays": "DOSTUPNÉ BLOKOVÉ RELAYE",
@@ -381,7 +337,7 @@
     "syncMessage": "SYNCHRONIZUJE VÁŠEHO KLIENTA OD ZAČÁTKU ŘETĚZCE",
     "portused": "POUŽITÝ PORT",
     "cancel": "zrušit",
-    "save": "uložit",
+    "save": "SAVE",
     "add": "PŘIDAT",
     "clickAndAdd": "Klikněte na PŘIDAT"
   },
@@ -391,10 +347,6 @@
     "chooseFile": "Vybrat soubor",
     "continue": "Pokračovat"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "Není nainstalován žádný klient validátora!",
-    "disabledStakingMessage": "Nainstalujte alespoň jednoho klienta validátora pro aktivaci importu klíčů validátora."
-  },
   "logOutModal": {
     "logOutTitle": "ODHLÁSIT SE",
     "logOutQuestion": "JSTE SI JISTÝ(Á), ŽE SE CHCETE ODHLÁSIT ZE SVÉHO SERVERU S UZLEM?",
@@ -403,6 +355,7 @@
   "reconnectModal": {
     "reconnectTitle": "Connection lost",
     "reconnectMessage": "Check your connection and try again.",
+    "reconnectingMessage": "Reconnecting...",
     "reconnectBtn": "Reconnect"
   },
   "prunningModal": {
@@ -412,10 +365,10 @@
     "close": "klikněte mimo pro zavření"
   },
   "restartModal": {
-    "restarQ": "Jste si jistý(á), že chcete provést restart?",
     "restartMessage": "váš uzel se může během tohoto procesu odpojit!",
     "restart": "restartovat",
-    "confirmMessage": "Jste si jistý(á), že chcete vypnout váš uzel"
+    "confirmMessage": "Jste si jistý(á), že chcete vypnout váš uzel",
+    "areYouSure": "are you sure you want to"
   },
   "nukeModal": {
     "nukeQ": "JSTE SI JISTÝ(Á), ŽE CHCETE ODSTRANIT STEREUM A VŠECHNY JEHO SLUŽBY ZE SERVERU?",
@@ -452,8 +405,7 @@
     "clickIcon": "Klikněte na ikonu vašeho klienta validátora",
     "cong": "Blahopřejeme, hotovo!",
     "clickPass": "Prosím, klikněte zde pro zadání vašeho hesla a potvrzení.",
-    "noSlash": "Vyberte \"Ne\" pokud nemáte žádnou databázi pro ochranu proti slashingu z předchozího uzlu",
-    "test": "testtesttestte"
+    "noSlash": "Vyberte \"Ne\" pokud nemáte žádnou databázi pro ochranu proti slashingu z předchozího uzlu"
   },
   "blockProduct": {
     "status": "STAV",
@@ -499,18 +451,15 @@
   },
   "nodeAlert": {
     "lowSpace": "NÍZKÁ KAPACITA ÚLOŽIŠTĚ",
-    "missAttest": "ZMEŠKANÁ ATESTACE",
     "use": "POUŽITÍ",
     "noFee": "žádný příjemce poplatku",
     "stereumUpt": "AKTUALIZACE STEREUM",
     "clkFee": "Service Settings",
     "clkUpdate": "Klikněte pro otevření panelu aktualizace",
     "sync": "Synchronization Error",
-    "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "jste si jistý(á), že chcete",
-    "close": "klikněte mimo pro zavření"
+    "taskFail": "Task Failed",
+    "stats": "STATUS: OPEN",
+    "clientService": "CLIENT / SERVICE"
   },
   "resyncModal": {
     "message": "VÁŠ KLIENT UCHOVÁVÁ DATA BLOKCHAINU NA VAŠEM SERVERU. DÍKY TOMU VÁŠ UZEL MŮŽE PLNIT POVINOSTI V SÍTI. Je to nezbytné pro to, aby váš uzel PLNIL SVOU ÚLOHU ATESTOVÁNÍ V STAKINGU. POUŽITÍ TÉTO VOLBY BUDE ZNAMENAT VYMAZÁNÍ AKTUÁLNÍCH DAT BLOKCHAINU VÁŠEHO KLIENTA A POUŽITÍ VYBRANÉ VOLBY JAKO ZDROJE PRO \n OPĚTOVNÉ ZSYNCHRONIZACI VAŠEHO UZLU.",
@@ -572,8 +521,7 @@
   },
   "uploadConfig": {
     "message": "S touto možností instalace můžete importovat použitý konfigurační soubor Stereum pro zkopírování nastavení vašeho uzlu.",
-    "selectConfig": "VYBERTE KONFIGURAČNÍ SOUBOR STEREUM, ABYSTE HO NAHRÁLI",
-    "configFile": "Konfigurační soubor"
+    "selectConfig": "VYBERTE KONFIGURAČNÍ SOUBOR STEREUM, ABYSTE HO NAHRÁLI"
   },
   "fastSync": {
     "header": "Nastavte, jak budou klienti uzlu synchronizovat svá data blockchainu.",
@@ -584,7 +532,6 @@
     "message": "Po nainstalování vašeho uzlu se vaši klienti začnou synchronizovat se zvoleným zdrojem synchronizace. Tento proces může trvat několik hodin nebo dní. Obvykle se nejprve synchronizuje klient pro konsensus a poté klient pro exekuci."
   },
   "deleteModal": {
-    "message": "Chcete odstranit uložené připojení?",
     "rem": "Odstranit",
     "close": "klikněte mimo pro zavření"
   },
@@ -652,7 +599,11 @@
     "availableUpdt": "K dispozici je nová aktualizace",
     "updtPan": "panel aktualizace",
     "setting": "Nastavení Stereum",
-    "logOutBtn": "Odhlásit se"
+    "logOutBtn": "Odhlásit se",
+    "rem": "REMOVE",
+    "node": "NODE",
+    "control": "CONTROL",
+    "staking": "STAKING"
   },
   "switchNetwork": {
     "message": "Toto je aktuální síť, klikněte pro výběr jiné sítě"
@@ -687,9 +638,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
@@ -754,5 +703,189 @@
     "trnOn": "Turn your node on",
     "trnOff": "Turn your node off",
     "expNode": "Export your Node Configuration"
+  },
+  "customAnim": {
+    "processing": "Processing"
+  },
+  "customFooter": {
+    "back": "BACK",
+    "next": "NEXT"
+  },
+  "configDetails": {
+    "addConfig": "Add Config"
+  },
+  "editBody": {
+    "executionClient": "Execution Client",
+    "consensusClient": "Consensus Client",
+    "validator": "Validator"
+  },
+  "editModals": {
+    "noAvailService": "There is no available service",
+    "executionClients": "Execution Clients",
+    "consensusClients": "Consensus Clients",
+    "validatorClients": "Validator Clients",
+    "installationPath": "Installation Path",
+    "syncMode": "Sync Mode",
+    "serviceId": "Service ID",
+    "serviceCat": "Service Category",
+    "modifyConnection": "Modify Connection",
+    "confirm": "Confirm",
+    "clckOutside": "Click outside to close",
+    "switchNetwork": "Switch Network",
+    "selectNetwork": "Select a network to replace the",
+    "switchTo": "Switch To",
+    "trnOn": "Turn on",
+    "trnOff": "Turn off",
+    "selectClient": "Select a Client From List",
+    "switchClient": "switch client",
+    "selectNet": "Select Network"
+  },
+  "editPageServices": {
+    "services": "Services",
+    "service": "Service",
+    "delete": "Delete"
+  },
+  "guideInfo": {
+    "close": "Close"
+  },
+  "ImportConfigHeader": {
+    "toImport": "To import",
+    "rem": "Remove"
+  },
+  "loginServer": {
+    "wait": "Please wait . . .",
+    "chckServerDetails": "Please check your server details.",
+    "serverRem": "Your server will be removed.",
+    "removeServer": "REMOVE SERVER",
+    "removeServerText": "Are you sure you want to remove it?"
+  },
+  "multiServer": {
+    "serverName": "Server Name",
+    "saveServer": "Save Server",
+    "ipOrHost": "IP or Hostname",
+    "port": "Port",
+    "userName": "Username",
+    "pass": "Password",
+    "keyPath": "Key Path",
+    "login": "Login",
+    "conecting": "Connecting . . .",
+    "newPass": "New Password",
+    "EnterNewPass": "Enter New Password",
+    "verifyPass": "Verify Password",
+    "chngResPass": "Change / Reset Password",
+    "chngPass": "Change Password",
+    "machineName": "Machine Name",
+    "chngAvatar": "Change Avatar",
+    "sshkeyMang": "SSH KEY MANAGEMENT",
+    "createNewKey": "CREATE A NEW KEY",
+    "addExistingKey": "ADD AN EXISTING KEY",
+    "loginFailed": "Login Failed",
+    "ok": "OK",
+    "genSshKey": "Generate SSH Key",
+    "keyType": "Key Type",
+    "selectKeyType": "Select Key Type",
+    "sshPass": "SSH Password",
+    "unlockExpertOptions": "UNLOCK EXPERT OPTIONS",
+    "optionalSshPass": "DEFINE AN OPTIONAL SSH PASSWORD",
+    "savePath": "SAVE PATH",
+    "specCypher": "SPECIFY CYPHER",
+    "bitAmount": "BIT AMOUNT",
+    "useCostumCypher": "USE CUSTOM CYPHER",
+    "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
+    "gen": "GENERATE",
+    "saveServerCon": "SAVED SERVER CONNECTIONS",
+    "serch": "Search",
+    "serchFor": "Search for...",
+    "addServer": "ADD A NEW SERVER CONNECTION",
+    "serverAccMang": "Server Access Management"
+  },
+  "oneClick": {
+    "installedService": "INSTALLED SERVICES",
+    "addOption": "ADDITIONAL OPTIONS",
+    "chooseNetwork": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "oneClckInstall": "ONE-CLICK INSTALLATION",
+    "setNodeClient": "Set how the Node clients where synchronize their blockchain data from",
+    "process": "Processing"
+  },
+  "serviceModal": {
+    "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
+    "generateEnr": "GENERATING NEW ENR",
+    "open": "OPEN",
+    "createEnr": "CREATE NEW ENR",
+    "openObol": "OPEN OBOL LAUNCHPAD",
+    "generateEnrToJoin": "Generate a new ENR to use to create or join an existing cluster",
+    "joinCluster": "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.",
+    "openBrowser": "OPEN IN BROWSER",
+    "importEnr": "IMPORT EXISTING ENR",
+    "entrEnr": "Enter ENR",
+    "import": "import",
+    "copy": "COPY",
+    "rem": "REMOVE",
+    "backUpFile": "BACKUP DEPOSIT FILE",
+    "startDkg": "START THE DKG",
+    "exportBackup": "Export your backup deposit file from the server to back it up",
+    "allEnrSign": "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!",
+    "srart": "START",
+    "pasteUrl": "PASTE THE URL",
+    "entrUrl": "Enter URL",
+    "oops": "Oops! Something Went Wrong",
+    "wentWrong": "Something went wrong. Please click the refresh button and try again.",
+    "pubKey": "Public operator key",
+    "genPair": "GENERATE ENCRYPTED PAIR",
+    "confWarning": "CONFIRM WARNING",
+    "opDash": "MAINNET OPERATOR DASHBOARD",
+    "runOp": "The most secure way to run your Operator node, is to generate an Encrypted key pair.",
+    "dnldBackup": "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!",
+    "showPerformance": "Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it.",
+    "copyKey": "COPY PUBLIC OPERATOR KEY",
+    "skPk": "Secret Operator Key (SK) & Public Operator Key (PK)",
+    "selPk": "SELECT AN EXISTING PRIVATE KEY TO IMPORT",
+    "selEnc": "SELECT UNENCRYPTED PRIVATE KEY",
+    "sel": "SELECT",
+    "dnldBk": "DOWNLOAD BACKUP",
+    "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
+    "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
+    "dl": "DOWNLOAD",
+    "imp": "IMPORT"
+  },
+  "stakingPage": {
+    "somethingWrong": "Something went wrong",
+    "enteredGraffitti": "Entered Graffiti Not Valid.",
+    "writeGrpName": "Write here your group name",
+    "noVal": "No Validator key imported.",
+    "noMatch": "No Matches.",
+    "reward": "Reward",
+    "ttl": "Total",
+    "pleaseWait": "Please wait until the remote key is imported.",
+    "imp": "Importing",
+    "yes": "YES",
+    "no": "NO",
+    "noFile": "No file selected",
+    "impDet": "Import Details :",
+    "grpId": "Group ID:",
+    "grpNam": "Group Name:",
+    "keys": "Keys:",
+    "remGrp": "Remove Group",
+    "areYouSure": "Are you sure you want to remove this group?",
+    "remValKey": "Remove Validator Key(s)",
+    "areXouSure": "Are you sure you want to remove this Key(s)?",
+    "stopImport": " Otherwise, click outside to stop importing.",
+    "expMsg": "Export Message",
+    "riskWarning": "Risk Warning",
+    "process": "Processing...",
+    "withdrawExit": "Withdraw & Exit Validator Keys",
+    "vldExited": "Validator(s) Successfully Exited.",
+    "vldFailed": "Validator(s) Failed to exit.",
+    "successExit": "Successfully Exited.",
+    "exitFailed": "Exit Failed.",
+    "readConeq": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES"
+  },
+  "welcomePage": {
+    "logedOut": "You will be logged out of the Stereum Launcher. You will need to log back in to access your node.",
+    "logOut": "Logging out",
+    "logOutMsg": "Are you sure you want to log out?",
+    "logOutBtn": "Logout",
+    "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
+    "welcomeStereum": "Welcome to Stereum"
   }
 }

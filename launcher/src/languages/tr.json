@@ -16,36 +16,15 @@
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "AD",
-    "edit": "Manage node",
-    "loading": "yeni durum yükleniyor",
-    "turnOn": "Düğüm Çalıştır",
-    "turnOff": "Düğüm Durdur",
-    "log": "Günlükleri Aç",
-    "restart": "Yeniden Başlat",
-    "start": "başlat",
-    "resync": "resync",
-    "stop": "durdur",
-    "machineIp": "Makine IP Adresi",
-    "machineName": "Makine Adı",
-    "clkEdit": "Düğümünüzü düzenlemek için tıklayın",
-    "clkOn": "Düğümünüzü açmak için tıklayın",
-    "clkOff": "Düğümünüzü kapatmak için tıklayın",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "AD"
   },
   "pagesnav": {
-    "node": "DÜĞÜM",
-    "control": "KONTROL",
     "staking": "STAKING"
   },
   "supportModal": {
     "support": "DESTEK",
     "supportText": "Destek için bir kişiye ulaşmanın en hızlı yolu Discord sunucumuza katılmaktır!",
     "bugReport": "HATA RAPORLA",
-    "bugRepText": "Lütfen bir sorun yazmak için zaman ayırın ve Stereum'u daha iyi hale getirmemize yardımcı olun!",
     "emailText": "veya şu adrese bir e-posta yazın:",
     "docsTitle": "zincir dökümanları",
     "docsText": "Seçtiğiniz düğüm yapılandırması için ağ günlüklerinin belgelerine kullanışlı bir bağlantı."
@@ -60,11 +39,9 @@
     "update": "GÜNCELLE",
     "launcherVersion": "Launcher Sürümü",
     "nodeVersion": "Düğüm Versiyonu",
-    "lane": "Stereum - Test Yolu",
     "on": "aç",
     "off": "kapat",
     "updateConfig": "Steum Güncelleme Yapılandırması",
-    "servicePlugin": "Eklenti / Hizmet Güncelleme Yapılandırması",
     "manual": "EL İLE",
     "auto": "OTOMATİK",
     "sxConf": "Yapılandırmayı Dışa Aktar",
@@ -76,14 +53,11 @@
   },
   "nodeSidebarVideo": {
     "stake": "32 ETH Stake edin",
-    "ssv": "ssv.network kullan",
-    "alert": "Mobil uygulama için uyarıları aç",
-    "switchC": "İstemci Değiştir",
-    "migrate": "Düğüm Geçişi",
     "rpc": "RPC Bağlantısı",
-    "gnoStake": "1 GNO STAKE EDİN",
     "written": "Yazılı Rehberler",
-    "video": "Videolu Rehberler"
+    "video": "Videolu Rehberler",
+    "stereumTutorial": "stereum tutorials",
+    "statBox": "status box"
   },
   "pluginZone": {
     "client": "istemci"
@@ -99,12 +73,7 @@
   },
   "modifyPanel": {
     "backNode": "DÜĞÜME geri dön",
-    "addPreset": "1 TIKLAMA İLE ÖN AYARLATI EKLE",
-    "changeNetwork": "AĞ DEĞİŞTİR",
     "nukeNode": "DÜĞÜMÜ İMHA ET!"
-  },
-  "sidebarManage": {
-    "filter": "Filtre..."
   },
   "changeConfirm": {
     "confirm": "DEĞİŞİKLİKLERİ ONAYLA",
@@ -125,14 +94,7 @@
     "serviceDesc": "Yüklü eklentiler için güncellemeler",
     "availablePlugin": "KULLANILABİLİR EKLENTİ GÜNCELLEMELERİ",
     "all": "tamamını güncelle",
-    "osTitle": "sunucu işletim sistemi güncellemeleri",
-    "availableUpdates": "güncellemeler",
-    "searchVersion": "Kullanılabilir sürüm güncellemelerini arayın",
-    "updtBtn": "Güncellemek için tıklayın",
-    "updtAllPlugin": "Tüm eklentileri güncelle",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "sunucu işletim sistemi güncellemeleri"
   },
   "controlPage": {
     "node": "DÜĞÜM",
@@ -176,16 +138,19 @@
     "off": "Switch off the service",
     "on": "Switch on the service",
     "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "restart": "restart the service",
+    "currentEpoch": "Current EPOCH",
+    "currentSlot": "Current SLOT"
   },
   "taskManager": {
     "clickDisplay": "Görüntülemek için görevlere tıklayın"
   },
   "displayValidator": {
     "pk": "Açık Anahtar",
+    "rm": "Remote key",
     "service": "SERVİS",
     "active": "AKTİF OLDUĞU TARİH",
-    "state": "DURUM",
+    "state": "Status Indicator",
     "balance": "BAKİYE",
     "option": "SEÇENEKLER",
     "importKey": "Doğrulayıcı anahtarı/anahtarları içe aktarma",
@@ -205,14 +170,44 @@
     "renameVal": "rename the validator key",
     "removVal": "remove the validator key",
     "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter"
+    "waitEnt": "You have to wait for the validator keys to enter",
+    "grpNam": "group name is",
+    "keyNumGrp": "Number of Contained Keys",
+    "grpBal": "group balance",
+    "openGrp": "open Group",
+    "renameGrp": "rename the group",
+    "removGrp": "remove the group",
+    "inserValidator": "insert validator key",
+    "backList": "back to list",
+    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT",
+    "crteGrp": "create a new group",
+    "openSrch": "search for a validator key or group",
+    "showValKey": "show validator keys",
+    "showKeyNam": "show key names",
+    "upcomingSync": "upcoming sync committee duties",
+    "upcomingBlocProd": "upcoming block production duties",
+    "clentSel": "client selected",
+    "selValClint": "selected validator client",
+    "upcomEpochDuti": "upcoming epoch duties",
+    "graffitiPanel": "change graffiti for all keys in the validator client",
+    "removeMultiple": "remove all keys from the validator client",
+    "withdrawMultiple": "exit & withdraw all keys from the validator client",
+    "importRemote": "import remote keys into the validator client",
+    "valClint": "validator client",
+    "valStat": "validator state",
+    "numValidator": "number imported validator keys",
+    "attestReward": "attestation reward",
+    "blockProdreward": "block production rewards",
+    "syncCommitteeReward": "sync committee rewards",
+    "ttlKeys": "total keys",
+    "ttlBal": "total balance"
   },
   "enterPass": {
     "enterPass": "ŞİFRENİ GİR & İÇE AKTAR"
   },
   "exitMultipleValidator": {
     "passMessage": "BU ANAHTAR İLE ZİNCİRDEN ÇIKMAK İÇİN DOĞRULAYICI ŞİFRENİZİ GİRİN...",
-    "confirm": "Doğrula"
+    "confirm": "CONFIRM"
   },
   "exitValidatorModal": {
     "modalMessage": "SEÇİLİ doğrulayıcı ANAHTARLARI ile zincirden çıkmak istediğinizden emin misiniz? Bu, doğrulayıcı görevinizi durdurur ve geri almak mümkün DEĞİLDİR. Fonunuz da yalnızca zincir izin veriyorsa çekilebilir.",
@@ -234,90 +229,49 @@
     "insertText": "ANAHTAR EKLEMEK İÇİN TIKLAYIN VEYA SÜRÜKLEYİN"
   },
   "removeSingleModal": {
-    "question": "SLASHING VERİTABANINIZI İNDİRMEK İSTER MİSİNİZ?",
-    "description": "ANAHTARLARINIZIN GEÇİŞİNİ YAPARKEN EK GÜVENLİĞİNİZİ SAĞLAMAK İÇİN BUNU DOĞRULAYICI ANAHTARLARINIZLA İÇE AKTARABİLİRSİNİZ",
-    "btn": "yol seçin"
+    "question": "SLASHING VERİTABANINIZI İNDİRMEK İSTER MİSİNİZ?"
   },
   "removeMultiModal": {
     "sure": "Bu anahtarı sunucunuzdan kaldırmak istediğinize emin misiniz?",
     "slashing": "Slashing Koruma Veritabanı ile mi?",
-    "remove": "Sil",
-    "path": "dışa aktarılan slashing veritabanını kaydetmek için bir yer seçin",
-    "writePath": "Lütfen yeri yazınız"
+    "remove": "Sil"
   },
   "removeMultipleValidators": {
     "sureText": "BU MAKİNEDEN Tüm Doğrulayıcı anahtarlarını kaldırmak istediğinizden emin misiniz?"
   },
   "timeReward": {
     "totalText": "TOPLAM BAKİYESİ",
-    "validators": "DOĞRULAYICI",
-    "proposed": "ÖNERİLEN",
-    "attestRate": "TASDİK ORANI",
-    "attention": "ONAYLAMA",
-    "missed": "KAÇIRILDI",
-    "aggregations": "TOPLAMALAR",
-    "slashed": "SLASHED"
-  },
-  "validatorsBox": {
-    "date": "TARİH",
-    "validator": "DOĞRULAYICI",
-    "attestRate": "TASDİK.ORANI",
-    "reward": "ÖDÜL"
+    "validators": "DOĞRULAYICI"
   },
   "installOption": {
-    "installText": "KULLANIM DURUMUNUZU VE AĞINIZI SEÇİN. SEÇİM YAPIP BAŞLATTIKTAN SONRA, KULLANIM DURUMUNUZA HİZMET VERMEK İÇİN RASTGELE BİR İSTEMCİ SEÇİMİ YAPILACAKTIR",
     "back": "GERİ",
-    "install": "YÜKLE",
-    "placeHoldrer": "ağ seçiniz"
-  },
-  "removeModal": {
-    "removeText": "Bütün servisler kaldırılacak.",
-    "sure": "Emin misin?"
+    "install": "YÜKLE"
   },
   "installitionMenu": {
-    "welcome": "HOŞGELDİNİZ",
-    "installText": "BU ADIMDA DÜĞÜMÜNÜZÜ NASIL KURMAK İSTEDİĞİNİZİ SEÇERSİNİZ. KURULUMLA İLGİLİ YARDIMA İHTİYACINIZ VARSA, DİSCORD'UMUZA KATILIN - SİZE YARDIMCI OLMAK BİZİ MUTLU EDER",
     "osCheck": "SUNUCU İŞLETİM SİSTEMİ DESTEĞİ KONTROL EDİLİYOR",
     "osSupported": "DESTEKLENEN İŞLETİM SİSTEMİ"
   },
   "pluginName": {
-    "option": "SEÇİLEN AĞ",
-    "chosen": "SEÇİLEN AĞ",
     "path": "KURULUM DİZİNİ",
-    "syncClient": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
-    "plugin": "KURULAN SERVİSLER",
-    "addOpt": "ADDITIONAL OPTIONS",
     "installOpt": "INSTALLATION OPTIONS",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "GERİ",
-    "next": "SONRAKİ"
+    "instMonit": "Install Monitoring?"
   },
   "creditPanel": {
-    "creditTitle": "KATKIDA BULUNANLAR - MADDİ KATKI SAĞLAYANLAR",
-    "fincialTitle": "İSİMİNİZİ LİSTEYE YAZIN! GELİŞTİRMEYİ DESTEKLEDİĞİNİZ İÇİN TEŞEKKÜRLER!",
-    "technicPage": "TEKNİK KATKI SAĞLAYANLAR",
     "techTitle": "KATKIDA BULUNANLAR - TEKNİK KATKI SAĞLAYANLAR",
     "techText": "GİTPOAP KAZANIN! GITHUB SAYFAMIZI ZİYARET EDEREK NASIL KAZANILACAĞINI ÖĞRENİN!",
     "financialPage": "FİNANSAL KATKI SAĞLAYANLAR",
-    "gitcoinList": "GITCOIN TAM LİSTESİ",
     "developers": "GELİŞTİRİCİLER",
     "testers": "TEST EDENLER"
   },
   "verifyInstallation": {
-    "verifyTitle": "DOĞRULA & YÜKLE",
     "name": "AD",
     "cat": "KATEGORİ",
     "path": "DİZİN"
   },
   "warningModal": {
     "warningText": "Daha fazla değişiklik yapmadan önce ilk kurulumun tamamlanmasını beklemenizi öneririz"
-  },
-  "tutorialBox": {
-    "video": "video",
-    "walkthrough": "İzlenecek yol",
-    "textGuide": "Yazılı rehber"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "YENİ BİR OPERATÖR KAYDI",
@@ -355,7 +309,11 @@
     "pageTitle": "EKLENTİ GÜNLÜKLERİ",
     "noLogFound": "Listede günlük bulunamadı",
     "clickCopy": "Günlükleri Kopyalamak için Çift Tıklayın",
-    "serviceId": "servis kimliği"
+    "serviceId": "Service ID:",
+    "exportAll": "Export All Logs",
+    "export150": "Export 150 Logs",
+    "cat": "Category:",
+    "ver": "Version:"
   },
   "serviceModals": {
     "localApp": "YEREL UYGULAMALAR",
@@ -368,9 +326,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "ÖZEL KURULUM",
-    "customInstallationText": "Bu mod, daha ileri düzey kullanıcılar içindir ve istemcilerin birbirleriyle nasıl etkileşime girdiğini anlamanızı gerektirir. İşlevsel hale gelmeden önce düğümünüzün her bir parçasını kullanıcı arayüzü ile kendiniz seçmeli, kurmalı ve bağlamalısınız!",
-    "chooseWhereToInstall": "STEREUM'U NEREYE KURMAK İSTEDİĞİNİZİ SEÇİN",
-    "installationPath": "KURULUM DİZİNİ"
+    "customInstallationText": "Bu mod, daha ileri düzey kullanıcılar içindir ve istemcilerin birbirleriyle nasıl etkileşime girdiğini anlamanızı gerektirir. İşlevsel hale gelmeden önce düğümünüzün her bir parçasını kullanıcı arayüzü ile kendiniz seçmeli, kurmalı ve bağlamalısınız!"
   },
   "mevboostConfig": {
     "availRelays": "MEVCUT BLOK RÖLELERİ",
@@ -381,7 +337,7 @@
     "syncMessage": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
     "portused": "KULLANILAN PORT",
     "cancel": "iptal",
-    "save": "kaydet",
+    "save": "SAVE",
     "add": "EKLE",
     "clickAndAdd": "EKLE'ye tıklayın"
   },
@@ -391,10 +347,6 @@
     "chooseFile": "Dosya Seç",
     "continue": "Devam Et"
   },
-  "disabledStaking": {
-    "noValidatorInstalled": "Yüklü doğrulayıcı istemci yok!",
-    "disabledStakingMessage": "Doğrulayıcı anahtarlarını içe aktarmayı etkinleştirmek için en az bir doğrulayıcı istemci kurun."
-  },
   "logOutModal": {
     "logOutTitle": "ÇIKIŞ YAP",
     "logOutQuestion": "DÜĞÜM SUNUCUSUNUZDAN ÇIKIŞ YAPMAK İSTEDİĞİNİZDEN EMİN MİSİNİZ?",
@@ -403,6 +355,7 @@
   "reconnectModal": {
     "reconnectTitle": "Connection lost",
     "reconnectMessage": "Check your connection and try again.",
+    "reconnectingMessage": "Reconnecting...",
     "reconnectBtn": "Reconnect"
   },
   "prunningModal": {
@@ -412,10 +365,10 @@
     "close": "click outside to close"
   },
   "restartModal": {
-    "restarQ": "Yeniden başlatmak istediğinizden emin misiniz?",
     "restartMessage": "bunu yaparken düğümünüz çevrimdışı olabilir!",
     "restart": "yeniden başlat",
-    "confirmMessage": "Düğümünüzü çevirmek istediğinizden emin misiniz?"
+    "confirmMessage": "Düğümünüzü çevirmek istediğinizden emin misiniz?",
+    "areYouSure": "are you sure you want to"
   },
   "nukeModal": {
     "nukeQ": "STEREUM VE TÜM SERVİSLERİ SUNUCUDAN KALDIRMAK İSTEDİĞİNİZE EMİN MİSİNİZ?",
@@ -452,8 +405,7 @@
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Congrats you are done!",
     "clickPass": "Parolanızı girmek ve onaylamak için lütfen buraya tıklayın.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
   },
   "blockProduct": {
     "status": "STATUS",
@@ -499,18 +451,15 @@
   },
   "nodeAlert": {
     "lowSpace": "DÜŞÜK DEPOLAMA",
-    "missAttest": "MISSED ATTESTATION",
     "use": "KULLANIMI",
     "noFee": "no fee recipient",
     "stereumUpt": "STEREUM UPDATE",
     "clkFee": "Hizmet Ayarları",
     "clkUpdate": "Güncelleme panelini açmak için tıklayın",
     "sync": "Synchronization Error",
-    "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "Bunu istediğinize emin misiniz?",
-    "close": "Kapatmak için pencere dışında bir yere tıklayın"
+    "taskFail": "Task Failed",
+    "stats": "STATUS: OPEN",
+    "clientService": "CLIENT / SERVICE"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -572,8 +521,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Yapılandırma dosyası"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -584,7 +532,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Kaldır",
     "close": "click outside to close"
   },
@@ -652,7 +599,11 @@
     "availableUpdt": "New update is available",
     "updtPan": "paneli güncelle",
     "setting": "Stereum ayarları",
-    "logOutBtn": "Çıkış yap"
+    "logOutBtn": "Çıkış yap",
+    "rem": "REMOVE",
+    "node": "NODE",
+    "control": "CONTROL",
+    "staking": "STAKING"
   },
   "switchNetwork": {
     "message": "This is the current network, you can click to select another network"
@@ -687,9 +638,7 @@
   },
   "ipScanModal": {
     "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "IP adresi bulunamadı",
-    "clickSearch": "Click [search] to start"
+    "clockClose": "Click outside to close"
   },
   "serviceBtn": {
     "turnOff": "Turn off the service",
@@ -754,5 +703,189 @@
     "trnOn": "Düğümünüzü açın",
     "trnOff": "Düğümünüzü kapatın",
     "expNode": "Düğüm Yapılandırmanızı Dışa Aktarın"
+  },
+  "customAnim": {
+    "processing": "Processing"
+  },
+  "customFooter": {
+    "back": "BACK",
+    "next": "NEXT"
+  },
+  "configDetails": {
+    "addConfig": "Add Config"
+  },
+  "editBody": {
+    "executionClient": "Execution Client",
+    "consensusClient": "Consensus Client",
+    "validator": "Validator"
+  },
+  "editModals": {
+    "noAvailService": "There is no available service",
+    "executionClients": "Execution Clients",
+    "consensusClients": "Consensus Clients",
+    "validatorClients": "Validator Clients",
+    "installationPath": "Installation Path",
+    "syncMode": "Sync Mode",
+    "serviceId": "Service ID",
+    "serviceCat": "Service Category",
+    "modifyConnection": "Modify Connection",
+    "confirm": "Confirm",
+    "clckOutside": "Click outside to close",
+    "switchNetwork": "Switch Network",
+    "selectNetwork": "Select a network to replace the",
+    "switchTo": "Switch To",
+    "trnOn": "Turn on",
+    "trnOff": "Turn off",
+    "selectClient": "Select a Client From List",
+    "switchClient": "switch client",
+    "selectNet": "Select Network"
+  },
+  "editPageServices": {
+    "services": "Services",
+    "service": "Service",
+    "delete": "Delete"
+  },
+  "guideInfo": {
+    "close": "Close"
+  },
+  "ImportConfigHeader": {
+    "toImport": "To import",
+    "rem": "Remove"
+  },
+  "loginServer": {
+    "wait": "Please wait . . .",
+    "chckServerDetails": "Please check your server details.",
+    "serverRem": "Your server will be removed.",
+    "removeServer": "REMOVE SERVER",
+    "removeServerText": "Are you sure you want to remove it?"
+  },
+  "multiServer": {
+    "serverName": "Server Name",
+    "saveServer": "Save Server",
+    "ipOrHost": "IP or Hostname",
+    "port": "Port",
+    "userName": "Username",
+    "pass": "Password",
+    "keyPath": "Key Path",
+    "login": "Login",
+    "conecting": "Connecting . . .",
+    "newPass": "New Password",
+    "EnterNewPass": "Enter New Password",
+    "verifyPass": "Verify Password",
+    "chngResPass": "Change / Reset Password",
+    "chngPass": "Change Password",
+    "machineName": "Machine Name",
+    "chngAvatar": "Change Avatar",
+    "sshkeyMang": "SSH KEY MANAGEMENT",
+    "createNewKey": "CREATE A NEW KEY",
+    "addExistingKey": "ADD AN EXISTING KEY",
+    "loginFailed": "Login Failed",
+    "ok": "OK",
+    "genSshKey": "Generate SSH Key",
+    "keyType": "Key Type",
+    "selectKeyType": "Select Key Type",
+    "sshPass": "SSH Password",
+    "unlockExpertOptions": "UNLOCK EXPERT OPTIONS",
+    "optionalSshPass": "DEFINE AN OPTIONAL SSH PASSWORD",
+    "savePath": "SAVE PATH",
+    "specCypher": "SPECIFY CYPHER",
+    "bitAmount": "BIT AMOUNT",
+    "useCostumCypher": "USE CUSTOM CYPHER",
+    "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
+    "gen": "GENERATE",
+    "saveServerCon": "SAVED SERVER CONNECTIONS",
+    "serch": "Search",
+    "serchFor": "Search for...",
+    "addServer": "ADD A NEW SERVER CONNECTION",
+    "serverAccMang": "Server Access Management"
+  },
+  "oneClick": {
+    "installedService": "INSTALLED SERVICES",
+    "addOption": "ADDITIONAL OPTIONS",
+    "chooseNetwork": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "oneClckInstall": "ONE-CLICK INSTALLATION",
+    "setNodeClient": "Set how the Node clients where synchronize their blockchain data from",
+    "process": "Processing"
+  },
+  "serviceModal": {
+    "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
+    "generateEnr": "GENERATING NEW ENR",
+    "open": "OPEN",
+    "createEnr": "CREATE NEW ENR",
+    "openObol": "OPEN OBOL LAUNCHPAD",
+    "generateEnrToJoin": "Generate a new ENR to use to create or join an existing cluster",
+    "joinCluster": "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.",
+    "openBrowser": "OPEN IN BROWSER",
+    "importEnr": "IMPORT EXISTING ENR",
+    "entrEnr": "Enter ENR",
+    "import": "import",
+    "copy": "COPY",
+    "rem": "REMOVE",
+    "backUpFile": "BACKUP DEPOSIT FILE",
+    "startDkg": "START THE DKG",
+    "exportBackup": "Export your backup deposit file from the server to back it up",
+    "allEnrSign": "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!",
+    "srart": "START",
+    "pasteUrl": "PASTE THE URL",
+    "entrUrl": "Enter URL",
+    "oops": "Oops! Something Went Wrong",
+    "wentWrong": "Something went wrong. Please click the refresh button and try again.",
+    "pubKey": "Public operator key",
+    "genPair": "GENERATE ENCRYPTED PAIR",
+    "confWarning": "CONFIRM WARNING",
+    "opDash": "MAINNET OPERATOR DASHBOARD",
+    "runOp": "The most secure way to run your Operator node, is to generate an Encrypted key pair.",
+    "dnldBackup": "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!",
+    "showPerformance": "Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it.",
+    "copyKey": "COPY PUBLIC OPERATOR KEY",
+    "skPk": "Secret Operator Key (SK) & Public Operator Key (PK)",
+    "selPk": "SELECT AN EXISTING PRIVATE KEY TO IMPORT",
+    "selEnc": "SELECT UNENCRYPTED PRIVATE KEY",
+    "sel": "SELECT",
+    "dnldBk": "DOWNLOAD BACKUP",
+    "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
+    "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
+    "dl": "DOWNLOAD",
+    "imp": "IMPORT"
+  },
+  "stakingPage": {
+    "somethingWrong": "Something went wrong",
+    "enteredGraffitti": "Entered Graffiti Not Valid.",
+    "writeGrpName": "Write here your group name",
+    "noVal": "No Validator key imported.",
+    "noMatch": "No Matches.",
+    "reward": "Reward",
+    "ttl": "Total",
+    "pleaseWait": "Please wait until the remote key is imported.",
+    "imp": "Importing",
+    "yes": "YES",
+    "no": "NO",
+    "noFile": "No file selected",
+    "impDet": "Import Details :",
+    "grpId": "Group ID:",
+    "grpNam": "Group Name:",
+    "keys": "Keys:",
+    "remGrp": "Remove Group",
+    "areYouSure": "Are you sure you want to remove this group?",
+    "remValKey": "Remove Validator Key(s)",
+    "areXouSure": "Are you sure you want to remove this Key(s)?",
+    "stopImport": " Otherwise, click outside to stop importing.",
+    "expMsg": "Export Message",
+    "riskWarning": "Risk Warning",
+    "process": "Processing...",
+    "withdrawExit": "Withdraw & Exit Validator Keys",
+    "vldExited": "Validator(s) Successfully Exited.",
+    "vldFailed": "Validator(s) Failed to exit.",
+    "successExit": "Successfully Exited.",
+    "exitFailed": "Exit Failed.",
+    "readConeq": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES"
+  },
+  "welcomePage": {
+    "logedOut": "You will be logged out of the Stereum Launcher. You will need to log back in to access your node.",
+    "logOut": "Logging out",
+    "logOutMsg": "Are you sure you want to log out?",
+    "logOutBtn": "Logout",
+    "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
+    "welcomeStereum": "Welcome to Stereum"
   }
 }

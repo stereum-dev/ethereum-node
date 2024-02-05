@@ -22,6 +22,7 @@
         @delete-preview="deletePreviewKey"
         @confirm-graffiti="confirmEnteredGrafiti"
         @confirm-remote="confirmImportRemoteKeys"
+        @remove-group="removeGroupConfirm"
       />
       <ManagementSection
         @graffiti-panel="graffitiPanelHandler"
@@ -38,6 +39,7 @@
     </transition>
   </base-layout>
 </template>
+
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
 import ListSection from "./sections/ListSection";
@@ -81,7 +83,7 @@ const modals = {
   },
   removeGroup: {
     component: RemoveGroup,
-    props: {},
+
     events: {
       removeGroup: () => removeGroupConfirm(stakingStore.currentGroup),
     },
@@ -214,6 +216,7 @@ const importKey = async (val) => {
   stakingStore.importKeyMessage = await ControlService.importKey(
     stakingStore.selectedValidatorService.config.serviceID
   );
+
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];
@@ -272,6 +275,7 @@ const importValidatorProcessing = async () => {
     stakingStore.keyFiles = [];
   } else {
     stakingStore.setActiveModal("risk");
+    stakingStore.doppelgangerKeys = [];
     console.log("error: there are active validators");
   }
 };
@@ -388,8 +392,7 @@ const renameGroup = (item) => {
 
 //Withdraw Group
 
-const withdrawGroup = (item) => {
-  console.log(item);
+const withdrawGroup = () => {
   stakingStore.setActivePanel("password");
 };
 
@@ -526,7 +529,7 @@ const deletePreviewKey = async (item) => {
 
 //**** Client Commands Buttons ****
 
-// ****** Fee Recepient *******
+// ****** Fee Recipient *******
 const confirmFeeRecepient = async () => {
   const key = stakingStore.selectKeyForFee;
   if (key) {
@@ -546,7 +549,7 @@ const confirmFeeRecepient = async () => {
   stakingStore.setActivePanel(null);
 };
 
-// ****** End of Fee Recepient *******
+// ****** End of Fee Recipient *******
 
 //****** Withdraw & Exit *******
 const withdrawModalHandler = () => {

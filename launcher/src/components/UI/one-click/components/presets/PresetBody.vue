@@ -5,10 +5,7 @@ import { ref, onMounted, watch } from 'vue';
       class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
-        <span class="text-center text-gray-200 text-sm">
-          CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO
-          SERVE YOUR USE CASE</span
-        >
+        <span class="text-center text-gray-200 text-sm uppercase">{{ $t("oneClick.chooseNetwork") }}</span>
       </div>
       <div class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5">
         <div

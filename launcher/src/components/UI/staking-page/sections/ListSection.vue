@@ -26,6 +26,7 @@
         @confirm-feerecepient="confirmFeerecepient"
         @confirm-graffiti="confirmGraffiti"
         @confirm-remote="confirmRemote"
+        @remove-group="removeGroup"
       />
     </div>
   </div>
@@ -55,6 +56,7 @@ const emit = defineEmits([
   "resetName",
   "confirmGraffiti",
   "confirmRemote",
+  "removeGroup",
 ]);
 
 const stakingStore = useStakingStore();
@@ -122,5 +124,9 @@ const backList = () => {
 };
 const confirmRemote = () => {
   emit("confirmRemote");
+};
+
+const removeGroup = (item) => {
+  emit("removeGroup", item);
 };
 </script>

@@ -23,13 +23,21 @@ import { computed, ref } from 'vue';
       <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
     <div
-      v-if="checkClientConnection && props.client.category !== 'execution'"
+      v-if="
+        checkClientConnection &&
+        props.client.category !== 'execution' &&
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="flex justify-evenly items-center absolute end-1 top-0"
     >
       <img class="w-3" src="/img/icon/manage-node-icons/connected.png" alt="icon" />
     </div>
     <div
-      v-else-if="!checkClientConnection && props.client.category !== 'execution'"
+      v-else-if="
+        !checkClientConnection &&
+        props.client.category !== 'execution' &&
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="flex justify-evenly items-center absolute end-1 top-0"
     >
       <img class="w-3" src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />

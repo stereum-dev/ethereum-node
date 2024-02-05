@@ -4,7 +4,7 @@
     :client="client"
     :sub-title="getSubTitles"
     :confirm-text="getConfirmText"
-    :disabled-button="disabledButton"
+    :disabled-button="disabledButton || externalServiceConfirmBtn"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
     @confirm-action="confirmInstall"
@@ -55,7 +55,9 @@ const properties = ref({
 const getConfirmText = computed(() => {
   let text = "";
   if (isAddPanelActivated.value) {
-    if (props.client.category === "execution") {
+    if (props.client.category === "consensus" && props.client.service === "ExternalConsensusService") {
+      text = "confirm";
+    } else if (props.client.category === "execution" && props.client.service === "ExternalExecutionService") {
       text = "confirm";
     } else if (
       props.client.category === "consensus" ||
@@ -85,6 +87,15 @@ const getSubTitles = computed(() => {
     text = "Add Connection";
   }
   return text;
+});
+
+const externalServiceConfirmBtn = computed(() => {
+  if (props.client.service === "ExternalExecutionService") {
+    return props.client.config.source === "" || props.client.config.jwtToken === "";
+  } else if (props.client.service === "ExternalConsensusService") {
+    return props.client.config.source === "";
+  }
+  return false;
 });
 
 //Lifecycle Hooks

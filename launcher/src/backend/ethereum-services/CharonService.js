@@ -44,7 +44,6 @@ export class CharonService extends NodeService {
       consensusClients // consensusClients    
     );
     return service;
-
   }
 
   static buildByConfiguration(config) {
@@ -66,6 +65,7 @@ export class CharonService extends NodeService {
   buildConsensusClientGateway() {
     return "stereum-" + this.id + ":3600";
   }
+
 
   getDataDir() {
     return this.volumes.find((volume) => volume.servicePath === "/opt/charon").destinationPath;
@@ -98,5 +98,6 @@ export class CharonService extends NodeService {
   //definitionFile as URL or Path to file (default ".charon/cluster-definition.json" by dkg command)
   getDKGCommand(definitionFile) {
     return `docker run -u 0 --name "dkg-container" -d -v "${this.getDataDir()}:/opt/charon" ${this.image + ":" + this.imageVersion} dkg ${definitionFile ? "--definition-file=" + definitionFile : ""} --publish`;
+
   }
 }

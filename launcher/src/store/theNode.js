@@ -12,6 +12,8 @@ export const useNodeStore = defineStore("theNode", {
       runNodePowerModal: false,
       clientToLogs: null,
       logs: [],
+      exportAllLogs: false,
+      exportLogs: false,
       searchLogs: "",
       serviceLogs: [],
       consensusItems: [],

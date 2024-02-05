@@ -19,8 +19,16 @@
         </div>
       </div>
       <no-data
-        v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"
-        :service-cat="installedServicesController !== '' ? 'install' : prometheusIsOff ? 'prometheus' : ''"
+        v-else-if="
+          consensusClientIsOff || prometheusIsOff || installedServicesController !== ''
+        "
+        :service-cat="
+          installedServicesController !== ''
+            ? 'install'
+            : prometheusIsOff
+            ? 'prometheus'
+            : ''
+        "
       />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
@@ -35,9 +43,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                (cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
-                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
-                }`),
+                (cursorLocation = `the current epoch: ${
+                  currentResult.currentEpoch
+                } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`),
                   dialogOpen(currentResult.currentEpoch, n.slotNumber, n.slotStatus),
                   (epochType = 'proposed ')
               "
@@ -58,7 +66,11 @@
               }"
               @mouseenter="
                 (cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`),
-                  dialogOpen(currentResult.currentJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  dialogOpen(
+                    currentResult.currentJustifiedEpoch,
+                    n.slotNumber,
+                    n.slotStatus
+                  ),
                   (epochType = 'justified ')
               "
               @mouseleave="(cursorLocation = ''), dialogClose()"
@@ -76,7 +88,11 @@
               }"
               @mouseenter="
                 (cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`),
-                  dialogOpen(currentResult.previousJustifiedEpoch, n.slotNumber, n.slotStatus),
+                  dialogOpen(
+                    currentResult.previousJustifiedEpoch,
+                    n.slotNumber,
+                    n.slotStatus
+                  ),
                   (epochType = 'previous justified ')
               "
               @mouseleave="(cursorLocation = ''), dialogClose()"
@@ -222,11 +238,17 @@ export default {
     },
     currentResult: {
       handler(newResult) {
-        if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
-          const newArray = newResult.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
-            slotNumber: slot.slotNumber,
-            slotStatus: slot.slotStatus,
-          }));
+        if (
+          newResult &&
+          newResult.currentEpochStatus &&
+          newResult.currentEpochStatus[0]
+        ) {
+          const newArray = newResult.currentEpochStatus[0]
+            .slice(0, this.proposedBlock.length)
+            .map((slot) => ({
+              slotNumber: slot.slotNumber,
+              slotStatus: slot.slotStatus,
+            }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -271,13 +293,17 @@ export default {
       }
 
       const categories = ["consensus", "execution"];
-      const missingCategories = categories.filter((category) => !foundCategories.has(category));
+      const missingCategories = categories.filter(
+        (category) => !foundCategories.has(category)
+      );
 
       if (!hasPrometheus) {
         missingCategories.push("Prometheus");
       }
 
-      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
+      this.installedServicesController = missingCategories
+        .join(", ")
+        .replace(/, (?=[^,]*$)/, " and ");
     },
 
     refreshTimer() {
@@ -342,6 +368,7 @@ export default {
     },
   },
 };
+//for test PR
 </script>
 <style scoped>
 .box-wrapper {

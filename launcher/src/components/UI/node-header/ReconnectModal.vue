@@ -2,16 +2,21 @@
   <div class="reconnect-modal-parent">
     <div class="modal-opacity"></div>
     <div class="reconnect-modal-content">
-    <div class="logoutBtn"> 
-      <div class="logoutBox" @click="$emit('openLogout')">
-        <span>{{ $t("logOutModal.logOutBtn") }}</span>
+      <div class="logoutBtn">
+        <div class="logoutBox" @click="$emit('openLogout')">
+          <span>{{ $t("logOutModal.logOutBtn") }}</span>
+        </div>
       </div>
-    </div>
       <div class="title-box">
         <span>{{ $t("reconnectModal.reconnectTitle") }}</span>
       </div>
-      <div class="messageContent">
+      <div v-if="!reconnecting" class="messageContent">
+        <img src="/img/icon/manage-node-icons/stereum_cant_connect.gif" />
         <span class="message">{{ $t("reconnectModal.reconnectMessage") }}</span>
+      </div>
+      <div v-if="reconnecting" class="messageContent">
+        <img v-if="reconnecting" src="/img/icon/manage-node-icons/stereum_connected.gif" />
+        <span class="message">{{ $t("reconnectModal.reconnectingMessage") }}</span>
       </div>
       <div class="confirmBtn">
         <div class="confirmBox" @click="$emit('confirmReconnect')">
@@ -21,7 +26,17 @@
     </div>
   </div>
 </template>
-<script></script>
+<script>
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
+export default {
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      reconnecting: "reconnecting",
+    }),
+  },
+};
+</script>
 <style scoped>
 .reconnect-modal-parent {
   width: 100%;
@@ -130,7 +145,6 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  
 }
 .confirmBox span {
   font-size: 100%;
@@ -142,7 +156,6 @@
   color: #c4c4c4;
 }
 .confirmBox:hover {
-
   transform: scale(1.05);
   transition: all 100ms;
   color: #d6d6d6;
