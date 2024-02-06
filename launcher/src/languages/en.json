@@ -140,7 +140,10 @@
     "settingService": "Setting up the service",
     "restart": "restart the service",
     "currentEpoch": "Current EPOCH",
-    "currentSlot": "Current SLOT"
+    "currentSlot": "Current SLOT",
+    "p2pNet": "Peer to peer network",
+    "selConcensus": "Select the consensus client",
+    "selExecution": "Select the execution client"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

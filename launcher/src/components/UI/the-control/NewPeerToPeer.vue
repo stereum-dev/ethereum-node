@@ -1,14 +1,27 @@
 <template>
-  <div class="np2p-parent">
+  <div
+    class="np2p-parent"
+    @mouseenter="footerStore.cursorLocation = `${compName}`"
+    @mouseleave="footerStore.cursorLocation = ''"
+  >
     <div class="np2p-icon-box">
       <div class="np2p-icon-box_container">
         <img src="/img/icon/control/PeertoPeerIcon.png" alt="" />
       </div>
-      <span>PEER TO PEER NETWORK</span>
+      <span class="uppercase">{{ $t("controlPage.p2pNet") }}</span>
     </div>
     <div class="np2p-rowsbox">
-      <div v-for="(item, index) in peerRows(selectedService)" :key="index" class="service-rox">
-        {{ item.name }}
+      <div
+        v-for="(item, index) in peerRows(selectedService)"
+        :key="index"
+        class="service-rox"
+        @mouseenter="footerStore.cursorLocation = `${item.name} : ${dummy}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
+        <div class="service-rox_icon"><img :src="item.icon" :alt="item.name" /></div>
+        <div class="service-row_val">
+          <span>{{ dummy }}</span>
+        </div>
       </div>
     </div>
     <div class="service-selction">
@@ -16,15 +29,31 @@
         class="service-icon"
         :style="{ background: selectedService == consensus ? '#94DEFF' : '' }"
         @click="selectService(consensus)"
+        @mouseenter="footerStore.cursorLocation = `${selConcensus}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img :src="controlStore.currentConsensusIcon" alt="" />
+        <img
+          :class="controlStore.currentConsensusIcon == '' ? 'animate-spin' : ''"
+          :src="
+            controlStore.currentConsensusIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentConsensusIcon
+          "
+          alt="consensus"
+        />
       </div>
       <div
         class="service-icon"
         :style="{ background: selectedService == execution ? '#94DEFF' : '' }"
         @click="selectService(execution)"
+        @mouseenter="footerStore.cursorLocation = `${selExecution}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img :src="controlStore.currentExecutionIcon" alt="" />
+        <img
+          :class="controlStore.currentExecutionIcon == '' ? 'animate-spin' : ''"
+          :src="
+            controlStore.currentExecutionIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentExecutionIcon
+          "
+          alt="execution"
+        />
       </div>
     </div>
   </div>
@@ -32,15 +61,25 @@
 <script setup>
 import { useControlStore } from "@/store/theControl";
 import { useServices } from "@/store/services";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
 
 import { ref } from "vue";
 
+const t = i18n.global.t;
+
+const footerStore = useFooter();
 const serviceStore = useServices();
 const controlStore = useControlStore();
+
+const compName = t("controlPage.p2pNet");
+const selConcensus = t("controlPage.selConcensus");
+const selExecution = t("controlPage.selExecution");
 
 const selectedService = ref("consensus");
 const consensus = ref("consensus");
 const execution = ref("execution");
+const dummy = ref("000000000000"); // dummy data
 
 const selectService = (service) => {
   selectedService.value = service;
@@ -112,6 +151,25 @@ console.log(serviceStore.allServices.filter((item) => item.category.toLowerCase(
   border: 1px solid #c1c1c1;
   border-radius: 10px;
   padding: 1% 2%;
+}
+.service-rox_icon {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.service-rox_icon img {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+.service-row_val {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 80%;
 }
 .service-selction {
   width: 20%;
