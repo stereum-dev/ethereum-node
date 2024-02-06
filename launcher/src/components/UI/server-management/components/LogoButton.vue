@@ -14,7 +14,7 @@ import { computed, ref } from 'vue'; import { useFooter } from '@/store/theFoote
     />
 
     <div
-      v-if="isHovered"
+      v-if="isHovered && route.path !== '/login'"
       role="tooltip"
       class="absolute top-20 left-12 w-56 h-9 rounded bg-[#1d1f20] px-3 py-2 text-center text-sm font-semibold text-white outline-none flex justify-center items-center"
     >
@@ -26,6 +26,7 @@ import { computed, ref } from 'vue'; import { useFooter } from '@/store/theFoote
 <script setup>
 import { useFooter } from "@/store/theFooter";
 import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const props = defineProps({
   serverAcc: {
@@ -34,6 +35,7 @@ const props = defineProps({
   },
 });
 
+const route = useRoute();
 const footerStore = useFooter();
 const isHovered = ref(false);
 

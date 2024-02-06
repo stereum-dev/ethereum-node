@@ -3,7 +3,7 @@ import ServerHeader from './components/ServerHeader.vue';
   <div
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
-    <ServerHeader />
+    <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
       @select-server="serverHandler"
       @change-password="acceptChangePass"
@@ -53,6 +53,11 @@ onMounted(async () => {
 
 //Methods
 
+//Server Management Tab Picker
+const tabPicker = (tab) => {
+  serverStore.setActiveTab(tab);
+};
+
 //Load stored connections
 
 const loadStoredConnections = async () => {
@@ -96,6 +101,10 @@ const acceptChangePass = async (pass) => {
 
 const closeWindow = () => {
   serverStore.isRemoveModalActive = false;
+};
+
+const closeErrorDialog = () => {
+  serverStore.errorMsgExists = false;
 };
 
 const removeServerHandler = async () => {
