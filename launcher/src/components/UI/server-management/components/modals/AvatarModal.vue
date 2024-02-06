@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 <template>
   <div
-    class="absolute -top-20 -left-[7px] w-[390px] h-[200px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-sm shadow-lg overflow-hidden grid grid-cols-5 grid-rows-4 gap-2 p-2"
+    class="absolute -top-20 left-0 w-[400px] h-[200px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-md shadow-lg overflow-hidden grid grid-cols-5 grid-rows-4 gap-2 p-2"
     :class="serverStore.isAvatarModalActive ? 'animate__fadeInDown' : 'animate__fadeOutUp'"
     @mouseleave="serverStore.isAvatarModalActive = false"
   >

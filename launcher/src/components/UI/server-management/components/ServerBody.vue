@@ -3,33 +3,31 @@
     class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-24 grid-rows-12 p-2 gap-x-1"
   >
     <div
-      class="col-start-14 col-span-full row-start-1 row-span-full p-1 pl-0 grid grid-cols-12 grid-rows-12 bg-[#1b1b1d] rounded-md"
+      class="col-start-14 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
     >
-      <LoginBox v-if="isLoginActive" />
-      <ManagementBox
-        v-if="isManagementActive"
-        @change-password="changePassword"
-        @set-avatar="setServerAvatar"
-        @file-upload="fileUpload"
-        @delete-key="deleteKey"
-      />
+      <LoginPanel v-if="isLoginActive" />
+      <DetailsPanel v-else-if="isDetailsActive" @change-password="changePassword" @set-avatar="setServerAvatar" />
+      <UpdatePanel v-else-if="serverStore.isServerUpdateActive" />
+      <SshPanel v-else-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
     </div>
     <div
-      class="col-start-1 col-end-14 row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b1b1d] rounded-md"
+      class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
     >
-      <SavedServers @select-server="selectServer" @server-login="addNewServer" />
+      <ServerPanel @select-server="selectServer" @server-login="addNewServer" />
     </div>
   </div>
 </template>
 
 <script setup>
-import ManagementBox from "./management/ManagementBox.vue";
-import SavedServers from "./saved-servers/SavedServers.vue";
-import LoginBox from "./login-form/LoginBox.vue";
+import ServerPanel from "./saved-servers/ServerPanel.vue";
+import LoginPanel from "./login-form/LoginPanel.vue";
+import DetailsPanel from "./server-details/DetailsPanel.vue";
+import UpdatePanel from "./server-update/UpdatePanel.vue";
+import SshPanel from "./ssh-management/SshPanel.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { watch, computed } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey"]);
@@ -39,17 +37,18 @@ const controlStore = useControlStore();
 const route = useRoute();
 
 const isLoginActive = computed(() => route.path === "/login" || serverStore.isServerLoginActive);
-const isManagementActive = computed(() => route.path !== "/login" && serverStore.isServerManagementActive);
+const isSSHActive = computed(() => route.path !== "/login" && serverStore.isServerSSHActive);
+const isDetailsActive = computed(() => route.path !== "/login" && serverStore.isServerDetailsActive);
 
-watch(
-  () => serverStore.selectedServerConnection,
-  async (newVal) => {
-    if (newVal) {
-      serverStore.isServerLoginActive = false;
-      serverStore.isServerManagementActive = true;
-    }
-  }
-);
+// watch(
+//   () => serverStore.selectedServerConnection,
+//   async (newVal) => {
+//     if (newVal) {
+//       serverStore.isServerLoginActive = false;
+//       serverStore.isServerManagementActive = true;
+//     }
+//   }
+// );
 
 //Methods
 
