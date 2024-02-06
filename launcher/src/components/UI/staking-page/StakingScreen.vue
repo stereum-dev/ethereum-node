@@ -50,7 +50,6 @@ import RiskWarning from "./components/modals/RiskWarning.vue";
 import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import ImportRemote from "./components/modals/ImportRemote.vue";
 import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
-import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, ref, watch } from "vue";
@@ -301,7 +300,7 @@ const openGroupList = (item) => {
 //Create Group;
 
 const createGroup = async (groupName) => {
-  const groupId = uuidv4();
+  const groupId = self.crypto.randomUUID();
   const existingKeys = await ControlService.readKeys();
 
   if (existingKeys) {
