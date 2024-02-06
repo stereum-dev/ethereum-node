@@ -6,19 +6,21 @@
   >
     <div class="np2p-icon-box">
       <div class="np2p-icon-box_container">
-        <img src="/img/icon/control/PeertoPeerIcon.png" alt="" />
+        <img src="/img/icon/control/SubnetSubscriptions.png" alt="" />
       </div>
-      <span class="uppercase">{{ $t("controlPage.p2pNet") }}</span>
+      <span class="uppercase">{{ $t("controlPage.subsribeSubnet") }}</span>
     </div>
     <div class="np2p-rowsbox">
       <div
-        v-for="(item, index) in peerRows(selectedService)"
+        v-for="(item, index) in 10"
         :key="index"
         class="service-rox"
-        @mouseenter="footerStore.cursorLocation = `${item.name} : ${dummy}`"
+        @mouseenter="footerStore.cursorLocation = `${item} : ${dummy}`"
         @mouseleave="footerStore.cursorLocation = `${compName}`"
       >
-        <div class="service-rox_icon"><img :src="item.icon" :alt="item.name" /></div>
+        <div class="service-rox_icon">
+          <img src="/img/icon/control/SubnetPeet.png" :alt="item.name" />
+        </div>
         <div class="service-row_val">
           <span>{{ dummy }}</span>
         </div>
@@ -60,7 +62,6 @@
 </template>
 <script setup>
 import { useControlStore } from "@/store/theControl";
-import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 
@@ -69,10 +70,9 @@ import { ref } from "vue";
 const t = i18n.global.t;
 
 const footerStore = useFooter();
-const serviceStore = useServices();
 const controlStore = useControlStore();
 
-const compName = t("controlPage.p2pNet");
+const compName = t("controlPage.subsribeSubnet");
 const selConcensus = t("controlPage.selConcensus");
 const selExecution = t("controlPage.selExecution");
 
@@ -84,13 +84,6 @@ const dummy = ref("000000000000"); // dummy data
 const selectService = (service) => {
   selectedService.value = service;
 };
-
-const peerRows = (arg) => {
-  console.log(serviceStore.allServices.filter((item) => item.category.toLowerCase() === arg));
-  return serviceStore.allServices.filter((item) => item.category.toLowerCase() === arg);
-};
-
-console.log(serviceStore.allServices.filter((item) => item.category.toLowerCase() === "consensus"));
 </script>
 
 <style scoped>
@@ -126,7 +119,7 @@ console.log(serviceStore.allServices.filter((item) => item.category.toLowerCase(
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50%;
+  font-size: 45%;
   font-weight: bold;
   color: #c1c1c1;
 }
