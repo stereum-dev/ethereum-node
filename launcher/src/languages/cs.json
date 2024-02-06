@@ -140,7 +140,10 @@
     "settingService": "Nastavení služby",
     "restart": "restartovat službu",
     "currentEpoch": "Current EPOCH",
-    "currentSlot": "Current SLOT"
+    "currentSlot": "Current SLOT",
+    "p2pNet": "Peer to peer network",
+    "selConcensus": "Select the consensus client",
+    "selExecution": "Select the execution client"
   },
   "taskManager": {
     "clickDisplay": "Klikněte na úkoly pro zobrazení"
@@ -284,7 +287,7 @@
     "pubKey": "Veřejný klíč operátora",
     "copied": "zkopírováno!",
     "secKey": "Soukromý klíč operátora",
-    "makeSureText": "Ujistěte se, že svůj tajný klíč operátora uložíte a zálohujete na bezpečném místě. Tento klíč s nikým nesdílejte.",
+    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place. Do not share this key with anyone.",
     "copyMessage": "Zkopírujte váš veřejný klíč operátora do tohoto pole, abyste potvrdili, že jste své klíče uložili!"
   },
   "ssvDashboard": {
@@ -326,7 +329,7 @@
   },
   "customInstallation": {
     "customInstallationTitle": "VLASTNÍ INSTALACE",
-    "customInstallationText": "Tento režim je určen pro pokročilejší uživatele a vyžaduje znalost toho, jak mezi sebou klienti vzájemně interagují. Budete muset vybírat, instalovat a propojovat každou část svého uzlu s uživatelským rozhraním sami!"
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have an understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
   },
   "mevboostConfig": {
     "availRelays": "DOSTUPNÉ BLOKOVÉ RELAYE",
@@ -385,7 +388,7 @@
     "clickExtention": "Klikněte na tlačítko \"vaš exekuční klient \" pro zkopírování RPC URL",
     "clickCancel": "Klikněte na křížek pro zrušení",
     "firstMessage": "Widget pro RPC-Endpoint je umístěn na přehledové desce. Prosím, \"ZAPNĚTE\" tlačítko a klikněte na \"Exekuční Klient\" pro pokračování na další krok.",
-    "secondMessage": "Nyní můžete odeslat svou transakci PŘES VÁŠ UZEL POMOCÍ METAMASK. Až budete hotovi s odesíláním transakcí, klikněte na tlačítko \"ZAPNOUT\", aby se uzavřel váš port",
+    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending your transactions, click on “ON” to close your port",
     "firstSlide": "Nyní se přihlaste do vaší dApp nebo peněženky, kterou chcete použít (v našem případě MetaMask)",
     "secondSlide": "Klikněte na tlačítko \"Síť\"",
     "thirdSlide": "Klikněte na \"Přidat síť\"",
@@ -547,7 +550,7 @@
     "usingTerminal": "Přečtěte si o \"používání terminálu\" (Using the terminal) a klikněte na \"PŘIJMÁM\"",
     "validatorUptime": "Přečtěte si o \"dostupnosti validátoru\" (Validator uptime) a klikněte na \"PŘIJMÁM\"",
     "validatorBahavior": "Přečtěte si o \"špatném chování validátora\" (Bad validator behaviour) a klikněte na \"PŘIJMÁM\"",
-    "keyManagement": "Přečtěte si o \"správě klíčů\" (Key management) a klikněte na \"PŘIJMÁM\"",
+    "keyManagement": "Read through Key management and click on “I ACCEPT”",
     "validatingLongterm": "Přečtěte si o \"validaci jako dlouhodobém závazku\" (Validating is a long-term commitment) a klikněte na \"PŘIJMÁM\"",
     "earlyAdaptor": "Přečtěte si o \"rizicích pro brzké uživatele\" (Early adopter risks) a klikněte na \"PŘIJMÁM\"",
     "stakingChecklist": "Přečtěte si \"kontrolní seznam stakování\" (Staking checklist) a klikněte na \"PŘIJMÁM\"",
@@ -566,7 +569,7 @@
     "selectNetwork": "Vyberte síť, ve které chcete spustit váš uzel",
     "clickOk": "Klikněte na \"OK\"",
     "clickCreate": "Klikněte na \"VYTVOŘIT\"",
-    "recoveryPhrase": "Po vytvoření vaší tajné obnovovací fráze ji uložte na bezpečné místo. Klikněte na tlačítko \"Kopírovat\".",
+    "recoveryPhrase": "After your Secret Recovery Phrase is created save it in a safe place. Click on the copy button.",
     "clickNext": "Klikněte na \"DALŠÍ\"",
     "imSure": "Klikněte na \"JSEM SI JISTÝ(Á)\"",
     "pasteRecovery": "Zadejte vaši tajnou obnovovací frázi",
@@ -579,7 +582,7 @@
     "clickCreateWait": "Klikněte na \"VYTVOŘIT\" a počkejte pár sekund",
     "clickClose": "Zkontrolujte, zda jsou vaše klíče generovány a klikněte na \"ZAVŘÍT\"",
     "switchSetup": "Přepnout zpět na stránku nastavení",
-    "dragFile": "Klikněte na \"Přetáhnout soubor k nahrání nebo procházet\" a přetáhněte váš soubor do pole",
+    "dragFile": "Click on “Drag file to upload or browse” and drag your deposite file in the field",
     "connWalet": "Připojte peněženku, zkontrolujte síť a zůstatek",
     "understandRisk": "Přečtěte si sekci \"Rozumějte rizikům\" (Understand the risks) a zaškrtněte každé políčko",
     "readSection": "Přečtěte si sekci \"Ujistěte se, že nejste oklamáni phisingem\" (Make sure you aren't phished) a zaškrtněte políčko",
