@@ -175,6 +175,8 @@ export default {
       consensusName: "consensusName",
       pageNumber: "pageNumber",
       synchronizationError: "synchronizationError",
+      currentConsensusIcon: "currentConsensusIcon",
+      currentExecutionIcon: "currentExecutionIcon",
     }),
 
     errorIco() {
@@ -202,6 +204,7 @@ export default {
       return Math.floor(this.consensusPer);
     },
   },
+
   mounted() {
     this.syncControler();
   },
@@ -228,6 +231,13 @@ export default {
       const lowerCaseInputValue = name.toLowerCase();
       const clientData = [...this.consensusClientsData, ...this.executionClientsData];
       const matchingClient = clientData.find((client) => client.name.toLowerCase() === lowerCaseInputValue);
+
+      if (name === this.consensusName) {
+        this.currentConsensusIcon = matchingClient.img;
+      } else if (name === this.executionName) {
+        this.currentExecutionIcon = matchingClient.img;
+      }
+
       return matchingClient ? matchingClient.img : "";
     },
     getPer(firstVal, secondVal) {
