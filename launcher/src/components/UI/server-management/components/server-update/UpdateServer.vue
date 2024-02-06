@@ -40,7 +40,7 @@
       <div
         class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full border border-gray-500 rounded-md flex flex-col justify-start items-center p-1 space-y-1 bg-black overflow-x-hidden overflow-y-auto"
       >
-        <UpdateRow v-for="item in serverStore.serverUpdates" :key="item" :item="item" />
+        <UpdateRow v-for="item in updates" :key="item" :item="item" @update-server="updateServer" />
       </div>
     </div>
   </div>
@@ -60,6 +60,21 @@ const headerStore = useNodeHeader();
 const serviceStore = useServices();
 
 const osVersionCurrent = ref("");
+
+const updates = ref([
+  {
+    name: "Ubuntu",
+    version: "20.04",
+  },
+  {
+    name: "Ubuntu",
+    version: "20.03",
+  },
+  {
+    name: "Ubuntu",
+    version: "20.02",
+  },
+]);
 
 onMounted(() => {
   getUpdatablePackagesCount();
@@ -90,5 +105,17 @@ const getOsVersion = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const updateServer = async (item) => {
+  console.log(item);
+  // try {
+  //   serverStore.isUpdateProcessing = true;
+  //   await ControlService.updateOS(item.version);
+  //   serverStore.isUpdateProcessing = false;
+  // } catch (error) {
+  //   serverStore.isUpdateProcessing = false;
+  //   console.log(error);
+  // }
 };
 </script>

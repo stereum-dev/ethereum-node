@@ -84,6 +84,10 @@ export const useServers = defineStore("servers", {
         useAuth: false,
       },
 
+      //Update
+      serverUpdates: [],
+      isUpdateProcessing: false,
+
       //Form
       addNewServer: false,
       connectExistingServer: false,
@@ -107,14 +111,12 @@ export const useServers = defineStore("servers", {
   actions: {
     setActiveTab(tab) {
       this.selectedTab = null;
-      console.log("taaab", tab);
       this.tabs.forEach((item) => {
         item.isActive = false;
       });
 
       this.tabs.find((item) => item.name === tab).isActive = true;
       this.selectedTab = tab;
-      console.log("Selected Tabbb", this.selectedTab);
     },
   },
 });
