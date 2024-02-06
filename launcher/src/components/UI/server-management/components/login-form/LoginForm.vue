@@ -1,7 +1,14 @@
 import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch, watchEffect } from 'vue';
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full flex justify-center items-center">
-    <form class="w-full h-full grid grid-cols-12 grid-rows-7 space-y-1">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
+  >
+    <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
+      <span class="text-md font-semibold text-gray-300 uppercase">Login to server</span>
+    </div>
+    <form
+      class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
+    >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="servername"
@@ -14,7 +21,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           v-model="serverStore.loginState.hostName"
           type="text"
           :placeholder="`${$t('multiServer.serverName')}`"
-          class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
         />
 
         <div
@@ -72,7 +79,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           v-model="serverStore.loginState.ip"
           type="text"
           placeholder="114.72.86.90"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
         />
       </div>
       <div class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -86,7 +93,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           v-model="serverStore.loginState.port"
           type="text"
           placeholder="22"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
         />
       </div>
       <div class="col-start-1 col-end-7 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -101,7 +108,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           v-model="serverStore.loginState.username"
           type="text"
           placeholder="root"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
         />
       </div>
       <div class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -118,7 +125,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
             id="AcceptConditions"
             v-model="serverStore.loginState.useAuth"
             type="checkbox"
-            class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden"
+            class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden bg-gray-200"
             @change="changeLabel"
           />
 
@@ -168,7 +175,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           id="password"
           v-model="serverStore.loginState.password"
           type="password"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           placeholder="******************"
           :disabled="useSSHKey"
         />
@@ -185,7 +192,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           v-model="serverStore.loginState.keyPath"
           type="text"
           placeholder="/user/.ssh/id_rsa"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           :disabled="!useSSHKey"
         />
         <label
@@ -211,15 +218,15 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           id="password"
           v-model="serverStore.loginState.passphrase"
           type="password"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           placeholder="******************"
         />
       </div>
 
-      <div class="col-start-1 col-span-full row-start-7 row-span-1 flex justify-center items-center px-2 py-1">
+      <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
         <button
           v-if="!serverStore.connectingProcess"
-          class="w-full h-8 bg-gray-200 hover:bg-teal-700 text-gray-700 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100"
+          class="w-full h-[50px] bg-gray-200 hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
           type="button"
           @click="internalLogin"
         >
@@ -227,10 +234,10 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         </button>
         <div
           v-else
-          class="w-full h-8 bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center"
+          class="w-full h-[50px] bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center text-md"
         >
           <svg
-            class="animate-spin h-5 w-5 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full"
+            class="animate-spin h-6 w-6 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full"
             viewBox="0 0 24 24"
           ></svg>
           {{ $t("multiServer.conecting") }}
@@ -275,7 +282,7 @@ const useSSHKey = computed(() => {
 });
 
 const addButtonDisabled = computed(() => {
-  const existingServer = serverStore.savedServers.savedConnections.some(
+  const existingServer = serverStore.savedServers?.savedConnections?.some(
     (item) => item.host === serverStore.selectedServerToConnect?.host
   );
 

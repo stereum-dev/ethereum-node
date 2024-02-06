@@ -1,9 +1,9 @@
 import ServerHeader from './components/ServerHeader.vue';
 <template>
   <div
-    class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-gray-700 z-10 p-2 rounded-md divide-y-2 divide-gray-500"
+    class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
-    <ServerHeader />
+    <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
       @select-server="serverHandler"
       @change-password="acceptChangePass"
@@ -30,7 +30,7 @@ import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 import { useServers } from "@/store/servers";
@@ -44,6 +44,40 @@ const { remove } = useServerLogin();
 
 const keyLocation = ref("");
 
+watchEffect(() => {
+  switch (serverStore.selectedTab) {
+    case "login":
+      serverStore.isServerLoginActive = true;
+      serverStore.isServerDetailsActive = false;
+      serverStore.isServerSSHActive = false;
+      serverStore.isServerUpdateActive = false;
+      break;
+    case "info":
+      serverStore.isServerLoginActive = false;
+      serverStore.isServerDetailsActive = true;
+      serverStore.isServerSSHActive = false;
+      serverStore.isServerUpdateActive = false;
+      break;
+    case "ssh":
+      serverStore.isServerLoginActive = false;
+      serverStore.isServerDetailsActive = false;
+      serverStore.isServerSSHActive = true;
+      serverStore.isServerUpdateActive = false;
+      break;
+    case "update":
+      serverStore.isServerLoginActive = false;
+      serverStore.isServerDetailsActive = false;
+      serverStore.isServerSSHActive = false;
+      serverStore.isServerUpdateActive = true;
+      break;
+    case null:
+      serverStore.isServerLoginActive = true;
+      serverStore.isServerDetailsActive = false;
+      serverStore.isServerSSHActive = false;
+      serverStore.isServerUpdateActive = false;
+      break;
+  }
+});
 // const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
 
 onMounted(async () => {
@@ -52,6 +86,11 @@ onMounted(async () => {
 });
 
 //Methods
+
+//Server Management Tab Picker
+const tabPicker = (tab) => {
+  serverStore.setActiveTab(tab);
+};
 
 //Load stored connections
 
@@ -64,16 +103,22 @@ const loadStoredConnections = async () => {
 
 //Click handling on a server in the saved servers list
 const serverHandler = (server) => {
+  serverStore.tabs.forEach((tab) => {
+    tab.isActive = false;
+  });
+
   if (serverStore.selectedServerConnection?.name === server.name) {
     serverStore.isServerLoginActive = false;
-    serverStore.isServerManagementActive = true;
+    serverStore.setActiveTab("info");
+    serverStore.isServerDetailsActive = true;
   } else {
     if (serverStore.addNewServer) {
       serverStore.addNewServer = false;
     }
+    serverStore.setActiveTab("login");
     serverStore.connectExistingServer = true;
     serverStore.selectedServerToConnect = server;
-    serverStore.isServerManagementActive = false;
+    serverStore.isServerDetailsActive = false;
     serverStore.isServerLoginActive = true;
   }
 };
@@ -96,6 +141,10 @@ const acceptChangePass = async (pass) => {
 
 const closeWindow = () => {
   serverStore.isRemoveModalActive = false;
+};
+
+const closeErrorDialog = () => {
+  serverStore.errorMsgExists = false;
 };
 
 const removeServerHandler = async () => {
