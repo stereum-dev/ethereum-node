@@ -259,41 +259,40 @@ export class ServiceManager {
       NimbusBeaconService: "--trusted-node-url=",
       TekuBeaconService: "--initial-state=",
     };
-    //if command is string
-    if (typeof client.command === "string") {
-      //remove old checkpoint command
-      if (client.command.includes(checkpointCommands[client.service])) {
-        let commands = client.command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
-        let includesCommand = commands.filter((c) => c.includes(checkpointCommands[client.service]));
-        commands = commands.filter((c) => !includesCommand.includes(c));
-        client.command = commands.concat().join(" ").trim();
-      }
-      //add checkpointSync if Url was send
-      if (checkpointUrl) {
-        client.command += " " + checkpointCommands[client.service] + checkpointUrl;
-      }
-    } else {
-      //check if command is used
-      const checkpointSyncIndex = client.command.findIndex((c) => c.includes(checkpointCommands[client.service]));
-      //delete checkpointSync if used
-      if (checkpointSyncIndex > -1) {
-        client.command.splice(checkpointSyncIndex, 1);
-      }
-      //add checkpointSync if Url was send
-      if (checkpointUrl) {
-        client.command.push(checkpointCommands[client.service] + checkpointUrl);
-      }
+
+    const genesisSyncCommands = {
+      LighthouseBeaconService: "--allow-insecure-genesis-sync",
+      TekuBeaconService: "--ignore-weak-subjectivity-period-enabled",
+    };
+
+    let isString = false;
+    let command = client.command;
+    if (typeof command === "string") {
+      isString = true;
+      command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
     }
 
-    //Lighthouse needs extra tag if syncing from genesis
-    if (client.service == "LighthouseBeaconService") {
-      //no URL given and tag not included in command => add tag
-      if (!client.command.some((c) => c.includes("--allow-insecure-genesis-sync") && !checkpointUrl)) {
-        client.command.push("--allow-insecure-genesis-sync");
-        //URL given and tag included in command => remove tag
-      } else if (client.command.some((c) => c.includes("--allow-insecure-genesis-sync") && checkpointUrl)) {
-        client.command = client.command.filter((c) => !c.includes("--allow-insecure-genesis-sync"));
-      }
+    //check if command is used
+    const checkpointSyncIndex = command.findIndex((c) => c.includes(checkpointCommands[client.service]));
+    //delete checkpointSync if used
+    if (checkpointSyncIndex > -1) {
+      command.splice(checkpointSyncIndex, 1);
+    }
+    //add checkpointSync if Url was send
+    if (checkpointUrl) {
+      command.push(checkpointCommands[client.service] + checkpointUrl);
+      if (genesisSyncCommands[client.service])
+        command = command.filter((c) => !c.includes(genesisSyncCommands[client.service]));
+    } else {
+      //add genesisSync if no Url was send
+      if (genesisSyncCommands[client.service])
+        command.push(genesisSyncCommands[client.service]);
+    }
+
+    if (isString) {
+      client.command = command.join(" ").trim();
+    } else {
+      client.command = command;
     }
   }
 
