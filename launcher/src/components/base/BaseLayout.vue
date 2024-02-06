@@ -23,7 +23,7 @@
       <TaskManager />
     </div>
     <Transition name="slide-fade">
-      <ServerScreen
+      <MultiServerScreen
         v-if="
           serverStore.isServerAccessManagementActive &&
           router.currentRoute.value.fullPath !== '/config/play' &&
@@ -39,8 +39,8 @@
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
-import ServerScreen from "../UI/multi-server/ServerScreen.vue";
-import LogoButton from "../UI/multi-server/components/LogoButton.vue";
+import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
+import LogoButton from "../UI/server-management/components/LogoButton.vue";
 import { useFooter } from "@/store/theFooter";
 import { ref, computed } from "vue";
 import i18n from "../../../../launcher/src/includes/i18n";

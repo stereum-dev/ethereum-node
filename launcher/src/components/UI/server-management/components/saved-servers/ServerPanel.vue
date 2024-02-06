@@ -1,7 +1,9 @@
 <template>
-  <div class="col-start-1 col-span-full row-start-1 row-span-full p-2 grid grid-cols-12 grid-rows-12 items-center">
+  <div
+    class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md"
+  >
     <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
-      <span class="text-sm text-gray-200 text-left font-semibold uppercase">{{ $t("multiServer.saveServerCon") }}</span>
+      <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("multiServer.saveServerCon") }}</span>
     </div>
     <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
       <label for="Search" class="sr-only"> {{ $t("multiServer.serch") }} </label>
@@ -48,7 +50,7 @@
       />
     </div>
     <button
-      class="w-full h-[50px] col-start-1 col-span-full row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer space-x-4 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
+      class="w-full h-[50px] self-end col-start-1 col-span-full row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer space-x-4 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
       @click="serverLogin"
     >
       <img
