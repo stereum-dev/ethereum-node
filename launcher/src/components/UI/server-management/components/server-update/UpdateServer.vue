@@ -38,7 +38,7 @@
       </div>
 
       <div
-        class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full border border-gray-500 rounded-md flex flex-col justify-start items-center p-1 space-y-1 bg-black"
+        class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full border border-gray-500 rounded-md flex flex-col justify-start items-center p-1 space-y-1 bg-black overflow-x-hidden overflow-y-auto"
       >
         <UpdateRow v-for="item in serverStore.serverUpdates" :key="item" :item="item" />
       </div>

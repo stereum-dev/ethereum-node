@@ -6,9 +6,9 @@
       class="col-start-14 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
     >
       <LoginPanel v-if="isLoginActive" />
-      <DetailsPanel v-else-if="isDetailsActive" @change-password="changePassword" @set-avatar="setServerAvatar" />
-      <UpdatePanel v-else-if="serverStore.isServerUpdateActive" />
-      <SshPanel v-else-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
+      <DetailsPanel v-if="isDetailsActive" @change-password="changePassword" @set-avatar="setServerAvatar" />
+      <UpdatePanel v-if="isUpdateActive" />
+      <SshPanel v-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
     </div>
     <div
       class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
@@ -39,6 +39,7 @@ const route = useRoute();
 const isLoginActive = computed(() => route.path === "/login" || serverStore.isServerLoginActive);
 const isSSHActive = computed(() => route.path !== "/login" && serverStore.isServerSSHActive);
 const isDetailsActive = computed(() => route.path !== "/login" && serverStore.isServerDetailsActive);
+const isUpdateActive = computed(() => route.path !== "/login" && serverStore.isServerUpdateActive);
 
 // watch(
 //   () => serverStore.selectedServerConnection,

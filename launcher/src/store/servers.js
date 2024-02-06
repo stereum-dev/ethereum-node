@@ -90,48 +90,31 @@ export const useServers = defineStore("servers", {
 
       //Server Management tabs
 
-      isServerLoginActive: true,
+      isServerLoginActive: false,
       isServerDetailsActive: false,
       isServerSSHActive: false,
       isServerUpdateActive: false,
 
       tabs: [
-        { name: "login", icon: "/img/icon/form-setup/login.png", isActive: true, isDisabled: false },
+        { name: "login", icon: "/img/icon/form-setup/login.png", isActive: false, isDisabled: false },
         { name: "info", icon: "/img/icon/form-setup/infos.png", isActive: false, isDisabled: false },
         { name: "ssh", icon: "/img/icon/form-setup/lock.png", isActive: false, isDisabled: false },
         { name: "update", icon: "/img/icon/form-setup/download.png", isActive: false, isDisabled: false },
       ],
-      selectedTab: "login",
+      selectedTab: null,
     };
   },
   actions: {
     setActiveTab(tab) {
-      this.selectedTab = tab;
+      this.selectedTab = null;
+      console.log("taaab", tab);
       this.tabs.forEach((item) => {
         item.isActive = false;
       });
-      this.tabs.find((t) => t.name === tab).isActive = true;
 
-      // Reset all panel active states
-      this.isServerLoginActive = false;
-      this.isServerDetailsActive = false;
-      this.isServerSSHActive = false;
-      this.isServerUpdateActive = false;
-
-      switch (tab) {
-        case "login":
-          this.isServerLoginActive = true;
-          break;
-        case "info":
-          this.isServerDetailsActive = true;
-          break;
-        case "ssh":
-          this.isServerSSHActive = true;
-          break;
-        case "update":
-          this.isServerUpdateActive = true;
-          break;
-      }
+      this.tabs.find((item) => item.name === tab).isActive = true;
+      this.selectedTab = tab;
+      console.log("Selected Tabbb", this.selectedTab);
     },
   },
 });

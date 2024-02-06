@@ -10,25 +10,15 @@
         :class="logoDisabled ? 'pointer-events-none ' : ''"
         @mousedown.prevent.stop
       >
-        <LogoButton
-          :server-acc="serverAccMange"
-          @access-handler="serverAccessHandler"
-          @mouse-leave="mouseLeave"
-        />
+        <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
       </div>
 
       <MainNavbar />
     </div>
-    <div
-      class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative"
-    >
+    <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative">
       <slot></slot>
     </div>
-    <div
-      class="w-full h-[30px] rounded-b-lg bg-[#33393E]"
-      @pointerdown.prevent.stop
-      @mousedown.prevent.stop
-    >
+    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
       <TheFooter />
       <TaskManager />
     </div>
