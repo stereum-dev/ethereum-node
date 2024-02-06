@@ -370,7 +370,7 @@ export class SSHService {
     });
   }
 
-  // reads a directory's contents and returns an array of 
+  // reads a directory's contents and returns an array of stats objects of these contents
   async readDirectorySFTP(remotePath, sftp = null) {
     if (!sftp) {
       sftp = await this.getSFTPSession();
