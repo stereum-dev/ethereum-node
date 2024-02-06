@@ -37,6 +37,7 @@
     "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
     "evilscan": "^1.9.1",
+    "geoip-lite": "^1.4.7",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
     "leader-line-new": "^1.1.9",
