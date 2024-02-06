@@ -387,6 +387,7 @@ export class SSHService {
   }
 
   // returns filename and mode of the contents of a given directory
+  // workaround for readdirnot running with sudo
   async readDirectorySSH(remotePath) {
     try {
       const result = await this.exec(`find ${remotePath} -maxdepth 1 -exec stat --format '%n\n%f\n' {} +`);
@@ -423,6 +424,7 @@ export class SSHService {
     });
   }
 
+  // downloads a Directory and all its contents recursively from the remotePath to the localPath
   async downloadDirectorySSH(remotePath, localPath, sftp = null) {
     try {
       if (!sftp) {

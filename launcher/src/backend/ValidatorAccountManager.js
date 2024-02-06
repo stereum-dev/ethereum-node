@@ -1061,7 +1061,6 @@ export class ValidatorAccountManager {
       }
     } catch (err) {
       log.error("Error downloading Obol Backup: ", err);
-      return false;
     }
   }
 
