@@ -49,13 +49,13 @@
 <script setup>
 import UpdateRow from "./UpdateRow.vue";
 import ControlService from "@/store/ControlService";
-import { useServers } from "@/store/servers";
+// import { useServers } from "@/store/servers";
 
 import { ref, onMounted } from "vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 
-const serverStore = useServers();
+// const serverStore = useServers();
 const headerStore = useNodeHeader();
 const serviceStore = useServices();
 
