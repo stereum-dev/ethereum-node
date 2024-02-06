@@ -5,6 +5,7 @@ import ServerHeader from './components/ServerHeader.vue';
   >
     <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
+      @server-login="loginHandler"
       @select-server="serverHandler"
       @change-password="acceptChangePass"
       @file-upload="addExistingKeyHandler"
@@ -32,15 +33,15 @@ import PasswordModal from "./components/modals/PasswordModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
 import { ref, onMounted, watchEffect } from "vue";
 import ControlService from "@/store/ControlService";
-import { useControlStore } from "@/store/theControl";
 import { useServers } from "@/store/servers";
 import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
 import { useServerLogin } from "@/composables/useLogin";
+import { useRouter } from "vue-router";
 
-const controlStore = useControlStore();
 const serverStore = useServers();
-const { remove } = useServerLogin();
+const { login, remove, loadStoredConnections } = useServerLogin();
+const router = useRouter();
 
 const keyLocation = ref("");
 
@@ -87,18 +88,20 @@ onMounted(async () => {
 
 //Methods
 
+//Server Management Login Handler
+
+const loginHandler = async () => {
+  if (router.currentRoute.value.path === "/login") {
+    await login();
+  } else {
+    await ControlService.logout();
+    await login();
+  }
+};
+
 //Server Management Tab Picker
 const tabPicker = (tab) => {
   serverStore.setActiveTab(tab);
-};
-
-//Load stored connections
-
-const loadStoredConnections = async () => {
-  const savedConnections = await ControlService.readConfig();
-  serverStore.selectedServerConnection = savedConnections.savedConnections.find(
-    (item) => item.host === controlStore.ipAddress
-  );
 };
 
 //Click handling on a server in the saved servers list
@@ -145,6 +148,7 @@ const closeWindow = () => {
 
 const closeErrorDialog = () => {
   serverStore.errorMsgExists = false;
+  serverStore.connectingProcess = false;
 };
 
 const removeServerHandler = async () => {
