@@ -38,7 +38,6 @@ const emit = defineEmits(["tabPicker"]);
 const isLoginRoute = computed(() => route.path === "/login");
 
 const tabPicker = (tabName) => {
-  console.log(`Tab picked: ${tabName}`);
   serverStore.setActiveTab(tabName);
   emit("tabPicker", tabName);
 };
