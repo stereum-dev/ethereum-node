@@ -19,7 +19,7 @@ export class ExternalConsensusService extends NodeService {
       null, // imageVersion
       [], // command
       [], // entrypoint
-      { link: source, gateway: gateway ? gateway : "" }, // env
+      gateway ? { link: source, gateway: gateway } : { link: source }, // env
       [], // ports
       volumes, // volumes
       null, // user
@@ -40,7 +40,7 @@ export class ExternalConsensusService extends NodeService {
   }
 
   buildConsensusClientGateway() {
-    return this.env.gateway === "" || typeof this.env.gateway === "undefined" ? "" : this.env.gateway;
+    return !this.env.gateway || typeof this.env.gateway === "undefined" ? "" : this.env.gateway;
   }
 
   static buildByConfiguration(config) {

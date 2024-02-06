@@ -556,7 +556,7 @@ export class ServiceManager {
     if (service.service.includes("PrysmValidator") && serviceToDelete.service.includes("ExternalConsensus")) {
       service.command = this.removeCommandConnection(
         service.command,
-        serviceToDelete.env.gateway !== "" ? serviceToDelete.env.gateway : "--beacon-rpc-gateway-provider="
+        serviceToDelete.env.gateway ? serviceToDelete.env.gateway : "--beacon-rpc-gateway-provider="
       );
     }
 
@@ -1079,7 +1079,7 @@ export class ServiceManager {
           .join("/");
         await this.nodeConnection.sshService.exec(
           `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-            (service.env.gateway !== "" ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
+            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
