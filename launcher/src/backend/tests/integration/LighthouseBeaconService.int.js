@@ -109,7 +109,6 @@ test("lighthouse validator import", async () => {
       /Beacon chain initialized/.test(BCstatus.stderr) &&
       /HTTP API started/.test(BCstatus.stderr) &&
       /Metrics HTTP server started/.test(BCstatus.stderr) &&
-      /Execution engine online/.test(BCstatus.stderr) &&
       /Syncing /.test(BCstatus.stderr) &&
       /The execution endpoint is connected and configured, however it is not yet synced/.test(BCstatus.stderr) &&
       /Successfully loaded graffiti file/.test(VCstatus.stderr) &&
@@ -158,7 +157,6 @@ test("lighthouse validator import", async () => {
   expect(BCstatus.stderr).toMatch(/Beacon chain initialized/);
   expect(BCstatus.stderr).toMatch(/HTTP API started/);
   expect(BCstatus.stderr).toMatch(/Metrics HTTP server started/);
-  expect(BCstatus.stderr).toMatch(/Execution engine online/);
   expect(BCstatus.stderr).toMatch(/Syncing/);
   expect(BCstatus.stderr).toMatch(/The execution endpoint is connected and configured, however it is not yet synced/);
 

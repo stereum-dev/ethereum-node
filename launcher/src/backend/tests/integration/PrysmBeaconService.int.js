@@ -117,7 +117,7 @@ test("prysm validator import", async () => {
       /Finished reading JWT secret/.test(BCstatus.stderr) &&
       /Starting beacon node/.test(BCstatus.stderr) &&
       /Starting initial chain sync/.test(BCstatus.stderr) &&
-      /estimated time remaining/.test(BCstatus.stderr) &&
+      /Peer summary/.test(BCstatus.stderr) &&
       /Connected to new endpoint: http:\/\/stereum-.{36}:8551/.test(BCstatus.stderr) &&
       /Beacon chain started/.test(VCstatus.stderr) &&
       /Waiting for beacon node to sync to latest chain head/.test(VCstatus.stderr)
@@ -180,7 +180,7 @@ test("prysm validator import", async () => {
   expect(BCstatus.stderr).toMatch(/Finished reading JWT secret/);
   expect(BCstatus.stderr).toMatch(/Starting beacon node/);
   expect(BCstatus.stderr).toMatch(/Starting initial chain sync/);
-  expect(BCstatus.stderr).toMatch(/estimated time remaining/);
+  expect(BCstatus.stderr).toMatch(/Peer summary/);
   expect(BCstatus.stderr).toMatch(/Connected to new endpoint: http:\/\/stereum-.{36}:8551/);
 
   //check prysm VC logs
