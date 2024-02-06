@@ -9,7 +9,7 @@
         <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
       </div>
       <div class="balance-box">
-        <div class="balance-value" :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }">{{ balance }} GWei</div>
+        <div class="balance-value" :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }">{{ fmtBalance }} GWei</div>
         <div class="title">{{ $t("balWid.bal") }}</div>
       </div>
     </div>
@@ -29,6 +29,7 @@ export default {
     return {
       finalized_epoch: "Loading..",
       balance: 0,
+      fmtBalance: 0,
       finEPOCH: this.$t("controlPage.finEPOCH"),
     };
   },
@@ -51,7 +52,8 @@ export default {
         newbalancestatus.hasOwnProperty("balance")
       ) {
         this.finalized_epoch = newbalancestatus.finalized_epoch;
-        this.balance = this.numberFormat(newbalancestatus.balance);
+        this.balance = newbalancestatus.balance;
+        this.fmtBalance = this.numberFormat(newbalancestatus.balance);
       }
     },
   },
