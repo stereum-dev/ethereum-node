@@ -15,7 +15,7 @@
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
                 class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
-                @click="isOpen = !isOpen"
+                @click.prevent.stop="isOpen = !isOpen"
               >
                 <span class="text-center font-semibold">{{
                   serverStore.selectedKeyType || `${$t("multiServer.selectKeyType")}`
@@ -36,7 +36,7 @@
                   v-for="type in serverStore.keyTypes"
                   :key="type"
                   class="py-1 px-4 text-sm text-gray-800 hover:bg-blue-100 cursor-pointer"
-                  @click="selectKeyType(type)"
+                  @click.prevent.stop="selectKeyType(type)"
                 >
                   {{ type }}
                 </div>
@@ -63,7 +63,7 @@
               <label
                 for="keypath-file"
                 class="col-start-12 col-span-full row-start-2 row-span-2 w-full h-full flex justify-center items-center cursor-pointer"
-                @click="openDirectoryPicker"
+                @click.prevent.stop="openDirectoryPicker"
               >
                 <div class="w-6 h-6 border border-gray-400 rounded-full flex justify-center items-center">
                   <span
@@ -178,7 +178,7 @@
                   v-for="size in typesAmount"
                   :key="size"
                   class="py-1 px-4 text-sm text-gray-800 hover:bg-blue-100 cursor-pointer"
-                  @click="selectKeySize(size)"
+                  @click.prevent.stop="selectKeySize(size)"
                 >
                   {{ size }}
                 </div>
@@ -217,7 +217,7 @@
                   v-for="item in serverStore.specifyCipherItems"
                   :key="item"
                   class="py-1 px-4 text-sm text-gray-800 hover:bg-blue-100 cursor-pointer"
-                  @click="selectSpecifyAmount(item)"
+                  @click.prevent.stop="selectSpecifyAmount(item)"
                 >
                   {{ item }}
                 </div>
@@ -233,7 +233,7 @@
                 'opacity-50 pointer-events-none cursor-not-allowed': isDisabled,
               }"
               :disabled="isDisabled"
-              @click="generateKey"
+              @click.prevent.stop="generateKey"
             >
               {{ $t("multiServer.gen") }}
             </button>
