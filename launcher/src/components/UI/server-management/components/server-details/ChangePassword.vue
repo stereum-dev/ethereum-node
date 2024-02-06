@@ -9,7 +9,7 @@
       <span
         v-else
         :class="{ 'text-red-500': error, 'text-gray-300': !error }"
-        class="col-start-1 col-span-full row-start-1 row-span-1 text-sm font-semibold"
+        class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-semibold"
       >
         {{ error ? errorMessage : "" }}
       </span>
@@ -53,20 +53,20 @@
         class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center space-x-4 py-1"
       >
         <div
-          class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-teal-500 hover:bg-teal-800 p-[3px] shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-900 hover:text-gray-100 text-sm font-semibold uppercase"
+          class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-teal-800 hover:bg-teal-950 p-[3px] border border-teal-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
           @click="changePassword"
         >
           Confirm
         </div>
         <div
-          class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-red-500 hover:bg-red-800 p-[3px] shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-900 hover:text-gray-100 text-sm font-semibold uppercase"
+          class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-red-800 hover:bg-red-950 p-[3px] border border-red-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
           @click="denyPassChange"
         >
           Cancel
         </div>
       </div>
     </div>
-    <div v-else class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center">
+    <div v-else class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center">
       <button
         class="w-full h-10 bg-teal-700 hover:bg-teal-900 text-gray-200 font-semibold py-1 px-4 rounded-md flex justify-center items-center cursor-pointer space-x-2 transition-all duration-200 ease-in-out active:scale-95 shadow-lg shadow-black active:shadow-none"
         @click="serverStore.isChangingPasswordActive = true"

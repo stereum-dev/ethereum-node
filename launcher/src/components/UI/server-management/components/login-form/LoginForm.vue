@@ -234,10 +234,10 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         </button>
         <div
           v-else
-          class="w-full h-8 bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center"
+          class="w-full h-[50px] bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center text-md"
         >
           <svg
-            class="animate-spin h-5 w-5 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full"
+            class="animate-spin h-6 w-6 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full"
             viewBox="0 0 24 24"
           ></svg>
           {{ $t("multiServer.conecting") }}

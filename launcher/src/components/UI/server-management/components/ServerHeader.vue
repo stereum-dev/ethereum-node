@@ -18,7 +18,7 @@ import { ref, watchEffect } from 'vue';
           ]"
           @click="isLoginRoute && (tab.name === 'info' || tab.name === 'ssh') ? null : tabPicker(tab.name)"
         >
-          <img class="w-8 h-8 mx-auto hover:scale-110 transition-all duration-200" :src="tab.icon" alt="Server Icon" />
+          <img class="w-7 h-7 mx-auto hover:scale-110 transition-all duration-200" :src="tab.icon" alt="Server Icon" />
         </div>
       </div>
     </div>
