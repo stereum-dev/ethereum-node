@@ -17,8 +17,9 @@
       ><disk-speed @mouseenter="cursorLocation = `${diskSpeed}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="p2p">
-      <peer-to-peer @mouseenter="cursorLocation = `${p2p}`" @mouseleave="cursorLocation = ''"
-    /></dashboard-card>
+      <peer-to-peer @mouseenter="cursorLocation = `${p2p}`" @mouseleave="cursorLocation = ''" />
+      <!-- <newPeerToPeer /> -->
+    </dashboard-card>
     <dashboard-card class="the-cpu">
       <the-cpu @mouseenter="cursorLocation = `${cpuUse}`" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
@@ -73,6 +74,7 @@ import WsEndpoint from "./WsEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
 import TheStaking from "./TheStaking.vue";
+// import NewPeerToPeer from "./NewPeerToPeer.vue";
 export default {
   components: {
     PortList,
@@ -84,6 +86,7 @@ export default {
     AmsterdamComponent,
     MachineName,
     TheRam,
+    // NewPeerToPeer,
     PeerToPeer,
     TheCpu,
     TheNetwork,
