@@ -86,6 +86,8 @@ const addNewServer = () => {
   }
   serverStore.addNewServer = true;
   serverStore.isServerLoginActive = true;
+  serverStore.isServerDetailsActive = false;
+  serverStore.setActiveTab("login");
   serverStore.isServerManagementActive = false;
 };
 
