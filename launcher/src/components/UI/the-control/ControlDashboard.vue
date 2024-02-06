@@ -38,9 +38,10 @@
     <dashboard-card class="the-network"
       ><the-network @mouseenter="cursorLocation = `${netSpeed}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
-    <dashboard-card class="portlist_card"
-      ><port-list @mouseenter="cursorLocation = `${listPort}`" @mouseleave="cursorLocation = ''"
-    /></dashboard-card>
+    <dashboard-card class="portlist_card">
+      <port-list @mouseenter="cursorLocation = `${listPort}`" @mouseleave="cursorLocation = ''" />
+      <!-- <SubscribedSubnets /> -->
+    </dashboard-card>
     <div class="half-card">
       <rpc-endpoint @mouseenter="cursorLocation = `RPC ${endPoint}`" @mouseleave="cursorLocation = ''" />
     </div>
@@ -75,6 +76,7 @@ import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
 import TheStaking from "./TheStaking.vue";
 // import NewPeerToPeer from "./NewPeerToPeer.vue";
+// import SubscribedSubnets from "./SubscribedSubnets.vue";
 export default {
   components: {
     PortList,
@@ -87,6 +89,7 @@ export default {
     MachineName,
     TheRam,
     // NewPeerToPeer,
+    // SubscribedSubnets,
     PeerToPeer,
     TheCpu,
     TheNetwork,
