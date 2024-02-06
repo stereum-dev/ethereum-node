@@ -92,8 +92,16 @@ const getSubTitles = computed(() => {
 const externalServiceConfirmBtn = computed(() => {
   if (props.client.service === "ExternalExecutionService") {
     return props.client.config.source === "" || props.client.config.jwtToken === "";
-  } else if (props.client.service === "ExternalConsensusService") {
+  } else if (
+    props.client.service === "ExternalConsensusService" &&
+    manageStore.externalConsensusSelectedService !== "prysm"
+  ) {
     return props.client.config.source === "";
+  } else if (
+    props.client.service === "ExternalConsensusService" &&
+    manageStore.externalConsensusSelectedService === "prysm"
+  ) {
+    return props.client.config.source === "" || props.client.config.gateway === "";
   }
   return false;
 });

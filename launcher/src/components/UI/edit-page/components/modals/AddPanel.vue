@@ -55,6 +55,59 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
         />
       </div>
     </div>
+    <div v-if="client.service === 'ExternalConsensusService'" class="w-full grid grid-cols-12 items-center text-md">
+      <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/category.png" alt="Path Icon" />
+      <span class="col-start-2 col-span-3 text-gray-400 text-left">Client Selection</span>
+
+      <div
+        class="col-start-6 col-span-full w-full relative bg-[#141516] border border-gray-500 rounded-md grid grid-cols-12 items-center"
+        @click="dropdown"
+      >
+        <div class="col-start-1 col-span-full flex justify-center items-center overflow-hidden">
+          <div class="w-3/4 px-4 py-2 text-sm/none text-gray-400 capitalize">
+            {{ selectedService ? selectedService : "Select Existing Service" }}
+          </div>
+
+          <button class="w-1/4 h-full p-2 text-gray-500 hover:text-gray-200 flex justify-end items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div
+          v-if="isOpen"
+          class="absolute top-8 end-2 z-10 mt-2 max-h-[160px] w-56 rounded-md border border-gray-100 bg-white shadow-lg overflow-x-hidden overflow-y-auto"
+          role="menu"
+        >
+          <div class="p-2" @mouseleave="isOpen = false">
+            <span
+              v-for="service in services"
+              :key="service"
+              class="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-100 hover:bg-blue-500 uppercase cursor-pointer"
+              role="menuitem"
+              @click="pickService(service), (isOpen = false)"
+            >
+              {{ service }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="selectedService === 'prysm'" class="w-full grid grid-cols-12 items-center text-md">
+      <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/gateway.png" alt="Path Icon" />
+      <span class="col-start-2 col-span-3 text-gray-400 text-left">Gateway</span>
+      <input
+        v-model="gateway"
+        class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
+        type="text"
+        autofocus
+      />
+    </div>
   </div>
 </template>
 
@@ -62,6 +115,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
 import { onMounted, ref, watchEffect } from "vue";
 import SyncCarousel from "../edit/SyncCarousel";
 import ControlService from "@/store/ControlService";
+import { useNodeManage } from "@/store/nodeManage";
 
 const props = defineProps({
   client: {
@@ -74,17 +128,20 @@ const props = defineProps({
   },
 });
 
+const manageStore = useNodeManage();
 const sourceLink = ref("");
 const jwtToken = ref("");
+const gateway = ref("");
+const selectedService = ref("");
+const isOpen = ref(false);
+const services = ["prysm", "lighthouse", "teku", "nimbus", "lodestar"];
 
 //Computed & Watcher
 
 watchEffect(() => {
   props.client.config.source = sourceLink.value;
-});
-
-watchEffect(() => {
   props.client.config.jwtToken = jwtToken.value;
+  props.client.config.gateway = gateway.value;
 });
 
 //Lifecycle Hooks
@@ -93,10 +150,22 @@ onMounted(() => {
   sourceLink.value = "";
   jwtToken.value = "";
   props.properties.installDir = "";
+  gateway.value = "";
+  selectedService.value = "";
   getInstallPath();
 });
 
 //Methods
+
+const dropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const pickService = (service) => {
+  selectedService.value = service;
+  manageStore.ExternalConsensusSelectedService = service;
+  dropdown();
+};
 
 const getInstallPath = async () => {
   let largestVolumePath = await ControlService.getLargestVolumePath();

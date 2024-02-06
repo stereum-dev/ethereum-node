@@ -549,9 +549,16 @@ export class ServiceManager {
 
   removeDependencies(service, serviceToDelete) {
     //update command
-    service.command = serviceToDelete.service.includes("External")
-      ? this.removeCommandConnection(service.command, serviceToDelete.env.link)
-      : this.removeCommandConnection(service.command, serviceToDelete.id);
+    service.command = this.removeCommandConnection(
+      service.command,
+      serviceToDelete.service.includes("External") ? serviceToDelete.env.link : serviceToDelete.id
+    );
+    if (service.service.includes("PrysmValidator") && serviceToDelete.service.includes("ExternalConsensus")) {
+      service.command = this.removeCommandConnection(
+        service.command,
+        serviceToDelete.env.gateway ? serviceToDelete.env.gateway : "--beacon-rpc-gateway-provider="
+      );
+    }
 
     //update volumes
     service.volumes = service.volumes.filter((v) => !v.destinationPath.includes(serviceToDelete.id));
@@ -943,7 +950,8 @@ export class ServiceManager {
         return ExternalConsensusService.buildByUserInput(
           args.network,
           args.installDir + "/externalConsensus",
-          args.source
+          args.source,
+          args.gateway ? args.gateway : ""
         );
     }
   }
@@ -1070,12 +1078,11 @@ export class ServiceManager {
           .slice(0, -1)
           .join("/");
         await this.nodeConnection.sshService.exec(
-          `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${service.env.link} > ${extConnDir}/link.txt`
+          `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
+            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
-          await this.nodeConnection.sshService.exec(
-            `touch ${extConnDir}/engine.jwt && echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`
-          );
+          await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
         }
       }
     }

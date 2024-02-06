@@ -1186,7 +1186,6 @@ export const useServices = defineStore("services", {
           modifierPanel: false,
           replacePanel: false,
           path: "/external",
-
           linkUrl: "",
           docsUrl: "",
           icon: require("/public/img/icon/plugin-icons/Other/consensusExternal.png"),
@@ -1205,6 +1204,7 @@ export const useServices = defineStore("services", {
             volumes: [],
             network: "",
             source: "",
+            gateway: "",
           },
         },
         {
@@ -1220,7 +1220,6 @@ export const useServices = defineStore("services", {
           modifierPanel: false,
           replacePanel: false,
           path: "/external",
-
           linkUrl: "",
           docsUrl: "",
           icon: require("/public/img/icon/plugin-icons/Other/executionExternal.png"),
