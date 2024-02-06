@@ -4,7 +4,7 @@
     <ServerDetails />
     <WelcomeBody />
     <WelcomeFooter />
-    <LogoutModal @logout-handler="loggingOut" @close-window="closeModal" />
+    <LogoutModal v-if="isLogoutModalActive" @logout-handler="loggingOut" @close-window="closeModal" />
   </installation-layout>
 </template>
 

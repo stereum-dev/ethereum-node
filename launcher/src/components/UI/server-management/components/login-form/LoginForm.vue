@@ -248,14 +248,15 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
-import ControlService from "@/store/ControlService";
 import { useServerLogin } from "@/composables/useLogin";
+
+const emit = defineEmits(["serverLogin"]);
 
 const serverStore = useServers();
 
-const { login, add, loadStoredConnections } = useServerLogin();
+const { add } = useServerLogin();
 
 const hovered = ref(false);
 const removeHovered = ref(false);
@@ -318,10 +319,6 @@ watchEffect(() => {
 
 // Lifecycle
 
-onMounted(async () => {
-  await loadStoredConnections();
-});
-
 // Methods
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
@@ -383,11 +380,15 @@ const internalLogin = async () => {
   if (!validateServerName() || !validateIPorHostname() || !validateUsername()) {
     return;
   }
-
-  await ControlService.logout();
-  await login();
-  serverStore.connectingProcess = false;
-  serverStore.isServerAccessManagementActive = false;
+  emit("serverLogin");
+  // if (router.currentRoute.value.fullPath === "/login") {
+  //   await login();
+  // } else {
+  //   await ControlService.logout();
+  //   await login();
+  //   serverStore.connectingProcess = false;
+  //   serverStore.isServerAccessManagementActive = false;
+  // }
 };
 
 const saveServer = async () => {
