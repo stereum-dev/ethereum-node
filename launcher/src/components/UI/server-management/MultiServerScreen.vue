@@ -71,14 +71,14 @@ const loadStoredConnections = async () => {
 const serverHandler = (server) => {
   if (serverStore.selectedServerConnection?.name === server.name) {
     serverStore.isServerLoginActive = false;
-    serverStore.isServerManagementActive = true;
+    serverStore.isServerDetailsActive = true;
   } else {
     if (serverStore.addNewServer) {
       serverStore.addNewServer = false;
     }
     serverStore.connectExistingServer = true;
     serverStore.selectedServerToConnect = server;
-    serverStore.isServerManagementActive = false;
+    serverStore.isServerDetailsActive = false;
     serverStore.isServerLoginActive = true;
   }
 };
