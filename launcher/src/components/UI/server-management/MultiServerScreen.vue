@@ -91,6 +91,7 @@ onMounted(async () => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
+  serverStore.connectingProcess = true;
   if (router.currentRoute.value.path === "/login") {
     await login();
   } else {
@@ -110,10 +111,16 @@ const serverHandler = (server) => {
     tab.isActive = false;
   });
 
+  // Reset isSelected for all servers before setting the selected one
+  serverStore.savedServers.savedConnections.forEach((s) => {
+    if (s.isSelected) s.isSelected = false;
+  });
+
   if (serverStore.selectedServerConnection?.name === server.name) {
     serverStore.isServerLoginActive = false;
     serverStore.setActiveTab("info");
     serverStore.isServerDetailsActive = true;
+    server.isSelected = true;
   } else {
     if (serverStore.addNewServer) {
       serverStore.addNewServer = false;
@@ -123,7 +130,10 @@ const serverHandler = (server) => {
     serverStore.selectedServerToConnect = server;
     serverStore.isServerDetailsActive = false;
     serverStore.isServerLoginActive = true;
+    server.isSelected = true;
   }
+
+  serverStore.savedServers.savedConnections = [...serverStore.savedServers.savedConnections];
 };
 
 //Change password handling

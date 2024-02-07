@@ -2,7 +2,13 @@ import { ref, computed, watch, watchEffect } from 'vue';
 <template>
   <div
     class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
-    :class="connectedServer ? 'bg-[#336666] border border-teal-300 ' : 'bg-gray-200 '"
+    :class="
+      connectedServer
+        ? 'bg-[#336666] border border-teal-300 '
+        : selectedServerBackground
+        ? 'bg-blue-300'
+        : 'bg-gray-200 '
+    "
     @mouseenter="hovered = true"
     @click="selectServer"
   >
@@ -66,6 +72,7 @@ const route = useRoute();
 const serverStore = useServers();
 
 const hovered = ref(false);
+const selectedServerBackground = ref(false);
 
 const getServerNumber = computed(() => {
   return `SERVER #${props.idx + 1}`;
@@ -90,6 +97,14 @@ watchEffect(() => {
       else tab.isActive = false;
       return tab;
     });
+  }
+});
+
+watchEffect(() => {
+  if (props.server.isSelected && (!connectedServer.value || route.path === "/login")) {
+    selectedServerBackground.value = true;
+  } else {
+    selectedServerBackground.value = false;
   }
 });
 
