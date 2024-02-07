@@ -1,0 +1,86 @@
+name: 🙏 Improvement Request
+description:
+title: "[Bug]: "
+labels: ["improvement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this improvement request for Stereum!
+
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: Is there a way to get in touch with you if we need more info?
+      placeholder: e. g. support@stereum.net | Discord - ExampleUser#9999 | Twitter - @stereumdev
+    validations:
+      required: false
+
+  - type: textarea
+    id: describe-the-problem
+    attributes:
+      label: Describe the problem you ran into!
+      description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+      placeholder: Tell us what you about the problem you ran into!
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshoot
+    attributes:
+      label: Attach a Screenshot!
+      description: If possible, please drag one/multiple screenshots of your bug into this!
+      placeholder: Drag a Screenshot here :)
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggestion-for-improvement
+    attributes:
+      label: Suggestion Box for Improvement
+      description: A clear and concise description of how you would like to see it improved!
+      placeholder: Tell us what you think this should look like!
+    validations:
+      required: false
+
+  - type: input
+    id: launcher-version
+    attributes:
+      label: Launcher Version
+      description: What version of our software are you running on your Desktop PC?
+      placeholder: e. g. [2.0.1], [2.0.0-rc.15]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: desktop-os
+    attributes:
+      label: Desktop OS
+      options:
+        - Windows
+        - Mac
+        - Linux
+        - Other
+        - All
+    validations:
+      required: true
+
+  - type: dropdown
+    id: node-server-os
+    attributes:
+      label: Node Server OS
+      options:
+        - Ubuntu 22.04
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acknowledgment
+      description: Please make sure to look through [our existing issues](https://github.com/stereum-dev/ethereum-node/labels/improvement) before submitting a bug!
+      options:
+        - label: I looked through the existing issues of this project
+          required: true
