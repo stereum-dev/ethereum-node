@@ -25,7 +25,7 @@ const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serv
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
-const nobleupgrade = new NobleUpgrade(nodeConnection);
+const nobleupgrade = new NodeUpdates(nodeConnection);
 stereumUpdater.initUpdater();
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
