@@ -91,6 +91,7 @@ onMounted(async () => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
+  serverStore.connectingProcess = true;
   if (router.currentRoute.value.path === "/login") {
     await login();
   } else {

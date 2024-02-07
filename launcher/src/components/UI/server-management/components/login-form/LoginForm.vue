@@ -22,6 +22,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           type="text"
           :placeholder="`${$t('multiServer.serverName')}`"
           class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          required
         />
 
         <div
@@ -72,7 +73,8 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <label
           for="hostname"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
-          >{{ $t("multiServer.ipOrHost") }}</label
+          :class="ipError ? 'text-red-500' : 'text-gray-300'"
+          >{{ ipError ? ipError : $t("multiServer.ipOrHost") }}</label
         >
         <input
           id="hostname"
@@ -80,6 +82,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           type="text"
           placeholder="114.72.86.90"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          required
         />
       </div>
       <div class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -109,6 +112,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           type="text"
           placeholder="root"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          required
         />
       </div>
       <div class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -169,7 +173,8 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <label
           for="password"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
-          >{{ $t("multiServer.pass") }}</label
+          :class="passwordError ? 'text-red-500' : 'text-gray-300'"
+          >{{ passwordError ? passwordError : $t("multiServer.pass") }}</label
         >
         <input
           id="password"
@@ -178,14 +183,15 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           placeholder="******************"
           :disabled="useSSHKey"
+          required
         />
       </div>
       <div v-if="useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="keypath"
           class="col-start-1 col-end-12 row-start-1 row-span-1 block text-xs font-bold"
-          :class="message ? 'text-red-500' : 'text-gray-300'"
-          >{{ message ? message : `${$t("multiServer.keyPath")}` }}</label
+          :class="sshError ? 'text-red-500' : 'text-gray-300'"
+          >{{ sshError ? sshError : `${$t("multiServer.keyPath")}` }}</label
         >
         <input
           id="keypath"
@@ -194,6 +200,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           placeholder="/user/.ssh/id_rsa"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           :disabled="!useSSHKey"
+          required
         />
         <label
           for="keypath-file"
@@ -265,6 +272,8 @@ const message = ref("");
 const serverNameError = ref("");
 const ipError = ref("");
 const usernameError = ref("");
+const passwordError = ref("");
+const sshError = ref("");
 
 const getTrashImg = computed(() => {
   if (hovered.value) {
@@ -369,6 +378,26 @@ const validateUsername = () => {
   return true;
 };
 
+const validateSshKey = () => {
+  if (serverStore.loginState.keyPath) {
+    sshError.value = "";
+    return true;
+  } else {
+    sshError.value = "SSH key path is required.";
+    return false;
+  }
+};
+
+const validatePassword = () => {
+  if (serverStore.loginState.password) {
+    passwordError.value = "";
+    return true;
+  } else {
+    passwordError.value = "Password is required.";
+    return false;
+  }
+};
+
 const changeLabel = () => {
   if (serverStore.loginState.useAuth) {
     serverStore.loginState.password = "";
@@ -376,19 +405,26 @@ const changeLabel = () => {
 };
 
 const internalLogin = async () => {
-  serverStore.connectingProcess = true;
-  if (!validateServerName() || !validateIPorHostname() || !validateUsername()) {
-    return;
+  serverNameError.value = "";
+  ipError.value = "";
+  usernameError.value = "";
+  passwordError.value = "";
+  sshError.value = "";
+
+  let isValid = true;
+  isValid = isValid && validateServerName();
+  isValid = isValid && validateIPorHostname();
+  isValid = isValid && validateUsername();
+
+  if (useSSHKey.value) {
+    isValid = isValid && validateSshKey();
+  } else {
+    isValid = isValid && validatePassword();
   }
-  emit("serverLogin");
-  // if (router.currentRoute.value.fullPath === "/login") {
-  //   await login();
-  // } else {
-  //   await ControlService.logout();
-  //   await login();
-  //   serverStore.connectingProcess = false;
-  //   serverStore.isServerAccessManagementActive = false;
-  // }
+
+  if (isValid) {
+    emit("serverLogin");
+  }
 };
 
 const saveServer = async () => {
