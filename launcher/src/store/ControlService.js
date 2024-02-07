@@ -487,6 +487,10 @@ class ControlService extends EventEmitter {
   async getSyncCommitteeRewards(validators, slot) {
     return await this.promiseIpc.send("getSyncCommitteeRewards", { validators, slot });
   }
+
+  async upgradeToNoble() {
+    return await this.promiseIpc.send("upgradeToNoble");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

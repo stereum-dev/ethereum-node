@@ -1,0 +1,50 @@
+---
+- name: Get distribution version
+  setup:
+    filter: ansible_distribution*
+- name: Skip if not Ubuntu 22.04
+  meta: end_host
+  when: ansible_distribution != 'Ubuntu' or ansible_distribution_version != '22.04'
+- name: apt clean
+  ansible.builtin.apt:
+    autoclean: true
+  become: yes
+- name: Get filesystem facts
+  setup:
+    filter: ansible_mounts
+- name: Fail if free space on / is below 5 GiB
+  ansible.builtin.assert:
+    that:
+      - item.size_available > (5 * 1024 * 1024 * 1024)
+    fail_msg: "Free disk space on {{ item.mount }} is below 5 GiB"
+  loop: "{{ ansible_mounts }}"
+  when: item.mount == "/"
+- name: All apt packages up to date
+  apt:
+    upgrade: dist
+    update_cache: yes
+  become: yes
+- name: apt autoremove
+  apt:
+    autoremove: yes
+  become: yes
+- name: apt clean
+  ansible.builtin.apt:
+    autoclean: true
+  become: yes
+- name: Check if reboot required
+  ansible.builtin.stat:
+    path: /run/reboot-required
+    get_md5: no
+  register: reboot_required_file
+- name: Reboot if required
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 60
+    test_command: whoami
+  when: reboot_required_file.stat.exists
+  become: true
+
