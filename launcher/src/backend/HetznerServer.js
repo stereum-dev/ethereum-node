@@ -67,7 +67,9 @@ export class HetznerServer {
         });
         res.on("end", () => {
           log.debug(`${options.method} ${options.path} ${res.statusCode} ${res.statusMessage}`)
-          log.debug(data)
+          if (res.statusCode >= 300) {
+            log.error(data)
+          }
           resolve(data);
         });
       });
@@ -198,7 +200,9 @@ export class HetznerServer {
     const existing = response.ssh_keys.find((key) => key.name === name);
     if (existing && existing.id) {
       await this.deleteSSHKey(existing.id);
+      log.debug("deleted existing ssh key with name " + name + " and id " + existing.id)
     }
+    await this.Sleep(5000)
     return JSON.parse(await this.makeRequest(await this.createHTTPOptions("POST", "ssh_keys"),
       JSON.stringify({ name: name, public_key: this.sshKeyPair.public })));
   }
