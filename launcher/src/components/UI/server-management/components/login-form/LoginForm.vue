@@ -1,4 +1,5 @@
-import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch, watchEffect } from 'vue';
+import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch, watchEffect, onUnmounted } from
+'vue';
 <template>
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
@@ -32,6 +33,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
             class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :src="getTrashImg"
             alt=""
+            :class="removeButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
             @mousedown.prevent
             @mouseenter="(hovered = true), (removeHovered = true)"
             @mouseleave="(hovered = false), (removeHovered = false)"
@@ -255,7 +257,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
 </template>
 
 <script setup>
-import { computed, ref, watchEffect } from "vue";
+import { computed, onUnmounted, ref, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import { useServerLogin } from "@/composables/useLogin";
 
@@ -303,6 +305,14 @@ const addButtonDisabled = computed(() => {
   }
 });
 
+const removeButtonDisabled = computed(() => {
+  if (serverStore.selectedServerToConnect) {
+    return false;
+  } else {
+    return true;
+  }
+});
+
 watchEffect(() => {
   if (serverStore.connectExistingServer) {
     serverStore.loginState.hostName = serverStore.selectedServerToConnect.name;
@@ -327,6 +337,19 @@ watchEffect(() => {
 });
 
 // Lifecycle
+
+onUnmounted(() => {
+  serverStore.loginState.hostName = "";
+  serverStore.loginState.ip = "";
+  serverStore.loginState.port = "";
+  serverStore.loginState.username = "";
+  serverStore.loginState.useAuth = false;
+  serverStore.loginState.keyPath = "";
+  serverStore.loginState.password = "";
+  serverStore.loginState.passphrase = "";
+  serverStore.connectExistingServer = false;
+  serverStore.selectedServerToConnect = null;
+});
 
 // Methods
 const handleFileSelect = (event) => {
