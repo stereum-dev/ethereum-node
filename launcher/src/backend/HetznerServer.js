@@ -66,6 +66,8 @@ export class HetznerServer {
           data += d;
         });
         res.on("end", () => {
+          log.debug(`${options.method} ${options.path} ${res.statusCode} ${res.statusMessage}`)
+          log.debug(data)
           resolve(data);
         });
       });
