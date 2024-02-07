@@ -4,7 +4,8 @@ const {
 } = require("ssh2");
 import { createTunnel } from "./SSHServiceTunnel";
 import { StringUtils } from "./StringUtils";
-import { writeFile } from "fs/promises";
+import * as fs from "fs";
+import * as path from "path";
 const log = require("electron-log");
 
 export class SSHService {
@@ -61,12 +62,8 @@ export class SSHService {
     let lastIndex = this.connectionPool.length - 1;
     const threshholdIndex = lastIndex - 2;
 
-    if (
-      this.connectionInfo &&
-      !this.addingConnection &&
-      (this.connectionPool.length < 5 || this.connectionPool[threshholdIndex]?._chanMgr?._count > 0)
-    ) {
-      await this.connect(this.connectionInfo);
+    if (this.connectionInfo && !this.addingConnection && (this.connectionPool.length < 6 || this.connectionPool[threshholdIndex]?._chanMgr?._count > 0)) {
+      await this.connect(this.connectionInfo)
     }
     if (this.connectionPool.length > 5 && this.connectionPool[threshholdIndex]?._chanMgr?._count === 0) {
       this.removeConnectionCount++;
@@ -273,7 +270,6 @@ export class SSHService {
   }
 
   async generateSSHKeyPair(opts = {}) {
-    const path = require("path");
     if (opts.pickPath.endsWith("/")) opts.pickPath = opts.pickPath.slice(0, -1, ""); //if path ends with '/' remove it
     try {
       //default bit values for keys
@@ -306,12 +302,12 @@ export class SSHService {
       const keyPair = generateKeyPairSync(opts.keyType, opts);
       let exitingKeys = await this.readSSHKeyFile();
       if (keyPair.public) {
-        let allKeys = [...exitingKeys, keyPair.public];
-        await this.writeSSHKeyFile(allKeys);
-        const savePath = path.join(opts.pickPath, opts.keyType.toLowerCase());
-        await writeFile(savePath, keyPair.private);
-        await writeFile(savePath + ".pub", keyPair.public);
-        return allKeys;
+        let allKeys = [...exitingKeys, keyPair.public]
+        await this.writeSSHKeyFile(allKeys)
+        const savePath = path.join(opts.pickPath, opts.keyType.toLowerCase())
+        await fs.promises.writeFile(savePath, keyPair.private)
+        await fs.promises.writeFile(savePath + ".pub", keyPair.public)
+        return allKeys
       }
       return exitingKeys;
     } catch (err) {
@@ -319,11 +315,11 @@ export class SSHService {
     }
   }
 
-  async readSSHKeyFile(path = `~/.ssh`) {
-    let authorizedKeys = [];
+  async readSSHKeyFile(sshDirPath = `~/.ssh`) {
+    let authorizedKeys = []
     try {
-      if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
-      let result = await this.exec(`cat ${path}/authorized_keys`);
+      if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
+      let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
       }
@@ -336,11 +332,11 @@ export class SSHService {
     return authorizedKeys;
   }
 
-  async writeSSHKeyFile(keys = [], path = `~/.ssh`) {
+  async writeSSHKeyFile(keys = [], sshDirPath = `~/.ssh`) {
     try {
-      if (path.endsWith("/")) path = path.slice(0, -1, ""); //if path ends with '/' remove it
-      let newKeys = keys.join("\n");
-      let result = await this.exec(`echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${path}/authorized_keys`);
+      if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
+      let newKeys = keys.join("\n")
+      let result = await this.exec(`echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`);
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));
       }
@@ -349,5 +345,111 @@ export class SSHService {
       return [];
     }
     return keys;
+  }
+
+  // Check if mode is a directory with fs constants https://nodejs.org/api/fs.html#fsconstants
+  // mode - integer - Mode/permissions for the resource.
+  // S_IFMT is a bit mask used to extract the file type code.
+  // S_IFDIR is a file type constant for a directory.
+  isDir(mode) {
+    return (mode & fs.constants.S_IFMT) == fs.constants.S_IFDIR;
+  }
+
+  // opens an SFTP session and returns the session object.
+  // optionally takes a ssh session object as an argument, otherwise it will get a new connection from the pool.
+  async getSFTPSession(conn = null) {
+    conn = this.getConnectionFromPool()
+    return new Promise((resolve, reject) => {
+      conn.sftp((err, sftp) => {
+        if (err) {
+          log.error("Failed to open SFTP session: ", err);
+          reject(null);
+        }
+        resolve(sftp);
+      });
+    });
+  }
+
+  // reads a directory's contents and returns an array of stats objects of these contents
+  async readDirectorySFTP(remotePath, sftp = null) {
+    if (!sftp) {
+      sftp = await this.getSFTPSession();
+    }
+    return new Promise((resolve, reject) => {
+      sftp.readdir(remotePath, (err, array) => {
+        if (err) {
+          log.error("Failed to read directory: ", err);
+          reject(null);
+        }
+        resolve(array);
+      });
+    });
+  }
+
+  // returns filename and mode of the contents of a given directory
+  // workaround for readdirnot running with sudo
+  async readDirectorySSH(remotePath) {
+    try {
+      const result = await this.exec(`find ${remotePath} -maxdepth 1 -exec stat --format '%n\n%f\n' {} +`);
+      if (SSHService.checkExecError(result)) {
+        throw new Error("Failed reading directory: " + SSHService.extractExecError(result));
+      }
+      let files = result.stdout.split("\n\n").filter((e) => e)
+      files.shift(); //remove the first element which is the directory itself
+      return files.map((file) => {
+        let [filename, mode] = file.split("\n");
+        filename = path.posix.basename(path.posix.normalize(filename)); // normalize path
+        mode = parseInt(mode, 16); // convert mode from hex to integer
+        return { filename, mode };
+      })
+    } catch (error) {
+      log.error("Failed reading directory via SSH: ", error);
+      return [];
+    }
+  }
+
+  // uses "cat" to get file contetns and pipes that stream to a local write stream
+  // this is a workaround for the lack of sudo permissions with sftp createReadStream
+  async downloadFileSSH(remotePath, localPath, conn = this.getConnectionFromPool()) {
+    return new Promise((resolve, reject) => {
+      const writeStream = fs.createWriteStream(localPath);
+      writeStream.on('error', reject);
+      writeStream.on('close', resolve);
+
+      conn.exec(`sudo cat ${remotePath}`, function (err, stream) {
+        if (err) throw err;
+        stream.on('error', reject);
+        stream.pipe(writeStream);
+      });
+    });
+  }
+
+  // downloads a Directory and all its contents recursively from the remotePath to the localPath
+  async downloadDirectorySSH(remotePath, localPath, sftp = null) {
+    try {
+      if (!sftp) {
+        sftp = await this.getSFTPSession();
+      }
+
+      if (!fs.existsSync(localPath)) {
+        fs.mkdirSync(localPath, { recursive: true });
+      }
+
+      const dirContents = await this.readDirectorySSH(remotePath)
+      for (let item of dirContents) {
+        const remoteFilePath = path.posix.join(remotePath, item.filename);
+        const localFilePath = path.join(localPath, item.filename);
+
+        if (this.isDir(item.mode)) {
+          await this.downloadDirectorySSH(remoteFilePath, localFilePath, sftp);
+        } else {
+          await this.downloadFileSSH(remoteFilePath, localFilePath);
+        }
+      }
+      return true
+    } catch (error) {
+      log.error("Failed to download directory via SSH: ", error);
+      return false
+    }
   }
 }
