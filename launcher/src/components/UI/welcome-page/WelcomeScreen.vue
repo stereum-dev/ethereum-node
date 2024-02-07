@@ -1,15 +1,10 @@
 <template>
   <installation-layout>
-    <WelcomeHeader @logout="logoutModalHandler" />
+    <WelcomeHeader @logout="logoutModal" />
     <ServerDetails />
     <WelcomeBody />
     <WelcomeFooter />
-    <LogoutModal
-      v-if="isLogoutModalActive"
-      :process="isProcessing"
-      @logout-handler="loggingOut"
-      @close-window="closeModal"
-    />
+    <LogoutModal v-if="isLogoutModalActive" @logout-handler="loggingOut" @close-window="closeModal" />
   </installation-layout>
 </template>
 
@@ -31,7 +26,6 @@ const router = useRouter();
 //Refs
 const refresh = ref(false);
 const isLogoutModalActive = ref(false);
-const isProcessing = ref(false);
 
 //Methods
 
@@ -39,13 +33,13 @@ const closeModal = () => {
   isLogoutModalActive.value = false;
 };
 
-const logoutModalHandler = () => {
+const logoutModal = () => {
   isLogoutModalActive.value = true;
 };
 
 const loggingOut = async () => {
   serverStore.connectingAnimActive = false;
-  isProcessing.value = true;
+  serverStore.isUpdateProcessing = true;
   router.push("/login").then(() => {
     location.reload();
   });

@@ -419,6 +419,7 @@ const addServiceHandler = (item) => {
     dataObject.jwtToken = item.client.config?.jwtToken;
   } else if (item.client.service === "ExternalConsensusService") {
     dataObject.source = item.client.config?.source;
+    dataObject.gateway = item.client.config?.gateway;
   }
 
   manageStore.confirmChanges.push({

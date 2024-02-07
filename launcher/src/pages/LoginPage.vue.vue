@@ -2,5 +2,5 @@
   <LoginScreen />
 </template>
 <script setup>
-import LoginScreen from "../components/UI/login-server/LoginScreen.vue";
+import LoginScreen from "../components/UI/server-management/LoginScreen.vue";
 </script>

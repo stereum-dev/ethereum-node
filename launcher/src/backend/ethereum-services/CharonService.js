@@ -8,7 +8,9 @@ export class CharonService extends NodeService {
     const workingDir = service.buildWorkingDir(dir);
 
     const dataDir = "/opt/charon";
-    const volumes = [new ServiceVolume(workingDir, dataDir)];
+    const volumes = [
+      new ServiceVolume(workingDir, dataDir),
+    ];
 
     const beaconNodes = consensusClients
       .map((client) => {
@@ -21,7 +23,7 @@ export class CharonService extends NodeService {
       service.id, // id
       1, // configVersion
       "obolnetwork/charon", // image
-      "v0.15.0", // imageVersion
+      "v0.19.0", // imageVersion
       [
         "run",
         `--beacon-node-endpoints=${beaconNodes}`,
@@ -39,7 +41,7 @@ export class CharonService extends NodeService {
       null, // user
       network, // network
       null, // executionClients
-      consensusClients // consensusClients
+      consensusClients // consensusClients    
     );
     return service;
   }
@@ -64,8 +66,38 @@ export class CharonService extends NodeService {
     return "stereum-" + this.id + ":3600";
   }
 
-  getCharonCreateEnrCommand() {
-    const dataDir = this.volumes.find((volume) => volume.servicePath === "/opt/charon").destinationPath;
-    return `docker run -u 0 --rm -v "${dataDir}:/opt/charon" ${this.image + ":" + this.imageVersion} create enr`;
+
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/charon").destinationPath;
+  }
+
+  getCreateEnrCommand() {
+    return `docker run -u 0 --rm -v "${this.getDataDir()}:/opt/charon" ${this.image + ":" + this.imageVersion} create enr`;
+  }
+
+  getReadEnrCommand() {
+    return `docker run -u 0 --rm -v "${this.getDataDir()}:/opt/charon" ${this.image + ":" + this.imageVersion} enr`;
+  }
+
+  getRemoveEnrCommand() {
+    return `rm ${this.getDataDir()}/.charon/charon-enr-private-key`;
+  }
+
+  getWriteENRPrivateKeyCommand(privateKey) {
+    return `echo "${privateKey}" > ${this.getDataDir()}/.charon/charon-enr-private-key`
+  }
+
+  getReadENRPrivateKeyCommand() {
+    return `cat ${this.getDataDir()}/.charon/charon-enr-private-key`
+  }
+
+  getListCharonFolderContentsCommand() {
+    return `ls -1 -a ${this.getDataDir()}/.charon`
+  }
+
+  //definitionFile as URL or Path to file (default ".charon/cluster-definition.json" by dkg command)
+  getDKGCommand(definitionFile) {
+    return `docker run -u 0 --name "dkg-container" -d -v "${this.getDataDir()}:/opt/charon" ${this.image + ":" + this.imageVersion} dkg ${definitionFile ? "--definition-file=" + definitionFile : ""} --publish`;
+
   }
 }

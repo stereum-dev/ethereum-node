@@ -23,8 +23,6 @@ export const useServers = defineStore("servers", {
       savedServers: [],
       selectedServerConnection: null,
       isServerAccessManagementActive: false,
-      isServerLoginActive: false,
-      isServerManagementActive: true,
       selectedServerToConnect: null,
       isAvatarModalActive: false,
       isRemoveModalActive: false,
@@ -86,10 +84,39 @@ export const useServers = defineStore("servers", {
         useAuth: false,
       },
 
+      //Update
+      serverUpdates: [],
+      isUpdateProcessing: false,
+
       //Form
       addNewServer: false,
       connectExistingServer: false,
+
+      //Server Management tabs
+
+      isServerLoginActive: false,
+      isServerDetailsActive: false,
+      isServerSSHActive: false,
+      isServerUpdateActive: false,
+
+      tabs: [
+        { name: "login", icon: "/img/icon/form-setup/login.png", isActive: true, isDisabled: false },
+        { name: "info", icon: "/img/icon/form-setup/infos.png", isActive: false, isDisabled: false },
+        { name: "ssh", icon: "/img/icon/form-setup/lock.png", isActive: false, isDisabled: false },
+        { name: "update", icon: "/img/icon/form-setup/download.png", isActive: false, isDisabled: false },
+      ],
+      selectedTab: null,
     };
   },
-  actions: {},
+  actions: {
+    setActiveTab(tab) {
+      this.selectedTab = null;
+      this.tabs.forEach((item) => {
+        item.isActive = false;
+      });
+
+      this.tabs.find((item) => item.name === tab).isActive = true;
+      this.selectedTab = tab;
+    },
+  },
 });

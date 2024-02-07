@@ -6,6 +6,7 @@ import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume.js";
 import { networks } from "./ethereum-services/NodeService.js";
 
+import * as path from "path";
 import axios from "axios";
 
 const log = require("electron-log");
@@ -309,13 +310,12 @@ export class ValidatorAccountManager {
     }
   }
 
-  async keymanagerAPI(service, method = "GET", path, data, args = [], apiToken) {
-    if (!path.startsWith("/")) path = "/" + path;
+  async keymanagerAPI(service, method = "GET", apiPath, data, args = [], apiToken) {
+    if (!apiPath.startsWith("/")) apiPath = "/" + apiPath;
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${path}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -908,4 +908,160 @@ export class ValidatorAccountManager {
         break;
     }
   }
+
+  async createObolENR() {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+
+      let result = await this.nodeConnection.sshService.exec(charonClient.getCreateEnrCommand());
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      const data = result.stdout.split('\n')
+      const enr = data.find((line) => line.includes('enr:-'));
+      return enr;
+    } catch (err) {
+      log.error("Error creating Obol ENR: ", err);
+      return err;
+    }
+  }
+
+  async checkObolContent() {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+
+      let result = await this.nodeConnection.sshService.exec(charonClient.getListCharonFolderContentsCommand());
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      const data = result.stdout;
+      return {
+        privateKey: data.includes('charon-enr-private-key'),          //ENR Created
+        clusterDefinition: data.includes('cluster-definition.json'),  //Cluster Definition Created / Successfull DKG
+        depositData: data.includes('deposit-data.json'),              //Successfull DKG
+        clusterLock: data.includes('cluster-lock.json'),              //Successfull DKG
+        validatorKeys: data.includes('validator_keys'),              //Successfull DKG
+      }
+    } catch (err) {
+      log.error("Error checking Obol ENR: ", err);
+      return {
+        privateKey: false,
+        clusterDefinition: false,
+        depositData: false,
+        clusterLock: false,
+        validatorKeys: false,
+        error: err
+      }
+    }
+  }
+
+  async getObolENRPrivateKey() {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+
+      let result = await this.nodeConnection.sshService.exec(charonClient.getReadENRPrivateKeyCommand());
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      return result.stdout;
+    } catch (err) {
+      log.error("Error getting Obol ENR private key: ", err);
+      return err;
+    }
+  }
+
+  async getObolENRPublicKey() {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+
+      let result = await this.nodeConnection.sshService.exec(charonClient.getReadEnrCommand());
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      return result.stdout;
+    } catch (err) {
+      log.error("Error getting Obol ENR public key: ", err);
+      return "";
+    }
+  }
+
+  // removes the ENR Private Key and therefore also the Public one
+  async removeObolENR() {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+
+      let result = await this.nodeConnection.sshService.exec(charonClient.getRemoveEnrCommand());
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      return true;
+    } catch (err) {
+      log.error("Error removing Obol ENR: ", err);
+      return false;
+    }
+  }
+
+  async startObolDKG(input) {
+    try {
+      await this.nodeConnection.sshService.exec("docker rm -f dkg-container");
+    } catch (e) {} // eslint-disable-next-line no-empty
+
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+
+      let contentResult = await this.nodeConnection.sshService.exec(charonClient.getListCharonFolderContentsCommand());
+      if (SSHService.checkExecError(contentResult) && contentResult.stderr) throw SSHService.extractExecError(contentResult);
+      const content = contentResult.stdout;
+      const dkgCommand = charonClient.getDKGCommand(content.includes('cluster-definition.json') ? "" : input.match(/http(s)?:.*\/[0-9a-zA-z]*/));
+
+      let result = await this.nodeConnection.sshService.exec(dkgCommand);
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      return true;
+    } catch (err) {
+      log.error("Error starting Obol DKG: ", err);
+      return false;
+    }
+  }
+
+  async checkObolDKG() {
+    try {
+      //get all names of running docker containers
+      const result = await this.nodeConnection.sshService.exec("docker ps --format '{{.Names}}'")
+      const containerNames = result.stdout.split('\n');
+      if (containerNames.includes('dkg-container'))
+        return true;
+      return false;
+    } catch (error) {
+      log.error("Error checking Status of Obol DKG: ", error);
+      return false;
+    }
+  }
+
+  async getObolDKGLogs() {
+    try {
+      const result = await this.nodeConnection.sshService.exec("docker logs dkg-container")
+      return result.stdout + result.stderr;
+    } catch (error) {
+      log.error("Error getting Obol DKG Logs: ", error);
+      return "";
+    }
+  }
+
+  async downloadObolBackup(localPath) {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+      const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
+      const result = await this.nodeConnection.sshService.downloadDirectorySSH(dataDir, localPath);
+      if (result) {
+        log.info("Obol Backup downloaded to: ", localPath);
+      }
+    } catch (err) {
+      log.error("Error downloading Obol Backup: ", err);
+    }
+  }
+
 }

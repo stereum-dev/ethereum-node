@@ -2,9 +2,9 @@ name: Tests Jest
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   workflow_dispatch:
 
@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '19'
+          node-version: "20"
       - run: npm install
         working-directory: ./launcher
-      - run: npm run test .test
+      - run: npm run test:unit
         working-directory: ./launcher

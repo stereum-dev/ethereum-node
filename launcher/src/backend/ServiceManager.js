@@ -259,30 +259,40 @@ export class ServiceManager {
       NimbusBeaconService: "--trusted-node-url=",
       TekuBeaconService: "--initial-state=",
     };
-    //if command is string
-    if (typeof client.command === "string") {
-      //remove old checkpoint command
-      if (client.command.includes(checkpointCommands[client.service])) {
-        let commands = client.command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
-        let includesCommand = commands.filter((c) => c.includes(checkpointCommands[client.service]));
-        commands = commands.filter((c) => !includesCommand.includes(c));
-        client.command = commands.concat().join(" ").trim();
-      }
-      //add checkpointSync if Url was send
-      if (checkpointUrl) {
-        client.command += " " + checkpointCommands[client.service] + checkpointUrl;
-      }
+
+    const genesisSyncCommands = {
+      LighthouseBeaconService: "--allow-insecure-genesis-sync",
+      TekuBeaconService: "--ignore-weak-subjectivity-period-enabled",
+    };
+
+    let isString = false;
+    let command = client.command;
+    if (typeof command === "string") {
+      isString = true;
+      command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+    }
+
+    //check if command is used
+    const checkpointSyncIndex = command.findIndex((c) => c.includes(checkpointCommands[client.service]));
+    //delete checkpointSync if used
+    if (checkpointSyncIndex > -1) {
+      command.splice(checkpointSyncIndex, 1);
+    }
+    //add checkpointSync if Url was send
+    if (checkpointUrl) {
+      command.push(checkpointCommands[client.service] + checkpointUrl);
+      if (genesisSyncCommands[client.service])
+        command = command.filter((c) => !c.includes(genesisSyncCommands[client.service]));
     } else {
-      //check if command is used
-      const checkpointSyncIndex = client.command.findIndex((c) => c.includes(checkpointCommands[client.service]));
-      //delete checkpointSync if used
-      if (checkpointSyncIndex > -1) {
-        client.command.splice(checkpointSyncIndex, 1);
-      }
-      //add checkpointSync if Url was send
-      if (checkpointUrl) {
-        client.command.push(checkpointCommands[client.service] + checkpointUrl);
-      }
+      //add genesisSync if no Url was send
+      if (genesisSyncCommands[client.service])
+        command.push(genesisSyncCommands[client.service]);
+    }
+
+    if (isString) {
+      client.command = command.join(" ").trim();
+    } else {
+      client.command = command;
     }
   }
 
@@ -549,9 +559,16 @@ export class ServiceManager {
 
   removeDependencies(service, serviceToDelete) {
     //update command
-    service.command = serviceToDelete.service.includes("External")
-      ? this.removeCommandConnection(service.command, serviceToDelete.env.link)
-      : this.removeCommandConnection(service.command, serviceToDelete.id);
+    service.command = this.removeCommandConnection(
+      service.command,
+      serviceToDelete.service.includes("External") ? serviceToDelete.env.link : serviceToDelete.id
+    );
+    if (service.service.includes("PrysmValidator") && serviceToDelete.service.includes("ExternalConsensus")) {
+      service.command = this.removeCommandConnection(
+        service.command,
+        serviceToDelete.env.gateway ? serviceToDelete.env.gateway : "--beacon-rpc-gateway-provider="
+      );
+    }
 
     //update volumes
     service.volumes = service.volumes.filter((v) => !v.destinationPath.includes(serviceToDelete.id));
@@ -943,7 +960,8 @@ export class ServiceManager {
         return ExternalConsensusService.buildByUserInput(
           args.network,
           args.installDir + "/externalConsensus",
-          args.source
+          args.source,
+          args.gateway ? args.gateway : ""
         );
     }
   }
@@ -1070,12 +1088,11 @@ export class ServiceManager {
           .slice(0, -1)
           .join("/");
         await this.nodeConnection.sshService.exec(
-          `mkdir ${extConnDir} && touch ${extConnDir}/link.txt && echo -e ${service.env.link} > ${extConnDir}/link.txt`
+          `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
+          (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
-          await this.nodeConnection.sshService.exec(
-            `touch ${extConnDir}/engine.jwt && echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`
-          );
+          await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
         }
       }
     }
@@ -1551,7 +1568,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1560,7 +1577,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1569,7 +1586,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1587,7 +1604,7 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
           metricsExporterCommands[firstConsensusClient.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
         await this.manageServiceState(firstConsensusClient.id, "started");

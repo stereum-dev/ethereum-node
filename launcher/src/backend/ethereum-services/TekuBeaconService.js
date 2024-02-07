@@ -70,7 +70,11 @@ export class TekuBeaconService extends NodeService {
       null, //consensusClients
       mevboost //mevboost
     );
-    if (checkpointURL) service.command.push("--initial-state=" + checkpointURL);
+    if (checkpointURL) {
+      service.command.push("--initial-state=" + checkpointURL);
+    } else {
+      service.command.push("--ignore-weak-subjectivity-period-enabled");
+    }
     if (mevboostEndpoint) service.command.push(`--builder-endpoint=${mevboostEndpoint}`);
     return service;
   }
@@ -100,9 +104,8 @@ export class TekuBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id
+      }\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

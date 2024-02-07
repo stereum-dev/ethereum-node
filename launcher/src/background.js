@@ -518,8 +518,45 @@ ipcMain.handle("getSyncCommitteeRewards", async (event, args) => {
   return await monitoring.getSyncCommitteeRewards(args.validators, args.slot);
 });
 
+ipcMain.handle("createObolENR", async () => {
+  return await validatorAccountManager.createObolENR();
+});
+
+ipcMain.handle("getObolENRPrivateKey", async () => {
+  return await validatorAccountManager.getObolENRPrivateKey();
+});
+
+ipcMain.handle("checkObolContent", async () => {
+  return await validatorAccountManager.checkObolContent();
+});
+
+ipcMain.handle("getObolENRPublicKey", async () => {
+  return await validatorAccountManager.getObolENRPublicKey();
+});
+
+ipcMain.handle("removeObolENR", async () => {
+  return await validatorAccountManager.removeObolENR();
+});
+
+ipcMain.handle("startObolDKG", async (event, args) => {
+  return await validatorAccountManager.startObolDKG(args);
+});
+
+ipcMain.handle("checkObolDKG", async () => {
+  return await validatorAccountManager.checkObolDKG();
+});
+
+ipcMain.handle("getObolDKGLogs", async () => {
+  return await validatorAccountManager.getObolDKGLogs();
+});
+
+ipcMain.handle("downloadObolBackup", async (event, args) => {
+  return await validatorAccountManager.downloadObolBackup(args);
+});
+
 ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
+
 });
 
 // Scheme must be registered before the app is ready
