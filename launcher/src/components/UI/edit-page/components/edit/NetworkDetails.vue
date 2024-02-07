@@ -3,15 +3,15 @@ import { useNodeManage } from '@/store/nodeManage';
   <div
     class="col-start-7 col-span-3 flex flex-col justify-between items-center bg-[#151618] border h-full border-gray-600 rounded-md px-2 py-1"
     style="cursor: default"
-    @mouseenter="footerStore.cursorLocation = `${currIs} ${network.name}`"
+    @mouseenter="footerStore.cursorLocation = `${currIs} ${network?.name}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="w-full self-start text-xs font-semibold text-teal-700">
       {{ t("networkDetails.currentNet") }}
     </div>
     <div class="w-full flex justify-center items-center">
-      <img v-if="network.icon" :src="network.icon" alt="Networks" class="w-5 mr-1" />
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ network.name }}</span>
+      <img v-if="network?.icon" :src="network?.icon" alt="Networks" class="w-5 mr-1" />
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ network?.name }}</span>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ const currIs = t("networkDetails.currIs");
 
 const footerStore = useFooter();
 const manageStore = useNodeManage();
-const network = ref({});
+const network = ref(null);
 
 watchEffect(() => {
   let id = manageStore.configNetwork?.id ? manageStore.configNetwork.id : manageStore.currentNetwork.id;
@@ -39,7 +39,7 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  network.value = {};
+  network.value = null;
 });
 </script>
 <style scoped>
