@@ -11,6 +11,7 @@ export class HetznerServer {
     this.serverRootPassword = null;
     this.sshKeyPair = generateKeyPairSync("ed25519")
     this.sshKeyName = null;
+    this.httpsAgent = new https.Agent({ keepAlive: true, keepAliveMsecs: 15000 });
   }
 
   async Sleep(ms) {
@@ -51,6 +52,7 @@ export class HetznerServer {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.apiToken,
       },
+      agent: this.httpsAgent,
     };
     return options;
   }
@@ -189,7 +191,6 @@ export class HetznerServer {
   async deleteSSHKey(keyID) {
     if (!keyID) {
       const response = await this.getSSHKeyByName(this.sshKeyName);
-      log.info(response);
       const key = response.ssh_keys.find((key) => key.name === this.sshKeyName);
       keyID = key.id;
     }
@@ -210,14 +211,10 @@ export class HetznerServer {
   }
 
   async finishTestGracefully(nodeConnection) {
-    log.info("Finishing Test Gracefully")
     clearInterval(nodeConnection.sshService.checkPoolPolling)
-    log.info("Disconnecting SSH Connection")
     await this.Sleep(10000)
     await nodeConnection.sshService.disconnect();
-    log.info("Deleting SSH Key")
     await this.deleteSSHKey()
-    log.info("Destroying Server")
     await this.destroy();
   }
 }
