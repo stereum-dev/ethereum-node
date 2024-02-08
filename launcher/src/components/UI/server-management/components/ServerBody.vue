@@ -5,7 +5,7 @@
     <div
       class="col-start-14 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
     >
-      <LoginPanel v-if="isLoginActive" />
+      <LoginPanel v-if="isLoginActive" @server-login="serverLogin" />
       <DetailsPanel v-if="isDetailsActive" @change-password="changePassword" @set-avatar="setServerAvatar" />
       <UpdatePanel v-if="isUpdateActive" />
       <SshPanel v-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
@@ -27,7 +27,7 @@ import SshPanel from "./ssh-management/SshPanel.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey"]);
@@ -41,15 +41,15 @@ const isSSHActive = computed(() => route.path !== "/login" && serverStore.isServ
 const isDetailsActive = computed(() => route.path !== "/login" && serverStore.isServerDetailsActive);
 const isUpdateActive = computed(() => route.path !== "/login" && serverStore.isServerUpdateActive);
 
-// watch(
-//   () => serverStore.selectedServerConnection,
-//   async (newVal) => {
-//     if (newVal) {
-//       serverStore.isServerLoginActive = false;
-//       serverStore.isServerManagementActive = true;
-//     }
-//   }
-// );
+watch(
+  () => serverStore.selectedServerConnection,
+  async (newVal) => {
+    if (newVal) {
+      serverStore.isServerLoginActive = false;
+      serverStore.isServerManagementActive = true;
+    }
+  }
+);
 
 //Methods
 
@@ -86,6 +86,8 @@ const addNewServer = () => {
   }
   serverStore.addNewServer = true;
   serverStore.isServerLoginActive = true;
+  serverStore.isServerDetailsActive = false;
+  serverStore.setActiveTab("login");
   serverStore.isServerManagementActive = false;
 };
 
@@ -99,5 +101,9 @@ const fileUpload = (file) => {
 
 const deleteKey = (key) => {
   emit("deleteKey", key);
+};
+
+const serverLogin = () => {
+  emit("serverLogin");
 };
 </script>

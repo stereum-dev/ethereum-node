@@ -76,7 +76,11 @@ export class LighthouseBeaconService extends NodeService {
       mevboost //mevboost
     );
 
-    if (checkpointURL) service.command.push("--checkpoint-sync-url=" + checkpointURL);
+    if (checkpointURL) {
+      service.command.push("--checkpoint-sync-url=" + checkpointURL);
+    } else {
+      service.command.push("--allow-insecure-genesis-sync");
+    }
     if (mevboostEndpoint) service.command.push(`--builder=${mevboostEndpoint}`);
 
     return service;
@@ -107,9 +111,8 @@ export class LighthouseBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id
+      }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

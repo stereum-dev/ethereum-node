@@ -5,6 +5,7 @@ import ServerHeader from './components/ServerHeader.vue';
   >
     <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
+      @server-login="loginHandler"
       @select-server="serverHandler"
       @change-password="acceptChangePass"
       @file-upload="addExistingKeyHandler"
@@ -32,15 +33,15 @@ import PasswordModal from "./components/modals/PasswordModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
 import { ref, onMounted, watchEffect } from "vue";
 import ControlService from "@/store/ControlService";
-import { useControlStore } from "@/store/theControl";
 import { useServers } from "@/store/servers";
 import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
 import { useServerLogin } from "@/composables/useLogin";
+import { useRouter } from "vue-router";
 
-const controlStore = useControlStore();
 const serverStore = useServers();
-const { remove } = useServerLogin();
+const { login, remove, loadStoredConnections } = useServerLogin();
+const router = useRouter();
 
 const keyLocation = ref("");
 
@@ -87,18 +88,21 @@ onMounted(async () => {
 
 //Methods
 
+//Server Management Login Handler
+
+const loginHandler = async () => {
+  serverStore.connectingProcess = true;
+  if (router.currentRoute.value.path === "/login") {
+    await login();
+  } else {
+    await ControlService.logout();
+    await login();
+  }
+};
+
 //Server Management Tab Picker
 const tabPicker = (tab) => {
   serverStore.setActiveTab(tab);
-};
-
-//Load stored connections
-
-const loadStoredConnections = async () => {
-  const savedConnections = await ControlService.readConfig();
-  serverStore.selectedServerConnection = savedConnections.savedConnections.find(
-    (item) => item.host === controlStore.ipAddress
-  );
 };
 
 //Click handling on a server in the saved servers list
@@ -107,10 +111,16 @@ const serverHandler = (server) => {
     tab.isActive = false;
   });
 
+  // Reset isSelected for all servers before setting the selected one
+  serverStore.savedServers.savedConnections.forEach((s) => {
+    if (s.isSelected) s.isSelected = false;
+  });
+
   if (serverStore.selectedServerConnection?.name === server.name) {
     serverStore.isServerLoginActive = false;
     serverStore.setActiveTab("info");
     serverStore.isServerDetailsActive = true;
+    server.isSelected = true;
   } else {
     if (serverStore.addNewServer) {
       serverStore.addNewServer = false;
@@ -120,7 +130,10 @@ const serverHandler = (server) => {
     serverStore.selectedServerToConnect = server;
     serverStore.isServerDetailsActive = false;
     serverStore.isServerLoginActive = true;
+    server.isSelected = true;
   }
+
+  serverStore.savedServers.savedConnections = [...serverStore.savedServers.savedConnections];
 };
 
 //Change password handling
@@ -145,6 +158,7 @@ const closeWindow = () => {
 
 const closeErrorDialog = () => {
   serverStore.errorMsgExists = false;
+  serverStore.connectingProcess = false;
 };
 
 const removeServerHandler = async () => {

@@ -487,6 +487,42 @@ class ControlService extends EventEmitter {
   async getSyncCommitteeRewards(validators, slot) {
     return await this.promiseIpc.send("getSyncCommitteeRewards", { validators, slot });
   }
+
+  async createObolENR() {
+    return await this.promiseIpc.send("createObolENR");
+  }
+
+  async getObolENRPrivateKey() {
+    return await this.promiseIpc.send("getObolENRPrivateKey");
+  }
+
+  async checkObolContent() {
+    return await this.promiseIpc.send("checkObolContent");
+  }
+
+  async getObolENRPublicKey() {
+    return await this.promiseIpc.send("getObolENRPublicKey");
+  }
+
+  async removeObolENR() {
+    return await this.promiseIpc.send("removeObolENR");
+  }
+
+  async startObolDKG(args) {
+    return await this.promiseIpc.send("startObolDKG", args);
+  }
+
+  async checkObolDKG() {
+    return await this.promiseIpc.send("checkObolDKG");
+  }
+
+  async getObolDKGLogs() {
+    return await this.promiseIpc.send("getObolDKGLogs");
+  }
+
+  async downloadObolBackup(args) {
+    return await this.promiseIpc.send("downloadObolBackup", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
