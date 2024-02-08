@@ -3,7 +3,7 @@
     <control-dialog :open="openDialog"
       ><div class="dialogBox">
         <div class="dialogIcon"><img :src="dialogIcon" /></div>
-        <div class="dialogMessage">
+        <div class="dialogMessage uppercase">
           <span>{{ dialogValue }}</span>
         </div>
       </div></control-dialog
