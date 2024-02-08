@@ -308,7 +308,7 @@
     "RPCCopiedMessage": "تم نسخ عنوان RPC-URL إلى الحافظة!",
     "WSTurnOnMessage": "يرجى تشغيل نفق WS أولاً!",
     "WSCopiedMessage": "تم نسخ عنوان WS-URL إلى الحافظة!"
-  },
+ },
   "pluginLogs": {
     "pageTitle": "سجلات الإضافة",
     "noLogFound": "لم يتم العثور على سجل في القائمة",

@@ -301,7 +301,7 @@
   },
   "dataAPIAndRPC": {
     "copy": "Klikněte pro zkopírování!",
-    "closed": "Tunel uzavřen!",
+    "closed": "Turn On First",
     "turnOnMessage": "Nejprve prosím ZAPNĚTE DATA-API tunel!",
     "copiedMessage": "DATA-API-URL zkopírována do schránky!",
     "RPCTurnOnMessage": "Nejprve prosím ZAPNĚTE RPC tunel!",

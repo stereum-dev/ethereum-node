@@ -301,7 +301,7 @@
   },
   "dataAPIAndRPC": {
     "copy": "Kliknite za kopiranje!",
-    "closed": "Tunnel zatvoren!",
+    "closed": "Turn On First",
     "turnOnMessage": "Molimo prvo UKLJUČITE DATA-API tunel!",
     "copiedMessage": "DATA-API-URL kopiran u clipboard!",
     "RPCTurnOnMessage": "Molimo prvo UKLJUČITE RPC tunel!",
