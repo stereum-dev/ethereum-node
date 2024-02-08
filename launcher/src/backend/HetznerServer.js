@@ -80,6 +80,7 @@ export class HetznerServer {
       });
 
       req.on("error", (err) => {
+        log.info(`${method} ${path} ${query} ${body}`)
         log.error(err);
         reject(err);
       });
