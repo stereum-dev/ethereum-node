@@ -82,7 +82,7 @@ test("mevboost installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection, keyResponse)
+  await testServer.finishTestGracefully(nodeConnection)
 
   //check docker container
   expect(docker.stdout).toMatch(/flashbots\/mev-boost/);
