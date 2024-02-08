@@ -1,11 +1,11 @@
 /**
  * @jest-environment node
  */
-import { HetznerServer } from "../HetznerServer.js";
-import { NodeConnection } from "../NodeConnection.js";
-import { ValidatorAccountManager } from "../ValidatorAccountManager.js";
-import { ServiceManager } from "../ServiceManager.js";
-import { TaskManager } from "../TaskManager.js";
+import { HetznerServer } from "../../HetznerServer.js";
+import { NodeConnection } from "../../NodeConnection.js";
+import { ValidatorAccountManager } from "../../ValidatorAccountManager.js";
+import { ServiceManager } from "../../ServiceManager.js";
+import { TaskManager } from "../../TaskManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(1000000);

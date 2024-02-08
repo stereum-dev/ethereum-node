@@ -1,22 +1,22 @@
 /**
  * @jest-environment node
  */
-import { HetznerServer } from "../HetznerServer.js";
-import { NodeConnection } from "../NodeConnection.js";
-import { ServiceManager } from "../ServiceManager.js";
-import { TaskManager } from "../TaskManager.js";
-import { ValidatorAccountManager } from "../ValidatorAccountManager.js";
+import { HetznerServer } from "../../HetznerServer.js";
+import { NodeConnection } from "../../NodeConnection.js";
+import { ServiceManager } from "../../ServiceManager.js";
+import { TaskManager } from "../../TaskManager.js";
+import { ValidatorAccountManager } from "../../ValidatorAccountManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(1000000);
 
-test("lodestar validator import", async () => {
+test("nimbus validator import", async () => {
   //create server
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Lodestar--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Nimbus--integration-test--ubuntu-2204")
 
   const serverSettings = {
-    name: "Lodestar--integration-test--ubuntu-2204",
+    name: "Nimbus--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx31",
     start_after_create: true,
@@ -26,7 +26,7 @@ test("lodestar validator import", async () => {
   };
 
   await testServer.create(serverSettings);
-  log.info("Server started");
+  log.info("server started");
 
   const connectionParams = {
     host: testServer.serverIPv4,
@@ -56,31 +56,32 @@ test("lodestar validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
+  //install geth
   let geth = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
 
-  let lBC = serviceManager.getService("LodestarBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] });
+  //install nimbus
+  let nimbusBC = serviceManager.getService("NimbusBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] })
 
-  let lVC = serviceManager.getService("LodestarValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [lBC] });
+  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
 
-  //get latest versions
   let versions = await nodeConnection.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
-  lBC.imageVersion = versions[lBC.network][lBC.service].slice(-1).pop()
-  lVC.imageVersion = versions[lVC.network][lVC.service].slice(-1).pop()
+  nimbusBC.imageVersion = versions[nimbusBC.network][nimbusBC.service].slice(-1).pop()
+  nimbusVC.imageVersion = versions[nimbusVC.network][nimbusVC.service].slice(-1).pop()
 
-  await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
-    await serviceManager.manageServiceState(geth.id, "started");
 
-  //write configs for lodestar BC and VC
-  await nodeConnection.writeServiceConfiguration(lBC.buildConfiguration());
-  await nodeConnection.writeServiceConfiguration(lVC.buildConfiguration());
+  //write config and start geth
+  await nodeConnection.writeServiceConfiguration(geth.buildConfiguration());
+  await serviceManager.manageServiceState(geth.id, "started");
 
-  //start lodestar BC and VC
-  await serviceManager.manageServiceState(lBC.id, "started");
-  await serviceManager.manageServiceState(lVC.id, "started");
+  //write config and start nimbus
+  await nodeConnection.writeServiceConfiguration(nimbusBC.buildConfiguration());
+  await nodeConnection.writeServiceConfiguration(nimbusVC.buildConfiguration());
+  await serviceManager.manageServiceState(nimbusBC.id, "started");
+  await serviceManager.manageServiceState(nimbusVC.id, "started");
 
   //Waiting for the service to start properly
-  await testServer.Sleep(300000);
+  await testServer.Sleep(60000);
 
   //import validator
   const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
@@ -92,66 +93,64 @@ test("lodestar validator import", async () => {
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
   })
-  await validatorAccountManager.importKey(lVC.id);
+  await validatorAccountManager.importKey(nimbusVC.id);
 
   //get logs
   let condition = false;
   let counter = 0;
-  let VCstatus = "";
   let BCstatus = "";
+  let VCstatus = "";
   while (!condition && counter < 10) {
     await testServer.Sleep(30000);
-    VCstatus = await await nodeConnection.sshService.exec(`docker logs stereum-${lVC.id}`);
-    BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lBC.id}`);
+    BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${nimbusBC.id}`);
+    VCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${nimbusVC.id}`);
     if (
-      /Started metrics HTTP server/.test(BCstatus.stdout) &&
-      /Started REST API server address/.test(BCstatus.stdout) &&
-      /Searching peers/.test(BCstatus.stdout) &&
-      /Syncing/.test(BCstatus.stdout) &&
-      /Genesis fetched from the beacon node/.test(VCstatus.stdout) &&
-      /Verified connected beacon node and validator have same the config/.test(VCstatus.stdout) &&
-      /REST api server keymanager bearer access token located at/.test(VCstatus.stdout)
+      /Starting beacon node/.test(BCstatus.stdout) &&
+      /Listening to incoming network requests/.test(BCstatus.stdout) &&
+      /REST service started/.test(BCstatus.stdout) &&
+      /Slot start/.test(BCstatus.stdout) &&
+      /Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)/.test(BCstatus.stdout) &&
+      /Beacon node is online/.test(VCstatus.stdout) &&
+      /Beacon node is compatible/.test(VCstatus.stdout) &&
+      /Local validator attached/.test(VCstatus.stdout) &&
+      /REST service started/.test(VCstatus.stdout) &&
+      /Slot start/.test(VCstatus.stdout)
     ) {
       condition = true;
     }
     counter++;
   }
-
   const ufw = await nodeConnection.sshService.exec("ufw status");
   const docker = await nodeConnection.sshService.exec("docker ps");
-  const api_token = await nodeConnection.sshService.exec(
-    `cat /opt/stereum/lodestar-${lVC.id}/validator/validator-db/api-token.txt`
-  );
 
   // destroy
   await testServer.finishTestGracefully(nodeConnection)
 
   //check ufw
-  expect(ufw.stdout).toMatch(/30303\/tcp/);
-  expect(ufw.stdout).toMatch(/30303\/udp/);
   expect(ufw.stdout).toMatch(/9000\/tcp/);
   expect(ufw.stdout).toMatch(/9000\/udp/);
-
-  //check for api_token file
-  expect(api_token.stdout).toBeTruthy();
+  expect(ufw.stdout).toMatch(/5052\/tcp/);
 
   //check docker container
-  expect(docker.stdout).toMatch(/chainsafe\/lodestar/);
+  expect(docker.stdout).toMatch(/statusim\/nimbus-eth2/);
+  expect(docker.stdout).toMatch(/statusim\/nimbus-validator-client/);
+  expect(docker.stdout).toMatch(/5052->5052/);
   expect(docker.stdout).toMatch(/9000->9000/);
-  expect(docker.stdout).toMatch(/5062->5062/);
-  expect(docker.stdout).toMatch(/9596->9596/);
-  if (![lBC.id, lVC.id, geth.id].join("").includes("Up")) {
+  if (!nimbusBC.id.includes("Up") && !nimbusVC.id.includes("Up") && !geth.id.includes("Up")) {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(3);
   }
 
-  //check lighthouse BC logs
-  expect(BCstatus.stdout).toMatch(/Started metrics HTTP server/);
-  expect(BCstatus.stdout).toMatch(/Started REST API server address/);
-  expect(BCstatus.stdout).toMatch(/Searching peers/);
-  expect(BCstatus.stdout).toMatch(/Syncing/);
+  //check nimbus service logs
+  expect(BCstatus.stdout).toMatch(/Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)/);
+  expect(BCstatus.stdout).toMatch(/Starting beacon node/);
+  expect(BCstatus.stdout).toMatch(/Listening to incoming network requests/);
+  expect(BCstatus.stdout).toMatch(/REST service started/);
+  expect(BCstatus.stdout).toMatch(/Slot start/);
 
-  //check lighthouse VC logs
-  expect(VCstatus.stdout).toMatch(/Genesis fetched from the beacon node/);
-  expect(VCstatus.stdout).toMatch(/Verified connected beacon node and validator have same the config/);
-  expect(VCstatus.stdout).toMatch(/REST api server keymanager bearer access token located at/);
+  expect(VCstatus.stdout).toMatch(/Beacon node is online/);
+  expect(VCstatus.stdout).toMatch(/Beacon node is compatible/);
+  expect(VCstatus.stdout).toMatch(/Local validator attached/);
+  expect(VCstatus.stdout).toMatch(/REST service started/);
+  expect(VCstatus.stdout).toMatch(/Slot start/);
+
 });

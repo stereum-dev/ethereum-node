@@ -1,10 +1,10 @@
 /**
  * @jest-environment node
  */
-import { NodeConnection } from "../NodeConnection";
-import { nodeOS } from "../NodeOS";
-import { TaskManager } from "../TaskManager";
-import { HetznerServer } from "../HetznerServer";
+import { NodeConnection } from "../../NodeConnection";
+import { nodeOS } from "../../NodeOS";
+import { TaskManager } from "../../TaskManager";
+import { HetznerServer } from "../../HetznerServer";
 const log = require("electron-log");
 
 jest.setTimeout(500000);
