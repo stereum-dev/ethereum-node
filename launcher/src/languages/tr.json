@@ -301,7 +301,7 @@
   },
   "dataAPIAndRPC": {
     "copy": "Kopyalamak için tıkla!",
-    "closed": "Tünelleme kapalı!",
+    "closed": "Turn On First",
     "turnOnMessage": "Lütfen önce DATA-API tünellemeyi AÇIN!",
     "copiedMessage": "DATA-API-URL panoya kopyalandı!",
     "RPCTurnOnMessage": "Lütfen önce RPC tünellemeyi açın!",

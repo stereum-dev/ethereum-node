@@ -301,7 +301,7 @@
   },
   "dataAPIAndRPC": {
     "copy": "Cliquez pour copier !",
-    "closed": "Tunnel closed!",
+    "closed": "Turn On First",
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
     "copiedMessage": "DATA-API-URL copied to clipboard!",
     "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
