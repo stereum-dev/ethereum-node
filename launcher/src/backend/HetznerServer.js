@@ -187,7 +187,9 @@ export class HetznerServer {
   }
 
   async deleteSSHKey(keyID) {
+    log.info("Deleting SSH Key with ID " + keyID + " ...")
     if (!keyID) {
+      log.info("No keyID provided, trying to get keyID by name with name " + this.sshKeyName + " ...")
       const response = await this.getSSHKeyByName(this.sshKeyName);
       log.info(response);
       const key = response.ssh_keys.find((key) => key.name === this.sshKeyName);
