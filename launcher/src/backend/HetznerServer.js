@@ -11,7 +11,6 @@ export class HetznerServer {
     this.serverRootPassword = null;
     this.sshKeyPair = generateKeyPairSync("ed25519")
     this.sshKeyName = null;
-    this.httpsAgent = new https.Agent({ keepAlive: true });
   }
 
   async Sleep(ms) {
@@ -52,8 +51,6 @@ export class HetznerServer {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.apiToken,
       },
-      agent: this.httpsAgent,
-      timeout: 60000,
     };
     return options;
   }
