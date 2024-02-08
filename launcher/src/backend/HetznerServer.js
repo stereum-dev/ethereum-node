@@ -35,15 +35,16 @@ export class HetznerServer {
   /**
    * creates HTTPS options object
    * @param method {string} - Either "GET", "POST", "DELTE" or "PUT"
-   * @param serverID {string} - Used to specify which server to target (optional)
+   * @param path {string} - Path to the API endpoint
+   * @param query {string} - Query for the API endpoint (optional)
    * @returns https options with given method and path
    */
-  async createHTTPOptions(method, option, serverID, action) {
-    serverID === undefined ? (serverID = "") : (serverID = "/" + serverID);
-    action === undefined ? (action = "") : (action = "/actions/" + action);
+  async createHTTPOptions(method, path, query) {
+    if (!path.startsWith("/")) path = "/" + path;
+    if (query && !query.startsWith("?")) query = "?" + query;
     const options = {
       hostname: "api.hetzner.cloud",
-      path: `/v1/${option}${serverID}${action}`,
+      path: query ? `${path}${query}` : `${path}`,
       method: method,
       headers: {
         "Content-Type": "application/json",
@@ -55,10 +56,13 @@ export class HetznerServer {
 
   /**
    * makes HTTPS Request with given HTTPS options and body
-   * @param options - https options
+   * @param method - Either "GET", "POST", "DELTE" or "PUT"
+   * @param path - Path to the API endpoint
+   * @param query - Query for the API endpoint (optional)
    * @param body - body of the Request (optional)
    */
-  async makeRequest(options, body) {
+  async makeRequest(method, path, query, body) {
+    const options = await this.createHTTPOptions(method, path, query);
     let data = "";
     return new Promise((resolve, reject) => {
       const req = https.request(options, (res) => {
@@ -91,21 +95,15 @@ export class HetznerServer {
    * @param serverSettings object with settings for Server Creation
    */
   async create(serverSettings) {
-    const response = await this.getStatusAll();
-    if (response.servers.some((server) => server.name == serverSettings.name)) {
+    const response = await this.getStatusByName(serverSettings.name);
+    const existing = response.servers.find((server) => server.name === serverSettings.name);
+    if (existing) {
       log.info("server already exists");
-      response.servers.forEach((server) => {
-        if (server.name == serverSettings.name) {
-          this.serverID = server.id;
-        }
-      });
+      this.serverID = existing.id;
       await this.destroy();
     }
 
-    const data = await this.makeRequest(
-      await this.createHTTPOptions("POST", "servers"),
-      JSON.stringify(serverSettings)
-    );
+    const data = await this.makeRequest("POST", "/v1/servers", "", JSON.stringify(serverSettings));
     const responseData = JSON.parse(data);
 
     if (responseData.error !== undefined) {
@@ -137,7 +135,9 @@ export class HetznerServer {
    * Destroys Server via API call
    */
   async destroy() {
-    await this.makeRequest(await this.createHTTPOptions("DELETE", "servers", this.serverID));
+    log.info("Destroying Server with ID " + this.serverID + " ...")
+
+    await this.makeRequest("DELETE", `/v1/servers/${this.serverID}`);
 
     log.info("Server with ID " + this.serverID + " was destroyed successfully");
   }
@@ -147,19 +147,19 @@ export class HetznerServer {
    * @returns object containing server information
    */
   async getStatus() {
-    const data = await this.makeRequest(await this.createHTTPOptions("GET", "servers", this.serverID));
+    const data = await this.makeRequest("GET", `/v1/servers/${this.serverID}`);
     const responseData = JSON.parse(data);
     return responseData;
   }
 
-  async getStatusAll() {
-    const data = await this.makeRequest(await this.createHTTPOptions("GET", "servers"));
+  async getStatusByName(name) {
+    const data = await this.makeRequest("GET", "/v1/servers", `?${name}`);
     const responseData = JSON.parse(data);
     return responseData;
   }
 
   async getAllNetworks() {
-    const data = await this.makeRequest(await this.createHTTPOptions("GET", "networks"));
+    const data = await this.makeRequest("GET", "/v1/networks");
     const responseData = JSON.parse(data);
     return responseData;
   }
@@ -175,36 +175,29 @@ export class HetznerServer {
       ip: ip,
       network: networkID,
     };
-    console.log(
-      await this.makeRequest(
-        await this.createHTTPOptions("POST", "servers", this.serverID, "attach_to_network"),
-        JSON.stringify(settings)
-      )
-    );
+    await this.makeRequest("POST", `/v1/servers/${this.serverID}/actions/attach_to_network`, "", JSON.stringify(settings))
   }
 
-  async getAllSSHKeys() {
-    const data = await this.makeRequest(await this.createHTTPOptions("GET", "ssh_keys"));
+  async getSSHKeyByName(name) {
+    const data = await this.makeRequest("GET", "/v1/ssh_keys", `?name=${name}`);
     const responseData = JSON.parse(data);
     return responseData;
   }
 
   async deleteSSHKey(keyID) {
-    await this.makeRequest(await this.createHTTPOptions("DELETE", "ssh_keys", keyID))
+    await this.makeRequest("DELETE", `/v1/ssh_keys/${keyID}`);
 
     log.info("SSH Key with ID " + keyID + " was deleted successfully");
   }
 
   async createSSHKey(name) {
-    const response = await this.getAllSSHKeys();
+    const response = await this.getSSHKeyByName(name);
     const existing = response.ssh_keys.find((key) => key.name === name);
     if (existing && existing.id) {
       await this.deleteSSHKey(existing.id);
       log.debug("deleted existing ssh key with name " + name + " and id " + existing.id)
     }
-    await this.Sleep(5000)
-    return JSON.parse(await this.makeRequest(await this.createHTTPOptions("POST", "ssh_keys"),
-      JSON.stringify({ name: name, public_key: this.sshKeyPair.public })));
+    return JSON.parse(await this.makeRequest("POST", "/v1/ssh_keys", "", JSON.stringify({ name: name, public_key: this.sshKeyPair.public })));
   }
 
   async finishTestGracefully(nodeConnection, keyResponse) {
