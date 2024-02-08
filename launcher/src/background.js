@@ -26,6 +26,7 @@ const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 const nobleupgrade = new NodeUpdates(nodeConnection);
+const nodeUpdates = new NodeUpdates(NodeConnection);
 stereumUpdater.initUpdater();
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
@@ -255,27 +256,27 @@ ipcMain.handle("manageServiceState", async (event, args) => {
 
 ipcMain.handle("runAllUpdates", async (event, args) => {
   app.showExitPrompt = true;
-  const returnValue = await nodeConnection.runAllUpdates(args.commit);
+  const returnValue = await nodeUpdates.runAllUpdates(args.commit);
   app.showExitPrompt = false;
   return returnValue;
 });
 
 ipcMain.handle("updateServices", async (event, args) => {
   app.showExitPrompt = true;
-  let seconds = await nodeConnection.updateServices(args.services);
+  let seconds = await nodeUpdates.updateServices(args.services);
   app.showExitPrompt = false;
   return seconds;
 });
 
 ipcMain.handle("updateStereum", async (event, args) => {
   app.showExitPrompt = true;
-  let seconds = await nodeConnection.updateStereum(args.commit);
+  let seconds = await nodeUpdates.updateStereum(args.commit);
   app.showExitPrompt = false;
   return seconds;
 });
 
 ipcMain.handle("restartServices", async (event, args) => {
-  await nodeConnection.restartServices(args);
+  await nodeUpdates.restartServices(args);
 });
 
 ipcMain.handle("restartService", async (event, args) => {
@@ -283,19 +284,19 @@ ipcMain.handle("restartService", async (event, args) => {
 });
 
 ipcMain.handle("checkUpdates", async () => {
-  return await nodeConnection.checkUpdates();
+  return await nodeUpdates.checkUpdates();
 });
 
 ipcMain.handle("getCurrentOsVersion", async () => {
-  return await nodeConnection.getCurrentOsVersion();
+  return await nodeUpdates.getCurrentOsVersion();
 });
 
 ipcMain.handle("getCountOfUpdatableOSUpdate", async () => {
-  return await nodeConnection.getCountOfUpdatableOSUpdate();
+  return await nodeUpdates.getCountOfUpdatableOSUpdate();
 });
 
 ipcMain.handle("updateOS", async () => {
-  return await nodeConnection.updateOS();
+  return await nodeUpdates.updateOS();
 });
 
 ipcMain.handle("upgradeToNoble", async () => {
