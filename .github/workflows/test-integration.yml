@@ -14,8 +14,8 @@ jobs:
       ELTests: ${{ steps.get-EL-tests.outputs.tests }}
       otherTests: ${{ steps.get-other-tests.outputs.tests }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - run: npm install
@@ -44,8 +44,8 @@ jobs:
       matrix:
         test: ${{ fromJson(needs.setup.outputs.importTests) }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - run: npm install
@@ -66,8 +66,8 @@ jobs:
       matrix:
         test: ${{ fromJson(needs.setup.outputs.ELTests) }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - run: npm install
@@ -87,8 +87,8 @@ jobs:
       matrix:
         test: ${{ fromJson(needs.setup.outputs.otherTests) }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
       - run: npm install
