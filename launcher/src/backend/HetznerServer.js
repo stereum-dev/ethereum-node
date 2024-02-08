@@ -10,6 +10,7 @@ export class HetznerServer {
     this.serverIPv4 = null;
     this.serverRootPassword = null;
     this.sshKeyPair = generateKeyPairSync("ed25519")
+    this.sshKeyName = null;
   }
 
   async Sleep(ms) {
@@ -185,12 +186,19 @@ export class HetznerServer {
   }
 
   async deleteSSHKey(keyID) {
+    if (!keyID) {
+      const response = await this.getSSHKeyByName(this.sshKeyName);
+      log.info(response);
+      const key = response.ssh_keys.find((key) => key.name === this.sshKeyName);
+      keyID = key.id;
+    }
     await this.makeRequest("DELETE", `/v1/ssh_keys/${keyID}`);
 
     log.info("SSH Key with ID " + keyID + " was deleted successfully");
   }
 
   async createSSHKey(name) {
+    this.sshKeyName = name;
     const response = await this.getSSHKeyByName(name);
     const existing = response.ssh_keys.find((key) => key.name === name);
     if (existing && existing.id) {
@@ -200,11 +208,15 @@ export class HetznerServer {
     return JSON.parse(await this.makeRequest("POST", "/v1/ssh_keys", "", JSON.stringify({ name: name, public_key: this.sshKeyPair.public })));
   }
 
-  async finishTestGracefully(nodeConnection, keyResponse) {
+  async finishTestGracefully(nodeConnection) {
+    log.info("Finishing Test Gracefully")
     clearInterval(nodeConnection.sshService.checkPoolPolling)
+    log.info("Disconnecting SSH Connection")
     await this.Sleep(10000)
     await nodeConnection.sshService.disconnect();
-    await this.deleteSSHKey(keyResponse.ssh_key.id)
+    log.info("Deleting SSH Key")
+    await this.deleteSSHKey()
+    log.info("Destroying Server")
     await this.destroy();
   }
 }
