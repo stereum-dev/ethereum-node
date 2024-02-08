@@ -1,20 +1,20 @@
 /**
  * @jest-environment node
  */
-import { HetznerServer } from "../../HetznerServer.js";
-import { NodeConnection } from "../../NodeConnection.js";
-import { ServiceManager } from "../../ServiceManager.js";
-import { TaskManager } from "../../TaskManager.js";
+import { HetznerServer } from "../HetznerServer.js";
+import { NodeConnection } from "../NodeConnection.js";
+import { ServiceManager } from "../ServiceManager.js";
+import { TaskManager } from "../TaskManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(500000);
 
-test("erigon installation", async () => {
+test("besu installation", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Erigon--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Besu--integration-test--ubuntu-2204")
 
   const serverSettings = {
-    name: "Erigon--integration-test--ubuntu-2204",
+    name: "Besu--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
@@ -42,20 +42,20 @@ test("erigon installation", async () => {
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
-  echo "stereum_settings:
-  settings:
-    controls_install_path: /opt/stereum
-    os_user: stereum
-    updates:
-      lane: stable
-      unattended:
-        install: false
-  " > /etc/stereum/stereum.yaml`);
+      echo "stereum_settings:
+      settings:
+        controls_install_path: /opt/stereum
+        os_user: stereum
+        updates:
+          lane: stable
+          unattended:
+            install: false
+      " > /etc/stereum/stereum.yaml`);
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  //install erigon
-  let executionClient = serviceManager.getService("ErigonService", { network: "goerli", installDir: "/opt/stereum" })
+  //install besu
+  let executionClient = serviceManager.getService("BesuService", { network: "goerli", installDir: "/opt/stereum" })
 
   let versions = await nodeConnection.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
@@ -71,11 +71,15 @@ test("erigon installation", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
     if (
-      /Enabling metrics export to prometheus/.test(status.stderr) &&
-      /HTTP endpoint opened for Engine API/.test(status.stderr) &&
-      /HTTP endpoint opened/.test(status.stderr) &&
-      /Started P2P networking/.test(status.stderr) &&
-      !/ws=false/.test(status.stderr)
+      /Starting Besu/.test(status.stdout) &&
+      /Starting Ethereum main loop/.test(status.stdout) &&
+      /Websocket service started/.test(status.stdout) &&
+      /EngineJsonRpcService \| JSON-RPC service started/.test(status.stdout) &&
+      /JsonRpcHttpService \| JSON-RPC service started/.test(status.stdout) &&
+      /MetricsHttpService \| Metrics service started/.test(status.stdout) &&
+      /P2P RLPx agent started/.test(status.stdout) &&
+      /Starting peer discovery agent/.test(status.stdout) &&
+      /Starting sync/.test(status.stdout)
     ) {
       condition = true;
     }
@@ -92,16 +96,19 @@ test("erigon installation", async () => {
   expect(ufw.stdout).toMatch(/30303\/udp/);
 
   //check docker container
-  expect(docker.stdout).toMatch(/thorax\/erigon/);
+  expect(docker.stdout).toMatch(/hyperledger\/besu/);
   expect(docker.stdout).toMatch(/30303->30303/);
-  expect(docker.stdout).toMatch(/8545-8546/);
   if (!executionClient.id.includes("Up")) {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  expect(status.stderr).toMatch(/Enabling metrics export to prometheus/);
-  expect(status.stderr).toMatch(/HTTP endpoint opened for Engine API/);
-  expect(status.stderr).toMatch(/HTTP endpoint opened/);
-  expect(status.stderr).toMatch(/Started P2P networking/);
-  expect(status.stderr).not.toMatch(/ws=false/);
+  expect(status.stdout).toMatch(/Starting Besu/);
+  expect(status.stdout).toMatch(/Starting Ethereum main loop/);
+  expect(status.stdout).toMatch(/Websocket service started/);
+  expect(status.stdout).toMatch(/EngineJsonRpcService \| JSON-RPC service started/);
+  expect(status.stdout).toMatch(/JsonRpcHttpService \| JSON-RPC service started/);
+  expect(status.stdout).toMatch(/MetricsHttpService \| Metrics service started/);
+  expect(status.stdout).toMatch(/P2P RLPx agent started/);
+  expect(status.stdout).toMatch(/Starting peer discovery agent/);
+  expect(status.stdout).toMatch(/Starting sync/);
 });

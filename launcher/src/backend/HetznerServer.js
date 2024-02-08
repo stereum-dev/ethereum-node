@@ -1,5 +1,6 @@
 const { utils: { generateKeyPairSync } } = require('ssh2');
 const log = require("electron-log");
+const https = require("https");
 
 export class HetznerServer {
   constructor() {
@@ -63,26 +64,8 @@ export class HetznerServer {
    */
   async makeRequest(method, path, query, body) {
     const options = await this.createHTTPOptions(method, path, query);
-
-
+    let data = "";
     return new Promise((resolve, reject) => {
-      fetch(`https://${options.hostname}${options.path}`, { method: method, body: body, headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + this.apiToken }, keepalive: true }).then((res) => {
-        log.debug(`${options.method} ${options.path} ${res.status} ${res.statusText}`)
-        if (!res.ok)
-          log.error(res.body)
-        if (res.body) {
-          res.json().then(json => {
-            resolve(JSON.stringify(json))
-          })
-        } else {
-          resolve("{}")
-        }
-      }).catch((err) => {
-        log.error(err)
-        reject(err)
-      })
-    })
-    /*return new Promise((resolve, reject) => {
       const req = https.request(options, (res) => {
         res.on("data", (d) => {
           data += d;
@@ -107,7 +90,6 @@ export class HetznerServer {
       }
       req.end();
     });
-    */
   }
 
   /**
@@ -205,9 +187,7 @@ export class HetznerServer {
   }
 
   async deleteSSHKey(keyID) {
-    log.info("Deleting SSH Key with ID " + keyID + " ...")
     if (!keyID) {
-      log.info("No keyID provided, trying to get keyID by name with name " + this.sshKeyName + " ...")
       const response = await this.getSSHKeyByName(this.sshKeyName);
       log.info(response);
       const key = response.ssh_keys.find((key) => key.name === this.sshKeyName);

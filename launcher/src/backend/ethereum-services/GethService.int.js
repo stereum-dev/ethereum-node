@@ -1,20 +1,20 @@
 /**
  * @jest-environment node
  */
-import { HetznerServer } from "../../HetznerServer.js";
-import { NodeConnection } from "../../NodeConnection.js";
-import { ServiceManager } from "../../ServiceManager.js";
-import { TaskManager } from "../../TaskManager.js";
+import { HetznerServer } from "../HetznerServer.js";
+import { NodeConnection } from "../NodeConnection.js";
+import { ServiceManager } from "../ServiceManager.js";
+import { TaskManager } from "../TaskManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(500000);
 
-test("nethermind installationm", async () => {
+test("geth installation", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Nethermind--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Geth--integration-test--ubuntu-2204")
 
   const serverSettings = {
-    name: "Nethermind--integration-test--ubuntu-2204",
+    name: "Geth--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
@@ -42,20 +42,20 @@ test("nethermind installationm", async () => {
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
-          echo "stereum_settings:
-          settings:
-            controls_install_path: /opt/stereum
-            os_user: stereum
-            updates:
-              lane: stable
-              unattended:
-                install: false
-          " > /etc/stereum/stereum.yaml`);
+  echo "stereum_settings:
+  settings:
+    controls_install_path: /opt/stereum
+    os_user: stereum
+    updates:
+      lane: stable
+      unattended:
+        install: false
+  " > /etc/stereum/stereum.yaml`);
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  //install nethermind
-  let executionClient = serviceManager.getService("NethermindService", { network: "goerli", installDir: "/opt/stereum" })
+  //install geth
+  let executionClient = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
 
   let versions = await nodeConnection.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
@@ -71,15 +71,17 @@ test("nethermind installationm", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
     if (
-      /Nethermind initialization completed/.test(status.stdout) &&
-      /Peers/.test(status.stdout) &&
-      /http:\/\/0\.0\.0\.0:8545 ; http:\/\/0\.0\.0\.0:8546 ; http:\/\/0\.0\.0\.0:8551/.test(status.stdout)
+      /WebSocket enabled/.test(status.stderr) &&
+      /Started P2P networking/.test(status.stderr) &&
+      /Starting metrics server/.test(status.stderr) &&
+      /Loaded JWT secret file/.test(status.stderr) &&
+      /Looking for peers/.test(status.stderr) &&
+      /HTTP server started/.test(status.stderr)
     ) {
       condition = true;
     }
     counter++;
   }
-
   const ufw = await nodeConnection.sshService.exec("ufw status");
   const docker = await nodeConnection.sshService.exec("docker ps");
 
@@ -91,13 +93,19 @@ test("nethermind installationm", async () => {
   expect(ufw.stdout).toMatch(/30303\/udp/);
 
   //check docker container
-  expect(docker.stdout).toMatch(/nethermind\/nethermind/);
+  expect(docker.stdout).toMatch(/ethereum\/client-go/);
   expect(docker.stdout).toMatch(/30303->30303/);
   if (!executionClient.id.includes("Up")) {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  expect(status.stdout).toMatch(/Nethermind initialization completed/);
-  expect(status.stdout).toMatch(/Peers/);
-  expect(status.stdout).toMatch(/http:\/\/0\.0\.0\.0:8545 ; http:\/\/0\.0\.0\.0:8546 ; http:\/\/0\.0\.0\.0:8551/);
+  // check if geth service established WebSocket connection
+  // idk why but logs are stored in stderr but stdout string is empty
+  expect(status.stderr).toMatch(/WebSocket enabled/);
+  expect(status.stderr).toMatch(/Started P2P networking/);
+  expect(status.stderr).toMatch(/Starting metrics server/);
+  expect(status.stderr).toMatch(/Loaded JWT secret file/);
+  expect(status.stderr).toMatch(/Looking for peers/);
+  expect(status.stderr).toMatch(/HTTP server started/);
+
 });
