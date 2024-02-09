@@ -143,7 +143,8 @@
     "currentSlot": "Current SLOT",
     "p2pNet": "Peer to peer network",
     "selConcensus": "Select the consensus client",
-    "selExecution": "Select the execution client"
+    "selExecution": "Select the execution client",
+    "subsribeSubnet": "subscribed subnets"
   },
   "taskManager": {
     "clickDisplay": "点击任务显示"
@@ -300,7 +301,7 @@
   },
   "dataAPIAndRPC": {
     "copy": "点击复制",
-    "closed": "隧道已关闭！",
+    "closed": "Turn On First",
     "turnOnMessage": "请先打开 DATA-API 隧道！",
     "copiedMessage": "DATA-API-URL已复制到剪贴板！",
     "RPCTurnOnMessage": "请先打开 RPC 隧道！",

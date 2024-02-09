@@ -25,7 +25,7 @@
       </div>
     </div>
     <div
-      class="w-full h-full col-start-1 col-span-full row-start-4 row-span-full border-t border-gray-500 grid grid-cols-12 grid-rows-12 items-center p-2"
+      class="w-full h-full col-start-1 col-span-full row-start-4 row-span-full border-t border-gray-500 grid grid-cols-12 grid-rows-12 items-center p-1"
     >
       <div
         class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 grid grid-cols-6 items-center gap-x-2 px-1"
@@ -38,9 +38,36 @@
       </div>
 
       <div
-        class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full border border-gray-500 rounded-md flex flex-col justify-start items-center p-1 space-y-1 bg-black overflow-x-hidden overflow-y-auto"
+        class="w-full h-full max-h-[200px] col-start-1 col-span-full row-start-3 row-end-11 border border-gray-500 rounded-md flex flex-col justify-start items-center p-1 space-y-1 bg-black overflow-x-hidden overflow-y-auto"
       >
-        <UpdateRow v-for="item in updates" :key="item" :item="item" @update-server="updateServer" />
+        <UpdateRow
+          v-for="item in updates"
+          v-show="updates.length"
+          :key="item"
+          :item="item"
+          @update-server="updateServer"
+        />
+        <ListRow v-for="task in updateTasks" v-show="!updates.length" :key="task.action" :task="task" />
+      </div>
+      <div class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full grid grid-cols-12 py-2">
+        <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center">
+          <div
+            class="w-full h-full flex justify-evenly items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm active:scale-90 shadow-md shadow-black active:shadow-none transition-all duration-100 ease-in-out cursor-pointer"
+            :class="{
+              'opacity-40 pointer-events-none bg-[#3d4244] scale-95': updates.length === 0,
+            }"
+            @click.prevent.stop="updateServer"
+          >
+            <span class="text-gray-100 text-sm font-semibold uppercase">{{ $t("updatePanel.all") }}</span>
+            <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+          </div>
+        </div>
+        <div class="w-full h-full col-start-7 col-span-full flex justify-center items-center p-1">
+          <span class="text-gray-200 text-md font-semibold"
+            >{{ $t("updatePanel.auto") }} :
+            <span class="text-md uppercase font-semibold" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -48,40 +75,70 @@
 
 <script setup>
 import UpdateRow from "./UpdateRow.vue";
+import ListRow from "./ListRow.vue";
 import ControlService from "@/store/ControlService";
-// import { useServers } from "@/store/servers";
 
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useServices } from "@/store/services";
 
-// const serverStore = useServers();
 const headerStore = useNodeHeader();
-const serviceStore = useServices();
 
 const osVersionCurrent = ref("");
+const stereumApp = ref({
+  current: "alpha",
+  latest: "2.0",
+  autoUpdate: "",
+});
 
-const updates = ref([
+const updateTasks = ref([
   {
-    name: "Ubuntu",
-    version: "20.04",
+    action: "minor os update",
   },
   {
-    name: "Ubuntu",
-    version: "20.03",
+    action: "major os update",
   },
   {
-    name: "Ubuntu",
-    version: "20.02",
+    action: "patch os update",
   },
 ]);
+
+const updates = ref([
+  // {
+  //   name: "Ubuntu",
+  //   version: "20.04",
+  // },
+  // {
+  //   name: "Ubuntu",
+  //   version: "20.03",
+  // },
+  // {
+  //   name: "Ubuntu",
+  //   version: "20.02",
+  // },
+]);
+
+const onOff = computed(() => {
+  if (stereumApp.value.autoUpdate == "on") {
+    return "text-green-700";
+  } else {
+    return "text-red-700";
+  }
+});
 
 onMounted(() => {
   getUpdatablePackagesCount();
   getOsVersion();
+  getSettings();
 });
 
-console.log(serviceStore.newUpdates);
+const getSettings = async () => {
+  let settings = await ControlService.getStereumSettings();
+  if (settings.stereum?.settings.updates.unattended.install) {
+    stereumApp.value.autoUpdate = "on";
+  } else {
+    stereumApp.value.autoUpdate = "off";
+  }
+};
 
 const getUpdatablePackagesCount = async () => {
   try {
@@ -107,8 +164,8 @@ const getOsVersion = async () => {
   }
 };
 
-const updateServer = async (item) => {
-  console.log(item);
+const updateServer = async () => {
+  console.log("update os");
   // try {
   //   serverStore.isUpdateProcessing = true;
   //   await ControlService.updateOS(item.version);

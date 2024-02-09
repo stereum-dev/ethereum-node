@@ -143,7 +143,8 @@
     "currentSlot": "Current SLOT",
     "p2pNet": "Peer to peer network",
     "selConcensus": "Select the consensus client",
-    "selExecution": "Select the execution client"
+    "selExecution": "Select the execution client",
+    "subsribeSubnet": "subscribed subnets"
   },
   "taskManager": {
     "clickDisplay": "Görüntülemek için görevlere tıklayın"
@@ -300,7 +301,7 @@
   },
   "dataAPIAndRPC": {
     "copy": "Kopyalamak için tıkla!",
-    "closed": "Tünelleme kapalı!",
+    "closed": "Turn On First",
     "turnOnMessage": "Lütfen önce DATA-API tünellemeyi AÇIN!",
     "copiedMessage": "DATA-API-URL panoya kopyalandı!",
     "RPCTurnOnMessage": "Lütfen önce RPC tünellemeyi açın!",
