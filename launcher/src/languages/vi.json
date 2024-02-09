@@ -1,404 +1,404 @@
 {
   "formsetup": {
-    "login": "login",
-    "server": "Connect to your server",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY",
-    "fillFields": "Please fill in the missing fields!",
-    "KeyPassphrase": "KEY PASSPHRASE"
+    "login": "đăng nhập",
+    "server": "Kết nối với máy chủ của bạn",
+    "servername": "TÊN MÁY CHỦ",
+    "iphost": "IP / TÊN HOST",
+    "username": "TÊN NGƯỜI DÙNG",
+    "password": "MẬT KHẨU",
+    "keylocation": "VỊ TRÍ KHÓA",
+    "usessh": "SỬ DỤNG KHÓA SSH",
+    "fillFields": "Vui lòng điền vào các trường còn thiếu!",
+    "KeyPassphrase": "CỤM KHÓA"
   },
   "comingsoon": {
-    "comingsoon": "COMING SOON"
+    "comingsoon": "SẮP RA MẮT"
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "NAME"
+    "servername": "TÊN"
   },
   "pagesnav": {
     "staking": "STAKING"
   },
   "supportModal": {
-    "support": "support",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
-    "bugReport": "BUG REPORT",
-    "emailText": "or write an email to:",
-    "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "support": "hỗ trợ",
+    "supportText": "Cách nhanh nhất để liên hệ với một người hỗ trợ là tham gia máy chủ Discord của chúng tôi!",
+    "bugReport": "BÁO CÁO LỖI",
+    "emailText": "hoặc viết email đến:",
+    "docsTitle": "tài liệu chuỗi",
+    "docsText": "Một liên kết tiện lợi đến tài liệu của nhật ký mạng cho cấu hình nút của bạn."
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLY",
-    "general": "GENERAL",
-    "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
-    "on": "on",
-    "off": "off",
-    "updateConfig": "Stereum Update Configuration",
-    "manual": "MANUAL",
-    "auto": "AUTO",
-    "sxConf": "Export Config",
-    "chngAppr": "Changes to be applied",
-    "creditInfo": "click the button to see the contributors",
-    "langInfo": "click the button to change the language",
-    "exportInfo": "click the button to export the configuration in a yaml file",
-    "stereumUpd": "Click the button to configure the Stereum update"
+    "stereumName": "cài đặt stereum",
+    "langName": "Chọn Ngôn Ngữ",
+    "confirm": "ÁP DỤNG",
+    "general": "CHUNG",
+    "credits": "Tín Dụng",
+    "open": "mở",
+    "update": "CẬP NHẬT",
+    "launcherVersion": "Phiên Bản Launcher",
+    "nodeVersion": "Phiên Bản Nút",
+    "on": "bật",
+    "off": "tắt",
+    "updateConfig": "Cấu Hình Cập Nhật Stereum",
+    "manual": "THỦ CÔNG",
+    "auto": "TỰ ĐỘNG",
+    "sxConf": "Xuất Cấu Hình",
+    "chngAppr": "Thay Đổi Được Áp Dụng",
+    "creditInfo": "nhấn vào nút để xem người đóng góp",
+    "langInfo": "nhấn vào nút để đổi ngôn ngữ",
+    "exportInfo": "nhấn vào nút để xuất cấu hình trong một tệp yaml",
+    "stereumUpd": "Nhấn vào nút để cấu hình cập nhật Stereum"
   },
   "nodeSidebarVideo": {
-    "stake": "Stake with 32 ETH",
-    "rpc": "RPC Connection",
-    "written": "Written Guides",
-    "video": "Video Guides",
-    "stereumTutorial": "stereum tutorials",
-    "statBox": "status box"
+    "stake": "Stake với 32 ETH",
+    "rpc": "Kết Nối RPC",
+    "written": "Hướng Dẫn Viết",
+    "video": "Hướng Dẫn Video",
+    "stereumTutorial": "hướng dẫn stereum",
+    "statBox": "hộp trạng thái"
   },
   "pluginZone": {
-    "client": "client"
+    "client": "khách hàng"
   },
   "theNode": {
-    "execution": "execution",
-    "consensus": "consensus",
-    "validator": "validator",
-    "servicePlugin": "SERVICE PLUGIN",
-    "message": "The current network is ",
-    "chckTutorial": "Check out the tutorials",
-    "returnStatus": "Return to status box"
+    "execution": "thực thi",
+    "consensus": "đồng thuận",
+    "validator": "người xác thực",
+    "servicePlugin": "PLUGIN DỊCH VỤ",
+    "message": "Mạng hiện tại là ",
+    "chckTutorial": "Xem các hướng dẫn",
+    "returnStatus": "Quay lại hộp trạng thái"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
-    "nukeNode": "NUKE NODE"
+    "backNode": "quay lại NÚT",
+    "nukeNode": "NUKE NÚT"
   },
   "changeConfirm": {
-    "confirm": "CONFIRM CHANGES",
-    "process": "processing...",
-    "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "confirm": "XÁC NHẬN THAY ĐỔI",
+    "process": "đang xử lý...",
+    "change": "THAY ĐỔI ĐỂ XÁC NHẬN",
+    "delete": "XÓA"
   },
   "updatePanel": {
     "launcherTitle": "launcher",
-    "version": "version",
-    "current": "current",
-    "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "Auto Update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "plug-in updates",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all",
-    "osTitle": "server os updates"
+    "version": "phiên bản",
+    "current": "hiện tại",
+    "nodeTitle": "cập nhật nút",
+    "latest": "mới nhất",
+    "auto": "Cập Nhật Tự Động",
+    "available": "có sẵn",
+    "searching": "tìm kiếm cập nhật mới",
+    "serviceTitle": "cập nhật plug-in",
+    "serviceDesc": "Cập nhật cho lựa chọn plug-in đã cài đặt",
+    "availablePlugin": "CẬP NHẬT PLUG-IN CÓ SẴN",
+    "all": "cập nhật tất cả",
+    "osTitle": "cập nhật os máy chủ"
   },
   "controlPage": {
-    "node": "NODE",
-    "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
-    "inclusionDistance": "INCLUSION DISTANCE",
-    "rpc": "RPC-ENDPOINT",
-    "ws": "WS-ENDPOINT",
-    "syncStatus": "SYNC STATUS",
-    "hard": "STORAGE VOLUME",
-    "free": "FREE",
-    "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
+    "node": "NÚT",
+    "disk": "TỐC ĐỘ ĐĨA",
+    "write": "GHI",
+    "read": "ĐỌC",
+    "inclusionDistance": "KHOẢNG CÁCH BAO GỒM",
+    "rpc": "ĐIỂM CUỐI RPC",
+    "ws": "ĐIỂM CUỐI WS",
+    "syncStatus": "TRẠNG THÁI ĐỒNG BỘ",
+    "hard": "DUNG LƯỢNG LƯU TRỮ",
+    "free": "TRỐNG",
+    "total": "TỔNG",
+    "network": "MẠNG",
+    "receive": "Nhận Dữ Liệu",
+    "transmit": "Truyền Dữ Liệu",
     "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
-    "storage": "STORAGE",
-    "active": "ACTIVE",
-    "rating": "RATING",
-    "usage": "Usage",
-    "netSel": "The selected network is",
-    "machineName": "Machine Name",
-    "storVol": "Server storage volume",
-    "stor": "Server storage overview",
-    "diskSpeed": "Disk speed",
-    "p2p": "Peer to peer connections",
-    "cpuUse": "CPU Usage",
-    "syncInfo": "Synchronization status",
-    "ramUse": "RAM Usage",
-    "netSpeed": "Network Speed",
-    "listPort": "List of service ports",
-    "endPoint": "endpoint",
-    "data": "data",
-    "enteredKeys": "The number of imported validator keys",
-    "ttlBal": "Total balance",
-    "finEPOCH": "Finalized EPOCH",
-    "pending": "service is pending",
-    "off": "Switch off the service",
-    "on": "Switch on the service",
-    "settingService": "Setting up the service",
-    "restart": "restart the service",
-    "currentEpoch": "Current EPOCH",
-    "currentSlot": "Current SLOT",
-    "p2pNet": "Peer to peer network",
-    "selConcensus": "Select the consensus client",
-    "selExecution": "Select the execution client",
-    "subsribeSubnet": "subscribed subnets"
+    "used": "đã sử dụng",
+    "totalram": "tổng",
+    "storage": "LƯU TRỮ",
+    "active": "HOẠT ĐỘNG",
+    "rating": "ĐÁNH GIÁ",
+    "usage": "Sử Dụng",
+    "netSel": "Mạng được chọn là",
+    "machineName": "Tên Máy",
+    "storVol": "Dung lượng lưu trữ máy chủ",
+    "stor": "Tổng quan lưu trữ máy chủ",
+    "diskSpeed": "Tốc độ đĩa",
+    "p2p": "Kết nối ngang hàng",
+    "cpuUse": "Sử Dụng CPU",
+    "syncInfo": "Trạng thái đồng bộ hóa",
+    "ramUse": "Sử Dụng RAM",
+    "netSpeed": "Tốc độ mạng",
+    "listPort": "Danh sách cổng dịch vụ",
+    "endPoint": "điểm cuối",
+    "data": "dữ liệu",
+    "enteredKeys": "Số lượng khóa xác thực đã nhập",
+    "ttlBal": "Số dư tổng",
+    "finEPOCH": "EPOCH đã hoàn thành",
+    "pending": "dịch vụ đang chờ xử lý",
+    "off": "Tắt dịch vụ",
+    "on": "Bật dịch vụ",
+    "settingService": "Cài đặt dịch vụ",
+    "restart": "khởi động lại dịch vụ",
+    "currentEpoch": "EPOCH hiện tại",
+    "currentSlot": "SLOT hiện tại",
+    "p2pNet": "Mạng ngang hàng",
+    "selConcensus": "Chọn khách hàng đồng thuận",
+    "selExecution": "Chọn khách hàng thực thi",
+    "subsribeSubnet": "mạng con đã đăng ký"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Nhấn vào nhiệm vụ để hiển thị"
   },
   "displayValidator": {
-    "pk": "Public Key",
-    "rm": "Remote key",
-    "service": "SERVICE",
-    "active": "ACTIVE SINCE",
-    "state": "Status Indicator",
-    "balance": "BALANCE",
-    "option": "OPTIONS",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some time",
-    "waitForImport": "Please wait until the key is imported",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
-    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
-    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "I am sure",
-    "cancel": "cancel",
-    "serviceExpl": "The service selected for the entered Validator key",
-    "activeExpl": "The time since the validator has been active",
-    "balExpl": "The balance of the validator",
-    "copyPub": "Copy the public key",
-    "copiedPub": "Public key copied",
-    "setFee": "set the block fee recipient for the selected keys",
-    "renameVal": "rename the validator key",
-    "removVal": "remove the validator key",
-    "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter",
-    "grpNam": "group name is",
-    "keyNumGrp": "Number of Contained Keys",
-    "grpBal": "group balance",
-    "openGrp": "open Group",
-    "renameGrp": "rename the group",
-    "removGrp": "remove the group",
-    "inserValidator": "insert validator key",
-    "backList": "back to list",
-    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT",
-    "crteGrp": "create a new group",
-    "openSrch": "search for a validator key or group",
-    "showValKey": "show validator keys",
-    "showKeyNam": "show key names",
-    "upcomingSync": "upcoming sync committee duties",
-    "upcomingBlocProd": "upcoming block production duties",
-    "clentSel": "client selected",
-    "selValClint": "selected validator client",
-    "upcomEpochDuti": "upcoming epoch duties",
-    "graffitiPanel": "change graffiti for all keys in the validator client",
-    "removeMultiple": "remove all keys from the validator client",
-    "withdrawMultiple": "exit & withdraw all keys from the validator client",
-    "importRemote": "import remote keys into the validator client",
-    "valClint": "validator client",
-    "valStat": "validator state",
-    "numValidator": "number imported validator keys",
-    "attestReward": "attestation reward",
-    "blockProdreward": "block production rewards",
-    "syncCommitteeReward": "sync committee rewards",
-    "ttlKeys": "total keys",
-    "ttlBal": "total balance"
+    "pk": "Khóa Công Khai",
+    "rm": "Khóa Từ Xa",
+    "service": "DỊCH VỤ",
+    "active": "HOẠT ĐỘNG TỪ",
+    "state": "Chỉ Báo Trạng Thái",
+    "balance": "SỐ DƯ",
+    "option": "TÙY CHỌN",
+    "importKey": "Nhập khóa xác thực",
+    "waitMessage": "Có thể mất một chút thời gian",
+    "waitForImport": "Vui lòng chờ cho đến khi khóa được nhập",
+    "warningMessage": "Kiểm tra bảo vệ chống cắt của chúng tôi cho thấy một trong những người xác thực bạn sắp nhập đã chứng thực trong 2 epoch cuối cùng.",
+    "warningAlarm": "CẢNH BÁO: Bạn có nguy cơ cao bị cắt!",
+    "warningQuestion": "BẠN CÓ CHẮC CHẮN MUỐN NHẬP KHÓA XÁC THỰC?",
+    "sure": "Tôi chắc chắn",
+    "cancel": "hủy",
+    "serviceExpl": "Dịch vụ được chọn cho khóa xác thực đã nhập",
+    "activeExpl": "Thời gian kể từ khi người xác thực hoạt động",
+    "balExpl": "Số dư của người xác thực",
+    "copyPub": "Sao chép khóa công khai",
+    "copiedPub": "Khóa công khai đã được sao chép",
+    "setFee": "đặt người nhận phí khối cho các khóa được chọn",
+    "renameVal": "đổi tên khóa xác thực",
+    "removVal": "loại bỏ khóa xác thực",
+    "exitChain": "rời khỏi chuỗi với các khóa được chọn",
+    "waitEnt": "Bạn phải chờ đợi khóa xác thực để nhập",
+    "grpNam": "tên nhóm là",
+    "keyNumGrp": "Số Lượng Khóa Chứa",
+    "grpBal": "số dư nhóm",
+    "openGrp": "mở Nhóm",
+    "renameGrp": "đổi tên nhóm",
+    "removGrp": "loại bỏ nhóm",
+    "inserValidator": "chèn khóa xác thực",
+    "backList": "quay lại danh sách",
+    "web3Import": "NHẬP KHÓA TỪ XA WEB3SIGNER",
+    "crteGrp": "tạo một nhóm mới",
+    "openSrch": "tìm kiếm một khóa xác thực hoặc nhóm",
+    "showValKey": "hiển thị khóa xác thực",
+    "showKeyNam": "hiển thị tên khóa",
+    "upcomingSync": "nhiệm vụ ủy ban đồng bộ sắp tới",
+    "upcomingBlocProd": "nhiệm vụ sản xuất khối sắp tới",
+    "clentSel": "khách hàng được chọn",
+    "selValClint": "khách hàng xác thực được chọn",
+    "upcomEpochDuti": "nhiệm vụ epoch sắp tới",
+    "graffitiPanel": "thay đổi graffiti cho tất cả các khóa trong khách hàng xác thực",
+    "removeMultiple": "loại bỏ tất cả các khóa khỏi khách hàng xác thực",
+    "withdrawMultiple": "rút và rời khỏi tất cả các khóa khỏi khách hàng xác thực",
+    "importRemote": "nhập khóa từ xa vào khách hàng xác thực",
+    "valClint": "khách hàng xác thực",
+    "valStat": "trạng thái người xác thực",
+    "numValidator": "số lượng khóa xác thực đã nhập",
+    "attestReward": "phần thưởng chứng thực",
+    "blockProdreward": "phần thưởng sản xuất khối",
+    "syncCommitteeReward": "phần thưởng ủy ban đồng bộ",
+    "ttlKeys": "tổng khóa",
+    "ttlBal": "số dư tổng"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "NHẬP MẬT KHẨU & NHẬP"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "CONFIRM"
+    "passMessage": "NHẬP MẬT KHẨU XÁC THỰC CỦA BẠN ĐỂ RỜI KHỎI CHUỖI VỚI KHÓA NÀY...",
+    "confirm": "XÁC NHẬN"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "modalMessage": "Bạn có chắc chắn muốn rời khỏi chuỗi với CÁC KHÓA XÁC THỰC ĐƯỢC CHỌN? Điều này sẽ dừng nhiệm vụ xác thực của bạn & KHÔNG THỂ đảo ngược. Quỹ của bạn cũng chỉ có thể rút, nếu chuỗi cho phép.",
+    "exitApprove": "TÔI ĐÃ ĐỌC VĂN BẢN VÀ BIẾT VỀ HẬU QUẢ",
+    "exitChain": "RỜI KHỎI CHUỖI",
+    "clickClose": "Nhấn bên ngoài để đóng."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "textPlaceHolder": "Nhập một địa chỉ Ethereum hợp lệ để gửi phần thưởng khối của bạn đến ... ",
+    "setBlock": "ĐẶT ĐỊA CHỈ NGƯỜI NHẬN PHÍ KHỐI"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Nhập tối đa 32 ký tự để thêm vào chuỗi khi bạn tạo một khối!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "Nhập tối đa 32 ký tự để đổi tên người xác thực!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "NHẤN HOẶC KÉO ĐỂ CHÈN KHÓA"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?"
+    "question": "BẠN CÓ MUỐN TẢI XUỐNG CƠ SỞ DỮ LIỆU CHỐNG CẮT CỦA MÌNH?"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With Slashing Protection Database?",
-    "remove": "Remove"
+    "sure": "Bạn có chắc chắn muốn loại bỏ khóa này khỏi máy của mình không?",
+    "slashing": "Với Cơ Sở Dữ Liệu Bảo Vệ Chống Cắt?",
+    "remove": "Loại bỏ"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "Bạn có chắc chắn muốn loại bỏ TẤT CẢ Khóa Xác Thực KHỎI MÁY NÀY?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS"
+    "totalText": "SỐ DƯ TỔNG CỦA",
+    "validators": "NGƯỜI XÁC THỰC"
   },
   "installOption": {
-    "back": "BACK",
-    "install": "INSTALL"
+    "back": "QUAY LẠI",
+    "install": "CÀI ĐẶT"
   },
   "installitionMenu": {
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
-    "osSupported": "IS A SUPPORTED OS"
+    "osCheck": "KIỂM TRA NẾU HỆ ĐIỀU HÀNH CỦA MÁY CHỦ CỦA BẠN ĐƯỢC HỖ TRỢ",
+    "osSupported": "LÀ MỘT HỆ ĐIỀU HÀNH ĐƯỢC HỖ TRỢ"
   },
   "pluginName": {
-    "path": "INSTALLATION PATH",
-    "installOpt": "INSTALLATION OPTIONS",
-    "startOnInstall": "Start up client after installation?",
-    "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?"
+    "path": "ĐƯỜNG DẪN CÀI ĐẶT",
+    "installOpt": "TÙY CHỌN CÀI ĐẶT",
+    "startOnInstall": "Khởi động khách hàng sau khi cài đặt?",
+    "monitor": "GIÁM SÁT",
+    "instMonit": "Cài đặt Giám Sát?"
   },
   "creditPanel": {
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION",
-    "developers": "DEVELOPERS",
-    "testers": "TESTERS"
+    "techTitle": "TÍN DỤNG - NGƯỜI ĐÓNG GÓP KỸ THUẬT",
+    "techText": "KIẾM MỘT GITPOAP! TÌM HIỂU CÁCH THAM GIA BẰNG CÁCH TRUY CẬP GITHUB CỦA CHÚNG TÔI!",
+    "financialPage": "ĐÓNG GÓP TÀI CHÍNH",
+    "developers": "LẬP TRÌNH VIÊN",
+    "testers": "NGƯỜI KIỂM THỬ"
   },
   "verifyInstallation": {
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "name": "TÊN",
+    "cat": "DANH MỤC",
+    "path": "ĐƯỜNG DẪN"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Chúng tôi khuyên bạn nên chờ cho đến khi cài đặt ban đầu được hoàn thành trước khi áp dụng thêm thay đổi"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
-    "insertTitle": "insert operator key for existing operator",
-    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+    "newRegistritionTitle": "ĐĂNG KÝ MỘT NHÀ VẬN HÀNH MỚI",
+    "newRegistritionText": "Sử dụng khóa vận hành mới được tạo để đăng ký một nhà vận hành nút mới vào Mạng SSV",
+    "register": "Đăng ký",
+    "insertTitle": "chèn khóa vận hành cho nhà vận hành hiện tại",
+    "insertText": "Sử dụng một khóa riêng vận hành hiện có để khôi phục các quy trình của nhà vận hành nút hiện tại của bạn"
   },
   "registerSSV": {
-    "pubKey": "Public operator key",
-    "copied": "copied!",
-    "secKey": "Secret Operator Key",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place. Do not share this key with anyone.",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "pubKey": "Khóa vận hành công khai",
+    "copied": "đã sao chép!",
+    "secKey": "Khóa Vận Hành Bí Mật",
+    "makeSureText": "Vui lòng chắc chắn lưu trữ và sao lưu khóa bí mật vận hành của bạn ở một nơi an toàn. Đừng chia sẻ khóa này với bất kỳ ai.",
+    "copyMessage": "Sao chép khóa vận hành công khai của bạn vào trường này để xác nhận rằng bạn đã lưu trữ khóa của mình!"
   },
   "ssvDashboard": {
-    "operatorPage": "My Operator Page",
-    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+    "operatorPage": "Trang Nhà Vận Hành Của Tôi",
+    "SSVNodeGrafna": "Bảng Điều Khiển Grafana Nút SSV"
   },
   "secretKeyReg": {
-    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "modalLabel": "CHÈN MỘT KHÓA RIÊNG VẬN HÀNH HIỆN CÓ ĐỂ SỬ DỤNG NÓ LÀM KHÓA VẬN HÀNH CỦA BẠN",
+    "apply": "ÁP DỤNG"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
-    "closed": "Turn On First",
-    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
-    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "copy": "Nhấn để sao chép!",
+    "closed": "Bật Trước",
+    "turnOnMessage": "Vui lòng bật trước hầm DATA-API!",
+    "copiedMessage": "Địa chỉ DATA-API-URL đã được sao chép vào bảng tạm!",
+    "RPCTurnOnMessage": "Vui lòng bật trước hầm RPC!",
+    "RPCCopiedMessage": "Địa chỉ RPC-URL đã được sao chép vào bảng tạm!",
+    "WSTurnOnMessage": "Vui lòng bật trước hầm WS!",
+    "WSCopiedMessage": "Địa chỉ WS-URL đã được sao chép vào bảng tạm!"
   },
   "pluginLogs": {
-    "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Double Click to Copy Logs",
-    "serviceId": "Service ID:",
-    "exportAll": "Export All Logs",
-    "export150": "Export 150 Logs",
-    "cat": "Category:",
-    "ver": "Version:"
+    "pageTitle": "NHẬT KÝ PLUG-IN",
+    "noLogFound": "Không tìm thấy nhật ký trong danh sách",
+    "clickCopy": "Nhấp Đúp để Sao chép Nhật ký",
+    "serviceId": "ID Dịch Vụ:",
+    "exportAll": "Xuất Tất Cả Nhật Ký",
+    "export150": "Xuất 150 Nhật Ký",
+    "cat": "Danh Mục:",
+    "ver": "Phiên Bản:"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
-    "openBrowser": "OPEN IN BROWSER",
-    "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
-    "blockRel": "Block relay",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "localApp": "ỨNG DỤNG CỤC BỘ",
+    "localAppText": "Mở dịch vụ trên máy tính cục bộ của bạn",
+    "openBrowser": "MỞ TRONG TRÌNH DUYỆT",
+    "availBlockRel": "CÁC RELAY KHỐI CÓ SẴN",
+    "process": "Đang Xử Lý",
+    "blockRel": "Relay khối",
+    "blockRelTxt": "Chọn một hoặc nhiều relay để nhận khối từ"
   },
   "customInstallation": {
-    "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have an understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
+    "customInstallationTitle": "CÀI ĐẶT TÙY CHỈNH",
+    "customInstallationText": "Chế độ này dành cho người dùng nâng cao hơn và yêu cầu bạn phải hiểu cách các khách hàng tương tác với nhau. Bạn sẽ phải tự chọn, cài đặt và kết nối từng phần của nút của mình với giao diện người dùng trước khi nó có thể hoạt động!"
   },
   "mevboostConfig": {
-    "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "availRelays": "CÁC RELAY KHỐI CÓ SẴN",
+    "usedRelays": "CÁC RELAY KHỐI ĐƯỢC SỬ DỤNG"
   },
   "addModifyPanel": {
-    "installPath": "INSTALLATION PATH",
-    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "portused": "PORT USED",
-    "cancel": "cancel",
-    "save": "SAVE",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "installPath": "ĐƯỜNG DẪN CÀI ĐẶT",
+    "syncMessage": "ĐỒNG BỘ HÓA KHÁCH HÀNG TỪ ĐẦU CHUỖI",
+    "portused": "CỔNG SỬ DỤNG",
+    "cancel": "hủy",
+    "save": "LƯU",
+    "add": "THÊM",
+    "clickAndAdd": "Nhấn vào THÊM"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
-    "continue": "Continue"
+    "slashModalMessage": "Bạn có muốn nhập cùng với Cơ Sở Dữ Liệu Bảo Vệ Chống Cắt?",
+    "importMessage": "Nhập tệp cơ sở dữ liệu cắt của bạn.",
+    "chooseFile": "Chọn Tệp",
+    "continue": "Tiếp Tục"
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
-    "logOutBtn": "Log out"
+    "logOutTitle": "ĐĂNG XUẤT",
+    "logOutQuestion": "BẠN CÓ CHẮC CHẮN MUỐN ĐĂNG XUẤT KHỎI MÁY CHỦ NÚT CỦA BẠN?",
+    "logOutBtn": "Đăng xuất"
   },
   "reconnectModal": {
-    "reconnectTitle": "Connection lost",
-    "reconnectMessage": "Check your connection and try again.",
-    "reconnectingMessage": "Reconnecting...",
-    "reconnectBtn": "Reconnect"
+    "reconnectTitle": "Mất kết nối",
+    "reconnectMessage": "Kiểm tra kết nối của bạn và thử lại.",
+    "reconnectingMessage": "Đang kết nối lại...",
+    "reconnectBtn": "Kết nối lại"
   },
   "prunningModal": {
-    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Start Pruning",
-    "close": "click outside to close"
+    "prunningText": "GETH sử dụng không gian lưu trữ tăng lên theo thời gian hoạt động. Mất NHIỀU GIỜ để cắt tỉa cơ sở dữ liệu Geth, loại bỏ dữ liệu không cần thiết và giải phóng một số không gian lưu trữ đã sử dụng. Điều này phải được thực hiện trong khi Geth không chạy. BẮT ĐẦU QUÁ TRÌNH CẮT TỈA NÚT CỦA BẠN SẼ NGẮT KẾT NỐI VÀ DỪNG CÁC NHIỆM VỤ CHỨNG THỰC TIỀM NĂNG.",
+    "prunningChecked": "TÔI ĐÃ ĐỌC VĂN BẢN VÀ BIẾT VỀ HẬU QUẢ",
+    "prunningStart": "Bắt Đầu Cắt Tỉa",
+    "close": "nhấn bên ngoài để đóng"
   },
   "restartModal": {
-    "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart",
-    "confirmMessage": "Are you sure you want turn your node",
-    "areYouSure": "are you sure you want to"
+    "restartMessage": "nút của bạn có thể ngắt kết nối trong khi làm vậy!",
+    "restart": "khởi động lại",
+    "confirmMessage": "Bạn có chắc chắn muốn bật nút của mình",
+    "areYouSure": "bạn có chắc chắn muốn"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
-    "nukeTitle": "nuke the node",
-    "backToLogin": "Back to login"
+    "nukeQ": "BẠN CÓ CHẮC CHẮN MUỐN LOẠI BỎ STEREUM & TẤT CẢ DỊCH VỤ CỦA NÓ KHỎI MÁY CHỦ?",
+    "nukeTitle": "nuke nút",
+    "backToLogin": "Quay lại đăng nhập"
   },
   "noData": {
-    "noData": "no data",
-    "turnOn": "please turn on"
+    "noData": "không có dữ liệu",
+    "turnOn": "vui lòng bật lên"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Click on the “ON/OFF” button to open your port",
-    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Click x to cancel",
-    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
-    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending your transactions, click on “ON” to close your port",
-    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Click on the Network button",
-    "thirdSlide": "Click on “Add Network”",
-    "fourthSlide": "Type in a name for your network",
-    "fivethSlide": "Paste in the copied URL from Stereum",
-    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "Type in “ETH” as the currency symbol",
-    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
-    "ninethSlide": "Click on “SAVE”"
+    "clickNav": "Nhấn vào “CONTROL” để vào Bảng Điều Khiển.",
+    "toggleMessage": "Nhấn vào nút “ON/OFF” để mở cổng của bạn",
+    "clickExtention": "Nhấn vào “khách hàng thực thi” của bạn để sao chép URL RPC",
+    "clickCancel": "Nhấn x để hủy",
+    "firstMessage": "Widget điểm cuối RPC nằm ở bảng điều khiển. Vui lòng bật nút “ON” và nhấn “Khách Hàng Thực Thi” để tiếp tục bước tiếp theo.",
+    "secondMessage": "Bây giờ bạn có thể gửi giao dịch của mình QUA NÚT CỦA BẠN VỚI METAMASK. Khi bạn hoàn thành việc gửi giao dịch của mình, nhấn vào “ON” để đóng cổng của bạn",
+    "firstSlide": "Bây giờ đăng nhập vào dAPP hoặc ví bạn muốn sử dụng (trong trường hợp của chúng tôi là MetaMask)",
+    "secondSlide": "Nhấn vào nút Mạng",
+    "thirdSlide": "Nhấn vào “Thêm Mạng”",
+    "fourthSlide": "Nhập tên cho mạng của bạn",
+    "fivethSlide": "Dán URL đã sao chép từ Stereum",
+    "sixthSlide": "Nhập CHAIN-ID mà nút của bạn chạy trên (cho GoerliTestnet là 5)",
+    "seventhSlide": "Nhập “ETH” là biểu tượng tiền tệ",
+    "eightthSlide": "TÙY CHỌN - bạn có thể dán vào URL Trình Duyệt Khối",
+    "ninethSlide": "Nhấn vào “LƯU”"
   },
   "stakeGuide": {
     "syncCheck": "First Check if your Node is synced",
