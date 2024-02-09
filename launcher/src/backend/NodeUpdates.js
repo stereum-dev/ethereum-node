@@ -21,9 +21,9 @@ export class NodeUpdates {
 				
 			} catch (err) {
 				log.error(err);
-				return 1;
+				return 0;
 			}
-    return 0;
+    return 1;
 		}					
 
   async checkUpdates() {
@@ -131,4 +131,64 @@ export class NodeUpdates {
       return 0;
     }
   }
+
+  /**
+   * runs the "update_package" role, update for one or more specific packages
+   * @param {string[]} package - Array of Packagenames to upgrade
+   * @returns {number} - playbook runtime
+   */
+  async updatePackage(package) {
+    let extraVars = {
+      stereum_role: "update_package",
+      packages_list : package,
+    };
+    try {
+      let before = this.getTimeStamp();
+      await this.nodeConnection.runPlaybook("update_package", extraVars);
+      let after = this.getTimeStamp();
+      return after - before;
+    } catch (err) {
+      log.error("Error occurred running update_package:\n", err);
+      return 0;
+    }
+  }
+
+  /**
+  * executes "apt update" and "apt list --upgradable" on the remote Node
+  * @returns {Object[]} - An array of objects representing package names and versions from "apt list --upgradable"
+  * Example: [{ packageName: 'gjs', oldVersion: '1.72.2', newVersion: '1.72.4' },{ packageName: 'libgjs0g', oldVersion: '1.72.2', newVersion: '1.72.4' },]
+  */
+  async getUpgradeablePackages() {
+    try {
+        await this.nodeConnection.sshService.exec(`apt update`);
+        const output = await this.nodeConnection.sshService.exec(`apt list --upgradable`);
+
+       // Ensure the output ends with a newline character
+        const outputWithNewline = stdout.endsWith('\n') ? stdout : stdout + '\n';
+
+        // Split the output into lines
+        const lines = outputWithNewline.split('\n');
+
+        const packages = lines.slice(1).map(line => {
+            // Extract package name, old version, and new version using regex
+            const match = line.match(/^(.*?)\/.*?\s(.*?)\s.*?\s\[upgradable from: (.*?)\]$/);
+            if (match && match.length === 4) {
+                const packageName = match[1];
+                // Extract version numbers without distribution-specific suffixes
+                const oldVersion = match[3].split('-')[0];
+                const newVersion = match[2].split('-')[0];
+                return { packageName, oldVersion, newVersion };
+            } else {
+                return null; // Return null for lines that don't match the regex
+            }
+        }).filter(entry => entry !== null); // Filter out null entries
+
+        return packages;
+    } catch (err) {
+        log.error("Error occurred during get list of upgradeable os packages:\n", err);
+        return []; // Return an empty array in case of error
+    }
+  }
+
+
 }

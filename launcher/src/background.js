@@ -299,6 +299,14 @@ ipcMain.handle("updateOS", async () => {
   return await nodeUpdates.updateOS();
 });
 
+ipcMain.handle("updatePackage", async (event, args) => {
+  return await nodeUpdates.updatePackage(args);
+});
+
+ipcMain.handle("getUpgradeablePackages", async () => {
+  return await nodeUpdates.getUpgradeablePackages();
+});
+
 ipcMain.handle("upgradeToNoble", async () => {
   return await nobleupgrade.upgrade();
 });

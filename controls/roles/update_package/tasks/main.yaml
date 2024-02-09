@@ -1,0 +1,9 @@
+---
+- name: Upgrade packages
+      ansible.builtin.apt:
+        name: "{{ packages }}"
+        state: latest
+        only_upgrade: true
+      vars:
+        packages:
+          - "{{ packages_list }}"
