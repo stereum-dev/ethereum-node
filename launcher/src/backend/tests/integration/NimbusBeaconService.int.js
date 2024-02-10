@@ -124,7 +124,7 @@ test("nimbus validator import", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection, keyResponse)
+  await testServer.finishTestGracefully(nodeConnection)
 
   //check ufw
   expect(ufw.stdout).toMatch(/9000\/tcp/);

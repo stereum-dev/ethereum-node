@@ -19,16 +19,8 @@
         </div>
       </div>
       <no-data
-        v-else-if="
-          consensusClientIsOff || prometheusIsOff || installedServicesController !== ''
-        "
-        :service-cat="
-          installedServicesController !== ''
-            ? 'install'
-            : prometheusIsOff
-            ? 'prometheus'
-            : ''
-        "
+        v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"
+        :service-cat="installedServicesController !== '' ? 'install' : prometheusIsOff ? 'prometheus' : ''"
       />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
@@ -43,13 +35,11 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                (cursorLocation = `the current epoch: ${
-                  currentResult.currentEpoch
-                } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`),
-                  dialogOpen(currentResult.currentEpoch, n.slotNumber, n.slotStatus),
-                  (epochType = 'proposed ')
+                cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
+                }`
               "
-              @mouseleave="(cursorLocation = ''), dialogClose()"
+              @mouseleave="cursorLocation = ''"
             ></div>
           </div>
         </div>
@@ -65,15 +55,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                (cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`),
-                  dialogOpen(
-                    currentResult.currentJustifiedEpoch,
-                    n.slotNumber,
-                    n.slotStatus
-                  ),
-                  (epochType = 'justified ')
+                cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
               "
-              @mouseleave="(cursorLocation = ''), dialogClose()"
+              @mouseleave="cursorLocation = ''"
             ></div>
           </div>
           <div class="Finalized-row">
@@ -87,15 +71,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                (cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`),
-                  dialogOpen(
-                    currentResult.previousJustifiedEpoch,
-                    n.slotNumber,
-                    n.slotStatus
-                  ),
-                  (epochType = 'previous justified ')
+                cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`
               "
-              @mouseleave="(cursorLocation = ''), dialogClose()"
+              @mouseleave="cursorLocation = ''"
             ></div>
           </div>
         </div>
@@ -111,11 +89,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                (cursorLocation = `the Finalized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`),
-                  dialogOpen(currentResult.finalizedEpoch, n.slotNumber, n.slotStatus),
-                  (epochType = 'Finalized')
+                cursorLocation = `the Finalized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
               "
-              @mouseleave="(cursorLocation = ''), dialogClose()"
+              @mouseleave="cursorLocation = ''"
             ></div>
           </div>
         </div>
@@ -164,8 +140,6 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
       isConsensusRunning: "isConsensusRunning",
-      dialog: "dialog",
-      epochType: "epochType",
       epoch: "epoch",
       slot: "slot",
       status: "status",
@@ -238,17 +212,11 @@ export default {
     },
     currentResult: {
       handler(newResult) {
-        if (
-          newResult &&
-          newResult.currentEpochStatus &&
-          newResult.currentEpochStatus[0]
-        ) {
-          const newArray = newResult.currentEpochStatus[0]
-            .slice(0, this.proposedBlock.length)
-            .map((slot) => ({
-              slotNumber: slot.slotNumber,
-              slotStatus: slot.slotStatus,
-            }));
+        if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
+          const newArray = newResult.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
+            slotNumber: slot.slotNumber,
+            slotStatus: slot.slotStatus,
+          }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -293,17 +261,13 @@ export default {
       }
 
       const categories = ["consensus", "execution"];
-      const missingCategories = categories.filter(
-        (category) => !foundCategories.has(category)
-      );
+      const missingCategories = categories.filter((category) => !foundCategories.has(category));
 
       if (!hasPrometheus) {
         missingCategories.push("Prometheus");
       }
 
-      this.installedServicesController = missingCategories
-        .join(", ")
-        .replace(/, (?=[^,]*$)/, " and ");
+      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
     },
 
     refreshTimer() {
@@ -325,20 +289,6 @@ export default {
       this.currentResult = {};
       clearInterval(this.polling);
       this.currentEpochSlot(this.consensusName);
-    },
-
-    dialogOpen(arg1, arg2, arg3) {
-      this.dialog = true;
-      this.epoch = arg1;
-      this.slot = arg2;
-      this.status = arg3;
-    },
-    dialogClose() {
-      this.epoch = "";
-      this.slot = "";
-      this.status = "";
-      this.dialog = false;
-      this.epochType = "";
     },
 
     initializeProposedBlock() {

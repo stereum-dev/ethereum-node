@@ -26,11 +26,8 @@
             </div>
             <div
               class="consensusIconCons"
-              @mouseenter="
-                dialogOpen(consensusName, consensusFirstVal, consensusSecondVal),
-                  (cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`)
-              "
-              @mouseleave="dialogClose(), (cursorLocation = '')"
+              @mouseenter="cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`"
+              @mouseleave="cursorLocation = ''"
             >
               <img :src="clientImage(consensusName)" alt="consensus" />
             </div>
@@ -48,11 +45,8 @@
             </div>
             <div
               class="executionIconCons"
-              @mouseenter="
-                dialogOpen(executionName, executionFirstVal, executionSecondVal),
-                  (cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`)
-              "
-              @mouseleave="dialogClose(), (cursorLocation = '')"
+              @mouseenter="cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`"
+              @mouseleave="cursorLocation = ''"
             >
               <img :src="clientImage(executionName)" alt="execution" />
             </div>
@@ -212,18 +206,6 @@ export default {
     if (this.refresher) clearTimeout(this.refresher);
   },
   methods: {
-    dialogOpen(arg1, arg2, arg3) {
-      this.dialog = true;
-      this.title = arg1;
-      this.first = arg2;
-      this.second = arg3;
-    },
-    dialogClose() {
-      this.dialog = false;
-      this.title = "";
-      this.first = "";
-      this.second = "";
-    },
     clientImage(name) {
       if (!name) {
         return "";

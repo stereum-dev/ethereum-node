@@ -2,7 +2,6 @@
   <base-layout>
     <!-- Start Control main layouts -->
     <div class="ctrGridParent gap-1 relative">
-      <TooltipDialog :open="dialog" />
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
@@ -13,11 +12,7 @@
               <img src="/img/icon/manage-node-icons/white-arrow-up.png" alt="" />
             </div>
             <div ref="pluginsTable" class="plugins-table">
-              <div
-                v-for="(item, index) in installedServices"
-                :key="index"
-                class="plugins-row"
-              >
+              <div v-for="(item, index) in installedServices" :key="index" class="plugins-row">
                 <div
                   class="plugins-pending-state"
                   :class="{
@@ -37,10 +32,7 @@
                 <div class="service-edit">
                   <div class="edit-box">
                     <div
-                      v-if="
-                        item.service !== 'ExternalExecutionService' &&
-                        item.service !== 'ExternalConsensusService'
-                      "
+                      v-if="item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'"
                       class="icon-bg"
                     >
                       <div class="power-icon">
@@ -109,9 +101,7 @@
       <div class="dashboard-container border-4 border-gray-500 bg-black rounded-md">
         <control-dashboard></control-dashboard>
       </div>
-      <div
-        class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2"
-      >
+      <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
         <control-alert @expert-handler="expertModeHandlerAlert"></control-alert>
       </div>
     </div>
@@ -130,7 +120,6 @@ import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useFooter } from "@/store/theFooter";
-import TooltipDialog from "./TooltipDialog.vue";
 export default {
   components: {
     ControlDashboard,
@@ -138,7 +127,6 @@ export default {
     ControlAlert,
     PrunningModal,
     ResyncModal,
-    TooltipDialog,
     ExpertWindow,
   },
   data() {
@@ -174,9 +162,7 @@ export default {
       dialog: "dialog",
     }),
     isAnyConsensusRunning() {
-      const consensusServices = this.installedServices.filter(
-        (item) => item.category === "consensus"
-      );
+      const consensusServices = this.installedServices.filter((item) => item.category === "consensus");
 
       if (consensusServices.length === 0) {
         return false;

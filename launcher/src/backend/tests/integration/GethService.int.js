@@ -86,7 +86,7 @@ test("geth installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection, keyResponse)
+  await testServer.finishTestGracefully(nodeConnection)
 
   //check ufw
   expect(ufw.stdout).toMatch(/30303\/tcp/);

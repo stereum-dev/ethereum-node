@@ -316,7 +316,7 @@ export class ValidatorAccountManager {
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
       `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
-      }${path}`,
+      }${apiPath}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
       apiToken ? `-H 'Authorization: Bearer ${apiToken}'` : "",
@@ -570,19 +570,19 @@ export class ValidatorAccountManager {
     let result = { rc: 1, stderr: "default" };
     switch (service.service) {
       case "PrysmValidatorService": {
-        let path = "";
+        let walletPath = "";
         if (typeof service.volumes[0] == "string") {
-          path = ServiceVolume.buildByConfig(
+          walletPath = ServiceVolume.buildByConfig(
             service.volumes.find((v) => v.includes("/opt/app/data/wallets"))
           ).destinationPath;
         } else {
-          path = service.volumes.find((v) => v.servicePath == "/opt/app/data/wallets").destinationPath;
+          walletPath = service.volumes.find((v) => v.servicePath == "/opt/app/data/wallets").destinationPath;
         }
         //Make sure keystores have correct permissions
-        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + path + "/direct/accounts/*");
+        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + walletPath + "/direct/accounts/*");
         log.info(chmodResult.stdout);
-        if (path) {
-          result = await this.nodeConnection.sshService.exec("cat " + path + "/auth-token");
+        if (walletPath) {
+          result = await this.nodeConnection.sshService.exec("cat " + walletPath + "/auth-token");
           result.stdout = result.stdout
             .split("\n")
             .filter((e) => e)
