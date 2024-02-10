@@ -4,11 +4,11 @@
       v-for="link in sortedFlags"
       :key="link.flag"
       :is-active="link.enable"
-      @setting="setLang(link.langName, link.langSelect, link.label)"
+      @setting="setLang(link.name, link.flag, link.label)"
     >
-      <div class="langIco"><img :src="link.langImg" /></div>
+      <div class="langIco"><img :src="link.flag" /></div>
       <div class="langName">
-        <span>{{ link.langName }}</span>
+        <span>{{ link.name }}</span>
       </div>
     </flag-button>
   </div>
@@ -17,8 +17,8 @@
 <script>
 import FlagButton from "./FlagButton.vue";
 import { mapWritableState } from "pinia";
-import { useFlagDialog } from "../../../store/flagDialog";
 import ControlService from "@/store/ControlService";
+import { useLangStore } from "@/store/languages";
 export default {
   components: { FlagButton },
   emits: ["back"],
@@ -33,14 +33,14 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useFlagDialog, {
-      linkFlags: "linkFlags",
+    ...mapWritableState(useLangStore, {
+      langOptions: "langOptions",
     }),
     sortedFlags() {
-      const sortedFlags = [...this.linkFlags];
+      const sortedFlags = [...this.langOptions];
       sortedFlags.sort((a, b) => {
-        let fa = a.langName.toLowerCase(),
-          fb = b.langName.toLowerCase();
+        let fa = a.name.toLowerCase(),
+          fb = b.name.toLowerCase();
         if (fa < fb) {
           return -1;
         }
