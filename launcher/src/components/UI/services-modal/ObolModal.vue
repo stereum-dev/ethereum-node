@@ -74,9 +74,26 @@
               />
             </div>
           </div>
-          <div v-if="headerStore.continueForExistENR" class="browserBox">
+          <div class="browserBox">
+            <div v-if="!headerStore.continueForExistENR || dkgControl == true" class="browserBox_import">
+              <div class="import-title">
+                <span>{{ dkgControl !== true ? "INSERT EXISITING BACKUP" : $t("serviceModal.pasteUrl") }}</span>
+              </div>
+              <div class="enrImport">
+                <input
+                  v-model="startDKG"
+                  type="text"
+                  :placeholder="`${
+                    dkgControl !== true ? 'e.g., C:\\path\\to\\backup.zip' : $t('serviceModal.entrUrl')
+                  }`"
+                />
+                <div class="import-btn" @click="dkgImporter">
+                  {{ $t("serviceModal.srart") }}
+                </div>
+              </div>
+            </div>
             <ConfirmBox
-              v-if="!dkgControl || headerStore.depositFile"
+              v-else-if="!dkgControl || headerStore.depositFile"
               :top-line="`${
                 headerStore.depositFile ? `${$t('serviceModal.backUpFile')}` : `${$t('serviceModal.startDkg')}`
               }`"
@@ -88,20 +105,11 @@
               :btn-name-color="`#2fe4ab`"
               @confirmPluginClick="dkgSwitch"
             />
-            <div v-else class="browserBox_import">
-              <div class="import-title">
-                <span>{{ $t("serviceModal.pasteUrl") }}</span>
-              </div>
-              <div class="enrImport">
-                <input v-model="startDKG" type="text" :placeholder="`${$t('serviceModal.entrUrl')}`" />
-                <div class="import-btn" @click="dkgImporter">
-                  {{ $t("serviceModal.srart") }}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-        <div v-else class="wrapper"><EnrGenerator :cluster-definition="clusterDefinition" /></div>
+        <div v-else class="wrapper">
+          <EnrGenerator :cluster-definition="clusterDefinition" />
+        </div>
       </div>
     </div>
   </div>
@@ -180,7 +188,9 @@ const removeHandler = () => {
 
 const openDirectoryPicker = async () => {
   try {
-    const paths = await ControlService.openDirectoryDialog({ properties: ["openDirectory", "createDirectory"] });
+    const paths = await ControlService.openDirectoryDialog({
+      properties: ["openDirectory", "createDirectory"],
+    });
     return paths[0];
   } catch (error) {
     // Handle case when user cancels directory picker
