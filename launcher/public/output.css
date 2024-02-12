@@ -2420,6 +2420,10 @@ video {
   grid-template-rows: repeat(8 , minmax(0,1fr));
 }
 
+.grid-rows-11{
+  grid-template-rows: repeat(11, minmax(0, 1fr));
+}
+
 .flex-col{
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
