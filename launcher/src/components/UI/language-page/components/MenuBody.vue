@@ -83,13 +83,13 @@ const setThumbsSwiper = (swiper) => {
 };
 
 const handleClick = (lang) => {
-  playSoundEffect("/sound/click2.mp3");
+  playSoundEffect("/sound/click.wav");
   selectItem(lang);
 };
 
 const selectItem = async (lang, playSound = true) => {
   if (playSound) {
-    playSoundEffect("/sound/click2.mp3");
+    playSoundEffect("/sound/click.wav");
   }
   langStore.langOptions.forEach((option) => (option.isSelected = false));
   lang.isSelected = true;
