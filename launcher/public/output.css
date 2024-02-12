@@ -2384,6 +2384,10 @@ video {
   grid-template-rows: repeat(10, minmax(0, 1fr));
 }
 
+.grid-rows-11{
+  grid-template-rows: repeat(11, minmax(0, 1fr));
+}
+
 .grid-rows-12{
   grid-template-rows: repeat(12 , minmax(0,1fr));
 }
@@ -2418,10 +2422,6 @@ video {
 
 .grid-rows-8{
   grid-template-rows: repeat(8 , minmax(0,1fr));
-}
-
-.grid-rows-11{
-  grid-template-rows: repeat(11, minmax(0, 1fr));
 }
 
 .flex-col{
@@ -3102,6 +3102,11 @@ video {
   border-top-color: rgb(37 99 235 / var(--tw-border-opacity));
 }
 
+.bg-\[\#0F1217\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 18 23 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#0d0d0e\]{
   --tw-bg-opacity: 1;
   background-color: rgb(13 13 14 / var(--tw-bg-opacity));
@@ -3265,6 +3270,11 @@ video {
 .bg-\[\#23272c\]{
   --tw-bg-opacity: 1;
   background-color: rgb(35 39 44 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#242529\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(36 37 41 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#242628\]{
@@ -4452,6 +4462,11 @@ video {
 
 .shadow-zinc-800{
   --tw-shadow-color: #27272a;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.shadow-\[\#1c3634\]{
+  --tw-shadow-color: #1c3634;
   --tw-shadow: var(--tw-shadow-colored);
 }
 

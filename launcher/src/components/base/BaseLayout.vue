@@ -2,19 +2,8 @@
   <div
     class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none relative"
   >
-    <div
-      class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634]"
-    >
-      <div
-        class="absolute left-0 top-0 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[40px] rounded-br-[40px] rounded-bl-[37px] shadow-md shadow-[#252525]"
-        :class="logoDisabled ? 'pointer-events-none ' : ''"
-        @mousedown.prevent.stop
-      >
-        <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
-      </div>
+    <HeaderScreen />
 
-      <MainNavbar />
-    </div>
     <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative">
       <slot></slot>
     </div>
@@ -36,45 +25,15 @@
   </div>
 </template>
 <script setup>
-import MainNavbar from "../UI/node-header/MainNavbar.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
 import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
-import LogoButton from "../UI/server-management/components/LogoButton.vue";
-import { useFooter } from "@/store/theFooter";
-import { ref, computed } from "vue";
-import i18n from "../../../../launcher/src/includes/i18n";
-import { useServers } from "@/store/servers";
+import HeaderScreen from "../UI/base-header/HeaderScreen.vue";
 import { useRouter } from "vue-router";
+import { useServers } from "@/store/servers";
 
-const t = i18n.global.t;
-const serverStore = useServers();
-const footerStore = useFooter();
 const router = useRouter();
-const tooltip = ref(false);
-const serverAccMange = t("serverManagement.serverAccMange");
-
-const logoDisabled = computed(() => {
-  if (
-    router.currentRoute.value.fullPath === "/config/play" ||
-    router.currentRoute.value.fullPath === "/oneClick/play" ||
-    router.currentRoute.value.fullPath === "/custom/play" ||
-    router.currentRoute.value.fullPath === "/login"
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-});
-
-const mouseLeave = () => {
-  tooltip.value = false;
-  footerStore.cursorLocation = "";
-};
-
-const serverAccessHandler = () => {
-  serverStore.isServerAccessManagementActive = !serverStore.isServerAccessManagementActive;
-};
+const serverStore = useServers();
 </script>
 
 <style scoped>
