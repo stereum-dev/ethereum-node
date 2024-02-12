@@ -4,8 +4,8 @@ import router from "./router/index.js";
 import { createPinia } from "pinia";
 
 import "./main.css";
-import i18n from "./includes/i18n";
 
+import i18n from "./includes/i18n";
 import BaseLayout from "./components/base/BaseLayout.vue";
 import InstallationLayout from "../src/components/base/InstallationLayout.vue";
 import TaskManager from "./components/UI/task-manager/TaskManager.vue";
@@ -22,4 +22,5 @@ app.component("StakingCustomModal", StakingCustomModal);
 app.use(router);
 app.use(pinia);
 app.use(i18n);
+
 app.mount("#app");
