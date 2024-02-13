@@ -79,9 +79,20 @@
               <div class="import-title">
                 <span>{{ dkgControl !== true ? "INSERT EXISITING BACKUP" : $t("serviceModal.pasteUrl") }}</span>
               </div>
-              <div class="enrImport">
+              <div class="enrImport" style="position: relative; z-index: 99">
+                <label
+                  v-if="!dkgControl"
+                  for="file_input"
+                  class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
+                >
+                  <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
+                  <span class="absolute" style="color: #192d31; top: 1; left: 3%; font-size: 2rem; font-weight: 600"
+                    >+</span
+                  >
+                </label>
                 <input
-                  v-model="startDKG"
+                  v-model="thirdRowInput"
+                  :style="`${dkgControl !== true ? 'padding-left: 12px; text-indent: 12px;' : ''}`"
                   type="text"
                   :placeholder="`${
                     dkgControl !== true ? 'e.g., C:\\path\\to\\backup.zip' : $t('serviceModal.entrUrl')
@@ -125,6 +136,7 @@ const importedENR = ref("");
 const clusterDefinition = ref("");
 const dkgControl = ref(false);
 const isLoading = ref(true);
+const thirdRowInput = ref("");
 
 const headerStore = useNodeHeader();
 
@@ -182,6 +194,7 @@ const removeHandler = () => {
       headerStore.generatedENR = "";
       headerStore.continueForExistENR = false;
       headerStore.depositFile = false;
+      dkgControl.value = false;
     }
   });
 };
@@ -214,14 +227,38 @@ const dkgSwitch = async () => {
 };
 
 const dkgImporter = () => {
-  if (!clusterDefinition.value) {
+  let backupPath;
+  if (!dkgControl.value) {
+    // path of existing backup
+    if (!thirdRowInput.value) {
+      console.log("please enter input");
+    } else {
+      backupPath = thirdRowInput.value;
+      headerStore.enrIsGenerating = false;
+      headerStore.generatorPlugin = false;
+      headerStore.distrubutedValidatorGenerator = false;
+      headerStore.deactivateBtnToWaitForLogs = false;
+      console.log(backupPath);
+      headerStore.continueForExistENR = true;
+    }
+  }
+  // url of cluster definition
+  else if (!thirdRowInput.value) {
     console.log("please enter url");
   } else {
+    clusterDefinition.value = thirdRowInput.value;
+    console.log(clusterDefinition.value);
     headerStore.enrIsGenerating = false;
     headerStore.generatorPlugin = true;
     headerStore.distrubutedValidatorGenerator = true;
     headerStore.deactivateBtnToWaitForLogs = true;
   }
+};
+const previewFiles = (event) => {
+  const Path = event.target.files[0].path;
+  let pathString = new String(Path);
+  let result = pathString.toString();
+  thirdRowInput.value = result;
 };
 
 onMounted(async () => {
