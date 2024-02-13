@@ -81,6 +81,8 @@ const footerStore = useFooter();
 
 //Computed & Watchers
 
+console.log(nodeStore?.installedServices);
+
 watchEffect(() => {
   if (router.currentRoute.value.path !== "/node") {
     nodeStore.isLineHidden = true;

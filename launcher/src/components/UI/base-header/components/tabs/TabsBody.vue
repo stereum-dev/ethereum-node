@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-3 col-end-12 grid grid-cols-3 items-center gap-x-1">
+  <div class="col-start-3 col-end-13 grid grid-cols-3 items-center gap-x-2">
     <SingleTab v-for="tab in tabs" :key="tab.page" :tab="tab" />
   </div>
 </template>
