@@ -86,7 +86,9 @@
                   class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
                 >
                   <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
-                  <span class="absolute" style="color: #192d31; top: 1; left: 3%; font-size: 2rem; font-weight: 600"
+                  <span
+                    class="absolute cursor-pointer"
+                    style="color: #192d31; top: 1; left: 3%; font-size: 2rem; font-weight: 600"
                     >+</span
                   >
                 </label>
@@ -240,6 +242,7 @@ const dkgImporter = () => {
       headerStore.deactivateBtnToWaitForLogs = false;
       console.log(backupPath);
       headerStore.continueForExistENR = true;
+      thirdRowInput.value = "";
     }
   }
   // url of cluster definition
@@ -248,6 +251,7 @@ const dkgImporter = () => {
   } else {
     clusterDefinition.value = thirdRowInput.value;
     console.log(clusterDefinition.value);
+    thirdRowInput.value = "";
     headerStore.enrIsGenerating = false;
     headerStore.generatorPlugin = true;
     headerStore.distrubutedValidatorGenerator = true;
