@@ -7,6 +7,12 @@ export class NodeUpdates {
     this.nodeConnection = nodeConnection;
   }
 
+  /**
+   * runs the "upgrade_prep" role
+   * executes do-release-upgrade
+   * runs the "switch_repos" role
+   * @returns {number}
+   */
   async upgrade() {
     try {
       log.info("Preparing for Upgrade to noble numbat ...");
@@ -26,12 +32,21 @@ export class NodeUpdates {
     return 1;
   }
 
+  /**
+   * fetches the updates.json from stereum.net
+   * @returns {Object} - updates available for services
+   */
   async checkUpdates() {
     let response = await axios.get("https://stereum.net/downloads/updates.json");
     if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
     return response.data;
   }
 
+  /**
+   * updateStereum and updateServices
+   * @param {string} commit
+   * @returns {number}
+   */
   async runAllUpdates(commit) {
     //stereum and service updates
     let before = 0;
@@ -49,6 +64,11 @@ export class NodeUpdates {
     return 30;
   }
 
+  /**
+   * runs the "update-services" role
+   * @param {string} services
+   * @returns {number} seconds
+   */
   async updateServices(services) {
     try {
       let before = this.getTimeStamp();
@@ -64,6 +84,11 @@ export class NodeUpdates {
     }
   }
 
+  /**
+   * runs the "update-stereum" role
+   * @param {string} commit - commit id
+   * @returns {number} - playbook runtime
+   */
   async updateStereum(commit) {
     let extraVars = {
       stereum_role: "update-stereum",
@@ -83,10 +108,18 @@ export class NodeUpdates {
     }
   }
 
+  /**
+   * Returns the current Unix timestamp rounded up to the nearest second
+   * @returns {number} - unix timestamp in seconds
+   */
   getTimeStamp() {
     return Math.ceil(Date.now() / 1000);
   }
 
+  /**
+   * runs the "restart-services" role
+   * @param {number} seconds
+   */
   async restartServices(seconds) {
     try {
       await this.nodeConnection.runPlaybook("Restart Services", {
@@ -98,6 +131,10 @@ export class NodeUpdates {
     }
   }
 
+  /**
+   * runs a shell command to get the current OS-Version number
+   * @returns {string} - Example: 22.04.3
+   */
   async getCurrentOsVersion() {
     try {
       const res = await this.nodeConnection.sshService.exec(`lsb_release -d | awk '{print $3}'`);
@@ -107,6 +144,10 @@ export class NodeUpdates {
     }
   }
 
+  /**
+   * runs a shell command
+   * @returns {string} - a string representing the count of upgradable packages
+   */
   async getCountOfUpdatableOSUpdate() {
     try {
       const res = await this.nodeConnection.sshService.exec(
@@ -119,6 +160,10 @@ export class NodeUpdates {
     }
   }
 
+  /**
+   * runs the "update-os" role to update the os packages
+   * @returns {number} - playbook runtime in seconds
+   */
   async updateOS() {
     try {
       let before = this.getTimeStamp();
@@ -135,7 +180,7 @@ export class NodeUpdates {
   }
 
   /**
-   * runs the "update_package" role, update for one or more specific packages
+   * runs the "update_package" role, update of one or more specific packages
    * @param {string[]} packages - Array of Packagenames to upgrade
    * @returns {number} - playbook runtime
    */

@@ -4,6 +4,7 @@ import { nodeOS } from "./NodeOS";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import net from "net";
 import YAML from "yaml";
+import { NodeUpdates } from "./NodeUpdates";
 const log = require("electron-log");
 const electron = require("electron");
 const Evilscan = require("evilscan");
@@ -26,6 +27,7 @@ export class NodeConnection {
     this.nodeConnectionParams = nodeConnectionParams;
     this.os = null;
     this.osv = null;
+    this.nodeUpdates = new NodeUpdates(this);
   }
 
   async establish(taskManager) {
@@ -201,7 +203,7 @@ export class NodeConnection {
     let versions;
     let commit;
     try {
-      versions = await this.checkUpdates();
+      versions = await this.nodeUpdates.checkUpdates();
       this.taskManager.otherSubTasks.push({
         name: "Get Version Information",
         otherRunRef: ref,
@@ -335,17 +337,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -459,9 +461,9 @@ export class NodeConnection {
       if (SSHService.checkExecError(ssvNetworkConfig)) {
         throw new Error(
           "Failed reading SSV network config to get keystore keystore from service " +
-          serviceID +
-          ": " +
-          SSHService.extractExecError(ssvNetworkConfig)
+            serviceID +
+            ": " +
+            SSHService.extractExecError(ssvNetworkConfig)
         );
       }
       let ssvNetworkConfigParsed = YAML.parse(ssvNetworkConfig.stdout);
@@ -484,9 +486,9 @@ export class NodeConnection {
         );
         throw new Error(
           "Can't read SSV keystore password file content from service " +
-          serviceID +
-          ": " +
-          keyStorePasswordFileRequest.stderr
+            serviceID +
+            ": " +
+            keyStorePasswordFileRequest.stderr
         );
       }
       let keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
@@ -499,9 +501,9 @@ export class NodeConnection {
         );
         throw new Error(
           "Can't read SSV keystore private key file content from service " +
-          serviceID +
-          ": " +
-          keyStorePrivateKeyFileRequest.stderr
+            serviceID +
+            ": " +
+            keyStorePrivateKeyFileRequest.stderr
         );
       }
       let keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
@@ -669,10 +671,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -718,10 +720,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -743,9 +745,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -978,7 +980,6 @@ export class NodeConnection {
     }
     return ports;
   }
-
 
   async getCurrentStereumVersion() {
     let response;
