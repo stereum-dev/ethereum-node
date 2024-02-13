@@ -121,18 +121,18 @@
     "netSel": "Избраната мрежа е",
     "machineName": "Име на машината",
     "storVol": "Обем за съхранение в сървъра",
-    "stor": "Server storage overview",
-    "diskSpeed": "Disk speed",
-    "p2p": "Peer to peer connections",
-    "cpuUse": "CPU Usage",
-    "syncInfo": "Synchronization status",
-    "ramUse": "RAM Usage",
-    "netSpeed": "Network Speed",
-    "listPort": "List of service ports",
-    "endPoint": "endpoint",
-    "data": "data",
-    "enteredKeys": "The number of imported validator keys",
-    "ttlBal": "Total balance",
+    "stor": "Преглед на съхранението в сървъра",
+    "diskSpeed": "Скорост на диска",
+    "p2p": "Връзки peer to peer",
+    "cpuUse": "Използване на процесора",
+    "syncInfo": "Статус на синхронизацията",
+    "ramUse": "Използване на паметта",
+    "netSpeed": "Скорост на мрежата",
+    "listPort": "Списък на сървис портовете",
+    "endPoint": "крайна точка",
+    "data": "данни",
+    "enteredKeys": "Броят на импортираните ключове на валидатора",
+    "ttlBal": "Общ баланс",
     "finEPOCH": "Finalized EPOCH",
     "pending": "service is pending",
     "off": "Switch off the service",
@@ -164,7 +164,7 @@
     "warningAlarm": "WARNING: You run a high risk of getting slashed!",
     "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
     "sure": "I am sure",
-    "cancel": "cancel",
+    "cancel": "отказ",
     "serviceExpl": "The service selected for the entered Validator key",
     "activeExpl": "The time since the validator has been active",
     "balExpl": "The balance of the validator",
@@ -199,19 +199,19 @@
     "importRemote": "import remote keys into the validator client",
     "valClint": "validator client",
     "valStat": "validator state",
-    "numValidator": "number imported validator keys",
+    "numValidator": "броят на импортираните ключове на валидатора",
     "attestReward": "attestation reward",
     "blockProdreward": "block production rewards",
     "syncCommitteeReward": "sync committee rewards",
     "ttlKeys": "total keys",
-    "ttlBal": "total balance"
+    "ttlBal": "общ баланс"
   },
   "enterPass": {
     "enterPass": "ВЪВЕДЕТЕ ПАРОЛА & ИМПОРТИРАЙТЕ"
   },
   "exitMultipleValidator": {
     "passMessage": "ВЪВЕДЕТЕ ПАРОЛАТА СИ ЗА ВАЛИДИРАНЕ, ЗА ДА ИЗЛЕЗЕТЕ ОТ ВЕРИГАТА С ТОЗИ КЛЮЧ...",
-    "confirm": "CONFIRM"
+    "confirm": "ПОТВЪРДИ"
   },
   "exitValidatorModal": {
     "modalMessage": "Сигурни ли сте, че искате да излезете от веригата с ИЗБРАНИТЕ КЛЮЧОВЕ ЗА УТВЪРЖДАВАНЕ? Това прекратява работата на валидатора и НЕ МОЖЕ да бъде върнато назад. Вашите средства също могат да се изтеглят само ако веригата го позволява.",
@@ -224,7 +224,7 @@
     "setBlock": "ЗАДАВАНЕ НА АДРЕС НА ПОЛУЧАТЕЛ НА БЛОКОВА ТАКСА"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Въведете до 32 символа, които да добавите към веригата, когато създавате блок!"
   },
   "renameValidator": {
     "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
@@ -257,7 +257,7 @@
   },
   "pluginName": {
     "path": "ПЪТ ЗА ИНСТАЛИРАНЕ",
-    "installOpt": "INSTALLATION OPTIONS",
+    "installOpt": "ОПЦИИ ЗА ИНСТАЛИРАНЕ",
     "startOnInstall": "Start up client after installation?",
     "monitor": "MONITORING",
     "instMonit": "Install Monitoring?"
@@ -270,7 +270,7 @@
     "testers": "TESTERS"
   },
   "verifyInstallation": {
-    "name": "NAME",
+    "name": "ИМЕ",
     "cat": "CATEGORY",
     "path": "PATH"
   },
@@ -286,7 +286,7 @@
   },
   "registerSSV": {
     "pubKey": "Public operator key",
-    "copied": "copied!",
+    "copied": "копирано!",
     "secKey": "Secret Operator Key",
     "makeSureText": "Please make sure to store and backup your operator secret key in a safe place. Do not share this key with anyone.",
     "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
@@ -297,10 +297,10 @@
   },
   "secretKeyReg": {
     "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "apply": "ПРИЛОЖИ"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
+    "copy": "Настисни за да копираш!",
     "closed": "Turn On First",
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
     "copiedMessage": "DATA-API-URL copied to clipboard!",
@@ -324,7 +324,7 @@
     "localAppText": "Open up the service on your local machine",
     "openBrowser": "OPEN IN BROWSER",
     "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
+    "process": "Обработване",
     "blockRel": "Block relay",
     "blockRelTxt": "Select one or multiple relays to receive blocks from"
   },
