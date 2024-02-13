@@ -45,19 +45,19 @@
     "manual": "РЪКОВОДСТВО",
     "auto": "АВТОМАТИЧНО",
     "sxConf": "Експортирай конфигурация",
-    "chngAppr": "Changes to be applied",
-    "creditInfo": "click the button to see the contributors",
-    "langInfo": "click the button to change the language",
-    "exportInfo": "click the button to export the configuration in a yaml file",
-    "stereumUpd": "Click the button to configure the Stereum update"
+    "chngAppr": "Промени, които да бъдат приложени",
+    "creditInfo": "кликнете върху бутона, за да видите участниците",
+    "langInfo": "щракнете върху бутона, за да промените езика",
+    "exportInfo": "кликнете бутона, за да експортирате конфигурацията в yaml файл",
+    "stereumUpd": "Кликнете бутона, за да конфигурирате актуализацията на Stereum"
   },
   "nodeSidebarVideo": {
     "stake": "Залог с 32 ETH",
-    "rpc": "RPC Connection",
-    "written": "Written Guides",
-    "video": "Video Guides",
-    "stereumTutorial": "stereum tutorials",
-    "statBox": "status box"
+    "rpc": "RPC Връзка",
+    "written": "Писмени ръководства",
+    "video": "Видео ръководства",
+    "stereumTutorial": "стереум уроци",
+    "statBox": "статус поле"
   },
   "pluginZone": {
     "client": "клиент"
@@ -67,27 +67,27 @@
     "consensus": "консенсус",
     "validator": "валидатор",
     "servicePlugin": "СЪРВИС ПЛЪГИН",
-    "message": "The current network is ",
-    "chckTutorial": "Check out the tutorials",
-    "returnStatus": "Return to status box"
+    "message": "Настоящата мрежа е",
+    "chckTutorial": "Проверете уроците",
+    "returnStatus": "Връщане към статус полето"
   },
   "modifyPanel": {
     "backNode": "обратно към НОД-а",
-    "nukeNode": "NUKE NODE"
+    "nukeNode": "ИЗТРИЙ НОДА"
   },
   "changeConfirm": {
-    "confirm": "CONFIRM CHANGES",
-    "process": "processing...",
+    "confirm": "ПОТВЪРЖДАВАНЕ НА ПРОМЕНИТЕ",
+    "process": "обработка...",
     "change": "ПРОМЕНИ ЗА ПОТВЪРЖДАВАНЕ",
     "delete": "ИЗТРИЙ"
   },
   "updatePanel": {
-    "launcherTitle": "launcher",
-    "version": "version",
+    "launcherTitle": "стартер",
+    "version": "версия",
     "current": "текущ",
     "nodeTitle": "нод актуализации",
     "latest": "последни",
-    "auto": "Auto Update",
+    "auto": "Автоматично обновяване",
     "available": "налично",
     "searching": "търсене за актуализации",
     "serviceTitle": "plug-in updates",
