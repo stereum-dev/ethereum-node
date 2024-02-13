@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-13 col-end-19 flex justify-center items-center p-1">
+  <div class="col-start-14 col-end-19 flex justify-center items-center p-1">
     <ServiceCarousel :slides="slides" />
   </div>
 </template>
@@ -14,6 +14,4 @@ const headerStore = useNodeHeader();
 const slides = computed(() => {
   return JSON.parse(JSON.stringify(headerStore.runningServices));
 });
-
-console.log(slides.value);
 </script>

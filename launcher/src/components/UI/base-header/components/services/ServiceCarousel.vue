@@ -1,87 +1,84 @@
 <template>
   <swiper
     :modules="modules"
-    :slidesPerView="3"
-    :centeredSlides="true"
-    :spaceBetween="30"
-    :pagination="{
-      type: 'fraction',
-    }"
-    :navigation="true"
+    :slides-per-view="3.5"
+    :mousewheel="true"
+    :navigation="slides.length > 4 ? true : false"
     :virtual="true"
-    class="mySwiper"
-    @swiper="setSwiperRef"
   >
-    <swiper-slide v-for="(slideContent, index) in slides" :key="index" :virtualIndex="index">{{
-      slideContent
-    }}</swiper-slide>
+    <swiper-slide v-for="(slide, index) in slides" :key="index" :virtual-index="index">
+      <div class="w-full flex justify-center items-center cursor-pointer" @click="handleModal(slide)">
+        <img class="w-full h-full" :src="slide.sIcon" alt="Service Icon" />
+      </div>
+    </swiper-slide>
   </swiper>
 </template>
 
 <script setup>
-  import 'swiper/css';
-  import { Swiper, SwiperSlide } from 'swiper/vue';
-import Pagination from 'swiper';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/virtual";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Mousewheel, Navigation, Virtual } from "swiper/modules";
+import { useNodeHeader } from "@/store/nodeHeader";
 
-
-  const modules = {Pagination , Navigation ,Mousewheel , Keyboard};
 const { slides } = defineProps({
   slides: Array,
 });
-console.log(slides);
-const emit = defineEmits(["modalEvent"]);
-const modules = ;
 
-const singleSwiper = ref(null);
+const headerStore = useNodeHeader();
+const modules = [Navigation, Mousewheel, Virtual];
 
-const handleModal = (item) => {
-  emit("modalEvent", item);
-  console.log(item);
+// Modal handler
+const handleModal = (slide) => {
+  headerStore.setServiceModal(slide.service);
 };
 </script>
 
-<style scoped>
+<style>
 .swiper {
-  width: 100%;
-  height: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 10px !important;
 }
 
 .swiper-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 90% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 .swiper-slide {
-  height: 100% !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 40px !important;
+  height: 40px !important;
 }
 
-/* .swiper-button-prev,
-.swiper-button-next {
+.swiper-button-next,
+.swiper-button-prev {
   width: 20px !important;
-  height: 20px !important;
-  margin-top: 0;
-  margin-bottom: 0;
-  color: #000;
-  background: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
+  height: 90% !important;
+  color: rgb(244, 244, 244) !important;
+  background-color: rgb(29, 29, 30) !important;
+  border-radius: 5px;
+  justify-self: end;
+  align-self: center;
 }
 
-.swiper-button-prev:after,
-.swiper-button-next:after {
-  width: 5px !important;
-  height: 5px !important;
-  font-size: 10px !important;
-  background: #000 !important;
-  transform: scale(0.5) !important;
-} */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 15px !important;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  transform: scale(1.1) !important;
+  background-color: rgb(223, 230, 231) !important;
+  color: rgb(29, 29, 30) !important;
+}
+
+.swiper-button-next.swiper-button-disabled,
+.swiper-button-prev.swiper-button-disabled {
+  opacity: 0 !important;
+}
 </style>

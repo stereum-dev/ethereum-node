@@ -16,6 +16,7 @@ import MenuSection from "./sections/MenuSection.vue";
 import { useFrontendServices } from "@/composables/services";
 import { onBeforeUnmount, onMounted } from "vue";
 import { useServices } from "@/store/services";
+
 let intervalID;
 
 const serviceStore = useServices();
@@ -25,7 +26,7 @@ onMounted(() => {
     useFrontendServices();
   }
 
-  intervalID = setInterval(useFrontendServices, 2000); //refresh services
+  intervalID = setInterval(useFrontendServices, 2000); //refresh se rvices
 });
 
 onBeforeUnmount(() => {

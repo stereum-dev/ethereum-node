@@ -2,6 +2,18 @@ import { defineStore } from "pinia";
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      //Service Modals begin
+      isServiceAvailable: true,
+      showGrafanaWindow: false,
+      showSsvWindow: false,
+      showPrometheusWindow: false,
+      showMevboostWindow: false,
+      showObolCharonWindow: false,
+      //Service Modals end
+
+      //Update Panel begin
+      displayUpdatePanel: false,
+      //Update Panel end
       importBoxModel: "",
       passwordBoxModel: "",
       selectedValidatorFromNodeAlert: {},
@@ -16,7 +28,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       serverAccessManagement: false,
       distrubutedValidatorGenerator: false,
       deactivateBtnToWaitForLogs: false,
-      displayUpdatePanel: false,
+
       runningServices: [],
       refresh: true,
       stereumUpdate: {},
@@ -49,5 +61,37 @@ export const useNodeHeader = defineStore("nodeHeader", {
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    setServiceModal(serviceName) {
+      switch (serviceName) {
+        case "GrafanaService":
+          this.showGrafanaWindow = true;
+          break;
+        case "SSVNetworkService":
+          this.showSsvWindow = true;
+          break;
+        case "PrometheusService":
+          this.showPrometheusWindow = true;
+          break;
+        case "FlashbotsMevBoostService":
+          this.showMevboostWindow = true;
+          break;
+        case "CharonService":
+          this.showObolCharonWindow = true;
+          break;
+        case null:
+          this.showGrafanaWindow = false;
+          this.showSsvWindow = false;
+          this.showPrometheusWindow = false;
+          this.showMevboostWindow = false;
+          this.showObolCharonWindow = false;
+          break;
+        default:
+          console.error(`No modal associated with the service name: ${serviceName}`);
+      }
+    },
+    openUpdatePanel() {
+      this.displayUpdatePanel = !this.displayUpdatePanel;
+    },
+  },
 });

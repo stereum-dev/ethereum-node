@@ -22,6 +22,11 @@
         "
       />
     </Transition>
+    <GrafanaModal v-if="headerStore.showGrafanaWindow" @close-window="closeServiceBrowser" />
+    <SsvModal v-if="headerStore.showSsvWindow" @close-window="closeServiceBrowser" />
+    <PrometheusModal v-if="headerStore.showPrometheusWindow" @close-window="closeServiceBrowser" />
+    <MevboostModal v-if="headerStore.showMevboostWindow" @close-window="closeServiceBrowser" />
+    <ObolModal v-if="headerStore.showObolCharonWindow" @close-window="closeServiceBrowser" />
   </div>
 </template>
 <script setup>
@@ -29,11 +34,22 @@ import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
 import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
 import HeaderScreen from "../UI/base-header/HeaderScreen.vue";
+import GrafanaModal from "../UI/services-modal/GrafanaModal.vue";
+import SsvModal from "../UI/services-modal/SsvModal.vue";
+import PrometheusModal from "../UI/services-modal/PrometheusModal.vue";
+import MevboostModal from "../UI/services-modal/MevboostModal.vue";
+import ObolModal from "../UI/services-modal/ObolModal.vue";
+import { useNodeHeader } from "@/store/nodeHeader";
 import { useRouter } from "vue-router";
 import { useServers } from "@/store/servers";
 
 const router = useRouter();
 const serverStore = useServers();
+const headerStore = useNodeHeader();
+
+const closeServiceBrowser = () => {
+  headerStore.setServiceModal(null);
+};
 </script>
 
 <style scoped>
