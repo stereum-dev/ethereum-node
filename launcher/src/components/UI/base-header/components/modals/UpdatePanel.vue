@@ -1,10 +1,10 @@
 <template>
   <div class="w-screen h-screen absolute inset-0 flex justify-end items-center">
-    <div class="w-full h-screen absolute inset-0 bg-black opacity-50 z-30 rounded-lg" @click="clickOutside"></div>
+    <div class="w-full h-full absolute inset-0 bg-black opacity-50 z-30 rounded-lg" @click="clickOutside"></div>
     <Transition name="slide-fade">
       <div
         v-if="show"
-        class="w-[400px] delay-100 transition-transform h-full justify-self-end flex flex-col justify-between items-center border-y border-l border-gray-500 z-40 rounded-tl-lg rounded-bl-lg duration-300 bg-[#264744] p-4"
+        class="w-[400px] delay-100 transition-transform h-full justify-self-end flex flex-col justify-between items-center z-40 rounded-md duration-300 bg-[#264744] p-4 mr-1 mb-1"
         @mouseleave="hidePanel"
       >
         <div class="max-h-full bg-[#171a1c] rounded-md grid grid-cols-2 grid-rows-12 py-2">

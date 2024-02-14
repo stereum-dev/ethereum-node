@@ -354,7 +354,7 @@ export default {
   display: flex;
   width: 90%;
   height: 15%;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .notif-Title span {
@@ -366,7 +366,7 @@ export default {
   display: flex;
   width: 90%;
   height: 12%;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .notif-message span {
@@ -376,11 +376,9 @@ export default {
 .notif-box {
   display: flex;
   width: 90%;
-  height: 65%;
-  border: 1px solid #3e3d3d;
-  background: #2a2a2a;
-  box-shadow: 1px 1px 10px 1px #171717, inset 1px 1px 5px 1px #1e1e1e;
-  border-radius: 10px;
+  height: 64%;
+  background: #141414;
+  border-radius: 10px 10px 30px 30px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
@@ -391,6 +389,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   border: 1px solid #3e3d3d;
+  background-color: #1e1d1d;
   width: 95%;
   height: 20%;
   box-shadow: 1px 1px 10px 1px #171717;
@@ -663,11 +662,11 @@ export default {
   z-index: 311;
 }
 .notif-modal-content {
-  width: 55%;
+  width: 60%;
   height: 70%;
-  border-radius: 1rem;
+  border-radius: 75px;
+  border: 3px solid #bfbfbf;
   background-color: #343434;
-  border: 4px solid rgb(171, 170, 170);
   z-index: 312;
   opacity: 1;
   display: flex;
@@ -775,9 +774,9 @@ export default {
 }
 
 .close {
-  color: #bf3a3a;
+  color: #e53333;
   font-size: 70%;
-  font-weight: 400;
+  font-weight: 600;
   align-self: center;
   position: absolute;
   bottom: 1%;
