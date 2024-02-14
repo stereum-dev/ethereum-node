@@ -55,22 +55,26 @@
               <ConfirmBox
                 :top-line="`${
                   !headerStore.continueForExistENR
-                    ? `${$t('serviceModal.createEnr')}`
-                    : `${$t('serviceModal.openObol')}`
+                    ? $t('serviceModal.createEnr')
+                    : areYouSureToRemove
+                    ? $t('serviceModal.areYouSure')
+                    : $t('serviceModal.mngEnr')
                 }`"
                 :bottom-line="`${
                   !headerStore.continueForExistENR
-                    ? `${$t('serviceModal.generateEnrToJoin')}`
-                    : `${$t('serviceModal.joinCluster')}`
+                    ? $t('serviceModal.generateEnrToJoin')
+                    : areYouSureToRemove
+                    ? $t('serviceModal.areYouSureMsg')
+                    : $t('serviceModal.copyEnr')
                 }`"
-                :btn-name="`${$t('serviceModal.copy')}`"
-                :second-btn-name="`${$t('serviceModal.rem')}`"
-                :btn-bg-color="`#494949`"
+                :btn-name="`${areYouSureToRemove ? $t('exitMultipleValidator.confirm') : $t('serviceModal.copy')}`"
+                :second-btn-name="`${areYouSureToRemove ? $t('displayValidator.cancel') : $t('serviceModal.rem')}`"
+                :btn-bg-color="`${areYouSureToRemove ? '#74FA65' : '#494949'}`"
                 :second-btn-bg-color="`#eb5353`"
-                :btn-name-color="`#dbdbdb`"
-                img-url="/img/icon/service-icons/copy1.png"
-                @confirmPluginClick="copyHandler"
-                @secBtnPluginClick="removeHandler"
+                :btn-name-color="`${areYouSureToRemove ? '#000' : '#dbdbdb'}`"
+                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-icons/copy1.png'}`"
+                @confirmPluginClick="secondRowBtnHandler"
+                @secBtnPluginClick="removeHandlerControler"
               />
             </div>
           </div>
@@ -139,6 +143,7 @@ const clusterDefinition = ref("");
 const dkgControl = ref(false);
 const isLoading = ref(true);
 const thirdRowInput = ref("");
+const areYouSureToRemove = ref(false);
 
 const headerStore = useNodeHeader();
 
@@ -177,6 +182,14 @@ const enrImport = () => {
   headerStore.continueForExistENR = true;
 };
 
+const secondRowBtnHandler = () => {
+  if (areYouSureToRemove.value) {
+    removeHandler();
+  } else {
+    copyHandler();
+  }
+};
+
 const copyHandler = () => {
   let toCopy = headerStore.generatedENR;
   navigator.clipboard
@@ -189,6 +202,10 @@ const copyHandler = () => {
     });
 };
 
+const removeHandlerControler = () => {
+  areYouSureToRemove.value = !areYouSureToRemove.value;
+};
+
 const removeHandler = () => {
   //returns true if successful otherwise false
   ControlService.removeObolENR().then((res) => {
@@ -197,6 +214,7 @@ const removeHandler = () => {
       headerStore.continueForExistENR = false;
       headerStore.depositFile = false;
       dkgControl.value = false;
+      areYouSureToRemove.value = false;
     }
   });
 };

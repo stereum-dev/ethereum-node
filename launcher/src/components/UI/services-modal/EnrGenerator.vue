@@ -167,7 +167,9 @@ const startDGKLogging = async () => {
 
 const openDirectoryPicker = async () => {
   try {
-    const paths = await ControlService.openDirectoryDialog({ properties: ["openDirectory", "createDirectory"] });
+    const paths = await ControlService.openDirectoryDialog({
+      properties: ["openDirectory", "createDirectory"],
+    });
     backupPath.value = paths[0];
   } catch (error) {
     // Handle case when user cancels directory picker

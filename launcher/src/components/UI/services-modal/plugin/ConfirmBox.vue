@@ -69,6 +69,12 @@ export default {
       dynamicBackgroundColor: this.btnBgColor,
     };
   },
+  watch: {
+    btnBgColor(newVal) {
+      this.dynamicBackgroundColor = newVal;
+    },
+  },
+
   methods: {
     confirmPluginClick() {
       this.$emit("confirmPluginClick");
