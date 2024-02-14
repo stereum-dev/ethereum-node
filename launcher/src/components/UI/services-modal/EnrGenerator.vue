@@ -37,7 +37,6 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted, computed, onBeforeUnmount } from "vue";
 import ControlService from "@/store/ControlService";
 import { saveToFile } from "@/composables/utils";
-import { defineProps } from "vue";
 
 // Define props
 const props = defineProps({
@@ -167,7 +166,9 @@ const startDGKLogging = async () => {
 
 const openDirectoryPicker = async () => {
   try {
-    const paths = await ControlService.openDirectoryDialog({ properties: ["openDirectory", "createDirectory"] });
+    const paths = await ControlService.openDirectoryDialog({
+      properties: ["openDirectory", "createDirectory"],
+    });
     backupPath.value = paths[0];
   } catch (error) {
     // Handle case when user cancels directory picker
