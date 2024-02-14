@@ -669,12 +669,12 @@
     "resync": "Resync the service from a selected source"
   },
   "clientLay": {
-    "client": "client",
+    "client": "клиент",
     "keyMsg": "key(s) imported",
-    "syncStatus": "sync status:"
+    "syncStatus": "състояние на синхронизиране:"
   },
   "serverDetails": {
-    "machineName": "Machine Name",
+    "machineName": "Име на машината",
     "machineIp": "Machine IP Address"
   },
   "changesBox": {
@@ -684,16 +684,16 @@
     "clkEdit": "Click to edit your service"
   },
   "generalMenu": {
-    "modify": "modify",
-    "connection": "connection",
-    "switchClient": "switch client",
-    "delete": "delete",
-    "service": "service",
-    "info": "info"
+    "modify": "редакция",
+    "connection": "свързване",
+    "switchClient": "превключване на клиенти",
+    "delete": "изтрий",
+    "service": "услуга",
+    "info": "инфо"
   },
   "networkDetails": {
-    "currIs": "The current network is",
-    "currentNet": "Current Network"
+    "currIs": "Настоящата мрежа е",
+    "currentNet": "Текуща мрежа"
   },
   "changeSect": {
     "clkConfirm": "Click here to confirm change(s)"
@@ -709,26 +709,26 @@
     "expNode": "Export your Node Configuration"
   },
   "customAnim": {
-    "processing": "Processing"
+    "processing": "Обработване"
   },
   "customFooter": {
-    "back": "BACK",
-    "next": "NEXT"
+    "back": "НАЗАД",
+    "next": "СЛЕДВАЩ"
   },
   "configDetails": {
     "addConfig": "Add Config"
   },
   "editBody": {
-    "executionClient": "Execution Client",
-    "consensusClient": "Consensus Client",
-    "validator": "Validator"
+    "executionClient": "Клиент за изпълнение",
+    "consensusClient": "Kонсенсусен клиент",
+    "validator": "Валидатор"
   },
   "editModals": {
     "noAvailService": "There is no available service",
-    "executionClients": "Execution Clients",
-    "consensusClients": "Consensus Clients",
-    "validatorClients": "Validator Clients",
-    "installationPath": "Installation Path",
+    "executionClients": "Клиент за изпълнение",
+    "consensusClients": "Kонсенсусни клиенти",
+    "validatorClients": "Валидаторски клиент",
+    "installationPath": "Място за инсталиране",
     "syncMode": "Sync Mode",
     "serviceId": "Service ID",
     "serviceCat": "Service Category",
@@ -761,34 +761,34 @@
     "chckServerDetails": "Please check your server details.",
     "serverRem": "Your server will be removed.",
     "removeServer": "REMOVE SERVER",
-    "removeServerText": "Are you sure you want to remove it?"
+    "removeServerText": "Сигурни ли сте, че искате да изтриете?"
   },
   "multiServer": {
-    "serverName": "Server Name",
+    "serverName": "Име на сървъра",
     "saveServer": "Save Server",
-    "ipOrHost": "IP or Hostname",
-    "port": "Port",
-    "userName": "Username",
-    "pass": "Password",
+    "ipOrHost": "IP или име на хост",
+    "port": "Порт",
+    "userName": "Потребителско име",
+    "pass": "Парола",
     "keyPath": "Key Path",
-    "login": "Login",
-    "conecting": "Connecting . . .",
-    "newPass": "New Password",
-    "EnterNewPass": "Enter New Password",
-    "verifyPass": "Verify Password",
+    "login": "Вход",
+    "conecting": "Свързване.",
+    "newPass": "Нова парола",
+    "EnterNewPass": "Въведете нова парола",
+    "verifyPass": "Потвърдете паролата",
     "chngResPass": "Change / Reset Password",
-    "chngPass": "Change Password",
-    "machineName": "Machine Name",
-    "chngAvatar": "Change Avatar",
+    "chngPass": "Промяна на парола",
+    "machineName": "Име на машината",
+    "chngAvatar": "Смяна на Аватар",
     "sshkeyMang": "SSH KEY MANAGEMENT",
     "createNewKey": "CREATE A NEW KEY",
     "addExistingKey": "ADD AN EXISTING KEY",
-    "loginFailed": "Login Failed",
-    "ok": "OK",
+    "loginFailed": "Неуспешно влизане",
+    "ok": "ОК",
     "genSshKey": "Generate SSH Key",
-    "keyType": "Key Type",
+    "keyType": "Тип на ключа",
     "selectKeyType": "Select Key Type",
-    "sshPass": "SSH Password",
+    "sshPass": "SSH парола",
     "unlockExpertOptions": "UNLOCK EXPERT OPTIONS",
     "optionalSshPass": "DEFINE AN OPTIONAL SSH PASSWORD",
     "savePath": "SAVE PATH",
@@ -796,9 +796,9 @@
     "bitAmount": "BIT AMOUNT",
     "useCostumCypher": "USE CUSTOM CYPHER",
     "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
-    "gen": "GENERATE",
+    "gen": "ОСНОВНИ",
     "saveServerCon": "SAVED SERVER CONNECTIONS",
-    "serch": "Search",
+    "serch": "Търсене",
     "serchFor": "Search for...",
     "addServer": "ADD A NEW SERVER CONNECTION",
     "serverAccMang": "Server Access Management"
@@ -806,10 +806,10 @@
   "oneClick": {
     "installedService": "INSTALLED SERVICES",
     "addOption": "ADDITIONAL OPTIONS",
-    "chooseNetwork": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "chooseNetwork": "ИЗБЕРЕТЕ СВОЯ СЛУЧАЙ НА УПОТРЕБА И МРЕЖА. СЛЕД КАТО ИЗБЕРЕТЕ И НАТИСНЕТЕ СТАРТ, ЩЕ БЪДЕ ИЗБРАН СЛУЧАЕН КЛИЕНТ, КОЙТО ДА ОБСЛУЖВА ВАШИЯ СЛУЧАЙ НА УПОТРЕБА",
     "oneClckInstall": "ONE-CLICK INSTALLATION",
     "setNodeClient": "Set how the Node clients where synchronize their blockchain data from",
-    "process": "Processing"
+    "process": "Обработване"
   },
   "serviceModal": {
     "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
