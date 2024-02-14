@@ -10,7 +10,6 @@ import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
-//import { NodeUpdates } from "./backend/NodeUpdates.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -25,7 +24,6 @@ const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serv
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
-//const nodeUpdates = new NodeUpdates(nodeConnection);
 stereumUpdater.initUpdater();
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
