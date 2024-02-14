@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
@@ -11,9 +12,15 @@ export const useNodeHeader = defineStore("nodeHeader", {
       showObolCharonWindow: false,
       //Service Modals end
 
-      //Update Panel begin
+      //Menu Modals begin
       displayUpdatePanel: false,
-      //Update Panel end
+      logoutModalIsActive: false,
+      reconnectModalIsActive: false,
+      supportModalIsActive: false,
+      notificationModalIsActive: false,
+      isStakeGuideActive: false,
+      isTutorialActive: false,
+      //Menu Modals end
       importBoxModel: "",
       passwordBoxModel: "",
       selectedValidatorFromNodeAlert: {},
@@ -24,7 +31,6 @@ export const useNodeHeader = defineStore("nodeHeader", {
       generatorPlugin: false,
       obolDashboard: false,
       continueForExistENR: false,
-      notificationModalIsActive: false,
       serverAccessManagement: false,
       distrubutedValidatorGenerator: false,
       deactivateBtnToWaitForLogs: false,
@@ -85,13 +91,48 @@ export const useNodeHeader = defineStore("nodeHeader", {
           this.showPrometheusWindow = false;
           this.showMevboostWindow = false;
           this.showObolCharonWindow = false;
+          this.displayUpdatePanel = false;
           break;
         default:
           console.error(`No modal associated with the service name: ${serviceName}`);
       }
     },
-    openUpdatePanel() {
-      this.displayUpdatePanel = !this.displayUpdatePanel;
+    setMenuModal(name) {
+      console.log(name);
+      switch (name) {
+        case "Available Update":
+          this.displayUpdatePanel = true;
+          break;
+        case "Logout":
+          this.logoutModalIsActive = true;
+          break;
+        case "Reconnect":
+          this.reconnectModalIsActive = true;
+          break;
+        case "Help":
+          this.supportModalIsActive = true;
+          break;
+        case "Notifications":
+          this.notificationModalIsActive = true;
+          break;
+        case "StakeGuide":
+          this.isStakeGuideActive = true;
+          break;
+        case "Tutorial":
+          this.isTutorialActive = true;
+          break;
+        case null:
+          this.displayUpdatePanel = false;
+          this.logoutModalIsActive = false;
+          this.reconnectModalIsActive = false;
+          this.supportModalIsActive = false;
+          this.notificationModalIsActive = false;
+          this.isStakeGuideActive = false;
+          this.isTutorialActive = false;
+          break;
+        default:
+          console.error("No modal");
+      }
     },
   },
 });

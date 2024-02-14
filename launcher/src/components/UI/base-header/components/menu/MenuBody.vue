@@ -38,7 +38,7 @@ const items = ref([
     name: "Available Update",
     icon: "/img/icon/header-icons/update-green.png",
     activeIcon: "/img/icon/header-icons/update-blue.png",
-    action: updateModalHandler,
+    action: updatePanelHandler,
   },
   {
     name: "Settings",
@@ -51,15 +51,6 @@ const items = ref([
     action: logoutModalHandler,
   },
 ]);
-
-// Component imports
-const updatePanel = UpdatePanel;
-const logoutModal = LogoutModal;
-const reconnectModal = ReconnectModal;
-const supportModal = SupportModal;
-const notifModal = NotifModal;
-const tutorialGuide = TutorialGuide;
-const stakeGuide = StakeGuide;
 
 // Using the stores
 const footerStore = useFooter();
@@ -76,9 +67,17 @@ const supportModalIsActive = ref(false);
 // ... other reactive states
 
 // Computed properties
-const isUpdateAvailable = computed(() => nodeHeaderStore.isUpdateAvailable);
-// ... other computed properties using nodeHeaderStore, servicesStore, etc.
+const isUpdateAvailable = computed(() => headerStore.isUpdateAvailable);
 
+//METHODS
+
+const eventHandler = (action) => {
+  if (typeof action === "function") {
+    action();
+  } else {
+    router.push(path);
+  }
+};
 // Methods are now functions
 const updateConfirmationHandler = async () => {
   // ... your logic here
@@ -108,8 +107,8 @@ const reconnect = async () => {
   // ... your logic here
 };
 
-const updateModalHandler = () => {
-  // ... your logic here
+const updatePanelHandler = () => {
+  headerStore.displayUpdatePanel = true;
 };
 
 const removeUpdateModal = () => {

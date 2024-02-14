@@ -27,6 +27,27 @@
     <PrometheusModal v-if="headerStore.showPrometheusWindow" @close-window="closeServiceBrowser" />
     <MevboostModal v-if="headerStore.showMevboostWindow" @close-window="closeServiceBrowser" />
     <ObolModal v-if="headerStore.showObolCharonWindow" @close-window="closeServiceBrowser" />
+    <UpdatePanel
+      v-if="headerStore.displayUpdatePanel"
+      ref="UpdatePanelComp"
+      @update-confirm="updateConfirmationHandler"
+      @run-update="runUpdate"
+      @run-os-update="runOsUpdate"
+      @click-outside="closeServiceBrowser"
+    />
+
+    <ReconnectModal
+      v-if="!footerStore.stereumStatus"
+      @open-logout="logoutModalHandler"
+      @confirm-reconnect="reconnect"
+    />
+
+    <LogoutModal v-if="headerStore.logoutModalIsActive" @close-window="closeMenuWindow" @confrim-logout="loggingOut" />
+
+    <SupportModal v-if="headerStore.supportModalIsActive" @close-window="closeMenuWindow" />
+    <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
+    <TutorialGuide v-if="headerStore.isTutorialActive" />
+    <StakeGuide v-if="headerStore.stakeGuideActive" />
   </div>
 </template>
 <script setup>
@@ -39,16 +60,29 @@ import SsvModal from "../UI/services-modal/SsvModal.vue";
 import PrometheusModal from "../UI/services-modal/PrometheusModal.vue";
 import MevboostModal from "../UI/services-modal/MevboostModal.vue";
 import ObolModal from "../UI/services-modal/ObolModal.vue";
+import UpdatePanel from "../UI/base-header/components/modals/UpdatePanel.vue";
+import ReconnectModal from "../UI/base-header/components/modals/ReconnectModal.vue";
+import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
+import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
+import NotifModal from "../UI/base-header/components/modals/NotifModal.vue";
+import TutorialGuide from "../UI/the-node/TutorialGuide.vue";
+import StakeGuide from "../UI/the-node/StakeGuide.vue";
+import { useUpdateCheck } from "@/composables/version";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useRouter } from "vue-router";
 import { useServers } from "@/store/servers";
-
+import { useFooter } from "@/store/theFooter";
 const router = useRouter();
 const serverStore = useServers();
 const headerStore = useNodeHeader();
+const footerStore = useFooter();
 
 const closeServiceBrowser = () => {
   headerStore.setServiceModal(null);
+};
+
+const closeMenuWindow = () => {
+  headerStore.setMenuModal(null);
 };
 </script>
 

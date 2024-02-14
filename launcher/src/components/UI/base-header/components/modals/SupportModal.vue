@@ -1,6 +1,9 @@
 <template>
-  <div class="support-modal-parent">
-    <div class="modal-opacity" @click="$emit('closeMe')"></div>
+  <div class="w-full h-full absolute inset-0 flex justify-center items-center">
+    <div
+      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
+      @click="$emit('closeWindow')"
+    ></div>
     <div class="support-modal-content">
       <div class="content">
         <support-modal-box
@@ -100,9 +103,7 @@ export default {
   border: 4px solid rgb(171, 170, 170);
   z-index: 312;
   opacity: 1;
-  position: absolute;
-  top: 13%;
-  left: 18%;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -1,6 +1,9 @@
 <template>
-  <div class="logout-modal-parent">
-    <div class="modal-opacity" @click="$emit('closeMe')"></div>
+  <div class="w-full h-full absolute inset-0 flex justify-center items-center">
+    <div
+      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
+      @click="$emit('closeWindow')"
+    ></div>
     <div class="logout-modal-content">
       <div class="title-box">
         <span>{{ $t("logOutModal.logOutTitle") }}</span>
@@ -43,9 +46,7 @@
   height: 60%;
   border-radius: 75px;
   border: 3px solid #bfbfbf;
-  position: absolute;
-  top: 10%;
-  left: 18%;
+
   background-color: #bf3a3a;
   display: flex;
   flex-direction: column;
