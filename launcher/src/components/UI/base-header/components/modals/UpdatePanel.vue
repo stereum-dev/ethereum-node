@@ -37,15 +37,15 @@
                       class="col-start-4 col-span-3 row-start-2 row-span-1 text-[10px] flex justify-center items-center"
                     >
                       <div
-                        v-if="!nodeHeaderStore.searchingForOsUpdates || nodeHeaderStore.osUpdating"
+                        v-if="!headerStore.searchingForOsUpdates || headerStore.osUpdating"
                         class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-2"
                       >
                         <img
-                          v-if="nodeHeaderStore.searchingForOsUpdates && !nodeHeaderStore.osUpdating"
+                          v-if="headerStore.searchingForOsUpdates && !headerStore.osUpdating"
                           class="w-5 h-5 spinner mr-2"
                           src="/img/icon/control/loading_circle.gif"
                         />
-                        <span v-else>{{ nodeHeaderStore.osVersionLatest ? nodeHeaderStore.osVersionLatest : 0 }}</span>
+                        <span v-else>{{ headerStore.osVersionLatest ? headerStore.osVersionLatest : 0 }}</span>
                       </div>
                     </div>
                   </div>
@@ -68,7 +68,7 @@
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       :class="{
                         'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                          nodeHeaderStore.osVersionLatest === 0 || nodeHeaderStore.osUpdating,
+                          headerStore.osVersionLatest === 0 || headerStore.osUpdating,
                       }"
                       @click="$emit('runOsUpdate')"
                     >
@@ -77,9 +77,9 @@
                   </div>
                   <!-- <div
                     v-if="
-                      nodeHeaderStore.searchingForOsUpdates &&
-                      nodeHeaderStore.searchingForOsUpdatesManual &&
-                      !nodeHeaderStore.osUpdating
+                      headerStore.searchingForOsUpdates &&
+                      headerStore.searchingForOsUpdatesManual &&
+                      !headerStore.osUpdating
                     "
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
                   >
@@ -123,7 +123,7 @@
                       <span>{{ $t("updatePanel.current") }}:</span>
                     </div>
                     <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
-                      <span>{{ nodeHeaderStore.stereumUpdate.current }}</span>
+                      <span>{{ headerStore.stereumUpdate.current }}</span>
                     </div>
                   </div>
                   <div class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center">
@@ -131,7 +131,7 @@
                       <span>{{ $t("updatePanel.latest") }}:</span>
                     </div>
                     <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
-                      <span>{{ nodeHeaderStore.stereumUpdate?.version }}</span>
+                      <span>{{ headerStore.stereumUpdate?.version }}</span>
                     </div>
                   </div>
                   <div
@@ -147,9 +147,9 @@
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       :class="{
                         'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                          !checkStereumUpdate || nodeHeaderStore.updating,
+                          !checkStereumUpdate || headerStore.updating,
                       }"
-                      @click="$emit('runUpdate', nodeHeaderStore.stereumUpdate)"
+                      @click="$emit('runUpdate', headerStore.stereumUpdate)"
                     >
                       <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
                     </div>
@@ -163,11 +163,11 @@
                       <img class="w-2 h-2" src="/img/icon/header-icons/update-green.png" alt="icon" />
                     </div>
                     <span class="text-[8px] text-gray-200 font-semibold ml-2"
-                      >{{ nodeHeaderStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
+                      >{{ headerStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
                     >
                   </div>
                   <div
-                    v-if="nodeHeaderStore.searchingForUpdates && !checkStereumUpdate"
+                    v-if="headerStore.searchingForUpdates && !checkStereumUpdate"
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
                   >
                     <span class="circle pulse mr-2"></span>
@@ -216,7 +216,7 @@
                     class="w-full h-[30px] flex justify-between items-center p-1 mx-auto bg-[#334d4d] text-gray-300 font-semibold text-md"
                   >
                     <div
-                      v-if="item.running || nodeHeaderStore.updating"
+                      v-if="item.running || headerStore.updating"
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
                     >
                       <img class="w-5" src="/img/icon/node-icons/download_disabled.png" alt="icon" />
@@ -245,7 +245,7 @@
                 class="w-2/3 h-full flex justify-evenly items-center bg-[#334d4d] border border-gray-500 rounded-sm text-gray-400 text-sm font-semibold hover:bg-[#243535] transition-colors cursor-pointer active:scale-95"
                 :class="{
                   'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                    (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || nodeHeaderStore.updating,
+                    (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || headerStore.updating,
                 }"
                 @click.prevent.stop="updateConfirm"
               >
@@ -280,7 +280,7 @@ const show = ref(false);
 //Stores
 const serviceStore = useServices();
 const serverStore = useServers();
-const nodeHeaderStore = useNodeHeader();
+const headerStore = useNodeHeader();
 
 //Data
 const stereumApp = ref({
@@ -300,7 +300,7 @@ const onOff = computed(() => {
 });
 
 watchEffect(() => {
-  if (nodeHeaderStore.displayUpdatePanel) {
+  if (headerStore.displayUpdatePanel) {
     setTimeout(() => {
       show.value = true;
     });
@@ -320,7 +320,7 @@ onMounted(async () => {
 const hidePanel = () => {
   show.value = false;
   setTimeout(() => {
-    nodeHeaderStore.displayUpdatePanel = false;
+    headerStore.displayUpdatePanel = false;
   }, 500);
 };
 
@@ -332,8 +332,8 @@ const searchUpdate = () => {
 };
 
 const checkStereumUpdate = computed(() => {
-  if (nodeHeaderStore.stereumUpdate && nodeHeaderStore.stereumUpdate.version)
-    return nodeHeaderStore.stereumUpdate.commit != nodeHeaderStore.stereumUpdate.current_commit ? true : false;
+  if (headerStore.stereumUpdate && headerStore.stereumUpdate.version)
+    return headerStore.stereumUpdate.commit != headerStore.stereumUpdate.current_commit ? true : false;
   return false;
 });
 
@@ -352,38 +352,38 @@ const getSettings = async () => {
 };
 
 const openOsUpdatePanel = () => {
-  nodeHeaderStore.displayUpdatePanel = false;
+  headerStore.displayUpdatePanel = false;
   serverStore.isServerAccessManagementActive = true;
 };
 
 const searchOsUpdates = async (manual = false) => {
-  if (nodeHeaderStore.osUpdating) {
-    nodeHeaderStore.searchingForOsUpdates = false;
-    nodeHeaderStore.searchingForOsUpdatesManual = false;
+  if (headerStore.osUpdating) {
+    headerStore.searchingForOsUpdates = false;
+    headerStore.searchingForOsUpdatesManual = false;
     return;
   }
-  if (nodeHeaderStore.searchingForOsUpdates) {
+  if (headerStore.searchingForOsUpdates) {
     return;
   }
-  nodeHeaderStore.searchingForOsUpdates = true;
+  headerStore.searchingForOsUpdates = true;
   if (manual) {
-    nodeHeaderStore.searchingForOsUpdatesManual = true;
+    headerStore.searchingForOsUpdatesManual = true;
   }
   await getUpdatablePackagesCount();
-  nodeHeaderStore.searchingForOsUpdates = false;
-  nodeHeaderStore.searchingForOsUpdatesManual = false;
+  headerStore.searchingForOsUpdates = false;
+  headerStore.searchingForOsUpdatesManual = false;
 };
 
 const getUpdatablePackagesCount = async () => {
   try {
     const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
     const numPackages = Number(packagesCount);
-    nodeHeaderStore.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-    nodeHeaderStore.isOsUpdateAvailable = nodeHeaderStore.osVersionLatest ? true : false;
-    return nodeHeaderStore.osVersionLatest;
+    headerStore.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
+    headerStore.isOsUpdateAvailable = headerStore.osVersionLatest ? true : false;
+    return headerStore.osVersionLatest;
   } catch (error) {
-    nodeHeaderStore.osVersionLatest = 0;
-    nodeHeaderStore.isOsUpdateAvailable = false;
+    headerStore.osVersionLatest = 0;
+    headerStore.isOsUpdateAvailable = false;
     console.log(error);
   }
 };
@@ -398,8 +398,25 @@ const getOsVersion = async () => {
   }
 };
 
-const updateConfirm = () => {
-  emit("updateConfirm");
+const updateConfirm = async () => {
+  let seconds = 0;
+  try {
+    headerStore.refresh = false;
+    headerStore.updating = true;
+    headerStore.newUpdates.forEach((update) => (update.running = true));
+    seconds = await ControlService.runAllUpdates({
+      commit: this.stereumUpdate.commit,
+    });
+  } catch (err) {
+    console.log("Running All Updates Failed: ", err);
+  } finally {
+    headerStore.updating = false;
+    serviceStore.versions = {};
+    serviceStore.newUpdates = [];
+    headerStore.refresh = true;
+    // search for updates afterwards
+    await ControlService.restartServices(seconds);
+  }
 };
 </script>
 <style scoped>

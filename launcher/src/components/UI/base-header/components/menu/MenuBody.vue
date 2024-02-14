@@ -7,38 +7,21 @@
 //
 <script setup>
 import SingleMenu from "./SingleMenu.vue";
-import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import ControlService from "@/store/ControlService";
-import UpdatePanel from "../modals/UpdatePanel.vue";
-import LogoutModal from "../modals/LogoutModal.vue";
-import ReconnectModal from "../modals/ReconnectModal.vue";
-import SupportModal from "../modals/SupportModal.vue";
-import NotifModal from "../modals/NotifModal.vue";
-import TutorialGuide from "../../../the-node/TutorialGuide.vue";
-import StakeGuide from "../../../the-node/StakeGuide.vue";
-import { useUpdateCheck } from "@/composables/version";
-import { useFooter } from "@/store/theFooter";
-import { useNodeHeader } from "@/store/nodeHeader";
-import { useServices } from "@/store/services";
-import { useServers } from "@/store/servers";
+import { ref } from "vue";
 
 const items = ref([
   {
     name: "Help",
     icon: "/img/icon/header-icons/question-mark.png",
-    action: supportModalOpen,
   },
   {
     name: "Notifications",
     icon: "/img/icon/header-icons/megaphone9.png",
-    action: notifModalOpen,
   },
   {
     name: "Available Update",
     icon: "/img/icon/header-icons/update-green.png",
     activeIcon: "/img/icon/header-icons/update-blue.png",
-    action: updatePanelHandler,
   },
   {
     name: "Settings",
@@ -48,91 +31,6 @@ const items = ref([
   {
     name: "Logout",
     icon: "/img/icon/header-icons/exit9.png",
-    action: logoutModalHandler,
   },
 ]);
-
-// Using the stores
-const footerStore = useFooter();
-const headerStore = useNodeHeader();
-const serviceStore = useServices();
-const serverStore = useServers();
-const router = useRouter();
-
-// Reactive data
-const test = ref(true);
-const logoutModalIsActive = ref(false);
-const reconnectModalIsActive = ref(false);
-const supportModalIsActive = ref(false);
-// ... other reactive states
-
-// Computed properties
-const isUpdateAvailable = computed(() => headerStore.isUpdateAvailable);
-
-//METHODS
-
-const eventHandler = (action) => {
-  if (typeof action === "function") {
-    action();
-  } else {
-    router.push(path);
-  }
-};
-// Methods are now functions
-const updateConfirmationHandler = async () => {
-  // ... your logic here
-};
-
-const runUpdate = async (item) => {
-  // ... your logic here
-};
-
-const runOsUpdate = async () => {
-  // ... your logic here
-};
-
-const clickToCancelLogout = () => {
-  logoutModalIsActive.value = false;
-};
-
-const logoutModalHandler = () => {
-  logoutModalIsActive.value = true;
-};
-
-const loggingOut = async () => {
-  // ... your logic here
-};
-
-const reconnect = async () => {
-  // ... your logic here
-};
-
-const updatePanelHandler = () => {
-  headerStore.displayUpdatePanel = true;
-};
-
-const removeUpdateModal = () => {
-  // ... your logic here
-};
-
-const notifModalOpen = () => {
-  // ... your logic here
-};
-
-const notifModalClose = () => {
-  // ... your logic here
-};
-
-const supportModalOpen = () => {
-  // ... your logic here
-};
-
-const supportModalClose = () => {
-  // ... your logic here
-};
-
-// Lifecycle hooks (like mounted)
-onMounted(async () => {
-  // ... your logic here
-});
 </script>

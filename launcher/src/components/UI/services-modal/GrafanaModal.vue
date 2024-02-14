@@ -51,6 +51,7 @@ const headerStore = useNodeHeader();
 
 const grafanaService = ref({});
 const isGrafanaAvailable = ref(false);
+const refreshStereum = ref(false);
 
 onMounted(() => {
   filterGrafanaService();
@@ -76,6 +77,11 @@ const openGitHub = () => {
 const openLocalApp = () => {
   let url = grafanaService.value.linkUrl;
   window.open(url, "_blank");
+};
+
+const stereumRefresher = () => {
+  refreshStereum.value = false;
+  window.location.reload();
 };
 </script>
 

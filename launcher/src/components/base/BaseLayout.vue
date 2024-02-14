@@ -29,8 +29,7 @@
     <ObolModal v-if="headerStore.showObolCharonWindow" @close-window="closeServiceBrowser" />
     <UpdatePanel
       v-if="headerStore.displayUpdatePanel"
-      ref="UpdatePanelComp"
-      @update-confirm="updateConfirmationHandler"
+      ref="UpdatePanelCompRef"
       @run-update="runUpdate"
       @run-os-update="runOsUpdate"
       @click-outside="closeServiceBrowser"
@@ -51,6 +50,7 @@
   </div>
 </template>
 <script setup>
+import { ref, onMounted } from "vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
 import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
@@ -72,10 +72,19 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useRouter } from "vue-router";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
+import ControlService from "@/store/ControlService";
+import { useServices } from "@/store/services.js";
+
 const router = useRouter();
 const serverStore = useServers();
 const headerStore = useNodeHeader();
 const footerStore = useFooter();
+const serviceStore = useServices();
+const UpdatePanelCompRef = ref(null);
+
+onMounted(() => {
+  useUpdateCheck();
+});
 
 const closeServiceBrowser = () => {
   headerStore.setServiceModal(null);
@@ -83,6 +92,68 @@ const closeServiceBrowser = () => {
 
 const closeMenuWindow = () => {
   headerStore.setMenuModal(null);
+};
+
+const runUpdate = async (item) => {
+  let seconds = 0;
+  try {
+    headerStore.refresh = false;
+    item.running = true;
+    headerStore.updating = true;
+    if (item && item.id) {
+      seconds = await ControlService.updateServices({ services: item.id });
+    } else if (item && item.commit) {
+      seconds = await ControlService.updateStereum({ commit: item.commit });
+    }
+  } catch (err) {
+    console.log(JSON.stringify(item) + "\nUpdate Failed", err);
+  } finally {
+    headerStore.refresh = true;
+    serviceStore.newUpdates = serviceStore.newUpdates.filter((u) => {
+      if (item && item.id) {
+        return u.id != item.id;
+      } else if (item && item.commit) {
+        return u.commit != item.commit;
+      }
+    });
+    headerStore.updating = false;
+    // Search for updates afterwards
+    await ControlService.restartServices(seconds);
+  }
+};
+const runOsUpdate = async () => {
+  try {
+    headerStore.osUpdating = true;
+    await ControlService.updateOS();
+  } catch (err) {
+    console.log("OS Update Failed", err);
+  } finally {
+    headerStore.osUpdating = false;
+    headerStore.searchingForOsUpdates = false;
+
+    // Accessing the ref's component methods and properties
+    if (UpdatePanelCompRef.value) {
+      UpdatePanelCompRef.value.osUpdating = false;
+      UpdatePanelCompRef.value.searchingForOsUpdates = false;
+      await UpdatePanelCompRef.value.searchOsUpdates();
+    }
+  }
+};
+
+const loggingOut = async () => {
+  serverStore.connectingAnimActive = false;
+  headerStore.refresh = false;
+  await ControlService.logout();
+  router.push("/login").then(() => {
+    location.reload();
+  });
+};
+
+const reconnect = async () => {
+  headerStore.reconnecting = true;
+  await ControlService.reconnect();
+  headerStore.reconnecting = false;
+  headerStore.refresh = true;
 };
 </script>
 
