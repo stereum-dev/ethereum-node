@@ -414,7 +414,7 @@
   "blockProduct": {
     "status": "STATUS",
     "assignSlot": "Assigned Slot",
-    "noAsign": "Not Assigned",
+    "noAsign": "Не е зададен",
     "nxtBlck": "Next Block Proposal in:"
   },
   "disableStake": {
@@ -429,16 +429,16 @@
     "status": "STATUS",
     "particip": "PARTICIPATING",
     "noParticip": "NOT PARTICIPATING",
-    "start": "Start",
-    "end": "End",
+    "start": "Старт",
+    "end": "Край",
     "newSync": "New Sync Committee in",
-    "hours": "hours"
+    "hours": "часове"
   },
   "theAttes": {
     "lastAttest": "Last Attestation Slot:",
     "keyStatus": "Key Status:",
     "attest": "ATTESTING",
-    "pending": "PENDING",
+    "pending": "ЧАКАЩО",
     "noKey": "CHOOSE A KEY",
     "nxtAttest": "next Attestation Slot:",
     "slotRem": "Slots remaining",
@@ -449,19 +449,19 @@
     "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
     "messageOff": "Your node will go offline!",
     "messageOn": "Your node will go online!",
-    "turnOn": "turn on",
-    "turnOff": "turn off",
-    "close": "click outside to close"
+    "turnOn": "включи",
+    "turnOff": "изключи",
+    "close": "кликнете извън прозореца за прекратите процеса"
   },
   "nodeAlert": {
     "lowSpace": "LOW STORAGE",
     "use": "USAGE",
-    "noFee": "no fee recipient",
+    "noFee": "няма получател на таксата",
     "stereumUpt": "STEREUM UPDATE",
-    "clkFee": "Service Settings",
+    "clkFee": "Настройки на услугата",
     "clkUpdate": "Click to open update panel",
-    "sync": "Synchronization Error",
-    "taskFail": "Task Failed",
+    "sync": "Грешка при синхронизиране",
+    "taskFail": "Задачата е неуспешна",
     "stats": "STATUS: OPEN",
     "clientService": "CLIENT / SERVICE"
   },
@@ -470,15 +470,15 @@
     "sync": "SYNCHRONISATION",
     "gen": "GENESIS",
     "chkSync": "CHECKPOINT SYNC",
-    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cont": "CONTINUE",
+    "syncMsg": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
+    "cont": "НАПРЕД",
     "resync": "RESYNC",
-    "close": "click outside to close"
+    "close": "кликнете извън прозореца за прекратите процеса"
   },
   "resyncSeparateService": {
     "message": "by initiating resync you will delete the database of",
     "msgPartTwo": " source will be used for resynchronization",
-    "resync": "resync",
+    "resync": "повторно синхронизиране",
     "close": "click outside to close"
   },
   "notifModal": {
@@ -600,14 +600,14 @@
   "headerBtn": {
     "help": "help",
     "notif": "Management of notification channels",
-    "availableUpdt": "New update is available",
-    "updtPan": "update panel",
-    "setting": "Stereum settings",
-    "logOutBtn": "Log out",
-    "rem": "REMOVE",
-    "node": "NODE",
-    "control": "CONTROL",
-    "staking": "STAKING"
+    "availableUpdt": "Има нова актуализация",
+    "updtPan": "обновяване на панела",
+    "setting": "Стереумни настройки",
+    "logOutBtn": "Излез от профила си",
+    "rem": "ПРЕМАХВАНЕ",
+    "node": "НОД",
+    "control": "КОНТРОЛ",
+    "staking": "СТАКИНГ"
   },
   "switchNetwork": {
     "message": "This is the current network, you can click to select another network"
@@ -615,17 +615,17 @@
   "searchOption": {
     "switchShow": "Switch between showing the public key & your picked custom name",
     "group": "Group multiple key(s)",
-    "searchFilter": "Search & filters"
+    "searchFilter": "Филтри за търсене"
   },
   "serverManagement": {
     "serverAccMange": "Server Access Management",
-    "serverNam": "Server Name",
-    "ipHOST": "IP or HOST NAME",
-    "userNam": "User Name",
-    "machineNam": "Machine Name",
-    "port": "Port",
-    "pass": "Password",
-    "chngPass": "Change Password",
+    "serverNam": "Име на сървъра",
+    "ipHOST": "IP / ИМЕ НА ХОСТ",
+    "userNam": "Потребителско име",
+    "machineNam": "Име на машината",
+    "port": "Порт",
+    "pass": "Парола",
+    "chngPass": "Промяна на парола",
     "passmessage": "Please enter a password to change it",
     "confirmPass": "please enter the password again",
     "confirmPassMessage": "confirm your password",
@@ -649,12 +649,12 @@
     "turnOn": "Turn on the service",
     "restart": "Restart the service",
     "pending": "Service is pending",
-    "settings": "service settings",
+    "settings": "настройки на услугата",
     "logs": "open logs",
     "docs": "open docs"
   },
   "serviceLay": {
-    "srvice": "service"
+    "srvice": "услуга"
   },
   "clientButtons": {
     "turnOn": "Turn the service on",
