@@ -10,7 +10,7 @@ import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
-import { NodeUpdates } from "./backend/NodeUpdates.js";
+//import { NodeUpdates } from "./backend/NodeUpdates.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -25,8 +25,7 @@ const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serv
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
-const nobleupgrade = new NodeUpdates(nodeConnection);
-const nodeUpdates = new NodeUpdates(NodeConnection);
+//const nodeUpdates = new NodeUpdates(nodeConnection);
 stereumUpdater.initUpdater();
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
@@ -256,27 +255,27 @@ ipcMain.handle("manageServiceState", async (event, args) => {
 
 ipcMain.handle("runAllUpdates", async (event, args) => {
   app.showExitPrompt = true;
-  const returnValue = await nodeUpdates.runAllUpdates(args.commit);
+  const returnValue = await nodeConnection.nodeUpdates.runAllUpdates(args.commit);
   app.showExitPrompt = false;
   return returnValue;
 });
 
 ipcMain.handle("updateServices", async (event, args) => {
   app.showExitPrompt = true;
-  let seconds = await nodeUpdates.updateServices(args.services);
+  let seconds = await nodeConnection.nodeUpdates.updateServices(args.services);
   app.showExitPrompt = false;
   return seconds;
 });
 
 ipcMain.handle("updateStereum", async (event, args) => {
   app.showExitPrompt = true;
-  let seconds = await nodeUpdates.updateStereum(args.commit);
+  let seconds = await nodeConnection.nodeUpdates.updateStereum(args.commit);
   app.showExitPrompt = false;
   return seconds;
 });
 
 ipcMain.handle("restartServices", async (event, args) => {
-  await nodeUpdates.restartServices(args);
+  await nodeConnection.nodeUpdates.restartServices(args);
 });
 
 ipcMain.handle("restartService", async (event, args) => {
@@ -284,31 +283,31 @@ ipcMain.handle("restartService", async (event, args) => {
 });
 
 ipcMain.handle("checkUpdates", async () => {
-  return await nodeUpdates.checkUpdates();
+  return await nodeConnection.nodeUpdates.checkUpdates();
 });
 
 ipcMain.handle("getCurrentOsVersion", async () => {
-  return await nodeUpdates.getCurrentOsVersion();
+  return await nodeConnection.nodeUpdates.getCurrentOsVersion();
 });
 
 ipcMain.handle("getCountOfUpdatableOSUpdate", async () => {
-  return await nodeUpdates.getCountOfUpdatableOSUpdate();
+  return await nodeConnection.nodeUpdates.getCountOfUpdatableOSUpdate();
 });
 
 ipcMain.handle("updateOS", async () => {
-  return await nodeUpdates.updateOS();
+  return await nodeConnection.nodeUpdates.updateOS();
 });
 
 ipcMain.handle("updatePackage", async (event, args) => {
-  return await nodeUpdates.updatePackage(args);
+  return await nodeConnection.nodeUpdates.updatePackage(args);
 });
 
 ipcMain.handle("getUpgradeablePackages", async () => {
-  return await nodeUpdates.getUpgradeablePackages();
+  return await nodeConnection.nodeUpdates.getUpgradeablePackages();
 });
 
 ipcMain.handle("upgradeToNoble", async () => {
-  return await nobleupgrade.upgrade();
+  return await nodeConnection.nodeUpdates.upgrade();
 });
 
 ipcMain.handle("getCurrentStereumVersion", async () => {
@@ -571,7 +570,6 @@ ipcMain.handle("downloadObolBackup", async (event, args) => {
 
 ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
-
 });
 
 // Scheme must be registered before the app is ready
