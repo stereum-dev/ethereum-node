@@ -98,7 +98,6 @@ export const useNodeHeader = defineStore("nodeHeader", {
       }
     },
     setMenuModal(name) {
-      console.log(name);
       switch (name) {
         case "Available Update":
           this.displayUpdatePanel = true;
