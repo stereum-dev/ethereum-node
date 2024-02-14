@@ -492,10 +492,10 @@
     "close": "хаахын тулд гадна талд товшино уу",
     "dash": "Dashboard",
     "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
-    "goTo": "Go to",
-    "machinename": "Machine Name",
-    "apikey": "API Key",
-    "apply": "APPLY"
+    "goTo": "Руу орох",
+    "machinename": "Машины Нэр",
+    "apikey": "API Түлхүүр",
+    "apply": "ХЭРЭГЛЭХ"
   },
   "replacePanel": {
     "client": "Клайнт",
@@ -514,26 +514,26 @@
     "nodeConf": "Нөүдийн тохиргоо"
   },
   "importingSyncing": {
-    "message": "Set how the Node clients will synchronize their blockchain data.",
+    "message": "Нөүд клайнтууд блокчейн өгөгдлөө хэрхэн синхрончлохыг тохируулна уу.",
     "client": "Клайнтууд",
     "syncSrc": "SYNC ЭХ ҮҮСВЭР"
   },
   "importingVerify": {
-    "pluginInst": "Plugins To Install",
+    "pluginInst": "Суулгах Плагинс-ууд",
     "cat": "ангилал",
     "path": "зам"
   },
   "uploadConfig": {
     "message": "Энэ сонголтоор та өөрийн нөүдийн тохиргоог сэргээхийн тулд ашиглагдаж байсан Stereum тохиргооны файлыг импортлох боломжтой.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
+    "selectConfig": "СТЕРЕУМ ТОХИРГООНЫ ФАЙЛЫГ СОНГОЖ ОРУУЛНА УУ"
   },
   "fastSync": {
-    "header": "Set how the Node clients will synchronize their blockchain data.",
+    "header": "Нөүд клайнтууд блокчейн өгөгдлөө хэрхэн синхрончлохыг тохируулна уу.",
     "client": "Клайнтууд",
     "syncSrc": "SYNC ЭХ ҮҮСВЭР",
     "gen": "GENESIS",
     "sync": "Syncs from genesis",
-    "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
+    "message": "Нөүдийг суулгасны дараа таны клайнтууд таны сонгосон синхрончлолын эх үүсвэртэй синк хийж эхэлнэ. Энэ үйл явц хэдэн цаг эсвэл өдрөөр үргэлжилж болно. Ихэвчлэн Consensus Client эхлээд синхрончлогддог ба дараа нь Execution Client."
   },
   "deleteModal": {
     "rem": "Устгах",
@@ -545,7 +545,7 @@
   },
   "sliderTutorial": {
     "visitUrl": "Вэбсайтаар зочилох",
-    "becomeValidator": "Click on “BECOME A VALIDATOR”",
+    "becomeValidator": "“ВАЛИДАТОР БОЛОХ” дээр товшино уу",
     "proofStake": "Read through Proof of stake and click on “CONTINUE”",
     "deposit": "Read through the deposit and click on “I ACCEPT”",
     "usingTerminal": "Read through Using the terminal and click on “I ACCEPT”",
@@ -663,142 +663,142 @@
     "pending": "Service is pending",
     "settings": "Access the settings of the service",
     "logs": "Open the logs of the service",
-    "docs": "Open the documentation of the service in your browser",
-    "removeLock": "Remove Lock files of the service",
-    "pruning": "Prune the service database",
-    "resync": "Resync the service from a selected source"
+    "docs": "Сервисийн лавлахыг хөтөч дээр нээх",
+    "removeLock": "Сервисийн Lock файлыг устгах",
+    "pruning": "Сервисийн өгөглдийн санг багасгах",
+    "resync": "Сонгосон эх сурвалжаас сервисийг дахин синк хийх"
   },
   "clientLay": {
-    "client": "client",
-    "keyMsg": "key(s) imported",
-    "syncStatus": "sync status:"
+    "client": "клайнт",
+    "keyMsg": "түлхүүр(үүд) импортлогдсон",
+    "syncStatus": "синк статус:"
   },
   "serverDetails": {
-    "machineName": "Machine Name",
-    "machineIp": "Machine IP Address"
+    "machineName": "Машины Нэр",
+    "machineIp": "Машины IP хаяг"
   },
   "changesBox": {
-    "clickToCancel": "Click here to cancel this change"
+    "clickToCancel": "Энэ өөрчлөлтийг цуцлахын тулд энд дарна уу"
   },
   "editClientLay": {
-    "clkEdit": "Click to edit your service"
+    "clkEdit": "Сервисийг хянан засахын тулд товшино уу"
   },
   "generalMenu": {
-    "modify": "modify",
-    "connection": "connection",
-    "switchClient": "switch client",
-    "delete": "delete",
-    "service": "service",
-    "info": "info"
+    "modify": "өөрчлөх",
+    "connection": "холболт",
+    "switchClient": "клайнтийг солих",
+    "delete": "устгах",
+    "service": "сервис",
+    "info": "мэдээлэл"
   },
   "networkDetails": {
-    "currIs": "The current network is",
-    "currentNet": "Current Network"
+    "currIs": "Одоогийн сүлжээ бол",
+    "currentNet": "Одоогийн сүлжээ"
   },
   "changeSect": {
-    "clkConfirm": "Click here to confirm change(s)"
+    "clkConfirm": "Өөрчлөлт(үүд)-ийг баталгаажуулахын тулд энд дарна уу"
   },
   "sidebarSect": {
-    "toNode": "Return to the Node Page",
-    "toEdit": "Go to the Edit Node Page",
-    "setchNet": "Switch Network in the configuration of the Node",
-    "nukTheNud": "Nuke the Stereum Node and all its services",
-    "nukNod": "Nuke Node",
-    "trnOn": "Turn your node on",
-    "trnOff": "Turn your node off",
-    "expNode": "Export your Node Configuration"
+    "toNode": "Нөүд Хуудас руу буцах",
+    "toEdit": "Нөүд Хуудасны хянан засварлах руу очно уу",
+    "setchNet": "Нөүдийн тохиргоон дах Сүлжээг солих",
+    "nukTheNud": "Стереум Нөүд болон бүх сервисүүдийг устгах",
+    "nukNod": "Нөүдийг устгах",
+    "trnOn": "Нөүдийг асаах",
+    "trnOff": "Нөүдийг унтраах",
+    "expNode": "Нөүдийн Тохиргоог экспортлох"
   },
   "customAnim": {
-    "processing": "Processing"
+    "processing": "Боловсруулж байна"
   },
   "customFooter": {
-    "back": "BACK",
-    "next": "NEXT"
+    "back": "БУЦАХ",
+    "next": "ДАРААГИЙНХ"
   },
   "configDetails": {
-    "addConfig": "Add Config"
+    "addConfig": "Тохиргоо нэмэх"
   },
   "editBody": {
-    "executionClient": "Execution Client",
-    "consensusClient": "Consensus Client",
-    "validator": "Validator"
+    "executionClient": "Execution клайнт",
+    "consensusClient": "Consensus клайнт",
+    "validator": "Валидатор"
   },
   "editModals": {
-    "noAvailService": "There is no available service",
-    "executionClients": "Execution Clients",
-    "consensusClients": "Consensus Clients",
-    "validatorClients": "Validator Clients",
-    "installationPath": "Installation Path",
-    "syncMode": "Sync Mode",
-    "serviceId": "Service ID",
-    "serviceCat": "Service Category",
-    "modifyConnection": "Modify Connection",
-    "confirm": "Confirm",
-    "clckOutside": "Click outside to close",
-    "switchNetwork": "Switch Network",
-    "selectNetwork": "Select a network to replace the",
-    "switchTo": "Switch To",
-    "trnOn": "Turn on",
-    "trnOff": "Turn off",
-    "selectClient": "Select a Client From List",
-    "switchClient": "switch client",
-    "selectNet": "Select Network"
+    "noAvailService": "Бололцоотой сервис байхгүй байна",
+    "executionClients": "Execution клайнт",
+    "consensusClients": "Consensus клайнт",
+    "validatorClients": "Валидатор клайнт",
+    "installationPath": "Суулгах Зам",
+    "syncMode": "Синк Горим",
+    "serviceId": "Сервис ID",
+    "serviceCat": "Сервис Ангилал",
+    "modifyConnection": "Холболтыг өөрчлөх",
+    "confirm": "Баталгаажуул",
+    "clckOutside": "Хаахын тулд гадна талд товшино уу",
+    "switchNetwork": "Сүлжээ солих",
+    "selectNetwork": "Орлуулах сүлжээг сонгоно уу",
+    "switchTo": "Үүнрүү шилжүүл",
+    "trnOn": "Асаах",
+    "trnOff": "Унтраах",
+    "selectClient": "Жагсаалтаас Клайнтаа сонгоно уу",
+    "switchClient": "клайнтийг солих",
+    "selectNet": "Сүлжээг сонгоно уу"
   },
   "editPageServices": {
-    "services": "Services",
-    "service": "Service",
-    "delete": "Delete"
+    "services": "Сервисүүд",
+    "service": "Сервис",
+    "delete": "Устгах"
   },
   "guideInfo": {
-    "close": "Close"
+    "close": "Хаах"
   },
   "ImportConfigHeader": {
-    "toImport": "To import",
-    "rem": "Remove"
+    "toImport": "Импортлох",
+    "rem": "Хасах"
   },
   "loginServer": {
-    "wait": "Please wait . . .",
-    "chckServerDetails": "Please check your server details.",
-    "serverRem": "Your server will be removed.",
-    "removeServer": "REMOVE SERVER",
-    "removeServerText": "Are you sure you want to remove it?"
+    "wait": "Хүлээнэ үү . . .",
+    "chckServerDetails": "Серверийнхээ дэлгэрэнгүй мэдээллийг шалгана уу.",
+    "serverRem": "Таны сервер устгагдах болно.",
+    "removeServer": "СЕРВЕРИЙГ УСТГАХ",
+    "removeServerText": "Та хасахдаа итгэлтэй байна уу?"
   },
   "multiServer": {
-    "serverName": "Server Name",
-    "saveServer": "Save Server",
-    "ipOrHost": "IP or Hostname",
-    "port": "Port",
-    "userName": "Username",
-    "pass": "Password",
-    "keyPath": "Key Path",
-    "login": "Login",
-    "conecting": "Connecting . . .",
-    "newPass": "New Password",
-    "EnterNewPass": "Enter New Password",
-    "verifyPass": "Verify Password",
-    "chngResPass": "Change / Reset Password",
-    "chngPass": "Change Password",
-    "machineName": "Machine Name",
-    "chngAvatar": "Change Avatar",
-    "sshkeyMang": "SSH KEY MANAGEMENT",
-    "createNewKey": "CREATE A NEW KEY",
-    "addExistingKey": "ADD AN EXISTING KEY",
-    "loginFailed": "Login Failed",
+    "serverName": "Серверийн Нэр",
+    "saveServer": "Серверийг хадгал",
+    "ipOrHost": "IP эсвэл Хостын нэр",
+    "port": "Порт",
+    "userName": "Хэрэглэгчийн нэр",
+    "pass": "Нууц үг",
+    "keyPath": "Түлхүүрийн зам",
+    "login": "Нэвтрэх",
+    "conecting": "Холбогдож байна. . .",
+    "newPass": "Шинэ Нууц үг",
+    "EnterNewPass": "Шинэ Нууц үгээ оруулна уу",
+    "verifyPass": "Нууц үгээ баталгаажуулна уу",
+    "chngResPass": "Нууц үг солих / дахин тохируулах",
+    "chngPass": "Нууц үг солих",
+    "machineName": "Машины нэр",
+    "chngAvatar": "Аватар солих",
+    "sshkeyMang": "SSH ТҮЛХҮҮРИЙН УДИРДЛАГА",
+    "createNewKey": "ШИНЭ ТҮЛХҮҮР ҮҮСГЭ",
+    "addExistingKey": "БАЙГАА ТҮЛХҮҮР НЭМЭХ",
+    "loginFailed": "Нэвтрэлт амжилтгүй",
     "ok": "OK",
-    "genSshKey": "Generate SSH Key",
-    "keyType": "Key Type",
-    "selectKeyType": "Select Key Type",
-    "sshPass": "SSH Password",
-    "unlockExpertOptions": "UNLOCK EXPERT OPTIONS",
-    "optionalSshPass": "DEFINE AN OPTIONAL SSH PASSWORD",
-    "savePath": "SAVE PATH",
-    "specCypher": "SPECIFY CYPHER",
-    "bitAmount": "BIT AMOUNT",
-    "useCostumCypher": "USE CUSTOM CYPHER",
-    "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
-    "gen": "GENERATE",
-    "saveServerCon": "SAVED SERVER CONNECTIONS",
-    "serch": "Search",
+    "genSshKey": "SSH түлхүүр үүсгэх",
+    "keyType": "Түлхүүрийн төрөл",
+    "selectKeyType": "Түлхүүрийн төрлийг сонгоно уу",
+    "sshPass": "SSH Нууц үг",
+    "unlockExpertOptions": "ЭКСПЕРТ СОНГОЛТЫН ТҮГЖЭЭГ ТАЙЛАХ",
+    "optionalSshPass": "OPTIONAL SSH НУУЦ ҮГИЙГ ТОДОРХОЙЛ",
+    "savePath": "ЗАМЫГ ХАДГАЛ",
+    "specCypher": "CYPHER-Г ТОДОРХОЙЛ",
+    "bitAmount": "БИТ ДҮН",
+    "useCostumCypher": "CUSTOM CYPHER АШИГЛАХ",
+    "specSshBitAmount": "SSH БИТ ДҮНГ ТОДОРХОЙЛ",
+    "gen": "ҮҮСГЭ",
+    "saveServerCon": "ХАДГАЛАГДСАН СЕРВЕРИЙН ХОЛБООСУУД",
+    "serch": "Хайх",
     "serchFor": "Хайх...",
     "addServer": "ШИНЭ СЕРВЕР ХОЛБОЛТ НЭМЭХ",
     "serverAccMang": "Серверийн Хандалтын Менежмент"
@@ -808,27 +808,27 @@
     "addOption": "НЭМЭЛТ СОНГОЛТУУД",
     "chooseNetwork": "USE CASE БОЛОН СҮЛЖЭЭГЭЭ СОНГОХ. СОНГОЛТОО ХИЙГЭЭД, ЭХЛҮҮЛЭХ ТОВЧИЙГ ДАРСНЫ ДАРАА КЛАЙНТ САНАМСАРГҮЙГЭЭР СОНГОГДОЖ, ТАНЫ USE CASE - ИЙН ДАГУУ ҮЙЛЧЛЭХ БОЛНО",
     "oneClckInstall": "ONE-CLICK СУУРИЛУУЛАЛТ",
-    "setNodeClient": "Set how the Node clients where synchronize their blockchain data from",
+    "setNodeClient": "Нөүд клайнтууд блокчейн өгөгдлөө хаанаас синхрончлохыг тохируулна уу",
     "process": "Боловсруулж байна"
   },
   "serviceModal": {
     "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
-    "generateEnr": "GENERATING NEW ENR",
-    "open": "OPEN",
-    "createEnr": "CREATE NEW ENR",
-    "openObol": "OPEN OBOL LAUNCHPAD",
-    "generateEnrToJoin": "Generate a new ENR to use to create or join an existing cluster",
-    "joinCluster": "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.",
-    "openBrowser": "OPEN IN BROWSER",
-    "importEnr": "IMPORT EXISTING ENR",
+    "generateEnr": "ШИНЭ ENR-Г ҮҮСГЭЖ БАЙНА",
+    "open": "НЭЭХ",
+    "createEnr": "ШИНЭ ENR ҮҮСГЭ",
+    "openObol": "OBOL LAUNCHPAD-ийг нээх",
+    "generateEnrToJoin": "Одоо байгаа кластер-д нэгдэх эсвэл шинээр бий болгохын тулд шинэ ENR үүсгэнэ үү",
+    "joinCluster": "Distributed Validator Launchpad-г ашиглан Obol Cluster-г соло эсвэл бүлгээр үүсгэх/нэгдэх.",
+    "openBrowser": "ХӨТӨЧ ДЭЭР НЭЭХ",
+    "importEnr": "БАЙГАА ENR-ИЙГ ИМПОРТЛО",
     "entrEnr": "ENR Оруулах",
     "import": "импортлох",
     "copy": "ХУУЛБАРЛАХ",
     "rem": "ХАСАХ",
-    "backUpFile": "BACKUP DEPOSIT FILE",
-    "startDkg": "START THE DKG",
-    "exportBackup": "Export your backup deposit file from the server to back it up",
-    "allEnrSign": "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!",
+    "backUpFile": "BACKUP DEPOSIT ФАЙЛ",
+    "startDkg": "DKG-Г ЭХЛҮҮЛ",
+    "exportBackup": "Backup deposit файлаа backup-лахын тулд серверээс экспортлоно уу",
+    "allEnrSign": "Бүх ENR-үүд signed болсоны дараа та тушаал өгөх болно. Бүх нөүд операторууд энэ тушаалыг нэгэн зэрэг ажиллуулах ёстой!",
     "srart": "ЭХЛҮҮЛЭХ",
     "pasteUrl": "URL-г ХУУЛЖ ТАВИХ",
     "entrUrl": "URL Оруулах",
