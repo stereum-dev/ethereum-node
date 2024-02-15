@@ -30,9 +30,9 @@
     "docsText": "A handy link to the network logs' documentation for your selected node configuration."
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
+    "stereumName": "stereum тохируулга",
     "langName": "Language  Selection",
-    "confirm": "APPLY",
+    "confirm": "ХЭРЭГЛЭХ",
     "general": "ЕРӨНХИЙ",
     "credits": "Нэр дурьдалт",
     "open": "нээх",
@@ -54,9 +54,9 @@
   "nodeSidebarVideo": {
     "stake": "32 ETH - тай стэйк хийх",
     "rpc": "RPC Холболт",
-    "written": "Written Guides",
-    "video": "Video Guides",
-    "stereumTutorial": "stereum tutorials",
+    "written": "Бичигдсэн хөтөч",
+    "video": "Видео хөтөч",
+    "stereumTutorial": "stereum зааварчилгаанууд",
     "statBox": "status box"
   },
   "pluginZone": {
@@ -76,25 +76,25 @@
     "nukeNode": "ЦӨМ НӨҮД"
   },
   "changeConfirm": {
-    "confirm": "CONFIRM CHANGES",
-    "process": "processing...",
+    "confirm": "ӨӨРЧЛӨЛТИЙГ ЗӨВШӨӨРӨХ",
+    "process": "боловсруулж байна...",
     "change": "БАТАЛГААЖУУЛАХ ӨӨРЧЛӨЛТҮҮД",
     "delete": "УСТГАХ"
   },
   "updatePanel": {
     "launcherTitle": "launcher",
-    "version": "version",
+    "version": "хувилбар",
     "current": "одоогийн",
     "nodeTitle": "нөүд шинэчлэлтүүд",
     "latest": "сүүлийн",
-    "auto": "Auto Update",
+    "auto": "Авто-шинэчлэлт",
     "available": "боломжтой",
     "searching": "шинэ шинэчлэлтүүдийг хайж байна",
     "serviceTitle": "plug-in updates",
     "serviceDesc": "ПЛАГ-ИН-үүдийн суулгасан сонголтын шинэчлэлтүүд",
     "availablePlugin": "БОЛОМЖИТ ПЛАГ-ИН ШИНЭЧЛЭЛТҮҮД",
     "all": "бүгдийг шинэчлэх",
-    "osTitle": "server os updates"
+    "osTitle": "серверийн үйлдлийн системийн шинэчлэлтүүд"
   },
   "controlPage": {
     "node": "НӨҮД",
@@ -103,7 +103,7 @@
     "read": "УНШИХ",
     "inclusionDistance": "ХАМААРУУЛАХ ЗАЙ",
     "rpc": "RPC-ТӨГСГӨЛИЙН ЦЭГ",
-    "ws": "WS-ENDPOINT",
+    "ws": "WS-ТӨГСГӨЛИЙН ЦЭГ",
     "syncStatus": "СИНК СТАТУС",
     "hard": "STORAGE VOLUME",
     "free": "ЧӨЛӨӨТЭЙ",
@@ -119,7 +119,7 @@
     "rating": "ЗЭРЭГЛЭЛ",
     "usage": "Хэрэглээ",
     "netSel": "The selected network is",
-    "machineName": "Machine Name",
+    "machineName": "Машины Нэр",
     "storVol": "Server storage volume",
     "stor": "Server storage overview",
     "diskSpeed": "Disk speed",
@@ -130,7 +130,7 @@
     "netSpeed": "Сүлжээний Хурд",
     "listPort": "List of service ports",
     "endPoint": "endpoint",
-    "data": "data",
+    "data": "өгөгдөл",
     "enteredKeys": "The number of imported validator keys",
     "ttlBal": "Нийт баланс",
     "finEPOCH": "Finalized EPOCH",
@@ -140,8 +140,8 @@
     "settingService": "Setting up the service",
     "restart": "сервисийг дахин эхлүүлнэ үү",
     "currentEpoch": "Current EPOCH",
-    "currentSlot": "Current SLOT",
-    "p2pNet": "Peer to peer network",
+    "currentSlot": "Одоогийн SLOT",
+    "p2pNet": "Peer to peer сүлжээ",
     "selConcensus": "Select the consensus client",
     "selExecution": "Select the execution client",
     "subsribeSubnet": "subscribed subnets"
