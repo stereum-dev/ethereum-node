@@ -365,14 +365,14 @@
   "prunningModal": {
     "prunningText": "GETH-ийн хэрэглэх санах ойн хэмжээ ашиглалтын хугацаандаа ихэсгэдэг. Geth-ийн өгөгдлийн санг багасгах, шаардлагагүй өгөгдлийг устгаж, ашигласан хадгалах зайг чөлөөлөхөд ОЛОН ЦАГ шаардагдана. Үүнийг Geth ажиллахгүй байх үед хийх ёстой. БАГАСГАХ ҮЙЛ ЯВЦЫН ҮЕД ТАНЫ НӨҮД СҮЛЖЭЭНЭЭС ГАРЧ БАТАЛГААЖУУЛАЛТ ХИЙХЭЭ ЗОГСООНО.",
     "prunningChecked": "БИ ТЕКСТИЙГ УНШСАН, МӨН ҮР ДАГАВАРУУДЫГ ОЙЛГОЖ БАЙНА",
-    "prunningStart": "Start Pruning",
+    "prunningStart": "Хасалтыг эхлүүлэх",
     "close": "хаахын тулд гадна талд товшино уу"
   },
   "restartModal": {
     "restartMessage": "your node might go offline while doing so!",
     "restart": "дахин ачааллах",
     "confirmMessage": "Are you sure you want turn your node",
-    "areYouSure": "are you sure you want to"
+    "areYouSure": "та итгэлтэй байна уу"
   },
   "nukeModal": {
     "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
@@ -404,7 +404,7 @@
     "syncCheck": "Эхлээд таны Нөүд синк хийгдсэн эсэхийг шалгана уу",
     "scrollMessage": "Scroll to change slides faster",
     "stake": "staking",
-    "scrollClick": "Click on Staking",
+    "scrollClick": "Staking дээр дарна уу",
     "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
     "clickIcon": "Click on the icon of your validator client",
     "cong": "Дууслаа баяр хүргэе!",
@@ -421,13 +421,13 @@
     "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
   },
   "selectionOption": {
-    "graffiti": "graffiti",
-    "removeKeys": "Remove all keys"
+    "graffiti": "граффити",
+    "removeKeys": "Бүх түлхүүрүүдийг устгах"
   },
   "syncCommitte": {
     "total": "нийт",
     "status": "СТАТУС",
-    "particip": "PARTICIPATING",
+    "particip": "ОРОЛЦОЖ БАЙНА",
     "noParticip": "NOT PARTICIPATING",
     "start": "Эхлэл",
     "end": "Төгсгөл",
@@ -441,11 +441,11 @@
     "pending": "ХҮЛЭЭГДЭЖ БАЙНА",
     "noKey": "KEY-г СОНГОНО УУ",
     "nxtAttest": "дараагийн Attestation Slot:",
-    "slotRem": "Slots remaining",
-    "tillAtest": "till attestation"
+    "slotRem": "Үлдсэн Слотууд",
+    "tillAtest": "баталгаажуулалт хүртэл"
   },
   "confirmModal": {
-    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
+    "off": "ТА НӨҮДӨӨ УНТАРАХЫГ ХҮСЭЖ БАЙНА УУ?",
     "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
     "messageOff": "Your node will go offline!",
     "messageOn": "Your node will go online!",
@@ -462,7 +462,7 @@
     "clkUpdate": "Шинэчлэх самбарыг нээхийн тулд товшино уу",
     "sync": "Synchronization Error",
     "taskFail": "Task Failed",
-    "stats": "STATUS: OPEN",
+    "stats": "СТАТУС: НЭЭЛТТЭЙ",
     "clientService": "CLIENT / SERVICE"
   },
   "resyncModal": {
