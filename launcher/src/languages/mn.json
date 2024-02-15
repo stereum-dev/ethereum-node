@@ -413,12 +413,12 @@
   },
   "blockProduct": {
     "status": "СТАТУС",
-    "assignSlot": "Assigned Slot",
-    "noAsign": "Not Assigned",
-    "nxtBlck": "Next Block Proposal in:"
+    "assignSlot": "Томилогдсон Слот",
+    "noAsign": "Томилогдоогүй",
+    "nxtBlck": "Дараагийн блок санал:"
   },
   "disableStake": {
-    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+    "message": "СТЕКИНГТ ХАНДАХЫН ТУЛД АЖИЛЖ БАЙГАА ВАЛИДАТОР КЛАЙНТ ШААРДЛАГАТАЙ"
   },
   "selectionOption": {
     "graffiti": "граффити",
@@ -428,14 +428,14 @@
     "total": "нийт",
     "status": "СТАТУС",
     "particip": "ОРОЛЦОЖ БАЙНА",
-    "noParticip": "NOT PARTICIPATING",
+    "noParticip": "ОРОЛЦООГҮЙ БАЙНА",
     "start": "Эхлэл",
     "end": "Төгсгөл",
-    "newSync": "New Sync Committee in",
+    "newSync": "Шинэ синхрончлолын Committee",
     "hours": "цаг"
   },
   "theAttes": {
-    "lastAttest": "Last Attestation Slot:",
+    "lastAttest": "Сүүлийн Attestation Slot:",
     "keyStatus": "Key Стасус:",
     "attest": "ATTESTING",
     "pending": "ХҮЛЭЭГДЭЖ БАЙНА",
@@ -446,9 +446,9 @@
   },
   "confirmModal": {
     "off": "ТА НӨҮДӨӨ УНТАРАХЫГ ХҮСЭЖ БАЙНА УУ?",
-    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
-    "messageOff": "Your node will go offline!",
-    "messageOn": "Your node will go online!",
+    "on": "ТА НӨҮДӨӨ АСААХЫГ ХҮСЭЖ БАЙНА УУ?",
+    "messageOff": "Таны нөүд офлайн болно!",
+    "messageOn": "Таны нөүд онлайн болно!",
     "turnOn": "асаах",
     "turnOff": "унтраах",
     "close": "хаахын тулд гадна талд товшино уу"
