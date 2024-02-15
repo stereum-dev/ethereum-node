@@ -303,64 +303,64 @@
     "copy": "Хуулах бол товшино уу!",
     "closed": "Turn On First",
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
-    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "copiedMessage": "DATA-API-URL-г санах ой руу хуулсан!",
+    "RPCTurnOnMessage": "Эхлээд RPC туннелийг асаана уу!",
+    "RPCCopiedMessage": "RPC-URL-г санах ой руу хуулсан!",
+    "WSTurnOnMessage": "Эхлээд WS туннелийг асаана уу!",
+    "WSCopiedMessage": "WS-URL-г санах ой руу хуулсан!"
   },
   "pluginLogs": {
-    "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
+    "pageTitle": "ПЛАГ-ИН ЛОГУУД",
+    "noLogFound": "Жагсаалтад лог олдсонгүй",
     "clickCopy": "Логуудыг Хуулахын тулд Хоёр Товшино уу",
-    "serviceId": "Service ID:",
-    "exportAll": "Export All Logs",
-    "export150": "Export 150 Logs",
-    "cat": "Category:",
-    "ver": "Version:"
+    "serviceId": "Сервис ID:",
+    "exportAll": "Бүх Логийг экспортлох",
+    "export150": "150 Логийг экспортлох",
+    "cat": "Ангилал:",
+    "ver": "Хувилбар:"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
-    "openBrowser": "OPEN IN BROWSER",
-    "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
-    "blockRel": "Block relay",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "localApp": "ДОТООД АППЛИКЭЙШН",
+    "localAppText": "Дотоод машин дээрээ сервисээ нээнэ үү",
+    "openBrowser": "ХӨТӨЧ ДЭЭР НЭЭХ",
+    "availBlockRel": "БОЛОМЖТОЙ БЛОК RELAYS",
+    "process": "Боловсруулж байна",
+    "blockRel": "Блок relay",
+    "blockRelTxt": "Блокуудыг хүлээн авахын тулд нэг буюу хэд хэдэн relay-г сонгоно уу"
   },
   "customInstallation": {
-    "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have an understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
+    "customInstallationTitle": "CUSTOM СУУРИЛУУЛАЛТ",
+    "customInstallationText": "Энэ горим нь илүү дэвшилтэт хэрэглэгчдэд зориулагдсан бөгөөд клайнтууд хоорондоо хэрхэн харьцдаг талаар ойлголттой байхыг шаарддаг. Та нөүдийнхээ хэсэг бүрийг UI ашиглан өөрөө сонгон, суулгаж мөн холбох хэрэгтэй болно!"
   },
   "mevboostConfig": {
-    "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "availRelays": "БОЛОМЖТОЙ БЛОК RELAYS",
+    "usedRelays": "АШИГЛАСАН БЛОК RELAYS"
   },
   "addModifyPanel": {
-    "installPath": "INSTALLATION PATH",
-    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "installPath": "СУУЛГАХ ЗАМ",
+    "syncMessage": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
     "portused": "АШИГЛАСАН ПОРТ",
     "cancel": "цуцлах",
-    "save": "SAVE",
+    "save": "ХАДГАЛАХ",
     "add": "НЭМЭХ",
     "clickAndAdd": "НЭМЭХ дээр дарна уу"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
+    "slashModalMessage": "Та Slashing Protection Database ашиглан импортлохыг хүсэж байна уу?",
+    "importMessage": "Slashing database файлаа импортлоно уу.",
     "chooseFile": "Файлаа сонгоно уу",
     "continue": "Үргэлжлүүлэх"
   },
   "logOutModal": {
     "logOutTitle": "СИСТЕМЭЭС-ГАРАХ",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
+    "logOutQuestion": "ТА NODE СЕРВЕРЭЭС ГАРАХЫГ ХҮСЭЖ БАЙНА УУ?",
     "logOutBtn": "Системээс гарах"
   },
   "reconnectModal": {
-    "reconnectTitle": "Connection lost",
-    "reconnectMessage": "Check your connection and try again.",
-    "reconnectingMessage": "Reconnecting...",
-    "reconnectBtn": "Reconnect"
+    "reconnectTitle": "Холболт тасарсан",
+    "reconnectMessage": "Холболтоо шалгаад дахин оролдоно уу.",
+    "reconnectingMessage": "Дахин холбогдож байна...",
+    "reconnectBtn": "Дахин холбогдох"
   },
   "prunningModal": {
     "prunningText": "GETH-ийн хэрэглэх санах ойн хэмжээ ашиглалтын хугацаандаа ихэсгэдэг. Geth-ийн өгөгдлийн санг багасгах, шаардлагагүй өгөгдлийг устгаж, ашигласан хадгалах зайг чөлөөлөхөд ОЛОН ЦАГ шаардагдана. Үүнийг Geth ажиллахгүй байх үед хийх ёстой. БАГАСГАХ ҮЙЛ ЯВЦЫН ҮЕД ТАНЫ НӨҮД СҮЛЖЭЭНЭЭС ГАРЧ БАТАЛГААЖУУЛАЛТ ХИЙХЭЭ ЗОГСООНО.",
@@ -369,13 +369,13 @@
     "close": "хаахын тулд гадна талд товшино уу"
   },
   "restartModal": {
-    "restartMessage": "your node might go offline while doing so!",
+    "restartMessage": "ингэх үед таны нөүд офлайн болж магадгүй!",
     "restart": "дахин ачааллах",
-    "confirmMessage": "Are you sure you want turn your node",
+    "confirmMessage": "Та нөүд-өө эргүүлэхдээ итгэлтэй байна уу",
     "areYouSure": "та итгэлтэй байна уу"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
+    "nukeQ": "ТА STEREUM БОЛОН ТҮҮНИЙ БҮХ СЕРВИСИЙГ СЕРВЕРЭЭС УСТГАХЫГ ХҮСЭЖ БАЙНА УУ?",
     "nukeTitle": "нөүдийг цөмдөх",
     "backToLogin": "Нэвтрэх хэсэгрүү буцах"
   },
@@ -384,7 +384,7 @@
     "turnOn": "асаана уу"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
+    "clickNav": "Control Panel-руу орохын тулд \"CONTROL\" дээр дарна уу.",
     "toggleMessage": "Click on the “ON/OFF” button to open your port",
     "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
     "clickCancel": "Цуцлахын тулд x дээр дарна уу",
@@ -456,28 +456,28 @@
   "nodeAlert": {
     "lowSpace": "БАГА САНАХ ОЙ",
     "use": "ХЭРЭГЛЭЭ",
-    "noFee": "no fee recipient",
+    "noFee": "fee recipient байхгүй",
     "stereumUpt": "STEREUM-ийн ШИНЭЧЛЭЛТ",
-    "clkFee": "Service Settings",
+    "clkFee": "Сервисийн Тохиргоонууд",
     "clkUpdate": "Шинэчлэх самбарыг нээхийн тулд товшино уу",
-    "sync": "Synchronization Error",
-    "taskFail": "Task Failed",
+    "sync": "Синхрончлолын Алдаа",
+    "taskFail": "Даалгавар амжилтгүй боллоо",
     "stats": "СТАТУС: НЭЭЛТТЭЙ",
-    "clientService": "CLIENT / SERVICE"
+    "clientService": "КЛАЙНТ / СЕРВИС"
   },
   "resyncModal": {
-    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
+    "message": "ТАНЫ КЛАЙНТ блокчейн өгөгдлийг ТАНЫ СЕРВЕР ДЭЭР хадгалдаг тул ТАНЫ НӨҮД СҮЛЖЭЭНД үйлчлэх боломжтой. Энэ нь таны нөүд СТАЙКИНГ дэх ATTESTATION DUTY-гээ авахын тулд зайлшгүй шаардлагатай. ЭНЭ СОНГОЛТЫГ АШИГЛАСНААР ТА КЛАЙНТЫНХАА ОДОО БАЙГАА БЛОКЧЭЙН ӨГӨГДӨЛИЙГ УСТГАЖ & СОНГОГДСОН ТОХИРУУЛГЫГ НӨҮД ШИНЭЭР СИНХРОНЧЛОХ ЭХ ҮҮСВЭР БОЛГОЖ АШИГЛАНА.",
     "sync": "СИНХРОНЖУУЛАЛТ",
     "gen": "GENESIS",
     "chkSync": "CHECKPOINT SYNC",
-    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "syncMsg": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
     "cont": "ҮРГЭЛЖЛҮҮЛЭХ",
     "resync": "RESYNC",
     "close": "хаахын тулд гадна талд товшино уу"
   },
   "resyncSeparateService": {
-    "message": "by initiating resync you will delete the database of",
-    "msgPartTwo": " source will be used for resynchronization",
+    "message": "дахин синхрончлолыг эхлүүлснээр та дараах мэдээллийн санг устгах болно",
+    "msgPartTwo": " эх сурвалж дахин синхрончлолд ашиглагдана",
     "resync": "resync",
     "close": "хаахын тулд гадна талд товшино уу"
   },
@@ -490,8 +490,8 @@
     "stepThree": "QR кодыг сканнердах",
     "stepFour": "Тест мэдэгдэлийг илгээнэ үү",
     "close": "хаахын тулд гадна талд товшино уу",
-    "dash": "Dashboard",
-    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
+    "dash": "Хяналтын самбар",
+    "chooseVal": "МОНИТОРИНГД ХОЛБОГДОХЫН ТУЛД ВАЛИДАТОР КЛАЙНТАА СОНГОНО УУ",
     "goTo": "Руу орох",
     "machinename": "Машины Нэр",
     "apikey": "API Түлхүүр",
