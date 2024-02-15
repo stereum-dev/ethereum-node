@@ -170,7 +170,6 @@ const searchNotFound = computed(() => {
 const filteredDoppelgangerKeys = computed(() => {
   return stakingStore.doppelgangerKeys;
 });
-console.log("filteredDoppelgangerKeys", filteredDoppelgangerKeys.value);
 
 const isDropZoneDisabled = computed(() => {
   const isLoadingOrImporting = isLoading.value || stakingStore.keys.length === 0;
