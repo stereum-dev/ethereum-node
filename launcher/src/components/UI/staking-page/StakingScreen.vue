@@ -200,6 +200,8 @@ const onDrop = (event) => {
       handleFiles(droppedFiles);
       stakingStore.keyFiles = [...droppedFiles];
       stakingStore.setActivePanel("validator");
+    } else {
+      stakingStore.inputWrongKey = true;
     }
   }
 };
@@ -209,6 +211,8 @@ const onDrop = (event) => {
 //****End of Validator Key File ****
 
 //**** Import Key Validation ****
+
+console.log(stakingStore.doppelgangerKeys);
 
 const importKey = async (val) => {
   stakingStore.importEnteredPassword = val;
@@ -493,16 +497,17 @@ const doppelgangerController = async (item) => {
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
   const existingPubKeys = new Set(stakingStore.doppelgangerKeys.map((key) => key.pubkey));
+  console.log("existingPubKeys", existingPubKeys);
   stakingStore.previewKeys.forEach((previewKey) => {
-    if (!existingPubKeys.has(previewKey.pubkey)) {
-      stakingStore.doppelgangerKeys.push({
-        ...previewKey,
-        serviceID: service.config?.serviceID,
-      });
-    }
+    if (existingPubKeys.has(previewKey.pubkey)) return;
+    stakingStore.doppelgangerKeys.push({
+      ...previewKey,
+      serviceID: service.config?.serviceID,
+    });
   });
-  stakingStore.setActivePanel("password");
+  console.log("doppelgangerKeys", stakingStore.doppelgangerKeys);
   await doppelgangerController(service);
+  stakingStore.setActivePanel("password");
 };
 
 //Delete Preview Key
