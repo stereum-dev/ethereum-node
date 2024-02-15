@@ -196,14 +196,14 @@
     "graffitiPanel": "промяна на графитите за всички ключове в клиента на валидатора",
     "removeMultiple": "премахване на всички ключове от клиента на валидатора",
     "withdrawMultiple": "излизане и изтегляне на всички ключове от клиента на валидатора",
-    "importRemote": "import remote keys into the validator client",
-    "valClint": "validator client",
-    "valStat": "validator state",
+    "importRemote": "импортиране на ремоут ключове в клиента на валидатора",
+    "valClint": "валидаторски клиент",
+    "valStat": "състояние на валидатора",
     "numValidator": "броят на импортираните ключове на валидатора",
-    "attestReward": "attestation reward",
-    "blockProdreward": "block production rewards",
-    "syncCommitteeReward": "sync committee rewards",
-    "ttlKeys": "total keys",
+    "attestReward": "награда за атестация",
+    "blockProdreward": "награди за блоково производство",
+    "syncCommitteeReward": "възнаграждения на комитета за синхронизация",
+    "ttlKeys": "общ брой ключове",
     "ttlBal": "общ баланс"
   },
   "enterPass": {
@@ -227,17 +227,17 @@
     "textPlaceHolder": "Въведете до 32 символа, които да добавите към веригата, когато създавате блок!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "Въведете до 32 символа, за да преименувате валидатора!"
   },
   "insertValidator": {
     "insertText": "КЛИКНЕТЕ ИЛИ ПЛЪЗНЕТЕ, ЗА ДА ДОБАВИТЕ КЛЮЧ"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?"
+    "question": "ИСКАТЕ ЛИ ДА ИЗТЕГЛИТЕ ВАШАТА БАЗА ДАННИ ЗА СЛАШИНГ?"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With Slashing Protection Database?",
+    "sure": "Сигурни ли сте, че искате да премахнете този ключ от машината си?",
+    "slashing": "Със слашинг на базата данни за защита?",
     "remove": "Премахване"
   },
   "removeMultipleValidators": {
@@ -253,34 +253,34 @@
   },
   "installitionMenu": {
     "osCheck": "ПРОВЕРКА ДАЛИ ОПЕРАЦИОННАТА СИСТЕМА НА ВАШИЯ СЪРВЪР СЕ ПОДДЪРЖА",
-    "osSupported": "IS A SUPPORTED OS"
+    "osSupported": "Е ПОДДЪРЖАН OS"
   },
   "pluginName": {
     "path": "ПЪТ ЗА ИНСТАЛИРАНЕ",
     "installOpt": "ОПЦИИ ЗА ИНСТАЛИРАНЕ",
-    "startOnInstall": "Start up client after installation?",
-    "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?"
+    "startOnInstall": "Стартиране на клиента след инсталиране?",
+    "monitor": "МОНИТОРИНГ",
+    "instMonit": "Инсталиране на мониторинг?"
   },
   "creditPanel": {
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION",
-    "developers": "DEVELOPERS",
-    "testers": "TESTERS"
+    "techTitle": "КРЕДИТИ - ТЕХНИЧЕСКИ СЪТРУДНИЦИ",
+    "techText": "СПЕЧЕЛЕТЕ GITPOAP! НАУЧЕТЕ КАК ДА СЕ ВКЛЮЧИТЕ, КАТО ПОСЕТИТЕ НАШИЯ GITHUB!",
+    "financialPage": "ФИНАНСОВ ПРИНОС",
+    "developers": "РАЗРАБОТЧИЦИ",
+    "testers": "ТЕСТЕРИ"
   },
   "verifyInstallation": {
     "name": "ИМЕ",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "cat": "КАТЕГОРИЯ",
+    "path": "ПЪТ"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Препоръчваме ви да изчакате да приключи първоначалната инсталация, преди да прилагате допълнителни промени"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
+    "newRegistritionTitle": "ДА РЕГИСТРИРАТЕ НОВ ОПЕРАТОР",
+    "newRegistritionText": "Използвайте новогенерирания операторски ключ, за да регистрирате нов оператор на нода в мрежата SSV",
+    "register": "Регистрация",
     "insertTitle": "insert operator key for existing operator",
     "insertText": "Use an existing operator private key to recover your existing node operator's processes"
   },
