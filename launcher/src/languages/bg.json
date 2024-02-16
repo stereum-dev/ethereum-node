@@ -741,47 +741,47 @@
     "trnOn": "Включи",
     "trnOff": "Изключи",
     "selectClient": "Избор на клиент от списъка",
-    "switchClient": "switch client",
-    "selectNet": "Select Network"
+    "switchClient": "превключване на клиента",
+    "selectNet": "Избор на мрежа"
   },
   "editPageServices": {
-    "services": "Services",
-    "service": "Service",
-    "delete": "Delete"
+    "services": "Услуги",
+    "service": "Услуга",
+    "delete": "Изтрий"
   },
   "guideInfo": {
-    "close": "Close"
+    "close": "Затвори"
   },
   "ImportConfigHeader": {
-    "toImport": "To import",
-    "rem": "Remove"
+    "toImport": "Към импортиране",
+    "rem": "Премахване"
   },
   "loginServer": {
-    "wait": "Please wait . . .",
-    "chckServerDetails": "Please check your server details.",
-    "serverRem": "Your server will be removed.",
-    "removeServer": "REMOVE SERVER",
+    "wait": "Моля изчакайте...",
+    "chckServerDetails": "Моля проверете данните на сървъра.",
+    "serverRem": "Вашият сървър ще бъде премахнат.",
+    "removeServer": "ПРЕМАХНИ СЪРВЪРА",
     "removeServerText": "Сигурни ли сте, че искате да изтриете?"
   },
   "multiServer": {
     "serverName": "Име на сървъра",
-    "saveServer": "Save Server",
+    "saveServer": "Запази сървъра",
     "ipOrHost": "IP или име на хост",
     "port": "Порт",
     "userName": "Потребителско име",
     "pass": "Парола",
-    "keyPath": "Key Path",
+    "keyPath": "Път на ключа",
     "login": "Вход",
     "conecting": "Свързване.",
     "newPass": "Нова парола",
     "EnterNewPass": "Въведете нова парола",
     "verifyPass": "Потвърдете паролата",
-    "chngResPass": "Change / Reset Password",
+    "chngResPass": "Промяна / нулиране на паролата",
     "chngPass": "Промяна на парола",
     "machineName": "Име на машината",
     "chngAvatar": "Смяна на Аватар",
-    "sshkeyMang": "SSH KEY MANAGEMENT",
-    "createNewKey": "CREATE A NEW KEY",
+    "sshkeyMang": "УПРАВЛЕНИЕ НА SSH КЛЮЧОВЕ",
+    "createNewKey": "СЪЗДАВАНЕ НА НОВ КЛЮЧ",
     "addExistingKey": "ДОБАВЕТЕ СЪЩЕСТВУВАЩ КЛЮЧ",
     "loginFailed": "Неуспешно влизане",
     "ok": "ОК",
@@ -880,16 +880,16 @@
     "withdrawExit": "Withdraw & Exit Validator Keys",
     "vldExited": "Validator(s) Successfully Exited.",
     "vldFailed": "Validator(s) Failed to exit.",
-    "successExit": "Successfully Exited.",
-    "exitFailed": "Exit Failed.",
+    "successExit": "Излязохте успешно.",
+    "exitFailed": "Неуспешно излизане.",
     "readConeq": "ПРОЧЕТОХ ТЕКСТА И СЪМ НАЯСНО С ПОСЛЕДСТВИЯТА"
   },
   "welcomePage": {
-    "logedOut": "You will be logged out of the Stereum Launcher. You will need to log back in to access your node.",
-    "logOut": "Logging out",
+    "logedOut": "Ще бъдете изписани от Stereum Launcher. Ще трябва да влезете отново, за да получите достъп до вашия нод.",
+    "logOut": "Излизане",
     "logOutMsg": "Наистина ли искате да излезете от профила си?",
     "logOutBtn": "Изход",
-    "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
-    "welcomeStereum": "Welcome to Stereum"
+    "chooseInstallNode": "В тази стъпка избирате начина на инсталиране на нод. За начинаещите препоръчваме опцията Инсталиране с едно кликване!",
+    "welcomeStereum": "Добре дошли в Stereum"
   }
 }
