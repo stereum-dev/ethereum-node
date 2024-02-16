@@ -8,7 +8,7 @@
     "password": "Нууц үг",
     "keylocation": "ТҮЛХҮҮРИЙН БАЙРШИЛ",
     "usessh": "SSH түлхүүрийг ашиглана уу",
-    "fillFields": "Please fill in the missing fields!",
+    "fillFields": "Дутуу талбаруудыг бөглөнө үү!",
     "KeyPassphrase": "KEY PASSPHRASE"
   },
   "comingsoon": {
@@ -26,12 +26,12 @@
     "supportText": "Тусламж авах хүнтэй холбогдох хамгийн хурдан арга бол манай Discord серверт нэгдэх юм!",
     "bugReport": "АЛДААГ МЭДЭЭЛЛЭХ",
     "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:",
-    "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "docsTitle": "чэйний docs",
+    "docsText": "Таны сонгосон нөүдийн тохиргоонд зориулсан сүлжээний logs-ын баримт бичигт хэрэгтэй холбоос."
   },
   "settingPanel": {
     "stereumName": "stereum тохируулга",
-    "langName": "Language  Selection",
+    "langName": "Хэл Сонголт",
     "confirm": "ХЭРЭГЛЭХ",
     "general": "ЕРӨНХИЙ",
     "credits": "Нэр дурьдалт",
@@ -44,12 +44,12 @@
     "updateConfig": "Стереум Шинэчлэлт Тохиргоо",
     "manual": "ГАР АЖИЛЛАГАА",
     "auto": "АВТОМАТ",
-    "sxConf": "Export Config",
-    "chngAppr": "Changes to be applied",
-    "creditInfo": "click the button to see the contributors",
-    "langInfo": "click the button to change the language",
-    "exportInfo": "click the button to export the configuration in a yaml file",
-    "stereumUpd": "Click the button to configure the Stereum update"
+    "sxConf": "Тохиргоог Экспортлох",
+    "chngAppr": "Хавсаргасан өөрчлөлтүүд",
+    "creditInfo": "товчийг дарж хувь нэмэр оруулагчдыг харна уу",
+    "langInfo": "хэлийг өөрчлөхийн тулд товчийг дарна уу",
+    "exportInfo": "тохиргоог yaml файлд экспортлохын тулд товчийг дарна уу",
+    "stereumUpd": "Stereum update тохируулахын тулд товчлуурыг дарна уу"
   },
   "nodeSidebarVideo": {
     "stake": "32 ETH - тай стэйк хийх",
@@ -57,7 +57,7 @@
     "written": "Бичигдсэн хөтөч",
     "video": "Видео хөтөч",
     "stereumTutorial": "stereum зааварчилгаанууд",
-    "statBox": "status box"
+    "statBox": "статус box"
   },
   "pluginZone": {
     "client": "клaйнт"
@@ -67,9 +67,9 @@
     "consensus": "консэнсус",
     "validator": "валидатор",
     "servicePlugin": "СЕРВИС ПЛАГИН",
-    "message": "The current network is ",
-    "chckTutorial": "Check out the tutorials",
-    "returnStatus": "Return to status box"
+    "message": "Одоогийн сүлжээ бол ",
+    "chckTutorial": "Хичээлүүдийг үзээрэй",
+    "returnStatus": "Статус box руу буцах"
   },
   "modifyPanel": {
     "backNode": "НӨҮД рүү буцах",
@@ -87,10 +87,10 @@
     "current": "одоогийн",
     "nodeTitle": "нөүд шинэчлэлтүүд",
     "latest": "сүүлийн",
-    "auto": "Авто-шинэчлэлт",
+    "auto": "Авто-Шинэчлэлт",
     "available": "боломжтой",
     "searching": "шинэ шинэчлэлтүүдийг хайж байна",
-    "serviceTitle": "plug-in updates",
+    "serviceTitle": "плаг-ин шинэчлэлтүүд",
     "serviceDesc": "ПЛАГ-ИН-үүдийн суулгасан сонголтын шинэчлэлтүүд",
     "availablePlugin": "БОЛОМЖИТ ПЛАГ-ИН ШИНЭЧЛЭЛТҮҮД",
     "all": "бүгдийг шинэчлэх",
@@ -118,20 +118,20 @@
     "active": "ИДЭВХИТЭЙ",
     "rating": "ЗЭРЭГЛЭЛ",
     "usage": "Хэрэглээ",
-    "netSel": "The selected network is",
+    "netSel": "Сонгогдсон сүлжээ бол",
     "machineName": "Машины Нэр",
-    "storVol": "Server storage volume",
-    "stor": "Server storage overview",
-    "diskSpeed": "Disk speed",
-    "p2p": "Peer to peer connections",
+    "storVol": "Серверийн санах ойн хэмжээ",
+    "stor": "Серверийн санах ойн тойм",
+    "diskSpeed": "Дискний хурд",
+    "p2p": "Peer to peer холболтууд",
     "cpuUse": "CPU-ийн хэрэглээ",
-    "syncInfo": "Synchronization status",
+    "syncInfo": "Синхрончлолын статус",
     "ramUse": "RAM-ийн хэрэглээ",
     "netSpeed": "Сүлжээний Хурд",
-    "listPort": "List of service ports",
+    "listPort": "Сервисийн портуудын жагсаалт",
     "endPoint": "endpoint",
     "data": "өгөгдөл",
-    "enteredKeys": "The number of imported validator keys",
+    "enteredKeys": "Импортлогдсон валидатор түлхүүрүүдийн тоо",
     "ttlBal": "Нийт баланс",
     "finEPOCH": "Finalized EPOCH",
     "pending": "сервис хүлээгдэж байна",
