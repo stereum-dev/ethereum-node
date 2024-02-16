@@ -117,7 +117,7 @@
               :bottom-line="`${
                 headerStore.depositFile ? `${$t('serviceModal.exportBackup')}` : `${$t('serviceModal.allEnrSign')}`
               }`"
-              :btn-name="`${headerStore.depositFile ? `${$t('addModifyPanel.save')}` : `${$t('serviceModal.srart')}`}`"
+              :btn-name="`${headerStore.depositFile ? `${$t('serviceModal.save')}` : `${$t('serviceModal.srart')}`}`"
               :btn-bg-color="`#192d31`"
               :btn-name-color="`#2fe4ab`"
               @confirmPluginClick="dkgSwitch"
