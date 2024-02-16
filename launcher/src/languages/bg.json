@@ -329,31 +329,31 @@
     "blockRelTxt": "Изберете едно или няколко релета, от които да получават блокове"
   },
   "customInstallation": {
-    "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have an understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
+    "customInstallationTitle": "ИНСТАЛАЦИЯ ПО ИЗБОР",
+    "customInstallationText": "Този режим е предназначен за по-напреднали потребители и изисква от вас да разбирате как клиентите взаимодействат помежду си. Ще трябва сами да изберете, инсталирате и свържете всяка част от вашия нод с потребителския интерфейс, преди той да бъде функционален!"
   },
   "mevboostConfig": {
-    "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "availRelays": "НАЛИЧНИ БЛОКОВИ РЕЛЕТА",
+    "usedRelays": "ИЗПОЛЗВАНИ БЛОКОВИ РЕЛЕТА"
   },
   "addModifyPanel": {
     "installPath": "ПЪТ ЗА ИНСТАЛИРАНЕ",
     "syncMessage": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
-    "portused": "PORT USED",
+    "portused": "ИЗПОЛЗВАН ПОРТ",
     "cancel": "отказ",
     "save": "ЗАПАЗИ",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "add": "ДОБАВИ",
+    "clickAndAdd": "Кликни да добавиш"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
+    "slashModalMessage": "Искате ли да импортирате с база данни за защита от слашинг?",
+    "importMessage": "Импортирайте своя файл с база данни за слашинг.",
+    "chooseFile": "Избери файл",
     "continue": "Продължи"
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
+    "logOutTitle": "ОТПИСВАНЕ",
+    "logOutQuestion": "СИГУРНИ ЛИ СТЕ, ЧЕ ИСКАТЕ ДА ИЗЛЕЗЕТЕ ОТ ВАШИЯТ НОД?",
     "logOutBtn": "Излез от профила си"
   },
   "reconnectModal": {
@@ -363,69 +363,69 @@
     "reconnectBtn": "Свържи повторно"
   },
   "prunningModal": {
-    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
+    "prunningText": "Използваното от GETH пространство за съхранение нараства през времето на експлоатация. Отнема МНОГО ЧАСОВЕ, за да се изчисти базата данни на Geth, да се премахнат ненужните данни и да се освободи част от използваното пространство за съхранение. Това трябва да се направи, докато Geth не работи. ЗАПОЧВАЙКИ ПРОЦЕСА НА ИЗРЯЗВАНЕ, ВАШИЯТ НОД ЩЕ ИЗЛЕЗЕ ОТ МРЕЖАТА И ЩЕ СПРЕ ДА ИЗПЪЛНЯВА ПОТЕНЦИАЛНИ ЗАДЪЛЖЕНИЯ ПО АТЕСТИРАНЕ.",
     "prunningChecked": "ПРОЧЕТОХ ТЕКСТА И СЪМ НАЯСНО С ПОСЛЕДСТВИЯТА",
-    "prunningStart": "Start Pruning",
+    "prunningStart": "Стартиране на пречистване",
     "close": "кликнете извън прозореца за прекратите процеса"
   },
   "restartModal": {
-    "restartMessage": "your node might go offline while doing so!",
+    "restartMessage": "възможно е вашият нод да излезе от мрежата, докато го правите!",
     "restart": "рестартиране",
-    "confirmMessage": "Are you sure you want turn your node",
+    "confirmMessage": "Сигурни ли сте, че искате да превърнете нода си",
     "areYouSure": "наистина ли искате да"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
-    "nukeTitle": "nuke the node",
+    "nukeQ": "СИГУРНИ ЛИ СТЕ, ЧЕ ИСКАТЕ ДА ПРЕМАХНЕТЕ СТЕРЕУМ И ВСИЧКИ НЕГОВИ УСЛУГИ ОТ СЪРВЪРА?",
+    "nukeTitle": "унищожаване на нода",
     "backToLogin": "Обратно към вход"
   },
   "noData": {
     "noData": "няма данни",
-    "turnOn": "please turn on"
+    "turnOn": "моля включи"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Click on the “ON/OFF” button to open your port",
-    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Click x to cancel",
-    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
-    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending your transactions, click on “ON” to close your port",
-    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Click on the Network button",
-    "thirdSlide": "Click on “Add Network”",
-    "fourthSlide": "Type in a name for your network",
-    "fivethSlide": "Paste in the copied URL from Stereum",
-    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "Type in “ETH” as the currency symbol",
-    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
-    "ninethSlide": "Click on “SAVE”"
+    "clickNav": "Щракнете върху \"CONTROL\", за да влезете в контролния панел.",
+    "toggleMessage": "Щракнете върху бутона \"ON/OFF\", за да отворите порта",
+    "clickExtention": "Щракнете върху бутона \"Вашият клиент за изпълнение\", за да копирате RPC URL адреса",
+    "clickCancel": "Кликнете върху x, за да отмените",
+    "firstMessage": "Уиджет RPC-Endpoint, разположен в таблото за управление. Моля, включете бутона \"ON\" и щракнете върху \"Execution Client\", за да преминете към следващата стъпка.",
+    "secondMessage": "Сега можете да изпратите транзакцията си ПРЕЗ ВАШИЯ НОД С METAMASK. Когато приключите с изпращането на транзакциите, кликнете върху \"ON\", за да затворите порта",
+    "firstSlide": "Сега влезте във вашия dAPP или портфейл, който искате да използвате (в нашия случай MetaMask)",
+    "secondSlide": "Кликнете върху бутона Мрежа",
+    "thirdSlide": "Кликнете върху \"Добавяне на мрежа\"",
+    "fourthSlide": "Въведете име за вашата мрежа",
+    "fivethSlide": "Поставете копирания URL адрес от Stereum",
+    "sixthSlide": "Въведете идентификатора на веригата (CHAIN-ID), на която работи вашият нод (за GoerliTestnet той е 5)",
+    "seventhSlide": "Въведете \"ETH\" като символ на валутата",
+    "eightthSlide": "ПО ВАРИАНТ - можете да поставите URL адрес на Block Explorer",
+    "ninethSlide": "Кликнете върху \"SAVE\""
   },
   "stakeGuide": {
-    "syncCheck": "First Check if your Node is synced",
-    "scrollMessage": "Scroll to change slides faster",
-    "stake": "staking",
-    "scrollClick": "Click on Staking",
-    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
-    "clickIcon": "Click on the icon of your validator client",
-    "cong": "Congrats you are done!",
-    "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
+    "syncCheck": "Първо проверете дали нодът ви е синхронизиран",
+    "scrollMessage": "Скролнете, за да сменяте слайдовете по-бързо",
+    "stake": "залагане",
+    "scrollClick": "Кликнете на залагане",
+    "drag": "Плъзнете или щракнете върху \"CLICK OR DRAG TO INSERT KEY\"",
+    "clickIcon": "Кликнете върху иконата на вашия клиент за валидиране",
+    "cong": "Поздравления, вие сте готови!",
+    "clickPass": "Моля, кликнете тук, за да въведете паролата си и да я потвърдите.",
+    "noSlash": "Изберете \"Не\", ако нямате база данни за защита от нарязване от предишен нод"
   },
   "blockProduct": {
-    "status": "STATUS",
-    "assignSlot": "Assigned Slot",
+    "status": "СТАТУС",
+    "assignSlot": "Начислен слот",
     "noAsign": "Не е зададен",
-    "nxtBlck": "Next Block Proposal in:"
+    "nxtBlck": "Следваща Блок Предложение в:"
   },
   "disableStake": {
-    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+    "message": "ИЗИСКВА СТАРТИРАНЕ НА КЛИЕНТ НА ВАЛИДАТОРА НА СЪРВЪРА ЗА ДОСТЪП ДО ЗАЛАГАНЕ"
   },
   "selectionOption": {
-    "graffiti": "graffiti",
-    "removeKeys": "Remove all keys"
+    "graffiti": "графити",
+    "removeKeys": "Изтрий всички ключове"
   },
   "syncCommitte": {
-    "total": "total",
+    "total": "общо",
     "status": "СТАТУС",
     "particip": "УЧАСТВАЩИ",
     "noParticip": "НЕ УЧАСТВАЩИ",
@@ -661,27 +661,27 @@
     "turnOff": "Изключване на услугата",
     "restart": "Рестартиране на услугата",
     "pending": "Услугата е в очакване",
-    "settings": "Access the settings of the service",
-    "logs": "Open the logs of the service",
-    "docs": "Open the documentation of the service in your browser",
-    "removeLock": "Remove Lock files of the service",
-    "pruning": "Prune the service database",
-    "resync": "Resync the service from a selected source"
+    "settings": "Достъп до настройките на услугата",
+    "logs": "Отворете регистрите на услугата",
+    "docs": "Отворете документацията на услугата в браузъра си",
+    "removeLock": "Премахване на заключващите файлове на услугата",
+    "pruning": "Пречистване на базата данни за услуги",
+    "resync": "Повторно синхронизиране на услугата от избран източник"
   },
   "clientLay": {
     "client": "клиент",
-    "keyMsg": "key(s) imported",
+    "keyMsg": "импортирани ключ(ове)",
     "syncStatus": "състояние на синхронизиране:"
   },
   "serverDetails": {
     "machineName": "Име на машината",
-    "machineIp": "Machine IP Address"
+    "machineIp": "IP адрес на машината"
   },
   "changesBox": {
-    "clickToCancel": "Click here to cancel this change"
+    "clickToCancel": "Натиснете тук, за да отмените тази промяна"
   },
   "editClientLay": {
-    "clkEdit": "Click to edit your service"
+    "clkEdit": "Кликнете, за да редактирате услугата си"
   },
   "generalMenu": {
     "modify": "редакция",
@@ -696,17 +696,17 @@
     "currentNet": "Текуща мрежа"
   },
   "changeSect": {
-    "clkConfirm": "Click here to confirm change(s)"
+    "clkConfirm": "Щракнете тук, за да потвърдите промяната(ите)"
   },
   "sidebarSect": {
-    "toNode": "Return to the Node Page",
-    "toEdit": "Go to the Edit Node Page",
-    "setchNet": "Switch Network in the configuration of the Node",
-    "nukTheNud": "Nuke the Stereum Node and all its services",
-    "nukNod": "Nuke Node",
-    "trnOn": "Turn your node on",
-    "trnOff": "Turn your node off",
-    "expNode": "Export your Node Configuration"
+    "toNode": "Връщане към нод страницата",
+    "toEdit": "Отидете на страницата Редактиране на нод",
+    "setchNet": "Превключване на мрежата в конфигурацията на нода",
+    "nukTheNud": "Изтриване на Stereum нода и всички негови услуги",
+    "nukNod": "Изтрий нод",
+    "trnOn": "Включи своя нод",
+    "trnOff": "Изключи своя нод",
+    "expNode": "Експортирай твоята нод конфигурация"
   },
   "customAnim": {
     "processing": "Обработване"
@@ -716,7 +716,7 @@
     "next": "СЛЕДВАЩ"
   },
   "configDetails": {
-    "addConfig": "Add Config"
+    "addConfig": "Добави конфигурация"
   },
   "editBody": {
     "executionClient": "Клиент за изпълнение",
@@ -724,23 +724,23 @@
     "validator": "Валидатор"
   },
   "editModals": {
-    "noAvailService": "There is no available service",
+    "noAvailService": "Няма налична услуга",
     "executionClients": "Клиент за изпълнение",
     "consensusClients": "Kонсенсусни клиенти",
     "validatorClients": "Валидаторски клиент",
     "installationPath": "Място за инсталиране",
-    "syncMode": "Sync Mode",
-    "serviceId": "Service ID",
-    "serviceCat": "Service Category",
-    "modifyConnection": "Modify Connection",
-    "confirm": "Confirm",
-    "clckOutside": "Click outside to close",
-    "switchNetwork": "Switch Network",
-    "selectNetwork": "Select a network to replace the",
-    "switchTo": "Switch To",
-    "trnOn": "Turn on",
-    "trnOff": "Turn off",
-    "selectClient": "Select a Client From List",
+    "syncMode": "Мод на синхронизация",
+    "serviceId": "ID на услугата",
+    "serviceCat": "Категория услуги",
+    "modifyConnection": "Промяна на връзката",
+    "confirm": "Потвърди",
+    "clckOutside": "Кликнете извън прозореца за да затворите",
+    "switchNetwork": "Смяна на мрежата",
+    "selectNetwork": "Изберете мрежа, която да замени",
+    "switchTo": "Превключване към",
+    "trnOn": "Включи",
+    "trnOff": "Изключи",
+    "selectClient": "Избор на клиент от списъка",
     "switchClient": "switch client",
     "selectNet": "Select Network"
   },
