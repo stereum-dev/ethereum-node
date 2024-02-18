@@ -90,7 +90,7 @@ const enrBtnToShow = computed(() => {
   ) {
     return "CONTINUE"; //continue
   } else if (headerStore.distrubutedValidatorGenerator && !headerStore.enrIsGenerating) {
-    return "Y of X CONNECTED";
+    return "DKG FINISHED";
   } else if (backupDistributedValidator.value && !headerStore.enrIsGenerating) {
     return "BACKUP";
   } else if (distributedCompleted.value && !headerStore.enrIsGenerating && !backupDistributedValidator.value) {
@@ -206,7 +206,7 @@ const btnHandling = async () => {
     headerStore.generatorPlugin = false;
     headerStore.obolDashboard = true;
     headerStore.continueForExistENR = true;
-  } else if (enrBtnToShow.value === "Y of X CONNECTED") {
+  } else if (enrBtnToShow.value === "DKG FINISHED") {
     await openDirectoryPicker();
     backupDistributedValidator.value = true;
     headerStore.distrubutedValidatorGenerator = false;

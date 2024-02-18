@@ -23,16 +23,12 @@
           <div class="browserBox">
             <ConfirmBox
               :top-line="`${
-                !headerStore.continueForExistENR ? `${$t('serviceModal.createEnr')}` : `${$t('serviceModal.openObol')}`
+                !headerStore.continueForExistENR ? $t('serviceModal.createEnr') : $t('serviceModal.openObol')
               }`"
               :bottom-line="`${
-                !headerStore.continueForExistENR
-                  ? `${$t('serviceModal.generateEnrToJoin')}`
-                  : `${$t('serviceModal.joinCluster')}`
+                !headerStore.continueForExistENR ? $t('serviceModal.generateEnrToJoin') : $t('serviceModal.joinCluster')
               }`"
-              :btn-name="`${
-                !headerStore.continueForExistENR ? `${$t('multiServer.gen')}` : `${$t('serviceModal.openBrowser')}`
-              }`"
+              :btn-name="`${!headerStore.continueForExistENR ? $t('multiServer.gen') : $t('serviceModal.openBrowser')}`"
               :btn-bg-color="`#192d31`"
               :btn-name-color="`#2fe4ab`"
               @confirmPluginClick="topBlock"
@@ -68,10 +64,17 @@
                     : $t('serviceModal.copyEnr')
                 }`"
                 :btn-name="`${areYouSureToRemove ? $t('exitMultipleValidator.confirm') : $t('serviceModal.copy')}`"
-                :second-btn-name="`${areYouSureToRemove ? $t('displayValidator.cancel') : $t('serviceModal.rem')}`"
+                :second-btn-name="`${
+                  headerStore.depositFile
+                    ? ''
+                    : areYouSureToRemove
+                    ? $t('displayValidator.cancel')
+                    : $t('serviceModal.rem')
+                }`"
                 :btn-bg-color="`${areYouSureToRemove ? '#74FA65' : '#494949'}`"
                 :second-btn-bg-color="`#eb5353`"
                 :btn-name-color="`${areYouSureToRemove ? '#000' : '#dbdbdb'}`"
+                :second-btn-name-color="`#dbdbdb`"
                 :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-icons/copy1.png'}`"
                 @confirmPluginClick="secondRowBtnHandler"
                 @secBtnPluginClick="removeHandlerControler"
@@ -112,15 +115,39 @@
             <ConfirmBox
               v-else-if="!dkgControl || headerStore.depositFile"
               :top-line="`${
-                headerStore.depositFile ? `${$t('serviceModal.backUpFile')}` : `${$t('serviceModal.startDkg')}`
+                areYouSureToRemoveCluster
+                  ? $t('serviceModal.areYouSureCluster')
+                  : headerStore.depositFile
+                  ? $t('serviceModal.backUpFile')
+                  : $t('serviceModal.startDkg')
               }`"
               :bottom-line="`${
-                headerStore.depositFile ? `${$t('serviceModal.exportBackup')}` : `${$t('serviceModal.allEnrSign')}`
+                areYouSureToRemoveCluster
+                  ? $t('serviceModal.areYouSureMsg')
+                  : headerStore.depositFile
+                  ? $t('serviceModal.exportBackup')
+                  : $t('serviceModal.allEnrSign')
               }`"
-              :btn-name="`${headerStore.depositFile ? `${$t('serviceModal.save')}` : `${$t('serviceModal.srart')}`}`"
-              :btn-bg-color="`#192d31`"
-              :btn-name-color="`#2fe4ab`"
+              :btn-name="`${
+                areYouSureToRemoveCluster
+                  ? $t('exitMultipleValidator.confirm')
+                  : headerStore.depositFile
+                  ? $t('serviceModal.save')
+                  : $t('serviceModal.srart')
+              }`"
+              :second-btn-name="`${
+                !headerStore.depositFile
+                  ? ''
+                  : areYouSureToRemoveCluster
+                  ? $t('displayValidator.cancel')
+                  : $t('serviceModal.rem')
+              }`"
+              :second-btn-bg-color="`#eb5353`"
+              :btn-bg-color="`${areYouSureToRemoveCluster ? '#74FA65' : '#192d31'}`"
+              :btn-name-color="`${areYouSureToRemoveCluster ? '#000' : '#2fe4ab'}`"
+              :second-btn-name-color="`#dbdbdb`"
               @confirmPluginClick="dkgSwitch"
+              @secBtnPluginClick="removeHandlerClusterControler"
             />
           </div>
         </div>
@@ -144,6 +171,7 @@ const dkgControl = ref(false);
 const isLoading = ref(true);
 const thirdRowInput = ref("");
 const areYouSureToRemove = ref(false);
+const areYouSureToRemoveCluster = ref(false);
 
 const headerStore = useNodeHeader();
 
@@ -205,6 +233,9 @@ const copyHandler = () => {
 const removeHandlerControler = () => {
   areYouSureToRemove.value = !areYouSureToRemove.value;
 };
+const removeHandlerClusterControler = () => {
+  areYouSureToRemoveCluster.value = !areYouSureToRemoveCluster.value;
+};
 
 const removeHandler = () => {
   //returns true if successful otherwise false
@@ -236,7 +267,9 @@ const openDirectoryPicker = async () => {
 };
 
 const dkgSwitch = async () => {
-  if (headerStore.depositFile) {
+  if (areYouSureToRemoveCluster.value) {
+    console.log("remove cluster");
+  } else if (headerStore.depositFile) {
     const path = await openDirectoryPicker();
     if (path) {
       ControlService.downloadObolBackup(path);
@@ -254,11 +287,13 @@ const dkgImporter = () => {
       console.log("please enter input");
     } else {
       backupPath = thirdRowInput.value;
+      console.log(backupPath);
+
       headerStore.enrIsGenerating = false;
       headerStore.generatorPlugin = false;
       headerStore.distrubutedValidatorGenerator = false;
       headerStore.deactivateBtnToWaitForLogs = false;
-      console.log(backupPath);
+      headerStore.depositFile = true;
       headerStore.continueForExistENR = true;
       thirdRowInput.value = "";
     }
