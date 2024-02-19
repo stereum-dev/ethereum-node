@@ -16,7 +16,7 @@
         <span>{{ $t("nodeSidebarVideo.video") }}</span>
       </div>
     </div>
-    <div class="tutorial-btn" @click="tutorial = true">
+    <div class="tutorial-btn" @click="isTutorialActive = true">
       <div class="icon-box camera">
         <img src="/img/icon/tutorial-icons/Guide-icon.png" alt="" />
       </div>
@@ -24,7 +24,7 @@
         <span>{{ $t("nodeSidebarVideo.rpc") }}</span>
       </div>
     </div>
-    <div v-if="currentNetwork.network !== 'gnosis'" class="tutorial-btn" @click="stakeGuide = true">
+    <div v-if="currentNetwork.network !== 'gnosis'" class="tutorial-btn" @click="isStakeGuideActive = true">
       <div class="icon-box camera">
         <img src="/img/icon/tutorial-icons/Guide-icon.png" alt="" />
       </div>
@@ -65,8 +65,8 @@ export default {
       infoAlarm: "infoAlarm",
     }),
     ...mapWritableState(useNodeHeader, {
-      tutorial: "tutorial",
-      stakeGuide: "stakeGuide",
+      isStakeGuideActive: "isStakeGuideActive",
+      isTutorialActive: "isTutorialActive",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
