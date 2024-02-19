@@ -5217,6 +5217,11 @@ html body {
   background-color: rgb(4 47 46 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-black:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-opacity-10:hover{
   --tw-bg-opacity: 0.1;
 }
