@@ -23,16 +23,12 @@
           <div class="browserBox">
             <ConfirmBox
               :top-line="`${
-                !headerStore.continueForExistENR ? `${$t('serviceModal.createEnr')}` : `${$t('serviceModal.openObol')}`
+                !headerStore.continueForExistENR ? $t('serviceModal.createEnr') : $t('serviceModal.openObol')
               }`"
               :bottom-line="`${
-                !headerStore.continueForExistENR
-                  ? `${$t('serviceModal.generateEnrToJoin')}`
-                  : `${$t('serviceModal.joinCluster')}`
+                !headerStore.continueForExistENR ? $t('serviceModal.generateEnrToJoin') : $t('serviceModal.joinCluster')
               }`"
-              :btn-name="`${
-                !headerStore.continueForExistENR ? `${$t('multiServer.gen')}` : `${$t('serviceModal.openBrowser')}`
-              }`"
+              :btn-name="`${!headerStore.continueForExistENR ? $t('multiServer.gen') : $t('serviceModal.openBrowser')}`"
               :btn-bg-color="`#192d31`"
               :btn-name-color="`#2fe4ab`"
               @confirmPluginClick="topBlock"
@@ -55,53 +51,109 @@
               <ConfirmBox
                 :top-line="`${
                   !headerStore.continueForExistENR
-                    ? `${$t('serviceModal.createEnr')}`
-                    : `${$t('serviceModal.openObol')}`
+                    ? $t('serviceModal.createEnr')
+                    : areYouSureToRemove
+                    ? $t('serviceModal.areYouSure')
+                    : $t('serviceModal.mngEnr')
                 }`"
                 :bottom-line="`${
                   !headerStore.continueForExistENR
-                    ? `${$t('serviceModal.generateEnrToJoin')}`
-                    : `${$t('serviceModal.joinCluster')}`
+                    ? $t('serviceModal.generateEnrToJoin')
+                    : areYouSureToRemove
+                    ? $t('serviceModal.areYouSureMsg')
+                    : $t('serviceModal.copyEnr')
                 }`"
-                :btn-name="`${$t('serviceModal.copy')}`"
-                :second-btn-name="`${$t('serviceModal.rem')}`"
-                :btn-bg-color="`#494949`"
+                :btn-name="`${areYouSureToRemove ? $t('exitMultipleValidator.confirm') : $t('serviceModal.copy')}`"
+                :second-btn-name="`${
+                  headerStore.depositFile
+                    ? ''
+                    : areYouSureToRemove
+                    ? $t('displayValidator.cancel')
+                    : $t('serviceModal.rem')
+                }`"
+                :btn-bg-color="`${areYouSureToRemove ? '#74FA65' : '#494949'}`"
                 :second-btn-bg-color="`#eb5353`"
-                :btn-name-color="`#dbdbdb`"
-                img-url="/img/icon/service-icons/copy1.png"
-                @confirmPluginClick="copyHandler"
-                @secBtnPluginClick="removeHandler"
+                :btn-name-color="`${areYouSureToRemove ? '#000' : '#dbdbdb'}`"
+                :second-btn-name-color="`#dbdbdb`"
+                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-icons/copy1.png'}`"
+                @confirmPluginClick="secondRowBtnHandler"
+                @secBtnPluginClick="removeHandlerControler"
               />
             </div>
           </div>
-          <div v-if="headerStore.continueForExistENR" class="browserBox">
-            <ConfirmBox
-              v-if="!dkgControl || headerStore.depositFile"
-              :top-line="`${
-                headerStore.depositFile ? `${$t('serviceModal.backUpFile')}` : `${$t('serviceModal.startDkg')}`
-              }`"
-              :bottom-line="`${
-                headerStore.depositFile ? `${$t('serviceModal.exportBackup')}` : `${$t('serviceModal.allEnrSign')}`
-              }`"
-              :btn-name="`${headerStore.depositFile ? `${$t('addModifyPanel.save')}` : `${$t('serviceModal.srart')}`}`"
-              :btn-bg-color="`#192d31`"
-              :btn-name-color="`#2fe4ab`"
-              @confirmPluginClick="dkgSwitch"
-            />
-            <div v-else class="browserBox_import">
+          <div class="browserBox">
+            <div v-if="!headerStore.continueForExistENR || dkgControl == true" class="browserBox_import">
               <div class="import-title">
-                <span>{{ $t("serviceModal.pasteUrl") }}</span>
+                <span>{{ dkgControl !== true ? "INSERT EXISITING BACKUP" : $t("serviceModal.pasteUrl") }}</span>
               </div>
-              <div class="enrImport">
-                <input v-model="startDKG" type="text" :placeholder="`${$t('serviceModal.entrUrl')}`" />
+              <div class="enrImport" style="position: relative; z-index: 99">
+                <label
+                  v-if="!dkgControl"
+                  for="file_input"
+                  class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
+                >
+                  <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
+                  <span
+                    class="absolute cursor-pointer"
+                    style="color: #192d31; top: 1; left: 3%; font-size: 2rem; font-weight: 600"
+                    >+</span
+                  >
+                </label>
+                <input
+                  v-model="thirdRowInput"
+                  :style="`${dkgControl !== true ? 'padding-left: 12px; text-indent: 12px;' : ''}`"
+                  type="text"
+                  :placeholder="`${
+                    dkgControl !== true ? 'e.g., C:\\path\\to\\backup.zip' : $t('serviceModal.entrUrl')
+                  }`"
+                />
                 <div class="import-btn" @click="dkgImporter">
                   {{ $t("serviceModal.srart") }}
                 </div>
               </div>
             </div>
+            <ConfirmBox
+              v-else-if="!dkgControl || headerStore.depositFile"
+              :top-line="`${
+                areYouSureToRemoveCluster
+                  ? $t('serviceModal.areYouSureCluster')
+                  : headerStore.depositFile
+                  ? $t('serviceModal.backUpFile')
+                  : $t('serviceModal.startDkg')
+              }`"
+              :bottom-line="`${
+                areYouSureToRemoveCluster
+                  ? $t('serviceModal.areYouSureMsg')
+                  : headerStore.depositFile
+                  ? $t('serviceModal.exportBackup')
+                  : $t('serviceModal.allEnrSign')
+              }`"
+              :btn-name="`${
+                areYouSureToRemoveCluster
+                  ? $t('exitMultipleValidator.confirm')
+                  : headerStore.depositFile
+                  ? $t('serviceModal.save')
+                  : $t('serviceModal.srart')
+              }`"
+              :second-btn-name="`${
+                !headerStore.depositFile
+                  ? ''
+                  : areYouSureToRemoveCluster
+                  ? $t('displayValidator.cancel')
+                  : $t('serviceModal.rem')
+              }`"
+              :second-btn-bg-color="`#eb5353`"
+              :btn-bg-color="`${areYouSureToRemoveCluster ? '#74FA65' : '#192d31'}`"
+              :btn-name-color="`${areYouSureToRemoveCluster ? '#000' : '#2fe4ab'}`"
+              :second-btn-name-color="`#dbdbdb`"
+              @confirmPluginClick="dkgSwitch"
+              @secBtnPluginClick="removeHandlerClusterControler"
+            />
           </div>
         </div>
-        <div v-else class="wrapper"><EnrGenerator :cluster-definition="clusterDefinition" /></div>
+        <div v-else class="wrapper">
+          <EnrGenerator :cluster-definition="clusterDefinition" />
+        </div>
       </div>
     </div>
   </div>
@@ -117,6 +169,9 @@ const importedENR = ref("");
 const clusterDefinition = ref("");
 const dkgControl = ref(false);
 const isLoading = ref(true);
+const thirdRowInput = ref("");
+const areYouSureToRemove = ref(false);
+const areYouSureToRemoveCluster = ref(false);
 
 const headerStore = useNodeHeader();
 
@@ -155,6 +210,14 @@ const enrImport = () => {
   headerStore.continueForExistENR = true;
 };
 
+const secondRowBtnHandler = () => {
+  if (areYouSureToRemove.value) {
+    removeHandler();
+  } else {
+    copyHandler();
+  }
+};
+
 const copyHandler = () => {
   let toCopy = headerStore.generatedENR;
   navigator.clipboard
@@ -167,6 +230,13 @@ const copyHandler = () => {
     });
 };
 
+const removeHandlerControler = () => {
+  areYouSureToRemove.value = !areYouSureToRemove.value;
+};
+const removeHandlerClusterControler = () => {
+  areYouSureToRemoveCluster.value = !areYouSureToRemoveCluster.value;
+};
+
 const removeHandler = () => {
   //returns true if successful otherwise false
   ControlService.removeObolENR().then((res) => {
@@ -174,13 +244,17 @@ const removeHandler = () => {
       headerStore.generatedENR = "";
       headerStore.continueForExistENR = false;
       headerStore.depositFile = false;
+      dkgControl.value = false;
+      areYouSureToRemove.value = false;
     }
   });
 };
 
 const openDirectoryPicker = async () => {
   try {
-    const paths = await ControlService.openDirectoryDialog({ properties: ["openDirectory", "createDirectory"] });
+    const paths = await ControlService.openDirectoryDialog({
+      properties: ["openDirectory", "createDirectory"],
+    });
     return paths[0];
   } catch (error) {
     // Handle case when user cancels directory picker
@@ -193,7 +267,9 @@ const openDirectoryPicker = async () => {
 };
 
 const dkgSwitch = async () => {
-  if (headerStore.depositFile) {
+  if (areYouSureToRemoveCluster.value) {
+    console.log("remove cluster");
+  } else if (headerStore.depositFile) {
     const path = await openDirectoryPicker();
     if (path) {
       ControlService.downloadObolBackup(path);
@@ -204,14 +280,42 @@ const dkgSwitch = async () => {
 };
 
 const dkgImporter = () => {
-  if (!clusterDefinition.value) {
+  let backupPath;
+  if (!dkgControl.value) {
+    // path of existing backup
+    if (!thirdRowInput.value) {
+      console.log("please enter input");
+    } else {
+      backupPath = thirdRowInput.value;
+      console.log(backupPath);
+
+      headerStore.enrIsGenerating = false;
+      headerStore.generatorPlugin = false;
+      headerStore.distrubutedValidatorGenerator = false;
+      headerStore.deactivateBtnToWaitForLogs = false;
+      headerStore.depositFile = true;
+      headerStore.continueForExistENR = true;
+      thirdRowInput.value = "";
+    }
+  }
+  // url of cluster definition
+  else if (!thirdRowInput.value) {
     console.log("please enter url");
   } else {
+    clusterDefinition.value = thirdRowInput.value;
+    console.log(clusterDefinition.value);
+    thirdRowInput.value = "";
     headerStore.enrIsGenerating = false;
     headerStore.generatorPlugin = true;
     headerStore.distrubutedValidatorGenerator = true;
     headerStore.deactivateBtnToWaitForLogs = true;
   }
+};
+const previewFiles = (event) => {
+  const Path = event.target.files[0].path;
+  let pathString = new String(Path);
+  let result = pathString.toString();
+  thirdRowInput.value = result;
 };
 
 onMounted(async () => {

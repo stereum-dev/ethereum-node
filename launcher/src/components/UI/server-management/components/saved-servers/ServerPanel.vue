@@ -77,7 +77,7 @@ const searchQuery = ref("");
 
 const filteredServers = computed(() => {
   if (!searchQuery.value) {
-    return serverStore.savedServers.savedConnections;
+    return serverStore.savedServers?.savedConnections;
   }
   return serverStore.savedServers.savedConnections.filter((server) =>
     server.name.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -102,7 +102,7 @@ onMounted(async () => {
 const loadStoredConnections = async () => {
   serverStore.savedServers = await ControlService.readConfig();
 
-  serverStore.selectedServerConnection = serverStore.savedServers.savedConnections.find(
+  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find(
     (item) => item.host === controlStore.ipAddress
   );
 
