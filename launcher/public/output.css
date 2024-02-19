@@ -1204,6 +1204,10 @@ video {
   grid-column-end: 9;
 }
 
+.col-end-19{
+  grid-column-end: 19;
+}
+
 .row-span-1{
   grid-row: span 1 / span 1;
 }
