@@ -90,7 +90,6 @@ const handleModal = (slide) => {
 }
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
-  transform: scale(1.1) !important;
   transition: all 0.3s ease-in-out !important;
   background-color: rgb(223, 230, 231) !important;
   color: rgb(29, 29, 30) !important;
