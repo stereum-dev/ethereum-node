@@ -1014,7 +1014,7 @@ export class ValidatorAccountManager {
       let contentResult = await this.nodeConnection.sshService.exec(charonClient.getListCharonFolderContentsCommand());
       if (SSHService.checkExecError(contentResult) && contentResult.stderr) throw SSHService.extractExecError(contentResult);
       const content = contentResult.stdout;
-      const dkgCommand = charonClient.getDKGCommand(content.includes('cluster-definition.json') ? "" : input.match(/http(s)?:.*\/[0-9a-zA-z]*/));
+      const dkgCommand = charonClient.getDKGCommand(content.includes('cluster-definition.json') ? "" : input.match(/http(s)?:.*\/[0-9a-zA-z]*/)[0]);
 
       let result = await this.nodeConnection.sshService.exec(dkgCommand);
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -1059,6 +1059,14 @@ export class ValidatorAccountManager {
       if (result) {
         log.info("Obol Backup downloaded to: ", localPath);
       }
+    } catch (err) {
+      log.error("Error downloading Obol Backup: ", err);
+    }
+  }
+
+  async importObolBackup(localPath) {
+    try {
+      //this.nodeConnection.sshService.uploadDirectorySSH(localPath, "/some/remote/path");
     } catch (err) {
       log.error("Error downloading Obol Backup: ", err);
     }

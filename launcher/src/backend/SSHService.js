@@ -387,7 +387,7 @@ export class SSHService {
   }
 
   // returns filename and mode of the contents of a given directory
-  // workaround for readdirnot running with sudo
+  // workaround for readdir not running with sudo
   async readDirectorySSH(remotePath) {
     try {
       const result = await this.exec(`find ${remotePath} -maxdepth 1 -exec stat --format '%n\n%f\n' {} +`);
@@ -404,6 +404,18 @@ export class SSHService {
       })
     } catch (error) {
       log.error("Failed reading directory via SSH: ", error);
+      return [];
+    }
+  }
+
+  async readDirectoryLocal(localPath) {
+    try {
+      log.info("localPath", localPath)
+      const filenames = await fs.promises.readdir(localPath, { withFileTypes: true });
+      log.info("filenames", filenames)
+      return filenames;
+    } catch (error) {
+      console.error("Failed reading local directory: ", error);
       return [];
     }
   }
@@ -425,10 +437,10 @@ export class SSHService {
   }
 
   // downloads a Directory and all its contents recursively from the remotePath to the localPath
-  async downloadDirectorySSH(remotePath, localPath, sftp = null) {
+  async downloadDirectorySSH(remotePath, localPath, conn = null) {
     try {
-      if (!sftp) {
-        sftp = await this.getSFTPSession();
+      if (!conn) {
+        conn = await this.getConnectionFromPool();
       }
 
       if (!fs.existsSync(localPath)) {
@@ -441,7 +453,7 @@ export class SSHService {
         const localFilePath = path.join(localPath, item.filename);
 
         if (this.isDir(item.mode)) {
-          await this.downloadDirectorySSH(remoteFilePath, localFilePath, sftp);
+          await this.downloadDirectorySSH(remoteFilePath, localFilePath, conn);
         } else {
           await this.downloadFileSSH(remoteFilePath, localFilePath);
         }
@@ -449,6 +461,57 @@ export class SSHService {
       return true
     } catch (error) {
       log.error("Failed to download directory via SSH: ", error);
+      return false
+    }
+  }
+
+  async uploadFileSSH(localPath, remotePath, conn = this.getConnectionFromPool()) {
+    return new Promise((resolve, reject) => {
+      const readStream = fs.createReadStream(localPath);
+      readStream.on('error', reject);
+      readStream.on('close', resolve);
+
+      conn.exec(`sudo cat > ${remotePath}`, function (err, stream) {
+        if (err) throw err;
+        stream.on('error', reject);
+        stream.on('close', resolve);
+        readStream.pipe(stream.stdin);
+      });
+    });
+  }
+
+  async ensureRemotePathExists(remotePath, conn = this.getConnectionFromPool()) {
+    return new Promise((resolve, reject) => {
+      conn.exec(`sudo mkdir -p ${remotePath} && sudo chown deploy ${remotePath}`, (err) => {
+        if (err) reject(err);
+        resolve();
+      });
+    });
+  }
+
+  async uploadDirectorySSH(localPath, remotePath, conn = null) {
+    try {
+      if (!conn) {
+        conn = await this.getConnectionFromPool();
+      }
+
+      await this.ensureRemotePathExists(remotePath)
+
+      const dirContents = await this.readDirectoryLocal(localPath)
+      for (let item of dirContents) {
+        const remoteFilePath = path.posix.join(remotePath, item.name);
+        const localFilePath = path.join(localPath, item.name);
+        log.info("currentItem:", item, item.isDirectory())
+        if (item.isDirectory()) {
+          await this.uploadDirectorySSH(localFilePath, remoteFilePath, conn);
+        } else {
+          await this.uploadFileSSH(localFilePath, remoteFilePath);
+        }
+      }
+      //await this.exec(`chown -R root:root ${remotePath} && chmod -R 700 ${remotePath}`);
+      return true
+    } catch (error) {
+      log.error("Failed to upload directory via SSH: ", error);
       return false
     }
   }

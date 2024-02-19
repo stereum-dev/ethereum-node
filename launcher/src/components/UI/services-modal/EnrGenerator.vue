@@ -147,7 +147,7 @@ const startDKG = async () => {
   //first check if there is already a running dkg
   const isRunning = await ControlService.checkObolDKG();
   if (!isRunning) {
-    await ControlService.startObolDKG();
+    await ControlService.startObolDKG(props.clusterDefinition);
   }
   startDGKLogging();
 };

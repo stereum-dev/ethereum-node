@@ -93,7 +93,7 @@
                 <span>{{ $t("serviceModal.pasteUrl") }}</span>
               </div>
               <div class="enrImport">
-                <input v-model="startDKG" type="text" :placeholder="`${$t('serviceModal.entrUrl')}`" />
+                <input v-model="clusterDefinition" type="text" :placeholder="`${$t('serviceModal.entrUrl')}`" />
                 <div class="import-btn" @click="dkgImporter">
                   {{ $t("serviceModal.srart") }}
                 </div>
@@ -117,7 +117,6 @@ const importedENR = ref("");
 const clusterDefinition = ref("");
 const dkgControl = ref(false);
 const isLoading = ref(true);
-
 const headerStore = useNodeHeader();
 
 const openBrowser = () => {
@@ -230,12 +229,7 @@ onMounted(async () => {
   //check if ready for DKG
   headerStore.continueForExistENR = content.privateKey;
   //check if ready for operation
-  headerStore.depositFile =
-    content.privateKey &&
-    content.clusterDefinition &&
-    content.depositData &&
-    content.clusterLock &&
-    content.validatorKeys;
+  headerStore.depositFile = content.privateKey && content.depositData && content.clusterLock && content.validatorKeys;
 
   isLoading.value = false;
 });
