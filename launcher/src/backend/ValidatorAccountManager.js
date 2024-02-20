@@ -1066,9 +1066,16 @@ export class ValidatorAccountManager {
 
   async importObolBackup(localPath) {
     try {
-      //this.nodeConnection.sshService.uploadDirectorySSH(localPath, "/some/remote/path");
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+      const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
+      const result = await this.nodeConnection.sshService.uploadDirectorySSH(path.normalize(localPath), dataDir);
+      if (result) {
+        log.info("Obol Backup uownloaded from: ", localPath);
+      }
     } catch (err) {
-      log.error("Error downloading Obol Backup: ", err);
+      log.error("Error uploading Obol Backup: ", err);
     }
   }
 

@@ -347,16 +347,23 @@ export class SSHService {
     return keys;
   }
 
-  // Check if mode is a directory with fs constants https://nodejs.org/api/fs.html#fsconstants
-  // mode - integer - Mode/permissions for the resource.
-  // S_IFMT is a bit mask used to extract the file type code.
-  // S_IFDIR is a file type constant for a directory.
+  /**
+   * Checks if mode is a directory with fs constants https://nodejs.org/api/fs.html#fsconstants.
+   * `S_IFMT` is a bit mask used to extract the file type code.
+   * `S_IFDIR` is a file type constant for a directory.
+   * @param {Integer} mode 
+   * @returns `True` if mode is a directory, `False` otherwise
+   */
   isDir(mode) {
     return (mode & fs.constants.S_IFMT) == fs.constants.S_IFDIR;
   }
 
-  // opens an SFTP session and returns the session object.
-  // optionally takes a ssh session object as an argument, otherwise it will get a new connection from the pool.
+  /**
+   * Get an SFTP session object from the connection pool.
+   * Optionally takes a ssh session object as an argument, otherwise it will get a new connection from the pool.
+   * @param {Client} [conn] 
+   * @returns sftp session object
+   */
   async getSFTPSession(conn = null) {
     conn = this.getConnectionFromPool()
     return new Promise((resolve, reject) => {
@@ -370,7 +377,12 @@ export class SSHService {
     });
   }
 
-  // reads a directory's contents and returns an array of stats objects of these contents
+  /**
+   * Reads a directory's contents from remotePath using SFTP
+   * @param {String} remotePath 
+   * @param {SFTP Session} [sftp] 
+   * @returns Array of objects containing filename and mode of the contents of a given directory on the remote server.
+   */
   async readDirectorySFTP(remotePath, sftp = null) {
     if (!sftp) {
       sftp = await this.getSFTPSession();
@@ -386,8 +398,12 @@ export class SSHService {
     });
   }
 
-  // returns filename and mode of the contents of a given directory
-  // workaround for readdir not running with sudo
+  /**
+   * Returns an array of objects containing filename and mode of the contents of a given directory on the remote server.
+   * "orkaround for readdir not running with sudo permissions.
+   * @param {String} remotePath 
+   * @returns 
+   */
   async readDirectorySSH(remotePath) {
     try {
       const result = await this.exec(`find ${remotePath} -maxdepth 1 -exec stat --format '%n\n%f\n' {} +`);
@@ -408,6 +424,11 @@ export class SSHService {
     }
   }
 
+  /**
+   * Reads a directory's contents from localPath
+   * @param {String} localPath 
+   * @returns Array of Dirent objects or an empty array on error
+   */
   async readDirectoryLocal(localPath) {
     try {
       log.info("localPath", localPath)
@@ -420,8 +441,15 @@ export class SSHService {
     }
   }
 
-  // uses "cat" to get file contetns and pipes that stream to a local write stream
-  // this is a workaround for the lack of sudo permissions with sftp createReadStream
+  /**
+   * Downloads a file from remotePath to localPath.
+   * Uses "cat" to get file contents and pipes that stream to a local write stream.
+   * This is a workaround for the lack of sudo permissions with sftp createReadStream.
+   * @param {String} remotePath 
+   * @param {String} localPath 
+   * @param {Client} [conn] 
+   * @returns `void`
+   */
   async downloadFileSSH(remotePath, localPath, conn = this.getConnectionFromPool()) {
     return new Promise((resolve, reject) => {
       const writeStream = fs.createWriteStream(localPath);
@@ -436,7 +464,13 @@ export class SSHService {
     });
   }
 
-  // downloads a Directory and all its contents recursively from the remotePath to the localPath
+  /**
+   * Downloads a Directory and all its contents recursively from the remotePath to the localPath
+   * @param {String} remotePath 
+   * @param {String} localPath 
+   * @param {Client} [conn] 
+   * @returns `true` if download was successful, `false` otherwise
+   */
   async downloadDirectorySSH(remotePath, localPath, conn = null) {
     try {
       if (!conn) {
@@ -464,7 +498,13 @@ export class SSHService {
       return false
     }
   }
-
+  /**
+   * Uploads a file from localPath to remotePath
+   * @param {String} localPath 
+   * @param {String} remotePath 
+   * @param {Client} [conn] 
+   * @returns `void`
+   */
   async uploadFileSSH(localPath, remotePath, conn = this.getConnectionFromPool()) {
     return new Promise((resolve, reject) => {
       const readStream = fs.createReadStream(localPath);
@@ -479,16 +519,27 @@ export class SSHService {
       });
     });
   }
-
+  /**
+   * Ensures that the remotePath exists and is owned by the current user
+   * @param {String} remotePath 
+   * @param {Client} [conn] 
+   */
   async ensureRemotePathExists(remotePath, conn = this.getConnectionFromPool()) {
     return new Promise((resolve, reject) => {
-      conn.exec(`sudo mkdir -p ${remotePath} && sudo chown deploy ${remotePath}`, (err) => {
+      conn.exec(`sudo mkdir -p ${remotePath} && sudo chown ${this.connectionInfo.user} ${remotePath}`, (err) => {
         if (err) reject(err);
         resolve();
       });
     });
   }
 
+  /**
+   * Uploads a directory and all its contents recursively from the localPath to the remotePath
+   * @param {String} localPath 
+   * @param {String} remotePath 
+   * @param {Client} [conn] 
+   * @returns `true` if upload was successful, `false` otherwise
+   */
   async uploadDirectorySSH(localPath, remotePath, conn = null) {
     try {
       if (!conn) {
@@ -508,7 +559,6 @@ export class SSHService {
           await this.uploadFileSSH(localFilePath, remoteFilePath);
         }
       }
-      //await this.exec(`chown -R root:root ${remotePath} && chmod -R 700 ${remotePath}`);
       return true
     } catch (error) {
       log.error("Failed to upload directory via SSH: ", error);
