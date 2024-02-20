@@ -104,7 +104,7 @@
                 </label>
                 <input
                   v-model="thirdRowInput"
-                  :style="`${dkgControl !== true ? 'padding-left: 12px; text-indent: 12px;' : ''}`"
+                  :style="`${dkgControl !== true ? 'padding-left: 14px; text-indent: 14px;' : ''}`"
                   type="text"
                   :placeholder="`${
                     dkgControl !== true ? 'e.g., C:\\path\\to\\backup.zip' : $t('serviceModal.entrUrl')
