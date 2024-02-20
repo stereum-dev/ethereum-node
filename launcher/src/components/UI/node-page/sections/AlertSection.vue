@@ -1,6 +1,6 @@
 <template>
   <div class="h-[430px] flex flex-col justify-between items-center">
-    <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
+    <NodeTutorial v-if="!infoAlarm" />
     <NodeAlert v-else />
   </div>
 </template>
