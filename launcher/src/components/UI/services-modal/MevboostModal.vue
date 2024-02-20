@@ -1,6 +1,9 @@
 <template>
-  <div class="service-modal_parent">
-    <div class="bg-dark" @click="closeWindow"></div>
+  <div class="w-full h-full absolute inset-0 flex justify-center items-center">
+    <div
+      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
+      @click="$emit('closeWindow')"
+    ></div>
     <div class="browser-modal">
       <div class="mev-header">
         <div class="icon-box">

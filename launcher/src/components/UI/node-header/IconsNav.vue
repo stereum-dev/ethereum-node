@@ -98,7 +98,7 @@ import LogoutModal from "./LogoutModal.vue";
 import ReconnectModal from "./ReconnectModal.vue";
 import SupportModal from "./SupportModal.vue";
 import NotifModal from "./NotifModal.vue";
-import { useNodeHeader } from "../../../store/nodeHeader";
+import { useNodeHeader } from "@/store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import { useUpdateCheck } from "@/composables/version";

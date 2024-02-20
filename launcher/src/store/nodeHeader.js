@@ -1,7 +1,26 @@
 import { defineStore } from "pinia";
+
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      //Service Modals begin
+      isServiceAvailable: true,
+      showGrafanaWindow: false,
+      showSsvWindow: false,
+      showPrometheusWindow: false,
+      showMevboostWindow: false,
+      showObolCharonWindow: false,
+      //Service Modals end
+
+      //Menu Modals begin
+      displayUpdatePanel: false,
+      logoutModalIsActive: false,
+      reconnectModalIsActive: false,
+      supportModalIsActive: false,
+      notificationModalIsActive: false,
+      isStakeGuideActive: false,
+      isTutorialActive: false,
+      //Menu Modals end
       importBoxModel: "",
       passwordBoxModel: "",
       selectedValidatorFromNodeAlert: {},
@@ -12,11 +31,10 @@ export const useNodeHeader = defineStore("nodeHeader", {
       generatorPlugin: false,
       obolDashboard: false,
       continueForExistENR: false,
-      notificationModalIsActive: false,
       serverAccessManagement: false,
       distrubutedValidatorGenerator: false,
       deactivateBtnToWaitForLogs: false,
-      displayUpdatePanel: false,
+
       runningServices: [],
       refresh: true,
       stereumUpdate: {},
@@ -29,8 +47,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       osUpdating: false,
       osVersionLatest: "-",
       operators: [{ operatorName: "stereum" }, { operatorName: "Rocklogic GmbH" }],
-      tutorial: false,
-      stakeGuide: false,
+
       rpcOne: true,
       rpcTwo: false,
       stakeFirstStep: true,
@@ -49,5 +66,71 @@ export const useNodeHeader = defineStore("nodeHeader", {
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    setServiceModal(serviceName) {
+      switch (serviceName) {
+        case "GrafanaService":
+          this.showGrafanaWindow = true;
+          break;
+        case "SSVNetworkService":
+          this.showSsvWindow = true;
+          break;
+        case "PrometheusService":
+          this.showPrometheusWindow = true;
+          break;
+        case "FlashbotsMevBoostService":
+          this.showMevboostWindow = true;
+          break;
+        case "CharonService":
+          this.showObolCharonWindow = true;
+          break;
+        case null:
+          this.showGrafanaWindow = false;
+          this.showSsvWindow = false;
+          this.showPrometheusWindow = false;
+          this.showMevboostWindow = false;
+          this.showObolCharonWindow = false;
+          this.displayUpdatePanel = false;
+          break;
+        default:
+          console.error(`No modal associated with the service name: ${serviceName}`);
+      }
+    },
+    setMenuModal(name) {
+      switch (name) {
+        case "Available Update":
+          this.displayUpdatePanel = true;
+          break;
+        case "Logout":
+          this.logoutModalIsActive = true;
+          break;
+        case "Reconnect":
+          this.reconnectModalIsActive = true;
+          break;
+        case "Help":
+          this.supportModalIsActive = true;
+          break;
+        case "Notifications":
+          this.notificationModalIsActive = true;
+          break;
+        case "StakeGuide":
+          this.isStakeGuideActive = true;
+          break;
+        case "Tutorial":
+          this.isTutorialActive = true;
+          break;
+        case null:
+          this.displayUpdatePanel = false;
+          this.logoutModalIsActive = false;
+          this.reconnectModalIsActive = false;
+          this.supportModalIsActive = false;
+          this.notificationModalIsActive = false;
+          this.isStakeGuideActive = false;
+          this.isTutorialActive = false;
+          break;
+        default:
+          console.error("No modal");
+      }
+    },
+  },
 });
