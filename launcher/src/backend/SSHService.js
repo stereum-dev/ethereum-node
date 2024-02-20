@@ -400,7 +400,7 @@ export class SSHService {
 
   /**
    * Returns an array of objects containing filename and mode of the contents of a given directory on the remote server.
-   * "orkaround for readdir not running with sudo permissions.
+   * Workaround for readdir not running with sudo permissions.
    * @param {String} remotePath 
    * @returns 
    */
@@ -552,7 +552,6 @@ export class SSHService {
       for (let item of dirContents) {
         const remoteFilePath = path.posix.join(remotePath, item.name);
         const localFilePath = path.join(localPath, item.name);
-        log.info("currentItem:", item, item.isDirectory())
         if (item.isDirectory()) {
           await this.uploadDirectorySSH(localFilePath, remoteFilePath, conn);
         } else {

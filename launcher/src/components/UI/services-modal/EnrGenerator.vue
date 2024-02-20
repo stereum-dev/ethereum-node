@@ -170,7 +170,6 @@ const startDKG = async () => {
 const startDGKLogging = async () => {
   dkgLogs.value = (await ControlService.getObolDKGLogs()).split("\n");
   polling.value = setInterval(async () => {
-    console.log("interval running...");
     const logs = await ControlService.getObolDKGLogs();
     dkgLogs.value = logs.split("\n");
     if (logs.includes("Successfully completed DKG ceremony")) {

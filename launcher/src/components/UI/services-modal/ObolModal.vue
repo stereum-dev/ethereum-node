@@ -155,7 +155,7 @@
           </div>
         </div>
         <div v-else class="wrapper">
-          <EnrGenerator :cluster-definition="clusterDefinition" :dkg-control="dkgControl" />
+          <EnrGenerator :cluster-definition="clusterDefinition" />
         </div>
       </div>
     </div>
