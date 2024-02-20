@@ -525,18 +525,19 @@ onMounted(async () => {
   width: 100%;
   height: 70%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
 }
 .enrImport input {
-  width: 95%;
+  width: 71.5%;
   height: 50%;
   border: none;
-  border-radius: 20px;
+  border-radius: 20px 0 0 20px;
   font-size: 0.9rem;
   font-weight: 600;
   padding-left: 10px;
+  margin-left: 10px;
 }
 .import-title span {
   color: #dbdbdb;
@@ -565,11 +566,11 @@ onMounted(async () => {
 }
 .import-btn:hover {
   transition-duration: 100ms;
-  background-color: #1a2e32e6;
+  background-color: #1c3035;
 }
 .import-btn:active {
   transition-duration: 100ms;
-  background-color: #1a2e32e6;
+  background-color: #22393e;
   box-shadow: 1px 1px 10px 1px #171717 inset;
 }
 </style>
