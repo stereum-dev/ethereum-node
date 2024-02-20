@@ -106,8 +106,6 @@ const enrBtnToShow = computed(() => {
     return "CONTINUE"; //continue
   } else if (headerStore.distrubutedValidatorGenerator && !headerStore.enrIsGenerating) {
     return "DKG FINISHED";
-  } else if (backupDistributedValidator.value && !headerStore.enrIsGenerating) {
-    return "BACKUP";
   } else if (distributedCompleted.value && !headerStore.enrIsGenerating) {
     return "COMPLETE";
   }
