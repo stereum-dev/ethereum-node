@@ -131,6 +131,12 @@ onMounted(() => {
   getSettings();
 });
 
+//const test = await ControlService.getUpgradeablePackages();
+//console.log(test);
+//await ControlService.updatePackage(package);
+
+// await ControlService.updateOS();
+
 const getSettings = async () => {
   let settings = await ControlService.getStereumSettings();
   if (settings.stereum?.settings.updates.unattended.install) {

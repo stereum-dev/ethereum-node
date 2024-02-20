@@ -209,12 +209,16 @@ export class NodeUpdates {
     try {
       await this.nodeConnection.sshService.exec(`apt update`);
       const output = await this.nodeConnection.sshService.exec(`apt list --upgradable`);
+      //console.log("1_Output received:", output);
+      const stdout = output.stdout;
 
-      // Ensure the output ends with a newline character
-      const outputWithNewline = output.endsWith("\n") ? output : output + "\n";
-
+      // Ensure the stdout ends with a newline character
+      const outputWithNewline = stdout.endsWith("\n") ? stdout : stdout + "\n";
+      // Remaining code remains the same...
+      //console.log("2_Output with new Line:", outputWithNewline);
       // Split the output into lines
       const lines = outputWithNewline.split("\n");
+      console.log("3_:", lines);
 
       const packages = lines
         .slice(1)
@@ -232,7 +236,7 @@ export class NodeUpdates {
           }
         })
         .filter((entry) => entry !== null); // Filter out null entries
-
+      console.log("4_:", packages);
       return packages;
     } catch (err) {
       log.error("Error occurred during get list of upgradeable os packages:\n", err);
