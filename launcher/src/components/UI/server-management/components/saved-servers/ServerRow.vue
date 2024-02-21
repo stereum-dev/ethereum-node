@@ -85,7 +85,7 @@ const getServerNumber = computed(() => {
 
 const serverAvatar = computed(() => {
   if (props.server.avatar) return props.server.avatar;
-  else return "/avatar/server_selection_1.png";
+  else return "/avatar/default.png";
 });
 
 const connectedServer = computed(() => {
