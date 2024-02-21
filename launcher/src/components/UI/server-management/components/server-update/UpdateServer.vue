@@ -31,7 +31,9 @@
         class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 grid grid-cols-6 items-center gap-x-2 px-1"
       >
         <div class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center">
-          <span class="text-sm font-semibold text-gray-300 text-center">{{ headerStore.osVersionLatest }}</span>
+          <span class="text-sm font-semibold text-gray-300 text-center">{{
+            packagesCount.length ? packagesCount.length : 0
+          }}</span>
         </div>
 
         <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">AVAILABLE SERVER OS UPDATES</span>
@@ -41,22 +43,22 @@
         class="w-full h-full max-h-[200px] col-start-1 col-span-full row-start-3 row-end-11 border border-gray-500 rounded-md flex flex-col justify-start items-center p-1 space-y-1 bg-black overflow-x-hidden overflow-y-auto"
       >
         <UpdateRow
-          v-for="item in updates"
-          v-show="updates.length"
+          v-for="item in newUpdates"
+          v-show="newUpdates.length > '0'"
           :key="item"
           :item="item"
-          @update-server="updateServer"
+          @update-package="updatePackage"
         />
-        <ListRow v-for="task in updateTasks" v-show="!updates.length" :key="task.action" :task="task" />
+        <ListRow v-for="task in updateTasks" v-show="newUpdates.length === '0'" :key="task.action" :task="task" />
       </div>
       <div class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full grid grid-cols-12 py-2">
         <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center">
           <div
             class="w-full h-full flex justify-evenly items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm active:scale-90 shadow-md shadow-black active:shadow-none transition-all duration-100 ease-in-out cursor-pointer"
             :class="{
-              'opacity-40 pointer-events-none bg-[#3d4244] scale-95': updates.length === 0,
+              'opacity-40 pointer-events-none bg-[#3d4244] scale-95': newUpdates.length === 0,
             }"
-            @click.prevent.stop="updateServer"
+            @click.prevent="updateAll"
           >
             <span class="text-gray-100 text-sm font-semibold uppercase">{{ $t("updatePanel.all") }}</span>
             <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
@@ -80,9 +82,13 @@ import ControlService from "@/store/ControlService";
 
 import { ref, onMounted, computed } from "vue";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useServers } from "@/store/servers";
 
 const headerStore = useNodeHeader();
+const serverStore = useServers();
 
+const doneUpdatesTask = ref([]);
+const packagesCount = ref(0);
 const osVersionCurrent = ref("");
 const stereumApp = ref({
   current: "alpha",
@@ -90,32 +96,9 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 
-const updateTasks = ref([
-  {
-    action: "minor os update",
-  },
-  {
-    action: "major os update",
-  },
-  {
-    action: "patch os update",
-  },
-]);
-
-const updates = ref([
-  // {
-  //   name: "Ubuntu",
-  //   version: "20.04",
-  // },
-  // {
-  //   name: "Ubuntu",
-  //   version: "20.03",
-  // },
-  // {
-  //   name: "Ubuntu",
-  //   version: "20.02",
-  // },
-]);
+const newUpdates = computed(() => {
+  return serverStore.upgradablePackages;
+});
 
 const onOff = computed(() => {
   if (stereumApp.value.autoUpdate == "on") {
@@ -127,6 +110,7 @@ const onOff = computed(() => {
 
 onMounted(() => {
   getUpdatablePackagesCount();
+  getUpgradablePackages();
   getOsVersion();
   getSettings();
 });
@@ -148,11 +132,7 @@ const getSettings = async () => {
 
 const getUpdatablePackagesCount = async () => {
   try {
-    const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
-    const numPackages = Number(packagesCount);
-    headerStore.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-    headerStore.isOsUpdateAvailable = headerStore.osVersionLatest ? true : false;
-    return headerStore.osVersionLatest;
+    packagesCount.value = await ControlService.getUpgradeablePackages();
   } catch (error) {
     headerStore.osVersionLatest = 0;
     headerStore.isOsUpdateAvailable = false;
@@ -170,15 +150,32 @@ const getOsVersion = async () => {
   }
 };
 
-const updateServer = async () => {
-  console.log("update os");
-  // try {
-  //   serverStore.isUpdateProcessing = true;
-  //   await ControlService.updateOS(item.version);
-  //   serverStore.isUpdateProcessing = false;
-  // } catch (error) {
-  //   serverStore.isUpdateProcessing = false;
-  //   console.log(error);
-  // }
+const getUpgradablePackages = async () => {
+  try {
+    serverStore.upgradablePackages = await ControlService.getUpgradeablePackages();
+    console.log(serverStore.upgradablePackages);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updatePackage = async (item) => {
+  console.log("update package");
+  try {
+    serverStore.isUpdateProcessing = true;
+    await ControlService.updatePackage(item.packageName);
+    serverStore.isUpdateProcessing = false;
+  } catch (error) {
+    serverStore.isUpdateProcessing = false;
+    console.log(error);
+  }
+};
+
+const updateAll = async () => {
+  try {
+    await ControlService.updateOS();
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>

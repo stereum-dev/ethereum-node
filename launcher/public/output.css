@@ -4566,10 +4566,6 @@ video {
           transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
-.scrollbar{
-  scrollbar-color: var(--scrollbar-thumb, initial) var(--scrollbar-track, initial);
-}
-
 .scrollbar::-webkit-scrollbar-track{
   background-color: var(--scrollbar-track);
   border-radius: var(--scrollbar-track-radius);
@@ -4611,6 +4607,7 @@ video {
 
 .scrollbar{
   scrollbar-width: auto;
+  scrollbar-color: var(--scrollbar-thumb, initial) var(--scrollbar-track, initial);
 }
 
 .scrollbar::-webkit-scrollbar{
