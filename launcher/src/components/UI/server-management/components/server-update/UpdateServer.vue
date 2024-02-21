@@ -49,7 +49,6 @@
           :item="item"
           @update-package="updatePackage"
         />
-        <ListRow v-for="task in updateTasks" v-show="newUpdates.length === '0'" :key="task.action" :task="task" />
       </div>
       <div class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full grid grid-cols-12 py-2">
         <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center">
@@ -77,7 +76,6 @@
 
 <script setup>
 import UpdateRow from "./UpdateRow.vue";
-import ListRow from "./ListRow.vue";
 import ControlService from "@/store/ControlService";
 
 import { ref, onMounted, computed } from "vue";
@@ -87,7 +85,6 @@ import { useServers } from "@/store/servers";
 const headerStore = useNodeHeader();
 const serverStore = useServers();
 
-const doneUpdatesTask = ref([]);
 const packagesCount = ref(0);
 const osVersionCurrent = ref("");
 const stereumApp = ref({
