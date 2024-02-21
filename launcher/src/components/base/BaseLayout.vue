@@ -140,6 +140,10 @@ const runOsUpdate = async () => {
   }
 };
 
+const logoutModalHandler = () => {
+  headerStore.logoutModalIsActive = true;
+};
+
 const loggingOut = async () => {
   serverStore.connectingAnimActive = false;
   headerStore.refresh = false;

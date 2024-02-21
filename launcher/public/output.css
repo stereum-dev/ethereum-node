@@ -1148,8 +1148,8 @@ video {
   grid-column-end: 17;
 }
 
-.col-end-18{
-  grid-column-end: 18;
+.col-end-19{
+  grid-column-end: 19;
 }
 
 .col-end-2{
@@ -1202,10 +1202,6 @@ video {
 
 .col-end-9{
   grid-column-end: 9;
-}
-
-.col-end-19{
-  grid-column-end: 19;
 }
 
 .row-span-1{
@@ -1713,6 +1709,10 @@ video {
   height: 100vh;
 }
 
+.h-1\/2{
+  height: 50%;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -2109,6 +2109,22 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-40{
+  width: 10rem;
+}
+
+.w-44{
+  width: 11rem;
+}
+
+.w-48{
+  width: 12rem;
+}
+
+.w-52{
+  width: 13rem;
 }
 
 .min-w-\[100px\]{
@@ -2779,6 +2795,10 @@ video {
 
 .rounded-xl{
   border-radius: 0.75rem;
+}
+
+.rounded-\[75px\]{
+  border-radius: 75px;
 }
 
 .rounded-b-lg{
@@ -3660,6 +3680,11 @@ video {
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#2a2e30\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(42 46 48 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
@@ -5122,6 +5147,11 @@ html body {
   background-color: rgb(76 121 96 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-black:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-blue-100:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(219 234 254 / var(--tw-bg-opacity));
@@ -5217,9 +5247,9 @@ html body {
   background-color: rgb(4 47 46 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-black:hover{
+.hover\:bg-red-800:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+  background-color: rgb(153 27 27 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-opacity-10:hover{
