@@ -87,6 +87,10 @@ export class CharonService extends NodeService {
     return `rm -rf ${this.getDataDir()}/.charon`;
   }
 
+  getCreateCharonFolderCommand() {
+    return `mkdir -p ${this.getDataDir()}/.charon`;
+  }
+
   getWriteENRPrivateKeyCommand(privateKey) {
     return `echo "${privateKey}" > ${this.getDataDir()}/.charon/charon-enr-private-key`
   }

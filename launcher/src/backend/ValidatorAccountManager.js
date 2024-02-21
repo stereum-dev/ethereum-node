@@ -915,8 +915,12 @@ export class ValidatorAccountManager {
       let charonClient = services.find((service) => service.service === "CharonService");
       if (!charonClient) throw "Couldn't find CharonService";
       if (privateKey) {
-        let result = await this.nodeConnection.sshService.exec(charonClient.getWriteENRPrivateKeyCommand(privateKey));
+        let result = await this.nodeConnection.sshService.exec(charonClient.getCreateCharonFolderCommand());
         if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+
+        result = await this.nodeConnection.sshService.exec(charonClient.getWriteENRPrivateKeyCommand(privateKey));
+        if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+
         let enr = await this.getObolENRPublicKey()
         return enr;
       } else {
