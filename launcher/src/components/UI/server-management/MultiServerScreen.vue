@@ -23,6 +23,13 @@ import ServerHeader from './components/ServerHeader.vue';
       @close-window="closeWindow"
     />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
+
+    <div
+      v-if="serverStore.isServerAnimationActive"
+      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full flex justify-center items-center rounded-md bg-black bg-opacity-50 z-40"
+    >
+      <img class="w-2/3 z-50" src="/animation/servers/server_switch.gif" alt="Anim" />
+    </div>
   </div>
 </template>
 
@@ -95,8 +102,12 @@ const loginHandler = async () => {
   if (router.currentRoute.value.path === "/login") {
     await login();
   } else {
+    serverStore.isServerAnimationActive = true;
     await ControlService.logout();
     await login();
+    setTimeout(() => {
+      serverStore.isServerAnimationActive = false;
+    }, 3000);
   }
 };
 
