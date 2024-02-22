@@ -403,9 +403,9 @@ const updateConfirm = async () => {
   try {
     headerStore.refresh = false;
     headerStore.updating = true;
-    headerStore.newUpdates.forEach((update) => (update.running = true));
+    serviceStore.newUpdates.forEach((update) => (update.running = true));
     seconds = await ControlService.runAllUpdates({
-      commit: this.stereumUpdate.commit,
+      commit: headerStore.stereumUpdate.commit,
     });
   } catch (err) {
     console.log("Running All Updates Failed: ", err);
