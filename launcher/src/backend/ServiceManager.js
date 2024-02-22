@@ -1072,11 +1072,17 @@ export class ServiceManager {
           service.dependencies.executionClients,
           service.dependencies.consensusClients
         );
+        let replacementString = ""
+        if (config.ssv_sk) {
+          replacementString = "OperatorPrivateKey: " + config.ssv_sk
+        } else {
+          replacementString = "KeyStore:\n  PrivateKeyFile: /secrets/encrypted_private_key.json\n  PasswordFile: /secrets/password"
+        }
 
         // prepare service's config file
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
         const escapedConfigFile = StringUtils.escapeStringForShell(
-          ssvConfig.replace(/^OperatorPrivateKey.*/gm, "OperatorPrivateKey: " + config.ssv_sk)
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, replacementString)
         );
         this.nodeConnection.sshService.exec(
           `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
