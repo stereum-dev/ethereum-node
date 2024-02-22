@@ -130,18 +130,20 @@ export default {
         ControlService.getServiceConfig(this.mevService.config.serviceID)
           .then((service) => {
             if (service && service.entrypoint) {
+              this.serviceConfig = service;
               const relayEntryPointIndex = service.entrypoint.findIndex((e) => e === "-relays");
               if (relayEntryPointIndex !== -1 && relayEntryPointIndex + 1 < service.entrypoint.length) {
-                const relayURLs = service.entrypoint[relayEntryPointIndex + 1].split(",");
-                relayURLs.forEach((relay) => {
-                  let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
-                  if (relayData) this.checkedRelays.push(relayData);
-                });
+                if (service.entrypoint[relayEntryPointIndex + 1]) {
+                  const relayURLs = service.entrypoint[relayEntryPointIndex + 1].split(",");
+                  relayURLs.forEach((relay) => {
+                    let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
+                    if (relayData) this.checkedRelays.push(relayData);
+                  });
+                }
               } else {
                 console.error("Invalid or missing -relays entry in service entrypoint");
                 // Handle the error or add appropriate fallback logic.
               }
-              this.serviceConfig = service;
             } else {
               console.error("Invalid service or missing entrypoint");
               // Handle the error or add appropriate fallback logic.
@@ -179,6 +181,9 @@ export default {
             this.$emit("closeWindow");
           }, 2000);
         });
+      } else {
+        this.loading = false;
+        console.error("Invalid service or missing entrypoint");
       }
     },
     closeWindow() {
