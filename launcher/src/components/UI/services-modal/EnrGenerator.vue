@@ -10,11 +10,16 @@
     <div
       class="obol-modal-plugin_spaceWindow"
       :style="{
-        backgroundImage: backupDistributedValidator || distributedCompleted ? distrubutedValidatorAnimation : '',
+        backgroundImage:
+          backupDistributedValidator || distributedCompleted
+            ? distrubutedValidatorAnimation
+            : '',
       }"
     >
       <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
-        <span v-if="!headerStore.distrubutedValidatorGenerator">{{ headerStore.generatedENR }}</span>
+        <span v-if="!headerStore.distrubutedValidatorGenerator">{{
+          headerStore.generatedENR
+        }}</span>
         <div v-else class="span-wrapper">
           <span v-for="item in dkgLogs" :key="item">{{ item }}</span>
         </div>
@@ -37,7 +42,6 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted, computed, onBeforeUnmount } from "vue";
 import ControlService from "@/store/ControlService";
 import { saveToFile } from "@/composables/utils";
-import { defineProps } from "vue";
 
 // Define props
 const props = defineProps({
@@ -48,7 +52,9 @@ const enrGeneratedSuccess = ref(false);
 const enrGeneratedFailed = ref(false);
 const enrGeneratedContinue = ref(false);
 const backupDistributedValidator = ref(false);
-const distrubutedValidatorAnimation = ref("url('./img/icon/service-icons/obol_animation.gif')");
+const distrubutedValidatorAnimation = ref(
+  "url('./img/icon/service-icons/obol_animation.gif')"
+);
 const distributedCompleted = ref(false);
 const polling = ref(null);
 const dkgLogs = ref([]);
@@ -93,7 +99,11 @@ const enrBtnToShow = computed(() => {
     return "Y of X CONNECTED";
   } else if (backupDistributedValidator.value && !headerStore.enrIsGenerating) {
     return "BACKUP";
-  } else if (distributedCompleted.value && !headerStore.enrIsGenerating && !backupDistributedValidator.value) {
+  } else if (
+    distributedCompleted.value &&
+    !headerStore.enrIsGenerating &&
+    !backupDistributedValidator.value
+  ) {
     return "COMPLETE";
   }
 
@@ -167,7 +177,9 @@ const startDGKLogging = async () => {
 
 const openDirectoryPicker = async () => {
   try {
-    const paths = await ControlService.openDirectoryDialog({ properties: ["openDirectory", "createDirectory"] });
+    const paths = await ControlService.openDirectoryDialog({
+      properties: ["openDirectory", "createDirectory"],
+    });
     backupPath.value = paths[0];
   } catch (error) {
     // Handle case when user cancels directory picker
