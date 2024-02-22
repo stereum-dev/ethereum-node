@@ -93,7 +93,7 @@ export const useServers = defineStore("servers", {
       connectExistingServer: false,
 
       //Server Management tabs
-
+      isServerAnimationActive: false,
       isServerLoginActive: false,
       isServerDetailsActive: false,
       isServerSSHActive: false,

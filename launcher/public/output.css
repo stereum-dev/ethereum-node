@@ -1877,6 +1877,10 @@ video {
   min-height: 450px;
 }
 
+.min-h-\[146px\]{
+  min-height: 146px;
+}
+
 .w-1\/2{
   width: 50%;
 }
@@ -3690,6 +3694,10 @@ video {
 
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
+}
+
+.bg-opacity-50{
+  --tw-bg-opacity: 0.5;
 }
 
 .bg-gradient-to-b{
