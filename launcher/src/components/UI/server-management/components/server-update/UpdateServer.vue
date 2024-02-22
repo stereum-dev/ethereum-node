@@ -32,7 +32,7 @@
       >
         <div class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center">
           <span class="text-sm font-semibold text-gray-300 text-center">{{
-            packagesCount.length ? packagesCount.length : 0
+            serverStore.upgradablePackages?.length ? serverStore.upgradablePackages.length : 0
           }}</span>
         </div>
 
@@ -79,13 +79,10 @@ import UpdateRow from "./UpdateRow.vue";
 import ControlService from "@/store/ControlService";
 
 import { ref, onMounted, computed } from "vue";
-import { useNodeHeader } from "@/store/nodeHeader";
 import { useServers } from "@/store/servers";
 
-const headerStore = useNodeHeader();
 const serverStore = useServers();
 
-const packagesCount = ref(0);
 const osVersionCurrent = ref("");
 const stereumApp = ref({
   current: "alpha",
@@ -106,17 +103,10 @@ const onOff = computed(() => {
 });
 
 onMounted(() => {
-  getUpdatablePackagesCount();
   getUpgradablePackages();
   getOsVersion();
   getSettings();
 });
-
-//const test = await ControlService.getUpgradeablePackages();
-//console.log(test);
-//await ControlService.updatePackage(package);
-
-// await ControlService.updateOS();
 
 const getSettings = async () => {
   let settings = await ControlService.getStereumSettings();
@@ -124,16 +114,6 @@ const getSettings = async () => {
     stereumApp.value.autoUpdate = "on";
   } else {
     stereumApp.value.autoUpdate = "off";
-  }
-};
-
-const getUpdatablePackagesCount = async () => {
-  try {
-    packagesCount.value = await ControlService.getUpgradeablePackages();
-  } catch (error) {
-    headerStore.osVersionLatest = 0;
-    headerStore.isOsUpdateAvailable = false;
-    console.log(error);
   }
 };
 
@@ -150,9 +130,9 @@ const getOsVersion = async () => {
 const getUpgradablePackages = async () => {
   try {
     serverStore.upgradablePackages = await ControlService.getUpgradeablePackages();
-    console.log(serverStore.upgradablePackages);
   } catch (error) {
     console.log(error);
+    serverStore.upgradablePackages = [];
   }
 };
 

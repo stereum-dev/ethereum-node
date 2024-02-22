@@ -32,9 +32,6 @@ const serverStore = useServers();
 const props = defineProps({
   item: Object,
 });
-
-console.log(props.item);
-
 const updatePackage = () => {
   emit("updatePackage", props.item);
 };
