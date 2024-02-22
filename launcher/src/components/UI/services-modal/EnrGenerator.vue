@@ -21,18 +21,13 @@
       </div>
     </div>
     <div class="obol-modal-plugin_btn-box">
-      <input
-        v-if="backupDistributedValidator"
-        v-model="backupPath"
-        type="text"
-        placeholder="e.g., C:\\path\\to\\backup.zip"
-      />
+      <input v-if="backupDistributedValidator" v-model="backupPath" type="text" placeholder="/path/to/backup" />
 
       <span
         v-if="backupDistributedValidator"
         class="absolute cursor-pointer uppercase flex justify-center items-center backup-btn"
         @click="backupBtn"
-        >backup</span
+        >path</span
       >
 
       <div
@@ -40,6 +35,7 @@
           'obol-modal-plugin_btn',
           !headerStore.enrIsGenerating ? 'activeBtn' : '',
           headerStore.deactivateBtnToWaitForLogs ? 'deactivate' : '',
+          runningBackup ? 'deactivate' : '',
         ]"
         @click="btnHandling"
       >
@@ -68,6 +64,7 @@ const distributedCompleted = ref(false);
 const polling = ref(null);
 const dkgLogs = ref([]);
 const backupPath = ref("");
+const runningBackup = ref(false);
 
 const headerStore = useNodeHeader();
 
@@ -194,6 +191,9 @@ const openDirectoryPicker = async () => {
 };
 
 const btnHandling = async () => {
+  if (runningBackup.value) {
+    return;
+  }
   if (enrBtnToShow.value === "GENERATING...") {
     console.log("GENERATING...");
   } else if (enrBtnToShow.value === "BACKUP ENR") {
@@ -224,6 +224,19 @@ const btnHandling = async () => {
     headerStore.distrubutedValidatorGenerator = false;
     distributedCompleted.value = true;
   } else if (enrBtnToShow.value === "COMPLETE") {
+    if (!backupPath.value || backupPath.value === "") {
+      //check if user has selected a path
+      openDirectoryPicker(); // if not prompt selection again
+      return;
+    }
+    runningBackup.value = true;
+    try {
+      await ControlService.downloadObolBackup(backupPath.value);
+    } catch (error) {
+      console.error("Error downloading backup:", error);
+    } finally {
+      runningBackup.value = false;
+    }
     backupDistributedValidator.value = false;
     headerStore.distrubutedValidatorGenerator = false;
     distributedCompleted.value = false;
@@ -234,15 +247,7 @@ const btnHandling = async () => {
   }
 };
 const backupBtn = async () => {
-  if (!backupPath.value || backupPath.value === "") {
-    //check if user has selected a path
-    openDirectoryPicker(); // if not prompt selection again
-    return;
-  }
-  await ControlService.downloadObolBackup(backupPath.value);
-  backupDistributedValidator.value = false;
-  headerStore.distrubutedValidatorGenerator = false;
-  distributedCompleted.value = true;
+  await openDirectoryPicker();
 };
 </script>
 
