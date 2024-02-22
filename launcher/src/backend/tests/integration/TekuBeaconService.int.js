@@ -65,7 +65,7 @@ test("teku validator import", async () => {
   //install tekuVC
   let tekuVC = serviceManager.getService("TekuValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [tekuBC] })
 
-  let versions = await nodeConnection.checkUpdates();
+  let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
   tekuBC.imageVersion = versions[tekuBC.network][tekuBC.service].slice(-1).pop()
   tekuVC.imageVersion = versions[tekuVC.network][tekuVC.service].slice(-1).pop()
