@@ -8,36 +8,52 @@
   set_fact:
     ssv_config: "{{ ssv_config_raw['content'] | b64decode | from_yaml }}"
 
-- name: Generate SSV network keys
+- name: set path to secrets dir
+  set_fact:
+    secrets_path: "{{ ssv_config.volumes | select('search', ssv_config.id) | first | split(':') | first | regex_search('^.*' + ssv_config.id) }}/secrets"
+
+- name: set paths of secrets
+  set_fact:
+    password_file: "{{ secrets_path }}/password"
+    keystore_file: "{{ secrets_path }}/encrypted_private_key.json"
+
+- name: Ensure SSVNetworkService secrets directory exists
+  file:
+    path: "{{ secrets_path }}"
+    state: directory
+    owner: "{{ ssv_config.user }}"
+    group: "{{ ssv_config.user }}"
+    mode: 0755
+    recurse: yes
+  become: yes
+
+- name: create password for keystore
+  copy:
+    content: "{{ lookup('password', '/dev/null chars=ascii_letters,digits') | to_uuid }}"
+    dest: "{{ secrets_path }}/password"
+    owner: "{{ ssv_config.user }}"
+    group: "{{ ssv_config.user }}"
+    mode: 0600
+  become: yes
+
+- name: Generate SSVNetwork Keys
   command:
-    bash -c "docker run -d --name=ssv_node_op_key -it '{{ ssv_config.image }}' /go/bin/ssvnode generate-operator-keys &&
+    bash -c "docker run -d --name=ssv_node_op_key -v '{{ password_file }}':/password -it '{{ ssv_config.image }}' /go/bin/ssvnode generate-operator-keys --password-file=/password &&
     docker logs ssv_node_op_key --follow &&
+    docker cp ssv_node_op_key:/encrypted_private_key.json {{ keystore_file }} &&
     docker stop ssv_node_op_key &&
     docker rm ssv_node_op_key"
-  register: ssv_keys
+  register: ssv_keygen_logs
   changed_when: false
   become: yes
 
-- name: Parse keys
-  set_fact:
-    ssv:
-      pk: "{{ ssv_keys.stdout | regex_search('(?<=\"pk\":\\s\").*(?=\")') }}"
-      sk: "{{ ssv_keys.stdout | regex_search('(?<=\"sk\":\\s\").*(?=\")') }}"
+- name: Log stdout of key generation
+  debug:
+    msg: "{{ ssv_keygen_logs.stdout }}"
+  when: ssv_keygen_logs.stdout_lines | length > 0
 
-- name: Create ssv-secret/public key
-  file:
-    path: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
-    state: touch
-    owner: "2000"
-    group: "2000"
-    mode: "0644"
-  become: yes
-
-- name: Adapt ssv-secret/public key
-  blockinfile:
-    path: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
-    block: |
-      ssv_pk: "{{ ssv.pk }}"
-      ssv_sk: "{{ ssv.sk }}"
-  become: yes
+- name: Log stderr of key generation
+  debug:
+    msg: "{{ ssv_keygen_logs.stderr }}"
+  when: ssv_keygen_logs.stderr_lines | length > 0
 # EOF
