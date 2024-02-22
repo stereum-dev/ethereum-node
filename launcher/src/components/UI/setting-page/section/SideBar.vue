@@ -8,7 +8,9 @@
     >
       settings
     </div>
-    <slot></slot>
+    <div class="sidebar-container flex flex-col h-4/5 w-full justify-center items-center">
+      <slot></slot>
+    </div>
   </div>
 </template>
 

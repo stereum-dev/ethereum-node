@@ -3,7 +3,10 @@
     <!-- <SettingPanel /> -->
 
     <div class="flex justify-start items-start w-56 h-full">
-      <SideBar><span>a</span> <span>a</span><span>a</span><span>a</span><span>a</span> </SideBar>
+      <SideBar>
+        <SidebarBtn />
+        <SidebarBtn />
+      </SideBar>
     </div>
     <div class="bg-black w-5/6 h-full"><MainBox /></div>
   </base-layout>
@@ -12,4 +15,5 @@
 // import SettingPanel from "./SettingPanel.vue";
 import SideBar from "./section/SideBar.vue";
 import MainBox from "./section/MainBox";
+import SidebarBtn from "./components/SidebarBtn";
 </script>
