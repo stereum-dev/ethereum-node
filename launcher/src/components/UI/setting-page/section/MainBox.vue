@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-full w-full p-2">
-    <div class="grid grid-rows-2 w-full mt-20 p-1 gap-y-5">sss</div>
+  <div class="mainBox-setting_parent flex flex-col items-center justify-start h-full w-full p-2">
+    <slot></slot>
   </div>
 </template>
 
@@ -8,4 +8,8 @@
 export default {};
 </script>
 
-<style scoped></style>
+<style scoped>
+.mainBox-setting_parent {
+  background: #3a3d40;
+}
+</style>

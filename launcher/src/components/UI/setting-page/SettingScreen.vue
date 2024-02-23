@@ -16,7 +16,12 @@
         />
       </SideBar>
     </div>
-    <div class="bg-black w-5/6 h-full"><MainBox /></div>
+    <div class="bg-black w-5/6 h-full">
+      <MainBox
+        ><ItemRow :title="itemTitles[0]" />
+        <ItemRow :title="itemTitles[1]" /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow
+      /></MainBox>
+    </div>
   </base-layout>
 </template>
 <script setup>
@@ -24,11 +29,16 @@
 import SideBar from "./section/SideBar.vue";
 import MainBox from "./section/MainBox";
 import SidebarBtn from "./components/SidebarBtn";
-import { ref } from "vue";
+import ItemRow from "./components/ItemRow";
+import { ref, computed } from "vue";
 
 const mainBox = ref("general");
 
 const toggleSettings = (arg) => {
   mainBox.value = arg;
 };
+
+const itemTitles = computed(() => {
+  return mainBox.value === "general" ? ["Language Selection", "Credits"] : ["Output Device", "Volume"];
+});
 </script>
