@@ -18,7 +18,7 @@
     </div>
     <div class="bg-black w-5/6 h-full">
       <MainBox
-        ><ItemRow :title="itemTitles[0]"></ItemRow>
+        ><ItemRow :title="itemTitles[0]"><OutputOptions /></ItemRow>
         <ItemRow :title="itemTitles[1]"><VolumeSlider v-if="mainBox == 'audio'" /></ItemRow
         ><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow
       /></MainBox>
@@ -32,6 +32,7 @@ import MainBox from "./section/MainBox";
 import SidebarBtn from "./components/SidebarBtn";
 import ItemRow from "./components/ItemRow";
 import VolumeSlider from "./components/VolumeSlider";
+import OutputOptions from "./components/OutputOptions.vue";
 import { ref, computed } from "vue";
 
 const mainBox = ref("general");
