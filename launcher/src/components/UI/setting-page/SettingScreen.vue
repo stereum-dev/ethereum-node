@@ -4,8 +4,8 @@
 
     <div class="flex justify-start items-start w-56 h-full">
       <SideBar>
-        <SidebarBtn />
-        <SidebarBtn />
+        <SidebarBtn btn-name="general" />
+        <SidebarBtn btn-name="audio" />
       </SideBar>
     </div>
     <div class="bg-black w-5/6 h-full"><MainBox /></div>
