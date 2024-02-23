@@ -19,13 +19,18 @@ import { ref, computed, watch, watchEffect } from 'vue';
       <span class="animate-spin border-2 border-gray-300 border-t-blue-600 border-r-blue-600 bg-transparent"></span>
     </div>
 
-    <img
+    <!-- <p
+      v-else-if="!props.server.avatar"
+      class="col-start-1 col-span-1 animate-pulse self-center w-8 h-8 bg-gray-400 rounded-full"
+    ></p> -->
+
+    <div
       v-else
-      class="col-start-1 col-span-1 self-center mx-auto w-full flex-none rounded-full bg-gray-50 border border-gray-300 shadow-sm shadow-[#1f2021]"
-      :src="serverAvatar"
-      alt="Server Avatar"
-      @click="avatarModalHandler"
-    />
+      class="col-start-1 col-span-1 h-[38px] w-[38px] self-center mx-auto flex-none rounded-full bg-gray-50 border border-gray-300 shadow-sm shadow-[#1f2021]"
+    >
+      <img class="w-full h-full rounded-full" :src="serverAvatar" alt="Server Avatar" @click="avatarModalHandler" />
+    </div>
+
     <div
       class="col-start-2 col-end-10 flex flex-col justify-center items-start ml-2"
       :class="connectedServer ? 'text-gray-100' : 'text-gray-800'"

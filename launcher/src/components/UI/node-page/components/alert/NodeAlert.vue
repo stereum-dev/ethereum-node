@@ -298,6 +298,8 @@ export default {
         return "/img/icon/plugin-icons/Other/PrometheusNodeExporter-s.png";
       } else if (arg.name === "Notification") {
         return "/img/icon/plugin-icons/Other/NotifierService-s.png";
+      } else if (arg.name == "Charon") {
+        return "/img/icon/plugin-icons/validator/ObolCharon-s.png";
       } else {
         return arg.sIcon;
       }

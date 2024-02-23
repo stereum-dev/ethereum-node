@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center items-center absolute left-0 top-0 w-full h-full">
+  <div class="w-full h-full absolute inset-0 flex justify-center items-center">
     <div
-      class="absolute left-0 top-0 w-full h-full bg-black opacity-50 z-10 cursor-default"
+      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
       @click="$emit('closeWindow')"
     ></div>
     <div class="browser-modal">
@@ -51,6 +51,7 @@ const headerStore = useNodeHeader();
 
 const grafanaService = ref({});
 const isGrafanaAvailable = ref(false);
+const refreshStereum = ref(false);
 
 onMounted(() => {
   filterGrafanaService();
@@ -76,6 +77,11 @@ const openGitHub = () => {
 const openLocalApp = () => {
   let url = grafanaService.value.linkUrl;
   window.open(url, "_blank");
+};
+
+const stereumRefresher = () => {
+  refreshStereum.value = false;
+  window.location.reload();
 };
 </script>
 

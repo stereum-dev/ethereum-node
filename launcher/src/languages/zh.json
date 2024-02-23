@@ -1,84 +1,84 @@
 {
   "formsetup": {
     "login": "登录",
-    "server": "连接服务器",
-    "servername": "服务器 名称",
+    "server": "服务器",
+    "servername": "服务器名称",
     "iphost": "IP / 主机名",
-    "username": "用户名称",
+    "username": "用户名",
     "password": "密码",
-    "keylocation": "密钥定位",
+    "keylocation": "密钥位置",
     "usessh": "使用 SSH 密钥",
-    "fillFields": "Please fill in the missing fields!",
-    "KeyPassphrase": "KEY PASSPHRASE"
+    "fillFields": "请填写缺失的字段！",
+    "KeyPassphrase": "密钥口令"
   },
   "comingsoon": {
-    "comingsoon": "即将播出！"
+    "comingsoon": "即将来临！"
   },
   "journalnode": {
-    "serverip": "IP",
-    "servername": "名称"
+    "serverip": "服务器IP",
+    "servername": "服务器名称"
   },
   "pagesnav": {
-    "staking": "权益质押"
+    "staking": "质押"
   },
   "supportModal": {
-    "support": "客户服务",
-    "supportText": "想最快方式联系技术客服, 请加入Discord服务器!",
+    "support": "支持",
+    "supportText": "想要快速联系技术支持，请加入我们的Discord服务器！",
     "bugReport": "漏洞报告",
-    "emailText": "或请发邮件到以下邮箱",
-    "docsTitle": "链码",
-    "docsText": "您所选节点配置网络记录文档的链接。"
+    "emailText": "或发送邮件至下方邮箱",
+    "docsTitle": "文档",
+    "docsText": "链接到您选择的节点配置的网络记录文档。"
   },
   "settingPanel": {
     "stereumName": "设置",
-    "langName": "语言选择",
-    "confirm": "应用",
-    "general": "总体",
-    "credits": "归于",
+    "langName": "语言",
+    "confirm": "确认",
+    "general": "常规",
+    "credits": "鸣谢",
     "open": "打开",
     "update": "更新",
     "launcherVersion": "启动器版本:",
     "nodeVersion": "节点版本",
     "on": "开",
-    "off": "关闭",
+    "off": "关",
     "updateConfig": "更新配置",
     "manual": "手动更新",
     "auto": "自动更新",
-    "sxConf": "Export Config",
-    "chngAppr": "Changes to be applied",
-    "creditInfo": "click the button to see the contributors",
-    "langInfo": "click the button to change the language",
-    "exportInfo": "click the button to export the configuration in a yaml file",
-    "stereumUpd": "Click the button to configure the Stereum update"
+    "sxConf": "导出配置",
+    "chngAppr": "待应用更改",
+    "creditInfo": "点击按钮查看贡献者",
+    "langInfo": "点击按钮更改语言",
+    "exportInfo": "点击按钮以yaml文件格式导出配置",
+    "stereumUpd": "点击按钮配置Stereum更新"
   },
   "nodeSidebarVideo": {
     "stake": "使用 32 ETH",
     "rpc": "RPC 连接",
-    "written": "Written Guides",
-    "video": "Video Guides",
-    "stereumTutorial": "stereum tutorials",
-    "statBox": "status box"
+    "written": "书面指南",
+    "video": "视频指南",
+    "stereumTutorial": "stereum教程",
+    "statBox": "状态框"
   },
   "pluginZone": {
-    "client": "客户"
+    "client": "客户端"
   },
   "theNode": {
-    "execution": "运行",
+    "execution": "执行",
     "consensus": "共识",
     "validator": "验证者",
-    "servicePlugin": "插入",
-    "message": "The current network is ",
-    "chckTutorial": "Check out the tutorials",
-    "returnStatus": "Return to status box"
+    "servicePlugin": "服务插件",
+    "message": "当前网络为",
+    "chckTutorial": "查看教程",
+    "returnStatus": "返回状态框"
   },
   "modifyPanel": {
-    "backNode": "回到节点",
-    "nukeNode": "删除节点"
+    "backNode": "返回节点",
+    "nukeNode": "销毁节点"
   },
   "changeConfirm": {
-    "confirm": "CONFIRM CHANGES",
-    "process": "processing...",
-    "change": "更改为确认",
+    "confirm": "确认更改",
+    "process": "处理中...",
+    "change": "更改确认",
     "delete": "删除"
   },
   "updatePanel": {
@@ -88,156 +88,156 @@
     "nodeTitle": "节点更新",
     "latest": "最新版本",
     "auto": "自动更新",
-    "available": "可使用",
-    "searching": "正在搜索更新……",
-    "serviceTitle": "插件更新",
-    "serviceDesc": "已安装选择插件的更新",
-    "availablePlugin": "可使用插件更新",
+    "available": "可用",
+    "searching": "搜索更新中……",
+    "serviceTitle": "服务更新",
+    "serviceDesc": "已安装选择服务的更新",
+    "availablePlugin": "可用插件更新",
     "all": "全部更新",
-    "osTitle": "更新服务器"
+    "osTitle": "操作系统更新"
   },
   "controlPage": {
     "node": "节点",
     "disk": "磁盘速度",
-    "write": "编写",
-    "read": "阅读",
-    "inclusionDistance": "纳入距离",
-    "rpc": "RPC-端点",
-    "ws": "WS-端点",
+    "write": "写入",
+    "read": "读取",
+    "inclusionDistance": "包含距离",
+    "rpc": "RPC端点",
+    "ws": "WS端点",
     "syncStatus": "同步状态",
     "hard": "硬件",
-    "free": "免费",
-    "total": "总计",
+    "free": "空闲",
+    "total": "总共",
     "network": "网络",
-    "receive": "接收数据",
-    "transmit": "发出数据",
-    "ram": "内存",
+    "receive": "接收",
+    "transmit": "发送",
+    "ram": "RAM",
     "used": "已使用",
-    "totalram": "总计",
-    "storage": "储存",
-    "active": "激活",
-    "rating": "评分",
-    "usage": "使用",
-    "netSel": "The selected network is",
-    "machineName": "Machine Name",
-    "storVol": "Server storage volume",
-    "stor": "Server storage overview",
-    "diskSpeed": "Disk speed",
-    "p2p": "Peer to peer connections",
-    "cpuUse": "CPU Usage",
-    "syncInfo": "Synchronization status",
-    "ramUse": "RAM Usage",
-    "netSpeed": "Network Speed",
-    "listPort": "List of service ports",
-    "endPoint": "endpoint",
-    "data": "data",
-    "enteredKeys": "The number of imported validator keys",
+    "totalram": "总共",
+    "storage": "存储",
+    "active": "活跃",
+    "rating": "评级",
+    "usage": "使用率",
+    "netSel": "选定的网络为",
+    "machineName": "机器名称",
+    "storVol": "服务器存储卷",
+    "stor": "服务器存储概览",
+    "diskSpeed": "磁盘速度",
+    "p2p": "点对点连接",
+    "cpuUse": "CPU使用率",
+    "syncInfo": "同步状态",
+    "ramUse": "RAM使用率",
+    "netSpeed": "网络速度",
+    "listPort": "服务端口列表",
+    "endPoint": "端点",
+    "data": "数据",
+    "enteredKeys": "导入的验证器密钥数量",
     "ttlBal": "总余额",
-    "finEPOCH": "Finalized EPOCH",
-    "pending": "service is pending",
-    "off": "Switch off the service",
-    "on": "Switch on the service",
-    "settingService": "Setting up the service",
-    "restart": "restart the service",
-    "currentEpoch": "Current EPOCH",
-    "currentSlot": "Current SLOT",
-    "p2pNet": "Peer to peer network",
-    "selConcensus": "Select the consensus client",
-    "selExecution": "Select the execution client",
-    "subsribeSubnet": "subscribed subnets"
+    "finEPOCH": "最终纪元",
+    "pending": "服务待处理",
+    "off": "关闭服务",
+    "on": "开启服务",
+    "settingService": "设置服务",
+    "restart": "重启服务",
+    "currentEpoch": "当前纪元",
+    "currentSlot": "当前时隙",
+    "p2pNet": "点对点网络",
+    "selConcensus": "选择共识客户端",
+    "selExecution": "选择执行客户端",
+    "subsribeSubnet": "订阅子网"
   },
   "taskManager": {
-    "clickDisplay": "点击任务显示"
+    "clickDisplay": "点击显示任务"
   },
   "displayValidator": {
-    "pk": "公开密钥",
-    "rm": "Remote key",
-    "service": "服务器",
+    "pk": "公钥",
+    "rm": "远程密钥",
+    "service": "服务",
     "active": "激活时间",
-    "state": "Status Indicator",
+    "state": "状态指示器",
     "balance": "余额",
     "option": "选项",
     "importKey": "导入验证器密钥",
     "waitMessage": "此操作需要一些时间",
-    "waitForImport": "正在导入, 请稍候。",
-    "warningMessage": "我们额外的 消减保护检查显示，您即将导入的验证器之一已经在最后的 两个节点 中认证。",
-    "warningAlarm": "警告：您有被削减的高风险！",
-    "warningQuestion": "您想要导入验证密钥吗？",
-    "sure": "确认",
+    "waitForImport": "导入中，请稍候。",
+    "warningMessage": "我们的额外削减保护检查显示，您即将导入的一些验证器已在过去的两个纪元中被认证。",
+    "warningAlarm": "警告：您面临高风险的削减！",
+    "warningQuestion": "您确定要导入验证密钥吗？",
+    "sure": "确定",
     "cancel": "取消",
-    "serviceExpl": "The service selected for the entered Validator key",
-    "activeExpl": "The time since the validator has been active",
-    "balExpl": "The balance of the validator",
-    "copyPub": "Copy the public key",
-    "copiedPub": "Public key copied",
-    "setFee": "set the block fee recipient for the selected keys",
-    "renameVal": "rename the validator key",
-    "removVal": "remove the validator key",
-    "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter",
-    "grpNam": "group name is",
-    "keyNumGrp": "Number of Contained Keys",
-    "grpBal": "group balance",
-    "openGrp": "open Group",
-    "renameGrp": "rename the group",
-    "removGrp": "remove the group",
-    "inserValidator": "insert validator key",
-    "backList": "back to list",
-    "web3Import": "WEB3SIGNER REMOTE KEY IMPORT",
-    "crteGrp": "create a new group",
-    "openSrch": "search for a validator key or group",
-    "showValKey": "show validator keys",
-    "showKeyNam": "show key names",
-    "upcomingSync": "upcoming sync committee duties",
-    "upcomingBlocProd": "upcoming block production duties",
-    "clentSel": "client selected",
-    "selValClint": "selected validator client",
-    "upcomEpochDuti": "upcoming epoch duties",
-    "graffitiPanel": "change graffiti for all keys in the validator client",
-    "removeMultiple": "remove all keys from the validator client",
-    "withdrawMultiple": "exit & withdraw all keys from the validator client",
-    "importRemote": "import remote keys into the validator client",
-    "valClint": "validator client",
-    "valStat": "validator state",
-    "numValidator": "number imported validator keys",
-    "attestReward": "attestation reward",
-    "blockProdreward": "block production rewards",
-    "syncCommitteeReward": "sync committee rewards",
-    "ttlKeys": "total keys",
-    "ttlBal": "total balance"
+    "serviceExpl": "为输入的验证器密钥选择的服务",
+    "activeExpl": "验证器激活以来的时间",
+    "balExpl": "验证器的余额",
+    "copyPub": "复制公钥",
+    "copiedPub": "公钥已复制",
+    "setFee": "为选定的密钥设置区块费用接收者",
+    "renameVal": "重命名验证器密钥",
+    "removVal": "移除验证器密钥",
+    "exitChain": "用选定的密钥退出链",
+    "waitEnt": "您必须等待验证器密钥进入",
+    "grpNam": "组名为",
+    "keyNumGrp": "包含密钥数量",
+    "grpBal": "组余额",
+    "openGrp": "打开组",
+    "renameGrp": "重命名组",
+    "removGrp": "移除组",
+    "inserValidator": "插入验证器密钥",
+    "backList": "返回列表",
+    "web3Import": "WEB3SIGNER远程密钥导入",
+    "crteGrp": "创建新组",
+    "openSrch": "搜索验证器密钥或组",
+    "showValKey": "显示验证器密钥",
+    "showKeyNam": "显示密钥名称",
+    "upcomingSync": "即将到来的同步委员会职责",
+    "upcomingBlocProd": "即将到来的区块生产职责",
+    "clentSel": "已选择客户端",
+    "selValClint": "已选择的验证器客户端",
+    "upcomEpochDuti": "即将到来的纪元职责",
+    "graffitiPanel": "更改验证器客户端中所有密钥的涂鸦",
+    "removeMultiple": "从验证器客户端中移除所有密钥",
+    "withdrawMultiple": "从验证器客户端退出并提取所有密钥",
+    "importRemote": "将远程密钥导入到验证器客户端",
+    "valClint": "验证器客户端",
+    "valStat": "验证器状态",
+    "numValidator": "导入的验证器密钥数量",
+    "attestReward": "认证奖励",
+    "blockProdreward": "区块生产奖励",
+    "syncCommitteeReward": "同步委员会奖励",
+    "ttlKeys": "总密钥",
+    "ttlBal": "总余额"
   },
   "enterPass": {
-    "enterPass": "输入密码和导入"
+    "enterPass": "输入密码并导入"
   },
   "exitMultipleValidator": {
-    "passMessage": "输入您的验证密码及使用此秘钥退出区块链",
-    "confirm": "CONFIRM"
+    "passMessage": "输入您的验证密码并使用此密钥退出区块链",
+    "confirm": "确认"
   },
   "exitValidatorModal": {
-    "modalMessage": "您确定要使用已选择的验证密钥退出区块链吗？这将停止您的验证操作且不可撤销。 您的资金也只有在链条允许的情况下才可提款。",
-    "exitApprove": "我已阅读且了解后果",
+    "modalMessage": "您确定要使用所选的验证密钥退出区块链吗？这将停止您的验证操作并且是不可逆的。您的资金也只能在链条允许的情况下提取。",
+    "exitApprove": "我已阅读并理解后果",
     "exitChain": "退出区块链",
     "clickClose": "点击外部关闭"
   },
   "feeRecipient": {
-    "textPlaceHolder": "输入有效的以太坊地址来将您的奖项发送到... ",
-    "setBlock": "设置方块手续费接收地址"
+    "textPlaceHolder": "输入有效的以太坊地址以接收您的奖励...",
+    "setBlock": "设置区块手续费接收地址"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "输入最多32个字符到区块链中当您新创一个方块！"
+    "textPlaceHolder": "输入最多32个字符到区块中当您创建一个新区块时！"
   },
   "renameValidator": {
-    "textPlaceHolder": "输入最多32个字符来重名验证器！"
+    "textPlaceHolder": "输入最多32个字符来重命名验证器！"
   },
   "insertValidator": {
     "insertText": "点击或拖动以输入密钥"
   },
   "removeSingleModal": {
-    "question": "您是否要下载您的消减数据？"
+    "question": "您是否要下载您的削减数据？"
   },
   "removeMultiModal": {
-    "sure": "确定要从您的机器中删除此密钥吗？",
-    "slashing": "使用消减保护数据库？",
+    "sure": "您确定要从您的机器中删除此密钥吗？",
+    "slashing": "使用削减保护数据库？",
     "remove": "删除"
   },
   "removeMultipleValidators": {
@@ -248,26 +248,26 @@
     "validators": "验证器"
   },
   "installOption": {
-    "back": "回去",
+    "back": "返回",
     "install": "安装"
   },
   "installitionMenu": {
-    "osCheck": "在检查如果您的服务器需要支持",
+    "osCheck": "检查您的服务器是否需要支持",
     "osSupported": "支持的操作系统"
   },
   "pluginName": {
-    "path": "安装路劲",
-    "installOpt": "INSTALLATION OPTIONS",
-    "startOnInstall": "Start up client after installation?",
-    "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?"
+    "path": "安装路径",
+    "installOpt": "安装选项",
+    "startOnInstall": "安装后启动客户端？",
+    "monitor": "监控",
+    "instMonit": "安装监控？"
   },
   "creditPanel": {
-    "techTitle": "CREDITS - 技术贡献者",
-    "techText": "注意一个GITPOAP！通过查看我们的GITHUB来了解！",
+    "techTitle": "鸣谢 - 技术贡献者",
+    "techText": "获得一个GITPOAP！通过查看我们的GITHUB了解更多！",
     "financialPage": "财务贡献者",
-    "developers": "开发队伍",
-    "testers": "测试人员"
+    "developers": "开发团队",
+    "testers": "测试者"
   },
   "verifyInstallation": {
     "name": "名称",
@@ -275,33 +275,33 @@
     "path": "路径"
   },
   "warningModal": {
-    "warningText": "建议您稍等直到完成重要安装再应用更多修改"
+    "warningText": "我们建议您等待重要安装完成后再应用更多修改"
   },
   "frontPageSsv": {
     "newRegistritionTitle": "注册一个新的操作者",
     "newRegistritionText": "使用新建的操作密钥注册新的节点操作到 SSV 网络",
     "register": "注册",
-    "insertTitle": "为现有操作器插入操作器密钥",
-    "insertText": "使用现有的操作器密钥来恢复您现有的节点操作器流程"
+    "insertTitle": "为现有操作者插入操作密钥",
+    "insertText": "使用现有的操作密钥恢复您现有的节点操作者"
   },
   "registerSSV": {
-    "pubKey": "公开操作器密钥",
+    "pubKey": "公共操作密钥",
     "copied": "已复制！",
-    "secKey": "秘密操作密钥",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place. Do not share this key with anyone.",
-    "copyMessage": "将您的公共密钥复制到这里，以确认您储存了您的密钥！"
+    "secKey": "私密操作密钥",
+    "makeSureText": "请确保将您的操作者私密密钥妥善保存并备份在安全的地方。不要与任何人分享此密钥。",
+    "copyMessage": "将您的公共密钥复制到此处，以确认您已保存您的密钥！"
   },
   "ssvDashboard": {
     "operatorPage": "我的操作页面",
     "SSVNodeGrafna": "SSV节点Grafana面板"
   },
   "secretKeyReg": {
-    "modalLabel": "输入原始私密操作密钥来当您的操作密钥",
+    "modalLabel": "输入原始私密操作密钥作为您的操作密钥",
     "apply": "应用"
   },
   "dataAPIAndRPC": {
     "copy": "点击复制",
-    "closed": "Turn On First",
+    "closed": "首先打开",
     "turnOnMessage": "请先打开 DATA-API 隧道！",
     "copiedMessage": "DATA-API-URL已复制到剪贴板！",
     "RPCTurnOnMessage": "请先打开 RPC 隧道！",
@@ -310,106 +310,106 @@
     "WSCopiedMessage": "WS-URL 已复制到剪贴板中！"
   },
   "pluginLogs": {
-    "pageTitle": "插件日记",
-    "noLogFound": "在列表中找不到日记",
-    "clickCopy": "双击复制日记",
-    "serviceId": "Service ID:",
-    "exportAll": "Export All Logs",
-    "export150": "Export 150 Logs",
-    "cat": "Category:",
-    "ver": "Version:"
+    "pageTitle": "插件日志",
+    "noLogFound": "列表中未找到日志",
+    "clickCopy": "双击复制日志",
+    "serviceId": "服务ID:",
+    "exportAll": "导出所有日志",
+    "export150": "导出150条日志",
+    "cat": "类别:",
+    "ver": "版本:"
   },
   "serviceModals": {
     "localApp": "应用",
     "localAppText": "在此机器上打开服务",
     "openBrowser": "在浏览器中打开",
-    "availBlockRel": "可用方块中继",
-    "process": "正在处理",
-    "blockRel": "中继区块",
-    "blockRelTxt": "选择一个或多个中继接收方块"
+    "availBlockRel": "可用区块中继",
+    "process": "处理中",
+    "blockRel": "区块中继",
+    "blockRelTxt": "选择一个或多个中继以接收区块"
   },
   "customInstallation": {
-    "customInstallationTitle": "定制安装",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have an understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
+    "customInstallationTitle": "自定义安装",
+    "customInstallationText": "此模式适用于更高级的用户，并要求您了解客户端之间的互动方式。您需要亲自挑选、安装并连接节点的每个部分，使其能够正常工作！"
   },
   "mevboostConfig": {
-    "availRelays": "可用方块中继",
-    "usedRelays": "已使用方块中继"
+    "availRelays": "可用区块中继",
+    "usedRelays": "已使用区块中继"
   },
   "addModifyPanel": {
-    "installPath": "安装路劲",
-    "syncMessage": "由原始区块链同步您的客户端",
+    "installPath": "安装路径",
+    "syncMessage": "从原始区块链同步您的客户端",
     "portused": "已使用端口",
     "cancel": "取消",
-    "save": "SAVE",
+    "save": "保存",
     "add": "添加",
-    "clickAndAdd": "点击ADD"
+    "clickAndAdd": "点击添加"
   },
   "importSlashingModal": {
-    "slashModalMessage": "是否使用消减数据保护程式来导入",
-    "importMessage": "导入您的数据消减档案",
+    "slashModalMessage": "是否使用削减保护导入",
+    "importMessage": "导入您的削减保护文件",
     "chooseFile": "选择文件",
     "continue": "继续"
   },
   "logOutModal": {
     "logOutTitle": "登出",
-    "logOutQuestion": "确定想要登出您的服务器节点吗？",
+    "logOutQuestion": "您确定要登出您的服务器节点吗？",
     "logOutBtn": "登出"
   },
   "reconnectModal": {
-    "reconnectTitle": "Connection lost",
-    "reconnectMessage": "Check your connection and try again.",
-    "reconnectingMessage": "Reconnecting...",
-    "reconnectBtn": "Reconnect"
+    "reconnectTitle": "连接丢失",
+    "reconnectMessage": "检查您的连接并重试。",
+    "reconnectingMessage": "重新连接中...",
+    "reconnectBtn": "重新连接"
   },
   "prunningModal": {
-    "prunningText": "GETH 在操作时间内使用的存储空间一直增加。 需要多小时来修剪它数据库，删除不必要的数据并释放一些使用过的储存空间。 必须在GETH不运作的时候完成这项工作。开始修建过程您的节点会下线并停止潜在性见证工作。",
-    "prunningChecked": "我已阅读且了解后果",
-    "prunningStart": "开始剪枝",
-    "close": "click outside to close"
+    "prunningText": "GETH在运行时所使用的存储空间会逐渐增加。修剪数据库、删除不必要的数据并释放一些已使用的存储空间需要几个小时。这项工作必须在GETH停止运行时完成。开始修剪过程会使您的节点下线并停止潜在的见证工作。",
+    "prunningChecked": "我已阅读并理解后果",
+    "prunningStart": "开始修剪",
+    "close": "点击外部关闭"
   },
   "restartModal": {
-    "restartMessage": "您的节点可因此操作离线！",
+    "restartMessage": "您的节点可能因此操作而离线！",
     "restart": "重启",
-    "confirmMessage": "您确定要转向您的节点",
-    "areYouSure": "are you sure you want to"
+    "confirmMessage": "您确定要重启您的节点吗",
+    "areYouSure": "您确定吗"
   },
   "nukeModal": {
-    "nukeQ": "是否确认要从系统中删除以太坊和所有服务器？",
-    "nukeTitle": "毁灭节点",
-    "backToLogin": "返回登入"
+    "nukeQ": "您确定要从系统中删除以太坊和所有服务吗？",
+    "nukeTitle": "销毁节点",
+    "backToLogin": "返回登录"
   },
   "noData": {
-    "noData": "没有数据",
+    "noData": "无数据",
     "turnOn": "请开启"
   },
   "rpcGuide": {
     "clickNav": "点击“控制”进入控制面板",
-    "toggleMessage": "点击“开启/关闭”按钮来打开您的端口",
+    "toggleMessage": "点击“开/关”按钮以打开您的端口",
     "clickExtention": "点击“执行客户端”按钮复制RPC URL",
-    "clickCancel": "点击X来取消",
-    "firstMessage": "RPC端点小工具位于控面板中。请点击“ON\"按钮并点击”执行客户端“来继续下一步",
-    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending your transactions, click on “ON” to close your port",
-    "firstSlide": "现在登录您的DAPP或想使用的钱包（在这案子是小狐狸钱包）",
+    "clickCancel": "点击X取消",
+    "firstMessage": "RPC端点小工具位于控制面板中。请点击“开”按钮并点击“执行客户端”继续下一步",
+    "secondMessage": "您现在可以通过您的节点使用METAMASK发送交易。发送交易后，点击“开”关闭您的端口",
+    "firstSlide": "现在登录您想使用的DAPP或钱包（在这个案例中是MetaMask钱包）",
     "secondSlide": "点击网络按钮",
     "thirdSlide": "点击“添加网络”",
     "fourthSlide": "输入您网络的名称",
     "fivethSlide": "粘贴从以太坊复制的网址",
-    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "输入“ETH”为货币符号",
-    "eightthSlide": "可选项-您可以粘贴到区块链资源管理器的 URL",
-    "ninethSlide": "点击\"SAVE\""
+    "sixthSlide": "输入您节点运行的CHAIN-ID（对于GoerliTestnet是5）",
+    "seventhSlide": "输入“ETH”作为货币符号",
+    "eightthSlide": "可选项-您可以粘贴区块链资源管理器的URL",
+    "ninethSlide": "点击“保存”"
   },
   "stakeGuide": {
-    "syncCheck": "先检查节点是否已同步",
+    "syncCheck": "首先检查节点是否已同步",
     "scrollMessage": "滚动以更快地更改幻灯片",
-    "stake": "staking",
-    "scrollClick": "Click on Staking",
-    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
-    "clickIcon": "Click on the icon of your validator client",
-    "cong": "Congrats you are done!",
-    "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node"
+    "stake": "质押",
+    "scrollClick": "点击质押",
+    "drag": "拖动或点击“点击或拖动以插入密钥”",
+    "clickIcon": "点击您的验证器客户端图标",
+    "cong": "恭喜您完成了！",
+    "clickPass": "请点击此处输入您的密码并确认。",
+    "noSlash": "如果您没有先前节点的削减保护数据库，请选择“否”"
   },
   "blockProduct": {
     "status": "状态",
@@ -418,7 +418,7 @@
     "nxtBlck": "下一个区块提案："
   },
   "disableStake": {
-    "message": "要求在服务器上运行验证其客户端来进入货币质押"
+    "message": "要求在服务器上运行验证器客户端以进入质押"
   },
   "selectionOption": {
     "graffiti": "涂鸦",
@@ -428,112 +428,112 @@
     "total": "总计",
     "status": "状态",
     "particip": "参与",
-    "noParticip": "没参与",
+    "noParticip": "未参与",
     "start": "开始",
     "end": "结束",
-    "newSync": "New Sync Committee in",
-    "hours": "小时"
+    "newSync": "新同步委员会在",
+    "hours": "小时内"
   },
   "theAttes": {
-    "lastAttest": "最后一次证明栏位：",
+    "lastAttest": "最后一次证明时隙：",
     "keyStatus": "密钥状态：",
-    "attest": "认证中",
+    "attest": "正在认证",
     "pending": "待定",
-    "noKey": "CHOOSE A KEY",
-    "nxtAttest": "下个证明栏位",
+    "noKey": "选择一个密钥",
+    "nxtAttest": "下一个证明时隙",
     "slotRem": "剩余时隙",
     "tillAtest": "直到认证"
   },
   "confirmModal": {
-    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
-    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
-    "messageOff": "Your node will go offline!",
-    "messageOn": "Your node will go online!",
+    "off": "您确定要关闭您的节点吗？",
+    "on": "您确定要开启您的节点吗？",
+    "messageOff": "您的节点将会离线！",
+    "messageOn": "您的节点将会在线！",
     "turnOn": "开启",
     "turnOff": "关闭",
     "close": "点击外部关闭"
   },
   "nodeAlert": {
-    "lowSpace": "LOW STORAGE",
+    "lowSpace": "存储空间不足",
     "use": "使用",
-    "noFee": "没有收费收件人",
+    "noFee": "没有手续费接收者",
     "stereumUpt": "以太坊更新",
-    "clkFee": "Service Settings",
-    "clkUpdate": "Click to open update panel",
-    "sync": "Synchronization Error",
-    "taskFail": "Task Failed",
-    "stats": "STATUS: OPEN",
-    "clientService": "CLIENT / SERVICE"
+    "clkFee": "服务设置",
+    "clkUpdate": "点击打开更新面板",
+    "sync": "同步错误",
+    "taskFail": "任务失败",
+    "stats": "状态：开启",
+    "clientService": "客户端/服务"
   },
   "resyncModal": {
-    "message": "您的客户端将区块链数据存储在您的服务器上所以您的节点可为网络服务。 这对于您的节点的币安质押中提升其证明工作是必要的。 通过使用此选项来删除您的客户端数据，并使用该选择同步您的节点。",
-    "sync": "同步化",
+    "message": "您的客户端将把区块链数据存储在您的服务器上，以便您的节点可以为网络提供服务。这对于您的节点在质押中提高其证明工作是必要的。使用此选项删除您的客户端数据，并使用所选源同步您的节点。",
+    "sync": "同步",
     "gen": "创世块",
     "chkSync": "同步检查点",
-    "syncMsg": "由原始区块链同步您的客户端",
+    "syncMsg": "从原始区块链同步您的客户端",
     "cont": "继续",
     "resync": "重新同步",
     "close": "点击外部关闭"
   },
   "resyncSeparateService": {
-    "message": "by initiating resync you will delete the database of",
-    "msgPartTwo": " source will be used for resynchronization",
+    "message": "通过启动重新同步，您将删除",
+    "msgPartTwo": "源将用于重新同步",
     "resync": "重新同步",
     "close": "点击外部关闭"
   },
   "notifModal": {
-    "addNotif": "加上其他通知通道",
-    "chooseNotif": "Choose what kind of Notification Channel you want to configure",
-    "stereumMonitor": "以太坊节点监视器",
-    "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
-    "stepTwo": "在您的智能手机上打开应用程式",
+    "addNotif": "添加其他通知渠道",
+    "chooseNotif": "选择您想配置的通知渠道类型",
+    "stereumMonitor": "以太坊节点监控",
+    "stepOne": "访问应用商店或我们的网站下载“STEREUM节点监控”应用",
+    "stepTwo": "在您的智能手机上打开应用",
     "stepThree": "扫描二维码",
     "stepFour": "发送测试通知",
     "close": "点击外部关闭",
-    "dash": "Dashboard",
-    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
-    "goTo": "Go to",
-    "machinename": "Machine Name",
-    "apikey": "API Key",
-    "apply": "APPLY"
+    "dash": "仪表板",
+    "chooseVal": "选择要连接监控的验证器客户端",
+    "goTo": "前往",
+    "machinename": "机器名称",
+    "apikey": "API密钥",
+    "apply": "应用"
   },
   "replacePanel": {
-    "client": "客户",
+    "client": "客户端",
     "sync": "同步",
     "gen": "创世块",
-    "chkPoint": "CHECKPOINT",
-    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cancel": "CANCEL",
+    "chkPoint": "检查点",
+    "genActiv": "从链的开始同步您的客户端",
+    "cancel": "取消",
     "confirm": "确认"
   },
   "executionSync": {
     "gen": "创世块",
-    "syncClient": "Syncs your clients"
+    "syncClient": "同步您的客户端"
   },
   "importingList": {
-    "nodeConf": "Node Config"
+    "nodeConf": "节点配置"
   },
   "importingSyncing": {
-    "message": "Set how the Node clients will synchronize their blockchain data.",
-    "client": "CLIENTs",
-    "syncSrc": "SYNC SOURCE"
+    "message": "设置节点客户端将如何同步它们的区块链数据。",
+    "client": "客户端",
+    "syncSrc": "同步源"
   },
   "importingVerify": {
-    "pluginInst": "Plugins To Install",
-    "cat": "category",
-    "path": "path"
+    "pluginInst": "要安装的插件",
+    "cat": "类别",
+    "path": "路径"
   },
   "uploadConfig": {
-    "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
+    "message": "通过这个安装选项，您可以导入一个已使用的Stereum配置文件，以复制您的节点设置。",
+    "selectConfig": "选择一个Stereum配置文件进行上传"
   },
   "fastSync": {
-    "header": "Set how the Node clients will synchronize their blockchain data.",
-    "client": "CLIENTs",
-    "syncSrc": "SYNC SOURCE",
+    "header": "设置节点客户端将如何同步它们的区块链数据。",
+    "client": "客户端",
+    "syncSrc": "同步源",
     "gen": "创世块",
-    "sync": "Syncs from genesis",
-    "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
+    "sync": "从创世块同步",
+    "message": "安装您的节点后，您的客户端将开始与您选择的同步源同步。这个过程可能需要几个小时或几天。通常，共识客户端首先同步，然后是执行客户端。"
   },
   "deleteModal": {
     "rem": "删除",
@@ -544,352 +544,352 @@
     "close": "点击外部关闭"
   },
   "sliderTutorial": {
-    "visitUrl": "Visit the website",
-    "becomeValidator": "Click on “BECOME A VALIDATOR”",
-    "proofStake": "Read through Proof of stake and click on “CONTINUE”",
-    "deposit": "Read through the deposit and click on “I ACCEPT”",
-    "usingTerminal": "Read through Using the terminal and click on “I ACCEPT”",
-    "validatorUptime": "Read through Validator uptime and click on “I ACCEPT”",
-    "validatorBahavior": "Read through Bad validator behaviour and click on “I ACCEPT”",
-    "keyManagement": "Read through Key management and click on “I ACCEPT”",
-    "validatingLongterm": "Read through Validating is a long-term commitment and click on “I ACCEPT”",
-    "earlyAdaptor": "Read through Early adopter risks and click on “I ACCEPT”",
-    "stakingChecklist": "Read through Staking checklist and click on “I ACCEPT”",
-    "clickCont": "Click on “CONTINUE”",
-    "executionClient": "Select your execution client by clicking on it",
-    "scrollDown": "Scroll down and click on “CONTINUE”",
-    "consensusClient": "Select your consensus client by clicking on it",
-    "numValidator": "Type in the number of validators you want to run",
-    "generateKey": "Select the operating system you’re currently using to generate the key",
-    "keyGUI": "Click on “Download the Key Gen GUI app”",
-    "dlGithub": "Click on “Download from GitHub”",
-    "clickInstaller": "Scroll down and click on the installer you need and download it",
-    "setupPage": "Go back to the setup page and scroll down and click on the checkbox",
-    "wagueKey": "Switch to the WAGYU Key Generator app",
-    "secratePhrase": "Click on “Create New Secret Recovery Phrase”",
-    "selectNetwork": "Select the network in which you want your node to run",
-    "clickOk": "Click on “OK”",
-    "clickCreate": "Click on “CREATE”",
-    "recoveryPhrase": "After your Secret Recovery Phrase is created save it in a safe place. Click on the copy button.",
-    "clickNext": "Click on “NEXT”",
-    "imSure": "Click on “I’M SURE”",
-    "pasteRecovery": "Paste in your Secret Recovery Phrase",
-    "clickCheck": "Click on “CHECK”",
-    "needKey": "Type in the number of keys you need",
-    "typPass": "Type in a password",
-    "retypPass": "Retype your pasword",
-    "clickBrowse": "Click on “BROWSE”",
-    "chooseFolder": "Choose a folder where you want to save your keys and safe them in a safe place",
-    "clickCreateWait": "Click on “CREATE” and wait for a couple of seconds",
-    "clickClose": "Check if your keys are generated and click on “CLOSE”",
-    "switchSetup": "Switch back to the setup page",
-    "dragFile": "Click on “Drag file to upload or browse” and drag your deposite file in the field",
-    "connWalet": "Connect your wallet, check the network and your balance",
-    "understandRisk": "Read the section “Understand the risks” and check every box",
-    "readSection": "Read the section “Make sure you aren’t pished” and check the box",
-    "protectYourself": "Read the section “Protect yourself against double deposits” and check the box",
-    "dblCheck": "Double check everything and click on “CONTINUE”",
-    "sendDeposit": "Click on “SEND DEPOSIT”",
-    "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
-    "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+    "visitUrl": "访问网站",
+    "becomeValidator": "点击“成为验证者”",
+    "proofStake": "阅读权益证明并点击“继续”",
+    "deposit": "阅读存款信息并点击“我接受”",
+    "usingTerminal": "阅读使用终端信息并点击“我接受”",
+    "validatorUptime": "阅读验证者运行时间并点击“我接受”",
+    "validatorBahavior": "阅读恶劣验证者行为并点击“我接受”",
+    "keyManagement": "阅读密钥管理并点击“我接受”",
+    "validatingLongterm": "阅读验证是长期承诺并点击“我接受”",
+    "earlyAdaptor": "阅读早期采纳风险并点击“我接受”",
+    "stakingChecklist": "阅读质押清单并点击“我接受”",
+    "clickCont": "点击“继续”",
+    "executionClient": "通过点击选择您的执行客户端",
+    "scrollDown": "向下滚动并点击“继续”",
+    "consensusClient": "通过点击选择您的共识客户端",
+    "numValidator": "输入您想运行的验证者数量",
+    "generateKey": "选择您当前使用的操作系统以生成密钥",
+    "keyGUI": "点击“下载密钥生成GUI应用”",
+    "dlGithub": "点击“从GitHub下载”",
+    "clickInstaller": "向下滚动并点击您需要的安装程序进行下载",
+    "setupPage": "返回设置页面，向下滚动并点击复选框",
+    "wagueKey": "切换到WAGYU密钥生成器应用",
+    "secratePhrase": "点击“创建新的秘密恢复短语”",
+    "selectNetwork": "选择您希望节点运行的网络",
+    "clickOk": "点击“确定”",
+    "clickCreate": "点击“创建”",
+    "recoveryPhrase": "创建秘密恢复短语后，请将其保存在安全的地方。点击复制按钮。",
+    "clickNext": "点击“下一步”",
+    "imSure": "点击“我确定”",
+    "pasteRecovery": "粘贴您的秘密恢复短语",
+    "clickCheck": "点击“检查”",
+    "needKey": "输入您需要的密钥数量",
+    "typPass": "输入密码",
+    "retypPass": "重新输入您的密码",
+    "clickBrowse": "点击“浏览”",
+    "chooseFolder": "选择一个文件夹保存您的密钥并将其安全保存",
+    "clickCreateWait": "点击“创建”并等待几秒钟",
+    "clickClose": "检查您的密钥是否已生成并点击“关闭”",
+    "switchSetup": "切换回设置页面",
+    "dragFile": "点击“拖动文件上传或浏览”并将您的存款文件拖到字段中",
+    "connWalet": "连接您的钱包，检查网络和您的余额",
+    "understandRisk": "阅读“理解风险”部分并勾选每个框",
+    "readSection": "阅读“确保您没有被钓鱼”部分并勾选框",
+    "protectYourself": "阅读“保护自己免受重复存款的影响”部分并勾选框",
+    "dblCheck": "仔细检查一切并点击“继续”",
+    "sendDeposit": "点击“发送存款”",
+    "walletPopup": "您的钱包会弹出，点击“确认”发送交易",
+    "contCong": "点击“继续”，恭喜您创建了一个验证器密钥"
   },
   "balWid": {
-    "fin": "FINALIZED",
-    "bal": "BALANCE CHANGE"
+    "fin": "已确定",
+    "bal": "余额变化"
   },
   "headerBtn": {
-    "help": "help",
-    "notif": "Management of notification channels",
-    "availableUpdt": "New update is available",
-    "updtPan": "update panel",
-    "setting": "Stereum settings",
-    "logOutBtn": "Log out",
-    "rem": "REMOVE",
-    "node": "NODE",
-    "control": "CONTROL",
-    "staking": "STAKING"
+    "help": "帮助",
+    "notif": "通知渠道管理",
+    "availableUpdt": "有新的更新可用",
+    "updtPan": "更新面板",
+    "setting": "Stereum设置",
+    "logOutBtn": "登出",
+    "rem": "移除",
+    "node": "节点",
+    "control": "控制",
+    "staking": "质押"
   },
   "switchNetwork": {
-    "message": "This is the current network, you can click to select another network"
+    "message": "这是当前网络，您可以点击选择另一个网络"
   },
   "searchOption": {
-    "switchShow": "Switch between showing the public key & your picked custom name",
-    "group": "Group multiple key(s)",
-    "searchFilter": "Search & filters"
+    "switchShow": "切换显示公钥和您选择的自定义名称之间",
+    "group": "分组多个密钥",
+    "searchFilter": "搜索和过滤"
   },
   "serverManagement": {
-    "serverAccMange": "Server Access Management",
-    "serverNam": "Server Name",
-    "ipHOST": "IP or HOST NAME",
-    "userNam": "User Name",
-    "machineNam": "Machine Name",
-    "port": "Port",
-    "pass": "Password",
-    "chngPass": "Change Password",
-    "passmessage": "Please enter a password to change it",
-    "confirmPass": "please enter the password again",
-    "confirmPassMessage": "confirm your password",
-    "cancel": "CANCEL",
-    "clckChngPass": "click to change your password",
-    "key": "Key",
-    "createKey": "create a new key",
-    "clckCreateKey": "click to generate a new key",
-    "addKey": "add an existing key",
-    "clckAddKey": "click to add an existing key"
+    "serverAccMange": "服务器访问管理",
+    "serverNam": "服务器名称",
+    "ipHOST": "IP或主机名",
+    "userNam": "用户名",
+    "machineNam": "机器名称",
+    "port": "端口",
+    "pass": "密码",
+    "chngPass": "更改密码",
+    "passmessage": "请输入密码进行更改",
+    "confirmPass": "请再次输入密码",
+    "confirmPassMessage": "确认您的密码",
+    "cancel": "取消",
+    "clckChngPass": "点击更改密码",
+    "key": "密钥",
+    "createKey": "创建新密钥",
+    "clckCreateKey": "点击生成新密钥",
+    "addKey": "添加现有密钥",
+    "clckAddKey": "点击添加现有密钥"
   },
   "taskMang": {
-    "taskMng": "Task Manager"
+    "taskMng": "任务管理器"
   },
   "ipScanModal": {
-    "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close"
+    "message": "您想通过搜索您家庭网络中Stereum的Ubuntu ISO发出的ping来自动检索您的节点服务器IP吗？这可能需要一段时间...",
+    "clockClose": "点击外部关闭"
   },
   "serviceBtn": {
-    "turnOff": "Turn off the service",
-    "turnOn": "Turn on the service",
-    "restart": "Restart the service",
-    "pending": "Service is pending",
-    "settings": "service settings",
-    "logs": "open logs",
-    "docs": "open docs"
+    "turnOff": "关闭服务",
+    "turnOn": "开启服务",
+    "restart": "重启服务",
+    "pending": "服务待处理",
+    "settings": "服务设置",
+    "logs": "打开日志",
+    "docs": "在浏览器中打开文档"
   },
   "serviceLay": {
-    "srvice": "service"
+    "srvice": "服务"
   },
   "clientButtons": {
-    "turnOn": "Turn the service on",
-    "turnOff": "Turn the service off",
-    "restart": "Restart the service",
-    "pending": "Service is pending",
-    "settings": "Access the settings of the service",
-    "logs": "Open the logs of the service",
-    "docs": "Open the documentation of the service in your browser",
-    "removeLock": "Remove Lock files of the service",
-    "pruning": "Prune the service database",
-    "resync": "Resync the service from a selected source"
+    "turnOn": "开启服务",
+    "turnOff": "关闭服务",
+    "restart": "重启服务",
+    "pending": "服务待处理",
+    "settings": "访问服务设置",
+    "logs": "打开服务日志",
+    "docs": "在浏览器中打开服务文档",
+    "removeLock": "移除服务的锁定文件",
+    "pruning": "修剪服务数据库",
+    "resync": "从选定源重新同步服务"
   },
   "clientLay": {
-    "client": "client",
-    "keyMsg": "key(s) imported",
-    "syncStatus": "sync status:"
+    "client": "客户端",
+    "keyMsg": "密钥已导入",
+    "syncStatus": "同步状态："
   },
   "serverDetails": {
-    "machineName": "Machine Name",
-    "machineIp": "Machine IP Address"
+    "machineName": "机器名称",
+    "machineIp": "机器IP地址"
   },
   "changesBox": {
-    "clickToCancel": "Click here to cancel this change"
+    "clickToCancel": "点击此处取消此更改"
   },
   "editClientLay": {
-    "clkEdit": "Click to edit your service"
+    "clkEdit": "点击编辑您的服务"
   },
   "generalMenu": {
-    "modify": "modify",
-    "connection": "connection",
-    "switchClient": "switch client",
-    "delete": "delete",
-    "service": "service",
-    "info": "info"
+    "modify": "修改",
+    "connection": "连接",
+    "switchClient": "切换客户端",
+    "delete": "删除",
+    "service": "服务",
+    "info": "信息"
   },
   "networkDetails": {
-    "currIs": "The current network is",
-    "currentNet": "Current Network"
+    "currIs": "当前网络为",
+    "currentNet": "当前网络"
   },
   "changeSect": {
-    "clkConfirm": "Click here to confirm change(s)"
+    "clkConfirm": "点击此处确认更改"
   },
   "sidebarSect": {
-    "toNode": "Return to the Node Page",
-    "toEdit": "Go to the Edit Node Page",
-    "setchNet": "Switch Network in the configuration of the Node",
-    "nukTheNud": "Nuke the Stereum Node and all its services",
-    "nukNod": "Nuke Node",
-    "trnOn": "Turn your node on",
-    "trnOff": "Turn your node off",
-    "expNode": "Export your Node Configuration"
+    "toNode": "返回节点页面",
+    "toEdit": "前往编辑节点页面",
+    "setchNet": "在节点配置中切换网络",
+    "nukTheNud": "销毁Stereum节点及其所有服务",
+    "nukNod": "销毁节点",
+    "trnOn": "开启您的节点",
+    "trnOff": "关闭您的节点",
+    "expNode": "导出您的节点配置"
   },
   "customAnim": {
-    "processing": "Processing"
+    "processing": "处理中"
   },
   "customFooter": {
-    "back": "BACK",
-    "next": "NEXT"
+    "back": "返回",
+    "next": "下一步"
   },
   "configDetails": {
-    "addConfig": "Add Config"
+    "addConfig": "添加配置"
   },
   "editBody": {
-    "executionClient": "Execution Client",
-    "consensusClient": "Consensus Client",
-    "validator": "Validator"
+    "executionClient": "执行客户端",
+    "consensusClient": "共识客户端",
+    "validator": "验证器"
   },
   "editModals": {
-    "noAvailService": "There is no available service",
-    "executionClients": "Execution Clients",
-    "consensusClients": "Consensus Clients",
-    "validatorClients": "Validator Clients",
-    "installationPath": "Installation Path",
-    "syncMode": "Sync Mode",
-    "serviceId": "Service ID",
-    "serviceCat": "Service Category",
-    "modifyConnection": "Modify Connection",
-    "confirm": "Confirm",
-    "clckOutside": "Click outside to close",
-    "switchNetwork": "Switch Network",
-    "selectNetwork": "Select a network to replace the",
-    "switchTo": "Switch To",
-    "trnOn": "Turn on",
-    "trnOff": "Turn off",
-    "selectClient": "Select a Client From List",
-    "switchClient": "switch client",
-    "selectNet": "Select Network"
+    "noAvailService": "没有可用服务",
+    "executionClients": "执行客户端",
+    "consensusClients": "共识客户端",
+    "validatorClients": "验证器客户端",
+    "installationPath": "安装路径",
+    "syncMode": "同步模式",
+    "serviceId": "服务ID",
+    "serviceCat": "服务类别",
+    "modifyConnection": "修改连接",
+    "confirm": "确认",
+    "clckOutside": "点击外部关闭",
+    "switchNetwork": "切换网络",
+    "selectNetwork": "选择一个网络以替换",
+    "switchTo": "切换到",
+    "trnOn": "开启",
+    "trnOff": "关闭",
+    "selectClient": "从列表中选择一个客户端",
+    "switchClient": "切换客户端",
+    "selectNet": "选择网络"
   },
   "editPageServices": {
-    "services": "Services",
-    "service": "Service",
-    "delete": "Delete"
+    "services": "服务",
+    "service": "服务",
+    "delete": "删除"
   },
   "guideInfo": {
-    "close": "Close"
+    "close": "关闭"
   },
   "ImportConfigHeader": {
-    "toImport": "To import",
-    "rem": "Remove"
+    "toImport": "导入",
+    "rem": "移除"
   },
   "loginServer": {
-    "wait": "Please wait . . .",
-    "chckServerDetails": "Please check your server details.",
-    "serverRem": "Your server will be removed.",
-    "removeServer": "REMOVE SERVER",
-    "removeServerText": "Are you sure you want to remove it?"
+    "wait": "请稍候...",
+    "chckServerDetails": "请检查您的服务器详情。",
+    "serverRem": "您的服务器将被移除。",
+    "removeServer": "移除服务器",
+    "removeServerText": "您确定要移除它吗？"
   },
   "multiServer": {
-    "serverName": "Server Name",
-    "saveServer": "Save Server",
-    "ipOrHost": "IP or Hostname",
-    "port": "Port",
-    "userName": "Username",
-    "pass": "Password",
-    "keyPath": "Key Path",
-    "login": "Login",
-    "conecting": "Connecting . . .",
-    "newPass": "New Password",
-    "EnterNewPass": "Enter New Password",
-    "verifyPass": "Verify Password",
-    "chngResPass": "Change / Reset Password",
-    "chngPass": "Change Password",
-    "machineName": "Machine Name",
-    "chngAvatar": "Change Avatar",
-    "sshkeyMang": "SSH KEY MANAGEMENT",
-    "createNewKey": "CREATE A NEW KEY",
-    "addExistingKey": "ADD AN EXISTING KEY",
-    "loginFailed": "Login Failed",
-    "ok": "OK",
-    "genSshKey": "Generate SSH Key",
-    "keyType": "Key Type",
-    "selectKeyType": "Select Key Type",
-    "sshPass": "SSH Password",
-    "unlockExpertOptions": "UNLOCK EXPERT OPTIONS",
-    "optionalSshPass": "DEFINE AN OPTIONAL SSH PASSWORD",
-    "savePath": "SAVE PATH",
-    "specCypher": "SPECIFY CYPHER",
-    "bitAmount": "BIT AMOUNT",
-    "useCostumCypher": "USE CUSTOM CYPHER",
-    "specSshBitAmount": "SPECIFY SSH BIT AMOUNT",
-    "gen": "GENERATE",
-    "saveServerCon": "SAVED SERVER CONNECTIONS",
-    "serch": "Search",
-    "serchFor": "Search for...",
-    "addServer": "ADD A NEW SERVER CONNECTION",
-    "serverAccMang": "Server Access Management"
+    "serverName": "服务器名称",
+    "saveServer": "保存服务器",
+    "ipOrHost": "IP或主机名",
+    "port": "端口",
+    "userName": "用户名",
+    "pass": "密码",
+    "keyPath": "密钥路径",
+    "login": "登录",
+    "conecting": "连接中...",
+    "newPass": "新密码",
+    "EnterNewPass": "输入新密码",
+    "verifyPass": "验证密码",
+    "chngResPass": "更改/重置密码",
+    "chngPass": "更改密码",
+    "machineName": "机器名称",
+    "chngAvatar": "更改头像",
+    "sshkeyMang": "SSH密钥管理",
+    "createNewKey": "创建新密钥",
+    "addExistingKey": "添加现有密钥",
+    "loginFailed": "登录失败",
+    "ok": "确定",
+    "genSshKey": "生成SSH密钥",
+    "keyType": "密钥类型",
+    "selectKeyType": "选择密钥类型",
+    "sshPass": "SSH密码",
+    "unlockExpertOptions": "解锁高级选项",
+    "optionalSshPass": "定义一个可选的SSH密码",
+    "savePath": "保存路径",
+    "specCypher": "指定加密算法",
+    "bitAmount": "位数",
+    "useCostumCypher": "使用自定义加密算法",
+    "specSshBitAmount": "指定SSH位数",
+    "gen": "生成",
+    "saveServerCon": "保存的服务器连接",
+    "serch": "搜索",
+    "serchFor": "搜索...",
+    "addServer": "添加新的服务器连接",
+    "serverAccMang": "服务器访问管理"
   },
   "oneClick": {
-    "installedService": "INSTALLED SERVICES",
-    "addOption": "ADDITIONAL OPTIONS",
-    "chooseNetwork": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "oneClckInstall": "ONE-CLICK INSTALLATION",
-    "setNodeClient": "Set how the Node clients where synchronize their blockchain data from",
-    "process": "Processing"
+    "installedService": "已安装服务",
+    "addOption": "附加选项",
+    "chooseNetwork": "选择您的用例和网络。选择并点击开始后，将随机选择一个客户端来服务于您的用例",
+    "oneClckInstall": "一键安装",
+    "setNodeClient": "设置节点客户端将如何同步它们的区块链数据",
+    "process": "处理中"
   },
   "serviceModal": {
-    "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
-    "generateEnr": "GENERATING NEW ENR",
-    "open": "OPEN",
-    "createEnr": "CREATE NEW ENR",
-    "openObol": "OPEN OBOL LAUNCHPAD",
-    "generateEnrToJoin": "Generate a new ENR to use to create or join an existing cluster",
-    "joinCluster": "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.",
-    "openBrowser": "OPEN IN BROWSER",
-    "importEnr": "IMPORT EXISTING ENR",
-    "entrEnr": "Enter ENR",
-    "import": "import",
-    "copy": "COPY",
-    "rem": "REMOVE",
-    "backUpFile": "BACKUP DEPOSIT FILE",
-    "startDkg": "START THE DKG",
-    "exportBackup": "Export your backup deposit file from the server to back it up",
-    "allEnrSign": "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!",
-    "srart": "START",
-    "pasteUrl": "PASTE THE URL",
-    "entrUrl": "Enter URL",
-    "oops": "Oops! Something Went Wrong",
-    "wentWrong": "Something went wrong. Please click the refresh button and try again.",
-    "pubKey": "Public operator key",
-    "genPair": "GENERATE ENCRYPTED PAIR",
-    "confWarning": "CONFIRM WARNING",
-    "opDash": "MAINNET OPERATOR DASHBOARD",
-    "runOp": "The most secure way to run your Operator node, is to generate an Encrypted key pair.",
-    "dnldBackup": "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!",
-    "showPerformance": "Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it.",
-    "copyKey": "COPY PUBLIC OPERATOR KEY",
-    "skPk": "Secret Operator Key (SK) & Public Operator Key (PK)",
-    "selPk": "SELECT AN EXISTING PRIVATE KEY TO IMPORT",
-    "selEnc": "SELECT UNENCRYPTED PRIVATE KEY",
-    "sel": "SELECT",
-    "dnldBk": "DOWNLOAD BACKUP",
-    "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
-    "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
-    "dl": "DOWNLOAD",
-    "imp": "IMPORT"
+    "distributedValidator": "分布式验证器生成",
+    "generateEnr": "生成新的ENR",
+    "open": "打开",
+    "createEnr": "创建新的ENR",
+    "openObol": "打开Obol发射台",
+    "generateEnrToJoin": "生成一个新的ENR用于创建或加入现有的集群",
+    "joinCluster": "使用分布式验证器发射台单独或与小组一起创建/加入Obol集群。",
+    "openBrowser": "在浏览器中打开",
+    "importEnr": "导入现有ENR",
+    "entrEnr": "输入ENR",
+    "import": "导入",
+    "copy": "复制",
+    "rem": "移除",
+    "backUpFile": "备份存款文件",
+    "startDkg": "开始DKG",
+    "exportBackup": "从服务器导出备份存款文件以进行备份",
+    "allEnrSign": "当所有ENR签名后，将显示一个命令。所有节点操作者都必须同时运行此命令！",
+    "srart": "开始",
+    "pasteUrl": "粘贴URL",
+    "entrUrl": "输入URL",
+    "oops": "哎呀！出了点问题",
+    "wentWrong": "出了点问题。请点击刷新按钮并重试。",
+    "pubKey": "公共操作密钥",
+    "genPair": "生成加密对",
+    "confWarning": "确认警告",
+    "opDash": "主网操作面板",
+    "runOp": "运行操作者节点的最安全方式是生成加密密钥对。",
+    "dnldBackup": "请确保记下密码并下载备份。如果您丢失了它们，没有人能帮助您恢复密码或私密密钥！",
+    "showPerformance": "显示您的节点为SSV网络以及分配给它的所有密钥的性能概览。",
+    "copyKey": "复制公共操作密钥",
+    "skPk": "私密操作密钥(SK)和公共操作密钥(PK)",
+    "selPk": "选择一个现有的私密密钥进行导入",
+    "selEnc": "选择未加密的私密密钥",
+    "sel": "选择",
+    "dnldBk": "下载私密密钥以备份。确保也记下了用于加密的密码！",
+    "dkKey": "输入密码以解密私钥",
+    "dlPk": "下载私密密钥以进行备份。确保也记下了您用于加密的密码！",
+    "dl": "下载",
+    "imp": "导入"
   },
   "stakingPage": {
-    "somethingWrong": "Something went wrong",
-    "enteredGraffitti": "Entered Graffiti Not Valid.",
-    "writeGrpName": "Write here your group name",
-    "noVal": "No Validator key imported.",
-    "noMatch": "No Matches.",
-    "reward": "Reward",
-    "ttl": "Total",
-    "pleaseWait": "Please wait until the remote key is imported.",
-    "imp": "Importing",
-    "yes": "YES",
-    "no": "NO",
-    "noFile": "No file selected",
-    "impDet": "Import Details :",
-    "grpId": "Group ID:",
-    "grpNam": "Group Name:",
-    "keys": "Keys:",
-    "remGrp": "Remove Group",
-    "areYouSure": "Are you sure you want to remove this group?",
-    "remValKey": "Remove Validator Key(s)",
-    "areXouSure": "Are you sure you want to remove this Key(s)?",
-    "stopImport": " Otherwise, click outside to stop importing.",
-    "expMsg": "Export Message",
-    "riskWarning": "Risk Warning",
-    "process": "Processing...",
-    "withdrawExit": "Withdraw & Exit Validator Keys",
-    "vldExited": "Validator(s) Successfully Exited.",
-    "vldFailed": "Validator(s) Failed to exit.",
-    "successExit": "Successfully Exited.",
-    "exitFailed": "Exit Failed.",
-    "readConeq": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES"
+    "somethingWrong": "出了点问题",
+    "enteredGraffitti": "输入的涂鸦无效。",
+    "writeGrpName": "在此处写下您的组名",
+    "noVal": "没有导入验证器密钥。",
+    "noMatch": "没有匹配项。",
+    "reward": "奖励",
+    "ttl": "总计",
+    "pleaseWait": "请等待远程密钥导入完成。",
+    "imp": "导入中",
+    "yes": "是",
+    "no": "否",
+    "noFile": "未选择文件",
+    "impDet": "导入详情：",
+    "grpId": "组ID：",
+    "grpNam": "组名：",
+    "keys": "密钥：",
+    "remGrp": "移除组",
+    "areYouSure": "您确定要移除这个组吗？",
+    "remValKey": "移除验证器密钥",
+    "areXouSure": "您确定要移除这个密钥吗？",
+    "stopImport": "否则，点击外部停止导入。",
+    "expMsg": "导出消息",
+    "riskWarning": "风险警告",
+    "process": "处理中...",
+    "withdrawExit": "退出并提取验证器密钥",
+    "vldExited": "验证器成功退出。",
+    "vldFailed": "验证器退出失败。",
+    "successExit": "成功退出。",
+    "exitFailed": "退出失败。",
+    "readConeq": "我已阅读文本并了解后果"
   },
   "welcomePage": {
-    "logedOut": "You will be logged out of the Stereum Launcher. You will need to log back in to access your node.",
-    "logOut": "Logging out",
-    "logOutMsg": "Are you sure you want to log out?",
-    "logOutBtn": "Logout",
-    "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
-    "welcomeStereum": "Welcome to Stereum"
+    "logedOut": "您将被登出Stereum启动器。您需要重新登录才能访问您的节点。",
+    "logOut": "正在登出",
+    "logOutMsg": "您确定要登出吗？",
+    "logOutBtn": "登出",
+    "chooseInstallNode": "在这一步，您选择如何安装您的节点。对于初学者，我们推荐使用一键安装选项！",
+    "welcomeStereum": "欢迎使用Stereum"
   }
 }

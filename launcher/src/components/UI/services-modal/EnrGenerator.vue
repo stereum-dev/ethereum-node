@@ -25,15 +25,31 @@
         </div>
       </div>
     </div>
-    <div
-      :class="[
-        'obol-modal-plugin_btn',
-        !headerStore.enrIsGenerating ? 'activeBtn' : '',
-        headerStore.deactivateBtnToWaitForLogs ? 'deactivate' : '',
-      ]"
-      @click="btnHandling"
-    >
-      {{ enrBtnToShow }}
+    <div class="obol-modal-plugin_btn-box">
+      <input
+        v-if="backupDistributedValidator"
+        v-model="backupPath"
+        type="text"
+        placeholder="e.g., C:\\path\\to\\backup.zip"
+      />
+
+      <span
+        v-if="backupDistributedValidator"
+        class="absolute cursor-pointer uppercase flex justify-center items-center backup-btn"
+        @click="backupBtn"
+        >backup</span
+      >
+
+      <div
+        :class="[
+          'obol-modal-plugin_btn',
+          !headerStore.enrIsGenerating ? 'activeBtn' : '',
+          headerStore.deactivateBtnToWaitForLogs ? 'deactivate' : '',
+        ]"
+        @click="btnHandling"
+      >
+        {{ enrBtnToShow }}
+      </div>
     </div>
   </div>
 </template>
@@ -96,14 +112,11 @@ const enrBtnToShow = computed(() => {
   ) {
     return "CONTINUE"; //continue
   } else if (headerStore.distrubutedValidatorGenerator && !headerStore.enrIsGenerating) {
-    return "Y of X CONNECTED";
+    return "DKG FINISHED";
   } else if (backupDistributedValidator.value && !headerStore.enrIsGenerating) {
     return "BACKUP";
-  } else if (
-    distributedCompleted.value &&
-    !headerStore.enrIsGenerating &&
-    !backupDistributedValidator.value
-  ) {
+
+  } else if (distributedCompleted.value && !headerStore.enrIsGenerating) {
     return "COMPLETE";
   }
 
@@ -216,19 +229,9 @@ const btnHandling = async () => {
     headerStore.generatorPlugin = false;
     headerStore.obolDashboard = true;
     headerStore.continueForExistENR = true;
-  } else if (enrBtnToShow.value === "Y of X CONNECTED") {
+  } else if (enrBtnToShow.value === "DKG FINISHED") {
     await openDirectoryPicker();
     backupDistributedValidator.value = true;
-    headerStore.distrubutedValidatorGenerator = false;
-    distributedCompleted.value = false;
-  } else if (enrBtnToShow.value === "BACKUP") {
-    if (!backupPath.value || backupPath.value === "") {
-      //check if user has selected a path
-      openDirectoryPicker(); // if not prompt selection again
-      return;
-    }
-    await ControlService.downloadObolBackup(backupPath.value);
-    backupDistributedValidator.value = false;
     headerStore.distrubutedValidatorGenerator = false;
     distributedCompleted.value = true;
   } else if (enrBtnToShow.value === "COMPLETE") {
@@ -240,6 +243,17 @@ const btnHandling = async () => {
     headerStore.continueForExistENR = true;
     headerStore.depositFile = true;
   }
+};
+const backupBtn = async () => {
+  if (!backupPath.value || backupPath.value === "") {
+    //check if user has selected a path
+    openDirectoryPicker(); // if not prompt selection again
+    return;
+  }
+  await ControlService.downloadObolBackup(backupPath.value);
+  backupDistributedValidator.value = false;
+  headerStore.distrubutedValidatorGenerator = false;
+  distributedCompleted.value = true;
 };
 </script>
 
@@ -276,7 +290,7 @@ const btnHandling = async () => {
   font-weight: 600;
 }
 .obol-modal-plugin_spaceWindow {
-  width: 90%;
+  width: 95%;
   height: 60%;
   display: flex;
   flex-wrap: wrap;
@@ -320,9 +334,43 @@ const btnHandling = async () => {
   flex-shrink: 0;
   word-wrap: break-word;
 }
+.obol-modal-plugin_btn-box {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 2% 0;
+  position: relative;
+}
+.obol-modal-plugin_btn-box input {
+  width: 61%;
+  height: 80%;
+  background-color: #eee;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 25px;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.backup-btn {
+  color: #2fe4ab;
+  top: 1;
+  left: 48%;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: #192d31;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 25px;
+  height: 75%;
+  width: 15%;
+}
 .obol-modal-plugin_btn {
   width: 30%;
-  height: 15%;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -334,7 +382,6 @@ const btnHandling = async () => {
   color: #dbdbdb;
   font-size: 1rem;
   font-weight: 600;
-  margin: 2% 0;
 }
 .obol-modal-plugin_btn:hover {
   transition-duration: 100ms;
