@@ -1,0 +1,16 @@
+---
+- name: Find all 3rd-party repos
+  ansible.builtin.find:
+    paths: /etc/apt/sources.list.d
+    patterns: '*'
+    recurse: no
+  register: third_party_repos
+- name: Switch 3rd-party repos from jammy to noble
+  ansible.builtin.replace:
+    path: "{{ item.path }}"
+    regexp: 'jammy'
+    replace: 'noble'
+  loop: "{{ third_party_repos.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  become: yes
