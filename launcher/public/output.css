@@ -1890,6 +1890,10 @@ video {
   min-height: 450px;
 }
 
+.w-setting {
+  width: 36%;
+}
+
 .w-1\/2 {
   width: 50%;
 }
@@ -2549,6 +2553,11 @@ video {
   -webkit-box-pack: space-evenly;
   -ms-flex-pack: space-evenly;
   justify-content: space-evenly;
+}
+
+.justify-around {
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
 }
 
 .gap-1 {

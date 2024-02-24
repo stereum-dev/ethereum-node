@@ -1,10 +1,15 @@
 <template>
   <div class="w-full audio-output-parent flex h-ful">
     <div class="selected-option w-full h-full flex justify-between items-center" @click="toggleDropdown">
-      <span class="device-label w-11/12 flex justify-start items-center font-semibold capitalize">
+      <span class="device-label w-11/12 flex justify-start items-center font-semibold capitalize pl-2 mr-0">
         {{ selectedDevice.label || "Select a device" }}
       </span>
-      <img src="/img/icon/control/arrowIcon.png" alt="topDown" />
+      <img
+        class="mr-2"
+        :style="{ transform: dropdownVisible ? 'rotate(0deg)' : 'rotate(180deg)' }"
+        src="/img/icon/control/arrowIcon.png"
+        alt="topDown"
+      />
     </div>
     <ul v-if="dropdownVisible" class="dropdown-audio-output w-64 bg-white h-full absolute z-50">
       <li v-for="device in audioOutputDevices" :key="device.deviceId" @click="selectDevice(device)">
@@ -53,11 +58,18 @@ const getAudioDevices = async () => {
 .selected-option {
   color: #eee;
 }
+.selected-option img {
+  width: 15px;
+  height: 15px;
+  transition: 0.3s;
+  transform: rotate(180deg);
+}
 
 .device-label {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 0.75rem;
 }
 
 .dropdown-audio-output span:hover {

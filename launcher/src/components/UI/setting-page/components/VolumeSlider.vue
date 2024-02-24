@@ -1,11 +1,11 @@
 <template>
-  <div class="flex w-full h-full items-center justify-center">
-    <span style="color: aliceblue; width: 40px" class="flex justify-start items-center font-semibold">{{ value }}</span
+  <div class="flex w-full h-full items-center justify-around">
+    <span style="color: aliceblue" class="w-12 flex justify-center items-center font-semibold pr-2">{{ value }}</span
     ><vue-slider
       v-model="value"
       dot-size="16"
-      width="170px"
-      :process-style="{ backgroundColor: '#a1c1ad' }"
+      width="185px"
+      :process-style="{ backgroundColor: '#336666' }"
       :tooltip-style="{ backgroundColor: 'pink', borderColor: 'pink' }"
       tooltip="none"
     >
