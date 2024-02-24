@@ -1,27 +1,28 @@
 <template>
   <base-layout>
     <!-- <SettingPanel /> -->
-
-    <div class="flex justify-start items-start w-56 h-full">
-      <SideBar>
-        <SidebarBtn
-          btn-name="general"
-          :is-active="mainBox == 'general' ? 'true' : 'false'"
-          @toggle-active="toggleSettings('general')"
-        />
-        <SidebarBtn
-          btn-name="audio"
-          :is-active="mainBox == 'audio' ? 'true' : 'false'"
-          @toggle-active="toggleSettings('audio')"
-        />
-      </SideBar>
-    </div>
-    <div class="bg-black w-5/6 h-full">
-      <MainBox
-        ><ItemRow :title="itemTitles[0]"><OutputOptions v-if="mainBox == 'audio'" /></ItemRow>
-        <ItemRow :title="itemTitles[1]"><VolumeSlider v-if="mainBox == 'audio'" /></ItemRow
-        ><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow
-      /></MainBox>
+    <div class="setting-parent w-full h-full flex justify-center items-center">
+      <div class="flex justify-start items-start w-56 h-full">
+        <SideBar>
+          <SidebarBtn
+            btn-name="general"
+            :is-active="mainBox == 'general' ? 'true' : 'false'"
+            @toggle-active="toggleSettings('general')"
+          />
+          <SidebarBtn
+            btn-name="audio"
+            :is-active="mainBox == 'audio' ? 'true' : 'false'"
+            @toggle-active="toggleSettings('audio')"
+          />
+        </SideBar>
+      </div>
+      <div class="bg-black w-5/6 h-full">
+        <MainBox
+          ><ItemRow :title="itemTitles[0]"><OutputOptions v-if="mainBox == 'audio'" /></ItemRow>
+          <ItemRow :title="itemTitles[1]"><VolumeSlider v-if="mainBox == 'audio'" /></ItemRow
+          ><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow
+        /></MainBox>
+      </div>
     </div>
   </base-layout>
 </template>
@@ -45,3 +46,8 @@ const itemTitles = computed(() => {
   return mainBox.value === "general" ? ["Language Selection", "Credits"] : ["Output Device", "Volume"];
 });
 </script>
+<style>
+.setting-parent {
+  max-height: 488px;
+}
+</style>

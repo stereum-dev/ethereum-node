@@ -30,7 +30,6 @@ const props = defineProps({
 // Convert 'isActive' string prop to a boolean value
 const active = computed(() => props.isActive === "true");
 
-// Define emits
 const emit = defineEmits(["toggle-active"]);
 
 const toggleActive = () => {
