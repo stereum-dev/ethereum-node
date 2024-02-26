@@ -725,6 +725,10 @@ video {
   inset: 0px;
 }
 
+.inset-5{
+  inset: 1.25rem;
+}
+
 .inset-x-0{
   left: 0px;
   right: 0px;
@@ -3700,6 +3704,10 @@ video {
   --tw-bg-opacity: 0.8;
 }
 
+.bg-opacity-90{
+  --tw-bg-opacity: 0.9;
+}
+
 .bg-gradient-to-b{
   background-image: -webkit-gradient(linear, left top, left bottom, from(var(--tw-gradient-stops)));
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -4387,6 +4395,10 @@ video {
 
 .opacity-80{
   opacity: 0.8;
+}
+
+.opacity-90{
+  opacity: 0.9;
 }
 
 .shadow{
