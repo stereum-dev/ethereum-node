@@ -64,7 +64,7 @@ test("lighthouse validator import", async () => {
   let lhVC = serviceManager.getService("LighthouseValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [lhBC] })
 
   //get latest versions
-  let versions = await nodeConnection.checkUpdates();
+  let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
   lhBC.imageVersion = versions[lhBC.network][lhBC.service].slice(-1).pop()
   lhVC.imageVersion = versions[lhVC.network][lhVC.service].slice(-1).pop()

@@ -2,9 +2,9 @@ import { SSHService } from "./SSHService";
 import { StringUtils } from "./StringUtils";
 import { nodeOS } from "./NodeOS";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
-import axios from "axios";
 import net from "net";
 import YAML from "yaml";
+import { NodeUpdates } from "./NodeUpdates";
 const log = require("electron-log");
 const electron = require("electron");
 const Evilscan = require("evilscan");
@@ -27,6 +27,7 @@ export class NodeConnection {
     this.nodeConnectionParams = nodeConnectionParams;
     this.os = null;
     this.osv = null;
+    this.nodeUpdates = new NodeUpdates(this);
   }
 
   async establish(taskManager) {
@@ -202,7 +203,7 @@ export class NodeConnection {
     let versions;
     let commit;
     try {
-      versions = await this.checkUpdates();
+      versions = await this.nodeUpdates.checkUpdates();
       this.taskManager.otherSubTasks.push({
         name: "Get Version Information",
         otherRunRef: ref,
@@ -978,113 +979,6 @@ export class NodeConnection {
       ports.push(port);
     }
     return ports;
-  }
-
-  async checkUpdates() {
-    let response = await axios.get("https://stereum.net/downloads/updates.json");
-    if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
-    return response.data;
-  }
-
-  async runAllUpdates(commit) {
-    //stereum and service updates
-    let before = 0;
-    let after = 0;
-    try {
-      before = this.getTimeStamp();
-      await this.updateStereum(commit);
-      await this.updateServices();
-      after = this.getTimeStamp();
-    } catch (err) {
-      log.error("Error occurred running all updates:\n", err);
-      return 30;
-    }
-    if (after != 0 && before != 0) return after - before;
-    return 30;
-  }
-
-  async updateServices(services) {
-    try {
-      let before = this.getTimeStamp();
-      await this.runPlaybook("Update Services", {
-        stereum_role: "update-services",
-        services_to_update: services ? services : undefined,
-      });
-      let after = this.getTimeStamp();
-      return after - before;
-    } catch (err) {
-      log.error("Error occurred running service updates:\n", err);
-      return 0;
-    }
-  }
-
-  async updateStereum(commit) {
-    console.log("updateStereum");
-    let extraVars = {
-      stereum_role: "update-stereum",
-      stereum_args: {
-        override_gitcommit: commit ? commit : undefined,
-      },
-    };
-    try {
-      let before = this.getTimeStamp();
-      await this.runPlaybook("Update Stereum", extraVars);
-      await this.runPlaybook("Update Changes", { stereum_role: "update-changes" });
-      let after = this.getTimeStamp();
-      return after - before;
-    } catch (err) {
-      log.error("Error occurred running stereum updates:\n", err);
-      return 0;
-    }
-  }
-
-  getTimeStamp() {
-    return Math.ceil(Date.now() / 1000);
-  }
-
-  async restartServices(seconds) {
-    try {
-      await this.runPlaybook("Restart Services", {
-        stereum_role: "restart-services",
-        restart_time_scope: seconds + 10,
-      });
-    } catch (err) {
-      log.error("Error occurred during restarting services:\n", err);
-    }
-  }
-
-  async getCurrentOsVersion() {
-    try {
-      const res = await this.sshService.exec(`lsb_release -d | awk '{print $3}'`);
-      return res.stdout;
-    } catch (err) {
-      log.error("Error occurred during get count pd updating os packages:\n", err);
-    }
-  }
-
-  async getCountOfUpdatableOSUpdate() {
-    try {
-      const res = await this.sshService.exec(`LANG=C apt-get upgrade -s |grep -P '^\\d+ upgraded'|cut -d" " -f1`);
-
-      return res.stdout;
-    } catch (err) {
-      log.error("Error occurred during get count pd updating os packages:\n", err);
-    }
-  }
-
-  async updateOS() {
-    try {
-      let before = this.getTimeStamp();
-      await this.runPlaybook("Update OS", {
-        stereum_role: "update-os",
-        stereum_args: { only_os_updates: true },
-      });
-      let after = this.getTimeStamp();
-      return after - before;
-    } catch (err) {
-      log.error("Error occurred running os package updates:\n", err);
-      return 0;
-    }
   }
 
   async getCurrentStereumVersion() {

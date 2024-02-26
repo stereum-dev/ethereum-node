@@ -1,5 +1,5 @@
 import { ServiceManager } from "./ServiceManager";
-import YAML from "yaml"
+import YAML from "yaml";
 import { StringUtils } from "./StringUtils";
 
 const log = require("electron-log");
@@ -22,12 +22,12 @@ export class OneClickInstall {
           updates: {
             lane: "stable",
             unattended: {
-              install: false
-            }
-          }
-        }
-      }
-    }
+              install: false,
+            },
+          },
+        },
+      },
+    };
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
     mkdir -p /etc/stereum/services &&\
     echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
@@ -90,19 +90,15 @@ export class OneClickInstall {
 
   getConfigurations() {
     let serviceList = [];
-    serviceList.push(
-      this.beaconService,
-      this.executionClient,
-    );
+    serviceList.push(this.beaconService, this.executionClient);
     if (this.mevboost) serviceList.push(this.mevboost);
     if (this.validatorService) serviceList.push(this.validatorService);
     if (this.extraServices) this.extraServices.forEach((service) => serviceList.push(service));
     serviceList.forEach((service) => {
-      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch)
-    })
-    return serviceList.map(service => service.buildConfiguration());
+      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
+    });
+    return serviceList.map((service) => service.buildConfiguration());
   }
-
 
   async createServices(constellation, checkpointURL, relayURL, selectedPreset) {
     this.needsKeystore = [];
@@ -110,123 +106,161 @@ export class OneClickInstall {
       network: this.network,
       installDir: this.installDir,
       checkpointURL: checkpointURL,
-      relays: relayURL
-    }
+      relays: relayURL,
+    };
     if (constellation.includes("GethService")) {
       //GethService
-      this.executionClient = this.serviceManager.getService("GethService", args)
+      this.executionClient = this.serviceManager.getService("GethService", args);
     }
 
     if (constellation.includes("RethService")) {
       //RethService
-      this.executionClient = this.serviceManager.getService("RethService", args)
+      this.executionClient = this.serviceManager.getService("RethService", args);
     }
 
     if (constellation.includes("BesuService")) {
       //BesuService
-      this.executionClient = this.serviceManager.getService("BesuService", args)
+      this.executionClient = this.serviceManager.getService("BesuService", args);
     }
 
     if (constellation.includes("NethermindService")) {
       //NethermindService
-      this.executionClient = this.serviceManager.getService("NethermindService", args)
+      this.executionClient = this.serviceManager.getService("NethermindService", args);
     }
 
     if (constellation.includes("ErigonService")) {
       //ErigonService
-      this.executionClient = this.serviceManager.getService("ErigonService", args)
+      this.executionClient = this.serviceManager.getService("ErigonService", args);
     }
 
     if (constellation.includes("FlashbotsMevBoostService")) {
       //FlashbotsMevBoostService
-      this.mevboost = this.serviceManager.getService("FlashbotsMevBoostService", args)
+      this.mevboost = this.serviceManager.getService("FlashbotsMevBoostService", args);
     }
 
     if (constellation.includes("LighthouseBeaconService")) {
       //LighthouseBeaconService
-      this.beaconService = this.serviceManager.getService("LighthouseBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
+      this.beaconService = this.serviceManager.getService("LighthouseBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+        ...(this.mevboost && { mevboost: [this.mevboost] }),
+      });
     }
 
     if (constellation.includes("LodestarBeaconService")) {
       //LodestarBeaconService
-      this.beaconService = this.serviceManager.getService("LodestarBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
+      this.beaconService = this.serviceManager.getService("LodestarBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+        ...(this.mevboost && { mevboost: [this.mevboost] }),
+      });
     }
 
     if (constellation.includes("PrysmBeaconService")) {
       //PrysmBeaconService
-      this.beaconService = this.serviceManager.getService("PrysmBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
+      this.beaconService = this.serviceManager.getService("PrysmBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+        ...(this.mevboost && { mevboost: [this.mevboost] }),
+      });
     }
 
     if (constellation.includes("NimbusBeaconService")) {
       //NimbusBeaconService
-      this.beaconService = this.serviceManager.getService("NimbusBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
+      this.beaconService = this.serviceManager.getService("NimbusBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+        ...(this.mevboost && { mevboost: [this.mevboost] }),
+      });
     }
 
     if (constellation.includes("TekuBeaconService")) {
       //TekuBeaconService
-      this.beaconService = this.serviceManager.getService("TekuBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
+      this.beaconService = this.serviceManager.getService("TekuBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+        ...(this.mevboost && { mevboost: [this.mevboost] }),
+      });
     }
-    let charon = undefined
+    let charon = undefined;
     if (constellation.includes("CharonService")) {
       //SSVNetworkService
-      charon = this.serviceManager.getService("CharonService", { ...args, consensusClients: [this.beaconService] })
+      charon = this.serviceManager.getService("CharonService", { ...args, consensusClients: [this.beaconService] });
 
-      this.extraServices.push(charon)
-      this.notToStart.push(charon.id)
+      this.extraServices.push(charon);
+      this.notToStart.push(charon.id);
     }
 
     if (constellation.includes("LighthouseValidatorService")) {
       //LighthouseValidatorService
-      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", {
+        ...args,
+        consensusClients: [charon ? charon : this.beaconService],
+      });
     }
 
     if (constellation.includes("LodestarValidatorService")) {
       //LodestarValidatorService
-      this.validatorService = this.serviceManager.getService("LodestarValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("LodestarValidatorService", {
+        ...args,
+        consensusClients: [charon ? charon : this.beaconService],
+      });
     }
 
     if (constellation.includes("PrysmValidatorService")) {
       //PrysmValidatorService
-      this.validatorService = this.serviceManager.getService("PrysmValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
+      this.validatorService = this.serviceManager.getService("PrysmValidatorService", {
+        ...args,
+        consensusClients: [charon ? charon : this.beaconService],
+      });
     }
-
 
     if (constellation.includes("NimbusValidatorService")) {
       //NimbusBeaconService
-      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
-      this.needsKeystore.push(this.validatorService)
+      this.validatorService = this.serviceManager.getService("NimbusValidatorService", {
+        ...args,
+        consensusClients: [charon ? charon : this.beaconService],
+      });
+      this.needsKeystore.push(this.validatorService);
     }
 
     if (constellation.includes("TekuValidatorService")) {
       //TekuBeaconService
-      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, consensusClients: [charon ? charon : this.beaconService] })
-      this.needsKeystore.push(this.validatorService)
+      this.validatorService = this.serviceManager.getService("TekuValidatorService", {
+        ...args,
+        consensusClients: [charon ? charon : this.beaconService],
+      });
+      this.needsKeystore.push(this.validatorService);
     }
 
     if (constellation.includes("SSVNetworkService")) {
       //SSVNetworkService
-      this.validatorService = this.serviceManager.getService("SSVNetworkService", { ...args, consensusClients: [this.beaconService], executionClients: [this.executionClient] })
-      this.needsKeystore.push(this.validatorService)
+      this.validatorService = this.serviceManager.getService("SSVNetworkService", {
+        ...args,
+        consensusClients: [this.beaconService],
+        executionClients: [this.executionClient],
+      });
+      this.needsKeystore.push(this.validatorService);
     }
 
     if (constellation.includes("PrometheusNodeExporterService")) {
       //PrometheusNodeExporterService
-      this.extraServices.push(this.serviceManager.getService("PrometheusNodeExporterService", args))
+      this.extraServices.push(this.serviceManager.getService("PrometheusNodeExporterService", args));
     }
 
     if (constellation.includes("PrometheusService")) {
       //PrometheusService
-      this.extraServices.push(this.serviceManager.getService("PrometheusService", args))
+      this.extraServices.push(this.serviceManager.getService("PrometheusService", args));
     }
 
     if (constellation.includes("GrafanaService")) {
       //GrafanaService
-      this.extraServices.push(this.serviceManager.getService("GrafanaService", args))
+      this.extraServices.push(this.serviceManager.getService("GrafanaService", args));
     }
 
     if (constellation.includes("NotificationService")) {
       //NotificationService
-      this.extraServices.push(this.serviceManager.getService("NotificationService", args))
+      this.extraServices.push(this.serviceManager.getService("NotificationService", args));
     }
 
     if (selectedPreset == "staking") {
@@ -235,8 +269,7 @@ export class OneClickInstall {
           this.executionClient.command.push("--full");
           break;
       }
-    }
-    else if (selectedPreset == "archive") {
+    } else if (selectedPreset == "archive") {
       switch (this.executionClient.service) {
         case "GethService":
           this.executionClient.command.push("--syncmode=full");
@@ -246,22 +279,29 @@ export class OneClickInstall {
           //archvie by default
           break;
         case "ErigonService":
-          this.executionClient.command = this.executionClient.command.filter(c => !c.includes("--prune"));
+          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--prune"));
           break;
         case "BesuService":
-          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))] = "--sync-mode=FULL";
-          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--pruning-enabled=true"))] = "--pruning-enabled=false";
+          this.executionClient.command[
+            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))
+          ] = "--sync-mode=FULL";
+          this.executionClient.command[
+            this.executionClient.command.findIndex((c) => c.includes("--pruning-enabled=true"))
+          ] = "--pruning-enabled=false";
           break;
         case "NethermindService":
-          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] += "_archive";
-          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode=Hybrid"))] = "--Pruning.Mode=None";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
+            "_archive";
+          this.executionClient.command[
+            this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode=Hybrid"))
+          ] = "--Pruning.Mode=None";
           break;
       }
     }
 
     let versions;
     try {
-      versions = await this.nodeConnection.checkUpdates();
+      versions = await this.nodeConnection.nodeUpdates.checkUpdates();
     } catch (err) {
       log.error(`Couldn't fetch versions in OneClickInstallation...
       Installing with predefined Versions
@@ -314,7 +354,7 @@ export class OneClickInstall {
   }
 
   async startServices() {
-    const services = this.getConfigurations().filter(s => !this.notToStart.includes(s.id))
+    const services = this.getConfigurations().filter((s) => !this.notToStart.includes(s.id));
     const runRefs = [];
     if (services[0] !== undefined) {
       await Promise.all(
@@ -331,7 +371,13 @@ export class OneClickInstall {
     this.clearSetup();
     this.setup = setup;
     this.network = network;
-    let services = ["GethService", "GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
+    let services = [
+      "GethService",
+      "GrafanaService",
+      "PrometheusNodeExporterService",
+      "PrometheusService",
+      "NotificationService",
+    ];
 
     this.choosenClient = await this.chooseClient();
     this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1);
@@ -347,7 +393,7 @@ export class OneClickInstall {
         "GrafanaService",
         "PrometheusNodeExporterService",
         "PrometheusService",
-        "NotificationService"
+        "NotificationService",
       ];
 
     switch (setup) {
@@ -360,13 +406,25 @@ export class OneClickInstall {
         services.push("SSVNetworkService");
         break;
       case "obol":
-        services = ["GethService", "LighthouseBeaconService", "TekuValidatorService", "CharonService", "GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
+        services = [
+          "GethService",
+          "LighthouseBeaconService",
+          "TekuValidatorService",
+          "CharonService",
+          "GrafanaService",
+          "PrometheusNodeExporterService",
+          "PrometheusService",
+          "NotificationService",
+        ];
         break;
       case "rocketpool":
         services.push("ROCKETPOOL");
         break;
       case "stereum on arm":
-        services = services.filter(s => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s));
+        services = services.filter(
+          (s) =>
+            !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s)
+        );
         break;
       case "archive":
         break;

@@ -1,25 +1,24 @@
 import { useServers } from '@/store/servers';
 <template>
-  <div class="w-full h-7 grid grid-cols-12 mx-auto bg-[#334d4d] text-gray-300 font-semibold text-md p-[2px]">
+  <div class="w-full h-7 grid grid-cols-12 mx-auto bg-[#334d4d]">
+    <div class="w-full h-full col-start-1 col-end-7 flex justify-start items-center pl-2">
+      <span class="text-xs text-gray-200">{{ props.item.packageName }}</span>
+    </div>
+    <div class="w-full h-full col-start-7 col-end-11 flex justify-center items-center">
+      <span class="text-xs text-amber-400 font-semibold">{{ props.item.newVersion }}</span>
+    </div>
     <div
       v-if="serverStore.isUpdateProcessing"
-      class="h-6 col-start-1 col-span-2 p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
+      class="w-full h-full col-start-11 col-span-full flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
     >
       <img class="w-5" src="/img/icon/node-icons/download_disabled.png" alt="icon" />
     </div>
     <div
       v-else
-      class="h-6 col-start-1 col-span-2 self-center flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] active:border-none active:shadow-none border border-transparent hover:border-[#4d7575] rounded-sm cursor-pointer transition-colors shadow-sm shadow-[#182020]"
-      @click="updateServer"
+      class="w-full h-full col-start-11 col-span-full self-center flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] active:border-none active:shadow-none border border-transparent hover:border-[#4d7575] rounded-sm cursor-pointer transition-colors shadow-sm shadow-[#182020]"
+      @click="updatePackage"
     >
       <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
-    </div>
-
-    <div class="col-start-4 col-end-8 flex justify-center items-center overflow-hidden">
-      <span class="text-sm text-gray-200 font-semibold">{{ props.item?.name }}</span>
-    </div>
-    <div class="col-start-9 col-span-full flex justify-center items-center overflow-hidden">
-      <span class="text-sm text-amber-400 font-semibold">{{ props.item?.version }}</span>
     </div>
   </div>
 </template>
@@ -27,14 +26,13 @@ import { useServers } from '@/store/servers';
 <script setup>
 import { useServers } from "@/store/servers";
 
-const emit = defineEmits(["updateServer"]);
+const emit = defineEmits(["updatePackage"]);
 const serverStore = useServers();
 
 const props = defineProps({
   item: Object,
 });
-
-const updateServer = () => {
-  emit("updateServer", props.item);
+const updatePackage = () => {
+  emit("updatePackage", props.item);
 };
 </script>
