@@ -1,7 +1,6 @@
 <template>
   <base-layout>
-    <!-- isStakingDisabled -->
-    <DisabledSection v-if="true" />
+    <DisabledSection v-if="isStakingDisabled" />
     <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
       <SidebarSection />
       <ListSection
