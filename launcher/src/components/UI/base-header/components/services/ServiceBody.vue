@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-13 col-end-19 grid grid-cols-12 p-1">
+  <div class="col-start-13 col-end-18 flex justify-center items-center p-1">
     <ServiceCarousel :slides="slides" />
   </div>
 </template>
