@@ -9,7 +9,7 @@
     >
       <div class="flex flex-col justify-between gap-5">
         <div class="text-center p-2 flex-auto justify-center space-y-4">
-          <div v-if="icon">
+          <div v-if="icon !== ''">
             <img
               class="-m-1 flex items-center text-red-500 mx-auto"
               :src="icon"

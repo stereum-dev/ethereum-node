@@ -39,17 +39,13 @@
       <div
         class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 grid grid-cols-6 items-center gap-x-2 px-1"
       >
-        <img
-          v-if="searchingForUpdatablePackages"
-          class="w-5 h-5 spinner self-center justify-self-center"
-          src="/img/icon/control/loading_circle.gif"
-        />
         <div
-          v-else
           class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center"
         >
           <span class="text-sm font-semibold text-gray-300 text-center">{{
-            numberOfUpdatablePackages
+            serverStore.upgradablePackages?.length
+              ? serverStore.upgradablePackages.length
+              : 0
           }}</span>
         </div>
 
@@ -105,62 +101,74 @@
 <script setup>
 import UpdateRow from "./UpdateRow.vue";
 import ControlService from "@/store/ControlService";
-import { ref, onMounted, computed, reactive } from "vue";
+
+import { ref, onMounted, computed } from "vue";
 import { useServers } from "@/store/servers";
 
 const serverStore = useServers();
 
 const osVersionCurrent = ref("");
-const updateStatus = reactive({
-  message: "",
-  color: "",
-});
 const stereumApp = ref({
   current: "alpha",
   latest: "2.0",
   autoUpdate: "",
 });
-const numberOfUpdatablePackages = ref(null);
-const searchingForUpdatablePackages = ref(false);
 
-const newUpdates = computed(() => serverStore.upgradablePackages);
-const onOff = computed(() =>
-  stereumApp.value.autoUpdate == "on" ? "text-green-700" : "text-red-700"
-);
+const newUpdates = computed(() => {
+  return serverStore.upgradablePackages;
+});
 
-onMounted(async () => {
-  await getUpgradablePackages();
-  await getOsVersion();
-  await getSettings();
+const onOff = computed(() => {
+  if (stereumApp.value.autoUpdate == "on") {
+    return "text-green-700";
+  } else {
+    return "text-red-700";
+  }
+});
+
+onMounted(() => {
+  getUpgradablePackages();
+  getOsVersion();
+  getSettings();
 });
 
 const getSettings = async () => {
-  const settings = await ControlService.getStereumSettings();
-  stereumApp.value.autoUpdate = settings.stereum?.settings.updates.unattended.install
-    ? "on"
-    : "off";
+  let settings = await ControlService.getStereumSettings();
+  if (settings.stereum?.settings.updates.unattended.install) {
+    stereumApp.value.autoUpdate = "on";
+  } else {
+    stereumApp.value.autoUpdate = "off";
+  }
 };
 
 const getOsVersion = async () => {
   try {
     const osVersion = await ControlService.getCurrentOsVersion();
+
     osVersionCurrent.value = osVersion;
   } catch (error) {
-    console.error("Failed to fetch OS version:", error);
+    console.log(error);
   }
 };
 
 const getUpgradablePackages = async () => {
-  searchingForUpdatablePackages.value = true;
   try {
-    const output = await ControlService.getUpgradeablePackages();
-    if (output) {
-      numberOfUpdatablePackages.value = output.length;
-      searchingForUpdatablePackages.value = false;
-    }
+    serverStore.upgradablePackages = await ControlService.getUpgradeablePackages();
   } catch (error) {
-    console.error("Failed to fetch upgradable packages:", error);
+    console.log(error);
     serverStore.upgradablePackages = [];
+  }
+};
+
+const updatePackage = async (item) => {
+  serverStore.isUpdateProcessing = true;
+  console.log("update package");
+  try {
+    await ControlService.updatePackage(item.packageName);
+    serverStore.isUpdateProcessing = false;
+  } catch (error) {
+    serverStore.isUpdateProcessing = false;
+    console.log(error);
   }
 };
 
@@ -168,36 +176,9 @@ const updateAll = async () => {
   serverStore.isUpdateProcessing = true;
   try {
     await ControlService.updateOS();
-    await getUpgradablePackages(); // Refresh the list of upgradable packages
-    updateStatus.message = "All packages updated successfully!";
-    updateStatus.color = "text-green-500";
-  } catch (error) {
-    console.error("Failed to update all packages:", error);
-    updateStatus.message = "Failed to update all packages.";
-    updateStatus.color = "text-red-500";
-  } finally {
     serverStore.isUpdateProcessing = false;
+  } catch (error) {
+    console.log(error);
   }
 };
-
-const updatePackage = async (item) => {
-  serverStore.isUpdateProcessing = true;
-  updateUIWithInProgressMessage(item.packageName);
-  try {
-    const result = await ControlService.updatePackage(item.packageName);
-    if (result) {
-      await getUpgradablePackages(); // Refresh the list
-    }
-  } catch (error) {
-    console.error(`Failed to update ${item.packageName}:`, error);
-  } finally {
-    serverStore.isUpdateProcessing = false;
-  }
-};
-
-// UI update functions
-function updateUIWithInProgressMessage(packageName) {
-  updateStatus.message = `Updating ${packageName}...`;
-  updateStatus.color = "text-amber-400";
-}
 </script>
