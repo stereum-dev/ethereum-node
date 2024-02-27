@@ -64,7 +64,7 @@ test("nimbus validator import", async () => {
 
   let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
 
-  let versions = await nodeConnection.checkUpdates();
+  let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
   nimbusBC.imageVersion = versions[nimbusBC.network][nimbusBC.service].slice(-1).pop()
   nimbusVC.imageVersion = versions[nimbusVC.network][nimbusVC.service].slice(-1).pop()

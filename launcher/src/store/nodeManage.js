@@ -203,7 +203,9 @@ export const useNodeManage = defineStore("nodeManage", {
           support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol"],
         },
       ],
+      //Current network to display in node and edit pages
       currentNetwork: {},
+      //Selected network to pick from the network modal
       selectedNetwork: null,
       configNetwork: {},
       catDefult: "select a category",

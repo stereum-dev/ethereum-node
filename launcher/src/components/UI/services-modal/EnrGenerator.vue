@@ -10,11 +10,16 @@
     <div
       class="obol-modal-plugin_spaceWindow"
       :style="{
-        backgroundImage: backupDistributedValidator || distributedCompleted ? distrubutedValidatorAnimation : '',
+        backgroundImage:
+          backupDistributedValidator || distributedCompleted
+            ? distrubutedValidatorAnimation
+            : '',
       }"
     >
       <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
-        <span v-if="!headerStore.distrubutedValidatorGenerator">{{ headerStore.generatedENR }}</span>
+        <span v-if="!headerStore.distrubutedValidatorGenerator">{{
+          headerStore.generatedENR
+        }}</span>
         <div v-else class="span-wrapper">
           <span v-for="item in dkgLogs" :key="item">{{ item }}</span>
         </div>
@@ -63,7 +68,9 @@ const enrGeneratedSuccess = ref(false);
 const enrGeneratedFailed = ref(false);
 const enrGeneratedContinue = ref(false);
 const backupDistributedValidator = ref(false);
-const distrubutedValidatorAnimation = ref("url('./img/icon/service-icons/obol_animation.gif')");
+const distrubutedValidatorAnimation = ref(
+  "url('./img/icon/service-icons/obol_animation.gif')"
+);
 const distributedCompleted = ref(false);
 const polling = ref(null);
 const dkgLogs = ref([]);
@@ -108,6 +115,7 @@ const enrBtnToShow = computed(() => {
     return "DKG FINISHED";
   } else if (backupDistributedValidator.value && !headerStore.enrIsGenerating) {
     return "BACKUP";
+
   } else if (distributedCompleted.value && !headerStore.enrIsGenerating) {
     return "COMPLETE";
   }

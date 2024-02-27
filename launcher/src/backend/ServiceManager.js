@@ -285,8 +285,7 @@ export class ServiceManager {
         command = command.filter((c) => !c.includes(genesisSyncCommands[client.service]));
     } else {
       //add genesisSync if no Url was send
-      if (genesisSyncCommands[client.service])
-        command.push(genesisSyncCommands[client.service]);
+      if (genesisSyncCommands[client.service]) command.push(genesisSyncCommands[client.service]);
     }
 
     if (isString) {
@@ -1072,11 +1071,17 @@ export class ServiceManager {
           service.dependencies.executionClients,
           service.dependencies.consensusClients
         );
+        let replacementString = ""
+        if (config.ssv_sk) {
+          replacementString = "OperatorPrivateKey: " + config.ssv_sk
+        } else {
+          replacementString = "KeyStore:\n  PrivateKeyFile: /secrets/encrypted_private_key.json\n  PasswordFile: /secrets/password"
+        }
 
         // prepare service's config file
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
         const escapedConfigFile = StringUtils.escapeStringForShell(
-          ssvConfig.replace(/^OperatorPrivateKey.*/gm, "OperatorPrivateKey: " + config.ssv_sk)
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, replacementString)
         );
         this.nodeConnection.sshService.exec(
           `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
@@ -1089,7 +1094,7 @@ export class ServiceManager {
           .join("/");
         await this.nodeConnection.sshService.exec(
           `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-          (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
+            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
@@ -1220,7 +1225,7 @@ export class ServiceManager {
 
     let versions;
     try {
-      versions = await this.nodeConnection.checkUpdates();
+      versions = await this.nodeConnection.nodeUpdates.checkUpdates();
     } catch (err) {
       log.error(`Couldn't fetch versions in OneClickInstallation...
       Installing with predefined Versions
@@ -1351,7 +1356,7 @@ export class ServiceManager {
     if (jobs.includes("DELETE")) {
       let services = await this.readServiceConfigurations();
       let ssvConfigs = await this.getSSVConfigs(services);
-      let before = this.nodeConnection.getTimeStamp();
+      let before = this.nodeConnection.nodeUpdates.getTimeStamp();
       try {
         await Promise.all(
           tasks.filter(ServiceManager.uniqueByID("DELETE")).map((task, index, tasks) => {
@@ -1361,8 +1366,8 @@ export class ServiceManager {
       } catch (err) {
         log.error("Deleting Services Failed:", err);
       } finally {
-        let after = this.nodeConnection.getTimeStamp();
-        await this.nodeConnection.restartServices(after - before);
+        let after = this.nodeConnection.nodeUpdates.getTimeStamp();
+        await this.nodeConnection.nodeUpdates.restartServices(after - before);
       }
     }
     let newInstallTasks = [];
@@ -1385,7 +1390,7 @@ export class ServiceManager {
       }
     }
     if (jobs.includes("NETWORK")) {
-      let before = this.nodeConnection.getTimeStamp();
+      let before = this.nodeConnection.nodeUpdates.getTimeStamp();
       let services = await this.readServiceConfigurations();
       try {
         let changeNetworkTask = tasks.find((t) => t.content === "NETWORK");
@@ -1396,12 +1401,12 @@ export class ServiceManager {
       } catch (err) {
         log.error("Changing Network Failed:", err);
       } finally {
-        let after = this.nodeConnection.getTimeStamp();
-        await this.nodeConnection.restartServices(after - before);
+        let after = this.nodeConnection.nodeUpdates.getTimeStamp();
+        await this.nodeConnection.nodeUpdates.restartServices(after - before);
       }
     }
     if (jobs.includes("SWITCH CLIENT")) {
-      let before = this.nodeConnection.getTimeStamp();
+      let before = this.nodeConnection.nodeUpdates.getTimeStamp();
       try {
         let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
         for (const switchTask of switchTasks) {
@@ -1416,8 +1421,8 @@ export class ServiceManager {
       } catch (err) {
         log.error("Switching Services Failed:", err);
       } finally {
-        let after = this.nodeConnection.getTimeStamp();
-        await this.nodeConnection.restartServices(after - before);
+        let after = this.nodeConnection.nodeUpdates.getTimeStamp();
+        await this.nodeConnection.nodeUpdates.restartServices(after - before);
       }
     }
   }
@@ -1568,7 +1573,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1577,7 +1582,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1586,7 +1591,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1604,7 +1609,7 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
           metricsExporterCommands[firstConsensusClient.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
         await this.manageServiceState(firstConsensusClient.id, "started");

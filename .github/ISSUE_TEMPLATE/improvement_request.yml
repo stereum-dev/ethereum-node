@@ -1,12 +1,12 @@
 name: 🙏 Improvement Request
-description: Suggest an improvement for an existing feature or functionality.
-title: "[Bug]: "
+description: Suggest an improvement for an existing feature, UI page or functionality.
+title: "[Improvement]: "
 labels: ["improvement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this improvement request for Stereum!
+        Thanks for taking the time to fill out this improvement form for Stereum!
 
   - type: input
     id: contact
@@ -20,9 +20,9 @@ body:
   - type: textarea
     id: describe-the-problem
     attributes:
-      label: Describe the problem you ran into!
-      description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-      placeholder: Tell us what you about the problem you ran into!
+      label: Describe what you don not like or what problem you ran into
+      description: A clear and concise description of what the problem is. Ex. I am always frustrated when [...]
+      placeholder: Tell us about the problem you ran into!
     validations:
       required: true
 
@@ -40,7 +40,7 @@ body:
     attributes:
       label: Suggestion Box for Improvement
       description: A clear and concise description of how you would like to see it improved!
-      placeholder: Tell us what you think this should look like!
+      placeholder: Tell us what you think this should look like or what improvement you think can be made!
     validations:
       required: false
 
@@ -80,7 +80,7 @@ body:
     id: terms
     attributes:
       label: Acknowledgment
-      description: Please make sure to look through [our existing issues](https://github.com/stereum-dev/ethereum-node/labels/improvement) before submitting a bug!
+      description: Please make sure to look through [our existing issues](https://github.com/stereum-dev/ethereum-node/labels/improvement) before submitting a improvement request!
       options:
         - label: I looked through the existing issues of this project
           required: true

@@ -4,10 +4,16 @@
   >
     <HeaderScreen />
 
-    <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative">
+    <div
+      class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative"
+    >
       <slot></slot>
     </div>
-    <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
+    <div
+      class="w-full h-[30px] rounded-b-lg bg-[#33393E]"
+      @pointerdown.prevent.stop
+      @mousedown.prevent.stop
+    >
       <TheFooter />
       <TaskManager />
     </div>
@@ -22,11 +28,23 @@
         "
       />
     </Transition>
-    <GrafanaModal v-if="headerStore.showGrafanaWindow" @close-window="closeServiceBrowser" />
+    <GrafanaModal
+      v-if="headerStore.showGrafanaWindow"
+      @close-window="closeServiceBrowser"
+    />
     <SsvModal v-if="headerStore.showSsvWindow" @close-window="closeServiceBrowser" />
-    <PrometheusModal v-if="headerStore.showPrometheusWindow" @close-window="closeServiceBrowser" />
-    <MevboostModal v-if="headerStore.showMevboostWindow" @close-window="closeServiceBrowser" />
-    <ObolModal v-if="headerStore.showObolCharonWindow" @close-window="closeServiceBrowser" />
+    <PrometheusModal
+      v-if="headerStore.showPrometheusWindow"
+      @close-window="closeServiceBrowser"
+    />
+    <MevboostModal
+      v-if="headerStore.showMevboostWindow"
+      @close-window="closeServiceBrowser"
+    />
+    <ObolModal
+      v-if="headerStore.showObolCharonWindow"
+      @close-window="closeServiceBrowser"
+    />
     <UpdatePanel
       v-if="headerStore.displayUpdatePanel"
       ref="UpdatePanelCompRef"
@@ -41,12 +59,23 @@
       @confirm-reconnect="reconnect"
     />
 
-    <LogoutModal v-if="headerStore.logoutModalIsActive" @close-window="closeMenuWindow" @confrim-logout="loggingOut" />
+    <LogoutModal
+      v-if="headerStore.logoutModalIsActive"
+      @close-window="closeMenuWindow"
+      @confrim-logout="loggingOut"
+    />
 
-    <SupportModal v-if="headerStore.supportModalIsActive" @close-window="closeMenuWindow" />
-    <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
+    <SupportModal
+      v-if="headerStore.supportModalIsActive"
+      @close-window="closeMenuWindow"
+    />
+    <NotifModal
+      v-if="headerStore.notificationModalIsActive"
+      @close-window="closeMenuWindow"
+    />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
     <StakeGuide v-if="headerStore.stakeGuideActive" />
+    <SwitchAnimation v-if="serverStore.isServerAnimationActive" />
   </div>
 </template>
 <script setup>
@@ -66,6 +95,7 @@ import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
 import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
 import NotifModal from "../UI/base-header/components/modals/NotifModal.vue";
 import TutorialGuide from "../UI/the-node/TutorialGuide.vue";
+import SwitchAnimation from "../UI/server-management/components/SwitchAnimation.vue";
 import StakeGuide from "../UI/the-node/StakeGuide.vue";
 import { useUpdateCheck } from "@/composables/version";
 import { useNodeHeader } from "@/store/nodeHeader";
@@ -138,6 +168,10 @@ const runOsUpdate = async () => {
       await UpdatePanelCompRef.value.searchOsUpdates();
     }
   }
+};
+
+const logoutModalHandler = () => {
+  headerStore.logoutModalIsActive = true;
 };
 
 const loggingOut = async () => {
