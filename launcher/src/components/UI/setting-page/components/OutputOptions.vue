@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full audio-output-parent flex h-ful">
+  <div class="w-full audio-output-parent flex h-full bg-[#33393E] rounded-md">
     <div class="selected-option w-full h-full flex justify-between items-center" @click="toggleDropdown">
       <span class="device-label w-11/12 flex justify-start items-center font-semibold capitalize pl-2 mr-0">
         {{ selectedDevice.label || "Select a device" }}

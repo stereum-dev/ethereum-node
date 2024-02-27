@@ -14,11 +14,11 @@
         </SideBar>
       </div>
       <div class="bg-black w-5/6 h-full">
-        <MainBox
-          ><ItemRow :title="itemTitles[0]"><OutputOptions v-if="mainBox == 'audio'" /></ItemRow>
-          <ItemRow :title="itemTitles[1]"><VolumeSlider v-if="mainBox == 'audio'" /></ItemRow
-          ><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow /><ItemRow
-        /></MainBox>
+        <MainBox>
+          <ItemRow v-for="(item, index) in itemConfigurations" :key="index" :title="item.title">
+            <component :is="item.component" v-if="item.component"></component>
+          </ItemRow>
+        </MainBox>
       </div>
     </div>
   </base-layout>
@@ -48,8 +48,25 @@ const toggleSettings = (name) => {
   mainBox.value = name;
 };
 
-const itemTitles = computed(() => {
-  return mainBox.value === "general" ? ["Language Selection", "Credits"] : ["Output Device", "Volume"];
+// const itemTitles = computed(() => {
+//   return mainBox.value === "general" ? ["Language Selection", "Credits"] : ["Output Device", "Volume"];
+// });
+
+const itemConfigurations = computed(() => {
+  let items = [];
+  if (mainBox.value === "general") {
+    items = [{ title: "Language Selection" }, { title: "Credits" }];
+  } else if (mainBox.value === "audio") {
+    items = [
+      { title: "Output Device", component: OutputOptions },
+      { title: "Volume", component: VolumeSlider },
+    ];
+  }
+  // Ensure there are always 8 rows
+  while (items.length < 8) {
+    items.push({ title: "" }); // Empty rows
+  }
+  return items;
 });
 </script>
 <style>
