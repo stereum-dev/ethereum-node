@@ -16,7 +16,7 @@
       <div class="bg-black w-5/6 h-full">
         <MainBox>
           <ItemRow v-for="(item, index) in itemConfigurations" :key="index" :title="item.title">
-            <component :is="item.component" v-if="item.component"></component>
+            <component :is="item.component" v-if="item.component" />
           </ItemRow>
         </MainBox>
       </div>
@@ -35,10 +35,6 @@ import { ref, computed } from "vue";
 
 const mainBox = ref("general");
 
-// const toggleSettings = (arg) => {
-//   mainBox.value = arg;
-// };
-
 const sidebarButtons = ref([
   { name: "general", label: "General" },
   { name: "audio", label: "Audio" },
@@ -47,10 +43,6 @@ const sidebarButtons = ref([
 const toggleSettings = (name) => {
   mainBox.value = name;
 };
-
-// const itemTitles = computed(() => {
-//   return mainBox.value === "general" ? ["Language Selection", "Credits"] : ["Output Device", "Volume"];
-// });
 
 const itemConfigurations = computed(() => {
   let items = [];
@@ -62,7 +54,7 @@ const itemConfigurations = computed(() => {
       { title: "Volume", component: VolumeSlider },
     ];
   }
-  // Ensure there are always 8 rows
+
   while (items.length < 8) {
     items.push({ title: "" }); // Empty rows
   }
