@@ -153,9 +153,9 @@ const getOsVersion = async () => {
 const getUpgradablePackages = async () => {
   searchingForUpdatablePackages.value = true;
   try {
-    const output = await ControlService.getUpgradeablePackages();
-    if (output) {
-      numberOfUpdatablePackages.value = output.length;
+    serverStore.upgradablePackages = await ControlService.getUpgradeablePackages();
+    if (serverStore.upgradablePackages) {
+      numberOfUpdatablePackages.value = serverStore.upgradablePackages.length;
       searchingForUpdatablePackages.value = false;
     }
   } catch (error) {
@@ -187,11 +187,10 @@ const updatePackage = async (item) => {
     const result = await ControlService.updatePackage(item.packageName);
     if (result) {
       await getUpgradablePackages(); // Refresh the list
+      serverStore.isUpdateProcessing = false;
     }
   } catch (error) {
     console.error(`Failed to update ${item.packageName}:`, error);
-  } finally {
-    serverStore.isUpdateProcessing = false;
   }
 };
 
