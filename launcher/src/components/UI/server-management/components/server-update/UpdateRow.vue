@@ -1,6 +1,6 @@
 import { useServers } from '@/store/servers';
 <template>
-  <div class="w-full h-7 grid grid-cols-12 mx-auto bg-[#334d4d]">
+  <div class="w-full h-7 min-h-7 grid grid-cols-12 mx-auto bg-[#334d4d]">
     <div class="w-full h-full col-start-1 col-end-7 flex justify-start items-center pl-2">
       <span class="text-xs text-gray-200">{{ props.item.packageName }}</span>
     </div>

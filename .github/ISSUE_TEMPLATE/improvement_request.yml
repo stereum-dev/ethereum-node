@@ -20,7 +20,7 @@ body:
   - type: textarea
     id: describe-the-problem
     attributes:
-      label: Describe what you don not like or what problem you ran into
+      label: Describe what you do not like or what problem you ran into
       description: A clear and concise description of what the problem is. Ex. I am always frustrated when [...]
       placeholder: Tell us about the problem you ran into!
     validations:

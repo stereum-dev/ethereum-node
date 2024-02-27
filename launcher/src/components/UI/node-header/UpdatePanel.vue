@@ -41,11 +41,11 @@
                         class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-2"
                       >
                         <img
-                          v-if="updatablePackages"
+                          v-if="nodeHeaderStore.searchingForOsUpdates && !nodeHeaderStore.osUpdating"
                           class="w-5 h-5 spinner mr-2"
                           src="/img/icon/control/loading_circle.gif"
                         />
-                        <span v-else>{{ updatablePackages }}</span>
+                        <span v-else>{{ nodeHeaderStore.osVersionLatest ? nodeHeaderStore.osVersionLatest : 0 }}</span>
                       </div>
                     </div>
                   </div>
@@ -289,7 +289,6 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 const osVersionCurrent = ref("-");
-const updatablePackages = ref(0);
 
 //Computed
 const onOff = computed(() => {
@@ -310,7 +309,6 @@ watchEffect(() => {
 
 //on Mounted
 onMounted(async () => {
-  await getUpgradablePackages();
   useUpdateCheck();
   getSettings();
   await getOsVersion();
@@ -374,13 +372,6 @@ const searchOsUpdates = async (manual = false) => {
   await getUpdatablePackagesCount();
   nodeHeaderStore.searchingForOsUpdates = false;
   nodeHeaderStore.searchingForOsUpdatesManual = false;
-};
-const getUpgradablePackages = async () => {
-  try {
-    updatablePackages.value = await ControlService.getUpgradeablePackages();
-  } catch (error) {
-    console.error("Failed to fetch upgradable packages:", error);
-  }
 };
 
 const getUpdatablePackagesCount = async () => {

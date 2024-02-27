@@ -36,9 +36,9 @@ const props = defineProps({
   },
 });
 
+const serverStore = useServers();
 const route = useRoute();
 const footerStore = useFooter();
-const serverStore = useServers();
 const isHovered = ref(false);
 
 const emit = defineEmits(["mouseLeave", "accessHandler"]);

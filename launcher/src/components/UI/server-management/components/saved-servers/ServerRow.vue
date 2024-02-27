@@ -1,7 +1,7 @@
 import { ref, computed, watch, watchEffect } from 'vue';
 <template>
   <div
-    class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
+    class="w-full h-[55px] min-h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
     :class="
       connectedServer
         ? 'bg-[#336666] border border-teal-300 '
