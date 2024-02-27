@@ -95,8 +95,12 @@ const loginHandler = async () => {
   if (router.currentRoute.value.path === "/login") {
     await login();
   } else {
+    serverStore.isServerAnimationActive = true;
     await ControlService.logout();
     await login();
+    setTimeout(() => {
+      serverStore.isServerAnimationActive = false;
+    }, 5000);
   }
 };
 

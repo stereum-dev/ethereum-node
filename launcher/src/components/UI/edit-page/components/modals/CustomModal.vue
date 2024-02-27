@@ -10,7 +10,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
       <div class="h-full flex flex-col justify-between gap-4">
         <div class="text-center pt-4 flex-auto justify-center space-y-2">
           <div class="flex justify-center items-center px-4 mx-auto">
-            <img v-if="client" class="w-[55px] h-[55px] mr-2" :src="getClientIcon" alt="Service Icon" />
+            <img v-if="getClientIcon" class="w-[55px] h-[55px] mr-2" :src="getClientIcon" alt="Service Icon" />
             <div class="flex flex-col justify-center items-start">
               <span v-if="mainTitle" class="text-[26px] font-bold text-teal-600 uppercase">{{ mainTitle }}</span>
               <span v-if="subTitle" class="text-[22px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
@@ -68,7 +68,7 @@ const emit = defineEmits(["closeWindow", "confirmAction"]);
 //Watchers
 
 const getClientIcon = computed(() => {
-  return props.client.sIcon ? props.client.sIcon : props.client.icon;
+  return props.client?.sIcon ? props.client?.sIcon : "";
 });
 
 //Methods

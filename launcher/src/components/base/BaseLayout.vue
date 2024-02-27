@@ -35,11 +35,7 @@
       @click-outside="closeServiceBrowser"
     />
 
-    <ReconnectModal
-      v-if="!footerStore.stereumStatus"
-      @open-logout="logoutModalHandler"
-      @confirm-reconnect="reconnect"
-    />
+    <ReconnectModal v-if="!footerStore.stereumStatus" @open-logout="loggingOut" @confirm-reconnect="reconnect" />
 
     <LogoutModal v-if="headerStore.logoutModalIsActive" @close-window="closeMenuWindow" @confrim-logout="loggingOut" />
 
@@ -47,6 +43,7 @@
     <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
     <StakeGuide v-if="headerStore.stakeGuideActive" />
+    <SwitchAnimation v-if="serverStore.isServerAnimationActive" />
   </div>
 </template>
 <script setup>
@@ -67,6 +64,7 @@ import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
 import NotifModal from "../UI/base-header/components/modals/NotifModal.vue";
 import TutorialGuide from "../UI/the-node/TutorialGuide.vue";
 import StakeGuide from "../UI/the-node/StakeGuide.vue";
+import SwitchAnimation from "../UI/server-management/components/SwitchAnimation.vue";
 import { useUpdateCheck } from "@/composables/version";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useRouter } from "vue-router";

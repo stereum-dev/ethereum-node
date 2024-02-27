@@ -2,9 +2,9 @@ import { SSHService } from "./SSHService";
 import { StringUtils } from "./StringUtils";
 import { nodeOS } from "./NodeOS";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
-import axios from "axios";
 import net from "net";
 import YAML from "yaml";
+import { NodeUpdates } from "./NodeUpdates";
 const log = require("electron-log");
 const electron = require("electron");
 const Evilscan = require("evilscan");
@@ -27,6 +27,7 @@ export class NodeConnection {
     this.nodeConnectionParams = nodeConnectionParams;
     this.os = null;
     this.osv = null;
+    this.nodeUpdates = new NodeUpdates(this);
   }
 
   async establish(taskManager) {
@@ -202,7 +203,7 @@ export class NodeConnection {
     let versions;
     let commit;
     try {
-      versions = await this.checkUpdates();
+      versions = await this.nodeUpdates.checkUpdates();
       this.taskManager.otherSubTasks.push({
         name: "Get Version Information",
         otherRunRef: ref,
@@ -336,17 +337,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -460,9 +461,9 @@ export class NodeConnection {
       if (SSHService.checkExecError(ssvNetworkConfig)) {
         throw new Error(
           "Failed reading SSV network config to get keystore keystore from service " +
-          serviceID +
-          ": " +
-          SSHService.extractExecError(ssvNetworkConfig)
+            serviceID +
+            ": " +
+            SSHService.extractExecError(ssvNetworkConfig)
         );
       }
       let ssvNetworkConfigParsed = YAML.parse(ssvNetworkConfig.stdout);
@@ -485,9 +486,9 @@ export class NodeConnection {
         );
         throw new Error(
           "Can't read SSV keystore password file content from service " +
-          serviceID +
-          ": " +
-          keyStorePasswordFileRequest.stderr
+            serviceID +
+            ": " +
+            keyStorePasswordFileRequest.stderr
         );
       }
       let keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
@@ -500,9 +501,9 @@ export class NodeConnection {
         );
         throw new Error(
           "Can't read SSV keystore private key file content from service " +
-          serviceID +
-          ": " +
-          keyStorePrivateKeyFileRequest.stderr
+            serviceID +
+            ": " +
+            keyStorePrivateKeyFileRequest.stderr
         );
       }
       let keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
@@ -670,10 +671,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -719,10 +720,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -744,9 +745,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -978,112 +979,6 @@ export class NodeConnection {
       ports.push(port);
     }
     return ports;
-  }
-
-  async checkUpdates() {
-    let response = await axios.get("https://stereum.net/downloads/updates.json");
-    if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
-    return response.data;
-  }
-
-  async runAllUpdates(commit) {
-    //stereum and service updates
-    let before = 0;
-    let after = 0;
-    try {
-      before = this.getTimeStamp();
-      await this.updateStereum(commit);
-      await this.updateServices();
-      after = this.getTimeStamp();
-    } catch (err) {
-      log.error("Error occurred running all updates:\n", err);
-      return 30;
-    }
-    if (after != 0 && before != 0) return after - before;
-    return 30;
-  }
-
-  async updateServices(services) {
-    try {
-      let before = this.getTimeStamp();
-      await this.runPlaybook("Update Services", {
-        stereum_role: "update-services",
-        services_to_update: services ? services : undefined,
-      });
-      let after = this.getTimeStamp();
-      return after - before;
-    } catch (err) {
-      log.error("Error occurred running service updates:\n", err);
-      return 0;
-    }
-  }
-
-  async updateStereum(commit) {
-    let extraVars = {
-      stereum_role: "update-stereum",
-      stereum_args: {
-        override_gitcommit: commit ? commit : undefined,
-      },
-    };
-    try {
-      let before = this.getTimeStamp();
-      await this.runPlaybook("Update Stereum", extraVars);
-      await this.runPlaybook("Update Changes", { stereum_role: "update-changes" });
-      let after = this.getTimeStamp();
-      return after - before;
-    } catch (err) {
-      log.error("Error occurred running stereum updates:\n", err);
-      return 0;
-    }
-  }
-
-  getTimeStamp() {
-    return Math.ceil(Date.now() / 1000);
-  }
-
-  async restartServices(seconds) {
-    try {
-      await this.runPlaybook("Restart Services", {
-        stereum_role: "restart-services",
-        restart_time_scope: seconds + 10,
-      });
-    } catch (err) {
-      log.error("Error occurred during restarting services:\n", err);
-    }
-  }
-
-  async getCurrentOsVersion() {
-    try {
-      const res = await this.sshService.exec(`lsb_release -d | awk '{print $3}'`);
-      return res.stdout;
-    } catch (err) {
-      log.error("Error occurred during get count pd updating os packages:\n", err);
-    }
-  }
-
-  async getCountOfUpdatableOSUpdate() {
-    try {
-      const res = await this.sshService.exec(`LANG=C apt-get upgrade -s |grep -P '^\\d+ upgraded'|cut -d" " -f1`);
-
-      return res.stdout;
-    } catch (err) {
-      log.error("Error occurred during get count pd updating os packages:\n", err);
-    }
-  }
-
-  async updateOS() {
-    try {
-      let before = this.getTimeStamp();
-      await this.runPlaybook("Update OS", {
-        stereum_role: "update-os",
-        stereum_args: { only_os_updates: true },
-      });
-      let after = this.getTimeStamp();
-      return after - before;
-    } catch (err) {
-      log.error("Error occurred running os package updates:\n", err);
-      return 0;
-    }
   }
 
   async getCurrentStereumVersion() {

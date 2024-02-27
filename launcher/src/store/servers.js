@@ -87,13 +87,14 @@ export const useServers = defineStore("servers", {
       //Update
       serverUpdates: [],
       isUpdateProcessing: false,
+      upgradablePackages: [],
 
       //Form
       addNewServer: false,
       connectExistingServer: false,
 
       //Server Management tabs
-
+      isServerAnimationActive: false,
       isServerLoginActive: false,
       isServerDetailsActive: false,
       isServerSSHActive: false,
