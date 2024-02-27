@@ -1893,6 +1893,14 @@ video {
   min-height: 450px;
 }
 
+.min-h-\[55px\]{
+  min-height: 55px;
+}
+
+.min-h-7{
+  min-height: 1.75rem;
+}
+
 .w-1\/2{
   width: 50%;
 }
