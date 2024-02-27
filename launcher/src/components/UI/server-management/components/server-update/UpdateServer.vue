@@ -182,7 +182,7 @@ const updateAll = async () => {
 
 const updatePackage = async (item) => {
   serverStore.isUpdateProcessing = true;
-  updateUIWithInProgressMessage(item.packageName);
+
   try {
     const result = await ControlService.updatePackage(item.packageName);
     if (result) {
@@ -193,10 +193,4 @@ const updatePackage = async (item) => {
     console.error(`Failed to update ${item.packageName}:`, error);
   }
 };
-
-// UI update functions
-function updateUIWithInProgressMessage(packageName) {
-  updateStatus.message = `Updating ${packageName}...`;
-  updateStatus.color = "text-amber-400";
-}
 </script>
