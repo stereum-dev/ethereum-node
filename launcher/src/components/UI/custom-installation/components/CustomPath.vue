@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
-    <CustomHead />
+    <CustomHeader />
     <div
       class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
     >
@@ -90,7 +90,7 @@
 <script setup>
 import { ref, onMounted, onBeforeMount } from "vue";
 import CustomFooter from "./CustomFooter.vue";
-import CustomHead from "./CustomHead.vue";
+import CustomHeader from "./CustomHead.vue";
 import ControlService from "@/store/ControlService";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
