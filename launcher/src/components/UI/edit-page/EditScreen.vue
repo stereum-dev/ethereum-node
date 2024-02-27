@@ -115,7 +115,7 @@ import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, computed, onUnmounted, watch } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
@@ -149,25 +149,12 @@ const serverStore = useServers();
 
 // Computed & Watcher
 
-const isLoadingNewConfiguration = ref(true);
-
-watch(
-  () => manageStore.newConfiguration,
-  () => {
-    isLoadingNewConfiguration.value = false;
-    updateDisplayNetworkList();
-  },
-  { deep: true }
-);
-
 onMounted(() => {
   if (manageStore.currentNetwork.id) manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
   manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
   if (!manageStore.architecture) setArchitecture();
 });
 onMounted(() => {
-  isLoadingNewConfiguration.value = false;
-  updateDisplayNetworkList();
   manageStore.confirmChanges = [];
   manageStore.newConfiguration.forEach((el) => {
     return {
@@ -203,18 +190,10 @@ const listKeys = async (forceRefresh) => {
   await useListKeys(forceRefresh);
 };
 
-const updateDisplayNetworkList = () => {
-  if (manageStore.newConfiguration.length === 0) {
-    manageStore.displayNetworkList = true;
-  } else {
-    manageStore.displayNetworkList = false;
-  }
-};
-
 // Random ID generator
 function generateRandomId() {
-  const timestamp = new Date().getTime().toString(16);
-  const randomPart = Math.random().toString(16).substring(2, 8);
+  const timestamp = new Date().getTime().toString(16); // Convert timestamp to hexadecimal
+  const randomPart = Math.random().toString(16).substring(2, 8); // Generate a random hexadecimal string
   return timestamp + randomPart;
 }
 

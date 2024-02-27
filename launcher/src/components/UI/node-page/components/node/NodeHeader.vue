@@ -10,7 +10,7 @@
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import ServerDetails from "./ServerDetails.vue";
-import NetworkDetails from "../../../edit-page/components/edit/NetworkDetails.vue";
+import NetworkDetails from "./NetworkDetails.vue";
 import ConfigDetails from "../../../edit-page/components/edit/ConfigDetails.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";

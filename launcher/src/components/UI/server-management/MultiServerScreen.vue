@@ -22,11 +22,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
-    <ErrorModal
-      v-if="serverStore.errorMsgExists"
-      :description="serverStore.error"
-      @close-window="closeErrorDialog"
-    />
+    <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
   </div>
 </template>
 
@@ -99,12 +95,8 @@ const loginHandler = async () => {
   if (router.currentRoute.value.path === "/login") {
     await login();
   } else {
-    serverStore.isServerAnimationActive = true;
     await ControlService.logout();
     await login();
-    setTimeout(() => {
-      serverStore.isServerAnimationActive = false;
-    }, 5000);
   }
 };
 
@@ -141,9 +133,7 @@ const serverHandler = (server) => {
     server.isSelected = true;
   }
 
-  serverStore.savedServers.savedConnections = [
-    ...serverStore.savedServers.savedConnections,
-  ];
+  serverStore.savedServers.savedConnections = [...serverStore.savedServers.savedConnections];
 };
 
 //Change password handling
@@ -175,8 +165,7 @@ const removeServerHandler = async () => {
   serverStore.isRemoveProcessing = true;
   serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
     (item) =>
-      item.host !== serverStore.selectedServerToConnect?.host &&
-      item.name !== serverStore.selectedServerToConnect?.name
+      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
   );
 
   await remove();
@@ -193,9 +182,7 @@ const readSSHKeyFile = async () => {
 const confirmDelete = async (key) => {
   serverStore.sshKeys = serverStore.sshKeys.filter((item) => item !== key);
   try {
-    await ControlService.writeSSHKeyFile(
-      serverStore.sshKeys.filter((item) => item !== key)
-    );
+    await ControlService.writeSSHKeyFile(serverStore.sshKeys.filter((item) => item !== key));
     await readSSHKeyFile();
   } catch (err) {
     console.log(err);
