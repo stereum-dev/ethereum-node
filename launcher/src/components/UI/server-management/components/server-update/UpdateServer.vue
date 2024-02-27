@@ -114,6 +114,9 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 
+const numberOfUpdatablePackages = ref(0);
+const searchingForUpdatablePackages = ref(false);
+
 const newUpdates = computed(() => {
   return serverStore.upgradablePackages;
 });
@@ -154,6 +157,11 @@ const getOsVersion = async () => {
 const getUpgradablePackages = async () => {
   try {
     serverStore.upgradablePackages = await ControlService.getUpgradeablePackages();
+
+    if (serverStore.upgradablePackages) {
+      numberOfUpdatablePackages.value = serverStore.upgradablePackages.length;
+      searchingForUpdatablePackages.value = false;
+    }
   } catch (error) {
     console.log(error);
     serverStore.upgradablePackages = [];
