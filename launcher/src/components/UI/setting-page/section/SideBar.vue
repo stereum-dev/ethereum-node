@@ -4,11 +4,11 @@
     style="border-right: 1px solid #707070"
   >
     <div
-      class="title mt-3 bg-[#336666] w-11/12 h-12 pr-4 font-semibold text-xl uppercase box-border justify-end flex items-center"
+      class="title mt-3 bg-[#336666] w-11/12 h-12 pr-4 font-semibold text-md uppercase box-border justify-end flex items-center"
     >
       settings
     </div>
-    <div class="sidebar-container flex flex-col h-4/5 w-full justify-center items-center">
+    <div class="sidebar-container flex flex-col h-4/5 w-full justify-center items-center space-y-2 pt-4 px-1">
       <slot></slot>
     </div>
   </div>

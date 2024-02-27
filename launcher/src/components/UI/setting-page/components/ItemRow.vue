@@ -1,7 +1,10 @@
 <template>
   <div class="item-parent w-full h-12 bg-[#242529] rounded-xl shadow-2xl mt-2 flex justify-between items-center p-1">
     <span class="ml-4 font-semibold uppercase">{{ props.title }}</span>
-    <div v-if="hasSlotContent" class="mr-4 w-setting rounded-md h-full bg-[#33393E] flex flex-col justify-center">
+    <div
+      v-if="hasSlotContent"
+      class="mr-4 w-setting rounded-md h-full bg-[#33393E] flex flex-col justify-center items-center"
+    >
       <slot></slot>
     </div>
   </div>

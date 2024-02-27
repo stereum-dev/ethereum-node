@@ -1,12 +1,14 @@
 <template>
   <div
-    class="btn-parent mt-3 w-11/12 h-12 pr-4 font-semibold text-xl uppercase box-border justify-end flex items-center cursor-pointer"
+    class="btn-parent w-full rounded-md h-12 pr-4 font-semibold text-xl uppercase box-border cursor-pointer grid grid-col-4 items-center px-2"
     :class="{ 'active-btn': active }"
     @click="toggleActive"
   >
-    {{ props.btnName }}
+    <span class="col-start-1 col-end-4 text-sm font-semibold" :class="active ? 'text-gray-900' : 'text-gray-200'">{{
+      props.btnName
+    }}</span>
     <img
-      class="w-5 h-5 mr-2 ml-2"
+      class="col-start-4 col-span-1 w-5 h-5 justify-self-center self-center"
       :src="
         props.btnName == 'audio'
           ? '/img/icon/setting-page/volume-icon.png'
@@ -41,7 +43,6 @@ const toggleActive = () => {
 .btn-parent {
   border: 1px solid #343434;
   box-shadow: 5px 1px 10px 1px rgb(36, 36, 36);
-  border-radius: 10px;
   background: #242529;
   color: #eee;
   transition: 0.3s;
