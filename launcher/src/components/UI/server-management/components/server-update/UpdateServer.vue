@@ -2,35 +2,26 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0 gap-y-2"
   >
-    <div
-      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center py-1"
-    >
+    <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center py-1">
       <span class="text-md font-semibold text-gray-300">OPERATING SYSTEM UPDATES</span>
     </div>
     <div
       class="w-full h-full col-start-1 col-span-full row-start-2 row-end-4 grid grid-cols-6 grid-rows-2 items-center gap-x-1"
     >
-      <div
-        class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full flex justify-center items-center"
-      >
+      <div class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full flex justify-center items-center">
         <img class="w-full" src="/img/icon/control/ubuntuIco.svg" />
       </div>
-      <div
-        class="w-full h-full col-start-2 col-span-full row-start-1 row-span-1 flex justify-start items-center ml-2"
-      >
+      <div class="w-full h-full col-start-2 col-span-full row-start-1 row-span-1 flex justify-start items-center ml-2">
         <span class="text-lg font-semibold text-gray-400 uppercase">Ubuntu</span>
       </div>
 
-      <div
-        class="w-full h-full col-start-2 col-span-full row-start-2 row-span-1 ml-2 grid grid-cols-4 items-center"
-      >
+      <div class="w-full h-full col-start-2 col-span-full row-start-2 row-span-1 ml-2 grid grid-cols-4 items-center">
         <span class="col-start-1 col-span-3 text-sm font-semibold text-gray-400 uppercase"
           >OPERATING SYSTEM VERSION</span
         >
-        <span
-          class="col-start-4 col-span-1 text-sm font-semibold text-amber-400 uppercase"
-          >{{ osVersionCurrent }}</span
-        >
+        <span class="col-start-4 col-span-1 text-sm font-semibold text-amber-400 uppercase">{{
+          osVersionCurrent
+        }}</span>
       </div>
     </div>
     <div
@@ -39,19 +30,16 @@
       <div
         class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 grid grid-cols-6 items-center gap-x-2 px-1"
       >
-        <div
-          class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center"
-        >
-          <span class="text-sm font-semibold text-gray-300 text-center">{{
-            serverStore.upgradablePackages?.length
-              ? serverStore.upgradablePackages.length
-              : 0
-          }}</span>
+        <img
+          v-if="searchingForUpdatablePackages"
+          class="w-5 h-5 spinner self-center justify-self-center"
+          src="/img/icon/control/loading_circle.gif"
+        />
+        <div v-else class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center">
+          <span class="text-sm font-semibold text-gray-300 text-center">{{ numberOfUpdatablePackages }}</span>
         </div>
 
-        <span class="col-start-2 col-span-full text-md font-semibold text-gray-300"
-          >AVAILABLE SERVER OS UPDATES</span
-        >
+        <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">AVAILABLE SERVER OS UPDATES</span>
       </div>
 
       <div
@@ -65,32 +53,23 @@
           @update-package="updatePackage"
         />
       </div>
-      <div
-        class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full grid grid-cols-12 py-2"
-      >
+      <div class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full grid grid-cols-12 py-2">
         <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center">
           <div
             class="w-full h-full flex justify-evenly items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm active:scale-90 shadow-md shadow-black active:shadow-none transition-all duration-100 ease-in-out cursor-pointer"
             :class="{
-              'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                serverStore.isUpdateProcessing,
+              'opacity-40 pointer-events-none bg-[#3d4244] scale-95': serverStore.isUpdateProcessing,
             }"
             @click.prevent="updateAll"
           >
-            <span class="text-gray-100 text-sm font-semibold uppercase">{{
-              $t("updatePanel.all")
-            }}</span>
+            <span class="text-gray-100 text-sm font-semibold uppercase">{{ $t("updatePanel.all") }}</span>
             <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
           </div>
         </div>
-        <div
-          class="w-full h-full col-start-7 col-span-full flex justify-center items-center p-1"
-        >
+        <div class="w-full h-full col-start-7 col-span-full flex justify-center items-center p-1">
           <span class="text-gray-200 text-md font-semibold"
             >{{ $t("updatePanel.auto") }} :
-            <span class="text-md uppercase font-semibold" :class="onOff">{{
-              stereumApp.autoUpdate
-            }}</span></span
+            <span class="text-md uppercase font-semibold" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
           >
         </div>
       </div>
@@ -101,82 +80,58 @@
 <script setup>
 import UpdateRow from "./UpdateRow.vue";
 import ControlService from "@/store/ControlService";
-
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, reactive } from "vue";
 import { useServers } from "@/store/servers";
 
 const serverStore = useServers();
 
 const osVersionCurrent = ref("");
+const updateStatus = reactive({
+  message: "",
+  color: "",
+});
 const stereumApp = ref({
   current: "alpha",
   latest: "2.0",
   autoUpdate: "",
 });
-
-const numberOfUpdatablePackages = ref(0);
+const numberOfUpdatablePackages = ref(null);
 const searchingForUpdatablePackages = ref(false);
 
-const newUpdates = computed(() => {
-  return serverStore.upgradablePackages;
-});
+const newUpdates = computed(() => serverStore.upgradablePackages);
+const onOff = computed(() => (stereumApp.value.autoUpdate == "on" ? "text-green-700" : "text-red-700"));
 
-const onOff = computed(() => {
-  if (stereumApp.value.autoUpdate == "on") {
-    return "text-green-700";
-  } else {
-    return "text-red-700";
-  }
-});
-
-onMounted(() => {
-  getUpgradablePackages();
-  getOsVersion();
-  getSettings();
+onMounted(async () => {
+  await getUpgradablePackages();
+  await getOsVersion();
+  await getSettings();
 });
 
 const getSettings = async () => {
-  let settings = await ControlService.getStereumSettings();
-  if (settings.stereum?.settings.updates.unattended.install) {
-    stereumApp.value.autoUpdate = "on";
-  } else {
-    stereumApp.value.autoUpdate = "off";
-  }
+  const settings = await ControlService.getStereumSettings();
+  stereumApp.value.autoUpdate = settings.stereum?.settings.updates.unattended.install ? "on" : "off";
 };
 
 const getOsVersion = async () => {
   try {
     const osVersion = await ControlService.getCurrentOsVersion();
-
     osVersionCurrent.value = osVersion;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch OS version:", error);
   }
 };
 
 const getUpgradablePackages = async () => {
+  searchingForUpdatablePackages.value = true;
   try {
-    serverStore.upgradablePackages = await ControlService.getUpgradeablePackages();
-
-    if (serverStore.upgradablePackages) {
-      numberOfUpdatablePackages.value = serverStore.upgradablePackages.length;
+    const output = await ControlService.getUpgradeablePackages();
+    if (output) {
+      numberOfUpdatablePackages.value = output.length;
       searchingForUpdatablePackages.value = false;
     }
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch upgradable packages:", error);
     serverStore.upgradablePackages = [];
-  }
-};
-
-const updatePackage = async (item) => {
-  serverStore.isUpdateProcessing = true;
-  console.log("update package");
-  try {
-    await ControlService.updatePackage(item.packageName);
-    serverStore.isUpdateProcessing = false;
-  } catch (error) {
-    serverStore.isUpdateProcessing = false;
-    console.log(error);
   }
 };
 
@@ -184,9 +139,36 @@ const updateAll = async () => {
   serverStore.isUpdateProcessing = true;
   try {
     await ControlService.updateOS();
-    serverStore.isUpdateProcessing = false;
+    await getUpgradablePackages(); // Refresh the list of upgradable packages
+    updateStatus.message = "All packages updated successfully!";
+    updateStatus.color = "text-green-500";
   } catch (error) {
-    console.log(error);
+    console.error("Failed to update all packages:", error);
+    updateStatus.message = "Failed to update all packages.";
+    updateStatus.color = "text-red-500";
+  } finally {
+    serverStore.isUpdateProcessing = false;
   }
 };
+
+const updatePackage = async (item) => {
+  serverStore.isUpdateProcessing = true;
+  updateUIWithInProgressMessage(item.packageName);
+  try {
+    const result = await ControlService.updatePackage(item.packageName);
+    if (result) {
+      await getUpgradablePackages(); // Refresh the list
+    }
+  } catch (error) {
+    console.error(`Failed to update ${item.packageName}:`, error);
+  } finally {
+    serverStore.isUpdateProcessing = false;
+  }
+};
+
+// UI update functions
+function updateUIWithInProgressMessage(packageName) {
+  updateStatus.message = `Updating ${packageName}...`;
+  updateStatus.color = "text-amber-400";
+}
 </script>
