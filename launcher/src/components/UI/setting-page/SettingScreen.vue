@@ -5,14 +5,11 @@
       <div class="flex justify-start items-start w-56 h-full">
         <SideBar>
           <SidebarBtn
-            btn-name="general"
-            :is-active="mainBox == 'general' ? 'true' : 'false'"
-            @toggle-active="toggleSettings('general')"
-          />
-          <SidebarBtn
-            btn-name="audio"
-            :is-active="mainBox == 'audio' ? 'true' : 'false'"
-            @toggle-active="toggleSettings('audio')"
+            v-for="button in sidebarButtons"
+            :key="button.name"
+            :btn-name="button.name"
+            :is-active="mainBox === button.name ? 'true' : 'false'"
+            @toggle-active="toggleSettings(button.name)"
           />
         </SideBar>
       </div>
@@ -38,8 +35,17 @@ import { ref, computed } from "vue";
 
 const mainBox = ref("general");
 
-const toggleSettings = (arg) => {
-  mainBox.value = arg;
+// const toggleSettings = (arg) => {
+//   mainBox.value = arg;
+// };
+
+const sidebarButtons = ref([
+  { name: "general", label: "General" },
+  { name: "audio", label: "Audio" },
+]);
+
+const toggleSettings = (name) => {
+  mainBox.value = name;
 };
 
 const itemTitles = computed(() => {
