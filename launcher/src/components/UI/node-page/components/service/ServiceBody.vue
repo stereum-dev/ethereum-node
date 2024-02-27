@@ -16,7 +16,7 @@
       >
         <ClientStatus :client="item" />
         <div
-          class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 grid-rows-2 bg-[#212629] shadow-md mx-auto"
+          class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-2 grid-rows-2 bg-[#212629] shadow-md mx-auto"
         >
           <ServiceLayout :client="item" />
           <ServiceButtons

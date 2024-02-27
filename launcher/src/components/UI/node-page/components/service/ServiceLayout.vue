@@ -8,7 +8,7 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="flex justify-start items-center">
-      <img class="w-12 ml-1" :src="props.client.sIcon" alt="icon" />
+      <img class="w-10" :src="props.client.sIcon" alt="icon" />
     </div>
   </div>
 </template>

@@ -4,41 +4,26 @@
       class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
       @click="$emit('closeWindow')"
     ></div>
-    <div
-      class="w-3/5 h-2/3 grid grid-cols-12 grid-rows-8 p-2 mx-auto bg-[#2a2e30] z-20 border-2 border-gray-400 rounded-[75px] shadow-lg shadow-black"
-    >
-      <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
-        <span class="text-3xl text-gray-200 font-bold uppercase">{{ $t("reconnectModal.reconnectTitle") }}</span>
-      </div>
-      <div
-        v-if="!reconnecting"
-        class="w-full h-full col-start-1 col-span-full row-start-2 row-span-5 flex flex-col justify-evenly items-center"
-      >
-        <img class="w-52" src="/img/icon/manage-node-icons/stereum_cant_connect.gif" />
-        <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("reconnectModal.reconnectMessage") }}</span>
-      </div>
-      <div
-        v-if="reconnecting"
-        class="w-full h-full col-start-1 col-span-full row-start-2 row-span-5 flex flex-col justify-evenly items-center"
-      >
-        <img v-if="reconnecting" class="w-52" src="/img/icon/manage-node-icons/stereum_connected.gif" />
-        <span class="text-md text-gray-200 font-semibold uppercase">{{
-          $t("reconnectModal.reconnectingMessage")
-        }}</span>
-      </div>
-      <div class="w-full h-full col-start-1 col-span-full row-start-7 row-span-full grid grid-cols-5 items-center">
-        <div
-          class="w-full min-w-[120px] h-10 col-start-2 col-span-1 flex justify-center items-center cursor-pointer rounded-md active:scale-90 active:shadow-none transition-all duration-100 ease-in-out border border-gray-400 bg-teal-700 hover:bg-teal-900 shadow-md shadow-[#252525]"
-          @click="$emit('confirmReconnect')"
-        >
-          <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("reconnectModal.reconnectBtn") }}</span>
+    <div class="reconnect-modal-content">
+      <div class="logoutBtn">
+        <div class="logoutBox" @click="$emit('openLogout')">
+          <span>{{ $t("logOutModal.logOutBtn") }}</span>
         </div>
-
-        <div
-          class="w-full min-w-[120px] h-10 border border-gray-400 bg-red-500 hover:bg-red-800 shadow-md shadow-[#252525] col-start-4 col-span-1 flex justify-center items-center cursor-pointer rounded-md active:scale-90 active:shadow-none transition-all duration-100 ease-in-out"
-          @click="$emit('openLogout')"
-        >
-          <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("logOutModal.logOutBtn") }}</span>
+      </div>
+      <div class="title-box">
+        <span>{{ $t("reconnectModal.reconnectTitle") }}</span>
+      </div>
+      <div v-if="!reconnecting" class="messageContent">
+        <img src="/img/icon/manage-node-icons/stereum_cant_connect.gif" />
+        <span class="message">{{ $t("reconnectModal.reconnectMessage") }}</span>
+      </div>
+      <div v-if="reconnecting" class="messageContent">
+        <img v-if="reconnecting" src="/img/icon/manage-node-icons/stereum_connected.gif" />
+        <span class="message">{{ $t("reconnectModal.reconnectingMessage") }}</span>
+      </div>
+      <div class="confirmBtn">
+        <div class="confirmBox" @click="$emit('confirmReconnect')">
+          <span>{{ $t("reconnectModal.reconnectBtn") }}</span>
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
-    <CustomHead />
     <div
       class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
     >
@@ -47,7 +46,7 @@
             :duration="500"
           >
             <li
-              v-for="item in manageStore.networkList"
+              v-for="item in networkList"
               :key="item.name"
               class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
               @click="selectNetwork(item)"
@@ -87,139 +86,82 @@
     <CustomFooter :disabled-btn="nextBtnDisabled" @prepare-stereum="prepareStereum" />
   </div>
 </template>
-<script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
-import CustomFooter from "./CustomFooter.vue";
-import CustomHead from "./CustomHead.vue";
+
+<script>
 import ControlService from "@/store/ControlService";
-import { useRouter } from "vue-router";
+import CustomFooter from "./CustomFooter.vue";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeManage } from "@/store/nodeManage";
 
-// Data
+export default {
+  components: {
+    CustomFooter,
+  },
+  data() {
+    return {
+      installPath: "/opt/stereum",
+      networkListDropdown: false,
+      selectedNetwork: "click to select a network",
+      selectedNetworkIcon: "",
+      selectedNetworkName: "",
+      inputTitle: "Choose your installation path where Stereum will be installed",
+      nextBtnDisabled: false,
+      displayItem: "Click to select a network",
+    };
+  },
 
-const headerStore = useNodeHeader();
-const manageStore = useNodeManage();
-const router = useRouter();
-const installPath = ref("/opt/stereum");
-const networkListDropdown = ref(false);
-// const selectedNetwork = ref("click to select a network");
-const selectedNetworkIcon = ref("");
-const selectedNetworkName = ref("");
-const inputTitle = ref("Choose your installation path where Stereum will be installed");
-const nextBtnDisabled = ref(false);
-const displayItem = ref("Click to select a network");
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      refresh: "refresh",
+    }),
 
-// Methods
-const selectNetwork = (network) => {
-  selectedNetworkIcon.value = network.icon;
-  selectedNetworkName.value = network.name;
-  manageStore.currentNetwork = network;
-  displayItem.value = network;
-  nextBtnDisabled.value = true;
-  networkListDropdown.value = false;
+    ...mapWritableState(useNodeManage, {
+      networkList: "networkList",
+      currentNetwork: "currentNetwork",
+    }),
+  },
+  created() {
+    this.activeBtn();
+    this.getInstallPath();
+  },
+  mounted() {
+    this.displayItem = "Click to select a network";
+  },
+
+  methods: {
+    selectNetwork(network) {
+      this.selectedNetworkIcon = network.icon;
+      this.selectedNetworkName = network.name;
+      this.currentNetwork = network;
+      this.displayItem = network;
+      this.nextBtnDisabled = true;
+      this.networkListDropdown = false;
+    },
+    async getInstallPath() {
+      let largestVolumePath = await ControlService.getLargestVolumePath();
+      if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
+      const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
+      this.installPath = stereumInstallationPath;
+    },
+    async prepareStereum() {
+      this.$router.push("/custom/play");
+      this.refresh = false;
+      await ControlService.prepareStereumNode(this.installPath);
+      const restarted = await ControlService.restartServer();
+      this.refresh = true;
+      if (restarted) await new Promise((resolve) => setTimeout(resolve, 5000));
+      this.$router.push("/node");
+    },
+    activeBtn() {
+      if (this.installPath === "") {
+        return "deactivated";
+      } else {
+        return "";
+      }
+    },
+  },
 };
-
-const getInstallPath = async () => {
-  let largestVolumePath = await ControlService.getLargestVolumePath();
-  if (largestVolumePath === "/") largestVolumePath += "opt";
-  const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
-  installPath.value = stereumInstallationPath;
-};
-
-const prepareStereum = async () => {
-  router.push("/custom/play");
-  headerStore.refresh = false;
-  await ControlService.prepareStereumNode(installPath.value);
-  const restarted = await ControlService.restartServer();
-  headerStore.refresh = true;
-  if (restarted) await new Promise((resolve) => setTimeout(resolve, 5000));
-  router.push("/node");
-};
-
-const activeBtn = () => {
-  return installPath.value === "" ? "deactivated" : "";
-};
-
-// Lifecycle Hooks
-onBeforeMount(() => {
-  activeBtn();
-  getInstallPath();
-});
-onMounted(() => {
-  displayItem.value = "Click to select a network";
-});
-</script>
-
-//
-<script>
-// export default {
-
-//   data() {
-//     return {
-//       installPath: "/opt/stereum",
-//       networkListDropdown: false,
-//       selectedNetwork: "click to select a network",
-//       selectedNetworkIcon: "",
-//       selectedNetworkName: "",
-//       inputTitle: "Choose your installation path where Stereum will be installed",
-//       nextBtnDisabled: false,
-//       displayItem: "Click to select a network",
-//     };
-//   },
-
-//   computed: {
-//     ...mapWritableState(useNodeHeader, {
-//       refresh: "refresh",
-//     }),
-
-//     ...mapWritableState(useNodeManage, {
-//       networkList: "networkList",
-//       currentNetwork: "currentNetwork",
-//     }),
-//   },
-//   created() {
-//     this.activeBtn();
-//     this.getInstallPath();
-//   },
-//   mounted() {
-//     this.displayItem = "Click to select a network";
-//   },
-
-//   methods: {
-//     selectNetwork(network) {
-//       this.selectedNetworkIcon = network.icon;
-//       this.selectedNetworkName = network.name;
-//       this.currentNetwork = network;
-//       this.displayItem = network;
-//       this.nextBtnDisabled = true;
-//       this.networkListDropdown = false;
-//     },
-//     async getInstallPath() {
-//       let largestVolumePath = await ControlService.getLargestVolumePath();
-//       if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
-//       const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
-//       this.installPath = stereumInstallationPath;
-//     },
-//     async prepareStereum() {
-//       this.$router.push("/custom/play");
-//       this.refresh = false;
-//       await ControlService.prepareStereumNode(this.installPath);
-//       const restarted = await ControlService.restartServer();
-//       this.refresh = true;
-//       if (restarted) await new Promise((resolve) => setTimeout(resolve, 5000));
-//       this.$router.push("/node");
-//     },
-//     activeBtn() {
-//       if (this.installPath === "") {
-//         return "deactivated";
-//       } else {
-//         return "";
-//       }
-//     },
-//   },
-// };
-//
 </script>
 
 <style scoped>

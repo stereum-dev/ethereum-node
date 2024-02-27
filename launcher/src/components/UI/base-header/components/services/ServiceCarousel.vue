@@ -40,7 +40,6 @@ const handleModal = (slide) => {
 
 <style>
 .swiper {
-  grid-column: 2/12 !important;
   width: 100% !important;
   height: 100% !important;
   padding: 0 10px !important;
