@@ -1,5 +1,5 @@
 export function useDeepClone(obj) {
-  return JSON.parse(JSON.stringify(obj));
+  if (obj) return JSON.parse(JSON.stringify(obj));
 }
 
 export function useTruncate(str, frontChars, endChars) {
@@ -21,4 +21,4 @@ export function saveToFile(fileName, fileContent, fileType = "text/plain") {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-};
+}

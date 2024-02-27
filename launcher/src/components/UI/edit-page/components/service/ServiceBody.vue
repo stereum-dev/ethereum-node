@@ -16,7 +16,7 @@
       <div
         v-for="item in getServices"
         :key="item"
-        class="w-full max-h-[78px] grid grid-cols-2 p-2 rounded-md border border-gray-600 shadow-md mx-auto"
+        class="w-full max-h-[78px] grid grid-cols-2 p-2 rounded-md border border-gray-600 shadow-md mx-auto bg-[#212629]"
         :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
         style="cursor: default"
         @mouseenter="footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`"
@@ -32,7 +32,7 @@
             <img class="w-5 z-10" src="/img/icon/manage-node-icons/connection.png" alt="" @mousedown.prevent.stop />
           </div>
           <div
-            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200"
+            class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 hover:bg-black rounded-md cursor-pointer p-1 transform active:scale-75 duration-200"
             :class="{
               'border-red-500': item.displayTooltip,
               'pointer-events-none': item.isRemoveProcessing,

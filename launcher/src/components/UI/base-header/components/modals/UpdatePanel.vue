@@ -1,26 +1,41 @@
 <template>
   <div class="w-screen h-screen absolute inset-0 flex justify-end items-center">
-    <div class="w-full h-full absolute inset-0 bg-black opacity-50 z-30 rounded-lg" @click="clickOutside"></div>
+    <div
+      class="w-full h-full absolute inset-0 bg-black opacity-50 z-30 rounded-lg"
+      @click="clickOutside"
+    ></div>
     <Transition name="slide-fade">
       <div
         v-if="show"
         class="w-[400px] delay-100 transition-transform h-full justify-self-end flex flex-col justify-between items-center z-40 rounded-md duration-300 bg-[#264744] p-4 mr-1 mb-1"
         @mouseleave="hidePanel"
       >
-        <div class="max-h-full bg-[#171a1c] rounded-md grid grid-cols-2 grid-rows-12 py-2">
+        <div
+          class="max-h-full bg-[#171a1c] rounded-md grid grid-cols-2 grid-rows-12 py-2"
+        >
           <div class="col-start-1 col-span-3 row-start-1 row-span-6">
             <div class="w-full h-full grid grid-cols-3 grid-rows-4 p-1 gap-y-2">
-              <div class="w-full col-start-1 col-end-4 row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
-                <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
+              <div
+                class="w-full col-start-1 col-end-4 row-start-1 row-span-1 grid grid-cols-12 grid-rows-3"
+              >
+                <div
+                  class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1"
+                >
                   <img class="w-4/5" src="/img/icon/manage-node-icons/server.png" />
                 </div>
-                <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
+                <div
+                  class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1"
+                >
                   <span
                     class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
                     >{{ $t("updatePanel.osTitle") }}</span
                   >
-                  <div class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                  <div
+                    class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center"
+                  >
+                    <div
+                      class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold"
+                    >
                       <span>{{ $t("updatePanel.version") }}:</span>
                     </div>
                     <div
@@ -29,23 +44,27 @@
                       <span>{{ osVersionCurrent }}</span>
                     </div>
                   </div>
-                  <div class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                  <div
+                    class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center"
+                  >
+                    <div
+                      class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold"
+                    >
                       <span>{{ $t("updatePanel.available") }}:</span>
                     </div>
                     <div
-                      class="col-start-4 col-span-3 row-start-2 row-span-1 text-[10px] flex justify-center items-center"
+                      class="col-start-4 col-span-3 row-start-2 row-span-1 flex justify-center items-center"
                     >
+                      <img
+                        v-if="searchingForOsUpdates"
+                        class="w-5 h-5 spinner self-center justify-self-start mr-5"
+                        src="/img/icon/control/loading_circle.gif"
+                      />
                       <div
-                        v-if="!headerStore.searchingForOsUpdates || headerStore.osUpdating"
-                        class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-2"
+                        v-else
+                        class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[12px] text-gray-200 text-center flex justify-center items-center mr-2"
                       >
-                        <img
-                          v-if="headerStore.searchingForOsUpdates && !headerStore.osUpdating"
-                          class="w-5 h-5 spinner mr-2"
-                          src="/img/icon/control/loading_circle.gif"
-                        />
-                        <span v-else>{{ headerStore.osVersionLatest ? headerStore.osVersionLatest : 0 }}</span>
+                        <span>{{ numberOfUpdatablePackages.length }}</span>
                       </div>
                     </div>
                   </div>
@@ -56,49 +75,37 @@
                       class="w-[50px] h-[20px] bg-teal-800 hover:bg-teal-900 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="openOsUpdatePanel"
                     >
-                      <img class="w-5" src="/img/icon/header-icons/open.png" alt="Open Icon" @mousedown.prevent />
+                      <img
+                        class="w-5"
+                        src="/img/icon/header-icons/open.png"
+                        alt="Open Icon"
+                        @mousedown.prevent
+                      />
                     </div>
-                    <!-- <div
-                      class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
-                      @click="searchOsUpdates"
-                    >
-                      <img class="w-4" src="/img/icon/header-icons/search.png" alt="icon" />
-                    </div> -->
-                    <!-- <div
-                      class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
-                      :class="{
-                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                          headerStore.osVersionLatest === 0 || headerStore.osUpdating,
-                      }"
-                      @click="$emit('runOsUpdate')"
-                    >
-                      <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
-                    </div> -->
                   </div>
-                  <!-- <div
-                    v-if="
-                      headerStore.searchingForOsUpdates &&
-                      headerStore.searchingForOsUpdatesManual &&
-                      !headerStore.osUpdating
-                    "
-                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
-                  >
-                    <span class="circle pulse mr-2"></span>
-                    <span class="text-[9px] text-gray-200">{{ $t("updatePanel.searching") }}</span>
-                  </div> -->
                 </div>
               </div>
-              <div class="w-full col-start-1 col-end-4 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
-                <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
+              <div
+                class="w-full col-start-1 col-end-4 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3"
+              >
+                <div
+                  class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1"
+                >
                   <img class="w-4/5" src="/img/icon/manage-node-icons/launcher.png" />
                 </div>
-                <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
+                <div
+                  class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1"
+                >
                   <span
                     class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
                     >{{ $t("updatePanel.launcherTitle") }}</span
                   >
-                  <div class="col-start-1 col-end-12 row-start-2 row-span-1 grid grid-cols-12">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                  <div
+                    class="col-start-1 col-end-12 row-start-2 row-span-1 grid grid-cols-12"
+                  >
+                    <div
+                      class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold"
+                    >
                       <span>{{ $t("updatePanel.current") }}:</span>
                     </div>
                     <div
@@ -109,28 +116,46 @@
                   </div>
                 </div>
               </div>
-              <div class="w-full col-start-1 col-end-4 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
-                <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
+              <div
+                class="w-full col-start-1 col-end-4 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3"
+              >
+                <div
+                  class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1"
+                >
                   <img class="w-4/5" src="/img/icon/manage-node-icons/launcher.png" />
                 </div>
-                <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
+                <div
+                  class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1"
+                >
                   <span
                     class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
                     >{{ $t("updatePanel.nodeTitle") }}</span
                   >
-                  <div class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                  <div
+                    class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center"
+                  >
+                    <div
+                      class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold"
+                    >
                       <span>{{ $t("updatePanel.current") }}:</span>
                     </div>
-                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
+                    <div
+                      class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold"
+                    >
                       <span>{{ headerStore.stereumUpdate.current }}</span>
                     </div>
                   </div>
-                  <div class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                  <div
+                    class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center"
+                  >
+                    <div
+                      class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold"
+                    >
                       <span>{{ $t("updatePanel.latest") }}:</span>
                     </div>
-                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
+                    <div
+                      class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold"
+                    >
                       <span>{{ headerStore.stereumUpdate?.version }}</span>
                     </div>
                   </div>
@@ -141,7 +166,11 @@
                       class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="searchUpdate"
                     >
-                      <img class="w-4" src="/img/icon/header-icons/search.png" alt="icon" />
+                      <img
+                        class="w-4"
+                        src="/img/icon/header-icons/search.png"
+                        alt="icon"
+                      />
                     </div>
                     <div
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
@@ -151,7 +180,11 @@
                       }"
                       @click="$emit('runUpdate', headerStore.stereumUpdate)"
                     >
-                      <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+                      <img
+                        class="w-4"
+                        src="/img/icon/node-icons/download2.png"
+                        alt="icon"
+                      />
                     </div>
                   </div>
 
@@ -159,11 +192,18 @@
                     v-if="checkStereumUpdate"
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
                   >
-                    <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1">
-                      <img class="w-2 h-2" src="/img/icon/header-icons/update-green.png" alt="icon" />
+                    <div
+                      class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1"
+                    >
+                      <img
+                        class="w-2 h-2"
+                        src="/img/icon/header-icons/update-green.png"
+                        alt="icon"
+                      />
                     </div>
                     <span class="text-[8px] text-gray-200 font-semibold ml-2"
-                      >{{ headerStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
+                      >{{ headerStore.stereumUpdate.version }}
+                      {{ $t("updatePanel.available") }}</span
                     >
                   </div>
                   <div
@@ -171,15 +211,23 @@
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
                   >
                     <span class="circle pulse mr-2"></span>
-                    <span class="text-[9px] text-gray-200">{{ $t("updatePanel.searching") }}</span>
+                    <span class="text-[9px] text-gray-200">{{
+                      $t("updatePanel.searching")
+                    }}</span>
                   </div>
                 </div>
               </div>
-              <div class="w-full col-start-1 col-end-4 row-start-4 row-span-1 grid grid-cols-12 grid-rows-2">
-                <div class="col-start-1 col-end-3 row-start-1 row-end-3 flex justify-center items-center p-1">
+              <div
+                class="w-full col-start-1 col-end-4 row-start-4 row-span-1 grid grid-cols-12 grid-rows-2"
+              >
+                <div
+                  class="col-start-1 col-end-3 row-start-1 row-end-3 flex justify-center items-center p-1"
+                >
                   <img class="w-4/5" src="/img/icon/manage-node-icons/plugin.png" />
                 </div>
-                <div class="col-start-3 col-end-13 row-start-1 row-end-3 grid grid-cols-12 grid-rows-2 p-1">
+                <div
+                  class="col-start-3 col-end-13 row-start-1 row-end-3 grid grid-cols-12 grid-rows-2 p-1"
+                >
                   <span
                     class="col-start-1 col-end-10 row-start-1 row-span-1 self-center text-[18px] font-bold text-[#4B878D] text-left uppercase justify-self-start py-1"
                     >{{ $t("updatePanel.serviceTitle") }}</span
@@ -192,7 +240,9 @@
               </div>
             </div>
           </div>
-          <div class="col-start-1 col-span-3 row-start-7 row-span-5 flex flex-col justify-between items-center">
+          <div
+            class="col-start-1 col-span-3 row-start-7 row-span-5 flex flex-col justify-between items-center"
+          >
             <div class="w-full h-[200px] flex justify-center items-center mx-auto px-1">
               <div
                 class="w-full h-full flex flex-col justify-start items-center bg-[#334d4d] border border-gray-500 rounded-sm"
@@ -201,7 +251,11 @@
                   class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800"
                 >
                   <div class="w-5 h-5 bg-[#243d36] rounded-full p-1">
-                    <img class="w-3" src="/img/icon/header-icons/update-green.png" alt="icon" />
+                    <img
+                      class="w-3"
+                      src="/img/icon/header-icons/update-green.png"
+                      alt="icon"
+                    />
                   </div>
                   <span class="text-center text-sm text-gray-300 font-semibold">{{
                     $t("updatePanel.availablePlugin")
@@ -219,14 +273,22 @@
                       v-if="item.running || headerStore.updating"
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
                     >
-                      <img class="w-5" src="/img/icon/node-icons/download_disabled.png" alt="icon" />
+                      <img
+                        class="w-5"
+                        src="/img/icon/node-icons/download_disabled.png"
+                        alt="icon"
+                      />
                     </div>
                     <div
                       v-else
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="$emit('runUpdate', item)"
                     >
-                      <img class="w-5" src="/img/icon/node-icons/download2.png" alt="icon" />
+                      <img
+                        class="w-5"
+                        src="/img/icon/node-icons/download2.png"
+                        alt="icon"
+                      />
                     </div>
                     <div class="serviceName">
                       <span>{{ item.name }}</span>
@@ -239,13 +301,16 @@
               </div>
             </div>
           </div>
-          <div class="col-start-1 col-span-3 row-start-12 row-end-13 w-full h-full flex justify-evenly items-center">
+          <div
+            class="col-start-1 col-span-3 row-start-12 row-end-13 w-full h-full flex justify-evenly items-center"
+          >
             <div class="w-1/2 h-full flex justify-center items-center p-1">
               <div
                 class="w-2/3 h-full flex justify-evenly items-center bg-[#334d4d] border border-gray-500 rounded-sm text-gray-400 text-sm font-semibold hover:bg-[#243535] transition-colors cursor-pointer active:scale-95"
                 :class="{
                   'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                    (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || headerStore.updating,
+                    (!checkAvailableServicesNewUpdate && !checkStereumUpdate) ||
+                    headerStore.updating,
                 }"
                 @click.prevent.stop="updateConfirm"
               >
@@ -256,7 +321,9 @@
             <div class="w-1/2 h-full flex justify-center items-center p-1">
               <span class="text-gray-400 text-md font-semibold"
                 >{{ $t("updatePanel.auto") }} :
-                <span class="text-md uppercase font-semibold" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
+                <span class="text-md uppercase font-semibold" :class="onOff">{{
+                  stereumApp.autoUpdate
+                }}</span></span
               >
             </div>
           </div>
@@ -289,6 +356,8 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 const osVersionCurrent = ref("-");
+const numberOfUpdatablePackages = ref(0);
+const searchingForOsUpdates = ref(false);
 
 //Computed
 const onOff = computed(() => {
@@ -333,7 +402,9 @@ const searchUpdate = () => {
 
 const checkStereumUpdate = computed(() => {
   if (headerStore.stereumUpdate && headerStore.stereumUpdate.version)
-    return headerStore.stereumUpdate.commit != headerStore.stereumUpdate.current_commit ? true : false;
+    return headerStore.stereumUpdate.commit != headerStore.stereumUpdate.current_commit
+      ? true
+      : false;
   return false;
 });
 
@@ -356,22 +427,27 @@ const openOsUpdatePanel = () => {
   serverStore.isServerAccessManagementActive = true;
 };
 
-const searchOsUpdates = async (manual = false) => {
+const searchOsUpdates = async () => {
   if (headerStore.osUpdating) {
     headerStore.searchingForOsUpdates = false;
     headerStore.searchingForOsUpdatesManual = false;
     return;
   }
-  if (headerStore.searchingForOsUpdates) {
-    return;
+
+  searchingForOsUpdates.value = true;
+  setTimeout(async () => {
+    await getUpdatablePackagesCount();
+    await getUpgradablePackages();
+    searchingForOsUpdates.value = false;
+  }, 2000);
+};
+
+const getUpgradablePackages = async () => {
+  try {
+    numberOfUpdatablePackages.value = await ControlService.getUpgradeablePackages();
+  } catch (error) {
+    console.error("Failed to fetch upgradable packages:", error);
   }
-  headerStore.searchingForOsUpdates = true;
-  if (manual) {
-    headerStore.searchingForOsUpdatesManual = true;
-  }
-  await getUpdatablePackagesCount();
-  headerStore.searchingForOsUpdates = false;
-  headerStore.searchingForOsUpdatesManual = false;
 };
 
 const getUpdatablePackagesCount = async () => {
