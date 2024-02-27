@@ -63,7 +63,7 @@
           >
             <img
               class="w-6 h-6 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200"
-              src="/img/icon/PLUS_ICON.png"
+              src="/img/icon/form-setup/PLUS_ICON.png"
               alt="icon"
               @mousedown.prevent
             />
@@ -347,9 +347,9 @@ const hovered = ref(false);
 //Computed & Watch
 const getTrashImg = computed(() => {
   if (hovered.value) {
-    return "./img/icon/TRASH_CAN2.png";
+    return "./img/icon/form-setup/TRASH_CAN2.png";
   } else {
-    return "./img/icon/TRASH_CAN.png";
+    return "./img/icon/form-setup/TRASH_CAN.png";
   }
 });
 
