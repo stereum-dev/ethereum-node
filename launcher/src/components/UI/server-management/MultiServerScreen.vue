@@ -1,3 +1,4 @@
+import ServerHeader from './components/ServerHeader.vue';
 <template>
   <div
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"

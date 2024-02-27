@@ -33,19 +33,17 @@
                     <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.available") }}:</span>
                     </div>
-                    <div
-                      class="col-start-4 col-span-3 row-start-2 row-span-1 text-[10px] flex justify-center items-center"
-                    >
+                    <div class="col-start-4 col-span-3 row-start-2 row-span-1 flex justify-center items-center">
+                      <img
+                        v-if="searchingForOsUpdates"
+                        class="w-5 h-5 spinner self-center justify-self-start mr-5"
+                        src="/img/icon/control/loading_circle.gif"
+                      />
                       <div
-                        v-if="!headerStore.searchingForOsUpdates || headerStore.osUpdating"
-                        class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-2"
+                        v-else
+                        class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[12px] text-gray-200 text-center flex justify-center items-center mr-2"
                       >
-                        <img
-                          v-if="headerStore.searchingForOsUpdates && !headerStore.osUpdating"
-                          class="w-5 h-5 spinner mr-2"
-                          src="/img/icon/control/loading_circle.gif"
-                        />
-                        <span v-else>{{ headerStore.osVersionLatest ? headerStore.osVersionLatest : 0 }}</span>
+                        <span>{{ numberOfUpdatablePackages.length }}</span>
                       </div>
                     </div>
                   </div>
@@ -58,34 +56,7 @@
                     >
                       <img class="w-5" src="/img/icon/header-icons/open.png" alt="Open Icon" @mousedown.prevent />
                     </div>
-                    <!-- <div
-                      class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
-                      @click="searchOsUpdates"
-                    >
-                      <img class="w-4" src="/img/icon/header-icons/search.png" alt="icon" />
-                    </div> -->
-                    <!-- <div
-                      class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
-                      :class="{
-                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                          headerStore.osVersionLatest === 0 || headerStore.osUpdating,
-                      }"
-                      @click="$emit('runOsUpdate')"
-                    >
-                      <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
-                    </div> -->
                   </div>
-                  <!-- <div
-                    v-if="
-                      headerStore.searchingForOsUpdates &&
-                      headerStore.searchingForOsUpdatesManual &&
-                      !headerStore.osUpdating
-                    "
-                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center"
-                  >
-                    <span class="circle pulse mr-2"></span>
-                    <span class="text-[9px] text-gray-200">{{ $t("updatePanel.searching") }}</span>
-                  </div> -->
                 </div>
               </div>
               <div class="w-full col-start-1 col-end-4 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -289,6 +260,8 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 const osVersionCurrent = ref("-");
+const numberOfUpdatablePackages = ref(0);
+const searchingForOsUpdates = ref(false);
 
 //Computed
 const onOff = computed(() => {
@@ -356,22 +329,27 @@ const openOsUpdatePanel = () => {
   serverStore.isServerAccessManagementActive = true;
 };
 
-const searchOsUpdates = async (manual = false) => {
+const searchOsUpdates = async () => {
   if (headerStore.osUpdating) {
     headerStore.searchingForOsUpdates = false;
     headerStore.searchingForOsUpdatesManual = false;
     return;
   }
-  if (headerStore.searchingForOsUpdates) {
-    return;
+
+  searchingForOsUpdates.value = true;
+  setTimeout(async () => {
+    await getUpdatablePackagesCount();
+    await getUpgradablePackages();
+    searchingForOsUpdates.value = false;
+  }, 2000);
+};
+
+const getUpgradablePackages = async () => {
+  try {
+    numberOfUpdatablePackages.value = await ControlService.getUpgradeablePackages();
+  } catch (error) {
+    console.error("Failed to fetch upgradable packages:", error);
   }
-  headerStore.searchingForOsUpdates = true;
-  if (manual) {
-    headerStore.searchingForOsUpdatesManual = true;
-  }
-  await getUpdatablePackagesCount();
-  headerStore.searchingForOsUpdates = false;
-  headerStore.searchingForOsUpdatesManual = false;
 };
 
 const getUpdatablePackagesCount = async () => {
