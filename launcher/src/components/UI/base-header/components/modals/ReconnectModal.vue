@@ -1,9 +1,6 @@
 <template>
   <div class="w-full h-full absolute inset-0 flex justify-center items-center">
-    <div
-      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
-      @click="$emit('closeWindow')"
-    ></div>
+    <div class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10" @click="closeWindow"></div>
     <div
       class="w-3/5 h-2/3 grid grid-cols-12 grid-rows-8 p-2 mx-auto bg-[#2a2e30] z-20 border-2 border-gray-400 rounded-[75px] shadow-lg shadow-black"
     >
@@ -29,14 +26,14 @@
       <div class="w-full h-full col-start-1 col-span-full row-start-7 row-span-full grid grid-cols-5 items-center">
         <div
           class="w-full min-w-[120px] h-10 col-start-2 col-span-1 flex justify-center items-center cursor-pointer rounded-md active:scale-90 active:shadow-none transition-all duration-100 ease-in-out border border-gray-400 bg-teal-700 hover:bg-teal-900 shadow-md shadow-[#252525]"
-          @click="$emit('confirmReconnect')"
+          @click="confirmReconnect"
         >
           <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("reconnectModal.reconnectBtn") }}</span>
         </div>
 
         <div
           class="w-full min-w-[120px] h-10 border border-gray-400 bg-red-500 hover:bg-red-800 shadow-md shadow-[#252525] col-start-4 col-span-1 flex justify-center items-center cursor-pointer rounded-md active:scale-90 active:shadow-none transition-all duration-100 ease-in-out"
-          @click="$emit('openLogout')"
+          @click="openLogout"
         >
           <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("logOutModal.logOutBtn") }}</span>
         </div>
@@ -44,15 +41,22 @@
     </div>
   </div>
 </template>
-<script>
-import { mapWritableState } from "pinia";
+<script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
-export default {
-  computed: {
-    ...mapWritableState(useNodeHeader, {
-      reconnecting: "reconnecting",
-    }),
-  },
+
+const emit = defineEmits(["closeWindow", "confirmReconnect", "openLogout"]);
+const { reconnecting } = useNodeHeader();
+
+const closeWindow = () => {
+  emit("closeWindow");
+};
+
+const confirmReconnect = () => {
+  emit("confirmReconnect");
+};
+
+const openLogout = () => {
+  emit("openLogout");
 };
 </script>
 <style scoped>

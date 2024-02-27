@@ -35,11 +35,7 @@
       @click-outside="closeServiceBrowser"
     />
 
-    <ReconnectModal
-      v-if="!footerStore.stereumStatus"
-      @open-logout="logoutModalHandler"
-      @confirm-reconnect="reconnect"
-    />
+    <ReconnectModal v-if="!footerStore.stereumStatus" @open-logout="loggingOut" @confirm-reconnect="reconnect" />
 
     <LogoutModal v-if="headerStore.logoutModalIsActive" @close-window="closeMenuWindow" @confrim-logout="loggingOut" />
 
