@@ -6,7 +6,7 @@
     "iphost": "IP / 主机名",
     "username": "用户名",
     "password": "密码",
-    "keylocation": "密钥位置",
+    "keylocation": "密钥定位",
     "usessh": "使用 SSH 密钥",
     "fillFields": "请填写缺失的字段！",
     "KeyPassphrase": "密钥口令"
@@ -111,7 +111,7 @@
     "network": "网络",
     "receive": "接收",
     "transmit": "发送",
-    "ram": "RAM",
+    "ram": "内存",
     "used": "已使用",
     "totalram": "总共",
     "storage": "存储",
@@ -850,7 +850,13 @@
     "dkKey": "输入密码以解密私钥",
     "dlPk": "下载私密密钥以进行备份。确保也记下了您用于加密的密码！",
     "dl": "下载",
-    "imp": "导入"
+    "imp": "导入",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "出了点问题",

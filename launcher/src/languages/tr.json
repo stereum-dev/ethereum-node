@@ -850,7 +850,13 @@
     "dkKey": "ÖZEL ANAHTARI ŞİFRE ÇÖZMEK İÇİN PAROLAYI GİRİN",
     "dlPk": "Yedeğini almak için özel anahtarınızı indirin. Şifreleme için kullandığınız parolayı da yazdığınızdan emin olun!",
     "dl": "İNDİR",
-    "imp": "İÇE AKTAR"
+    "imp": "İÇE AKTAR",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "Bir şeyler yanlış gitti",

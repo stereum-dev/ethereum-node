@@ -850,7 +850,13 @@
     "dkKey": "ВВЕДИТЕ ПАРОЛЬ ДЛЯ РАСШИФРОВКИ ЗАКРЫТОГО КЛЮЧА",
     "dlPk": "Скачайте закрытый ключ, чтобы сделать резервную копию. Убедитесь, что вы также записали пароль, используемый для шифрования!",
     "dl": "СКАЧАТЬ",
-    "imp": "ИМПОРТИРОВАТЬ"
+    "imp": "ИМПОРТИРОВАТЬ",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "Что-то пошло не так",
