@@ -12,7 +12,7 @@
       <div class="flex flex-col justify-between items-center py-2 px-4 space-y-2 mt-10">
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
-            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/plugin-item-icon.png" alt="Client Icon" />
+            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-item-icon.png" alt="Client Icon" />
             <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.serviceId") }}</span>
             <span class="col-start-6 col-end-13 text-amber-600 text-center">{{ client.config.serviceID }}</span>
           </div>

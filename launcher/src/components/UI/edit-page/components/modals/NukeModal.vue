@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="closeMe"></div>
     <div v-if="visible" class="remove-modal-content">
       <div class="title-box">
-        <img src="/img/icon/edit-node-icons/stop.png" />
+        <img src="/img/icon/edit-node-icons/stop-caution-icon.png" />
       </div>
       <div class="remove-message">
         <span class="warning">{{ $t("nukeModal.nukeQ") }} </span>

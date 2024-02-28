@@ -11,11 +11,11 @@
         <span>{{ $t("reconnectModal.reconnectTitle") }}</span>
       </div>
       <div v-if="!reconnecting" class="messageContent">
-        <img src="/img/icon/edit-node-icons/stereum_cant_connect.gif" />
+        <img src="/animation/reconnect/stereum_cant_connect.gif" />
         <span class="message">{{ $t("reconnectModal.reconnectMessage") }}</span>
       </div>
       <div v-if="reconnecting" class="messageContent">
-        <img v-if="reconnecting" src="/img/icon/edit-node-icons/stereum_connected.gif" />
+        <img v-if="reconnecting" src="/animation/reconnect/stereum_connected.gif" />
         <span class="message">{{ $t("reconnectModal.reconnectingMessage") }}</span>
       </div>
       <div class="confirmBtn">

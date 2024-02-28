@@ -47,7 +47,7 @@
           >
             <img
               class="w-5 z-10 cursor-pointer"
-              src="/img/icon/edit-node-icons/trash.png"
+              src="/img/icon/edit-node-icons/service-delete.png"
               alt=""
               @mousedown.prevent.stop
             />

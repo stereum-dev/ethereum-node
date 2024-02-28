@@ -18,7 +18,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
       class="w-full flex justify-center items-center"
     >
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img class="w-8 col-start-1" src="/img/icon/edit-node-icons/sync.gif" alt="Sync Icon" />
+        <img class="w-8 col-start-1" src="/img/icon/edit-node-icons/service-sync-option.gif" alt="Sync Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-md text-left">{{ $t("editModals.syncMode") }}</span>
         <SyncCarousel :properties="props.properties" />
       </div>

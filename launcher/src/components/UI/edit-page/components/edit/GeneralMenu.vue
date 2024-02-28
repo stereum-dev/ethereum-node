@@ -33,7 +33,7 @@
       />
       <img
         class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-        src="/img/icon/edit-node-icons/trash.png"
+        src="/img/icon/edit-node-icons/service-delete.png"
         alt="Trash Icon"
         @click="deleteService"
         @mouseenter="

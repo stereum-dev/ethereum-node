@@ -134,7 +134,7 @@ export const useNodeManage = defineStore("nodeManage", {
         {
           id: 2,
           content: "DELETE",
-          contentIcon: require("../../public/img/icon/edit-node-icons/REMOVE_PLUGIN.png"),
+          contentIcon: require("../../public/img/icon/edit-node-icons/remove-service.png"),
         },
         {
           id: 3,

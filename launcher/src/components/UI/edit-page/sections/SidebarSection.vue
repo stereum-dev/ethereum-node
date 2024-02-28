@@ -46,7 +46,7 @@
         @mouseenter="footerStore.cursorLocation = `${nukTheNud}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-6" src="/img/icon/edit-node-icons/nuke.png" alt="Export Icon" />
+        <img class="w-6" src="/img/icon/edit-node-icons/nuke-node.png" alt="Export Icon" />
       </button>
       <Transition name="slide-fade">
         <button
@@ -55,7 +55,7 @@
           @mouseleave="nukeHovered = false"
           @click="nukeNode"
         >
-          <img class="w-4" src="/img/icon/edit-node-icons/nuke.png" alt="Export Icon" />
+          <img class="w-4" src="/img/icon/edit-node-icons/nuke-node.png" alt="Export Icon" />
           <span class="text-xs text-gray-200 font-semibold">{{ $t("sidebarSect.nukNod") }}</span>
         </button>
       </Transition>

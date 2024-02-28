@@ -18,7 +18,7 @@
 
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
-        src="/img/icon/node-icons/all-logs.png"
+        src="/img/icon/service-logs/all-log-export-button.png"
         alt=""
         @mousedown.prevent
         @click="exportAllLogs"
