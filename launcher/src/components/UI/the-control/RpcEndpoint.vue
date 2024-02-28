@@ -30,7 +30,7 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="/animation/loading/spinner.gif" alt="loading" />
+      <img src="/animation/loading/mushroom-spinner.gif" alt="loading" />
     </div>
   </div>
 </template>
@@ -56,7 +56,7 @@ export default {
       dialogValue: "",
       copyIcon: "/img/icon/control/ok.png",
       infoIcon: "/img/icon/control/info.png",
-      bttnLoading: "/img/icon/control/loading.gif",
+      bttnLoading: "/animation/loading/loading-dots.gif",
       rpcItems: [],
       dialogIcon: "",
       copyText: this.$t("dataAPIAndRPC.copy"),

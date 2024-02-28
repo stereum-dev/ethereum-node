@@ -43,7 +43,7 @@
                         <img
                           v-if="nodeHeaderStore.searchingForOsUpdates && !nodeHeaderStore.osUpdating"
                           class="w-5 h-5 spinner mr-2"
-                          src="/img/icon/control/loading_circle.gif"
+                          src="/animation/loading/loading-circle.gif"
                         />
                         <span v-else>{{ nodeHeaderStore.osVersionLatest ? nodeHeaderStore.osVersionLatest : 0 }}</span>
                       </div>

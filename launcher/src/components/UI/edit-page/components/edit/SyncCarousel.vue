@@ -195,7 +195,7 @@ const openDropdown = () => {
 
 const linkPicker = async (item) => {
   selectedItem.value = "Validating...";
-  selectedIcon.value = "/animation/loading/spinner.gif";
+  selectedIcon.value = "/animation/loading/mushroom-spinner.gif";
   installStore.checkPointSync = "";
   dropdown.value = false;
   const isCheckpointValid = await ControlService.isCheckpointValid(item.url);

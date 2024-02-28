@@ -33,7 +33,7 @@
         <img
           v-if="searchingForUpdatablePackages"
           class="w-5 h-5 spinner self-center justify-self-center"
-          src="/img/icon/control/loading_circle.gif"
+          src="/animation/loading/loading-circle.gif"
         />
         <div v-else class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center">
           <span class="text-sm font-semibold text-gray-300 text-center">{{ numberOfUpdatablePackages }}</span>

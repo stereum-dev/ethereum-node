@@ -32,7 +32,7 @@
 
         <div class="remove-modal-accepted_footer" :class="{ deactive: loginBtn }">
           <div v-if="loginBtn" class="spinner">
-            <img src="/animation/loading/spinner.gif" alt="" />
+            <img src="/animation/loading/mushroom-spinner.gif" alt="" />
           </div>
           <span v-else @click="backToLogin">{{ $t("nukeModal.backToLogin") }}</span>
         </div>

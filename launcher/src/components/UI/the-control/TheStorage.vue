@@ -28,7 +28,7 @@ import { ref, computed, watch } from "vue";
 const controlStore = useControlStore();
 const storagestatus = computed(() => controlStore.storagestatus);
 const isLoading = ref(true);
-const bttnLoading = ref("/animation/loading/spinner.gif");
+const bttnLoading = ref("/animation/loading/mushroom-spinner.gif");
 
 watch(storagestatus, (newVal) => {
   if (newVal && Array.isArray(newVal) && newVal.length) {

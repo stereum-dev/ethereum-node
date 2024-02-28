@@ -37,7 +37,7 @@
                       <img
                         v-if="searchingForOsUpdates"
                         class="w-5 h-5 spinner self-center justify-self-start mr-5"
-                        src="/img/icon/control/loading_circle.gif"
+                        src="/animation/loading/loading-circle.gif"
                       />
                       <div
                         v-else
