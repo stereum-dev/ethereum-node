@@ -69,7 +69,7 @@
         </div>
         <div class="searchBox">
           <input id="search" v-model="searchValue" type="search" placeholder="Search" />
-          <img v-if="!searchValue" src="/img/icon/arrows/search.png" alt="icon" />
+          <img v-if="!searchValue" src="/img/icon/plugin-logs/search.png" alt="icon" />
         </div>
         <div class="export-log" data-tooltip="Export the log" @click="logExport">
           <img src="/img/icon/manage-node-icons/log_export.png" alt="" />
