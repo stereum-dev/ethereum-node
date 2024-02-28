@@ -50,7 +50,7 @@
         <img
           :class="controlStore.currentExecutionIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentExecutionIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentExecutionIcon
+            controlStore.currentExecutionIcon == '' ? '/img/icon/loading/loading-circle.png' : controlStore.currentExecutionIcon
           "
           alt="execution"
         />
