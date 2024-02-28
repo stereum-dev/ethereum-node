@@ -102,7 +102,7 @@
     </template>
     <template #plusIcon>
       <div class="plus-icon-box" @click="$emit('modalView', list)">
-        <img src="/img/icon/manage-node-icons/fullscreen.png" alt="icon" />
+        <img src="/img/icon/edit-node-icons/fullscreen.png" alt="icon" />
       </div>
     </template>
   </manage-trapezoid>

@@ -35,7 +35,7 @@
       </div>
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
-        src="/img/icon/manage-node-icons/log_export.png"
+        src="/img/icon/edit-node-icons/log_export.png"
         alt=""
         @mousedown.prevent
         @click="exportLogs"

@@ -72,7 +72,7 @@
           <img v-if="!searchValue" src="/img/icon/plugin-logs/search.png" alt="icon" />
         </div>
         <div class="export-log" data-tooltip="Export the log" @click="logExport">
-          <img src="/img/icon/manage-node-icons/log_export.png" alt="" />
+          <img src="/img/icon/edit-node-icons/log_export.png" alt="" />
         </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>

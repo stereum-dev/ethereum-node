@@ -137,7 +137,7 @@
         >{{ $t("journalnode.resync") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/manage-node-icons/undo1.png"
+        img-path="/img/icon/edit-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
@@ -170,7 +170,7 @@
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/manage-node-icons/undo1.png"
+        img-path="/img/icon/edit-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
@@ -202,7 +202,7 @@
         ><span id="start">start</span> / <span id="stop">stop</span></the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/manage-node-icons/undo1.png"
+        img-path="/img/icon/edit-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
@@ -226,7 +226,7 @@
     </div>
     <div v-if="openRestart && !openLog" class="configBtn">
       <the-node-panel-btn
-        img-path="/img/icon/manage-node-icons/undo1.png"
+        img-path="/img/icon/edit-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
