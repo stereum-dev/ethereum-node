@@ -40,7 +40,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: false,
         },
         {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          icon: "/img/icon/mev-relays/bloxroute.png",
           name: "BloXroute MAX PROFIT",
           mainnet:
             "https://0x8b5d2e73e2a3a55c6c87b8b6eb92e0149a125c852751db1422fa951e42a09b82c142c3ea98d0d9930b056a3bc9896b8f@bloxroute.max-profit.blxrbdn.com",
@@ -52,7 +52,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
         {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          icon: "/img/icon/mev-relays/bloxroute.png",
           name: "BloXroute REGULATED",
           mainnet:
             "https://0xb0b07cd0abef743db4260b0ed50619cf6ad4d82064cb4fbec9d3ec530f7c5e6793d9f286c4e082c0244ffb9f2658fe88@bloxroute.regulated.blxrbdn.com",
@@ -99,7 +99,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
         {
-          icon: "/img/icon/click-installation/agnostic.png",
+          icon: "/img/icon/mev-relays/agnostic.png",
           name: "Agnostic",
           mainnet:
             "https://0xa7ab7a996c8584251c8f925da3170bdfd6ebc75d50f5ddc4050a6fdc77f2a3b5fce2cc750d0865e05d7228af97d69561@agnostic-relay.net",
