@@ -27,7 +27,7 @@
           class="z-10 dataTitleBox"
           @click="openExpertMode"
         >
-          <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
+          <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown.png" alt="icon" />
 
           <span>Expert Mode</span>
           <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
@@ -103,7 +103,7 @@
             <img
               v-else
               class="buttonOn"
-              src="/img/icon/plugin-menu-icons/edit2.png"
+              src="/img/icon/plugin-menu-icons/edit.png"
               alt="icon"
               @click="buttonOn(option)"
             />

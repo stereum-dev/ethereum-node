@@ -15,14 +15,14 @@ import { useNodeStore } from '@/store/theNode';
         @mouseenter="footerStore.cursorLocation = `${turnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/plugin-menu-icons/shutdown.png" alt="icon" class="w-4 active:scale-95" />
+        <img src="/img/icon/node-icons/service-command-turn-off.png" alt="icon" class="w-4 active:scale-95" />
       </button>
       <button
         v-else-if="props.client.state == 'restarting'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
         @click="stateHandler"
       >
-        <img src="/img/icon/plugin-menu-icons/pending.png" alt="icon" class="w-4 active:scale-95" />
+        <img src="/img/icon/node-icons/service-command-pending.png" alt="icon" class="w-4 active:scale-95" />
       </button>
       <button
         v-else
@@ -31,7 +31,7 @@ import { useNodeStore } from '@/store/theNode';
         @mouseenter="footerStore.cursorLocation = `${turnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" class="w-4 active:scale-95" />
+        <img src="/img/icon/node-icons/service-command-turn-on.png" alt="icon" class="w-4 active:scale-95" />
       </button>
     </div>
     <button
@@ -41,7 +41,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/restart.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon//node-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
@@ -50,7 +50,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${expert}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/setting2.png" alt="icon" class="w-8 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-open-settings.png" alt="icon" class="w-8 active:scale-95" />
     </button>
     <button
       v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"

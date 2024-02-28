@@ -29,7 +29,7 @@
           <div class="service-name"><span>ssv.network</span></div>
           <div class="service-option">
             <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-icons/github.png" alt="icon" @click="openGitHub" />
             <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
@@ -38,7 +38,7 @@
       <!-- <div v-if="dataLoading" class="spinnerBox"> -->
       <!-- start renew -->
       <div v-if="dataLoading" class="modal-content">
-        <img src="/img/icon/service-icons/ssv.gif" alt="loading" />
+        <img src="/animation/services/ssv-network/ssv-network-animation.gif" alt="loading" />
       </div>
       <div v-else class="modal-content">
         <div class="browserBox">
@@ -111,7 +111,7 @@
             :top-line="!lastStep ? secondRowTitle : `${$t('serviceModal.copyKey')}`"
             :bottom-line="!lastStep ? secondRowExplain : `${$t('serviceModal.skPk')}`"
             :btn-name="!lastStep ? secondRowBtnName : `${$t('serviceModal.copy')}`"
-            :img-url="!lastStep ? '' : '/img/icon/service-icons/copy1.png'"
+            :img-url="!lastStep ? '' : '/img/icon/service-icons/copy.png'"
             @confirmPluginClick="secondRowBtnHandler"
           />
           <PasswordBox

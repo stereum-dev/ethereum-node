@@ -40,7 +40,7 @@
 
       <the-node-panel-btn
         v-if="isloading"
-        img-path="/img/icon/plugin-menu-icons/turning_circle.gif"
+        img-path="/animation/loading/turning-circle.gif"
         is-color="grey"
         width="10"
         margin-right="5"

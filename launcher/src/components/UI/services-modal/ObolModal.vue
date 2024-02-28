@@ -13,13 +13,13 @@
           <div class="service-name"><span>obol</span></div>
           <div class="service-option">
             <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-icons/github.png" alt="icon" @click="openGitHub" />
             <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
       <div v-if="isLoading">
-        <img src="/img/icon/service-icons/obol_animation.gif" alt="icon" />
+        <img src="/animation/services/obol/obol-animation.gif" alt="icon" />
       </div>
       <div v-else class="content">
         <div v-if="!headerStore.generatorPlugin" class="wrapper">
@@ -78,7 +78,7 @@
                 :second-btn-bg-color="`#eb5353`"
                 :btn-name-color="`${areYouSureToRemove ? '#000' : '#dbdbdb'}`"
                 :second-btn-name-color="`#dbdbdb`"
-                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-icons/copy1.png'}`"
+                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-icons/copy.png'}`"
                 @confirmPluginClick="secondRowBtnHandler"
                 @secBtnPluginClick="removeHandlerControler"
               />

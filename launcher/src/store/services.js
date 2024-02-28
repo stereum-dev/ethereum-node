@@ -56,14 +56,14 @@ export const useServices = defineStore("services", {
               title: "External IP Address",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/ip_address.png",
+              icon: "/img/icon/plugin-menu-icons/ip-address.png",
               pattern: ["(- --enr-address=)(.*)(\\n)"],
             },
             {
               title: "Disable ENR auto update",
               type: "toggle",
               changeValue: true,
-              icon: "/img/icon/plugin-menu-icons/external_ip_update.png",
+              icon: "/img/icon/plugin-menu-icons/external-ip-update.png",
               pattern: ["(- --disable-enr-auto-update=)(.*)(\\n)"],
             },
             {
@@ -116,7 +116,7 @@ export const useServices = defineStore("services", {
               title: "Default Fee Recipient",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/fee.png",
+              icon: "/img/icon/plugin-menu-icons/blockfee-recipient.png",
               pattern: ["(- --suggested-fee-recipient=)(.*)(\\n)"],
             },
             {
@@ -171,7 +171,7 @@ export const useServices = defineStore("services", {
               title: "External IP Address",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/ip_address.png",
+              icon: "/img/icon/plugin-menu-icons/ip-address.png",
               pattern: ["( --p2p-host-ip=)(.*)(\\n)"],
             },
             {
@@ -223,7 +223,7 @@ export const useServices = defineStore("services", {
               title: "Default Fee Recipient",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/fee.png",
+              icon: "/img/icon/plugin-menu-icons/blockfee-recipient.png",
               pattern: ["(--suggested-fee-recipient=)(.*)(\\n)"],
             },
             {
@@ -287,14 +287,14 @@ export const useServices = defineStore("services", {
               title: "External IP Address",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/ip_address.png",
+              icon: "/img/icon/plugin-menu-icons/ip-address.png",
               pattern: ["(- --nat:extip:)(.*)(\\n)"],
             },
             {
               title: "ENR auto update",
               type: "toggle",
               changeValue: true,
-              icon: "/img/icon/plugin-menu-icons/external_ip_update.png",
+              icon: "/img/icon/plugin-menu-icons/external-ip-update.png",
               pattern: ["(- --enr-auto-update=)(.*)(\\n)"],
             },
             {
@@ -346,7 +346,7 @@ export const useServices = defineStore("services", {
               title: "Default Fee Recipient",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/fee.png",
+              icon: "/img/icon/plugin-menu-icons/blockfee-recipient.png",
               pattern: ["(- --suggested-fee-recipient=)(.*)(\\n)"],
             },
             {
@@ -410,7 +410,7 @@ export const useServices = defineStore("services", {
               title: "External IP Address",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/ip_address.png",
+              icon: "/img/icon/plugin-menu-icons/ip-address.png",
               pattern: ["(- --p2p-advertised-ip=)(.*)(\\n)"],
             },
             {
@@ -471,7 +471,7 @@ export const useServices = defineStore("services", {
               title: "Default Fee Recipient",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/fee.png",
+              icon: "/img/icon/plugin-menu-icons/blockfee-recipient.png",
               pattern: ["(- --validators-proposer-default-fee-recipient=)(.*)(\\n)"],
             },
             {
@@ -550,7 +550,7 @@ export const useServices = defineStore("services", {
               title: "Data retention (in days)",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/DataRetention.png",
+              icon: "/img/icon/plugin-menu-icons/dataretention.png",
               pattern: ["(--storage.tsdb.retention.time=)(.*)(d)"],
             },
           ],
@@ -863,14 +863,14 @@ export const useServices = defineStore("services", {
               title: "External IP Address",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/ip_address.png",
+              icon: "/img/icon/plugin-menu-icons/ip-address.png",
               pattern: ["(- --enr.ip=)(.*)(\\n)"],
             },
             {
               title: "Enable NAT",
               type: "toggle",
               changeValue: true,
-              icon: "/img/icon/plugin-menu-icons/external_ip_update.png",
+              icon: "/img/icon/plugin-menu-icons/external-ip-update.png",
               pattern: ["(- --nat=)(.*)(\\n)"],
             },
             {
@@ -923,7 +923,7 @@ export const useServices = defineStore("services", {
               title: "Default Fee Recipient",
               type: "text",
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/fee.png",
+              icon: "/img/icon/plugin-menu-icons/blockfee-recipient.png",
               pattern: ["(- --suggestedFeeRecipient=)(.*)(\\n)"],
             },
             {

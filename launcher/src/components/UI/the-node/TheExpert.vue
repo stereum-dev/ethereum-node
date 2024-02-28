@@ -19,7 +19,7 @@
         </div>
         <!-- expert mode row -->
         <div v-if="!ssvExpertModeActive && !prometheusExpertModeActive" class="dataTitleBox" @click="openExpertMode">
-          <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
+          <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown.png" alt="icon" />
           <span>Expert Mode</span>
           <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
@@ -82,7 +82,7 @@
           class="actionBox"
           v-if="!isExpertModeActive && !ssvExpertModeActive"
         >
-          <img src="/img/icon/plugin-menu-icons/ServiceAutoUpdate.png" alt="" />
+          <img src="/img/icon/plugin-menu-icons/service-auto-update.png" alt="" />
           <span class="actionBoxTitle">Services Update Configuration</span>
           <div class="updateService">
             <select
@@ -115,7 +115,7 @@
             <img
               v-else
               class="buttonOn"
-              src="/img/icon/plugin-menu-icons/edit2.png"
+              src="/img/icon/plugin-menu-icons/edit.png"
               alt="icon"
               @click="buttonOn(option)"
             />

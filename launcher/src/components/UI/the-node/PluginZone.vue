@@ -26,14 +26,14 @@
                 <img
                   v-if="item.serviceIsPending"
                   class="pending"
-                  src="/img/icon/plugin-menu-icons/turning_circle.gif"
+                  src="/animation/loading/turning-circle.gif"
                   alt="icon"
                   @mouseenter="cursorLocation = `${pending}`"
                   @mouseleave="cursorLocation = ''"
                 />
                 <img
                   v-else-if="item.state == 'running'"
-                  src="/img/icon/plugin-menu-icons/shutdown.png"
+                  src="/img/icon/node-icons/service-command-turn-off.png"
                   alt="icon"
                   @click.stop="stateHandler(item)"
                   @mouseenter="cursorLocation = `${off}`"
@@ -41,7 +41,7 @@
                 />
                 <img
                   v-else-if="item.state == 'restarting'"
-                  src="/img/icon/plugin-menu-icons/restart.png"
+                  src="/img/icon//node-icons/service-command-restart.png"
                   alt="icon"
                   @click="stateHandler(item)"
                   @mouseenter="cursorLocation = `${restart}`"
@@ -49,7 +49,7 @@
                 />
                 <img
                   v-else
-                  src="/img/icon/plugin-menu-icons/turn-on.png"
+                  src="/img/icon/node-icons/service-command-turn-on.png"
                   alt="icon"
                   @click.stop="stateHandler(item)"
                   @mouseenter="cursorLocation = `${on}`"
