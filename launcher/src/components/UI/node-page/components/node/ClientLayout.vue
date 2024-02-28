@@ -84,7 +84,7 @@ const syncIcons = ref([
   {
     id: 2,
     name: "active",
-    icon: "/img/icon/arrows/SynchronisationIconActive.gif",
+    icon: "/img/animation/synchronisation/synchronisation-icon-active.gif",
   },
   {
     id: 3,
