@@ -3094,7 +3094,7 @@ rm -rf diskoutput
         // retrive current-Slot also current, justified and finalized-Epochs
         const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
         let APIBegin = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/`;
-        let cmdBegin = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v1/beacon/blocks/`;
+        let cmdBegin = `curl -s -X 'GET' 'http://localhost:${beaconAPIPort}/eth/v2/beacon/blocks/`;
         let cmdEnd = "' -H 'accept: application/json'";
         let notFound = ":404";
 
