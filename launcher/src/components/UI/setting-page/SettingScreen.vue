@@ -31,6 +31,7 @@ import SidebarBtn from "./components/SidebarBtn";
 import ItemRow from "./components/ItemRow";
 import VolumeSlider from "./components/VolumeSlider";
 import OutputOptions from "./components/OutputOptions.vue";
+import LanguageBtn from "./components/LanguageBtn.vue";
 import { ref, computed } from "vue";
 
 const mainBox = ref("general");
@@ -47,7 +48,7 @@ const toggleSettings = (name) => {
 const itemConfigurations = computed(() => {
   let items = [];
   if (mainBox.value === "general") {
-    items = [{ title: "Language Selection" }, { title: "Credits" }];
+    items = [{ title: "Language Selection", component: LanguageBtn }, { title: "Credits" }];
   } else if (mainBox.value === "audio") {
     items = [
       { title: "Output Device", component: OutputOptions },
