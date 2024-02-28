@@ -9,7 +9,10 @@
       </div>
       <div class="info-row">
         <span>{{ $t("authenticatorModal.codeText") }}</span>
-        <input v-model="varificationCode" type="text" class="val-part" />
+        <input v-if="timeBase" v-model="verificationCode" type="text" class="val-part" />
+        <div v-if="!timeBase" class="val-part" @click="copy('')">
+          {{ codeCopied ? "COPIED" : verificationCode }}
+        </div>
       </div>
       <div class="info-row">
         <span>{{ $t("authenticatorModal.saveText") }}</span>
@@ -18,8 +21,8 @@
         </div>
       </div>
     </div>
-    <div class="barcode-part">
-      <div class="barcode"><img :src="barcode" alt="" /></div>
+    <div class="qrcode-part">
+      <div class="qrcode"><img :src="qrCode" alt="" /></div>
     </div>
   </div>
 </template>
@@ -33,9 +36,13 @@ export default {
       type: String,
       default: "",
     },
-    barcode: {
+    qrCode: {
       type: String,
       default: "",
+    },
+    timeBase: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -46,19 +53,21 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
-      varificationCode: "varificationCode",
-      validVarificationCode: "validVarificationCode",
+      verificationCode: "verificationCode",
+      validVerificationCode: "validVerificationCode",
+      QRcode: "QRcode",
+      authKeyTimeBase: "authKeyTimeBase",
     }),
     checkSave() {
-      return this.validVarificationCode === this.varificationCode ? "" : "disable-save";
+      return this.validVerificationCode === this.verificationCode ? "" : "disable-save";
     },
   },
   mounted() {
-    this.varificationCode = "";
+    this.verificationCode = "";
   },
   methods: {
     async copy(type) {
-      const text = type === "secretKey" ? this.secretKey : this.varificationCode;
+      const text = type === "secretKey" ? this.secretKey : this.verificationCode;
       await navigator.clipboard.writeText(text);
       if (type === "secretKey") {
         this.secretCopied = true;
@@ -99,14 +108,14 @@ export default {
   justify-content: space-around;
   align-items: flex-start;
 }
-.barcode-part {
+.qrcode-part {
   width: 30%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.barcode {
+.qrcode {
   width: 60%;
   height: 90%;
   background: #010101;
@@ -117,7 +126,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.barcode img {
+.qrcode img {
   width: 100%;
   height: 100%;
 }

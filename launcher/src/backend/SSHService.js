@@ -113,6 +113,9 @@ export class SSHService {
           reject(msg);
         }
       });
+      conn.on("keyboard-interactive", () => {
+        console.log("msg of the day: Or something");
+      });
       conn
         .on("ready", async () => {
           this.connectionPool.push(conn);
@@ -137,6 +140,7 @@ export class SSHService {
           privateKey: connectionInfo.privateKey || undefined,
           passphrase: connectionInfo.passphrase || undefined,
           keepaliveInterval: 30000,
+          tryKeyboard: true,
         });
     });
   }

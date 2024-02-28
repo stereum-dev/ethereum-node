@@ -10,6 +10,7 @@ import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
+import { AuthenticationService } from "./backend/AuthenticationService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -21,6 +22,7 @@ const monitoring = new Monitoring(nodeConnection);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
+const authenticationService = new AuthenticationService(nodeConnection);
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
@@ -473,6 +475,19 @@ ipcMain.handle("checkRemoteKeys", async (event, args) => {
 
 ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
   return await monitoring.getCurrentEpochSlot(args);
+});
+
+ipcMain.handle("beginAuthSetup", async (event, args) => {
+  const current_window = event.sender;
+  return await authenticationService.beginAuthSetup(args, current_window)
+});
+
+ipcMain.handle("finishAuthSetup", async (event, args) => {
+  return await authenticationService.finishAuthSetup(args.increaseTimeLimit, args.enableRateLimit)
+});
+
+ipcMain.handle("removeAuthenticator", async (event, args) => {
+  return await monitoring.removeAuthenticator(args);
 });
 
 ipcMain.handle("changePassword", async (event, args) => {

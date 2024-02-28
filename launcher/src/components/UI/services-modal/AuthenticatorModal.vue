@@ -39,16 +39,18 @@
           /><AuthContainer
             v-else
             :secret-key="secretKey"
-            :varification-code="varificationCode"
-            :barcode="authBarcode"
+            :verification-code="verificationCode"
+            :qr-code="QRcode"
+            :time-base="authKeyTimeBase"
             @save-click="saveScratch"
+            @update="handleVerificationCode"
           />
         </div>
         <div v-if="setupPage || generationPage || setupConfirmPage" class="checkContainer">
           <checkContainer :title="`${checkContainer.title}`" @update="handleCheckboxUpdate" />
         </div>
         <div v-if="setupConfirmPage" class="checkContainer">
-          <checkContainer :title="`${$t('authenticatorModal.rateLimit')}`" @update="handleRateLimitPage" />
+          <checkContainer :title="`${$t('authenticatorModal.rateLimit')}`" @update="handleRateLimit" />
         </div>
         <div v-if="setupPage || generationPage || setupConfirmPage" class="btn-auth" @click="mainBtnClick">
           {{ mainBtnContent.btnName }}
@@ -60,6 +62,8 @@
 
 <script>
 import { mapWritableState } from "pinia";
+import ControlService from "@/store/ControlService";
+import { saveAs } from "file-saver";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeStore } from "@/store/theNode";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
@@ -80,11 +84,10 @@ export default {
       configurePage: false,
       configured2fa: false,
       setupConfirmPage: false,
-      rateLimitPage: false,
+      enableRateLimit: false,
       orginalGenerationTimeLimit: false,
-      secretKey: "H6pGFVFBPDM2FSTD", //dummy key
-      authBarcode: "/img/icon/header-icons/dummyQR.png", //dummy barcode
-      //check points for the check box
+      secretKey: "",
+      QRcode: "/img/icon/header-icons/dummyQR.png", //dummy qr code
       authKeyTimeBase: false,
       confirmSuccessAuth: false,
     };
@@ -93,8 +96,9 @@ export default {
   computed: {
     ...mapWritableState(useNodeHeader, {
       runningServices: "runningServices",
-      varificationCode: "varificationCode",
-      validVarificationCode: "validVarificationCode",
+      verificationCode: "verificationCode",
+      validVerificationCode: "validVerificationCode",
+      verificationOutput: "verificationOutput",
     }),
     ...mapWritableState(useNodeStore, {
       hideConnectedLines: "hideConnectedLines",
@@ -194,8 +198,15 @@ export default {
   },
   mounted() {
     this.filterAuthenticatorService();
+    ControlService.addListener("2FAEvents", this.authenticatorHandler);
+  },
+  unmounted() {
+    ControlService.removeListener("2FAEvents", this.authenticatorHandler);
   },
   methods: {
+    authenticatorHandler(event, data) {
+      this.loadOutput(data);
+    },
     handleCheckboxUpdate(value) {
       if (this.setupPage || (!this.generationPage && !this.setupConfirmPage)) {
         this.authKeyTimeBase = value;
@@ -208,9 +219,18 @@ export default {
         console.log("orginal Generation Time Limit", this.orginalGenerationTimeLimit);
       }
     },
-    handleRateLimitPage(value) {
-      this.rateLimitPage = value;
-      console.log("rate limit", this.rateLimitPage);
+    async handleVerificationCode(value) {
+      if (this.authKeyTimeBase && value.length == 6) {
+        this.verificationOutput = await ControlService.authenticatorVerification(value);
+        /*if(this.verificationOutput != "wrong code")
+        {
+          this.validVerificationCode = true;
+        }*/
+      }
+    },
+    handleRateLimit(value) {
+      this.enableRateLimit = value;
+      console.log("rate limit", this.enableRateLimit);
     },
     filterAuthenticatorService() {
       this.runningServices.forEach((item) => {
@@ -226,26 +246,26 @@ export default {
       let url = "https://github.com/authenticator/authenticator";
       window.open(url, "_blank");
     },
-    topConfirmBoxClick() {
+    async topConfirmBoxClick() {
       if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
-        //generation func have to be added
-        console.log("back to gene");
+        //backup not needed anymore
       } else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
         this.setupPage = false;
         this.generationPage = false;
-        this.validVarificationCode = "";
-        this.varificationCode = "";
+        this.validVerificationCode = "";
+        this.verificationCode = "";
         this.setupConfirmPage = false;
       } else if (!this.setupPage && !this.generationPage) {
         this.setupPage = true;
       }
     },
-    mainBtnClick() {
+    async mainBtnClick() {
       if (this.setupPage) {
         this.generationPage = true;
         this.setupPage = false;
-        this.validVarificationCode = "111111"; //dummy valid code for the test
-        console.log("valid code", this.validVarificationCode);
+        this.validVerificationCode = "false"; //dummy valid code for the test
+        //console.log("valid code", this.validVerificationCode);
+        await ControlService.beginAuthSetup(this.authKeyTimeBase);
       } else if (this.generationPage && !this.setupPage) {
         console.log("setup");
         this.setupConfirmPage = true;
@@ -257,10 +277,23 @@ export default {
         this.setupConfirmPage = false;
         this.generationPage = false;
         this.setupPage = false;
+        await ControlService.finishAuthSetup(this.orginalGenerationTimeLimit, this.enableRateLimit);
+      }
+    },
+    loadOutput(data){
+      console.log(data);
+      this.QRcode = data[0].trim().replace("www.google","chart.googleapis");
+      this.secretKey = data[1].split(": ").pop();
+      if(data.length > 5){
+        this.verificationCode = data[2].split("is ").pop();
+        this.validVerificationCode = this.verificationCode;
+        this.verificationOutput = data.slice(3, 9)
       }
     },
     saveScratch() {
-      console.log("save scratch");
+      //console.log("save scratch");
+      const blob = new Blob([this.verificationOutput], { type: "text/plain;charset=utf-8" });
+      saveAs(blob, "2FA_ScratchCodes.txt");
     },
   },
 };
