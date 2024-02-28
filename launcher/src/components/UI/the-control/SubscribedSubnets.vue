@@ -37,7 +37,7 @@
         <img
           :class="controlStore.currentConsensusIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentConsensusIcon == '' ? '/img/icon/loading/loading-circle.png' : controlStore.currentConsensusIcon
+            controlStore.currentConsensusIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentConsensusIcon
           "
           alt="consensus"
         />
@@ -52,7 +52,7 @@
         <img
           :class="controlStore.currentExecutionIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentExecutionIcon == '' ? '/img/icon/loading/loading-circle.png' : controlStore.currentExecutionIcon
+            controlStore.currentExecutionIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentExecutionIcon
           "
           alt="execution"
         />

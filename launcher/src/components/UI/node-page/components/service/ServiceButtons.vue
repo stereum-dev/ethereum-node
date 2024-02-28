@@ -11,7 +11,7 @@
         type="button"
         class="w-full h-full flex justify-center items-center rounded-md disabled"
       >
-        <img src="/img/icon/loading/loading-circle.png" alt="icon" class="w-4 animate-spin" />
+        <img src="/img/icon/loading-icons/loading-circle.png" alt="icon" class="w-4 animate-spin" />
       </button>
       <button
         v-else-if="props.client.state == 'running'"
