@@ -29,7 +29,7 @@
                 <input :id="relay.id" v-model="checkedRelays" type="checkbox" :value="relay" @change="enableBtn" />
                 <label :for="relay.id">{{ relay.name }}</label>
                 <div v-if="relay.freeCensorship == false" class="iconBox" data-tooltip="OFAC Compliant - censored">
-                  <img src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
+                  <img src="/img/icon/mev-relays/ofac-compliant-icon.png" alt="flag-icon" />
                 </div>
               </div>
             </div>

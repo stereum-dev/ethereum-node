@@ -7,7 +7,7 @@
       @mouseleave="cursorLocation = ''"
       @mousedown.prevent
     >
-      <img alt="help" src="/img/icon/header-icons/question-mark.png" />
+      <img alt="help" src="/img/icon/header-icons/header-help-button.png" />
     </div>
 
     <div
@@ -17,7 +17,7 @@
       @mouseleave="cursorLocation = ''"
       @mousedown.prevent
     >
-      <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
+      <img alt="notification" src="/img/icon/header-icons/header-notification-button.png" />
     </div>
     <div
       v-if="isUpdateAvailable || isOsUpdateAvailable"
@@ -27,7 +27,7 @@
       @mouseleave="cursorLocation = ''"
       @mousedown.prevent
     >
-      <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
+      <img alt="update-icon" src="/img/icon/header-icons/header-update-button-green.png" />
     </div>
     <div
       v-else
@@ -38,7 +38,7 @@
       @mouseleave="(showUpdateText = false), (cursorLocation = '')"
       @mousedown.prevent
     >
-      <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
+      <img alt="update-icon" src="/img/icon/header-icons/header-update-button-blue.png" />
     </div>
 
     <router-link
@@ -49,7 +49,7 @@
       @mousedown.prevent
     >
       <div>
-        <img alt="setting" src="/img/icon/header-icons/setting4.png" />
+        <img alt="setting" src="/img/icon/header-icons/header-stereum-settings-button.png" />
       </div>
     </router-link>
 
@@ -60,7 +60,7 @@
       @mouseleave="cursorLocation = ''"
       @mousedown.prevent
     >
-      <img alt="logout" src="/img/icon/header-icons/exit9.png" />
+      <img alt="logout" src="/img/icon/header-icons/header-logout-button.png" />
     </div>
 
     <update-panel

@@ -56,13 +56,13 @@
                       class="w-[50px] h-[20px] bg-teal-800 hover:bg-teal-900 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="openOsUpdatePanel"
                     >
-                      <img class="w-5" src="/img/icon/header-icons/open.png" alt="Open Icon" @mousedown.prevent />
+                      <img class="w-5" src="/img/icon/header-icons/update-modal-open-button.png" alt="Open Icon" @mousedown.prevent />
                     </div>
                     <!-- <div
                       class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="searchOsUpdates"
                     >
-                      <img class="w-4" src="/img/icon/header-icons/search.png" alt="icon" />
+                      <img class="w-4" src="/img/icon/header-icons/update-modal-search-button.png" alt="icon" />
                     </div> -->
                     <!-- <div
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
@@ -141,7 +141,7 @@
                       class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="searchUpdate"
                     >
-                      <img class="w-4" src="/img/icon/header-icons/search.png" alt="icon" />
+                      <img class="w-4" src="/img/icon/header-icons/update-modal-search-button.png" alt="icon" />
                     </div>
                     <div
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
@@ -160,7 +160,7 @@
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
                   >
                     <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1">
-                      <img class="w-2 h-2" src="/img/icon/header-icons/update-green.png" alt="icon" />
+                      <img class="w-2 h-2" src="/img/icon/header-icons/header-update-button-green.png" alt="icon" />
                     </div>
                     <span class="text-[8px] text-gray-200 font-semibold ml-2"
                       >{{ nodeHeaderStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
@@ -201,7 +201,7 @@
                   class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800"
                 >
                   <div class="w-5 h-5 bg-[#243d36] rounded-full p-1">
-                    <img class="w-3" src="/img/icon/header-icons/update-green.png" alt="icon" />
+                    <img class="w-3" src="/img/icon/header-icons/header-update-button-green.png" alt="icon" />
                   </div>
                   <span class="text-center text-sm text-gray-300 font-semibold">{{
                     $t("updatePanel.availablePlugin")

@@ -5,13 +5,13 @@
       <div class="content">
         <support-modal-box
           :box-title="$t('supportModal.support')"
-          box-image-path="/img/icon/header-icons/support.png"
+          box-image-path="/img/icon/header-icons/help-modal-support.png"
           :box-text="$t('supportModal.supportText')"
           @card-action="OpenStereumDiscord"
         ></support-modal-box>
         <support-modal-box
           :box-title="$t('supportModal.bugReport')"
-          box-image-path="/img/icon/header-icons/bug.png"
+          box-image-path="/img/icon/header-icons/help-modal-bug-report.png"
           :box-text="$t('supportModal.supportText')"
           @card-action="OpenStereumGithub"
         ></support-modal-box>
@@ -46,9 +46,9 @@ export default {
   },
   mounted() {
     if (this.currentNetwork.network === "gnosis") {
-      this.docsImage = "/img/icon/header-icons/Gnosis_Documentation_Logo.png";
+      this.docsImage = "/img/icon/header-icons/help-modal-doc-gnosis.png";
     } else {
-      this.docsImage = "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
+      this.docsImage = "/img/icon/header-icons/help-modal-doc-ethereum.png";
     }
   },
   methods: {

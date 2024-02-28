@@ -82,7 +82,7 @@ export const useFinancialStore = defineStore("financialCredit", {
         },
         {
           name: "criptocu",
-          avatar: "./img/icon/credit/criptocu.png",
+          avatar: "./img/icon/credits/criptocu.png",
         },
         {
           name: "sushanth9909",
