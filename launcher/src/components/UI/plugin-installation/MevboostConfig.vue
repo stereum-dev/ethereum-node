@@ -34,7 +34,7 @@
             <img src="/img/icon/arrows/right-1.png" alt="icon" />
           </div>
           <div class="remove" @click="removeFromUsedBlocks">
-            <img src="/img/icon/arrows/left-1.png" alt="icon" />
+            <img src="/img/icon/arrows/left-arrow-2.png" alt="icon" />
           </div>
         </div>
         <div class="included-box">
