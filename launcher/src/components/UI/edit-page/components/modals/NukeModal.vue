@@ -63,7 +63,7 @@ export default {
       ],
       nukeData: [],
       loginBtn: true,
-      nukeNode: "url('./img/icon/arrows/NukeNode_Final.gif')",
+      nukeNode: "url('./img/animation/nuke-node/nuke_node.gif')",
       autoScroll: true,
       loadingDump: false,
     };
