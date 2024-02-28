@@ -38,7 +38,7 @@
           <div class="btn-box">
             <div v-if="loading" class="process">
               {{ $t("serviceModals.process") }}...
-              <img class="animate-spin" src="/img/icon/arrows/loading.png" alt="icon" />
+              <img class="animate-spin" src="/img/icon/loading/loading-circle.png" alt="icon" />
             </div>
             <span v-else class="btn" :class="{ disabled: applyBtnDisabled }" @click="applyRelays">{{
               $t("secretKeyReg.apply")

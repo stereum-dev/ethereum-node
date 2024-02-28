@@ -6,7 +6,7 @@ import { useNodeStore } from '@/store/theNode';
       class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md"
     >
       <button v-if="props.client.serviceIsPending" type="button" class="w-full h-full rounded-md disabled">
-        <img src="/img/icon/arrows/loading.png" alt="icon" class="w-4 animate-spin" />
+        <img src="/img/icon/loading/loading-circle.png" alt="icon" class="w-4 animate-spin" />
       </button>
       <button
         v-else-if="props.client.state == 'running'"

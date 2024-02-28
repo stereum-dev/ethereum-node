@@ -37,7 +37,7 @@
         <img
           :class="controlStore.currentConsensusIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentConsensusIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentConsensusIcon
+            controlStore.currentConsensusIcon == '' ? '/img/icon/loading/loading-circle.png' : controlStore.currentConsensusIcon
           "
           alt="consensus"
         />
