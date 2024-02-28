@@ -23,7 +23,7 @@
     >
       <div class="w-full h-full absolute inset-0 bg-black rounded-md opacity-80"></div>
       <div class="w-full h-full flex flex-col justify-center items-center space-y-4 z-50">
-        <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
+        <img src="/animation/login/login_animation.gif" alt="anim" />
         <div
           class="w-[150px] h-12 bg-red-500 py-2 px-4 rounded-full shadow-md shadow-[#161515] hover:scale-110 active:scale-100 hover:bg-red-700 flex justify-center items-center cursor-pointer transition-all duration-200 ease-in-out"
           @click="cancelLogin"
