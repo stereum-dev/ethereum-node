@@ -63,8 +63,8 @@ export const useNodeManage = defineStore("nodeManage", {
         },
 
         {
-          icon: "/img/icon/click-installation/MANIFOLD.png",
-          name: "MANIFOLD",
+          icon: "/img/icon/mev-relays/manifold.png",
+          name: "Manifold",
           mainnet:
             "https://0x98650451ba02064f7b000f5768cf0cf4d4e492317d82871bdc87ef841a0743f69f0f1eea11168503240ac35d101c9135@mainnet-relay.securerpc.com",
           goerli:
