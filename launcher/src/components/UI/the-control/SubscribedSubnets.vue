@@ -19,7 +19,7 @@
         @mouseleave="footerStore.cursorLocation = `${compName}`"
       >
         <div class="service-rox_icon">
-          <img src="/img/icon/control/SubnetPeet.png" :alt="item.name" />
+          <img src="/img/icon/control/SubnetPeer.png" :alt="item.name" />
         </div>
         <div class="service-row_val">
           <span>{{ dummy }}</span>

@@ -17,7 +17,7 @@
             active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
           }"
         >
-          <img src="/img/icon/control/SETTINGS.png" alt="green" />
+          <img src="/img/icon/alerts/alert-settings.png" alt="green" />
         </div>
       </div>
       <div class="alert-box_messages overflow-x-hidden overflow-y-auto">
