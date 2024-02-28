@@ -16,7 +16,7 @@
       <div v-if="secondPoint" class="point-wrapper">
         <div class="first-point">
           <div class="first-point_icon">
-            <img src="/img/icon/arrows/Pointer1.png" alt="pointer" />
+            <img src="/img/icon/arrows/left-arrow-4.png" alt="pointer" />
           </div>
           <div class="first-point_title">{{ $t("rpcGuide.toggleMessage") }}</div>
         </div>
@@ -26,7 +26,7 @@
         <div class="second-point">
           <div class="second-point_title">{{ $t("rpcGuide.clickExtention") }}</div>
           <div class="second-point_icon">
-            <img src="/img/icon/arrows/Pointer1.png" alt="pointer" />
+            <img src="/img/icon/arrows/left-arrow-4.png" alt="pointer" />
           </div>
         </div>
         <div class="second-border"></div>
