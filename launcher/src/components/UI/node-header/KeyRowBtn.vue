@@ -2,15 +2,15 @@
   <div class="btn-box-parent">
     <div v-if="!deleteKey" class="wrapper">
       <div class="btn-del" @click="deleteKeySwitch">
-        <img src="/img/icon/access-management/open_trashcan_icon.png" alt="" />
+        <img src="/img/icon/server-management/open_trashcan_icon.png" alt="" />
       </div>
     </div>
     <div v-else class="wrapper">
       <div class="btn-del close" @click="cancelDelete">
-        <img src="/img/icon/access-management/close.png" alt="" />
+        <img src="/img/icon/server-management/close.png" alt="" />
       </div>
       <div class="btn-del done" @click="confirmDelete">
-        <img src="/img/icon/access-management/done.png" alt="" />
+        <img src="/img/icon/server-management/done.png" alt="" />
       </div>
     </div>
   </div>
