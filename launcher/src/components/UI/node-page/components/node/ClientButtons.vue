@@ -59,7 +59,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/log-command.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-open-logs.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
@@ -68,7 +68,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${docs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/plugin-docs.png" alt="icon" class="w-5 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-open-docs.png" alt="icon" class="w-5 active:scale-95" />
     </button>
     <button
       v-if="
@@ -81,7 +81,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${resync}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/resync.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-resync-client.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       v-if="props.client.service == 'TekuValidatorService'"
@@ -90,7 +90,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${removeLockBtn}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/delete-lock.png" alt="icon" class="w-4 h-4 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-delete-lockfile.png" alt="icon" class="w-4 h-4 active:scale-95" />
     </button>
     <button
       v-if="props.client.service == 'GethService'"
@@ -99,7 +99,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${pruning}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/pruning.png" alt="icon" class="active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-pruning.png" alt="icon" class="active:scale-95" />
     </button>
     <button
       v-if="props.client.category == 'execution' && props.client.service !== 'ExternalExecutionService'"
@@ -109,7 +109,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${copyToken}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/jwtCopy.png" alt="icon" class="w-4 h-4 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-copy-jwt.png" alt="icon" class="w-4 h-4 active:scale-95" />
     </button>
     <slot></slot>
   </div>

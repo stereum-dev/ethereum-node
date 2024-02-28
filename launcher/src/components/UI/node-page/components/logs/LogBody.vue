@@ -48,7 +48,7 @@ const isCopied = ref(false);
 
 const copyIconHandler = computed(() => {
   if (isCopied.value === true) {
-    return "/img/icon/node-icons/copied.png";
+    return "/img/icon/service-logs/copied.png";
   }
   return "/img/icon/the-staking/copy6.png";
 });

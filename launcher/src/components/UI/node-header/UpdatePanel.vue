@@ -72,7 +72,7 @@
                       }"
                       @click="$emit('runOsUpdate')"
                     >
-                      <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+                      <img class="w-4" src="/img/icon/header-icons/update-modal-download.png" alt="icon" />
                     </div> -->
                   </div>
                   <!-- <div
@@ -151,7 +151,7 @@
                       }"
                       @click="$emit('runUpdate', nodeHeaderStore.stereumUpdate)"
                     >
-                      <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+                      <img class="w-4" src="/img/icon/header-icons/update-modal-download.png" alt="icon" />
                     </div>
                   </div>
 
@@ -219,14 +219,14 @@
                       v-if="item.running || nodeHeaderStore.updating"
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
                     >
-                      <img class="w-5" src="/img/icon/node-icons/download_disabled.png" alt="icon" />
+                      <img class="w-5" src="/img/icon/header-icons/update-modal-download-disabled.png" alt="icon" />
                     </div>
                     <div
                       v-else
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="$emit('runUpdate', item)"
                     >
-                      <img class="w-5" src="/img/icon/node-icons/download2.png" alt="icon" />
+                      <img class="w-5" src="/img/icon/header-icons/update-modal-download.png" alt="icon" />
                     </div>
                     <div class="serviceName">
                       <span>{{ item.name }}</span>
@@ -250,7 +250,7 @@
                 @click.prevent.stop="updateConfirm"
               >
                 <span>{{ $t("updatePanel.all") }}</span>
-                <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+                <img class="w-4" src="/img/icon/header-icons/update-modal-download.png" alt="icon" />
               </div>
             </div>
             <div class="w-1/2 h-full flex justify-center items-center p-1">

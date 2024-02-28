@@ -63,7 +63,7 @@
             @click.prevent="updateAll"
           >
             <span class="text-gray-100 text-sm font-semibold uppercase">{{ $t("updatePanel.all") }}</span>
-            <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+            <img class="w-4" src="/img/icon/header-icons/update-modal-download.png" alt="icon" />
           </div>
         </div>
         <div class="w-full h-full col-start-7 col-span-full flex justify-center items-center p-1">

@@ -31,7 +31,7 @@
         @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} ${keyMsg}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
+        <img class="w-5" src="/img/icon/node-icons/validator-key-icon.png" alt="icon" />
         <span
           class="text-md font-semibold"
           :class="props.client.state === 'running' ? 'text-green-500' : 'text-red-600 '"

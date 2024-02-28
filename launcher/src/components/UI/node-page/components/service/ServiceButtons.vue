@@ -63,7 +63,7 @@
       @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/log-command.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-open-logs.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       class="w-full h-full p-1 col-span-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
@@ -71,7 +71,7 @@
       @mouseenter="footerStore.cursorLocation = `${docs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/plugin-docs.png" alt="icon" class="w-5 active:scale-95" />
+      <img src="/img/icon/node-icons/service-command-open-docs.png" alt="icon" class="w-5 active:scale-95" />
     </button>
   </div>
 </template>
