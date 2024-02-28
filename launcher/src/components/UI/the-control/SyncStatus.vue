@@ -124,22 +124,22 @@ export default {
         {
           id: 1,
           name: "error",
-          icon: "/img/icon/arrows/SynchronisationIconError.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-error.gif",
         },
         {
           id: 2,
           name: "active",
-          icon: "/img/animation/synchronisation/synchronisation-icon-active.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-active.gif",
         },
         {
           id: 3,
           name: "synched",
-          icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-sucess.gif",
         },
         {
           id: 4,
           name: "unknown",
-          icon: "/img/icon/control/spinner.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-unknown.gif",
         },
       ],
     };
