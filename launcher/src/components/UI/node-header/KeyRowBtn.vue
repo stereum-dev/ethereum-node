@@ -2,7 +2,7 @@
   <div class="btn-box-parent">
     <div v-if="!deleteKey" class="wrapper">
       <div class="btn-del" @click="deleteKeySwitch">
-        <img src="/img/icon/access-management/OPEN_TRASH_ICON.png" alt="" />
+        <img src="/img/icon/access-management/open_trashcan_icon.png" alt="" />
       </div>
     </div>
     <div v-else class="wrapper">
