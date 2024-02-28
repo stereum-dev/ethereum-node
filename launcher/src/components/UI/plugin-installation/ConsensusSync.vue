@@ -159,7 +159,7 @@ export default {
     },
     async linkPicker(item) {
       this.selectedItem = "Validating...";
-      this.selectedIcon = "/img/icon/control/spinner.gif";
+      this.selectedIcon = "/animation/loading/spinner.gif";
       this.checkPointSync = "";
       this.dropdown = false;
       const isCheckpointValid = await ControlService.isCheckpointValid(item.url);

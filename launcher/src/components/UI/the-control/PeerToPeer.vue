@@ -80,7 +80,7 @@ export default {
         {
           id: 2,
           name: "unknown",
-          icon: "/img/icon/control/spinner.gif",
+          icon: "/animation/loading/spinner.gif",
         },
       ],
     };
