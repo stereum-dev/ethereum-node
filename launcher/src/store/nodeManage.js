@@ -24,7 +24,7 @@ export const useNodeManage = defineStore("nodeManage", {
       usedBlocks: [],
       relaysList: [
         {
-          icon: "/img/icon/click-installation/flashbot-icon.png",
+          icon: "/img/icon/mev-relays/flashbots.png",
           name: "FLASHBOTS",
           mainnet:
             "https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net",
@@ -111,7 +111,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
         {
-          icon: "/img/icon/click-installation/eden.png",
+          icon: "/img/icon/mev-relays/eden.png",
           name: "Eden",
           mainnet:
             "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io/",
