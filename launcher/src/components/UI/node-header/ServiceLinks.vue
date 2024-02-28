@@ -20,7 +20,7 @@
     </div>
     <div class="arrow-box">
       <div class="right-arrow left-paddle paddle" @click="scrollRight">
-        <img alt="update-icon" src="/img/icon/header-icons/right.png" />
+        <img alt="update-icon" src="/img/icon/header-icons/right-arrow-3.png" />
       </div>
       <div class="left-arrow" @click="scrollLeft">
         <img alt="update-icon" src="/img/icon/header-icons/left-arrow-3" />

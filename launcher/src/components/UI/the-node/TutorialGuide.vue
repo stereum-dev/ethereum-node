@@ -36,7 +36,7 @@
           <div class="step-two">
             <span>{{ mainMessage }}</span>
           </div>
-          <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
+          <img src="/img/icon/arrows/curved-arrow-rotated.png" class="comp-arrow" />
         </div>
         <div class="fix-place"><RpcEndpoint /></div>
       </div>

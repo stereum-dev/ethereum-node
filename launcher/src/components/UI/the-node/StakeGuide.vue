@@ -13,7 +13,7 @@
     </div>
     <div v-if="stakeSecondStep" class="wrapper">
       <h1>{{ $t("stakeGuide.syncCheck") }}</h1>
-      <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
+      <img src="/img/icon/arrows/curved-arrow-rotated.png" class="comp-arrow" />
       <div class="left-slide"></div>
       <div class="top-slide"></div>
       <div class="bottom-slide"></div>
