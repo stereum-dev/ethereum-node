@@ -11,7 +11,7 @@
         </div>
         <div class="network-icon">
           <img
-            src="/img/icon/click-installation/testnet-circle.png"
+            src="/img/icon/network-icons/ethereum-testnet-circle.png"
             alt="icon"
           />
         </div> -->
@@ -20,7 +20,7 @@
           <div class="flip-box-inner">
             <img class="flip-box-front" src="/img/icon/service-icons/ssv-network.png" alt="icon" />
 
-            <img class="flip-box-back" src="/img/icon/click-installation/testnet-icon.png" alt="icon" />
+            <img class="flip-box-back" src="/img/icon/network-icons/ethereum-testnet-icon.png" alt="icon" />
           </div>
         </div>
 
