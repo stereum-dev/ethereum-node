@@ -23,7 +23,7 @@
         <img alt="update-icon" src="/img/icon/header-icons/right.png" />
       </div>
       <div class="left-arrow" @click="scrollLeft">
-        <img alt="update-icon" src="/img/icon/header-icons/left.png" />
+        <img alt="update-icon" src="/img/icon/header-icons/left-arrow-3" />
       </div>
     </div>
   </div>
