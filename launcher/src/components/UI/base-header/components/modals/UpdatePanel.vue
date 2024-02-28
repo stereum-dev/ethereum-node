@@ -61,7 +61,7 @@
               </div>
               <div class="w-full col-start-1 col-end-4 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
                 <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
-                  <img class="w-4/5" src="/img/icon/edit-node-icons/launcher.png" />
+                  <img class="w-4/5" src="/img/icon/edit-node-icons/update-modal-stereum-icon.png" />
                 </div>
                 <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
                   <span
@@ -82,7 +82,7 @@
               </div>
               <div class="w-full col-start-1 col-end-4 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
                 <div class="col-start-1 col-end-3 row-start-1 row-end-4 flex justify-center items-center p-1">
-                  <img class="w-4/5" src="/img/icon/edit-node-icons/launcher.png" />
+                  <img class="w-4/5" src="/img/icon/edit-node-icons/update-modal-stereum-icon.png" />
                 </div>
                 <div class="col-start-3 col-end-13 row-start-1 row-end-4 grid grid-cols-12 grid-rows-3 p-1">
                   <span

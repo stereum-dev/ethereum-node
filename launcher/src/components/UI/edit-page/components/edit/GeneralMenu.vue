@@ -13,7 +13,7 @@
           item.service !== 'ExternalConsensusService'
         "
         class="w-7 bg-gray-900 hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200 border border-gray-700 rounded-md"
-        src="/img/icon/edit-node-icons/connection.png"
+        src="/img/icon/edit-node-icons/service-connecting.png"
         alt="Trash Icon"
         @click="modifyService"
         @mouseenter="footerStore.cursorLocation = `${modify} ${item.name} ${connection}`"
@@ -43,7 +43,7 @@
       />
       <img
         class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
-        src="/img/icon/edit-node-icons/info.png"
+        src="/img/icon/edit-node-icons/service-info.png"
         alt="Trash Icon"
         @click="infoModal"
         @mouseenter="footerStore.cursorLocation = `${info} ${item.name} ${service}`"

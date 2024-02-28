@@ -30,7 +30,7 @@ import { computed, ref } from 'vue';
       "
       class="flex justify-evenly items-center absolute end-1 top-0"
     >
-      <img class="w-3" src="/img/icon/edit-node-icons/connected.png" alt="icon" />
+      <img class="w-3" src="/img/icon/edit-node-icons/service-connected.png" alt="icon" />
     </div>
     <div
       v-else-if="
@@ -40,7 +40,7 @@ import { computed, ref } from 'vue';
       "
       class="flex justify-evenly items-center absolute end-1 top-0"
     >
-      <img class="w-3" src="/img/icon/edit-node-icons/not-connected.png" alt="icon" />
+      <img class="w-3" src="/img/icon/edit-node-icons/not-service-connected.png" alt="icon" />
     </div>
   </div>
 </template>

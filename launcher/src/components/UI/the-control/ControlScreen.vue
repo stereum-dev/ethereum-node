@@ -93,7 +93,7 @@
               </div>
             </div>
             <div class="arrow-down" @click="scrollDown">
-              <img src="/img/icon/edit-node-icons/white-arrow-down.png" alt="icon" />
+              <img src="/img/icon/arrows/arrow-down-2.png" alt="icon" />
             </div>
           </div>
         </control-plugins>

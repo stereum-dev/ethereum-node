@@ -70,7 +70,7 @@
     </div>
     <img
       class="service-arrow"
-      src="/img/icon/edit-node-icons/white-arrow-down.png"
+      src="/img/icon/arrows/arrow-down-2.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />

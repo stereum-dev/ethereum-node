@@ -281,7 +281,7 @@ const confirmModifyingService = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "MODIFY",
-    contentIcon: "/img/icon/edit-node-icons/connected.png",
+    contentIcon: "/img/icon/edit-node-icons/service-connected.png",
     service: item.client,
     data: {
       executionClients: item.executionClients,
@@ -307,7 +307,7 @@ const confirmConsensusConnection = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "CLIENT CONNECT",
-    contentIcon: "/img/icon/edit-node-icons/connection.png",
+    contentIcon: "/img/icon/edit-node-icons/service-connecting.png",
     service: item,
   });
 };
@@ -446,7 +446,7 @@ const addServiceHandler = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
-    contentIcon: "/img/icon/edit-node-icons/install.png",
+    contentIcon: "/img/icon/edit-node-icons/add-service-icon.png",
     service: item.client,
     data: dataObject,
   });
@@ -525,7 +525,7 @@ const selectedServiceToRemove = (item) => {
   const confirmDelete = {
     id: item.config.serviceID,
     content: "DELETE",
-    contentIcon: "/img/icon/edit-node-icons/delete.png",
+    contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
   };
   const itemExists = manageStore.confirmChanges.some((e) => e.id === item.config.serviceID && e.content === "DELETE");

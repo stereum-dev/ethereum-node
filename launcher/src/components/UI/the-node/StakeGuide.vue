@@ -54,7 +54,7 @@
       </div>
       <div v-if="insertVal" class="wrapper">
         <div v-if="!isDragOver && dragStep === false" class="message-stake-wrapper">
-          <img src="/img/icon/arrows/drag.png" class="drag-icon" alt="" />
+          <img src="/img/icon/guide-icons/drag-icon.png" class="drag-icon" alt="" />
           <div class="drag-message">
             <span>{{ $t("stakeGuide.drag") }}</span>
           </div>

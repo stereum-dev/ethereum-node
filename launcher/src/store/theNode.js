@@ -23,7 +23,7 @@ export const useNodeStore = defineStore("theNode", {
       sidebarPlugins: [
         {
           id: 1,
-          source: require("../../public/img/icon/edit-node-icons/filter-confirm.png"),
+          source: require("../../public/img/icon/edit-node-icons/filter-confirmed.png"),
           drag: true,
           category: "execution",
           active: false,

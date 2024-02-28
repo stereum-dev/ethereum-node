@@ -129,7 +129,7 @@ export const useNodeManage = defineStore("nodeManage", {
         {
           id: 1,
           content: "INSTALL",
-          contentIcon: require("../../public/img/icon/edit-node-icons/ADD_PLUGIN.png"),
+          contentIcon: require("../../public/img/icon/edit-node-icons/add-service.png"),
         },
         {
           id: 2,
@@ -139,7 +139,7 @@ export const useNodeManage = defineStore("nodeManage", {
         {
           id: 3,
           content: "MODIFY",
-          contentIcon: require("../../public/img/icon/edit-node-icons/manage-item-icon.png"),
+          contentIcon: require("../../public/img/icon/edit-node-icons/modify-service.png"),
         },
         {
           id: 5,
