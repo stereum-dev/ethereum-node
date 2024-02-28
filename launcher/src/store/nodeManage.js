@@ -75,7 +75,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
         {
-          icon: "/img/icon/click-installation/UltraSoundRelay.png",
+          icon: "/img/icon/mev-relays/ultra-sound-relay.png",
           name: "Ultra sound money",
           mainnet:
             "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay.ultrasound.money",
