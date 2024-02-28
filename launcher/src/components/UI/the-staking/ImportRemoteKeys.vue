@@ -43,7 +43,7 @@
           <span>{{ keyFiles.length }} Keys</span>
           <input v-model="keyInput" />
           <div class="key-add-icon" @click="addKeyHandler">
-            <img src="/img/icon/form-setup/plus.png" alt="icon" />
+            <img src="/img/icon/server-management/plus.png" alt="icon" />
           </div>
         </div>
       </div>
