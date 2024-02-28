@@ -357,6 +357,7 @@
     "rateLimit":"Do you want to enable rate-limiting?",
     "configureConfirmButton":"CONFIGURE",
     "configureTitel":"CONFIGURE 2FA OPTION",
+    "configureText":"Configure your 2FA connection options",
     "configureButton":"OPEN",
     "removeTitel":"REMOVE 2FA",
     "removeText":"Use this option to remove Google Authenticator 2FA from your server",
