@@ -1908,7 +1908,6 @@ video {
   min-height: 450px;
 }
 
-
 .w-setting {
   width: 36%;
 }
@@ -2578,12 +2577,10 @@ video {
   justify-content: space-evenly;
 }
 
-
 .justify-around {
   -ms-flex-pack: distribute;
   justify-content: space-around;
 }
-
 
 .gap-1 {
   gap: 0.25rem;
@@ -3029,6 +3026,11 @@ video {
 .border-\[\#3e4347\] {
   --tw-border-opacity: 1;
   border-color: rgb(62 67 71 / var(--tw-border-opacity));
+}
+
+.border-\[\#33393E\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(51 57 62 / var(--tw-border-opacity));
 }
 
 .border-\[\#4b8585\] {

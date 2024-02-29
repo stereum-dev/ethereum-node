@@ -16,7 +16,7 @@
       <div class="bg-black w-5/6 h-full">
         <MainBox>
           <ItemRow v-for="(item, index) in itemConfigurations" :key="index" :title="item.title">
-            <component :is="item.component" v-if="item.component" />
+            <component :is="item.component" v-if="item.component" @languageChanged="test" />
           </ItemRow>
         </MainBox>
       </div>
@@ -43,6 +43,10 @@ const sidebarButtons = ref([
 
 const toggleSettings = (name) => {
   mainBox.value = name;
+};
+
+const test = () => {
+  console.log("Language Changed");
 };
 
 const itemConfigurations = computed(() => {
