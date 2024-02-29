@@ -64,7 +64,7 @@
                   <span class="text-sm text-gray-300 text-center">{{ selectedItem }}</span>
                 </div>
                 <div class="col-start-6 col-span-1 self-center" @click="openWindow">
-                  <img class="w-6" src="/img/icon/service-icons/internet.png" alt="Internet" />
+                  <img class="w-6" src="/img/icon/service-modals-icons/internet.png" alt="Internet" />
                 </div>
               </div>
             </div>

@@ -53,7 +53,7 @@
                   {{ selectedItem }}
                 </div>
                 <div class="openURL" @click="openWindow">
-                  <img src="/img/icon/service-icons/internet.png" alt="Internet" />
+                  <img src="/img/icon/service-modals-icons/internet.png" alt="Internet" />
                 </div>
               </div>
             </div>

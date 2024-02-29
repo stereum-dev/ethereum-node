@@ -22,7 +22,7 @@
       </Transition>
 
       <button v-if="isloading" class="row-start-2 row-end-3 p-1 rounded-md relative flex justify-center items-center">
-        <img v-if="loading" src="/img/icon/task-manager-icons/turning_circle_blue.gif" alt="loading" />
+        <img v-if="loading" src="/animation/loading/turning-circle-blue.gif" alt="loading" />
       </button>
       <button
         v-else-if="checkStatus"

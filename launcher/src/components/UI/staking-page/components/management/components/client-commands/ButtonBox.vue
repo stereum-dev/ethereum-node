@@ -58,13 +58,13 @@ const buttonState = ref([
   },
   {
     text: "WITHDRAW & EXIT ALL KEYS",
-    icon: "/img/icon/staking-page-icons/withdraw.png",
+    icon: "/img/icon/staking-page-icons/option-withdraw.png",
     events: withdrawMultiple,
     tooltip: t("displayValidator.withdrawMultiple"),
   },
   {
     text: "Import Remote Keys",
-    icon: "/img/icon/staking-page-icons/remotekey.svg",
+    icon: "/img/icon/staking-page-icons/remote-key-icon.svg",
     events: importRemote,
     tooltip: t("displayValidator.importRemote"),
   },

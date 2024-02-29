@@ -134,7 +134,7 @@ export default {
       qrPage: true,
       beaconchaDashboard: false,
       banner: "/img/icon/base-header-icons/notification-modal-selection-stereum-node-monitor.png",
-      qrCode: "/img/icon/task-manager-icons/turning_circle_blue.gif",
+      qrCode: "/animation/loading/turning-circle-blue.gif",
       ErrorQRCode: "/img/icon/base-header-icons/notification-modal-dummy-qr-code.png",
       selectedVal: "",
       machineName: "",

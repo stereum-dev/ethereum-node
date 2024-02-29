@@ -84,7 +84,7 @@
                     <div @click="handleOpenWindow">
                       <img
                         class="w-6 cursor-pointer hover:scale-95"
-                        src="/img/icon/service-icons/internet.png"
+                        src="/img/icon/service-modals-icons/internet.png"
                         alt="Internet"
                       />
                     </div>

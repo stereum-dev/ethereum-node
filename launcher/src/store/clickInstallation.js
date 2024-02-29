@@ -106,12 +106,12 @@ export const useClickInstall = defineStore("clickInstallation", {
       services: [
         {
           serviceName: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
+          icon: "/img/icon/service-icons/Other/Grafana-s.png",
           linkUrl: "https://stereum.net",
         },
         {
           serviceName: "prometheus",
-          icon: "/img/icon/service-icons/prometheus.png",
+          icon: "/img/icon/service-icons/Other/Prometheus-s.png",
           linkUrl: "https://stereum.net",
         },
         {
@@ -146,7 +146,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 3,
           name: "EthStaker",
-          icon: "/img/icon/service-icons/ethstaker.png",
+          icon: "/img/icon/checkpoint-sync-icons/ethstaker-checkpoint-icon.png",
           url: "https://beaconstate.ethstaker.cc/",
         },
         {
@@ -158,25 +158,25 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 5,
           name: "Sigma Prime",
-          icon: "/img/icon/service-icons/sigmaprime.png",
+          icon: "/img/icon/checkpoint-sync-icons/sigmaprime-checkpoint-icon.png",
           url: "https://mainnet.checkpoint.sigp.io/",
         },
         {
           id: 6,
           name: "PietjePuk",
-          icon: "/img/icon/service-icons/pietjepuk.png",
+          icon: "/img/icon/checkpoint-sync-icons/pietjepuk-checkpoint-icon.png",
           url: "https://checkpointz.pietjepuk.net/",
         },
         {
           id: 7,
           name: "invis.tools",
-          icon: "/img/icon/service-icons/invis-tools.png",
+          icon: "/img/icon/checkpoint-sync-icons/invis-tools-checkpoint-icon.png",
           url: "https://sync.invis.tools/",
         },
         {
           id: 8,
           name: "stakely.io",
-          icon: "/img/icon/service-icons/stakely-io.png",
+          icon: "/img/icon/checkpoint-sync-icons/stakely-io-checkpoint-icon.png",
           url: "https://mainnet-checkpoint-sync.stakely.io/",
         },
         {
@@ -190,13 +190,13 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 1,
           name: "Sigma Prime",
-          icon: "/img/icon/service-icons/sigmaprime.png",
+          icon: "/img/icon/checkpoint-sync-icons/sigmaprime-checkpoint-icon.png",
           url: "https://prater.checkpoint.sigp.io/",
         },
         {
           id: 2,
           name: "invis.tools",
-          icon: "/img/icon/service-icons/invis-tools.png",
+          icon: "/img/icon/checkpoint-sync-icons/invis-tools-checkpoint-icon.png",
           url: "https://goerli-sync.invis.tools/",
         },
         {
@@ -214,13 +214,13 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 5,
           name: "stakely.io",
-          icon: "/img/icon/service-icons/stakely-io.png",
+          icon: "/img/icon/checkpoint-sync-icons/stakely-io-checkpoint-icon.png",
           url: "https://prater-checkpoint-sync.stakely.io/",
         },
         {
           id: 6,
           name: "EthStaker",
-          icon: "/img/icon/service-icons/ethstaker.png",
+          icon: "/img/icon/checkpoint-sync-icons/ethstaker-checkpoint-icon.png",
           url: "https://goerli.beaconstate.ethstaker.cc/",
         },
         {
@@ -280,13 +280,13 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 3,
           name: "EthStaker",
-          icon: "/img/icon/service-icons/ethstaker.png",
+          icon: "/img/icon/checkpoint-sync-icons/ethstaker-checkpoint-icon.png",
           url: "https://holesky.beaconstate.ethstaker.cc",
         },
         {
           id: 4,
           name: "EF DevOps",
-          icon: "/img/icon/service-icons/ef-devops.png",
+          icon: "/img/icon/checkpoint-sync-icons/ef-devops-checkpoint-icon.png",
           url: "https://checkpoint-sync.holesky.ethpandaops.io",
         },
       ],

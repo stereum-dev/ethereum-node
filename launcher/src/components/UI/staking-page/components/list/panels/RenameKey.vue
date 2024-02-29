@@ -16,7 +16,7 @@
     <div class="w-full h-full grid grid-cols-12 grid-rows-1 py-[2px]">
       <img
         class="w-6 h-6 self-center col-start-1 col-span-1 justify-self-center"
-        src="/img/icon/staking-page-icons/key-sign.png"
+        src="/img/icon/staking-page-icons/key-icon.png"
         alt="Group Icon"
         @mousedown.prevent
       />

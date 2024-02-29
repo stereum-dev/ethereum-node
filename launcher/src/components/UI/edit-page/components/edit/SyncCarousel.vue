@@ -68,7 +68,7 @@
                   {{ selectedItem }}
                 </div>
                 <div class="w-1/6" @click="openWindow">
-                  <img class="w-6" src="/img/icon/service-icons/internet.png" alt="Internet" />
+                  <img class="w-6" src="/img/icon/service-modals-icons/internet.png" alt="Internet" />
                 </div>
               </div>
             </div>
