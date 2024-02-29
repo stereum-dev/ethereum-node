@@ -62,8 +62,8 @@ import ReconnectModal from "../UI/base-header/components/modals/ReconnectModal.v
 import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
 import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
 import NotifModal from "../UI/base-header/components/modals/NotifModal.vue";
-import TutorialGuide from "../UI/the-node/TutorialGuide.vue";
-import StakeGuide from "../UI/the-node/StakeGuide.vue";
+import TutorialGuide from "../UI/guide-page/TutorialGuide.vue";
+import StakeGuide from "../UI/guide-page/StakeGuide.vue";
 import SwitchAnimation from "../UI/server-management/components/SwitchAnimation.vue";
 import { useUpdateCheck } from "@/composables/version";
 import { useNodeHeader } from "@/store/nodeHeader";

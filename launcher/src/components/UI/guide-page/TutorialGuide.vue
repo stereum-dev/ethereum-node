@@ -140,6 +140,7 @@ export default {
       rpcTwo: "rpcTwo",
       activeRPC: "activeRPC",
       nextStepFlag: "nextStepFlag",
+      isTutorialActive: "isTutorialActive",
     }),
   },
   watch: {
@@ -240,6 +241,7 @@ export default {
       this.rpcOne = true;
       this.rpcTwo = false;
       this.nextStepFlag = 0;
+      this.isTutorialActive = false;
     },
   },
 };

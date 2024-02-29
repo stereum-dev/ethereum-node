@@ -95,10 +95,8 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
-import DisplayValidators from "../the-staking/DisplayValidators.vue";
 
 export default {
-  components: { DisplayValidators },
   data() {
     return {
       slideID: "",

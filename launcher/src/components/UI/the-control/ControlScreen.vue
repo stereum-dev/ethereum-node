@@ -114,8 +114,8 @@ import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
 
-import PrunningModal from "../the-node/PrunningModal.vue";
-import ResyncModal from "../the-node/ResyncModal.vue";
+// import PrunningModal from "../the-node/PrunningModal.vue";
+// import ResyncModal from "../the-node/ResyncModal.vue";
 import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -125,8 +125,7 @@ export default {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-    PrunningModal,
-    ResyncModal,
+
     ExpertWindow,
   },
   data() {
