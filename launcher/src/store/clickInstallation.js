@@ -42,17 +42,17 @@ export const useClickInstall = defineStore("clickInstallation", {
       installation: [
         {
           img: "/img/icon/one-click-installer.png",
-          img2: "/img/icon/welcome-page/oneclick-install.png",
+          img2: "/img/icon/welcome-page-icons/oneclick-install.png",
           path: "/selectPlugin",
         },
         {
           img: "/img/icon/custom_installer.png",
-          img2: "img/icon/welcome-page/custom-install.png",
+          img2: "img/icon/welcome-page-icons/custom-install.png",
           path: "/manage",
         },
         {
           img: "/img/icon/IMPORT_CONFIGURATIONS.png",
-          img2: "/img/icon/welcome-page/config-import.png",
+          img2: "/img/icon/welcome-page-icons/config-import.png",
           path: "/",
         },
       ],

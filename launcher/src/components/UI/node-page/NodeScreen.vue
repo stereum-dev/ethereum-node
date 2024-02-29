@@ -24,7 +24,7 @@
             "
             @mouseleave="footerStore.cursorLocation = ''"
           >
-            <img class="w-8" src="/img/icon/node-icons/access-tutorial-icon.png" alt="information" />
+            <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
           </button>
         </div>
         <AlertSection :info-aralm="nodeStore.infoAlarm" />

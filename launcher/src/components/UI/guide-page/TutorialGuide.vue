@@ -87,47 +87,47 @@ export default {
       sliderTutorial: [
         {
           id: 1,
-          img: "/img/icon/tutorial-icons/two.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-two.png",
           text: this.$t("rpcGuide.firstSlide"),
         },
         {
           id: 2,
-          img: "/img/icon/tutorial-icons/three.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-three.png",
           text: this.$t("rpcGuide.secondSlide"),
         },
         {
           id: 3,
-          img: "/img/icon/tutorial-icons/four.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-four.png",
           text: this.$t("rpcGuide.thirdSlide"),
         },
         {
           id: 4,
-          img: "/img/icon/tutorial-icons/five.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-five.png",
           text: this.$t("rpcGuide.fourthSlide"),
         },
         {
           id: 5,
-          img: "/img/icon/tutorial-icons/six.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-six.png",
           text: this.$t("rpcGuide.fivethSlide"),
         },
         {
           id: 6,
-          img: "/img/icon/tutorial-icons/seven.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-seven.png",
           text: this.$t("rpcGuide.sixthSlide"),
         },
         {
           id: 7,
-          img: "/img/icon/tutorial-icons/eight.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-eight.png",
           text: this.$t("rpcGuide.seventhSlide"),
         },
         {
           id: 8,
-          img: "/img/icon/tutorial-icons/nine.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-nine.png",
           text: this.$t("rpcGuide.eightthSlide"),
         },
         {
           id: 9,
-          img: "/img/icon/tutorial-icons/ten.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-ten.png",
           text: this.$t("rpcGuide.ninethSlide"),
         },
       ],

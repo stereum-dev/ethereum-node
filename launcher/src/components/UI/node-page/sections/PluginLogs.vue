@@ -15,7 +15,7 @@
             <span>{{ $t("pluginLogs.pageTitle") }}</span>
           </div>
           <div class="title-icon">
-            <img src="/img/icon/service-logs/log-icon.png" alt="icon" />
+            <img src="/img/icon/service-log-icons/log-icon.png" alt="icon" />
           </div>
         </div>
         <div class="serviceDetails">
@@ -69,10 +69,10 @@
         </div>
         <div class="searchBox">
           <input id="search" v-model="searchValue" type="search" placeholder="Search" />
-          <img v-if="!searchValue" src="/img/icon/service-logs/search.png" alt="icon" />
+          <img v-if="!searchValue" src="/img/icon/service-log-icons/search.png" alt="icon" />
         </div>
         <div class="export-log" data-tooltip="Export the log" @click="logExport">
-          <img src="/img/icon/service-logs/150-log-export-button.png" alt="" />
+          <img src="/img/icon/service-log-icons/150-log-export-button.png" alt="" />
         </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>

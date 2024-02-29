@@ -15,8 +15,8 @@
       v-if="!active"
       class="bg-[#1E2429] rounded-full flex justify-center items-center p-2 text-gray-300 font-normal text-md"
     >
-      <img v-if="isSupported" src="/img/icon/welcome-page/like.png" alt="icon" class="w-5 h-5 mr-2" />
-      <img v-else src="/img/icon/welcome-page/dislike.png" alt="icon" class="w-5 h-5 mr-2" />
+      <img v-if="isSupported" src="/img/icon/welcome-page-icons/like.png" alt="icon" class="w-5 h-5 mr-2" />
+      <img v-else src="/img/icon/welcome-page-icons/dislike.png" alt="icon" class="w-5 h-5 mr-2" />
       <span :class="{ 'text-gray-300': isSupported, 'text-red-500': !isSupported }" class="font-semibold text-md">
         {{ message }}
       </span>

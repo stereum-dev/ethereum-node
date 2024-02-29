@@ -18,7 +18,7 @@
 
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
-        src="/img/icon/service-logs/all-log-export-button.png"
+        src="/img/icon/service-log-icons/all-log-export-button.png"
         alt=""
         @mousedown.prevent
         @click="exportAllLogs"
@@ -35,7 +35,7 @@
       </div>
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
-        src="/img/icon/service-logs/150-log-export-button.png"
+        src="/img/icon/service-log-icons/150-log-export-button.png"
         alt=""
         @mousedown.prevent
         @click="exportLogs"

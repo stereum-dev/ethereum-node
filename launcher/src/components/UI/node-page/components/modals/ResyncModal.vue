@@ -1,7 +1,7 @@
 <template>
   <custom-modal
     :client="props.item"
-    icon="/img/icon/plugin-menu-icons/resync.png"
+    icon="/img/icon/service-setting-icons/resync.png"
     bg-color="bg-[#151a1e]"
     :main-title="$t('resyncSeparateService.message')"
     :confirm-text="$t('resyncSeparateService.resync')"
