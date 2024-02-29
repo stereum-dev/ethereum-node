@@ -3,13 +3,13 @@
     <div class="alert-box">
       <div class="alert-box_header">
         <div class="icon_alarm" :class="{ active: perfect }">
-          <img src="/img/icon/alerts/alert-notification.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-notification.png" alt="green" />
         </div>
         <div class="icon_alarm" :class="{ active: warning || pointStatus.length !== 0 }">
-          <img src="/img/icon/alerts/alert-general-yellow.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
         </div>
         <div class="icon_alarm" :class="{ active: alarm }">
-          <img src="/img/icon/alerts/alert-general-red.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
         </div>
         <div
           class="icon_alarm"
@@ -17,7 +17,7 @@
             active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
           }"
         >
-          <img src="/img/icon/alerts/alert-settings.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-settings.png" alt="green" />
         </div>
       </div>
       <div class="alert-box_messages overflow-x-hidden overflow-y-auto">
@@ -28,7 +28,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img src="/img/icon/alerts/alert-storage-yellow.png" alt="warn_storage" />
+            <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message">
@@ -44,7 +44,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img src="/img/icon/alerts/alert-cpu-yellow.png" alt="warn_storage" />
+            <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message">
@@ -75,7 +75,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img src="/img/icon/alerts/alert-cpu-red.png" alt="warn_storage" />
+            <img src="/img/icon/node-alert-icons/alert-cpu-red.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message">
@@ -93,7 +93,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img src="/img/icon/alerts/alert-sync-error.gif" alt="warn_storage" />
+            <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message"><span>CLIENT / SERVICE</span></div>
@@ -110,7 +110,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img src="/img/icon/alerts/alert-task-error.png" alt="warn_storage" />
+            <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
           </div>
 
           <div class="message">
@@ -145,7 +145,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box" @click="showUpdate">
-            <img src="/img/icon/alerts/alert-notification-stereum-update.png" alt="warn_storage" />
+            <img src="/img/icon/node-alert-icons/alert-notification-stereum-update.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message" @click="showUpdate">

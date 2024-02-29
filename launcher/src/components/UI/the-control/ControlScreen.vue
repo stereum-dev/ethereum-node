@@ -9,7 +9,7 @@
           </div>
           <div class="plugins-table-bg">
             <div class="arrow-up" @click="scrollUp">
-              <img src="/img/icon/arrows/arrow-up-1.png" alt="" />
+              <img src="/img/icon/control-page-icons/arrow-up-1.png" alt="" />
             </div>
             <div ref="pluginsTable" class="plugins-table">
               <div v-for="(item, index) in installedServices" :key="index" class="plugins-row">
@@ -93,7 +93,7 @@
               </div>
             </div>
             <div class="arrow-down" @click="scrollDown">
-              <img src="/img/icon/arrows/arrow-down-1.png" alt="icon" />
+              <img src="/img/icon/control-page-icons/arrow-down-1.png" alt="icon" />
             </div>
           </div>
         </control-plugins>

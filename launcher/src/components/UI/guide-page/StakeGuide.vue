@@ -77,7 +77,7 @@
           </div>
         </div>
         <div v-if="modalGuide" class="modal-guide-wrapper">
-          <img src="/img/icon/arrows/left-arrow-3.png" alt="" class="point-to-modal" />
+          <img src="/img/icon/guide-page-icons/arrow.png" alt="" class="point-to-modal" />
         </div>
         <div v-if="modalGuide" class="staking-step-three">
           <span>{{ $t("stakeGuide.noSlash") }}</span>

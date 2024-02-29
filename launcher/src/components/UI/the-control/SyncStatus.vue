@@ -57,13 +57,13 @@
     </div>
     <div v-if="isMultiService" v-show="syncItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img src="/img/icon/arrows/arrow-up-small.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img src="/img/icon/arrows/arrow-up-small.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
     </div>
   </div>
