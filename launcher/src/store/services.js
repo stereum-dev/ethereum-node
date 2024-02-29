@@ -509,7 +509,7 @@ export const useServices = defineStore("services", {
           path: "/ssv_network",
           icon: require("../../public/img/icon/service-icons/Other/ssv-network.png"),
           sIcon: require("../../public/img/icon/service-icons/Other/ssv-network-s.png"),
-          hIcon: "/img/icon/service-icons/ssv.png",
+          hIcon: "/img/icon/service-icons/Other/ssv-network-s.png",
           linkUrl: "",
           docsUrl: "https://docs.ssv.network/",
           headerOption: true,

@@ -116,7 +116,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           serviceName: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
+          icon: "/img/icon/service-icons/Other/ssv-network-s.png",
           linkUrl: "https://stereum.net",
         },
       ],
@@ -134,13 +134,13 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 1,
           name: "Attestant",
-          icon: "/img/icon/service-icons/attestant.png",
+          icon: "/img/icon/checkpoint-sync-icons/attestant-checkpoint-icon.png",
           url: "https://mainnet-checkpoint-sync.attestant.io/",
         },
         {
           id: 2,
           name: "Lodestar",
-          icon: "/img/icon/service-icons/lodestar.png",
+          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
           url: "https://beaconstate-mainnet.chainsafe.io/",
         },
         {
@@ -152,7 +152,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 4,
           name: "beaconcha.in",
-          icon: "/img/icon/service-icons/beaconchain.png",
+          icon: "/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png",
           url: "https://sync-mainnet.beaconcha.in/",
         },
         {
@@ -202,13 +202,13 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 3,
           name: "Checkpoint",
-          icon: "/img/icon/service-icons/checkpoint.png",
+          icon: "/img/icon/checkpoint-sync-icons/checkpointz-checkpoint-icon.png",
           url: "https://checkpoint-sync.goerli.ethpandaops.io/",
         },
         {
           id: 4,
           name: "beaconcha.in",
-          icon: "/img/icon/service-icons/beaconchain.png",
+          icon: "/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png",
           url: "https://sync-goerli.beaconcha.in/",
         },
         {
@@ -226,7 +226,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 7,
           name: "Lodestar",
-          icon: "/img/icon/service-icons/lodestar.png",
+          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
           url: "https://beaconstate-goerli.chainsafe.io/",
         },
         {
@@ -240,13 +240,13 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 1,
           name: "Lodestar",
-          icon: "/img/icon/service-icons/lodestar.png",
+          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
           url: "https://beaconstate-sepolia.chainsafe.io/",
         },
         {
           id: 2,
           name: "Checkpoint",
-          icon: "/img/icon/service-icons/checkpoint.png",
+          icon: "/img/icon/checkpoint-sync-icons/checkpointz-checkpoint-icon.png",
           url: "https://checkpoint-sync.sepolia.ethpandaops.io/",
         },
         {
@@ -268,7 +268,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 1,
           name: "Lodestar",
-          icon: "/img/icon/service-icons/lodestar.png",
+          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
           url: "https://beaconstate-holesky.chainsafe.io",
         },
         {

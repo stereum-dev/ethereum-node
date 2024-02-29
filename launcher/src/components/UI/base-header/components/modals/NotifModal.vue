@@ -23,7 +23,7 @@
           </li>
           <li @click="(beaconchaDashboard = true), (qrPage = true)">
             <div class="notif-row_icon">
-              <img src="/img/icon/service-icons/beaconchain.png" alt="notif logo" />
+              <img src="/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png" alt="notif logo" />
             </div>
             <div class="notif-row_name">
               <span>Beaconchain {{ $t("notifModal.dash") }} (Mobile App)</span>
@@ -61,7 +61,7 @@
       <div v-if="beaconchaDashboard" class="qrPage_content">
         <div class="banner" @click="beaconchaDashboard = false">
           <div class="banner_icon">
-            <img src="/img/icon/service-icons/beaconchain.png" />
+            <img src="/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png" />
           </div>
           <div class="banner_title">
             <span>Beaconchain {{ $t("notifModal.dash") }}</span>
