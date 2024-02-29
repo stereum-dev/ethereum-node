@@ -14,7 +14,7 @@ export const useTaskManager = defineStore("taskManager", {
         failedIcon: require("../../public/img/icon/task-manager-icons/task-red-icon.png"),
       },
       installIconSrc: {
-        activeInstallIcon: require("../../public/animation/loading/turning_circle.gif"),
+        activeInstallIcon: require("../../public/animation/loading/turning-circle.gif"),
         successInstallIcon: require("../../public/img/icon/task-manager-icons/check-icon.png"),
         failedInstallIcon: require("../../public/img/icon/task-manager-icons/cancel-icon.png"),
       },
