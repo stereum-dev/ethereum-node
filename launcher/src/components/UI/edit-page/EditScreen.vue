@@ -78,6 +78,17 @@
         @confirm-modify="confirmModifyingService"
       />
       <!-- End Modify Services Modal -->
+      <!-- Start Config Modal for Custom Service -->
+
+      <ConfigModal
+        v-if="clientToInstall?.configPanel"
+        :client="clientToInstall"
+        @close-window="cancelInstallation"
+        @confirm-create="confirmCreateCustomService"
+      />
+
+      <!-- End Config Modal for Custom Service -->
+
       <!-- Start Add New Service Modal -->
       <AddModal
         v-if="clientToInstall?.addPanel"
@@ -109,6 +120,7 @@ import NetworkModal from "./components/modals/NetworkModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
+import ConfigModal from "./components/modals/ConfigModal.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
@@ -310,6 +322,7 @@ const changeMevboostConnection = () => {
     return;
   }
 };
+
 const confirmConnection = (item) => {
   isConfirmLoading.value = true;
   setTimeout(() => {
@@ -354,12 +367,26 @@ const removeChangeHandler = (item) => {
   }
   manageStore.isLineHidden = false;
 };
+
 // Add service with double click
 
 const addServices = (service) => {
   let item = useDeepClone(service);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
+  } else if (
+    item.category === "service" &&
+    service.service === "CustomService" &&
+    !manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
+    item.id = manageStore.newConfiguration.length;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+    };
+    manageStore.newConfiguration.push(newItem);
+    clientToInstall.value = newItem;
+    clientToInstall.value.configPanel = true;
   } else {
     item.id = manageStore.newConfiguration.length;
     const newItem = {
@@ -390,6 +417,19 @@ const onDrop = (event) => {
   let item = allServices.find((item) => item.id == itemId);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
+  } else if (
+    item.category === "service" &&
+    item.service === "CustomService" &&
+    !manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
+    item.id = manageStore.newConfiguration.length;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+    };
+    manageStore.newConfiguration.push(newItem);
+    clientToInstall.value = newItem;
+    clientToInstall.value.configPanel = true;
   } else {
     item.id = manageStore.newConfiguration.length;
     const newItem = {
@@ -400,6 +440,15 @@ const onDrop = (event) => {
     clientToInstall.value = newItem;
     clientToInstall.value.addPanel = true;
   }
+};
+
+// CUSTOM SERVICE  LOGICS
+
+const confirmCreateCustomService = (item, config) => {
+  // console.log("SERVICE", item);
+  console.log("CONFIG", config);
+  item.configPanel = false;
+  item.addPanel = true;
 };
 
 //Confirm Adding service
@@ -434,6 +483,10 @@ const addServiceHandler = (item) => {
 // Cancel Adding service
 
 const cancelInstallation = (item) => {
+  console.log("cancelInstallation -> item", item);
+  if (item.service === "CustomService") {
+    item.configPanel = false;
+  }
   clientToInstall.value = null;
   isAddModalOpen.value = false;
 

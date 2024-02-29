@@ -1358,6 +1358,10 @@ video {
   margin-bottom: -1.5rem;
 }
 
+.mb-1{
+  margin-bottom: 0.25rem;
+}
+
 .mb-2{
   margin-bottom: 0.5rem;
 }
@@ -1448,10 +1452,6 @@ video {
 
 .mt-8{
   margin-top: 2rem;
-}
-
-.mb-1{
-  margin-bottom: 0.25rem;
 }
 
 .box-border{
@@ -1701,10 +1701,6 @@ video {
   height: 100vh;
 }
 
-.h-\[24px\]{
-  height: 24px;
-}
-
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -1827,6 +1823,10 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-\[216px\]{
+  max-height: 216px;
 }
 
 .min-h-11{

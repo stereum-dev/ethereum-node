@@ -1250,6 +1250,7 @@ export const useServices = defineStore("services", {
           modifierPanel: false,
           replacePanel: false,
           addPanel: false,
+          configPanel: false,
           category: "service",
           path: "/customservice",
           icon: "/img/icon/plugin-icons/Other/custom-service.png",
