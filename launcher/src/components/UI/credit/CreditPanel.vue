@@ -34,6 +34,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
+// import TechnicalBox from "./TechnicalBox.vue";
 import TechnicalBox from "./TechnicalBox.vue";
 export default {
   components: { TechnicalBox },
