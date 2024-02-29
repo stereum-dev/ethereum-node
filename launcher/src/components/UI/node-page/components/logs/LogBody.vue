@@ -50,7 +50,7 @@ const copyIconHandler = computed(() => {
   if (isCopied.value === true) {
     return "/img/icon/service-logs/copied.png";
   }
-  return "/img/icon/the-staking/copy6.png";
+  return "/img/icon/staking-page-icons/copy6.png";
 });
 
 const logsList = computed(() => {

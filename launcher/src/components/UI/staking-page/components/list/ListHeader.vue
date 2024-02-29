@@ -7,7 +7,7 @@
       class="w-full h-full col-start-1 col-span-full flex justify-center items-center rounded-t-md bg-[#17A2B8] space-x-4"
     >
       <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("displayValidator.inserValidator") }}</span>
-      <img class="w-4 h-5" src="/img/icon/the-staking/black-key.png" alt="icon" />
+      <img class="w-4 h-5" src="/img/icon/staking-page-icons/black-key.png" alt="icon" />
     </div>
     <div
       v-else-if="stakingStore.isGroupListActive"
@@ -15,7 +15,7 @@
     >
       <img
         class="w-6 h-6 col-start-1 col-span-1 justify-self-center"
-        src="/img/icon/the-staking/group.png"
+        src="/img/icon/staking-page-icons/group.png"
         alt="Manage Icon"
         @mousedown.prevent
       />
@@ -32,7 +32,7 @@
       >
         <img
           class="w-3 h-3 hover:scale-110 active:scale-95 transition-all duration-150"
-          src="/img/icon/the-staking/backtolist.png"
+          src="/img/icon/staking-page-icons/backtolist.png"
           alt="Back Icon"
         />
       </button>
@@ -61,7 +61,7 @@
         @click="close"
         @mousedown.prevent
       >
-        <img class="w-5 h-5" src="/img/icon/the-staking/close.png" alt="Back Icon" />
+        <img class="w-5 h-5" src="/img/icon/staking-page-icons/close.png" alt="Back Icon" />
       </button>
     </div>
   </div>

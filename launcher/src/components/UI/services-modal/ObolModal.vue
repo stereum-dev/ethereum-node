@@ -7,7 +7,7 @@
     <div class="browser-modal">
       <div class="obol_charon-header">
         <div class="icon-box">
-          <img src="/img/icon/plugin-icons/validator/ObolCharon.png" alt="icon" />
+          <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="icon" />
         </div>
         <div class="title-box">
           <div class="service-name"><span>obol</span></div>

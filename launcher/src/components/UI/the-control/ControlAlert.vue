@@ -57,7 +57,7 @@
         </div>
         <div v-for="point in pointStatus" :key="point" class="alert-message_yellow">
           <div class="icon-box">
-            <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
+            <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message">
@@ -314,11 +314,11 @@ export default {
   methods: {
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
-        return "/img/icon/plugin-icons/Other/PrometheusNodeExporter-s.png";
+        return "/img/icon/service-icons/Other/PrometheusNodeExporter-s.png";
       } else if (arg.name === "Notification") {
-        return "/img/icon/plugin-icons/Other/NotifierService-s.png";
+        return "/img/icon/service-icons/Other/NotifierService-s.png";
       } else if (arg.name === "Charon") {
-        return "/img/icon/plugin-icons/validator/ObolCharon-s.png";
+        return "/img/icon/service-icons/validator/ObolCharon-s.png";
       } else {
         return arg.sIcon;
       }

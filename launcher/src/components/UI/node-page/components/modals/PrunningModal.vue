@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="$emit('cancelWarning')"></div>
     <div class="warning-modal-content">
       <div class="title-box">
-        <img src="/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img src="/img/icon/staking-page-icons/stereum-error.png" alt="icon" />
       </div>
       <div class="warningMessage">
         <p>

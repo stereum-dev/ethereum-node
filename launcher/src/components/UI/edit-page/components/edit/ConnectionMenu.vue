@@ -13,7 +13,7 @@
       </div>
       <img
         class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
-        src="/img/icon/the-staking/close.png"
+        src="/img/icon/staking-page-icons/close.png"
         alt="CIcon"
         @click="hideConnection(item)"
       />

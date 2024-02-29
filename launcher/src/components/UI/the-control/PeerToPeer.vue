@@ -75,7 +75,7 @@ export default {
         {
           id: 1,
           name: "default",
-          icon: "/img/icon/control/PeerToPeerIcon.svg",
+          icon: "/img/icon/control-page-icons/PeerToPeerIcon.svg",
         },
         {
           id: 2,

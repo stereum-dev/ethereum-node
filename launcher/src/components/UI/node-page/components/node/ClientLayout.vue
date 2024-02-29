@@ -44,7 +44,7 @@
       v-if="getConnectedMevboost?.config.serviceID === props.client.config.serviceID"
       class="flex justify-evenly items-center absolute -bottom-2 -right-24"
     >
-      <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
+      <img class="w-5" src="/img/icon/service-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
   </div>
 </template>

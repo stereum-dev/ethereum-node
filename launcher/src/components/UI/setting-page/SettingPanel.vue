@@ -128,7 +128,7 @@ export default {
       chngAppr: this.$t("settingPanel.chngAppr"),
       stereumConfig: [],
       stereumServiceRef: "manual",
-      SIco: "/img/icon/setting-page/setting_icon.png",
+      SIco: "/img/icon/setting-page-icons/setting_icon.png",
       onOff: true,
       btnStatus: "",
       pageName: "",
@@ -136,10 +136,10 @@ export default {
       stereumRef: "manual",
       pluginRef: "manual",
       settingData: {
-        icon: "/img/icon/setting-page/setting_icon.png",
+        icon: "/img/icon/setting-page-icons/setting_icon.png",
       },
       languageData: {
-        icon: "/img/icon/setting-page/language_page.png",
+        icon: "/img/icon/setting-page-icons/language_page.png",
       },
       langActive: false,
       langIco: "",

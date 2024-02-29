@@ -3,7 +3,7 @@
     <div class="storage-box">
       <div class="storage-icon">
         <div class="storage-icon_container">
-          <img src="/img/icon/control/ServiceIcon.png" />
+          <img src="/img/icon/control-page-icons/ServiceIcon.png" />
         </div>
         <span>{{ $t("controlPage.storage") }}</span>
       </div>

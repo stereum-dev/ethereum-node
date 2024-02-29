@@ -107,7 +107,7 @@ export default {
       //dialog datas
       openDialog: false,
       dialogValue: "",
-      copyIcon: "/img/icon/control/ok.png",
+      copyIcon: "/img/icon/control-page-icons/ok.png",
     };
   },
 

@@ -6,7 +6,7 @@
   >
     <div class="np2p-icon-box">
       <div class="np2p-icon-box_container">
-        <img src="/img/icon/control/PeertoPeerIcon.png" alt="" />
+        <img src="/img/icon/control-page-icons/PeertoPeerIcon.png" alt="" />
       </div>
       <span class="uppercase">{{ $t("controlPage.p2pNet") }}</span>
     </div>
