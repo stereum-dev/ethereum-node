@@ -1,7 +1,8 @@
 <template>
   <base-layout>
     <!-- <SettingPanel /> -->
-    <div class="setting-parent w-full h-full flex justify-center items-center">
+    <language-panel v-if="langActive" @back="langActiveBox" />
+    <div v-else class="setting-parent w-full h-full flex justify-center items-center">
       <div class="flex justify-start items-start w-56 h-full">
         <SideBar>
           <SidebarBtn
@@ -16,7 +17,7 @@
       <div class="bg-black w-5/6 h-full">
         <MainBox>
           <ItemRow v-for="(item, index) in itemConfigurations" :key="index" :title="item.title">
-            <component :is="item.component" v-if="item.component" @languageChanged="test" />
+            <component :is="item.component" v-if="item.component" @languageChanged="langActiveBox" />
           </ItemRow>
         </MainBox>
       </div>
@@ -33,8 +34,10 @@ import VolumeSlider from "./components/VolumeSlider";
 import OutputOptions from "./components/OutputOptions.vue";
 import LanguageBtn from "./components/LanguageBtn.vue";
 import { ref, computed } from "vue";
+import LanguagePanel from "./LanguagePanel.vue";
 
 const mainBox = ref("general");
+const langActive = ref(false);
 
 const sidebarButtons = ref([
   { name: "general", label: "General" },
@@ -45,8 +48,8 @@ const toggleSettings = (name) => {
   mainBox.value = name;
 };
 
-const test = () => {
-  console.log("Language Changed");
+const langActiveBox = () => {
+  langActive.value = !langActive.value;
 };
 
 const itemConfigurations = computed(() => {

@@ -15,7 +15,7 @@ export const useLangStore = defineStore("languages", {
           name: "deutsch",
           flag: "img/flag/germany.png",
           label: "de",
-          isSelected: false,
+          isSelected: true,
         },
         {
           name: "français",

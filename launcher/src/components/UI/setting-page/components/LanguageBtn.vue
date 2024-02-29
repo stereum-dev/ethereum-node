@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUpdated, defineEmits } from "vue";
+import { ref, onMounted, onUpdated } from "vue";
 import i18n from "@/includes/i18n";
 import ControlService from "@/store/ControlService";
 
@@ -30,7 +30,7 @@ const checkSettings = async () => {
   const savedConfig = await ControlService.readConfig();
   if (savedConfig !== undefined && savedConfig.savedLanguage !== undefined) {
     langIco.value = savedConfig.savedLanguage.flag;
-    langName.value = savedConfig.savedLanguage.language;
+    langName.value = savedConfig.savedLanguage.name;
     i18n.locale = savedConfig.savedLanguage.label; // Directly use imported i18n to set locale
   }
 };
