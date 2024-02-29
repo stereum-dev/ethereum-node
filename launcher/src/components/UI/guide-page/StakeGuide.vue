@@ -5,7 +5,7 @@
         <div class="header-node" @click.prevent="stakeGuideStep1">
           <div class="title">{{ $t("pagesnav.control") }}</div>
         </div>
-        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+        <img src="/img/icon/guide-page-icons/curved-arrow.png" class="header-arrow" />
         <div class="step-one">
           <span>{{ $t("rpcGuide.clickNav") }}</span>
         </div>
@@ -13,7 +13,7 @@
     </div>
     <div v-if="stakeSecondStep" class="wrapper">
       <h1>{{ $t("stakeGuide.syncCheck") }}</h1>
-      <img src="/img/icon/arrows/curved-arrow-rotated.png" class="comp-arrow" />
+      <img src="/img/icon/guide-page-icons/curved-arrow-rotated.png" class="comp-arrow" />
       <div class="left-slide"></div>
       <div class="top-slide"></div>
       <div class="bottom-slide"></div>
@@ -47,7 +47,7 @@
         <div class="header-node-staking" @click.prevent="stakeGuideStep2">
           <div class="title">{{ $t("stakeGuide.stake") }}</div>
         </div>
-        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow-staking" />
+        <img src="/img/icon/guide-page-icons/curved-arrow.png" class="header-arrow-staking" />
         <div class="staking-step-one">
           <span>{{ $t("stakeGuide.scrollClick") }}</span>
         </div>
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div v-if="clickService" class="message-stake-wrapper">
-          <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
+          <img src="/img/icon/guide-page-icons/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
             <span>{{ $t("stakeGuide.clickIcon") }}</span>
           </div>
@@ -71,13 +71,13 @@
           </div>
         </div>
         <div v-if="passPointer" class="message-stake-wrapper">
-          <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
+          <img src="/img/icon/guide-page-icons/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
             <span>{{ $t("stakeGuide.clickPass") }}</span>
           </div>
         </div>
         <div v-if="modalGuide" class="modal-guide-wrapper">
-          <img src="/img/icon/arrows/left-arrow-4.png" alt="" class="point-to-modal" />
+          <img src="/img/icon/arrows/left-arrow-3.png" alt="" class="point-to-modal" />
         </div>
         <div v-if="modalGuide" class="staking-step-three">
           <span>{{ $t("stakeGuide.noSlash") }}</span>

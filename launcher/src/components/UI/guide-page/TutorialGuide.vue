@@ -4,7 +4,7 @@
       <div class="header-node" @click.prevent="rpcStepOne">
         <div class="title">{{ $t("pagesnav.control") }}</div>
       </div>
-      <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+      <img src="/img/icon/guide-page-icons/curved-arrow.png" class="header-arrow" />
       <div class="step-one">
         <span>{{ $t("rpcGuide.clickNav") }}</span>
       </div>
@@ -16,7 +16,7 @@
       <div v-if="secondPoint" class="point-wrapper">
         <div class="first-point">
           <div class="first-point_icon">
-            <img src="/img/icon/arrows/left-arrow-4.png" alt="pointer" />
+            <img src="/img/icon/arrows/left-arrow-3.png" alt="pointer" />
           </div>
           <div class="first-point_title">{{ $t("rpcGuide.toggleMessage") }}</div>
         </div>
@@ -26,7 +26,7 @@
         <div class="second-point">
           <div class="second-point_title">{{ $t("rpcGuide.clickExtention") }}</div>
           <div class="second-point_icon">
-            <img src="/img/icon/arrows/left-arrow-4.png" alt="pointer" />
+            <img src="/img/icon/arrows/left-arrow-3.png" alt="pointer" />
           </div>
         </div>
         <div class="second-border"></div>
@@ -36,7 +36,7 @@
           <div class="step-two">
             <span>{{ mainMessage }}</span>
           </div>
-          <img src="/img/icon/arrows/curved-arrow-rotated.png" class="comp-arrow" />
+          <img src="/img/icon/guide-page-icons/curved-arrow-rotated.png" class="comp-arrow" />
         </div>
         <div class="fix-place"><RpcEndpoint /></div>
       </div>
