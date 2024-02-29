@@ -69,7 +69,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           id: 1,
           name: "mev boost",
           defaultPath: "/opt/stereum",
-          icon: "/img/icon/presets-icons/mev-staking.png",
+          icon: "/img/icon/one-click-installation/mev-staking-preset.png",
           showDropDown: false,
           includedPlugins: [],
         },
