@@ -29,7 +29,7 @@
     <!-- Start drawer layout -->
     <img
       class="w-10 absolute top-50 -right-5 cursor-pointer"
-      src="/img/icon/manage-node-icons/sidebar-out.png"
+      src="/img/icon/edit-node-icons/sidebar-out.png"
       alt="Arrow Icon"
       @mousedown.prevent.stop
       @click="openDrawer"
@@ -255,7 +255,7 @@ const switchClientConfirm = (properties) => {
   manageStore.confirmChanges.push({
     id: properties.itemToReplace.config?.serviceID,
     content: "SWITCH CLIENT",
-    contentIcon: "/img/icon/manage-node-icons/switch.png",
+    contentIcon: "/img/icon/edit-node-icons/switch-client-icon.png",
     service: properties.itemToReplace,
     data: {
       itemToInstall: properties.itemToInstall,
@@ -281,7 +281,7 @@ const confirmModifyingService = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "MODIFY",
-    contentIcon: "/img/icon/manage-node-icons/connected.png",
+    contentIcon: "/img/icon/edit-node-icons/service-connected.png",
     service: item.client,
     data: {
       executionClients: item.executionClients,
@@ -307,7 +307,7 @@ const confirmConsensusConnection = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "CLIENT CONNECT",
-    contentIcon: "/img/icon/manage-node-icons/connection.png",
+    contentIcon: "/img/icon/edit-node-icons/service-connecting.png",
     service: item,
   });
 };
@@ -446,7 +446,7 @@ const addServiceHandler = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
-    contentIcon: "/img/icon/manage-node-icons/install.png",
+    contentIcon: "/img/icon/edit-node-icons/add-service-icon.png",
     service: item.client,
     data: dataObject,
   });
@@ -486,7 +486,7 @@ const switchNetworkConfirm = (network) => {
       manageStore.confirmChanges.push({
         id: network.network,
         content: "NETWORK",
-        contentIcon: "/img/icon/manage-node-icons/switch-client.png",
+        contentIcon: "/img/icon/edit-node-icons/switch-client.png",
         service: network,
         data: { network: network.network },
       });
@@ -525,7 +525,7 @@ const selectedServiceToRemove = (item) => {
   const confirmDelete = {
     id: item.config.serviceID,
     content: "DELETE",
-    contentIcon: "/img/icon/manage-node-icons/delete.png",
+    contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
   };
   const itemExists = manageStore.confirmChanges.some((e) => e.id === item.config.serviceID && e.content === "DELETE");

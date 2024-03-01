@@ -12,8 +12,8 @@
         <div class="title-box">
           <div class="service-name"><span>prometheus</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-modals-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-modals-icons/github.png" alt="icon" @click="openGitHub" />
           </div>
         </div>
       </div>

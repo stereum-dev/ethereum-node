@@ -45,7 +45,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
     <img
       v-if="connectedServer"
       class="col-start-10 col-span-1 w-5 self-center"
-      src="/img/icon/access-management/check.png"
+      src="/img/icon/server-management-icons/check.png"
       alt="Check Icon"
     />
   </div>

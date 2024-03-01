@@ -101,10 +101,10 @@ export const useServers = defineStore("servers", {
       isServerUpdateActive: false,
 
       tabs: [
-        { name: "login", icon: "/img/icon/form-setup/login.png", isActive: true, isDisabled: false },
-        { name: "info", icon: "/img/icon/form-setup/infos.png", isActive: false, isDisabled: false },
-        { name: "ssh", icon: "/img/icon/form-setup/lock.png", isActive: false, isDisabled: false },
-        { name: "update", icon: "/img/icon/form-setup/download.png", isActive: false, isDisabled: false },
+        { name: "login", icon: "/img/icon/server-management-icons/login.png", isActive: true, isDisabled: false },
+        { name: "info", icon: "/img/icon/server-management-icons/infos.png", isActive: false, isDisabled: false },
+        { name: "ssh", icon: "/img/icon/server-management-icons/lock.png", isActive: false, isDisabled: false },
+        { name: "update", icon: "/img/icon/server-management-icons/download.png", isActive: false, isDisabled: false },
       ],
       selectedTab: null,
     };

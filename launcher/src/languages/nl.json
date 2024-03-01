@@ -850,7 +850,13 @@
     "dkKey": "VOER HET WACHTWOORD IN OM DE PRIVÉ SLEUTEL TE ONTCIJFEREN",
     "dlPk": "Download de privésleutel om een backup te maken. Zorg ervoor dat u ook het wachtwoord opschrijft dat u voor versleuteling hebt gebruikt!",
     "dl": "DOWNLOADEN",
-    "imp": "IMPORTEREN"
+    "imp": "IMPORTEREN",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "Er is iets misgegaan",

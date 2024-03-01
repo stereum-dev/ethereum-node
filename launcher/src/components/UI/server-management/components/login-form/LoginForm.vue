@@ -53,7 +53,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           <img
             class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :class="addButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
-            src="/img/icon/PLUS_ICON.png"
+            src="/img/icon/server-management-icons/plus-icon.png"
             alt="icon"
             @mousedown.prevent
             @mouseenter="addHovered = true"
@@ -279,9 +279,9 @@ const sshError = ref("");
 
 const getTrashImg = computed(() => {
   if (hovered.value) {
-    return "./img/icon/TRASH_CAN2.png";
+    return "./img/icon/server-management-icons/trash-can-2.png";
   } else {
-    return "./img/icon/TRASH_CAN.png";
+    return "./img/icon/server-management-icons/trash-can.png";
   }
 });
 

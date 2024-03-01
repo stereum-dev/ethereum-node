@@ -36,7 +36,7 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="/img/icon/control/spinner.gif" alt="" />
+      <img src="/animation/loading/mushroom-spinner.gif" alt="" />
     </div>
   </div>
 </template>
@@ -59,9 +59,9 @@ export default {
       copyVal: "click to copy",
       openDialog: false,
       dialogValue: "",
-      copyIcon: "/img/icon/control/ok.png",
-      infoIcon: "/img/icon/control/info.png",
-      bttnLoading: "/img/icon/control/loading.gif",
+      copyIcon: "/img/icon/control-page-icons/ok.png",
+      infoIcon: "/img/icon/control-page-icons/info.png",
+      bttnLoading: "/animation/loading/loading-dots.gif",
       dataApiItems: [],
       dialogIcon: "",
       copyText: this.$t("dataAPIAndRPC.copy"),

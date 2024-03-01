@@ -6,7 +6,7 @@
   >
     <div class="np2p-icon-box">
       <div class="np2p-icon-box_container">
-        <img src="/img/icon/control/SubnetSubscriptions.png" alt="" />
+        <img src="/img/icon/control-page-icons/SubnetSubscriptions.png" alt="" />
       </div>
       <span class="uppercase">{{ $t("controlPage.subsribeSubnet") }}</span>
     </div>
@@ -19,7 +19,7 @@
         @mouseleave="footerStore.cursorLocation = `${compName}`"
       >
         <div class="service-rox_icon">
-          <img src="/img/icon/control/SubnetPeet.png" :alt="item.name" />
+          <img src="/img/icon/control-page-icons/SubnetPeer.png" :alt="item.name" />
         </div>
         <div class="service-row_val">
           <span>{{ dummy }}</span>
@@ -37,7 +37,7 @@
         <img
           :class="controlStore.currentConsensusIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentConsensusIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentConsensusIcon
+            controlStore.currentConsensusIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentConsensusIcon
           "
           alt="consensus"
         />
@@ -52,7 +52,7 @@
         <img
           :class="controlStore.currentExecutionIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentExecutionIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentExecutionIcon
+            controlStore.currentExecutionIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentExecutionIcon
           "
           alt="execution"
         />

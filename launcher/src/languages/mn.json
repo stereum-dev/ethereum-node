@@ -850,7 +850,13 @@
     "dkKey": "ХУВИЙН ТҮЛХҮҮРИЙН ШИФРИЙГ ТАЙЛАХЫН ТУЛД НУУЦ ҮГЭЭ ОРУУЛНА УУ",
     "dlPk": "Хувийн түлхүүрийг татаж аван хадгалаарай. Мөн шифрлэлтэнд ашигласан нууц үгээ бичиж аваарай!",
     "dl": "ТАТАЖ АВАХ",
-    "imp": "ИМПОРТ"
+    "imp": "ИМПОРТ",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "Ямар нэгэн зүйл буруу байна",

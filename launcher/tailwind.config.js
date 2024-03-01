@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        drop: "url('/img/icon/manage-node-icons/drag.png')",
+        drop: "url('/img/icon/edit-node-icons/drag-service-icon.png')",
       },
       fontSize: {
         "2xs": "10px",

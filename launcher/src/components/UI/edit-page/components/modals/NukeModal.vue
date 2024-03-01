@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="closeMe"></div>
     <div v-if="visible" class="remove-modal-content">
       <div class="title-box">
-        <img src="/img/icon/manage-node-icons/stop.png" />
+        <img src="/img/icon/edit-node-icons/stop-caution-icon.png" />
       </div>
       <div class="remove-message">
         <span class="warning">{{ $t("nukeModal.nukeQ") }} </span>
@@ -32,7 +32,7 @@
 
         <div class="remove-modal-accepted_footer" :class="{ deactive: loginBtn }">
           <div v-if="loginBtn" class="spinner">
-            <img src="/img/icon/control/spinner.gif" alt="" />
+            <img src="/animation/loading/mushroom-spinner.gif" alt="" />
           </div>
           <span v-else @click="backToLogin">{{ $t("nukeModal.backToLogin") }}</span>
         </div>
@@ -63,7 +63,7 @@ export default {
       ],
       nukeData: [],
       loginBtn: true,
-      nukeNode: "url('./img/icon/arrows/NukeNode_Final.gif')",
+      nukeNode: "url('./img/animation/nuke-node/nuke_node.gif')",
       autoScroll: true,
       loadingDump: false,
     };
@@ -77,7 +77,7 @@ export default {
       return this.loadingDump ? "animate-spin" : "";
     },
     loadingIconsClass() {
-      return this.loadingDump ? "/img/icon/arrows/loading.png" : "/img/icon/manage-node-icons/log_export.png";
+      return this.loadingDump ? "/img/icon/loading-icons/loading-circle.png" : "/img/icon/service-log-icons/150-log-export-button.png";
     },
   },
   mounted() {

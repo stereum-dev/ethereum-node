@@ -46,25 +46,25 @@ const importRemote = () => {
 const buttonState = ref([
   {
     text: "CHANGE ALL GRAFFITI",
-    icon: "/img/icon/the-staking/option-graffiti.png",
+    icon: "/img/icon/staking-page-icons/option-graffiti.png",
     events: graffitiPanel,
     tooltip: t("displayValidator.graffitiPanel"),
   },
   {
     text: "REMOVE ALL KEYS",
-    icon: "/img/icon/the-staking/option-remove.png",
+    icon: "/img/icon/staking-page-icons/option-remove.png",
     events: removeMultiple,
     tooltip: t("displayValidator.removeMultiple"),
   },
   {
     text: "WITHDRAW & EXIT ALL KEYS",
-    icon: "/img/icon/the-staking/withdraw.png",
+    icon: "/img/icon/staking-page-icons/option-withdraw.png",
     events: withdrawMultiple,
     tooltip: t("displayValidator.withdrawMultiple"),
   },
   {
     text: "Import Remote Keys",
-    icon: "/img/icon/the-staking/remotekey.svg",
+    icon: "/img/icon/staking-page-icons/remote-key-icon.svg",
     events: importRemote,
     tooltip: t("displayValidator.importRemote"),
   },

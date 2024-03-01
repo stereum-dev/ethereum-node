@@ -14,7 +14,7 @@
       </div>
       <div class="restart-message">{{ $t("restartModal.restartMessage") }}</div>
       <div class="restart-button" :class="{ disabled: loading }" @click="$emit('restartConfirm', service)">
-        <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
+        <img v-if="loading" src="/animation/loading/mushroom-spinner.gif" alt="loading" />
         <span v-else>{{ title }}</span>
       </div>
       <span class="clickOut">click outside to close</span>

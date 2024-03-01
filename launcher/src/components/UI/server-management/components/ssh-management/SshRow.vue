@@ -3,7 +3,7 @@
     <span class="col-start-1 col-end-12 text-xs text-gray-300">{{ sshKey }}</span>
     <img
       class="col-start-12 col-span-1 justify-self-center self-center h-6 border border-transparent rounded-md p-1 bg-black hover:border-red-500 active:scale-90 cursor-pointer"
-      src="/img/icon/manage-node-icons/trash.png"
+      src="/img/icon/edit-node-icons/service-delete.png"
       alt="Delete Icon"
       @click="deleteKey"
     />

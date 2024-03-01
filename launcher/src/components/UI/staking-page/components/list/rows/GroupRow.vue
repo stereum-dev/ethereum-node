@@ -8,7 +8,7 @@ import { useStakingStore } from '@/store/theStaking';
       class="col-start-1 col-end-4 self-center overflow-hidden flex justify-start items-center"
       @mouseenter="footerStore.cursorLocation = `${grpNam} ${groupName}`"
     >
-      <img class="w-6" src="/img/icon/the-staking/newfolder-icon.png" alt="Folder Icon" @mousedown.prevent />
+      <img class="w-6" src="/img/icon/staking-page-icons/group-circle-icon.png" alt="Folder Icon" @mousedown.prevent />
       <span class="text-center text-sm text-gray-300 ml-1 overflow-hidden">{{ groupName }}</span>
     </div>
     <div
@@ -34,7 +34,7 @@ import { useStakingStore } from '@/store/theStaking';
       >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/open-group.png"
+          src="/img/icon/staking-page-icons/open-group.png"
           alt="Icon"
           @mousedown.prevent
           @click="openGroup"
@@ -47,7 +47,7 @@ import { useStakingStore } from '@/store/theStaking';
       >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/rename-group.png"
+          src="/img/icon/staking-page-icons/rename.png"
           alt="Icon"
           @mousedown.prevent
           @click="renameGroup"
@@ -57,7 +57,7 @@ import { useStakingStore } from '@/store/theStaking';
       <!-- <div class="col-start-3 col-span-1 justify-self-center">
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150 opacity-30 pointer-events-none"
-          src="/img/icon/the-staking/withdraw.png"
+          src="/img/icon/staking-page-icons/option-withdraw.png"
           alt="Icon"
           @mousedown.prevent
         />
@@ -69,7 +69,7 @@ import { useStakingStore } from '@/store/theStaking';
       >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/RemoveGroup.png"
+          src="/img/icon/staking-page-icons/remove-group.png"
           alt="Icon"
           @mousedown.prevent
           @click="removeGroup"

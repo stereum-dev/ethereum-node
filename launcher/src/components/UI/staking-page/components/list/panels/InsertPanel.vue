@@ -14,7 +14,7 @@
         @change="getFileValue"
       />
       <span class="text-md font-semibold text-gray-200">{{ t("insertValidator.insertText") }}</span>
-      <img class="w-6 h-6" src="/img/icon/the-staking/white-key.svg" alt="icon" @mousedown.prevent />
+      <img class="w-6 h-6" src="/img/icon/staking-page-icons/validator-import.svg" alt="icon" @mousedown.prevent />
     </div>
   </div>
 </template>

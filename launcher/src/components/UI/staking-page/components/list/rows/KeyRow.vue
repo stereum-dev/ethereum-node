@@ -14,11 +14,11 @@ import { computed } from 'vue';
         <img
           v-if="props.item.isRemote"
           class="w-full h-full"
-          src="/img/icon/the-staking/remotekey.svg"
+          src="/img/icon/staking-page-icons/remote-key-icon.svg"
           alt="Key Icon"
           @mousedown.prevent
         />
-        <img v-else class="w-full h-full" src="/img/icon/the-staking/key-sign.png" alt="Key Icon" @mousedown.prevent />
+        <img v-else class="w-full h-full" src="/img/icon/staking-page-icons/key-icon.png" alt="Key Icon" @mousedown.prevent />
       </div>
     </div>
     <div
@@ -76,7 +76,7 @@ import { computed } from 'vue';
       >
         <img
           class="w-5 h-5 bg-[#343434] rounded-sm hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/copy6.png"
+          src="/img/icon/staking-page-icons/copy.png"
           alt="Icon"
           @mousedown.prevent
           @click="copyHandler(props.item)"
@@ -89,7 +89,7 @@ import { computed } from 'vue';
       >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/rename-group.png"
+          src="/img/icon/staking-page-icons/rename.png"
           alt="Icon"
           @mousedown.prevent
           @click="renameKey(props.item)"
@@ -102,7 +102,7 @@ import { computed } from 'vue';
       >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/fee-recepient.png"
+          src="/img/icon/staking-page-icons/option-fee-recepient.png"
           alt="Icon"
           @mousedown.prevent
           @click="FeeRecepient"
@@ -115,7 +115,7 @@ import { computed } from 'vue';
       >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/option-remove.png"
+          src="/img/icon/staking-page-icons/option-remove.png"
           alt="Icon"
           @mousedown.prevent
           @click="removeSingle(props.item)"
@@ -128,7 +128,7 @@ import { computed } from 'vue';
       >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/withdraw.png"
+          src="/img/icon/staking-page-icons/option-withdraw.png"
           alt="Icon"
           @mousedown.prevent
           @click="withdrawHandler"
@@ -156,14 +156,14 @@ const footerStore = useFooter();
 
 const t = i18n.global.t;
 //Key Status Icons
-const activeStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Active.png";
-const slashedStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Slashed.png";
-const depositStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Deposit.png";
-const offlineStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Offline.png";
-const pendingStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png";
-const exitedStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Exited.png";
-const apiProblems = "/img/icon/the-staking/State_Icon.png";
-const apiLoading = "/img/icon/task-manager-icons/turning_circle.gif";
+const activeStatusIcon = "/img/icon/staking-page-icons/validator-state-active.png";
+const slashedStatusIcon = "/img/icon/staking-page-icons/validator-state-slashed.png";
+const depositStatusIcon = "/img/icon/staking-page-icons/validator-state-not-deposited.png";
+const offlineStatusIcon = "/img/icon/staking-page-icons/validator-state-offline.png";
+const pendingStatusIcon = "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
+const exitedStatusIcon = "/img/icon/staking-page-icons/validator-state-exited.png";
+const apiProblems = "/img/icon/staking-page-icons/validator-state-unknown.png";
+const apiLoading = "/animation/loading/turning-circle.gif";
 const pk = t("displayValidator.pk");
 const rm = t("displayValidator.rm");
 const state = t("displayValidator.state");

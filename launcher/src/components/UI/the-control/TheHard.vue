@@ -3,7 +3,7 @@
     <div class="storageBox">
       <div class="storageIco">
         <div class="icoContainer">
-          <img src="/img/icon/control/hdd.svg" />
+          <img src="/img/icon/control-page-icons/hdd.svg" />
         </div>
         <div class="icoTitle">
           <span>{{ $t("controlPage.hard") }}</span>
