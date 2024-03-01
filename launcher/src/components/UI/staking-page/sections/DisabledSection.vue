@@ -5,7 +5,7 @@
       @mousedown.prevent
     >
       <div class="col-start-2 col-end-12 row-start-2 col-span-full row-end-8 flex justify-center items-center">
-        <img class="w-2/3" src="/img/icon/the-staking/staking-disabled.png" alt="icon" />
+        <img class="w-2/3" src="/img/icon/staking-page-icons/staking-disabled.png" alt="icon" />
       </div>
       <div
         class="col-start-2 col-end-12 col-span-full row-start-10 row-end-11 flex justify-center items-center text-center mt-2"

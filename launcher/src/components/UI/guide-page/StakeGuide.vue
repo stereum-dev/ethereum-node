@@ -5,7 +5,7 @@
         <div class="header-node" @click.prevent="stakeGuideStep1">
           <div class="title">{{ $t("pagesnav.control") }}</div>
         </div>
-        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+        <img src="/img/icon/guide-page-icons/curved-arrow.png" class="header-arrow" />
         <div class="step-one">
           <span>{{ $t("rpcGuide.clickNav") }}</span>
         </div>
@@ -13,7 +13,7 @@
     </div>
     <div v-if="stakeSecondStep" class="wrapper">
       <h1>{{ $t("stakeGuide.syncCheck") }}</h1>
-      <img src="/img/icon/arrows/curved-arrow-rotated.png" class="comp-arrow" />
+      <img src="/img/icon/guide-page-icons/curved-arrow-rotated.png" class="comp-arrow" />
       <div class="left-slide"></div>
       <div class="top-slide"></div>
       <div class="bottom-slide"></div>
@@ -47,20 +47,20 @@
         <div class="header-node-staking" @click.prevent="stakeGuideStep2">
           <div class="title">{{ $t("stakeGuide.stake") }}</div>
         </div>
-        <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow-staking" />
+        <img src="/img/icon/guide-page-icons/curved-arrow.png" class="header-arrow-staking" />
         <div class="staking-step-one">
           <span>{{ $t("stakeGuide.scrollClick") }}</span>
         </div>
       </div>
       <div v-if="insertVal" class="wrapper">
         <div v-if="!isDragOver && dragStep === false" class="message-stake-wrapper">
-          <img src="/img/icon/guide-icons/drag-icon.png" class="drag-icon" alt="" />
+          <img src="/img/icon/guide-page-icons/drag-icon.png" class="drag-icon" alt="" />
           <div class="drag-message">
             <span>{{ $t("stakeGuide.drag") }}</span>
           </div>
         </div>
         <div v-if="clickService" class="message-stake-wrapper">
-          <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
+          <img src="/img/icon/guide-page-icons/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
             <span>{{ $t("stakeGuide.clickIcon") }}</span>
           </div>
@@ -71,13 +71,13 @@
           </div>
         </div>
         <div v-if="passPointer" class="message-stake-wrapper">
-          <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
+          <img src="/img/icon/guide-page-icons/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
             <span>{{ $t("stakeGuide.clickPass") }}</span>
           </div>
         </div>
         <div v-if="modalGuide" class="modal-guide-wrapper">
-          <img src="/img/icon/arrows/left-arrow-4.png" alt="" class="point-to-modal" />
+          <img src="/img/icon/guide-page-icons/arrow.png" alt="" class="point-to-modal" />
         </div>
         <div v-if="modalGuide" class="staking-step-three">
           <span>{{ $t("stakeGuide.noSlash") }}</span>
@@ -106,282 +106,282 @@ export default {
       sliderTutorial: [
         {
           id: 1,
-          img: "/img/icon/guide-staking/1.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/1.jpg",
           text: this.$t("sliderTutorial.visitUrl") + " “https://goerli.launchpad.ethereum.org/en/”",
         },
         {
           id: 2,
-          img: "/img/icon/guide-staking/2.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/2.jpg",
           text: this.$t("sliderTutorial.becomeValidator"),
         },
         {
           id: 3,
-          img: "/img/icon/guide-staking/3.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/3.jpg",
           text: this.$t("sliderTutorial.proofStake"),
         },
         {
           id: 4,
-          img: "/img/icon/guide-staking/4.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/4.jpg",
           text: this.$t("sliderTutorial.deposit"),
         },
         {
           id: 5,
-          img: "/img/icon/guide-staking/5.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/5.jpg",
           text: this.$t("sliderTutorial.usingTerminal"),
         },
         {
           id: 6,
-          img: "/img/icon/guide-staking/6.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/6.jpg",
           text: this.$t("sliderTutorial.validatorUptime"),
         },
         {
           id: 7,
-          img: "/img/icon/guide-staking/7.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/7.jpg",
           text: this.$t("sliderTutorial.validatorBahavior"),
         },
         {
           id: 8,
-          img: "/img/icon/guide-staking/8.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/8.jpg",
           text: this.$t("sliderTutorial.keyManagement"),
         },
         {
           id: 9,
-          img: "/img/icon/guide-staking/9.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/9.jpg",
           text: this.$t("sliderTutorial.validatingLongterm"),
         },
         {
           id: 10,
-          img: "/img/icon/guide-staking/10.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/10.jpg",
           text: this.$t("sliderTutorial.earlyAdaptor"),
         },
         {
           id: 11,
-          img: "/img/icon/guide-staking/11.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/11.jpg",
           text: this.$t("sliderTutorial.stakingChecklist"),
         },
         {
           id: 12,
-          img: "/img/icon/guide-staking/12.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/12.jpg",
           text: this.$t("sliderTutorial.clickCont"),
         },
         {
           id: 13,
-          img: "/img/icon/guide-staking/13.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/13.jpg",
           text: this.$t("sliderTutorial.executionClient"),
         },
         {
           id: 14,
-          img: "/img/icon/guide-staking/14.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/14.jpg",
           text: this.$t("sliderTutorial.scrollDown"),
         },
         {
           id: 15,
-          img: "/img/icon/guide-staking/15.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/15.jpg",
           text: this.$t("sliderTutorial.consensusClient"),
         },
         {
           id: 16,
-          img: "/img/icon/guide-staking/16.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/16.jpg",
           text: this.$t("sliderTutorial.scrollDown"),
         },
         {
           id: 17,
-          img: "/img/icon/guide-staking/17.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/17.jpg",
           text: this.$t("sliderTutorial.numValidator"),
         },
         {
           id: 18,
-          img: "/img/icon/guide-staking/18.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/18.jpg",
           text: this.$t("sliderTutorial.generateKey"),
         },
         {
           id: 19,
-          img: "/img/icon/guide-staking/19.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/19.jpg",
           text: this.$t("sliderTutorial.keyGUI"),
         },
         {
           id: 20,
-          img: "/img/icon/guide-staking/20.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/20.jpg",
           text: this.$t("sliderTutorial.dlGithub"),
         },
         {
           id: 21,
-          img: "/img/icon/guide-staking/21.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/21.jpg",
           text: this.$t("sliderTutorial.clickInstaller"),
         },
         {
           id: 22,
-          img: "/img/icon/guide-staking/22.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/22.jpg",
           text: this.$t("sliderTutorial.setupPage"),
         },
         {
           id: 23,
-          img: "/img/icon/guide-staking/23.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/23.jpg",
           text: this.$t("sliderTutorial.clickCont"),
         },
         {
           id: 24,
-          img: "/img/icon/guide-staking/24.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/24.jpg",
           text: this.$t("sliderTutorial.wagueKey"),
         },
         {
           id: 25,
-          img: "/img/icon/guide-staking/25.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/25.jpg",
           text: this.$t("sliderTutorial.secratePhrase"),
         },
         {
           id: 26,
-          img: "/img/icon/guide-staking/26.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/26.jpg",
           text: this.$t("sliderTutorial.selectNetwork"),
         },
         {
           id: 27,
-          img: "/img/icon/guide-staking/27.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/27.jpg",
           text: this.$t("sliderTutorial.clickOk"),
         },
         {
           id: 28,
-          img: "/img/icon/guide-staking/28.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/28.jpg",
           text: this.$t("sliderTutorial.clickCreate"),
         },
         {
           id: 29,
-          img: "/img/icon/guide-staking/29.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/29.jpg",
           text: this.$t("sliderTutorial.recoveryPhrase"),
         },
         {
           id: 30,
-          img: "/img/icon/guide-staking/30.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/30.jpg",
           text: this.$t("sliderTutorial.recoveryPhrase"),
         },
         {
           id: 31,
-          img: "/img/icon/guide-staking/31.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/31.jpg",
           text: this.$t("sliderTutorial.clickNext"),
         },
         {
           id: 32,
-          img: "/img/icon/guide-staking/32.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/32.jpg",
           text: this.$t("sliderTutorial.imSure"),
         },
         {
           id: 33,
-          img: "/img/icon/guide-staking/33.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/33.jpg",
           text: this.$t("sliderTutorial.pasteRecovery"),
         },
         {
           id: 34,
-          img: "/img/icon/guide-staking/34.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/34.jpg",
           text: this.$t("sliderTutorial.clickCheck"),
         },
         {
           id: 35,
-          img: "/img/icon/guide-staking/35.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/35.jpg",
           text: this.$t("sliderTutorial.needKey"),
         },
         {
           id: 36,
-          img: "/img/icon/guide-staking/36.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/36.jpg",
           text: this.$t("sliderTutorial.typPass"),
         },
         {
           id: 37,
-          img: "/img/icon/guide-staking/37.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/37.jpg",
           text: this.$t("sliderTutorial.retypPass"),
         },
         {
           id: 38,
-          img: "/img/icon/guide-staking/38.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/38.jpg",
           text: this.$t("sliderTutorial.clickNext"),
         },
         {
           id: 39,
-          img: "/img/icon/guide-staking/39.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/39.jpg",
           text: this.$t("sliderTutorial.clickBrowse"),
         },
         {
           id: 40,
-          img: "/img/icon/guide-staking/40.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/40.jpg",
           text: this.$t("sliderTutorial.chooseFolder"),
         },
         {
           id: 41,
-          img: "/img/icon/guide-staking/41.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/41.jpg",
           text: this.$t("sliderTutorial.clickCreateWait"),
         },
         {
           id: 42,
-          img: "/img/icon/guide-staking/42.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/42.jpg",
           text: this.$t("sliderTutorial.clickClose"),
         },
         {
           id: 43,
-          img: "/img/icon/guide-staking/43.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/43.jpg",
           text: this.$t("sliderTutorial.switchSetup"),
         },
         {
           id: 44,
-          img: "/img/icon/guide-staking/44.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/44.jpg",
           text: this.$t("sliderTutorial.dragFile"),
         },
         {
           id: 45,
-          img: "/img/icon/guide-staking/45.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/45.jpg",
           text: this.$t("sliderTutorial.clickCont"),
         },
         {
           id: 46,
-          img: "/img/icon/guide-staking/46.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/46.jpg",
           text: this.$t("sliderTutorial.connWalet"),
         },
         {
           id: 47,
-          img: "/img/icon/guide-staking/47.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/47.jpg",
           text: this.$t("sliderTutorial.connWalet"),
         },
         {
           id: 48,
-          img: "/img/icon/guide-staking/48.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/48.jpg",
           text: this.$t("sliderTutorial.clickCont"),
         },
         {
           id: 49,
-          img: "/img/icon/guide-staking/49.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/49.jpg",
           text: this.$t("sliderTutorial.understandRisk"),
         },
         {
           id: 50,
-          img: "/img/icon/guide-staking/50.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/50.jpg",
           text: this.$t("sliderTutorial.readSection"),
         },
         {
           id: 51,
-          img: "/img/icon/guide-staking/51.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/51.jpg",
           text: this.$t("sliderTutorial.protectYourself"),
         },
         {
           id: 52,
-          img: "/img/icon/guide-staking/52.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/52.jpg",
           text: this.$t("sliderTutorial.dblCheck"),
         },
         {
           id: 53,
-          img: "/img/icon/guide-staking/53.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/53.jpg",
           text: this.$t("sliderTutorial.sendDeposit"),
         },
         {
           id: 54,
-          img: "/img/icon/guide-staking/54.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/54.jpg",
           text: this.$t("sliderTutorial.walletPopup"),
         },
         {
           id: 55,
-          img: "/img/icon/guide-staking/55.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/55.jpg",
           text: this.$t("sliderTutorial.contCong"),
         },
         {
           id: 56,
-          img: "/img/icon/guide-staking/56.jpg",
+          img: "/img/icon/guide-page-icons/guide-staking-icons/56.jpg",
           text: this.$t("sliderTutorial.contCong"),
         },
       ],

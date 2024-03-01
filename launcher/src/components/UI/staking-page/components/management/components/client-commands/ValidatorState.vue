@@ -31,7 +31,7 @@
 
     <img
       class="w-4 col-start-5 col-span-1 justify-self-center"
-      src="/img/icon/the-staking/keyIcon.png"
+      src="/img/icon/staking-page-icons/keyIcon.png"
       alt="Key Icon"
       @mousedown.prevent
     />

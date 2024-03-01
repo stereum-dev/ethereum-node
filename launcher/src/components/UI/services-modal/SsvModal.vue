@@ -7,7 +7,7 @@
     <div class="browser-modal">
       <div class="ssv-header">
         <!-- <div class="icon-box">
-          <img src="/img/icon/service-icons/ssv-network.png" alt="icon" />
+          <img src="/img/icon/service-icons/Other/ssv-network.png" alt="icon" />
         </div>
         <div class="network-icon">
           <img
@@ -18,7 +18,7 @@
 
         <div class="flip-box icon-box">
           <div class="flip-box-inner">
-            <img class="flip-box-front" src="/img/icon/service-icons/ssv-network.png" alt="icon" />
+            <img class="flip-box-front" src="/img/icon/service-icons/Other/ssv-network.png" alt="icon" />
 
             <img class="flip-box-back" src="/img/icon/network-icons/ethereum-testnet-icon.png" alt="icon" />
           </div>
@@ -28,9 +28,9 @@
         <div class="title-box">
           <div class="service-name"><span>ssv.network</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github.png" alt="icon" @click="openGitHub" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
+            <img src="/img/icon/service-modals-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-modals-icons/github.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-modals-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@
             :top-line="!lastStep ? secondRowTitle : `${$t('serviceModal.copyKey')}`"
             :bottom-line="!lastStep ? secondRowExplain : `${$t('serviceModal.skPk')}`"
             :btn-name="!lastStep ? secondRowBtnName : `${$t('serviceModal.copy')}`"
-            :img-url="!lastStep ? '' : '/img/icon/service-icons/copy.png'"
+            :img-url="!lastStep ? '' : '/img/icon/service-modals-icons/copy.png'"
             @confirmPluginClick="secondRowBtnHandler"
           />
           <PasswordBox

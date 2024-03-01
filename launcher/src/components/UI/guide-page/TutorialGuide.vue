@@ -4,7 +4,7 @@
       <div class="header-node" @click.prevent="rpcStepOne">
         <div class="title">{{ $t("pagesnav.control") }}</div>
       </div>
-      <img src="/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+      <img src="/img/icon/guide-page-icons/curved-arrow.png" class="header-arrow" />
       <div class="step-one">
         <span>{{ $t("rpcGuide.clickNav") }}</span>
       </div>
@@ -16,7 +16,7 @@
       <div v-if="secondPoint" class="point-wrapper">
         <div class="first-point">
           <div class="first-point_icon">
-            <img src="/img/icon/arrows/left-arrow-4.png" alt="pointer" />
+            <img src="/img/icon/guide-page-icons/arrow.png" alt="pointer" />
           </div>
           <div class="first-point_title">{{ $t("rpcGuide.toggleMessage") }}</div>
         </div>
@@ -26,7 +26,7 @@
         <div class="second-point">
           <div class="second-point_title">{{ $t("rpcGuide.clickExtention") }}</div>
           <div class="second-point_icon">
-            <img src="/img/icon/arrows/left-arrow-4.png" alt="pointer" />
+            <img src="/img/icon/guide-page-icons/arrow.png" alt="pointer" />
           </div>
         </div>
         <div class="second-border"></div>
@@ -36,7 +36,7 @@
           <div class="step-two">
             <span>{{ mainMessage }}</span>
           </div>
-          <img src="/img/icon/arrows/curved-arrow-rotated.png" class="comp-arrow" />
+          <img src="/img/icon/guide-page-icons/curved-arrow-rotated.png" class="comp-arrow" />
         </div>
         <div class="fix-place"><RpcEndpoint /></div>
       </div>
@@ -87,47 +87,47 @@ export default {
       sliderTutorial: [
         {
           id: 1,
-          img: "/img/icon/tutorial-icons/two.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-two.png",
           text: this.$t("rpcGuide.firstSlide"),
         },
         {
           id: 2,
-          img: "/img/icon/tutorial-icons/three.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-three.png",
           text: this.$t("rpcGuide.secondSlide"),
         },
         {
           id: 3,
-          img: "/img/icon/tutorial-icons/four.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-four.png",
           text: this.$t("rpcGuide.thirdSlide"),
         },
         {
           id: 4,
-          img: "/img/icon/tutorial-icons/five.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-five.png",
           text: this.$t("rpcGuide.fourthSlide"),
         },
         {
           id: 5,
-          img: "/img/icon/tutorial-icons/six.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-six.png",
           text: this.$t("rpcGuide.fivethSlide"),
         },
         {
           id: 6,
-          img: "/img/icon/tutorial-icons/seven.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-seven.png",
           text: this.$t("rpcGuide.sixthSlide"),
         },
         {
           id: 7,
-          img: "/img/icon/tutorial-icons/eight.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-eight.png",
           text: this.$t("rpcGuide.seventhSlide"),
         },
         {
           id: 8,
-          img: "/img/icon/tutorial-icons/nine.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-nine.png",
           text: this.$t("rpcGuide.eightthSlide"),
         },
         {
           id: 9,
-          img: "/img/icon/tutorial-icons/ten.png",
+          img: "/img/icon/guide-page-icons/guide-rpc-icons/rpc-ten.png",
           text: this.$t("rpcGuide.ninethSlide"),
         },
       ],

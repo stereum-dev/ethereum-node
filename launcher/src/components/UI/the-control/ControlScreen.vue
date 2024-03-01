@@ -9,7 +9,7 @@
           </div>
           <div class="plugins-table-bg">
             <div class="arrow-up" @click="scrollUp">
-              <img src="/img/icon/arrows/arrow-up-2.png" alt="" />
+              <img src="/img/icon/control-page-icons/arrow-up-1.png" alt="" />
             </div>
             <div ref="pluginsTable" class="plugins-table">
               <div v-for="(item, index) in installedServices" :key="index" class="plugins-row">
@@ -44,19 +44,19 @@
                         />
                         <img
                           v-else-if="item.state == 'running'"
-                          src="/img/icon/node-icons/service-command-turn-off.png"
+                          src="/img/icon/node-page-icons/service-command-turn-off.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
                         />
                         <img
                           v-else-if="item.state == 'restarting'"
-                          src="/img/icon//node-icons/service-command-restart.png"
+                          src="/img/icon//node-page-icons/service-command-restart.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
                         />
                         <img
                           v-else
-                          src="/img/icon/node-icons/service-command-turn-on.png"
+                          src="/img/icon/node-page-icons/service-command-turn-on.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
                         />
@@ -64,7 +64,7 @@
                     </div>
                     <div class="icon-bg">
                       <div class="seting-icon" @click.stop="expertModeHandler(item)">
-                        <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
+                        <img src="/img/icon/service-setting-icons/setting8.png" alt="icon" />
                       </div>
                     </div>
                   </div>
@@ -93,7 +93,7 @@
               </div>
             </div>
             <div class="arrow-down" @click="scrollDown">
-              <img src="/img/icon/arrows/arrow-down-2.png" alt="icon" />
+              <img src="/img/icon/control-page-icons/arrow-down-1.png" alt="icon" />
             </div>
           </div>
         </control-plugins>

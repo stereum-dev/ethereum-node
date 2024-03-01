@@ -6,7 +6,7 @@
   >
     <img
       class="col-start-1 col-span-1 w-3 h-3"
-      src="/img/icon/the-staking/predicition-icon.png"
+      src="/img/icon/staking-page-icons/predicition-icon.png"
       alt="Prediction Icon"
       @mousedown.prevent
     />

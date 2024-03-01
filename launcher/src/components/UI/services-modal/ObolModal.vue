@@ -7,14 +7,14 @@
     <div class="browser-modal">
       <div class="obol_charon-header">
         <div class="icon-box">
-          <img src="/img/icon/plugin-icons/validator/ObolCharon.png" alt="icon" />
+          <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="icon" />
         </div>
         <div class="title-box">
           <div class="service-name"><span>obol</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github.png" alt="icon" @click="openGitHub" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
+            <img src="/img/icon/service-modals-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-modals-icons/github.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-modals-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@
                 :second-btn-bg-color="`#eb5353`"
                 :btn-name-color="`${areYouSureToRemove ? '#000' : '#dbdbdb'}`"
                 :second-btn-name-color="`#dbdbdb`"
-                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-icons/copy.png'}`"
+                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-modals-icons/copy.png'}`"
                 @confirmPluginClick="secondRowBtnHandler"
                 @secBtnPluginClick="removeHandlerControler"
               />

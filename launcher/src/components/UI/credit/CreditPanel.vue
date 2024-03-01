@@ -40,8 +40,8 @@ export default {
   components: { TechnicalBox },
   data() {
     return {
-      financialIco: "./img/icon/credits/financial-credit.png",
-      technikalIco: "./img/icon/credits/technical-credit.png",
+      financialIco: "./img/icon/credit-page-icons/financial-credit.png",
+      technikalIco: "./img/icon/credit-page-icons/technical-credit.png",
     };
   },
   computed: {
