@@ -13,7 +13,7 @@
         <div class="text-center p-5 flex-auto justify-center">
           <img
             class="w-10 -m-1 flex items-center text-red-500 mx-auto"
-            :src="mainIcon ? '/img/icon/node-icons/turn_on.png' : '/img/icon/node-icons/power2.png'"
+            :src="mainIcon ? '/img/icon/node-page-icons/turn-on.png' : '/img/icon/node-page-icons/turn-off.png'"
             alt="restart warning"
           />
           <div v-if="!mainIcon" class="text-md font-bold py-4">

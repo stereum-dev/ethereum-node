@@ -185,9 +185,10 @@ export class NodeUpdates {
    * @returns {number} - playbook runtime
    */
   async updatePackage(packages) {
+    let packagesListString = packages.join(',');
     let extraVars = {
       stereum_role: "update_package",
-      packages_list: packages,
+      packages_list: packagesListString,
     };
     try {
       let before = this.getTimeStamp();
@@ -213,8 +214,7 @@ export class NodeUpdates {
 
       // Ensure the stdout ends with a newline character
       const outputWithNewline = stdout.endsWith("\n") ? stdout : stdout + "\n";
-      // Remaining code remains the same...
-
+      
       // Split the output into lines
       const lines = outputWithNewline.split("\n");
 

@@ -850,7 +850,13 @@
     "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
     "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
     "dl": "DOWNLOAD",
-    "imp": "IMPORT"
+    "imp": "IMPORT",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "Възникна грешка",

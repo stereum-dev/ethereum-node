@@ -12,25 +12,25 @@ import { ref } from "vue";
 const items = ref([
   {
     name: "Help",
-    icon: "/img/icon/header-icons/question-mark.png",
+    icon: "/img/icon/base-header-icons/header-help-button.png",
   },
   {
     name: "Notifications",
-    icon: "/img/icon/header-icons/megaphone9.png",
+    icon: "/img/icon/base-header-icons/header-notification-button.png",
   },
   {
     name: "Available Update",
-    icon: "/img/icon/header-icons/update-green.png",
-    activeIcon: "/img/icon/header-icons/update-blue.png",
+    icon: "/img/icon/base-header-icons/header-update-button-green.png",
+    activeIcon: "/img/icon/base-header-icons/header-update-button-blue.png",
   },
   {
     name: "Settings",
-    icon: "/img/icon/header-icons/setting4.png",
+    icon: "/img/icon/base-header-icons/header-stereum-settings-button.png",
     path: "/setting",
   },
   {
     name: "Logout",
-    icon: "/img/icon/header-icons/exit9.png",
+    icon: "/img/icon/base-header-icons/header-logout-button.png",
   },
 ]);
 </script>

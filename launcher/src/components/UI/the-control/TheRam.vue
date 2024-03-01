@@ -3,7 +3,7 @@
     <div class="ramBox">
       <div class="ramIco">
         <div class="ramIco-container">
-          <img src="../../../../public/img/icon/control/ramStick.svg" />
+          <img src="../../../../public/img/icon/control-page-icons/ramStick.svg" />
         </div>
         <span>{{ $t("controlPage.ram") }}</span>
       </div>

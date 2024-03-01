@@ -6,7 +6,7 @@ import { computed, ref } from 'vue';
   >
     <div class="w-full h-full col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
       <div class="w-6 h-6 bg-gray-300 rounded-full p-1">
-        <img class="w-full" src="/img/icon/the-staking/select-key.png" alt="Key Icon" @mousedown.prevent />
+        <img class="w-full" src="/img/icon/staking-page-icons/key-icon.png" alt="Key Icon" @mousedown.prevent />
       </div>
     </div>
     <div class="w-full h-full col-start-2 col-end-25 self-center overflow-hidden flex justify-between items-center">

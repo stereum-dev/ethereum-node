@@ -69,7 +69,7 @@ const enrGeneratedFailed = ref(false);
 const enrGeneratedContinue = ref(false);
 const backupDistributedValidator = ref(false);
 const distrubutedValidatorAnimation = ref(
-  "url('./img/icon/service-icons/obol_animation.gif')"
+  "url('./animation/services/obol/obol-animation.gif')"
 );
 const distributedCompleted = ref(false);
 const polling = ref(null);

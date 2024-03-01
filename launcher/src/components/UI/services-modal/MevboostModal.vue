@@ -13,8 +13,8 @@
         <div class="title-box">
           <div class="service-name"><span>Flashbots Mev Boost</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-modals-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-modals-icons/github.png" alt="icon" @click="openGitHub" />
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
                 <input :id="relay.id" v-model="checkedRelays" type="checkbox" :value="relay" @change="enableBtn" />
                 <label :for="relay.id">{{ relay.name }}</label>
                 <div v-if="relay.freeCensorship == false" class="iconBox" data-tooltip="OFAC Compliant - censored">
-                  <img src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
+                  <img src="/img/icon/one-click-icons/mevboost-icons/ofac-compliant-icon.png" alt="flag-icon" />
                 </div>
               </div>
             </div>
@@ -38,7 +38,7 @@
           <div class="btn-box">
             <div v-if="loading" class="process">
               {{ $t("serviceModals.process") }}...
-              <img class="animate-spin" src="/img/icon/arrows/loading.png" alt="icon" />
+              <img class="animate-spin" src="/img/icon/loading-icons/loading-circle.png" alt="icon" />
             </div>
             <span v-else class="btn" :class="{ disabled: applyBtnDisabled }" @click="applyRelays">{{
               $t("secretKeyReg.apply")

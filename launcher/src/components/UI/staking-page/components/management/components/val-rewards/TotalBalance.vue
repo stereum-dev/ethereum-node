@@ -8,7 +8,7 @@
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <div class="w-full flex justify-between items-center">
-        <img class="w-4 -rotate-90" src="/img/icon/the-staking/keyIcon.png" alt="Key Icon" @mousedown.prevent />
+        <img class="w-4 -rotate-90" src="/img/icon/staking-page-icons/keyIcon.png" alt="Key Icon" @mousedown.prevent />
         <span class="w-full text-[12px] text-green-600 font-semibold text-center">{{ totalKeys }}</span>
       </div>
       <span class="w-1/3 text-[10px] text-amber-300 font-semibold text-center">{{ $t("stakingPage.ttl") }}</span>

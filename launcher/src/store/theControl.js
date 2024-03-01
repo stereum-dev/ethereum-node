@@ -39,49 +39,49 @@ export const useControlStore = defineStore("theControl", {
       consensusClientsData: [
         {
           name: "lighthouse",
-          img: "/img/icon/plugin-icons/consensus/LightHouse.png",
+          img: "/img/icon/service-icons/consensus/LightHouse.png",
         },
         {
           name: "lodestar",
-          img: "/img/icon/plugin-icons/consensus/Lodestar.png",
+          img: "/img/icon/service-icons/consensus/Lodestar.png",
         },
         {
           name: "nimbus",
-          img: "/img/icon/plugin-icons/consensus/Nimbus.png",
+          img: "/img/icon/service-icons/consensus/Nimbus.png",
         },
         {
           name: "prysm",
-          img: "/img/icon/plugin-icons/consensus/Prysm.png",
+          img: "/img/icon/service-icons/consensus/Prysm.png",
         },
         {
           name: "teku",
-          img: "/img/icon/plugin-icons/consensus/Teku.png",
+          img: "/img/icon/service-icons/consensus/Teku.png",
         },
       ],
       executionClientsData: [
         {
           name: "erigon",
-          img: "/img/icon/plugin-icons/execution/Erigon.png",
+          img: "/img/icon/service-icons/execution/Erigon.png",
         },
         {
           name: "geth",
-          img: "/img/icon/plugin-icons/execution/Geth.png",
+          img: "/img/icon/service-icons/execution/Geth.png",
         },
         {
           name: "reth",
-          img: "/img/icon/plugin-icons/execution/Reth.png",
+          img: "/img/icon/service-icons/execution/Reth.png",
         },
         {
           name: "besu",
-          img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
+          img: "/img/icon/service-icons/execution/hyperLedger-besu.png",
         },
         {
           name: "nethermind",
-          img: "/img/icon/plugin-icons/execution/Nethermind.png",
+          img: "/img/icon/service-icons/execution/Nethermind.png",
         },
         {
           name: "openethereum",
-          img: "/img/icon/plugin-icons/execution/OpenEthereum.png",
+          img: "/img/icon/service-icons/execution/OpenEthereum.png",
         },
       ],
     };

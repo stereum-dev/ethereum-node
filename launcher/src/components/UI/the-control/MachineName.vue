@@ -1,7 +1,7 @@
 <template>
   <div class="MachineNameParent">
     <div class="ubuntuIcon">
-      <img src="/img/icon/control/ubuntuIco.svg" />
+      <img src="/img/icon/control-page-icons/ubuntuIco.svg" />
     </div>
     <div class="machineNam">
       <span>{{ ServerName }}</span>

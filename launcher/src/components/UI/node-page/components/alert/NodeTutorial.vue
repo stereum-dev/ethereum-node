@@ -2,7 +2,7 @@
   <div class="tutorial-box border border-gray-600 rounded-md bg-[#151618]">
     <div class="tutorial-btn" @click="handleWrittenOptionClick">
       <div class="icon-box">
-        <img src="/img/icon/tutorial-icons/manual-icon.png" alt="" />
+        <img src="/img/icon/guide-page-icons/manual-icon.png" alt="" />
       </div>
       <div class="name-span">
         <span>{{ $t("nodeSidebarVideo.written") }}</span>
@@ -10,7 +10,7 @@
     </div>
     <div class="tutorial-btn" @click="handleCameraOptionClick">
       <div class="icon-box camera">
-        <img src="/img/icon/tutorial-icons/big-camera.png" alt="" />
+        <img src="/img/icon/guide-page-icons/big-camera.png" alt="" />
       </div>
       <div class="name-span">
         <span>{{ $t("nodeSidebarVideo.video") }}</span>
@@ -18,7 +18,7 @@
     </div>
     <div class="tutorial-btn" @click="isTutorialActive = true">
       <div class="icon-box camera">
-        <img src="/img/icon/tutorial-icons/Guide-icon.png" alt="" />
+        <img src="/img/icon/guide-page-icons/guide-icon.png" alt="" />
       </div>
       <div class="name-span">
         <span>{{ $t("nodeSidebarVideo.rpc") }}</span>
@@ -26,7 +26,7 @@
     </div>
     <div v-if="currentNetwork.network !== 'gnosis'" class="tutorial-btn" @click="isStakeGuideActive = true">
       <div class="icon-box camera">
-        <img src="/img/icon/tutorial-icons/Guide-icon.png" alt="" />
+        <img src="/img/icon/guide-page-icons/guide-icon.png" alt="" />
       </div>
       <div class="name-span">
         <span>{{ $t("nodeSidebarVideo.stake") }}</span>

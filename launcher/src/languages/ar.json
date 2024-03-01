@@ -308,7 +308,7 @@
     "RPCCopiedMessage": "تم نسخ عنوان RPC-URL إلى الحافظة!",
     "WSTurnOnMessage": "يرجى تشغيل نفق WS أولاً!",
     "WSCopiedMessage": "تم نسخ عنوان WS-URL إلى الحافظة!"
- },
+  },
   "pluginLogs": {
     "pageTitle": "سجلات الإضافة",
     "noLogFound": "لم يتم العثور على سجل في القائمة",
@@ -850,7 +850,13 @@
     "dkKey": "أدخل كلمة المرور لفك تشفير المفتاح الخاص",
     "dlPk": "قم بتنزيل المفتاح الخاص لنسخه احتياطيًا. تأكد أيضًا من كتابة كلمة المرور التي استخدمتها للتشفير!",
     "dl": "تنزيل",
-    "imp": "استيراد"
+    "imp": "استيراد",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "حدث خطأ ما",

@@ -23,7 +23,7 @@
     >
       <div class="w-full h-full absolute inset-0 bg-black rounded-md opacity-80"></div>
       <div class="w-full h-full flex flex-col justify-center items-center space-y-4 z-50">
-        <img src="/img/icon/form-setup/anim3.gif" alt="anim" />
+        <img src="/animation/login/login_animation.gif" alt="anim" />
         <div
           class="w-[150px] h-12 bg-red-500 py-2 px-4 rounded-full shadow-md shadow-[#161515] hover:scale-110 active:scale-100 hover:bg-red-700 flex justify-center items-center cursor-pointer transition-all duration-200 ease-in-out"
           @click="cancelLogin"
@@ -63,7 +63,7 @@
           >
             <img
               class="w-6 h-6 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200"
-              src="/img/icon/PLUS_ICON.png"
+              src="/img/icon/server-management-icons/plus-icon.png"
               alt="icon"
               @mousedown.prevent
             />
@@ -113,7 +113,7 @@
             class="col-start-4 col-span-1 w-8 h-8 rounded-full border-4 border-slate-500 bg-gray-200 flex justify-center items-center p-1 cursor-pointer hover:border-slate-400 shadow-md shadow-[#1c2122]"
             @click="ipScanModal = true"
           >
-            <img class="w-4 h-4 hover:scale-110 active:scale-100" src="/img/icon/form-setup/local-lan.png" alt="" />
+            <img class="w-4 h-4 hover:scale-110 active:scale-100" src="/img/icon/server-management-icons/local-lan.png" alt="" />
           </div>
           <input
             v-model="serverStore.loginState.ip"
@@ -190,7 +190,7 @@
                 class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
               >
                 <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
-                <img class="w-4 h-4" src="/img/icon/form-setup/plus.png" />
+                <img class="w-4 h-4" src="/img/icon/server-management-icons/plus.png" />
               </label>
             </div>
             <div
@@ -218,7 +218,7 @@
                 class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer px-1"
                 @click="toggleShowPassword"
               >
-                <img class="w-6 h-6" src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
+                <img class="w-6 h-6" src="/img/icon/server-management-icons/eye.png" alt="eyeIcon" />
               </div>
             </div>
           </div>
@@ -250,7 +250,7 @@
               class="col-start-12 col-span-1 w-full h-full self-center flex justify-center items-center bg-gray-300 rounded-r-full cursor-pointer"
               @click="toggleShowPassword"
             >
-              <img class="w-6 h-6" src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
+              <img class="w-6 h-6" src="/img/icon/server-management-icons/eye.png" alt="eyeIcon" />
             </div>
           </div>
         </Transition>
@@ -347,9 +347,9 @@ const hovered = ref(false);
 //Computed & Watch
 const getTrashImg = computed(() => {
   if (hovered.value) {
-    return "./img/icon/TRASH_CAN2.png";
+    return "./img/icon/server-management-icons/trash-can-2.png";
   } else {
-    return "./img/icon/TRASH_CAN.png";
+    return "./img/icon/server-management-icons/trash-can.png";
   }
 });
 

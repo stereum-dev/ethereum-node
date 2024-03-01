@@ -3,13 +3,13 @@
     <div class="status-box_header bg-[#151618] border border-gray-600 rounded-md">
       <div class="icon-line">
         <div class="status-icon" :class="{ active: perfect }">
-          <img src="/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-notification.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: warning || pointStatus.length !== 0 }">
-          <img src="/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
         </div>
         <div class="status-icon" :class="{ active: alarm }">
-          <img src="/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
         </div>
         <div
           class="status-icon"
@@ -17,14 +17,14 @@
             active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
           }"
         >
-          <img src="/img/icon/control/SETTINGS.png" alt="green" />
+          <img src="/img/icon/node-alert-icons/alert-settings.png" alt="green" />
         </div>
       </div>
     </div>
     <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md">
       <router-link v-if="storageWarning" to="/control" class="status-message_yellow">
         <div class="message-icon">
-          <img src="/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
+          <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -35,7 +35,7 @@
       </router-link>
       <router-link v-if="cpuWarning" to="/control" class="status-message_yellow">
         <div class="message-icon">
-          <img src="/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
+          <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -48,7 +48,7 @@
       </router-link>
       <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow">
         <div class="message-icon">
-          <img src="/img/icon/control/PORT_LIST_ICON.png" alt="warn_storage" />
+          <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -61,7 +61,7 @@
       </router-link>
       <router-link v-if="cpuAlarm" to="/control" class="status-message_red">
         <div class="message-icon">
-          <img src="/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
+          <img src="/img/icon/node-alert-icons/alert-cpu-red.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -75,7 +75,7 @@
 
       <router-link v-if="synchronizationError" to="/control" class="status-message_red">
         <div class="message-icon">
-          <img src="/img/icon/control/SyncErrorWithShadow.gif" alt="warn_storage" />
+          <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -88,7 +88,7 @@
       </router-link>
       <div v-if="errorAlarm" class="status-message_red" @click="isTaskModalActive = true">
         <div class="message-icon">
-          <img src="/img/icon/control/TaskErrorAlert.png" alt="warn_storage" />
+          <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -126,7 +126,7 @@
         @click="showUpdate"
       >
         <div class="message-icon">
-          <img src="/img/icon/control/logo-icon.png" alt="warn_storage" />
+          <img src="/img/icon/node-alert-icons/alert-notification-stereum-update.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="main-message">
@@ -295,11 +295,11 @@ export default {
   methods: {
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
-        return "/img/icon/plugin-icons/Other/PrometheusNodeExporter-s.png";
+        return "/img/icon/service-icons/Other/PrometheusNodeExporter-s.png";
       } else if (arg.name === "Notification") {
-        return "/img/icon/plugin-icons/Other/NotifierService-s.png";
+        return "/img/icon/service-icons/Other/NotifierService-s.png";
       } else if (arg.name == "Charon") {
-        return "/img/icon/plugin-icons/validator/ObolCharon-s.png";
+        return "/img/icon/service-icons/validator/ObolCharon-s.png";
       } else {
         return arg.sIcon;
       }

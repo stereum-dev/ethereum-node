@@ -3,7 +3,7 @@
     <div class="cpuContentBox">
       <div class="cpuIco">
         <div class="cpuIco-container">
-          <img src="/img/icon/control/cpuIcon.svg" />
+          <img src="/img/icon/control-page-icons/cpuIcon.svg" />
         </div>
         <span>CPU</span>
       </div>
