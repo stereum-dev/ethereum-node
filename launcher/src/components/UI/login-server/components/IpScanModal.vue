@@ -3,7 +3,7 @@
     <div class="ipscan-modal-bg" @click="closeIpscan"></div>
     <div class="ipscan-modal">
       <div class="ipscan-icon-container">
-        <img src="/img/icon/the-staking/stereum-error.png" alt="" />
+        <img src="/img/icon/staking-page-icons/stereum-error.png" alt="" />
       </div>
       <div class="ipscan-text-container">
         <p class="text">

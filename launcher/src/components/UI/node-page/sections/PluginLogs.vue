@@ -15,7 +15,7 @@
             <span>{{ $t("pluginLogs.pageTitle") }}</span>
           </div>
           <div class="title-icon">
-            <img src="/img/icon/node-icons/log-icon.png" alt="icon" />
+            <img src="/img/icon/service-log-icons/log-icon.png" alt="icon" />
           </div>
         </div>
         <div class="serviceDetails">
@@ -69,10 +69,10 @@
         </div>
         <div class="searchBox">
           <input id="search" v-model="searchValue" type="search" placeholder="Search" />
-          <img v-if="!searchValue" src="/img/icon/arrows/search.png" alt="icon" />
+          <img v-if="!searchValue" src="/img/icon/service-log-icons/search.png" alt="icon" />
         </div>
         <div class="export-log" data-tooltip="Export the log" @click="logExport">
-          <img src="/img/icon/manage-node-icons/log_export.png" alt="" />
+          <img src="/img/icon/service-log-icons/150-log-export-button.png" alt="" />
         </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>
@@ -107,7 +107,7 @@ export default {
       //dialog datas
       openDialog: false,
       dialogValue: "",
-      copyIcon: "/img/icon/control/ok.png",
+      copyIcon: "/img/icon/control-page-icons/ok.png",
     };
   },
 

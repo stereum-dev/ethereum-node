@@ -7,7 +7,7 @@
     <div class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]">
       <img
         class="col-start-1 col-span-1 w-4 h-4"
-        src="/img/icon/the-staking/eye.png"
+        src="/img/icon/staking-page-icons/eye.png"
         alt="Block Icon"
         @mousedown.prevent
       />

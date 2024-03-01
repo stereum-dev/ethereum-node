@@ -7,11 +7,11 @@
         <img
           v-if="isPasswordVisible"
           class="w-4"
-          src="/img/icon/the-staking/visible.png"
+          src="/img/icon/staking-page-icons/visible.png"
           alt="Visible Icon"
           @mousedown.prevent
         />
-        <img v-else class="w-4" src="/img/icon/the-staking/invisible.png" alt="Invisible Icon" @mousedown.prevent />
+        <img v-else class="w-4" src="/img/icon/staking-page-icons/invisible.png" alt="Invisible Icon" @mousedown.prevent />
       </button>
 
       <input
@@ -26,7 +26,7 @@
         class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
         @click="cancelPassword"
       >
-        <img class="w-4 h-4" src="/img/icon/the-staking/close.png" alt="Close Icon" @mousedown.prevent />
+        <img class="w-4 h-4" src="/img/icon/staking-page-icons/close.png" alt="Close Icon" @mousedown.prevent />
       </div>
     </div>
     <div class="col-start-12 col-span-1 flex justify-center items-center p-1">
@@ -34,7 +34,7 @@
         class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
         @click="confirmPassword"
       >
-        <img class="w-4 h-4" src="/img/icon/the-staking/check.png" alt="Check Icon" @mousedown.prevent />
+        <img class="w-4 h-4" src="/img/icon/staking-page-icons/check.png" alt="Check Icon" @mousedown.prevent />
       </div>
     </div>
   </div>

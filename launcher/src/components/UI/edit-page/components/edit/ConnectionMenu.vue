@@ -4,7 +4,7 @@
       <img
         v-if="!item.isServiceConnecting"
         class="w-6 rounded-md bg-gray-500 border border-gray-700 p-1 cursor-pointer active:scale-90 transition duration-200 hover:bg-gray-700"
-        src="/img/icon/manage-node-icons/connection.png"
+        src="/img/icon/edit-node-icons/service-connecting.png"
         alt="Trash Icon"
         @click="confirmConnection(item)"
       />
@@ -13,7 +13,7 @@
       </div>
       <img
         class="w-6 bg-gray-500 rounded-md border border-gray-700 hover:bg-gray-700"
-        src="/img/icon/the-staking/close.png"
+        src="/img/icon/staking-page-icons/close.png"
         alt="CIcon"
         @click="hideConnection(item)"
       />

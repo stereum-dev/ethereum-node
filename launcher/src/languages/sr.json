@@ -850,7 +850,13 @@
     "dkKey": "УНЕСИ ЛОЗИНКУ ЗА ДЕШИФРОВАЊЕ ПРИВАТНОГ КЉУЧА",
     "dlPk": "Преузми приватни кључ да га сачуваш. Обавезно запиши лозинку коју си користио за шифровање!",
     "dl": "ПРЕУЗМИ",
-    "imp": "УВЕЗИ"
+    "imp": "УВЕЗИ",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "Дошло је до грешке",

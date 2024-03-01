@@ -3,7 +3,7 @@
     <div class="dick-speed_box">
       <div class="disk-speed_icon">
         <div class="disk-speed_icon_container">
-          <img src="/img/icon/control/Speedmeter.png" />
+          <img src="/img/icon/control-page-icons/Speedmeter.png" />
         </div>
         <span>{{ $t("controlPage.disk") }}</span>
       </div>

@@ -3,7 +3,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
   <div class="w-full h-full flex flex-col justify-evenly items-center mx-auto px-4 py-2 space-y-2 mt-6 relative">
     <div class="w-full flex justify-center items-center">
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/folder.png" alt="Path Icon" />
+        <img class="col-start-1 w-8" src="/img/icon/edit-node-icons/service-save-path.png" alt="Path Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.installationPath") }}</span>
         <input
           v-model="props.properties.installDir"
@@ -18,7 +18,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
       class="w-full flex justify-center items-center"
     >
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img class="w-8 col-start-1" src="/img/icon/manage-node-icons/sync.gif" alt="Sync Icon" />
+        <img class="w-8 col-start-1" src="/animation/synchronisation/synchronisation-icon-active.gif" alt="Sync Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-md text-left">{{ $t("editModals.syncMode") }}</span>
         <SyncCarousel :properties="props.properties" />
       </div>
@@ -29,7 +29,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
       class="w-full flex justify-center items-center"
     >
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/external-source.png" alt="Path Icon" />
+        <img class="col-start-1 w-8" src="/img/icon/edit-node-icons/service-external-source.png" alt="Path Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-left">External Source</span>
         <input
           v-model="sourceLink"
@@ -45,7 +45,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
       class="w-full flex justify-center items-center"
     >
       <div class="w-full grid grid-cols-12 items-center text-md">
-        <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/JWTTokenIcon.png" alt="Path Icon" />
+        <img class="col-start-1 w-8" src="/img/icon/edit-node-icons/service-jwt-token-connection.png" alt="Path Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-left">JWT TOKEN</span>
         <input
           v-model="jwtToken"
@@ -56,7 +56,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
       </div>
     </div>
     <div v-if="client.service === 'ExternalConsensusService'" class="w-full grid grid-cols-12 items-center text-md">
-      <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/category.png" alt="Path Icon" />
+      <img class="col-start-1 w-8" src="/img/icon/edit-node-icons/service-category.png" alt="Path Icon" />
       <span class="col-start-2 col-span-3 text-gray-400 text-left">Client Selection</span>
 
       <div
@@ -99,7 +99,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
       </div>
     </div>
     <div v-if="selectedService === 'prysm'" class="w-full grid grid-cols-12 items-center text-md">
-      <img class="col-start-1 w-8" src="/img/icon/manage-node-icons/gateway.png" alt="Path Icon" />
+      <img class="col-start-1 w-8" src="/img/icon/edit-node-icons/service-port.png" alt="Path Icon" />
       <span class="col-start-2 col-span-3 text-gray-400 text-left">Gateway</span>
       <input
         v-model="gateway"

@@ -40,13 +40,13 @@
     </div>
     <div v-if="isMultiService" v-show="p2pItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
     </div>
   </div>
@@ -75,12 +75,12 @@ export default {
         {
           id: 1,
           name: "default",
-          icon: "/img/icon/control/PeerToPeerIcon.svg",
+          icon: "/img/icon/control-page-icons/PeerToPeerIcon.svg",
         },
         {
           id: 2,
           name: "unknown",
-          icon: "/img/icon/control/spinner.gif",
+          icon: "/animation/loading/mushroom-spinner.gif",
         },
       ],
     };

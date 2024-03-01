@@ -36,7 +36,7 @@
             </div>
             <div class="remove">
               <img
-                src="/img/icon/click-installation/cancel.png"
+                src="/img/icon/import-config-icons/cancel-import.png"
                 alt="remove"
                 @click="removeServiceFromList(plugin, index)"
               />
@@ -65,7 +65,7 @@
             </div>
             <div class="remove">
               <img
-                src="/img/icon/click-installation/cancel.png"
+                src="/img/icon/import-config-icons/cancel-import.png"
                 alt="remove"
                 @click="removeServiceFromList(plugin, index)"
               />

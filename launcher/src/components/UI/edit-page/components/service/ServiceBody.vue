@@ -29,7 +29,7 @@
             class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 hover:border-gray-300"
             @click="changeConnection(item)"
           >
-            <img class="w-5 z-10" src="/img/icon/manage-node-icons/connection.png" alt="" @mousedown.prevent.stop />
+            <img class="w-5 z-10" src="/img/icon/edit-node-icons/service-connecting.png" alt="" @mousedown.prevent.stop />
           </div>
           <div
             class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 hover:bg-black rounded-md cursor-pointer p-1 transform active:scale-75 duration-200"
@@ -47,7 +47,7 @@
           >
             <img
               class="w-5 z-10 cursor-pointer"
-              src="/img/icon/manage-node-icons/trash.png"
+              src="/img/icon/edit-node-icons/service-delete.png"
               alt=""
               @mousedown.prevent.stop
             />

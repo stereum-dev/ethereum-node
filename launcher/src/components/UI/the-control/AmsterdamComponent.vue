@@ -117,7 +117,7 @@ export default {
     return {
       showSyncInfo: false,
       counter: null,
-      defaultIcon: "/img/icon/control/spinner.gif",
+      defaultIcon: "/animation/loading/mushroom-spinner.gif",
       days: null,
       date: "",
       pattern: [],

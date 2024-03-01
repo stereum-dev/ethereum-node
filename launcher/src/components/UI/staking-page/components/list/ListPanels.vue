@@ -10,7 +10,7 @@
         <img
           v-if="stakingStore.isGroupListActive"
           class="w-5 h-5"
-          src="/img/icon/the-staking/ungroup.png"
+          src="/img/icon/staking-page-icons/ungroup.png"
           alt="Group Icon"
           @click="removeGroup"
           @mousedown.prevent
@@ -20,7 +20,7 @@
         <img
           v-else
           class="w-5 h-5"
-          src="/img/icon/the-staking/group.png"
+          src="/img/icon/staking-page-icons/group.png"
           alt="Group Icon"
           @click="groupingPanel"
           @mousedown.prevent
@@ -38,7 +38,7 @@
       >
         <img
           class="h-6"
-          src="/img/icon/the-staking/filter.png"
+          src="/img/icon/staking-page-icons/filter.png"
           alt="Insert Icon"
           @click="searchPanel"
           @mousedown.prevent
@@ -118,9 +118,9 @@ const activePanel = shallowRef({
 
 const aliasIcon = computed(() => {
   if (!stakingStore.isPubkeyVisible) {
-    return "/img/icon/the-staking/display-name.png";
+    return "/img/icon/staking-page-icons/display-name.png";
   } else {
-    return "/img/icon/the-staking/hide.png";
+    return "/img/icon/staking-page-icons/hide.png";
   }
 });
 
