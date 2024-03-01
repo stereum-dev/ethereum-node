@@ -2,5 +2,5 @@
   <CreditScreen />
 </template>
 <script setup>
-import CreditScreen from "../components/UI/credit/CreditScreen.vue";
+import CreditScreen from "../components/UI/credit-page/CreditScreen.vue";
 </script>

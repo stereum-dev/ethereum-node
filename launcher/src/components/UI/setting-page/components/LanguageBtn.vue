@@ -6,7 +6,7 @@
     <div class="icon-box w-9 h-full flex justify-center items-center">
       <img class="lang-icon w-6 h-6" :src="langIco" :alt="langIco" />
     </div>
-    <span class="w-4/5 flex h-full justify-center items-center uppercase pl-1 text-gray-200 font-semibold text-base">
+    <span class="w-4/5 flex h-full justify-center items-center font-medium uppercase pl-1 text-gray-200 text-base">
       {{ langName }}
     </span>
   </div>

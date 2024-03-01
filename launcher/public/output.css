@@ -2052,6 +2052,10 @@ video {
   width: 75%;
 }
 
+.w-\[30\%\] {
+  width: 30%;
+}
+
 .w-\[110px\] {
   width: 110px;
 }
@@ -4054,6 +4058,10 @@ video {
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-\[8px\] {
+  font-size: 8px;
 }
 
 .text-\[10px\] {

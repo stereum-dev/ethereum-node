@@ -61,4 +61,11 @@ const toggleActive = () => {
 .btn-parent:active {
   box-shadow: 1px 1px 10px 1px #171717 inset;
 }
+.btn-parent:active img {
+  transform: scale(0.9);
+}
+
+.btn-parent:active span {
+  transform: scale(0.95);
+}
 </style>

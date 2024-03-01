@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import FlagButton from "./FlagButton.vue";
+import FlagButton from "../components/FlagButton.vue";
 import { mapWritableState } from "pinia";
 import ControlService from "@/store/ControlService";
 import { useLangStore } from "@/store/languages";

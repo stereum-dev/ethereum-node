@@ -17,7 +17,10 @@
       <div class="bg-black w-5/6 h-full">
         <MainBox>
           <ItemRow v-for="(item, index) in itemConfigurations" :key="index" :title="item.title">
-            <component :is="item.component" v-if="item.component" @languageChanged="langActiveBox" />
+            <component :is="item.component" v-if="item.component === CreditButtons">
+              <CreditBtn v-for="btnName in creditButtonNames" :key="btnName" :btn-name="btnName" />
+            </component>
+            <component :is="item.component" v-else @languageChanged="langActiveBox" />
           </ItemRow>
         </MainBox>
       </div>
@@ -29,12 +32,14 @@
 import SideBar from "./section/SideBar.vue";
 import MainBox from "./section/MainBox";
 import SidebarBtn from "./components/SidebarBtn";
-import ItemRow from "./components/ItemRow";
+import ItemRow from "./section/ItemRow";
 import VolumeSlider from "./components/VolumeSlider";
 import OutputOptions from "./components/OutputOptions.vue";
 import LanguageBtn from "./components/LanguageBtn.vue";
+import CreditButtons from "./section/CreditButtons.vue";
 import { ref, computed } from "vue";
-import LanguagePanel from "./LanguagePanel.vue";
+import LanguagePanel from "./section/LanguagePanel.vue";
+import CreditBtn from "./components/CreditBtn.vue";
 
 const mainBox = ref("general");
 const langActive = ref(false);
@@ -43,6 +48,8 @@ const sidebarButtons = ref([
   { name: "general", label: "General" },
   { name: "audio", label: "Audio" },
 ]);
+
+const creditButtonNames = ["technical contribution", "feedback, testing & suggestions", "translation"];
 
 const toggleSettings = (name) => {
   mainBox.value = name;
@@ -55,7 +62,10 @@ const langActiveBox = () => {
 const itemConfigurations = computed(() => {
   let items = [];
   if (mainBox.value === "general") {
-    items = [{ title: "Language Selection", component: LanguageBtn }, { title: "Credits" }];
+    items = [
+      { title: "Language Selection", component: LanguageBtn },
+      { title: "Credits", component: CreditButtons },
+    ];
   } else if (mainBox.value === "audio") {
     items = [
       { title: "Output Device", component: OutputOptions },
@@ -64,7 +74,7 @@ const itemConfigurations = computed(() => {
   }
 
   while (items.length < 8) {
-    items.push({ title: "" }); // Empty rows
+    items.push({ title: "" });
   }
   return items;
 });
