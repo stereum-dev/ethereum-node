@@ -45,9 +45,9 @@ const emit = defineEmits(["mouseLeave", "accessHandler"]);
 
 const getStatus = computed(() => {
   if (footerStore.stereumStatus) {
-    return "/img/icon/header-icons/LOGO.png";
+    return "/img/icon/base-header-icons/header-logo-button.png";
   } else {
-    return "/img/icon/header-icons/statusOff.png";
+    return "/img/icon/base-header-icons/header-logo-button-offline.png";
   }
 });
 

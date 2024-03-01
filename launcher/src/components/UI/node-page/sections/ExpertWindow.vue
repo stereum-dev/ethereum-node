@@ -27,7 +27,7 @@
           class="z-10 dataTitleBox"
           @click="openExpertMode"
         >
-          <img class="titleIcon" src="/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
+          <img class="titleIcon" src="/img/icon/service-setting-icons/crown.png" alt="icon" />
 
           <span>Expert Mode</span>
           <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
@@ -38,7 +38,7 @@
           class="dataTitleBox"
           @click="openSSVExpertMode"
         >
-          <img class="titleIcon" src="/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
+          <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
           <span>SSV Configuration</span>
           <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
@@ -96,14 +96,14 @@
             <img
               v-if="option.buttonState"
               class="buttonOff"
-              src="/img/icon/plugin-menu-icons/confirm.png"
+              src="/img/icon/service-setting-icons/confirm.png"
               alt="icon"
               @click="buttonOff(option)"
             />
             <img
               v-else
               class="buttonOn"
-              src="/img/icon/plugin-menu-icons/edit2.png"
+              src="/img/icon/service-setting-icons/edit.png"
               alt="icon"
               @click="buttonOn(option)"
             />

@@ -31,10 +31,10 @@
         </div>
         <div class="arrowBox">
           <div class="select" @click="addBlocksToUse">
-            <img src="/img/icon/arrows/right-1.png" alt="icon" />
+            <img src="/img/icon/mevboost-icons/arrow-right.png" alt="icon" />
           </div>
           <div class="remove" @click="removeFromUsedBlocks">
-            <img src="/img/icon/arrows/left-1.png" alt="icon" />
+            <img src="/img/icon/mevboost-icons/arrow-left.png" alt="icon" />
           </div>
         </div>
         <div class="included-box">

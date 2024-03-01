@@ -8,7 +8,7 @@
           <span class="comment-row2">Prometheus</span>
         </div>
         <div class="icon-part" :data-tooltip="serviceName">
-          <img src="/img/icon/control/PrometheusServiceCircle.png" alt="Prometheus" />
+          <img src="/img/icon/control-page-icons/PrometheusServiceCircle.png" alt="Prometheus" />
         </div>
       </div>
       <div v-else class="bottom-part">

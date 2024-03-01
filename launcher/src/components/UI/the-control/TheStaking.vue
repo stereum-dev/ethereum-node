@@ -3,7 +3,7 @@
     <div class="staking-box">
       <div class="staking-ico">
         <div class="staking-ico_container">
-          <img src="/img/icon/control/key-eth.svg" alt="Key-icon" />
+          <img src="/img/icon/control-page-icons/key-eth.svg" alt="Key-icon" />
         </div>
         <span>STAKING</span>
       </div>
@@ -105,19 +105,19 @@ export default {
     setSelectedCurrency() {
       switch (this.currentNetwork.id) {
         case 1:
-          this.selectedCurrency = "/img/icon/control/ETH_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-ethereum-mainnet.png";
           break;
         case 2:
-          this.selectedCurrency = "/img/icon/control/goETH_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png";
           break;
         case 3:
-          this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
+          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-sepolia-testnet.png";
           break;
         case 4:
-          this.selectedCurrency = "/img/icon/control/gno_currency_symbol.png";
+          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-gnosis-mainnet.png";
           break;
         case 5:
-          this.selectedCurrency = "/img/icon/control/ho_currency_symbol.png";
+          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-holesky-testnet.png";
           break;
         default:
           break;

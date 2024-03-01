@@ -34,13 +34,14 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
+// import TechnicalBox from "./TechnicalBox.vue";
 import TechnicalBox from "./TechnicalBox.vue";
 export default {
   components: { TechnicalBox },
   data() {
     return {
-      financialIco: "./img/icon/credit/creditFinancial.png",
-      technikalIco: "./img/icon/credit/creditTechnik.png",
+      financialIco: "./img/icon/credit-page-icons/financial-credit.png",
+      technikalIco: "./img/icon/credit-page-icons/technical-credit.png",
     };
   },
   computed: {

@@ -1,7 +1,7 @@
 <template>
   <div class="update-parent">
     <div class="loading-icon">
-      <img src="/img/icon/update-loading.gif" />
+      <img src="/animation/launcher-update/update-loading.gif" />
     </div>
     <div class="update-text">
       <span>{{ `${updateState.message}${updateState.MBps ? " " + updateState.MBps.toFixed(2) + " MBps" : ""}` }}</span>

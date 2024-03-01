@@ -20,7 +20,7 @@ import { watch, watchEffect } from 'vue';
       label
     }}</span>
     <div v-if="relay.freeCensorship == false" class="col-start-12 col-span-1" data-tooltip="OFAC Compliant - censored">
-      <img class="w-5" src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
+      <img class="w-5" src="/img/icon/one-click-icons/mevboost-icons/ofac-compliant-icon.png" alt="flag-icon" />
     </div>
   </label>
 </template>

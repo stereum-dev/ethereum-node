@@ -20,7 +20,7 @@ import { computed, ref } from 'vue';
       v-if="client.category === 'consensus' && getConnectedMevboost?.config.serviceID === client?.config.serviceID"
       class="flex justify-evenly items-center absolute -right-2 -bottom-3"
     >
-      <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
+      <img class="w-5" src="/img/icon/service-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
     <div
       v-if="
@@ -30,7 +30,7 @@ import { computed, ref } from 'vue';
       "
       class="flex justify-evenly items-center absolute end-1 top-0"
     >
-      <img class="w-3" src="/img/icon/manage-node-icons/connected.png" alt="icon" />
+      <img class="w-3" src="/img/icon/edit-node-icons/service-connected.png" alt="icon" />
     </div>
     <div
       v-else-if="
@@ -40,7 +40,7 @@ import { computed, ref } from 'vue';
       "
       class="flex justify-evenly items-center absolute end-1 top-0"
     >
-      <img class="w-3" src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />
+      <img class="w-3" src="/img/icon/edit-node-icons/not-service-connected.png" alt="icon" />
     </div>
   </div>
 </template>

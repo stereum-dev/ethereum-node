@@ -77,11 +77,11 @@ export async function useFrontendServices() {
               vs = allServices.find((element) => element.service === oldService.name + "ValidatorService");
             }
             if (vs.service === "TekuValidatorService") {
-              vs.icon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-Circle.png");
-              vs.sIcon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-s.png");
+              vs.icon = require("/public/img/icon/service-icons/validator/Teku-Validator-Linked-Circle.png");
+              vs.sIcon = require("/public/img/icon/service-icons/validator/Teku-Validator-Linked-s.png");
             } else if (vs.service === "NimbusValidatorService") {
-              vs.icon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-Circle.png");
-              vs.sIcon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-s.png");
+              vs.icon = require("/public/img/icon/service-icons/validator/Nimbus-Validator-Linked-Circle.png");
+              vs.sIcon = require("/public/img/icon/service-icons/validator/Nimbus-Validator-Linked-s.png");
             }
             vs.config = oldService.config;
             vs.state = oldService.state;

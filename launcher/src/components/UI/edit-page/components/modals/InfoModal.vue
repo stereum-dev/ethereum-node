@@ -12,14 +12,14 @@
       <div class="flex flex-col justify-between items-center py-2 px-4 space-y-2 mt-10">
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
-            <img class="col-start-1 w-7 h-7" src="/img/icon/manage-node-icons/plugin-item-icon.png" alt="Client Icon" />
+            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-item-icon.png" alt="Client Icon" />
             <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.serviceId") }}</span>
             <span class="col-start-6 col-end-13 text-amber-600 text-center">{{ client.config.serviceID }}</span>
           </div>
         </div>
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
-            <img class="col-start-1 w-7 h-7" src="/img/icon/manage-node-icons/category.png" alt="Client Icon" />
+            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-category.png" alt="Client Icon" />
             <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.serviceCat") }}</span>
             <span
               v-if="client.category !== 'service'"
@@ -35,7 +35,7 @@
         <div v-if="activateConnectionInfo" class="w-full flex flex-col justify-between items-start space-y-1 py-1">
           <div v-if="getConnectedExecution" class="w-full flex justify-center items-center">
             <div class="w-full grid grid-cols-12 items-center text-md">
-              <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
+              <img class="col-start-1 w-5" src="/img/icon/edit-node-icons/service-connected.png" alt="Client Icon" />
               <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editBody.executionClient") }}</span>
               <div
                 class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
@@ -48,7 +48,7 @@
           </div>
           <div v-if="getConnectedConsensus" class="w-full flex justify-center items-center">
             <div class="w-full grid grid-cols-12 items-center text-md">
-              <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
+              <img class="col-start-1 w-5" src="/img/icon/edit-node-icons/service-connected.png" alt="Client Icon" />
               <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editBody.consensusClient") }}</span>
               <div
                 class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
@@ -61,7 +61,7 @@
           </div>
           <div v-if="getConnectedMevboost" class="w-full flex justify-center items-center">
             <div class="w-full grid grid-cols-12 items-center text-md">
-              <img class="col-start-1 w-5" src="/img/icon/manage-node-icons/connected.png" alt="Client Icon" />
+              <img class="col-start-1 w-5" src="/img/icon/edit-node-icons/service-connected.png" alt="Client Icon" />
               <span class="col-start-2 col-span-3 text-gray-400 text-left">Mevboost</span>
               <div
                 class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"

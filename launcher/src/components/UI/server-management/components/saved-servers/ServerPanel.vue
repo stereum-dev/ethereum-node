@@ -55,7 +55,7 @@
     >
       <img
         class="w-7 h-7 border border-gray-500 bg-teal-500 rounded-full p-1"
-        src="/img/icon/form-setup/plus.png"
+        src="/img/icon/server-management-icons/plus.png"
         alt="Add Icon"
       />
       <span class="text-sm text-left uppercase font-bold">{{ $t("multiServer.addServer") }}</span>

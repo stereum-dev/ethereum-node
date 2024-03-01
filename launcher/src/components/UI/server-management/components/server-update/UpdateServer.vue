@@ -9,7 +9,7 @@
       class="w-full h-full col-start-1 col-span-full row-start-2 row-end-4 grid grid-cols-6 grid-rows-2 items-center gap-x-1"
     >
       <div class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full flex justify-center items-center">
-        <img class="w-full" src="/img/icon/control/ubuntuIco.svg" />
+        <img class="w-full" src="/img/icon/control-page-icons/ubuntuIco.svg" />
       </div>
       <div class="w-full h-full col-start-2 col-span-full row-start-1 row-span-1 flex justify-start items-center ml-2">
         <span class="text-lg font-semibold text-gray-400 uppercase">Ubuntu</span>
@@ -33,7 +33,7 @@
         <img
           v-if="searchingForUpdatablePackages"
           class="w-5 h-5 spinner self-center justify-self-center"
-          src="/img/icon/control/loading_circle.gif"
+          src="/animation/loading/loading-circle.gif"
         />
         <div v-else class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center">
           <span class="text-sm font-semibold text-gray-300 text-center">{{ numberOfUpdatablePackages }}</span>
@@ -63,7 +63,7 @@
             @click.prevent="updateAll"
           >
             <span class="text-gray-100 text-sm font-semibold uppercase">{{ $t("updatePanel.all") }}</span>
-            <img class="w-4" src="/img/icon/node-icons/download2.png" alt="icon" />
+            <img class="w-4" src="/img/icon/base-header-icons/update-modal-download.png" alt="icon" />
           </div>
         </div>
         <div class="w-full h-full col-start-7 col-span-full flex justify-center items-center p-1">

@@ -5,7 +5,7 @@
     </div>
     <div class="inputBox">
       <div class="password-box">
-        <img src="/img/icon/form-setup/eye.png" alt="" @click="passCtrlSwitch" />
+        <img src="/img/icon/server-management-icons/eye.png" alt="" @click="passCtrlSwitch" />
         <input
           v-model="passwordBoxModel"
           :type="passCtrl ? 'text' : 'password'"

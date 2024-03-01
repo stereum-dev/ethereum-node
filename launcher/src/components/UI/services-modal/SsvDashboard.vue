@@ -11,7 +11,7 @@
           :placeholder="`${$t('serviceModal.pubKey')}`"
         />
         <div class="copy-icon" @click="copyPubKey">
-          <img src="/img/icon/service-icons/copy1.png" alt="icon" />
+          <img src="/img/icon/service-modals-icons/copy.png" alt="icon" />
           <span>copied!</span>
         </div>
       </div>

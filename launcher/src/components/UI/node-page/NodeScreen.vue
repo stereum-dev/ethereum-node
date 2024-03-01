@@ -24,7 +24,7 @@
             "
             @mouseleave="footerStore.cursorLocation = ''"
           >
-            <img class="w-8" src="/img/icon/round-icon.png" alt="information" />
+            <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
           </button>
         </div>
         <AlertSection :info-aralm="nodeStore.infoAlarm" />
@@ -63,9 +63,6 @@ const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
 const isLogsPageActive = ref(false);
 const refreshStats = ref(false);
-
-// const chckTutorial = "/img/icon/round-icon.png";
-// const returnStatus = "/img/icon/round-icon.png";
 
 let polling = null;
 let pollingVitals = null;

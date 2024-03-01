@@ -11,14 +11,14 @@
         v-if="!reconnecting"
         class="w-full h-full col-start-1 col-span-full row-start-2 row-span-5 flex flex-col justify-evenly items-center"
       >
-        <img class="w-52" src="/img/icon/manage-node-icons/stereum_cant_connect.gif" />
+        <img class="w-52" src="/animation/reconnect/stereum_cant_connect.gif" />
         <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("reconnectModal.reconnectMessage") }}</span>
       </div>
       <div
         v-if="reconnecting"
         class="w-full h-full col-start-1 col-span-full row-start-2 row-span-5 flex flex-col justify-evenly items-center"
       >
-        <img v-if="reconnecting" class="w-52" src="/img/icon/manage-node-icons/stereum_connected.gif" />
+        <img v-if="reconnecting" class="w-52" src="/animation/reconnect/stereum_connected.gif" />
         <span class="text-md text-gray-200 font-semibold uppercase">{{
           $t("reconnectModal.reconnectingMessage")
         }}</span>
