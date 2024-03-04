@@ -4,6 +4,7 @@ import router from "./router/index.js";
 import { createPinia } from "pinia";
 
 import "./main.css";
+import "vue-command/dist/vue-command.css";
 
 import i18n from "./includes/i18n";
 import BaseLayout from "./components/base/BaseLayout.vue";
