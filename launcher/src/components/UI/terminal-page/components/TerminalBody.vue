@@ -1,45 +1,45 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-full max-h-[490px] p-8 bg-[#18181a]">
     <div ref="terminalContainer" class="terminal"></div>
   </div>
 </template>
 
 <script setup>
 import { Terminal } from "xterm";
+import { FitAddon } from "xterm-addon-fit";
 import { ref, onMounted } from "vue";
 
 const terminalContainer = ref(null);
+const term = new Terminal({ cursorBlink: "block" });
+const fitAddon = new FitAddon();
 
 onMounted(() => {
-  const term = new Terminal({
-    cursorBlink: "block",
-  });
+  if (terminalContainer.value) {
+    term.open(terminalContainer.value);
+    term.loadAddon(fitAddon);
+    fitAddon.fit(); // Automatically adjust the terminal size to fit the container
+  }
 
-  let currLine = "";
-  const entries = [];
-  let currPos = 0;
-
-  term.open(terminalContainer.value);
+  term.writeln("Welcome to the terminal!");
   term.prompt = () => {
-    term.write("\n\r" + currLine + "\r\n\u001b[32mscm> \u001b[37m");
+    term.write("\r\n\u001b[32m$ \u001b[37m"); // Example prompt
   };
-
-  term.write("Welcome to my Scheme web interpreter!");
   term.prompt();
 
-  term.onKey(({ key, domEvent: ev }) => {
-    // Handle key events here
-  });
-
-  // Use a custom key event handler to capture paste events
-  term.attachCustomKeyEventHandler((ev) => {
-    if (ev.type === "paste") {
-      const data = ev.clipboardData.getData("text");
-      currLine += data;
-      term.write(currLine);
-      return false; // Prevent the default handler
+  term.onKey(({ key, domEvent }) => {
+    const char = domEvent.key;
+    if (domEvent.keyCode === 13) {
+      // Enter key
+      term.prompt();
+    } else if (domEvent.keyCode === 8) {
+      // Backspace
+      // Prevent the browser from navigating back
+      domEvent.preventDefault();
+      // Delete the character before the cursor
+      term.write("\b \b");
+    } else if (char) {
+      term.write(char);
     }
-    return true; // Let xterm.js handle all other key events
   });
 });
 </script>
@@ -48,8 +48,16 @@ onMounted(() => {
 .terminal {
   height: 100%;
   width: 100%;
-  max-height: 490px;
+  max-height: 425px;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: #1e1e1e;
+  padding: 0 10px;
+  border: 1px solid #7b7b7b;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .xterm {
@@ -64,15 +72,22 @@ onMounted(() => {
 .xterm:focus {
   outline: none;
 }
+.xterm-dom-renderer-owner-1 {
+  max-height: 400px !important;
+}
 
-.xterm .xterm-helpers {
-  position: absolute;
-  top: 0;
-  /**
-     * The z-index of the helpers must be higher than the canvases in order for
-     * IMEs to appear on top.
-     */
-  z-index: 5;
+.xterm .xterm-screen {
+  position: relative;
+  width: 100% !important;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.xterm .xterm-screen .xterm-helpers {
+  display: none !important;
 }
 
 .xterm .xterm-helper-textarea {
