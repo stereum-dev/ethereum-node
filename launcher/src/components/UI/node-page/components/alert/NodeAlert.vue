@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md space-y-1">
+    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md space-y-2">
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
       <div v-show="!loadingAlerts" class="status_innerBox">
         <router-link v-if="storageWarning" to="/control" class="status-message_yellow">
@@ -194,7 +194,7 @@ export default {
       clkFee: this.$t("nodeAlert.clkFee"),
       clkUpdate: this.$t("nodeAlert.clkUpdate"),
       loadingAlerts: false,
-      skeletons: [1, 2, 3],
+      skeletons: [1, 2, 3, 4, 5, 6, 7, 8],
     };
   },
   computed: {

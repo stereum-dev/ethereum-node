@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-[155px] h-[80px] self-start justify-self-center col-span-1 flex justify-evenly items-center bg-gray-700 rounded-md p-2 opacity-50 pointer-events-none"
+    class="w-[155px] h-[80px] self-start justify-self-center col-span-1 flex justify-evenly items-center bg-gray-700 rounded-md p-2 opacity-50 pointer-events-none mt-2"
   >
     <div class="w-1/2 flex justify-center items-center">
       <span class="animate-pulse w-14 h-14 rounded-full bg-slate-400"> </span>

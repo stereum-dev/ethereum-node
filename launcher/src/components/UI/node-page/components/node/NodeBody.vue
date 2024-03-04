@@ -68,7 +68,7 @@ const emit = defineEmits(["openExpert", "openLog"]);
 // Refs
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
-const skeletons = ref([1, 2, 3, 4, 5, 6]);
+const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
 const loadingClients = ref(false);
 const isLineDrawHandlerReady = ref(false);
