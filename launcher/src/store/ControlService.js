@@ -238,6 +238,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getCountOfUpdatableOSUpdate", args);
   }
 
+  async updatePackage(args) {
+    return await this.promiseIpc.send("updatePackage", args);
+  }
+
+  async getUpgradeablePackages(args) {
+    return await this.promiseIpc.send("getUpgradeablePackages", args);
+  }
+
   async updateOS(args) {
     return await this.promiseIpc.send("updateOS", args);
   }
@@ -530,6 +538,10 @@ class ControlService extends EventEmitter {
 
   async importObolBackup(args) {
     return await this.promiseIpc.send("importObolBackup", args);
+  }
+  
+  async upgradeToNoble() {
+    return await this.promiseIpc.send("upgradeToNoble");
   }
 }
 if (!instance) {

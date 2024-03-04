@@ -6,7 +6,7 @@
   >
     <div class="np2p-icon-box">
       <div class="np2p-icon-box_container">
-        <img src="/img/icon/control/PeertoPeerIcon.png" alt="" />
+        <img src="/img/icon/control-page-icons/PeertoPeerIcon.png" alt="" />
       </div>
       <span class="uppercase">{{ $t("controlPage.p2pNet") }}</span>
     </div>
@@ -35,7 +35,7 @@
         <img
           :class="controlStore.currentConsensusIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentConsensusIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentConsensusIcon
+            controlStore.currentConsensusIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentConsensusIcon
           "
           alt="consensus"
         />
@@ -50,7 +50,7 @@
         <img
           :class="controlStore.currentExecutionIcon == '' ? 'animate-spin' : ''"
           :src="
-            controlStore.currentExecutionIcon == '' ? '/img/icon/arrows/loading.png' : controlStore.currentExecutionIcon
+            controlStore.currentExecutionIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentExecutionIcon
           "
           alt="execution"
         />

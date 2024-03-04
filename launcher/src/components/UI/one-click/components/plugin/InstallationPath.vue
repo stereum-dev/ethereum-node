@@ -57,7 +57,7 @@
         </div>
 
         <!-- <div :class="[checkBox, 'checkItem']" @click="props.monitoring = !props.monitoring">
-          <img v-if="props.monitoring" src="/img/icon/access-management/done.png" alt="" />
+          <img v-if="props.monitoring" src="/img/icon/server-management-icons/done.png" alt="" />
         </div> -->
 
         <!-- <input v-model="installMonitoring" class="switch" type="checkbox" /> -->

@@ -1,9 +1,8 @@
-import { useNodeManage } from '@/store/nodeManage';
 <template>
   <div
     class="col-start-7 col-span-3 flex flex-col justify-between items-center bg-[#151618] border h-full border-gray-600 rounded-md px-2 py-1"
     style="cursor: default"
-    @mouseenter="footerStore.cursorLocation = `${currIs} ${network?.name}`"
+    @mouseenter="footerStore.cursorLocation = `${currIs} ${getNetworkName}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="w-full self-start text-xs font-semibold text-teal-700">
@@ -17,7 +16,7 @@ import { useNodeManage } from '@/store/nodeManage';
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { watchEffect, ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useFooter } from "@/store/theFooter";
 import { useDeepClone } from "@/composables/utils";
 import i18n from "@/includes/i18n";
@@ -31,25 +30,11 @@ const manageStore = useNodeManage();
 const network = ref(null);
 
 const getNetworkName = computed(() => {
-  return network.value.name ? network.value.name : manageStore.currentNetwork.name;
+  return manageStore.currentNetwork?.name;
 });
 
 const getNetworkIcon = computed(() => {
-  return network.value.icon ? network.value.icon : manageStore.currentNetwork.icon;
-});
-
-watch(network, (val) => {
-  if (!val) {
-    useDeepClone(manageStore.configNetwork);
-  }
-});
-
-watchEffect(() => {
-  let id = manageStore.configNetwork?.id ? manageStore.configNetwork.id : manageStore.currentNetwork.id;
-  if (!id) {
-    manageStore.currentNetwork = useDeepClone(manageStore.networkList.find((net) => net.id === (id ? id : 5)));
-  }
-  network.value = useDeepClone(manageStore.currentNetwork);
+  return manageStore.currentNetwork?.icon;
 });
 
 onMounted(() => {

@@ -1,7 +1,7 @@
 import { ref, computed, watch, watchEffect } from 'vue';
 <template>
   <div
-    class="w-full h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
+    class="w-full h-[55px] min-h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
     :class="
       connectedServer
         ? 'bg-[#336666] border border-teal-300 '
@@ -45,7 +45,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
     <img
       v-if="connectedServer"
       class="col-start-10 col-span-1 w-5 self-center"
-      src="/img/icon/access-management/check.png"
+      src="/img/icon/server-management-icons/check.png"
       alt="Check Icon"
     />
   </div>
@@ -85,7 +85,7 @@ const getServerNumber = computed(() => {
 
 const serverAvatar = computed(() => {
   if (props.server.avatar) return props.server.avatar;
-  else return "/avatar/server_selection_1.png";
+  else return "/avatar/default.png";
 });
 
 const connectedServer = computed(() => {

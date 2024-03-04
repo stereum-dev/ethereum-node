@@ -9,7 +9,7 @@
         <span>{{ $t("logOutModal.logOutTitle") }}</span>
       </div>
       <div class="messageContent">
-        <img src="/img/icon/manage-node-icons/stop.png" alt="" />
+        <img src="/img/icon/edit-node-icons/stop-caution-icon.png" alt="" />
         <span class="question">{{ $t("logOutModal.logOutQuestion") }}</span>
       </div>
       <div class="confrimBtn">

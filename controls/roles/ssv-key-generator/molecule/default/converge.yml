@@ -20,6 +20,7 @@
       user: '2000'
       volumes:
       - /opt/app/services/{{ ssv_key_service }}/data:/data
+      - /opt/app/services/{{ ssv_key_service }}/secrets:/secrets
 
   tasks:
     - name: Create directory for Service-ID.yaml

@@ -2,7 +2,7 @@
   "formsetup": {
     "login": "ورود",
     "server": "به سرور خود متصل شوید",
-    "servername": "نام سرور",
+    "servername": "نام سرور ",
     "iphost": "IP / نام هاست",
     "username": "نام کاربری",
     "password": "کلمه عبور",
@@ -230,7 +230,7 @@
     "textPlaceHolder": "برای تغییر نام اعتباردهنده، ۳۲ کاراکتر را وارد کنید!"
   },
   "insertValidator": {
-    "insertText": "برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید"
+    "insertText": "برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید "
   },
   "removeSingleModal": {
     "question": "آیا می‌خواهید پایگاه داده اسلشینگ خود را دانلود کنید؟"
@@ -372,8 +372,7 @@
     "restartMessage": "نود شما ممکن است در حین این کار آفلاین شود!",
     "restart": "راه‌اندازی مجدد",
     "confirmMessage": "آیا مطمئن هستید که می‌خواهید نود خود را",
-    "areYouSure": "آیا اطمینان دارید که می‌خواهید",
-    "close": "برای بستن اینجا بیرون از کادر کلیک کنید"
+    "areYouSure": "آیا اطمینان دارید که می‌خواهید"
   },
   "nukeModal": {
     "nukeQ": "آیا مطمئن هستید که می‌خواهید استریوم و تمام خدمات آن را از سرور حذف کنید؟",
@@ -848,9 +847,16 @@
     "selEnc": "انتخاب کلید خصوصی رمزنگاری نشده",
     "sel": "انتخاب",
     "dnldBk": "دانلود کلید خصوصی برای پشتیبان گیری. مطمئن شوید که رمز عبوری که برای رمزنگاری استفاده کردید را نیز یادداشت کرده‌اید!",
+    "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
     "dlPk": "دانلود کلید خصوصی برای پشتیبان‌گیری. مطمئن شوید که رمز عبوری که برای رمزگذاری استفاده کردید را نیز یادداشت کرده‌اید!",
     "dl": "دانلود",
-    "imp": "وارد کردن"
+    "imp": "وارد کردن",
+    "mngEnr": "MANAGE ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
   },
   "stakingPage": {
     "somethingWrong": "چیزی اشتباه رفت",

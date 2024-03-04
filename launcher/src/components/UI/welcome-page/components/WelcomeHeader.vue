@@ -11,7 +11,7 @@ import { ref } from 'vue';
       @mouseenter="runTooltip"
       @click="logout"
     >
-      <img class="w-4 h-4 mx-auto" src="/img/icon/header-icons/exit9.png" alt="Logout Icon" />
+      <img class="w-4 h-4 mx-auto" src="/img/icon/base-header-icons/header-logout-button.png" alt="Logout Icon" />
     </div>
     <div
       v-if="isHovered"

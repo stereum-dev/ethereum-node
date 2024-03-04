@@ -4,7 +4,7 @@
     <div class="networkBox">
       <div class="networkIco">
         <div class="networkIco-container">
-          <img src="../../../../public/img/icon/control/wifiIcon.svg" />
+          <img src="../../../../public/img/icon/control-page-icons/wifiIcon.svg" />
         </div>
         <span>{{ $t("controlPage.network") }}</span>
       </div>

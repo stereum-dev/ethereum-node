@@ -97,7 +97,7 @@ export const useLangStore = defineStore("languages", {
         },
         {
           name: "Српски",
-          flag: "img/flag/sr.png",
+          flag: "img/flag/serbia.png",
           label: "sr",
           isSelected: false,
         },

@@ -53,7 +53,7 @@
                   {{ selectedItem }}
                 </div>
                 <div class="openURL" @click="openWindow">
-                  <img src="/img/icon/service-icons/internet.png" alt="Internet" />
+                  <img src="/img/icon/service-modals-icons/internet.png" alt="Internet" />
                 </div>
               </div>
             </div>
@@ -159,7 +159,7 @@ export default {
     },
     async linkPicker(item) {
       this.selectedItem = "Validating...";
-      this.selectedIcon = "/img/icon/control/spinner.gif";
+      this.selectedIcon = "/animation/loading/mushroom-spinner.gif";
       this.checkPointSync = "";
       this.dropdown = false;
       const isCheckpointValid = await ControlService.isCheckpointValid(item.url);

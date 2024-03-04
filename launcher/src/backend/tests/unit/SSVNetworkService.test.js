@@ -53,8 +53,9 @@ test("buildConfiguration", () => {
   log.info("cmd: ", ssvService.command);
 
   expect(ssvService.env.CONFIG_PATH).toMatch(/\/config.yaml/);
-  expect(ssvService.volumes).toHaveLength(1);
+  expect(ssvService.volumes).toHaveLength(2);
   expect(ssvService.volumes).toContain("/opt/stereum/ssv-" + ssvService.id + "/data:/data");
+  expect(ssvService.volumes).toContain("/opt/stereum/ssv-" + ssvService.id + "/secrets:/secrets");
   expect(ssvService.ports).toHaveLength(2);
   expect(ssvService.id).toHaveLength(36);
   expect(ssvService.user).toMatch(/2000/);

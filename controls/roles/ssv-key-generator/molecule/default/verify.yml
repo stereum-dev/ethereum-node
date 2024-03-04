@@ -3,28 +3,18 @@
   hosts: all
   gather_facts: false
   tasks:
-    - stat: path=/etc/stereum/services
-      register: stereum_services_dir
+    - stat: path=/opt/app/services/c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e/secrets/password
+      register: ssv_password_file
     - debug:
-        msg: "{{ stereum_services_dir }}"
-    - stat: path=/etc/stereum/services/c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e.yaml
-      register: stereum_service_yaml
+        msg: "{{ ssv_password_file }}"
+
+    - stat: path=/opt/app/services/c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e/secrets/encrypted_private_key.json
+      register: ssv_keystore_file
     - debug:
-        msg: "{{ stereum_service_yaml }}"
-    - name: Check for Service-ID.yaml
+        msg: "{{ ssv_keystore_file }}"
+
+    - name: Check for Keystore and Passowrd File
       assert:
         that:
-          - stereum_service_yaml.stat.exists
-    - name: Check SSV keys
-      lineinfile:
-        path: /etc/stereum/services/c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e.yaml
-        regexp: "{{ item }}"
-        state: absent
-      check_mode: yes
-      register: ssv_keys
-      with_items:
-        - '(^ssv_sk: ).*(?=)'
-        - '(^ssv_pk: ).*(?=)'
-      failed_when: not ssv_keys.changed
-    - debug:
-        msg: "{{ ssv_keys }}"
+          - ssv_password_file.stat.exists
+          - ssv_keystore_file.stat.exists

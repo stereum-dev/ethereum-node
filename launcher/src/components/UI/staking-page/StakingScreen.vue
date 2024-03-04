@@ -1,7 +1,7 @@
 <template>
   <base-layout>
     <DisabledSection v-if="isStakingDisabled" />
-    <div v-else class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
+    <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
       <SidebarSection />
       <ListSection
         @confirm-grouping="confirmGrouping"

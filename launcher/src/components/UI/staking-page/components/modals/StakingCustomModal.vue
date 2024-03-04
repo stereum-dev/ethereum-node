@@ -28,7 +28,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
             class="col-start-1 col-end-5 ml-4 min-w-[100px] max-h-10 bg-blue-500 px-5 py-2 shadow-xl shadow-[#141516] tracking-wider rounded-full uppercase active:scale-90 transition-all duration-150 flex justify-evenly items-center space-x-2"
             @click="exportAction"
           >
-            <img class="h-4" src="/img/icon/the-staking/export.png" alt="Export Icon" />
+            <img class="h-4" src="/img/icon/staking-page-icons/export.png" alt="Export Icon" />
             <span class="text-sm text-gray-200 font-semibold">{{ $("stakingPage.expMsg") }}</span>
           </button>
           <button

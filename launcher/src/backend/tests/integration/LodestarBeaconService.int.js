@@ -63,7 +63,7 @@ test("lodestar validator import", async () => {
   let lVC = serviceManager.getService("LodestarValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [lBC] });
 
   //get latest versions
-  let versions = await nodeConnection.checkUpdates();
+  let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
   lBC.imageVersion = versions[lBC.network][lBC.service].slice(-1).pop()
   lVC.imageVersion = versions[lVC.network][lVC.service].slice(-1).pop()

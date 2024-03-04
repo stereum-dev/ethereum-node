@@ -33,7 +33,7 @@
       >
         <img
           class="flex-shrink-0 object-cover mx-1 rounded-full w-8 h-8"
-          src="/img/icon/click-installation/mainnet-circle.png"
+          src="/img/icon/network-icons/ethereum-mainnet-circle.png"
           alt="mainnet icon"
         />
         <div class="mx-1">
@@ -47,7 +47,7 @@
       >
         <img
           class="flex-shrink-0 object-cover mx-1 rounded-full w-8 h-8"
-          src="/img/icon/click-installation/mainnet-circle.png"
+          src="/img/icon/network-icons/ethereum-mainnet-circle.png"
           alt="mainnet icon"
         />
         <div class="mx-1">
@@ -61,7 +61,7 @@
       >
         <img
           class="flex-shrink-0 object-cover mx-1 rounded-full w-8 h-8"
-          src="/img/icon/click-installation/mainnet-circle.png"
+          src="/img/icon/network-icons/ethereum-mainnet-circle.png"
           alt="mainnet icon"
         />
         <div class="mx-1">
