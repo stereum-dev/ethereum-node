@@ -1,13 +1,13 @@
-<template>
-  <div class="w-full h-[425px] flex flex-col justify-between items-center p-1" name="contributors-list">
+<!--<template>
+  <div class="" name="contributors-list">
     <div class="w-full flex justify-end items-center px-6">
       <select id="technikToggl" v-model="techToggl" class=" rounded-full text-sm py-1 px-2" name="technikToggl">
         <option value="developers">{{ $t("creditPanel.developers") }}</option>
         <option value="testers">{{ $t("creditPanel.testers") }}</option>
       </select>
-    </div>
+    </div> -->
 
-    <div v-if="compToggl" class="wrapper">
+<!-- <div v-if="compToggl" class="wrapper">
       <TheContributor
         v-for="(result, index) in results"
         :key="result.id"
@@ -45,10 +45,30 @@
         :crown="index == 0"
         :rank="index + 1"
         :score="result.score"
-      />
+      /> 
     </div>
   </div>
+</template>-->
+
+<template>
+  <div class="contributors-list" name="contributors-list">
+    <TheContributor
+      v-for="(result, index) in results"
+      :key="result.id"
+      :class="{
+        'gold-border': index === 0,
+        'silver-border': index === 1,
+        'bronze-border': index === 2,
+      }"
+      :name="result.name"
+      :avatar="result.avatar"
+      :crown="index === 0"
+      :rank="index + 1"
+      :score="result.score"
+    />
+  </div>
 </template>
+
 <script>
 import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
@@ -143,6 +163,16 @@ export default {
 };
 </script>
 <style scoped>
+.contributors-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(250px, auto); /* Adjust the min size as per your requirement */
+  gap: 10px;
+  max-height: 420px; /* Adjust based on your needs */
+  overflow-y: auto;
+  justify-content: center;
+  align-items: center;
+}
 .testers-container {
   cursor: default;
   display: grid;
@@ -192,7 +222,7 @@ export default {
 .wrapper {
   display: flex;
   width: 100%;
-  height: 70vh;
+  height: 100%;
 
   justify-content: center;
   align-items: center;

@@ -1,8 +1,7 @@
 <template>
-  <div class="credit-panel_parent border-4 border-gray-400">
-    <transition name="fade-box" mode="out-in">
-      <div class="credit-panel_box">
-        <div class="credit-panel_title">
+  <div class="credit-panel_parent h-full">
+    <div class="credit-panel_box w-full h-full">
+      <!-- <div class="credit-panel_title">
           <div class="ttl-box">
             <div class="credit-panel_title_ico">
               <img :src="technikalIco" />
@@ -11,8 +10,8 @@
               <span>{{ $t("creditPanel.techTitle") }}</span>
             </div>
           </div>
-        </div>
-        <div class="desc-line">
+        </div> -->
+      <!-- <div class="desc-line">
           <small>{{ $t("creditPanel.techText") }} </small>
           <div
             class="desc-line-button"
@@ -25,10 +24,14 @@
             </div>
             <span>{{ $t("creditPanel.financialPage") }}</span>
           </div>
-        </div>
+        </div> -->
+      <div
+        class="credit-header col-start-1 col-end-3 bg-white row-start-1 row-end-3 flex w-full h-full justify-center items-center"
+      ></div>
+      <div class="credit-container">
         <TechnicalBox />
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 <script>
@@ -58,6 +61,15 @@ export default {
 };
 </script>
 <style scoped>
+.credit-panel_box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto repeat(10, 1fr); /* Adjust based on your needs */
+  gap: 10px;
+}
+.credit-container {
+  grid-area: 3 / 1 / 12 / 3;
+}
 .desc-line {
   display: flex;
   justify-content: space-between;
@@ -117,21 +129,13 @@ export default {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 100%;
-  background-color: #232323;
+
   border-radius: 10px;
   z-index: 0;
   box-sizing: border-box;
   cursor: default;
 }
-.credit-panel_box {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  justify-content: flex-start;
-  align-items: center;
-}
+
 .credit-panel_title {
   display: flex;
   justify-content: space-between;

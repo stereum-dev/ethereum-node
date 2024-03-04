@@ -54,13 +54,13 @@ export default {
   transform-origin: -55%;
 }
 .crown img {
-  width: 70%;
+  width: 50%;
 }
 .contributor-parent {
   cursor: default;
   display: flex;
-  width: 16%;
-  height: 59%;
+  width: 180px;
+  height: 230px;
   justify-content: center;
   align-items: center;
   border: 1px solid #343434;
@@ -69,9 +69,7 @@ export default {
   box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 30px;
   flex-direction: column;
-  margin-top: 2%;
-  margin-right: 2%;
-  margin-bottom: 1%;
+  justify-self: center;
   position: relative;
 }
 .contributor-parent:hover {
