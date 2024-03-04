@@ -1707,6 +1707,14 @@ video {
   height: 16rem;
 }
 
+.h-\[100px\]{
+  height: 100px;
+}
+
+.h-\[80px\]{
+  height: 80px;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -2127,6 +2135,14 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-\[180px\]{
+  width: 180px;
+}
+
+.w-\[152px\]{
+  width: 152px;
 }
 
 .min-w-\[100px\]{
@@ -3677,6 +3693,11 @@ video {
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-slate-400{
+  --tw-bg-opacity: 1;
+  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
