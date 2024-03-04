@@ -1715,6 +1715,14 @@ video {
   height: 80px;
 }
 
+.h-\[35px\]{
+  height: 35px;
+}
+
+.h-\[36px\]{
+  height: 36px;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -2143,6 +2151,14 @@ video {
 
 .w-\[152px\]{
   width: 152px;
+}
+
+.w-\[144px\]{
+  width: 144px;
+}
+
+.w-\[153px\]{
+  width: 153px;
 }
 
 .min-w-\[100px\]{
