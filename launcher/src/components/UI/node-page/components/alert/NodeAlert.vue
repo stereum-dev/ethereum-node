@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md space-y-2">
+    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md">
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
       <div v-show="!loadingAlerts" class="status_innerBox">
         <router-link v-if="storageWarning" to="/control" class="status-message_yellow">
@@ -507,7 +507,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 3px;
+  padding: 1px 3px;
   overflow: hidden;
   overflow-y: scroll;
 }
