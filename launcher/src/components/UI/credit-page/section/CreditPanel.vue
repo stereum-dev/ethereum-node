@@ -26,49 +26,53 @@
           </div>
         </div> -->
       <div
-        class="credit-header col-start-1 col-end-3 bg-white row-start-1 row-end-3 flex w-full h-full justify-center items-center"
-      ></div>
+        class="credit-header col-start-1 col-end-3 row-start-1 row-end-4 flex w-full h-full justify-center items-center"
+      >
+        <CreditHeader />
+      </div>
       <div class="credit-container">
-        <TechnicalBox />
+        <ContributorsList />
       </div>
     </div>
   </div>
 </template>
-<script>
-import { mapWritableState } from "pinia";
-import { useFooter } from "@/store/theFooter";
-// import TechnicalBox from "./TechnicalBox.vue";
-import TechnicalBox from "./TechnicalBox.vue";
-export default {
-  components: { TechnicalBox },
-  data() {
-    return {
-      financialIco: "./img/icon/credit-page-icons/financial-credit.png",
-      technikalIco: "./img/icon/credit-page-icons/technical-credit.png",
-    };
-  },
-  computed: {
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-    }),
-  },
-  methods: {
-    creditToggle() {
-      let url = "https://stereum.net/donate";
-      window.open(url, "_blank");
-    },
-  },
-};
+<script setup>
+import ContributorsList from "./ContributorsList.vue";
+import CreditHeader from "./CreditHeader.vue";
+
+// const financialIco = "./img/icon/credit-page-icons/financial-credit.png";
+// const technikalIco = "./img/icon/credit-page-icons/technical-credit.png";
+
+// const creditToggle = () => {
+//   let url = "https://stereum.net/donate";
+//   window.open(url, "_blank");
+// };
+
+// export default {
+//   components: { ContributorsList, CreditHeader },
+//   data() {
+//     return {
+//       financialIco: "./img/icon/credit-page-icons/financial-credit.png",
+//       technikalIco: "./img/icon/credit-page-icons/technical-credit.png",
+//     };
+//   },
+
+//   methods: {
+//     creditToggle() {
+//       let url = "https://stereum.net/donate";
+//       window.open(url, "_blank");
+//     },
+//   },
+// };
 </script>
 <style scoped>
 .credit-panel_box {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto repeat(10, 1fr); /* Adjust based on your needs */
-  gap: 10px;
+  grid-template-rows: auto repeat(10, 1fr);
 }
 .credit-container {
-  grid-area: 3 / 1 / 12 / 3;
+  grid-area: 4/ 1 / 9 / 3;
 }
 .desc-line {
   display: flex;

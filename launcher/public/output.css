@@ -3952,7 +3952,12 @@ video {
 .pl-4 {
   padding-left: 1rem;
 }
-
+.pl-6 {
+  padding-left: 2rem;
+}
+.pl-8 {
+  padding-left: 4rem;
+}
 .pr-0 {
   padding-right: 0px;
 }

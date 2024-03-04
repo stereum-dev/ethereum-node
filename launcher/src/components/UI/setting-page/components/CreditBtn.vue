@@ -8,12 +8,17 @@
   </router-link>
 </template>
 <script setup>
+import { useNodeHeader } from "@/store/nodeHeader";
+
+const headerStore = useNodeHeader();
+
 const props = defineProps({
   btnName: String,
 });
 
 const test = () => {
-  console.log("test");
+  headerStore.choosedCreditType = props.btnName;
+  console.log(headerStore.choosedCreditType);
 };
 </script>
 <style scoped>
