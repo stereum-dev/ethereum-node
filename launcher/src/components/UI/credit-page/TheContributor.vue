@@ -7,7 +7,7 @@
     <div class="contributor-name">
       <span>{{ name }}</span>
       <span class="rank"># {{ rank }}</span>
-      <small class="score">SCORE: {{ score }} </small>
+      <small v-if="score" class="score">SCORE: {{ score }} </small>
     </div>
   </div>
 </template>
@@ -48,13 +48,13 @@ export default {
   position: absolute;
   justify-content: center;
   align-items: center;
-  top: -13%;
+  top: -15%;
   left: 63%;
-  transform: rotatez(33deg);
-  transform-origin: -55%;
+  transform: rotatez(38deg);
+  transform-origin: -40%;
 }
 .crown img {
-  width: 50%;
+  width: 55%;
 }
 .contributor-parent {
   cursor: default;
@@ -84,8 +84,8 @@ export default {
   border-radius: 30px 30px 0 0;
 }
 .contributor-avatar img {
-  width: 55%;
-  height: 70%;
+  width: 90px;
+  height: 90px;
   border-radius: 40%;
 }
 .contributor-name {

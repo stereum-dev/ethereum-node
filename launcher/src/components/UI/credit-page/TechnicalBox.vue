@@ -51,21 +51,30 @@
 </template>-->
 
 <template>
-  <div class="contributors-list" name="contributors-list">
-    <TheContributor
-      v-for="(result, index) in results"
-      :key="result.id"
-      :class="{
-        'gold-border': index === 0,
-        'silver-border': index === 1,
-        'bronze-border': index === 2,
-      }"
-      :name="result.name"
-      :avatar="result.avatar"
-      :crown="index === 0"
-      :rank="index + 1"
-      :score="result.score"
-    />
+  <div class="contributors-parent">
+    <div v-if="loader" class="loader">
+      <div class="spinner-square">
+        <div class="square-1 square"></div>
+        <div class="square-2 square"></div>
+        <div class="square-3 square"></div>
+      </div>
+    </div>
+    <div v-else class="contributors-list" name="contributors-list">
+      <TheContributor
+        v-for="(result, index) in results"
+        :key="result.id"
+        :class="{
+          'gold-border': index === 0,
+          'silver-border': index === 1,
+          'bronze-border': index === 2,
+        }"
+        :name="result.name"
+        :avatar="result.avatar"
+        :crown="index === 0"
+        :rank="index + 1"
+        :score="result.score"
+      />
+    </div>
   </div>
 </template>
 
@@ -87,30 +96,29 @@ export default {
   },
 
   computed: {
-    filterTesters() {
-      return [...new Map(this.issuesVal.map((item) => [item.name, item])).values()];
-    },
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
     }),
-    flag() {
-      return this.testerResults.length == [] ? true : false;
+    loader() {
+      return this.results.length == [] ? true : false;
     },
   },
 
-  updated() {
-    this.toggleHandler();
-  },
+  // updated() {
+  //   this.toggleHandler();
+  // },
   created() {
-    this.github();
+    // this.github();
+    // this.stereumTranslator();
   },
   mounted() {
     this.stereumTesters();
+    // this.stereumTranslator();
   },
   methods: {
     async stereumTesters() {
       try {
-        const response = await fetch("/api");
+        const response = await fetch("/testers");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -119,12 +127,12 @@ export default {
         const testersData = responseData.data.testers;
 
         const results = testersData.map((tester) => ({
-          username: tester.username,
+          name: tester.username,
           avatar: tester.avatarUrl,
           score: tester.testsCount,
         }));
-
-        this.testerResults = results;
+        console.log("stereumTesters", results);
+        this.results = results;
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -132,6 +140,27 @@ export default {
       }
     },
 
+    async stereumTranslator() {
+      try {
+        const response = await fetch("/translators");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const responseData = await response.json();
+        const translatorData = responseData.data.translators;
+        const results = translatorData.map((tester) => ({
+          name: tester.username,
+          avatar: tester.avatarUrl,
+          score: tester.testsCount,
+        }));
+        console.log("results", results);
+        this.results = results;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
     github() {
       fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors")
         .then((response) => {
@@ -152,13 +181,14 @@ export default {
           this.results = results;
         });
     },
-    toggleHandler() {
-      if (this.techToggl === "developers") {
-        return (this.compToggl = true);
-      } else if (this.techToggl === "testers") {
-        return (this.compToggl = false);
-      }
-    },
+
+    // toggleHandler() {
+    //   if (this.techToggl === "developers") {
+    //     return (this.compToggl = true);
+    //   } else if (this.techToggl === "testers") {
+    //     return (this.compToggl = false);
+    //   }
+    // },
   },
 };
 </script>
