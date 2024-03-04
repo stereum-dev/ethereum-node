@@ -10,6 +10,7 @@
 
       <input
         id="Search"
+        ref="searchInputRef"
         v-model="searchQuery"
         type="text"
         :placeholder="`${$t('multiServer.serchFor')}`"
@@ -74,6 +75,7 @@ const emit = defineEmits(["selectServer", "serverLogin"]);
 const serverStore = useServers();
 const controlStore = useControlStore();
 const searchQuery = ref("");
+const searchInputRef = ref(null);
 
 const filteredServers = computed(() => {
   if (!searchQuery.value) {
@@ -95,6 +97,9 @@ watch(
 
 onMounted(async () => {
   await loadStoredConnections();
+  if (searchInputRef.value) {
+    searchInputRef.value.focus();
+  }
 });
 
 //Methods
