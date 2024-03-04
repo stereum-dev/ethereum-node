@@ -338,7 +338,6 @@ export class ServiceManager {
       );
 
       if (service.service === "FlashbotsMevBoostService") {
-        service.entrypoint[service.entrypoint.findIndex((e) => e === "-relays") + 1] = task.data.relays;
         modifiedServices.push(service);
         let dependenciesToRemove = services.filter((s) =>
           s.dependencies.mevboost.map((m) => m.id).includes(service.id)

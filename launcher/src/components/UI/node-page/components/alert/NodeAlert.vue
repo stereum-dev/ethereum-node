@@ -146,7 +146,7 @@
         @click="showUpdate"
       >
         <div class="message-icon">
-          <img :src="iconFilter(item)" alt="warn_storage" />
+          <img :src="item.sIcon" alt="warn_storage" />
         </div>
         <div class="message-text_container update-items">
           <div class="main-message">
@@ -211,6 +211,7 @@ export default {
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      allServices: "allServices",
       newUpdates: "newUpdates",
     }),
     ...mapWritableState(useFooter, {
@@ -238,7 +239,7 @@ export default {
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
-        const matchingService = this.installedServices.find((service) => service.name === update.name);
+        const matchingService = this.allServices.find((service) => service.service.replace(/(Beacon|Validator|Service)/gm, "") === update.name);
         if (matchingService) {
           return {
             ...update,

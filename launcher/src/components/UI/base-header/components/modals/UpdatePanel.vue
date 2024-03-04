@@ -54,7 +54,12 @@
                       class="w-[50px] h-[20px] bg-teal-800 hover:bg-teal-900 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="openOsUpdatePanel"
                     >
-                      <img class="w-5" src="/img/icon/base-header-icons/update-modal-open-button.png" alt="Open Icon" @mousedown.prevent />
+                      <img
+                        class="w-5"
+                        src="/img/icon/base-header-icons/update-modal-open-button.png"
+                        alt="Open Icon"
+                        @mousedown.prevent
+                      />
                     </div>
                   </div>
                 </div>
@@ -131,7 +136,11 @@
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
                   >
                     <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1">
-                      <img class="w-2 h-2" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" />
+                      <img
+                        class="w-2 h-2"
+                        src="/img/icon/base-header-icons/header-update-button-green.png"
+                        alt="icon"
+                      />
                     </div>
                     <span class="text-[8px] text-gray-200 font-semibold ml-2"
                       >{{ headerStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
@@ -190,7 +199,11 @@
                       v-if="item.running || headerStore.updating"
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
                     >
-                      <img class="w-5" src="/img/icon/base-header-icons/update-modal-download-disabled.png" alt="icon" />
+                      <img
+                        class="w-5"
+                        src="/img/icon/base-header-icons/update-modal-download-disabled.png"
+                        alt="icon"
+                      />
                     </div>
                     <div
                       v-else
@@ -381,9 +394,9 @@ const updateConfirm = async () => {
   try {
     headerStore.refresh = false;
     headerStore.updating = true;
-    headerStore.newUpdates.forEach((update) => (update.running = true));
+    serviceStore.newUpdates.forEach((update) => (update.running = true));
     seconds = await ControlService.runAllUpdates({
-      commit: this.stereumUpdate.commit,
+      commit: headerStore.stereumUpdate.commit,
     });
   } catch (err) {
     console.log("Running All Updates Failed: ", err);

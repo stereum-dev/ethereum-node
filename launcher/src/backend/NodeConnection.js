@@ -14,7 +14,7 @@ async function Sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
+if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
   log.info("pulling from main branch");
 } else {
