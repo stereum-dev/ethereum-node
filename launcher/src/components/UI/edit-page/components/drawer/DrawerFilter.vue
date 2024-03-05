@@ -78,7 +78,7 @@ const getFilterbyNetwork = () => {
     case "goerli":
       return (item) => archFilter(item.service);
     case "holesky":
-      return (item) => item.service != "CharonService" && archFilter(item.service);
+      return (item) => item.service != archFilter(item.service);
     case "sepolia":
       return (item) => item.service != "SSVNetworkService" && archFilter(item.service);
     case "gnosis":

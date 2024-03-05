@@ -530,8 +530,8 @@ ipcMain.handle("getSyncCommitteeRewards", async (event, args) => {
   return await monitoring.getSyncCommitteeRewards(args.validators, args.slot);
 });
 
-ipcMain.handle("createObolENR", async () => {
-  return await validatorAccountManager.createObolENR();
+ipcMain.handle("createObolENR", async (event, args) => {
+  return await validatorAccountManager.createObolENR(args);
 });
 
 ipcMain.handle("getObolENRPrivateKey", async () => {
@@ -550,6 +550,10 @@ ipcMain.handle("removeObolENR", async () => {
   return await validatorAccountManager.removeObolENR();
 });
 
+ipcMain.handle("removeObolCluster", async () => {
+  return await validatorAccountManager.removeObolCluster();
+});
+
 ipcMain.handle("startObolDKG", async (event, args) => {
   return await validatorAccountManager.startObolDKG(args);
 });
@@ -564,6 +568,10 @@ ipcMain.handle("getObolDKGLogs", async () => {
 
 ipcMain.handle("downloadObolBackup", async (event, args) => {
   return await validatorAccountManager.downloadObolBackup(args);
+});
+
+ipcMain.handle("importObolBackup", async (event, args) => {
+  return await validatorAccountManager.importObolBackup(args);
 });
 
 ipcMain.handle("copyExecutionJWT", async (event, args) => {
