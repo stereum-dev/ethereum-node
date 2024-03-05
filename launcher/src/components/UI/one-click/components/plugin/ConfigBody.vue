@@ -169,7 +169,7 @@ const checkPluginCategory = (element) => {
     case "staking":
       filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
+        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
     case "ssv.network":
@@ -212,7 +212,7 @@ const checkPluginCategory = (element) => {
     case "archive":
       filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
+        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
     default:
