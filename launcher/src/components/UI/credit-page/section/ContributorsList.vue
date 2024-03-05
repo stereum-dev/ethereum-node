@@ -114,17 +114,6 @@ const getClass = (index) => {
   }
   return baseClasses;
 };
-
-//  getClass(index) {
-//       const baseClasses = {};
-//       if (this.headerStore.choosedCreditType !== "translation") {
-//         if (index === 0) baseClasses['gold-border'] = true;
-//         else if (index === 1) baseClasses['silver-border'] = true;
-//         else if (index === 2) baseClasses['bronze-border'] = true;
-//       }
-//       return baseClasses;
-//     }
-//   }
 </script>
 
 <style scoped>
