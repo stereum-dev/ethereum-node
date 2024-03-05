@@ -812,7 +812,7 @@
     "process": "処理中"
   },
   "serviceModal": {
-    "distributedValidator": "分散検証者生成",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "新しいENRの生成",
     "open": "開く",
     "createEnr": "新しいENRを作成する",
