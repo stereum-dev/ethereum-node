@@ -812,7 +812,7 @@
     "process": "Обрада"
   },
   "serviceModal": {
-    "distributedValidator": "ГЕНЕРИСАЊЕ РАСПОДЕЉЕНОГ ВАЛИДАТОРА",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "ГЕНЕРИСАЊЕ НОВОГ ENR",
     "open": "ОТВОРИ",
     "createEnr": "КРЕИРАЈ НОВИ ENR",
