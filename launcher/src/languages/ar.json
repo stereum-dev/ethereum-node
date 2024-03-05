@@ -812,7 +812,7 @@
     "process": "المعالجة"
   },
   "serviceModal": {
-    "distributedValidator": "توليد الموثق الموزع",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "توليد ENR جديد",
     "open": "فتح",
     "createEnr": "إنشاء ENR جديد",
