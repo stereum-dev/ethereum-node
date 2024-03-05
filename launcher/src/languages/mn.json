@@ -812,7 +812,7 @@
     "process": "Боловсруулж байна"
   },
   "serviceModal": {
-    "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "ШИНЭ ENR-Г ҮҮСГЭЖ БАЙНА",
     "open": "НЭЭХ",
     "createEnr": "ШИНЭ ENR ҮҮСГЭ",
