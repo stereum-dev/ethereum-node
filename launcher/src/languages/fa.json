@@ -812,7 +812,7 @@
     "process": "در حال پردازش"
   },
   "serviceModal": {
-    "distributedValidator": "تولید اعتبارسنج توزیع شده",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "تولید ENR جدید",
     "open": "باز کردن",
     "createEnr": "ایجاد ENR جدید",
