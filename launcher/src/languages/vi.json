@@ -812,7 +812,7 @@
     "process": "Đang xử lý"
   },
   "serviceModal": {
-    "distributedValidator": "TẠO VALIDATOR PHÂN TÁN",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "TẠO MỚI ENR",
     "open": "MỞ",
     "createEnr": "TẠO MỚI ENR",
