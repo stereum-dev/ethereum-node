@@ -812,7 +812,7 @@
     "process": "Обработка"
   },
   "serviceModal": {
-    "distributedValidator": "ГЕНЕРАЦИЯ РАСПРЕДЕЛЕННОГО ВАЛИДАТОРА",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "ГЕНЕРАЦИЯ НОВОГО ENR",
     "open": "ОТКРЫТЬ",
     "createEnr": "СОЗДАТЬ НОВЫЙ ENR",
