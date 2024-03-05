@@ -1,46 +1,44 @@
 <template>
   <div class="contributor-parent">
-    <div v-if="crown" class="crown">
+    <div v-if="props.crown" class="crown">
       <img src="/img/icon/credit-page-icons/crown.png" alt="crown" />
     </div>
-    <div class="contributor-avatar"><img :src="avatar" /></div>
+    <div class="contributor-avatar"><img :src="props.avatar" /></div>
     <div class="contributor-name">
-      <span>{{ name }}</span>
-      <span class="rank"># {{ rank }}</span>
-      <small v-if="score" class="score">SCORE: {{ score }} </small>
+      <span>{{ props.name }}</span>
+      <span v-if="props.rank" class="rank"># {{ props.rank }}</span>
+      <small v-if="props.score" class="score">SCORE: {{ props.score }} </small>
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    name: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    avatar: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    crown: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    rank: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    score: {
-      type: String,
-      required: true,
-      default: "",
-    },
+<script setup>
+const props = defineProps({
+  name: {
+    type: String,
+    required: true,
+    default: "",
   },
-};
+  avatar: {
+    type: String,
+    required: true,
+    default: "",
+  },
+  crown: {
+    type: String,
+    required: true,
+    default: "",
+  },
+  rank: {
+    type: String,
+    required: true,
+    default: "",
+  },
+  score: {
+    type: String,
+    required: true,
+    default: "",
+  },
+});
 </script>
 <style scoped>
 .crown {

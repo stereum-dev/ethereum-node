@@ -11,15 +11,11 @@
       <TheContributor
         v-for="(result, index) in results"
         :key="result.id"
-        :class="{
-          'gold-border': index === 0,
-          'silver-border': index === 1,
-          'bronze-border': index === 2,
-        }"
+        :class="getClass(index)"
         :name="result.name"
         :avatar="result.avatar"
-        :crown="index === 0"
-        :rank="index + 1"
+        :crown="headerStore.choosedCreditType !== 'translation' && index === 0"
+        :rank="headerStore.choosedCreditType !== 'translation' ? index + 1 : ''"
         :score="result.score"
       />
     </div>
@@ -76,11 +72,13 @@ const fetchStereumTranslators = async () => {
       throw new Error("Network response was not ok");
     }
     const responseData = await response.json();
-    results.value = responseData.data.translators.map((translator) => ({
-      name: translator.username,
-      avatar: translator.avatarUrl,
-      score: translator.testsCount,
-    }));
+    results.value = responseData.data.translators
+      .map((translator) => ({
+        name: translator.username,
+        avatar: translator.avatarUrl,
+        score: translator.testsCount,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
     console.error("Error fetching data:", error);
   } finally {
@@ -106,6 +104,27 @@ const fetchGithubContributors = () => {
     .catch((error) => console.error("Error fetching data:", error))
     .finally(() => (isLoading.value = false));
 };
+
+const getClass = (index) => {
+  const baseClasses = {};
+  if (headerStore.choosedCreditType !== "translation") {
+    if (index === 0) baseClasses["gold-border"] = true;
+    else if (index === 1) baseClasses["silver-border"] = true;
+    else if (index === 2) baseClasses["bronze-border"] = true;
+  }
+  return baseClasses;
+};
+
+//  getClass(index) {
+//       const baseClasses = {};
+//       if (this.headerStore.choosedCreditType !== "translation") {
+//         if (index === 0) baseClasses['gold-border'] = true;
+//         else if (index === 1) baseClasses['silver-border'] = true;
+//         else if (index === 2) baseClasses['bronze-border'] = true;
+//       }
+//       return baseClasses;
+//     }
+//   }
 </script>
 
 <style scoped>
