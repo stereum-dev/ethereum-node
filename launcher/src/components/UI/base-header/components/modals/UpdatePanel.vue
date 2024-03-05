@@ -59,7 +59,10 @@
                         src="/img/icon/base-header-icons/update-modal-open-button.png"
                         alt="Open Icon"
                         @mousedown.prevent
+                        @mouseenter="footerStore.cursorLocation = `${openButton}`"
+                        @mouseleave="footerStore.cursorLocation = ''"
                       />
+                      <span></span>
                     </div>
                   </div>
                 </div>
@@ -256,6 +259,7 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { onMounted, computed, ref, watchEffect } from "vue";
 import { useUpdateCheck } from "@/composables/version.js";
 import { useServers } from "@/store/servers";
+import { useFooter } from "@/store/theFooter";
 
 //Emits
 const emit = defineEmits(["clickOutside", "updateConfirm"]);
@@ -265,6 +269,9 @@ const show = ref(false);
 const serviceStore = useServices();
 const serverStore = useServers();
 const headerStore = useNodeHeader();
+const footerStore = useFooter();
+
+const openButton = ref("Open OS Update Panel");
 
 //Data
 const stereumApp = ref({
