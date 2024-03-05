@@ -812,7 +812,7 @@
     "process": "Zpracovávání"
   },
   "serviceModal": {
-    "distributedValidator": "GENERACE DISTRIBUOVANÉHO VALIDÁTORA",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "GENERACE NOVÉHO ENR",
     "open": "OTEVŘÍT",
     "createEnr": "VYTVOŘIT NOVÉ ENR",
