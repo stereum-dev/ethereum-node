@@ -812,7 +812,7 @@
     "process": "处理中"
   },
   "serviceModal": {
-    "distributedValidator": "分布式验证器生成",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "生成新的ENR",
     "open": "打开",
     "createEnr": "创建新的ENR",
