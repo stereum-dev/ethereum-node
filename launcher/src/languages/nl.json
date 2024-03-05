@@ -812,7 +812,7 @@
     "process": "Verwerking"
   },
   "serviceModal": {
-    "distributedValidator": "VERDEELDE VALIDATOR GENERATIE",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "GENEREREN VAN NIEUWE ENR",
     "open": "OPEN",
     "createEnr": "CREËER NIEUWE ENR",
