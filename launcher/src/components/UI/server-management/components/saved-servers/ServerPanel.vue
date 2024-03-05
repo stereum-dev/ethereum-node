@@ -48,6 +48,7 @@
         :idx="index"
         :server="server"
         @select-server="selectServer"
+        @quick-login="quickLogin"
       />
     </div>
     <button
@@ -70,7 +71,7 @@ import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
 import { onMounted, watch, ref, computed } from "vue";
 
-const emit = defineEmits(["selectServer", "serverLogin"]);
+const emit = defineEmits(["selectServer", "serverLogin", "quickLogin"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
@@ -116,6 +117,10 @@ const loadStoredConnections = async () => {
 
 const selectServer = (server) => {
   emit("selectServer", server);
+};
+
+const quickLogin = (server) => {
+  emit("quickLogin", server);
 };
 
 const serverLogin = () => {

@@ -10,6 +10,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @change-password="acceptChangePass"
       @file-upload="addExistingKeyHandler"
       @delete-key="confirmDelete"
+      @quick-login="loginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
     <GenerateKey
