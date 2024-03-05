@@ -41,9 +41,9 @@
                       />
                       <div
                         v-else
-                        class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[12px] text-gray-200 text-center flex justify-center items-center mr-2"
+                        class="w-4 h-4 bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-5"
                       >
-                        <span>{{ numberOfUpdatablePackages.length }}</span>
+                        <span>{{ numberOfUpdatablePackages }}</span>
                       </div>
                     </div>
                   </div>
@@ -352,29 +352,16 @@ const searchOsUpdates = async () => {
   searchingForOsUpdates.value = true;
   setTimeout(async () => {
     await getUpdatablePackagesCount();
-    await getUpgradablePackages();
     searchingForOsUpdates.value = false;
-  }, 2000);
-};
-
-const getUpgradablePackages = async () => {
-  try {
-    numberOfUpdatablePackages.value = await ControlService.getUpgradeablePackages();
-  } catch (error) {
-    console.error("Failed to fetch upgradable packages:", error);
-  }
+  }, 10);
 };
 
 const getUpdatablePackagesCount = async () => {
   try {
     const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
     const numPackages = Number(packagesCount);
-    headerStore.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-    headerStore.isOsUpdateAvailable = headerStore.osVersionLatest ? true : false;
-    return headerStore.osVersionLatest;
+    numberOfUpdatablePackages.value = isNaN(numPackages) || !numPackages ? 0 : numPackages;
   } catch (error) {
-    headerStore.osVersionLatest = 0;
-    headerStore.isOsUpdateAvailable = false;
     console.log(error);
   }
 };
@@ -382,7 +369,6 @@ const getUpdatablePackagesCount = async () => {
 const getOsVersion = async () => {
   try {
     const osVersion = await ControlService.getCurrentOsVersion();
-
     osVersionCurrent.value = osVersion;
   } catch (error) {
     console.log(error);
