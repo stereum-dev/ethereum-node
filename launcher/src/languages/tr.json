@@ -812,7 +812,7 @@
     "process": "İşleniyor"
   },
   "serviceModal": {
-    "distributedValidator": "DAĞITILMIŞ DOĞRULAYICI ÜRETİMİ",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "YENİ ENR ÜRETİLİYOR",
     "open": "AÇ",
     "createEnr": "YENİ ENR OLUŞTUR",
