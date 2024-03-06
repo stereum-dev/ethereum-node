@@ -43,7 +43,7 @@
     <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
     <StakeGuide v-if="headerStore.stakeGuideActive" />
-    <SwitchAnimation v-if="serverStore.isServerAnimationActive" />
+    <SwitchAnimation v-if="serverStore.isServerAnimationActive && !serverStore.errorMsgExists" />
   </div>
 </template>
 <script setup>

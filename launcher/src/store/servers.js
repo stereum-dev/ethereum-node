@@ -92,6 +92,7 @@ export const useServers = defineStore("servers", {
       //Form
       addNewServer: false,
       connectExistingServer: false,
+      isIpScannerModalActive: false,
 
       //Server Management tabs
       isServerAnimationActive: false,

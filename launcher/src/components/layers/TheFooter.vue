@@ -78,9 +78,11 @@ export default {
 }
 .onlineState {
   background-color: green;
+  z-index: 50;
 }
 .offlineState {
   background-color: red;
+  z-index: 50;
 }
 .stereum-status-state {
   width: 80%;
@@ -91,5 +93,6 @@ export default {
   text-transform: uppercase;
   font-weight: 600;
   font-size: 90%;
+  z-index: 50;
 }
 </style>

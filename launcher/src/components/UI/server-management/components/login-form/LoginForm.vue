@@ -78,14 +78,29 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           :class="ipError ? 'text-red-500' : 'text-gray-300'"
           >{{ ipError ? ipError : $t("multiServer.ipOrHost") }}</label
         >
-        <input
-          id="hostname"
-          v-model="serverStore.loginState.ip"
-          type="text"
-          placeholder="114.72.86.90"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-          required
-        />
+        <div
+          class="w-full h-fit col-start-1 col-span-full row-start-2 row-span-2 bg-gray-200 rounded-md grid grid-cols-12 items-center self-center"
+        >
+          <input
+            id="hostname"
+            v-model="serverStore.loginState.ip"
+            type="text"
+            placeholder="114.72.86.90"
+            class="h-8 self-center col-start-1 col-end-11 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+            required
+          />
+          <img
+            v-if="!serverStore.isIpScannerModalActive"
+            class="w-6 h-6 col-start-11 col-span-full self-center p-[2px] cursor-pointer hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 justify-self-center"
+            src="/img/icon/server-management-icons/local-lan.png"
+            alt="Scanner Icon"
+            @click="IpScanLan1"
+          />
+          <span
+            v-else
+            class="animate-spin w-6 h-6 col-start-11 col-span-full border-4 border-gray-300 border-t-4 border-t-[#88b79a] border-r-4 border-r-[#88b79a] rounded-full self-center justify-self-center"
+          ></span>
+        </div>
       </div>
       <div class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
@@ -93,6 +108,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
           >{{ $t("multiServer.port") }}</label
         >
+
         <input
           id="port"
           v-model="serverStore.loginState.port"
@@ -235,7 +251,8 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
       <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
         <button
           v-if="!serverStore.connectingProcess"
-          class="w-full h-[50px] bg-gray-200 hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
+          class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
+          :class="serverStore.isIpScannerModalActive ? 'bg-gray-400 opacity-50 pointer-events-none ' : 'bg-gray-200'"
           type="button"
           @click="internalLogin"
         >
@@ -260,6 +277,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
 import { computed, onUnmounted, ref, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import { useServerLogin } from "@/composables/useLogin";
+import ControlService from "@/store/ControlService";
 
 const emit = defineEmits(["serverLogin"]);
 
@@ -276,6 +294,7 @@ const ipError = ref("");
 const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
+const devices = ref([]);
 
 const getTrashImg = computed(() => {
   if (hovered.value) {
@@ -447,6 +466,23 @@ const internalLogin = async () => {
 
   if (isValid) {
     emit("serverLogin");
+  }
+};
+
+const IpScanLan1 = async () => {
+  serverStore.isIpScannerModalActive = true;
+  try {
+    let res = await ControlService.IpScanLan();
+    devices.value = res;
+    if (devices.value.length > 0) {
+      const ip = devices.value[0].ip;
+      serverStore.loginState.ip = ip;
+      serverStore.isIpScannerModalActive = false;
+    } else {
+      serverStore.isIpScannerModalActive = false;
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
   }
 };
 

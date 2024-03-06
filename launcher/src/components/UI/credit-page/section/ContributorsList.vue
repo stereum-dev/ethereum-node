@@ -122,7 +122,7 @@ const getClass = (index) => {
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: minmax(250px, auto);
   gap: 10px;
-  max-height: 395px;
+  max-height: 408px;
   overflow-y: auto;
   justify-content: center;
   align-items: center;

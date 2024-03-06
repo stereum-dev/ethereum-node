@@ -12,6 +12,7 @@ import { mapState, map } from 'pinia';
       <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }} </span>
     </div>
     <div class="w-full h-full grid grid-cols-3 pt-8">
+      <ClientSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
       <ExecutionClients
         @open-expert="openExpert"
         @open-log="openLog"
@@ -54,6 +55,7 @@ import ExecutionClients from "./ExecutionClients.vue";
 import ConsensusClients from "./ConsensusClients.vue";
 import ValidatorClients from "./ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
+import ClientSkeleton from "./ClientSkeleton.vue";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
@@ -66,11 +68,22 @@ const emit = defineEmits(["openExpert", "openLog"]);
 // Refs
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
+const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+const loadingClients = ref(false);
 const isLineDrawHandlerReady = ref(false);
 
 // Store and router
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
+
+watchEffect(() => {
+  if (nodeStore.skeletonLoading || serviceStore.installedServices.length === 0) {
+    loadingClients.value = true;
+  } else {
+    loadingClients.value = false;
+  }
+});
 
 watchEffect(() => {
   if (nodeStore.isLineHidden) {
