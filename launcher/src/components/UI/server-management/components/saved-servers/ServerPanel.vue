@@ -10,6 +10,7 @@
 
       <input
         id="Search"
+        ref="searchInputRef"
         v-model="searchQuery"
         type="text"
         :placeholder="`${$t('multiServer.serchFor')}`"
@@ -47,6 +48,7 @@
         :idx="index"
         :server="server"
         @select-server="selectServer"
+        @quick-login="quickLogin"
       />
     </div>
     <button
@@ -69,11 +71,12 @@ import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
 import { onMounted, watch, ref, computed } from "vue";
 
-const emit = defineEmits(["selectServer", "serverLogin"]);
+const emit = defineEmits(["selectServer", "serverLogin", "quickLogin"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
 const searchQuery = ref("");
+const searchInputRef = ref(null);
 
 const filteredServers = computed(() => {
   if (!searchQuery.value) {
@@ -95,6 +98,9 @@ watch(
 
 onMounted(async () => {
   await loadStoredConnections();
+  if (searchInputRef.value) {
+    searchInputRef.value.focus();
+  }
 });
 
 //Methods
@@ -111,6 +117,10 @@ const loadStoredConnections = async () => {
 
 const selectServer = (server) => {
   emit("selectServer", server);
+};
+
+const quickLogin = (server) => {
+  emit("quickLogin", server);
 };
 
 const serverLogin = () => {

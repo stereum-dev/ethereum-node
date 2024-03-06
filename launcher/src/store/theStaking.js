@@ -8,6 +8,7 @@ export const useStakingStore = defineStore("theStaking", {
       secondsPerSlot: null,
       slotsPerEpoch: null,
       // ***** Staking List
+      isStakingDisabled: true,
       selectedServiceToFilter: null,
       filteredKeys: null,
       searchedKeys: [],
