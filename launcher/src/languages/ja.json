@@ -263,8 +263,12 @@
     "instMonit": "モニタリングをインストールしますか？"
   },
   "creditPanel": {
-    "techTitle": "クレジット - 技術貢献者",
-    "techText": "GITPOAPを獲得しましょう！参加方法を学ぶには、私たちのGitHubを訪問してください！",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "財務貢献",
     "developers": "開発者",
     "testers": "テスター"
