@@ -13,7 +13,7 @@
     </div>
     <ul
       v-if="dropdownVisible"
-      class="dropdown-audio-output w-72 h-fit absolute z-50 bg-teal-600 text-wrap text-sm font-serif font-medium p-1 top-14 rounded-md text-[#e6e4e4]"
+      class="dropdown-audio-output w-72 h-fit absolute z-50 bg-teal-600 text-wrap text-sm font-serif font-medium p-1 top-14 right-4 rounded-md text-[#e6e4e4]"
     >
       <li
         v-for="device in audioOutputDevices"
