@@ -7,12 +7,20 @@
       <img
         class="mr-2"
         :style="{ transform: dropdownVisible ? 'rotate(0deg)' : 'rotate(180deg)' }"
-        src="/img/icon/control/arrowIcon.png"
+        src="/img/icon/control-page-icons/arrow-up-1.png"
         alt="topDown"
       />
     </div>
-    <ul v-if="dropdownVisible" class="dropdown-audio-output w-64 bg-white h-full absolute z-50">
-      <li v-for="device in audioOutputDevices" :key="device.deviceId" @click="selectDevice(device)">
+    <ul
+      v-if="dropdownVisible"
+      class="dropdown-audio-output w-72 h-fit absolute z-50 bg-teal-600 text-wrap text-sm font-serif font-medium p-1 top-14 rounded-md text-[#e6e4e4]"
+    >
+      <li
+        v-for="device in audioOutputDevices"
+        :key="device.deviceId"
+        class="cursor-pointer mt-1 p-1 rounded-md"
+        @click="selectDevice(device)"
+      >
         {{ device.label }}
       </li>
     </ul>
@@ -74,10 +82,11 @@ const getAudioDevices = async () => {
 
 .dropdown-audio-output span:hover {
   background: #a1c1ad;
-  color: #000;
+
   cursor: pointer;
 }
 .dropdown-audio-output li:hover {
-  background-color: aquamarine;
+  background-color: #17a2b8;
+  color: #000 !important;
 }
 </style>
