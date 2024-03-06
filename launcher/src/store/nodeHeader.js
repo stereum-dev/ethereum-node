@@ -63,8 +63,6 @@ export const useNodeHeader = defineStore("nodeHeader", {
       rpcState: false,
       dataState: false,
       wsState: false,
-
-      choosedCreditType: "",
     };
   },
   getters: {},
