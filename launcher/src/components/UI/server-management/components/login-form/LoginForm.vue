@@ -216,7 +216,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           v-model="serverStore.loginState.keyPath"
           type="text"
           placeholder="/user/.ssh/id_rsa"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 overflow-hidden appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           :disabled="!useSSHKey"
           required
         />

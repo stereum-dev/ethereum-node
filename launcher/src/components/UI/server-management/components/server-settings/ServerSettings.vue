@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch, toRaw } from "vue";
 import ControlService from "@/store/ControlService";
 import { useUpdateCheck } from "@/composables/version.js";
 
@@ -39,6 +39,17 @@ const isAutoUpdateEnabled = ref(false);
 
 const onOff = computed(() => {
   return isAutoUpdateEnabled.value ? "absolute left-3" : "absolute right-3";
+});
+
+const updateSettings = async () => {
+  let settings = await ControlService.getStereumSettings();
+  settings.stereum.settings.updates.unattended.install = isAutoUpdateEnabled.value === true;
+  await ControlService.setStereumSettings(toRaw(settings));
+};
+
+watch(isAutoUpdateEnabled, () => {
+  updateSettings();
+  console.log("Auto update enabled: ", isAutoUpdateEnabled.value);
 });
 
 onMounted(async () => {
