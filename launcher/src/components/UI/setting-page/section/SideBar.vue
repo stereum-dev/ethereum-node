@@ -8,7 +8,7 @@
     >
       settings
     </div>
-    <div class="sidebar-container flex flex-col h-4/5 w-full justify-center items-center space-y-2 pt-4 px-1">
+    <div class="sidebar-container flex flex-col h-4/5 w-full justify-start items-center space-y-2 pt-4 px-1">
       <slot></slot>
     </div>
   </div>
