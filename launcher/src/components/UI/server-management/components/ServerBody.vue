@@ -13,7 +13,7 @@
     <div
       class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
     >
-      <ServerPanel @select-server="selectServer" @server-login="addNewServer" />
+      <ServerPanel @select-server="selectServer" @server-login="addNewServer" @quick-login="quickLogin" />
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ import { useControlStore } from "@/store/theControl";
 import { computed, watch } from "vue";
 import { useRoute } from "vue-router";
 
-const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey"]);
+const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey", "quickLogin"]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
@@ -105,5 +105,9 @@ const deleteKey = (key) => {
 
 const serverLogin = () => {
   emit("serverLogin");
+};
+
+const quickLogin = (server) => {
+  emit("quickLogin", server);
 };
 </script>

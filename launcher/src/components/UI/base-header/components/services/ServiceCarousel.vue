@@ -44,6 +44,7 @@ const handleModal = (slide) => {
   width: 100% !important;
   height: 100% !important;
   padding: 0 10px !important;
+  z-index: 0 !important;
 }
 
 .swiper-wrapper {

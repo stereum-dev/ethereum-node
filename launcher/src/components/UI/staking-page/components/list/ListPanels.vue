@@ -5,7 +5,9 @@
     <div class="w-full h-full col-start-1 col-end-4 grid grid-cols-3 py-1">
       <div
         class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer px-1 active:scale-95"
-        :class="stakingStore.isPreviewListActive ? 'opacity-50 pointer-events-none ' : ''"
+        :class="
+          stakingStore.isPreviewListActive || stakingStore.isStakingDisabled ? 'opacity-50 pointer-events-none ' : ''
+        "
       >
         <img
           v-if="stakingStore.isGroupListActive"
@@ -31,7 +33,9 @@
       <div
         class="w-2/3 h-full col-start-2 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
         :class="
-          stakingStore.isGroupListActive || stakingStore.isPreviewListActive ? 'opacity-50 pointer-events-none ' : ''
+          stakingStore.isGroupListActive || stakingStore.isPreviewListActive || stakingStore.isStakingDisabled
+            ? 'opacity-50 pointer-events-none '
+            : ''
         "
         @mouseenter="footerStore.cursorLocation = `${openSrch}`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -47,7 +51,9 @@
       <div
         class="w-2/3 h-full col-start-3 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
         :class="
-          stakingStore.isGroupListActive || stakingStore.isPreviewListActive ? 'opacity-50 pointer-events-none ' : ''
+          stakingStore.isGroupListActive || stakingStore.isPreviewListActive || stakingStore.isStakingDisabled
+            ? 'opacity-50 pointer-events-none '
+            : ''
         "
         @mouseenter="footerStore.cursorLocation = `${nameNumber}`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -57,7 +63,9 @@
     </div>
 
     <div class="w-full h-full col-start-4 col-end-13 grid grid-cols-12 items-center self-center px-1 relative">
-      <component :is="activePanel.component" v-bind="activePanel.props" v-on="activePanel.events" />
+      <keep-alive>
+        <component :is="activePanel.component" v-bind="activePanel.props" v-on="activePanel.events" />
+      </keep-alive>
     </div>
   </div>
 </template>
@@ -71,6 +79,7 @@ import i18n from "@/includes/i18n";
 const t = i18n.global.t;
 
 const footerStore = useFooter();
+const stakingStore = useStakingStore();
 
 const crteGrp = t("displayValidator.crteGrp");
 const removGrp = t("displayValidator.removGrp");
@@ -93,7 +102,6 @@ const emit = defineEmits([
 ]);
 
 //Stores
-const stakingStore = useStakingStore();
 
 const panels = {
   insert: defineAsyncComponent(() => import("./panels/InsertPanel.vue")),
@@ -157,7 +165,7 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-  if (stakingStore.activePanel === null) {
+  if (stakingStore.activePanel === null || stakingStore.isStakingDisabled) {
     stakingStore.setActivePanel("insert");
   }
 });

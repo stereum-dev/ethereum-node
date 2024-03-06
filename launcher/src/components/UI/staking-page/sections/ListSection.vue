@@ -7,7 +7,9 @@
         v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive || stakingStore.isRemoteListActive"
         @back-list="backList"
       />
+      <DisabledSection v-if="stakingStore.isStakingDisabled" />
       <ListBody
+        v-else
         @on-drop="onDrop"
         @remove-single="removeSingle"
         @open-group="openGroup"
@@ -35,6 +37,7 @@
 import ListHeader from "../components/list/ListHeader.vue";
 import ListBody from "../components/list/ListBody.vue";
 import ListPanels from "../components/list/ListPanels.vue";
+import DisabledSection from "../sections/DisabledSection.vue";
 import { useStakingStore } from "@/store/theStaking";
 
 const emit = defineEmits([
