@@ -78,16 +78,16 @@
         @confirm-modify="confirmModifyingService"
       />
       <!-- End Modify Services Modal -->
-      <!-- Start Config Modal for Custom Service -->
+      <!-- Start Add configs for Custom Service -->
 
-      <ConfigModal
+      <AddCustom
         v-if="clientToInstall?.configPanel"
         :client="clientToInstall"
         @close-window="cancelInstallation"
         @confirm-create="confirmCreateCustomService"
       />
 
-      <!-- End Config Modal for Custom Service -->
+      <!-- End Add configs for Custom Service -->
 
       <!-- Start Add New Service Modal -->
       <AddModal
@@ -120,7 +120,7 @@ import NetworkModal from "./components/modals/NetworkModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
-import ConfigModal from "./components/modals/ConfigModal.vue";
+import AddCustom from "./components/modals/custom-service/AddCustom.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
@@ -483,14 +483,20 @@ const addServiceHandler = (item) => {
 // Cancel Adding service
 
 const cancelInstallation = (item) => {
-  console.log("cancelInstallation -> item", item);
-  if (item.service === "CustomService") {
-    item.configPanel = false;
-  }
   clientToInstall.value = null;
   isAddModalOpen.value = false;
+  if (item?.service === "CustomService") {
+    manageStore.customConfig = {
+      image: "",
+      entrypoint: "",
+      command: "",
+      ports: [],
+      paths: [],
+    };
+    item.configPanel = false;
+  }
 
-  const event = manageStore.newConfiguration.find((e) => e.id === item.id);
+  const event = manageStore.newConfiguration.find((e) => e.id === item?.id);
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
   manageStore.isLineHidden = false;
