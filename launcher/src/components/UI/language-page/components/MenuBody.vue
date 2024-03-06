@@ -98,12 +98,6 @@ const selectItem = async (lang, playSound = true) => {
   await updateSettings(lang);
 };
 
-const playSoundEffect = (path) => {
-  const audio = new Audio(path);
-  audio.volume = langStore.currentVolume;
-  audio.play().catch((e) => console.error("Failed to play sound:", e));
-};
-
 const updateSettings = async (lang) => {
   try {
     const prevConf = await ControlService.readConfig();
@@ -115,6 +109,11 @@ const updateSettings = async (lang) => {
   } catch (error) {
     console.error("Failed to update settings:", error);
   }
+};
+
+const playSoundEffect = (path) => {
+  const audio = new Audio(path);
+  audio.play().catch((e) => console.error("Failed to play sound:", e));
 };
 </script>
 

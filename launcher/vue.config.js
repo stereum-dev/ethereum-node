@@ -3,18 +3,11 @@
 module.exports = {
   devServer: {
     proxy: {
-      "/testers": {
+      "/api": {
         target: "https://stereum.net",
         changeOrigin: true,
         pathRewrite: {
-          "^/testers": "/api/github/testers",
-        },
-      },
-      "/translators": {
-        target: "https://stereum.net",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/translators": "/api/translators",
+          "^/api": "/api/github/testers",
         },
       },
     },

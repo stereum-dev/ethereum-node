@@ -1,44 +1,46 @@
 <template>
   <div class="contributor-parent">
-    <div v-if="props.crown" class="crown">
+    <div v-if="crown" class="crown">
       <img src="/img/icon/credit-page-icons/crown.png" alt="crown" />
     </div>
-    <div class="contributor-avatar"><img :src="props.avatar" /></div>
+    <div class="contributor-avatar"><img :src="avatar" /></div>
     <div class="contributor-name">
-      <span>{{ props.name }}</span>
-      <span v-if="props.rank" class="rank"># {{ props.rank }}</span>
-      <small v-if="props.score" class="score">SCORE: {{ props.score }} </small>
+      <span>{{ name }}</span>
+      <span class="rank"># {{ rank }}</span>
+      <small class="score">SCORE: {{ score }} </small>
     </div>
   </div>
 </template>
-<script setup>
-const props = defineProps({
-  name: {
-    type: String,
-    required: true,
-    default: "",
+<script>
+export default {
+  props: {
+    name: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    avatar: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    crown: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    rank: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    score: {
+      type: String,
+      required: true,
+      default: "",
+    },
   },
-  avatar: {
-    type: String,
-    required: true,
-    default: "",
-  },
-  crown: {
-    type: String,
-    required: true,
-    default: "",
-  },
-  rank: {
-    type: String,
-    required: true,
-    default: "",
-  },
-  score: {
-    type: String,
-    required: true,
-    default: "",
-  },
-});
+};
 </script>
 <style scoped>
 .crown {
@@ -46,19 +48,19 @@ const props = defineProps({
   position: absolute;
   justify-content: center;
   align-items: center;
-  top: -15%;
+  top: -13%;
   left: 63%;
-  transform: rotatez(38deg);
-  transform-origin: -40%;
+  transform: rotatez(33deg);
+  transform-origin: -55%;
 }
 .crown img {
-  width: 55%;
+  width: 70%;
 }
 .contributor-parent {
   cursor: default;
   display: flex;
-  width: 180px;
-  height: 230px;
+  width: 16%;
+  height: 59%;
   justify-content: center;
   align-items: center;
   border: 1px solid #343434;
@@ -67,7 +69,9 @@ const props = defineProps({
   box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 30px;
   flex-direction: column;
-  justify-self: center;
+  margin-top: 2%;
+  margin-right: 2%;
+  margin-bottom: 1%;
   position: relative;
 }
 .contributor-parent:hover {
@@ -82,8 +86,8 @@ const props = defineProps({
   border-radius: 30px 30px 0 0;
 }
 .contributor-avatar img {
-  width: 90px;
-  height: 90px;
+  width: 55%;
+  height: 70%;
   border-radius: 40%;
 }
 .contributor-name {
