@@ -122,5 +122,24 @@ export const useServers = defineStore("servers", {
       this.tabs.find((item) => item.name === tab).isActive = true;
       this.selectedTab = tab;
     },
+
+    setActiveState(state) {
+      if (state === null) {
+        this.isServerAnimationActive = false;
+        this.isServerLoginActive = false;
+        this.isServerDetailsActive = false;
+        this.isServerSSHActive = false;
+        this.isServerUpdateActive = false;
+        this.isServerSettingsActive = false;
+      }
+      this.isServerAnimationActive = false;
+      this.isServerLoginActive = false;
+      this.isServerDetailsActive = false;
+      this.isServerSSHActive = false;
+      this.isServerUpdateActive = false;
+      this.isServerSettingsActive = false;
+
+      this[state] = true;
+    },
   },
 });

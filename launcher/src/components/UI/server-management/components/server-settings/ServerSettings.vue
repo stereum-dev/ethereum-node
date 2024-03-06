@@ -54,10 +54,4 @@ const getSettings = async () => {
     isAutoUpdateEnabled.value = false;
   }
 };
-
-// const getSettings = async () => {
-//   let settings = await ControlService.getStereumSettings();
-//   console.log(settings.stereum?.settings.updates.unattended.install);
-//   isAutoUpdateEnabled.value = settings.stereum?.settings.updates.unattended.install;
-// };
 </script>
