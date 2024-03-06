@@ -41,9 +41,9 @@
                       />
                       <div
                         v-else
-                        class="w-12 h-[17px] bg-red-700 rounded-full p-1 text-[12px] text-gray-200 text-center flex justify-center items-center mr-2"
+                        class="w-4 h-4 bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-5"
                       >
-                        <span>{{ numberOfUpdatablePackages.length }}</span>
+                        <span>{{ numberOfUpdatablePackages }}</span>
                       </div>
                     </div>
                   </div>
@@ -54,7 +54,12 @@
                       class="w-[50px] h-[20px] bg-teal-800 hover:bg-teal-900 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="openOsUpdatePanel"
                     >
-                      <img class="w-5" src="/img/icon/base-header-icons/update-modal-open-button.png" alt="Open Icon" @mousedown.prevent />
+                      <img
+                        class="w-5"
+                        src="/img/icon/base-header-icons/update-modal-open-button.png"
+                        alt="Open Icon"
+                        @mousedown.prevent
+                      />
                     </div>
                   </div>
                 </div>
@@ -131,7 +136,11 @@
                     class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
                   >
                     <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1">
-                      <img class="w-2 h-2" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" />
+                      <img
+                        class="w-2 h-2"
+                        src="/img/icon/base-header-icons/header-update-button-green.png"
+                        alt="icon"
+                      />
                     </div>
                     <span class="text-[8px] text-gray-200 font-semibold ml-2"
                       >{{ headerStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
@@ -190,7 +199,11 @@
                       v-if="item.running || headerStore.updating"
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
                     >
-                      <img class="w-5" src="/img/icon/base-header-icons/update-modal-download-disabled.png" alt="icon" />
+                      <img
+                        class="w-5"
+                        src="/img/icon/base-header-icons/update-modal-download-disabled.png"
+                        alt="icon"
+                      />
                     </div>
                     <div
                       v-else
@@ -339,29 +352,16 @@ const searchOsUpdates = async () => {
   searchingForOsUpdates.value = true;
   setTimeout(async () => {
     await getUpdatablePackagesCount();
-    await getUpgradablePackages();
     searchingForOsUpdates.value = false;
-  }, 2000);
-};
-
-const getUpgradablePackages = async () => {
-  try {
-    numberOfUpdatablePackages.value = await ControlService.getUpgradeablePackages();
-  } catch (error) {
-    console.error("Failed to fetch upgradable packages:", error);
-  }
+  }, 10);
 };
 
 const getUpdatablePackagesCount = async () => {
   try {
     const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
     const numPackages = Number(packagesCount);
-    headerStore.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-    headerStore.isOsUpdateAvailable = headerStore.osVersionLatest ? true : false;
-    return headerStore.osVersionLatest;
+    numberOfUpdatablePackages.value = isNaN(numPackages) || !numPackages ? 0 : numPackages;
   } catch (error) {
-    headerStore.osVersionLatest = 0;
-    headerStore.isOsUpdateAvailable = false;
     console.log(error);
   }
 };
@@ -369,7 +369,6 @@ const getUpdatablePackagesCount = async () => {
 const getOsVersion = async () => {
   try {
     const osVersion = await ControlService.getCurrentOsVersion();
-
     osVersionCurrent.value = osVersion;
   } catch (error) {
     console.log(error);
@@ -381,9 +380,9 @@ const updateConfirm = async () => {
   try {
     headerStore.refresh = false;
     headerStore.updating = true;
-    headerStore.newUpdates.forEach((update) => (update.running = true));
+    serviceStore.newUpdates.forEach((update) => (update.running = true));
     seconds = await ControlService.runAllUpdates({
-      commit: this.stereumUpdate.commit,
+      commit: headerStore.stereumUpdate.commit,
     });
   } catch (err) {
     console.log("Running All Updates Failed: ", err);
