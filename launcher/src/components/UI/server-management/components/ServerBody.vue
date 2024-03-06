@@ -29,7 +29,7 @@ import SettingsPanel from "./server-settings/SettingsPanel.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { computed, watch } from "vue";
+import { computed, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey", "quickLogin"]);
@@ -53,6 +53,15 @@ watch(
     }
   }
 );
+
+onUnmounted(() => {
+  serverStore.isServerLoginActive = false;
+  serverStore.isServerManagementActive = false;
+  serverStore.isServerDetailsActive = false;
+  serverStore.isServerSSHActive = false;
+  serverStore.isServerUpdateActive = false;
+  serverStore.isServerSettingsActive = false;
+});
 
 //Methods
 

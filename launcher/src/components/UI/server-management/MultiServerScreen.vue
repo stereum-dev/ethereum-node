@@ -123,16 +123,21 @@ const serverHandler = (server) => {
   });
 
   if (serverStore.selectedServerConnection?.name === server.name) {
+    serverStore.isServerLoginActive = false;
+    serverStore.isServerSettingsActive = false;
     serverStore.setActiveTab("info");
-    serverStore.setActiveState("isServerDetailsActive");
+    serverStore.isServerDetailsActive = true;
     server.isSelected = true;
   } else {
     if (serverStore.addNewServer) {
       serverStore.addNewServer = false;
     }
     serverStore.setActiveTab("login");
-    serverStore.setActiveState("isServerLoginActive");
     serverStore.connectExistingServer = true;
+    serverStore.selectedServerToConnect = server;
+    serverStore.isServerDetailsActive = false;
+    serverStore.isServerSettingsActive = false;
+    serverStore.isServerLoginActive = true;
     server.isSelected = true;
   }
 
