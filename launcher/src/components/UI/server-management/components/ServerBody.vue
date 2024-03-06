@@ -9,6 +9,7 @@
       <DetailsPanel v-if="isDetailsActive" @change-password="changePassword" @set-avatar="setServerAvatar" />
       <UpdatePanel v-if="isUpdateActive" />
       <SshPanel v-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
+      <SettingsPanel v-if="isSettingsActive" />
     </div>
     <div
       class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
@@ -24,10 +25,11 @@ import LoginPanel from "./login-form/LoginPanel.vue";
 import DetailsPanel from "./server-details/DetailsPanel.vue";
 import UpdatePanel from "./server-update/UpdatePanel.vue";
 import SshPanel from "./ssh-management/SshPanel.vue";
+import SettingsPanel from "./server-settings/SettingsPanel.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { computed, watch } from "vue";
+import { computed, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey", "quickLogin"]);
@@ -40,6 +42,7 @@ const isLoginActive = computed(() => route.path === "/login" || serverStore.isSe
 const isSSHActive = computed(() => route.path !== "/login" && serverStore.isServerSSHActive);
 const isDetailsActive = computed(() => route.path !== "/login" && serverStore.isServerDetailsActive);
 const isUpdateActive = computed(() => route.path !== "/login" && serverStore.isServerUpdateActive);
+const isSettingsActive = computed(() => route.path !== "/login" && serverStore.isServerSettingsActive);
 
 watch(
   () => serverStore.selectedServerConnection,
@@ -50,6 +53,15 @@ watch(
     }
   }
 );
+
+onUnmounted(() => {
+  serverStore.isServerLoginActive = false;
+  serverStore.isServerManagementActive = false;
+  serverStore.isServerDetailsActive = false;
+  serverStore.isServerSSHActive = false;
+  serverStore.isServerUpdateActive = false;
+  serverStore.isServerSettingsActive = false;
+});
 
 //Methods
 
@@ -89,6 +101,7 @@ const addNewServer = () => {
   serverStore.isServerDetailsActive = false;
   serverStore.setActiveTab("login");
   serverStore.isServerManagementActive = false;
+  serverStore.isServerSettingsActive = false;
 };
 
 const changePassword = (newPassword) => {

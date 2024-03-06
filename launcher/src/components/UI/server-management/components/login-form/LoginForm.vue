@@ -216,15 +216,15 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           v-model="serverStore.loginState.keyPath"
           type="text"
           placeholder="/user/.ssh/id_rsa"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           :disabled="!useSSHKey"
           required
         />
         <label
           for="keypath-file"
-          class="col-start-12 col-span-full row-start-2 row-span-2 w-full h-full flex justify-center items-center cursor-pointer"
+          class="h-8 col-start-12 col-span-full row-start-2 row-span-2 self-center w-full flex justify-center items-center cursor-pointer bg-gray-200 rounded-r-md"
         >
-          <div class="w-6 h-6 border border-gray-400 rounded-full flex justify-center items-center">
+          <div class="w-6 h-6 border-2 border-gray-400 rounded-full flex justify-center items-center">
             <span
               class="text-xl text-teal-700 text-center font-bold hover:scale-125 active:scale-100 transition-all duration-150 ease-in-out"
               >+</span

@@ -1,5 +1,5 @@
 <template>
-  <div class="flagBtn_parent" :style="activeCheck()" @click="setting">
+  <div class="flagBtn_parent" @click="setting">
     <slot></slot>
   </div>
 </template>
@@ -11,6 +11,7 @@ export default {
       required: true,
     },
   },
+  // : style="activeCheck()"
   emits: ["setting"],
   data() {
     return {
@@ -26,11 +27,11 @@ export default {
     setting() {
       this.$emit("setting");
     },
-    activeCheck() {
-      if (this.isActive === false) {
-        return this.deActive;
-      }
-    },
+    // activeCheck() {
+    //   if (this.isActive === false) {
+    //     return this.deActive;
+    //   }
+    // },
   },
 };
 </script>
