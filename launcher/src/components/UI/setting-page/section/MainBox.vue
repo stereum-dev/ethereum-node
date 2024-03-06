@@ -4,10 +4,6 @@
   </div>
 </template>
 
-<script>
-export default {};
-</script>
-
 <style scoped>
 .mainBox-setting_parent {
   background: #3a3d40;
