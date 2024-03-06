@@ -52,30 +52,43 @@ watchEffect(() => {
       serverStore.isServerDetailsActive = false;
       serverStore.isServerSSHActive = false;
       serverStore.isServerUpdateActive = false;
+      serverStore.isServerSettingsActive = false;
       break;
     case "info":
       serverStore.isServerLoginActive = false;
       serverStore.isServerDetailsActive = true;
       serverStore.isServerSSHActive = false;
       serverStore.isServerUpdateActive = false;
+      serverStore.isServerSettingsActive = false;
+
       break;
     case "ssh":
       serverStore.isServerLoginActive = false;
       serverStore.isServerDetailsActive = false;
       serverStore.isServerSSHActive = true;
+      serverStore.isServerSettingsActive = false;
       serverStore.isServerUpdateActive = false;
       break;
     case "update":
       serverStore.isServerLoginActive = false;
       serverStore.isServerDetailsActive = false;
       serverStore.isServerSSHActive = false;
+      serverStore.isServerSettingsActive = false;
       serverStore.isServerUpdateActive = true;
+      break;
+    case "settings":
+      serverStore.isServerLoginActive = false;
+      serverStore.isServerDetailsActive = false;
+      serverStore.isServerSSHActive = false;
+      serverStore.isServerUpdateActive = false;
+      serverStore.isServerSettingsActive = true;
       break;
     case null:
       serverStore.isServerLoginActive = true;
       serverStore.isServerDetailsActive = false;
       serverStore.isServerSSHActive = false;
       serverStore.isServerUpdateActive = false;
+      serverStore.isServerSettingsActive = false;
       break;
   }
 });
