@@ -1,42 +1,3 @@
-<!-- <template>
-  <div class="flex w-full h-full items-center justify-around">
-    <span style="color: aliceblue" class="w-12 flex justify-center items-center font-semibold pr-2">{{ value }}</span
-    ><vue-slider
-      v-model="value"
-      dot-size="16"
-      width="185px"
-      :process-style="{ backgroundColor: '#336666' }"
-      
-      tooltip="none"
-    >
-      <template #dot="{ focus }">
-        <div :class="['custom-dot', { focus }]"></div>
-      </template>
-    </vue-slider>
-  </div>
-</template>
-
-<script setup>
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/default.css";
-import { ref } from "vue";
-
-const value = ref(0);
-</script>
-<style scoped>
-.custom-dot {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: #336666;
-  transition: 0.2s;
-  cursor: pointer;
-}
-.custom-dot:active {
-  background-color: #a1c1ad;
-}
-</style> -->
-
 <template>
   <div class="flex w-full m-auto items-center h-32 justify-center bg-[#33393E] rounded-md">
     <div class="px-2 py-1 relative w-10/12">
@@ -57,16 +18,41 @@ const value = ref(0);
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useLangStore } from "@/store/languages";
+
+const langStore = useLangStore();
 
 const sliderBar = ref(null);
-const audio = new Audio("path_to_your_audio_file");
 const volumePercentage = ref(95);
 
 const updateVolume = (clientX) => {
   const barRect = sliderBar.value.getBoundingClientRect();
   const newVolume = Math.max(0, Math.min(1, (clientX - barRect.left) / barRect.width));
-  audio.volume = newVolume;
+  langStore.currentVolume = newVolume;
   volumePercentage.value = newVolume * 100;
+};
+
+const playSoundEffect = async (path) => {
+  const audio = new Audio(path);
+  audio.volume = langStore.currentVolume;
+
+  if ("setSinkId" in audio && langStore.selectedDeviceId) {
+    try {
+      await audio.setSinkId(langStore.selectedDeviceId);
+      console.log(`Output device set to ${langStore.selectedDeviceId}`);
+    } catch (error) {
+      console.warn("Failed to set audio output device:", error);
+    }
+  } else {
+    if (!("setSinkId" in audio)) {
+      console.warn("setSinkId is not supported by this browser.");
+    }
+    if (!langStore.selectedDeviceId) {
+      console.warn("No audio output device selected.");
+    }
+  }
+
+  audio.play().catch((e) => console.error("Failed to play sound:", e));
 };
 
 const onMouseMove = (event) => {
@@ -76,7 +62,7 @@ const onMouseMove = (event) => {
 const onMouseUp = () => {
   document.removeEventListener("mousemove", onMouseMove);
   document.removeEventListener("mouseup", onMouseUp);
-  console.log("Volume set to", volumePercentage.value);
+  playSoundEffect("/sound/click.wav", langStore.selectedDeviceId);
 };
 
 const startDrag = () => {

@@ -2,7 +2,7 @@
   <div class="w-full audio-output-parent flex h-full bg-[#33393E] rounded-md">
     <div class="selected-option w-full h-full flex justify-between items-center" @click="toggleDropdown">
       <span class="device-label w-11/12 flex justify-start items-center font-semibold capitalize pl-2 mr-0">
-        {{ selectedDevice.label || "Select a device" }}
+        {{ selectedDevice.label || "Default Device" }}
       </span>
       <img
         class="mr-2"
@@ -29,6 +29,9 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useLangStore } from "@/store/languages";
+
+const langStore = useLangStore();
 
 const audioOutputDevices = ref([]);
 const selectedDevice = ref({});
@@ -40,6 +43,7 @@ const toggleDropdown = () => {
 
 const selectDevice = (device) => {
   selectedDevice.value = device;
+  langStore.selectedDeviceId = device.deviceId;
   toggleDropdown();
 };
 
@@ -54,7 +58,7 @@ const getAudioDevices = async () => {
     audioOutputDevices.value = devices.filter((device) => device.kind === "audiooutput");
 
     if (audioOutputDevices.value.length > 0) {
-      selectedDevice.value = audioOutputDevices.value[0];
+      langStore.selectedDeviceId = audioOutputDevices.value[0].deviceId;
     }
   } catch (error) {
     console.error("Error accessing media devices:", error);
