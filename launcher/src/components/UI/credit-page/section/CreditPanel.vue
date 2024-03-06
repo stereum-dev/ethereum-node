@@ -1,14 +1,10 @@
 <template>
-  <div class="credit-panel_parent h-full flex flex-col justify-start items-center w-full rounded-md cursor-default">
-    <div class="credit-panel_box w-full h-full">
-      <div
-        class="credit-header col-start-1 col-end-3 row-start-1 row-end-4 flex w-full h-full justify-center items-center"
-      >
-        <CreditHeader />
-      </div>
-      <div class="credit-container">
-        <ContributorsList />
-      </div>
+  <div class="credit-panel_box w-full grid grid-cols-2 grid-rows-12">
+    <div class="credit-header flex w-full h-full justify-center items-center">
+      <CreditHeader />
+    </div>
+    <div class="credit-container">
+      <ContributorsList />
     </div>
   </div>
 </template>
@@ -17,12 +13,15 @@ import ContributorsList from "./ContributorsList.vue";
 import CreditHeader from "./CreditHeader.vue";
 </script>
 <style scoped>
-.credit-panel_box {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto repeat(10, 1fr);
+.credit-header {
+  grid-area: 1/ 1 / 3 / 3;
 }
 .credit-container {
-  grid-area: 4/ 1 / 9 / 3;
+  grid-area: 3/ 1 / 11 / 3;
+}
+
+.credit-panel_box {
+  max-height: 488px;
+  cursor: default;
 }
 </style>
