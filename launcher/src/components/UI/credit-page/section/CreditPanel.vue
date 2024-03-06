@@ -1,5 +1,5 @@
 <template>
-  <div class="credit-panel_parent h-full">
+  <div class="credit-panel_parent h-full flex flex-col justify-start items-center w-full rounded-md cursor-default">
     <div class="credit-panel_box w-full h-full">
       <div
         class="credit-header col-start-1 col-end-3 row-start-1 row-end-4 flex w-full h-full justify-center items-center"
@@ -24,18 +24,5 @@ import CreditHeader from "./CreditHeader.vue";
 }
 .credit-container {
   grid-area: 4/ 1 / 9 / 3;
-}
-
-.credit-panel_parent {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-
-  border-radius: 10px;
-  z-index: 0;
-  box-sizing: border-box;
-  cursor: default;
 }
 </style>
