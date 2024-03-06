@@ -99,12 +99,14 @@ export const useServers = defineStore("servers", {
       isServerDetailsActive: false,
       isServerSSHActive: false,
       isServerUpdateActive: false,
+      isServerSettingsActive: false,
 
       tabs: [
         { name: "login", icon: "/img/icon/server-management-icons/login.png", isActive: true, isDisabled: false },
         { name: "info", icon: "/img/icon/server-management-icons/infos.png", isActive: false, isDisabled: false },
         { name: "ssh", icon: "/img/icon/server-management-icons/lock.png", isActive: false, isDisabled: false },
         { name: "update", icon: "/img/icon/server-management-icons/download.png", isActive: false, isDisabled: false },
+        { name: "settings", icon: "/img/icon/setting-page-icons/setting_icon.png", isActive: false, isDisabled: false },
       ],
       selectedTab: null,
     };
