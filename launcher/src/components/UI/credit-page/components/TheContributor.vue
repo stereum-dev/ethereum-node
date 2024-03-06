@@ -1,46 +1,44 @@
 <template>
   <div class="contributor-parent">
-    <div v-if="crown" class="crown">
+    <div v-if="props.crown" class="crown">
       <img src="/img/icon/credit-page-icons/crown.png" alt="crown" />
     </div>
-    <div class="contributor-avatar"><img :src="avatar" /></div>
+    <div class="contributor-avatar"><img :src="props.avatar" /></div>
     <div class="contributor-name">
-      <span>{{ name }}</span>
-      <span class="rank"># {{ rank }}</span>
-      <small class="score">SCORE: {{ score }} </small>
+      <span>{{ props.name }}</span>
+      <span v-if="props.rank" class="rank"># {{ props.rank }}</span>
+      <small v-if="props.score" class="score">SCORE: {{ props.score }} </small>
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    name: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    avatar: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    crown: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    rank: {
-      type: String,
-      required: true,
-      default: "",
-    },
-    score: {
-      type: String,
-      required: true,
-      default: "",
-    },
+<script setup>
+const props = defineProps({
+  name: {
+    type: String,
+    required: true,
+    default: "",
   },
-};
+  avatar: {
+    type: String,
+    required: true,
+    default: "",
+  },
+  crown: {
+    type: String,
+    required: true,
+    default: "",
+  },
+  rank: {
+    type: String,
+    required: true,
+    default: "",
+  },
+  score: {
+    type: String,
+    required: true,
+    default: "",
+  },
+});
 </script>
 <style scoped>
 .crown {
@@ -48,19 +46,19 @@ export default {
   position: absolute;
   justify-content: center;
   align-items: center;
-  top: -13%;
+  top: -15%;
   left: 63%;
-  transform: rotatez(33deg);
-  transform-origin: -55%;
+  transform: rotatez(38deg);
+  transform-origin: -40%;
 }
 .crown img {
-  width: 70%;
+  width: 55%;
 }
 .contributor-parent {
   cursor: default;
   display: flex;
-  width: 16%;
-  height: 59%;
+  width: 180px;
+  height: 230px;
   justify-content: center;
   align-items: center;
   border: 1px solid #343434;
@@ -69,9 +67,7 @@ export default {
   box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 30px;
   flex-direction: column;
-  margin-top: 2%;
-  margin-right: 2%;
-  margin-bottom: 1%;
+  justify-self: center;
   position: relative;
 }
 .contributor-parent:hover {
@@ -86,8 +82,8 @@ export default {
   border-radius: 30px 30px 0 0;
 }
 .contributor-avatar img {
-  width: 55%;
-  height: 70%;
+  width: 90px;
+  height: 90px;
   border-radius: 40%;
 }
 .contributor-name {
