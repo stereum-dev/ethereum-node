@@ -19,7 +19,7 @@
         >
           <div class="w-full col-start-2 col-end-12 row-start-2 row-end-4 items-center grid grid-cols-24">
             <img
-              class="col-start-1 col-span-2 w-8 justify-self-center"
+              class="col-start-1 col-span-2 w-7 justify-self-center"
               src="/img/icon/manage-node-icons/image-icon.png"
               alt="Image Icon"
             />
@@ -37,7 +37,7 @@
           <div class="w-full col-start-2 col-end-12 row-start-5 row-end-7 items-center grid grid-cols-24">
             <img
               class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/manage-node-icons/image-icon.png"
+              src="/img/icon/manage-node-icons/entrypoint.png"
               alt="Image Icon"
             />
             <span class="col-start-3 col-span-4 text-md text-gray-300 text-left font-semibold capitalize"
@@ -55,8 +55,8 @@
           </div>
           <div class="w-full col-start-2 col-end-12 row-start-8 row-end-10 items-center grid grid-cols-24">
             <img
-              class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/manage-node-icons/image-icon.png"
+              class="col-start-1 col-span-2 w-7 justify-self-center"
+              src="/img/icon/manage-node-icons/command.png"
               alt="Image Icon"
             />
             <span class="col-start-3 col-span-4 text-md text-gray-300 text-left font-semibold capitalize">COMMAND</span>
