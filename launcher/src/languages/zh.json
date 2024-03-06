@@ -263,8 +263,12 @@
     "instMonit": "安装监控？"
   },
   "creditPanel": {
-    "techTitle": "鸣谢 - 技术贡献者",
-    "techText": "获得一个GITPOAP！通过查看我们的GITHUB了解更多！",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "财务贡献者",
     "developers": "开发团队",
     "testers": "测试者"
