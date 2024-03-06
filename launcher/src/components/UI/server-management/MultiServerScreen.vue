@@ -10,6 +10,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @change-password="acceptChangePass"
       @file-upload="addExistingKeyHandler"
       @delete-key="confirmDelete"
+      @quick-login="loginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
     <GenerateKey
@@ -38,8 +39,10 @@ import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
 import { useServerLogin } from "@/composables/useLogin";
 import { useRouter } from "vue-router";
+import { useNodeStore } from "@/store/theNode";
 
 const serverStore = useServers();
+const nodeStore = useNodeStore();
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 
@@ -92,6 +95,7 @@ onMounted(async () => {
 
 const loginHandler = async () => {
   serverStore.connectingProcess = true;
+  nodeStore.skeletonLoading = true;
   if (router.currentRoute.value.path === "/login") {
     await login();
   } else {
@@ -100,6 +104,7 @@ const loginHandler = async () => {
     await login();
     setTimeout(() => {
       serverStore.isServerAnimationActive = false;
+      nodeStore.skeletonLoading = false;
     }, 5000);
   }
 };
