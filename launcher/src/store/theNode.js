@@ -92,33 +92,6 @@ export const useNodeStore = defineStore("theNode", {
           active: false,
         },
       ],
-      newUpdates: [
-        {
-          id: 1,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 2,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 3,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 4,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 5,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-      ],
       statusContents: [
         {
           id: 1,
