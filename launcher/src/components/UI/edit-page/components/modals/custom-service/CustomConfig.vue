@@ -218,20 +218,14 @@ const closeWindow = () => {
 };
 
 const customInstallHandler = () => {
-  if (
-    buttonText.value === "next" &&
-    isCustomConfigActive.value &&
-    manageStore.customConfig.image !== "" &&
-    manageStore.customConfig.entrypoint !== "" &&
-    manageStore.customConfig.command !== ""
-  ) {
+  if (buttonText.value === "next" && isCustomConfigActive.value && manageStore.customConfig.image !== "") {
     isCustomConfigActive.value = false;
     isLoading.value = true;
     setTimeout(() => {
       isCustomPathActive.value = true;
       isLoading.value = false;
     }, 500);
-  } else if (buttonText.value === "next" && isCustomPathActive.value && manageStore.customConfig.paths.length > 0) {
+  } else if (buttonText.value === "next" && isCustomPathActive.value) {
     isCustomConfigActive.value = false;
     isCustomPathActive.value = false;
     isLoading.value = true;
@@ -239,7 +233,7 @@ const customInstallHandler = () => {
       isLoading.value = false;
       isCustomPortActive.value = true;
     }, 1000);
-  } else if (buttonText.value === "create" && isCustomPortActive.value && manageStore.customConfig.ports.length > 0) {
+  } else if (buttonText.value === "create" && isCustomPortActive.value) {
     emit("serviceInstallation");
     closeWindow();
   }
