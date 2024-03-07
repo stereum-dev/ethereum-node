@@ -263,12 +263,12 @@
     "instMonit": "Überwachung installieren?"
   },
   "creditPanel": {
-    "techTitle": "CREDITS > Technical Contributors",
-    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
-    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
-    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
-    "translateTitle": "CREDITS > Translation",
-    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
+    "techTitle": "CREDITS > Technische Mitwirkende",
+    "techText": "Verdiene einen GitPOAP! Lerne wie du dich beteiligst, indem du unseren GitHub besuchst!",
+    "testTitle": "CREDITS > Testen, Feedback & Vorschläge",
+    "testText": "Machen Sie einen konstruktiven Vorschlag, lösen Sie ein Problem auf unserem GitHub!",
+    "translateTitle": "CREDITS > Übersetzung",
+    "translateText": "Nicht das richtige Wort? Helfen Sie uns, Stereum auf Crowdin in Ihrer Sprache zu verbreiten!",
     "financialPage": "FINANZIELLE BEITRÄGE",
     "developers": "ENTWICKLER",
     "testers": "TESTER"
@@ -533,7 +533,7 @@
   },
   "fastSync": {
     "header": "Legen Sie fest, wie die Node-Clients ihre Blockchain-Daten synchronisieren.",
-    "client": "CLIENTs",
+    "client": "CLIENTS",
     "syncSrc": "SYNC-QUELLE",
     "gen": "GENESIS",
     "sync": "Synchronisiert von Genesis",
@@ -816,7 +816,7 @@
     "process": "Verarbeitung"
   },
   "serviceModal": {
-    "distributedValidator": "DISTRIBUTED KEY GENERATION",
+    "distributedValidator": "VERTEILTE VALIDATORGENERIERUNG",
     "generateEnr": "NEUE ENR GENERIEREN",
     "open": "ÖFFNEN",
     "createEnr": "NEUE ENR ERSTELLEN",
@@ -855,11 +855,11 @@
     "dlPk": "Laden Sie den privaten Schlüssel herunter, um ihn zu sichern. Stellen Sie sicher, dass Sie auch das Passwort notieren, das Sie zur Verschlüsselung verwendet haben!",
     "dl": "HERUNTERLADEN",
     "imp": "IMPORTIEREN",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
+    "mngEnr": "ENR MANAGEMENT",
+    "copyEnr": "Kopieren Sie den generierten oder importierten 'Ethereum Node Record' - den Identifikator Ihres Knotens mit Obol.",
+    "areYouSure": "Möchtest du deine ENR wirklich löschen?",
+    "areYouSureCluster": "Sind Sie sicher, dass sie ihren Cluster entfernen möchten?",
+    "areYouSureMsg": "Diese Aktion kann nicht rückgängig gemacht werden!",
     "save": "BACKUP..."
   },
   "stakingPage": {
