@@ -4,9 +4,12 @@
       <div>SECURE SHELL - SERVER CONNECTION</div>
       <div>{{ controlStore.ServerName }}</div>
       <div>IP: {{ controlStore.ipAddress }}</div>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="refreshConnection">
-        REFRESH
-      </button>
+      <div
+        class="w-10 h-7 flex justify-center items-center bg-gray-700 hover:bg-black rounded-sm cursor-pointer transition-all duration-300 ease-in-out active:bg-gray-800 active:shadow-none active:shadow-gray-800"
+        @click="refreshConnection"
+      >
+        <img class="w-6 h-6" src="/img/icon/terminal-page-icons/redo.png" alt="Refresh Icon" />
+      </div>
     </div>
     <div ref="terminalContainer" class="terminal"></div>
   </div>
@@ -19,6 +22,11 @@ import { AttachAddon } from "xterm-addon-attach";
 import { onMounted, onUnmounted, ref } from "vue";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
+import { useClickInstall } from "@/store/clickInstallation";
+
+const clickStore = useClickInstall();
+
+console.log("install pathhhhhh", clickStore.installationPath);
 
 const terminalContainer = ref(null);
 const controlStore = useControlStore();
@@ -52,30 +60,40 @@ const handleSocketError = async () => {
 };
 
 const refreshConnection = async () => {
+  // Close the existing WebSocket connection if it's open
   if (socket.readyState === WebSocket.OPEN) {
-    terminal.clear();
+    socket.close();
   }
-  // else if (socket.readyState === WebSocket.CLOSED) {
-  // socket = new WebSocket(`ws://${controlStore.ipAddress}:1234`); // Create a new socket
-  // await ControlService.startShell();
-  // connectWebSocket();
+  //location.reload();
 
-  // if (shellStarted === undefined) {
-  //   handleSocketError();
-  // }
+  // // Clear the terminal
+  // terminal.clear();
+  // terminal.reset();
 
-  // console.log("socket");
-  // socket.onclose = handleSocketError;
-  // }
-  // else {
-  //   await stopShell();
-  //   if (typeof removeOutputListener === "function") {
-  //     removeOutputListener();
+  // // Create a new WebSocket connection
+  // socket = new WebSocket(`ws://${controlStore.ipAddress}:1234`);
+
+  // // Re-attach the WebSocket connection to the terminal
+  // socket.onopen = () => {
+  //   terminal.loadAddon(new AttachAddon(socket));
+  // };
+
+  // // Set up the WebSocket error handler
+  // socket.onerror = handleSocketError;
+
+  // // Set up the WebSocket message handler
+  // socket.onmessage = async (event) => {
+  //   const exitCommand = new RegExp("^\\s*exit\\s*$", "m");
+  //   if (exitCommand.test(event.data)) {
+  //     await stopShell();
+  //     if (typeof removeOutputListener === "function") {
+  //       removeOutputListener();
+  //     }
+  //     socket.close();
+  //     terminal.reset();
+  //     terminal.writeln("Terminal Connection is closed. Press on REFRESH to connect it again :)");
   //   }
-  //   socket.close();
-  //   terminal.reset();
-  //   connectWebSocket();
-  // }
+  // };
 };
 
 const stopShell = async () => {
@@ -117,17 +135,18 @@ const connectWebSocket = () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  //await ControlService.startShell();
   connectWebSocket();
+});
 
-  onUnmounted(async () => {
-    await stopShell();
-    if (typeof removeOutputListener === "function") {
-      removeOutputListener();
-    }
-    socket.close();
-    terminal.reset();
-  });
+onUnmounted(async () => {
+  await stopShell();
+  if (typeof removeOutputListener === "function") {
+    removeOutputListener();
+  }
+  socket.close();
+  terminal.reset();
 });
 </script>
 
