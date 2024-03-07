@@ -263,8 +263,12 @@
     "instMonit": "¿Instalar Monitoreo?"
   },
   "creditPanel": {
-    "techTitle": "CRÉDITOS - CONTRIBUYENTES TÉCNICOS",
-    "techText": "¡GANE UN GITPOAP! APRENDA CÓMO PARTICIPAR VISITANDO NUESTRO GITHUB!",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "CONTRIBUCIÓN FINANCIERA",
     "developers": "DESARROLLADORES",
     "testers": "TESTERS"
@@ -485,10 +489,11 @@
     "addNotif": "añadir un canal de notificación",
     "chooseNotif": "Elija qué tipo de Canal de Notificación desea configurar",
     "stereumMonitor": "Monitor de Nodo Stereum",
-    "stepOne": "Visite la tienda de aplicaciones o nuestro sitio web para descargar “Monitor de Nodo Stereum”",
-    "stepTwo": "Abra la aplicación en su teléfono inteligente",
-    "stepThree": "Escanee el Código QR",
-    "stepFour": "Envíe una notificación de prueba",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "haga clic fuera para cerrar",
     "dash": "Panel de Control",
     "chooseVal": "ELIJA UN CLIENTE VALIDADOR PARA CONECTAR EL MONITOREO",
@@ -812,7 +817,7 @@
     "process": "Procesando"
   },
   "serviceModal": {
-    "distributedValidator": "GENERACIÓN DE VALIDADOR DISTRIBUIDO",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "GENERANDO NUEVO ENR",
     "open": "ABRIR",
     "createEnr": "CREAR NUEVO ENR",
