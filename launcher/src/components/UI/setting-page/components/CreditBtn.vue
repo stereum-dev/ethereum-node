@@ -2,7 +2,7 @@
   <router-link
     class="credit-btn-btn w-[30%] rounded-md h-full bg-green-800 flex justify-center items-center cursor-pointer border border-[#33393E] hover:border-[#4d7575] hover:bg-[#4d7575]"
     to="/credit"
-    @click="test"
+    @click="creditTypeHandler"
   >
     <span class="uppercase font-medium text-gray-200 text-[8px] text-center">{{ props.btnName }}</span>
   </router-link>
@@ -16,9 +16,8 @@ const props = defineProps({
   btnName: String,
 });
 
-const test = () => {
+const creditTypeHandler = () => {
   headerStore.choosedCreditType = props.btnName;
-  console.log(headerStore.choosedCreditType);
 };
 </script>
 <style scoped>

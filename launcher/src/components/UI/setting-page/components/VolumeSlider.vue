@@ -39,7 +39,6 @@ const playSoundEffect = async (path) => {
   if ("setSinkId" in audio && langStore.selectedDeviceId) {
     try {
       await audio.setSinkId(langStore.selectedDeviceId);
-      console.log(`Output device set to ${langStore.selectedDeviceId}`);
     } catch (error) {
       console.warn("Failed to set audio output device:", error);
     }
