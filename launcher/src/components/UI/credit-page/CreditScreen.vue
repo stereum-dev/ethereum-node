@@ -4,5 +4,5 @@
   </base-layout>
 </template>
 <script setup>
-import CreditPanel from "./CreditPanel.vue";
+import CreditPanel from "./section/CreditPanel.vue";
 </script>
