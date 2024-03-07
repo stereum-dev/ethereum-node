@@ -9,7 +9,7 @@
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { defineEmits } from "vue";
+import { defineEmits, onMounted } from "vue";
 import CustomConfig from "./CustomConfig.vue";
 
 const emits = defineEmits(["confirmCreate"]);
@@ -38,6 +38,14 @@ const serviceInstallation = () => {
     customConfigReady: true,
   });
 };
+
+onMounted(() => {
+  manageStore.customConfig.image = "";
+  manageStore.customConfig.entrypoint = "";
+  manageStore.customConfig.command = "";
+  manageStore.customConfig.ports = [];
+  manageStore.customConfig.paths = [];
+});
 
 const closeWindow = () => {
   manageStore.customConfig.image = "";

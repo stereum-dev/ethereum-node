@@ -29,8 +29,8 @@ export class CustomService extends NodeService {
       1, // configVersion
       image.image, // image
       image.version, // imageVersion
-      command.split(" "), // command
-      [entrypoint], // entrypoint
+      command ? command.split(" ") : [], // command
+      entrypoint ? [entrypoint] : [], // entrypoint
       null, // env
       finalPorts, // ports
       finalVolumes, // volumes

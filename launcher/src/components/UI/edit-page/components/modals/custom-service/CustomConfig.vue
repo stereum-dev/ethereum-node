@@ -184,15 +184,7 @@ const isLoading = ref(false);
 const disabledButton = computed(() => {
   let output = false;
   if (isCustomConfigActive.value) {
-    output = !(
-      manageStore.customConfig.image &&
-      manageStore.customConfig.entrypoint &&
-      manageStore.customConfig.command
-    );
-  } else if (isCustomPathActive.value) {
-    output = manageStore.customConfig.paths.length === 0;
-  } else if (isCustomPortActive.value) {
-    output = manageStore.customConfig.ports.length === 0;
+    output = manageStore.customConfig.image ? false : true;
   }
   return output;
 });
