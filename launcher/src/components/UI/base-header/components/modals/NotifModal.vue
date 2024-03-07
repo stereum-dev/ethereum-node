@@ -43,10 +43,11 @@
         </div>
         <div class="qrContent">
           <div class="qrCode-boxes">
-            <span>1# {{ $t("notifModal.stepOne") }} </span>
-            <span>2# {{ $t("notifModal.stepTwo") }}</span>
-            <span>3# {{ $t("notifModal.stepThree") }}</span>
-            <span>X# {{ $t("notifModal.stepFour") }}</span>
+            <span class="mb-2">1# {{ $t("notifModal.stepOne") }} </span>
+            <span class="mb-2">2# {{ $t("notifModal.stepTwo") }}</span>
+            <span class="mb-2">3# {{ $t("notifModal.stepThree") }}</span>
+            <span class="mb-2">4# {{ $t("notifModal.stepFour") }}</span>
+            <span>5# {{ $t("notifModal.stepFive") }}</span>
           </div>
           <div class="qrCode-boxes">
             <div class="qrCode-place-holder">
