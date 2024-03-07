@@ -84,7 +84,7 @@
         v-if="clientToInstall?.configPanel"
         :client="clientToInstall"
         @close-window="cancelInstallation"
-        @confirm-create="confirmCreateCustomService"
+        @confirm-create="addServiceHandler"
       />
 
       <!-- End Add configs for Custom Service -->
@@ -374,19 +374,6 @@ const addServices = (service) => {
   let item = useDeepClone(service);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
-  } else if (
-    item.category === "service" &&
-    service.service === "CustomService" &&
-    !manageStore.newConfiguration.map((s) => s.service).includes(item.service)
-  ) {
-    item.id = manageStore.newConfiguration.length;
-    const newItem = {
-      ...item,
-      isNewClient: true,
-    };
-    manageStore.newConfiguration.push(newItem);
-    clientToInstall.value = newItem;
-    clientToInstall.value.configPanel = true;
   } else {
     item.id = manageStore.newConfiguration.length;
     const newItem = {
@@ -417,19 +404,6 @@ const onDrop = (event) => {
   let item = allServices.find((item) => item.id == itemId);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
-  } else if (
-    item.category === "service" &&
-    item.service === "CustomService" &&
-    !manageStore.newConfiguration.map((s) => s.service).includes(item.service)
-  ) {
-    item.id = manageStore.newConfiguration.length;
-    const newItem = {
-      ...item,
-      isNewClient: true,
-    };
-    manageStore.newConfiguration.push(newItem);
-    clientToInstall.value = newItem;
-    clientToInstall.value.configPanel = true;
   } else {
     item.id = manageStore.newConfiguration.length;
     const newItem = {
@@ -442,18 +416,14 @@ const onDrop = (event) => {
   }
 };
 
-// CUSTOM SERVICE  LOGICS
-
-const confirmCreateCustomService = (item, config) => {
-  // console.log("SERVICE", item);
-  console.log("CONFIG", config);
-  item.configPanel = false;
-  item.addPanel = true;
-};
-
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
+  if (item.client.service === "CustomService" && !item.customConfigReady) {
+    manageStore.customConfig.installDir = item.installDir;
+    clientToInstall.value.configPanel = true;
+    return;
+  }
   let dataObject = {
     network: manageStore.configNetwork.network,
     installDir: item.installDir || "/opt/stereum",
@@ -461,6 +431,12 @@ const addServiceHandler = (item) => {
     consensusClients: item.consensusClients,
     relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
     checkpointURL: item.checkPointSyncUrl || false,
+    //CustomService Attributes
+    image: item.image,
+    entrypoint: item.entrypoint,
+    command: item.command,
+    ports: item.ports,
+    volumes: item.volumes,
   };
 
   if (item.client.service === "ExternalExecutionService") {

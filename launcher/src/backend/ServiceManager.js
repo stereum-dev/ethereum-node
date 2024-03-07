@@ -968,7 +968,7 @@ export class ServiceManager {
         );
       case "CustomService":
         ports = [];
-        return CustomService.buildByUserInput(args.network, ports, args.installDir + "/custom");
+        return CustomService.buildByUserInput(args.network, args.installDir + "/custom", args.image, args.entrypoint, args.command, args.ports, args.volumes);
     }
   }
 

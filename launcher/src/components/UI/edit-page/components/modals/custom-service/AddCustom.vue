@@ -9,9 +9,12 @@
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
+import { defineEmits } from "vue";
 import CustomConfig from "./CustomConfig.vue";
 
-const { client } = defineProps({
+const emits = defineEmits(["confirmCreate"]);
+
+const props = defineProps({
   client: {
     type: Object,
     required: true,
@@ -21,7 +24,19 @@ const { client } = defineProps({
 const manageStore = useNodeManage();
 
 const serviceInstallation = () => {
-  console.log(manageStore.customConfig);
+  emits("confirmCreate", {
+    client: props.client,
+    installDir: manageStore.customConfig.installDir,
+    image: manageStore.customConfig.image,
+    entrypoint: manageStore.customConfig.entrypoint,
+    command: manageStore.customConfig.command,
+    ports: manageStore.customConfig.ports,
+    volumes: manageStore.customConfig.paths,
+    relays: [],
+    executionClients: [],
+    consensusClients: [],
+    customConfigReady: true,
+  });
 };
 
 const closeWindow = () => {

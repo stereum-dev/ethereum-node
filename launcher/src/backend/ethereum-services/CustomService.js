@@ -1,28 +1,39 @@
 import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
+import { ServicePort } from "./ServicePort";
 
 export class CustomService extends NodeService {
-  static buildByUserInput(network, ports, dir) {
+  static buildByUserInput(network, dir, imageString, entrypoint, command, ports, volumes) {
     const service = new CustomService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
-    const dataDir = "/custom";
-    const volumes = [
-      new ServiceVolume(workingDir, dataDir),
-    ];
+    const image = CustomService.parseImageString(imageString);
+
+    command = command.replace(/\s\s+/g, ' ');
+
+    const finalPorts = ports.map(p => {
+      return ServicePort.buildByConfig(p);
+    });
+
+    const finalVolumes = volumes.map(v => {
+      if (v.includes("<iDir>")) {
+        v = v.replace("<iDir>", workingDir);
+      }
+      return ServiceVolume.buildByConfig(v);
+    })
 
     service.init(
       "CustomService", // service
       service.id, // id
       1, // configVersion
-      "curlimages/curl", // image
-      "latest", // imageVersion
-      ["test"], // command
-      ["curl"], // entrypoint
+      image.image, // image
+      image.version, // imageVersion
+      command.split(" "), // command
+      [entrypoint], // entrypoint
       null, // env
-      ports ? ports : [], // ports
-      volumes, // volumes
+      finalPorts, // ports
+      finalVolumes, // volumes
       null, // user
       network // network
       // executionClients

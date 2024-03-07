@@ -89,7 +89,7 @@
                 v-model="enteredPath"
                 class="w-full h-full col-start-1 col-end-12 bg-transparent text-gray-700 p-2 text-sm"
                 type="text"
-                placeholder="/opt/stereum"
+                placeholder="/opt/stereum:/opt/data"
               />
               <div
                 class="h-8 col-start-12 col-span-1 flex justify-center items-center bg-teal-700 cursor-pointer rounded-md hover:scale-105 active:scale-95 hover:bg-teal-600 transition-all duration-300 ease-in-out hover:shadow-md hover:shadow-[#191a1a]"
@@ -130,7 +130,7 @@
                 v-model="enteredPort"
                 class="w-full h-full col-start-1 col-end-12 bg-transparent text-gray-700 p-2 text-sm"
                 type="text"
-                placeholder="hyperledger/besu:22.7.6"
+                placeholder="0.0.0.0:80:80/tcp"
               />
               <div
                 class="h-8 col-start-12 col-span-1 flex justify-center items-center bg-teal-700 cursor-pointer rounded-md hover:scale-105 active:scale-95 hover:bg-teal-600 transition-all duration-300 ease-in-out hover:shadow-md hover:shadow-[#191a1a]"
