@@ -263,12 +263,12 @@
     "instMonit": "安装监控？"
   },
   "creditPanel": {
-    "techTitle": "CREDITS > Technical Contributors",
-    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
-    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
-    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
-    "translateTitle": "CREDITS > Translation",
-    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
+    "techTitle": "鸣谢 > 技术贡献者",
+    "techText": "赚取GitPOAP！访问我们的GitHub了解如何参与进来！",
+    "testTitle": "鸣谢 > 测试、反馈与建议",
+    "testText": "在我们的GitHub上提出建设性的建议，解决问题！",
+    "translateTitle": "鸣谢 > 翻译",
+    "translateText": "不是正确的词汇？帮助我们通过Crowdin将Stereum传播到您的语言中！",
     "financialPage": "财务贡献者",
     "developers": "开发团队",
     "testers": "测试者"
@@ -816,7 +816,7 @@
     "process": "处理中"
   },
   "serviceModal": {
-    "distributedValidator": "DISTRIBUTED KEY GENERATION",
+    "distributedValidator": "分布式密钥生成",
     "generateEnr": "生成新的ENR",
     "open": "打开",
     "createEnr": "创建新的ENR",
@@ -855,12 +855,12 @@
     "dlPk": "下载私密密钥以进行备份。确保也记下了您用于加密的密码！",
     "dl": "下载",
     "imp": "导入",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
-    "save": "BACKUP..."
+    "mngEnr": "管理ENR",
+    "copyEnr": "复制生成或导入的“以太坊节点记录”- 使用Obol的节点标识符。",
+    "areYouSure": "您确定要移除您的ENR吗？",
+    "areYouSureCluster": "您确定要移除您的集群吗？",
+    "areYouSureMsg": "此操作不能撤销！",
+    "save": "备份..."
   },
   "stakingPage": {
     "somethingWrong": "出了点问题",
