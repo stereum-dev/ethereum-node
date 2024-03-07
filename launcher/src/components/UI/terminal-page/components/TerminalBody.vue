@@ -136,7 +136,7 @@ const connectWebSocket = () => {
 };
 
 onMounted(async () => {
-  //await ControlService.startShell();
+  await ControlService.startShell();
   connectWebSocket();
 });
 
