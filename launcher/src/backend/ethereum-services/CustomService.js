@@ -10,7 +10,7 @@ export class CustomService extends NodeService {
 
     const image = CustomService.parseImageString(imageString);
 
-    command = command.replace(/\s\s+/g, ' ');
+    command = command.replace(/\s\s+/g, ' ').trim();
 
     const finalPorts = ports.map(p => {
       return ServicePort.buildByConfig(p);
