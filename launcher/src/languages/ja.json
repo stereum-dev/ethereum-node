@@ -263,12 +263,12 @@
     "instMonit": "モニタリングをインストールしますか？"
   },
   "creditPanel": {
-    "techTitle": "CREDITS > Technical Contributors",
-    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
-    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
-    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
-    "translateTitle": "CREDITS > Translation",
-    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
+    "techTitle": "クレジット > 技術貢献者",
+    "techText": "GitPOAPを獲得しよう！GitHubを訪れて参加方法を学びましょう！",
+    "testTitle": "クレジット > テスト、フィードバック＆提案",
+    "testText": "GitHubで問題を解決する建設的な提案をしましょう！",
+    "translateTitle": "クレジット > 翻訳",
+    "translateText": "正しい単語ではありませんか？Crowdinであなたの言語にStereumを広める手伝いをしてください！",
     "financialPage": "財務貢献",
     "developers": "開発者",
     "testers": "テスター"
@@ -496,7 +496,7 @@
     "close": "外側をクリックして閉じる",
     "dash": "ダッシュボード",
     "chooseVal": "モニタリングに接続する検証者クライアントを選択してください",
-    "goTo": "Go to",
+    "goTo": "移動する",
     "machinename": "マシン名",
     "apikey": "APIキー",
     "apply": "適用"
@@ -816,7 +816,7 @@
     "process": "処理中"
   },
   "serviceModal": {
-    "distributedValidator": "DISTRIBUTED KEY GENERATION",
+    "distributedValidator": "分散キー生成",
     "generateEnr": "新しいENRの生成",
     "open": "開く",
     "createEnr": "新しいENRを作成する",
@@ -855,12 +855,12 @@
     "dlPk": "プライベートキーをダウンロードしてバックアップする。暗号化に使用したパスワードも書き留めることを確認してください！",
     "dl": "ダウンロード",
     "imp": "インポート",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
-    "save": "BACKUP..."
+    "mngEnr": "ENRの管理",
+    "copyEnr": "生成またはインポートされた「Ethereumノードレコード」- Obolを使用したノードの識別子をコピーしてください。",
+    "areYouSure": "ENRを削除してもよろしいですか？",
+    "areYouSureCluster": "クラスターを削除してもよろしいですか？",
+    "areYouSureMsg": "これは元に戻せません！",
+    "save": "バックアップ..."
   },
   "stakingPage": {
     "somethingWrong": "何か問題が発生しました",
