@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 export const useLangStore = defineStore("languages", {
   state: () => {
     return {
+      currentVolume: 1,
+      selectedDeviceId: "",
       dialogIsVisible: false,
       langOptions: [
         {
@@ -15,7 +17,7 @@ export const useLangStore = defineStore("languages", {
           name: "deutsch",
           flag: "img/flag/germany.png",
           label: "de",
-          isSelected: false,
+          isSelected: true,
         },
         {
           name: "français",

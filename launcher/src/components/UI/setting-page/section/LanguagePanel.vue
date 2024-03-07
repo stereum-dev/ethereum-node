@@ -1,11 +1,6 @@
 <template>
   <div class="lang-panel_parent">
-    <flag-button
-      v-for="link in sortedFlags"
-      :key="link.flag"
-      :is-active="link.enable"
-      @setting="setLang(link.name, link.flag, link.label)"
-    >
+    <flag-button v-for="link in sortedFlags" :key="link.name" @setting="setLang(link.name, link.flag, link.label)">
       <div class="langIco"><img :src="link.flag" /></div>
       <div class="langName">
         <span>{{ link.name }}</span>
@@ -15,10 +10,11 @@
 </template>
 
 <script>
-import FlagButton from "./FlagButton.vue";
+import FlagButton from "../components/FlagButton.vue";
 import { mapWritableState } from "pinia";
 import ControlService from "@/store/ControlService";
 import { useLangStore } from "@/store/languages";
+
 export default {
   components: { FlagButton },
   emits: ["back"],
@@ -26,9 +22,11 @@ export default {
     return {
       isLanguageSelected: false,
       selectedLanguage: {
-        lang: "",
+        name: "",
         flag: "",
         label: "",
+        isSelected: false,
+        settings: undefined,
       },
     };
   },
@@ -53,22 +51,23 @@ export default {
     },
   },
   methods: {
-    setLang(lang, langSelect, langLabel) {
-      this.selectedLanguage.lang = lang;
-      this.selectedLanguage.flag = langSelect;
-      this.$i18n.locale = langLabel;
+    async setLang(name, flag, label) {
+      this.selectedLanguage.name = name;
+      this.selectedLanguage.flag = flag;
+      this.selectedLanguage.isSelected = true;
+      this.$i18n.locale = label;
       this.isLanguageSelected = true;
-      this.updateSettings(lang, langSelect, langLabel);
+      this.updateSettings(name, flag, label);
       this.$emit("back");
-
-      this.$forceUpdate();
-      location.reload();
+      // location.reload();
+      // this.$forceUpdate();
     },
-    updateSettings: async function (lang, langSelect, langLabel) {
+    updateSettings: async function (name, langSelect, langLabel) {
       const prevConf = await ControlService.readConfig();
+      console.log(prevConf);
       const conf = {
         ...prevConf,
-        savedLanguage: { language: lang, flag: langSelect, label: langLabel },
+        savedLanguage: { name: name, flag: langSelect, label: langLabel },
       };
       await ControlService.writeConfig(conf);
     },
