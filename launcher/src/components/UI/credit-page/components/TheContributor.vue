@@ -24,19 +24,19 @@ const props = defineProps({
     default: "",
   },
   crown: {
-    type: String,
+    type: Boolean,
     required: true,
-    default: "",
+    default: false,
   },
   rank: {
-    type: String,
+    type: Number,
     required: true,
-    default: "",
+    default: null,
   },
   score: {
-    type: String,
+    type: Number,
     required: true,
-    default: "",
+    default: null,
   },
 });
 </script>

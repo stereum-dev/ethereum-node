@@ -59,8 +59,6 @@ export default {
       this.isLanguageSelected = true;
       this.updateSettings(name, flag, label);
       this.$emit("back");
-      // location.reload();
-      // this.$forceUpdate();
     },
     updateSettings: async function (name, langSelect, langLabel) {
       const prevConf = await ControlService.readConfig();

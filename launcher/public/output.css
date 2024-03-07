@@ -2874,11 +2874,6 @@ video {
   border-top-right-radius: 0.375rem;
 }
 
-.rounded-l-full{
-  border-top-left-radius: 9999px;
-  border-bottom-left-radius: 9999px;
-}
-
 .rounded-bl-\[37px\]{
   border-bottom-left-radius: 37px;
 }

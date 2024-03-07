@@ -1,6 +1,5 @@
 <template>
   <base-layout>
-    <!-- <SettingPanel /> -->
     <language-panel v-if="langActive" @back="langActiveBox" />
     <div v-else class="setting-parent w-full h-full flex justify-center items-center">
       <div class="flex justify-start items-start w-56 h-full">
@@ -28,7 +27,6 @@
   </base-layout>
 </template>
 <script setup>
-// import SettingPanel from "./SettingPanel.vue";
 import SideBar from "./section/SideBar.vue";
 import MainBox from "./section/MainBox";
 import SidebarBtn from "./components/SidebarBtn";
