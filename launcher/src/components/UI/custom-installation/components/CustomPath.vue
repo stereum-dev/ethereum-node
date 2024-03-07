@@ -73,7 +73,7 @@
             <div class="w-full h-20 flex justify-center items-center p-4 bg-[#3d4449] rounded-full">
               <div class="w-full h-full bg-gray-300 rounded-full flex justify-start items-center">
                 <input
-                  v-model="clickStore.installationPath"
+                  v-model="userSelectedPath"
                   type="text"
                   placeholder="/opt/stereum"
                   class="w-full h-full bg-gray-300 rounded-full px-2 text-lg text-gray-800 font-semibold outline-none"
@@ -88,7 +88,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted, onBeforeMount, watch, watchEffect } from "vue";
 import CustomFooter from "./CustomFooter.vue";
 import CustomHeader from "./CustomHead.vue";
 import ControlService from "@/store/ControlService";
@@ -106,11 +106,37 @@ const clickStore = useClickInstall();
 const router = useRouter();
 const networkListDropdown = ref(false);
 // const selectedNetwork = ref("click to select a network");
+const userSelectedPath = ref("/opt/stereum");
 const selectedNetworkIcon = ref("");
 const selectedNetworkName = ref("");
 const inputTitle = ref("Choose your installation path where Stereum will be installed");
 const nextBtnDisabled = ref(false);
 const displayItem = ref("Click to select a network");
+
+watch(userSelectedPath, (newValue) => {
+  clickStore.installationPath = newValue;
+});
+
+watchEffect(() => {
+  if (userSelectedPath.value === "") {
+    nextBtnDisabled.value = true;
+  } else {
+    nextBtnDisabled.value = false;
+  }
+});
+
+// Lifecycle Hooks
+onBeforeMount(() => {
+  activeBtn();
+});
+
+onMounted(() => {
+  displayItem.value = "Click to select a network";
+
+  if (clickStore.installationPath === "") {
+    getInstallPath();
+  }
+});
 
 // Methods
 const selectNetwork = (network) => {
@@ -142,15 +168,6 @@ const prepareStereum = async () => {
 const activeBtn = () => {
   return clickStore.installationPath === "" ? "deactivated" : "";
 };
-
-// Lifecycle Hooks
-onBeforeMount(() => {
-  activeBtn();
-  getInstallPath();
-});
-onMounted(() => {
-  displayItem.value = "Click to select a network";
-});
 </script>
 
 <style scoped>

@@ -98,9 +98,8 @@ watch(
 
 onMounted(async () => {
   await loadStoredConnections();
-  if (searchInputRef.value) {
-    searchInputRef.value.focus();
-  }
+
+  searchInputRef.value.focus();
 });
 
 //Methods
