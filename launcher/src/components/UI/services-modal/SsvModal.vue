@@ -68,7 +68,7 @@
               !passGenerateEncryptKeyConfirmed
                 ? `${$t('multiServer.gen')}`
                 : !lastStep
-                ? `${$t('exitMultipleValidator.confirm')}`
+                ? `${$t('editModals.confirm')}`
                 : `${$t('serviceModal.openBrowser')}`
             }`"
             @confirmPluginClick="firstConfirmBtnHndlr"
@@ -77,13 +77,11 @@
             v-else-if="!switchEncryptedKeyGenerator || (passGenerateEncryptKeyConfirmed && importEncryptedKey)"
             :btn-bg-color="`#1ba5f8`"
             :import-box-title="
-              importRawOperatorKeyOldMethod
-                ? `${$t('exitMultipleValidator.selPk')}`
-                : `${$t('exitMultipleValidator.selEnc')}`
+              importRawOperatorKeyOldMethod ? `${$t('serviceModal.selPk')}` : `${$t('serviceModal.selEnc')}`
             "
             import-box-placeholder=""
             try-again="true"
-            :btn-name="`${$t('exitMultipleValidator.sel')}`"
+            :btn-name="`${$t('serviceModal.sel')}`"
             @importBoxHandler="firstImportBoxHandler"
           />
 
