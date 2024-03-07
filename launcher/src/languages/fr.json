@@ -263,8 +263,12 @@
     "instMonit": "Installer la surveillance ?"
   },
   "creditPanel": {
-    "techTitle": "CRÉDITS - CONTRIBUTEURS TECHNIQUES",
-    "techText": "RECEVEZ UN GITPOAP ! APPRENEZ COMMENT VOUS IMPLIQUER EN VISITANT NOTRE GITHUB !",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "CONTRIBUTION FINANCIÈRE",
     "developers": "DÉVELOPPEURS",
     "testers": "TESTEURS"
@@ -485,10 +489,11 @@
     "addNotif": "ajouter un canal de notification",
     "chooseNotif": "Choisissez le type de canal de notification que vous souhaitez configurer",
     "stereumMonitor": "Moniteur de nœud Stereum",
-    "stepOne": "Visitez l'App Store ou notre site Web pour télécharger « Moniteur de nœud Stereum »",
-    "stepTwo": "Ouvrez l'application sur votre smartphone",
-    "stepThree": "Scannez le code QR",
-    "stepFour": "Envoyez une notification de test",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "cliquez à l'extérieur pour fermer",
     "dash": "Tableau de bord",
     "chooseVal": "CHOISISSEZ UN CLIENT VALIDATEUR POUR CONNECTER LA SURVEILLANCE",
@@ -812,7 +817,7 @@
     "process": "Traitement"
   },
   "serviceModal": {
-    "distributedValidator": "GÉNÉRATION DE VALIDATEUR DISTRIBUÉ",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "GÉNÉRATION D'UN NOUVEAU ENR",
     "open": "OUVRIR",
     "createEnr": "CRÉER UN NOUVEAU ENR",

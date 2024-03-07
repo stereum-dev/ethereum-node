@@ -263,8 +263,12 @@
     "instMonit": "هل تريد تثبيت المراقبة؟"
   },
   "creditPanel": {
-    "techTitle": "الاعتمادات - المساهمون الفنيون",
-    "techText": "اكسب GITPOAP! تعرف على كيفية المشاركة بزيارة جيثاب الخاص بنا!",
+    "techTitle": "الاعتمادات > المساهمون التقنيون",
+    "techText": "اكسب GitPOAP! تعلم كيفية المشاركة بزيارة GitHub الخاص بنا!",
+    "testTitle": "الاعتمادات > الاختبار، التعليقات والاقتراحات",
+    "testText": "قدم اقتراحًا بناءً، حل مشكلة، على GitHub الخاص بنا!",
+    "translateTitle": "الاعتمادات > التَّرْجَمَةً",
+    "translateText": "ليست الكلمة الصحيحة؟ ساعدنا في نشر Stereum بلغتك على Crowdin!",
     "financialPage": "المساهمة المالية",
     "developers": "المطورون",
     "testers": "المختبرون"
@@ -485,10 +489,11 @@
     "addNotif": "إضافة قناة إشعار",
     "chooseNotif": "اختر نوع قناة الإشعار التي تريد تكوينها",
     "stereumMonitor": "مراقب عقدة ستيريوم",
-    "stepOne": "زر متجر التطبيقات أو موقعنا الإلكتروني لتنزيل تطبيق “مراقب عقدة ستيريوم”",
-    "stepTwo": "افتح التطبيق على هاتفك الذكي",
-    "stepThree": "مسح رمز الاستجابة السريعة",
-    "stepFour": "إرسال إشعار تجريبي",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "انقر خارجًا للإغلاق",
     "dash": "لوحة القيادة",
     "chooseVal": "اختر عميل الموثق لربط المراقبة به",
@@ -812,7 +817,7 @@
     "process": "المعالجة"
   },
   "serviceModal": {
-    "distributedValidator": "توليد الموثق الموزع",
+    "distributedValidator": "توليد المفتاح الموزع",
     "generateEnr": "توليد ENR جديد",
     "open": "فتح",
     "createEnr": "إنشاء ENR جديد",
@@ -851,12 +856,12 @@
     "dlPk": "قم بتنزيل المفتاح الخاص لنسخه احتياطيًا. تأكد أيضًا من كتابة كلمة المرور التي استخدمتها للتشفير!",
     "dl": "تنزيل",
     "imp": "استيراد",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
-    "save": "BACKUP..."
+    "mngEnr": "إدارة ENR",
+    "copyEnr": "انسخ 'سجل عقدة Ethereum' المولد أو المستورد - معرف عقدتك باستخدام Obol.",
+    "areYouSure": "هل أنت متأكد من أنك تريد إزالة ENR الخاص بك؟",
+    "areYouSureCluster": "هل أنت متأكد من أنك تريد إزالة مجموعتك؟",
+    "areYouSureMsg": "لا يمكن التراجع عن هذا!",
+    "save": "النسخ الاحتياطي..."
   },
   "stakingPage": {
     "somethingWrong": "حدث خطأ ما",
