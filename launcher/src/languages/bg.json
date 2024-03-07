@@ -263,8 +263,12 @@
     "instMonit": "Инсталиране на мониторинг?"
   },
   "creditPanel": {
-    "techTitle": "КРЕДИТИ - ТЕХНИЧЕСКИ СЪТРУДНИЦИ",
-    "techText": "СПЕЧЕЛЕТЕ GITPOAP! НАУЧЕТЕ КАК ДА СЕ ВКЛЮЧИТЕ, КАТО ПОСЕТИТЕ НАШИЯ GITHUB!",
+    "techTitle": "КРЕДИТИ > Технически сътрудници",
+    "techText": "Спечелете GitPOAP! Научете как да се включите, като посетите нашия GitHub!",
+    "testTitle": "КРЕДИТИ > Тестване, обратна връзка и предложения",
+    "testText": "Направете конструктивно предложение, решаващо проблем, в нашия GitHub!",
+    "translateTitle": "КРЕДИТИ > Превод",
+    "translateText": "Не е правилната дума? Помогнете ни да разпространим Stereum на вашия език в Crowdin!",
     "financialPage": "ФИНАНСОВ ПРИНОС",
     "developers": "РАЗРАБОТЧИЦИ",
     "testers": "ТЕСТЕРИ"
@@ -485,10 +489,11 @@
     "addNotif": "добавете канал за нотификация",
     "chooseNotif": "Изберете вида на канала за известия, който искате да конфигурирате",
     "stereumMonitor": "Stereum Нод Монитор",
-    "stepOne": "Посетете магазина за приложения или нашия уебсайт, за да изтеглите \"STEREUM Нод Монитор\"",
-    "stepTwo": "Отворете апликацията на вашият смартфон",
-    "stepThree": "Сканирайте QR кода",
-    "stepFour": "Изпрати тестово съобщение",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "кликнете извън прозореца за да затворите",
     "dash": "Контролен панел",
     "chooseVal": "ИЗБОР НА КЛИЕНТ ЗА ВАЛИДИРАНЕ, КЪМ КОЙТО ДА СЕ СВЪРЖЕ НАБЛЮДЕНИЕТО",
@@ -812,7 +817,7 @@
     "process": "Обработване"
   },
   "serviceModal": {
-    "distributedValidator": "РАЗПРЕДЕЛЕНО ГЕНЕРИРАНЕ НА ВАЛИДАТОРИ",
+    "distributedValidator": "Генериране на разпределен ключ",
     "generateEnr": "GENERATING NEW ENR",
     "open": "OPEN",
     "createEnr": "CREATE NEW ENR",
@@ -851,7 +856,7 @@
     "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
     "dl": "DOWNLOAD",
     "imp": "IMPORT",
-    "mngEnr": "MANAGE ENR",
+    "mngEnr": "Управление на ENR",
     "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
     "areYouSure": "Are you sure you want to remove your ENR?",
     "areYouSureCluster": "Are you sure you want to remove your cluster?",

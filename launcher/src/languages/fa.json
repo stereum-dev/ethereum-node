@@ -263,8 +263,12 @@
     "instMonit": "نصب نظارت؟"
   },
   "creditPanel": {
-    "techTitle": "اعتبارات - مشارکت‌کنندگان فنی",
-    "techText": "یک GITPOAP بدست آورید! با بازدید از GITHUB ما یاد بگیرید که چگونه درگیر شوید!",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "مشارکت مالی",
     "developers": "توسعه‌دهندگان",
     "testers": "آزمایش‌کننده‌ها"
@@ -485,10 +489,11 @@
     "addNotif": "اضافه کردن یک کانال اعلان",
     "chooseNotif": "نوع کانال اعلانی را که می‌خواهید پیکربندی کنید انتخاب کنید",
     "stereumMonitor": "نظارت نود استریوم",
-    "stepOne": "بازدید از فروشگاه برنامه یا وب‌سایت ما برای دانلود “STEREUM Node Monitor”",
-    "stepTwo": "باز کردن برنامه روی گوشی هوشمند شما",
-    "stepThree": "اسکن کد QR",
-    "stepFour": "ارسال یک اعلان آزمایشی",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "برای بستن اینجا بیرون از کادر کلیک کنید",
     "dash": "داشبورد",
     "chooseVal": "انتخاب یک مشتری اعتبارسنجی برای اتصال نظارت به آن",
@@ -812,7 +817,7 @@
     "process": "در حال پردازش"
   },
   "serviceModal": {
-    "distributedValidator": "تولید اعتبارسنج توزیع شده",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "تولید ENR جدید",
     "open": "باز کردن",
     "createEnr": "ایجاد ENR جدید",

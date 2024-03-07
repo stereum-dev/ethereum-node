@@ -263,8 +263,12 @@
     "instMonit": "安装监控？"
   },
   "creditPanel": {
-    "techTitle": "鸣谢 - 技术贡献者",
-    "techText": "获得一个GITPOAP！通过查看我们的GITHUB了解更多！",
+    "techTitle": "鸣谢 > 技术贡献者",
+    "techText": "赚取GitPOAP！访问我们的GitHub了解如何参与进来！",
+    "testTitle": "鸣谢 > 测试、反馈与建议",
+    "testText": "在我们的GitHub上提出建设性的建议，解决问题！",
+    "translateTitle": "鸣谢 > 翻译",
+    "translateText": "不是正确的词汇？帮助我们通过Crowdin将Stereum传播到您的语言中！",
     "financialPage": "财务贡献者",
     "developers": "开发团队",
     "testers": "测试者"
@@ -485,10 +489,11 @@
     "addNotif": "添加其他通知渠道",
     "chooseNotif": "选择您想配置的通知渠道类型",
     "stereumMonitor": "以太坊节点监控",
-    "stepOne": "访问应用商店或我们的网站下载“STEREUM节点监控”应用",
-    "stepTwo": "在您的智能手机上打开应用",
-    "stepThree": "扫描二维码",
-    "stepFour": "发送测试通知",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "点击外部关闭",
     "dash": "仪表板",
     "chooseVal": "选择要连接监控的验证器客户端",
@@ -812,7 +817,7 @@
     "process": "处理中"
   },
   "serviceModal": {
-    "distributedValidator": "分布式验证器生成",
+    "distributedValidator": "分布式密钥生成",
     "generateEnr": "生成新的ENR",
     "open": "打开",
     "createEnr": "创建新的ENR",
@@ -851,12 +856,12 @@
     "dlPk": "下载私密密钥以进行备份。确保也记下了您用于加密的密码！",
     "dl": "下载",
     "imp": "导入",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
-    "save": "BACKUP..."
+    "mngEnr": "管理ENR",
+    "copyEnr": "复制生成或导入的“以太坊节点记录”- 使用Obol的节点标识符。",
+    "areYouSure": "您确定要移除您的ENR吗？",
+    "areYouSureCluster": "您确定要移除您的集群吗？",
+    "areYouSureMsg": "此操作不能撤销！",
+    "save": "备份..."
   },
   "stakingPage": {
     "somethingWrong": "出了点问题",

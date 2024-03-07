@@ -263,8 +263,12 @@
     "instMonit": "モニタリングをインストールしますか？"
   },
   "creditPanel": {
-    "techTitle": "クレジット - 技術貢献者",
-    "techText": "GITPOAPを獲得しましょう！参加方法を学ぶには、私たちのGitHubを訪問してください！",
+    "techTitle": "クレジット > 技術貢献者",
+    "techText": "GitPOAPを獲得しよう！GitHubを訪れて参加方法を学びましょう！",
+    "testTitle": "クレジット > テスト、フィードバック＆提案",
+    "testText": "GitHubで問題を解決する建設的な提案をしましょう！",
+    "translateTitle": "クレジット > 翻訳",
+    "translateText": "正しい単語ではありませんか？Crowdinであなたの言語にStereumを広める手伝いをしてください！",
     "financialPage": "財務貢献",
     "developers": "開発者",
     "testers": "テスター"
@@ -485,14 +489,15 @@
     "addNotif": "通知チャネルを追加する",
     "chooseNotif": "設定したい通知チャネルの種類を選択してください",
     "stereumMonitor": "ステレウムノードモニター",
-    "stepOne": "アプリストアまたは私たちのウェブサイトを訪問して「STEREUM Node Monitor」をダウンロードしてください",
-    "stepTwo": "スマートフォンでアプリを開く",
-    "stepThree": "QRコードをスキャンする",
-    "stepFour": "テスト通知を送信する",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "外側をクリックして閉じる",
     "dash": "ダッシュボード",
     "chooseVal": "モニタリングに接続する検証者クライアントを選択してください",
-    "goTo": "Go to",
+    "goTo": "移動する",
     "machinename": "マシン名",
     "apikey": "APIキー",
     "apply": "適用"
@@ -812,7 +817,7 @@
     "process": "処理中"
   },
   "serviceModal": {
-    "distributedValidator": "分散検証者生成",
+    "distributedValidator": "分散キー生成",
     "generateEnr": "新しいENRの生成",
     "open": "開く",
     "createEnr": "新しいENRを作成する",
@@ -851,12 +856,12 @@
     "dlPk": "プライベートキーをダウンロードしてバックアップする。暗号化に使用したパスワードも書き留めることを確認してください！",
     "dl": "ダウンロード",
     "imp": "インポート",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
-    "save": "BACKUP..."
+    "mngEnr": "ENRの管理",
+    "copyEnr": "生成またはインポートされた「Ethereumノードレコード」- Obolを使用したノードの識別子をコピーしてください。",
+    "areYouSure": "ENRを削除してもよろしいですか？",
+    "areYouSureCluster": "クラスターを削除してもよろしいですか？",
+    "areYouSureMsg": "これは元に戻せません！",
+    "save": "バックアップ..."
   },
   "stakingPage": {
     "somethingWrong": "何か問題が発生しました",

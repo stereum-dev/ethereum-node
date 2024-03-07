@@ -263,8 +263,12 @@
     "instMonit": "Инсталирај Мониторинг?"
   },
   "creditPanel": {
-    "techTitle": "ЗАСЛУГЕ - ТЕХНИЧКИ ДОПРИНОСИОЦИ",
-    "techText": "ЗАРАДИТЕ GITPOAP! НАУЧИТЕ КАКО ДА СЕ УКЉУЧИТЕ ПОСЕТОМ НАШЕГ ГИТХУБ-а!",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "ФИНАНСИЈСКИ ДОПРИНОС",
     "developers": "РАЗВОЈНИЦИ",
     "testers": "ТЕСТЕРИ"
@@ -485,10 +489,11 @@
     "addNotif": "додајте канал обавештења",
     "chooseNotif": "Изаберите који тип канала обавештења желите да подесите",
     "stereumMonitor": "Стереум монитор чвора",
-    "stepOne": "Посетите продавницу апликација или нашу веб страницу за преузимање „Стереум монитора чвора“",
-    "stepTwo": "Отворите апликацију на вашем паметном телефону",
-    "stepThree": "Скенирајте QR код",
-    "stepFour": "Пошаљите тестно обавештење",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "кликните споља да затворите",
     "dash": "Контролна табла",
     "chooseVal": "ИЗАБЕРИТЕ КЛИЈЕНТА ВАЛИДАТОРА ЗА ПОВЕЗИВАЊЕ МОНИТОРИНГА",
@@ -812,7 +817,7 @@
     "process": "Обрада"
   },
   "serviceModal": {
-    "distributedValidator": "ГЕНЕРИСАЊЕ РАСПОДЕЉЕНОГ ВАЛИДАТОРА",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "ГЕНЕРИСАЊЕ НОВОГ ENR",
     "open": "ОТВОРИ",
     "createEnr": "КРЕИРАЈ НОВИ ENR",

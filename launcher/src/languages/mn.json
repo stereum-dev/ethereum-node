@@ -263,8 +263,12 @@
     "instMonit": "Мониторинг суулгах уу?"
   },
   "creditPanel": {
-    "techTitle": "НЭР ДУРДАЛТ - ТЕХНИКИЙН ХУВЬ НЭМЭР ОРУУЛАГЧИД",
-    "techText": "ГИТПОАП ОЛОХ! МАНАЙ ГИТХАБААР ЗОЧИЛЖ ХЭРХЭН ОРОЛЦОХ ТАЛААР СУРАЛЦААРАЙ!",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "САНХҮҮГИЙН ХУВЬ НЭМЭР",
     "developers": "ХӨГЖҮҮЛЭГЧИД",
     "testers": "ТЕСТЕРҮҮД"
@@ -485,10 +489,11 @@
     "addNotif": "мэдэгдлийн суваг нэмэх",
     "chooseNotif": "Ямар төрлийн мэдэгдлийн сувгийг тохируулахыг хүсч байгаагаа сонгоно уу",
     "stereumMonitor": "Stereum Нөүд Монитор",
-    "stepOne": "\"STEREUM Node Monitor\" програмыг татаж авахын тулд app store эсвэл манай вэбсайтад зочилно уу",
-    "stepTwo": "Ухаалаг утсан дээрээ програмаа нээнэ үү",
-    "stepThree": "QR кодыг сканнердах",
-    "stepFour": "Тест мэдэгдэлийг илгээнэ үү",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "хаахын тулд гадна талд товшино уу",
     "dash": "Хяналтын самбар",
     "chooseVal": "МОНИТОРИНГД ХОЛБОГДОХЫН ТУЛД ВАЛИДАТОР КЛАЙНТАА СОНГОНО УУ",
@@ -812,7 +817,7 @@
     "process": "Боловсруулж байна"
   },
   "serviceModal": {
-    "distributedValidator": "DISTRIBUTED VALIDATOR GENERATION",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "ШИНЭ ENR-Г ҮҮСГЭЖ БАЙНА",
     "open": "НЭЭХ",
     "createEnr": "ШИНЭ ENR ҮҮСГЭ",
