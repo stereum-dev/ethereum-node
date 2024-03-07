@@ -263,12 +263,12 @@
     "instMonit": "هل تريد تثبيت المراقبة؟"
   },
   "creditPanel": {
-    "techTitle": "CREDITS > Technical Contributors",
-    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
-    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
-    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
-    "translateTitle": "CREDITS > Translation",
-    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
+    "techTitle": "اعتبارات > مشارکت‌کنندگان فنی",
+    "techText": "یک GitPOAP بدست آورید! با مراجعه به GitHub ما یاد بگیرید چگونه درگیر شوید!",
+    "testTitle": "الاعتمادات > الاختبار، التعليقات والاقتراحات",
+    "testText": "یک پیشنهاد سازنده ارائه دهید، مشکلی را حل کنید، در GitHub ما!",
+    "translateTitle": "اعتبارات > ترجمه",
+    "translateText": "کلمه صحیح نیست؟ به ما کمک کنید Stereum را به زبان شما در Crowdin گسترش دهیم!",
     "financialPage": "المساهمة المالية",
     "developers": "المطورون",
     "testers": "المختبرون"
@@ -816,7 +816,7 @@
     "process": "المعالجة"
   },
   "serviceModal": {
-    "distributedValidator": "DISTRIBUTED KEY GENERATION",
+    "distributedValidator": "تولید کلید توزیع شده",
     "generateEnr": "توليد ENR جديد",
     "open": "فتح",
     "createEnr": "إنشاء ENR جديد",
@@ -855,12 +855,12 @@
     "dlPk": "قم بتنزيل المفتاح الخاص لنسخه احتياطيًا. تأكد أيضًا من كتابة كلمة المرور التي استخدمتها للتشفير!",
     "dl": "تنزيل",
     "imp": "استيراد",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
-    "save": "BACKUP..."
+    "mngEnr": "مدیریت ENR",
+    "copyEnr": "'رکورد نود اتریوم' تولید شده یا وارد شده را کپی کنید - شناسه نود شما با استفاده از Obol.",
+    "areYouSure": "آیا از حذف ENR خود مطمئن هستید؟",
+    "areYouSureCluster": "هل أنت متأكد من أنك تريد إزالة مجموعتك؟",
+    "areYouSureMsg": "لا يمكن التراجع عن هذا!",
+    "save": "مكافأة..."
   },
   "stakingPage": {
     "somethingWrong": "حدث خطأ ما",
