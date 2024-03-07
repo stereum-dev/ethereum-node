@@ -578,6 +578,37 @@ ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
 });
 
+ipcMain.handle("startShell", async (event) => {
+  if (!nodeConnection.sshService.shellStream) {
+    try {
+      await nodeConnection.sshService.startShell(
+        nodeConnection.nodeConnectionParams,
+        (output) => {
+          event.sender.send("terminal-output", output.toString());
+        },
+        (error) => {
+          console.error("SSH Shell Error:", error);
+          event.sender.send("terminal-output", `Error: ${error.message}`);
+        }
+      );
+    } catch (error) {
+      console.error("Error starting shell:", error);
+      return `Error starting shell: ${error.message}`;
+    }
+  }
+});
+
+ipcMain.handle("stopShell", async () => {
+  if (nodeConnection.sshService) {
+    try {
+      nodeConnection.sshService.stopShell();
+    } catch (error) {
+      console.error("Error stopping shell:", error);
+      return `Error stopping shell: ${error.message}`;
+    }
+  }
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

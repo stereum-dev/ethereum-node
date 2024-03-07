@@ -539,9 +539,17 @@ class ControlService extends EventEmitter {
   async importObolBackup(args) {
     return await this.promiseIpc.send("importObolBackup", args);
   }
-  
+
   async upgradeToNoble() {
     return await this.promiseIpc.send("upgradeToNoble");
+  }
+
+  async startShell() {
+    return this.promiseIpc.send("startShell");
+  }
+
+  async stopShell() {
+    return this.promiseIpc.send("stopShell");
   }
 }
 if (!instance) {
