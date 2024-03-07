@@ -11,7 +11,6 @@ export default {
       required: true,
     },
   },
-  // : style="activeCheck()"
   emits: ["setting"],
   data() {
     return {
@@ -27,11 +26,6 @@ export default {
     setting() {
       this.$emit("setting");
     },
-    // activeCheck() {
-    //   if (this.isActive === false) {
-    //     return this.deActive;
-    //   }
-    // },
   },
 };
 </script>
