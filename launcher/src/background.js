@@ -609,6 +609,10 @@ ipcMain.handle("stopShell", async () => {
   }
 });
 
+ipcMain.handle("controlsPath", async () => {
+  return await monitoring.controlsPath();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

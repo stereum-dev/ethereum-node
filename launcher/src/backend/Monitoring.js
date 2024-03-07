@@ -9,6 +9,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import YAML from "yaml";
 
 const globalMonitoringCache = {
   intervalHandler: null,
@@ -3268,5 +3269,14 @@ rm -rf diskoutput
         data: error,
       };
     }
+  }
+
+  async controlsPath() {
+    const stereumConfig = await this.nodeConnection.sshService.exec("cat /etc/stereum/stereum.yaml");
+    let controlsPath = "";
+    if (stereumConfig.rc == 0) {
+      controlsPath = YAML.parse(stereumConfig.stdout).stereum_settings.settings.controls_install_path;
+    }
+    return controlsPath.length > 0 || typeof controlsPath !== "undefined" ? controlsPath : "";
   }
 }

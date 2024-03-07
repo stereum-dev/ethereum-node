@@ -551,6 +551,10 @@ class ControlService extends EventEmitter {
   async stopShell() {
     return this.promiseIpc.send("stopShell");
   }
+
+  async controlsPath() {
+    return this.promiseIpc.send("controlsPath");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

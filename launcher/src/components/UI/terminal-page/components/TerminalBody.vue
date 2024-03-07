@@ -19,22 +19,19 @@
 import "xterm/css/xterm.css";
 import { Terminal } from "xterm";
 import { AttachAddon } from "xterm-addon-attach";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
-import { useClickInstall } from "@/store/clickInstallation";
-
-const clickStore = useClickInstall();
-
-console.log("install pathhhhhh", clickStore.installationPath);
 
 const terminalContainer = ref(null);
 const controlStore = useControlStore();
+const controlsPath = ref("");
 let terminal = new Terminal({
   allowTransparency: true,
   rightClickSelectsWord: true,
 });
-let socket = new WebSocket(`ws://${controlStore.ipAddress}:1234`);
+const wsPort = 1234;
+let socket = new WebSocket(`ws://${controlStore.ipAddress}:${wsPort}`);
 
 terminal.onSelectionChange(() => {
   if (terminal.hasSelection()) {
@@ -51,7 +48,6 @@ terminal.onSelectionChange(() => {
 });
 
 const handleSocketError = async () => {
-  console.log("handleSocketError--------");
   await stopShell();
   if (typeof removeOutputListener === "function") {
     removeOutputListener();
@@ -60,44 +56,28 @@ const handleSocketError = async () => {
 };
 
 const refreshConnection = async () => {
-  // Close the existing WebSocket connection if it's open
   if (socket.readyState === WebSocket.OPEN) {
-    socket.close();
+    terminal.clear();
   }
-  //location.reload();
-
-  // // Clear the terminal
-  // terminal.clear();
-  // terminal.reset();
-
-  // // Create a new WebSocket connection
-  // socket = new WebSocket(`ws://${controlStore.ipAddress}:1234`);
-
-  // // Re-attach the WebSocket connection to the terminal
-  // socket.onopen = () => {
-  //   terminal.loadAddon(new AttachAddon(socket));
-  // };
-
-  // // Set up the WebSocket error handler
-  // socket.onerror = handleSocketError;
-
-  // // Set up the WebSocket message handler
-  // socket.onmessage = async (event) => {
-  //   const exitCommand = new RegExp("^\\s*exit\\s*$", "m");
-  //   if (exitCommand.test(event.data)) {
-  //     await stopShell();
-  //     if (typeof removeOutputListener === "function") {
-  //       removeOutputListener();
-  //     }
-  //     socket.close();
-  //     terminal.reset();
-  //     terminal.writeln("Terminal Connection is closed. Press on REFRESH to connect it again :)");
+  // else if (socket.readyState === WebSocket.CLOSED) {
+  // socket = new WebSocket(`ws://${controlStore.ipAddress}:1234`); // Create a new socket
+  // await ControlService.startShell();
+  // connectWebSocket();
+  // if (shellStarted === undefined) {
+  //   handleSocketError();
+  // }
+  // console.log("socket");
+  // socket.onclose = handleSocketError;
+  // }
+  // else {
+  //   await stopShell();
+  //   if (typeof removeOutputListener === "function") {
+  //     removeOutputListener();
   //   }
-  // };
-};
-
-const stopShell = async () => {
-  await ControlService.stopShell();
+  //   socket.close();
+  //   terminal.reset();
+  //   connectWebSocket();
+  // }
 };
 
 let removeOutputListener;
@@ -135,8 +115,16 @@ const connectWebSocket = () => {
   }
 };
 
-onMounted(async () => {
+const stopShell = async () => {
+  await ControlService.stopShell();
+};
+
+onBeforeMount(async () => {
   await ControlService.startShell();
+  controlsPath.value = await ControlService.controlsPath();
+});
+
+onMounted(async () => {
   connectWebSocket();
 });
 
