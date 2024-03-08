@@ -7,7 +7,7 @@
       <div class="theValidatorBox_left">
         <div class="activePart">
           <div class="activeIco">
-            <img src="/img/icon/control/keyEth.svg" />
+            <img src="/img/icon/control-page-icons/keyEth.svg" />
           </div>
           <div class="activeValue">
             <span>{{ activeVal }} {{ $t("controlPage.active") }}</span>
@@ -15,7 +15,7 @@
         </div>
         <div class="gewiPart">
           <div class="gewiIco">
-            <img src="/img/icon/control/ethBag.svg" />
+            <img src="/img/icon/control-page-icons/ethBag.svg" />
           </div>
           <div class="gewiValuePart">
             <div class="green">

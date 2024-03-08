@@ -38,7 +38,7 @@
             <div class="w-full h-full col-start-12 col-span-1 flex justify-end items-center">
               <img
                 class="col-start-12 col-span-1 w-10 h-10 hover:scale-105 hover:shadow-lg hover:shadow-gray-900 active:scale-100 rounded-full justify-self-end transition-all duration-300 ease-in-out"
-                src="/img/icon/PLUS_ICON.png"
+                src="/img/icon/server-management-icons/plus-icon.png"
                 alt="icon"
               />
             </div>

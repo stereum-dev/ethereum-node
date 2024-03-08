@@ -1,9 +1,10 @@
 import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 <template>
   <div
-    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
+    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border bg-[#151618] rounded-b-sm mb-[1px]"
     :class="[
-      stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : '',
+      stakingStore.isOverDropZone ? 'border-dashed  border-blue-500 ' : 'border-gray-600',
+      stakingStore.inputWrongKey ? 'border-red-500' : '',
       stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
         ? 'row-start-2 row-end-12'
         : 'row-start-1 row-end-12 rounded-t-md',
@@ -16,9 +17,10 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       v-else
       ref="dropZoneRef"
       class="w-full h-full max-h-[423px] animate__animated animate__fadeIn"
+      :class="{ 'cursor-not-allowed': isDropZoneDisabled }"
+      @dragover.prevent="isDropZoneDisabled ? null : onDragOver"
+      @dragleave.prevent="isDropZoneDisabled ? null : onDragLeave"
       @drop.prevent="isDropZoneDisabled ? null : onDrop($event)"
-      @dragover.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = true)"
-      @dragleave.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = false)"
     >
       <span
         v-if="stakingStore.isOverDropZone"
@@ -71,7 +73,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         <DoppelGCheckRow
           v-for="key in filteredDoppelgangerKeys"
           v-show="
-            stakingStore.doppelgangerKeys.length > 0 &&
+            stakingStore.doppelgangerKeys.length &&
             !stakingStore.isPreviewListActive &&
             !isLoading &&
             stakingStore.selectedServiceToFilter?.config?.serviceID === key.serviceID
@@ -178,6 +180,22 @@ const isDropZoneDisabled = computed(() => {
   return isLoadingOrImporting || hasDoppelgangerForSelectedService;
 });
 
+// const isDropZoneDisabled = computed(() => {
+//   const isLoadingOrImporting = isLoading.value || stakingStore.keys.length === 0;
+//   const hasDoppelgangerForSelectedService = stakingStore.doppelgangerKeys.some(
+//     (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
+//   );
+//   return isLoadingOrImporting || hasDoppelgangerForSelectedService;
+// });
+
+const onDragOver = () => {
+  stakingStore.isOverDropZone = true;
+};
+
+const onDragLeave = () => {
+  stakingStore.isOverDropZone = false;
+};
+
 watchEffect(() => {
   if (stakingStore.keys.length === 0) {
     isLoading.value = true;
@@ -264,6 +282,8 @@ const isKeyInGroup = (key) => {
 };
 
 const onDrop = (event) => {
+  if (isDropZoneDisabled.value) return;
+
   emit("onDrop", event);
 };
 

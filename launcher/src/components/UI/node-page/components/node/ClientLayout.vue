@@ -31,7 +31,7 @@
         @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} ${keyMsg}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
+        <img class="w-5" src="/img/icon/node-page-icons/validator-key-icon.png" alt="icon" />
         <span
           class="text-md font-semibold"
           :class="props.client.state === 'running' ? 'text-green-500' : 'text-red-600 '"
@@ -44,7 +44,7 @@
       v-if="getConnectedMevboost?.config.serviceID === props.client.config.serviceID"
       class="flex justify-evenly items-center absolute -bottom-2 -right-24"
     >
-      <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
+      <img class="w-5" src="/img/icon/service-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
   </div>
 </template>
@@ -79,22 +79,22 @@ const syncIcons = ref([
   {
     id: 1,
     name: "error",
-    icon: "/img/icon/arrows/SynchronisationIconError.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-error.gif",
   },
   {
     id: 2,
     name: "active",
-    icon: "/img/icon/arrows/SynchronisationIconActive.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-active.gif",
   },
   {
     id: 3,
     name: "synched",
-    icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-sucess.gif",
   },
   {
     id: 4,
     name: "unknown",
-    icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-unknown.gif",
   },
 ]);
 

@@ -25,7 +25,7 @@ import CustomModal from "../../../edit-page/components/modals/CustomModal.vue";
 import i18n from "@/includes/i18n";
 import { ref } from "vue";
 
-const errorIcon = ref({ icon: "/img/icon/form-setup/form-error.png" });
+const errorIcon = ref({ icon: "/img/icon/server-management-icons/form-error.png" });
 
 const t = i18n.global.t;
 const props = defineProps({

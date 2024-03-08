@@ -14,9 +14,9 @@ export const useTaskManager = defineStore("taskManager", {
         failedIcon: require("../../public/img/icon/task-manager-icons/task-red-icon.png"),
       },
       installIconSrc: {
-        activeInstallIcon: require("../../public/img/icon/task-manager-icons/turning_circle.gif"),
-        successInstallIcon: require("../../public/img/icon/task-manager-icons/check5.png"),
-        failedInstallIcon: require("../../public/img/icon/task-manager-icons/cancel.png"),
+        activeInstallIcon: require("../../public/animation/loading/turning-circle.gif"),
+        successInstallIcon: require("../../public/img/icon/task-manager-icons/check-icon.png"),
+        failedInstallIcon: require("../../public/img/icon/task-manager-icons/cancel-icon.png"),
       },
     };
   },

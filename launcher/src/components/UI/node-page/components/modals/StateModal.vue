@@ -45,7 +45,7 @@ const on = t("confirmModal.on");
 const onMsg = t("confirmModal.messageOn");
 
 const getIcon = computed(() => {
-  return props.mainIcon ? "/img/icon/node-icons/turn_on.png" : "/img/icon/node-icons/power2.png";
+  return props.mainIcon ? "/img/icon/node-page-icons/turn-on.png" : "/img/icon/node-page-icons/turn-off.png";
 });
 
 const getMessageText = computed(() => {

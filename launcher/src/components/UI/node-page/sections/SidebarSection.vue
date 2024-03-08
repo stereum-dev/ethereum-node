@@ -7,7 +7,7 @@
         @mouseenter="footerStore.cursorLocation = `${toEdit}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-7" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+        <img class="w-7" src="/img/icon/node-page-icons/edit-node-icon.png" alt="Manage Icon" />
       </div>
       <Transition name="slide-fade">
         <router-link
@@ -16,13 +16,13 @@
           class="w-fit h-9 absolute col-span-1 row-start-1 row-end-2 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1 transition duration-200 shadow-md shadow-[#23272a]"
           @mouseleave="routerHovered = false"
         >
-          <img class="w-6 mr-1" src="/img/icon/node-icons/edit-node.png" alt="Manage Icon" />
+          <img class="w-6 mr-1" src="/img/icon/node-page-icons/edit-node-icon.png" alt="Manage Icon" />
           <span class="text-sm text-gray-200 font-semibold">{{ toEdit }}</span>
         </router-link>
       </Transition>
 
       <button v-if="isloading" class="row-start-2 row-end-3 p-1 rounded-md relative flex justify-center items-center">
-        <img v-if="loading" src="/img/icon/task-manager-icons/turning_circle_blue.gif" alt="loading" />
+        <img v-if="loading" src="/animation/loading/turning-circle-blue.gif" alt="loading" />
       </button>
       <button
         v-else-if="checkStatus"
@@ -31,7 +31,7 @@
         @mouseenter="footerStore.cursorLocation = `${trnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-5" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+        <img class="w-5" src="/img/icon/node-page-icons/turn-on.png" alt="Stop Icon" />
       </button>
 
       <button
@@ -41,7 +41,7 @@
         @mouseenter="footerStore.cursorLocation = `${trnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-5" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
+        <img class="w-5" src="/img/icon/node-page-icons/turn-off.png" alt="Stop Icon" />
       </button>
       <Transition name="slide-fade">
         <button
@@ -50,7 +50,7 @@
           @mouseleave="powerHovered = false"
           @click="showPowerModal"
         >
-          <img class="w-4 mr-1" src="/img/icon/node-icons/turn_on.png" alt="Stop Icon" />
+          <img class="w-4 mr-1" src="/img/icon/node-page-icons/turn-on.png" alt="Stop Icon" />
           <span class="text-sm text-gray-200 font-semibold">{{ trnOn }}</span>
         </button>
 
@@ -60,7 +60,7 @@
           @mouseleave="powerHovered = false"
           @click="showPowerModal"
         >
-          <img class="w-4 mr-1" src="/img/icon/node-icons/power2.png" alt="Stop Icon" />
+          <img class="w-4 mr-1" src="/img/icon/node-page-icons/turn-off.png" alt="Stop Icon" />
           <span class="text-xs text-gray-200">{{ trnOff }}</span>
         </button>
       </Transition>
@@ -72,7 +72,7 @@
           @mouseenter="footerStore.cursorLocation = `${expNode}`"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <img class="w-5" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
+          <img class="w-5" src="/img/icon/node-page-icons/export-config-icon.png" alt="Export Icon" />
         </button>
         <button
           v-else
@@ -80,7 +80,7 @@
           @mouseleave="exportHovered = false"
           @click="exportData"
         >
-          <img class="w-4" src="/img/icon/node-icons/export_config.png" alt="Export Icon" />
+          <img class="w-4" src="/img/icon/node-page-icons/export-config-icon.png" alt="Export Icon" />
           <span class="text-xs text-gray-200 font-semibold">{{ expNode }}</span>
         </button>
       </Transition>

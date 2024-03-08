@@ -64,7 +64,7 @@ test("prysm validator import", async () => {
 
   let prysmVC = serviceManager.getService("PrysmValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [prysmBC] })
 
-  let versions = await nodeConnection.checkUpdates();
+  let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
   prysmBC.imageVersion = versions[prysmBC.network][prysmBC.service].slice(-1).pop()
   prysmVC.imageVersion = versions[prysmVC.network][prysmVC.service].slice(-1).pop()

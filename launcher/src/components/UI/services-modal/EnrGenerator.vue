@@ -2,7 +2,7 @@
   <div class="obol-modal-plugin_parent">
     <div class="obol-modal-plugin_header">
       <span>{{
-        headerStore.distrubutedValidatorGenerator
+        headerStore.distrubutedValidatorGenerator || distributedCompleted
           ? `${$t("serviceModal.distributedValidator")}`
           : `${$t("serviceModal.generateEnr")}`
       }}</span>
@@ -10,25 +10,42 @@
     <div
       class="obol-modal-plugin_spaceWindow"
       :style="{
-        backgroundImage: backupDistributedValidator || distributedCompleted ? distrubutedValidatorAnimation : '',
+        backgroundImage:
+          backupDistributedValidator || distributedCompleted
+            ? distrubutedValidatorAnimation
+            : '',
       }"
     >
       <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
-        <span v-if="!headerStore.distrubutedValidatorGenerator">{{ headerStore.generatedENR }}</span>
+        <span v-if="!headerStore.distrubutedValidatorGenerator">{{
+          headerStore.generatedENR
+        }}</span>
         <div v-else class="span-wrapper">
           <span v-for="item in dkgLogs" :key="item">{{ item }}</span>
         </div>
       </div>
     </div>
-    <div
-      :class="[
-        'obol-modal-plugin_btn',
-        !headerStore.enrIsGenerating ? 'activeBtn' : '',
-        headerStore.deactivateBtnToWaitForLogs ? 'deactivate' : '',
-      ]"
-      @click="btnHandling"
-    >
-      {{ enrBtnToShow }}
+    <div class="obol-modal-plugin_btn-box">
+      <input v-if="backupDistributedValidator" v-model="backupPath" type="text" placeholder="/path/to/backup" />
+
+      <span
+        v-if="backupDistributedValidator"
+        class="absolute cursor-pointer uppercase flex justify-center items-center backup-btn"
+        @click="backupBtn"
+        >path</span
+      >
+
+      <div
+        :class="[
+          'obol-modal-plugin_btn',
+          !headerStore.enrIsGenerating ? 'activeBtn' : '',
+          headerStore.deactivateBtnToWaitForLogs ? 'deactivate' : '',
+          runningBackup ? 'deactivate' : '',
+        ]"
+        @click="btnHandling"
+      >
+        {{ enrBtnToShow }}
+      </div>
     </div>
   </div>
 </template>
@@ -47,11 +64,14 @@ const enrGeneratedSuccess = ref(false);
 const enrGeneratedFailed = ref(false);
 const enrGeneratedContinue = ref(false);
 const backupDistributedValidator = ref(false);
-const distrubutedValidatorAnimation = ref("url('./img/icon/service-icons/obol_animation.gif')");
+const distrubutedValidatorAnimation = ref(
+  "url('./animation/services/obol/obol-animation.gif')"
+);
 const distributedCompleted = ref(false);
 const polling = ref(null);
 const dkgLogs = ref([]);
 const backupPath = ref("");
+const runningBackup = ref(false);
 
 const headerStore = useNodeHeader();
 
@@ -92,7 +112,7 @@ const enrBtnToShow = computed(() => {
     return "DKG FINISHED";
   } else if (backupDistributedValidator.value && !headerStore.enrIsGenerating) {
     return "BACKUP";
-  } else if (distributedCompleted.value && !headerStore.enrIsGenerating && !backupDistributedValidator.value) {
+  } else if (distributedCompleted.value && !headerStore.enrIsGenerating) {
     return "COMPLETE";
   }
 
@@ -146,7 +166,7 @@ const startDKG = async () => {
   //first check if there is already a running dkg
   const isRunning = await ControlService.checkObolDKG();
   if (!isRunning) {
-    await ControlService.startObolDKG();
+    await ControlService.startObolDKG(props.clusterDefinition);
   }
   startDGKLogging();
 };
@@ -154,7 +174,6 @@ const startDKG = async () => {
 const startDGKLogging = async () => {
   dkgLogs.value = (await ControlService.getObolDKGLogs()).split("\n");
   polling.value = setInterval(async () => {
-    console.log("interval running...");
     const logs = await ControlService.getObolDKGLogs();
     dkgLogs.value = logs.split("\n");
     if (logs.includes("Successfully completed DKG ceremony")) {
@@ -181,6 +200,9 @@ const openDirectoryPicker = async () => {
 };
 
 const btnHandling = async () => {
+  if (runningBackup.value) {
+    return;
+  }
   if (enrBtnToShow.value === "GENERATING...") {
     console.log("GENERATING...");
   } else if (enrBtnToShow.value === "BACKUP ENR") {
@@ -209,18 +231,21 @@ const btnHandling = async () => {
     await openDirectoryPicker();
     backupDistributedValidator.value = true;
     headerStore.distrubutedValidatorGenerator = false;
-    distributedCompleted.value = false;
-  } else if (enrBtnToShow.value === "BACKUP") {
+    distributedCompleted.value = true;
+  } else if (enrBtnToShow.value === "COMPLETE") {
     if (!backupPath.value || backupPath.value === "") {
       //check if user has selected a path
       openDirectoryPicker(); // if not prompt selection again
       return;
     }
-    await ControlService.downloadObolBackup(backupPath.value);
-    backupDistributedValidator.value = false;
-    headerStore.distrubutedValidatorGenerator = false;
-    distributedCompleted.value = true;
-  } else if (enrBtnToShow.value === "COMPLETE") {
+    runningBackup.value = true;
+    try {
+      await ControlService.downloadObolBackup(backupPath.value);
+    } catch (error) {
+      console.error("Error downloading backup:", error);
+    } finally {
+      runningBackup.value = false;
+    }
     backupDistributedValidator.value = false;
     headerStore.distrubutedValidatorGenerator = false;
     distributedCompleted.value = false;
@@ -229,6 +254,9 @@ const btnHandling = async () => {
     headerStore.continueForExistENR = true;
     headerStore.depositFile = true;
   }
+};
+const backupBtn = async () => {
+  await openDirectoryPicker();
 };
 </script>
 
@@ -265,7 +293,7 @@ const btnHandling = async () => {
   font-weight: 600;
 }
 .obol-modal-plugin_spaceWindow {
-  width: 90%;
+  width: 95%;
   height: 60%;
   display: flex;
   flex-wrap: wrap;
@@ -309,9 +337,43 @@ const btnHandling = async () => {
   flex-shrink: 0;
   word-wrap: break-word;
 }
+.obol-modal-plugin_btn-box {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 2% 0;
+  position: relative;
+}
+.obol-modal-plugin_btn-box input {
+  width: 61%;
+  height: 80%;
+  background-color: #eee;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 25px;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.backup-btn {
+  color: #2fe4ab;
+  top: 1;
+  left: 48%;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: #192d31;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 25px;
+  height: 75%;
+  width: 15%;
+}
 .obol-modal-plugin_btn {
   width: 30%;
-  height: 15%;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -323,7 +385,6 @@ const btnHandling = async () => {
   color: #dbdbdb;
   font-size: 1rem;
   font-weight: 600;
-  margin: 2% 0;
 }
 .obol-modal-plugin_btn:hover {
   transition-duration: 100ms;

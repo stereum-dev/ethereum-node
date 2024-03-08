@@ -49,7 +49,10 @@ MetricsAPIPort: 15000`;
 
     const image = "bloxstaking/ssv-node";
 
-    const volumes = [new ServiceVolume(workingDir + "/data", "/data")];
+    const volumes = [
+      new ServiceVolume(workingDir + "/data", "/data"),
+      new ServiceVolume(workingDir + "/secrets", "/secrets")
+    ];
 
     // build service
     service.init(

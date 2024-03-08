@@ -10,6 +10,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @change-password="acceptChangePass"
       @file-upload="addExistingKeyHandler"
       @delete-key="confirmDelete"
+      @quick-login="loginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
     <GenerateKey
@@ -31,51 +32,44 @@ import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
 import { useServerLogin } from "@/composables/useLogin";
 import { useRouter } from "vue-router";
+import { useNodeStore } from "@/store/theNode";
 
 const serverStore = useServers();
+const nodeStore = useNodeStore();
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
-
 const keyLocation = ref("");
+
+watchEffect(() => {
+  serverStore.setActiveState("isServerDetailsActive");
+});
 
 watchEffect(() => {
   switch (serverStore.selectedTab) {
     case "login":
-      serverStore.isServerLoginActive = true;
-      serverStore.isServerDetailsActive = false;
-      serverStore.isServerSSHActive = false;
-      serverStore.isServerUpdateActive = false;
+      serverStore.setActiveState("isServerLoginActive");
       break;
     case "info":
-      serverStore.isServerLoginActive = false;
-      serverStore.isServerDetailsActive = true;
-      serverStore.isServerSSHActive = false;
-      serverStore.isServerUpdateActive = false;
+      serverStore.setActiveState("isServerDetailsActive");
       break;
     case "ssh":
-      serverStore.isServerLoginActive = false;
-      serverStore.isServerDetailsActive = false;
-      serverStore.isServerSSHActive = true;
-      serverStore.isServerUpdateActive = false;
+      serverStore.setActiveState("isServerSSHActive");
       break;
     case "update":
-      serverStore.isServerLoginActive = false;
-      serverStore.isServerDetailsActive = false;
-      serverStore.isServerSSHActive = false;
-      serverStore.isServerUpdateActive = true;
+      serverStore.setActiveState("isServerUpdateActive");
+      break;
+    case "settings":
+      serverStore.setActiveState("isServerSettingsActive");
       break;
     case null:
-      serverStore.isServerLoginActive = true;
-      serverStore.isServerDetailsActive = false;
-      serverStore.isServerSSHActive = false;
-      serverStore.isServerUpdateActive = false;
+      serverStore.setActiveState("isServerDetailsActive");
       break;
   }
 });
@@ -86,19 +80,31 @@ onMounted(async () => {
   await readSSHKeyFile();
 });
 
+onUnmounted(() => {
+  serverStore.setActiveState(null);
+});
+
 //Methods
 
 //Server Management Login Handler
 
 const loginHandler = async () => {
   serverStore.connectingProcess = true;
+  nodeStore.skeletonLoading = true;
   if (router.currentRoute.value.path === "/login") {
     await login();
   } else {
+    serverStore.isServerAnimationActive = true;
     await ControlService.logout();
     await login();
+    setTimeout(() => {
+      serverStore.isServerAnimationActive = false;
+      nodeStore.skeletonLoading = false;
+    }, 5000);
   }
 };
+
+//Server State Management
 
 //Server Management Tab Picker
 const tabPicker = (tab) => {
@@ -118,6 +124,7 @@ const serverHandler = (server) => {
 
   if (serverStore.selectedServerConnection?.name === server.name) {
     serverStore.isServerLoginActive = false;
+    serverStore.isServerSettingsActive = false;
     serverStore.setActiveTab("info");
     serverStore.isServerDetailsActive = true;
     server.isSelected = true;
@@ -129,6 +136,7 @@ const serverHandler = (server) => {
     serverStore.connectExistingServer = true;
     serverStore.selectedServerToConnect = server;
     serverStore.isServerDetailsActive = false;
+    serverStore.isServerSettingsActive = false;
     serverStore.isServerLoginActive = true;
     server.isSelected = true;
   }

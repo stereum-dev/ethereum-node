@@ -1,22 +1,25 @@
 <template>
-  <div class="service-modal_parent">
-    <div class="bg-dark" @click="$emit('closeWindow')"></div>
+  <div class="w-full h-full absolute inset-0 flex justify-center items-center">
+    <div
+      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
+      @click="$emit('closeWindow')"
+    ></div>
     <div class="browser-modal">
       <div class="obol_charon-header">
         <div class="icon-box">
-          <img src="/img/icon/plugin-icons/validator/ObolCharon.png" alt="icon" />
+          <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="icon" />
         </div>
         <div class="title-box">
           <div class="service-name"><span>obol</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
+            <img src="/img/icon/service-modals-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-modals-icons/github.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-modals-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
       <div v-if="isLoading">
-        <img src="/img/icon/service-icons/obol_animation.gif" alt="icon" />
+        <img src="/animation/services/obol/obol-animation.gif" alt="icon" />
       </div>
       <div v-else class="content">
         <div v-if="!headerStore.generatorPlugin" class="wrapper">
@@ -75,7 +78,7 @@
                 :second-btn-bg-color="`#eb5353`"
                 :btn-name-color="`${areYouSureToRemove ? '#000' : '#dbdbdb'}`"
                 :second-btn-name-color="`#dbdbdb`"
-                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-icons/copy1.png'}`"
+                :img-url="`${areYouSureToRemove ? '' : '/img/icon/service-modals-icons/copy.png'}`"
                 @confirmPluginClick="secondRowBtnHandler"
                 @secBtnPluginClick="removeHandlerControler"
               />
@@ -91,8 +94,8 @@
                   v-if="!dkgControl"
                   for="file_input"
                   class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
+                  @click="selectBackupPath"
                 >
-                  <input id="file_input" ref="fileInput" type="file" style="display: none" @change="previewFiles" />
                   <span
                     class="absolute cursor-pointer"
                     style="color: #192d31; top: 1; left: 3%; font-size: 2rem; font-weight: 600"
@@ -101,7 +104,7 @@
                 </label>
                 <input
                   v-model="thirdRowInput"
-                  :style="`${dkgControl !== true ? 'padding-left: 12px; text-indent: 12px;' : ''}`"
+                  :style="`${dkgControl !== true ? 'padding-left: 14px; text-indent: 14px;' : ''}`"
                   type="text"
                   :placeholder="`${
                     dkgControl !== true ? 'e.g., C:\\path\\to\\backup.zip' : $t('serviceModal.entrUrl')
@@ -203,11 +206,28 @@ const topBlock = () => {
   }
 };
 
-const enrImport = () => {
-  console.log(importedENR.value);
-  headerStore.depositFile = true;
-  headerStore.generatorPlugin = false;
-  headerStore.continueForExistENR = true;
+const enrImport = async () => {
+  isLoading.value = true;
+  headerStore.generatedENR = "";
+  await createEnr(importedENR.value);
+  if (headerStore.generatedENR) {
+    headerStore.depositFile = false;
+    headerStore.generatorPlugin = false;
+    headerStore.continueForExistENR = true;
+  }
+};
+
+const createEnr = async (privateKey) => {
+  let enr = "";
+  try {
+    enr = await ControlService.createObolENR(privateKey);
+  } catch (error) {
+    isLoading.value = false;
+    console.log(error);
+  } finally {
+    headerStore.generatedENR = enr;
+    isLoading.value = false;
+  }
 };
 
 const secondRowBtnHandler = () => {
@@ -268,34 +288,53 @@ const openDirectoryPicker = async () => {
 
 const dkgSwitch = async () => {
   if (areYouSureToRemoveCluster.value) {
-    console.log("remove cluster");
+    isLoading.value = true;
+    try {
+      await ControlService.removeObolCluster();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      areYouSureToRemoveCluster.value = false;
+      dkgControl.value = false;
+      await checkExistingFiles();
+    }
   } else if (headerStore.depositFile) {
     const path = await openDirectoryPicker();
     if (path) {
-      ControlService.downloadObolBackup(path);
+      isLoading.value = true;
+      try {
+        await ControlService.downloadObolBackup(path);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        isLoading.value = false;
+      }
     }
   } else {
     dkgControl.value = true;
   }
 };
 
-const dkgImporter = () => {
-  let backupPath;
+const dkgImporter = async () => {
   if (!dkgControl.value) {
     // path of existing backup
     if (!thirdRowInput.value) {
       console.log("please enter input");
     } else {
-      backupPath = thirdRowInput.value;
-      console.log(backupPath);
-
+      isLoading.value = true;
       headerStore.enrIsGenerating = false;
       headerStore.generatorPlugin = false;
       headerStore.distrubutedValidatorGenerator = false;
       headerStore.deactivateBtnToWaitForLogs = false;
-      headerStore.depositFile = true;
-      headerStore.continueForExistENR = true;
-      thirdRowInput.value = "";
+      try {
+        await ControlService.importObolBackup(thirdRowInput.value);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        await checkExistingFiles();
+        thirdRowInput.value = "";
+        isLoading.value = false;
+      }
     }
   }
   // url of cluster definition
@@ -303,26 +342,21 @@ const dkgImporter = () => {
     console.log("please enter url");
   } else {
     clusterDefinition.value = thirdRowInput.value;
-    console.log(clusterDefinition.value);
     thirdRowInput.value = "";
     headerStore.enrIsGenerating = false;
     headerStore.generatorPlugin = true;
     headerStore.distrubutedValidatorGenerator = true;
     headerStore.deactivateBtnToWaitForLogs = true;
+    dkgControl.value = false;
   }
 };
-const previewFiles = (event) => {
-  const Path = event.target.files[0].path;
-  let pathString = new String(Path);
-  let result = pathString.toString();
-  thirdRowInput.value = result;
+const selectBackupPath = async () => {
+  const path = await openDirectoryPicker();
+  thirdRowInput.value = path;
 };
 
-onMounted(async () => {
-  headerStore.generatorPlugin = false;
-  headerStore.distrubutedValidatorGenerator = false;
-  headerStore.continueForExistENR = false;
-
+const checkExistingFiles = async () => {
+  isLoading.value = true;
   //check existing files
   const content = await ControlService.checkObolContent();
   //if there is a private key, then get public enr
@@ -334,14 +368,15 @@ onMounted(async () => {
   //check if ready for DKG
   headerStore.continueForExistENR = content.privateKey;
   //check if ready for operation
-  headerStore.depositFile =
-    content.privateKey &&
-    content.clusterDefinition &&
-    content.depositData &&
-    content.clusterLock &&
-    content.validatorKeys;
-
+  headerStore.depositFile = content.privateKey && content.depositData && content.clusterLock && content.validatorKeys;
   isLoading.value = false;
+};
+
+onMounted(async () => {
+  headerStore.generatorPlugin = false;
+  headerStore.distrubutedValidatorGenerator = false;
+  headerStore.continueForExistENR = false;
+  await checkExistingFiles();
 });
 </script>
 
@@ -490,18 +525,19 @@ onMounted(async () => {
   width: 100%;
   height: 70%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
 }
 .enrImport input {
-  width: 95%;
+  width: 71.5%;
   height: 50%;
   border: none;
-  border-radius: 20px;
+  border-radius: 20px 0 0 20px;
   font-size: 0.9rem;
   font-weight: 600;
   padding-left: 10px;
+  margin-left: 10px;
 }
 .import-title span {
   color: #dbdbdb;
@@ -530,11 +566,11 @@ onMounted(async () => {
 }
 .import-btn:hover {
   transition-duration: 100ms;
-  background-color: #1a2e32e6;
+  background-color: #1c3035;
 }
 .import-btn:active {
   transition-duration: 100ms;
-  background-color: #1a2e32e6;
+  background-color: #22393e;
   box-shadow: 1px 1px 10px 1px #171717 inset;
 }
 </style>

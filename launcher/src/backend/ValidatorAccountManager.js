@@ -909,17 +909,27 @@ export class ValidatorAccountManager {
     }
   }
 
-  async createObolENR() {
+  async createObolENR(privateKey = "") {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
       let charonClient = services.find((service) => service.service === "CharonService");
       if (!charonClient) throw "Couldn't find CharonService";
+      if (privateKey) {
+        let result = await this.nodeConnection.sshService.exec(charonClient.getCreateCharonFolderCommand());
+        if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
 
-      let result = await this.nodeConnection.sshService.exec(charonClient.getCreateEnrCommand());
-      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-      const data = result.stdout.split('\n')
-      const enr = data.find((line) => line.includes('enr:-'));
-      return enr;
+        result = await this.nodeConnection.sshService.exec(charonClient.getWriteENRPrivateKeyCommand(privateKey));
+        if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+
+        let enr = await this.getObolENRPublicKey()
+        return enr;
+      } else {
+        let result = await this.nodeConnection.sshService.exec(charonClient.getCreateEnrCommand());
+        if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+        const data = result.stdout.split('\n')
+        const enr = data.find((line) => line.includes('enr:-'));
+        return enr
+      }
     } catch (err) {
       log.error("Error creating Obol ENR: ", err);
       return err;
@@ -1001,6 +1011,21 @@ export class ValidatorAccountManager {
     }
   }
 
+  async removeObolCluster() {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+
+      let result = await this.nodeConnection.sshService.exec(charonClient.getNukeObolCommand());
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      return true;
+    } catch (err) {
+      log.error("Error removing all Obol Files: ", err);
+      return false;
+    }
+  }
+
   async startObolDKG(input) {
     try {
       await this.nodeConnection.sshService.exec("docker rm -f dkg-container");
@@ -1014,7 +1039,7 @@ export class ValidatorAccountManager {
       let contentResult = await this.nodeConnection.sshService.exec(charonClient.getListCharonFolderContentsCommand());
       if (SSHService.checkExecError(contentResult) && contentResult.stderr) throw SSHService.extractExecError(contentResult);
       const content = contentResult.stdout;
-      const dkgCommand = charonClient.getDKGCommand(content.includes('cluster-definition.json') ? "" : input.match(/http(s)?:.*\/[0-9a-zA-z]*/));
+      const dkgCommand = charonClient.getDKGCommand(content.includes('cluster-definition.json') ? "" : input.match(/http(s)?:.*\/[0-9a-zA-z]*/)[0]);
 
       let result = await this.nodeConnection.sshService.exec(dkgCommand);
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -1061,6 +1086,21 @@ export class ValidatorAccountManager {
       }
     } catch (err) {
       log.error("Error downloading Obol Backup: ", err);
+    }
+  }
+
+  async importObolBackup(localPath) {
+    try {
+      let services = await this.serviceManager.readServiceConfigurations();
+      let charonClient = services.find((service) => service.service === "CharonService");
+      if (!charonClient) throw "Couldn't find CharonService";
+      const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
+      const result = await this.nodeConnection.sshService.uploadDirectorySSH(path.normalize(localPath), dataDir);
+      if (result) {
+        log.info("Obol Backup uownloaded from: ", localPath);
+      }
+    } catch (err) {
+      log.error("Error uploading Obol Backup: ", err);
     }
   }
 

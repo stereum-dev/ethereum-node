@@ -1,6 +1,9 @@
 <template>
-  <div class="service-modal_parent">
-    <div class="bg-dark" @click="closeWindow"></div>
+  <div class="w-full h-full absolute inset-0 flex justify-center items-center">
+    <div
+      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
+      @click="$emit('closeWindow')"
+    ></div>
     <div class="browser-modal">
       <div class="mev-header">
         <div class="icon-box">
@@ -10,8 +13,8 @@
         <div class="title-box">
           <div class="service-name"><span>Flashbots Mev Boost</span></div>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-modals-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-modals-icons/github.png" alt="icon" @click="openGitHub" />
           </div>
         </div>
       </div>
@@ -26,7 +29,7 @@
                 <input :id="relay.id" v-model="checkedRelays" type="checkbox" :value="relay" @change="enableBtn" />
                 <label :for="relay.id">{{ relay.name }}</label>
                 <div v-if="relay.freeCensorship == false" class="iconBox" data-tooltip="OFAC Compliant - censored">
-                  <img src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
+                  <img src="/img/icon/one-click-icons/mevboost-icons/ofac-compliant-icon.png" alt="flag-icon" />
                 </div>
               </div>
             </div>
@@ -35,7 +38,7 @@
           <div class="btn-box">
             <div v-if="loading" class="process">
               {{ $t("serviceModals.process") }}...
-              <img class="animate-spin" src="/img/icon/arrows/loading.png" alt="icon" />
+              <img class="animate-spin" src="/img/icon/loading-icons/loading-circle.png" alt="icon" />
             </div>
             <span v-else class="btn" :class="{ disabled: applyBtnDisabled }" @click="applyRelays">{{
               $t("secretKeyReg.apply")
@@ -127,18 +130,20 @@ export default {
         ControlService.getServiceConfig(this.mevService.config.serviceID)
           .then((service) => {
             if (service && service.entrypoint) {
+              this.serviceConfig = service;
               const relayEntryPointIndex = service.entrypoint.findIndex((e) => e === "-relays");
               if (relayEntryPointIndex !== -1 && relayEntryPointIndex + 1 < service.entrypoint.length) {
-                const relayURLs = service.entrypoint[relayEntryPointIndex + 1].split(",");
-                relayURLs.forEach((relay) => {
-                  let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
-                  if (relayData) this.checkedRelays.push(relayData);
-                });
+                if (service.entrypoint[relayEntryPointIndex + 1]) {
+                  const relayURLs = service.entrypoint[relayEntryPointIndex + 1].split(",");
+                  relayURLs.forEach((relay) => {
+                    let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
+                    if (relayData) this.checkedRelays.push(relayData);
+                  });
+                }
               } else {
                 console.error("Invalid or missing -relays entry in service entrypoint");
                 // Handle the error or add appropriate fallback logic.
               }
-              this.serviceConfig = service;
             } else {
               console.error("Invalid service or missing entrypoint");
               // Handle the error or add appropriate fallback logic.
@@ -176,6 +181,9 @@ export default {
             this.$emit("closeWindow");
           }, 2000);
         });
+      } else {
+        this.loading = false;
+        console.error("Invalid service or missing entrypoint");
       }
     },
     closeWindow() {

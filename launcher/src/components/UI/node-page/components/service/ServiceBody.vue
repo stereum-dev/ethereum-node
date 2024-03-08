@@ -7,8 +7,9 @@
     </div>
     <div
       ref="service"
-      class="col-start-1 col-span-full row-start-2 row-span-full flex flex-col justify-start space-y-2 items-center overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent px-1"
+      class="col-start-1 col-span-full row-start-2 row-span-full flex flex-col justify-start space-y-1 items-center overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent px-1"
     >
+      <ServiceSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
       <div
         v-for="item in getServices"
         :key="item"
@@ -16,7 +17,7 @@
       >
         <ClientStatus :client="item" />
         <div
-          class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-2 grid-rows-2 bg-[#212629] shadow-md mx-auto"
+          class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 grid-rows-2 bg-[#212629] shadow-md mx-auto"
         >
           <ServiceLayout :client="item" />
           <ServiceButtons
@@ -39,16 +40,30 @@ import { useServices } from "@/store/services";
 import ServiceLayout from "./ServiceLayout.vue";
 import ServiceButtons from "./ServiceButtons.vue";
 import ClientStatus from "./ClientStatus.vue";
-import { computed } from "vue";
+import ServiceSkeleton from "./ServiceSkeleton.vue";
+import { computed, ref, watchEffect } from "vue";
+import { useNodeStore } from "@/store/theNode";
 
 const emit = defineEmits(["openExpert", "openLogs"]);
 
 const serviceStore = useServices();
+const nodeStore = useNodeStore();
+
+const skeletons = [1, 2, 3, 4];
+const loadingClients = ref(false);
 
 const getServices = computed(() => {
   return serviceStore.installedServices
     .filter((e) => e.category === "service")
     .sort((a, b) => a.name.localeCompare(b.name));
+});
+
+watchEffect(() => {
+  if (nodeStore.skeletonLoading || serviceStore.installedServices.length === 0) {
+    loadingClients.value = true;
+  } else {
+    loadingClients.value = false;
+  }
 });
 
 const openExpert = (item) => {

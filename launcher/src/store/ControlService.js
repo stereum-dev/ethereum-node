@@ -238,6 +238,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getCountOfUpdatableOSUpdate", args);
   }
 
+  async updatePackage(args) {
+    return await this.promiseIpc.send("updatePackage", args);
+  }
+
+  async getUpgradeablePackages(args) {
+    return await this.promiseIpc.send("getUpgradeablePackages", args);
+  }
+
   async updateOS(args) {
     return await this.promiseIpc.send("updateOS", args);
   }
@@ -488,8 +496,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getSyncCommitteeRewards", { validators, slot });
   }
 
-  async createObolENR() {
-    return await this.promiseIpc.send("createObolENR");
+  async createObolENR(privateKey) {
+    return await this.promiseIpc.send("createObolENR", privateKey);
   }
 
   async getObolENRPrivateKey() {
@@ -508,6 +516,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("removeObolENR");
   }
 
+  async removeObolCluster() {
+    return await this.promiseIpc.send("removeObolCluster");
+  }
+
   async startObolDKG(args) {
     return await this.promiseIpc.send("startObolDKG", args);
   }
@@ -522,6 +534,14 @@ class ControlService extends EventEmitter {
 
   async downloadObolBackup(args) {
     return await this.promiseIpc.send("downloadObolBackup", args);
+  }
+
+  async importObolBackup(args) {
+    return await this.promiseIpc.send("importObolBackup", args);
+  }
+  
+  async upgradeToNoble() {
+    return await this.promiseIpc.send("upgradeToNoble");
   }
 }
 if (!instance) {

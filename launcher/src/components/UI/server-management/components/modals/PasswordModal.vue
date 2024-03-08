@@ -10,7 +10,7 @@ import { ref } from 'vue';
     <div class="col-start-1 col-span-full row-start-2 row-span-2 flex justify-center items-center space-x-2">
       <img
         class="w-8 h-8 rounded-full justify-self-center self-center col-span-1 row-span-1 bg-teal-500 p-2"
-        src="/img/icon/access-management/check.png"
+        src="/img/icon/server-management-icons/check.png"
         alt="Avatar"
       />
 

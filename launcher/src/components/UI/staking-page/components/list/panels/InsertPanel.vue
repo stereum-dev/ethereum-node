@@ -1,7 +1,11 @@
 <template>
   <div
     class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full rounded-sm flex justify-center items-center cursor-pointer shadow-md shadow-gray-800"
-    :class="isUploadDisabled ? 'opacity-25 pointer-events-none bg-[#243535]' : 'bg-[#336666] hover:bg-[#234545]'"
+    :class="
+      isUploadDisabled || stakingStore.isStakingDisabled
+        ? 'opacity-25 pointer-events-none bg-[#243535]'
+        : 'bg-[#336666] hover:bg-[#234545]'
+    "
   >
     <div class="w-full h-full flex justify-evenly items-center" @click="openUploadHandler">
       <input
@@ -14,7 +18,7 @@
         @change="getFileValue"
       />
       <span class="text-md font-semibold text-gray-200">{{ t("insertValidator.insertText") }}</span>
-      <img class="w-6 h-6" src="/img/icon/the-staking/white-key.svg" alt="icon" @mousedown.prevent />
+      <img class="w-6 h-6" src="/img/icon/staking-page-icons/validator-import.svg" alt="icon" @mousedown.prevent />
     </div>
   </div>
 </template>

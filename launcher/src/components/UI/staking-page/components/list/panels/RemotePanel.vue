@@ -25,7 +25,7 @@
           class="w-6 h-6 rounded-md bg-[#3e4347] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150 cursor-pointer"
           @click="closePanel"
         >
-          <img class="w-4 h-4" src="/img/icon/the-staking/close.png" alt="Close Icon" @mousedown.prevent />
+          <img class="w-4 h-4" src="/img/icon/staking-page-icons/close.png" alt="Close Icon" @mousedown.prevent />
         </div>
       </div>
       <div class="col-start-12 col-span-1 h-full flex justify-center items-center px-1">
@@ -34,7 +34,7 @@
           :class="stakingStore.remoteUrl !== '' ? 'cursor-pointer' : 'pointer-events-none opacity-50'"
           @click="getRemoteList"
         >
-          <img class="w-4 h-4" src="/img/icon/the-staking/check.png" alt="Check Icon" @mousedown.prevent />
+          <img class="w-4 h-4" src="/img/icon/staking-page-icons/check.png" alt="Check Icon" @mousedown.prevent />
         </div>
       </div>
     </div>

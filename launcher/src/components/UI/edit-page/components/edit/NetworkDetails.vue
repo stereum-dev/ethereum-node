@@ -1,23 +1,22 @@
-import { useNodeManage } from '@/store/nodeManage';
 <template>
   <div
     class="col-start-7 col-span-3 flex flex-col justify-between items-center bg-[#151618] border h-full border-gray-600 rounded-md px-2 py-1"
     style="cursor: default"
-    @mouseenter="footerStore.cursorLocation = `${currIs} ${network?.name}`"
+    @mouseenter="footerStore.cursorLocation = `${currIs} ${getNetworkName}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="w-full self-start text-xs font-semibold text-teal-700">
       {{ t("networkDetails.currentNet") }}
     </div>
     <div class="w-full flex justify-center items-center">
-      <img v-if="network?.icon" :src="network?.icon" alt="Networks" class="w-5 mr-1" />
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ network?.name }}</span>
+      <img v-if="getNetworkIcon" :src="getNetworkIcon" alt="Networks" class="w-5 mr-1" />
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ getNetworkName }}</span>
     </div>
   </div>
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { watchEffect, ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useFooter } from "@/store/theFooter";
 import { useDeepClone } from "@/composables/utils";
 import i18n from "@/includes/i18n";
@@ -30,18 +29,19 @@ const footerStore = useFooter();
 const manageStore = useNodeManage();
 const network = ref(null);
 
-watchEffect(() => {
-  let id = manageStore.configNetwork?.id ? manageStore.configNetwork.id : manageStore.currentNetwork.id;
-  if (!id) {
-    manageStore.currentNetwork = useDeepClone(manageStore.networkList.find((net) => net.id === (id ? id : 5)));
-  }
-  network.value = useDeepClone(manageStore.currentNetwork);
+const getNetworkName = computed(() => {
+  return manageStore.currentNetwork?.name;
+});
+
+const getNetworkIcon = computed(() => {
+  return manageStore.currentNetwork?.icon;
 });
 
 onMounted(() => {
-  network.value = null;
+  network.value = useDeepClone(manageStore.currentNetwork);
 });
 </script>
+
 <style scoped>
 .fade-move,
 .fade-enter-active,

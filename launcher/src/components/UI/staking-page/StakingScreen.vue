@@ -1,8 +1,8 @@
 <template>
   <base-layout>
-    <DisabledSection v-if="isStakingDisabled" />
-    <div v-else class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
+    <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
       <SidebarSection />
+
       <ListSection
         @confirm-grouping="confirmGrouping"
         @pick-validator="pickValidatorService"
@@ -52,19 +52,17 @@ import ImportRemote from "./components/modals/ImportRemote.vue";
 import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
 import { useDeepClone } from "@/composables/utils";
-import DisabledSection from "./sections/DisabledSection.vue";
 import { saveAs } from "file-saver";
 
 //Store
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
 const { listGroups } = useListGroups();
-const isStakingDisabled = ref(true);
 
 const modals = {
   import: {
@@ -122,7 +120,7 @@ watch(
     const hasValidator = serviceStore.installedServices.some(
       (s) => s.category === "validator" && s.state === "running"
     );
-    isStakingDisabled.value = !hasValidator;
+    stakingStore.isStakingDisabled = !hasValidator;
   }
 );
 
@@ -200,6 +198,8 @@ const onDrop = (event) => {
       handleFiles(droppedFiles);
       stakingStore.keyFiles = [...droppedFiles];
       stakingStore.setActivePanel("validator");
+    } else {
+      stakingStore.inputWrongKey = true;
     }
   }
 };
@@ -493,16 +493,17 @@ const doppelgangerController = async (item) => {
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
   const existingPubKeys = new Set(stakingStore.doppelgangerKeys.map((key) => key.pubkey));
+
   stakingStore.previewKeys.forEach((previewKey) => {
-    if (!existingPubKeys.has(previewKey.pubkey)) {
-      stakingStore.doppelgangerKeys.push({
-        ...previewKey,
-        serviceID: service.config?.serviceID,
-      });
-    }
+    if (existingPubKeys.has(previewKey.pubkey)) return;
+    stakingStore.doppelgangerKeys.push({
+      ...previewKey,
+      serviceID: service.config?.serviceID,
+    });
   });
-  stakingStore.setActivePanel("password");
+
   await doppelgangerController(service);
+  stakingStore.setActivePanel("password");
 };
 
 //Delete Preview Key
