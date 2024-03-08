@@ -1,0 +1,17 @@
+---
+- name: Install curl and gnupg for adding NodeSource PPA
+  apt:
+    name:
+      - curl
+      - gnupg2
+    state: present
+
+- name: Add NodeSource PPA
+  shell: curl -sL https://deb.nodesource.com/setup_21.x | sudo -E bash -
+
+- name: Install required system packages
+  apt:
+    name:
+      - nodejs
+    state: present
+#EOF

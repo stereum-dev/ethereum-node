@@ -273,6 +273,7 @@ export class NodeConnection {
       status: true,
     });
     this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+
     /**
      * run stereum ansible playbook "setup"
      */
@@ -307,6 +308,21 @@ export class NodeConnection {
     } catch (err) {
       log.error("Can't run configure-firewall playbook: ", err);
       throw new Error("Can't run configure-firewall playbook: " + err);
+    }
+
+    /*
+     *  run stereum ansible playbook "web-server"
+     */
+    log.info("run stereum ansible playbook 'web-server'");
+    try {
+      playbookRuns.push(
+        await this.runPlaybook("web-server", {
+          stereum_role: "web-server",
+        })
+      );
+    } catch (err) {
+      log.error("Can't run web-server playbook: ", err);
+      throw new Error("Can't run web-server playbook: " + err);
     }
 
     return playbookRuns;

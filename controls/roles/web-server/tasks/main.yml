@@ -1,0 +1,5 @@
+---
+- include_tasks: install-nodejs.yml
+
+- include_tasks: initilize-web-server-proj.yml
+#EOF

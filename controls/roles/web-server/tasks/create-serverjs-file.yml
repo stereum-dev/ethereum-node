@@ -1,0 +1,37 @@
+---
+- name: Create ws-server.js file
+  copy:
+    dest: "{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}/web-server/ws-server.js"
+    content: |
+      const pty = require('node-pty');
+      const WebSocket = require('ws');
+
+      const shell = 'bash';
+
+      const ptyProcess = pty.spawn(shell, [], {
+        name: 'xterm-color',
+        cols: 80,
+        rows: 30,
+        cwd: process.env.HOME,
+        env: process.env
+      });
+
+      const wss = new WebSocket.Server({ port: 1234});
+
+      wss.on('connection', (ws) => {
+        const sendData = (data) => {
+          ws.send(data);
+        };
+
+        ws.on('message', (message) => {
+          ptyProcess.write(message);
+        });
+
+        ptyProcess.on('data', sendData);
+
+        ws.on('close', () => {
+          ptyProcess.off('data', sendData);
+        });
+      });
+
+#EOF

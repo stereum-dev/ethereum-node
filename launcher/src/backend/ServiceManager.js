@@ -1778,7 +1778,7 @@ export class ServiceManager {
     }
 
     try {
-      await this.nodeConnection.sshService.exec(`sudo node ${controlsPath}/remote-terminal/ws-server.js`);
+      await this.nodeConnection.sshService.exec(`sudo node ${controlsPath}/web-server/ws-server.js`);
     } catch (error) {
       console.error("An error occurred while running the WebSocket server:", error);
     }
