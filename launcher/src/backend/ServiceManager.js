@@ -30,7 +30,6 @@ import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 import { AuthenticatorService } from "./ethereum-services/AuthenticatorService";
 import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
-import { AuthenticatorService } from "./ethereum-services/AuthenticatorService";
 import YAML from "yaml";
 
 const log = require("electron-log");
