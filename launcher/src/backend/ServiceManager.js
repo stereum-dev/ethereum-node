@@ -1070,11 +1070,12 @@ export class ServiceManager {
           service.dependencies.executionClients,
           service.dependencies.consensusClients
         );
-        let replacementString = ""
+        let replacementString = "";
         if (config.ssv_sk) {
-          replacementString = "OperatorPrivateKey: " + config.ssv_sk
+          replacementString = "OperatorPrivateKey: " + config.ssv_sk;
         } else {
-          replacementString = "KeyStore:\n  PrivateKeyFile: /secrets/encrypted_private_key.json\n  PasswordFile: /secrets/password"
+          replacementString =
+            "KeyStore:\n  PrivateKeyFile: /secrets/encrypted_private_key.json\n  PasswordFile: /secrets/password";
         }
 
         // prepare service's config file
@@ -1767,5 +1768,8 @@ export class ServiceManager {
     let jwtContent = "";
     jwtContent = await this.nodeConnection.sshService.exec(`cat ${volume}`);
     return jwtContent.stdout;
+  }
+  async runWebsocket(controlsPath) {
+    await this.nodeConnection.sshService.exec(`node ${controlsPath}/remote-terminal/ws-server.js`);
   }
 }

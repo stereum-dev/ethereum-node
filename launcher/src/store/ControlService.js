@@ -555,6 +555,10 @@ class ControlService extends EventEmitter {
   async controlsPath() {
     return this.promiseIpc.send("controlsPath");
   }
+
+  async runWebsocket(args) {
+    return await this.promiseIpc.send("runWebsocket", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

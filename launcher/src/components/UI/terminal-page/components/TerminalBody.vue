@@ -33,6 +33,7 @@ let terminal = new Terminal({
 const wsPort = 1234;
 let socket = new WebSocket(`ws://${controlStore.ipAddress}:${wsPort}`);
 
+// Copy selected text
 terminal.onSelectionChange(() => {
   if (terminal.hasSelection()) {
     const selection = terminal.getSelection();
@@ -48,11 +49,11 @@ terminal.onSelectionChange(() => {
 });
 
 const handleSocketError = async () => {
-  await stopShell();
+  await ControlService.stopShell();
   if (typeof removeOutputListener === "function") {
     removeOutputListener();
   }
-  terminal.writeln("Terminal connection encountered an error");
+  terminal.writeln("\x1B[31m\x1B[1m>> Terminal connection encountered an error! <<\x1B[0m");
 };
 
 const refreshConnection = async () => {
@@ -60,14 +61,42 @@ const refreshConnection = async () => {
     terminal.clear();
   }
   // else if (socket.readyState === WebSocket.CLOSED) {
-  // socket = new WebSocket(`ws://${controlStore.ipAddress}:1234`); // Create a new socket
-  // await ControlService.startShell();
-  // connectWebSocket();
-  // if (shellStarted === undefined) {
-  //   handleSocketError();
-  // }
-  // console.log("socket");
-  // socket.onclose = handleSocketError;
+  //   terminal.reset();
+  //   console.log(terminal.buffer.active.length);
+  //   // Re-establish the connection
+  //   console.log("Starting shell...");
+  //   await ControlService.startShell();
+  //   console.log("Shell started");
+
+  //   console.log("Getting controls path...");
+  //   controlsPath.value = await ControlService.controlsPath();
+  //   console.log("Controls path:", controlsPath.value);
+
+  //   console.log("Running WebSocket...");
+  //   await ControlService.runWebsocket(controlsPath.value);
+  //   console.log("WebSocket run");
+
+  //   const maxAttempts = 20;
+  //   let attempts = 0;
+  //   const connect = async () => {
+  //     try {
+  //       await connectWebSocket();
+  //     } catch (error) {
+  //       if (attempts < maxAttempts) {
+  //         attempts++;
+  //         setTimeout(connect, 300);
+  //       } else {
+  //         console.error("Failed to connect to WebSocket server");
+  //         await ControlService.stopShell();
+  //         if (typeof removeOutputListener === "function") {
+  //           removeOutputListener();
+  //         }
+  //         socket.close();
+  //         terminal.reset();
+  //       }
+  //     }
+  //   };
+  //   connect();
   // }
   // else {
   //   await stopShell();
@@ -85,13 +114,13 @@ let removeOutputListener;
 socket.onmessage = async (event) => {
   const exitCommand = new RegExp("^\\s*exit\\s*$", "m");
   if (exitCommand.test(event.data)) {
-    await stopShell();
+    await ControlService.stopShell();
     if (typeof removeOutputListener === "function") {
       removeOutputListener();
     }
     socket.close();
     terminal.reset();
-    terminal.writeln("Terminal Connection is closed. Press on REFRESH to connect it again :)");
+    terminal.writeln("\x1B[31m\x1B[1m>> Terminal Exited!. Click on REFRESH to connect again! <<\x1B[0m");
   }
 };
 
@@ -108,6 +137,7 @@ const connectWebSocket = () => {
         removeOutputListener = window.promiseIpc.onTerminalOutput((output) => {
           terminal.write(output);
         });
+        terminal.writeln("\x1B[32m\x1B[1m>> Connection established successfully! <<\x1B[0m");
       };
     } catch (error) {
       console.error("Failed to reconnect:", error);
@@ -115,21 +145,32 @@ const connectWebSocket = () => {
   }
 };
 
-const stopShell = async () => {
-  await ControlService.stopShell();
-};
-
 onBeforeMount(async () => {
   await ControlService.startShell();
   controlsPath.value = await ControlService.controlsPath();
+  await ControlService.runWebsocket(controlsPath.value);
 });
 
 onMounted(async () => {
-  connectWebSocket();
+  const maxAttempts = 20;
+  let attempts = 0;
+  const connect = async () => {
+    try {
+      await connectWebSocket();
+    } catch (error) {
+      if (attempts < maxAttempts) {
+        attempts++;
+        setTimeout(connect, 300);
+      } else {
+        console.error("Failed to connect to WebSocket server");
+      }
+    }
+  };
+  connect();
 });
 
 onUnmounted(async () => {
-  await stopShell();
+  await ControlService.stopShell();
   if (typeof removeOutputListener === "function") {
     removeOutputListener();
   }
