@@ -548,8 +548,8 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("startShell");
   }
 
-  async stopShell() {
-    return this.promiseIpc.send("stopShell");
+  async stopShell(args) {
+    return this.promiseIpc.send("stopShell", args);
   }
 
   async controlsPath() {

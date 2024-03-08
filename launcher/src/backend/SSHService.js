@@ -618,14 +618,23 @@ export class SSHService {
     });
   }
 
-  async stopShell() {
-    if (this.shellStream) {
-      this.shellStream.end();
-      this.shellStream = null;
+  async stopShell(wsPort) {
+    try {
+      await this.exec(`ufw delete allow ${wsPort}/tcp`);
+    } catch (error) {
+      console.error("An error occurred while deleting the UFW rule:", error);
     }
-    if (this.conn) {
-      this.conn.end();
-      this.conn = null;
+    try {
+      if (this.shellStream) {
+        this.shellStream.end();
+        this.shellStream = null;
+      }
+      if (this.conn) {
+        this.conn.end();
+        this.conn = null;
+      }
+    } catch (error) {
+      console.error("An error occurred while stopping the shell:", error);
     }
   }
 }

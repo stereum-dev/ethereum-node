@@ -1769,7 +1769,18 @@ export class ServiceManager {
     jwtContent = await this.nodeConnection.sshService.exec(`cat ${volume}`);
     return jwtContent.stdout;
   }
-  async runWebsocket(controlsPath) {
-    await this.nodeConnection.sshService.exec(`node ${controlsPath}/remote-terminal/ws-server.js`);
+
+  async runWebsocket(controlsPath, wsPort) {
+    try {
+      await this.nodeConnection.sshService.exec(`sudo ufw allow ${wsPort}/tcp`);
+    } catch (error) {
+      console.error("An error occurred while opening the port:", error);
+    }
+
+    try {
+      await this.nodeConnection.sshService.exec(`sudo node ${controlsPath}/remote-terminal/ws-server.js`);
+    } catch (error) {
+      console.error("An error occurred while running the WebSocket server:", error);
+    }
   }
 }

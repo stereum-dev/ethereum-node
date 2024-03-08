@@ -598,10 +598,10 @@ ipcMain.handle("startShell", async (event) => {
   }
 });
 
-ipcMain.handle("stopShell", async () => {
+ipcMain.handle("stopShell", async (event, args) => {
   if (nodeConnection.sshService) {
     try {
-      nodeConnection.sshService.stopShell();
+      nodeConnection.sshService.stopShell(args);
     } catch (error) {
       console.error("Error stopping shell:", error);
       return `Error stopping shell: ${error.message}`;
@@ -614,7 +614,7 @@ ipcMain.handle("controlsPath", async () => {
 });
 
 ipcMain.handle("runWebsocket", async (event, args) => {
-  return await serviceManager.runWebsocket(args);
+  return await serviceManager.runWebsocket(args.controlsPath, args.wsPort);
 });
 
 // Scheme must be registered before the app is ready

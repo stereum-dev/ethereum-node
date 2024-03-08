@@ -26,12 +26,13 @@ import ControlService from "@/store/ControlService";
 const terminalContainer = ref(null);
 const controlStore = useControlStore();
 const controlsPath = ref("");
+const wsPort = 1234;
+let socket = new WebSocket(`ws://${controlStore.ipAddress}:${wsPort}`);
+
 let terminal = new Terminal({
   allowTransparency: true,
   rightClickSelectsWord: true,
 });
-const wsPort = 1234;
-let socket = new WebSocket(`ws://${controlStore.ipAddress}:${wsPort}`);
 
 // Copy selected text
 terminal.onSelectionChange(() => {
@@ -49,7 +50,7 @@ terminal.onSelectionChange(() => {
 });
 
 const handleSocketError = async () => {
-  await ControlService.stopShell();
+  await ControlService.stopShell(`${wsPort}`);
   if (typeof removeOutputListener === "function") {
     removeOutputListener();
   }
@@ -87,7 +88,7 @@ const refreshConnection = async () => {
   //         setTimeout(connect, 300);
   //       } else {
   //         console.error("Failed to connect to WebSocket server");
-  //         await ControlService.stopShell();
+  //         await ControlService.stopShell(`${wsPort}`);
   //         if (typeof removeOutputListener === "function") {
   //           removeOutputListener();
   //         }
@@ -99,7 +100,7 @@ const refreshConnection = async () => {
   //   connect();
   // }
   // else {
-  //   await stopShell();
+  //   await stopShell(`${wsPort}`);
   //   if (typeof removeOutputListener === "function") {
   //     removeOutputListener();
   //   }
@@ -114,7 +115,7 @@ let removeOutputListener;
 socket.onmessage = async (event) => {
   const exitCommand = new RegExp("^\\s*exit\\s*$", "m");
   if (exitCommand.test(event.data)) {
-    await ControlService.stopShell();
+    await ControlService.stopShell(`${wsPort}`);
     if (typeof removeOutputListener === "function") {
       removeOutputListener();
     }
@@ -148,7 +149,10 @@ const connectWebSocket = () => {
 onBeforeMount(async () => {
   await ControlService.startShell();
   controlsPath.value = await ControlService.controlsPath();
-  await ControlService.runWebsocket(controlsPath.value);
+  await ControlService.runWebsocket({
+    controlsPath: controlsPath.value,
+    wsPort: wsPort,
+  });
 });
 
 onMounted(async () => {
@@ -170,7 +174,7 @@ onMounted(async () => {
 });
 
 onUnmounted(async () => {
-  await ControlService.stopShell();
+  await ControlService.stopShell(`${wsPort}`);
   if (typeof removeOutputListener === "function") {
     removeOutputListener();
   }
