@@ -12,6 +12,7 @@ export class SSHService {
   constructor() {
     this.connectionPool = [];
     this.connectionInfo = null;
+    this.timeoutTime = 50000;
     this.connected = false;
     this.tunnels = [];
     this.addingConnection = false;
@@ -86,7 +87,7 @@ export class SSHService {
     return conn;
   }
 
-  async connect(connectionInfo) {
+  async connect(connectionInfo, twoFactorAuthentication = false) {
     this.connectionInfo = connectionInfo;
     this.addingConnection = true;
     const conn = new Client();
@@ -107,7 +108,14 @@ export class SSHService {
         }
       });
       conn.on("keyboard-interactive", () => {
-        console.log("msg of the day: Or something");
+        if(!twoFactorAuthentication){
+          this.timeoutTime = 300000
+          this.connect(this.connectionInfo, true);
+          conn.end();
+        }
+        else{
+          //
+        }
       });
       conn
         .on("ready", async () => {
@@ -134,6 +142,7 @@ export class SSHService {
           passphrase: connectionInfo.passphrase || undefined,
           keepaliveInterval: 30000,
           tryKeyboard: true,
+          readyTimeout: this.timeoutTime,
         });
     });
   }

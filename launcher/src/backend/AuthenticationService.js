@@ -88,7 +88,6 @@ export class AuthenticationService {
 
   async finishAuthSetup(increaseTimeLimit, enableRateLimit){
     this.authStream.write('y\n');
-    this.authStream.write('n\n');
     if(increaseTimeLimit){
       this.authStream.write('y\n');
     }
@@ -104,15 +103,15 @@ export class AuthenticationService {
 
     await this.nodeConnection.sshService.exec("cp /etc/pam.d/sshd /etc/pam.d/sshd.bak");
     await this.nodeConnection.sshService.exec("cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak");
-/*
-    await this.nodeConnection.sshService.exec(`echo "echo 'auth required pam_google_authenticator.so nullok' >> /etc/pam.d/sshd"`);
-    await this.nodeConnection.sshService.exec(`echo "echo 'auth required pam_permit.so' >> /etc/pam.d/sshd"`);
-    await this.nodeConnection.sshService.exec(`echo "echo 'auth required pam_google_authenticator.so grace_period=86400' >> /etc/pam.d/sshd"`);
-    await this.nodeConnection.sshService.exec(`echo "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config"`);
-    await this.nodeConnection.sshService.exec(`echo "echo 'AuthenticationMethods publickey,password publickey,keyboard-interactive' >> /etc/ssh/sshd_config"`);
+
+    await this.nodeConnection.sshService.exec(`echo "auth required pam_google_authenticator.so nullok" >> /etc/pam.d/sshd`);
+    //await this.nodeConnection.sshService.exec(`echo "auth required pam_permit.so" >> /etc/pam.d/sshd`);
+    //await this.nodeConnection.sshService.exec(`echo "echo 'auth required pam_google_authenticator.so grace_period=86400' >> /etc/pam.d/sshd"`);
+    //await this.nodeConnection.sshService.exec(`echo "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config"`);
+    await this.nodeConnection.sshService.exec(`sed -i -e 's/KbdInteractiveAuthentication no/KbdInteractiveAuthentication yes/g' /etc/ssh/sshd_config"`);
+    await this.nodeConnection.sshService.exec(`echo "AuthenticationMethods publickey,password publickey,keyboard-interactive" >> /etc/ssh/sshd_config`);
     await this.nodeConnection.sshService.exec(`sed -i '/^@include common-auth$/s/^/#/' /etc/pam.d/sshd`);
     await this.nodeConnection.sshService.exec("systemctl restart sshd.service");
-*/
     this.authStream.end();
   }
 
