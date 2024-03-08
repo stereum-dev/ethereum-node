@@ -35,7 +35,7 @@
               configured2fa ? $t('authenticatorModal.removeButton') : $t('authenticatorModal.importButton')
             }`"
             :btn-bg-color="`${configured2fa ? '#ff0000' : '#A0A0A0'}`"
-            @confirmPluginClick="openLocalApp"
+            @confirmPluginClick="importOrRemove"
           /><AuthContainer
             v-else
             :secret-key="secretKey"
@@ -52,7 +52,10 @@
         <div v-if="setupConfirmPage" class="checkContainer">
           <checkContainer :title="`${$t('authenticatorModal.rateLimit')}`" @update="handleRateLimit" />
         </div>
-        <div v-if="setupPage || generationPage || setupConfirmPage" class="btn-auth" @click="mainBtnClick">
+        <div v-if="setupPage || setupConfirmPage" class="btn-auth" @click="mainBtnClick">
+          {{ mainBtnContent.btnName }}
+        </div>
+        <div v-if="generationPage" class="btn-auth" :class="{ disabled: !confirmSuccessAuth }" @click="mainBtnClick">
           {{ mainBtnContent.btnName }}
         </div>
       </div>
@@ -84,11 +87,11 @@ export default {
       configurePage: false,
       configured2fa: false,
       setupConfirmPage: false,
-      enableRateLimit: false,
+      enableRateLimit: true,
       orginalGenerationTimeLimit: false,
       secretKey: "",
       QRcode: "/img/icon/header-icons/dummyQR.png", //dummy qr code
-      authKeyTimeBase: false,
+      authKeyTimeBase: true,
       confirmSuccessAuth: false,
     };
   },
@@ -249,15 +252,21 @@ export default {
     async topConfirmBoxClick() {
       if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
         //backup not needed anymore
+        this.confirmSuccessAuth = true;
       } else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
-        this.setupPage = false;
-        this.generationPage = false;
-        this.validVerificationCode = "";
-        this.verificationCode = "";
-        this.setupConfirmPage = false;
+        this.authKeyTimeBase = true;
+        this.orginalGenerationTimeLimit = false;
+        this.enableRateLimit = true;
       } else if (!this.setupPage && !this.generationPage) {
         this.setupPage = true;
       }
+    },
+    async importOrRemove() {
+      if (this.configurePage) {
+        //import code
+      } else{
+        await ControlService.removeAuthenticator();
+      } 
     },
     async mainBtnClick() {
       if (this.setupPage) {
@@ -490,5 +499,9 @@ export default {
 }
 .btn-auth:active {
   box-shadow: 1px 1px 10px 1px #171717 inset;
+}
+.disabled {
+  opacity: 0.7;
+  pointer-events: none;
 }
 </style>
