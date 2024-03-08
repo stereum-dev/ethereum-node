@@ -263,8 +263,12 @@
     "instMonit": "Monitoring installeren?"
   },
   "creditPanel": {
-    "techTitle": "CREDITS - TECHNISCHE BIJDRAGERS",
-    "techText": "VERDIEN EEN GITPOAP! LEER HOE JE BETROKKEN KAN RAKEN DOOR ONZE GITHUB TE BEZOEKEN!",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "FINANCIËLE BIJDRAGE",
     "developers": "ONTWIKKELAARS",
     "testers": "TESTERS"
@@ -485,10 +489,11 @@
     "addNotif": "voeg een notificatiekanaal toe",
     "chooseNotif": "Kies welk soort Notificatiekanaal u wilt configureren",
     "stereumMonitor": "Stereum Node Monitor",
-    "stepOne": "Bezoek de app store of onze website om “STEREUM Node Monitor” te downloaden",
-    "stepTwo": "Open de app op uw smartphone",
-    "stepThree": "Scan de QR-code",
-    "stepFour": "Stuur een testnotificatie",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "klik buiten om te sluiten",
     "dash": "Dashboard",
     "chooseVal": "KIES EEN VALIDATOR CLIENT OM MONITORING AAN TE VERBINDEN",
@@ -812,7 +817,7 @@
     "process": "Verwerking"
   },
   "serviceModal": {
-    "distributedValidator": "VERDEELDE VALIDATOR GENERATIE",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "GENEREREN VAN NIEUWE ENR",
     "open": "OPEN",
     "createEnr": "CREËER NIEUWE ENR",

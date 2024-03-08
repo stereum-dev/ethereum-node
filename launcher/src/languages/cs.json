@@ -263,8 +263,12 @@
     "instMonit": "Instalovat monitorování?"
   },
   "creditPanel": {
-    "techTitle": "KREDITY - TECHNIČTÍ PŘÍSPĚVATELÉ",
-    "techText": "ZÍSKEJTE GITPOAP! NAVŠTIVTE NÁŠ GITHUB, KDE SE DOZVÍTE, JAK SE ZAPOJIT!",
+    "techTitle": "CREDITS > Technical Contributors",
+    "techText": "Earn a GitPOAP! Learn how to get involved by visiting our GitHub!",
+    "testTitle": "CREDITS > Testing, Feedback & Suggestions",
+    "testText": "Make a constructive suggestion, solving an issue, on our GitHub!",
+    "translateTitle": "CREDITS > Translation",
+    "translateText": "Not the correct word? Help us spread Stereum to your language on Crowdin!",
     "financialPage": "FINANČNÍ PŘÍSPĚVEK",
     "developers": "VÝVOJÁŘI",
     "testers": "TESTEŘI"
@@ -485,10 +489,11 @@
     "addNotif": "přidejte kanál pro oznámení",
     "chooseNotif": "Vyberte, jaký typ kanálu pro oznámení chcete nastavit",
     "stereumMonitor": "Monitor Stereum uzlu",
-    "stepOne": "Pro stažení \"Monitoru Stereum uzlu\" navštivte App Store nebo naše webové stránky",
-    "stepTwo": "Otevřete aplikaci na svém chytrém telefonu",
-    "stepThree": "Naskenujte QR kód",
-    "stepFour": "Odešlete zkušební oznámení",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
     "close": "klikněte mimo pro zavření",
     "dash": "Přehled",
     "chooseVal": "VYBERTE KLIENTA VALIDÁTORA PRO PŘIPOJENÍ MONITOROVÁNÍ",
@@ -812,7 +817,7 @@
     "process": "Zpracovávání"
   },
   "serviceModal": {
-    "distributedValidator": "GENERACE DISTRIBUOVANÉHO VALIDÁTORA",
+    "distributedValidator": "DISTRIBUTED KEY GENERATION",
     "generateEnr": "GENERACE NOVÉHO ENR",
     "open": "OTEVŘÍT",
     "createEnr": "VYTVOŘIT NOVÉ ENR",

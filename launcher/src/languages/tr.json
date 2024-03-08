@@ -263,8 +263,12 @@
     "instMonit": "Monitörlüğü kur?"
   },
   "creditPanel": {
-    "techTitle": "KATKIDA BULUNANLAR - TEKNİK KATKI SAĞLAYANLAR",
-    "techText": "GİTPOAP KAZANIN! GITHUB SAYFAMIZI ZİYARET EDEREK NASIL KAZANILACAĞINI ÖĞRENİN!",
+    "techTitle": "KREDİLER > Teknik Katkıda Bulunanlar",
+    "techText": "Bir GitPOAP kazanın! GitHub'ımızı ziyaret ederek nasıl katkıda bulunabileceğinizi öğrenin!",
+    "testTitle": "KREDİLER > Test Etme, Geri Bildirim ve Öneriler",
+    "testText": "GitHub'ımızda bir sorunu çözen yapıcı bir öneride bulunun!",
+    "translateTitle": "KREDİLER > Çeviri",
+    "translateText": "Doğru kelime değil mi? Stereum'u Crowdin üzerinden dilinize yaymamıza yardımcı olun!",
     "financialPage": "FİNANSAL KATKI SAĞLAYANLAR",
     "developers": "GELİŞTİRİCİLER",
     "testers": "TEST EDENLER"
@@ -366,13 +370,13 @@
     "prunningText": "GETH'in çalışma süresi boyunca kullandığı depolama alanı BÜYÜR. Geth veritabanını budamak, gereksiz verileri kaldırmak ve kullanılan depolama alanının bir kısmını boşaltmak ÇOK UZUN sürer. Bu Geth çalışmıyorken yapılmalıdır. BUDAMA SÜRECİNİ BAŞLATIRSANIZ DÜĞÜMÜNÜZ ÇEVRİMDIŞI OLACAK VE OLASI ONAY/DOĞRULAMA GÖREVLERİNİ DURDURACAKTIR!",
     "prunningChecked": "METİNİ OKUDUM VE SONUÇLARININ FARKINDAYIM",
     "prunningStart": "Budamayı Başlat",
-    "close": "click outside to close"
+    "close": "kapatmak için pencere dışında bir yere tıklayın"
   },
   "restartModal": {
     "restartMessage": "bunu yaparken düğümünüz çevrimdışı olabilir!",
     "restart": "yeniden başlat",
     "confirmMessage": "Düğümünüzü çevirmek istediğinizden emin misiniz?",
-    "areYouSure": "are you sure you want to"
+    "areYouSure": "bunu istediğinize emin misiniz"
   },
   "nukeModal": {
     "nukeQ": "STEREUM VE TÜM SERVİSLERİ SUNUCUDAN KALDIRMAK İSTEDİĞİNİZE EMİN MİSİNİZ?",
@@ -403,7 +407,7 @@
   "stakeGuide": {
     "syncCheck": "Önce Düğümünüzün senkronize olup olmadığını kontrol edin",
     "scrollMessage": "Daha hızlı slayt değiştirmek için kaydırın",
-    "stake": "staking",
+    "stake": "stake etme",
     "scrollClick": "Staking'e tıklayın",
     "drag": "Sürükleyin veya \"TIKLAYIN VEYA SÜRÜKLEYİN\"e tıklayın",
     "clickIcon": "Doğrulayıcı istemcinizin simgesine tıklayın",
@@ -451,7 +455,7 @@
     "messageOn": "Düğümünüz çevrim içi olacak!",
     "turnOn": "Aç",
     "turnOff": "Kapat",
-    "close": "click outside to close"
+    "close": "kapatmak için pencere dışında bir yere tıklayın"
   },
   "nodeAlert": {
     "lowSpace": "DÜŞÜK DEPOLAMA",
@@ -473,23 +477,24 @@
     "syncMsg": "İSTEMCİNİZİ ZİNCİRİN BAŞINDAN İTİBAREN SENKRONİZE EDER",
     "cont": "DEVAM ET",
     "resync": "YENİDEN SENKRONİZE ET",
-    "close": "click outside to close"
+    "close": "kapatmak için pencere dışında bir yere tıklayın"
   },
   "resyncSeparateService": {
     "message": "yeniden senkronizasyon başlatarak",
     "msgPartTwo": "kaynağı yeniden senkronizasyon için kullanılacak",
     "resync": "yeniden senkronize et",
-    "close": "click outside to close"
+    "close": "kapatmak için pencere dışında bir yere tıklayın"
   },
   "notifModal": {
     "addNotif": "Bildirim kanalı ekle",
     "chooseNotif": "Hangi tür bildirim kanalını yapılandırmak istediğinizi seçin",
     "stereumMonitor": "Stereum Düğüm Monitörü",
-    "stepOne": "“STEREUM Node Monitor” uygulamasını indirmek için uygulama mağazasını veya web sitemizi ziyaret edin",
-    "stepTwo": "Uygulamayı akıllı telefonunuzda açın",
-    "stepThree": "QR Kodunu tarayın",
-    "stepFour": "Bir test bildirimi gönderin",
-    "close": "click outside to close",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
+    "close": "kapatmak için pencere dışında bir yere tıklayın",
     "dash": "Gösterge Paneli",
     "chooseVal": "MONİTÖRLEMEYİ BAĞLAMAK İÇİN BİR DOĞRULAYICI İSTEMCİ SEÇİN",
     "goTo": "Git",
@@ -537,7 +542,7 @@
   },
   "deleteModal": {
     "rem": "Kaldır",
-    "close": "click outside to close"
+    "close": "kapatmak için pencere dışında bir yere tıklayın"
   },
   "errTerminal": {
     "copy": "kopyalandı!",
@@ -594,7 +599,7 @@
     "contCong": "“DEVAM ET”e tıklayın, tebrikler bir doğrulayıcı anahtarı oluşturdunuz"
   },
   "balWid": {
-    "fin": "FINALIZED",
+    "fin": "SONUÇLANDIRILDI",
     "bal": "BAKİYE DEĞİŞİMİ"
   },
   "headerBtn": {
@@ -607,7 +612,7 @@
     "rem": "KALDIR",
     "node": "DÜĞÜM",
     "control": "KONTROL",
-    "staking": "STAKING"
+    "staking": "STAKE ETME"
   },
   "switchNetwork": {
     "message": "Bu mevcut ağdır, başka bir ağ seçmek için tıklayabilirsiniz"
@@ -642,7 +647,7 @@
   },
   "ipScanModal": {
     "message": "Stereum'un Ubuntu ISO'sundan yayılan pingi arayarak ev ağınızda düğüm sunucunuzun IP adresini otomatik olarak almak ister misiniz? Bu biraz zaman alabilir...",
-    "clockClose": "Click outside to close"
+    "clockClose": "Kapatmak için dışarı tıklayın"
   },
   "serviceBtn": {
     "turnOff": "Hizmeti kapat",
@@ -812,7 +817,7 @@
     "process": "İşleniyor"
   },
   "serviceModal": {
-    "distributedValidator": "DAĞITILMIŞ DOĞRULAYICI ÜRETİMİ",
+    "distributedValidator": "Dağıtık Anahtar Üretimi",
     "generateEnr": "YENİ ENR ÜRETİLİYOR",
     "open": "AÇ",
     "createEnr": "YENİ ENR OLUŞTUR",
@@ -851,12 +856,12 @@
     "dlPk": "Yedeğini almak için özel anahtarınızı indirin. Şifreleme için kullandığınız parolayı da yazdığınızdan emin olun!",
     "dl": "İNDİR",
     "imp": "İÇE AKTAR",
-    "mngEnr": "MANAGE ENR",
-    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
-    "areYouSure": "Are you sure you want to remove your ENR?",
-    "areYouSureCluster": "Are you sure you want to remove your cluster?",
-    "areYouSureMsg": "This can not be undone!",
-    "save": "BACKUP..."
+    "mngEnr": "ENR Yönetimi",
+    "copyEnr": "Üretilen veya içe aktarılan 'Ethereum Node Kaydı'nı kopyalayın - Obol kullanarak düğümünüzün tanımlayıcısı.",
+    "areYouSure": "ENR'nizi kaldırmak istediğinizden emin misiniz?",
+    "areYouSureCluster": "Kümenizi kaldırmak istediğinizden emin misiniz?",
+    "areYouSureMsg": "Bu işlem geri alınamaz!",
+    "save": "YEDEKLEME..."
   },
   "stakingPage": {
     "somethingWrong": "Bir şeyler yanlış gitti",
