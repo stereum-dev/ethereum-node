@@ -78,9 +78,9 @@ export const useServerLogin = () => {
 
     try {
       await ControlService.connect({
-        host: serverStore.loginState.ip,
+        host: serverStore.loginState.ip.trim(),
         port: serverStore.loginState.port,
-        user: serverStore.loginState.username,
+        user: serverStore.loginState.username.trim(),
         password: serverStore.loginState.password,
         sshKeyAuth: serverStore.loginState.useAuth,
         keyfileLocation: serverStore.loginState.keyPath,
