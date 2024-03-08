@@ -27,6 +27,7 @@ import { NotificationService } from "./ethereum-services/NotificationService";
 import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
+import { AuthenticatorService } from "./ethereum-services/AuthenticatorService";
 import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
 import { AuthenticatorService } from "./ethereum-services/AuthenticatorService";
