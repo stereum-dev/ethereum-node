@@ -621,6 +621,7 @@ export class SSHService {
   async stopShell(wsPort) {
     try {
       await this.exec(`ufw delete allow ${wsPort}/tcp`);
+      log.info("Shell port closed");
     } catch (error) {
       console.error("An error occurred while deleting the UFW rule:", error);
     }
