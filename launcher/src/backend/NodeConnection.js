@@ -313,17 +313,17 @@ export class NodeConnection {
     /*
      *  run stereum ansible playbook "web-server"
      */
-    log.info("run stereum ansible playbook 'web-server'");
-    try {
-      playbookRuns.push(
-        await this.runPlaybook("web-server", {
-          stereum_role: "web-server",
-        })
-      );
-    } catch (err) {
-      log.error("Can't run web-server playbook: ", err);
-      throw new Error("Can't run web-server playbook: " + err);
-    }
+    // log.info("run stereum ansible playbook 'web-server'");
+    // try {
+    //   playbookRuns.push(
+    //     await this.runPlaybook("web-server", {
+    //       stereum_role: "web-server",
+    //     })
+    //   );
+    // } catch (err) {
+    //   log.error("Can't run web-server playbook: ", err);
+    //   throw new Error("Can't run web-server playbook: " + err);
+    // }
 
     return playbookRuns;
   }
