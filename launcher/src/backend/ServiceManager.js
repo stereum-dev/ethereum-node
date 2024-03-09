@@ -1773,6 +1773,7 @@ export class ServiceManager {
   async runWebsocket(controlsPath, wsPort) {
     try {
       await this.nodeConnection.sshService.exec(`sudo ufw allow ${wsPort}/tcp`);
+      log.info("Shell port opened");
     } catch (error) {
       console.error("An error occurred while opening the port:", error);
     }
