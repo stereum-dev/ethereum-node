@@ -16,7 +16,11 @@
         env: process.env
       });
 
-      const wss = new WebSocket.Server({ port: 1234});
+      const args = process.argv.slice(2);
+      const portArg = args.find(arg => arg.startsWith('--port='));
+      const port = portArg ? parseInt(portArg.split('=')[1]) : 1234;
+
+      const wss = new WebSocket.Server({ port });
 
       wss.on('connection', (ws) => {
         const sendData = (data) => {
