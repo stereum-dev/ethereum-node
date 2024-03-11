@@ -1277,10 +1277,6 @@ video {
   grid-row-start: 8;
 }
 
-.row-start-9{
-  grid-row-start: 9;
-}
-
 .row-end-10{
   grid-row-end: 10;
 }
@@ -1848,12 +1844,12 @@ video {
   max-height: 430px;
 }
 
-.max-h-\[450px\]{
-  max-height: 450px;
+.max-h-\[440px\]{
+  max-height: 440px;
 }
 
-.max-h-\[489px\]{
-  max-height: 489px;
+.max-h-\[450px\]{
+  max-height: 450px;
 }
 
 .max-h-\[503px\]{
@@ -5386,6 +5382,11 @@ html body {
 
 .hover\:shadow-\[\#191a1a\]:hover{
   --tw-shadow-color: #191a1a;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.hover\:shadow-\[\#1b1c1c\]:hover{
+  --tw-shadow-color: #1b1c1c;
   --tw-shadow: var(--tw-shadow-colored);
 }
 

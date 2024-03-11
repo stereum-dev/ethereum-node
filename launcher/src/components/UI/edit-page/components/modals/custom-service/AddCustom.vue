@@ -63,3 +63,4 @@ const removePorts = (port) => {
   manageStore.customConfig.ports = manageStore.customConfig.ports.filter((p) => p !== port);
 };
 </script>
+../../../../../../../public/img/icon/edit-node-icons/CustomConfig.vue

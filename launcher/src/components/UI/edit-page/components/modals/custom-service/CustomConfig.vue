@@ -20,7 +20,7 @@
           <div class="w-full col-start-2 col-end-12 row-start-2 row-end-4 items-center grid grid-cols-24">
             <img
               class="col-start-1 col-span-2 w-7 justify-self-center"
-              src="/img/icon/manage-node-icons/image-icon.png"
+              src="/img/icon/edit-node-icons/image-icon.png"
               alt="Image Icon"
             />
             <span class="col-start-3 col-span-4 text-md text-gray-200 text-left font-semibold capitalize">IMAGE</span>
@@ -37,7 +37,7 @@
           <div class="w-full col-start-2 col-end-12 row-start-5 row-end-7 items-center grid grid-cols-24">
             <img
               class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/manage-node-icons/entrypoint.png"
+              src="/img/icon/edit-node-icons/entrypoint.png"
               alt="Image Icon"
             />
             <span class="col-start-3 col-span-4 text-md text-gray-300 text-left font-semibold capitalize"
@@ -56,7 +56,7 @@
           <div class="w-full col-start-2 col-end-12 row-start-8 row-end-10 items-center grid grid-cols-24">
             <img
               class="col-start-1 col-span-2 w-7 justify-self-center"
-              src="/img/icon/manage-node-icons/command.png"
+              src="/img/icon/edit-node-icons/command.png"
               alt="Image Icon"
             />
             <span class="col-start-3 col-span-4 text-md text-gray-300 text-left font-semibold capitalize">COMMAND</span>
@@ -76,10 +76,13 @@
           class="animate__animated animate__fadeIn w-full h-full max-h-[210px] grid grid-cols-12 grid-rows-10 gap-y-1"
           :class="{ 'animate__animated animate__fadeOut': !isCustomPathActive }"
         >
-          <div class="w-full col-start-2 col-end-12 row-start-2 row-end-4 items-center grid grid-cols-24">
+          <span class="col-start-1 col-span-full row-start-1 row-span-1 text-sm text-center text-gray-200"
+            >Ensure that the volumes are in the correct format.</span
+          >
+          <div class="w-full col-start-2 col-end-12 row-start-3 row-end-5 items-center grid grid-cols-24">
             <img
               class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/manage-node-icons/volume-icon.png"
+              src="/img/icon/edit-node-icons/volume-icon.png"
               alt="Image Icon"
             />
             <span class="col-start-3 col-span-4 text-md text-gray-200 text-left font-semibold capitalize">VOLUMES</span>
@@ -89,7 +92,7 @@
                 v-model="enteredPath"
                 class="w-full h-full col-start-1 col-end-12 bg-transparent text-gray-700 p-2 text-sm"
                 type="text"
-                placeholder="/opt/stereum:/opt/data"
+                placeholder="<iDir>"
               />
               <div
                 class="h-8 col-start-12 col-span-1 flex justify-center items-center bg-teal-700 cursor-pointer rounded-md hover:scale-105 active:scale-95 hover:bg-teal-600 transition-all duration-300 ease-in-out hover:shadow-md hover:shadow-[#191a1a]"
@@ -103,7 +106,7 @@
             </div>
           </div>
           <div
-            class="w-full h-full max-h-[120px] col-start-2 col-end-12 row-start-5 row-span-full items-center flex flex-col justify-start bg-black rounded-md overflow-x-hidden overflow-y-auto p-1 gap-y-1"
+            class="w-full h-full max-h-[120px] col-start-2 col-end-12 row-start-6 row-span-full items-center flex flex-col justify-start bg-black rounded-md overflow-x-hidden overflow-y-auto p-1 gap-y-1"
           >
             <PathRows
               v-for="path in manageStore.customConfig.paths"
@@ -117,10 +120,13 @@
           v-else-if="isCustomPortActive"
           class="animate__animated animate__fadeIn w-full h-full max-h-[210px] grid grid-cols-12 grid-rows-10 gap-y-1"
         >
-          <div class="w-full col-start-2 col-end-12 row-start-2 row-end-4 items-center grid grid-cols-24">
+          <span class="col-start-1 col-span-full row-start-1 row-span-1 text-sm text-center text-gray-200"
+            >Ensure that the ports are in the correct format.</span
+          >
+          <div class="w-full col-start-2 col-end-12 row-start-3 row-end-5 items-center grid grid-cols-24">
             <img
               class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/manage-node-icons/port.png"
+              src="/img/icon/edit-node-icons/service-port.png"
               alt="Image Icon"
             />
             <span class="col-start-3 col-span-4 text-md text-gray-200 text-left font-semibold capitalize">PORTS</span>
@@ -142,7 +148,7 @@
             </div>
           </div>
           <div
-            class="w-full h-full max-h-[120px] col-start-2 col-end-12 row-start-5 row-span-full items-center flex flex-col justify-start bg-black rounded-md overflow-x-hidden overflow-y-auto p-1 gap-y-1"
+            class="w-full h-full max-h-[120px] col-start-2 col-end-12 row-start-6 row-span-full items-center flex flex-col justify-start bg-black rounded-md overflow-x-hidden overflow-y-auto p-1 gap-y-1"
           >
             <PortRows
               v-for="port in manageStore.customConfig.ports"
