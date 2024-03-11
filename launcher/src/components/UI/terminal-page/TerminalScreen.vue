@@ -1,9 +1,25 @@
 <template>
   <base-layout>
-    <TerminalBody />
+    <TerminalBody :key="componentKey" @refresh="refreshComponent" />
   </base-layout>
 </template>
 
-<script setup>
+<script>
 import TerminalBody from "./components/TerminalBody.vue";
+
+export default {
+  components: {
+    TerminalBody,
+  },
+  data() {
+    return {
+      componentKey: Date.now(),
+    };
+  },
+  methods: {
+    refreshComponent() {
+      this.componentKey = Date.now();
+    },
+  },
+};
 </script>

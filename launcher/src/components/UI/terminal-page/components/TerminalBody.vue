@@ -19,14 +19,24 @@
 import "xterm/css/xterm.css";
 import { Terminal } from "xterm";
 import { AttachAddon } from "xterm-addon-attach";
-import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import { onBeforeMount, onMounted, onUnmounted, ref, defineEmits } from "vue";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 
 const terminalContainer = ref(null);
 const controlStore = useControlStore();
 const controlsPath = ref("");
+// const availablePort = ref(0);
 const wsPort = 1234;
+
+// console.log("availabasdkljaPorteeeeeeeee-----------", availablePort.value);
+
+// const findFreePort = async () => {
+//   let test = await ControlService.findFreePort(wsPort);
+
+// };
+// // let availablePort = findFreePort();
+
 let socket = new WebSocket(`ws://${controlStore.ipAddress}:${wsPort}`);
 
 let terminal = new Terminal({
@@ -49,69 +59,32 @@ terminal.onSelectionChange(() => {
   }
 });
 
+// Error handling
 const handleSocketError = async () => {
   await ControlService.stopShell(`${wsPort}`);
   if (typeof removeOutputListener === "function") {
     removeOutputListener();
   }
+  socket.close();
+  terminal.reset();
   terminal.writeln("\x1B[31m\x1B[1m>> Terminal connection encountered an error! <<\x1B[0m");
 };
+
+// Refresh
+const emit = defineEmits(["refresh"]);
 
 const refreshConnection = async () => {
   if (socket.readyState === WebSocket.OPEN) {
     terminal.clear();
+  } else if (socket.readyState === WebSocket.CLOSED || socket.readyState === WebSocket.CLOSING) {
+    emit("refresh");
   }
-  // else if (socket.readyState === WebSocket.CLOSED) {
-  //   terminal.reset();
-  //   console.log(terminal.buffer.active.length);
-  //   // Re-establish the connection
-  //   console.log("Starting shell...");
-  //   await ControlService.startShell();
-  //   console.log("Shell started");
-
-  //   console.log("Getting controls path...");
-  //   controlsPath.value = await ControlService.controlsPath();
-  //   console.log("Controls path:", controlsPath.value);
-
-  //   console.log("Running WebSocket...");
-  //   await ControlService.runWebsocket(controlsPath.value);
-  //   console.log("WebSocket run");
-
-  //   const maxAttempts = 20;
-  //   let attempts = 0;
-  //   const connect = async () => {
-  //     try {
-  //       await connectWebSocket();
-  //     } catch (error) {
-  //       if (attempts < maxAttempts) {
-  //         attempts++;
-  //         setTimeout(connect, 300);
-  //       } else {
-  //         console.error("Failed to connect to WebSocket server");
-  //         await ControlService.stopShell(`${wsPort}`);
-  //         if (typeof removeOutputListener === "function") {
-  //           removeOutputListener();
-  //         }
-  //         socket.close();
-  //         terminal.reset();
-  //       }
-  //     }
-  //   };
-  //   connect();
-  // }
-  // else {
-  //   await stopShell(`${wsPort}`);
-  //   if (typeof removeOutputListener === "function") {
-  //     removeOutputListener();
-  //   }
-  //   socket.close();
-  //   terminal.reset();
-  //   connectWebSocket();
-  // }
 };
 
+// Clean up the old connection
 let removeOutputListener;
 
+// Exit command handling
 socket.onmessage = async (event) => {
   const exitCommand = new RegExp("^\\s*exit\\s*$", "m");
   if (exitCommand.test(event.data)) {
@@ -121,7 +94,7 @@ socket.onmessage = async (event) => {
     }
     socket.close();
     terminal.reset();
-    terminal.writeln("\x1B[31m\x1B[1m>> Terminal Exited!. Click on REFRESH to connect again! <<\x1B[0m");
+    terminal.writeln("\x1B[31m\x1B[1m>> Terminal Exited!. Click on REFRESH to connect it again! <<\x1B[0m");
   }
 };
 
@@ -147,9 +120,18 @@ const connectWebSocket = () => {
 };
 
 onBeforeMount(async () => {
-  await ControlService.startShell();
+  try {
+    await ControlService.startShell();
+  } catch (error) {
+    console.error("Error starting shell:", error);
+    return;
+  }
+
   controlsPath.value = await ControlService.controlsPath();
-  await ControlService.runWebsocket({
+  // availablePort.value = await ControlService.findFreePort(wsPort);
+  // console.log("hahahah=========", availablePort.value);
+
+  await ControlService.runWebServer({
     controlsPath: controlsPath.value,
     wsPort: wsPort,
   });
@@ -174,7 +156,9 @@ onMounted(async () => {
 });
 
 onUnmounted(async () => {
-  await ControlService.stopShell(`${wsPort}`);
+  if (socket.readyState === WebSocket.OPEN) {
+    await ControlService.stopShell(`${wsPort}`);
+  }
   if (typeof removeOutputListener === "function") {
     removeOutputListener();
   }

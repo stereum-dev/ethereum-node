@@ -621,21 +621,30 @@ export class SSHService {
   async stopShell(wsPort) {
     try {
       await this.exec(`ufw delete allow ${wsPort}/tcp`);
-      log.info("Shell port closed");
+      log.info("Web-Server-Port::closed");
     } catch (error) {
       console.error("An error occurred while deleting the UFW rule:", error);
-    }
-    try {
-      if (this.shellStream) {
-        this.shellStream.end();
-        this.shellStream = null;
+    } finally {
+      try {
+        if (this.shellStream) {
+          const shellStreamClosed = new Promise((resolve) => {
+            this.shellStream.on("close", resolve);
+          });
+
+          this.shellStream.end();
+          await shellStreamClosed;
+
+          console.log("shellstream ended");
+          this.shellStream = null;
+        }
+        if (this.conn) {
+          this.conn.end();
+          console.log("connection ended");
+          this.conn = null;
+        }
+      } catch (error) {
+        console.error("An error occurred while stopping the shell:", error);
       }
-      if (this.conn) {
-        this.conn.end();
-        this.conn = null;
-      }
-    } catch (error) {
-      console.error("An error occurred while stopping the shell:", error);
     }
   }
 }

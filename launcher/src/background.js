@@ -613,9 +613,13 @@ ipcMain.handle("controlsPath", async () => {
   return await monitoring.controlsPath();
 });
 
-ipcMain.handle("runWebsocket", async (event, args) => {
-  return await serviceManager.runWebsocket(args.controlsPath, args.wsPort);
+ipcMain.handle("runWebServer", async (event, args) => {
+  return await serviceManager.runWebServer(args.controlsPath, args.wsPort);
 });
+
+// ipcMain.handle("findFreePort", async (event, args) => {
+//   return await serviceManager.findFreePort(args);
+// });
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
