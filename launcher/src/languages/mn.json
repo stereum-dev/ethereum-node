@@ -777,6 +777,7 @@
     "pass": "Нууц үг",
     "keyPath": "Түлхүүрийн зам",
     "login": "Нэвтрэх",
+    "cancel": "Cancel Login",
     "conecting": "Холбогдож байна. . .",
     "newPass": "Шинэ Нууц үг",
     "EnterNewPass": "Шинэ Нууц үгээ оруулна уу",
