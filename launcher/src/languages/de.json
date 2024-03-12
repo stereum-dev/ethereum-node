@@ -807,7 +807,7 @@
     "serch": "Suchen",
     "serchFor": "Suchen nach...",
     "addServer": "EINE NEUE SERVERVERBINDUNG HINZUFÜGEN",
-    "serverAccMang": "Serverzugriffsverwaltung"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "INSTALLIERTE DIENSTE",
