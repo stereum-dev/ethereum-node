@@ -403,7 +403,7 @@ const validateIPorHostname = () => {
 
   const input = serverStore.loginState.ip;
 
-  if (ipRegex.test(input) || hostnameRegex.test(input)) {
+  if (ipRegex.test(input.trim()) || hostnameRegex.test(input.trim())) {
     ipError.value = "";
     return true;
   } else {
