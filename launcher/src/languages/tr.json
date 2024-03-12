@@ -777,6 +777,7 @@
     "pass": "Parola",
     "keyPath": "Anahtar Yolu",
     "login": "Giriş Yap",
+    "cancel": "Cancel Login",
     "conecting": "Bağlanıyor . . .",
     "newPass": "Yeni Parola",
     "EnterNewPass": "Yeni Parola Girin",
