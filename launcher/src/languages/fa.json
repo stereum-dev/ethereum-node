@@ -807,7 +807,7 @@
     "serch": "جستجو",
     "serchFor": "جستجو برای...",
     "addServer": "اضافه کردن یک اتصال سرور جدید",
-    "serverAccMang": "مدیریت دسترسی سرور"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "خدمات نصب شده",
