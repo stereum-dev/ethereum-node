@@ -777,6 +777,7 @@
     "pass": "Senha",
     "keyPath": "Caminho da Chave",
     "login": "Login",
+    "cancel": "Cancel Login",
     "conecting": "Conectando . . .",
     "newPass": "Nova Senha",
     "EnterNewPass": "Digite Nova Senha",
