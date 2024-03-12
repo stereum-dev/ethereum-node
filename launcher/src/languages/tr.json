@@ -807,7 +807,7 @@
     "serch": "Ara",
     "serchFor": "Şunun için ara...",
     "addServer": "YENİ BİR SUNUCU BAĞLANTISI EKLE",
-    "serverAccMang": "Sunucu Erişim Yönetimi"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "KURULAN HİZMETLER",
