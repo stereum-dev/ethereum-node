@@ -807,7 +807,7 @@
     "serch": "Претрага",
     "serchFor": "Тражи за...",
     "addServer": "ДОДАЈ НОВУ ВЕЗУ СЕРВЕРА",
-    "serverAccMang": "Управљање приступом серверу"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "ИНСТАЛИРАНЕ УСЛУГЕ",
