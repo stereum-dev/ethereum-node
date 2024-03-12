@@ -67,7 +67,7 @@
                   ? `${$t('serviceModal.apiUnavailable')}`
                   : `${$t('serviceModal.registerOperator')}`
                 : `${$t('serviceModal.showPerformance', {
-                    opid: operatorData?.id_str,
+                    opid: operatorData?.id,
                     opname: operatorData?.name,
                     network: network,
                   })}`
@@ -451,7 +451,7 @@ export default {
               console.log("SSV: this.operatorData", this.operatorData);
             } else {
               console.log("SSV API reported unknown operator");
-              // this.operatorData = { name: "FakeNameTesting", id: 60, id_str: "60" };
+              // this.operatorData = { name: "FakeNameTesting", id: 60 };
             }
           } catch (e) {
             this.apiUnavailable = true;
