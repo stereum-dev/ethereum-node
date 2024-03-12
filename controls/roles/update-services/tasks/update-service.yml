@@ -18,7 +18,7 @@
 - name: Get latest version for this service
   set_fact:
     new_service_docker_image_tag: "{{ update_data.json[service_configuration.network][service_configuration.service] | default(update_data.json['mainnet'][service_configuration.service]) | last }}"
-  when: service_configuration.autoupdate
+  when: service_configuration.autoupdate and service_configuration.service != 'CustomService'
 
 - name: Build new image tag
   set_fact:
