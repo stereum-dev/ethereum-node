@@ -28,7 +28,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
 
     <div
       class="col-start-2 col-end-10 flex flex-col justify-center items-start ml-2"
-      :class="connectedServer ? 'text-gray-100' : 'text-gray-800'"
+      :class="connectedServer && route.path !== '/login' ? 'text-gray-100' : 'text-gray-800'"
     >
       <p class="leading-6 text-2xs font-semibold">
         {{ getServerNumber }}
