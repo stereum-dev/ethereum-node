@@ -777,6 +777,7 @@
     "pass": "Heslo",
     "keyPath": "Cesta klíče",
     "login": "Přihlásit se",
+    "cancel": "Cancel Login",
     "conecting": "Připojování . . .",
     "newPass": "Nové heslo",
     "EnterNewPass": "Zadejte nové heslo",
