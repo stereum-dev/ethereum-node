@@ -258,6 +258,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         >
           {{ $t("multiServer.login") }}
         </button>
+
         <div
           v-else
           class="w-full h-[50px] bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center text-md"
@@ -447,6 +448,7 @@ const changeLabel = () => {
 };
 
 const internalLogin = async () => {
+  serverStore.connectingProcess = true;
   serverNameError.value = "";
   ipError.value = "";
   usernameError.value = "";
@@ -465,7 +467,9 @@ const internalLogin = async () => {
   }
 
   if (isValid) {
-    emit("serverLogin");
+    setTimeout(() => {
+      emit("serverLogin");
+    }, 3000);
   }
 };
 

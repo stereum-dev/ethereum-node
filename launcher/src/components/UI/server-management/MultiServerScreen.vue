@@ -3,6 +3,28 @@ import ServerHeader from './components/ServerHeader.vue';
   <div
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
+    <div
+      v-if="serverStore.connectingProcess"
+      class="w-full h-full fixed inset-0 bg-black rounded-md opacity-80 z-20 flex justify-center items-center"
+    >
+      <div class="w-full h-full grid grid-cols-24 grid-rows-12 items-center relative z-30">
+        <div
+          class="col-start-9 col-end-18 row-start-2 row-end-10 w-full h-full text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center text-md"
+        >
+          <svg
+            class="animate-spin h-32 w-32 mr-3 border-4 border-gray-600 border-tr-4 border-r-white rounded-full border-t-white z-50"
+            viewBox="0 0 24 24"
+          ></svg>
+        </div>
+        <button
+          class="absolute col-start-9 col-end-18 row-start-10 row-span-full w-full h-[50px] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-md shadow-lg shadow-black active:shadow-none text-md uppercase z-50"
+          type="button"
+          @click="cancelLoginHandler"
+        >
+          {{ $t("multiServer.cancel") }}
+        </button>
+      </div>
+    </div>
     <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
       @server-login="loginHandler"
@@ -11,6 +33,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @file-upload="addExistingKeyHandler"
       @delete-key="confirmDelete"
       @quick-login="loginHandler"
+      @cancel-login="cancelLoginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
     <GenerateKey
@@ -46,6 +69,7 @@ const nodeStore = useNodeStore();
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
+const abortController = new AbortController();
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -89,19 +113,23 @@ onUnmounted(() => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
-  serverStore.connectingProcess = true;
   nodeStore.skeletonLoading = true;
   if (router.currentRoute.value.path === "/login") {
-    await login();
+    await login(abortController.signal);
   } else {
     serverStore.isServerAnimationActive = true;
     await ControlService.logout();
-    await login();
+    await login(abortController.signal);
     setTimeout(() => {
       serverStore.isServerAnimationActive = false;
       nodeStore.skeletonLoading = false;
     }, 5000);
   }
+};
+
+const cancelLoginHandler = () => {
+  serverStore.connectingProcess = false;
+  abortController.abort();
 };
 
 //Server State Management

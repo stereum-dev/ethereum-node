@@ -777,6 +777,7 @@
     "pass": "Password",
     "keyPath": "Key Path",
     "login": "Login",
+    "cancel": "Cancel Login",
     "conecting": "Connecting . . .",
     "newPass": "New Password",
     "EnterNewPass": "Enter New Password",
