@@ -29,6 +29,7 @@ import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorSer
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
+import { CustomService } from "./ethereum-services/CustomService";
 import YAML from "yaml";
 
 const log = require("electron-log");
@@ -155,6 +156,8 @@ export class ServiceManager {
               services.push(ExternalConsensusService.buildByConfiguration(config));
             } else if (config.service == "ExternalExecutionService") {
               services.push(ExternalExecutionService.buildByConfiguration(config));
+            } else if (config.service == "CustomService") {
+              services.push(CustomService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -961,6 +964,9 @@ export class ServiceManager {
           args.source,
           args.gateway ? args.gateway : ""
         );
+      case "CustomService":
+        ports = [];
+        return CustomService.buildByUserInput(args.network, args.installDir + "/custom", args.image, args.entrypoint, args.command, args.ports, args.volumes);
     }
   }
 

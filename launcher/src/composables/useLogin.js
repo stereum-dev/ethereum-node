@@ -72,15 +72,15 @@ export const useServerLogin = () => {
     });
   };
 
-  const login = async () => {
+  const login = async (sig) => {
     const abortController = new AbortController();
     serverStore.connectingAnimActive = true;
 
     try {
       await ControlService.connect({
-        host: serverStore.loginState.ip,
+        host: serverStore.loginState.ip.trim(),
         port: serverStore.loginState.port,
-        user: serverStore.loginState.username,
+        user: serverStore.loginState.username.trim(),
         password: serverStore.loginState.password,
         sshKeyAuth: serverStore.loginState.useAuth,
         keyfileLocation: serverStore.loginState.keyPath,
@@ -88,7 +88,7 @@ export const useServerLogin = () => {
         signal: abortController.signal,
       });
 
-      if (abortController.signal.aborted) {
+      if (sig.aborted) {
         return;
       }
     } catch (err) {
