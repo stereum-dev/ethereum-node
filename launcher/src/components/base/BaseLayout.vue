@@ -43,7 +43,10 @@
     <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
     <StakeGuide v-if="headerStore.stakeGuideActive" />
-    <SwitchAnimation v-if="serverStore.isServerAnimationActive && !serverStore.errorMsgExists" />
+    <SwitchAnimation
+      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
+      @cancel-login="cancelLoginHandler"
+    />
   </div>
 </template>
 <script setup>
@@ -79,6 +82,7 @@ const headerStore = useNodeHeader();
 const footerStore = useFooter();
 const serviceStore = useServices();
 const UpdatePanelCompRef = ref(null);
+const abortController = new AbortController();
 
 onMounted(() => {
   useUpdateCheck();
@@ -152,6 +156,11 @@ const reconnect = async () => {
   await ControlService.reconnect();
   headerStore.reconnecting = false;
   headerStore.refresh = true;
+};
+
+const cancelLoginHandler = () => {
+  abortController.abort();
+  serverStore.isServerAnimationActive = false;
 };
 </script>
 
