@@ -76,14 +76,7 @@ export class AuthenticationService {
   }
 
   async authenticatorVerification(verificationCode) {
-    this.authStream.write(verificationCode + '\n');;
-    let outputString = await this.nodeConnection.sshService.exec(verificationCode);
-    if(outputString.includes("scretch")) {
-      return outputString;
-    }
-    else{
-      return "wrong code";
-    }
+    this.authStream.write(verificationCode + '\n');
   }
 
   async finishAuthSetup(increaseTimeLimit, enableRateLimit){
