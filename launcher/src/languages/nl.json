@@ -777,6 +777,7 @@
     "pass": "Wachtwoord",
     "keyPath": "Sleutelpad",
     "login": "Inloggen",
+    "cancel": "Cancel Login",
     "conecting": "Verbinden . . .",
     "newPass": "Nieuw Wachtwoord",
     "EnterNewPass": "Voer Nieuw Wachtwoord in",
