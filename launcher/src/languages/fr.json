@@ -807,7 +807,7 @@
     "serch": "Recherche",
     "serchFor": "Rechercher...",
     "addServer": "AJOUTER UNE NOUVELLE CONNEXION DE SERVEUR",
-    "serverAccMang": "Gestion de l'accès au serveur"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "SERVICES INSTALLÉS",
