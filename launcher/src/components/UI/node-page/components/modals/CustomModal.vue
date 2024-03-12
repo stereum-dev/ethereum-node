@@ -29,11 +29,12 @@
           <button
             v-if="confirmText !== ''"
             class="w-[8rem] mr-2 px-5 py-2 shadow-sm rounded-full hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-110 active:scale-100 text-gray-200 font-semibold uppercase"
-            :class="
+            :class="[
               btnColor === 'red'
                 ? 'bg-red-500 border border-gray-200 hover:bg-red-600'
-                : 'bg-green-500 border border-green-500 hover:bg-green-600'
-            "
+                : 'bg-green-500 border border-green-500 hover:bg-green-600',
+              isDisabled ? 'opacity-40 pointer-events-none' : '',
+            ]"
             @click="emitConfirmAction"
           >
             {{ confirmText }}
@@ -71,5 +72,6 @@ const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, bg
     bgColor: String,
     btnColor: String,
     iconSize: String,
+    isDisabled: Boolean,
   });
 </script>
