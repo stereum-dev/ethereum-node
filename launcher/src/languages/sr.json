@@ -777,6 +777,7 @@
     "pass": "Лозинка",
     "keyPath": "Путања кључа",
     "login": "Пријави се",
+    "cancel": "Cancel Login",
     "conecting": "Повезивање . . .",
     "newPass": "Нова лозинка",
     "EnterNewPass": "Унесите нову лозинку",
