@@ -72,7 +72,7 @@ export const useServerLogin = () => {
     });
   };
 
-  const login = async () => {
+  const login = async (sig) => {
     const abortController = new AbortController();
     serverStore.connectingAnimActive = true;
 
@@ -88,7 +88,7 @@ export const useServerLogin = () => {
         signal: abortController.signal,
       });
 
-      if (abortController.signal.aborted) {
+      if (sig.aborted) {
         return;
       }
     } catch (err) {
