@@ -6,6 +6,10 @@ import ServerHeader from './components/ServerHeader.vue';
     <!-- <div v-if="serverStore.connectingProcess" class="w-full h-full fixed inset-0 z-20 flex justify-center items-center">
       <SwitchAnimation @cancel-login="cancelLoginHandler" />
     </div> -->
+    <SwitchAnimation
+      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
+      @cancel-login="cancelLoginHandler"
+    />
     <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
       @server-login="loginHandler"
@@ -51,7 +55,7 @@ const nodeStore = useNodeStore();
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
-const abortController = new AbortController();
+const loginAbortController = ref(null);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -95,14 +99,17 @@ onUnmounted(() => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
+  loginAbortController.value = new AbortController();
   serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
   try {
     if (router.currentRoute.value.path === "/login") {
-      await login(abortController.signal);
+      await login(loginAbortController.value.signal);
     } else {
+      serverStore.connectingProcess = true;
+      serverStore.isServerAnimationActive = true;
       await ControlService.logout();
-      await login(abortController.signal);
+      await login(loginAbortController.value.signal);
       setTimeout(() => {
         serverStore.isServerAnimationActive = false;
         serverStore.connectingProcess = false;
@@ -114,15 +121,17 @@ const loginHandler = async () => {
 };
 
 const quickLoginHandler = async () => {
+  loginAbortController.value = new AbortController();
   serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
   try {
     if (router.currentRoute.value.path === "/login") {
-      await login(abortController.signal);
+      await login(loginAbortController.value.signal);
     } else {
       serverStore.isServerAnimationActive = true;
+      serverStore.connectingProcess = true;
       await ControlService.logout();
-      await login(abortController.signal);
+      await login(loginAbortController.value.signal);
       setTimeout(() => {
         serverStore.isServerAnimationActive = false;
         serverStore.connectingProcess = false;
@@ -131,6 +140,15 @@ const quickLoginHandler = async () => {
   } catch (error) {
     console.error("Quick login failed:", error);
   }
+};
+
+const cancelLoginHandler = () => {
+  console.log("Cancel login");
+  if (loginAbortController.value) {
+    loginAbortController.value.abort();
+  }
+  serverStore.isServerAnimationActive = false;
+  serverStore.connectingProcess = false;
 };
 
 //Server State Management

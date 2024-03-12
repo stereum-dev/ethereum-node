@@ -43,10 +43,10 @@
     <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
     <StakeGuide v-if="headerStore.stakeGuideActive" />
-    <SwitchAnimation
+    <!-- <SwitchAnimation
       v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
       @cancel-login="cancelLoginHandler"
-    />
+    /> -->
   </div>
 </template>
 <script setup>
@@ -67,7 +67,6 @@ import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
 import NotifModal from "../UI/base-header/components/modals/NotifModal.vue";
 import TutorialGuide from "../UI/guide-page/TutorialGuide.vue";
 import StakeGuide from "../UI/guide-page/StakeGuide.vue";
-import SwitchAnimation from "../UI/server-management/components/SwitchAnimation.vue";
 import { useUpdateCheck } from "@/composables/version";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useRouter } from "vue-router";
@@ -82,7 +81,6 @@ const headerStore = useNodeHeader();
 const footerStore = useFooter();
 const serviceStore = useServices();
 const UpdatePanelCompRef = ref(null);
-const abortController = new AbortController();
 
 onMounted(() => {
   useUpdateCheck();
@@ -156,11 +154,6 @@ const reconnect = async () => {
   await ControlService.reconnect();
   headerStore.reconnecting = false;
   headerStore.refresh = true;
-};
-
-const cancelLoginHandler = () => {
-  abortController.abort();
-  serverStore.isServerAnimationActive = false;
 };
 </script>
 

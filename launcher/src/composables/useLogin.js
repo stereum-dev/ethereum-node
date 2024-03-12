@@ -111,7 +111,7 @@ export const useServerLogin = () => {
         serverStore.error = "You need to change your password first";
       }
       router.push("/login");
-      location.reload();
+      // location.reload();
     }
   };
 
