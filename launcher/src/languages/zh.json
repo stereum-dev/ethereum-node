@@ -777,6 +777,7 @@
     "pass": "密码",
     "keyPath": "密钥路径",
     "login": "登录",
+    "cancel": "Cancel Login",
     "conecting": "连接中...",
     "newPass": "新密码",
     "EnterNewPass": "输入新密码",
