@@ -777,6 +777,7 @@
     "pass": "パスワード",
     "keyPath": "キーパス",
     "login": "ログイン",
+    "cancel": "Cancel Login",
     "conecting": "接続中...",
     "newPass": "新しいパスワード",
     "EnterNewPass": "新しいパスワードを入力",
