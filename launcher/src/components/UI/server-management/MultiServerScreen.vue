@@ -3,9 +3,6 @@ import ServerHeader from './components/ServerHeader.vue';
   <div
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
-    <!-- <div v-if="serverStore.connectingProcess" class="w-full h-full fixed inset-0 z-20 flex justify-center items-center">
-      <SwitchAnimation @cancel-login="cancelLoginHandler" />
-    </div> -->
     <SwitchAnimation
       v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
       @cancel-login="cancelLoginHandler"
@@ -48,10 +45,9 @@ import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
 import { useServerLogin } from "@/composables/useLogin";
 import { useRouter } from "vue-router";
-import { useNodeStore } from "@/store/theNode";
 
 const serverStore = useServers();
-const nodeStore = useNodeStore();
+
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");

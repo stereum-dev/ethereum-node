@@ -43,10 +43,6 @@
     <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
     <StakeGuide v-if="headerStore.stakeGuideActive" />
-    <!-- <SwitchAnimation
-      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
-      @cancel-login="cancelLoginHandler"
-    /> -->
   </div>
 </template>
 <script setup>
