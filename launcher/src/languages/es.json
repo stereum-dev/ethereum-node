@@ -777,6 +777,7 @@
     "pass": "Contraseña",
     "keyPath": "Ruta de la Llave",
     "login": "Iniciar Sesión",
+    "cancel": "Cancel Login",
     "conecting": "Conectando . . .",
     "newPass": "Nueva Contraseña",
     "EnterNewPass": "Ingrese Nueva Contraseña",
