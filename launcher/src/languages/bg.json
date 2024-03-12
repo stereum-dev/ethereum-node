@@ -807,7 +807,7 @@
     "serch": "Търсене",
     "serchFor": "Търсене...",
     "addServer": "ДОБАВЯНЕ НА НОВА ВРЪЗКА СЪС СЪРВЪР",
-    "serverAccMang": "Управление на достъпа до сървъра"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "ИНСТАЛИРАНИ УСЛУГИ",
