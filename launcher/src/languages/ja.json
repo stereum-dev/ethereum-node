@@ -807,7 +807,7 @@
     "serch": "検索",
     "serchFor": "検索...",
     "addServer": "新しいサーバー接続を追加",
-    "serverAccMang": "サーバーアクセス管理"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "インストールされたサービス",
