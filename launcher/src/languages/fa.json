@@ -777,6 +777,7 @@
     "pass": "رمز عبور",
     "keyPath": "مسیر کلید",
     "login": "ورود",
+    "cancel": "Cancel Login",
     "conecting": "در حال اتصال . . .",
     "newPass": "رمز عبور جدید",
     "EnterNewPass": "رمز عبور جدید را وارد کنید",
