@@ -23,6 +23,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
+    <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeWindow" />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
   </div>
 </template>
@@ -31,6 +32,7 @@ import ServerHeader from './components/ServerHeader.vue';
 import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
+import TwofactorModal from "./components/modals/TwofactorModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
@@ -46,6 +48,7 @@ const nodeStore = useNodeStore();
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
+const isTwoFactorAuthActive = ref(false);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -73,6 +76,7 @@ watchEffect(() => {
       break;
   }
 });
+
 // const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
 
 onMounted(async () => {
@@ -85,6 +89,11 @@ onUnmounted(() => {
 });
 
 //Methods
+
+// authentification handling
+const submitAuthHandler = () => {
+  console.log("submitAuthHandler");
+};
 
 //Server Management Login Handler
 
@@ -162,6 +171,7 @@ const acceptChangePass = async (pass) => {
 
 const closeWindow = () => {
   serverStore.isRemoveModalActive = false;
+  isTwoFactorAuthActive.value = false;
 };
 
 const closeErrorDialog = () => {
