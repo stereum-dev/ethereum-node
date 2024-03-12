@@ -807,7 +807,7 @@
     "serch": "بحث",
     "serchFor": "البحث عن...",
     "addServer": "إضافة اتصال خادم جديد",
-    "serverAccMang": "إدارة وصول الخادم"
+    "serverAccMang": "Server Management"
   },
   "oneClick": {
     "installedService": "الخدمات المثبتة",
