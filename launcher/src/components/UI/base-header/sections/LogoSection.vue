@@ -23,7 +23,7 @@ const serverStore = useServers();
 const footerStore = useFooter();
 const router = useRouter();
 const tooltip = ref(false);
-const serverAccMange = t("serverManagement.serverAccMange");
+const serverAccMange = t("multiServer.serverAccMang");
 
 const logoDisabled = computed(() => {
   if (

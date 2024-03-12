@@ -3,21 +3,12 @@ import ServerHeader from './components/ServerHeader.vue';
   <div
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
-    <div
-      v-if="serverStore.connectingProcess"
-      class="w-full h-full fixed inset-0 bg-black rounded-md opacity-80 z-20 flex justify-center items-center"
-    >
+    <div v-if="serverStore.connectingProcess" class="w-full h-full fixed inset-0 z-20 flex justify-center items-center">
       <div class="w-full h-full grid grid-cols-24 grid-rows-12 items-center relative z-30">
-        <div
-          class="col-start-9 col-end-18 row-start-2 row-end-10 w-full h-full text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center text-md"
-        >
-          <svg
-            class="animate-spin h-32 w-32 mr-3 border-4 border-gray-600 border-tr-4 border-r-white rounded-full border-t-white z-50"
-            viewBox="0 0 24 24"
-          ></svg>
-        </div>
+        <SwitchAnimation />
+
         <button
-          class="absolute col-start-9 col-end-18 row-start-10 row-span-full w-full h-[50px] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-md shadow-lg shadow-black active:shadow-none text-md uppercase z-50"
+          class="absolute col-start-9 col-end-18 row-start-10 row-span-full w-full h-[50px] bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-md shadow-lg shadow-black active:shadow-none text-md uppercase z-50 cursor-pointer"
           type="button"
           @click="cancelLoginHandler"
         >
@@ -32,7 +23,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @change-password="acceptChangePass"
       @file-upload="addExistingKeyHandler"
       @delete-key="confirmDelete"
-      @quick-login="loginHandler"
+      @quick-login="quickLoginHandler"
       @cancel-login="cancelLoginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
@@ -54,7 +45,9 @@ import ServerHeader from './components/ServerHeader.vue';
 import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
+import SwitchAnimation from "./components/SwitchAnimation.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
+
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
@@ -127,9 +120,25 @@ const loginHandler = async () => {
   }
 };
 
+const quickLoginHandler = async () => {
+  serverStore.connectingProcess = true;
+  if (router.currentRoute.value.path === "/login") {
+    await login(abortController.signal);
+  } else {
+    serverStore.isServerAnimationActive = true;
+    await ControlService.logout();
+    await login(abortController.signal);
+    setTimeout(() => {
+      serverStore.isServerAnimationActive = false;
+      serverStore.connectingProcess = false;
+    }, 5000);
+  }
+};
+
 const cancelLoginHandler = () => {
   serverStore.connectingProcess = false;
   abortController.abort();
+  location.reload();
 };
 
 //Server State Management
