@@ -279,6 +279,7 @@ import { computed, onUnmounted, ref, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import { useServerLogin } from "@/composables/useLogin";
 import ControlService from "@/store/ControlService";
+import { useRouter } from "vue-router";
 
 const emit = defineEmits(["serverLogin"]);
 
@@ -296,6 +297,8 @@ const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
 const devices = ref([]);
+
+const router = useRouter();
 
 const getTrashImg = computed(() => {
   if (hovered.value) {
@@ -448,6 +451,7 @@ const changeLabel = () => {
 };
 
 const internalLogin = async () => {
+  serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
   serverNameError.value = "";
   ipError.value = "";
@@ -470,6 +474,9 @@ const internalLogin = async () => {
     setTimeout(() => {
       emit("serverLogin");
     }, 3000);
+  } else {
+    serverStore.isServerAnimationActive = false;
+    router.push("/login");
   }
 };
 
