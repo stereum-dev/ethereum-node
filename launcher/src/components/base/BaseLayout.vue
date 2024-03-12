@@ -27,6 +27,7 @@
     <PrometheusModal v-if="headerStore.showPrometheusWindow" @close-window="closeServiceBrowser" />
     <MevboostModal v-if="headerStore.showMevboostWindow" @close-window="closeServiceBrowser" />
     <ObolModal v-if="headerStore.showObolCharonWindow" @close-window="closeServiceBrowser" />
+    <AuthenticatorModal v-if="headerStore.showAuthenticatorWindow" @close-window="closeServiceBrowser" />
     <UpdatePanel
       v-if="headerStore.displayUpdatePanel"
       ref="UpdatePanelCompRef"
@@ -57,6 +58,7 @@ import SsvModal from "../UI/services-modal/SsvModal.vue";
 import PrometheusModal from "../UI/services-modal/PrometheusModal.vue";
 import MevboostModal from "../UI/services-modal/MevboostModal.vue";
 import ObolModal from "../UI/services-modal/ObolModal.vue";
+import AuthenticatorModal from "../UI/services-modal/AuthenticatorModal.vue";
 import UpdatePanel from "../UI/base-header/components/modals/UpdatePanel.vue";
 import ReconnectModal from "../UI/base-header/components/modals/ReconnectModal.vue";
 import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
