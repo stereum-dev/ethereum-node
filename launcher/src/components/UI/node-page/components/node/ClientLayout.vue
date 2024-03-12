@@ -117,7 +117,7 @@ onUnmounted(() => {
 
 const getPercent = () => {
   const syncResult = useDeepClone(controlStore.syncstatus);
-  if (syncResult.code === 0) {
+  if (syncResult?.code === 0) {
     const flatArray = syncResult.data.flat();
     let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());
 
