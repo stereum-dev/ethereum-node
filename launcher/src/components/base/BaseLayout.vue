@@ -43,7 +43,6 @@
     <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
     <StakeGuide v-if="headerStore.stakeGuideActive" />
-    <SwitchAnimation v-if="serverStore.isServerAnimationActive && !serverStore.errorMsgExists" />
   </div>
 </template>
 <script setup>
@@ -64,7 +63,6 @@ import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
 import NotifModal from "../UI/base-header/components/modals/NotifModal.vue";
 import TutorialGuide from "../UI/guide-page/TutorialGuide.vue";
 import StakeGuide from "../UI/guide-page/StakeGuide.vue";
-import SwitchAnimation from "../UI/server-management/components/SwitchAnimation.vue";
 import { useUpdateCheck } from "@/composables/version";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useRouter } from "vue-router";

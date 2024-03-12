@@ -3,7 +3,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
   <div
     class="w-full h-[55px] min-h-[55px] rounded-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:outline-blue-600"
     :class="
-      connectedServer
+      connectedServer && route.path !== '/login'
         ? 'bg-[#336666] border border-teal-300 '
         : selectedServerBackground
         ? 'bg-blue-300'
@@ -28,7 +28,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
 
     <div
       class="col-start-2 col-end-10 flex flex-col justify-center items-start ml-2"
-      :class="connectedServer ? 'text-gray-100' : 'text-gray-800'"
+      :class="connectedServer && route.path !== '/login' ? 'text-gray-100' : 'text-gray-800'"
     >
       <p class="leading-6 text-2xs font-semibold">
         {{ getServerNumber }}
@@ -38,13 +38,13 @@ import { ref, computed, watch, watchEffect } from 'vue';
       </p>
     </div>
     <img
-      v-if="connectedServer"
+      v-if="connectedServer && route.path !== '/login'"
       class="col-start-10 col-span-1 w-5 self-center justify-self-center"
       src="/img/icon/server-management-icons/check.png"
       alt="Check Icon"
     />
     <div
-      v-if="!connectedServer"
+      v-if="!connectedServer && route.path !== '/login'"
       class="w-7 h-7 p-[2px] col-start-10 col-span-1 justify-self-center self-center rounded-full border-2 border-teal-800 transition-all duration-200 ease-in-out flex justify-center items-center cursor-pointer hover:scale-110 hover:shadow-sm hover:shadow-[#1b1c1c] active:scale-95"
       @click="quickLogin"
     >
