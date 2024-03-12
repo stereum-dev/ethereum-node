@@ -1,7 +1,8 @@
 <template>
   <div class="remove-modal-parent">
     <div class="modal-opacity" @click="closeMe"></div>
-    <div v-if="visible" class="remove-modal-content">
+    <!-- visible -->
+    <div v-if="false" class="remove-modal-content">
       <div class="title-box">
         <img src="/img/icon/edit-node-icons/stop-caution-icon.png" />
       </div>
@@ -63,7 +64,7 @@ export default {
       ],
       nukeData: [],
       loginBtn: true,
-      nukeNode: "url('./img/animation/nuke-node/nuke_node.gif')",
+      nukeNode: "url('./animation/nuke-node/nuke_node.gif')",
       autoScroll: true,
       loadingDump: false,
     };
@@ -77,7 +78,9 @@ export default {
       return this.loadingDump ? "animate-spin" : "";
     },
     loadingIconsClass() {
-      return this.loadingDump ? "/img/icon/loading-icons/loading-circle.png" : "/img/icon/service-log-icons/150-log-export-button.png";
+      return this.loadingDump
+        ? "/img/icon/loading-icons/loading-circle.png"
+        : "/img/icon/service-log-icons/150-log-export-button.png";
     },
   },
   mounted() {
