@@ -777,6 +777,7 @@
     "pass": "Пароль",
     "keyPath": "Путь к ключу",
     "login": "Войти",
+    "cancel": "Cancel Login",
     "conecting": "Подключение . . .",
     "newPass": "Новый пароль",
     "EnterNewPass": "Введите новый пароль",
