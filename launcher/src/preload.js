@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld("promiseIpc", {
 
   // for terminal interaction
   startShell: () => ipcRenderer.invoke("startShell"),
+  executeCommand: (command) => ipcRenderer.invoke("executeCommand", command),
   onTerminalOutput: (callback) => {
     ipcRenderer.on("terminal-output", (_, arg) => callback(arg));
     return () => ipcRenderer.removeListener("terminal-output", callback);

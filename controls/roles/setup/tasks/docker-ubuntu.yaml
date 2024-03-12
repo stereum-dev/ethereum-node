@@ -7,30 +7,21 @@
       - docker-registry
     state: absent
 
-- name: Install curl and gnupg for adding NodeSource PPA
-  apt:
-    name:
-      - curl
-      - gnupg2
-    state: present
-
-- name: Add NodeSource PPA
-  shell: curl -sL https://deb.nodesource.com/setup_21.x | sudo -E bash -
-
 - name: Install required system packages
   apt:
     name:
       - apt-transport-https
       - ca-certificates
+      - curl
       - software-properties-common
       - python3-pip
       - python3-docker
       - virtualenv
       - python3-setuptools
+      - gnupg2
       - pass
       - sysstat
       - python3-jmespath
-      - nodejs
 
 - name: Add Docker GPG apt Key
   apt_key:

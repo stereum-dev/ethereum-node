@@ -1769,49 +1769,4 @@ export class ServiceManager {
     jwtContent = await this.nodeConnection.sshService.exec(`cat ${volume}`);
     return jwtContent.stdout;
   }
-
-  async runWebServer(controlsPath, wsPort) {
-    try {
-      await this.nodeConnection.sshService.exec(`sudo ufw allow ${wsPort}/tcp`);
-      log.info("Web-Server-Port::opened");
-    } catch (error) {
-      console.error("An error occurred while opening Web-server port:", error);
-    }
-    try {
-      await this.nodeConnection.sshService.exec(`sudo node ${controlsPath}/web-server/ws-server.js --port=${wsPort}`);
-      log.info("Web-Server::running");
-    } catch (error) {
-      console.error("An error occurred while running the Web-server:", error);
-    }
-  }
-
-  // checkPort(port) {
-  //   return new Promise((resolve) => {
-  //     this.nodeConnection.sshService.exec(`netstat -tuln | grep :${port}`, (error) => {
-  //       if (error) {
-  //         // If the grep command fails, the port is not in use
-  //         resolve(false);
-  //       } else {
-  //         // If the grep command succeeds, the port is in use
-  //         resolve(true);
-  //       }
-  //     });
-  //   });
-  // }
-
-  // async findFreePort(defaultPort) {
-  //   let port = defaultPort;
-  //   let attempts = 0;
-  //   while (attempts < 1) {
-  //     const isInUse = await this.checkPort(port);
-
-  //     if (!isInUse) {
-  //       console.log("portn in service manager", port);
-  //       return port;
-  //     }
-  //     port++;
-  //     attempts++;
-  //   }
-  //   throw new Error("Could not find a free port");
-  // }
 }

@@ -19,7 +19,7 @@ export class SSHService {
     this.checkPoolPolling = setInterval(async () => {
       await this.checkConnectionPool();
     }, 100);
-    this.conn = null;
+    this.shellConn = null;
     this.shellStream = null;
   }
 
@@ -575,39 +575,52 @@ export class SSHService {
 
   async startShell(connectionInfo, onDataCallback, onErrorCallback) {
     return new Promise((resolve, reject) => {
-      this.conn = new Client();
+      this.shellConn = new Client();
 
-      this.conn.on("ready", () => {
+      this.shellConn.on("ready", () => {
         console.info("Client :: ready");
-        this.conn.shell((err, stream) => {
-          if (err) {
-            onErrorCallback(err);
-            reject(err);
-            return;
+        this.shellConn.shell(
+          {
+            pty: {
+              term: "xterm-256color",
+              cols: process.stdout.columns,
+              rows: process.stdout.rows,
+            },
+          },
+          (err, stream) => {
+            if (err) {
+              onErrorCallback(err);
+              reject(err);
+              return;
+            }
+
+            this.shellStream = stream;
+
+            stream.on("data", (data) => {
+              onDataCallback(data);
+            });
+
+            stream
+              .on("close", () => {
+                console.info("Stream :: close");
+                if (this.shellConn) {
+                  this.shellConn.end();
+                }
+              })
+              .stderr.on("data", onErrorCallback);
+
+            resolve(this);
           }
-
-          this.shellStream = stream;
-          stream
-            .on("close", () => {
-              console.info("Stream :: close");
-              if (this.conn) {
-                this.conn.end();
-              }
-            })
-            .on("data", onDataCallback)
-            .stderr.on("data", onErrorCallback);
-
-          resolve();
-        });
+        );
       });
 
-      this.conn.on("error", (err) => {
+      this.shellConn.on("error", (err) => {
         onErrorCallback(err);
         reject(err);
         return;
       });
 
-      this.conn.connect({
+      this.shellConn.connect({
         host: connectionInfo.host,
         port: parseInt(connectionInfo.port) || 22,
         username: connectionInfo.user || "root",
@@ -618,33 +631,40 @@ export class SSHService {
     });
   }
 
-  async stopShell(wsPort) {
+  async executeCommand(command) {
+    if (this.shellStream) {
+      this.shellStream.write(command);
+    } else {
+      console.error("Shell not started");
+    }
+  }
+
+  async stopShell() {
+    // try {
+    //   await this.exec(`ufw delete allow ${wsPort}/tcp`);
+    //   log.info("Web-Server-Port::closed");
+    // } catch (error) {
+    //   console.error("An error occurred while deleting the UFW rule:", error);
+    // } finally {
     try {
-      await this.exec(`ufw delete allow ${wsPort}/tcp`);
-      log.info("Web-Server-Port::closed");
-    } catch (error) {
-      console.error("An error occurred while deleting the UFW rule:", error);
-    } finally {
-      try {
-        if (this.shellStream) {
-          const shellStreamClosed = new Promise((resolve) => {
-            this.shellStream.on("close", resolve);
-          });
+      if (this.shellStream) {
+        const shellStreamClosed = new Promise((resolve) => {
+          this.shellStream.on("close", resolve);
+        });
 
-          this.shellStream.end();
-          await shellStreamClosed;
+        this.shellStream.end();
+        await shellStreamClosed;
 
-          console.log("shellstream ended");
-          this.shellStream = null;
-        }
-        if (this.conn) {
-          this.conn.end();
-          console.log("connection ended");
-          this.conn = null;
-        }
-      } catch (error) {
-        console.error("An error occurred while stopping the shell:", error);
+        console.log("shellstream ended");
+        this.shellStream = null;
       }
+      if (this.shellConn) {
+        this.shellConn.end();
+        this.shellConn.log("connection ended");
+        this.shellConn = null;
+      }
+    } catch (error) {
+      console.error("An error occurred while stopping the shell:", error);
     }
   }
 }

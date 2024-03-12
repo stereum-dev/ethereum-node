@@ -548,23 +548,13 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("startShell");
   }
 
-  async stopShell(args) {
-    return this.promiseIpc.send("stopShell", args);
+  async stopShell() {
+    return this.promiseIpc.send("stopShell");
   }
 
-  async controlsPath() {
-    return this.promiseIpc.send("controlsPath");
+  async executeCommand(args) {
+    return this.promiseIpc.send("executeCommand", args);
   }
-
-  async runWebServer(args) {
-    console.log("args", args);
-    return await this.promiseIpc.send("runWebServer", args);
-  }
-
-  // async findFreePort(args) {
-  //   console.log("args control----------", args);
-  //   return await this.promiseIpc.send("findFreePort", args);
-  // }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

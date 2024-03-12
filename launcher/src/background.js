@@ -598,28 +598,24 @@ ipcMain.handle("startShell", async (event) => {
   }
 });
 
-ipcMain.handle("stopShell", async (event, args) => {
+ipcMain.handle("executeCommand", (event, command) => {
+  if (nodeConnection.sshService.shellStream) {
+    nodeConnection.sshService.executeCommand(command);
+  } else {
+    console.error("Shell not started");
+  }
+});
+
+ipcMain.handle("stopShell", async () => {
   if (nodeConnection.sshService) {
     try {
-      nodeConnection.sshService.stopShell(args);
+      nodeConnection.sshService.stopShell();
     } catch (error) {
       console.error("Error stopping shell:", error);
       return `Error stopping shell: ${error.message}`;
     }
   }
 });
-
-ipcMain.handle("controlsPath", async () => {
-  return await monitoring.controlsPath();
-});
-
-ipcMain.handle("runWebServer", async (event, args) => {
-  return await serviceManager.runWebServer(args.controlsPath, args.wsPort);
-});
-
-// ipcMain.handle("findFreePort", async (event, args) => {
-//   return await serviceManager.findFreePort(args);
-// });
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);

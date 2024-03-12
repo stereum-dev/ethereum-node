@@ -1,6 +1,0 @@
----
-- name: Create a directory
-  file:
-    path: "{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}/web-server/"
-    state: directory
-#EOF
