@@ -777,6 +777,7 @@
     "pass": "Mật khẩu",
     "keyPath": "Đường dẫn Khóa",
     "login": "Đăng nhập",
+    "cancel": "Cancel Login",
     "conecting": "Đang kết nối . . .",
     "newPass": "Mật khẩu Mới",
     "EnterNewPass": "Nhập Mật khẩu Mới",
