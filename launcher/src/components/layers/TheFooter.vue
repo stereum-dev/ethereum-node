@@ -62,6 +62,7 @@ export default {
   align-items: center;
   position: absolute;
   bottom: 0.5%;
+  z-index: 50;
 }
 .stereum-stateIcon {
   width: 10px;
