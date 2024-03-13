@@ -789,6 +789,10 @@ video {
   top: -5rem;
 }
 
+.-top-4{
+  top: -1rem;
+}
+
 .-top-8{
   top: -2rem;
 }
@@ -969,6 +973,66 @@ video {
   top: 7rem;
 }
 
+.right-6{
+  right: 1.5rem;
+}
+
+.-top-2{
+  top: -0.5rem;
+}
+
+.left-4{
+  left: 1rem;
+}
+
+.left-8{
+  left: 2rem;
+}
+
+.left-9{
+  left: 2.25rem;
+}
+
+.bottom-\[2px\]{
+  bottom: 2px;
+}
+
+.left-10{
+  left: 2.5rem;
+}
+
+.left-40{
+  left: 10rem;
+}
+
+.left-36{
+  left: 9rem;
+}
+
+.bottom-\[4px\]{
+  bottom: 4px;
+}
+
+.left-32{
+  left: 8rem;
+}
+
+.left-\[2\.24rem\]{
+  left: 2.24rem;
+}
+
+.left-\[2\.23rem\]{
+  left: 2.23rem;
+}
+
+.left-\[36px\]{
+  left: 36px;
+}
+
+.left-\[34px\]{
+  left: 34px;
+}
+
 .-z-10{
   z-index: -10;
 }
@@ -999,6 +1063,10 @@ video {
 
 .z-\[2\]{
   z-index: 2;
+}
+
+.-z-30{
+  z-index: -30;
 }
 
 .col-span-1{
@@ -1121,6 +1189,10 @@ video {
   grid-column-start: 9;
 }
 
+.col-start-22{
+  grid-column-start: 22;
+}
+
 .col-end-10{
   grid-column-end: 10;
 }
@@ -1211,6 +1283,10 @@ video {
 
 .col-end-9{
   grid-column-end: 9;
+}
+
+.col-end-22{
+  grid-column-end: 22;
 }
 
 .row-span-1{
@@ -2172,6 +2248,10 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-40{
+  width: 10rem;
 }
 
 .min-w-\[100px\]{
@@ -3238,6 +3318,11 @@ video {
   background-color: rgb(19 19 19 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#131517\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(19 21 23 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#131617\]{
   --tw-bg-opacity: 1;
   background-color: rgb(19 22 23 / var(--tw-bg-opacity));
@@ -3760,6 +3845,41 @@ video {
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#d8d9da\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(216 217 218 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#111111\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 17 17 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#18191a\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(24 25 26 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#1a1c1d\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(26 28 29 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#191d21\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 29 33 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#262728\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(38 39 40 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#161717\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 23 23 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
@@ -4659,6 +4779,11 @@ video {
           filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+.filter-none{
+  -webkit-filter: none;
+          filter: none;
+}
+
 .transition{
   -webkit-transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, -webkit-box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, -webkit-box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
@@ -5326,6 +5451,16 @@ html body {
   background-color: rgb(4 47 46 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-\[\#1b1c1c\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(27 28 28 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#222425\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(34 36 37 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-opacity-10:hover{
   --tw-bg-opacity: 0.1;
 }
@@ -5438,10 +5573,6 @@ html body {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
-.hover\:outline-blue-600:hover{
-  outline-color: #2563eb;
-}
-
 .hover\:brightness-110:hover{
   --tw-brightness: brightness(1.1);
   -webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -5517,6 +5648,11 @@ html body {
 
 .active\:border-none:active{
   border-style: none;
+}
+
+.active\:bg-\[\#1b1c1c\]:active{
+  --tw-bg-opacity: 1;
+  background-color: rgb(27 28 28 / var(--tw-bg-opacity));
 }
 
 .active\:shadow-none:active{
