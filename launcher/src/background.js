@@ -602,12 +602,8 @@ ipcMain.handle("startShell", async (event) => {
   }
 });
 
-ipcMain.handle("executeCommand", (event, command) => {
-  if (nodeConnection.sshService.shellStream) {
-    nodeConnection.sshService.executeCommand(command);
-  } else {
-    console.error("Shell not started");
-  }
+ipcMain.handle("executeCommand", async (event, args) => {
+  return await nodeConnection.sshService.executeCommand(args);
 });
 
 ipcMain.handle("stopShell", async () => {
