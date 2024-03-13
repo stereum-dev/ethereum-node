@@ -116,30 +116,12 @@ const loginHandler = async () => {
   }
 };
 
-const quickLoginHandler = async () => {
-  loginAbortController.value = new AbortController();
-  serverStore.isServerAnimationActive = true;
-  serverStore.connectingProcess = true;
-  try {
-    if (router.currentRoute.value.path === "/login") {
-      await login(loginAbortController.value.signal);
-    } else {
-      serverStore.isServerAnimationActive = true;
-      serverStore.connectingProcess = true;
-      await ControlService.logout();
-      await login(loginAbortController.value.signal);
-      setTimeout(() => {
-        serverStore.isServerAnimationActive = false;
-        serverStore.connectingProcess = false;
-      }, 5000);
-    }
-  } catch (error) {
-    console.error("Quick login failed:", error);
-  }
+const quickLoginHandler = async (server) => {
+  serverHandler(server);
+  loginHandler();
 };
 
 const cancelLoginHandler = () => {
-  console.log("Cancel login");
   if (loginAbortController.value) {
     loginAbortController.value.abort();
   }
