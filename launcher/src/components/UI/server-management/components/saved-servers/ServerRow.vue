@@ -42,7 +42,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
       <img
         v-if="connectedServer && route.path !== '/login'"
         class="col-start-10 col-span-1 w-5 self-center justify-self-center"
-        src="/img/icon/server-management-icons/check.png"
+        src="/img/icon/edit-node-icons/service-connected.png"
         alt="Check Icon"
       />
     </div>

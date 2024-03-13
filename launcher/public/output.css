@@ -5573,6 +5573,10 @@ html body {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.hover\:outline-blue-600:hover{
+  outline-color: #2563eb;
+}
+
 .hover\:brightness-110:hover{
   --tw-brightness: brightness(1.1);
   -webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
