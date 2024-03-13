@@ -21,7 +21,7 @@ import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, onBeforeUnmount, ref } from "vue";
 
 const terminalContainer = ref(null);
 const controlStore = useControlStore();
@@ -31,28 +31,39 @@ let terminal = new Terminal({
   rightClickSelectsWord: true,
 });
 
-terminal.onSelectionChange(() => {
-  const selection = terminal.getSelection();
-  if (selection) {
-    navigator.clipboard.writeText(selection);
-  }
-});
-
 let fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
 
-onBeforeMount(async () => {
+// start stream
+const startShell = async () => {
   try {
     await ControlService.startShell();
   } catch (error) {
     console.error("Error starting shell:", error);
-    return;
   }
-});
+};
 
-onMounted(() => {
+// stop stream
+const stopShell = async () => {
+  try {
+    await ControlService.stopShell();
+  } catch (error) {
+    console.error("Error stopping shell:", error);
+  }
+};
+
+// setup terminal
+const setupTerminal = () => {
   terminal.open(terminalContainer.value);
   terminal.focus();
+
+  terminalContainer.value.addEventListener("contextmenu", async (event) => {
+    event.preventDefault();
+    const clipboardText = await navigator.clipboard.readText();
+    if (clipboardText) {
+      terminal.write(clipboardText);
+    }
+  });
 
   terminal.onData((data) => {
     ControlService.executeCommand(data);
@@ -61,7 +72,34 @@ onMounted(() => {
   window.promiseIpc.onTerminalOutput((data) => {
     terminal.write(data);
   });
+};
+
+// copy selected in clipboard
+terminal.onSelectionChange(() => {
+  const selection = terminal.getSelection();
+  if (selection) {
+    navigator.clipboard.writeText(selection);
+  }
 });
+
+// refresh
+const refreshConnection = async () => {
+  try {
+    await ControlService.stopShell();
+    terminal.dispose();
+    await ControlService.startShell();
+    terminal = new Terminal();
+    setupTerminal();
+  } catch (error) {
+    console.error("Error refreshing connection:", error);
+  }
+};
+
+onBeforeMount(startShell);
+
+onMounted(setupTerminal);
+
+onBeforeUnmount(stopShell);
 </script>
 
 <style scoped>

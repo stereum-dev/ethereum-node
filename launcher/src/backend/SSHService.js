@@ -573,4 +573,81 @@ export class SSHService {
       return false;
     }
   }
+
+  async startShell(connectionInfo, onDataCallback, onErrorCallback) {
+    return new Promise((resolve, reject) => {
+      this.shellConn = new Client();
+
+      this.shellConn.on("ready", () => {
+        console.info("Client :: ready");
+        this.shellConn.shell(
+          {
+            pty: {
+              term: "xterm-256color",
+              cols: process.stdout.columns,
+              rows: process.stdout.rows,
+            },
+          },
+          (err, stream) => {
+            if (err) {
+              onErrorCallback(err);
+              reject(err);
+              return;
+            }
+
+            this.shellStream = stream;
+
+            stream.on("data", (data) => {
+              onDataCallback(data);
+            });
+
+            stream
+              .on("close", () => {
+                console.info("Stream :: close");
+                if (this.shellConn) {
+                  this.shellConn.end();
+                }
+              })
+              .stderr.on("data", onErrorCallback);
+
+            resolve(this);
+          }
+        );
+      });
+
+      this.shellConn.on("error", (err) => {
+        onErrorCallback(err);
+        reject(err);
+        return;
+      });
+
+      this.shellConn.connect({
+        host: connectionInfo.host,
+        port: parseInt(connectionInfo.port) || 22,
+        username: connectionInfo.user || "root",
+        password: connectionInfo.password || undefined,
+        privateKey: connectionInfo.privateKey || undefined,
+        passphrase: connectionInfo.passphrase || undefined,
+      });
+    });
+  }
+
+  async executeCommand(command) {
+    if (this.shellStream) {
+      this.shellStream.write(command);
+    } else {
+      console.error("Shell not started");
+    }
+  }
+
+  async stopShell() {
+    try {
+      if (this.shellConn) {
+        this.shellConn.end();
+        this.shellConn = null;
+      }
+    } catch (error) {
+      console.error("An error occurred while stopping the shell:", error);
+    }
+  }
 }
