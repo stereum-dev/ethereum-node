@@ -628,6 +628,7 @@ export class SSHService {
         password: connectionInfo.password || undefined,
         privateKey: connectionInfo.privateKey || undefined,
         passphrase: connectionInfo.passphrase || undefined,
+        keepaliveInterval: 60000,
       });
     });
   }

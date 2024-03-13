@@ -57,6 +57,7 @@ const setupTerminal = () => {
   terminal.open(terminalContainer.value);
   terminal.focus();
 
+  // paste clipboard context onto terminal
   terminalContainer.value.addEventListener("contextmenu", async (event) => {
     event.preventDefault();
     const clipboardText = await navigator.clipboard.readText();
@@ -65,16 +66,18 @@ const setupTerminal = () => {
     }
   });
 
+  //send input to remote server
   terminal.onData((data) => {
     ControlService.executeCommand(data);
   });
 
+  // get and show output onto terminal
   window.promiseIpc.onTerminalOutput((data) => {
     terminal.write(data);
   });
 };
 
-// copy selected in clipboard
+// copy selected context in clipboard
 terminal.onSelectionChange(() => {
   const selection = terminal.getSelection();
   if (selection) {
