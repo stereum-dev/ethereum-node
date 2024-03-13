@@ -72,15 +72,16 @@ export const useServerLogin = () => {
     });
   };
 
-  const login = async () => {
+  const login = async (sig) => {
     const abortController = new AbortController();
-    serverStore.connectingAnimActive = true;
+    serverStore.isServerAnimationActive = true;
+    serverStore.errorMsgExists = false;
 
     try {
       await ControlService.connect({
-        host: serverStore.loginState.ip,
+        host: serverStore.loginState.ip.trim(),
         port: serverStore.loginState.port,
-        user: serverStore.loginState.username,
+        user: serverStore.loginState.username.trim(),
         password: serverStore.loginState.password,
         sshKeyAuth: serverStore.loginState.useAuth,
         keyfileLocation: serverStore.loginState.keyPath,
@@ -88,27 +89,29 @@ export const useServerLogin = () => {
         signal: abortController.signal,
       });
 
-      if (abortController.signal.aborted) {
+      if (sig.aborted) {
         return;
       }
-    } catch (err) {
-      console.log("err: ", err);
-      serverStore.connectingAnimActive = false;
+
+      const res = await ControlService.checkStereumInstallation();
+      const routePath = res ? "/node" : "/welcome";
+
+      if (serverStore.connectingProcess) {
+        router.push(routePath).then(() => location.reload());
+      } else {
+        router.push(routePath);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      serverStore.isServerAnimationActive = false;
       serverStore.errorMsgExists = true;
-      serverStore.error = "Connection refused, please try again.";
-      if (typeof err === "string" && new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(err.toLowerCase())) {
+      serverStore.error = "Failed to connect. Please try again.";
+      // You can customize the error message based on the error type or handle different error scenarios
+      if (typeof error === "string" && error.toLowerCase().includes("password")) {
         serverStore.error = "You need to change your password first";
       }
-      return;
-    }
-
-    const res = await ControlService.checkStereumInstallation();
-    const routePath = res ? "/node" : "/welcome";
-
-    if (serverStore.connectingProcess) {
-      router.push(routePath).then(() => location.reload());
-    } else {
-      router.push(routePath);
+      router.push("/login");
+      // location.reload();
     }
   };
 

@@ -258,6 +258,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         >
           {{ $t("multiServer.login") }}
         </button>
+
         <div
           v-else
           class="w-full h-[50px] bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center text-md"
@@ -278,6 +279,7 @@ import { computed, onUnmounted, ref, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import { useServerLogin } from "@/composables/useLogin";
 import ControlService from "@/store/ControlService";
+import { useRouter } from "vue-router";
 
 const emit = defineEmits(["serverLogin"]);
 
@@ -295,6 +297,8 @@ const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
 const devices = ref([]);
+
+const router = useRouter();
 
 const getTrashImg = computed(() => {
   if (hovered.value) {
@@ -402,7 +406,7 @@ const validateIPorHostname = () => {
 
   const input = serverStore.loginState.ip;
 
-  if (ipRegex.test(input) || hostnameRegex.test(input)) {
+  if (ipRegex.test(input.trim()) || hostnameRegex.test(input.trim())) {
     ipError.value = "";
     return true;
   } else {
@@ -447,6 +451,8 @@ const changeLabel = () => {
 };
 
 const internalLogin = async () => {
+  serverStore.isServerAnimationActive = true;
+  serverStore.connectingProcess = true;
   serverNameError.value = "";
   ipError.value = "";
   usernameError.value = "";
@@ -465,7 +471,12 @@ const internalLogin = async () => {
   }
 
   if (isValid) {
-    emit("serverLogin");
+    setTimeout(() => {
+      emit("serverLogin");
+    }, 3000);
+  } else {
+    serverStore.isServerAnimationActive = false;
+    router.push("/login");
   }
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "stereum-launcher",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": "stereum.net",
@@ -45,6 +45,7 @@
     "leader-line-new": "^1.1.9",
     "pinia": "^2.0.33",
     "qrcode": "^1.5.1",
+    "semver": "^7.6.0",
     "ssh2": "^1.1.0",
     "swiper": "^11.0.6",
     "vue": "^3.2.33",

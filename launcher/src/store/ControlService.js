@@ -350,8 +350,12 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("restartServer");
   }
 
-  async readSSVKeystoreConfig(args) {
-    return await this.promiseIpc.send("readSSVKeystoreConfig", args);
+  async forwardSSVCommand(args) {
+    return await this.promiseIpc.send("forwardSSVCommand", args);
+  }
+
+  async getSSVTotalConfig(args) {
+    return await this.promiseIpc.send("getSSVTotalConfig", args);
   }
 
   async readSSVNetworkConfig(args) {
@@ -453,6 +457,10 @@ class ControlService extends EventEmitter {
 
   async openDirectoryDialog(args) {
     return await this.promiseIpc.send("openDirectoryDialog", args);
+  }
+
+  async openFilePicker(dialog_options, read_content = false) {
+    return await this.promiseIpc.send("openFilePicker", dialog_options, read_content);
   }
 
   async AddExistingSSHKey(args) {

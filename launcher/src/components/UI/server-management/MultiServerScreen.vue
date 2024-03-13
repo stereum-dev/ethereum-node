@@ -3,6 +3,10 @@ import ServerHeader from './components/ServerHeader.vue';
   <div
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
+    <SwitchAnimation
+      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
+      @cancel-login="cancelLoginHandler"
+    />
     <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
       @server-login="loginHandler"
@@ -10,7 +14,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @change-password="acceptChangePass"
       @file-upload="addExistingKeyHandler"
       @delete-key="confirmDelete"
-      @quick-login="loginHandler"
+      @quick-login="quickLoginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
     <GenerateKey
@@ -31,7 +35,9 @@ import ServerHeader from './components/ServerHeader.vue';
 import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
+import SwitchAnimation from "./components/SwitchAnimation.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
+
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
@@ -39,13 +45,13 @@ import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
 import { useServerLogin } from "@/composables/useLogin";
 import { useRouter } from "vue-router";
-import { useNodeStore } from "@/store/theNode";
 
 const serverStore = useServers();
-const nodeStore = useNodeStore();
+
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
+const loginAbortController = ref(null);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -89,19 +95,56 @@ onUnmounted(() => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
+  loginAbortController.value = new AbortController();
+  serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
-  nodeStore.skeletonLoading = true;
-  if (router.currentRoute.value.path === "/login") {
-    await login();
-  } else {
-    serverStore.isServerAnimationActive = true;
-    await ControlService.logout();
-    await login();
-    setTimeout(() => {
-      serverStore.isServerAnimationActive = false;
-      nodeStore.skeletonLoading = false;
-    }, 5000);
+  try {
+    if (router.currentRoute.value.path === "/login") {
+      await login(loginAbortController.value.signal);
+    } else {
+      serverStore.connectingProcess = true;
+      serverStore.isServerAnimationActive = true;
+      await ControlService.logout();
+      await login(loginAbortController.value.signal);
+      setTimeout(() => {
+        serverStore.isServerAnimationActive = false;
+        serverStore.connectingProcess = false;
+      }, 5000);
+    }
+  } catch (error) {
+    console.error("Login failed:", error);
   }
+};
+
+const quickLoginHandler = async () => {
+  loginAbortController.value = new AbortController();
+  serverStore.isServerAnimationActive = true;
+  serverStore.connectingProcess = true;
+  try {
+    if (router.currentRoute.value.path === "/login") {
+      await login(loginAbortController.value.signal);
+    } else {
+      serverStore.isServerAnimationActive = true;
+      serverStore.connectingProcess = true;
+      await ControlService.logout();
+      await login(loginAbortController.value.signal);
+      setTimeout(() => {
+        serverStore.isServerAnimationActive = false;
+        serverStore.connectingProcess = false;
+      }, 5000);
+    }
+  } catch (error) {
+    console.error("Quick login failed:", error);
+  }
+};
+
+const cancelLoginHandler = () => {
+  console.log("Cancel login");
+  if (loginAbortController.value) {
+    loginAbortController.value.abort();
+  }
+  serverStore.isServerAnimationActive = false;
+  serverStore.connectingProcess = false;
 };
 
 //Server State Management

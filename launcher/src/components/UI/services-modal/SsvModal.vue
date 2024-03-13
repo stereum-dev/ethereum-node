@@ -55,20 +55,28 @@
                 ? `${$t('serviceModal.genPair')}`
                 : !lastStep
                 ? `${$t('serviceModal.confWarning')}`
-                : `${$t('serviceModal.opDash')}`
+                : `${$t('serviceModal.opDash', { network: network })}`
             }`"
             :bottom-line="`${
               !passGenerateEncryptKeyConfirmed
                 ? `${$t('serviceModal.runOp')}`
                 : !lastStep
                 ? `${$t('serviceModal.dnldBackup')}`
-                : `${$t('serviceModal.showPerformance')}`
+                : !operatorData
+                ? apiUnavailable
+                  ? `${$t('serviceModal.apiUnavailable')}`
+                  : `${$t('serviceModal.registerOperator')}`
+                : `${$t('serviceModal.showPerformance', {
+                    opid: operatorData?.id,
+                    opname: operatorData?.name,
+                    network: network,
+                  })}`
             }`"
             :btn-name="`${
               !passGenerateEncryptKeyConfirmed
                 ? `${$t('multiServer.gen')}`
                 : !lastStep
-                ? `${$t('exitMultipleValidator.confirm')}`
+                ? `${$t('serviceModal.confirm')}`
                 : `${$t('serviceModal.openBrowser')}`
             }`"
             @confirmPluginClick="firstConfirmBtnHndlr"
@@ -77,13 +85,13 @@
             v-else-if="!switchEncryptedKeyGenerator || (passGenerateEncryptKeyConfirmed && importEncryptedKey)"
             :btn-bg-color="`#1ba5f8`"
             :import-box-title="
-              importRawOperatorKeyOldMethod
-                ? `${$t('exitMultipleValidator.selPk')}`
-                : `${$t('exitMultipleValidator.selEnc')}`
+              importRawOperatorKeyOldMethod ? `${$t('serviceModal.selPk')}` : `${$t('serviceModal.selEnc')}`
             "
             import-box-placeholder=""
-            try-again="true"
-            :btn-name="`${$t('exitMultipleValidator.sel')}`"
+            :try-again="true"
+            :empty-disabled="false"
+            :btn-name="`${$t('serviceModal.sel')}`"
+            @input="firstRowInputHandler"
             @importBoxHandler="firstImportBoxHandler"
           />
 
@@ -109,7 +117,7 @@
             ]"
             :btn-bg-color="`${!lastStep ? '#1ba5f8' : '#494949'}`"
             :top-line="!lastStep ? secondRowTitle : `${$t('serviceModal.copyKey')}`"
-            :bottom-line="!lastStep ? secondRowExplain : `${$t('serviceModal.skPk')}`"
+            :bottom-line="!lastStep ? secondRowExplain : `${$t('serviceModal.copyKeyDesc')}`"
             :btn-name="!lastStep ? secondRowBtnName : `${$t('serviceModal.copy')}`"
             :img-url="!lastStep ? '' : '/img/icon/service-modals-icons/copy.png'"
             @confirmPluginClick="secondRowBtnHandler"
@@ -119,23 +127,26 @@
             :btn-bg-color="`#1ba5f8`"
             :import-box-title="`${$t('serviceModal.dkKey')}`"
             import-box-placeholder=""
+            :empty-disabled="false"
             :btn-name="`${$t('serviceModal.imp')}`"
-            :class="[importBoxModel && selectedUncryptedKey ? '' : 'disabled']"
+            :class="[importBoxModel ? '' : 'disabled']"
+            @input="secondRowInputHandler"
             @password-box-handler="secondRowBtnHandler"
           />
         </div>
-        <div v-if="!importEncryptedKey" class="browserBox">
+        <div class="browserBox">
           <ConfirmBox
             :class="[
               (!confirmPassToGenerateOpenInBrowser && switchEncryptedKeyGenerator) ||
               (importRawOperatorKeyOldMethod && !importBoxModel) ||
-              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator)
+              (!importEncryptedKey && !passGenerateEncryptKeyConfirmed && switchEncryptedKeyGenerator) ||
+              (importEncryptedKey && !passwordToDecrypt)
                 ? 'disabled'
                 : '',
             ]"
             btn-bg-color="#1ba5f8"
             :top-line="!lastStep ? thirdRowTitle : `${$t('serviceModal.dnldBk')}`"
-            :bottom-line="!lastStep ? thirdRowExplain : `${$t('serviceModal.dlPk')}`"
+            :bottom-line="!lastStep ? thirdRowExplain : `${$t('serviceModal.dlBak')}`"
             :btn-name="!lastStep ? thirdRowBtnName : `${$t('serviceModal.dl')}`"
             @confirmPluginClick="thirdRowBtnHandler"
           />
@@ -147,18 +158,36 @@
   </div>
 </template>
 <script>
-// import FrontpageSsv from "./FrontpageSsv.vue";
-// import RegisterSsv from "./RegisterSsv.vue";
-// import SsvDashboard from "./SsvDashboard.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-// import SecretkeyRegister from "./SecretkeyRegister.vue";
 import axios from "axios";
 import { toRaw } from "vue";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
 import ImportBox from "./plugin/ImportBox.vue";
 import PasswordBox from "./plugin/PasswordBox";
+import { useRestartService } from "@/composables/services";
+const JSZip = require("jszip");
+const saveAs = require("file-saver");
+const semver = require("semver");
+
+const openFilePicker = async (read_content = false) => {
+  try {
+    return await ControlService.openFilePicker(
+      {
+        properties: ["openFile", "multiSelections"],
+        // filters: [
+        //   { name: "ZIP Files", extensions: ["zip"] },
+        //   { name: "Text Files", extensions: ["txt"] },
+        // ],
+      },
+      read_content
+    );
+  } catch (error) {
+    console.error("Error picking files:", error);
+  }
+};
+
 export default {
   components: {
     // FrontpageSsv,
@@ -198,6 +227,18 @@ export default {
       lastStep: false,
       selectedUncryptedKey: "",
       passwordToDecrypt: "",
+      // newly added during wiring
+      network: null,
+      pubkey: null,
+      apiUnavailable: null,
+      ssvTotalConfig: null,
+      ssvServiceConfig: null,
+      ssvNetworkConfig: null,
+      lastKnownPublicKey: null,
+      keystoreExists: null,
+      isModernOperator: null,
+      isDownloading: false,
+      selectedEncryptedKey: "",
     };
   },
 
@@ -248,49 +289,58 @@ export default {
         return "DOWNLOAD BACKUP";
       } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
         return "MIGRATE TO ENCRYPTED KEY?";
-      } else {
+      } else if (this.lastStep) {
         return "COPY PUBLIC OPERATOR KEY";
+      } else {
+        return "IMPORT ENCRYPTED OPERATOR KEY";
       }
     },
     secondRowExplain() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
-        return "Use an existing operator private key to recover your existing node operator's  processes";
+        return "Download a backup of the generated private key and password you used for encryption. Keep this files on a safe location!";
       } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
-        return "Use an existing operator private key to recover your existing node operator's  processes";
+        return "Migrate the given secret key to an more secure encrypted private key during import and recover your existing node operator's processes.";
       } else {
-        return "Import an existing encrypted operator key";
+        return "Import an existing encrypted operator private key";
       }
     },
     secondRowBtnName() {
+      console.log("TODO: secondRowBtnName has wrong val on import keystore page!");
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
         return "DOWNLOAD";
       } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
         return "MIGRATE";
+      } else if (this.importEncryptedKey) {
+        return "SELECT";
       } else {
         return "IMPORT";
       }
     },
     thirdRowTitle() {
-      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
-        return "REGISTER NEW OPERATOR";
+      if (this.importEncryptedKey && !this.lastStep) {
+        return "IMPORT ENCRYPTED PRIVATE KEY AND PASSWORD";
+      } else if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "OPEN OPERATOR DASHBOARD";
       } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
-        return "IMPORT UNENCRYPTED PRIVATE KEY";
+        return "IMPORT AS IS - UNENCRYPTED SECRET KEY";
       } else {
-        return "IMPORT raw (OLD METHOD) Operator Keys";
+        return "IMPORT RAW (OLD METHOD) OPERATOR KEY";
       }
     },
     thirdRowExplain() {
-      if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
-        return "Register your SSV node as a new operator in the browser";
+      if (this.importEncryptedKey && !this.lastStep) {
+        return "Import the given encrypted private key and password to your SSV node";
+      } else if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
+        return "Open the local dahsboard to check your SSV operator status";
       } else if (this.importRawOperatorKeyOldMethod && !this.importEncryptedKey && !this.switchEncryptedKeyGenerator) {
-        return "Use an existing operator private key to recover your existing node operator's  processes";
+        return "Import the given secret key as is (thus unencrypted) to recover your existing node operator's processes";
       } else {
-        return "Use an existing operator private key to recover your existing node operator's  processes";
+        return "Import an existing unencrypted operator secret key";
       }
     },
     thirdRowBtnName() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
-        return "OPEN IN BROWSER";
+        return "CONTINUE";
       } else {
         return "IMPORT";
       }
@@ -313,39 +363,156 @@ export default {
       this.pubkeyModalActive = false;
       this.registerModalActive = true;
     },
+    isMinimumVersion(imageTag, minimumVersion) {
+      const version = semver.clean(imageTag.split(":")[1]);
+      if (!version) {
+        console.error("Invalid image tag:", imageTag);
+        return false;
+      }
+      return semver.gte(version, minimumVersion);
+    },
     getKeys: async function () {
-      let ssv = this.runningServices.find((service) => service.service === "SSVNetworkService");
-      this.ssvService = ssv;
-      let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
-      this.secretkey = ssvConfig.ssv_sk;
-      this.pubkey = ssvConfig.ssv_pk;
+      this.ssvService = this.runningServices.find((service) => service.service === "SSVNetworkService");
+      this.ssvTotalConfig = await ControlService.getSSVTotalConfig(this.ssvService.config.serviceID);
 
-      try {
-        if (!this.pubkey) {
-          let ssvKeystoreConfig = await ControlService.readSSVKeystoreConfig(ssv.config.serviceID);
-          if (ssvKeystoreConfig.privateKeyFileData.publicKey) {
-            this.pubkey = ssvKeystoreConfig.privateKeyFileData.publicKey;
+      // TODO: check image min version
+      // const imageTag = 'bloxstaking/ssv-node:v1.0.1-hotfix';
+      // const minimumVersion = '1.1.0';
+      const imageTag = this.ssvTotalConfig.ssvServiceConfig.image;
+      const minimumVersion = "v1.3.0";
+      if (this.isMinimumVersion(imageTag, minimumVersion)) {
+        console.log(`The image ${imageTag} meets the minimum version requirement of ${minimumVersion}`);
+      } else {
+        console.log(`The image ${imageTag} does not meet the minimum version requirement of ${minimumVersion}`);
+      }
+
+      this.ssvServiceConfig = this.ssvTotalConfig.ssvServiceConfig;
+      this.ssvNetworkConfig = this.ssvTotalConfig.ssvNetworkConfig;
+      this.network = this.ssvServiceConfig.network === "goerli" ? "prater" : this.ssvServiceConfig.network;
+      this.lastKnownPublicKey = this.ssvTotalConfig.lastKnownPublicKeyFileData;
+
+      // By default assume pk/sk are defined in ssvServiceConfig (unencrypted & deprecated by SSV)
+      this.pubkey = this.ssvTotalConfig.deprecatedPublicKey;
+      this.secretkey = this.ssvTotalConfig.deprecatedSecretKey;
+
+      // Unencrypted key specified in ssvNetworkConfig (unencrypted & deprecated by SSV)
+      if (this.ssvTotalConfig.deprecatedOperatorPrivateKey) {
+        console.log("Unencrypted key specified in ssvNetworkConfig");
+        this.secretkey = this.ssvTotalConfig.deprecatedOperatorPrivateKey;
+      }
+
+      // Encrypted keystore/password specified in ssvNetworkConfig (modern)
+      if (this.ssvTotalConfig?.privateKeyFileData?.publicKey) {
+        this.keystoreExists = true;
+        this.secretkey = null; // encrypted via encrypted_private_key.json/password
+        this.pubkey = this.ssvTotalConfig.privateKeyFileData.publicKey;
+        this.isModernOperator = true;
+      }
+
+      // console.log("this.ssvService", this.ssvService);
+      // console.log("this.ssvTotalConfig", this.ssvTotalConfig);
+      // console.log("this.ssvServiceConfig", this.ssvServiceConfig);
+      // console.log("this.ssvNetworkConfig", this.ssvNetworkConfig);
+      // console.log("this.secretkey", this.secretkey);
+      // console.log("this.pubkey", this.pubkey);
+      // console.log("this.lastKnownPublicKey", this.lastKnownPublicKey);
+
+      // Get last backed public key from backend (TODO: add this to backend outtput of ssvTotalConfig)
+      const lastBackedPublicKey = await this.sendSSVCommand({
+        command: "getSSVLastBackedPublicKey",
+        arguments: [this.ssvService.config.serviceID],
+      });
+      // console.log("lastBackedPublicKey", lastBackedPublicKey);
+
+      // If pubkey was already generated/imported at least once by the end-user via "generate/import" buttons
+      if (this.lastKnownPublicKey) {
+        console.log("pubkey already generated");
+
+        if (lastBackedPublicKey != this.pubkey) {
+          console.log("Current Key was never backed up, enforce backup state");
+          // Enforce download backup state if windows is re-opened after key was already generated
+          this.dataLoading = false;
+          this.confirmPassToGenerateCheck = true;
+          this.confirmPassToGenerateCheckForBackup = true;
+          this.firstPassToGenerateCheck = true;
+          this.passGenerateEncryptKeyConfirmed = true;
+          this.switchEncryptedKeyGenerator = true;
+        } else {
+          console.log("Current Key was backed up at least once, get operator data from SSV API");
+
+          // Get operator data from SSV
+          try {
+            let response = await axios.get(
+              `https://api.ssv.network/api/v4/${this.network}/operators/public_key/` + this.pubkey
+            );
+            if (response && response?.data?.data?.publicKey) {
+              this.operatorData = response.data.data;
+              console.log("Operator registered");
+              console.log("SSV: this.operatorData", this.operatorData);
+            } else {
+              console.log("SSV API reported unknown operator");
+              // this.operatorData = { name: "FakeNameTesting", id: 60 };
+            }
+          } catch (e) {
+            this.apiUnavailable = true;
+            console.log("Could not request operator data from SSV-API: ", e);
           }
+
+          this.dataLoading = false;
+          this.lastStep = true;
+          this.passGenerateEncryptKeyConfirmed = true;
+          console.log("SSV: this.lastStep", this.lastStep);
+          console.log("SSV: this.passGenerateEncryptKeyConfirmed", this.passGenerateEncryptKeyConfirmed);
         }
-        let network = ssvConfig.network === "goerli" ? "prater" : ssvConfig.network;
-        let response = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/public_key/` + this.pubkey);
-        if (!response.data.data)
-          response = await axios.get(`https://api.ssv.network/api/v3/${network}/operators/public_key/` + this.pubkey);
-        if (response.data.data) {
-          this.operatorData = response.data.data;
-          this.ssvDashboardActive = true;
-          this.pubkeyModalActive = false;
+      } else {
+        if (this.isModernOperator && this.ssvTotalConfig.ssvSecretsDirFallback) {
+          // D1) if encrypted key exists in fallback directory it must have user generated on an old node (automatically or mahually)
+          console.log(
+            "D1) if encrypted key exists in fallback directory it must have user generated on an old node (automatically or mahually)"
+          );
+          console.log("this.ssvTotalConfig.ssvSecretsDirFallback", this.ssvTotalConfig.ssvSecretsDirFallback);
+          const result = await this.sendSSVCommand(
+            {
+              command: "writeSSVLastKnownPublicKeyFile",
+              arguments: [
+                this.ssvTotalConfig.serviceID,
+                this.pubkey,
+                toRaw(this.ssvTotalConfig.getSsvServiceConfig),
+                toRaw(this.ssvTotalConfig.getSsvNetworkConfig),
+              ],
+            },
+            false,
+            true,
+            true
+          );
+          // ----
+          console.log("D1 :: result", result);
+          // console.log("refreshing keys after writing LKPK");
+          // await this.getKeys();
+          // console.log("set confirmPassToGenerateCheckForBackup to true to enable next step: backup download");
+          // this.confirmPassToGenerateCheckForBackup = true;
+
+          // Optionally also write lastback and send him straight to endscree
+          // Tell the backend that a backup was downloaded at least once
+          await this.sendSSVCommand({
+            command: "setSSVLastBackedPublicKey",
+            arguments: [this.ssvService.config.serviceID, this.pubkey],
+          });
+          // ----
+          await this.getKeys();
+          this.lastStep = true;
           this.dataLoading = false;
         } else {
+          // Key must at least once generated/imported by the user since key encryption exists
+          // This gives the user the option to encrypt also an existing key that is registered.
+          console.log("pubkey never generated/imported since key encryption exists");
+          console.log("this.isModernOperator", this.isModernOperator);
+          console.log("this.ssvTotalConfig.ssvSecretsDirFallback", this.ssvTotalConfig.ssvSecretsDirFallback);
+          console.log("this.lastKnownPublicKey", this.lastKnownPublicKey);
           this.ssvDashboardActive = false;
           this.pubkeyModalActive = true;
           this.dataLoading = false;
         }
-      } catch {
-        console.log("Operator not registered");
-        this.ssvDashboardActive = false;
-        this.pubkeyModalActive = true;
-        this.dataLoading = false;
       }
     },
     registerSsvPubkeyHandler() {
@@ -393,9 +560,27 @@ export default {
       let url = " https://discord.gg/AbYHBfjkDY";
       window.open(url, "_blank");
     },
+    openOperatorPage(operatorID, network) {
+      if (!operatorID) {
+        throw new Error("openOperatorPage -> Operaor ID unknown");
+      }
+      if (!network) {
+        throw new Error("openOperatorPage -> Network unknown");
+      }
+      let url = `https://${network}.explorer.ssv.network/operators/${operatorID}`;
+      window.open(url, "_blank");
+    },
+    openRegisterPage(network) {
+      if (!network) {
+        throw new Error("openRegisterPage -> Network unknown");
+      }
+      //let url = `https://app.ssv.network/join/${network}`;
+      let url = `https://app.ssv.network/join`;
+      window.open(url, "_blank");
+    },
 
     //new ssv start hereeeeeeeeeeee
-    firstConfirmBtnHndlr() {
+    async firstConfirmBtnHndlr() {
       if (
         !this.switchEncryptedKeyGenerator &&
         !this.passGenerateEncryptKeyConfirmed &&
@@ -409,8 +594,63 @@ export default {
         !this.confirmPassToGenerateOpenInBrowser &&
         !this.lastStep
       ) {
-        this.confirmPassToGenerateCheckForBackup = true;
-        console.log("confirmPassToGenerateCheckForBackup", this.confirmPassToGenerateCheckForBackup);
+        console.log("generate/import key finished by the user (migrate/overwrite the key in  backend now)!");
+        try {
+          let result = null;
+          if (this.selectedUncryptedKey) {
+            // B -> B1
+            console.log("B) clicked import old keys");
+            console.log(
+              "B1) clicked migrate: overwrite existing stuff with given stuff and migrate to encrypted keystore"
+            );
+            result = await this.sendSSVCommand(
+              {
+                command: "migrateToSSVEncryptedKeys",
+                arguments: [this.ssvService.config.serviceID, this.confirmPassToGenerate, this.selectedUncryptedKey],
+              },
+              true,
+              true
+            );
+          } else {
+            console.log("A) clicked generate");
+            if (this.keystoreExists) {
+              if (!this.ssvTotalConfig.ssvSecretsDirFallback && !this.lastKnownPublicKey) {
+                console.log(
+                  "A1-FIX) encrypted kestore/password exists on server in '/secrets' dir -> must be ansible generated -> renew now!"
+                );
+                console.log("this.ssvTotalConfig.ssvSecretsDirFallback", this.ssvTotalConfig.ssvSecretsDirFallback);
+                result = await this.sendSSVCommand(
+                  {
+                    command: "createSSVEncryptedKeys",
+                    arguments: [this.ssvTotalConfig.serviceID, this.confirmPassToGenerate],
+                  },
+                  true,
+                  true
+                );
+              } else {
+                console.log("this case must not happen!");
+              }
+            } else if (this.ssvTotalConfig.deprecatedSecretKey) {
+              console.log("A2) unencryted (deprecated) secret key exists on server -> migrate to encrypted keystore");
+              result = await this.sendSSVCommand(
+                {
+                  command: "migrateToSSVEncryptedKeys",
+                  arguments: [this.ssvService.config.serviceID, this.confirmPassToGenerate],
+                },
+                true,
+                true
+              );
+            }
+          }
+          // ----
+          console.log("X1 :: result", result);
+          console.log("refreshing keys after genrate/migrate");
+          await this.getKeys();
+          console.log("set confirmPassToGenerateCheckForBackup to true to enable next step: backup download");
+          this.confirmPassToGenerateCheckForBackup = true;
+        } catch (e) {
+          console.log("Could not generate/import key: ", e);
+        }
       } else if (
         this.switchEncryptedKeyGenerator &&
         this.passGenerateEncryptKeyConfirmed &&
@@ -420,12 +660,42 @@ export default {
         this.lastStep = true;
         console.log("last step", this.lastStep);
       } else if (this.passGenerateEncryptKeyConfirmed && this.lastStep) {
-        console.log("mainnet operator dashboard is in the last step");
+        console.log("operator dashboard is in the last step");
+        if (this.operatorData) {
+          console.log(`open url to existing ssv ${this.network} operator ${this.operatorData.id}`);
+          this.openOperatorPage(this.operatorData.id, this.network);
+        } else {
+          console.log(`open url to register new ssv ${this.network} operator`);
+          this.openRegisterPage(this.network);
+        }
       }
     },
-    firstImportBoxHandler() {
-      this.selectedUncryptedKey = this.importBoxModel;
-      console.log("selectedUncryptedKey", this.selectedUncryptedKey);
+    async firstRowInputHandler() {
+      if (this.importEncryptedKey) {
+        console.log("text typed in first row encrypted kesytore import");
+        this.selectedEncryptedKey = this.importBoxModel;
+      } else {
+        console.log("text typed in first row unencrypted private key import");
+        this.selectedUncryptedKey = this.importBoxModel;
+        console.log("selectedUncryptedKey", this.selectedUncryptedKey);
+      }
+    },
+    async firstImportBoxHandler() {
+      if (this.importEncryptedKey) {
+        console.log("button clicked in first row encrypted kesytore import");
+        let selectedfiles = await openFilePicker(true);
+        console.log("selectedfiles", selectedfiles);
+        if (selectedfiles.length) this.importBoxModel = selectedfiles[0].content;
+        this.selectedEncryptedKey = this.importBoxModel;
+        //console.log("selectedEncryptedKey", this.selectedEncryptedKey);
+      } else {
+        console.log("button clicked in first row unencrypted private key import");
+        let selectedfiles = await openFilePicker(true);
+        console.log("selectedfiles", selectedfiles);
+        if (selectedfiles.length) this.importBoxModel = selectedfiles[0].content;
+        this.selectedUncryptedKey = this.importBoxModel;
+        //console.log("selectedUncryptedKey", this.selectedUncryptedKey);
+      }
     },
     switchToGenerateEncryptedKeyPair() {
       this.switchEncryptedKeyGenerator = true;
@@ -456,54 +726,374 @@ export default {
         console.log("hhhhh");
       }
     },
-    secondRowBtnHandler() {
+    async secondRowInputHandler() {
+      if (this.importEncryptedKey && !this.lastStep) {
+        console.log("text typed in second row password for encrypted kesytore import");
+        this.passwordToDecrypt = this.passwordBoxModel;
+      }
+    },
+    async secondRowBtnHandler() {
       if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator && !this.lastStep) {
-        this.downloadBackup();
-        this.confirmPassToGenerateOpenInBrowser = true;
-        this.lastStep = true;
+        console.log("disable second row and goto open dashboard confirmation third row");
+        this.downloadBackupBttnOnClick();
+        setTimeout(() => {
+          console.log("enabled third row - user can now continue to dashboard");
+          this.confirmPassToGenerateOpenInBrowser = true;
+        }, 1000);
       } else if ((!this.importEncryptedKey && this.switchEncryptedKeyGenerator) || this.lastStep) {
         this.copyHandler();
         console.log("copy public key");
       } else if (this.importEncryptedKey && !this.lastStep) {
+        console.log("button clicked in second row encrypted kesytore import");
+        let selectedfiles = await openFilePicker(true);
+        console.log("selectedfiles", selectedfiles);
+        if (selectedfiles.length) this.passwordBoxModel = selectedfiles[0].content;
         this.passwordToDecrypt = this.passwordBoxModel;
-        this.passwordBoxModel = "";
-        this.importBoxModel = "";
-        this.lastStep = true;
-        this.importEncryptedKey = false;
-        this.passGenerateEncryptKeyConfirmed = true;
-        console.log("go to last step", this.passwordToDecrypt);
+        // console.log("this.passwordToDecrypt", this.passwordToDecrypt);
       } else if (this.importRawOperatorKeyOldMethod) {
+        console.log("button clicked in second row migrate unencrypted (old) imported key");
         this.switchEncryptedKeyGenerator = true;
         this.importRawOperatorKeyOldMethod = false;
         this.selectedUncryptedKey = this.importBoxModel;
         console.log("merge selected key and selected key is", this.selectedUncryptedKey);
       } else {
+        console.log("import encrypted key set to true");
         this.importEncryptedKey = true;
       }
     },
-    downloadBackup() {
-      console.log("download backup");
-    },
-    thirdRowBtnHandler() {
+    async thirdRowBtnHandler() {
       if (this.lastStep) {
-        this.downloadBackup();
+        this.downloadBackupBttnOnClick();
       } else if (!this.importEncryptedKey && this.switchEncryptedKeyGenerator) {
-        console.log("open in browser");
+        console.log("continue to dashboard");
+        this.lastStep = true;
+      } else if (this.importEncryptedKey && !this.lastStep) {
+        console.log("import encrypted operator key and password");
+        console.log("this.importEncryptedKey", this.importEncryptedKey);
+        console.log("this.selectedEncryptedKey", this.selectedEncryptedKey);
+        console.log("this.passwordToDecrypt", this.passwordToDecrypt);
+        if (this.selectedEncryptedKey) {
+          // C -> C1
+          console.log("C) clicked import encrypted keys (keystore)");
+          console.log("C1) overwrite existing stuff with given stuff and remove unencrypted keys (if they exist)");
+          const result = await this.sendSSVCommand(
+            {
+              command: "importSSVEncryptedKeys",
+              arguments: [this.ssvService.config.serviceID, this.selectedEncryptedKey, this.passwordToDecrypt],
+            },
+            true,
+            true
+          );
+          console.log("X2 :: result", result);
+          console.log("refreshing keys after import");
+          await this.getKeys();
+          // move to dashoard (last dialog)
+          console.log("move to dashoard (last dialog)");
+          this.ssvDashboardActive = true;
+          this.pubkeyModalActive = false;
+          this.dataLoading = false;
+          this.lastStep = true;
+          this.passGenerateEncryptKeyConfirmed = true;
+          this.importEncryptedKey = false;
+          console.log("last step", this.lastStep);
+        }
       } else if (!this.lastStep) {
         this.importRawOperatorKeyOldMethod = true;
         console.log("import raw operator key");
+        console.log(this.selectedUncryptedKey);
+        if (this.selectedUncryptedKey) {
+          // B -> B2
+          console.log("B) clicked import old keys");
+          console.log("B2) clicked as-is: overwrite existing stuff with given stuff and keep unencrypted okeys");
+          const result = await this.sendSSVCommand(
+            {
+              command: "importSSVUnencryptedKeys",
+              arguments: [this.ssvService.config.serviceID, this.selectedUncryptedKey],
+            },
+            true,
+            true
+          );
+          console.log("X3 :: result", result);
+          console.log("refreshing keys after import");
+          await this.getKeys();
+          // move to dashoard (last dialog)
+          console.log("move to dashoard (last dialog)");
+          this.ssvDashboardActive = true;
+          this.pubkeyModalActive = false;
+          this.dataLoading = false;
+          this.lastStep = true;
+          this.passGenerateEncryptKeyConfirmed = true;
+          console.log("last step", this.lastStep);
+        }
       }
     },
     copyHandler() {
-      let toCopy = "dummyyy value to test the copy btn";
+      //let toCopy = "dummyyy value to test the copy btn";
+      let toCopy = this.pubkey;
       navigator.clipboard
         .writeText(toCopy)
         .then(() => {
           this.cursorLocation = this.copiedPub;
         })
         .catch(() => {
-          console.log(`can't copy`);
+          console.log(`can't copy public operator key`);
         });
+    },
+    getFilenameFromPath(filePath) {
+      const parts = filePath.split(/[\\/]/);
+      return parts[parts.length - 1];
+    },
+    getCurrentDateTimeString(now = new Date(), human = false) {
+      //const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
+      const humanString = now.toLocaleString("en-US", { timeZoneName: "short" });
+
+      return human ? humanString : `${year}${month}${day}${hours}${minutes}${seconds}`;
+    },
+    ucWord(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    formatReadmeContent(str) {
+      return str
+        .split("\n")
+        .map((line) => line.trim())
+        .join("\n")
+        .trim();
+    },
+    async downloadBackupBttnOnClick() {
+      console.log("download backup");
+      if (this.isModernOperator) {
+        return await this.downloadModernBackup();
+      }
+      return await this.downloadUnencryptedBackup();
+    },
+    async downloadUnencryptedBackup() {
+      if (!this.isDownloading) {
+        try {
+          this.isDownloading = true;
+          const now = new Date();
+
+          // Create array of objects to download
+          const downloadObjects = [];
+          let pkFileName = "public_key.txt";
+          downloadObjects.push({
+            filename: pkFileName,
+            content: this.pubkey,
+          });
+          let skFileName = "secret_key.txt";
+          downloadObjects.push({
+            filename: skFileName,
+            content: this.secretkey,
+          });
+          let backupFileName = "";
+          if (this.operatorData) {
+            console.log("yo");
+            backupFileName =
+              this.getCurrentDateTimeString(now) +
+              `_ssv_unencrypted_operator_${this.operatorData.id}_${this.network}_backup.zip`;
+            downloadObjects.push({
+              filename: "readme.txt",
+              content: this.formatReadmeContent(`
+                This is a backup of your registered SSV Operator keys!
+                -----------------------------------------------------------------
+                Backup Date    : ${this.getCurrentDateTimeString(now, true)}
+                Service-ID     : ${this.ssvService.config.serviceID}
+                Network        : ${this.ucWord(this.network)}
+                Operator Name  : ${this.operatorData.name}
+                Operator ID    : ${this.operatorData.id}
+                Public Key File: ${pkFileName}
+                Secret Key File: ${skFileName}
+                -----------------------------------------------------------------
+                Important!
+                ==========
+                Keep this ZIP and all files included on a safe location!
+                If you loose those files your are not able to restore your SSV Operator.
+                The file "${pkFileName}" holds your SSV Public Key.
+                The file "${skFileName}" holds your SSV Secret Key (also known as SSV Private Key).
+              `),
+            });
+          } else {
+            backupFileName =
+              this.getCurrentDateTimeString() + `_ssv_unencrypted_operator_unregistered_${this.network}_backup.zip`;
+            downloadObjects.push({
+              filename: "readme.txt",
+              content: this.formatReadmeContent(`
+                This is a backup of your unregistered SSV Operator keys!
+                -----------------------------------------------------------------
+                Backup Date    : ${this.getCurrentDateTimeString(now, true)}
+                Service-ID     : ${this.ssvService.config.serviceID}
+                Network        : ${this.ucWord(this.network)}
+                Operator Name  : N/A (Not registered yet)
+                Operator ID    : N/A (Not registered yet)
+                Public Key File: ${pkFileName}
+                Secret Key File: ${skFileName}
+                -----------------------------------------------------------------
+                Important!
+                ==========
+                Keep this ZIP and all files included on a safe location!
+                You have not registered an SSV Operator with this keys yet but if
+                you decide to do so later on and then loose those files your are
+                not able to restore your SSV Operator - thus keep them safe.
+                The file "${pkFileName}" holds your SSV Public Key.
+                The file "${skFileName}" holds your SSV Secret Key (also known as SSV Private Key).
+              `),
+            });
+          }
+
+          // Add all objects from array to zip file and show saveAs dialog to the user
+          const zip = new JSZip();
+          downloadObjects.forEach((item) => {
+            zip.file(item.filename, item.content);
+          });
+          zip.generateAsync({ type: "blob" }).then(function (blob) {
+            saveAs(blob, backupFileName);
+          });
+
+          // Tell the backend that a backup was downloaded at least once
+          await this.sendSSVCommand({
+            command: "setSSVLastBackedPublicKey",
+            arguments: [this.ssvService.config.serviceID, this.pubkey],
+          });
+        } catch (err) {
+          console.log("Failed downloading backup: ", err);
+        } finally {
+          console.log("Successfully downloaded backup");
+          this.isDownloading = false;
+        }
+      }
+    },
+    async downloadModernBackup() {
+      if (!this.isDownloading) {
+        try {
+          this.isDownloading = true;
+          const now = new Date();
+
+          // Create array of objects to download
+          const downloadObjects = [];
+          let pkFileName = "public_key.txt";
+          downloadObjects.push({
+            filename: pkFileName, // "public_key.txt"
+            content: this.pubkey,
+          });
+          let pwdFileName = this.getFilenameFromPath(this.ssvTotalConfig.passwordFilePath);
+          downloadObjects.push({
+            filename: pwdFileName, // "password"
+            content: this.ssvTotalConfig.passwordFileData,
+          });
+          let keyFileName = this.getFilenameFromPath(this.ssvTotalConfig.privateKeyFilePath);
+          downloadObjects.push({
+            filename: keyFileName, // "encrypted_private_key.json"
+            content:
+              typeof this.ssvTotalConfig.privateKeyFileData === "object" &&
+              this.ssvTotalConfig.privateKeyFileData !== null
+                ? JSON.stringify(this.ssvTotalConfig.privateKeyFileData)
+                : this.ssvTotalConfig.privateKeyFileData,
+          });
+          let backupFileName = "";
+          if (this.operatorData) {
+            console.log("yo");
+            backupFileName =
+              this.getCurrentDateTimeString(now) + `_ssv_operator_${this.operatorData.id}_${this.network}_backup.zip`;
+            downloadObjects.push({
+              filename: "readme.txt",
+              content: this.formatReadmeContent(`
+                This is a backup of your registered SSV Operator keys!
+                -----------------------------------------------------------------
+                Backup Date    : ${this.getCurrentDateTimeString(now, true)}
+                Service-ID     : ${this.ssvService.config.serviceID}
+                Network        : ${this.ucWord(this.network)}
+                Operator Name  : ${this.operatorData.name}
+                Operator ID    : ${this.operatorData.id}
+                Public Key File: ${pkFileName}
+                KeyStore File  : ${keyFileName}
+                Password File  : ${pwdFileName}
+                -----------------------------------------------------------------
+                Important!
+                ==========
+                Keep this ZIP and all files included on a safe location!
+                If you loose those files your are not able to restore your SSV Operator.
+                The file "${pkFileName}" holds your SSV Public Key.
+                The file "${keyFileName}" is a KeyStore that holds (inter alia) your encrypted SSV Private Key.
+                The file "${pwdFileName}" holds the password required by the SSV-node to decrypt your SSV Private Key.
+              `),
+            });
+          } else {
+            backupFileName =
+              this.getCurrentDateTimeString(now) + `_ssv_operator_unregistered_${this.network}_backup.zip`;
+            downloadObjects.push({
+              filename: "readme.txt",
+              content: this.formatReadmeContent(`
+                This is a backup of your unregistered SSV Operator keys!
+                -----------------------------------------------------------------
+                Backup Date    : ${this.getCurrentDateTimeString(now, true)}
+                Service-ID     : ${this.ssvService.config.serviceID}
+                Network        : ${this.ucWord(this.network)}
+                Operator Name  : N/A (Not registered yet)
+                Operator ID    : N/A (Not registered yet)
+                Public Key File: ${pkFileName}
+                KeyStore File  : ${keyFileName}
+                Password File  : ${pwdFileName}
+                -----------------------------------------------------------------
+                Important!
+                ==========
+                Keep this ZIP and all files included on a safe location!
+                You have not registered an SSV Operator with this keys yet but if
+                you decide to do so later on and then loose those files your are
+                not able to restore your SSV Operator - thus keep them safe.
+                The file "${pkFileName}" holds your SSV Public Key.
+                The file "${keyFileName}" is a KeyStore that holds (inter alia) your encrypted SSV Private Key.
+                The file "${pwdFileName}" holds the password required by the SSV-node to decrypt your SSV Private Key.
+                -----
+              `),
+            });
+          }
+
+          // Add all objects from array to zip file and show saveAs dialog to the user
+          const zip = new JSZip();
+          downloadObjects.forEach((item) => {
+            zip.file(item.filename, item.content);
+          });
+          zip.generateAsync({ type: "blob" }).then(function (blob) {
+            saveAs(blob, backupFileName);
+          });
+
+          // Tell the backend that a backup was downloaded at least once
+          await this.sendSSVCommand({
+            command: "setSSVLastBackedPublicKey",
+            arguments: [this.ssvService.config.serviceID, this.pubkey],
+          });
+        } catch (err) {
+          console.log("Failed downloading backup: ", err);
+        } finally {
+          console.log("Successfully downloaded backup");
+          this.isDownloading = false;
+        }
+      }
+    },
+    async sendSSVCommand(obj, restart = false, loader = false, keeploader = false, minloaderms = 1000) {
+      if (loader) this.dataLoading = true;
+      try {
+        if (typeof obj !== "object") {
+          throw new Error(`Param 1 requires to be an object with keys "command" and "arguments"`);
+        }
+        let def = { command: "N/A", arguments: [] };
+        obj = { ...def, ...obj };
+        const result = await ControlService.forwardSSVCommand(obj);
+        if (restart && this.ssvService?.state == "running") {
+          await useRestartService(this.ssvService);
+        }
+        return result;
+      } finally {
+        if (loader) {
+          if (minloaderms) await new Promise((r) => setTimeout(r, minloaderms));
+          if (!keeploader) this.dataLoading = false;
+        }
+      }
     },
   },
 };
