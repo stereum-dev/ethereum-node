@@ -124,6 +124,7 @@ export async function useFrontendServices() {
           await ControlService.openTunnels(ports);
         } else if (nodeHeaderStore.refresh) {
           nodeHeaderStore.runningServices = serviceStore.installedServices.filter((service) => service?.headerOption);
+//console.log(serviceStore.installedServices)
         }
       } else {
         if (!nodeHeaderStore.updating) {

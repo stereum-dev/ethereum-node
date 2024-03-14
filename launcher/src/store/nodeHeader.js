@@ -10,6 +10,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       showPrometheusWindow: false,
       showMevboostWindow: false,
       showObolCharonWindow: false,
+      showAuthenticatorWindow: false,
       //Service Modals end
 
       //Menu Modals begin
@@ -36,6 +37,8 @@ export const useNodeHeader = defineStore("nodeHeader", {
       deactivateBtnToWaitForLogs: false,
 
       runningServices: [],
+      varificationCode: "",
+      validVarificationCode: "",
       refresh: true,
       stereumUpdate: {},
       searchingForUpdates: false,
@@ -86,6 +89,9 @@ export const useNodeHeader = defineStore("nodeHeader", {
         case "CharonService":
           this.showObolCharonWindow = true;
           break;
+        case "AuthenticatorService":
+          this.showAuthenticatorWindow = true;
+          break;
         case null:
           this.showGrafanaWindow = false;
           this.showSsvWindow = false;
@@ -93,6 +99,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
           this.showMevboostWindow = false;
           this.showObolCharonWindow = false;
           this.displayUpdatePanel = false;
+          this.showAuthenticatorWindow = false;
           break;
         default:
           console.error(`No modal associated with the service name: ${serviceName}`);

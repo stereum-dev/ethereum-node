@@ -27,6 +27,7 @@ import { NotificationService } from "./ethereum-services/NotificationService";
 import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
+import { AuthenticatorService } from "./ethereum-services/AuthenticatorService";
 import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
 import { CustomService } from "./ethereum-services/CustomService";
@@ -156,9 +157,12 @@ export class ServiceManager {
               services.push(ExternalConsensusService.buildByConfiguration(config));
             } else if (config.service == "ExternalExecutionService") {
               services.push(ExternalExecutionService.buildByConfiguration(config));
+            } else if (config.service == "AuthenticatorService") {
+              services.push(AuthenticatorService.buildByConfiguration(config));
             } else if (config.service == "CustomService") {
               services.push(CustomService.buildByConfiguration(config));
             }
+
           } else {
             log.error("found configuration without service!");
             log.error(config);
@@ -964,6 +968,8 @@ export class ServiceManager {
           args.source,
           args.gateway ? args.gateway : ""
         );
+      case "AuthenticatorService":
+        return AuthenticatorService.buildByUserInput(args.network);
       case "CustomService":
         ports = [];
         return CustomService.buildByUserInput(args.network, args.installDir + "/custom", args.image, args.entrypoint, args.command, args.ports, args.volumes);
