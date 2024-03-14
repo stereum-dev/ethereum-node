@@ -252,7 +252,11 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <button
           v-if="!serverStore.connectingProcess"
           class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
-          :class="serverStore.isIpScannerModalActive ? 'bg-gray-400 opacity-50 pointer-events-none ' : 'bg-gray-200'"
+          :class="
+            serverStore.isIpScannerModalActive || buttonDisabled
+              ? 'bg-gray-400 opacity-50 pointer-events-none '
+              : 'bg-gray-200'
+          "
           type="button"
           @click="internalLogin"
         >
@@ -297,6 +301,7 @@ const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
 const devices = ref([]);
+const buttonDisabled = ref(false);
 
 const router = useRouter();
 
@@ -361,7 +366,9 @@ watchEffect(() => {
 
 watchEffect(() => {
   if (!useSSHKey.value && serverStore.loginState.password === "") {
-    serverStore.isIpScannerModalActive = true;
+    buttonDisabled.value = true;
+  } else {
+    buttonDisabled.value = false;
   }
 });
 
