@@ -47,7 +47,12 @@
           />
         </div>
         <div v-if="setupPage || generationPage || setupConfirmPage" class="checkContainer">
-          <checkContainer :title="`${checkContainer.title}`" @update="handleCheckboxUpdate" />
+          <checkContainer
+            :title="`${checkContainer.title}`"
+            :checked="`${checkContainer.checked}`"
+            :reset="`${resetConfig}`"
+            @update="handleCheckboxUpdate"
+          />
         </div>
         <div v-if="setupConfirmPage" class="checkContainer">
           <checkContainer :title="`${$t('authenticatorModal.rateLimit')}`" @update="handleRateLimit" />
@@ -166,6 +171,7 @@ export default {
       if (this.setupPage || (!this.generationPage && !this.setupConfirmPage)) {
         return {
           title: `${this.$t("authenticatorModal.timedTokens")}`,
+          checked: false,
         };
       } else if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
         return {
@@ -213,6 +219,7 @@ export default {
     handleCheckboxUpdate(value) {
       if (this.setupPage || (!this.generationPage && !this.setupConfirmPage)) {
         this.authKeyTimeBase = value;
+        console.log("Checkbox updated:", value);
         console.log("auth key", this.authKeyTimeBase && !this.setupConfirmPage);
       } else if (!this.setupPage && this.generationPage) {
         this.confirmSuccessAuth = value;
@@ -259,6 +266,10 @@ export default {
         this.confirmSuccessAuth = true;
       } else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
         this.authKeyTimeBase = true;
+        this.resetConfig = "green";
+        setTimeout(() => {
+          this.resetConfig = "";
+        }, 1000);
         this.orginalGenerationTimeLimit = false;
         this.enableRateLimit = true;
       } else if (!this.setupPage && !this.generationPage) {
@@ -268,9 +279,9 @@ export default {
     async importOrRemove() {
       if (this.configurePage) {
         //import code
-      } else{
+      } else {
         await ControlService.removeAuthenticator();
-      } 
+      }
     },
     async mainBtnClick() {
       if (this.setupPage) {
@@ -293,14 +304,14 @@ export default {
         await ControlService.finishAuthSetup(this.orginalGenerationTimeLimit, this.enableRateLimit);
       }
     },
-    loadOutput(data){
+    loadOutput(data) {
       console.log(data);
-      this.QRcode = data[0].trim().replace("www.google","chart.googleapis");
+      this.QRcode = data[0].trim().replace("www.google", "chart.googleapis");
       this.secretKey = data[1].split(": ").pop();
-      if(data.length > 5){
+      if (data.length > 5) {
         this.verificationCode = data[2].split("is ").pop();
         this.validVerificationCode = this.verificationCode;
-        this.verificationOutput = data.slice(3, 9)
+        this.verificationOutput = data.slice(3, 9);
       }
     },
     saveScratch() {
