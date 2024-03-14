@@ -35,7 +35,7 @@
 - name: Check if reboot required
   ansible.builtin.stat:
     path: /run/reboot-required
-    get_md5: no
+    get_checksum: no
   register: reboot_required_file
 - name: Reboot if required
   ansible.builtin.reboot:

@@ -6,7 +6,7 @@
     <div class="inputBox">
       <input v-model="importBoxModel" type="text" :placeholder="importBoxPlaceholder" />
       <div
-        :class="['btn', importBoxModel ? '' : 'disabled']"
+        :class="['btn', importBoxModel ? '' : emptyDisabled ? 'disabled' : '']"
         :style="{ backgroundColor: dynamicBackgroundColor, color: btnNameColor }"
         @mouseover="handleMouseOver"
         @mouseleave="handleMouseLeave"
@@ -34,6 +34,10 @@ export default {
     tryAgain: {
       type: Boolean,
       default: false,
+    },
+    emptyDisabled: {
+      type: Boolean,
+      default: true,
     },
     btnBgColor: {
       type: String,

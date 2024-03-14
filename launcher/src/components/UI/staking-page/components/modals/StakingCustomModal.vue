@@ -29,7 +29,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
             @click="exportAction"
           >
             <img class="h-4" src="/img/icon/staking-page-icons/export.png" alt="Export Icon" />
-            <span class="text-sm text-gray-200 font-semibold">{{ $("stakingPage.expMsg") }}</span>
+            <span class="text-sm text-gray-200 font-semibold">{{ $t("stakingPage.expMsg") }}</span>
           </button>
           <button
             v-if="!props.isProcessing && props.confirmText"

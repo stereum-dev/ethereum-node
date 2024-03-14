@@ -78,6 +78,17 @@
         @confirm-modify="confirmModifyingService"
       />
       <!-- End Modify Services Modal -->
+      <!-- Start Add configs for Custom Service -->
+
+      <AddCustom
+        v-if="clientToInstall?.configPanel"
+        :client="clientToInstall"
+        @close-window="cancelInstallation"
+        @confirm-create="addServiceHandler"
+      />
+
+      <!-- End Add configs for Custom Service -->
+
       <!-- Start Add New Service Modal -->
       <AddModal
         v-if="clientToInstall?.addPanel"
@@ -109,6 +120,7 @@ import NetworkModal from "./components/modals/NetworkModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
+import AddCustom from "./components/modals/custom-service/AddCustom.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
@@ -331,6 +343,7 @@ const changeMevboostConnection = () => {
     return;
   }
 };
+
 const confirmConnection = (item) => {
   isConfirmLoading.value = true;
   setTimeout(() => {
@@ -375,6 +388,7 @@ const removeChangeHandler = (item) => {
   }
   manageStore.isLineHidden = false;
 };
+
 // Add service with double click
 
 const addServices = (service) => {
@@ -426,6 +440,11 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
+  if (item.client.service === "CustomService" && !item.customConfigReady) {
+    manageStore.customConfig.installDir = item.installDir;
+    clientToInstall.value.configPanel = true;
+    return;
+  }
   let dataObject = {
     network: manageStore.configNetwork.network,
     installDir: item.installDir || "/opt/stereum",
@@ -433,6 +452,12 @@ const addServiceHandler = (item) => {
     consensusClients: item.consensusClients,
     relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
     checkpointURL: item.checkPointSyncUrl || false,
+    //CustomService Attributes
+    image: item.image,
+    entrypoint: item.entrypoint,
+    command: item.command,
+    ports: item.ports,
+    volumes: item.volumes,
   };
 
   if (item.client.service === "ExternalExecutionService") {
@@ -457,8 +482,18 @@ const addServiceHandler = (item) => {
 const cancelInstallation = (item) => {
   clientToInstall.value = null;
   isAddModalOpen.value = false;
+  if (item?.service === "CustomService") {
+    manageStore.customConfig = {
+      image: "",
+      entrypoint: "",
+      command: "",
+      ports: [],
+      paths: [],
+    };
+    item.configPanel = false;
+  }
 
-  const event = manageStore.newConfiguration.find((e) => e.id === item.id);
+  const event = manageStore.newConfiguration.find((e) => e.id === item?.id);
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
   manageStore.isLineHidden = false;

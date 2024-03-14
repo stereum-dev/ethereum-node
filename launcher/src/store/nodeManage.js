@@ -2,6 +2,16 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      //  Beginning Custom Service
+      customConfig: {
+        image: "",
+        entrypoint: "",
+        command: "",
+        paths: [],
+        ports: [],
+      },
+
+      //End Custom Service
       externalConsensusSelectedService: "",
       reloadEditBody: false,
       isLineHidden: false,

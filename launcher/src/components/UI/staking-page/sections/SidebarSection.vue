@@ -58,7 +58,7 @@ const hoveredIndex = ref(null);
 
 const installedValidators = computed(() => {
   return serviceStore.installedServices
-    .filter((s) => s.category === "validator")
+    .filter((s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service))
     .map((service) => ({ ...service, selected: false }))
     .sort((a, b) => a.name.localeCompare(b.name));
 });

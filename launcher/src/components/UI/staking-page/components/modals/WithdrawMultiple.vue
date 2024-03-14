@@ -23,7 +23,7 @@
         >
           <div v-if="getStatus?.success" class="w-full h-full flex justify-center items-center overflow-hidden">
             <span class="text-md text-teal-700 font-semibold text-center">
-              {{ getStatus.success }} {{ $("stakingPage.vldExited") }}</span
+              {{ getStatus.success }} {{ $t("stakingPage.vldExited") }}</span
             >
           </div>
           <div v-if="getStatus?.failure" class="w-full h-full flex justify-center items-center overflow-hidden">
@@ -133,13 +133,15 @@ const getNumberOfKeys = () => {
   let successCount = 0;
   let failureCount = 0;
 
-  displayResponse.value.forEach((item) => {
-    if (item.code === "200") {
-      successCount++;
-    } else {
-      failureCount++;
-    }
-  });
+  if(Array.isArray(displayResponse.value)) {
+    displayResponse.value.forEach((item) => {
+      if (item.code === "200") {
+        successCount++;
+      } else {
+        failureCount++;
+      }
+    });
+  }
 
   // Combine the counts with the original displayResponse
   const combinedResponse = [...useDeepClone(displayResponse.value), { success: successCount, failure: failureCount }];

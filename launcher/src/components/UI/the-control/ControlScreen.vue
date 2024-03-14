@@ -75,21 +75,7 @@
                   left-distance="left-[100px]"
                   bg-opacity="opacity-25"
                   @hide-modal="hideExpertMode(item)"
-                  @prunning-warning="runGethPrunningWarning"
-                  @resync-warning="runResyncWarning"
                 />
-                <prunning-modal
-                  v-if="gethPrunningWarningModal"
-                  :item="item"
-                  @cancel-warning="hidePrunningWarningsModal"
-                  @confirm-btn="confirmRunningGethPrunning(option)"
-                ></prunning-modal>
-                <resync-modal
-                  v-if="resyncWarningModal"
-                  :item="item"
-                  @cancel-warning="hideResyncWarningsModal"
-                  @confirm-btn="confirmRunningResync"
-                ></resync-modal>
               </div>
             </div>
             <div class="arrow-down" @click="scrollDown">
@@ -114,8 +100,6 @@ import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
 
-// import PrunningModal from "../the-node/PrunningModal.vue";
-// import ResyncModal from "../the-node/ResyncModal.vue";
 import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -130,10 +114,6 @@ export default {
   },
   data() {
     return {
-      powerBtnRed: false,
-      gethPrunningWarningModal: false,
-      resyncWarningModal: false,
-      isPluginLogPageActive: false,
       isExpertWindowOpen: false,
       expertModeClient: null,
       pending: this.$t("controlPage.pending"),
@@ -193,55 +173,6 @@ export default {
     expertModeHandlerAlert(validator) {
       this.expertModeClient = validator;
       this.isExpertWindowOpen = true;
-    },
-    // Check if service is Geth
-    runGethPrunningWarning(option) {
-      if (option.changeValue && option.displayWarningModal) {
-        this.gethPrunningWarningModal = true;
-      } else if (!option.changeValue || !option.displayWarningModal) {
-        this.gethPrunningWarningModal = false;
-      }
-    },
-    //Double check & run Resync modal
-    runResyncWarning(option) {
-      if (option.changeValue && option.displayResyncModal) {
-        this.resyncWarningModal = true;
-      } else if (!option.changeValue || !option.displayWarningModal) {
-        this.resyncWarningModal = false;
-      }
-    },
-    // Prunning Functions
-    hidePrunningWarningsModal(el) {
-      this.gethPrunningWarningModal = false;
-      el.expertOptions
-        .filter((item) => {
-          return item.title === "Prunning";
-        })
-        .map((item) => {
-          if (item.changeValue) {
-            item.changeValue = false;
-          }
-        });
-    },
-    confirmRunningGethPrunning() {
-      this.gethPrunningWarningModal = false;
-    },
-
-    // Resync Functions
-    hideResyncWarningsModal(el) {
-      this.resyncWarningModal = false;
-      el.expertOptions
-        .filter((item) => {
-          return item.title === "Resync";
-        })
-        .map((item) => {
-          if (item.changeValue) {
-            item.changeValue = false;
-          }
-        });
-    },
-    confirmRunningResync() {
-      this.resyncWarningModal = false;
     },
     stateHandler(item) {
       useStateHandler(item);

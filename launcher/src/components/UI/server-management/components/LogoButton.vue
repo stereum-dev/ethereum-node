@@ -16,7 +16,7 @@ import { computed, ref } from 'vue'; import { useFooter } from '@/store/theFoote
     <div
       v-if="isHovered && route.path !== '/login' && !serverStore.isServerAccessManagementActive"
       role="tooltip"
-      class="absolute top-20 left-12 w-56 h-9 rounded bg-[#1d1f20] px-3 py-2 text-center text-sm font-semibold text-white outline-none flex justify-center items-center"
+      class="absolute top-16 left-12 w-56 h-9 rounded bg-[#eaecee] px-3 py-2 text-center text-sm font-semibold text-black outline-none flex justify-center items-center"
     >
       <span>{{ $t("multiServer.serverAccMang") }}</span>
     </div>

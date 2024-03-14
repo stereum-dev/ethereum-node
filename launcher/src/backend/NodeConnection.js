@@ -449,66 +449,735 @@ export class NodeConnection {
     return serviceYAML.stdout;
   }
 
-  async readSSVKeystoreConfig(serviceID) {
+  // <-------- NEW SSVMODAL START --------->
+
+  async forwardSSVCommand(args) {
     try {
-      const service = await this.readServiceConfiguration(serviceID);
-      let configPath = ServiceVolume.buildByConfig(
-        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
-      ).destinationPath;
-      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+      if (typeof this[args.command] === "function") {
+        return await this[args.command].apply(this, args.arguments);
+      } else {
+        throw new Error(`Method ${args.command} does not exist`);
+      }
+    } catch (err) {
+      log.error("Can't forward SSV command ", err);
+      throw new Error("Can't forward SSV command: " + err);
+    }
+  }
 
-      let ssvNetworkConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
-      if (SSHService.checkExecError(ssvNetworkConfig)) {
-        throw new Error(
-          "Failed reading SSV network config to get keystore keystore from service " +
-            serviceID +
-            ": " +
-            SSHService.extractExecError(ssvNetworkConfig)
+  async getSSVLastBackedPublicKeyFilePath(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const getSSVNetworkConfig = getSsvNetworkCfg
+        ? getSsvNetworkCfg
+        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const ssvNetworkConfigDir = getSSVNetworkConfig.ssvNetworkConfigDir;
+      return ssvNetworkConfigDir + "/last_backed_public_key";
+    } catch (err) {
+      log.error("Can't get SSV last backed public key file path from service " + serviceID, err);
+      throw new Error("Can't get SSV last backed public key file path from service " + serviceID + ": " + err);
+    }
+  }
+
+  async setSSVLastBackedPublicKey(
+    serviceID,
+    strPublicKey,
+    return_details = false,
+    getSsvServiceCfg = null,
+    getSsvNetworkCfg = null
+  ) {
+    try {
+      const lastBackedPublicKeyFilePath = await this.getSSVLastBackedPublicKeyFilePath(
+        serviceID,
+        getSsvServiceCfg,
+        getSsvNetworkCfg
+      );
+      const lastBackedPublicKeyFileData = strPublicKey.trim();
+      const result = await this.sshService.exec(
+        `echo -n "${lastBackedPublicKeyFileData}" > "${lastBackedPublicKeyFilePath}"`
+      );
+      if (SSHService.checkExecError(result, true)) {
+        throw new Error(SSHService.extractExecError(result));
+      }
+      if (!return_details) return lastBackedPublicKeyFileData;
+      return {
+        lastBackedPublicKeyFilePath: lastBackedPublicKeyFilePath,
+        lastBackedPublicKeyFileData: lastBackedPublicKeyFileData,
+      };
+    } catch (err) {
+      log.error("Can't write SSV last backed public key for service " + serviceID, err);
+      throw new Error("Can't write SSV last backed public key for for service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVLastBackedPublicKey(serviceID, return_details = false, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const lastBackedPublicKeyFilePath = await this.getSSVLastBackedPublicKeyFilePath(
+        serviceID,
+        getSsvServiceCfg,
+        getSsvNetworkCfg
+      );
+      let lastBackedPublicKeyFileContent = "";
+      if (lastBackedPublicKeyFilePath) {
+        let lastBackedPublicKeyFileRequest = await this.sshService.exec(
+          `if [ -f "${lastBackedPublicKeyFilePath}" ]; then cat "${lastBackedPublicKeyFilePath}"; else echo ""; fi`
+        );
+        if (SSHService.checkExecError(lastBackedPublicKeyFileRequest, true)) {
+          throw new Error(lastBackedPublicKeyFileRequest.stderr);
+        } else {
+          lastBackedPublicKeyFileContent = lastBackedPublicKeyFileRequest.stdout;
+        }
+      }
+      if (!return_details) return lastBackedPublicKeyFileContent.trim();
+      return {
+        lastBackedPublicKeyFilePath: lastBackedPublicKeyFilePath,
+        lastBackedPublicKeyFileData: lastBackedPublicKeyFileContent.trim(),
+      };
+    } catch (err) {
+      log.error("Can't read SSV last backed public key from service " + serviceID, err);
+      throw new Error("Can't read SSV last backed public key from service " + serviceID + ": " + err);
+    }
+  }
+
+  async importSSVEncryptedKeys(serviceID, encrypted_ssv_private_key, password) {
+    try {
+      const totalConfig = await this.getSSVTotalConfig(serviceID);
+      const user = totalConfig.ssvServiceConfig.user;
+      const service_config_dir = totalConfig.ssvServiceConfigDir;
+      const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
+      const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_file = network_config_dir + "/config.yaml";
+      const secrets_dir = totalConfig.ssvSecretsDir;
+      const keystore_file = secrets_dir + "/encrypted_private_key.json";
+      const password_file = secrets_dir + "/password";
+      const keystore_file_cfg = "/" + secrets_dir.split("/").pop() + "/encrypted_private_key.json";
+      const password_file_cfg = "/" + secrets_dir.split("/").pop() + "/password";
+      const private_key = encrypted_ssv_private_key;
+
+      // Check encrypted SSV private_key (keystore) and get public key
+      if (!private_key) {
+        throw new Error("Given encrypted SSV private_key (keystore) is invalid");
+      }
+      let private_key_data;
+      try {
+        private_key_data = JSON.parse(private_key);
+      } catch (e) {
+        throw new Error("Given encrypted SSV private_key (keystore) is invalid (not JSON format)");
+      }
+      if (!private_key_data?.publicKey) {
+        throw new Error("Given encrypted SSV private_key (keystore) is invalid (no public key available)");
+      }
+      const newPubKey = private_key_data.publicKey;
+
+      // Add password_file and keystore_file to secrets dir
+      const escapedPassword = StringUtils.escapeStringForShell(password);
+      const escapedPrivateKey = StringUtils.escapeStringForShell(private_key);
+      const keystore_password_write = await this.sshService.exec(`
+        mkdir -p ${secrets_dir} &&
+        echo ${escapedPassword} > ${password_file} &&
+        chown ${user}:${user} ${password_file} &&
+        chmod 0600 ${password_file} &&
+        echo ${escapedPrivateKey} > ${keystore_file} &&
+        chown ${user}:${user} ${keystore_file} &&
+        chmod 0600 ${keystore_file}
+      `);
+      if (SSHService.checkExecError(keystore_password_write, true)) {
+        throw new Error(SSHService.extractExecError(keystore_password_write));
+      }
+
+      // Write network config
+      const network_config_read = await this.sshService.exec(`cat ${network_config_file}`);
+      if (SSHService.checkExecError(network_config_read)) {
+        throw new Error(SSHService.extractExecError(network_config_read));
+      }
+      let network_config_content = network_config_read.stdout;
+      let replacementString = `KeyStore:\n  PrivateKeyFile: ${keystore_file_cfg}\n  PasswordFile: ${password_file_cfg}`;
+      network_config_content = network_config_content.replace(/^\s*(PrivateKeyFile|PasswordFile).*/gm, "");
+      network_config_content = network_config_content.replace(/^(KeyStore|OperatorPrivateKey).*/gm, replacementString);
+      const escapedNetworkConfigFile = StringUtils.escapeStringForShell(network_config_content.trim());
+      const network_config_write = await this.sshService.exec(`
+        mkdir -p ${network_config_dir} &&
+        echo ${escapedNetworkConfigFile} > ${network_config_file} &&
+        chown ${user}:${user} ${network_config_file} &&
+        chmod 0644 ${network_config_file}
+      `);
+      if (SSHService.checkExecError(network_config_write, true)) {
+        throw new Error(SSHService.extractExecError(network_config_write));
+      }
+
+      // Remove sk/pk from service config (if exists)
+      if (totalConfig.ssvServiceConfig?.ssv_pk || totalConfig.ssvServiceConfig?.ssv_sk) {
+        const service_config_read = await this.sshService.exec(`cat ${service_config_file}`);
+        if (SSHService.checkExecError(service_config_read)) {
+          throw new Error(SSHService.extractExecError(service_config_read));
+        }
+        const escapedServiceConfigFile = StringUtils.escapeStringForShell(
+          service_config_read.stdout
+            .replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "")
+            .trim()
+        );
+        const service_config_write = await this.sshService.exec(`
+          mkdir -p ${service_config_dir} &&
+          echo ${escapedServiceConfigFile} > ${service_config_file} &&
+          chown ${user}:${user} ${service_config_file} &&
+          chmod 0644 ${service_config_file}
+        `);
+        if (SSHService.checkExecError(service_config_write, true)) {
+          throw new Error(SSHService.extractExecError(service_config_write));
+        }
+      }
+
+      // Set last backed public key
+      await this.setSSVLastBackedPublicKey(totalConfig.serviceID, newPubKey);
+
+      // Write last known public key file
+      return await this.writeSSVLastKnownPublicKeyFile(
+        totalConfig.serviceID,
+        newPubKey,
+        totalConfig.getSsvServiceConfig,
+        totalConfig.getSsvNetworkConfig
+      );
+    } catch (err) {
+      log.error("Can't import encrypted SSV keys for service " + serviceID, err);
+      throw new Error("Can't import encrypted SSV keys for service " + serviceID + ": " + err);
+    }
+  }
+
+  async importSSVUnencryptedKeys(serviceID, unencrypted_secret_key) {
+    try {
+      const totalConfig = await this.getSSVTotalConfig(serviceID);
+      const user = totalConfig.ssvServiceConfig.user;
+      const service_config_dir = totalConfig.ssvServiceConfigDir;
+      const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
+      const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_file = network_config_dir + "/config.yaml";
+      const secrets_dir = totalConfig.ssvSecretsDir;
+      const keystore_file = secrets_dir + "/encrypted_private_key.json";
+      const password_file = secrets_dir + "/password";
+      const private_key = unencrypted_secret_key;
+
+      // Check (unencrypted) SSV secret key (private_key)
+      if (!private_key) {
+        throw new Error("Given unencrypted SSV secret key (private key) is invalid");
+      }
+      if (!StringUtils.isBase64(private_key)) {
+        throw new Error("Given unencrypted SSV secret key (private key) is invalid (not base 64 encoded)");
+      }
+      if (!StringUtils.isValidRsaPrivateKey(StringUtils.base64decode(private_key))) {
+        throw new Error("Given unencrypted SSV secret key is no valid RSA private key");
+      }
+
+      // Get new public key from secret key (private_key)
+      const newPubKey = StringUtils.getSSVPublicKeyFromSecretKey(private_key);
+
+      // Remove password file and keystore_file from secrets dir
+
+      const clean_secrets_dir = await this.sshService.exec(`
+        rm -f "${password_file}" &>/dev/null ;
+        rm -f "${keystore_file}" &>/dev/null
+      `);
+      if (SSHService.checkExecError(clean_secrets_dir, true)) {
+        throw new Error(SSHService.extractExecError(clean_secrets_dir));
+      }
+
+      // Write network config
+      const network_config_read = await this.sshService.exec(`cat ${network_config_file}`);
+      if (SSHService.checkExecError(network_config_read)) {
+        throw new Error(SSHService.extractExecError(network_config_read));
+      }
+      let network_config_content = network_config_read.stdout;
+      let replacementString = `OperatorPrivateKey: ${unencrypted_secret_key}`;
+      network_config_content = network_config_content.replace(/^(KeyStore|OperatorPrivateKey).*/gm, replacementString);
+      network_config_content = network_config_content.replace(/^\s*(PrivateKeyFile|PasswordFile).*/gm, "");
+      const escapedNetworkConfigFile = StringUtils.escapeStringForShell(network_config_content.trim());
+      const network_config_write = await this.sshService.exec(`
+        mkdir -p ${network_config_dir} &&
+        echo ${escapedNetworkConfigFile} > ${network_config_file} &&
+        chown ${user}:${user} ${network_config_file} &&
+        chmod 0644 ${network_config_file}
+      `);
+      if (SSHService.checkExecError(network_config_write, true)) {
+        throw new Error(SSHService.extractExecError(network_config_write));
+      }
+
+      // Remove sk/pk from service config (if exists) and add new sk/pk to service config
+      const service_config_read = await this.sshService.exec(`cat ${service_config_file}`);
+      if (SSHService.checkExecError(service_config_read)) {
+        throw new Error(SSHService.extractExecError(service_config_read));
+      }
+      let service_config_content = service_config_read.stdout;
+      if (totalConfig.ssvServiceConfig?.ssv_pk || totalConfig.ssvServiceConfig?.ssv_sk) {
+        service_config_content = service_config_content.replace(
+          /^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm,
+          ""
         );
       }
-      let ssvNetworkConfigParsed = YAML.parse(ssvNetworkConfig.stdout);
-
-      const regex = /^(\.\/|)data\//; // string starts with "./data/" or "data/"
-      let keyStorePasswordFile = ssvNetworkConfigParsed.KeyStore.PasswordFile;
-      if (regex.test(keyStorePasswordFile)) {
-        keyStorePasswordFile = configPath + "/" + keyStorePasswordFile.replace(regex, "");
+      service_config_content = service_config_content.trim();
+      service_config_content += `\n\n`;
+      service_config_content += `# BEGIN ANSIBLE MANAGED BLOCK\n`;
+      service_config_content += `ssv_pk: "${newPubKey}"\n`;
+      service_config_content += `ssv_sk: "${private_key}"\n`;
+      service_config_content += `# END ANSIBLE MANAGED BLOCK\n`;
+      const escapedServiceConfigFile = StringUtils.escapeStringForShell(service_config_content.trim());
+      const service_config_write = await this.sshService.exec(`
+        mkdir -p ${service_config_dir} &&
+        echo ${escapedServiceConfigFile} > ${service_config_file} &&
+        chown ${user}:${user} ${service_config_file} &&
+        chmod 0644 ${service_config_file}
+      `);
+      if (SSHService.checkExecError(service_config_write, true)) {
+        throw new Error(SSHService.extractExecError(service_config_write));
       }
-      let keyStorePrivateKeyFile = ssvNetworkConfigParsed.KeyStore.PrivateKeyFile;
-      if (regex.test(keyStorePrivateKeyFile)) {
-        keyStorePrivateKeyFile = configPath + "/" + keyStorePrivateKeyFile.replace(regex, "");
-      }
 
-      let keyStorePasswordFileRequest = await this.sshService.exec(`cat "${keyStorePasswordFile}"`);
-      if (SSHService.checkExecError(keyStorePasswordFileRequest) || keyStorePasswordFileRequest.rc) {
-        log.error(
-          "Can't read SSV keystore password file content from service " + serviceID,
-          keyStorePasswordFileRequest.stderr
-        );
+      // Set last backed public key
+      await this.setSSVLastBackedPublicKey(totalConfig.serviceID, newPubKey);
+
+      // Write last known public key file
+      return await this.writeSSVLastKnownPublicKeyFile(
+        totalConfig.serviceID,
+        newPubKey,
+        totalConfig.getSsvServiceConfig,
+        totalConfig.getSsvNetworkConfig
+      );
+    } catch (err) {
+      log.error("Can't import unencrypted SSV keys for service " + serviceID, err);
+      throw new Error("Can't import unencrypted SSV keys for service " + serviceID + ": " + err);
+    }
+  }
+
+  async migrateToSSVEncryptedKeys(serviceID, password, unencrypted_secret_key = null) {
+    try {
+      const totalConfig = await this.getSSVTotalConfig(serviceID);
+      const docker_image = totalConfig.ssvServiceConfig.image;
+      const user = totalConfig.ssvServiceConfig.user;
+      const service_config_dir = totalConfig.ssvServiceConfigDir;
+      const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
+      const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_file = network_config_dir + "/config.yaml";
+      const secrets_dir = totalConfig.ssvSecretsDir;
+      const keystore_file = secrets_dir + "/encrypted_private_key.json";
+      const password_file = secrets_dir + "/password";
+      const private_key = unencrypted_secret_key ? unencrypted_secret_key : totalConfig.deprecatedSecretKey;
+      const private_key_file = secrets_dir + "/private-key";
+      const keystore_file_cfg = "/" + secrets_dir.split("/").pop() + "/encrypted_private_key.json";
+      const password_file_cfg = "/" + secrets_dir.split("/").pop() + "/password";
+
+      // Check (unencrypted) SSV secret key (private_key)
+      if (!private_key) {
         throw new Error(
-          "Can't read SSV keystore password file content from service " +
-            serviceID +
-            ": " +
+          "Unencrypted SSV secret key (private key) is invalid (neither given as argument nor found on the server)"
+        );
+      }
+      if (!StringUtils.isBase64(private_key)) {
+        throw new Error("Unencrypted SSV secret key (private key) is invalid (not base 64 encoded)");
+      }
+      if (!StringUtils.isValidRsaPrivateKey(StringUtils.base64decode(private_key))) {
+        throw new Error("Unencrypted SSV secret key is no valid RSA private key");
+      }
+
+      // Create secrets dir, password file and private_key_file
+      const escapedPassword = StringUtils.escapeStringForShell(password);
+      const escapedPrivateKey = StringUtils.escapeStringForShell(private_key);
+      const password_write = await this.sshService.exec(`
+        mkdir -p ${secrets_dir} &&
+        chown ${user}:${user} ${secrets_dir} &&
+        chmod 0755 ${secrets_dir} &&
+        echo ${escapedPassword} > ${password_file} &&
+        chown ${user}:${user} ${password_file} && 
+        chmod 0600 ${password_file} &&
+        echo ${escapedPrivateKey} > ${private_key_file} &&
+        chown ${user}:${user} ${private_key_file} && 
+        chmod 0600 ${private_key_file}
+      `);
+      if (SSHService.checkExecError(password_write, true)) {
+        throw new Error(SSHService.extractExecError(password_write));
+      }
+
+      // Create keystore from unencrypted secret key
+      // Without "-it" https://stackoverflow.com/a/43099210
+      const keystore_write = await this.sshService.exec(`
+        docker run --name ssv-node-key-generation -v '${password_file}':/password -v '${private_key_file}':/private-key '${docker_image}' /go/bin/ssvnode generate-operator-keys --password-file=/password  --operator-key-file=/private-key &&
+        docker cp ssv-node-key-generation:/encrypted_private_key.json '${keystore_file}' &&
+        docker rm ssv-node-key-generation &&
+        rm '${private_key_file}' &&
+        chown ${user}:${user} ${keystore_file} && 
+        chmod 0600 ${keystore_file}
+      `);
+      if (SSHService.checkExecError(keystore_write)) {
+        throw new Error(SSHService.extractExecError(keystore_write));
+      }
+
+      // Get new public key from keystore
+      const keystore_read = await this.sshService.exec(`cat ${keystore_file}`);
+      if (SSHService.checkExecError(keystore_read)) {
+        throw new Error(SSHService.extractExecError(keystore_read));
+      }
+      const keystore_content = keystore_read.stdout;
+      const keystore_data = JSON.parse(keystore_content);
+      const newPubKey = keystore_data.publicKey;
+
+      // Write network config
+      const network_config_read = await this.sshService.exec(`cat ${network_config_file}`);
+      if (SSHService.checkExecError(network_config_read)) {
+        throw new Error(SSHService.extractExecError(network_config_read));
+      }
+      const network_config_content = network_config_read.stdout;
+      let replacementString = `KeyStore:\n  PrivateKeyFile: ${keystore_file_cfg}\n  PasswordFile: ${password_file_cfg}`;
+      const escapedNetworkConfigFile = StringUtils.escapeStringForShell(
+        network_config_content.replace(/^OperatorPrivateKey.*/gm, replacementString).trim()
+      );
+      const network_config_write = await this.sshService.exec(`
+        mkdir -p ${network_config_dir} &&
+        echo ${escapedNetworkConfigFile} > ${network_config_file} &&
+        chown ${user}:${user} ${network_config_file} &&
+        chmod 0644 ${network_config_file}
+      `);
+      if (SSHService.checkExecError(network_config_write, true)) {
+        throw new Error(SSHService.extractExecError(network_config_write));
+      }
+
+      // Remove sk/pk from service config (if exists)
+      if (totalConfig.ssvServiceConfig?.ssv_pk || totalConfig.ssvServiceConfig?.ssv_sk) {
+        const service_config_read = await this.sshService.exec(`cat ${service_config_file}`);
+        if (SSHService.checkExecError(service_config_read)) {
+          throw new Error(SSHService.extractExecError(service_config_read));
+        }
+        const service_config_content = service_config_read.stdout;
+        const escapedServiceConfigFile = StringUtils.escapeStringForShell(
+          service_config_content
+            .replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "")
+            .trim()
+        );
+        const service_config_write = await this.sshService.exec(
+          `mkdir -p ${service_config_dir} && echo ${escapedServiceConfigFile} > ${service_config_file} &&
+           chown ${user}:${user} ${service_config_file} &&
+           chmod 0644 ${service_config_file}`
+        );
+        if (SSHService.checkExecError(service_config_write, true)) {
+          throw new Error(SSHService.extractExecError(service_config_write));
+        }
+      }
+
+      // Write last known public key file
+      return await this.writeSSVLastKnownPublicKeyFile(
+        totalConfig.serviceID,
+        newPubKey,
+        totalConfig.getSsvServiceConfig,
+        totalConfig.getSsvNetworkConfig
+      );
+    } catch (err) {
+      log.error("Can't migrate unencrypted keys to SSV encrypted keys for service " + serviceID, err);
+      throw new Error("Can't migrate unencrypted keys to SSV encrypted keys for service " + serviceID + ": " + err);
+    }
+  }
+
+  async createSSVEncryptedKeys(serviceID, password) {
+    try {
+      const totalConfig = await this.getSSVTotalConfig(serviceID);
+      const docker_image = totalConfig.ssvServiceConfig.image;
+      const user = totalConfig.ssvServiceConfig.user;
+      const service_config_dir = totalConfig.ssvServiceConfigDir;
+      const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
+      const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_file = network_config_dir + "/config.yaml";
+      const secrets_dir = totalConfig.ssvSecretsDir;
+      const keystore_file = secrets_dir + "/encrypted_private_key.json";
+      const password_file = secrets_dir + "/password";
+      const keystore_file_cfg = "/" + secrets_dir.split("/").pop() + "/encrypted_private_key.json";
+      const password_file_cfg = "/" + secrets_dir.split("/").pop() + "/password";
+
+      // Create secrets dir and password file
+      const escapedPassword = StringUtils.escapeStringForShell(password);
+      const password_write = await this.sshService.exec(`
+        mkdir -p ${secrets_dir} &&
+        chown ${user}:${user} ${secrets_dir} &&
+        chmod 0755 ${secrets_dir} &&
+        echo ${escapedPassword} > ${password_file} &&
+        chown ${user}:${user} ${password_file} && 
+        chmod 0600 ${password_file}
+      `);
+      if (SSHService.checkExecError(password_write, true)) {
+        throw new Error(SSHService.extractExecError(password_write));
+      }
+
+      // Create keystore
+      const keystore_write = await this.sshService.exec(`
+        docker run -d --name=ssv_node_op_key -v '${password_file}':/password -it '${docker_image}' /go/bin/ssvnode generate-operator-keys --password-file=/password &&
+        docker logs ssv_node_op_key --follow &&
+        docker cp ssv_node_op_key:/encrypted_private_key.json ${keystore_file} &&
+        docker stop ssv_node_op_key &&
+        docker rm ssv_node_op_key
+      `);
+      if (SSHService.checkExecError(keystore_write)) {
+        throw new Error(SSHService.extractExecError(keystore_write));
+      }
+
+      // Get new public key from keystore
+      const keystore_read = await this.sshService.exec(`cat ${keystore_file}`);
+      if (SSHService.checkExecError(keystore_read)) {
+        throw new Error(SSHService.extractExecError(keystore_read));
+      }
+      const keystore_content = keystore_read.stdout;
+      const keystore_data = JSON.parse(keystore_content);
+      const newPubKey = keystore_data.publicKey;
+
+      // Write network config
+      const network_config_read = await this.sshService.exec(`cat ${network_config_file}`);
+      if (SSHService.checkExecError(network_config_read)) {
+        throw new Error(SSHService.extractExecError(network_config_read));
+      }
+      let network_config_content = network_config_read.stdout;
+      let replacementString = `KeyStore:\n  PrivateKeyFile: ${keystore_file_cfg}\n  PasswordFile: ${password_file_cfg}`;
+      network_config_content = network_config_content.replace(/^\s*(PrivateKeyFile|PasswordFile).*/gm, "");
+      network_config_content = network_config_content.replace(/^(KeyStore|OperatorPrivateKey).*/gm, replacementString);
+      const escapedNetworkConfigFile = StringUtils.escapeStringForShell(network_config_content.trim());
+      const network_config_write = await this.sshService.exec(`
+        mkdir -p ${network_config_dir} &&
+        echo ${escapedNetworkConfigFile} > ${network_config_file} &&
+        chown ${user}:${user} ${network_config_file} &&
+        chmod 0644 ${network_config_file}
+      `);
+      if (SSHService.checkExecError(network_config_write, true)) {
+        throw new Error(SSHService.extractExecError(network_config_write));
+      }
+
+      // Remove sk/pk from service config (if exists)
+      if (totalConfig.ssvServiceConfig?.ssv_pk || totalConfig.ssvServiceConfig?.ssv_sk) {
+        const service_config_read = await this.sshService.exec(`cat ${service_config_file}`);
+        if (SSHService.checkExecError(service_config_read)) {
+          throw new Error(SSHService.extractExecError(service_config_read));
+        }
+        const escapedServiceConfigFile = StringUtils.escapeStringForShell(
+          service_config_read.stdout
+            .replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "")
+            .trim()
+        );
+        const service_config_write = await this.sshService.exec(`
+          mkdir -p ${service_config_dir} &&
+          echo ${escapedServiceConfigFile} > ${service_config_file} &&
+          chown ${user}:${user} ${service_config_file} &&
+          chmod 0644 ${service_config_file}
+        `);
+        if (SSHService.checkExecError(service_config_write, true)) {
+          throw new Error(SSHService.extractExecError(service_config_write));
+        }
+      }
+
+      // Write last known public key file
+      return await this.writeSSVLastKnownPublicKeyFile(
+        serviceID,
+        newPubKey,
+        totalConfig.getSsvServiceConfig,
+        totalConfig.getSsvNetworkConfig
+      );
+    } catch (err) {
+      log.error("Can't create SSV encrypted keys for service " + serviceID, err);
+      throw new Error("Can't create SSV encrypted keys for service " + serviceID + ": " + err);
+    }
+  }
+
+  // <-------- NEW SSVMODAL CONFIG STUFF --------->
+
+  async getSSVServiceConfig(serviceID) {
+    try {
+      const ssvServiceConfig = await this.readServiceConfiguration(serviceID);
+      return {
+        ssvServiceConfig: ssvServiceConfig,
+        ssvServiceConfigDir: "/etc/stereum/services",
+      };
+    } catch (err) {
+      log.error("Can't read SSV service config from service " + serviceID, err);
+      throw new Error("Can't read SSV service config from service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVNetworkConfig(serviceID, getSsvServiceCfg = null) {
+    try {
+      const getSsvServiceConfig = getSsvServiceCfg ? getSsvServiceCfg : await this.getSSVServiceConfig(serviceID);
+      const ssvServiceConfig = getSsvServiceConfig.ssvServiceConfig;
+      const ssvServiceConfigDir = getSsvServiceConfig.ssvServiceConfigDir;
+      let ssvNetworkConfigDir = ".";
+      try {
+        ssvNetworkConfigDir = ServiceVolume.buildByConfig(
+          ssvServiceConfig.volumes.find((v) => v.split(":").slice(-1) == "/data")
+        ).destinationPath;
+        if (ssvNetworkConfigDir.endsWith("/")) ssvNetworkConfigDir = ssvNetworkConfigDir.slice(0, -1, ""); //if path ends with '/' remove it
+      } catch (e) {}
+      const ssvNetworkConfigContent = await this.sshService.exec(`cat ${ssvNetworkConfigDir}/config.yaml`);
+      if (SSHService.checkExecError(ssvNetworkConfigContent)) {
+        throw new Error(SSHService.extractExecError(ssvNetworkConfigContent));
+      }
+      const ssvNetworkConfig = YAML.parse(ssvNetworkConfigContent.stdout);
+      return {
+        getSsvServiceConfig: getSsvServiceConfig,
+        ssvServiceConfig: ssvServiceConfig,
+        ssvNetworkConfig: ssvNetworkConfig,
+        ssvServiceConfigDir: ssvServiceConfigDir,
+        ssvNetworkConfigDir: ssvNetworkConfigDir,
+      };
+    } catch (err) {
+      log.error("Can't read SSV network config from service " + serviceID, err);
+      throw new Error("Can't read SSV network config from service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVLastKnownPublicKeyFilePath(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const getSSVNetworkConfig = getSsvNetworkCfg
+        ? getSsvNetworkCfg
+        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const ssvNetworkConfigDir = getSSVNetworkConfig.ssvNetworkConfigDir;
+      return ssvNetworkConfigDir + "/last_known_public_key";
+    } catch (err) {
+      log.error("Can't get SSV last known public key file path from service " + serviceID, err);
+      throw new Error("Can't get SSV last known public key file path from service " + serviceID + ": " + err);
+    }
+  }
+
+  async writeSSVLastKnownPublicKeyFile(serviceID, strPublicKey, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const lastKnownPublicKeyFilePath = await this.getSSVLastKnownPublicKeyFilePath(
+        serviceID,
+        getSsvServiceCfg,
+        getSsvNetworkCfg
+      );
+      const lastKnownPublicKeyFileData = strPublicKey.trim();
+      const result = await this.sshService.exec(
+        `echo -n "${lastKnownPublicKeyFileData}" > "${lastKnownPublicKeyFilePath}"`
+      );
+      if (SSHService.checkExecError(result, true)) {
+        throw new Error(SSHService.extractExecError(result));
+      }
+      return {
+        lastKnownPublicKeyFilePath: lastKnownPublicKeyFilePath,
+        lastKnownPublicKeyFileData: lastKnownPublicKeyFileData,
+      };
+    } catch (err) {
+      log.error("Can't write SSV last known public key file for service " + serviceID, err);
+      throw new Error("Can't write SSV last known public key for for service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVLastKnownPublicKeyFile(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const lastKnownPublicKeyFilePath = await this.getSSVLastKnownPublicKeyFilePath(
+        serviceID,
+        getSsvServiceCfg,
+        getSsvNetworkCfg
+      );
+      let lastKnownPublicKeyFileContent = "";
+      if (lastKnownPublicKeyFilePath) {
+        let lastKnownPublicKeyFileRequest = await this.sshService.exec(
+          `if [ -f "${lastKnownPublicKeyFilePath}" ]; then cat "${lastKnownPublicKeyFilePath}"; else echo ""; fi`
+        );
+        if (SSHService.checkExecError(lastKnownPublicKeyFileRequest, true)) {
+          throw new Error(lastKnownPublicKeyFileRequest.stderr);
+        } else {
+          lastKnownPublicKeyFileContent = lastKnownPublicKeyFileRequest.stdout;
+        }
+      }
+      return {
+        lastKnownPublicKeyFilePath: lastKnownPublicKeyFilePath,
+        lastKnownPublicKeyFileData: lastKnownPublicKeyFileContent.trim(),
+      };
+    } catch (err) {
+      log.error("Can't read SSV last known public key file from service " + serviceID, err);
+      throw new Error("Can't read SSV last known public key file from service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVTotalConfig(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const getSsvNetworkConfig = getSsvNetworkCfg
+        ? getSsvNetworkCfg
+        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const getSsvServiceConfig = getSsvNetworkConfig.getSsvServiceConfig;
+      const ssvServiceConfig = getSsvNetworkConfig.ssvServiceConfig;
+      const ssvServiceConfigDir = getSsvNetworkConfig.ssvServiceConfigDir;
+      const ssvNetworkConfig = getSsvNetworkConfig.ssvNetworkConfig;
+      const ssvNetworkConfigDir = getSsvNetworkConfig.ssvNetworkConfigDir;
+
+      let ssvSecretsDir = ssvNetworkConfigDir; // ssvSecretsDir does not exist on old configurations, fallback to ssvNetworkConfigDir in such case
+      let ssvSecretsDirFallback = true; // expect fallback by default
+      try {
+        ssvSecretsDir = ServiceVolume.buildByConfig(
+          ssvServiceConfig.volumes.find((v) => v.split(":").slice(-1) == "/secrets")
+        ).destinationPath;
+        if (ssvSecretsDir.endsWith("/")) ssvSecretsDir = ssvSecretsDir.slice(0, -1, ""); //if path ends with '/' remove it
+        ssvSecretsDirFallback = false; // secrets dir exists (created by ansible; no fallback)
+      } catch (e) {}
+
+      const regexC = /^(?:\.\/|\/?)data\//; // string starts with "./data/" or "data/" or "/data/"
+      const regexS = /^(?:\.\/|\/?)secrets\//; // string starts with "./secrets/" or "secrets/" or "/secrets/"
+      let keyStorePasswordFile = ssvNetworkConfig?.KeyStore?.PasswordFile ? ssvNetworkConfig.KeyStore.PasswordFile : "";
+      if (regexC.test(keyStorePasswordFile)) {
+        keyStorePasswordFile = ssvNetworkConfigDir + "/" + keyStorePasswordFile.replace(regexC, ""); // password file found in config dir
+      } else if (regexS.test(keyStorePasswordFile)) {
+        keyStorePasswordFile = ssvSecretsDir + "/" + keyStorePasswordFile.replace(regexS, ""); // password file found in secrets dir
+      }
+      let keyStorePrivateKeyFile = ssvNetworkConfig?.KeyStore?.PrivateKeyFile
+        ? ssvNetworkConfig.KeyStore.PrivateKeyFile
+        : "";
+      if (regexC.test(keyStorePrivateKeyFile)) {
+        keyStorePrivateKeyFile = ssvNetworkConfigDir + "/" + keyStorePrivateKeyFile.replace(regexC, ""); // keystore file found in config dir
+      } else if (regexS.test(keyStorePrivateKeyFile)) {
+        keyStorePrivateKeyFile = ssvSecretsDir + "/" + keyStorePrivateKeyFile.replace(regexS, ""); // keystore file found in secrets dir
+      }
+
+      let keyStorePasswordFileContent = "";
+      if (keyStorePasswordFile) {
+        let keyStorePasswordFileRequest = await this.sshService.exec(
+          `if [ -f "${keyStorePasswordFile}" ]; then cat "${keyStorePasswordFile}"; else echo ""; fi`
+        );
+        if (SSHService.checkExecError(keyStorePasswordFileRequest, true)) {
+          log.error(
+            "Can't read SSV keystore password file content from service " + serviceID,
             keyStorePasswordFileRequest.stderr
-        );
+          );
+        } else {
+          keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
+        }
       }
-      let keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
 
-      let keyStorePrivateKeyFileRequest = await this.sshService.exec(`cat "${keyStorePrivateKeyFile}"`);
-      if (SSHService.checkExecError(keyStorePrivateKeyFileRequest) || keyStorePrivateKeyFileRequest.rc) {
-        log.error(
-          "Can't read SSV keystore private key file content from service " + serviceID,
-          keyStorePrivateKeyFileRequest.stderr
+      let keyStorePrivateKeyFileContent = "";
+      if (keyStorePrivateKeyFile) {
+        let keyStorePrivateKeyFileRequest = await this.sshService.exec(
+          `if [ -f "${keyStorePrivateKeyFile}" ]; then cat "${keyStorePrivateKeyFile}"; else echo ""; fi`
         );
-        throw new Error(
-          "Can't read SSV keystore private key file content from service " +
-            serviceID +
-            ": " +
+        if (SSHService.checkExecError(keyStorePrivateKeyFileRequest, true)) {
+          log.error(
+            "Can't read SSV keystore private key file content from service " + serviceID,
             keyStorePrivateKeyFileRequest.stderr
-        );
+          );
+        } else {
+          keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
+        }
       }
-      let keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
+
+      let operatorPrivateKey = ssvNetworkConfig?.OperatorPrivateKey ? ssvNetworkConfig.OperatorPrivateKey : "";
+
+      // Last known public key that was generated or imported by the end-user via ssv modal generate/import buttons
+      const getSSVLastKnownPublicKeyFile = await this.getSSVLastKnownPublicKeyFile(
+        serviceID,
+        getSsvServiceConfig,
+        getSsvNetworkConfig
+      );
+      const lastKnownPublicKeyFilePath = getSSVLastKnownPublicKeyFile.lastKnownPublicKeyFilePath;
+      const lastKnownPublicKeyFileData = getSSVLastKnownPublicKeyFile.lastKnownPublicKeyFileData;
 
       return {
+        serviceID: serviceID,
+        getSsvServiceConfig: getSsvServiceConfig,
+        getSsvNetworkConfig: getSsvNetworkConfig,
+        ssvServiceConfig: ssvServiceConfig,
+        ssvNetworkConfig: ssvNetworkConfig,
+        ssvServiceConfigDir: ssvServiceConfigDir,
+        ssvNetworkConfigDir: ssvNetworkConfigDir,
+        ssvSecretsDir: ssvSecretsDir,
+        ssvSecretsDirFallback: ssvSecretsDirFallback,
+        deprecatedPublicKey: ssvServiceConfig?.ssv_pk ? ssvServiceConfig.ssv_pk : null,
+        deprecatedSecretKey: ssvServiceConfig?.ssv_sk ? ssvServiceConfig.ssv_sk : null,
+        deprecatedOperatorPrivateKey: operatorPrivateKey, // normally same as deprecatedSecretKey but tells us that the config var exists
+        lastKnownPublicKeyFilePath: lastKnownPublicKeyFilePath,
+        lastKnownPublicKeyFileData: lastKnownPublicKeyFileData,
         passwordFilePath: keyStorePasswordFile,
         passwordFileData: keyStorePasswordFileContent.trim(),
         privateKeyFilePath: keyStorePrivateKeyFile,
@@ -521,10 +1190,11 @@ export class NodeConnection {
         })(),
       };
     } catch (err) {
-      log.error("Can't read SSV keystore from service " + serviceID, err);
-      throw new Error("Can't read SSV keystore from service " + serviceID + ": " + err);
+      log.error("Can't read SSV total config from service " + serviceID, err);
+      throw new Error("Can't read SSV total config from service " + serviceID + ": " + err);
     }
   }
+  // <-------- NEW SSVMODAL END --------->
 
   async readSSVNetworkConfig(serviceID) {
     let SSVNetworkConfig;

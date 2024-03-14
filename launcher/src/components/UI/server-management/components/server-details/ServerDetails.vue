@@ -90,7 +90,6 @@ onMounted(() => {
 //Methods
 const updateConnectionStats = async () => {
   const stats = await ControlService.getConnectionStats();
-
   controlStore.ServerName = stats.ServerName;
   controlStore.ipAddress = stats.ipAddress;
 };

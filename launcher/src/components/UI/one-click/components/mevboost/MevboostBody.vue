@@ -24,13 +24,13 @@
             class="w-8 h-8 justify-self-center self-end col-start-1 row-start-2 row-span-1 bg-[#1b1c1c] rounded-md p-1 cursor-pointer flex justify-center items-center hover:bg-[#383c3f] hover:shadow-lg hover:shadow-gray-950 hover:scale-110 active:scale-100 transition-all duration-300 ease-in-out"
             @click="addBlocksToUse"
           >
-            <img class="w-4 h-4" src="/img/icon/mevboost-icons/arrow-right.png" alt="icon" />
+            <img class="w-4 h-4" src="/img/icon/one-click-icons/mevboost-icons/arrow-right.png" alt="icon" />
           </div>
           <div
             class="w-8 h-8 justify-self-center self-start col-start-1 row-start-4 row-span-1 bg-[#1b1c1c] rounded-md p-1 cursor-pointer flex justify-center items-center hover:bg-[#383c3f] hover:shadow-lg hover:shadow-gray-950 hover:scale-110 active:scale-100 transition-all duration-300 ease-in-out"
             @click="removeFromUsedBlocks"
           >
-            <img class="w-4 h-4" src="/img/icon/mevboost-icons/arrow-left.png" alt="icon" />
+            <img class="w-4 h-4" src="/img/icon/one-click-icons/mevboost-icons/arrow-left.png" alt="icon" />
           </div>
         </div>
         <div class="col-start-7 col-span-6 row-start-2 row-span-full flex justify-center items-center">
