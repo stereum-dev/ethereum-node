@@ -51,7 +51,8 @@ const serverStore = useServers();
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
-const loginAbortController = ref(null);
+let loginAbortController = new AbortController();
+console.log("Server Management Screen", loginAbortController);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -95,17 +96,18 @@ onUnmounted(() => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
-  loginAbortController.value = new AbortController();
+  loginAbortController = new AbortController();
   serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
   try {
     if (router.currentRoute.value.path === "/login") {
-      await login(loginAbortController.value.signal);
+      await login(loginAbortController.signal);
     } else {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
       await ControlService.logout();
-      await login(loginAbortController.value.signal);
+      await login(loginAbortController.signal);
+
       setTimeout(() => {
         serverStore.isServerAnimationActive = false;
         serverStore.connectingProcess = false;
@@ -114,35 +116,20 @@ const loginHandler = async () => {
   } catch (error) {
     console.error("Login failed:", error);
   }
+  loginAbortController = null;
 };
 
-const quickLoginHandler = async () => {
-  loginAbortController.value = new AbortController();
-  serverStore.isServerAnimationActive = true;
-  serverStore.connectingProcess = true;
-  try {
-    if (router.currentRoute.value.path === "/login") {
-      await login(loginAbortController.value.signal);
-    } else {
-      serverStore.isServerAnimationActive = true;
-      serverStore.connectingProcess = true;
-      await ControlService.logout();
-      await login(loginAbortController.value.signal);
-      setTimeout(() => {
-        serverStore.isServerAnimationActive = false;
-        serverStore.connectingProcess = false;
-      }, 5000);
-    }
-  } catch (error) {
-    console.error("Quick login failed:", error);
-  }
+const quickLoginHandler = async (server) => {
+  serverHandler(server);
+  loginHandler();
 };
 
 const cancelLoginHandler = () => {
-  console.log("Cancel login");
-  if (loginAbortController.value) {
-    loginAbortController.value.abort();
+  if (loginAbortController.signal) {
+    loginAbortController.abort();
+    loginAbortController = null;
   }
+
   serverStore.isServerAnimationActive = false;
   serverStore.connectingProcess = false;
 };

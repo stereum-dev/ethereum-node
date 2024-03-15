@@ -9,7 +9,7 @@
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { defineEmits, onMounted } from "vue";
+import { onMounted } from "vue";
 import CustomConfig from "./CustomConfig.vue";
 
 const emits = defineEmits(["confirmCreate"]);
