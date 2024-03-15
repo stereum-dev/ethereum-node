@@ -72,8 +72,8 @@ export const useServerLogin = () => {
     });
   };
 
-  const login = async (sig) => {
-    const abortController = new AbortController();
+  const login = async (signal) => {
+    console.log("Composables", signal);
     serverStore.isServerAnimationActive = true;
     serverStore.errorMsgExists = false;
 
@@ -86,10 +86,12 @@ export const useServerLogin = () => {
         sshKeyAuth: serverStore.loginState.useAuth,
         keyfileLocation: serverStore.loginState.keyPath,
         passphrase: serverStore.loginState.passphrase,
-        signal: abortController.signal,
+        signal: signal,
       });
 
-      if (sig.aborted) {
+      if (signal.aborted) {
+        serverStore.isServerAnimationActive = false;
+        serverStore.connectingProcess = false;
         return;
       }
 
@@ -106,12 +108,18 @@ export const useServerLogin = () => {
       serverStore.isServerAnimationActive = false;
       serverStore.errorMsgExists = true;
       serverStore.error = "Failed to connect. Please try again.";
-      // You can customize the error message based on the error type or handle different error scenarios
-      if (typeof error === "string" && error.toLowerCase().includes("password")) {
+
+      // Customize the error message based on the error type
+      if (error.name === "AbortError") {
+        serverStore.error = "Login operation was cancelled.";
+        serverStore.isServerAnimationActive = false;
+        serverStore.connectingProcess = false;
+        return;
+      } else if (typeof error === "string" && error.toLowerCase().includes("password")) {
         serverStore.error = "You need to change your password first";
       }
+
       router.push("/login");
-      // location.reload();
     }
   };
 

@@ -51,7 +51,8 @@ const serverStore = useServers();
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
-const loginAbortController = ref(null);
+let loginAbortController = new AbortController();
+console.log("Server Management Screen", loginAbortController);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -95,17 +96,16 @@ onUnmounted(() => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
-  loginAbortController.value = new AbortController();
   serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
   try {
     if (router.currentRoute.value.path === "/login") {
-      await login(loginAbortController.value.signal);
+      await login(loginAbortController.signal);
     } else {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
       await ControlService.logout();
-      await login(loginAbortController.value.signal);
+      await login(loginAbortController.signal);
       setTimeout(() => {
         serverStore.isServerAnimationActive = false;
         serverStore.connectingProcess = false;
@@ -122,8 +122,8 @@ const quickLoginHandler = async (server) => {
 };
 
 const cancelLoginHandler = () => {
-  if (loginAbortController.value) {
-    loginAbortController.value.abort();
+  if (loginAbortController.signal) {
+    loginAbortController.abort();
   }
   serverStore.isServerAnimationActive = false;
   serverStore.connectingProcess = false;

@@ -279,7 +279,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
 </template>
 
 <script setup>
-import { computed, onUnmounted, ref, watch, watchEffect } from "vue";
+import { computed, onUnmounted, ref, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import { useServerLogin } from "@/composables/useLogin";
 import ControlService from "@/store/ControlService";
@@ -484,9 +484,7 @@ const internalLogin = async () => {
   }
 
   if (isValid) {
-    setTimeout(() => {
-      emit("serverLogin");
-    }, 3000);
+    emit("serverLogin");
   } else {
     serverStore.isServerAnimationActive = false;
     router.push("/login");
