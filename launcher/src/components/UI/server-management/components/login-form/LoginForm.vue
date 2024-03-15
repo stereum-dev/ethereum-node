@@ -202,6 +202,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           placeholder="******************"
           :disabled="useSSHKey"
           required
+          @keydown.enter="internalLogin"
         />
       </div>
       <div v-if="useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
