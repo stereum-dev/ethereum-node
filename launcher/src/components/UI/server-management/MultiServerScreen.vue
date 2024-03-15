@@ -96,6 +96,7 @@ onUnmounted(() => {
 //Server Management Login Handler
 
 const loginHandler = async () => {
+  loginAbortController = new AbortController();
   serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
   try {
@@ -106,6 +107,7 @@ const loginHandler = async () => {
       serverStore.isServerAnimationActive = true;
       await ControlService.logout();
       await login(loginAbortController.signal);
+
       setTimeout(() => {
         serverStore.isServerAnimationActive = false;
         serverStore.connectingProcess = false;
@@ -114,6 +116,7 @@ const loginHandler = async () => {
   } catch (error) {
     console.error("Login failed:", error);
   }
+  loginAbortController = null;
 };
 
 const quickLoginHandler = async (server) => {
@@ -124,7 +127,9 @@ const quickLoginHandler = async (server) => {
 const cancelLoginHandler = () => {
   if (loginAbortController.signal) {
     loginAbortController.abort();
+    loginAbortController = null;
   }
+
   serverStore.isServerAnimationActive = false;
   serverStore.connectingProcess = false;
 };
