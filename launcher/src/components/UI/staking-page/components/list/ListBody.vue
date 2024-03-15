@@ -18,9 +18,9 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       ref="dropZoneRef"
       class="w-full h-full max-h-[423px] animate__animated animate__fadeIn"
       :class="{ 'cursor-not-allowed': isDropZoneDisabled }"
-      @dragover.prevent="isDropZoneDisabled ? null : onDragOver"
-      @dragleave.prevent="isDropZoneDisabled ? null : onDragLeave"
-      @drop.prevent="isDropZoneDisabled ? null : onDrop($event)"
+      @dragover.prevent="onDragOver"
+      @dragleave.prevent="onDragLeave"
+      @drop.prevent="onDrop"
     >
       <span
         v-if="stakingStore.isOverDropZone"
@@ -130,6 +130,8 @@ const emit = defineEmits([
 const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
+const dropZoneRef = ref(null);
+const isDropZoneActive = ref(true);
 
 // Computed
 stakingStore.filteredKeys = computed(() => {
@@ -172,29 +174,24 @@ const filteredDoppelgangerKeys = computed(() => {
 });
 
 const isDropZoneDisabled = computed(() => {
-  const isLoadingOrImporting = isLoading.value || stakingStore.keys.length === 0;
-  const hasDoppelgangerForSelectedService = stakingStore.doppelgangerKeys.some(
-    (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
+  return (
+    isLoading.value ||
+    stakingStore.keys.length === 0 ||
+    stakingStore.doppelgangerKeys.some(
+      (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    )
   );
-
-  return isLoadingOrImporting || hasDoppelgangerForSelectedService;
 });
 
-// const isDropZoneDisabled = computed(() => {
-//   const isLoadingOrImporting = isLoading.value || stakingStore.keys.length === 0;
-//   const hasDoppelgangerForSelectedService = stakingStore.doppelgangerKeys.some(
-//     (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
-//   );
-//   return isLoadingOrImporting || hasDoppelgangerForSelectedService;
-// });
+// Watchers
 
-const onDragOver = () => {
-  stakingStore.isOverDropZone = true;
-};
-
-const onDragLeave = () => {
-  stakingStore.isOverDropZone = false;
-};
+watchEffect(() => {
+  if (stakingStore.inputWrongKey) {
+    setTimeout(() => {
+      stakingStore.inputWrongKey = false;
+    });
+  }
+});
 
 watchEffect(() => {
   if (stakingStore.keys.length === 0) {
@@ -248,7 +245,19 @@ onUnmounted(() => {
   stakingStore.setActivePanel(null);
 });
 
-// Methods
+//Methods
+
+const onDragOver = () => {
+  if (!isDropZoneDisabled.value) {
+    stakingStore.isOverDropZone = true;
+  }
+};
+
+const onDragLeave = () => {
+  if (isDropZoneActive.value) {
+    stakingStore.isOverDropZone = false;
+  }
+};
 
 const normalizeKey = (key) => {
   return key.startsWith("0x") ? key.substring(2) : key;
@@ -282,9 +291,12 @@ const isKeyInGroup = (key) => {
 };
 
 const onDrop = (event) => {
-  if (isDropZoneDisabled.value) return;
-
-  emit("onDrop", event);
+  if (!isDropZoneDisabled.value) {
+    stakingStore.isOverDropZone = false;
+  }
+  if (isDropZoneActive.value) {
+    emit("onDrop", event);
+  }
 };
 
 const deletePreview = (item) => {

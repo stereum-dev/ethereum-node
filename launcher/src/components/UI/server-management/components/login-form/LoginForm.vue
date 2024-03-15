@@ -202,6 +202,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           placeholder="******************"
           :disabled="useSSHKey"
           required
+          @keydown.enter="internalLogin"
         />
       </div>
       <div v-if="useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -252,7 +253,11 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         <button
           v-if="!serverStore.connectingProcess"
           class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
-          :class="serverStore.isIpScannerModalActive ? 'bg-gray-400 opacity-50 pointer-events-none ' : 'bg-gray-200'"
+          :class="
+            serverStore.isIpScannerModalActive || buttonDisabled
+              ? 'bg-gray-400 opacity-50 pointer-events-none '
+              : 'bg-gray-200'
+          "
           type="button"
           @click="internalLogin"
         >
@@ -297,6 +302,7 @@ const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
 const devices = ref([]);
+const buttonDisabled = ref(false);
 
 const router = useRouter();
 
@@ -356,6 +362,14 @@ watchEffect(() => {
     serverStore.loginState.keyPath = "";
     serverStore.loginState.password = "";
     serverStore.loginState.passphrase = "";
+  }
+});
+
+watchEffect(() => {
+  if (!useSSHKey.value && serverStore.loginState.password === "") {
+    buttonDisabled.value = true;
+  } else {
+    buttonDisabled.value = false;
   }
 });
 
@@ -471,9 +485,7 @@ const internalLogin = async () => {
   }
 
   if (isValid) {
-    setTimeout(() => {
-      emit("serverLogin");
-    }, 3000);
+    emit("serverLogin");
   } else {
     serverStore.isServerAnimationActive = false;
     router.push("/login");
