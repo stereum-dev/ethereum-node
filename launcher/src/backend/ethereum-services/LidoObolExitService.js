@@ -25,7 +25,7 @@ export class LidoObolExitService extends NodeService {
       "latest", // imageVersion
       [
         "run",
-        "--beacon-node-url=http://lighthouse:5052",
+        "--beacon-node-url=http://beaconAddress:beaconPort",
         "--charon-runtime-dir=" + charonDir,
         "--ejector-exit-path=" + exitmessagesDir,
         "--exit-epoch=194048",
