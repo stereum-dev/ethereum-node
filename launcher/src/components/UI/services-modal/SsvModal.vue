@@ -69,7 +69,7 @@
                 : `${$t('serviceModal.showPerformance', {
                     opid: operatorData?.id,
                     opname: operatorData?.name,
-                    network: network,
+                    network: ucWord(network),
                   })}`
             }`"
             :btn-name="`${
@@ -440,15 +440,25 @@ export default {
         } else {
           console.log("Current Key was backed up at least once, get operator data from SSV API");
 
-          // Get operator data from SSV
+          // Get operator ID from SSV
           try {
-            let response = await axios.get(
+            const response = await axios.get(
               `https://api.ssv.network/api/v4/${this.network}/operators/public_key/` + this.pubkey
             );
-            if (response && response?.data?.data?.publicKey) {
-              this.operatorData = response.data.data;
-              console.log("Operator registered");
-              console.log("SSV: this.operatorData", this.operatorData);
+            if (response && response?.data?.data?.id) {
+              // Get operator metadata from SSV
+              const operator_id = response?.data?.data?.id;
+              const opurl = `https://api.ssv.network/api/v4/${this.network}/operators/` + operator_id;
+              const opresp = await axios.get(opurl);
+              console.log("opurl", opurl);
+              if (opresp && opresp?.data?.id) {
+                this.operatorData = opresp.data;
+                console.log("Operator registered");
+                console.log("SSV: this.operatorData", this.operatorData);
+              } else {
+                this.apiUnavailable = true;
+                console.log(`SSV API did not respond metadata for operator ${operator_id}`);
+              }
             } else {
               console.log("SSV API reported unknown operator");
               // this.operatorData = { name: "FakeNameTesting", id: 60 };
@@ -567,7 +577,8 @@ export default {
       if (!network) {
         throw new Error("openOperatorPage -> Network unknown");
       }
-      let url = `https://${network}.explorer.ssv.network/operators/${operatorID}`;
+      let net = network == "mainnet" ? "" : network + ".";
+      let url = `https://${net}explorer.ssv.network/operators/${operatorID}`;
       window.open(url, "_blank");
     },
     openRegisterPage(network) {
@@ -892,7 +903,6 @@ export default {
           });
           let backupFileName = "";
           if (this.operatorData) {
-            console.log("yo");
             backupFileName =
               this.getCurrentDateTimeString(now) +
               `_ssv_unencrypted_operator_${this.operatorData.id}_${this.network}_backup.zip`;
@@ -906,6 +916,30 @@ export default {
                 Network        : ${this.ucWord(this.network)}
                 Operator Name  : ${this.operatorData.name}
                 Operator ID    : ${this.operatorData.id}
+                Public Key File: ${pkFileName}
+                Secret Key File: ${skFileName}
+                -----------------------------------------------------------------
+                Important!
+                ==========
+                Keep this ZIP and all files included on a safe location!
+                If you loose those files your are not able to restore your SSV Operator.
+                The file "${pkFileName}" holds your SSV Public Key.
+                The file "${skFileName}" holds your SSV Secret Key (also known as SSV Private Key).
+              `),
+            });
+          } else if (this.apiUnavailable) {
+            backupFileName =
+              this.getCurrentDateTimeString(now) + `_ssv_unencrypted_operator_unavailable_${this.network}_backup.zip`;
+            downloadObjects.push({
+              filename: "readme.txt",
+              content: this.formatReadmeContent(`
+                This is a backup of your SSV Operator keys!
+                -----------------------------------------------------------------
+                Backup Date    : ${this.getCurrentDateTimeString(now, true)}
+                Service-ID     : ${this.ssvService.config.serviceID}
+                Network        : ${this.ucWord(this.network)}
+                Operator Name  : N/A (SSV API unavailable)
+                Operator ID    : N/A (SSV API unavailable)
                 Public Key File: ${pkFileName}
                 Secret Key File: ${skFileName}
                 -----------------------------------------------------------------
@@ -936,9 +970,7 @@ export default {
                 Important!
                 ==========
                 Keep this ZIP and all files included on a safe location!
-                You have not registered an SSV Operator with this keys yet but if
-                you decide to do so later on and then loose those files your are
-                not able to restore your SSV Operator - thus keep them safe.
+                You have not yet registered an SSV Operator with these keys. However, if you decide to do this later and then lose these files, you will not be able to recover your SSV Operator. Therefore, keep them safe.
                 The file "${pkFileName}" holds your SSV Public Key.
                 The file "${skFileName}" holds your SSV Secret Key (also known as SSV Private Key).
               `),
@@ -996,7 +1028,6 @@ export default {
           });
           let backupFileName = "";
           if (this.operatorData) {
-            console.log("yo");
             backupFileName =
               this.getCurrentDateTimeString(now) + `_ssv_operator_${this.operatorData.id}_${this.network}_backup.zip`;
             downloadObjects.push({
@@ -1009,6 +1040,32 @@ export default {
                 Network        : ${this.ucWord(this.network)}
                 Operator Name  : ${this.operatorData.name}
                 Operator ID    : ${this.operatorData.id}
+                Public Key File: ${pkFileName}
+                KeyStore File  : ${keyFileName}
+                Password File  : ${pwdFileName}
+                -----------------------------------------------------------------
+                Important!
+                ==========
+                Keep this ZIP and all files included on a safe location!
+                If you loose those files your are not able to restore your SSV Operator.
+                The file "${pkFileName}" holds your SSV Public Key.
+                The file "${keyFileName}" is a KeyStore that holds (inter alia) your encrypted SSV Private Key.
+                The file "${pwdFileName}" holds the password required by the SSV-node to decrypt your SSV Private Key.
+              `),
+            });
+          } else if (this.apiUnavailable) {
+            backupFileName =
+              this.getCurrentDateTimeString(now) + `_ssv_unencrypted_operator_unavailable_${this.network}_backup.zip`;
+            downloadObjects.push({
+              filename: "readme.txt",
+              content: this.formatReadmeContent(`
+                This is a backup of your SSV Operator keys!
+                -----------------------------------------------------------------
+                Backup Date    : ${this.getCurrentDateTimeString(now, true)}
+                Service-ID     : ${this.ssvService.config.serviceID}
+                Network        : ${this.ucWord(this.network)}
+                Operator Name  : N/A (SSV API unavailable)
+                Operator ID    : N/A (SSV API unavailable)
                 Public Key File: ${pkFileName}
                 KeyStore File  : ${keyFileName}
                 Password File  : ${pwdFileName}
@@ -1042,13 +1099,10 @@ export default {
                 Important!
                 ==========
                 Keep this ZIP and all files included on a safe location!
-                You have not registered an SSV Operator with this keys yet but if
-                you decide to do so later on and then loose those files your are
-                not able to restore your SSV Operator - thus keep them safe.
+                You have not yet registered an SSV Operator with these keys. However, if you decide to do this later and then lose these files, you will not be able to recover your SSV Operator. Therefore, keep them safe.
                 The file "${pkFileName}" holds your SSV Public Key.
                 The file "${keyFileName}" is a KeyStore that holds (inter alia) your encrypted SSV Private Key.
                 The file "${pwdFileName}" holds the password required by the SSV-node to decrypt your SSV Private Key.
-                -----
               `),
             });
           }
