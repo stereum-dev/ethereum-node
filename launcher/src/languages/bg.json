@@ -849,7 +849,7 @@
     "dnldBackup": "Please make sure to write down your password & download the backup. Nobody can help you recover your password or encrypted private key if you lose them!",
     "registerOperator": "Open the SSV web app in your default browser to register your operator.",
     "apiUnavailable": "Unknown dashboard state (SSV API currently unavailable).",
-    "showPerformance": "Shows an overview of the performance of your node for your registered operator with ID {opid} on the SSV Network at {network} as well as all the keys assigned to it.",
+    "showPerformance": "Shows an overview of the performance of your node for your registered operator \"{opname}\" with ID {opid} on the SSV Network at {network} as well as all the keys assigned to it.",
     "copyKey": "COPY PUBLIC OPERATOR KEY",
     "copyKeyDesc": "Copy the public operator key of your node to clipboard.",
     "skPk": "Secret Operator Key (SK) & Public Operator Key (PK)",
