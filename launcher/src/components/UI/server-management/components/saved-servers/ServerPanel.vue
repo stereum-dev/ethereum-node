@@ -69,7 +69,7 @@ import ServerRow from "./ServerRow.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
-import { onMounted, watch, ref, computed } from "vue";
+import { onMounted, watch, ref } from "vue";
 
 const emit = defineEmits(["selectServer", "serverLogin", "quickLogin"]);
 
@@ -77,14 +77,23 @@ const serverStore = useServers();
 const controlStore = useControlStore();
 const searchQuery = ref("");
 const searchInputRef = ref(null);
+const filteredServers = ref(null);
 
-const filteredServers = computed(() => {
+const getFilteredServers = () => {
   if (!searchQuery.value) {
     return serverStore.savedServers?.savedConnections;
   }
   return serverStore.savedServers.savedConnections.filter((server) =>
     server.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
+};
+
+// Recompute filteredServers when searchQuery changes
+watch(searchQuery, () => {
+  filteredServers.value = null;
+  setTimeout(() => {
+    filteredServers.value = getFilteredServers();
+  }, 10);
 });
 
 watch(
@@ -101,6 +110,7 @@ onMounted(async () => {
   if (searchInputRef.value) {
     searchInputRef.value.focus();
   }
+  filteredServers.value = getFilteredServers();
 });
 
 //Methods
