@@ -113,10 +113,7 @@
             class="toggleTextInput"
             type="text"
             :class="{
-              disabled:
-                !option.buttonState ||
-                option.changeValue === null ||
-                option.changeValue === '0x0000000000000000000000000000000000000000',
+              disabled: option.changeValue === null || !option.buttonState,
             }"
             @input="somethingIsChanged(option)"
           />
