@@ -15,7 +15,7 @@
     <div class="w-full h-full col-start-8 col-end-11 flex justify-center items-center space-x-2">
       <span class="text-sm text-[#dee3e3] font-semibold">{{ $t("pluginLogs.ver") }}</span>
       <span class="text-amber-200 text-md font-semibold">
-        {{ client?.config?.imageVersion }}
+        {{ client?.config?.runningImageVersion }}
       </span>
     </div>
     <div class="w-full h-full col-start-12 col-span-1 flex justify-end items-center">
