@@ -1,87 +1,168 @@
 <template>
   <div
-    class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none"
+    class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none relative"
   >
-    <div
-      class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634]"
-    >
-      <div
-        class="absolute left-1 top-1 w-[74px] rounded-tl-lg z-50 p-1 bg-[#537263] rounded-tr-[37px] rounded-br-[37px] rounded-bl-[37px] shadow-md shadow-[#252525]"
-        @pointerdown.prevent.stop
-        @mousedown.prevent.stop
-      >
-        <SecurityButton
-          :tooltip="tooltip"
-          @mouse-enter="mouseEnter"
-          @access-switch="accessSwitch"
-          @mouse-leave="mouseLeave"
-        />
-      </div>
+    <HeaderScreen />
 
-      <MainNavbar />
-    </div>
-    <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E]">
+    <div class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative">
       <slot></slot>
     </div>
     <div class="w-full h-[30px] rounded-b-lg bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
       <TheFooter />
       <TaskManager />
     </div>
-    <serverAccessManagement v-if="serverAccessManagement" />
+    <Transition name="slide-fade">
+      <MultiServerScreen
+        v-if="
+          serverStore.isServerAccessManagementActive &&
+          router.currentRoute.value.fullPath !== '/config/play' &&
+          router.currentRoute.value.fullPath !== '/oneClick/play' &&
+          router.currentRoute.value.fullPath !== '/custom/play' &&
+          router.currentRoute.value.fullPath !== '/login'
+        "
+      />
+    </Transition>
+    <GrafanaModal v-if="headerStore.showGrafanaWindow" @close-window="closeServiceBrowser" />
+    <SsvModal v-if="headerStore.showSsvWindow" @close-window="closeServiceBrowser" />
+    <PrometheusModal v-if="headerStore.showPrometheusWindow" @close-window="closeServiceBrowser" />
+    <MevboostModal v-if="headerStore.showMevboostWindow" @close-window="closeServiceBrowser" />
+    <ObolModal v-if="headerStore.showObolCharonWindow" @close-window="closeServiceBrowser" />
+    <UpdatePanel
+      v-if="headerStore.displayUpdatePanel"
+      ref="UpdatePanelCompRef"
+      @run-update="runUpdate"
+      @run-os-update="runOsUpdate"
+      @click-outside="closeServiceBrowser"
+    />
+
+    <ReconnectModal v-if="!footerStore.stereumStatus" @open-logout="loggingOut" @confirm-reconnect="reconnect" />
+
+    <LogoutModal v-if="headerStore.logoutModalIsActive" @close-window="closeMenuWindow" @confrim-logout="loggingOut" />
+
+    <SupportModal v-if="headerStore.supportModalIsActive" @close-window="closeMenuWindow" />
+    <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
+    <TutorialGuide v-if="headerStore.isTutorialActive" />
+    <StakeGuide v-if="headerStore.stakeGuideActive" />
   </div>
 </template>
-<script>
-import MainNavbar from "../UI/node-header/MainNavbar.vue";
+<script setup>
+import { ref, onMounted } from "vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
-import SecurityButton from "../UI/node-header/SecurityButton.vue";
-import serverAccessManagement from "../UI/node-header/ServerAccessManagement.vue";
-import { mapWritableState } from "pinia";
+import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
+import HeaderScreen from "../UI/base-header/HeaderScreen.vue";
+import GrafanaModal from "../UI/services-modal/GrafanaModal.vue";
+import SsvModal from "../UI/services-modal/SsvModal.vue";
+import PrometheusModal from "../UI/services-modal/PrometheusModal.vue";
+import MevboostModal from "../UI/services-modal/MevboostModal.vue";
+import ObolModal from "../UI/services-modal/ObolModal.vue";
+import UpdatePanel from "../UI/base-header/components/modals/UpdatePanel.vue";
+import ReconnectModal from "../UI/base-header/components/modals/ReconnectModal.vue";
+import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
+import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
+import NotifModal from "../UI/base-header/components/modals/NotifModal.vue";
+import TutorialGuide from "../UI/guide-page/TutorialGuide.vue";
+import StakeGuide from "../UI/guide-page/StakeGuide.vue";
+import { useUpdateCheck } from "@/composables/version";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useRouter } from "vue-router";
+import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
+import ControlService from "@/store/ControlService";
+import { useServices } from "@/store/services.js";
 
-export default {
-  components: {
-    MainNavbar,
-    TaskManager,
-    TheFooter,
-    SecurityButton,
-    serverAccessManagement,
-  },
-  data() {
-    return {
-      tooltip: false,
-      serverAccMange: this.$t("serverManagement.serverAccMange"),
-    };
-  },
-  computed: {
-    ...mapWritableState(useFooter, {
-      stereumStatus: "stereumStatus",
-      cursorLocation: "cursorLocation",
-    }),
-    ...mapWritableState(useNodeHeader, {
-      serverAccessManagement: "serverAccessManagement",
-    }),
-  },
-  methods: {
-    mouseEnter() {
-      this.tooltip = true;
-      this.cursorLocation = this.serverAccMange;
-    },
+const router = useRouter();
+const serverStore = useServers();
+const headerStore = useNodeHeader();
+const footerStore = useFooter();
+const serviceStore = useServices();
+const UpdatePanelCompRef = ref(null);
 
-    mouseLeave() {
-      this.tooltip = false;
-      this.cursorLocation = "";
-    },
+onMounted(() => {
+  useUpdateCheck();
+});
 
-    accessSwitch() {
-      console.log("accessSwitch");
-      this.serverAccessManagement = !this.serverAccessManagement;
-    },
-  },
+const closeServiceBrowser = () => {
+  headerStore.setServiceModal(null);
+};
+
+const closeMenuWindow = () => {
+  headerStore.setMenuModal(null);
+};
+
+const runUpdate = async (item) => {
+  let seconds = 0;
+  try {
+    headerStore.refresh = false;
+    item.running = true;
+    headerStore.updating = true;
+    if (item && item.id) {
+      seconds = await ControlService.updateServices({ services: item.id });
+    } else if (item && item.commit) {
+      seconds = await ControlService.updateStereum({ commit: item.commit });
+    }
+  } catch (err) {
+    console.log(JSON.stringify(item) + "\nUpdate Failed", err);
+  } finally {
+    headerStore.refresh = true;
+    serviceStore.newUpdates = serviceStore.newUpdates.filter((u) => {
+      if (item && item.id) {
+        return u.id != item.id;
+      } else if (item && item.commit) {
+        return u.commit != item.commit;
+      }
+    });
+    headerStore.updating = false;
+    // Search for updates afterwards
+    await ControlService.restartServices(seconds);
+  }
+};
+const runOsUpdate = async () => {
+  try {
+    headerStore.osUpdating = true;
+    await ControlService.updateOS();
+  } catch (err) {
+    console.log("OS Update Failed", err);
+  } finally {
+    headerStore.osUpdating = false;
+    headerStore.searchingForOsUpdates = false;
+
+    // Accessing the ref's component methods and properties
+    if (UpdatePanelCompRef.value) {
+      UpdatePanelCompRef.value.osUpdating = false;
+      UpdatePanelCompRef.value.searchingForOsUpdates = false;
+      await UpdatePanelCompRef.value.searchOsUpdates();
+    }
+  }
+};
+
+const loggingOut = async () => {
+  serverStore.connectingAnimActive = false;
+  headerStore.refresh = false;
+  await ControlService.logout();
+  router.push("/login").then(() => {
+    location.reload();
+  });
+};
+
+const reconnect = async () => {
+  headerStore.reconnecting = true;
+  await ControlService.reconnect();
+  headerStore.reconnecting = false;
+  headerStore.refresh = true;
 };
 </script>
+
 <style scoped>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.6s ease-in-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(-1000px);
+}
 .server-access-tooltip {
   width: 220%;
   height: 50%;

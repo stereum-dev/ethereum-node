@@ -45,12 +45,16 @@ const displayButtonByCondition = computed(() => {
     (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config.serviceID
   );
 
+  if (isImportRemoteButton && stakingStore.isStakingDisabled) {
+    return true;
+  }
+
   if (isSelectedFilterWeb3Signer) {
     if (isImportRemoteButton || !matchingKeyForService || !isValidatorFilterRunning) {
       return true;
     }
   } else if (!isSelectedFilterWeb3Signer) {
-    if (!matchingKeyForService || !isValidatorFilterRunning) {
+    if ((!matchingKeyForService || !isValidatorFilterRunning) && !isImportRemoteButton) {
       return true;
     }
   }

@@ -8,82 +8,56 @@
     "password": "ПАРОЛА",
     "keylocation": "КЛЮЧОВО МЕСТОПОЛОЖЕНИЕ",
     "usessh": "ИЗПОЛЗВАЙТЕ SSH КЛЮЧ",
-    "fillFields": "Please fill in the missing fields!",
-    "KeyPassphrase": "KEY PASSPHRASE"
+    "fillFields": "Моля, попълнете липсващите полета!",
+    "KeyPassphrase": "КЛЮЧОВА ФРАЗА"
   },
   "comingsoon": {
     "comingsoon": "ОЧАКВАЙТЕ СКОРО"
   },
   "journalnode": {
     "serverip": "IP",
-    "servername": "NAME",
-    "edit": "Manage node",
-    "loading": "loading new states",
-    "turnOn": "Turn Node on",
-    "turnOff": "Turn Node off",
-    "log": "Open Logs",
-    "restart": "Restart",
-    "start": "start",
-    "resync": "resync",
-    "stop": "stop",
-    "machineIp": "Machine IP Address",
-    "machineName": "Machine Name",
-    "clkEdit": "Click to edit your node",
-    "clkOn": "Click to turn your node on",
-    "clkOff": "Click to turn your node off",
-    "clkLog": "Click to open the panel so that the log for clients and services is available to you separately",
-    "clkSwitch": "Click to open the panel so that the on/off switch for clients and services is available to you separately",
-    "clkRestart": "Click to open the panel so that you can restart clients and services separately",
-    "clkResync": "Click to open the panel so that you can resync clients separately"
+    "servername": "ИМЕ"
   },
   "pagesnav": {
-    "node": "НОД",
-    "control": "КОНТРОЛ",
     "staking": "СТАКИНГ"
   },
   "supportModal": {
     "support": "съпорт",
     "supportText": "Най-бързият начин да се свържете с човек за поддръжка е да се присъедините към нашия сървър в Дискорд!",
     "bugReport": "ДОКЛАД ЗА ГРЕШКИ",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "или пишете E-Mail на:",
-    "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "docsTitle": "верижни документи",
+    "docsText": "Удобна връзка към документацията на мрежовите журнали за избраната конфигурация на възела."
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLY",
-    "general": "GENERAL",
+    "stereumName": "стереумни настройки",
+    "langName": "Избор на език",
+    "confirm": "ПРИЛОЖИ",
+    "general": "ОСНОВНИ",
     "credits": "Заслуги",
     "open": "отвори",
     "update": "АКТУАЛИЗАЦИЯ",
     "launcherVersion": "Версия на стартиране",
     "nodeVersion": "Версия на Нода",
-    "lane": "Стереум - лента за тестване",
     "on": "включен",
     "off": "изключен",
     "updateConfig": "Конфигурация на Стереум актуализациите",
-    "servicePlugin": "Конфигурация за актуализация на плъгини / услуги",
     "manual": "РЪКОВОДСТВО",
     "auto": "АВТОМАТИЧНО",
-    "sxConf": "Export Config",
-    "chngAppr": "Changes to be applied",
-    "creditInfo": "click the button to see the contributors",
-    "langInfo": "click the button to change the language",
-    "exportInfo": "click the button to export the configuration in a yaml file",
-    "stereumUpd": "Click the button to configure the Stereum update"
+    "sxConf": "Експортирай конфигурация",
+    "chngAppr": "Промени, които да бъдат приложени",
+    "creditInfo": "кликнете върху бутона, за да видите участниците",
+    "langInfo": "щракнете върху бутона, за да промените езика",
+    "exportInfo": "кликнете бутона, за да експортирате конфигурацията в yaml файл",
+    "stereumUpd": "Кликнете бутона, за да конфигурирате актуализацията на Stereum"
   },
   "nodeSidebarVideo": {
     "stake": "Залог с 32 ETH",
-    "ssv": "Използвайте ssv мрежа",
-    "alert": "Сигнали в мобилното приложение",
-    "switchC": "Превключване на клиенти",
-    "migrate": "Nodes Migration",
-    "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO",
-    "written": "Written Guides",
-    "video": "Video Guides"
+    "rpc": "RPC Връзка",
+    "written": "Писмени ръководства",
+    "video": "Видео ръководства",
+    "stereumTutorial": "стереум уроци",
+    "statBox": "статус поле"
   },
   "pluginZone": {
     "client": "клиент"
@@ -93,46 +67,34 @@
     "consensus": "консенсус",
     "validator": "валидатор",
     "servicePlugin": "СЪРВИС ПЛЪГИН",
-    "message": "The current network is ",
-    "chckTutorial": "Check out the tutorials",
-    "returnStatus": "Return to status box"
+    "message": "Настоящата мрежа е",
+    "chckTutorial": "Проверете уроците",
+    "returnStatus": "Връщане към статус полето"
   },
   "modifyPanel": {
     "backNode": "обратно към НОД-а",
-    "addPreset": "ДОБАВЯНЕ НА ПРЕДВАРИТЕЛНА НАСТРОЙКА С 1 КЛИК",
-    "changeNetwork": "СМЯНА НА МРЕЖАТА",
-    "nukeNode": "NUKE NODE"
-  },
-  "sidebarManage": {
-    "filter": "Филтър..."
+    "nukeNode": "ИЗТРИЙ НОДА"
   },
   "changeConfirm": {
-    "confirm": "CONFIRM CHANGES",
-    "process": "processing...",
+    "confirm": "ПОТВЪРЖДАВАНЕ НА ПРОМЕНИТЕ",
+    "process": "обработка...",
     "change": "ПРОМЕНИ ЗА ПОТВЪРЖДАВАНЕ",
     "delete": "ИЗТРИЙ"
   },
   "updatePanel": {
-    "launcherTitle": "launcher",
-    "version": "version",
+    "launcherTitle": "стартер",
+    "version": "версия",
     "current": "текущ",
     "nodeTitle": "нод актуализации",
     "latest": "последни",
-    "auto": "Auto Update",
+    "auto": "Автоматично обновяване",
     "available": "налично",
     "searching": "търсене за актуализации",
-    "serviceTitle": "plug-in updates",
+    "serviceTitle": "актуализации на плъгини",
     "serviceDesc": "Актуализации за инсталираната селекция плъгин-и",
     "availablePlugin": "НАЛИЧНИ АКТУАЛИЗАЦИИ НА ПЛЪГИНИ",
     "all": "актуализиране на всички",
-    "osTitle": "server os updates",
-    "availableUpdates": "updates",
-    "searchVersion": "Search for available version updates",
-    "updtBtn": "click to update",
-    "updtAllPlugin": "update all the plugins",
-    "autoUpt": "the update is automatic",
-    "manualUpt": "the update is manual",
-    "chngAppr": "Changes to be applied"
+    "osTitle": "актуализиране на услугите"
   },
   "controlPage": {
     "node": "НОД",
@@ -141,9 +103,9 @@
     "read": "ПРОЧИТАНЕ",
     "inclusionDistance": "РАЗСТОЯНИЕ НА ВКЛЮЧВАНЕ",
     "rpc": "RPC-крайна връзка",
-    "ws": "WS-ENDPOINT",
+    "ws": "RPC-крайна връзка",
     "syncStatus": "СТАТУС СИНХРОНИЗАЦИЯ",
-    "hard": "STORAGE VOLUME",
+    "hard": "ОБЕМ НА СЪХРАНЕНИЕТО",
     "free": "БЕСПЛАТНО",
     "total": "ОБЩО",
     "network": "МРЕЖА",
@@ -156,63 +118,100 @@
     "active": "АКТИВЕН",
     "rating": "РЕЙТИНГ",
     "usage": "Използване",
-    "netSel": "The selected network is",
-    "machineName": "Machine Name",
-    "storVol": "Server storage volume",
-    "stor": "Server storage overview",
-    "diskSpeed": "Disk speed",
-    "p2p": "Peer to peer connections",
-    "cpuUse": "CPU Usage",
-    "syncInfo": "Synchronization status",
-    "ramUse": "RAM Usage",
-    "netSpeed": "Network Speed",
-    "listPort": "List of service ports",
-    "endPoint": "endpoint",
-    "data": "data",
-    "enteredKeys": "The number of imported validator keys",
-    "ttlBal": "Total balance",
-    "finEPOCH": "Finalized EPOCH",
-    "pending": "service is pending",
-    "off": "Switch off the service",
-    "on": "Switch on the service",
-    "settingService": "Setting up the service",
-    "restart": "restart the service"
+    "netSel": "Избраната мрежа е",
+    "machineName": "Име на машината",
+    "storVol": "Обем за съхранение в сървъра",
+    "stor": "Преглед на съхранението в сървъра",
+    "diskSpeed": "Скорост на диска",
+    "p2p": "Връзки peer to peer",
+    "cpuUse": "Използване на процесора",
+    "syncInfo": "Статус на синхронизацията",
+    "ramUse": "Използване на паметта",
+    "netSpeed": "Скорост на мрежата",
+    "listPort": "Списък на сървис портовете",
+    "endPoint": "крайна точка",
+    "data": "данни",
+    "enteredKeys": "Броят на импортираните ключове на валидатора",
+    "ttlBal": "Общ баланс",
+    "finEPOCH": "Финализиран ЕПОХ",
+    "pending": "услугата е в очакване",
+    "off": "Изключи услугата",
+    "on": "Включи услугата",
+    "settingService": "Създаване на услугата",
+    "restart": "рестартиране на услугата",
+    "currentEpoch": "Сегашен ЕПОХ",
+    "currentSlot": "Сегашен СЛОТ",
+    "p2pNet": "Мрежа peer to peer",
+    "selConcensus": "Изберете консенсус клиента",
+    "selExecution": "Изберете изпълнителен клиент",
+    "subsribeSubnet": "абонирани подмрежи"
   },
   "taskManager": {
     "clickDisplay": "Кликнете върху задачите, за да ги покажете"
   },
   "displayValidator": {
     "pk": "Публичен ключ",
+    "rm": "Дистанционен ключ",
     "service": "СЪРВИС",
     "active": "АКТИВЕН ОТ",
-    "state": "СЪСТОЯНИЕ",
+    "state": "Показател на състоянието",
     "balance": "БАЛАНС",
     "option": "ОПЦИИ",
     "importKey": "Импортиране на валидаторни ключ(ове)",
-    "waitMessage": "It may take some time",
+    "waitMessage": "Може да отнеме малко време",
     "waitForImport": "Моля изчакайте, докато ключ(овете) бъдат импортирани",
-    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
-    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
-    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
-    "sure": "I am sure",
-    "cancel": "cancel",
-    "serviceExpl": "The service selected for the entered Validator key",
-    "activeExpl": "The time since the validator has been active",
-    "balExpl": "The balance of the validator",
-    "copyPub": "Copy the public key",
-    "copiedPub": "Public key copied",
-    "setFee": "set the block fee recipient for the selected keys",
-    "renameVal": "rename the validator key",
-    "removVal": "remove the validator key",
-    "exitChain": "exit the chain with the selected keys",
-    "waitEnt": "You have to wait for the validator keys to enter"
+    "warningMessage": "Допълнителните ни проверки за защита показаха, че един от валидаторите, които ще импортирате, е атестирал през последните 2 епохи.",
+    "warningAlarm": "ПРЕДУПРЕЖДЕНИЕ: Съществува голям риск да бъдете порязани!",
+    "warningQuestion": "СИГУРНИ ЛИ СТЕ, ЧЕ ИСКАТЕ ДА ИМПОРТИРАТЕ КЛЮЧОВЕТЕ НА ВАЛИДАТОРА?",
+    "sure": "Сигурен съм",
+    "cancel": "отказ",
+    "serviceExpl": "Избраната услуга за въведения ключ на валидатора",
+    "activeExpl": "Времето, през което валидаторът е бил активен",
+    "balExpl": "Баланс на валидатора",
+    "copyPub": "Копирай публичен ключ",
+    "copiedPub": "Публичният ключ е копиран",
+    "setFee": "задаване на получателя на таксата за блок за избраните ключове",
+    "renameVal": "преименуване на ключа на валидатора",
+    "removVal": "изтриване на ключа на валидатора",
+    "exitChain": "излизане от веригата с избраните ключове",
+    "waitEnt": "Трябва да изчакате въвеждането на ключовете за валидиране",
+    "grpNam": "груповото име е",
+    "keyNumGrp": "Брой на съдържащите се ключове",
+    "grpBal": "групов баланс",
+    "openGrp": "отворена група",
+    "renameGrp": "преименувай групата",
+    "removGrp": "премахни групата",
+    "inserValidator": "постави ключ на валидиране",
+    "backList": "обратно към списъка",
+    "web3Import": "ИМПОРТ НА ОТДАЛЕЧЕН КЛЮЧ НА WEB3SIGNER",
+    "crteGrp": "създай нова група",
+    "openSrch": "търсене на ключ или група на валидатор",
+    "showValKey": "покажи ключ на валидиране",
+    "showKeyNam": "покажи име на ключа",
+    "upcomingSync": "предстоящи задължения на sync комитета",
+    "upcomingBlocProd": "предстоящи задължения за производство на блокове",
+    "clentSel": "селектиран клиент",
+    "selValClint": "избран клиент на валидатора",
+    "upcomEpochDuti": "предстоящи епох задължения",
+    "graffitiPanel": "промяна на графитите за всички ключове в клиента на валидатора",
+    "removeMultiple": "премахване на всички ключове от клиента на валидатора",
+    "withdrawMultiple": "излизане и изтегляне на всички ключове от клиента на валидатора",
+    "importRemote": "импортиране на ремоут ключове в клиента на валидатора",
+    "valClint": "валидаторски клиент",
+    "valStat": "състояние на валидатора",
+    "numValidator": "броят на импортираните ключове на валидатора",
+    "attestReward": "награда за атестация",
+    "blockProdreward": "награди за блоково производство",
+    "syncCommitteeReward": "възнаграждения на комитета за синхронизация",
+    "ttlKeys": "общ брой ключове",
+    "ttlBal": "общ баланс"
   },
   "enterPass": {
     "enterPass": "ВЪВЕДЕТЕ ПАРОЛА & ИМПОРТИРАЙТЕ"
   },
   "exitMultipleValidator": {
     "passMessage": "ВЪВЕДЕТЕ ПАРОЛАТА СИ ЗА ВАЛИДИРАНЕ, ЗА ДА ИЗЛЕЗЕТЕ ОТ ВЕРИГАТА С ТОЗИ КЛЮЧ...",
-    "confirm": "Confirm"
+    "confirm": "ПОТВЪРДИ"
   },
   "exitValidatorModal": {
     "modalMessage": "Сигурни ли сте, че искате да излезете от веригата с ИЗБРАНИТЕ КЛЮЧОВЕ ЗА УТВЪРЖДАВАНЕ? Това прекратява работата на валидатора и НЕ МОЖЕ да бъде върнато назад. Вашите средства също могат да се изтеглят само ако веригата го позволява.",
@@ -225,333 +224,292 @@
     "setBlock": "ЗАДАВАНЕ НА АДРЕС НА ПОЛУЧАТЕЛ НА БЛОКОВА ТАКСА"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Въведете до 32 символа, които да добавите към веригата, когато създавате блок!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "Въведете до 32 символа, за да преименувате валидатора!"
   },
   "insertValidator": {
     "insertText": "КЛИКНЕТЕ ИЛИ ПЛЪЗНЕТЕ, ЗА ДА ДОБАВИТЕ КЛЮЧ"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "ИСКАТЕ ЛИ ДА ИЗТЕГЛИТЕ ВАШАТА БАЗА ДАННИ ЗА СЛАШИНГ?"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With Slashing Protection Database?",
-    "remove": "Премахване",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "sure": "Сигурни ли сте, че искате да премахнете този ключ от машината си?",
+    "slashing": "Със слашинг на базата данни за защита?",
+    "remove": "Премахване"
   },
   "removeMultipleValidators": {
     "sureText": "Сигурни ли сте, че искате да премахнете всички ключове на Validator ОТ ТАЗИ МАШИНА?"
   },
   "timeReward": {
     "totalText": "ОБЩ БАЛАНС НА",
-    "validators": "ВАЛИДАТОРИ",
-    "proposed": "ПРЕДЛОЖЕНО",
-    "attestRate": "КОЕФИЦИЕНТ НА АТЕСТАЦИЯ",
-    "attention": "ATTESTATION",
-    "missed": "ИЗПУСНАТИ",
-    "aggregations": "АГРЕГАЦИИ",
-    "slashed": "НАРЯЗАНИ"
-  },
-  "validatorsBox": {
-    "date": "ДАТА",
-    "validator": "VALIDATOR",
-    "attestRate": "АТЕСТ.ТАРИФА",
-    "reward": "НАГРАДА"
+    "validators": "ВАЛИДАТОРИ"
   },
   "installOption": {
-    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "НАЗАД",
-    "install": "ИНСТАЛИРАЙ",
-    "placeHoldrer": "choose a network"
-  },
-  "removeModal": {
-    "removeText": "Всички услуги ще бъдат премахнати.",
-    "sure": "Сигурен ли сте?"
+    "install": "ИНСТАЛИРАЙ"
   },
   "installitionMenu": {
-    "welcome": "ДОБРЕ ДОШЛИ",
-    "installText": "В ТАЗИ СТЪПКА ИЗБИРАТЕ НАЧИНА НА ИНСТАЛИРАНЕ НА НОД-а. АКО ИМАТЕ НУЖДА ОТ ПОМОЩ ПРИ ИНСТАЛИРАНЕТО, ПРИСЪЕДИНЕТЕ СЕ КЪМ НАШИЯ ДИСКОРД - С УДОВОЛСТВИЕ ЩЕ ВИ ПОМОГНЕМ",
     "osCheck": "ПРОВЕРКА ДАЛИ ОПЕРАЦИОННАТА СИСТЕМА НА ВАШИЯ СЪРВЪР СЕ ПОДДЪРЖА",
-    "osSupported": "IS A SUPPORTED OS"
+    "osSupported": "Е ПОДДЪРЖАН OS"
   },
   "pluginName": {
-    "option": "CHOSEN NETWORK",
-    "chosen": "ИЗБИРАНЕ НА МРЕЖА",
     "path": "ПЪТ ЗА ИНСТАЛИРАНЕ",
-    "syncClient": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
-    "plugin": "INSTALLED SERVICES",
-    "addOpt": "ADDITIONAL OPTIONS",
-    "installOpt": "INSTALLATION OPTIONS",
-    "startOnInstall": "Start up client after installation?",
-    "monitor": "MONITORING",
-    "instMonit": "Install Monitoring?",
-    "back": "НАЗАД",
-    "next": "СЛЕДВАЩ"
+    "installOpt": "ОПЦИИ ЗА ИНСТАЛИРАНЕ",
+    "startOnInstall": "Стартиране на клиента след инсталиране?",
+    "monitor": "МОНИТОРИНГ",
+    "instMonit": "Инсталиране на мониторинг?"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
-    "developers": "DEVELOPERS",
-    "testers": "TESTERS"
+    "techTitle": "КРЕДИТИ > Технически сътрудници",
+    "techText": "Спечелете GitPOAP! Научете как да се включите, като посетите нашия GitHub!",
+    "testTitle": "КРЕДИТИ > Тестване, обратна връзка и предложения",
+    "testText": "Направете конструктивно предложение, решаващо проблем, в нашия GitHub!",
+    "translateTitle": "КРЕДИТИ > Превод",
+    "translateText": "Не е правилната дума? Помогнете ни да разпространим Stereum на вашия език в Crowdin!",
+    "financialPage": "ФИНАНСОВ ПРИНОС",
+    "developers": "РАЗРАБОТЧИЦИ",
+    "testers": "ТЕСТЕРИ"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "name": "ИМЕ",
+    "cat": "КАТЕГОРИЯ",
+    "path": "ПЪТ"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
-  },
-  "tutorialBox": {
-    "video": "video",
-    "walkthrough": "walkthrough",
-    "textGuide": "written guide"
+    "warningText": "Препоръчваме ви да изчакате да приключи първоначалната инсталация, преди да прилагате допълнителни промени"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
-    "insertTitle": "insert operator key for existing operator",
-    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+    "newRegistritionTitle": "ДА РЕГИСТРИРАТЕ НОВ ОПЕРАТОР",
+    "newRegistritionText": "Използвайте новогенерирания операторски ключ, за да регистрирате нов оператор на нода в мрежата SSV",
+    "register": "Регистрация",
+    "insertTitle": "вмъкване на операторски ключ за съществуващ оператор",
+    "insertText": "Използване на съществуващ частен ключ на оператор за възстановяване на процесите на съществуващ оператор на нода"
   },
   "registerSSV": {
-    "pubKey": "Public operator key",
-    "copied": "copied!",
-    "secKey": "Secret Operator Key",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "pubKey": "Публичен ключ на оператора",
+    "copied": "копирано!",
+    "secKey": "Секретен ключ на оператора",
+    "makeSureText": "Моля, уверете се, че съхранявате и архивирате тайния ключ на оператора на сигурно място. Не споделяйте този ключ с никого.",
+    "copyMessage": "Копирайте публичния си ключ на оператор в това поле, за да потвърдите, че сте съхранили ключовете си!"
   },
   "ssvDashboard": {
-    "operatorPage": "My Operator Page",
-    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+    "operatorPage": "Страницата на моя оператор",
+    "SSVNodeGrafna": "SSV Node Информационно табло Grafana"
   },
   "secretKeyReg": {
-    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "modalLabel": "ВМЪКНЕТЕ СЪЩЕСТВУВАЩ ЧАСТЕН КЛЮЧ НА ОПЕРАТОР, ЗА ДА ГО ИЗПОЛЗВАТЕ КАТО КЛЮЧ НА ОПЕРАТОР",
+    "apply": "ПРИЛОЖИ"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
-    "closed": "Tunnel closed!",
-    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
-    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
-    "WSCopiedMessage": "WS-URL copied to clipboard!"
+    "copy": "Настисни за да копираш!",
+    "closed": "Включете първо",
+    "turnOnMessage": "Моля, първо включете тунела DATA-API!",
+    "copiedMessage": "DATA-API-URL е копиран в клипборда!",
+    "RPCTurnOnMessage": "Моля, първо включете тунела DATA-API!",
+    "RPCCopiedMessage": "RPC-URL е копиран в клипборда!",
+    "WSTurnOnMessage": "Моля, първо включете тунела WS!",
+    "WSCopiedMessage": "WS-URL е копиран в клипборда!"
   },
   "pluginLogs": {
-    "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Double Click to Copy Logs",
-    "serviceId": "service id"
+    "pageTitle": "ПЛЪГ-ИН ЛОГОВЕ",
+    "noLogFound": "Няма намерен дневник в списъка",
+    "clickCopy": "Двойно кликване за копиране на дневници",
+    "serviceId": "ID на услугата:",
+    "exportAll": "Експортирай всички логове",
+    "export150": "Експортирай 150 логове",
+    "cat": "Категория:",
+    "ver": "Версия:"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
-    "openBrowser": "OPEN IN BROWSER",
-    "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
-    "blockRel": "Block relay",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "localApp": "ЛОКАЛНО ПРИЛОЖЕНИЕ",
+    "localAppText": "Отворете услугата на локалната си машина",
+    "openBrowser": "ОТВОРИ В БРАУЗЪРА",
+    "availBlockRel": "НАЛИЧНИ БЛОК-РЕЛЕТА",
+    "process": "Обработване",
+    "blockRel": "Блок реле",
+    "blockRelTxt": "Изберете едно или няколко релета, от които да получават блокове"
   },
   "customInstallation": {
-    "customInstallationTitle": "CUSTOM INSTALLATION",
-    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "customInstallationTitle": "ИНСТАЛАЦИЯ ПО ИЗБОР",
+    "customInstallationText": "Този режим е предназначен за по-напреднали потребители и изисква от вас да разбирате как клиентите взаимодействат помежду си. Ще трябва сами да изберете, инсталирате и свържете всяка част от вашия нод с потребителския интерфейс, преди той да бъде функционален!"
   },
   "mevboostConfig": {
-    "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "availRelays": "НАЛИЧНИ БЛОКОВИ РЕЛЕТА",
+    "usedRelays": "ИЗПОЛЗВАНИ БЛОКОВИ РЕЛЕТА"
   },
   "addModifyPanel": {
-    "installPath": "INSTALLATION PATH",
-    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "portused": "PORT USED",
-    "cancel": "cancel",
-    "save": "save",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "installPath": "ПЪТ ЗА ИНСТАЛИРАНЕ",
+    "syncMessage": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
+    "portused": "ИЗПОЛЗВАН ПОРТ",
+    "cancel": "отказ",
+    "save": "ЗАПАЗИ",
+    "add": "ДОБАВИ",
+    "clickAndAdd": "Кликни да добавиш"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
-    "chooseFile": "Choose File",
-    "continue": "Continue"
-  },
-  "disabledStaking": {
-    "noValidatorInstalled": "There is no validator client installed!",
-    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+    "slashModalMessage": "Искате ли да импортирате с база данни за защита от слашинг?",
+    "importMessage": "Импортирайте своя файл с база данни за слашинг.",
+    "chooseFile": "Избери файл",
+    "continue": "Продължи"
   },
   "logOutModal": {
-    "logOutTitle": "LOG-OUT",
-    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
-    "logOutBtn": "Log out"
+    "logOutTitle": "ОТПИСВАНЕ",
+    "logOutQuestion": "СИГУРНИ ЛИ СТЕ, ЧЕ ИСКАТЕ ДА ИЗЛЕЗЕТЕ ОТ ВАШИЯТ НОД?",
+    "logOutBtn": "Излез от профила си"
   },
   "reconnectModal": {
-    "reconnectTitle": "Connection lost",
-    "reconnectMessage": "Check your connection and try again.",
-    "reconnectBtn": "Reconnect"
+    "reconnectTitle": "Връзката се изгуби",
+    "reconnectMessage": "Проверете вашата интернет връзка и провайте отново.",
+    "reconnectingMessage": "Повторно свързване...",
+    "reconnectBtn": "Свържи повторно"
   },
   "prunningModal": {
-    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Start Pruning",
-    "close": "click outside to close"
+    "prunningText": "Използваното от GETH пространство за съхранение нараства през времето на експлоатация. Отнема МНОГО ЧАСОВЕ, за да се изчисти базата данни на Geth, да се премахнат ненужните данни и да се освободи част от използваното пространство за съхранение. Това трябва да се направи, докато Geth не работи. ЗАПОЧВАЙКИ ПРОЦЕСА НА ИЗРЯЗВАНЕ, ВАШИЯТ НОД ЩЕ ИЗЛЕЗЕ ОТ МРЕЖАТА И ЩЕ СПРЕ ДА ИЗПЪЛНЯВА ПОТЕНЦИАЛНИ ЗАДЪЛЖЕНИЯ ПО АТЕСТИРАНЕ.",
+    "prunningChecked": "ПРОЧЕТОХ ТЕКСТА И СЪМ НАЯСНО С ПОСЛЕДСТВИЯТА",
+    "prunningStart": "Стартиране на пречистване",
+    "close": "кликнете извън прозореца за прекратите процеса"
   },
   "restartModal": {
-    "restarQ": "Are you sure you want to restart?",
-    "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart",
-    "confirmMessage": "Are you sure you want turn your node"
+    "restartMessage": "възможно е вашият нод да излезе от мрежата, докато го правите!",
+    "restart": "рестартиране",
+    "confirmMessage": "Сигурни ли сте, че искате да превърнете нода си",
+    "areYouSure": "наистина ли искате да"
   },
   "nukeModal": {
-    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
-    "nukeTitle": "nuke the node",
-    "backToLogin": "Back to login"
+    "nukeQ": "СИГУРНИ ЛИ СТЕ, ЧЕ ИСКАТЕ ДА ПРЕМАХНЕТЕ СТЕРЕУМ И ВСИЧКИ НЕГОВИ УСЛУГИ ОТ СЪРВЪРА?",
+    "nukeTitle": "унищожаване на нода",
+    "backToLogin": "Обратно към вход"
   },
   "noData": {
-    "noData": "no data",
-    "turnOn": "please turn on"
+    "noData": "няма данни",
+    "turnOn": "моля включи"
   },
   "rpcGuide": {
-    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
-    "toggleMessage": "Click on the “ON/OFF” button to open your port",
-    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
-    "clickCancel": "Click x to cancel",
-    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
-    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
-    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
-    "secondSlide": "Click on the Network button",
-    "thirdSlide": "Click on “Add Network”",
-    "fourthSlide": "Type in a name for your network",
-    "fivethSlide": "Paste in the copied URL from Stereum",
-    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
-    "seventhSlide": "Type in “ETH” as the currency symbol",
-    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
-    "ninethSlide": "Click on “SAVE”"
+    "clickNav": "Щракнете върху \"CONTROL\", за да влезете в контролния панел.",
+    "toggleMessage": "Щракнете върху бутона \"ON/OFF\", за да отворите порта",
+    "clickExtention": "Щракнете върху бутона \"Вашият клиент за изпълнение\", за да копирате RPC URL адреса",
+    "clickCancel": "Кликнете върху x, за да отмените",
+    "firstMessage": "Уиджет RPC-Endpoint, разположен в таблото за управление. Моля, включете бутона \"ON\" и щракнете върху \"Execution Client\", за да преминете към следващата стъпка.",
+    "secondMessage": "Сега можете да изпратите транзакцията си ПРЕЗ ВАШИЯ НОД С METAMASK. Когато приключите с изпращането на транзакциите, кликнете върху \"ON\", за да затворите порта",
+    "firstSlide": "Сега влезте във вашия dAPP или портфейл, който искате да използвате (в нашия случай MetaMask)",
+    "secondSlide": "Кликнете върху бутона Мрежа",
+    "thirdSlide": "Кликнете върху \"Добавяне на мрежа\"",
+    "fourthSlide": "Въведете име за вашата мрежа",
+    "fivethSlide": "Поставете копирания URL адрес от Stereum",
+    "sixthSlide": "Въведете идентификатора на веригата (CHAIN-ID), на която работи вашият нод (за GoerliTestnet той е 5)",
+    "seventhSlide": "Въведете \"ETH\" като символ на валутата",
+    "eightthSlide": "ПО ВАРИАНТ - можете да поставите URL адрес на Block Explorer",
+    "ninethSlide": "Кликнете върху \"SAVE\""
   },
   "stakeGuide": {
-    "syncCheck": "First Check if your Node is synced",
-    "scrollMessage": "Scroll to change slides faster",
-    "stake": "staking",
-    "scrollClick": "Click on Staking",
-    "drag": "Drag or click on “CLICK OR DRAG TO INSERT KEY”",
-    "clickIcon": "Click on the icon of your validator client",
-    "cong": "Congrats you are done!",
-    "clickPass": "Please click here to enter your password and confirm.",
-    "noSlash": "Choose “No” if you have no Slashing Protection Database from a prior Node",
-    "test": "testtesttestte"
+    "syncCheck": "Първо проверете дали нодът ви е синхронизиран",
+    "scrollMessage": "Скролнете, за да сменяте слайдовете по-бързо",
+    "stake": "залагане",
+    "scrollClick": "Кликнете на залагане",
+    "drag": "Плъзнете или щракнете върху \"CLICK OR DRAG TO INSERT KEY\"",
+    "clickIcon": "Кликнете върху иконата на вашия клиент за валидиране",
+    "cong": "Поздравления, вие сте готови!",
+    "clickPass": "Моля, кликнете тук, за да въведете паролата си и да я потвърдите.",
+    "noSlash": "Изберете \"Не\", ако нямате база данни за защита от нарязване от предишен нод"
   },
   "blockProduct": {
-    "status": "STATUS",
-    "assignSlot": "Assigned Slot",
-    "noAsign": "Not Assigned",
-    "nxtBlck": "Next Block Proposal in:"
+    "status": "СТАТУС",
+    "assignSlot": "Начислен слот",
+    "noAsign": "Не е зададен",
+    "nxtBlck": "Следваща Блок Предложение в:"
   },
   "disableStake": {
-    "message": "REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING"
+    "message": "ИЗИСКВА СТАРТИРАНЕ НА КЛИЕНТ НА ВАЛИДАТОРА НА СЪРВЪРА ЗА ДОСТЪП ДО ЗАЛАГАНЕ"
   },
   "selectionOption": {
-    "graffiti": "graffiti",
-    "removeKeys": "Remove all keys"
+    "graffiti": "графити",
+    "removeKeys": "Изтрий всички ключове"
   },
   "syncCommitte": {
-    "total": "total",
-    "status": "STATUS",
-    "particip": "PARTICIPATING",
-    "noParticip": "NOT PARTICIPATING",
-    "start": "Start",
-    "end": "End",
-    "newSync": "New Sync Committee in",
-    "hours": "hours"
+    "total": "общо",
+    "status": "СТАТУС",
+    "particip": "УЧАСТВАЩИ",
+    "noParticip": "НЕ УЧАСТВАЩИ",
+    "start": "Старт",
+    "end": "Край",
+    "newSync": "Нов комитет за синхронизиране в",
+    "hours": "часове"
   },
   "theAttes": {
-    "lastAttest": "Last Attestation Slot:",
-    "keyStatus": "Key Status:",
-    "attest": "ATTESTING",
-    "pending": "PENDING",
-    "noKey": "CHOOSE A KEY",
-    "nxtAttest": "next Attestation Slot:",
-    "slotRem": "Slots remaining",
-    "tillAtest": "till attestation"
+    "lastAttest": "Последен слот за атестиране:",
+    "keyStatus": "Ключове статус:",
+    "attest": "АТЕСТАЦИЯ",
+    "pending": "ЧАКАЩО",
+    "noKey": "ИЗБЕРЕТЕ КЛЮЧ",
+    "nxtAttest": "следващия слот за атестиране:",
+    "slotRem": "Оставащи слотове",
+    "tillAtest": "до атестация"
   },
   "confirmModal": {
-    "off": "ARE YOU SURE YOU WANT TO TURN YOUR NODE OFF?",
-    "on": "ARE YOU SURE YOU WANT TO TURN YOUR NODE ON?",
-    "messageOff": "Your node will go offline!",
-    "messageOn": "Your node will go online!",
-    "turnOn": "turn on",
-    "turnOff": "turn off",
-    "close": "click outside to close"
+    "off": "СИГУРНИ ЛИ СТЕ, ЧЕ ИСКАТЕ ДА ИЗКЛЮЧИТЕ ВАШИЯТ НОД?",
+    "on": "СИГУРНИ ЛИ СТЕ, ЧЕ ИСКАТЕ ДА ВКЛЮЧИТЕ ВАЩИЯТ НОД?",
+    "messageOff": "Вашият нод ще бъде офлайн!",
+    "messageOn": "Вашият нод ще бъде онлайн!",
+    "turnOn": "включи",
+    "turnOff": "изключи",
+    "close": "кликнете извън прозореца за прекратите процеса"
   },
   "nodeAlert": {
-    "lowSpace": "LOW STORAGE",
-    "missAttest": "MISSED ATTESTATION",
-    "use": "USAGE",
-    "noFee": "no fee recipient",
-    "stereumUpt": "STEREUM UPDATE",
-    "clkFee": "Service Settings",
-    "clkUpdate": "Click to open update panel",
-    "sync": "Synchronization Error",
-    "taskFail": "task failed"
-  },
-  "restartModalNode": {
-    "message": "are you sure you want to",
-    "close": "click outside to close"
+    "lowSpace": "МАЛКО МЯСТО НА ДИСКА",
+    "use": "УПОТРЕБА",
+    "noFee": "няма получател на таксата",
+    "stereumUpt": "АКТУАЛИЗАЦИЯ НА STEREUM",
+    "clkFee": "Настройки на услугата",
+    "clkUpdate": "Кликнете, за да отворите панела за актуализация",
+    "sync": "Грешка при синхронизиране",
+    "taskFail": "Задачата е неуспешна",
+    "stats": "СТАТУС: ОТВОРЕН",
+    "clientService": "КЛИЕНТ / УСЛУГА"
   },
   "resyncModal": {
-    "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
-    "sync": "SYNCHRONISATION",
-    "gen": "GENESIS",
-    "chkSync": "CHECKPOINT SYNC",
-    "syncMsg": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cont": "CONTINUE",
-    "resync": "RESYNC",
-    "close": "click outside to close"
+    "message": "ВАШИЯТ КЛИЕНТ СЪХРАНЯВА данните от блокчейн НА ВАШИЯ СЕРВЪР, ЗА ДА МОЖЕ ВАШИЯТ ВЪЗЕЛ ДА ОБСЛУЖВА МРЕЖАТА. това е необходимо, за да може вашият възел ДА ПОЛУЧИ ЗАДЪЛЖЕНИЕТО СИ ЗА АТЕСТАЦИЯ В СТАКИНГ. С ИЗПОЛЗВАНЕТО НА ТОЗИ ВАРИАНТ ИЗТРИВАТЕ ДАННИТЕ ЗА БЛОКЧАЙНА НА ВАШИЯ КЛИЕНТ И ИЗПОЛЗВАТЕ ИЗБРАНИЯ ВАРИАНТ КАТО ИЗТОЧНИК ЗА СИНХРОНИЗИРАНЕ НА ВАШИЯ ВЪЗЕЛ НА НОВО.",
+    "sync": "СИНХРОНИЗАЦИЯ",
+    "gen": "ГЕНЕЗИС",
+    "chkSync": "ЧЕКПОЙНТ СИНХРОНИЗАЦИЯ",
+    "syncMsg": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
+    "cont": "НАПРЕД",
+    "resync": "РЕ-СИНХРОНИЗАЦИЯ",
+    "close": "кликнете извън прозореца за прекратите процеса"
   },
   "resyncSeparateService": {
-    "message": "by initiating resync you will delete the database of",
-    "msgPartTwo": " source will be used for resynchronization",
-    "resync": "resync",
-    "close": "click outside to close"
+    "message": "като инициирате повторно синхронизиране, ще изтриете базата данни на",
+    "msgPartTwo": " източникът ще бъде използван за ресинхронизация",
+    "resync": "повторно синхронизиране",
+    "close": "кликнете извън прозореца за да затворите процеса"
   },
   "notifModal": {
-    "addNotif": "add a notification channel",
-    "chooseNotif": "Choose what kind of Notification Channel you want to configure",
-    "stereumMonitor": "Stereum Node Monitor",
-    "stepOne": "Visit the app store or our website to download “STEREUM Node Monitor”",
-    "stepTwo": "Open the app on your smartphone",
-    "stepThree": "Scan the QR Code",
-    "stepFour": "Send a test notification",
-    "close": "click outside to close",
-    "dash": "Dashboard",
-    "chooseVal": "CHOOSE A VALIDATOR CLIENT TO CONNECT MONITORING TO",
-    "goTo": "Go to",
-    "machinename": "Machine Name",
-    "apikey": "API Key",
-    "apply": "APPLY"
+    "addNotif": "добавете канал за нотификация",
+    "chooseNotif": "Изберете вида на канала за известия, който искате да конфигурирате",
+    "stereumMonitor": "Stereum Нод Монитор",
+    "stepOne": "Make sure to install & turn on the Notification Service.",
+    "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
+    "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
+    "stepFour": "Scan the QR Code in the App.",
+    "stepFive": "Send a test notificiation in Grafana.",
+    "close": "кликнете извън прозореца за да затворите",
+    "dash": "Контролен панел",
+    "chooseVal": "ИЗБОР НА КЛИЕНТ ЗА ВАЛИДИРАНЕ, КЪМ КОЙТО ДА СЕ СВЪРЖЕ НАБЛЮДЕНИЕТО",
+    "goTo": "Отиди на/към",
+    "machinename": "Име на машината",
+    "apikey": "API ключ",
+    "apply": "ПРИЛОЖИ"
   },
   "replacePanel": {
-    "client": "Client",
-    "sync": "SYNC",
-    "gen": "GENESIS",
-    "chkPoint": "CHECKPOINT",
-    "genActiv": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "cancel": "CANCEL",
-    "confirm": "CONFIRM"
+    "client": "Клиент",
+    "sync": "СИНХРОНИЗАЦИЯ",
+    "gen": "ГЕНЕЗИС",
+    "chkPoint": "КОНТРОЛНА ТОЧКА",
+    "genActiv": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
+    "cancel": "ОТКАЗ",
+    "confirm": "ПОТВЪРДИ"
   },
   "executionSync": {
     "gen": "GENESIS",
@@ -572,8 +530,7 @@
   },
   "uploadConfig": {
     "message": "With this installation option you are able to import a used Stereum config file to replicate your node setup.",
-    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT",
-    "configFile": "Config file"
+    "selectConfig": "SELECT A STEREUM CONFIG FILE TO UPLOAD IT"
   },
   "fastSync": {
     "header": "Set how the Node clients will synchronize their blockchain data.",
@@ -584,7 +541,6 @@
     "message": "After installing your node, your clients will start syncing with the synchronization source you selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first, followed by the Execution Client."
   },
   "deleteModal": {
-    "message": "Do you want to remove the saved connection?",
     "rem": "Remove",
     "close": "click outside to close"
   },
@@ -600,7 +556,7 @@
     "usingTerminal": "Read through Using the terminal and click on “I ACCEPT”",
     "validatorUptime": "Read through Validator uptime and click on “I ACCEPT”",
     "validatorBahavior": "Read through Bad validator behaviour and click on “I ACCEPT”",
-    "keyManagement": "Read through Key managment and click on “I ACCEPT”",
+    "keyManagement": "Read through Key management and click on “I ACCEPT”",
     "validatingLongterm": "Read through Validating is a long-term commitment and click on “I ACCEPT”",
     "earlyAdaptor": "Read through Early adopter risks and click on “I ACCEPT”",
     "stakingChecklist": "Read through Staking checklist and click on “I ACCEPT”",
@@ -619,140 +575,332 @@
     "selectNetwork": "Select the network in which you want your node to run",
     "clickOk": "Click on “OK”",
     "clickCreate": "Click on “CREATE”",
-    "recoveryPhrase": "After your Secret Recovery Phrase is created safe it in a safe place. Click on the copy button.",
+    "recoveryPhrase": "After your Secret Recovery Phrase is created save it in a safe place. Click on the copy button.",
     "clickNext": "Click on “NEXT”",
     "imSure": "Click on “I’M SURE”",
-    "pasteRecovery": "Paste in your Secret Recovery Phrase",
-    "clickCheck": "Click on “CHECK”",
-    "needKey": "Type in the number of keys you need",
-    "typPass": "Type in a password",
-    "retypPass": "Retype your pasword",
-    "clickBrowse": "Click on “BROWSE”",
-    "chooseFolder": "Choose a folder where you want to save your keys and safe them in a safe place",
-    "clickCreateWait": "Click on “CREATE” and wait for a couple of seconds",
-    "clickClose": "Check if your keys are generated and click on “CLOSE”",
-    "switchSetup": "Switch back to the setup page",
-    "dragFile": "Click on “Drag file to uploud or browse” and drag your deposite file in the field",
-    "connWalet": "Connect your wallet, check the network and your balance",
-    "understandRisk": "Read the section “Understand the risks” and check every box",
-    "readSection": "Read the section “Make sure you aren’t pished” and check the box",
-    "protectYourself": "Read the section “Protect yourself against double deposits” and check the box",
-    "dblCheck": "Double check everything and click on “CONTINUE”",
-    "sendDeposit": "Click on “SEND DEPOSIT”",
-    "walletPopup": "Your wallet will pop-up, click on “Confirm” to send the transaction",
-    "contCong": "Click on “CONTINUE”, congrats you created a validator key"
+    "pasteRecovery": "Поставете тайната си фраза за възстановяване",
+    "clickCheck": "Кликнете върху \"CHECK\"",
+    "needKey": "Въведете необходимия брой ключове",
+    "typPass": "Напишете парола",
+    "retypPass": "Напишете паролата отново",
+    "clickBrowse": "Кликнете върху \"BROWSE\"",
+    "chooseFolder": "Изберете папка, в която искате да запазите ключовете си, и ги съхранете на сигурно място",
+    "clickCreateWait": "Кликнете върху \"CREATE\" и изчакайте няколко секунди",
+    "clickClose": "Проверете дали ключовете ви са генерирани и кликнете върху \"ЗАТВОРИ\"",
+    "switchSetup": "Върнете се към страницата с настройки",
+    "dragFile": "Кликнете върху \"Drag file to upload or browse\" и плъзнете депозирания файл в полето",
+    "connWalet": "Свържете портфейла си, проверете мрежата и баланса си",
+    "understandRisk": "Прочетете раздела \"Разбиране на рисковете\" и отбележете всяко квадратче",
+    "readSection": "Прочетете раздела \"Уверете се, че не сте измамени\" и поставете отметка в квадратчето",
+    "protectYourself": "Прочетете раздела \"Защита от двойни депозити\" и поставете отметка в квадратчето",
+    "dblCheck": "Проверете всичко два пъти и кликнете върху \"CONTINUE\"",
+    "sendDeposit": "Кликнете върху \"ИЗПРАТИ ДЕПОЗИТ\"",
+    "walletPopup": "Вашият портфейл ще се появи, кликнете върху \"Потвърди\", за да изпратите транзакцията",
+    "contCong": "Кликнете върху \"CONTINUE\", поздравления, че сте създали валидационен ключ"
   },
   "balWid": {
-    "fin": "FINALIZED",
-    "bal": "BALANCE CHANGE"
+    "fin": "ФИНАЛИЗИРАНО",
+    "bal": "БАЛАНС"
   },
   "headerBtn": {
-    "help": "help",
-    "notif": "Management of notification channels",
-    "availableUpdt": "New update is available",
-    "updtPan": "update panel",
-    "setting": "Stereum settings",
-    "logOutBtn": "Log out"
+    "help": "помощ",
+    "notif": "Управление на каналите за известия",
+    "availableUpdt": "Има нова актуализация",
+    "updtPan": "обновяване на панела",
+    "setting": "Стереумни настройки",
+    "logOutBtn": "Излез от профила си",
+    "rem": "ПРЕМАХВАНЕ",
+    "node": "НОД",
+    "control": "КОНТРОЛ",
+    "staking": "СТАКИНГ"
   },
   "switchNetwork": {
-    "message": "This is the current network, you can click to select another network"
+    "message": "Това е текущата мрежа, можете да кликнете, за да изберете друга мрежа"
   },
   "searchOption": {
-    "switchShow": "Switch between showing the public key & your picked custom name",
-    "group": "Group multiple key(s)",
-    "searchFilter": "Search & filters"
+    "switchShow": "Превключване между показване на публичния ключ и избраното от вас потребителско име",
+    "group": "Групиране на няколко ключ(а)",
+    "searchFilter": "Филтри за търсене"
   },
   "serverManagement": {
-    "serverAccMange": "Server Access Management",
-    "serverNam": "Server Name",
-    "ipHOST": "IP or HOST NAME",
-    "userNam": "User Name",
-    "machineNam": "Machine Name",
-    "port": "Port",
-    "pass": "Password",
-    "chngPass": "Change Password",
-    "passmessage": "Please enter a password to change it",
-    "confirmPass": "please enter the password again",
-    "confirmPassMessage": "confirm your password",
-    "cancel": "CANCEL",
-    "clckChngPass": "click to change your password",
-    "key": "Key",
-    "createKey": "create a new key",
-    "clckCreateKey": "click to generate a new key",
-    "addKey": "add an existing key",
-    "clckAddKey": "click to add an existing key"
+    "serverAccMange": "Управление на достъпа до сървъра",
+    "serverNam": "Име на сървъра",
+    "ipHOST": "IP / ИМЕ НА ХОСТ",
+    "userNam": "Потребителско име",
+    "machineNam": "Име на машината",
+    "port": "Порт",
+    "pass": "Парола",
+    "chngPass": "Промяна на парола",
+    "passmessage": "Моля, въведете парола, за да я промените",
+    "confirmPass": "моля, въведете отново паролата",
+    "confirmPassMessage": "потвърдете паролата си",
+    "cancel": "ОТКАЗ",
+    "clckChngPass": "кликнете, за да смените паролата си",
+    "key": "Ключ",
+    "createKey": "създаване на нов ключ",
+    "clckCreateKey": "кликнете, за да генерирате нов ключ",
+    "addKey": "добавете съществуващ ключ",
+    "clckAddKey": "кликнете, за да добавите съществуващ ключ"
   },
   "taskMang": {
-    "taskMng": "Task Manager"
+    "taskMng": "Диспечер на задачите"
   },
   "ipScanModal": {
-    "message": "  Do you want to automatically retrieve your node server ip by searching your home network for the ping emitted by Stereum's Ubuntu ISO? This might take a while...",
-    "clockClose": "Click outside to close",
-    "noIpFound": "No IP found",
-    "clickSearch": "Click [search] to start"
+    "message": "  Искате ли автоматично да извличате IP адреса на сървъра на нода, като търсите в домашната си мрежа за пинг, излъчен от Ubuntu ISO на Stereum? Това може да отнеме известно време...",
+    "clockClose": "Кликнете извън прозореца за да затворите"
   },
   "serviceBtn": {
-    "turnOff": "Turn off the service",
-    "turnOn": "Turn on the service",
-    "restart": "Restart the service",
-    "pending": "Service is pending",
-    "settings": "service settings",
-    "logs": "open logs",
-    "docs": "open docs"
+    "turnOff": "Изключи услугата",
+    "turnOn": "Включи услугата",
+    "restart": "Рестартиране на услугата",
+    "pending": "Услугата е в очакване",
+    "settings": "настройки на услугата",
+    "logs": "отвори логовете",
+    "docs": "отвори документите"
   },
   "serviceLay": {
-    "srvice": "service"
+    "srvice": "услуга"
   },
   "clientButtons": {
-    "turnOn": "Turn the service on",
-    "turnOff": "Turn the service off",
-    "restart": "Restart the service",
-    "pending": "Service is pending",
-    "settings": "Access the settings of the service",
-    "logs": "Open the logs of the service",
-    "docs": "Open the documentation of the service in your browser",
-    "removeLock": "Remove Lock files of the service",
-    "pruning": "Prune the service database",
-    "resync": "Resync the service from a selected source"
+    "turnOn": "Включване на услугата",
+    "turnOff": "Изключване на услугата",
+    "restart": "Рестартиране на услугата",
+    "pending": "Услугата е в очакване",
+    "settings": "Достъп до настройките на услугата",
+    "logs": "Отворете регистрите на услугата",
+    "docs": "Отворете документацията на услугата в браузъра си",
+    "removeLock": "Премахване на заключващите файлове на услугата",
+    "pruning": "Пречистване на базата данни за услуги",
+    "resync": "Повторно синхронизиране на услугата от избран източник"
   },
   "clientLay": {
-    "client": "client",
-    "keyMsg": "key(s) imported",
-    "syncStatus": "sync status:"
+    "client": "клиент",
+    "keyMsg": "импортирани ключ(ове)",
+    "syncStatus": "състояние на синхронизиране:"
   },
   "serverDetails": {
-    "machineName": "Machine Name",
-    "machineIp": "Machine IP Address"
+    "machineName": "Име на машината",
+    "machineIp": "IP адрес на машината"
   },
   "changesBox": {
-    "clickToCancel": "Click here to cancel this change"
+    "clickToCancel": "Натиснете тук, за да отмените тази промяна"
   },
   "editClientLay": {
-    "clkEdit": "Click to edit your service"
+    "clkEdit": "Кликнете, за да редактирате услугата си"
   },
   "generalMenu": {
-    "modify": "modify",
-    "connection": "connection",
-    "switchClient": "switch client",
-    "delete": "delete",
-    "service": "service",
-    "info": "info"
+    "modify": "редакция",
+    "connection": "свързване",
+    "switchClient": "превключване на клиенти",
+    "delete": "изтрий",
+    "service": "услуга",
+    "info": "инфо"
   },
   "networkDetails": {
-    "currIs": "The current network is",
-    "currentNet": "Current Network"
+    "currIs": "Настоящата мрежа е",
+    "currentNet": "Текуща мрежа"
   },
   "changeSect": {
-    "clkConfirm": "Click here to confirm change(s)"
+    "clkConfirm": "Щракнете тук, за да потвърдите промяната(ите)"
   },
   "sidebarSect": {
-    "toNode": "Return to the Node Page",
-    "toEdit": "Go to the Edit Node Page",
-    "setchNet": "Switch Network in the configuration of the Node",
-    "nukTheNud": "Nuke the Stereum Node and all its services",
-    "nukNod": "Nuke Node",
-    "trnOn": "Turn your node on",
-    "trnOff": "Turn your node off",
-    "expNode": "Export your Node Configuration"
+    "toNode": "Връщане към нод страницата",
+    "toEdit": "Отидете на страницата Редактиране на нод",
+    "setchNet": "Превключване на мрежата в конфигурацията на нода",
+    "nukTheNud": "Изтриване на Stereum нода и всички негови услуги",
+    "nukNod": "Изтрий нод",
+    "trnOn": "Включи своя нод",
+    "trnOff": "Изключи своя нод",
+    "expNode": "Експортирай твоята нод конфигурация"
+  },
+  "customAnim": {
+    "processing": "Обработване"
+  },
+  "customFooter": {
+    "back": "НАЗАД",
+    "next": "СЛЕДВАЩ"
+  },
+  "configDetails": {
+    "addConfig": "Добави конфигурация"
+  },
+  "editBody": {
+    "executionClient": "Клиент за изпълнение",
+    "consensusClient": "Kонсенсусен клиент",
+    "validator": "Валидатор"
+  },
+  "editModals": {
+    "noAvailService": "Няма налична услуга",
+    "executionClients": "Клиент за изпълнение",
+    "consensusClients": "Kонсенсусни клиенти",
+    "validatorClients": "Валидаторски клиент",
+    "installationPath": "Място за инсталиране",
+    "syncMode": "Мод на синхронизация",
+    "serviceId": "ID на услугата",
+    "serviceCat": "Категория услуги",
+    "modifyConnection": "Промяна на връзката",
+    "confirm": "Потвърди",
+    "clckOutside": "Кликнете извън прозореца за да затворите",
+    "switchNetwork": "Смяна на мрежата",
+    "selectNetwork": "Изберете мрежа, която да замени",
+    "switchTo": "Превключване към",
+    "trnOn": "Включи",
+    "trnOff": "Изключи",
+    "selectClient": "Избор на клиент от списъка",
+    "switchClient": "превключване на клиента",
+    "selectNet": "Избор на мрежа"
+  },
+  "editPageServices": {
+    "services": "Услуги",
+    "service": "Услуга",
+    "delete": "Изтрий"
+  },
+  "guideInfo": {
+    "close": "Затвори"
+  },
+  "ImportConfigHeader": {
+    "toImport": "Към импортиране",
+    "rem": "Премахване"
+  },
+  "loginServer": {
+    "wait": "Моля изчакайте...",
+    "chckServerDetails": "Моля проверете данните на сървъра.",
+    "serverRem": "Вашият сървър ще бъде премахнат.",
+    "removeServer": "ПРЕМАХНИ СЪРВЪРА",
+    "removeServerText": "Сигурни ли сте, че искате да изтриете?"
+  },
+  "multiServer": {
+    "serverName": "Име на сървъра",
+    "saveServer": "Запази сървъра",
+    "ipOrHost": "IP или име на хост",
+    "port": "Порт",
+    "userName": "Потребителско име",
+    "pass": "Парола",
+    "keyPath": "Път на ключа",
+    "login": "Вход",
+    "conecting": "Свързване.",
+    "newPass": "Нова парола",
+    "EnterNewPass": "Въведете нова парола",
+    "verifyPass": "Потвърдете паролата",
+    "chngResPass": "Промяна / нулиране на паролата",
+    "chngPass": "Промяна на парола",
+    "machineName": "Име на машината",
+    "chngAvatar": "Смяна на Аватар",
+    "sshkeyMang": "УПРАВЛЕНИЕ НА SSH КЛЮЧОВЕ",
+    "createNewKey": "СЪЗДАВАНЕ НА НОВ КЛЮЧ",
+    "addExistingKey": "ДОБАВЕТЕ СЪЩЕСТВУВАЩ КЛЮЧ",
+    "loginFailed": "Неуспешно влизане",
+    "ok": "ОК",
+    "genSshKey": "Генерирай SSH ключ",
+    "keyType": "Тип на ключа",
+    "selectKeyType": "Изберете тип на ключа",
+    "sshPass": "SSH парола",
+    "unlockExpertOptions": "ОТКЛЮЧВАНЕ НА ЕКСПЕРТНИ ОПЦИИ",
+    "optionalSshPass": "ОПРЕДЕЛЯНЕ НА НЕЗАДЪЛЖИТЕЛНА ПАРОЛА ЗА SSH",
+    "savePath": "ЗАПАЗВАНЕ НА ПЪТЯ",
+    "specCypher": "ОПРЕДЕЛЕТЕ ШИФЪР",
+    "bitAmount": "РАЗМЕР НА БИТА",
+    "useCostumCypher": "ИЗПОЛЗВАНЕ НА ПОТРЕБИТЕЛСКИ ШИФЪР",
+    "specSshBitAmount": "УКАЖЕТЕ КОЛИЧЕСТВОТО НА SSH БИТА",
+    "gen": "ОСНОВНИ",
+    "saveServerCon": "ЗАПАЗЕНИ СЪРВЪРНИ ВРЪЗКИ",
+    "serch": "Търсене",
+    "serchFor": "Търсене...",
+    "addServer": "ДОБАВЯНЕ НА НОВА ВРЪЗКА СЪС СЪРВЪР",
+    "serverAccMang": "Управление на достъпа до сървъра"
+  },
+  "oneClick": {
+    "installedService": "ИНСТАЛИРАНИ УСЛУГИ",
+    "addOption": "ДОПЪЛНИТЕЛНИ ОПЦИИ",
+    "chooseNetwork": "ИЗБЕРЕТЕ СВОЯ СЛУЧАЙ НА УПОТРЕБА И МРЕЖА. СЛЕД КАТО ИЗБЕРЕТЕ И НАТИСНЕТЕ СТАРТ, ЩЕ БЪДЕ ИЗБРАН СЛУЧАЕН КЛИЕНТ, КОЙТО ДА ОБСЛУЖВА ВАШИЯ СЛУЧАЙ НА УПОТРЕБА",
+    "oneClckInstall": "ИНСТАЛАЦИЯ С ЕДИН-КЛИК",
+    "setNodeClient": "Задаване на начина, по който клиентите на възела синхронизират своите блокчейн данни от",
+    "process": "Обработване"
+  },
+  "serviceModal": {
+    "distributedValidator": "Генериране на разпределен ключ",
+    "generateEnr": "GENERATING NEW ENR",
+    "open": "OPEN",
+    "createEnr": "CREATE NEW ENR",
+    "openObol": "OPEN OBOL LAUNCHPAD",
+    "generateEnrToJoin": "Generate a new ENR to use to create or join an existing cluster",
+    "joinCluster": "Create/join an Obol Cluster solo or with a group using the Distributed Validator Launchpad.",
+    "openBrowser": "OPEN IN BROWSER",
+    "importEnr": "IMPORT EXISTING ENR",
+    "entrEnr": "Enter ENR",
+    "import": "import",
+    "copy": "COPY",
+    "rem": "REMOVE",
+    "backUpFile": "BACKUP DEPOSIT FILE",
+    "startDkg": "START THE DKG",
+    "exportBackup": "Export your backup deposit file from the server to back it up",
+    "allEnrSign": "When all ENRs are signed, you will be presented with a command. All Node Operators have to run this command at the same time!",
+    "srart": "START",
+    "pasteUrl": "PASTE THE URL",
+    "entrUrl": "Enter URL",
+    "oops": "Oops! Something Went Wrong",
+    "wentWrong": "Something went wrong. Please click the refresh button and try again.",
+    "pubKey": "Public operator key",
+    "genPair": "GENERATE ENCRYPTED PAIR",
+    "confWarning": "CONFIRM WARNING",
+    "opDash": "MAINNET OPERATOR DASHBOARD",
+    "runOp": "The most secure way to run your Operator node, is to generate an Encrypted key pair.",
+    "dnldBackup": "Please make sure to write down your password & download the backup. Nobody can help you recover your password or secret key if you lose them!",
+    "showPerformance": "Shows an overview of the performance of your node for the SSV Network as well as all the keys assigned to it.",
+    "copyKey": "COPY PUBLIC OPERATOR KEY",
+    "skPk": "Secret Operator Key (SK) & Public Operator Key (PK)",
+    "selPk": "SELECT AN EXISTING PRIVATE KEY TO IMPORT",
+    "selEnc": "SELECT UNENCRYPTED PRIVATE KEY",
+    "sel": "SELECT",
+    "dnldBk": "DOWNLOAD BACKUP",
+    "dkKey": "ENTER THE PASSWORD TO DECRYPT THE PRIVATE KEY",
+    "dlPk": "Download the private key to back it up. Make sure to also write down the password you used for encryption!",
+    "dl": "DOWNLOAD",
+    "imp": "IMPORT",
+    "mngEnr": "Управление на ENR",
+    "copyEnr": "Copy the generated or imported 'Ethereum Node Record' - the identifier of your node using Obol.",
+    "areYouSure": "Are you sure you want to remove your ENR?",
+    "areYouSureCluster": "Are you sure you want to remove your cluster?",
+    "areYouSureMsg": "This can not be undone!",
+    "save": "BACKUP..."
+  },
+  "stakingPage": {
+    "somethingWrong": "Възникна грешка",
+    "enteredGraffitti": "Entered Graffiti Not Valid.",
+    "writeGrpName": "Write here your group name",
+    "noVal": "No Validator key imported.",
+    "noMatch": "No Matches.",
+    "reward": "Награда",
+    "ttl": "Общо",
+    "pleaseWait": "Моля изчакайте, докато ключ(овете) бъдат импортирани.",
+    "imp": "Importing",
+    "yes": "ДА",
+    "no": "НЕ",
+    "noFile": "Няма избран файл",
+    "impDet": "Импортирай детайли:",
+    "grpId": "Group ID:",
+    "grpNam": "Име на групата:",
+    "keys": "Keys:",
+    "remGrp": "Премахване на група",
+    "areYouSure": "Сигурни ли сте, че искате за изтриете групата?",
+    "remValKey": "Remove Validator Key(s)",
+    "areXouSure": "Наистина ли искате да премахнете този/тези ключ(ове)?",
+    "stopImport": " Otherwise, click outside to stop importing.",
+    "expMsg": "Експортирай съобщение",
+    "riskWarning": "Предупреждение за риск",
+    "process": "Обработване...",
+    "withdrawExit": "Withdraw & Exit Validator Keys",
+    "vldExited": "Validator(s) Successfully Exited.",
+    "vldFailed": "Validator(s) Failed to exit.",
+    "successExit": "Излязохте успешно.",
+    "exitFailed": "Неуспешно излизане.",
+    "readConeq": "ПРОЧЕТОХ ТЕКСТА И СЪМ НАЯСНО С ПОСЛЕДСТВИЯТА"
+  },
+  "welcomePage": {
+    "logedOut": "Ще бъдете изписани от Stereum Launcher. Ще трябва да влезете отново, за да получите достъп до вашия нод.",
+    "logOut": "Излизане",
+    "logOutMsg": "Наистина ли искате да излезете от профила си?",
+    "logOutBtn": "Изход",
+    "chooseInstallNode": "В тази стъпка избирате начина на инсталиране на нод. За начинаещите препоръчваме опцията Инсталиране с едно кликване!",
+    "welcomeStereum": "Добре дошли в Stereum"
   }
 }

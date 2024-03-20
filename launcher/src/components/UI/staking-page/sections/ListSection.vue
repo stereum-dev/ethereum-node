@@ -7,7 +7,9 @@
         v-if="stakingStore.isPreviewListActive || stakingStore.isGroupListActive || stakingStore.isRemoteListActive"
         @back-list="backList"
       />
+      <DisabledSection v-if="stakingStore.isStakingDisabled" />
       <ListBody
+        v-else
         @on-drop="onDrop"
         @remove-single="removeSingle"
         @open-group="openGroup"
@@ -26,6 +28,7 @@
         @confirm-feerecepient="confirmFeerecepient"
         @confirm-graffiti="confirmGraffiti"
         @confirm-remote="confirmRemote"
+        @remove-group="removeGroup"
       />
     </div>
   </div>
@@ -34,7 +37,10 @@
 import ListHeader from "../components/list/ListHeader.vue";
 import ListBody from "../components/list/ListBody.vue";
 import ListPanels from "../components/list/ListPanels.vue";
+import DisabledSection from "../sections/DisabledSection.vue";
 import { useStakingStore } from "@/store/theStaking";
+import { onBeforeMount, watch } from "vue";
+import { useServices } from "@/store/services.js";
 
 const emit = defineEmits([
   "confirmGrouping",
@@ -55,9 +61,35 @@ const emit = defineEmits([
   "resetName",
   "confirmGraffiti",
   "confirmRemote",
+  "removeGroup",
 ]);
 
 const stakingStore = useStakingStore();
+const serviceStore = useServices();
+
+watch(
+  () => serviceStore.installedServices,
+  async () => {
+    const hasValidator = serviceStore.installedServices.some(
+      (s) => s.category === "validator" && s.state === "running"
+    );
+    stakingStore.isStakingDisabled = !hasValidator;
+  }
+);
+
+// watchEffect(() => {
+//   activeStakingPanel.value = stakingStore.isStakingDisabled;
+// });
+
+onBeforeMount(() => {
+  CheckValidatorExistence();
+});
+
+const CheckValidatorExistence = () => {
+  const hasValidator = serviceStore.installedServices.some((s) => s.category === "validator" && s.state === "running");
+  stakingStore.isStakingDisabled = !hasValidator;
+};
+
 const confirmGrouping = (groupName) => {
   emit("confirmGrouping", groupName);
 };
@@ -122,5 +154,9 @@ const backList = () => {
 };
 const confirmRemote = () => {
   emit("confirmRemote");
+};
+
+const removeGroup = (item) => {
+  emit("removeGroup", item);
 };
 </script>

@@ -22,7 +22,7 @@
             <span v-if="displayTaskResult" class="itemAction">{{ item.action }}</span>
             <span v-else class="itemName">{{ item.name }}</span>
             <div class="loading-box">
-              <img src="/img/icon/task-manager-icons/check5.png" alt="" />
+              <img src="/img/icon/task-manager-icons/check-icon.png" alt="" />
             </div>
             <div v-if="item.showTooltip" class="success-tooltip">
               <span>{{ item.action }}</span>
@@ -32,7 +32,7 @@
             <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
             <span v-else class="noError">{{ item.name }}</span>
             <div class="error-icon">
-              <img src="/img/icon/task-manager-icons/cancel.png" alt="" />
+              <img src="/img/icon/task-manager-icons/cancel-icon.png" alt="" />
               <div v-if="item.showTooltip" class="failed-tooltip">
                 <span>{{ item.name }}</span>
               </div>
@@ -42,7 +42,7 @@
             <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
             <span v-else class="noError">{{ item.name }}</span>
             <div class="loading-box">
-              <img src="/img/icon/task-manager-icons/check5.png" alt="" />
+              <img src="/img/icon/task-manager-icons/check-icon.png" alt="" />
             </div>
             <div v-if="item.showTooltip" class="skipped-tooltip">
               <span>{{ item.name }}</span>

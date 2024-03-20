@@ -5,7 +5,7 @@
     </div>
     <div class="inputBox">
       <div class="password-box">
-        <img src="/img/icon/form-setup/eye.png" alt="" @click="passCtrlSwitch" />
+        <img src="/img/icon/server-management-icons/eye.png" alt="" @click="passCtrlSwitch" />
         <input
           v-model="passwordBoxModel"
           :type="passCtrl ? 'text' : 'password'"
@@ -13,7 +13,7 @@
           :style="{ border: borderForInput }"
         />
         <div
-          :class="['btn', passwordBoxModel ? '' : 'disabled']"
+          :class="['btn', passwordBoxModel ? '' : emptyDisabled ? 'disabled' : '']"
           :style="{ backgroundColor: dynamicBackgroundColor, color: btnNameColor }"
           @mouseover="handleMouseOver"
           @mouseleave="handleMouseLeave"
@@ -42,6 +42,10 @@ export default {
     tryAgain: {
       type: Boolean,
       default: false,
+    },
+    emptyDisabled: {
+      type: Boolean,
+      default: true,
     },
     btnBgColor: {
       type: String,

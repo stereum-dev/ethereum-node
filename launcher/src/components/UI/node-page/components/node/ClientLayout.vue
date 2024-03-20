@@ -31,7 +31,7 @@
         @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} ${keyMsg}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-5" src="/img/icon/node-icons/key.png" alt="icon" />
+        <img class="w-5" src="/img/icon/node-page-icons/validator-key-icon.png" alt="icon" />
         <span
           class="text-md font-semibold"
           :class="props.client.state === 'running' ? 'text-green-500' : 'text-red-600 '"
@@ -44,7 +44,7 @@
       v-if="getConnectedMevboost?.config.serviceID === props.client.config.serviceID"
       class="flex justify-evenly items-center absolute -bottom-2 -right-24"
     >
-      <img class="w-5" src="/img/icon/plugin-icons/Other/mev-sIcon.png" alt="icon" />
+      <img class="w-5" src="/img/icon/service-icons/Other/mev-sIcon.png" alt="icon" />
     </div>
   </div>
 </template>
@@ -79,22 +79,22 @@ const syncIcons = ref([
   {
     id: 1,
     name: "error",
-    icon: "/img/icon/arrows/SynchronisationIconError.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-error.gif",
   },
   {
     id: 2,
     name: "active",
-    icon: "/img/icon/arrows/SynchronisationIconActive.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-active.gif",
   },
   {
     id: 3,
     name: "synched",
-    icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-sucess.gif",
   },
   {
     id: 4,
     name: "unknown",
-    icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
+    icon: "/animation/synchronisation/synchronisation-icon-unknown.gif",
   },
 ]);
 
@@ -117,7 +117,7 @@ onUnmounted(() => {
 
 const getPercent = () => {
   const syncResult = useDeepClone(controlStore.syncstatus);
-  if (syncResult.code === 0) {
+  if (syncResult?.code === 0) {
     const flatArray = syncResult.data.flat();
     let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());
 
@@ -166,6 +166,11 @@ const clientStatus = computed(() => {
     return "w-5 h-[16px] bg-green-500 border border-green-500 rounded-r-full";
   } else if (props.client.state === "restarting") {
     return "w-5 h-[16px] bg-orange-500 border border-orange-500 rounded-r-full";
+  } else if (
+    props.client.service === "ExternalExecutionService" ||
+    props.client.service === "ExternalConsensusService"
+  ) {
+    return "w-5 h-[16px] bg-gray-400 border border-gray-400 rounded-r-full";
   }
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
 });

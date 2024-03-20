@@ -10,6 +10,7 @@ import { ref } from 'vue';
     </div>
   </div>
 </template>
+
 <script setup>
 import DutyHeader from "./components/epoch-duty/DutyHeader.vue";
 import DutyBody from "./components/epoch-duty/DutyBody";

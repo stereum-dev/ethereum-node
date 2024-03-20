@@ -1,7 +1,7 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
-    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
+
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
@@ -29,7 +29,7 @@
     <!-- Start drawer layout -->
     <img
       class="w-10 absolute top-50 -right-5 cursor-pointer"
-      src="/img/icon/manage-node-icons/sidebar-out.png"
+      src="/img/icon/edit-node-icons/sidebar-out.png"
       alt="Arrow Icon"
       @mousedown.prevent.stop
       @click="openDrawer"
@@ -78,6 +78,17 @@
         @confirm-modify="confirmModifyingService"
       />
       <!-- End Modify Services Modal -->
+      <!-- Start Add configs for Custom Service -->
+
+      <AddCustom
+        v-if="clientToInstall?.configPanel"
+        :client="clientToInstall"
+        @close-window="cancelInstallation"
+        @confirm-create="addServiceHandler"
+      />
+
+      <!-- End Add configs for Custom Service -->
+
       <!-- Start Add New Service Modal -->
       <AddModal
         v-if="clientToInstall?.addPanel"
@@ -96,6 +107,7 @@
       />
       <!-- End Nuke Modal -->
     </TransitionGroup>
+    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
   </base-layout>
 </template>
 <script setup>
@@ -108,19 +120,21 @@ import NetworkModal from "./components/modals/NetworkModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
+import AddCustom from "./components/modals/custom-service/AddCustom.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, computed, onUnmounted } from "vue";
+import { ref, onMounted, computed, onUnmounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone } from "@/composables/utils";
 import { useFooter } from "@/store/theFooter";
 import { useListKeys } from "@/composables/validators";
+import { useServers } from "@/store/servers";
 
 const footerStore = useFooter();
 const serviceStore = useServices();
@@ -143,7 +157,20 @@ const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
 
+const serverStore = useServers();
+
 // Computed & Watcher
+
+const isLoadingNewConfiguration = ref(true);
+
+watch(
+  () => manageStore.newConfiguration,
+  () => {
+    isLoadingNewConfiguration.value = false;
+    updateDisplayNetworkList();
+  },
+  { deep: true }
+);
 
 onMounted(() => {
   if (manageStore.currentNetwork.id) manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
@@ -151,6 +178,8 @@ onMounted(() => {
   if (!manageStore.architecture) setArchitecture();
 });
 onMounted(() => {
+  isLoadingNewConfiguration.value = false;
+  updateDisplayNetworkList();
   manageStore.confirmChanges = [];
   manageStore.newConfiguration.forEach((el) => {
     return {
@@ -186,10 +215,18 @@ const listKeys = async (forceRefresh) => {
   await useListKeys(forceRefresh);
 };
 
+const updateDisplayNetworkList = () => {
+  if (manageStore.newConfiguration.length === 0) {
+    manageStore.displayNetworkList = true;
+  } else {
+    manageStore.displayNetworkList = false;
+  }
+};
+
 // Random ID generator
 function generateRandomId() {
-  const timestamp = new Date().getTime().toString(16); // Convert timestamp to hexadecimal
-  const randomPart = Math.random().toString(16).substring(2, 8); // Generate a random hexadecimal string
+  const timestamp = new Date().getTime().toString(16);
+  const randomPart = Math.random().toString(16).substring(2, 8);
   return timestamp + randomPart;
 }
 
@@ -230,7 +267,7 @@ const switchClientConfirm = (properties) => {
   manageStore.confirmChanges.push({
     id: properties.itemToReplace.config?.serviceID,
     content: "SWITCH CLIENT",
-    contentIcon: "/img/icon/manage-node-icons/switch.png",
+    contentIcon: "/img/icon/edit-node-icons/switch-client-icon.png",
     service: properties.itemToReplace,
     data: {
       itemToInstall: properties.itemToInstall,
@@ -256,7 +293,7 @@ const confirmModifyingService = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "MODIFY",
-    contentIcon: "/img/icon/manage-node-icons/connected.png",
+    contentIcon: "/img/icon/edit-node-icons/service-connected.png",
     service: item.client,
     data: {
       executionClients: item.executionClients,
@@ -282,7 +319,7 @@ const confirmConsensusConnection = (item) => {
   manageStore.confirmChanges.push({
     id: randomId,
     content: "CLIENT CONNECT",
-    contentIcon: "/img/icon/manage-node-icons/connection.png",
+    contentIcon: "/img/icon/edit-node-icons/service-connecting.png",
     service: item,
   });
 };
@@ -306,6 +343,7 @@ const changeMevboostConnection = () => {
     return;
   }
 };
+
 const confirmConnection = (item) => {
   isConfirmLoading.value = true;
   setTimeout(() => {
@@ -350,6 +388,7 @@ const removeChangeHandler = (item) => {
   }
   manageStore.isLineHidden = false;
 };
+
 // Add service with double click
 
 const addServices = (service) => {
@@ -401,20 +440,40 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
-  manageStore.isLineHidden = true;
+  if (item.client.service === "CustomService" && !item.customConfigReady) {
+    manageStore.customConfig.installDir = item.installDir;
+    clientToInstall.value.configPanel = true;
+    return;
+  }
+  let dataObject = {
+    network: manageStore.configNetwork.network,
+    installDir: item.installDir || "/opt/stereum",
+    executionClients: item.executionClients,
+    consensusClients: item.consensusClients,
+    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+    checkpointURL: item.checkPointSyncUrl || false,
+    //CustomService Attributes
+    image: item.image,
+    entrypoint: item.entrypoint,
+    command: item.command,
+    ports: item.ports,
+    volumes: item.volumes,
+  };
+
+  if (item.client.service === "ExternalExecutionService") {
+    dataObject.source = item.client.config?.source;
+    dataObject.jwtToken = item.client.config?.jwtToken;
+  } else if (item.client.service === "ExternalConsensusService") {
+    dataObject.source = item.client.config?.source;
+    dataObject.gateway = item.client.config?.gateway;
+  }
+
   manageStore.confirmChanges.push({
     id: randomId,
     content: "INSTALL",
-    contentIcon: "/img/icon/manage-node-icons/install.png",
+    contentIcon: "/img/icon/edit-node-icons/add-service-icon.png",
     service: item.client,
-    data: {
-      network: manageStore.configNetwork.network,
-      installDir: item.installDir ? item.installDir : "/opt/stereum",
-      executionClients: item.executionClients,
-      consensusClients: item.consensusClients,
-      relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
-      checkpointURL: item.checkPointSyncUrl ? item.checkPointSyncUrl : false,
-    },
+    data: dataObject,
   });
 };
 
@@ -423,8 +482,18 @@ const addServiceHandler = (item) => {
 const cancelInstallation = (item) => {
   clientToInstall.value = null;
   isAddModalOpen.value = false;
+  if (item?.service === "CustomService") {
+    manageStore.customConfig = {
+      image: "",
+      entrypoint: "",
+      command: "",
+      ports: [],
+      paths: [],
+    };
+    item.configPanel = false;
+  }
 
-  const event = manageStore.newConfiguration.find((e) => e.id === item.id);
+  const event = manageStore.newConfiguration.find((e) => e.id === item?.id);
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
   manageStore.isLineHidden = false;
@@ -452,7 +521,7 @@ const switchNetworkConfirm = (network) => {
       manageStore.confirmChanges.push({
         id: network.network,
         content: "NETWORK",
-        contentIcon: "/img/icon/manage-node-icons/switch-client.png",
+        contentIcon: "/img/icon/edit-node-icons/switch-client.png",
         service: network,
         data: { network: network.network },
       });
@@ -491,7 +560,7 @@ const selectedServiceToRemove = (item) => {
   const confirmDelete = {
     id: item.config.serviceID,
     content: "DELETE",
-    contentIcon: "/img/icon/manage-node-icons/delete.png",
+    contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
   };
   const itemExists = manageStore.confirmChanges.some((e) => e.id === item.config.serviceID && e.content === "DELETE");
@@ -585,8 +654,12 @@ const nukeConfirmation = () => {
   destroyNode();
 };
 const backToLogin = async () => {
+  serverStore.connectingAnimActive = false;
+
+  router.push("/login").then(() => {
+    location.reload();
+  });
   await ControlService.logout();
-  router.push("/");
 };
 
 const closeNetworkModal = () => {

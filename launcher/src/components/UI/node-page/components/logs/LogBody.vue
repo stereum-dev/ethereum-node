@@ -2,7 +2,7 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-2 row-end-12 grid grid-cols-24 grid-rows-12 bg-[#2d3035]"
   >
-    <LogSidebar />
+    <LogSidebar :client="props.client" />
     <div
       class="w-full h-full col-start-2 col-span-full row-start-1 row-span-full overflow-x-hidden overflow-y-auto max-h-[409px] p-1 flex flex-col justify-start items-start space-y-1 bg-[#202225]"
     >
@@ -16,7 +16,7 @@
         @mouseenter="hoveredLogIndex = index"
         @mouseleave="hoveredLogIndex = null"
       >
-        <span class="text-sm font-semibold text-gray-400">#{{ logsList.length - index }}</span>
+        <span class="text-sm font-semibold text-gray-400">#{{ 150 - index }}</span>
         <span class="text-sm font-semibold">{{ log }}</span>
         <img
           v-if="hoveredLogIndex === index"
@@ -35,15 +35,22 @@ import LogSidebar from "./LogSidebar";
 import { useNodeStore } from "@/store/theNode";
 import { computed, ref } from "vue";
 
+const props = defineProps({
+  client: {
+    type: Object,
+    default: null,
+  },
+});
+
 const nodeStore = useNodeStore();
 const hoveredLogIndex = ref(null);
 const isCopied = ref(false);
 
 const copyIconHandler = computed(() => {
   if (isCopied.value === true) {
-    return "/img/icon/node-icons/copied.png";
+    return "/img/icon/service-log-icons/copied.png";
   }
-  return "/img/icon/the-staking/copy6.png";
+  return "/img/icon/staking-page-icons/copy.png";
 });
 
 const logsList = computed(() => {
@@ -59,6 +66,8 @@ const limitedLogs = computed(() => {
       : logsList.value;
   return allLogs.slice(-150).reverse();
 });
+
+//Methods
 
 const copy = async (log) => {
   try {

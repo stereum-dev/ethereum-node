@@ -238,6 +238,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getCountOfUpdatableOSUpdate", args);
   }
 
+  async updatePackage(args) {
+    return await this.promiseIpc.send("updatePackage", args);
+  }
+
+  async getUpgradeablePackages(args) {
+    return await this.promiseIpc.send("getUpgradeablePackages", args);
+  }
+
   async updateOS(args) {
     return await this.promiseIpc.send("updateOS", args);
   }
@@ -342,8 +350,12 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("restartServer");
   }
 
-  async readSSVKeystoreConfig(args) {
-    return await this.promiseIpc.send("readSSVKeystoreConfig", args);
+  async forwardSSVCommand(args) {
+    return await this.promiseIpc.send("forwardSSVCommand", args);
+  }
+
+  async getSSVTotalConfig(args) {
+    return await this.promiseIpc.send("getSSVTotalConfig", args);
   }
 
   async readSSVNetworkConfig(args) {
@@ -447,6 +459,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("openDirectoryDialog", args);
   }
 
+  async openFilePicker(dialog_options, read_content = false) {
+    return await this.promiseIpc.send("openFilePicker", dialog_options, read_content);
+  }
+
   async AddExistingSSHKey(args) {
     return await this.promiseIpc.send("AddExistingSSHKey", args);
   }
@@ -480,8 +496,60 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getBlockRewards", args);
   }
 
+  async copyExecutionJWT(args) {
+    return await this.promiseIpc.send("copyExecutionJWT", args);
+  }
+
   async getSyncCommitteeRewards(validators, slot) {
     return await this.promiseIpc.send("getSyncCommitteeRewards", { validators, slot });
+  }
+
+  async createObolENR(privateKey) {
+    return await this.promiseIpc.send("createObolENR", privateKey);
+  }
+
+  async getObolENRPrivateKey() {
+    return await this.promiseIpc.send("getObolENRPrivateKey");
+  }
+
+  async checkObolContent() {
+    return await this.promiseIpc.send("checkObolContent");
+  }
+
+  async getObolENRPublicKey() {
+    return await this.promiseIpc.send("getObolENRPublicKey");
+  }
+
+  async removeObolENR() {
+    return await this.promiseIpc.send("removeObolENR");
+  }
+
+  async removeObolCluster() {
+    return await this.promiseIpc.send("removeObolCluster");
+  }
+
+  async startObolDKG(args) {
+    return await this.promiseIpc.send("startObolDKG", args);
+  }
+
+  async checkObolDKG() {
+    return await this.promiseIpc.send("checkObolDKG");
+  }
+
+  async getObolDKGLogs() {
+    return await this.promiseIpc.send("getObolDKGLogs");
+  }
+
+  async downloadObolBackup(args) {
+    return await this.promiseIpc.send("downloadObolBackup", args);
+  }
+
+  async importObolBackup(args) {
+    return await this.promiseIpc.send("importObolBackup", args);
+  }
+
+  async upgradeToNoble() {
+    return await this.promiseIpc.send("upgradeToNoble");
   }
 }
 if (!instance) {

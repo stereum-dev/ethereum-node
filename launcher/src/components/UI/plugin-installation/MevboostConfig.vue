@@ -31,10 +31,10 @@
         </div>
         <div class="arrowBox">
           <div class="select" @click="addBlocksToUse">
-            <img src="/img/icon/arrows/right-1.png" alt="icon" />
+            <img src="/img/icon/mevboost-icons/arrow-right.png" alt="icon" />
           </div>
           <div class="remove" @click="removeFromUsedBlocks">
-            <img src="/img/icon/arrows/left-1.png" alt="icon" />
+            <img src="/img/icon/mevboost-icons/arrow-left.png" alt="icon" />
           </div>
         </div>
         <div class="included-box">
@@ -65,10 +65,9 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
-import { useServices } from "../../../store/services";
-import { useNodeManage } from "../../../store/nodeManage";
+import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
-
   data() {
     return {
       title: "Mevboost Config",

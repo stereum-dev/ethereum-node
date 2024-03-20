@@ -253,27 +253,27 @@ ipcMain.handle("manageServiceState", async (event, args) => {
 
 ipcMain.handle("runAllUpdates", async (event, args) => {
   app.showExitPrompt = true;
-  const returnValue = await nodeConnection.runAllUpdates(args.commit);
+  const returnValue = await nodeConnection.nodeUpdates.runAllUpdates(args.commit);
   app.showExitPrompt = false;
   return returnValue;
 });
 
 ipcMain.handle("updateServices", async (event, args) => {
   app.showExitPrompt = true;
-  let seconds = await nodeConnection.updateServices(args.services);
+  let seconds = await nodeConnection.nodeUpdates.updateServices(args.services);
   app.showExitPrompt = false;
   return seconds;
 });
 
 ipcMain.handle("updateStereum", async (event, args) => {
   app.showExitPrompt = true;
-  let seconds = await nodeConnection.updateStereum(args.commit);
+  let seconds = await nodeConnection.nodeUpdates.updateStereum(args.commit);
   app.showExitPrompt = false;
   return seconds;
 });
 
 ipcMain.handle("restartServices", async (event, args) => {
-  await nodeConnection.restartServices(args);
+  await nodeConnection.nodeUpdates.restartServices(args);
 });
 
 ipcMain.handle("restartService", async (event, args) => {
@@ -281,19 +281,31 @@ ipcMain.handle("restartService", async (event, args) => {
 });
 
 ipcMain.handle("checkUpdates", async () => {
-  return await nodeConnection.checkUpdates();
+  return await nodeConnection.nodeUpdates.checkUpdates();
 });
 
 ipcMain.handle("getCurrentOsVersion", async () => {
-  return await nodeConnection.getCurrentOsVersion();
+  return await nodeConnection.nodeUpdates.getCurrentOsVersion();
 });
 
 ipcMain.handle("getCountOfUpdatableOSUpdate", async () => {
-  return await nodeConnection.getCountOfUpdatableOSUpdate();
+  return await nodeConnection.nodeUpdates.getCountOfUpdatableOSUpdate();
 });
 
 ipcMain.handle("updateOS", async () => {
-  return await nodeConnection.updateOS();
+  return await nodeConnection.nodeUpdates.updateOS();
+});
+
+ipcMain.handle("updatePackage", async (event, args) => {
+  return await nodeConnection.nodeUpdates.updatePackage(args);
+});
+
+ipcMain.handle("getUpgradeablePackages", async () => {
+  return await nodeConnection.nodeUpdates.getUpgradeablePackages();
+});
+
+ipcMain.handle("upgradeToNoble", async () => {
+  return await nodeConnection.nodeUpdates.upgrade();
 });
 
 ipcMain.handle("getCurrentStereumVersion", async () => {
@@ -380,8 +392,12 @@ ipcMain.handle("restartServer", async () => {
   return await nodeConnection.restartServer();
 });
 
-ipcMain.handle("readSSVKeystoreConfig", async (event, args) => {
-  return await nodeConnection.readSSVKeystoreConfig(args);
+ipcMain.handle("forwardSSVCommand", async (event, args) => {
+  return await nodeConnection.forwardSSVCommand(args);
+});
+
+ipcMain.handle("getSSVTotalConfig", async (event, args) => {
+  return await nodeConnection.getSSVTotalConfig(args);
 });
 
 ipcMain.handle("readSSVNetworkConfig", async (event, args) => {
@@ -518,6 +534,54 @@ ipcMain.handle("getSyncCommitteeRewards", async (event, args) => {
   return await monitoring.getSyncCommitteeRewards(args.validators, args.slot);
 });
 
+ipcMain.handle("createObolENR", async (event, args) => {
+  return await validatorAccountManager.createObolENR(args);
+});
+
+ipcMain.handle("getObolENRPrivateKey", async () => {
+  return await validatorAccountManager.getObolENRPrivateKey();
+});
+
+ipcMain.handle("checkObolContent", async () => {
+  return await validatorAccountManager.checkObolContent();
+});
+
+ipcMain.handle("getObolENRPublicKey", async () => {
+  return await validatorAccountManager.getObolENRPublicKey();
+});
+
+ipcMain.handle("removeObolENR", async () => {
+  return await validatorAccountManager.removeObolENR();
+});
+
+ipcMain.handle("removeObolCluster", async () => {
+  return await validatorAccountManager.removeObolCluster();
+});
+
+ipcMain.handle("startObolDKG", async (event, args) => {
+  return await validatorAccountManager.startObolDKG(args);
+});
+
+ipcMain.handle("checkObolDKG", async () => {
+  return await validatorAccountManager.checkObolDKG();
+});
+
+ipcMain.handle("getObolDKGLogs", async () => {
+  return await validatorAccountManager.getObolDKGLogs();
+});
+
+ipcMain.handle("downloadObolBackup", async (event, args) => {
+  return await validatorAccountManager.downloadObolBackup(args);
+});
+
+ipcMain.handle("importObolBackup", async (event, args) => {
+  return await validatorAccountManager.importObolBackup(args);
+});
+
+ipcMain.handle("copyExecutionJWT", async (event, args) => {
+  return await serviceManager.copyExecutionJWT(args);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
@@ -623,6 +687,25 @@ async function createWindow(type = "main") {
     const { canceled, filePaths } = await dialog.showOpenDialog(win, args);
     if (canceled) return [];
     return filePaths;
+  });
+
+  ipcMain.handle("openFilePicker", async (event, dialog_options, read_content = false) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, dialog_options);
+    if (canceled) return [];
+    const fileList = [];
+    for (const filePath of filePaths) {
+      try {
+        if (read_content) {
+          const content = readFileSync(filePath, "utf-8");
+          fileList.push({ path: filePath, name: path.basename(filePath), content: content });
+        } else {
+          fileList.push({ path: filePath, name: path.basename(filePath) });
+        }
+      } catch (error) {
+        log.error("Failed reading local file: ", error);
+      }
+    }
+    return fileList;
   });
 
   return win;

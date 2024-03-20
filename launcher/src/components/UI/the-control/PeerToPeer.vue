@@ -8,7 +8,10 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
+        <no-data
+          v-if="noDataLayerShow || installedServicesController !== ''"
+          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+        />
         <div v-show="p2pItemsShow" class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
@@ -37,13 +40,13 @@
     </div>
     <div v-if="isMultiService" v-show="p2pItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
     </div>
   </div>
@@ -51,6 +54,7 @@
 <script>
 import { mapState } from "pinia";
 import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
 import NoData from "./NoData.vue";
 export default {
   components: { NoData },
@@ -71,12 +75,12 @@ export default {
         {
           id: 1,
           name: "default",
-          icon: "/img/icon/control/PeerToPeerIcon.svg",
+          icon: "/img/icon/control-page-icons/PeerToPeerIcon.svg",
         },
         {
           id: 2,
           name: "unknown",
-          icon: "/img/icon/control/spinner.gif",
+          icon: "/animation/loading/mushroom-spinner.gif",
         },
       ],
     };
@@ -86,6 +90,9 @@ export default {
     ...mapState(useControlStore, {
       code: "code",
       p2pstatus: "p2pstatus",
+    }),
+    ...mapState(useFooter, {
+      installedServicesController: "installedServicesController",
     }),
     defaultIco() {
       return this.p2pIco[0].icon;

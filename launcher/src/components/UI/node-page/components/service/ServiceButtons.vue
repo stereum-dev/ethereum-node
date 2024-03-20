@@ -1,8 +1,17 @@
 <template>
-  <div class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-2 gap-1 relative mt-1" @pointerdown.prevent.stop>
-    <div class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md">
-      <button v-if="client.serviceIsPending" type="button" class="w-full h-full rounded-md disabled">
-        <img src="/img/icon/arrows/loading.png" alt="icon" class="w-4 animate-spin" />
+  <div
+    class="col-start-2 col-span-full row-start-1 row-span-full grid grid-cols-3 grid-rows-2 items-center gap-1 relative py-2 pl-3 pr-1"
+    @pointerdown.prevent.stop
+  >
+    <div
+      class="w-full h-full p-1 col-start-1 col-span-1 flex justify-center items-center bg-[#131313] hover:bg-gray-600 rounded-md"
+    >
+      <button
+        v-if="client.serviceIsPending"
+        type="button"
+        class="w-full h-full flex justify-center items-center rounded-md disabled"
+      >
+        <img src="/img/icon/loading-icons/loading-circle.png" alt="icon" class="w-4 animate-spin" />
       </button>
       <button
         v-else-if="props.client.state == 'running'"
@@ -11,7 +20,7 @@
         @mouseenter="footerStore.cursorLocation = `${turnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/plugin-menu-icons/shutdown.png" alt="icon" class="w-4 active:scale-95" />
+        <img src="/img/icon/node-page-icons/service-command-turn-off.png" alt="icon" class="w-4 active:scale-95" />
       </button>
       <button
         v-else-if="props.client.state == 'restarting'"
@@ -20,7 +29,7 @@
         @mouseenter="footerStore.cursorLocation = `${pending}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/plugin-menu-icons/pending.png" alt="icon" class="w-4 active:scale-95" />
+        <img src="/img/icon/node-page-icons/service-command-pending.png" alt="icon" class="w-4 active:scale-95" />
       </button>
       <button
         v-else
@@ -29,40 +38,40 @@
         @mouseenter="footerStore.cursorLocation = `${turnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" class="w-4 active:scale-95" />
+        <img src="/img/icon/node-page-icons/service-command-turn-on.png" alt="icon" class="w-4 active:scale-95" />
       </button>
     </div>
     <button
-      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      class="w-full h-full col-span-1 p-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('restartService', props.client), (footerStore.cursorLocation = '')"
       @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/restart.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon//node-page-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
-      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
+      class="col-span-1 w-full h-full p-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md"
       @click="$emit('openExpert', props.client), (footerStore.cursorLocation = '')"
       @mouseenter="footerStore.cursorLocation = `${settings}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/plugin-menu-icons/setting2.png" alt="icon" class="w-8 active:scale-95" />
+      <img src="/img/icon/node-page-icons/service-command-open-settings.png" alt="icon" class="w-8 active:scale-95" />
     </button>
     <button
-      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      class="w-full h-full p-1 col-span-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('openLogs', props.client), (footerStore.cursorLocation = '')"
       @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/log-command.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-page-icons/service-command-open-logs.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
-      class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      class="w-full h-full p-1 col-span-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="$emit('openDocs', props.client), (footerStore.cursorLocation = '')"
       @mouseenter="footerStore.cursorLocation = `${docs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-icons/plugin-docs.png" alt="icon" class="w-5 active:scale-95" />
+      <img src="/img/icon/node-page-icons/service-command-open-docs.png" alt="icon" class="w-5 active:scale-95" />
     </button>
   </div>
 </template>

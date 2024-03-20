@@ -13,7 +13,7 @@
             @focus="$event.target.select()"
           />
           <div class="copy-icon" @click="copyPubKey">
-            <img src="/img/icon/service-icons/copy1.png" alt="icon" />
+            <img src="/img/icon/service-modals-icons/copy.png" alt="icon" />
             <span>{{ $t("registerSSV.copied") }}</span>
           </div>
         </div>
@@ -23,7 +23,7 @@
           <span class="secretkey-input_text">{{ $t("registerSSV.secKey") }}</span>
           <input v-model="localsecretkey" type="hidden" class="secretkey-input" disabled />
           <div class="copy-icon" @click="copySecretKey">
-            <img src="/img/icon/service-icons/copy1.png" alt="icon" />
+            <img src="/img/icon/service-modals-icons/copy.png" alt="icon" />
             <span>{{ $t("registerSSV.copied") }}</span>
           </div>
         </div>

@@ -9,7 +9,10 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <no-data v-if="noDataLayerShow" service-cat="prometheus"></no-data>
+        <no-data
+          v-if="noDataLayerShow || installedServicesController !== ''"
+          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+        ></no-data>
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
@@ -23,11 +26,8 @@
             </div>
             <div
               class="consensusIconCons"
-              @mouseenter="
-                dialogOpen(consensusName, consensusFirstVal, consensusSecondVal),
-                  (cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`)
-              "
-              @mouseleave="dialogClose(), (cursorLocation = '')"
+              @mouseenter="cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`"
+              @mouseleave="cursorLocation = ''"
             >
               <img :src="clientImage(consensusName)" alt="consensus" />
             </div>
@@ -45,11 +45,8 @@
             </div>
             <div
               class="executionIconCons"
-              @mouseenter="
-                dialogOpen(executionName, executionFirstVal, executionSecondVal),
-                  (cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`)
-              "
-              @mouseleave="dialogClose(), (cursorLocation = '')"
+              @mouseenter="cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`"
+              @mouseleave="cursorLocation = ''"
             >
               <img :src="clientImage(executionName)" alt="execution" />
             </div>
@@ -60,13 +57,13 @@
     </div>
     <div v-if="isMultiService" v-show="syncItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
+        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
     </div>
   </div>
@@ -127,22 +124,22 @@ export default {
         {
           id: 1,
           name: "error",
-          icon: "/img/icon/arrows/SynchronisationIconError.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-error.gif",
         },
         {
           id: 2,
           name: "active",
-          icon: "/img/icon/arrows/SynchronisationIconActive.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-active.gif",
         },
         {
           id: 3,
           name: "synched",
-          icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-sucess.gif",
         },
         {
           id: 4,
           name: "unknown",
-          icon: "/img/icon/control/spinner.gif",
+          icon: "/animation/synchronisation/synchronisation-icon-unknown.gif",
         },
       ],
     };
@@ -159,6 +156,7 @@ export default {
       title: "title",
       first: "first",
       second: "second",
+      installedServicesController: "installedServicesController",
     }),
     ...mapState(useControlStore, {
       code: "code",
@@ -171,7 +169,10 @@ export default {
       consensusName: "consensusName",
       pageNumber: "pageNumber",
       synchronizationError: "synchronizationError",
+      currentConsensusIcon: "currentConsensusIcon",
+      currentExecutionIcon: "currentExecutionIcon",
     }),
+
     errorIco() {
       return this.syncIco[0].icon;
     },
@@ -197,6 +198,7 @@ export default {
       return Math.floor(this.consensusPer);
     },
   },
+
   mounted() {
     this.syncControler();
   },
@@ -204,18 +206,6 @@ export default {
     if (this.refresher) clearTimeout(this.refresher);
   },
   methods: {
-    dialogOpen(arg1, arg2, arg3) {
-      this.dialog = true;
-      this.title = arg1;
-      this.first = arg2;
-      this.second = arg3;
-    },
-    dialogClose() {
-      this.dialog = false;
-      this.title = "";
-      this.first = "";
-      this.second = "";
-    },
     clientImage(name) {
       if (!name) {
         return "";
@@ -223,6 +213,13 @@ export default {
       const lowerCaseInputValue = name.toLowerCase();
       const clientData = [...this.consensusClientsData, ...this.executionClientsData];
       const matchingClient = clientData.find((client) => client.name.toLowerCase() === lowerCaseInputValue);
+
+      if (name === this.consensusName) {
+        this.currentConsensusIcon = matchingClient.img;
+      } else if (name === this.executionName) {
+        this.currentExecutionIcon = matchingClient.img;
+      }
+
       return matchingClient ? matchingClient.img : "";
     },
     getPer(firstVal, secondVal) {
@@ -405,23 +402,23 @@ export default {
       this.clients = clients;
       for (let k in clients) {
         const item = clients[k];
-        if (item.type == "consensus") {
-          this.consensusName = item.title;
+        if (item?.type == "consensus") {
+          this.consensusName = item?.title;
           this.consensusFirstVal = item.frstVal;
           this.consensusSecondVal = item.scndVal;
           this.consensusClass = item.style;
-          this.consensuColor = this.clientInfo[item.style].color;
-          this.consensusText = this.clientInfo[item.style].text;
+          this.consensuColor = this.clientInfo[item.style]?.color;
+          this.consensusText = this.clientInfo[item.style]?.text;
           if (item.style == "clientblue") {
             this.consensusText = this.displayConsensusPer + "% " + this.consensusText;
           }
         } else {
-          this.executionName = item.title;
+          this.executionName = item?.title;
           this.executionFirstVal = item.frstVal;
           this.executionSecondVal = item.scndVal;
           this.executionClass = item.style;
-          this.executionColor = this.clientInfo[item.style].color;
-          this.executionText = this.clientInfo[item.style].text;
+          this.executionColor = this.clientInfo[item.style]?.color;
+          this.executionText = this.clientInfo[item.style]?.text;
           if (item.style == "clientblue") {
             this.executionText = this.displayExecutionPer + "% " + this.executionText;
           }

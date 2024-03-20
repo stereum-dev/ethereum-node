@@ -17,7 +17,10 @@
       </div>
       <div
         v-if="secondBtnName"
-        :style="{ backgroundColor: secondBtnBgColor, color: btnNameColor }"
+        :style="{
+          backgroundColor: secondBtnBgColor,
+          color: !secondBtnNameColor ? btnNameColor : secondBtnNameColor,
+        }"
         class="btn"
         @click="secBtnPluginClick"
       >
@@ -58,6 +61,10 @@ export default {
       type: String,
       default: "#eee",
     },
+    secondBtnNameColor: {
+      type: String,
+      default: "",
+    },
     imgUrl: {
       type: String,
       default: "",
@@ -69,6 +76,12 @@ export default {
       dynamicBackgroundColor: this.btnBgColor,
     };
   },
+  watch: {
+    btnBgColor(newVal) {
+      this.dynamicBackgroundColor = newVal;
+    },
+  },
+
   methods: {
     confirmPluginClick() {
       this.$emit("confirmPluginClick");

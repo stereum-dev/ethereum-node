@@ -1,9 +1,10 @@
 import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 <template>
   <div
-    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border border-gray-600 bg-[#151618] rounded-b-sm mb-[1px]"
+    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border bg-[#151618] rounded-b-sm mb-[1px]"
     :class="[
-      stakingStore.isOverDropZone ? 'border-dashed border border-blue-500 ' : '',
+      stakingStore.isOverDropZone ? 'border-dashed  border-blue-500 ' : 'border-gray-600',
+      stakingStore.inputWrongKey ? 'border-red-500' : '',
       stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
         ? 'row-start-2 row-end-12'
         : 'row-start-1 row-end-12 rounded-t-md',
@@ -16,9 +17,10 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       v-else
       ref="dropZoneRef"
       class="w-full h-full max-h-[423px] animate__animated animate__fadeIn"
-      @drop.prevent="isDropZoneDisabled ? null : onDrop($event)"
-      @dragover.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = true)"
-      @dragleave.prevent="isDropZoneDisabled ? null : (stakingStore.isOverDropZone = false)"
+      :class="{ 'cursor-not-allowed': isDropZoneDisabled }"
+      @dragover.prevent="onDragOver"
+      @dragleave.prevent="onDragLeave"
+      @drop.prevent="onDrop"
     >
       <span
         v-if="stakingStore.isOverDropZone"
@@ -42,13 +44,20 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
             !filteredDoppelgangerKeys.length
           "
           class="text-lg font-bold text-gray-300 text-center uppercase select-none"
-          >No Validator key imported.</span
+          >{{ $t("stakingPage.noVal") }}</span
         >
         <span
           v-if="searchNotFound && getFilteredValidators.length > 0"
           class="text-lg font-bold text-gray-300 text-center uppercase"
-          >No Matches.</span
+          >{{ $t("stakingPage.noMatch") }}</span
         >
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
@@ -64,7 +73,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         <DoppelGCheckRow
           v-for="key in filteredDoppelgangerKeys"
           v-show="
-            stakingStore.doppelgangerKeys.length > 0 &&
+            stakingStore.doppelgangerKeys.length &&
             !stakingStore.isPreviewListActive &&
             !isLoading &&
             stakingStore.selectedServiceToFilter?.config?.serviceID === key.serviceID
@@ -121,6 +130,8 @@ const emit = defineEmits([
 const stakingStore = useStakingStore();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
+const dropZoneRef = ref(null);
+const isDropZoneActive = ref(true);
 
 // Computed
 stakingStore.filteredKeys = computed(() => {
@@ -163,12 +174,23 @@ const filteredDoppelgangerKeys = computed(() => {
 });
 
 const isDropZoneDisabled = computed(() => {
-  const isLoadingOrImporting = isLoading.value || stakingStore.keys.length === 0;
-  const hasDoppelgangerForSelectedService = stakingStore.doppelgangerKeys.some(
-    (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
+  return (
+    isLoading.value ||
+    stakingStore.keys.length === 0 ||
+    stakingStore.doppelgangerKeys.some(
+      (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    )
   );
+});
 
-  return isLoadingOrImporting || hasDoppelgangerForSelectedService;
+// Watchers
+
+watchEffect(() => {
+  if (stakingStore.inputWrongKey) {
+    setTimeout(() => {
+      stakingStore.inputWrongKey = false;
+    });
+  }
 });
 
 watchEffect(() => {
@@ -223,7 +245,19 @@ onUnmounted(() => {
   stakingStore.setActivePanel(null);
 });
 
-// Methods
+//Methods
+
+const onDragOver = () => {
+  if (!isDropZoneDisabled.value) {
+    stakingStore.isOverDropZone = true;
+  }
+};
+
+const onDragLeave = () => {
+  if (isDropZoneActive.value) {
+    stakingStore.isOverDropZone = false;
+  }
+};
 
 const normalizeKey = (key) => {
   return key.startsWith("0x") ? key.substring(2) : key;
@@ -257,7 +291,12 @@ const isKeyInGroup = (key) => {
 };
 
 const onDrop = (event) => {
-  emit("onDrop", event);
+  if (!isDropZoneDisabled.value) {
+    stakingStore.isOverDropZone = false;
+  }
+  if (isDropZoneActive.value) {
+    emit("onDrop", event);
+  }
 };
 
 const deletePreview = (item) => {

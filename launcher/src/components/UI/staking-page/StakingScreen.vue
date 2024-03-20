@@ -1,8 +1,8 @@
 <template>
   <base-layout>
-    <DisabledSection v-if="isStakingDisabled" />
-    <div v-else class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
+    <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
       <SidebarSection />
+
       <ListSection
         @confirm-grouping="confirmGrouping"
         @pick-validator="pickValidatorService"
@@ -22,6 +22,7 @@
         @delete-preview="deletePreviewKey"
         @confirm-graffiti="confirmEnteredGrafiti"
         @confirm-remote="confirmImportRemoteKeys"
+        @remove-group="removeGroupConfirm"
       />
       <ManagementSection
         @graffiti-panel="graffitiPanelHandler"
@@ -38,6 +39,7 @@
     </transition>
   </base-layout>
 </template>
+
 <script setup>
 import SidebarSection from "./sections/SidebarSection.vue";
 import ListSection from "./sections/ListSection";
@@ -48,22 +50,19 @@ import RiskWarning from "./components/modals/RiskWarning.vue";
 import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import ImportRemote from "./components/modals/ImportRemote.vue";
 import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
-import { v4 as uuidv4 } from "uuid";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, ref, watch } from "vue";
+import { computed, watch } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
 import { useDeepClone } from "@/composables/utils";
-import DisabledSection from "./sections/DisabledSection.vue";
 import { saveAs } from "file-saver";
 
 //Store
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
 const { listGroups } = useListGroups();
-const isStakingDisabled = ref(true);
 
 const modals = {
   import: {
@@ -81,7 +80,7 @@ const modals = {
   },
   removeGroup: {
     component: RemoveGroup,
-    props: {},
+
     events: {
       removeGroup: () => removeGroupConfirm(stakingStore.currentGroup),
     },
@@ -121,7 +120,7 @@ watch(
     const hasValidator = serviceStore.installedServices.some(
       (s) => s.category === "validator" && s.state === "running"
     );
-    isStakingDisabled.value = !hasValidator;
+    stakingStore.isStakingDisabled = !hasValidator;
   }
 );
 
@@ -199,6 +198,8 @@ const onDrop = (event) => {
       handleFiles(droppedFiles);
       stakingStore.keyFiles = [...droppedFiles];
       stakingStore.setActivePanel("validator");
+    } else {
+      stakingStore.inputWrongKey = true;
     }
   }
 };
@@ -214,6 +215,7 @@ const importKey = async (val) => {
   stakingStore.importKeyMessage = await ControlService.importKey(
     stakingStore.selectedValidatorService.config.serviceID
   );
+
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];
@@ -272,6 +274,7 @@ const importValidatorProcessing = async () => {
     stakingStore.keyFiles = [];
   } else {
     stakingStore.setActiveModal("risk");
+    stakingStore.doppelgangerKeys = [];
     console.log("error: there are active validators");
   }
 };
@@ -297,7 +300,7 @@ const openGroupList = (item) => {
 //Create Group;
 
 const createGroup = async (groupName) => {
-  const groupId = uuidv4();
+  const groupId = self.crypto.randomUUID();
   const existingKeys = await ControlService.readKeys();
 
   if (existingKeys) {
@@ -388,8 +391,7 @@ const renameGroup = (item) => {
 
 //Withdraw Group
 
-const withdrawGroup = (item) => {
-  console.log(item);
+const withdrawGroup = () => {
   stakingStore.setActivePanel("password");
 };
 
@@ -491,24 +493,26 @@ const doppelgangerController = async (item) => {
 const pickValidatorService = async (service) => {
   stakingStore.selectedValidatorService = service;
   const existingPubKeys = new Set(stakingStore.doppelgangerKeys.map((key) => key.pubkey));
+
   stakingStore.previewKeys.forEach((previewKey) => {
-    if (!existingPubKeys.has(previewKey.pubkey)) {
-      stakingStore.doppelgangerKeys.push({
-        ...previewKey,
-        serviceID: service.config?.serviceID,
-      });
-    }
+    if (existingPubKeys.has(previewKey.pubkey)) return;
+    stakingStore.doppelgangerKeys.push({
+      ...previewKey,
+      serviceID: service.config?.serviceID,
+    });
   });
-  stakingStore.setActivePanel("password");
+
   await doppelgangerController(service);
+  stakingStore.setActivePanel("password");
 };
 
 //Delete Preview Key
+
 const deletePreviewKey = async (item) => {
   stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.filename !== item.filename);
   stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((key) => key.filename !== item.filename);
-  const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
 
+  const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
   if (indexItem !== -1) {
     stakingStore.keyFiles.splice(indexItem, 1);
   }
@@ -518,15 +522,19 @@ const deletePreviewKey = async (item) => {
     stakingStore.setActivePanel("insert");
   }
 
-  stakingStore.forceRefresh = true;
-  await listKeys();
+  try {
+    stakingStore.forceRefresh = true;
+    await listKeys();
+  } catch (error) {
+    console.error("Failed to refresh keys:", error);
+  }
 };
 
 //****End of Validator Key ****
 
 //**** Client Commands Buttons ****
 
-// ****** Fee Recepient *******
+// ****** Fee Recipient *******
 const confirmFeeRecepient = async () => {
   const key = stakingStore.selectKeyForFee;
   if (key) {
@@ -546,7 +554,7 @@ const confirmFeeRecepient = async () => {
   stakingStore.setActivePanel(null);
 };
 
-// ****** End of Fee Recepient *******
+// ****** End of Fee Recipient *******
 
 //****** Withdraw & Exit *******
 const withdrawModalHandler = () => {

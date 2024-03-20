@@ -22,7 +22,9 @@ export class LighthouseBeaconService extends NodeService {
     // eth1 nodes
     const eth1Nodes = executionClients
       .map((client) => {
-        const elJWTDir = client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+        const elJWTDir = client.volumes.find(
+          (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
+        ).destinationPath;
         volumes.push(new ServiceVolume(elJWTDir, JWTDir));
         return client.buildExecutionClientEngineRPCHttpEndpointUrl();
       })
@@ -74,7 +76,11 @@ export class LighthouseBeaconService extends NodeService {
       mevboost //mevboost
     );
 
-    if (checkpointURL) service.command.push("--checkpoint-sync-url=" + checkpointURL);
+    if (checkpointURL) {
+      service.command.push("--checkpoint-sync-url=" + checkpointURL);
+    } else {
+      service.command.push("--allow-insecure-genesis-sync");
+    }
     if (mevboostEndpoint) service.command.push(`--builder=${mevboostEndpoint}`);
 
     return service;

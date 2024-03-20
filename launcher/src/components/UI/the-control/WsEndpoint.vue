@@ -3,7 +3,7 @@
     <control-dialog :open="openDialog">
       <div class="dialogBox">
         <div class="dialogIcon"><img :src="dialogIcon" /></div>
-        <div class="dialogMessage">
+        <div class="dialogMessage uppercase">
           <span>{{ dialogValue }}</span>
         </div>
       </div>
@@ -30,7 +30,7 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="../../../../public/img/icon/control/spinner.gif" alt="loading" />
+      <img src="../../../../public/animation/loading/mushroom-spinner.gif" alt="loading" />
     </div>
   </div>
 </template>
@@ -54,9 +54,9 @@ export default {
       copyVal: "click to copy",
       openDialog: false,
       dialogValue: "",
-      copyIcon: "/img/icon/control/ok.png",
-      infoIcon: "/img/icon/control/info.png",
-      bttnLoading: "/img/icon/control/loading.gif",
+      copyIcon: "/img/icon/control-page-icons/ok.png",
+      infoIcon: "/img/icon/control-page-icons/info.png",
+      bttnLoading: "/animation/loading/loading-dots.gif",
       wsItems: [],
       dialogIcon: "",
       copyText: this.$t("dataAPIAndRPC.copy"),

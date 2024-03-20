@@ -28,7 +28,13 @@ export async function useFrontendServices() {
   const allServices = JSON.parse(JSON.stringify(serviceStore.allServices));
   if (nodeHeaderStore.refresh) {
     if (await useConnectionCheck()) {
-      let services = await ControlService.refreshServiceInfos();
+      let services;
+      try {
+        services = await ControlService.refreshServiceInfos();
+      } catch (error) {
+        console.log(error);
+        return;
+      }
       if (services && services.length != 0 && nodeHeaderStore.refresh) {
         let otherServices = [];
         let needForTunnel = [];
@@ -44,15 +50,15 @@ export async function useFrontendServices() {
             );
           } else {
             oldService = allServices.find((s) => s.service === service.service);
-            if (oldService.tunnelLink) needForTunnel.push(oldService);
+            if (oldService?.tunnelLink) needForTunnel.push(oldService);
           }
-          if (oldService.config.keys) {
+          if (oldService?.config.keys) {
             oldService.config = {
-              ...service.config,
-              keys: oldService.config.keys,
+              ...service?.config,
+              keys: oldService?.config.keys,
             };
           } else {
-            oldService.config = service.config;
+            oldService.config = service?.config;
           }
           oldService.state = service.state;
           if (
@@ -71,11 +77,11 @@ export async function useFrontendServices() {
               vs = allServices.find((element) => element.service === oldService.name + "ValidatorService");
             }
             if (vs.service === "TekuValidatorService") {
-              vs.icon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-Circle.png");
-              vs.sIcon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-s.png");
+              vs.icon = require("/public/img/icon/service-icons/validator/Teku-Validator-Linked-Circle.png");
+              vs.sIcon = require("/public/img/icon/service-icons/validator/Teku-Validator-Linked-s.png");
             } else if (vs.service === "NimbusValidatorService") {
-              vs.icon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-Circle.png");
-              vs.sIcon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-s.png");
+              vs.icon = require("/public/img/icon/service-icons/validator/Nimbus-Validator-Linked-Circle.png");
+              vs.sIcon = require("/public/img/icon/service-icons/validator/Nimbus-Validator-Linked-s.png");
             }
             vs.config = oldService.config;
             vs.state = oldService.state;

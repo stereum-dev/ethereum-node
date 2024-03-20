@@ -39,6 +39,7 @@ export class NethermindService extends NodeService {
         "--Metrics.ExposePort=6060",
         "--HealthChecks.Enabled=true",
         "--Pruning.Mode=Hybrid",
+        "--Pruning.FullPruningTrigger=StateDbSize",
       ], // command
       ["./nethermind"], // entrypoint
       null, // env
@@ -82,8 +83,7 @@ export class NethermindService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id
+      }\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }

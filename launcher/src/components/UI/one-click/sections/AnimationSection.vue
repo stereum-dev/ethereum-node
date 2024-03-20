@@ -48,7 +48,7 @@
       </div>
       <div v-else class="message-box">
         <p class="msg-title">
-          Processing
+          {{ $t("oneClick.process") }}
           <span class="dot-flashing"></span>
         </p>
       </div>
@@ -68,10 +68,10 @@ const selectedPreset = installStore.selectedPreset;
 
 const executionClientIcon = ref("");
 const consensusClientIcon = ref("");
-const eyesLight = ref("/animation/installer-06.png");
-const bgLight = ref("/animation/installer-03.png");
-const shadow = ref("/animation/installer-04.png");
-const lightening = ref("/animation/installer-05.png");
+const eyesLight = ref("/animation/one-click/installer-06.png");
+const bgLight = ref("/animation/one-click/installer-03.png");
+const shadow = ref("/animation/one-click/installer-04.png");
+const lightening = ref("/animation/one-click/installer-05.png");
 
 const images = ref([]);
 const displayNewTask = ref("");
@@ -134,7 +134,7 @@ const pushIconsWithDelay = () => {
 };
 
 const addImage = (image) => {
-  images.value.push(`/animation/${image}`);
+  images.value.push(`/animation/one-click/${image}`);
 };
 
 const imgClass = (img) => ({

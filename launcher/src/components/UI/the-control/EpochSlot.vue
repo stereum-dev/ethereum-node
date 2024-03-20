@@ -1,6 +1,6 @@
 <template>
   <div class="epockSlot_parent">
-    <NoData v-if="noDataFlag" />
+    <NoData v-if="installedServicesController !== ''" service-cat="install" />
     <div v-else-if="flag" class="wrapper">
       {{ beaconControler }}
     </div>
@@ -8,11 +8,11 @@
     <div v-else class="wrapper">
       <div class="epoch-box">
         <div class="box_value">{{ currentResult.currentEpoch }}</div>
-        <div class="box_title">Current EPOCH</div>
+        <div class="box_title">{{ $t("controlPage.currentEpoch") }}</div>
       </div>
       <div class="slot-box">
         <div class="box_value">{{ currentResult.currentSlot }}</div>
-        <div class="box_title">Current SLOT</div>
+        <div class="box_title">{{ $t("controlPage.currentSlot") }}</div>
       </div>
     </div>
   </div>
@@ -22,6 +22,7 @@ import NoData from "./NoData.vue";
 import { mapState, mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import { useNodeManage } from "@/store/nodeManage";
+import { useFooter } from "@/store/theFooter";
 
 export default {
   components: {
@@ -43,7 +44,9 @@ export default {
       balancestatus: "balancestatus",
       noDataFlag: "noDataFlag",
     }),
-
+    ...mapWritableState(useFooter, {
+      installedServicesController: "installedServicesController",
+    }),
     beaconControler() {
       if (this.currentResult === undefined) {
         return "Checking Beacon Status...";

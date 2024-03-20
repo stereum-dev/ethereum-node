@@ -9,14 +9,14 @@
       aria-live="assertive"
     >
       <div class="flex items-center gap-2 text-red-800">
-        <strong class="block font-medium"> Something went wrong </strong>
+        <strong class="block font-medium">{{ $t("stakingPage.somethingWrong") }}</strong>
       </div>
-      <p class="mt-2 text-sm text-red-700">Entered Graffiti Not Valid.</p>
+      <p class="mt-2 text-sm text-red-700">{{ $t("stakingPage.enteredGraffitti") }}</p>
     </div>
     <div class="w-full h-full grid grid-cols-12 grid-rows-1 py-[2px]">
       <img
         class="w-6 h-6 self-center col-start-1 col-span-1 justify-self-center"
-        src="/img/icon/the-staking/option-graffiti.png"
+        src="/img/icon/staking-page-icons/option-graffiti.png"
         alt="Graffiti Icon"
         @mousedown.prevent
       />
@@ -37,7 +37,7 @@
           class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
           @click="cancelGraffiti"
         >
-          <img class="w-4 h-4" src="/img/icon/the-staking/close.png" alt="Close Icon" @mousedown.prevent />
+          <img class="w-4 h-4" src="/img/icon/staking-page-icons/close.png" alt="Close Icon" @mousedown.prevent />
         </div>
       </div>
       <div class="col-start-12 col-span-1 flex justify-center items-center p-1">
@@ -50,7 +50,7 @@
           ]"
           @click="confirmGraffiti"
         >
-          <img class="w-4 h-4" src="/img/icon/the-staking/check.png" alt="Check Icon" @mousedown.prevent />
+          <img class="w-4 h-4" src="/img/icon/staking-page-icons/check.png" alt="Check Icon" @mousedown.prevent />
         </div>
       </div>
     </div>

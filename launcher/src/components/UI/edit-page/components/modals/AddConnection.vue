@@ -1,7 +1,9 @@
 import { onMounted, computed } from 'vue';
 <template>
   <div v-if="!manageStore.newConfiguration.length > 0" class="mt-4 flex justify-center items-center">
-    <p class="text-md text-gray-400 font-semibold">There is no available service</p>
+    <p class="text-md text-gray-400 font-semibold">
+      {{ $t("editModals.noAvailService") }}
+    </p>
   </div>
   <div v-else class="w-full mt-4 flex justify-center items-center box-border">
     <div
@@ -9,7 +11,7 @@ import { onMounted, computed } from 'vue';
       class="w-1/3 h-[280px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-2">
-        <span class="text-lg font-semibold text-gray-500">Consensus Clients</span>
+        <span class="text-lg font-semibold text-gray-500">{{ $t("editModals.consensusClients") }}</span>
       </div>
       <div
         class="w-full h-[250px] overflow-y-auto overflow-x-hidden flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
@@ -19,7 +21,8 @@ import { onMounted, computed } from 'vue';
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
-            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700': option.isConnected,
+            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700':
+              option.isConnected,
             'bg-[#282a2c] text-teal-600 border-2 border-gray-600 hover:border-teal-600': !option.isConnected,
             ' w-[190px] h-[55px]': props.client.service === 'SSVNetworkService',
             'w-[200px] h-[65px] text-md': props.client.service !== 'SSVNetworkService',
@@ -50,7 +53,7 @@ import { onMounted, computed } from 'vue';
       class="w-1/3 h-[280px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-2">
-        <span class="text-lg font-semibold text-gray-500">Execution Clients</span>
+        <span class="text-lg font-semibold text-gray-500">{{ $t("editModals.executionClients") }}</span>
       </div>
       <div
         class="w-full h-[250px] overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
@@ -60,7 +63,8 @@ import { onMounted, computed } from 'vue';
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
-            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700': option.isConnected,
+            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700':
+              option.isConnected,
             'bg-[#282a2c] text-teal-600 border-2 border-gray-600 hover:border-teal-600': !option.isConnected,
             ' w-[190px] h-[55px]': props.client.service === 'SSVNetworkService',
             'w-[200px] h-[65px] text-md': props.client.service !== 'SSVNetworkService',
@@ -91,7 +95,7 @@ import { onMounted, computed } from 'vue';
       class="w-1/3 h-[280px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center mt-2">
-        <span class="text-lg font-semibold text-gray-500">Validator Clients</span>
+        <span class="text-lg font-semibold text-gray-500">{{ $t("editModals.validatorClients") }}</span>
       </div>
       <div
         class="w-full h-[250px] flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1 overflow-x-hidden overflow-y-auto"
@@ -101,7 +105,8 @@ import { onMounted, computed } from 'vue';
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
-            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700': option.isConnected,
+            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700':
+              option.isConnected,
             'bg-[#282a2c] text-teal-600 border-2 border-gray-600 hover:border-teal-600': !option.isConnected,
             ' w-[190px] h-[55px]': props.client.service === 'SSVNetworkService',
             'w-[200px] h-[65px] text-md': props.client.service !== 'SSVNetworkService',
@@ -168,7 +173,9 @@ const toggleConnection = (option) => {
   } else {
     option.isConnected = false;
   }
-  props.properties.executionClients = list.value.filter((e) => e.category === "execution" && e.isConnected);
+  props.properties.executionClients = list.value.filter(
+    (e) => e.category === "execution" && e.isConnected
+  );
   props.properties.consensusClients = list.value.filter(
     (e) => (e.category === "consensus" || e.service === "CharonService") && e.isConnected
   );
@@ -177,12 +184,20 @@ const toggleConnection = (option) => {
 const getConnectionOptions = () => {
   switch (props.client.category) {
     case "execution":
+      if (props.client.service === "ExternalExecutionService") {
+        return manageStore.newConfiguration.filter((e) => e.category === "consensus");
+      }
       return [];
     case "consensus":
+      if (props.client.service === "ExternalConsensusService") {
+        return manageStore.newConfiguration.filter((e) => e.category === "validator");
+      }
       return manageStore.newConfiguration.filter((e) => e.category === "execution");
     case "validator":
       if (props.client.service === "SSVNetworkService") {
-        return manageStore.newConfiguration.filter((e) => e.category === "consensus" || e.category === "execution");
+        return manageStore.newConfiguration.filter(
+          (e) => e.category === "consensus" || e.category === "execution"
+        );
       }
       if (props.client.service === "Web3SignerService") {
         return [];
@@ -190,11 +205,14 @@ const getConnectionOptions = () => {
       if (props.client.service === "CharonService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
-      return manageStore.newConfiguration.filter((e) => e.category === "consensus" || e.service === "CharonService");
+      return manageStore.newConfiguration.filter(
+        (e) => e.category === "consensus" || e.service === "CharonService"
+      );
     case "service":
       if (props.client.service === "FlashbotsMevBoostService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
+
       break;
     default:
       return [];
@@ -203,7 +221,9 @@ const getConnectionOptions = () => {
 
 const shortID = (client) => {
   if (client?.config?.serviceID) {
-    return client.config.serviceID.slice(0, 8) + "..." + client.config.serviceID.slice(-8);
+    return (
+      client.config.serviceID.slice(0, 8) + "..." + client.config.serviceID.slice(-8)
+    );
   }
   return client.id;
 };

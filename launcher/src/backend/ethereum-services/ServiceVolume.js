@@ -13,6 +13,7 @@ export class ServiceVolume {
 
   buildVolumeMapping() {
     if (this.bindOptions) return this.destinationPath + ":" + this.servicePath + ":" + this.bindOptions;
-    return this.destinationPath + ":" + this.servicePath;
+    else if (this.destinationPath !== "" && this.servicePath == "") return this.destinationPath;
+    else return this.destinationPath + ":" + this.servicePath;
   }
 }

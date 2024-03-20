@@ -6,8 +6,8 @@
       <div
         class="col-start-1 col-span-full row-start-1 row-span-1 bg-teal-600 rounded-md py-1 px-2 flex justify-between items-center z-10"
       >
-        <span class="text-sm text-gray-200 font-normal uppercase">To import</span>
-        <span class="text-sm text-gray-200 font-normal uppercase">Remove</span>
+        <span class="text-sm text-gray-200 font-normal uppercase">{{ $t("ImportConfigHeader.toImport") }}</span>
+        <span class="text-sm text-gray-200 font-normal uppercase">{{ $t("ImportConfigHeader.rem") }}</span>
       </div>
       <div
         class="col-start-1 col-span-full row-start-2 row-span-full overflow-x-hidden overscroll-y-auto flex flex-col justify-start items-start space-y-2 mt-2"
@@ -36,7 +36,7 @@
             </div>
             <div class="remove">
               <img
-                src="/img/icon/click-installation/cancel.png"
+                src="/img/icon/import-config-icons/cancel-import.png"
                 alt="remove"
                 @click="removeServiceFromList(plugin, index)"
               />
@@ -65,7 +65,7 @@
             </div>
             <div class="remove">
               <img
-                src="/img/icon/click-installation/cancel.png"
+                src="/img/icon/import-config-icons/cancel-import.png"
                 alt="remove"
                 @click="removeServiceFromList(plugin, index)"
               />

@@ -5,7 +5,7 @@ import { ref, computed } from 'vue';
       class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
-        <span class="text-gray-300 text-sm">Set how the Node clients where synchronize their blockchain data from</span>
+        <span class="text-gray-300 text-sm">{{ $t("oneClick.setNodeClient") }}</span>
       </div>
 
       <div class="col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-12 grid-rows-2 gap-2">

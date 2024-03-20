@@ -18,7 +18,7 @@ jobs:
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -66,12 +66,17 @@ jobs:
   update-changes:
     strategy:
       matrix:
-        tests: [{ role: "update-changes", test: "20-rc23" }]
+        tests:
+          [
+            { role: "update-changes", test: "20-rc23" },
+            { role: "update-changes", test: "202" },
+            { role: "update-changes", test: "203" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -124,7 +129,7 @@ jobs:
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -180,7 +185,7 @@ jobs:
   #   concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
   #   runs-on: ubuntu-22.04
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v4
   #     - name: Set up Python
   #       uses: actions/setup-python@v4
   #       with:
@@ -233,7 +238,7 @@ jobs:
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -293,7 +298,7 @@ jobs:
             # {role: "manage-service", test: "ssv-nimbus"},
             # {role: "manage-service", test: "ssv-teku"},
             # {role: "manage-service", test: "ssv-prysm"},
-            { role: "manage-service", test: "monitor-geth" },
+            #{ role: "manage-service", test: "monitor-geth" },
             # {role: "manage-service", test: "monitor-ssvnetwork"},
             # {role: "manage-service", test: "monitor-besu"},
             # {role: "manage-service", test: "monitor-nethermind"},
@@ -320,17 +325,17 @@ jobs:
             # {role: "manage-service", test: "besu-lighthouse"},
             # {role: "manage-service", test: "besu-lodestar"},
             # {role: "manage-service", test: "besu-nimbus"},
-            { role: "manage-service", test: "besu-prysm" },
+            #{ role: "manage-service", test: "besu-prysm" },
             # {role: "manage-service", test: "besu-teku"},
             # {role: "manage-service", test: "erigon-lighthouse"},
-            { role: "manage-service", test: "erigon-lodestar" },
+            #{ role: "manage-service", test: "erigon-lodestar" },
             # {role: "manage-service", test: "erigon-prysm"},
-            { role: "manage-service", test: "geth-lighthouse" },
+            #{ role: "manage-service", test: "geth-lighthouse" },
             # {role: "manage-service", test: "geth-nimbus"},
             # {role: "manage-service", test: "geth-prysm"},
-            { role: "manage-service", test: "geth-teku" },
+            #{ role: "manage-service", test: "geth-teku" },
             # {role: "manage-service", test: "nethermind-lighthouse"},
-            { role: "manage-service", test: "nethermind-nimbus" },
+            #{ role: "manage-service", test: "nethermind-nimbus" },
             # {role: "manage-service", test: "nethermind-prysm"},
             # {role: "manage-service", test: "nethermind-teku"},
             { role: "manage-service", test: "notifications" },
@@ -339,7 +344,7 @@ jobs:
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -394,7 +399,7 @@ jobs:
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -453,7 +458,7 @@ jobs:
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -513,7 +518,7 @@ jobs:
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:

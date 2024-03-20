@@ -1,21 +1,3 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-  "editor.tabSize": 2,
-  "editor.detectIndentation": false,
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "nuxt.isNuxtApp": false,
-  "vue.features.codeActions.enable": false,
-  "vue.codeActions.enabled": false,
-  "vetur.format.enable": false,
-  "[vue]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.autoIndent": "none",
-  "vue3snippets.enable-compile-vue-file-on-did-save-code": true,
-  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
-  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false
+    "nuxt.isNuxtApp": false
 }

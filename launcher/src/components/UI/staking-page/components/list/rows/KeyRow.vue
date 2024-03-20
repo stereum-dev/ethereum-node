@@ -6,43 +6,62 @@ import { computed } from 'vue';
     @click="selectKey(props.item)"
   >
     <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
-      <div class="w-6 h-6 rounded-full cursor-pointer bg-white p-[2px]">
+      <div
+        class="w-6 h-6 rounded-full cursor-pointer bg-white p-[2px]"
+        @mouseenter="footerStore.cursorLocation = `${props.item.isRemote ? rm : pk}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           v-if="props.item.isRemote"
           class="w-full h-full"
-          src="/img/icon/the-staking/remotekey.svg"
+          src="/img/icon/staking-page-icons/remote-key-icon.svg"
           alt="Key Icon"
           @mousedown.prevent
         />
-        <img v-else class="w-full h-full" src="/img/icon/the-staking/key-sign.png" alt="Key Icon" @mousedown.prevent />
+        <img v-else class="w-full h-full" src="/img/icon/staking-page-icons/key-icon.png" alt="Key Icon" @mousedown.prevent />
       </div>
     </div>
-    <div class="col-start-2 col-end-9 self-center overflow-hidden flex justify-start items-center">
+    <div
+      class="col-start-2 col-end-8 self-center overflow-hidden flex justify-start items-center"
+      @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
       <span
-        class="text-center font-semibold text-sm ml-1"
+        class="text-center font-semibold text-xs"
         :class="props.item?.selected ? 'text-gray-800' : 'text-gray-300'"
         >{{ displayText }}</span
       >
     </div>
 
     <img
-      class="w-6 h-6 col-start-9 col-end-11 self-center mx-auto"
+      class="w-6 h-6 col-start-8 col-span-1 self-center mx-auto"
       :src="props.item?.icon"
       alt="Client Icon"
       @mousedown.prevent
+      @mouseenter="footerStore.cursorLocation = `${serviceExpl}`"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <span
-      class="col-start-11 col-end-13 self-center text-center text-xs text-gray-300 overflow-hidden"
+      class="col-start-9 col-end-12 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
+      @mouseenter="footerStore.cursorLocation = `${activeExpl}`"
+      @mouseleave="footerStore.cursorLocation = ''"
       >{{ props.item.activeSince }}</span
     >
-    <div class="w-full col-start-13 col-end-15 self-center overflow-hidden flex justify-center items-center">
+
+    <div
+      class="w-full col-start-12 col-end-13 self-center overflow-hidden flex justify-center items-center"
+      @mouseenter="footerStore.cursorLocation = `${state}`"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
       <img class="w-6 h-6" :src="getKeyState" alt="icon" @mousedown.prevent />
     </div>
 
     <span
-      class="col-start-15 col-end-18 self-center text-left text-xs text-gray-300 overflow-hidden ml-2"
+      class="col-start-13 col-end-17 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
+      @mouseenter="footerStore.cursorLocation = `${balExpl}`"
+      @mouseleave="footerStore.cursorLocation = ''"
       >{{ props.item.balance }}</span
     >
 
@@ -50,46 +69,66 @@ import { computed } from 'vue';
       class="h-full col-start-18 col-span-full bg-[#151618] rounded-full grid grid-cols-5 items-center"
       @mousedown.prevent
     >
-      <div class="col-start-1 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+      <div
+        class="col-start-1 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = `${copyPub}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 bg-[#343434] rounded-sm hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/copy6.png"
+          src="/img/icon/staking-page-icons/copy.png"
           alt="Icon"
           @mousedown.prevent
           @click="copyHandler(props.item)"
         />
       </div>
-      <div class="col-start-2 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+      <div
+        class="col-start-2 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = `${renameVal}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/rename-group.png"
+          src="/img/icon/staking-page-icons/rename.png"
           alt="Icon"
           @mousedown.prevent
           @click="renameKey(props.item)"
         />
       </div>
-      <div class="col-start-3 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+      <div
+        class="col-start-3 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = `${setFee}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/fee-recepient.png"
+          src="/img/icon/staking-page-icons/option-fee-recepient.png"
           alt="Icon"
           @mousedown.prevent
           @click="FeeRecepient"
         />
       </div>
-      <div class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+      <div
+        class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = `${removVal}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/option-remove.png"
+          src="/img/icon/staking-page-icons/option-remove.png"
           alt="Icon"
           @mousedown.prevent
           @click="removeSingle(props.item)"
         />
       </div>
-      <div class="col-start-5 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center">
+      <div
+        class="col-start-5 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = `${exitChain}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
         <img
           class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/the-staking/withdraw.png"
+          src="/img/icon/staking-page-icons/option-withdraw.png"
           alt="Icon"
           @mousedown.prevent
           @click="withdrawHandler"
@@ -117,14 +156,25 @@ const footerStore = useFooter();
 
 const t = i18n.global.t;
 //Key Status Icons
-const activeStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Active.png";
-const slashedStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Slashed.png";
-const depositStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Deposit.png";
-const offlineStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Offline.png";
-const pendingStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png";
-const exitedStatusIcon = "/img/icon/the-staking/Validatorkey_Status_Exited.png";
-const apiProblems = "/img/icon/the-staking/State_Icon.png";
-const apiLoading = "/img/icon/task-manager-icons/turning_circle.gif";
+const activeStatusIcon = "/img/icon/staking-page-icons/validator-state-active.png";
+const slashedStatusIcon = "/img/icon/staking-page-icons/validator-state-slashed.png";
+const depositStatusIcon = "/img/icon/staking-page-icons/validator-state-not-deposited.png";
+const offlineStatusIcon = "/img/icon/staking-page-icons/validator-state-offline.png";
+const pendingStatusIcon = "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
+const exitedStatusIcon = "/img/icon/staking-page-icons/validator-state-exited.png";
+const apiProblems = "/img/icon/staking-page-icons/validator-state-unknown.png";
+const apiLoading = "/animation/loading/turning-circle.gif";
+const pk = t("displayValidator.pk");
+const rm = t("displayValidator.rm");
+const state = t("displayValidator.state");
+const serviceExpl = t("displayValidator.serviceExpl");
+const activeExpl = t("displayValidator.activeExpl");
+const balExpl = t("displayValidator.balExpl");
+const copyPub = t("displayValidator.copyPub");
+const setFee = t("displayValidator.setFee");
+const renameVal = t("displayValidator.renameVal");
+const removVal = t("displayValidator.removVal");
+const exitChain = t("displayValidator.exitChain");
 
 const getKeyState = computed(() => {
   const item = props.item.status;
@@ -184,6 +234,9 @@ const selectKey = (key) => {
 };
 
 const renameKey = (key) => {
+  stakingStore.keys.forEach((item) => {
+    item.selected = false;
+  });
   key.selected = true;
   stakingStore.selectKeyToRename = key;
   stakingStore.setActivePanel("renameKey");

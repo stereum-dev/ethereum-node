@@ -7,7 +7,7 @@
         @mouseenter="footerStore.cursorLocation = `${toNode}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-8 h-5" src="/img/icon/manage-node-icons/backtonode.png" alt="Manage Icon" />
+        <img class="w-8 h-5" src="/img/icon/edit-node-icons/back-to-node.png" alt="Manage Icon" />
       </div>
       <Transition name="slide-fade">
         <router-link
@@ -16,7 +16,7 @@
           class="w-fit h-9 absolute col-span-1 row-start-1 row-end-2 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-between items-center space-x-2 ml-1 transition duration-200 shadow-md shadow-[#23272a] z-50"
           @mouseleave="routerHovered = false"
         >
-          <img class="w-6 h-4 mr-1" src="/img/icon/manage-node-icons/backtonode.png" alt="Manage Icon" />
+          <img class="w-6 h-4 mr-1" src="/img/icon/edit-node-icons/back-to-node.png" alt="Manage Icon" />
           <span class="text-sm text-gray-200 font-semibold">{{ $t("sidebarSect.toNode") }}</span>
         </router-link>
       </Transition>
@@ -26,7 +26,7 @@
         @mouseenter="footerStore.cursorLocation = `${setchNet}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-6" src="/img/icon/manage-node-icons/change-network.png" alt="Network" />
+        <img class="w-6" src="/img/icon/edit-node-icons/change-network.png" alt="Network" />
       </button>
       <Transition name="slide-fade">
         <button
@@ -35,7 +35,7 @@
           @mouseleave="networkHovered = false"
           @click="networkModal"
         >
-          <img class="w-4 mr-1" src="/img/icon/manage-node-icons/change-network.png" alt="Network Icon" />
+          <img class="w-4 mr-1" src="/img/icon/edit-node-icons/change-network.png" alt="Network Icon" />
           <span class="text-sm text-gray-200 font-semibold">{{ setchNet }}</span>
         </button>
       </Transition>
@@ -46,7 +46,7 @@
         @mouseenter="footerStore.cursorLocation = `${nukTheNud}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-6" src="/img/icon/manage-node-icons/nuke.png" alt="Export Icon" />
+        <img class="w-6" src="/img/icon/edit-node-icons/nuke-node.png" alt="Export Icon" />
       </button>
       <Transition name="slide-fade">
         <button
@@ -55,7 +55,7 @@
           @mouseleave="nukeHovered = false"
           @click="nukeNode"
         >
-          <img class="w-4" src="/img/icon/manage-node-icons/nuke.png" alt="Export Icon" />
+          <img class="w-4" src="/img/icon/edit-node-icons/nuke-node.png" alt="Export Icon" />
           <span class="text-xs text-gray-200 font-semibold">{{ $t("sidebarSect.nukNod") }}</span>
         </button>
       </Transition>

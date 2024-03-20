@@ -2,46 +2,76 @@
   <div class="obol-modal-plugin_parent">
     <div class="obol-modal-plugin_header">
       <span>{{
-        headerStore.distrubutedValidatorGenerator ? "DISTRIBUTED VALIDATOR GENERATION" : "GENERATING NEW ENR"
+        headerStore.distrubutedValidatorGenerator || distributedCompleted
+          ? `${$t("serviceModal.distributedValidator")}`
+          : `${$t("serviceModal.generateEnr")}`
       }}</span>
     </div>
     <div
       class="obol-modal-plugin_spaceWindow"
       :style="{
-        backgroundImage: backupDistributedValidator || distributedCompleted ? distrubutedValidatorAnimation : '',
+        backgroundImage:
+          backupDistributedValidator || distributedCompleted
+            ? distrubutedValidatorAnimation
+            : '',
       }"
     >
       <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
-        <span v-if="!headerStore.distrubutedValidatorGenerator">{{ headerStore.generatedENR }}</span>
+        <span v-if="!headerStore.distrubutedValidatorGenerator">{{
+          headerStore.generatedENR
+        }}</span>
         <div v-else class="span-wrapper">
-          <span v-for="item in dummmmmmmy" :key="item">{{ item }}</span>
+          <span v-for="item in dkgLogs" :key="item">{{ item }}</span>
         </div>
       </div>
     </div>
-    <div
-      :class="[
-        'obol-modal-plugin_btn',
-        !headerStore.enrIsGenerating ? 'activeBtn' : '',
-        headerStore.deactivateBtnToWaitForLogs ? 'deactivate' : '',
-      ]"
-      @click="btnHandling"
-    >
-      {{ enrBtnToShow }}
+    <div class="obol-modal-plugin_btn-box">
+      <input v-if="backupDistributedValidator" v-model="backupPath" type="text" placeholder="/path/to/backup" />
+
+      <span
+        v-if="backupDistributedValidator"
+        class="absolute cursor-pointer uppercase flex justify-center items-center backup-btn"
+        @click="backupBtn"
+        >path</span
+      >
+
+      <div
+        :class="[
+          'obol-modal-plugin_btn',
+          !headerStore.enrIsGenerating ? 'activeBtn' : '',
+          headerStore.deactivateBtnToWaitForLogs ? 'deactivate' : '',
+          runningBackup ? 'deactivate' : '',
+        ]"
+        @click="btnHandling"
+      >
+        {{ enrBtnToShow }}
+      </div>
     </div>
   </div>
 </template>
 <script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onBeforeUnmount } from "vue";
+import ControlService from "@/store/ControlService";
+import { saveToFile } from "@/composables/utils";
+
+// Define props
+const props = defineProps({
+  clusterDefinition: String,
+});
 
 const enrGeneratedSuccess = ref(false);
 const enrGeneratedFailed = ref(false);
 const enrGeneratedContinue = ref(false);
-const dummmmmmmy = ref([]);
 const backupDistributedValidator = ref(false);
-const distrubutedValidatorAnimation = ref("url('./img/icon/service-icons/obol_animation.gif')");
-// const nukeNode = ref("url('./img/icon/service-icons/obol_animation.gif')");
+const distrubutedValidatorAnimation = ref(
+  "url('./animation/services/obol/obol-animation.gif')"
+);
 const distributedCompleted = ref(false);
+const polling = ref(null);
+const dkgLogs = ref([]);
+const backupPath = ref("");
+const runningBackup = ref(false);
 
 const headerStore = useNodeHeader();
 
@@ -79,10 +109,10 @@ const enrBtnToShow = computed(() => {
   ) {
     return "CONTINUE"; //continue
   } else if (headerStore.distrubutedValidatorGenerator && !headerStore.enrIsGenerating) {
-    return "Y of X CONNECTED";
+    return "DKG FINISHED";
   } else if (backupDistributedValidator.value && !headerStore.enrIsGenerating) {
     return "BACKUP";
-  } else if (distributedCompleted.value && !headerStore.enrIsGenerating && !backupDistributedValidator.value) {
+  } else if (distributedCompleted.value && !headerStore.enrIsGenerating) {
     return "COMPLETE";
   }
 
@@ -91,119 +121,92 @@ const enrBtnToShow = computed(() => {
 
 onMounted(() => {
   if (!headerStore.distrubutedValidatorGenerator && headerStore.enrIsGenerating) {
-    randomDummyText();
+    createEnr();
   }
   headerStore.generatedENR = "";
   if (headerStore.distrubutedValidatorGenerator && !headerStore.enrIsGenerating) {
-    randomDummyLog();
+    startDKG(props.clusterDefinition);
   }
 });
 
-const randomDummyText = () => {
-  setTimeout(() => {
-    let text = "";
-    let possible =
-      "IS4QHCYrYZbAKWCBRlAy5zzaDZXJBGkcnh4MHcBFZntXNFrdvJjX04jRzjzCBOonrkTfj499SZuOh8R33Ls8RRcy5wBgmlkgnY0gmlwhH8AAAGJc2VjcDI1NmsxoQPKY0yuDUmstAHYpMa2_oxVtw0RW_QAdpzBQA8yWM0xOIN1ZHCCdl8";
+onBeforeUnmount(() => {
+  clearInterval(polling.value);
+});
 
-    const randomNumber = Math.random();
+const createEnr = async () => {
+  enrGeneratedSuccess.value = false;
+  enrGeneratedFailed.value = false;
+  let enr = "";
 
-    if (randomNumber < 0.5) {
-      headerStore.enrIsGenerating = false;
-      enrGeneratedSuccess.value = false;
-      enrGeneratedFailed.value = true;
-      enrGeneratedContinue.value = false;
-      console.log("failed");
-    } else {
-      for (let i = 0; i < 100; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      headerStore.enrIsGenerating = false;
+  try {
+    enr = await ControlService.createObolENR();
+  } catch (error) {
+    enrGeneratedFailed.value = true;
+    headerStore.generatedENR = JSON.stringify(error);
+  } finally {
+    headerStore.generatedENR = enr;
+
+    if (enr.includes("enr:-")) {
       enrGeneratedSuccess.value = true;
-      enrGeneratedFailed.value = false;
-      enrGeneratedContinue.value = false;
-      headerStore.generatedENR = "enr:-" + text;
-    }
-  }, 3000);
-};
-
-const randomDummyLog = () => {
-  let testLog = [
-    "Unable to find image 'obolnetwork/charon:v0.17.2' locally",
-    "v0.17.2: Pulling from obolnetwork/charon",
-    "0bc8ff246cb8: Pull complete",
-    "354ff387eaea: Pull complete",
-    "df297ee79abd: Pull complete",
-    "20bedba6b33d: Pull complete",
-    "defe620960ca: Pull complete",
-    "eab7f61f4ebd: Pull complete",
-    "4f4fb700ef54: Pull complete",
-    "77703a2bc7cb: Pull complete",
-    "Digest: sha256:95f07300a8e78d0d9b98aa7eec30fb40b03ef48d9ad32312390b3f984f9ec7f1",
-    "Status: Downloaded newer image for obolnetwork/charon:v0.17.2",
-    '16:03:12.139 INFO cmd        Parsed config                            {"data-dir": ".charon", "definition-file": "https://api.obol.tech/dv/0x6a4b32218e6fed4ab78a70d609c0694d096c886bde9c292af376b19ef08d84df", "help": "false", "keymanager-address": "", "keymanager-auth-token": "xxxxx", "log-color": "auto", "log-format": "console", "log-level": "info", "no-verify": "false", "p2p-allowlist": "", "p2p-denylist": "", "p2p-disable-reuseport": "false", "p2p-external-hostname": "", "p2p-external-ip": "", "p2p-relays": "[https://0.relay.obol.tech]", "p2p-tcp-address": "[]", "publish": "true", "publish-address": "https://api.obol.tech", "shutdown-delay": "1s"}',
-    '16:03:12.139 INFO dkg        Charon DKG starting                      {"version": "v0.17.2", "git_commit_hash": "eb8870d", "git_commit_time": "2023-11-08T14:23:43Z"}',
-    '16:03:12.431 INFO dkg        Cluster definition downloaded from URL   {"URL": "https://api.obol.tech/dv/0x6a4b32218e6fed4ab78a70d609c0694d096c886bde9c292af376b19ef08d84df", "definition_hash": "0x1da92423171bb88dd2967d305597194f326e47b5993891c22b7946296c3ca059"}',
-    "16:03:12.453 INFO dkg        Starting local P2P networking peer",
-    '16:03:12.453 INFO dkg        Peer summary                             {"peer": "lovely-pen", "index": 0, "address": "0x0Dc93087891FE8a59A31109C7ac643cdE7835711"}',
-    '16:03:12.453 INFO dkg        Peer summary                             {"peer": "tired-father", "index": 1, "address": "0x3b9988E318874E5a2fBf32e3521951756d4f43af", "you": "⭐️"}',
-    '16:03:12.453 INFO dkg        Peer summary                             {"peer": "jealous-sale", "index": 2, "address": "0x48aB8492ff201c8eae9F89B17143dEd620b3bd06"}',
-    '16:03:12.453 INFO dkg        Peer summary                             {"peer": "wild-wood", "index": 3, "address": "0x5b3Bca24f0CaCB5240F238865DB55bCAcf83228D"}',
-    '16:03:12.453 INFO dkg        Peer summary                             {"peer": "puzzled-nest", "index": 4, "address": "0x6Da1d70907D948b63cf229BC4678Cb41F4EFFB46"}',
-    '16:03:12.453 INFO dkg        Peer summary                             {"peer": "motionless-site", "index": 5, "address": "0xE32c61f880Fcae8898AA32840A15330AE30758ff"}',
-    '16:03:12.453 INFO dkg        Peer summary                             {"peer": "vivacious-country", "index": 6, "address": "0xF2890F9E1aE105cF07366D8d667a438F99A167Ab"}',
-    '16:03:12.551 INFO dkg        Resolved new relay                       {"peer": "dazzling-mirror", "url": "https://0.relay.obol.tech", "addrs": "[/ip4/34.141.223.64/tcp/3610]"}',
-    "16:03:13.454 INFO dkg        LibP2P not accepting incoming connec,tions since --p2p-tcp-addresses empty",
-    "16:03:13.472 INFO dkg        Waiting to connect to all peers...",
-    '16:03:14.318 INFO dkg        Connected to peer 1 of 6                 {"peer": "puzzled-nest"}',
-    '16:03:14.337 INFO dkg        Connected to peer 2 of 6                 {"peer": "lovely-pen"}',
-    '16:03:14.377 INFO dkg        Connected to peer 3 of 6                 {"peer": "motionless-site"}',
-    '16:03:14.606 INFO dkg        Connected to peer 4 of 6                 {"peer": "vivacious-country"}',
-    '16:03:14.770 INFO dkg        Connected to peer 5 of 6                 {"peer": "wild-wood"}',
-    '16:03:15.398 INFO dkg        Connected to peer 6 of 6                 {"peer": "jealous-sale"}',
-    "16:03:15.649 INFO dkg        All peers connected, starting DKG ceremony",
-    "16:03:42.363 ERRO dkg        Sync failed to peer: client connect: open connection: failed to dial: failed to dial 16Uiu2HAmDop5bmMMZPBr5L1D8VGTjTuVCRWPWJPubUetWJoXyKNg:",
-    '  * [/ip4/34.141.223.64/tcp/3610/p2p/16Uiu2HAmEDxrw91R8XANWfLFyFoNxm9CzDSM48KeLrC2xjsTS7oN/p2p-circuit] error opening relay circuit: NO_RESERVATION (204) {"peer": "lovely-pen"}',
-    "        dkg/sync/client.go:235 .connect",
-    "        dkg/sync/client.go:83 .Run",
-    "        dkg/dkg.go:456 .func1",
-    '16:03:42.363 WARN dkg        Couldnt publish lock file to Obol API: failed to call POST endpoint: Post "https://api.obol.tech/lock": context canceled',
-    "        app/obolapi/api.go:97 .httpPost",
-    "        app/obolapi/api.go:66 .PublishLock",
-    "        dkg/dkg.go:1043 .writeLockToAPI",
-    "        dkg/dkg.go:338 .Run",
-    "        cmd/dkg.go:35 .func1",
-    "        cmd/cmd.go:80 .func1",
-    "        main.go:21 .main",
-  ];
-  let currentIndex = 0;
-
-  const intervalId = setInterval(() => {
-    if (currentIndex < testLog.length) {
-      dummmmmmmy.value.push(testLog[currentIndex]);
-      currentIndex++;
     } else {
-      headerStore.deactivateBtnToWaitForLogs = false;
-      clearInterval(intervalId);
+      enrGeneratedFailed.value = true;
     }
-  }, 500);
+
+    enrGeneratedContinue.value = false;
+    headerStore.enrIsGenerating = false;
+  }
 };
 
-const saveToFile = () => {
-  const dataToSave = headerStore.generatedENR;
-  const blob = new Blob([dataToSave], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "ENR.txt";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+const backupPrivateKey = async () => {
+  const content = await ControlService.getObolENRPrivateKey();
+  saveToFile("charon-enr-private-key", content);
 };
 
-const btnHandling = () => {
+const startDKG = async () => {
+  //first check if there is already a running dkg
+  const isRunning = await ControlService.checkObolDKG();
+  if (!isRunning) {
+    await ControlService.startObolDKG(props.clusterDefinition);
+  }
+  startDGKLogging();
+};
+
+const startDGKLogging = async () => {
+  dkgLogs.value = (await ControlService.getObolDKGLogs()).split("\n");
+  polling.value = setInterval(async () => {
+    const logs = await ControlService.getObolDKGLogs();
+    dkgLogs.value = logs.split("\n");
+    if (logs.includes("Successfully completed DKG ceremony")) {
+      clearInterval(polling.value);
+      headerStore.deactivateBtnToWaitForLogs = false;
+    }
+  }, 5000);
+};
+
+const openDirectoryPicker = async () => {
+  try {
+    const paths = await ControlService.openDirectoryDialog({
+      properties: ["openDirectory", "createDirectory"],
+    });
+    backupPath.value = paths[0];
+  } catch (error) {
+    // Handle case when user cancels directory picker
+    if (error.name === "AbortError") {
+      backupPath.value = "";
+    } else {
+      console.error("Error picking directory:", error);
+    }
+  }
+};
+
+const btnHandling = async () => {
+  if (runningBackup.value) {
+    return;
+  }
   if (enrBtnToShow.value === "GENERATING...") {
     console.log("GENERATING...");
   } else if (enrBtnToShow.value === "BACKUP ENR") {
-    saveToFile();
+    backupPrivateKey();
     headerStore.enrIsGenerating = false;
     enrGeneratedSuccess.value = false;
     enrGeneratedFailed.value = false;
@@ -224,15 +227,25 @@ const btnHandling = () => {
     headerStore.generatorPlugin = false;
     headerStore.obolDashboard = true;
     headerStore.continueForExistENR = true;
-  } else if (enrBtnToShow.value === "Y of X CONNECTED") {
+  } else if (enrBtnToShow.value === "DKG FINISHED") {
+    await openDirectoryPicker();
     backupDistributedValidator.value = true;
-    headerStore.distrubutedValidatorGenerator = false;
-    distributedCompleted.value = false;
-  } else if (enrBtnToShow.value === "BACKUP") {
-    backupDistributedValidator.value = false;
     headerStore.distrubutedValidatorGenerator = false;
     distributedCompleted.value = true;
   } else if (enrBtnToShow.value === "COMPLETE") {
+    if (!backupPath.value || backupPath.value === "") {
+      //check if user has selected a path
+      openDirectoryPicker(); // if not prompt selection again
+      return;
+    }
+    runningBackup.value = true;
+    try {
+      await ControlService.downloadObolBackup(backupPath.value);
+    } catch (error) {
+      console.error("Error downloading backup:", error);
+    } finally {
+      runningBackup.value = false;
+    }
     backupDistributedValidator.value = false;
     headerStore.distrubutedValidatorGenerator = false;
     distributedCompleted.value = false;
@@ -241,6 +254,9 @@ const btnHandling = () => {
     headerStore.continueForExistENR = true;
     headerStore.depositFile = true;
   }
+};
+const backupBtn = async () => {
+  await openDirectoryPicker();
 };
 </script>
 
@@ -277,7 +293,7 @@ const btnHandling = () => {
   font-weight: 600;
 }
 .obol-modal-plugin_spaceWindow {
-  width: 90%;
+  width: 95%;
   height: 60%;
   display: flex;
   flex-wrap: wrap;
@@ -321,9 +337,43 @@ const btnHandling = () => {
   flex-shrink: 0;
   word-wrap: break-word;
 }
+.obol-modal-plugin_btn-box {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 2% 0;
+  position: relative;
+}
+.obol-modal-plugin_btn-box input {
+  width: 61%;
+  height: 80%;
+  background-color: #eee;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 25px;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.backup-btn {
+  color: #2fe4ab;
+  top: 1;
+  left: 48%;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: #192d31;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 25px;
+  height: 75%;
+  width: 15%;
+}
 .obol-modal-plugin_btn {
   width: 30%;
-  height: 15%;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -335,7 +385,6 @@ const btnHandling = () => {
   color: #dbdbdb;
   font-size: 1rem;
   font-weight: 600;
-  margin: 2% 0;
 }
 .obol-modal-plugin_btn:hover {
   transition-duration: 100ms;
