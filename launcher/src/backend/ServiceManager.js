@@ -30,6 +30,7 @@ import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
 import { CustomService } from "./ethereum-services/CustomService";
+import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";  
 import YAML from "yaml";
 
 const log = require("electron-log");
@@ -158,6 +159,8 @@ export class ServiceManager {
               services.push(ExternalExecutionService.buildByConfiguration(config));
             } else if (config.service == "CustomService") {
               services.push(CustomService.buildByConfiguration(config));
+            } else if (config.service == "LidoObolExitService") {
+              services.push(LidoObolExitService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -967,7 +970,10 @@ export class ServiceManager {
       case "CustomService":
         ports = [];
         return CustomService.buildByUserInput(args.network, args.installDir + "/custom", args.image, args.entrypoint, args.command, args.ports, args.volumes);
-    }
+      case "LidoObolExitService":
+        ports = [];
+        return LidoObolExitService.buildByUserInput(args.network, ports, args.installDir + "/lidodvexit");
+      }
   }
 
   async createCachingDB(keyAPI) {
