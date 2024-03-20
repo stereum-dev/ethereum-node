@@ -32,10 +32,10 @@ const handleClick = () => {
 };
 
 const menuIcon = computed(() => {
-  if (props.item.name !== "Available Updates") {
+  if (props.item.name !== "Available Update") {
     return props.item.icon;
   } else if (
-    props.item.name === "Available Updates" &&
+    props.item.name === "Available Update" &&
     (headerStore.isUpdateAvailable || headerStore.isOsUpdateAvailable)
   ) {
     return props.item.activeIcon;
