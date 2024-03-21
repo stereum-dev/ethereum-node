@@ -111,8 +111,8 @@ onUnmounted(() => {
 //Methods
 
 // authentification handling
-const submitAuthHandler = () => {
-  console.log("submitAuthHandler");
+const submitAuthHandler = (val) => {
+  console.log("submitAuthHandler", val);
 };
 
 //Server Management Login Handler

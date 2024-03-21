@@ -49,8 +49,7 @@
         <div v-if="setupPage || generationPage || setupConfirmPage" class="checkContainer">
           <checkContainer
             :title="`${checkContainer.title}`"
-            :checked="`${checkContainer.checked}`"
-            :reset="`${resetConfig}`"
+            :reset="checkContainer.reset"
             @update="handleCheckboxUpdate"
           />
         </div>
@@ -107,6 +106,7 @@ export default {
       verificationCode: "verificationCode",
       validVerificationCode: "validVerificationCode",
       verificationOutput: "verificationOutput",
+      checkConfigToReset: "checkConfigToReset",
     }),
     ...mapWritableState(useNodeStore, {
       hideConnectedLines: "hideConnectedLines",
@@ -171,7 +171,7 @@ export default {
       if (this.setupPage || (!this.generationPage && !this.setupConfirmPage)) {
         return {
           title: `${this.$t("authenticatorModal.timedTokens")}`,
-          checked: false,
+          reset: `authTimeBase`,
         };
       } else if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
         return {
@@ -222,6 +222,7 @@ export default {
         console.log("Checkbox updated:", value);
         console.log("auth key", this.authKeyTimeBase && !this.setupConfirmPage);
       } else if (!this.setupPage && this.generationPage) {
+        console.log("testttt");
         this.confirmSuccessAuth = value;
         console.log("confirm", this.confirmSuccessAuth);
       } else if (!this.setupPage && !this.generationPage && this.setupConfirmPage) {
@@ -266,7 +267,8 @@ export default {
         this.confirmSuccessAuth = true;
       } else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
         this.authKeyTimeBase = true;
-        this.resetConfig = "green";
+        this.resetConfig = "reset";
+        console.log("reset config", this.resetConfig);
         setTimeout(() => {
           this.resetConfig = "";
         }, 1000);
