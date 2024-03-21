@@ -37,6 +37,7 @@ export class RethService extends NodeService {
         "--authrpc.addr=0.0.0.0",
         "--authrpc.jwtsecret=/engine.jwt",
         "--metrics=0.0.0.0:6060",
+        "--color=never",
       ], // command
       ["/usr/local/bin/reth"], // entrypoint
       {}, // env
