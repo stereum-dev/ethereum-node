@@ -52,6 +52,9 @@ export class LodestarValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
+    if(consensusClients.some(c => c.service === "CharonService"))
+      service.command.push("--distributed")
+
     return service;
   }
 
