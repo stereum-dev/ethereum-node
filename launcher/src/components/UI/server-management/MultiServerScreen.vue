@@ -9,6 +9,7 @@ import ServerHeader from './components/ServerHeader.vue';
     />
     <ServerHeader @tab-picker="tabPicker" />
     <ServerBody
+      :key="serverBodyComponentKey"
       @server-login="loginHandler"
       @select-server="serverHandler"
       @change-password="acceptChangePass"
@@ -53,6 +54,7 @@ const router = useRouter();
 const keyLocation = ref("");
 let loginAbortController = new AbortController();
 console.log("Server Management Screen", loginAbortController);
+const serverBodyComponentKey = ref(0);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -209,6 +211,7 @@ const removeServerHandler = async () => {
   await remove();
   serverStore.isRemoveProcessing = false;
   serverStore.isRemoveModalActive = false;
+  serverBodyComponentKey.value++;
 };
 
 //SSH Key Management

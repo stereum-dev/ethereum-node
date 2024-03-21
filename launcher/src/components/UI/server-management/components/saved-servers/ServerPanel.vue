@@ -88,19 +88,17 @@ const getFilteredServers = () => {
   );
 };
 
-// Recompute filteredServers when searchQuery changes
-watch(searchQuery, () => {
-  filteredServers.value = null;
-  setTimeout(() => {
-    filteredServers.value = getFilteredServers();
-  }, 10);
-});
-
+// Watch for changes in both searchQuery and serverStore.refreshServers
 watch(
-  () => serverStore.refreshServers,
-  async () => {
-    await loadStoredConnections();
-  }
+  [searchQuery, () => serverStore.refreshServers],
+  async ([, refreshTrigger], [, oldRefreshTrigger]) => {
+    if (refreshTrigger !== oldRefreshTrigger) {
+      await loadStoredConnections();
+    }
+
+    filteredServers.value = getFilteredServers();
+  },
+  { deep: true }
 );
 
 //Lifecycle Hooks
