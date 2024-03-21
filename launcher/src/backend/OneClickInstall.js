@@ -262,9 +262,9 @@ export class OneClickInstall {
       //NotificationService
       this.extraServices.push(this.serviceManager.getService("NotificationService", args));
     }
-    
+
     this.handleArchiveTags(selectedPreset);
-    
+
 
     let versions;
     try {
@@ -294,7 +294,7 @@ export class OneClickInstall {
     }
   }
 
-  handleArchiveTags(selectedPreset){
+  handleArchiveTags(selectedPreset) {
     if (selectedPreset == "staking") {
       switch (this.executionClient.service) {
         case "RethService":
@@ -335,17 +335,17 @@ export class OneClickInstall {
           this.beaconService.command = this.beaconService.command.filter((c) => !c.includes("--checkpointSyncUrl"));
           break;
         case "NimbusBeaconService":
-          if(this.beaconService.command.some(c => c.includes("--trusted-node-url="))){
+          if (this.beaconService.command.some(c => c.includes("--trusted-node-url="))) {
             this.beaconService.command.push("--backfill=true")
           }
           this.beaconService.command.push("--history=archive")
           break;
         case "PrysmBeaconService":
-          this.beaconService.command.push("--slots-per-archive-point=32");
+          this.beaconService.command += " --slots-per-archive-point=32";
           break;
         case "TekuBeaconService":
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--data-storage-mode"))
+          this.beaconService.command[
+            this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))
           ] = "--data-storage-mode=archive";
       }
     }
