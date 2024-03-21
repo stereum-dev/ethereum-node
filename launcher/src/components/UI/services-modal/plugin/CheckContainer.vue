@@ -4,7 +4,7 @@
       {{ title }}
     </div>
     <div class="check-parent_part">
-      <div :key="isChecked" class="customizedCheckBox" :style="checkboxStyle" @click="toggleCheckbox">
+      <div class="customizedCheckBox" :style="checkboxStyle" @click="toggleCheckbox">
         <span v-if="isChecked">✓</span>
       </div>
     </div>
@@ -18,7 +18,7 @@ export default {
       type: String,
       default: "",
     },
-    checked: {
+    isCheckedProps: {
       type: Boolean,
       default: false,
     },
@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      isChecked: this.checked,
+      isChecked: true,
     };
   },
   computed: {
@@ -40,15 +40,6 @@ export default {
         borderColor: this.isChecked ? "greenyellow" : "red",
         cursor: "pointer",
       };
-    },
-  },
-  watch: {
-    reset(val) {
-      if (val === "green") {
-        this.isChecked = true;
-      } else if (val === "red") {
-        this.isChecked = false;
-      }
     },
   },
 

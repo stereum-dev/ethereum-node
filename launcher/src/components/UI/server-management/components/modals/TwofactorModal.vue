@@ -45,7 +45,7 @@ const closeWindow = () => {
 };
 
 const submitAuth = () => {
-  emit("submitAuth");
+  emit("submitAuth", password.value);
 };
 </script>
 
