@@ -354,8 +354,9 @@ export default {
           if (patternIndex === -1 || !validator.yaml) {
             continue;
           }
-          const pattern = validator.expertOptions[patternIndex].pattern;
-          const match = [...validator.yaml.match(new RegExp(pattern))][2];
+          const command = validator.expertOptions[patternIndex].commands[0];
+          const result = validator.yaml.match(new RegExp(`${command}[:=]?([\\S*]+)`));
+          const match = result ? result[result.length - 1] : "";
           if (match) {
             const address = match;
             addresses.push({
@@ -364,11 +365,6 @@ export default {
               icon: validator.sIcon,
               serviceID: validator.config.serviceID,
             });
-          } else {
-            console.error(
-              "Could not find default-fee-recipient address in the service YAML for validator:",
-              validator.name
-            );
           }
         }
         const notSetAddresses = addresses.filter(

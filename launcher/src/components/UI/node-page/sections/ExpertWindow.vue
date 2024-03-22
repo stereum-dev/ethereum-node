@@ -113,7 +113,7 @@
             class="toggleTextInput"
             type="text"
             :class="{
-              disabled: option.changeValue === null || !option.buttonState,
+              disabled: !option.buttonState,
             }"
             @input="somethingIsChanged(option)"
           />
@@ -318,10 +318,6 @@ export default {
     async readService() {
       this.item.yaml = await ControlService.getServiceYAML(this.item.config.serviceID);
 
-      // this.updateSelect = this.checkAutoUpdate(
-      //   [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
-      // );
-
       if (this.item.service === "SSVNetworkService") {
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
       }
@@ -330,20 +326,38 @@ export default {
         this.prometheusConfig = this.item.prometheusConfig;
       }
       this.item.expertOptions = this.item.expertOptions.map((option) => {
-        if (this.item.yaml.includes("isPruning: true")) {
-          option.disabled = true;
-          if (option.type === "action") option.changeValue = true;
-        } else {
-          if (option.type === "action") option.changeValue = false;
-          option.disabled = false;
-        }
-        if (option.type === "select" || option.type === "text" || option.type === "toggle") {
-          if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
-            option.changeValue = this.item.yaml.indexOf(option.pattern[0]) === -1 ? false : true;
-          } else {
+        switch (option.type) {
+          case "select": {
             option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
               ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
               : "";
+            break;
+          }
+          case "text": {
+            option.commands.forEach((command) => {
+              if (this.item.yaml.includes(command)) {
+                let match = this.item.yaml.match(new RegExp(`${command}[:=]?([\\S*]*)`));
+                option.changeValue = match ? match[match.length - 1] : "";
+              } else {
+                option.changeValue = "";
+              }
+            });
+            break;
+          }
+          case "toggle": {
+            option.commands.forEach((command) => {
+              if (this.item.yaml.includes(command)) {
+                let match = this.item.yaml.match(new RegExp(`${command}([=]?)([\\S*]+)?`));
+                if (match[1] == "=") {
+                  option.changeValue = match[2] === "true" ? true : false;
+                } else {
+                  option.changeValue = true;
+                }
+              } else {
+                option.changeValue = false;
+              }
+            });
+            break;
           }
         }
         return {
@@ -360,86 +374,117 @@ export default {
         "$1" + this.checkAutoUpdate() + "$3"
       );
 
-      const ipReg = /^(\d{1,3}\.){3}\d{1,3}$/;
       this.item.expertOptions.forEach((option) => {
-        let validValue = false;
-        if (option.type === "select" && option.value.length > 0) {
-          for (const el of option.value) {
-            validValue = el === option.changeValue ? true : validValue;
-          }
-        }
-        if (
-          option.changeValue != undefined &&
-          option.changeValue != null &&
-          (!isNaN(option.changeValue) || option.changeValue.match(ipReg) || validValue)
-        ) {
-          if (option.changed) {
-            for (let i = 0; i < option.pattern.length; i++) {
-              if (this.item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
-                this.item.yaml =
-                  option.changeValue && !this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace("  - vc\n", `  - vc\n  ${option.pattern[i]}\n`)
-                    : this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "");
-              } else if (option.title === "External IP Address") {
-                let reg = "";
-                let replacement = "";
-                const extIPCmd = [
-                  {
-                    name: "Lighthouse",
-                    reg: "  - bn\n",
-                    replacement: `  - bn\n  - --enr-address=${option.changeValue}\n`,
-                  },
-                  {
-                    name: "Lodestar",
-                    reg: "  - beacon\n",
-                    replacement: `  - beacon\n  - --enr.ip=${option.changeValue}\n`,
-                  },
-                  {
-                    name: "Nimbus",
-                    reg: "command:\n",
-                    replacement: `command:\n  - --nat:extip:${option.changeValue}\n`,
-                  },
-                  {
-                    name: "Prysm",
-                    reg: "--accept-terms-of-use=true",
-                    replacement: `--accept-terms-of-use=true --p2p-host-ip=${option.changeValue}`,
-                  },
-                  {
-                    name: "Teku",
-                    reg: "command:\n",
-                    replacement: `command:\n  - --p2p-advertised-ip=${option.changeValue}\n`,
-                  },
-                ];
-                for (const el of extIPCmd) {
-                  if (el.name === this.item.name) {
-                    reg = el.reg;
-                    replacement = el.replacement;
-                  }
+        if (option.changed) {
+          switch (option.type) {
+            case "select": {
+              option.commands.forEach((command) => {
+                if (option.changeValue && this.item.yaml.includes(command)) {
+                  this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern[0]), `$1${option.changeValue}$3`);
                 }
-                this.item.yaml =
-                  option.changeValue === "" && this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "\n").replace(/^\s*\n/m, "")
-                    : option.changeValue !== "" && this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace(new RegExp(option.pattern[i]), "$1" + option.changeValue + "$3")
-                    : option.changeValue !== "" && !this.item.yaml.match(new RegExp(option.pattern[i]))
-                    ? this.item.yaml.replace(new RegExp(reg), replacement)
-                    : this.item.yaml;
-              } else if (option.title === "External TCP/UDP port" && (i === 2 || i === 3)) {
-                let tcp_udp = i === 2 ? "/tcp" : "/udp";
-                this.item.yaml = this.item.yaml.replace(
-                  new RegExp(option.pattern[i], "m"),
-                  "$1" + ":" + option.changeValue + ":" + option.changeValue + tcp_udp
-                );
-              } else {
-                this.item.yaml = this.item.yaml.replace(
-                  new RegExp(option.pattern[i]),
-                  "$1" + option.changeValue + "$3"
-                );
-              }
+              });
+              break;
+            }
+
+            case "toggle": {
+              option.commands.forEach((command) => {
+                if (this.item.yaml.includes(command)) {
+                  let match = this.item.yaml.match(new RegExp(`${command}([=]?)([\\S*]+)?`));
+                  if (match[1] == "=") {
+                    this.item.yaml = this.item.yaml.replace(
+                      new RegExp(match[0]),
+                      command + "=" + (option.changeValue ? "true" : "false")
+                    );
+                  } else {
+                    if (option.changeValue == false) {
+                      this.item.yaml = this.item.yaml.replace(new RegExp(`\n.*${command}.*`), "");
+                    }
+                  }
+                } else if (option.changeValue == true && !this.item.yaml.includes(command)) {
+                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
+                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
+                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
+                  let spaces = " ";
+                  if (matchSpaces) {
+                    spaces = matchSpaces[1];
+                  }
+                  this.item.yaml = this.item.yaml.replace(new RegExp(`${lastCommand}`), lastCommand + spaces + command);
+                }
+              });
+              break;
+            }
+
+            case "text": {
+              option.commands.forEach((command) => {
+                if (option.changeValue && this.item.yaml.includes(command)) {
+                  if (option.needsPortForwarding) {
+                    const matchCurrentValue = this.item.yaml.match(new RegExp(`${command}([=]?)([\\S*]*)`));
+                    const currentValue = matchCurrentValue[2];
+                    const matchPortForwardings = this.item.yaml.match(
+                      new RegExp(/ports:([\s]*- \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}:\d{1,5}(\/[tcpudp]*)?)*/gm)
+                    );
+                    let portForwardings = matchPortForwardings[0].split("\n");
+                    portForwardings.shift();
+                    if (portForwardings.length > 0) {
+                      const existingPortForwarding = portForwardings.find((pf) =>
+                        new RegExp(`:\\d{1,5}:${currentValue}(\\/[tcpudp]*)?`).test(pf)
+                      );
+                      const allreadyExists = portForwardings.filter((pf) =>
+                        new RegExp(`:\\d{1,5}:${option.changeValue}(\\/[tcpudp]*)?`).test(pf)
+                      );
+                      if (existingPortForwarding) {
+                        const portObj = this.getPortObject(existingPortForwarding);
+                        this.item.yaml = this.item.yaml.replace(
+                          existingPortForwarding,
+                          portObj.destinationIp +
+                            ":" +
+                            option.changeValue +
+                            ":" +
+                            option.changeValue +
+                            (portObj.servicePortProtocol ? "/" + portObj.servicePortProtocol : "")
+                        );
+                      } else if (allreadyExists.length === 0) {
+                        const firstPortForwarding = portForwardings[0];
+                        const spaces = firstPortForwarding.split("-")[0];
+                        this.item.yaml = this.item.yaml.replace(
+                          firstPortForwarding,
+                          `${spaces}- 0.0.0.0:${option.changeValue}:${option.changeValue}/tcp\n${spaces}- 0.0.0.0:${option.changeValue}:${option.changeValue}/udp\n${firstPortForwarding}`
+                        );
+                      }
+                    } else {
+                      this.item.yaml = this.item.yaml.replace(
+                        "ports: []",
+                        `ports:\n  - 0.0.0.0:${option.changeValue}:${option.changeValue}/tcp\n  - 0.0.0.0:${option.changeValue}:${option.changeValue}/udp`
+                      );
+                    }
+                  }
+
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`${command}([=]?)([\\S*]*)`),
+                    `${command}$1${option.changeValue}`
+                  );
+                } else if (option.changeValue && !this.item.yaml.includes(command)) {
+                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
+                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
+                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
+                  let spaces = " ";
+                  if (matchSpaces) {
+                    spaces = matchSpaces[1];
+                  }
+
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`${lastCommand}`),
+                    `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${option.changeValue}`
+                  );
+                } else if (!option.changeValue && this.item.yaml.includes(command)) {
+                  this.item.yaml = this.item.yaml.replace(new RegExp(`\n.*${command}.*`), "");
+                }
+              });
+              break;
             }
           }
-          option.changed = false;
         }
+        option.changed = false;
       });
 
       if (this.item.service === "SSVNetworkService")
@@ -462,7 +507,17 @@ export default {
         service: this.item.service,
       });
     },
+    getPortObject(portString) {
+      const portSettings = portString.split(":");
+      const servicePortSettings = portSettings[2]?.split("/");
 
+      const destinationIp = portSettings?.length >= 1 ? portSettings[0] : "";
+      const destinationPort = portSettings?.length >= 2 ? portSettings[1] : "";
+      const servicePort = servicePortSettings?.length >= 1 ? servicePortSettings[0] : "";
+      const servicePortProtocol = servicePortSettings?.length >= 2 ? servicePortSettings[1] : "";
+
+      return { destinationIp, destinationPort, servicePort, servicePortProtocol };
+    },
     checkAutoUpdate(val) {
       if (val != undefined && val != null && !isNaN(val)) {
         val = val == "true";
