@@ -2762,7 +2762,7 @@ export class Monitoring {
     } catch (err) {
       return {
         code: 1,
-        info: "error: an general error occured",
+        info: "error: an general error occurred",
         data: err,
       };
     }
