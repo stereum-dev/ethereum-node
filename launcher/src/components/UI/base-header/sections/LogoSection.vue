@@ -5,7 +5,7 @@
       :class="logoDisabled ? 'pointer-events-none ' : ''"
       @mousedown.prevent.stop
     >
-      <LogoButton :server-acc="serverAccMange" @access-handler="serverAccessHandler" @mouse-leave="mouseLeave" />
+      <LogoButton :server-acc="serverAccMange" @access-handler="btnHandler" @mouse-leave="mouseLeave" />
     </div>
   </div>
 </template>
@@ -45,5 +45,13 @@ const mouseLeave = () => {
 
 const serverAccessHandler = () => {
   serverStore.isServerAccessManagementActive = !serverStore.isServerAccessManagementActive;
+};
+
+const btnHandler = () => {
+  if (footerStore.stereumStatus) {
+    serverAccessHandler();
+  } else {
+    return;
+  }
 };
 </script>

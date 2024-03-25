@@ -511,6 +511,7 @@ const IpScanLan1 = async () => {
 
 const saveServer = async () => {
   await add();
+  //reload the page
 };
 
 const removeServer = () => {

@@ -20,8 +20,8 @@ const items = ref([
   },
   {
     name: "Available Update",
-    icon: "/img/icon/base-header-icons/header-update-button-green.png",
-    activeIcon: "/img/icon/base-header-icons/header-update-button-blue.png",
+    activeIcon: "/img/icon/base-header-icons/header-update-button-green.png",
+    icon: "/img/icon/base-header-icons/header-update-button-blue.png",
   },
   {
     name: "Settings",
