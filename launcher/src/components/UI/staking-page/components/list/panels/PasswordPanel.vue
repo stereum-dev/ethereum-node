@@ -11,7 +11,13 @@
           alt="Visible Icon"
           @mousedown.prevent
         />
-        <img v-else class="w-4" src="/img/icon/staking-page-icons/invisible.png" alt="Invisible Icon" @mousedown.prevent />
+        <img
+          v-else
+          class="w-4"
+          src="/img/icon/staking-page-icons/invisible.png"
+          alt="Invisible Icon"
+          @mousedown.prevent
+        />
       </button>
 
       <input
@@ -65,5 +71,7 @@ const cancelPassword = () => {
 
 const confirmPassword = () => {
   emit("confirmPassword", eneteredPassword.value.trim());
+  eneteredPassword.value = "";
+  isPasswordVisible.value = false;
 };
 </script>
