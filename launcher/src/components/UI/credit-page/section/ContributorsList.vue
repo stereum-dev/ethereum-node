@@ -44,10 +44,30 @@ onMounted(() => {
   }
 });
 
+// const fetchStereumTesters = async () => {
+//   isLoading.value = true;
+//   try {
+//     const response = await fetch("/testers");
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+//     const responseData = await response.json();
+//     results.value = responseData.data.testers.map((tester) => ({
+//       name: tester.username,
+//       avatar: tester.avatarUrl,
+//       score: tester.testsCount,
+//     }));
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//   } finally {
+//     isLoading.value = false;
+//   }
+// };
+
 const fetchStereumTesters = async () => {
   isLoading.value = true;
   try {
-    const response = await fetch("/testers");
+    const response = await fetch(process.env.VUE_APP_TESTERS_API);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -64,10 +84,34 @@ const fetchStereumTesters = async () => {
   }
 };
 
+// const fetchStereumTranslators = async () => {
+//   isLoading.value = true;
+//   try {
+//     const response = await fetch("/translators");
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
+//     const responseData = await response.json();
+//     results.value = responseData.data.translators
+//       .map((translator) => ({
+//         name: translator.username,
+//         avatar: translator.avatarUrl,
+//         score: translator.testsCount,
+//       }))
+//       .sort((a, b) => a.name.localeCompare(b.name));
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//   } finally {
+//     isLoading.value = false;
+//   }
+// };
+
 const fetchStereumTranslators = async () => {
   isLoading.value = true;
   try {
-    const response = await fetch("/translators");
+    const response = await fetch(
+      process.env.NODE_ENV === "production" ? "https://stereum.net/api/translators" : "/translators"
+    );
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
