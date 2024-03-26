@@ -20,7 +20,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
       <div class="w-full grid grid-cols-12 items-center text-md">
         <img class="w-8 col-start-1" src="/animation/synchronisation/synchronisation-icon-active.gif" alt="Sync Icon" />
         <span class="col-start-2 col-span-3 text-gray-400 text-md text-left">{{ $t("editModals.syncMode") }}</span>
-        <SyncCarousel :properties="props.properties" />
+        <SyncCarousel :cat="client.category" />
       </div>
     </div>
 
