@@ -1,7 +1,7 @@
 <template>
   <div class="check-parent">
     <div class="check-parent_title">
-      {{ title }}
+      {{ props.title }}
     </div>
     <div class="check-parent_part">
       <div class="customizedCheckBox" :style="checkboxStyle" @click="toggleCheckbox">
@@ -11,44 +11,75 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    title: {
-      type: String,
-      default: "",
-    },
-    isCheckedProps: {
-      type: Boolean,
-      default: false,
-    },
-    reset: {
-      type: String,
-      default: "",
-    },
-  },
-  data() {
-    return {
-      isChecked: true,
-    };
-  },
-  computed: {
-    checkboxStyle() {
-      return {
-        backgroundColor: this.isChecked ? "rgba(0, 128, 0, 0.4)" : "rgba(255, 0, 0, 0.4)",
-        border: "1px solid",
-        borderColor: this.isChecked ? "greenyellow" : "red",
-        cursor: "pointer",
-      };
-    },
-  },
+<script setup>
+import { useNodeHeader } from "@/store/nodeHeader";
+import { ref, onMounted, computed, watch } from "vue";
 
-  methods: {
-    toggleCheckbox() {
-      this.isChecked = !this.isChecked;
-      this.$emit("update", this.isChecked);
-    },
+const props = defineProps({
+  title: {
+    type: String,
+    default: "",
   },
+  isCheckedProps: {
+    type: Boolean,
+    default: false,
+  },
+  reset: {
+    type: String,
+    default: "",
+  },
+});
+
+const emit = defineEmits(["update"]);
+
+const isChecked = ref(false);
+const nameChecker = ref("");
+
+const headerStore = useNodeHeader();
+
+const checkboxStyle = computed(() => {
+  return {
+    backgroundColor: isChecked.value ? "rgba(0, 128, 0, 0.4)" : "rgba(255, 0, 0, 0.4)",
+    border: "1px solid",
+    borderColor: isChecked.value ? "greenyellow" : "red",
+    cursor: "pointer",
+  };
+});
+
+watch(
+  () => props.reset,
+  (newValue) => {
+    evaluateConditions(newValue);
+  }
+);
+
+watch(
+  () => headerStore.resetConfig,
+  (newValue) => {
+    if (newValue == true) {
+      evaluateConditions(props.reset);
+    }
+  }
+);
+
+onMounted(() => {
+  nameChecker.value = props.reset;
+  evaluateConditions(nameChecker.value);
+});
+
+const toggleCheckbox = () => {
+  isChecked.value = !isChecked.value;
+  emit("update", isChecked.value);
+};
+
+const evaluateConditions = (val) => {
+  isChecked.value = false;
+
+  if (val === "authTimeBase" || val === "enableRateLimit") {
+    isChecked.value = true;
+  } else if (val === "confirmSuccessAuth" || val === "orginalGenerationTimeLimit") {
+    isChecked.value = false;
+  }
 };
 </script>
 

@@ -49,12 +49,16 @@
         <div v-if="setupPage || generationPage || setupConfirmPage" class="checkContainer">
           <checkContainer
             :title="`${checkContainer.title}`"
-            :reset="checkContainer.reset"
+            :reset="`${checkContainer.reset}`"
             @update="handleCheckboxUpdate"
           />
         </div>
         <div v-if="setupConfirmPage" class="checkContainer">
-          <checkContainer :title="`${$t('authenticatorModal.rateLimit')}`" @update="handleRateLimit" />
+          <checkContainer
+            :title="`${$t('authenticatorModal.rateLimit')}`"
+            reset="enableRateLimit"
+            @update="handleRateLimit"
+          />
         </div>
         <div v-if="setupPage || setupConfirmPage" class="btn-auth" @click="mainBtnClick">
           {{ mainBtnContent.btnName }}
@@ -102,6 +106,7 @@ export default {
 
   computed: {
     ...mapWritableState(useNodeHeader, {
+      resetConfig: "resetConfig",
       runningServices: "runningServices",
       verificationCode: "verificationCode",
       validVerificationCode: "validVerificationCode",
@@ -176,10 +181,12 @@ export default {
       } else if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
         return {
           title: `${this.$t("authenticatorModal.confirmText")}`,
+          reset: `confirmSuccessAuth`,
         };
       } else if (!this.setupPage && !this.generationPage && this.setupConfirmPage) {
         return {
           title: `${this.$t("authenticatorModal.increaseTime")}`,
+          reset: `orginalGenerationTimeLimit`,
         };
       } else {
         return {
@@ -267,10 +274,10 @@ export default {
         this.confirmSuccessAuth = true;
       } else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
         this.authKeyTimeBase = true;
-        this.resetConfig = "reset";
-        console.log("reset config", this.resetConfig);
+        this.resetConfig = true;
+
         setTimeout(() => {
-          this.resetConfig = "";
+          this.resetConfig = false;
         }, 1000);
         this.orginalGenerationTimeLimit = false;
         this.enableRateLimit = true;

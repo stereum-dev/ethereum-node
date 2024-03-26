@@ -9,6 +9,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       //Stereum contributers end
 
       //Service Modals begin
+      resetConfig: false,
       isServiceAvailable: true,
       showGrafanaWindow: false,
       showSsvWindow: false,
@@ -71,7 +72,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       rpcState: false,
       dataState: false,
       wsState: false,
-      
+
       choosedCreditType: "",
     };
   },
