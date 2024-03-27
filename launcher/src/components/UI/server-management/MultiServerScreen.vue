@@ -89,10 +89,8 @@ onMounted(async () => {
   await readSSHKeyFile();
 
   if (serverStore.isUpdatePanelActive) {
-    setTimeout(() => {
-      tabPicker("update");
-      serverStore.isUpdatePanelActive = false;
-    }, 500);
+    tabPicker("update");
+    serverStore.isUpdatePanelActive = false;
   }
 });
 
