@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if specified packages are installed
+      package_facts:
+      register: installed_packages
+
+    - name: Assert packages are upgraded
+      assert:
+        that:
+          - git == 'latest'
+        fail_msg: "Package 'git' not upgraded to latest version."
+        msg: "Package 'git' is upgraded to the latest version."
+# EOF

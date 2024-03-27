@@ -1,0 +1,18 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if 3rd-party repos have been switched from jammy to noble
+      ansible.builtin.shell: cat /etc/apt/sources.list.d/{{ item.name }}
+      register: repo_content
+      loop: "{{ third_party_repos.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+
+    - name: Assert repo contents
+      ansible.builtin.assert:
+        that:
+          - "'noble' in repo_content.stdout"
+          - "'jammy' not in repo_content.stdout"
+# EOF

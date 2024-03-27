@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+
+  tasks:
+    - set_fact:
+        stereum:
+          settings:
+            controls_install_path: "/opt/stereum"
+    - debug:
+        msg: "{{ stereum }}"
+    - name: "Include switch_repos"
+      include_role:
+        name: "switch_repos"
