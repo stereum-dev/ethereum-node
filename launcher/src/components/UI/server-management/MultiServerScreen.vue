@@ -88,9 +88,8 @@ onMounted(async () => {
   await loadStoredConnections();
   await readSSHKeyFile();
 
-  if (serverStore.isUpdatePanelActive == true) {
+  if (serverStore.isUpdatePanelActive) {
     setTimeout(() => {
-      console.log("Update Panel Active " + serverStore.isUpdatePanelActive + typeof serverStore.isUpdatePanelActive);
       tabPicker("update");
       serverStore.isUpdatePanelActive = false;
     }, 500);
