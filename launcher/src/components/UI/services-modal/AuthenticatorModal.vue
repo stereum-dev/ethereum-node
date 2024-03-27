@@ -98,7 +98,7 @@ export default {
       enableRateLimit: true,
       orginalGenerationTimeLimit: false,
       secretKey: "",
-      QRcode: "/img/icon/header-icons/dummyQR.png", //dummy qr code
+      QRcode: "/img/icon/base-header-icons/notification-modal-dummy-qr-code.png", //dummy qr code
       authKeyTimeBase: true,
       confirmSuccessAuth: false,
     };
