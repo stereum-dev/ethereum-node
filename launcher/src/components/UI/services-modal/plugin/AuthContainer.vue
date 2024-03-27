@@ -152,7 +152,7 @@ export default {
   font-weight: 400;
   background: #131414;
   cursor: text;
-  width: 45%;
+  width: 60%;
   height: 100%;
   display: flex;
   align-items: center;

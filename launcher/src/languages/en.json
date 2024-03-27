@@ -346,7 +346,7 @@
     "generateKeyButton":"GENERATE KEY",
     "backupTitel":"BACKUP & CONNECT",
     "backupText":"Back up the generated secrets & your Google Authenticator file & scan the QR code in your Google Authenticator app before continuing",
-    "backupButton":"BACKUP",
+    "backupButton":"connect",
     "keyText":"Your secret key is:",
     "codeText":"Your verification code is:",
     "saveText":"Save your emergency scratch codes!",
