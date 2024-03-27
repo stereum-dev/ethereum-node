@@ -347,6 +347,7 @@ const getSettings = async () => {
 const openOsUpdatePanel = () => {
   headerStore.displayUpdatePanel = false;
   serverStore.isServerAccessManagementActive = true;
+  serverStore.isUpdatePanelActive = true;
 };
 
 const searchOsUpdates = async () => {
