@@ -87,6 +87,11 @@ watchEffect(() => {
 onMounted(async () => {
   await loadStoredConnections();
   await readSSHKeyFile();
+
+  if (serverStore.isUpdatePanelActive) {
+    tabPicker("update");
+    serverStore.isUpdatePanelActive = false;
+  }
 });
 
 onUnmounted(() => {
