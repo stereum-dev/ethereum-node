@@ -1,7 +1,6 @@
 <template>
   <base-layout>
-    <language-panel v-if="langActive" @back="langActiveBox" />
-    <div v-else class="setting-parent w-full h-full flex justify-center items-center">
+    <div class="setting-parent w-full h-full flex justify-center items-center">
       <div class="flex justify-start items-start w-56 h-full">
         <SideBar>
           <SidebarBtn
@@ -36,11 +35,15 @@ import OutputOptions from "./components/OutputOptions.vue";
 import LanguageBtn from "./components/LanguageBtn.vue";
 import CreditButtons from "./section/CreditButtons.vue";
 import { ref, computed } from "vue";
-import LanguagePanel from "./section/LanguagePanel.vue";
+// import LanguagePanel from "./section/LanguagePanel.vue";
 import CreditBtn from "./components/CreditBtn.vue";
+import { useRouter } from "vue-router";
+import { useLangStore } from "@/store/languages";
 
 const mainBox = ref("general");
-const langActive = ref(false);
+// const langActive = ref(false);
+const router = useRouter();
+const langStore = useLangStore();
 
 const sidebarButtons = ref([
   { name: "general", label: "General" },
@@ -54,7 +57,9 @@ const toggleSettings = (name) => {
 };
 
 const langActiveBox = () => {
-  langActive.value = !langActive.value;
+  // langActive.value = !langActive.value;
+  router.push("/");
+  langStore.settingPageIsVisible = true;
 };
 
 const itemConfigurations = computed(() => {
