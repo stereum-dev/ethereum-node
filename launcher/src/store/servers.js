@@ -4,6 +4,7 @@ export const useServers = defineStore("servers", {
   state: () => {
     return {
       //Connection
+
       connectingAnimActive: false,
       connectingProcess: false,
       errorMsgExists: false,
@@ -14,6 +15,7 @@ export const useServers = defineStore("servers", {
       showPassword: false,
 
       //Server Management
+      isUpdatePanelActive: false,
       newPassword: "",
       verifyPassword: "",
       isChangingPasswordActive: false,
