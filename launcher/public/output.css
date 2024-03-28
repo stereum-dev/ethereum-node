@@ -1233,6 +1233,10 @@ video {
   grid-column-end: 9;
 }
 
+.col-end-22{
+  grid-column-end: 22;
+}
+
 .row-span-1{
   grid-row: span 1 / span 1;
 }
@@ -1878,6 +1882,10 @@ video {
 
 .max-h-\[450px\]{
   max-height: 450px;
+}
+
+.max-h-\[491px\]{
+  max-height: 491px;
 }
 
 .max-h-\[503px\]{
@@ -5472,6 +5480,11 @@ html body {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.hover\:shadow-gray-800:hover{
+  --tw-shadow-color: #1f2937;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
 .hover\:shadow-gray-900:hover{
   --tw-shadow-color: #111827;
   --tw-shadow: var(--tw-shadow-colored);
@@ -5559,6 +5572,7 @@ html body {
   border-style: none;
 }
 
+
 .active\:bg-\[\#1b1c1c\]:active{
   --tw-bg-opacity: 1;
   background-color: rgb(27 28 28 / var(--tw-bg-opacity));
@@ -5569,6 +5583,11 @@ html body {
   --tw-shadow-colored: 0 0 #0000;
   -webkit-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.active\:shadow-gray-800:active{
+  --tw-shadow-color: #1f2937;
+  --tw-shadow: var(--tw-shadow-colored);
 }
 
 @media (min-width: 640px){

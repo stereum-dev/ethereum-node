@@ -15,6 +15,7 @@ import ControlPanel from "../pages/TheControl.vue";
 import NodePage from "../pages/NodePage.vue";
 import NodeEdit from "../pages/NodeEdit.vue";
 import StakingPage from "../pages/StakingPage.vue";
+import TerminalPage from "../pages/TerminalPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
 import CustomPage from "@/pages/CustomPage.vue";
@@ -152,6 +153,11 @@ const routes = [
     path: "/staking",
     name: "StakingPage",
     component: StakingPage,
+  },
+  {
+    path: "/shell",
+    name: "TerminalPage",
+    component: TerminalPage,
   },
 
   {

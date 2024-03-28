@@ -273,6 +273,7 @@ export class NodeConnection {
       status: true,
     });
     this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+
     /**
      * run stereum ansible playbook "setup"
      */
