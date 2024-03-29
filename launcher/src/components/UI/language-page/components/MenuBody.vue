@@ -62,9 +62,13 @@ const sortedLanguages = computed(() => {
 });
 
 onBeforeMount(async () => {
-  await checkSettings();
+  if (!langStore.settingPageIsVisible) {
+    await checkSettings();
+  } else {
+    router.push("/");
+  }
 });
-
+// langStore.settingPageIsVisible ? "/setting" :
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
