@@ -80,6 +80,7 @@ const onRefreshTerminal = () => {
   display: flex !important;
   justify-content: center;
   align-items: center;
+  color: rgb(65, 218, 180) !important;
 }
 
 .terminal .xterm-viewport {
@@ -93,6 +94,10 @@ const onRefreshTerminal = () => {
   background-color: white !important;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .terminal .xterm-screen .xterm-rows {
