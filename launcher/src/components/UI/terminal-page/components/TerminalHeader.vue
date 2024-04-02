@@ -16,17 +16,23 @@
         IP: <span class="w-full text-amber-300 text-md font-semibold text-left">{{ controlStore.ipAddress }}</span>
       </p>
     </div>
-    <!-- <div
-      class="w-10 h-7 flex justify-center items-center bg-gray-700 hover:bg-black rounded-sm cursor-pointer transition-all duration-300 ease-in-out active:bg-gray-800 active:shadow-none active:shadow-gray-800"
-      @click="refreshConnection"
-    >
-      <img class="w-6 h-6" src="/img/icon/terminal-page-icons/redo.png" alt="Refresh Icon" />
-    </div> -->
+    <div class="col-start-24 col-span-1 flex items-center justify-center cursor-pointer" @click="refreshTerminal">
+      <img
+        class="w-7 hover:scale-110 active:scale-100 hover:shadow-md hover:shadow-[#1b1d20] active:shadow-none transition duration-300 ease-in-out"
+        src="/img/icon/terminal-page-icons/reload.png"
+        alt="Terminal Icon"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useControlStore } from "@/store/theControl";
 
+const emit = defineEmits(["refreshTerminal"]);
 const controlStore = useControlStore();
+
+const refreshTerminal = () => {
+  emit("refreshTerminal");
+};
 </script>

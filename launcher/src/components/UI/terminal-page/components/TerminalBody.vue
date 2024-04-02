@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full max-h-[491px] grid grid-cols-24 grid-rows-12 items-center">
-    <TerminalHeader />
+    <TerminalHeader @refresh-terminal="refreshTerminal" />
     <TerminalPanel />
   </div>
 </template>

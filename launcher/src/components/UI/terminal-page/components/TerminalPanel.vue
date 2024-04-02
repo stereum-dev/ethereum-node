@@ -62,9 +62,24 @@ onMounted(() => {
 .terminal {
   height: 100%;
   width: 100%;
-  background-color: #1e1e1e;
-  padding: 10px;
-  color: #ffffff;
+  grid-column: 3/23;
+  grid-row: 2/13;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.terminal .xterm-viewport {
+  background-color: aqua !important;
+  overflow-y: auto;
+}
+
+.terminal .xterm-screen {
+  background-color: white !important;
+  overflow-y: auto;
+}
+
+.terminal .xterm-rows {
+  background-color: #1e1e1e !important;
   overflow-y: auto;
 }
 </style>
