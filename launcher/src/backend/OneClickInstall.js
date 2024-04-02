@@ -1,6 +1,8 @@
 import { ServiceManager } from "./ServiceManager";
 import YAML from "yaml";
 import { StringUtils } from "./StringUtils";
+const yaml = require("js-yaml");
+const uuid = require("uuid");
 
 const log = require("electron-log");
 
@@ -30,7 +32,8 @@ export class OneClickInstall {
     };
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
     mkdir -p /etc/stereum/services &&\
-    echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
+    echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml &&\
+    touch /etc/stereum/multiconfig.yaml`);
     await this.nodeConnection.findStereumSettings();
     return await this.nodeConnection.prepareStereumNode(
       this.nodeConnection.settings.stereum.settings.controls_install_path
@@ -265,7 +268,6 @@ export class OneClickInstall {
 
     this.handleArchiveTags(selectedPreset);
 
-
     let versions;
     try {
       versions = await this.nodeConnection.nodeUpdates.checkUpdates();
@@ -321,10 +323,11 @@ export class OneClickInstall {
         case "NethermindService":
           this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
             "_archive";
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))
-          ] = "--Pruning.Mode=None";
-          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--Pruning.FullPruningTrigger"));
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))] =
+            "--Pruning.Mode=None";
+          this.executionClient.command = this.executionClient.command.filter(
+            (c) => !c.includes("--Pruning.FullPruningTrigger")
+          );
           break;
       }
       switch (this.beaconService.service) {
@@ -335,18 +338,17 @@ export class OneClickInstall {
           this.beaconService.command = this.beaconService.command.filter((c) => !c.includes("--checkpointSyncUrl"));
           break;
         case "NimbusBeaconService":
-          if (this.beaconService.command.some(c => c.includes("--trusted-node-url="))) {
-            this.beaconService.command.push("--backfill=true")
+          if (this.beaconService.command.some((c) => c.includes("--trusted-node-url="))) {
+            this.beaconService.command.push("--backfill=true");
           }
-          this.beaconService.command.push("--history=archive")
+          this.beaconService.command.push("--history=archive");
           break;
         case "PrysmBeaconService":
           this.beaconService.command += " --slots-per-archive-point=32";
           break;
         case "TekuBeaconService":
-          this.beaconService.command[
-            this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))
-          ] = "--data-storage-mode=archive";
+          this.beaconService.command[this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))] =
+            "--data-storage-mode=archive";
       }
     }
   }
@@ -373,6 +375,10 @@ export class OneClickInstall {
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
+      let yamlStr = yaml
+        .safeDump({ ["eth-" + this.network + "-" + uuid.v4()]: configs.map((config) => config.id) })
+        .replace(/`/g, "\\`");
+      await this.nodeConnection.sshService.exec(`echo -e "${yamlStr}" > /etc/stereum/multiconfig.yaml`);
       return configs;
     }
   }
