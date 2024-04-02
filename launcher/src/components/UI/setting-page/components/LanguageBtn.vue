@@ -30,7 +30,7 @@ const checkSettings = async () => {
   const savedConfig = await ControlService.readConfig();
   if (savedConfig !== undefined && savedConfig.savedLanguage !== undefined) {
     langIco.value = savedConfig.savedLanguage.flag;
-    langName.value = savedConfig.savedLanguage.name;
+    langName.value = savedConfig.savedLanguage.language;
     i18n.locale = savedConfig.savedLanguage.label; // Directly use imported i18n to set locale
   }
 };

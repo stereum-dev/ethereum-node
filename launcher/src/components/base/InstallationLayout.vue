@@ -27,7 +27,8 @@
           router.currentRoute.value.fullPath !== '/config/play' &&
           router.currentRoute.value.fullPath !== '/oneClick/play' &&
           router.currentRoute.value.fullPath !== '/custom/play' &&
-          router.currentRoute.value.fullPath !== '/login'
+          router.currentRoute.value.fullPath !== '/login' &&
+          languagePageRouter
         "
       />
     </Transition>
@@ -42,6 +43,7 @@ import { useFooter } from "@/store/theFooter";
 import { useRouter } from "vue-router";
 import { ref, watchEffect, computed } from "vue";
 import i18n from "../../../../launcher/src/includes/i18n";
+import { useLangStore } from "@/store/languages";
 
 const t = i18n.global.t;
 
@@ -49,6 +51,7 @@ const footerStore = useFooter();
 const serverStore = useServers();
 
 const router = useRouter();
+const langStore = useLangStore();
 
 const serverAccessManagement = ref(false);
 const tooltip = ref(false);
@@ -61,6 +64,10 @@ const serverAccMange = computed(() => {
 
 watchEffect(() => {
   serverAccessManagement.value = serverStore.serverAccessManagement;
+});
+
+const languagePageRouter = computed(() => {
+  return router.currentRoute.value.fullPath !== "/" && !langStore.settingPageIsVisible;
 });
 
 // Methods
