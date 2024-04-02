@@ -51,7 +51,7 @@
                     class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1"
                   >
                     <div
-                      class="w-[50px] h-[20px] bg-teal-800 hover:bg-teal-900 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      class="w-[100px] h-[30px] bg-teal-800 hover:bg-teal-900 flex justify-center items-center p-1 rounded-md cursor-pointer active:scale-95 transition-transform"
                       @click="openOsUpdatePanel"
                     >
                       <img
@@ -347,6 +347,7 @@ const getSettings = async () => {
 const openOsUpdatePanel = () => {
   headerStore.displayUpdatePanel = false;
   serverStore.isServerAccessManagementActive = true;
+  serverStore.isUpdatePanelActive = true;
 };
 
 const searchOsUpdates = async () => {

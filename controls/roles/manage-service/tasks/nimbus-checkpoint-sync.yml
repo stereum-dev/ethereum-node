@@ -2,12 +2,13 @@
 - name: Set Variables
   set_fact:
     checkpoint_url: "{{ stereum_service_configuration.command | select('match', '^--trusted-node-url=') | first }}"
+    backfill: "{{ stereum_service_configuration.command | select('match', '^--backfill=') | first | default('--backfill=false') }}"
 
 - name: remove command from config
   ansible.utils.update_fact:
     updates:
     - path: stereum_service_configuration.command
-      value: "{{ stereum_service_configuration.command | reject('match', '^--trusted-node-url=') }}"
+      value: "{{ stereum_service_configuration.command | reject('match', '^--trusted-node-url=|^--backfill=') }}"
   register: updated
 
 - name: update config
@@ -29,6 +30,7 @@
       - "{{ stereum_service_configuration.command | select('search', '--data-dir=') | first }}"
       - "{{ stereum_service_configuration.command | select('search', '--network=') | first }}"
       - "{{ checkpoint_url }}"
+      - "{{ backfill }}"
     entrypoint: "{{ stereum_service_configuration.entrypoint | default([]) }}"
     restart_policy: "no"
     state: started

@@ -23,6 +23,7 @@ import AddConnection from "./AddConnection";
 import MevboostRelays from "./MevboostRelays.vue";
 import { ref, onMounted, computed } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
+import { useClickInstall } from "@/store/clickInstallation";
 
 const props = defineProps({
   client: {
@@ -34,6 +35,7 @@ const props = defineProps({
 const emit = defineEmits(["closeWindow", "confirmInstall", "selectService"]);
 
 const manageStore = useNodeManage();
+const installStore = useClickInstall();
 
 //Refs
 const isAddPanelActivated = ref(false);
@@ -48,6 +50,7 @@ const properties = ref({
   executionClients: [],
   consensusClients: [],
   relays: [],
+  checkPointSyncUrl: null,
 });
 
 //Computed & Watcher
@@ -116,6 +119,7 @@ onMounted(() => {
 const confirmInstall = () => {
   if (getConfirmText.value === "confirm") {
     props.client.addPanel = false;
+    properties.value.checkPointSyncUrl = installStore.checkPointSync;
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||

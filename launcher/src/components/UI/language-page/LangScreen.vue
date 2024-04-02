@@ -7,7 +7,7 @@
       <div
         class="w-[150px] h-14 bg-[#2f5a5a] hover:bg-[#244343] border-2 border-gray-400 rounded-full shadow-md shadow-[#1e2b2b] flex justify-center items-center cursor-pointer transition-all duration-300 ease-in-out hover:shadow-lg active:shadow-none active:scale-95 mr-4"
         :class="langStore.selectedLang === '' ? 'pointer-events-none opacity-50 ' : ''"
-        @click="langStore.runEntryAnimation()"
+        @click="buttonHandler"
       >
         <span class="text-2xl font-bold uppercase text-gray-200">Next</span>
       </div>
@@ -18,8 +18,19 @@
 import EntryAnimation from "./sections/EntryAnimation.vue";
 import LogoSection from "./sections/LogoSection.vue";
 import MenuSection from "./sections/MenuSection.vue";
+import { useRouter } from "vue-router";
 
 import { useLangStore } from "@/store/languages";
 
 const langStore = useLangStore();
+const router = useRouter();
+
+const buttonHandler = () => {
+  if (!langStore.settingPageIsVisible) {
+    langStore.runEntryAnimation();
+  } else {
+    router.push("/setting");
+    langStore.settingPageIsVisible = false;
+  }
+};
 </script>

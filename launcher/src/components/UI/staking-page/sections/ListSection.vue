@@ -39,6 +39,8 @@ import ListBody from "../components/list/ListBody.vue";
 import ListPanels from "../components/list/ListPanels.vue";
 import DisabledSection from "../sections/DisabledSection.vue";
 import { useStakingStore } from "@/store/theStaking";
+import { onBeforeMount, watch } from "vue";
+import { useServices } from "@/store/services.js";
 
 const emit = defineEmits([
   "confirmGrouping",
@@ -63,6 +65,31 @@ const emit = defineEmits([
 ]);
 
 const stakingStore = useStakingStore();
+const serviceStore = useServices();
+
+watch(
+  () => serviceStore.installedServices,
+  async () => {
+    const hasValidator = serviceStore.installedServices.some(
+      (s) => s.category === "validator" && s.state === "running"
+    );
+    stakingStore.isStakingDisabled = !hasValidator;
+  }
+);
+
+// watchEffect(() => {
+//   activeStakingPanel.value = stakingStore.isStakingDisabled;
+// });
+
+onBeforeMount(() => {
+  CheckValidatorExistence();
+});
+
+const CheckValidatorExistence = () => {
+  const hasValidator = serviceStore.installedServices.some((s) => s.category === "validator" && s.state === "running");
+  stakingStore.isStakingDisabled = !hasValidator;
+};
+
 const confirmGrouping = (groupName) => {
   emit("confirmGrouping", groupName);
 };

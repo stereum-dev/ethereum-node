@@ -507,11 +507,12 @@ const pickValidatorService = async (service) => {
 };
 
 //Delete Preview Key
+
 const deletePreviewKey = async (item) => {
   stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.filename !== item.filename);
   stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((key) => key.filename !== item.filename);
-  const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
 
+  const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
   if (indexItem !== -1) {
     stakingStore.keyFiles.splice(indexItem, 1);
   }
@@ -521,8 +522,12 @@ const deletePreviewKey = async (item) => {
     stakingStore.setActivePanel("insert");
   }
 
-  stakingStore.forceRefresh = true;
-  await listKeys();
+  try {
+    stakingStore.forceRefresh = true;
+    await listKeys();
+  } catch (error) {
+    console.error("Failed to refresh keys:", error);
+  }
 };
 
 //****End of Validator Key ****

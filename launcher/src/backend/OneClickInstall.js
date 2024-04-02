@@ -263,41 +263,8 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args));
     }
 
-    if (selectedPreset == "staking") {
-      switch (this.executionClient.service) {
-        case "RethService":
-          this.executionClient.command.push("--full");
-          break;
-      }
-    } else if (selectedPreset == "archive") {
-      switch (this.executionClient.service) {
-        case "GethService":
-          this.executionClient.command.push("--syncmode=full");
-          this.executionClient.command.push("--gcmode=archive");
-          break;
-        case "RethService":
-          //archvie by default
-          break;
-        case "ErigonService":
-          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--prune"));
-          break;
-        case "BesuService":
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))
-          ] = "--sync-mode=FULL";
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--pruning-enabled=true"))
-          ] = "--pruning-enabled=false";
-          break;
-        case "NethermindService":
-          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
-            "_archive";
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode=Hybrid"))
-          ] = "--Pruning.Mode=None";
-          break;
-      }
-    }
+    this.handleArchiveTags(selectedPreset);
+
 
     let versions;
     try {
@@ -323,6 +290,63 @@ export class OneClickInstall {
         this.extraServices.forEach((service) => {
           service.imageVersion = this.getLatestVersion(versions, service);
         });
+      }
+    }
+  }
+
+  handleArchiveTags(selectedPreset) {
+    if (selectedPreset == "staking") {
+      switch (this.executionClient.service) {
+        case "RethService":
+          this.executionClient.command.push("--full");
+          break;
+      }
+    } else if (selectedPreset == "archive") {
+      switch (this.executionClient.service) {
+        case "GethService":
+          this.executionClient.command.push("--syncmode=full");
+          this.executionClient.command.push("--gcmode=archive");
+          break;
+        case "RethService":
+          //archvie by default
+          break;
+        case "ErigonService":
+          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--prune"));
+          break;
+        case "BesuService":
+          this.executionClient.command[
+            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))
+          ] = "--sync-mode=FULL";
+          break;
+        case "NethermindService":
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
+            "_archive";
+          this.executionClient.command[
+            this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))
+          ] = "--Pruning.Mode=None";
+          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--Pruning.FullPruningTrigger"));
+          break;
+      }
+      switch (this.beaconService.service) {
+        case "LighthouseBeaconService":
+          this.beaconService.command.push("--reconstruct-historic-states", "--genesis-backfill");
+          break;
+        case "LodestarBeaconService":
+          this.beaconService.command = this.beaconService.command.filter((c) => !c.includes("--checkpointSyncUrl"));
+          break;
+        case "NimbusBeaconService":
+          if (this.beaconService.command.some(c => c.includes("--trusted-node-url="))) {
+            this.beaconService.command.push("--backfill=true")
+          }
+          this.beaconService.command.push("--history=archive")
+          break;
+        case "PrysmBeaconService":
+          this.beaconService.command += " --slots-per-archive-point=32";
+          break;
+        case "TekuBeaconService":
+          this.beaconService.command[
+            this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))
+          ] = "--data-storage-mode=archive";
       }
     }
   }
