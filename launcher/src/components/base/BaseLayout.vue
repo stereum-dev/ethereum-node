@@ -46,7 +46,7 @@
   </div>
 </template>
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onMounted, ref, onBeforeMount } from "vue";
 
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
@@ -79,11 +79,6 @@ const footerStore = useFooter();
 const serviceStore = useServices();
 const UpdatePanelCompRef = ref(null);
 
-// let terminal = new Terminal({
-//   allowTransparency: true,
-//   rightClickSelectsWord: true,
-// });
-
 onMounted(() => {
   useUpdateCheck();
 });
@@ -91,24 +86,13 @@ onMounted(() => {
 onBeforeMount(async () => {
   try {
     await ControlService.startShell();
+    serverStore.isTerminalRunning = true;
+    console.log("Starting terminal");
   } catch (error) {
     console.error("Error starting shell:", error);
     return;
   }
 });
-
-// onMounted(() => {
-//   terminal.open(terminalContainer.value);
-//   terminal.focus();
-
-//   terminal.onData((data) => {
-//     ControlService.executeCommand(data);
-//   });
-
-//   window.Promise.onTerminalOutput((data) => {
-//     terminal.write(data);
-//   });
-// });
 
 const closeServiceBrowser = () => {
   headerStore.setServiceModal(null);
@@ -167,6 +151,7 @@ const runOsUpdate = async () => {
 const loggingOut = async () => {
   serverStore.connectingAnimActive = false;
   headerStore.refresh = false;
+  serverStore.isTerminalStopped = true;
   await ControlService.logout();
   router.push("/login").then(() => {
     location.reload();

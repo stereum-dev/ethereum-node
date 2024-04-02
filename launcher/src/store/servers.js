@@ -3,6 +3,9 @@ import { defineStore } from "pinia";
 export const useServers = defineStore("servers", {
   state: () => {
     return {
+      //Terminal
+      isTerminalRunning: false,
+      isTerminalStopped: false,
       //Connection
 
       connectingAnimActive: false,
