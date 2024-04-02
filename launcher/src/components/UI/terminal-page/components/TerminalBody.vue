@@ -8,4 +8,10 @@
 <script setup>
 import TerminalHeader from "./TerminalHeader.vue";
 import TerminalPanel from "./TerminalPanel.vue";
+
+const emit = defineEmits(["refreshTerminal"]);
+
+const refreshTerminal = () => {
+  emit("refreshTerminal");
+};
 </script>

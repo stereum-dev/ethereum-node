@@ -46,7 +46,8 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
+
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
 import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
@@ -78,9 +79,36 @@ const footerStore = useFooter();
 const serviceStore = useServices();
 const UpdatePanelCompRef = ref(null);
 
+// let terminal = new Terminal({
+//   allowTransparency: true,
+//   rightClickSelectsWord: true,
+// });
+
 onMounted(() => {
   useUpdateCheck();
 });
+
+onBeforeMount(async () => {
+  try {
+    await ControlService.startShell();
+  } catch (error) {
+    console.error("Error starting shell:", error);
+    return;
+  }
+});
+
+// onMounted(() => {
+//   terminal.open(terminalContainer.value);
+//   terminal.focus();
+
+//   terminal.onData((data) => {
+//     ControlService.executeCommand(data);
+//   });
+
+//   window.Promise.onTerminalOutput((data) => {
+//     terminal.write(data);
+//   });
+// });
 
 const closeServiceBrowser = () => {
   headerStore.setServiceModal(null);
