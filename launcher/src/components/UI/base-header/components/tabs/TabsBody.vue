@@ -3,8 +3,8 @@
     <SingleTab v-for="tab in tabs" :key="tab.page" :tab="tab" />
     <router-link to="/shell" class="w-full h-full col-start-7 col-span-1 flex justify-center items-center">
       <img
-        class="w-8 h-8 border border-gray-400 rounded-full shadow-md shadow-gray-800 hover:shadow-lg hover:shadow-gray-800 hover:scale-110 cursor-pointer transition-transform duration-300 ease-in-out active:scale-100 active:shadow-none active:shadow-gray-800"
-        src="/img/icon/base-header-icons/header-shell-icon.png"
+        class="w-9 h-9 rounded-full shadow-md shadow-gray-800 hover:shadow-lg hover:shadow-gray-800 hover:scale-110 cursor-pointer transition-transform duration-300 ease-in-out active:scale-100 active:shadow-none active:shadow-gray-800"
+        src="/img/icon/base-header-icons/terminal2.png"
         alt="Shell Icon"
         @mousedown.prevent
       />

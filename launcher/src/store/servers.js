@@ -6,6 +6,7 @@ export const useServers = defineStore("servers", {
       //Terminal
       isTerminalRunning: false,
       isTerminalStopped: false,
+      terminalForceRefresh: false,
       //Connection
 
       connectingAnimActive: false,
@@ -145,6 +146,10 @@ export const useServers = defineStore("servers", {
       this.isServerSettingsActive = false;
 
       this[state] = true;
+    },
+
+    refreshTerminal() {
+      this.terminalForceRefresh = true;
     },
   },
 });

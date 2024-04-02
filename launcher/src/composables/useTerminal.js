@@ -17,21 +17,11 @@ export function useTerminal() {
   }
 
   const onData = (callback) => {
-    const disposable = terminalInstance.onData(callback);
-    return disposable; // Return this disposable to the caller
-  };
-
-  // Add a method to remove the onData event listener if necessary
-  const offData = (callback) => {
-    if (terminalInstance.removeListener) {
-      terminalInstance.removeListener("data", callback);
-    } else if (terminalInstance.removeEventListener) {
-      terminalInstance.removeEventListener("data", callback);
-    }
+    return terminalInstance.onData(callback); // Return the disposable directly
   };
 
   const getTerminal = () => terminalInstance;
   const getFitAddon = () => fitAddonInstance;
 
-  return { getTerminal, getFitAddon, onData, offData };
+  return { getTerminal, getFitAddon, onData };
 }
