@@ -15,6 +15,15 @@ const { getTerminal, getFitAddon, onData } = useTerminal();
 let onDataDisposable = null;
 
 watch(
+  () => serverStore.terminalForceClear,
+  (value) => {
+    if (value) {
+      onClearTerminal();
+      serverStore.terminalForceClear = false;
+    }
+  }
+);
+watch(
   () => serverStore.terminalForceRefresh,
   (value) => {
     if (value) {
@@ -23,26 +32,29 @@ watch(
     }
   }
 );
+watch(
+  () => serverStore.isTerminalStopped,
+  (value) => {
+    if (value) {
+      stopRunningTerminal();
+      serverStore.isTerminalStopped = false;
+    }
+  }
+);
 
 onMounted(() => {
-  console.log("Terminal Container:", terminalContainer.value);
-
   const terminal = getTerminal();
-  console.log("Initializing and opening terminal");
-
   terminal.open(terminalContainer.value);
   getFitAddon().fit();
   terminal.focus();
 
   onDataDisposable = onData((data) => {
-    console.log(data);
-
     ControlService.executeCommand(data);
   });
 
   terminalOutputListener = (output) => {
     const terminal = getTerminal();
-    terminal.write(output); // Write the backend output directly to the terminal
+    terminal.write(output);
   };
   window.promiseIpc.onTerminalOutput(terminalOutputListener);
   window.promiseIpc.startShell();
@@ -50,18 +62,34 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (onDataDisposable) {
-    onDataDisposable.dispose(); // Dispose of onData event listener
+    onDataDisposable.dispose();
   }
-  // Remove the terminal output listener
   window.promiseIpc.removeListener("terminal-output", terminalOutputListener);
-  // Stop the shell session on the backend if needed
-  // window.promiseIpc.send("stopShell");
 });
 
-const onRefreshTerminal = () => {
+const onClearTerminal = () => {
   const terminal = getTerminal();
   terminal.clear();
   terminal.focus();
+};
+
+const onRefreshTerminal = async () => {
+  try {
+    await ControlService.stopShell();
+    await ControlService.startShell();
+    console.log("Terminal Reconnected");
+  } catch (error) {
+    console.error("Error refreshing terminal:", error);
+  }
+};
+
+const stopRunningTerminal = async () => {
+  try {
+    await ControlService.stopShell();
+    console.log("Terminal Stopped");
+  } catch (error) {
+    console.error("Error stopping terminal:", error);
+  }
 };
 </script>
 
