@@ -83,6 +83,10 @@ onMounted(() => {
   useUpdateCheck();
 });
 
+//Terminal
+
+// Start the terminal
+
 onBeforeMount(async () => {
   try {
     await ControlService.startShell();
