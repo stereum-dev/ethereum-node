@@ -9,10 +9,12 @@ import ControlService from "@/store/ControlService";
 import { useServers } from "../../../../store/servers";
 
 const serverStore = useServers();
+const { getTerminal, getFitAddon, onData } = useTerminal();
+
 const terminalContainer = ref(null);
 let terminalOutputListener = null;
-const { getTerminal, getFitAddon, onData } = useTerminal();
 let onDataDisposable = null;
+const isNewTerminalPanel = ref(false);
 
 watch(
   () => serverStore.terminalForceClear,
@@ -24,30 +26,48 @@ watch(
   }
 );
 watch(
-  () => serverStore.terminalForceRefresh,
+  () => serverStore.newTerminalActive,
   (value) => {
     if (value) {
-      onRefreshTerminal();
-      serverStore.terminalForceRefresh = false;
+      onNewTerminal();
+      serverStore.newTerminalActive = false;
+      isNewTerminalPanel.value = true;
     }
   }
 );
 watch(
-  () => serverStore.isTerminalStopped,
+  () => serverStore.killTerminalActive,
   (value) => {
     if (value) {
-      stopRunningTerminal();
-      serverStore.isTerminalStopped = false;
+      onKillTerminal();
+      serverStore.killTerminalActive = false;
     }
   }
 );
 
 onMounted(() => {
+  openTerminal();
+  runningTerminal();
+});
+
+onUnmounted(() => {
+  disposeTerminal();
+});
+
+//Methods
+
+const openTerminal = () => {
   const terminal = getTerminal();
   terminal.open(terminalContainer.value);
   getFitAddon().fit();
+  if (isNewTerminalPanel.value) {
+    terminal.clear();
+    isNewTerminalPanel.value = false;
+  }
   terminal.focus();
+};
 
+const runningTerminal = () => {
   onDataDisposable = onData((data) => {
     ControlService.executeCommand(data);
   });
@@ -57,39 +77,37 @@ onMounted(() => {
     terminal.write(output);
   };
   window.promiseIpc.onTerminalOutput(terminalOutputListener);
-  window.promiseIpc.startShell();
-});
+};
 
-onUnmounted(() => {
+const disposeTerminal = () => {
   if (onDataDisposable) {
     onDataDisposable.dispose();
   }
   window.promiseIpc.removeListener("terminal-output", terminalOutputListener);
-});
+};
 
+//Create new terminal
+const onNewTerminal = async () => {
+  disposeTerminal();
+  await ControlService.startShell();
+  openTerminal();
+  runningTerminal();
+};
+
+//Clear terminal
 const onClearTerminal = () => {
   const terminal = getTerminal();
   terminal.clear();
   terminal.focus();
 };
 
-const onRefreshTerminal = async () => {
-  try {
-    await ControlService.stopShell();
-    await ControlService.startShell();
-    console.log("Terminal Reconnected");
-  } catch (error) {
-    console.error("Error refreshing terminal:", error);
+//Kill or Stop current terminal
+const onKillTerminal = async () => {
+  disposeTerminal();
+  if (terminalContainer.value) {
+    terminalContainer.value.innerHTML = "";
   }
-};
-
-const stopRunningTerminal = async () => {
-  try {
-    await ControlService.stopShell();
-    console.log("Terminal Stopped");
-  } catch (error) {
-    console.error("Error stopping terminal:", error);
-  }
+  await ControlService.stopShell();
 };
 </script>
 

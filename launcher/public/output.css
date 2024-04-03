@@ -757,6 +757,10 @@ video {
   bottom: -2rem;
 }
 
+.-left-12{
+  left: -3rem;
+}
+
 .-left-\[1px\]{
   left: -1px;
 }
@@ -787,6 +791,10 @@ video {
 
 .-top-20{
   top: -5rem;
+}
+
+.-top-7{
+  top: -1.75rem;
 }
 
 .-top-8{
@@ -871,6 +879,10 @@ video {
 
 .left-32{
   left: 8rem;
+}
+
+.left-4{
+  left: 1rem;
 }
 
 .left-\[1\.3rem\]{
@@ -979,42 +991,6 @@ video {
 
 .top-\[7rem\]{
   top: 7rem;
-}
-
-.-left-4{
-  left: -1rem;
-}
-
-.-top-6{
-  top: -1.5rem;
-}
-
-.-left-14{
-  left: -3.5rem;
-}
-
-.-top-7{
-  top: -1.75rem;
-}
-
-.-left-20{
-  left: -5rem;
-}
-
-.left-2{
-  left: 0.5rem;
-}
-
-.left-6{
-  left: 1.5rem;
-}
-
-.left-4{
-  left: 1rem;
-}
-
-.-left-12{
-  left: -3rem;
 }
 
 .-z-10{
@@ -3332,6 +3308,11 @@ video {
   background-color: rgb(22 23 23 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#16181b\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 24 27 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#171D22\]{
   --tw-bg-opacity: 1;
   background-color: rgb(23 29 34 / var(--tw-bg-opacity));
@@ -3392,6 +3373,11 @@ video {
   background-color: rgb(27 29 31 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#1b1d20\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(27 29 32 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#1b3231\]{
   --tw-bg-opacity: 1;
   background-color: rgb(27 50 49 / var(--tw-bg-opacity));
@@ -3425,6 +3411,11 @@ video {
 .bg-\[\#1f2123\]{
   --tw-bg-opacity: 1;
   background-color: rgb(31 33 35 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#1f2226\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 34 38 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#202123\]{
@@ -3836,21 +3827,6 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-\[\#1b1d20\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(27 29 32 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#16181b\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(22 24 27 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#1f2226\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 34 38 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
 }
@@ -3946,6 +3922,10 @@ video {
 
 .p-\[3px\]{
   padding: 3px;
+}
+
+.p-\[4px\]{
+  padding: 4px;
 }
 
 .px-1{

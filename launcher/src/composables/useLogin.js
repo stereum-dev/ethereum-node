@@ -102,6 +102,7 @@ export const useServerLogin = () => {
       } else {
         router.push(routePath);
       }
+      startShell();
     } catch (error) {
       console.error("Login failed:", error);
       serverStore.isServerAnimationActive = false;
@@ -120,7 +121,6 @@ export const useServerLogin = () => {
 
       router.push("/login");
     }
-    startShell();
   };
 
   const add = () => {

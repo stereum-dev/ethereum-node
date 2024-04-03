@@ -141,6 +141,7 @@ const loggingOut = async () => {
   serverStore.connectingAnimActive = false;
   headerStore.refresh = false;
   serverStore.isTerminalStopped = true;
+  await ControlService.stopShell();
   await ControlService.logout();
   router.push("/login").then(() => {
     location.reload();
