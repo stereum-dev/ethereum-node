@@ -47,7 +47,9 @@ watch(
 );
 
 onMounted(() => {
-  openTerminal();
+  if (!isTerminalRunning.value) {
+    openTerminal();
+  }
   runningTerminal();
 });
 
@@ -66,6 +68,20 @@ const openTerminal = () => {
     isNewTerminalPanel.value = false;
   }
   terminal.focus();
+
+  terminal.onSelectionChange(() => {
+    const selection = terminal.getSelection();
+    if (selection) {
+      navigator.clipboard.writeText(selection);
+    }
+  });
+
+  terminalContainer.value.addEventListener("contextmenu", async (event) => {
+    event.preventDefault();
+    const clipboardText = await navigator.clipboard.readText();
+    terminal.write(clipboardText);
+    terminal.focus();
+  });
 };
 
 const runningTerminal = () => {
