@@ -1,0 +1,45 @@
+name: 🍄 Enhancement Request
+description: Suggest a new feature or improvement to enhance the project
+title: "[Enhancement]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to suggest an enhancement to improve Stereum!
+
+  - type: textarea
+    id: enhancement-description
+    attributes:
+      label: Describe the enhancement
+      description: Provide a clear and concise description of the feature or improvement you'd like to see. Detail how this enhancement would benefit the project.
+      placeholder: Describe the feature or improvement here
+    validations:
+      required: true
+
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Are there any dependencies or prerequisites for implementing this enhancement?
+      placeholder: List any dependencies here
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Include any additional information, links to documentation, screenshots, images, graphs, or drawings that can help illustrate your suggestion.
+      placeholder: Provide additional context here
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acknowledgment
+      description: Before submitting, please check our repository to ensure this enhancement has not already been suggested or implemented.
+      options:
+        - label: I have reviewed the existing enhancements and confirm that this suggestion is unique.
+          required: true
