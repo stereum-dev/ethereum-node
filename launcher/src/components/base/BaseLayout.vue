@@ -46,7 +46,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, onBeforeMount } from "vue";
+import { onMounted, ref } from "vue";
 
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
@@ -81,21 +81,6 @@ const UpdatePanelCompRef = ref(null);
 
 onMounted(() => {
   useUpdateCheck();
-});
-
-//Terminal
-
-// Start the terminal
-
-onBeforeMount(async () => {
-  try {
-    await ControlService.startShell();
-    serverStore.isTerminalRunning = true;
-    console.log("Starting terminal");
-  } catch (error) {
-    console.error("Error starting shell:", error);
-    return;
-  }
 });
 
 const closeServiceBrowser = () => {
