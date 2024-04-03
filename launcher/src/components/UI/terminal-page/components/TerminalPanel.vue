@@ -105,13 +105,15 @@ const disposeTerminal = () => {
   window.promiseIpc.removeListener("terminal-output", terminalOutputListener);
 };
 
-//Create new terminal
+// Create new terminal
 const onNewTerminal = async () => {
   if (!isTerminalRunning.value) {
-    disposeTerminal();
     await ControlService.startShell();
-    openTerminal();
-    runningTerminal();
+
+    setTimeout(() => {
+      openTerminal();
+      runningTerminal();
+    }, 1000);
   }
 };
 
