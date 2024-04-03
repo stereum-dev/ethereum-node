@@ -1,4 +1,3 @@
-// useTerminal.js
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import "xterm/css/xterm.css";
