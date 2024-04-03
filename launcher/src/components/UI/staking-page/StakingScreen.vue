@@ -147,10 +147,13 @@ const readFileContent = (file) => {
 
   reader.onload = (event) => {
     try {
-      const jsonContent = JSON.parse(event.target.result);
-      // Add filename property to jsonContent
-      jsonContent.filename = file.name;
-      stakingStore.previewKeys.push(jsonContent);
+      if (file.type === "application/json") {
+        const jsonContent = JSON.parse(event.target.result);
+
+        // Add filename property to jsonContent
+        jsonContent.filename = file.name;
+        stakingStore.previewKeys.push(jsonContent);
+      }
     } catch (e) {
       console.error("Error parsing JSON file:", e);
     }
@@ -171,20 +174,21 @@ const handleFiles = (files) => {
       }
     }
   } else {
-    readFileContent(files[0]);
+    if (files[0].type === "application/json") {
+      readFileContent(files[0]);
+    }
   }
 };
 
 const uploadValidatorKey = (event) => {
   let uploadedFiles = event.target.files;
-  if (!stakingStore.keyFiles.includes(uploadedFiles[0]["name"]) && uploadedFiles[0]["type"] === "application/json") {
-    stakingStore.previewKeys = [];
-    handleFiles(uploadedFiles);
-    stakingStore.keyFiles = [...uploadedFiles];
-    stakingStore.isOverDropZone = false;
-    stakingStore.isPreviewListActive = true;
-    stakingStore.setActivePanel("validator");
-  }
+  stakingStore.previewKeys = [];
+  handleFiles(uploadedFiles);
+  stakingStore.passwordFiles = [...uploadedFiles].filter((file) => file.type === "text/plain");
+  stakingStore.keyFiles = [...uploadedFiles].filter((file) => file.type === "application/json");
+  stakingStore.isOverDropZone = false;
+  stakingStore.isPreviewListActive = true;
+  stakingStore.setActivePanel("validator");
 };
 
 const onDrop = (event) => {
@@ -192,11 +196,12 @@ const onDrop = (event) => {
   if (validator && validator.map((e) => e.state).includes("running")) {
     stakingStore.previewKeys = [];
     let droppedFiles = event.dataTransfer.files;
-    if (droppedFiles[0]["type"] === "application/json") {
+    if (droppedFiles[0]["type"] === "application/json" || droppedFiles[0]["type"] === "text/plain") {
       stakingStore.isOverDropZone = false;
       stakingStore.isPreviewListActive = true;
       handleFiles(droppedFiles);
-      stakingStore.keyFiles = [...droppedFiles];
+      stakingStore.passwordFiles = [...droppedFiles].filter((file) => file.type === "text/plain");
+      stakingStore.keyFiles = [...droppedFiles].filter((file) => file.type === "application/json");
       stakingStore.setActivePanel("validator");
     } else {
       stakingStore.inputWrongKey = true;
@@ -219,6 +224,7 @@ const importKey = async (val) => {
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel("insert");
   stakingStore.keyFiles = [];
+  stakingStore.passwordFiles = [];
   stakingStore.previewKeys = [];
 
   stakingStore.importEnteredPassword = "";
@@ -259,6 +265,7 @@ const confirmPassword = async (pass) => {
 const importValidatorProcessing = async () => {
   stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
     files: stakingStore.keyFiles,
+    passwordFiles: stakingStore.passwordFiles,
     password: stakingStore.importEnteredPassword,
     serviceID: stakingStore.selectedValidatorService.config?.serviceID,
     slashingDB: stakingStore.slashingDB?.path || null,
@@ -272,6 +279,7 @@ const importValidatorProcessing = async () => {
 
     stakingStore.setActivePanel(null);
     stakingStore.keyFiles = [];
+    stakingStore.passwordFiles = [];
   } else {
     stakingStore.setActiveModal("risk");
     stakingStore.doppelgangerKeys = [];
@@ -777,6 +785,7 @@ const confirmImportRemoteKeys = async () => {
     );
 
     stakingStore.keyFiles = [];
+    stakingStore.passwordFiles = [];
     stakingStore.previewRemoteKeys = [];
   } else {
     stakingStore.setActiveModal("risk");

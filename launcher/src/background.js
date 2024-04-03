@@ -431,6 +431,7 @@ ipcMain.handle("getQRCode", async () => {
 ipcMain.handle("checkActiveValidators", async (event, args) => {
   return await validatorAccountManager.checkActiveValidators(
     args.files,
+    args.passwordFiles,
     args.password,
     args.serviceID,
     args.slashingDB,
