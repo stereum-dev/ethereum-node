@@ -15,6 +15,7 @@ const terminalContainer = ref(null);
 let terminalOutputListener = null;
 let onDataDisposable = null;
 const isNewTerminalPanel = ref(false);
+let isTerminalRunning = ref(false);
 
 watch(
   () => serverStore.terminalForceClear,
@@ -68,6 +69,7 @@ const openTerminal = () => {
 };
 
 const runningTerminal = () => {
+  isTerminalRunning.value = true;
   onDataDisposable = onData((data) => {
     ControlService.executeCommand(data);
   });
@@ -80,6 +82,7 @@ const runningTerminal = () => {
 };
 
 const disposeTerminal = () => {
+  isTerminalRunning.value = false;
   if (onDataDisposable) {
     onDataDisposable.dispose();
   }
@@ -88,10 +91,12 @@ const disposeTerminal = () => {
 
 //Create new terminal
 const onNewTerminal = async () => {
-  disposeTerminal();
-  await ControlService.startShell();
-  openTerminal();
-  runningTerminal();
+  if (!isTerminalRunning.value) {
+    disposeTerminal();
+    await ControlService.startShell();
+    openTerminal();
+    runningTerminal();
+  }
 };
 
 //Clear terminal

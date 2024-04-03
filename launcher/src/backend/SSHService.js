@@ -645,7 +645,7 @@ export class SSHService {
     try {
       if (this.shellStream) {
         this.shellStream.end();
-        this.shellStream = null; // Explicitly clear the shellStream
+        this.shellStream = null;
       }
       if (this.shellConn) {
         this.shellConn.end();
