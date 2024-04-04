@@ -150,7 +150,7 @@ const onKillTerminal = async () => {
   justify-content: center;
   align-items: center;
   color: rgb(65, 218, 180) !important;
-  padding-bottom: 40px;
+  padding: 40px 0 !important;
 }
 
 .terminal .xterm-viewport {
@@ -159,8 +159,6 @@ const onKillTerminal = async () => {
 
 .terminal .xterm-screen {
   width: 100% !important;
-  height: 100% !important;
-  margin-bottom: 10px;
   background-color: white !important;
   overflow-x: hidden;
   overflow-y: auto;
