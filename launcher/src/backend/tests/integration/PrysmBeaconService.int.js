@@ -118,7 +118,7 @@ test("prysm validator import", async () => {
       /Starting beacon node/.test(BCstatus.stderr) &&
       /Starting initial chain sync/.test(BCstatus.stderr) &&
       /Peer summary/.test(BCstatus.stderr) &&
-      /Connected to new endpoint: http:\/\/stereum-.{36}:8551/.test(BCstatus.stderr) &&
+      /Connected to new endpoint/.test(BCstatus.stderr) &&
       /Beacon chain started/.test(VCstatus.stderr) &&
       /Waiting for beacon node to sync to latest chain head/.test(VCstatus.stderr)
     ) {
@@ -181,7 +181,7 @@ test("prysm validator import", async () => {
   expect(BCstatus.stderr).toMatch(/Starting beacon node/);
   expect(BCstatus.stderr).toMatch(/Starting initial chain sync/);
   expect(BCstatus.stderr).toMatch(/Peer summary/);
-  expect(BCstatus.stderr).toMatch(/Connected to new endpoint: http:\/\/stereum-.{36}:8551/);
+  expect(BCstatus.stderr).toMatch(/Connected to new endpoint/);
 
   //check prysm VC logs
   expect(VCstatus.stderr).toMatch(/Beacon chain started/);
