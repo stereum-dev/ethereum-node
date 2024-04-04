@@ -3,6 +3,11 @@ import { defineStore } from "pinia";
 export const useServers = defineStore("servers", {
   state: () => {
     return {
+      //Terminal
+      isTerminalRunning: false,
+      killTerminalActive: false,
+      newTerminalActive: false,
+      terminalForceClear: false,
       //Connection
 
       connectingAnimActive: false,
@@ -142,6 +147,16 @@ export const useServers = defineStore("servers", {
       this.isServerSettingsActive = false;
 
       this[state] = true;
+    },
+
+    killTerminal() {
+      this.killTerminalActive = true;
+    },
+    newTerminal() {
+      this.newTerminalActive = true;
+    },
+    clearTerminal() {
+      this.terminalForceClear = true;
     },
   },
 });

@@ -73,7 +73,6 @@ export const useServerLogin = () => {
   };
 
   const login = async (signal) => {
-    console.log("Composables", signal);
     serverStore.isServerAnimationActive = true;
     serverStore.errorMsgExists = false;
 
@@ -103,6 +102,7 @@ export const useServerLogin = () => {
       } else {
         router.push(routePath);
       }
+      startShell();
     } catch (error) {
       console.error("Login failed:", error);
       serverStore.isServerAnimationActive = false;
@@ -165,6 +165,18 @@ export const useServerLogin = () => {
     await loadStoredConnections();
 
     resetServerStoreLoginState();
+  };
+
+  //Shell Connection
+
+  const startShell = async () => {
+    try {
+      await ControlService.startShell();
+      console.log("Shell connected successfully!");
+    } catch (error) {
+      console.error("Error starting shell:", error);
+      return;
+    }
   };
 
   return {

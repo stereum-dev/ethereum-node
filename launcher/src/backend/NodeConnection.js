@@ -273,6 +273,7 @@ export class NodeConnection {
       status: true,
     });
     this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+
     /**
      * run stereum ansible playbook "setup"
      */
@@ -781,10 +782,10 @@ export class NodeConnection {
         chown ${user}:${user} ${secrets_dir} &&
         chmod 0755 ${secrets_dir} &&
         echo ${escapedPassword} > ${password_file} &&
-        chown ${user}:${user} ${password_file} && 
+        chown ${user}:${user} ${password_file} &&
         chmod 0600 ${password_file} &&
         echo ${escapedPrivateKey} > ${private_key_file} &&
-        chown ${user}:${user} ${private_key_file} && 
+        chown ${user}:${user} ${private_key_file} &&
         chmod 0600 ${private_key_file}
       `);
       if (SSHService.checkExecError(password_write, true)) {
@@ -798,7 +799,7 @@ export class NodeConnection {
         docker cp ssv-node-key-generation:/encrypted_private_key.json '${keystore_file}' &&
         docker rm ssv-node-key-generation &&
         rm '${private_key_file}' &&
-        chown ${user}:${user} ${keystore_file} && 
+        chown ${user}:${user} ${keystore_file} &&
         chmod 0600 ${keystore_file}
       `);
       if (SSHService.checkExecError(keystore_write)) {
@@ -891,7 +892,7 @@ export class NodeConnection {
         chown ${user}:${user} ${secrets_dir} &&
         chmod 0755 ${secrets_dir} &&
         echo ${escapedPassword} > ${password_file} &&
-        chown ${user}:${user} ${password_file} && 
+        chown ${user}:${user} ${password_file} &&
         chmod 0600 ${password_file}
       `);
       if (SSHService.checkExecError(password_write, true)) {
@@ -1741,6 +1742,7 @@ export class NodeConnection {
   }
 
   async logout() {
+    this.sshService.stopShell();
     this.sshService.disconnect();
     this.settings = undefined;
     await this.closeTunnels();

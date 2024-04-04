@@ -551,6 +551,18 @@ class ControlService extends EventEmitter {
   async upgradeToNoble() {
     return await this.promiseIpc.send("upgradeToNoble");
   }
+
+  async startShell() {
+    return this.promiseIpc.send("startShell");
+  }
+
+  async stopShell() {
+    return this.promiseIpc.send("stopShell");
+  }
+
+  async executeCommand(args) {
+    return this.promiseIpc.send("executeCommand", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
