@@ -150,6 +150,7 @@ const onKillTerminal = async () => {
   justify-content: center;
   align-items: center;
   color: rgb(65, 218, 180) !important;
+  padding-bottom: 40px;
 }
 
 .terminal .xterm-viewport {
