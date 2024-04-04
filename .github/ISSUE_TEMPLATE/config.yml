@@ -1,27 +1,28 @@
 blank_issues_enabled: true
 contact_links:
-  - name: Stereum Discord Channel
+  - name: 🌐 Stereum Website
+    url: https://stereum.net/
+    about: "Get more information about Stereum!"
+  - name: 📚 Stereum Documentation
+    url: https://stereum-dev.github.io/ethereum-node-web-docs/
+    about: "Check out our Documentation!"
+  - name: 💬 Stereum Discord Channel
     url: https://discord.gg/UPVKtw6Wte
     about: "If you need more support, please visit our Discord!"
-  - name: Stereum Website
-    url: https://stereum.net/
-    about: "If you need guidance on how to use Stereum!"
+  - name: 📄 Documentation Feedback
+    url: https://github.com/stereum-dev/ethereum-node/issues/new/choose
+    about: "Suggest improvements or report issues with our documentation."
 
-issue_template:
+issue_templates:
   - name: 🪳 Bug Report
     about: Report a bug to help us improve. Describe the issue in detail, including steps to reproduce if possible.
     template: bug_report.md
-    labels: ["improvement: critical", "bug"]
-  - name: 🍄 Feature Request
-    about: Suggest an idea for this project. Describe the feature and its potential benefits.
-    template: feature_request.md
-    labels: ["new feature"]
-  - name: 🙏 Improvement Request
-    about: Suggest an improvement for an existing feature or functionality. Describe how this change could enhance the user experience or software performance.
-    template: improvement_request.md
-    labels: ["improvement: minor", "improvement: major"]
+    labels: ["bug"]
+  - name: 🍄 Enhancement Request
+    about: Suggest a new feature or improvement. Describe the enhancement and its potential benefits.
+    template: enhancement_request.md
+    labels: ["enhancement"]
   - name: 🔌 Service Integration
     about: Propose a new service integration. Describe the service, how it integrates, and the value it adds to the project.
     template: service_integration.md
-    labels: ["new feature", "integration"]
-
+    labels: ["integration"]
