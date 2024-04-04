@@ -10,7 +10,7 @@ contact_links:
     url: https://discord.gg/UPVKtw6Wte
     about: "If you need more support, please visit our Discord!"
   - name: 📄 Documentation Feedback
-    url: https://github.com/stereum-dev/ethereum-node/issues/new/choose
+    url: https://github.com/stereum-dev/ethereum-node-web-docs/issues/new/choose
     about: "Suggest improvements or report issues with our documentation."
 
 issue_templates:
