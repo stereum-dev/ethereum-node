@@ -53,6 +53,7 @@ export const useStakingStore = defineStore("theStaking", {
       // ***** End Staking Remote Keys *****
 
       // ***** Validator Keys *****
+      passwordFiles: [],
       isPubkeyVisible: false,
       removeResponse: [],
       removeKeys: [],
@@ -68,7 +69,6 @@ export const useStakingStore = defineStore("theStaking", {
       selectedSingleKeyToWithdraw: null,
       withdrawAndExitResponse: null,
       withdrawIsChecked: false,
-
       exitMultiValidatorKeys: false,
       doppelgangerStatus: true,
       selectedIcon: "",
@@ -87,7 +87,6 @@ export const useStakingStore = defineStore("theStaking", {
       importRemoteKeysActive: false,
       display: true,
       isDragOver: false,
-
       dragStep: false,
       clickService: false,
       modalGuide: false,

@@ -174,13 +174,7 @@ const filteredDoppelgangerKeys = computed(() => {
 });
 
 const isDropZoneDisabled = computed(() => {
-  return (
-    isLoading.value ||
-    stakingStore.keys.length === 0 ||
-    stakingStore.doppelgangerKeys.some(
-      (doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID
-    )
-  );
+  return isLoading.value;
 });
 
 // Watchers
@@ -204,7 +198,7 @@ watchEffect(() => {
     if (isLoading.value) {
       isLoading.value = false;
     }
-  }, 5000);
+  }, 2000);
 });
 
 watch(
