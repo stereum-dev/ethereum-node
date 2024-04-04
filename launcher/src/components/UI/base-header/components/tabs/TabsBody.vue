@@ -1,6 +1,14 @@
 <template>
-  <div class="col-start-3 col-end-13 grid grid-cols-3 items-center gap-x-2">
+  <div class="col-start-3 col-end-14 grid grid-cols-7 items-center gap-x-2">
     <SingleTab v-for="tab in tabs" :key="tab.page" :tab="tab" />
+    <router-link to="/shell" class="w-full h-full col-start-7 col-span-1 flex justify-center items-center">
+      <img
+        class="w-9 h-9 rounded-full shadow-md shadow-gray-800 hover:shadow-lg hover:shadow-gray-800 hover:scale-110 cursor-pointer transition-transform duration-300 ease-in-out active:scale-100 active:shadow-none active:shadow-gray-800"
+        src="/img/icon/base-header-icons/terminal2.png"
+        alt="Shell Icon"
+        @mousedown.prevent
+      />
+    </router-link>
   </div>
 </template>
 

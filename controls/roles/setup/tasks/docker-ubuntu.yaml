@@ -2,26 +2,26 @@
 - name: Remove conflicting docker packages
   apt:
     name:
-    - docker-engine
-    - docker.io
-    - docker-registry
+      - docker-engine
+      - docker.io
+      - docker-registry
     state: absent
 
 - name: Install required system packages
   apt:
     name:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - software-properties-common
-    - python3-pip
-    - python3-docker
-    - virtualenv
-    - python3-setuptools
-    - gnupg2
-    - pass
-    - sysstat
-    - python3-jmespath
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python3-pip
+      - python3-docker
+      - virtualenv
+      - python3-setuptools
+      - gnupg2
+      - pass
+      - sysstat
+      - python3-jmespath
 
 - name: Add Docker GPG apt Key
   apt_key:
@@ -35,6 +35,5 @@
   apt:
     update_cache: yes
     name:
-    - docker-ce
-
+      - docker-ce
 # EOF
