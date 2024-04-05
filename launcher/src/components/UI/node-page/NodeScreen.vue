@@ -12,23 +12,33 @@
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection @open-expert="openExpertModal" @open-logs="openLogPage" />
       </div>
-      <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
-          <button
-            class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
-            @click="alarmToggle"
-            @mouseenter="
-              footerStore.cursorLocation = nodeStore.infoAlarm
-                ? `${$t('nodeSidebarVideo.stereumTutorial')}`
-                : `${$t('nodeSidebarVideo.statBox')}`
-            "
-            @mouseleave="footerStore.cursorLocation = ''"
-          >
-            <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
-          </button>
+      <TransitionGroup name="slide-fade">
+        <div
+          v-if="headerStore.displayWalletConnectModal"
+          class="col-start-21 col-end-25 px-1 flex flex-col justify-between bg-black"
+        >
+          <div class="w-96 h-full bg-black">
+            <w3m-button />
+          </div>
         </div>
-        <AlertSection :info-aralm="nodeStore.infoAlarm" />
-      </div>
+        <div v-else class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
+          <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
+            <button
+              class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
+              @click="alarmToggle"
+              @mouseenter="
+                footerStore.cursorLocation = nodeStore.infoAlarm
+                  ? `${$t('nodeSidebarVideo.stereumTutorial')}`
+                  : `${$t('nodeSidebarVideo.statBox')}`
+              "
+              @mouseleave="footerStore.cursorLocation = ''"
+            >
+              <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
+            </button>
+          </div>
+          <AlertSection :info-aralm="nodeStore.infoAlarm" />
+        </div>
+      </TransitionGroup>
       <LogsSection
         v-if="isLogsPageActive"
         :client="nodeStore.clientToLogs"
@@ -56,6 +66,7 @@ import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
+import { useWeb3Modal } from "@/composables/useWagmi";
 import { useFooter } from "@/store/theFooter";
 import { saveAs } from "file-saver";
 
@@ -75,6 +86,7 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const router = useRouter();
 const footerStore = useFooter();
+const modal = useWeb3Modal();
 
 //Computed & Watchers
 
@@ -236,5 +248,19 @@ const closeLogPage = () => {
 }
 .info-button img {
   max-width: 19%;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

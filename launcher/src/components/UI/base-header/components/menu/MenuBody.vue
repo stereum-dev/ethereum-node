@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-19 col-span-full grid grid-cols-5 items-center">
+  <div class="col-start-19 col-span-full grid grid-cols-6 items-center">
     <SingleMenu v-for="item in items" :key="item.name" :item="item" />
   </div>
 </template>
@@ -10,6 +10,10 @@ import SingleMenu from "./SingleMenu.vue";
 import { ref } from "vue";
 
 const items = ref([
+  {
+    name: "Wallet",
+    icon: "/img/icon/staking-page-icons/open-group.png",
+  },
   {
     name: "Help",
     icon: "/img/icon/base-header-icons/header-help-button.png",

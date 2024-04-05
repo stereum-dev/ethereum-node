@@ -20,6 +20,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       notificationModalIsActive: false,
       isStakeGuideActive: false,
       isTutorialActive: false,
+      displayWalletConnectModal: false,
       //Menu Modals end
       importBoxModel: "",
       passwordBoxModel: "",
@@ -100,6 +101,9 @@ export const useNodeHeader = defineStore("nodeHeader", {
     },
     setMenuModal(name) {
       switch (name) {
+        case "Wallet":
+          this.displayWalletConnectModal = true;
+          break;
         case "Available Update":
           this.displayUpdatePanel = true;
           break;
@@ -129,6 +133,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
           this.notificationModalIsActive = false;
           this.isStakeGuideActive = false;
           this.isTutorialActive = false;
+          this.displayWalletConnectModal = false;
           break;
         default:
           console.error("No modal");
