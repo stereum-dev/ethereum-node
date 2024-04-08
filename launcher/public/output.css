@@ -981,6 +981,18 @@ video {
   top: 7rem;
 }
 
+.-left-12{
+  left: -3rem;
+}
+
+.-top-7{
+  top: -1.75rem;
+}
+
+.left-4{
+  left: 1rem;
+}
+
 .-z-10{
   z-index: -10;
 }
@@ -1892,6 +1904,10 @@ video {
   max-height: 100%;
 }
 
+.max-h-\[491px\]{
+  max-height: 491px;
+}
+
 .min-h-11{
   min-height: 2.75rem;
 }
@@ -2072,6 +2088,10 @@ video {
   width: 75%;
 }
 
+.w-\[100px\]{
+  width: 100px;
+}
+
 .w-\[110px\]{
   width: 110px;
 }
@@ -2192,10 +2212,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-\[100px\]{
-  width: 100px;
 }
 
 .min-w-\[100px\]{
@@ -3796,6 +3812,21 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#16181b\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 24 27 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#1b1d20\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(27 29 32 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#1f2226\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 34 38 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
 }
@@ -3891,6 +3922,10 @@ video {
 
 .p-\[3px\]{
   padding: 3px;
+}
+
+.p-\[4px\]{
+  padding: 4px;
 }
 
 .px-1{
@@ -4674,12 +4709,6 @@ video {
 
 .ring-opacity-5{
   --tw-ring-opacity: 0.05;
-}
-
-.grayscale{
-  --tw-grayscale: grayscale(100%);
-  -webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-          filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .invert{
@@ -5482,6 +5511,16 @@ html body {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.hover\:shadow-\[\#1b1d20\]:hover{
+  --tw-shadow-color: #1b1d20;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.hover\:shadow-gray-800:hover{
+  --tw-shadow-color: #1f2937;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
 .hover\:brightness-110:hover{
   --tw-brightness: brightness(1.1);
   -webkit-filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -5569,6 +5608,11 @@ html body {
   --tw-shadow-colored: 0 0 #0000;
   -webkit-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.active\:shadow-gray-800:active{
+  --tw-shadow-color: #1f2937;
+  --tw-shadow: var(--tw-shadow-colored);
 }
 
 @media (min-width: 640px){

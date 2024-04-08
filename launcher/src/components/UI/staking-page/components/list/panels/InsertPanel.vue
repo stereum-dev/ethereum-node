@@ -14,7 +14,7 @@
         style="display: none"
         class="w-full h-full"
         multiple="true"
-        accept="application/json"
+        accept="application/json,text/plain"
         @change="getFileValue"
       />
       <span class="text-md font-semibold text-gray-200">{{ t("insertValidator.insertText") }}</span>

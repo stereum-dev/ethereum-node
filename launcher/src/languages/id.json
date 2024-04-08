@@ -1,0 +1,912 @@
+{
+  "formsetup": {
+    "login": "masuk",
+    "server": "Sambungkan ke server Anda",
+    "servername": "NAMA SERVER",
+    "iphost": "IP / NAMA HOST",
+    "username": "NAMA PENGGUNA",
+    "password": "KATA SANDI",
+    "keylocation": "LOKASI KUNCI",
+    "usessh": "GUNAKAN KUNCI SSH",
+    "fillFields": "Silakan isi bidang yang hilang!",
+    "KeyPassphrase": "FRASA SANDI KUNCI"
+  },
+  "comingsoon": {
+    "comingsoon": "SEGERA HADIR"
+  },
+  "journalnode": {
+    "serverip": "IP",
+    "servername": "NAMA"
+  },
+  "pagesnav": {
+    "staking": "STAKING"
+  },
+  "supportModal": {
+    "support": "dukungan",
+    "supportText": "Cara tercepat untuk menghubungi seseorang untuk dukungan adalah bergabung dengan server Discord kami!",
+    "bugReport": "LAPORAN BUG",
+    "emailText": "atau tulis email ke:",
+    "docsTitle": "dokumentasi rantai",
+    "docsText": "Link berguna ke dokumentasi log jaringan untuk konfigurasi node pilihan Anda."
+  },
+  "settingPanel": {
+    "stereumName": "pengaturan stereum",
+    "langName": "Pilihan Bahasa",
+    "confirm": "TERAPKAN",
+    "general": "UMUM",
+    "credits": "Kredit",
+    "open": "buka",
+    "update": "PERBARUI",
+    "launcherVersion": "Versi Peluncur",
+    "nodeVersion": "Versi Node",
+    "on": "hidup",
+    "off": "mati",
+    "updateConfig": "Konfigurasi Pembaruan Stereum",
+    "manual": "MANUAL",
+    "auto": "OTOMATIS",
+    "sxConf": "Ekspor Konfig",
+    "chngAppr": "Perubahan yang akan diterapkan",
+    "creditInfo": "klik tombol untuk melihat kontributor",
+    "langInfo": "klik tombol untuk mengubah bahasa",
+    "exportInfo": "klik tombol untuk mengekspor konfigurasi dalam file yaml",
+    "stereumUpd": "Klik tombol untuk mengkonfigurasi pembaruan Stereum"
+  },
+  "nodeSidebarVideo": {
+    "stake": "Stake dengan 32 ETH",
+    "rpc": "Koneksi RPC",
+    "written": "Panduan Tertulis",
+    "video": "Panduan Video",
+    "stereumTutorial": "tutorial stereum",
+    "statBox": "kotak status"
+  },
+  "pluginZone": {
+    "client": "klien"
+  },
+  "theNode": {
+    "execution": "eksekusi",
+    "consensus": "konsensus",
+    "validator": "validator",
+    "servicePlugin": "PLUG-IN LAYANAN",
+    "message": "Jaringan saat ini adalah ",
+    "chckTutorial": "Lihat tutorialnya",
+    "returnStatus": "Kembali ke kotak status"
+  },
+  "modifyPanel": {
+    "backNode": "kembali ke NODE",
+    "nukeNode": "HANCURKAN NODE"
+  },
+  "changeConfirm": {
+    "confirm": "KONFIRMASI PERUBAHAN",
+    "process": "memproses...",
+    "change": "PERUBAHAN UNTUK DIKONFIRMASI",
+    "delete": "HAPUS"
+  },
+  "updatePanel": {
+    "launcherTitle": "peluncur",
+    "version": "versi",
+    "current": "saat ini",
+    "nodeTitle": "pembaruan node",
+    "latest": "terbaru",
+    "auto": "Pembaruan Otomatis",
+    "available": "tersedia",
+    "searching": "mencari pembaruan baru",
+    "serviceTitle": "pembaruan plug-in",
+    "serviceDesc": "Pembaruan untuk pilihan PLUG-IN yang terinstal",
+    "availablePlugin": "PEMBARUAN PLUG-IN TERSEDIA",
+    "all": "perbarui semua",
+    "osTitle": "pembaruan os server"
+  },
+  "controlPage": {
+    "node": "NODE",
+    "disk": "KECEPATAN DISK",
+    "write": "TULIS",
+    "read": "BACA",
+    "inclusionDistance": "JARAK PENYERTAAN",
+    "rpc": "RPC-ENDPOINT",
+    "ws": "WS-ENDPOINT",
+    "syncStatus": "STATUS SINCRON",
+    "hard": "VOLUME PENYIMPANAN",
+    "free": "BEBAS",
+    "total": "TOTAL",
+    "network": "JARINGAN",
+    "receive": "Menerima Data",
+    "transmit": "Mengirim Data",
+    "ram": "RAM",
+    "used": "digunakan",
+    "totalram": "total",
+    "storage": "PENYIMPANAN",
+    "active": "AKTIF",
+    "rating": "PENILAIAN",
+    "usage": "Penggunaan",
+    "netSel": "Jaringan yang dipilih adalah",
+    "machineName": "Nama Mesin",
+    "storVol": "Volume penyimpanan server",
+    "stor": "Ikhtisar penyimpanan server",
+    "diskSpeed": "Kecepatan disk",
+    "p2p": "Koneksi peer to peer",
+    "cpuUse": "Penggunaan CPU",
+    "syncInfo": "Status sinkronisasi",
+    "ramUse": "Penggunaan RAM",
+    "netSpeed": "Kecepatan Jaringan",
+    "listPort": "Daftar port layanan",
+    "endPoint": "endpoint",
+    "data": "data",
+    "enteredKeys": "Jumlah kunci validator yang diimpor",
+    "ttlBal": "Saldo total",
+    "finEPOCH": "EPOCH Finalisasi",
+    "pending": "layanan tertunda",
+    "off": "Matikan layanan",
+    "on": "Hidupkan layanan",
+    "settingService": "Mengatur layanan",
+    "restart": "mulai ulang layanan",
+    "currentEpoch": "EPOCH Saat Ini",
+    "currentSlot": "SLOT Saat Ini",
+    "p2pNet": "Jaringan peer to peer",
+    "selConcensus": "Pilih klien konsensus",
+    "selExecution": "Pilih klien eksekusi",
+    "subsribeSubnet": "subnet yang berlangganan"
+  },
+  "taskManager": {
+    "clickDisplay": "Klik tugas untuk ditampilkan"
+  },
+  "displayValidator": {
+    "pk": "Kunci Publik",
+    "rm": "Kunci jarak jauh",
+    "service": "LAYANAN",
+    "active": "AKTIF SEJAK",
+    "state": "Indikator Status",
+    "balance": "SALDO",
+    "option": "OPSI",
+    "importKey": "Mengimpor kunci validator",
+    "waitMessage": "Ini mungkin memakan waktu",
+    "waitForImport": "Harap tunggu hingga kunci diimpor",
+    "warningMessage": "Pemeriksaan Perlindungan Slashing tambahan kami menunjukkan bahwa salah satu validator yang akan Anda impor telah memberikan kesaksian dalam 2 epoch terakhir.",
+    "warningAlarm": "PERINGATAN: Anda berisiko tinggi untuk di-slash!",
+    "warningQuestion": "APA ANDA YAKIN INGIN MENGIMPOR KUNCI VALIDATOR?",
+    "sure": "Saya yakin",
+    "cancel": "batal",
+    "serviceExpl": "Layanan yang dipilih untuk kunci Validator yang dimasukkan",
+    "activeExpl": "Waktu sejak validator telah aktif",
+    "balExpl": "Saldo dari validator",
+    "copyPub": "Salin kunci publik",
+    "copiedPub": "Kunci publik disalin",
+    "setFee": "atur penerima biaya blok untuk kunci yang dipilih",
+    "renameVal": "ubah nama kunci validator",
+    "removVal": "hapus kunci validator",
+    "exitChain": "keluar dari rantai dengan kunci yang dipilih",
+    "waitEnt": "Anda harus menunggu kunci validator untuk masuk",
+    "grpNam": "nama grup adalah",
+    "keyNumGrp": "Jumlah Kunci yang Terkandung",
+    "grpBal": "saldo grup",
+    "openGrp": "buka Grup",
+    "renameGrp": "ubah nama grup",
+    "removGrp": "hapus grup",
+    "inserValidator": "masukkan kunci validator",
+    "backList": "kembali ke daftar",
+    "web3Import": "IMPOR KUNCI JARAK JAUH WEB3SIGNER",
+    "crteGrp": "buat grup baru",
+    "openSrch": "cari kunci validator atau grup",
+    "showValKey": "tampilkan kunci validator",
+    "showKeyNam": "tampilkan nama kunci",
+    "upcomingSync": "tugas komite sinkronisasi mendatang",
+    "upcomingBlocProd": "produksi blok mendatang",
+    "clentSel": "klien yang dipilih",
+    "selValClint": "klien validator yang dipilih",
+    "upcomEpochDuti": "tugas epoch mendatang",
+    "graffitiPanel": "ubah graffiti untuk semua kunci di klien validator",
+    "removeMultiple": "hapus semua kunci dari klien validator",
+    "withdrawMultiple": "keluar & tarik semua kunci dari klien validator",
+    "importRemote": "impor kunci jarak jauh ke klien validator",
+    "valClint": "klien validator",
+    "valStat": "status validator",
+    "numValidator": "jumlah kunci validator yang diimpor",
+    "attestReward": "hadiah kesaksian",
+    "blockProdreward": "hadiah produksi blok",
+    "syncCommitteeReward": "hadiah komite sinkronisasi",
+    "ttlKeys": "total kunci",
+    "ttlBal": "saldo total"
+  },
+  "enterPass": {
+    "enterPass": "MASUKKAN PASSWORD & IMPOR"
+  },
+  "exitMultipleValidator": {
+    "passMessage": "MASUKKAN PASSWORD VALIDATOR ANDA UNTUK KELUAR RANTAI DENGAN KUNCI INI...",
+    "confirm": "KONFIRMASI"
+  },
+  "exitValidatorModal": {
+    "modalMessage": "Apakah Anda yakin ingin keluar dari rantai dengan KUNCI validator TERPILIH? Ini menghentikan tugas validator Anda & TIDAK bisa dibalik. Dana Anda juga hanya bisa ditarik, jika rantai mengizinkannya.",
+    "exitApprove": "SAYA MEMBACA TEKS DAN SAYA MENYADARI KONSEKUENSI",
+    "exitChain": "KELUAR RANTAI",
+    "clickClose": "Klik di luar untuk menutup."
+  },
+  "feeRecipient": {
+    "textPlaceHolder": "Masukkan alamat Ethereum yang valid untuk mengirim hadiah blok Anda ke ... ",
+    "setBlock": "TETAPKAN ALAMAT PENERIMA BIAYA BLOK"
+  },
+  "grafitiMultipleValidator": {
+    "textPlaceHolder": "Masukkan hingga 32 karakter untuk ditambahkan ke rantai saat Anda membuat blok!"
+  },
+  "renameValidator": {
+    "textPlaceHolder": "Masukkan hingga 32 karakter untuk mengganti nama validator!"
+  },
+  "insertValidator": {
+    "insertText": "KLIK ATAU SERET UNTUK MEMASUKKAN KUNCI"
+  },
+  "removeSingleModal": {
+    "question": "APAKAH ANDA INGIN MENGUNDUH DATABASE SLASHING ANDA?"
+  },
+  "removeMultiModal": {
+    "sure": "Apakah Anda yakin ingin menghapus kunci ini dari mesin Anda?",
+    "slashing": "Dengan Database Perlindungan Slashing?",
+    "remove": "Hapus"
+  },
+  "removeMultipleValidators": {
+    "sureText": "Apakah Anda yakin ingin menghapus SEMUA Kunci Validator DARI MESIN INI?"
+  },
+  "timeReward": {
+    "totalText": "SALDO TOTAL DARI",
+    "validators": "VALIDATOR"
+  },
+  "installOption": {
+    "back": "KEMBALI",
+    "install": "INSTAL"
+  },
+  "installitionMenu": {
+    "osCheck": "MEMERIKSA APAKAH OS SERVER ANDA DIDUKUNG",
+    "osSupported": "ADALAH OS YANG DIDUKUNG"
+  },
+  "pluginName": {
+    "path": "JALUR INSTALASI",
+    "installOpt": "OPSI INSTALASI",
+    "startOnInstall": "Mulai klien setelah instalasi?",
+    "monitor": "MONITORING",
+    "instMonit": "Instal Monitoring?"
+  },
+  "creditPanel": {
+    "techTitle": "KREDIT > Kontributor Teknis",
+    "techText": "Dapatkan GitPOAP! Pelajari cara terlibat dengan mengunjungi GitHub kami!",
+    "testTitle": "KREDIT > Pengujian, Umpan Balik & Saran",
+    "testText": "Buat saran konstruktif, memecahkan masalah, di GitHub kami!",
+    "translateTitle": "KREDIT > Terjemahan",
+    "translateText": "Bukan kata yang benar? Bantu kami menyebarkan Stereum ke bahasa Anda di Crowdin!",
+    "financialPage": "KONTRIBUSI KEUANGAN",
+    "developers": "PENGEMBANG",
+    "testers": "PENGUJI"
+  },
+  "verifyInstallation": {
+    "name": "NAMA",
+    "cat": "KATEGORI",
+    "path": "JALUR"
+  },
+  "warningModal": {
+    "warningText": "Kami merekomendasikan Anda untuk menunggu hingga instalasi awal selesai sebelum menerapkan perubahan lebih lanjut"
+  },
+  "frontPageSsv": {
+    "newRegistritionTitle": "DAFTAR OPERATOR BARU",
+    "newRegistritionText": "Gunakan kunci operator yang baru dihasilkan untuk mendaftarkan operator node baru ke Jaringan SSV",
+    "register": "Daftar",
+    "insertTitle": "masukkan kunci operator untuk operator yang sudah ada",
+    "insertText": "Gunakan kunci privat operator yang ada untuk memulihkan proses operator node Anda yang sudah ada"
+  },
+  "registerSSV": {
+    "pubKey": "Kunci operator publik",
+    "copied": "disalin!",
+    "secKey": "Kunci Operator Rahasia",
+    "makeSureText": "Pastikan untuk menyimpan dan mencadangkan kunci rahasia operator Anda di tempat yang aman. Jangan berbagi kunci ini dengan siapa pun.",
+    "copyMessage": "Salin kunci operator publik Anda ke dalam bidang ini untuk mengonfirmasi bahwa Anda telah menyimpan kunci Anda!"
+  },
+  "ssvDashboard": {
+    "operatorPage": "Halaman Operator Saya",
+    "SSVNodeGrafna": "Dashboard Grafana Node SSV"
+  },
+  "secretKeyReg": {
+    "modalLabel": "MASUKKAN KUNCI OPERATOR PRIBADI YANG ADA UNTUK MENGGUNAKANNYA SEBAGAI KUNCI OPERATOR ANDA",
+    "apply": "TERAPKAN"
+  },
+  "dataAPIAndRPC": {
+    "copy": "Klik untuk menyalin!",
+    "closed": "Hidupkan Terlebih Dahulu",
+    "turnOnMessage": "Silakan hidupkan terowongan DATA-API terlebih dahulu!",
+    "copiedMessage": "URL DATA-API disalin ke clipboard!",
+    "RPCTurnOnMessage": "Silakan hidupkan terowongan RPC terlebih dahulu!",
+    "RPCCopiedMessage": "URL RPC disalin ke clipboard!",
+    "WSTurnOnMessage": "Silakan hidupkan terowongan WS terlebih dahulu!",
+    "WSCopiedMessage": "URL WS disalin ke clipboard!"
+  },
+  "pluginLogs": {
+    "pageTitle": "LOG PLUG-IN",
+    "noLogFound": "Tidak ada log yang ditemukan dalam daftar",
+    "clickCopy": "Klik Ganda untuk Menyalin Log",
+    "serviceId": "ID Layanan:",
+    "exportAll": "Ekspor Semua Log",
+    "export150": "Ekspor 150 Log",
+    "cat": "Kategori:",
+    "ver": "Versi:"
+  },
+  "serviceModals": {
+    "localApp": "APLIKASI LOKAL",
+    "localAppText": "Buka layanan di mesin lokal Anda",
+    "openBrowser": "BUKA DI BROWSER",
+    "availBlockRel": "RELAI BLOK YANG TERSEDIA",
+    "process": "Memproses",
+    "blockRel": "Relai blok",
+    "blockRelTxt": "Pilih satu atau beberapa relai untuk menerima blok dari"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "INSTALASI KUSTOM",
+    "customInstallationText": "Mode ini ditujukan untuk pengguna lanjutan dan memerlukan Anda untuk memiliki pemahaman tentang bagaimana klien berinteraksi satu sama lain. Anda harus memilih dan memasang, serta menghubungkan setiap bagian dari node Anda dengan UI sendiri sebelum dapat berfungsi!"
+  },
+  "mevboostConfig": {
+    "availRelays": "RELAI BLOK YANG TERSEDIA",
+    "usedRelays": "RELAI BLOK YANG DIGUNAKAN"
+  },
+  "addModifyPanel": {
+    "installPath": "JALUR INSTALASI",
+    "syncMessage": "MENYINKRONKAN KLIEN ANDA DARI AWAL RANTAI",
+    "portused": "PORT YANG DIGUNAKAN",
+    "cancel": "batal",
+    "save": "SIMPAN",
+    "add": "TAMBAH",
+    "clickAndAdd": "Klik pada TAMBAH"
+  },
+  "importSlashingModal": {
+    "slashModalMessage": "Apakah Anda ingin mengimpor dengan Database Perlindungan Slashing?",
+    "importMessage": "Impor file database slashing Anda.",
+    "chooseFile": "Pilih File",
+    "continue": "Lanjutkan"
+  },
+  "logOutModal": {
+    "logOutTitle": "LOG-KELUAR",
+    "logOutQuestion": "APA ANDA YAKIN INGIN LOG KELUAR DARI SERVER NODE ANDA?",
+    "logOutBtn": "Log out"
+  },
+  "reconnectModal": {
+    "reconnectTitle": "Koneksi hilang",
+    "reconnectMessage": "Periksa koneksi Anda dan coba lagi.",
+    "reconnectingMessage": "Menghubungkan kembali...",
+    "reconnectBtn": "Hubungkan kembali"
+  },
+  "prunningModal": {
+    "prunningText": "GETH menggunakan ruang penyimpanan bertambah selama waktu operasionalnya. Memangkas basis data Geth membutuhkan WAKTU BERJAM-JAM, menghapus data yang tidak perlu dan membebaskan sebagian ruang penyimpanan yang digunakan. Ini harus dilakukan saat Geth tidak berjalan. MEMULAI PROSES PEMANGKASAN NODE ANDA AKAN OFFLINE DAN BERHENTI DARI TUGAS ATTESTASI POTENSIAL.",
+    "prunningChecked": "SAYA MEMBACA TEKS DAN SAYA MENYADARI KONSEKUENSI",
+    "prunningStart": "Mulai Pemangkasan",
+    "close": "klik di luar untuk menutup"
+  },
+  "restartModal": {
+    "restartMessage": "node Anda mungkin akan offline selama proses ini!",
+    "restart": "mulai ulang",
+    "confirmMessage": "Apakah Anda yakin ingin mematikan node Anda",
+    "areYouSure": "apakah Anda yakin ingin"
+  },
+  "nukeModal": {
+    "nukeQ": "APA ANDA YAKIN INGIN MENGHAPUS STEREUM & SEMUA LAYANANNYA DARI SERVER?",
+    "nukeTitle": "hancurkan node",
+    "backToLogin": "Kembali ke login"
+  },
+  "noData": {
+    "noData": "tidak ada data",
+    "turnOn": "silakan hidupkan"
+  },
+  "rpcGuide": {
+    "clickNav": "Klik pada “KONTROL” untuk masuk ke Panel Kontrol.",
+    "toggleMessage": "Klik pada tombol “ON/OFF” untuk membuka port Anda",
+    "clickExtention": "Klik pada “klien Eksekusi Anda” untuk menyalin URL RPC",
+    "clickCancel": "Klik x untuk membatalkan",
+    "firstMessage": "Widget RPC-Endpoint terletak di dashboard. Silakan klik “ON” pada tombol dan klik “Klien Eksekusi” untuk melanjutkan ke langkah selanjutnya.",
+    "secondMessage": "Anda sekarang dapat mengirim transaksi ANDA MELALUI NODE ANDA DENGAN METAMASK. Ketika Anda selesai mengirim transaksi Anda, klik pada “ON” untuk menutup port Anda",
+    "firstSlide": "Sekarang login ke dAPP atau dompet yang ingin Anda gunakan (dalam kasus kami MetaMask)",
+    "secondSlide": "Klik pada tombol Jaringan",
+    "thirdSlide": "Klik pada “Tambah Jaringan”",
+    "fourthSlide": "Ketikkan nama untuk jaringan Anda",
+    "fivethSlide": "Tempel URL yang disalin dari Stereum",
+    "sixthSlide": "Ketikkan ID RANTAI yang dijalankan node Anda (untuk GoerliTestnet adalah 5)",
+    "seventhSlide": "Ketikkan “ETH” sebagai simbol mata uang",
+    "eightthSlide": "OPSIONAL - Anda dapat menempel URL Penjelajah Blok",
+    "ninethSlide": "Klik pada “SIMPAN”"
+  },
+  "stakeGuide": {
+    "syncCheck": "Pertama Periksa apakah Node Anda telah sinkron",
+    "scrollMessage": "Gulir untuk mengubah slide lebih cepat",
+    "stake": "staking",
+    "scrollClick": "Klik pada Staking",
+    "drag": "Seret atau klik pada “KLIK ATAU SERET UNTUK MEMASUKKAN KUNCI”",
+    "clickIcon": "Klik pada ikon klien validator Anda",
+    "cong": "Selamat Anda selesai!",
+    "clickPass": "Silakan klik di sini untuk memasukkan password Anda dan konfirmasi.",
+    "noSlash": "Pilih “Tidak” jika Anda tidak memiliki Database Perlindungan Slashing dari Node sebelumnya"
+  },
+  "blockProduct": {
+    "status": "STATUS",
+    "assignSlot": "Slot yang Ditugaskan",
+    "noAsign": "Tidak Ditugaskan",
+    "nxtBlck": "Usulan Blok Berikutnya dalam:"
+  },
+  "disableStake": {
+    "message": "MEMERLUKAN KLIEN VALIDATOR YANG BERJALAN DI SERVER UNTUK MENGAKSES STAKING"
+  },
+  "selectionOption": {
+    "graffiti": "graffiti",
+    "removeKeys": "Hapus semua kunci"
+  },
+  "syncCommitte": {
+    "total": "total",
+    "status": "STATUS",
+    "particip": "BERPARTISIPASI",
+    "noParticip": "TIDAK BERPARTISIPASI",
+    "start": "Mulai",
+    "end": "Akhir",
+    "newSync": "Komite Sinkronisasi Baru dalam",
+    "hours": "jam"
+  },
+  "theAttes": {
+    "lastAttest": "Slot Kesaksian Terakhir:",
+    "keyStatus": "Status Kunci:",
+    "attest": "MENYAKSIKAN",
+    "pending": "TERTUNDA",
+    "noKey": "PILIH KUNCI",
+    "nxtAttest": "slot Kesaksian berikutnya:",
+    "slotRem": "Slot yang tersisa",
+    "tillAtest": "sampai kesaksian"
+  },
+  "confirmModal": {
+    "off": "APA ANDA YAKIN INGIN MEMATIKAN NODE ANDA?",
+    "on": "APA ANDA YAKIN INGIN MENYALAKAN NODE ANDA?",
+    "messageOff": "Node Anda akan offline!",
+    "messageOn": "Node Anda akan online!",
+    "turnOn": "hidupkan",
+    "turnOff": "matikan",
+    "close": "klik di luar untuk menutup"
+  },
+  "nodeAlert": {
+    "lowSpace": "PENYIMPANAN RENDAH",
+    "use": "PENGGUNAAN",
+    "noFee": "tidak ada penerima biaya",
+    "stereumUpt": "PEMBARUAN STEREUM",
+    "clkFee": "Pengaturan Layanan",
+    "clkUpdate": "Klik untuk membuka panel pembaruan",
+    "sync": "Kesalahan Sinkronisasi",
+    "taskFail": "Tugas Gagal",
+    "stats": "STATUS: BUKA",
+    "clientService": "KLIEN / LAYANAN"
+  },
+  "resyncModal": {
+    "message": "KLIENT ANDA Menyimpan data blockchain DI SERVER ANDA AGAR NODE ANDA DAPAT melayani jaringan. ini diperlukan agar node ANDA DAPAT MELAKUKAN TUGAS ATTESTASI DALAM STAKING. DENGAN MENGGUNAKAN OPSI INI ANDA MENGHAPUS DATA BLOCKCHAIN KLIENT ANDA SAAT INI & MENGGUNAKAN OPSI YANG DIPILIH SEBAGAI SUMBER UNTUK MENYINKRONKAN NODE ANDA BARU.",
+    "sync": "SINKRONISASI",
+    "gen": "GENESIS",
+    "chkSync": "SINKRONISASI CHECKPOINT",
+    "syncMsg": "MENYINKRONKAN KLIEN ANDA DARI AWAL RANTAI",
+    "cont": "LANJUTKAN",
+    "resync": "RESYNC",
+    "close": "klik di luar untuk menutup"
+  },
+  "resyncSeparateService": {
+    "message": "dengan memulai resync Anda akan menghapus database dari",
+    "msgPartTwo": " sumber akan digunakan untuk resinkronisasi",
+    "resync": "resync",
+    "close": "klik di luar untuk menutup"
+  },
+  "notifModal": {
+    "addNotif": "tambahkan saluran notifikasi",
+    "chooseNotif": "Pilih jenis Saluran Notifikasi yang ingin Anda konfigurasikan",
+    "stereumMonitor": "Monitor Node Stereum",
+    "stepOne": "Pastikan untuk menginstal & menghidupkan Layanan Notifikasi.",
+    "stepTwo": "Kunjungi appstore atau situs web kami untuk mengunduh 'Stereum Node Monitor'",
+    "stepThree": "Buka 'Stereum Node Monitor' di smartphone Anda",
+    "stepFour": "Pindai Kode QR di Aplikasi.",
+    "stepFive": "Kirim notifikasi tes di Grafana.",
+    "close": "klik di luar untuk menutup",
+    "dash": "Dasbor",
+    "chooseVal": "PILIH KLIEN VALIDATOR UNTUK MENYAMBUNGKAN MONITORING KE",
+    "goTo": "Pergi ke",
+    "machinename": "Nama Mesin",
+    "apikey": "Kunci API",
+    "apply": "TERAPKAN"
+  },
+  "replacePanel": {
+    "client": "Klien",
+    "sync": "SINKRON",
+    "gen": "GENESIS",
+    "chkPoint": "CHECKPOINT",
+    "genActiv": "MENYINKRONKAN KLIEN ANDA DARI AWAL RANTAI",
+    "cancel": "BATAL",
+    "confirm": "KONFIRMASI"
+  },
+  "executionSync": {
+    "gen": "GENESIS",
+    "syncClient": "Menyinkronkan klien Anda"
+  },
+  "importingList": {
+    "nodeConf": "Konfigurasi Node"
+  },
+  "importingSyncing": {
+    "message": "Atur bagaimana Klien Node akan menyinkronkan data blockchain mereka.",
+    "client": "KLIEN",
+    "syncSrc": "SUMBER SINKRON"
+  },
+  "importingVerify": {
+    "pluginInst": "Plugin Untuk Diinstal",
+    "cat": "kategori",
+    "path": "jalur"
+  },
+  "uploadConfig": {
+    "message": "Dengan opsi instalasi ini Anda dapat mengimpor file konfigurasi Stereum yang digunakan untuk meniru pengaturan node Anda.",
+    "selectConfig": "PILIH FILE KONFIGURASI STEREUM UNTUK MENGUNGGAHNYA"
+  },
+  "fastSync": {
+    "header": "Atur bagaimana Klien Node akan menyinkronkan data blockchain mereka.",
+    "client": "KLIEN",
+    "syncSrc": "SUMBER SINKRON",
+    "gen": "GENESIS",
+    "sync": "Menyinkron dari genesis",
+    "message": "Setelah menginstal node Anda, klien Anda akan mulai menyinkron dengan sumber sinkronisasi yang Anda pilih. Proses ini dapat memakan waktu beberapa jam atau hari. Biasanya, Klien Konsensus menyinkron terlebih dahulu, diikuti oleh Klien Eksekusi."
+  },
+  "deleteModal": {
+    "rem": "Hapus",
+    "close": "klik di luar untuk menutup"
+  },
+  "errTerminal": {
+    "copy": "disalin!",
+    "close": "klik di luar untuk menutup"
+  },
+  "sliderTutorial": {
+    "visitUrl": "Kunjungi situs web",
+    "becomeValidator": "Klik pada “MENJADI VALIDATOR”",
+    "proofStake": "Baca melalui Bukti taruhan dan klik pada “LANJUTKAN”",
+    "deposit": "Baca melalui deposit dan klik pada “SAYA MENERIMA”",
+    "usingTerminal": "Baca melalui Menggunakan terminal dan klik pada “SAYA MENERIMA”",
+    "validatorUptime": "Baca melalui Waktu aktif validator dan klik pada “SAYA MENERIMA”",
+    "validatorBahavior": "Baca melalui Perilaku validator yang buruk dan klik pada “SAYA MENERIMA”",
+    "keyManagement": "Baca melalui Manajemen kunci dan klik pada “SAYA MENERIMA”",
+    "validatingLongterm": "Baca melalui Memvalidasi adalah komitmen jangka panjang dan klik pada “SAYA MENERIMA”",
+    "earlyAdaptor": "Baca melalui Risiko perintis awal dan klik pada “SAYA MENERIMA”",
+    "stakingChecklist": "Baca melalui Daftar periksa staking dan klik pada “SAYA MENERIMA”",
+    "clickCont": "Klik pada “LANJUTKAN”",
+    "executionClient": "Pilih klien eksekusi Anda dengan mengkliknya",
+    "scrollDown": "Gulir ke bawah dan klik pada “LANJUTKAN”",
+    "consensusClient": "Pilih klien konsensus Anda dengan mengkliknya",
+    "numValidator": "Ketikkan jumlah validator yang ingin Anda jalankan",
+    "generateKey": "Pilih sistem operasi yang Anda gunakan saat ini untuk menghasilkan kunci",
+    "keyGUI": "Klik pada “Unduh Aplikasi GUI Pembuat Kunci”",
+    "dlGithub": "Klik pada “Unduh dari GitHub”",
+    "clickInstaller": "Gulir ke bawah dan klik pada pemasang yang Anda butuhkan dan unduh",
+    "setupPage": "Kembali ke halaman pengaturan dan gulir ke bawah dan klik pada kotak centang",
+    "wagueKey": "Beralih ke aplikasi Pembuat Kunci WAGYU",
+    "secratePhrase": "Klik pada “Buat Frase Pemulihan Rahasia Baru”",
+    "selectNetwork": "Pilih jaringan tempat Anda ingin menjalankan node Anda",
+    "clickOk": "Klik pada “OK”",
+    "clickCreate": "Klik pada “BUAT”",
+    "recoveryPhrase": "Setelah Frase Pemulihan Rahasia Anda dibuat simpan di tempat yang aman. Klik pada tombol salin.",
+    "clickNext": "Klik pada “BERIKUTNYA”",
+    "imSure": "Klik pada “SAYA YAKIN”",
+    "pasteRecovery": "Tempel Frase Pemulihan Rahasia Anda",
+    "clickCheck": "Klik pada “PERIKSA”",
+    "needKey": "Ketikkan jumlah kunci yang Anda butuhkan",
+    "typPass": "Ketikkan sebuah password",
+    "retypPass": "Ketik ulang password Anda",
+    "clickBrowse": "Klik pada “TELUSURI”",
+    "chooseFolder": "Pilih folder tempat Anda ingin menyimpan kunci Anda dan simpan di tempat yang aman",
+    "clickCreateWait": "Klik pada “BUAT” dan tunggu beberapa detik",
+    "clickClose": "Periksa apakah kunci Anda telah dihasilkan dan klik pada “TUTUP”",
+    "switchSetup": "Beralih kembali ke halaman pengaturan",
+    "dragFile": "Klik pada “Seret file untuk mengunggah atau telusuri” dan seret file deposit Anda ke dalam bidang",
+    "connWalet": "Sambungkan dompet Anda, periksa jaringan dan saldo Anda",
+    "understandRisk": "Baca bagian “Memahami risiko” dan centang setiap kotak",
+    "readSection": "Baca bagian “Pastikan Anda tidak dipancing” dan centang kotak",
+    "protectYourself": "Baca bagian “Lindungi diri Anda dari deposit ganda” dan centang kotak",
+    "dblCheck": "Periksa dua kali segalanya dan klik pada “LANJUTKAN”",
+    "sendDeposit": "Klik pada “KIRIM DEPOSIT”",
+    "walletPopup": "Dompet Anda akan muncul, klik pada “Konfirmasi” untuk mengirim transaksi",
+    "contCong": "Klik pada “LANJUTKAN”, selamat Anda telah membuat kunci validator"
+  },
+  "balWid": {
+    "fin": "FINALISASI",
+    "bal": "PERUBAHAN SALDO"
+  },
+  "headerBtn": {
+    "help": "bantuan",
+    "notif": "Manajemen saluran notifikasi",
+    "availableUpdt": "Pembaruan baru tersedia",
+    "updtPan": "panel pembaruan",
+    "setting": "Pengaturan Stereum",
+    "logOutBtn": "Log out",
+    "rem": "HAPUS",
+    "node": "NODE",
+    "control": "KONTROL",
+    "staking": "STAKING"
+  },
+  "switchNetwork": {
+    "message": "Ini adalah jaringan saat ini, Anda dapat klik untuk memilih jaringan lain"
+  },
+  "searchOption": {
+    "switchShow": "Beralih antara menampilkan kunci publik & nama kustom yang Anda pilih",
+    "group": "Grup beberapa kunci",
+    "searchFilter": "Pencarian & filter"
+  },
+  "serverManagement": {
+    "serverAccMange": "Manajemen Akses Server",
+    "serverNam": "Nama Server",
+    "ipHOST": "IP atau NAMA HOST",
+    "userNam": "Nama Pengguna",
+    "machineNam": "Nama Mesin",
+    "port": "Port",
+    "pass": "Password",
+    "chngPass": "Ubah Password",
+    "passmessage": "Silakan masukkan password untuk mengubahnya",
+    "confirmPass": "silakan masukkan password lagi",
+    "confirmPassMessage": "konfirmasi password Anda",
+    "cancel": "BATAL",
+    "clckChngPass": "klik untuk mengubah password Anda",
+    "key": "Kunci",
+    "createKey": "buat kunci baru",
+    "clckCreateKey": "klik untuk menghasilkan kunci baru",
+    "addKey": "tambahkan kunci yang ada",
+    "clckAddKey": "klik untuk menambahkan kunci yang ada"
+  },
+  "taskMang": {
+    "taskMng": "Manajer Tugas"
+  },
+  "ipScanModal": {
+    "message": "  Apakah Anda ingin secara otomatis mengambil alamat IP server node Anda dengan mencari jaringan rumah Anda untuk ping yang dipancarkan oleh ISO Ubuntu Stereum? Ini mungkin memakan waktu...",
+    "clockClose": "Klik di luar untuk menutup"
+  },
+  "serviceBtn": {
+    "turnOff": "Matikan layanan",
+    "turnOn": "Hidupkan layanan",
+    "restart": "Mulai ulang layanan",
+    "pending": "Layanan tertunda",
+    "settings": "pengaturan layanan",
+    "logs": "buka log",
+    "docs": "buka dokumen"
+  },
+  "serviceLay": {
+    "srvice": "layanan"
+  },
+  "clientButtons": {
+    "turnOn": "Hidupkan layanan",
+    "turnOff": "Matikan layanan",
+    "restart": "Mulai ulang layanan",
+    "pending": "Layanan tertunda",
+    "settings": "Akses pengaturan layanan",
+    "logs": "Buka log layanan",
+    "docs": "Buka dokumentasi layanan di browser Anda",
+    "removeLock": "Hapus file Lock layanan",
+    "pruning": "Pangkas basis data layanan",
+    "resync": "Sinkron ulang layanan dari sumber yang dipilih"
+  },
+  "clientLay": {
+    "client": "klien",
+    "keyMsg": "kunci yang diimpor",
+    "syncStatus": "status sinkronisasi:"
+  },
+  "serverDetails": {
+    "machineName": "Nama Mesin",
+    "machineIp": "Alamat IP Mesin"
+  },
+  "changesBox": {
+    "clickToCancel": "Klik di sini untuk membatalkan perubahan ini"
+  },
+  "editClientLay": {
+    "clkEdit": "Klik untuk mengedit layanan Anda"
+  },
+  "generalMenu": {
+    "modify": "modifikasi",
+    "connection": "koneksi",
+    "switchClient": "ganti klien",
+    "delete": "hapus",
+    "service": "layanan",
+    "info": "info"
+  },
+  "networkDetails": {
+    "currIs": "Jaringan saat ini adalah",
+    "currentNet": "Jaringan Saat Ini"
+  },
+  "changeSect": {
+    "clkConfirm": "Klik di sini untuk mengonfirmasi perubahan"
+  },
+  "sidebarSect": {
+    "toNode": "Kembali ke Halaman Node",
+    "toEdit": "Pergi ke Halaman Edit Node",
+    "setchNet": "Ganti Jaringan dalam konfigurasi Node",
+    "nukTheNud": "Hancurkan Node Stereum dan semua layanannya",
+    "nukNod": "Hancurkan Node",
+    "trnOn": "Hidupkan node Anda",
+    "trnOff": "Matikan node Anda",
+    "expNode": "Ekspor Konfigurasi Node Anda"
+  },
+  "customAnim": {
+    "processing": "Memproses"
+  },
+  "customFooter": {
+    "back": "KEMBALI",
+    "next": "BERIKUTNYA"
+  },
+  "configDetails": {
+    "addConfig": "Tambah Konfig"
+  },
+  "editBody": {
+    "executionClient": "Klien Eksekusi",
+    "consensusClient": "Klien Konsensus",
+    "validator": "Validator"
+  },
+  "editModals": {
+    "noAvailService": "Tidak ada layanan yang tersedia",
+    "executionClients": "Klien Eksekusi",
+    "consensusClients": "Klien Konsensus",
+    "validatorClients": "Klien Validator",
+    "installationPath": "Jalur Instalasi",
+    "syncMode": "Mode Sinkron",
+    "serviceId": "ID Layanan",
+    "serviceCat": "Kategori Layanan",
+    "modifyConnection": "Modifikasi Koneksi",
+    "confirm": "Konfirmasi",
+    "clckOutside": "Klik di luar untuk menutup",
+    "switchNetwork": "Ganti Jaringan",
+    "selectNetwork": "Pilih jaringan untuk menggantikan",
+    "switchTo": "Ganti Ke",
+    "trnOn": "Hidupkan",
+    "trnOff": "Matikan",
+    "selectClient": "Pilih Klien Dari Daftar",
+    "switchClient": "ganti klien",
+    "selectNet": "Pilih Jaringan"
+  },
+  "editPageServices": {
+    "services": "Layanan",
+    "service": "Layanan",
+    "delete": "Hapus"
+  },
+  "guideInfo": {
+    "close": "Tutup"
+  },
+  "ImportConfigHeader": {
+    "toImport": "Untuk mengimpor",
+    "rem": "Hapus"
+  },
+  "loginServer": {
+    "wait": "Harap tunggu . . .",
+    "chckServerDetails": "Silakan periksa detail server Anda.",
+    "serverRem": "Server Anda akan dihapus.",
+    "removeServer": "HAPUS SERVER",
+    "removeServerText": "Apakah Anda yakin ingin menghapusnya?"
+  },
+  "multiServer": {
+    "serverName": "Nama Server",
+    "saveServer": "Simpan Server",
+    "ipOrHost": "IP atau Nama Host",
+    "port": "Port",
+    "userName": "Nama Pengguna",
+    "pass": "Password",
+    "keyPath": "Jalur Kunci",
+    "login": "Login",
+    "cancel": "Batalkan Login",
+    "conecting": "Menghubungkan . . .",
+    "newPass": "Password Baru",
+    "EnterNewPass": "Masukkan Password Baru",
+    "verifyPass": "Verifikasi Password",
+    "chngResPass": "Ubah / Atur Ulang Password",
+    "chngPass": "Ubah Password",
+    "machineName": "Nama Mesin",
+    "chngAvatar": "Ubah Avatar",
+    "sshkeyMang": "MANAJEMEN KUNCI SSH",
+    "createNewKey": "BUAT KUNCI BARU",
+    "addExistingKey": "TAMBAHKAN KUNCI YANG ADA",
+    "loginFailed": "Login Gagal",
+    "ok": "OK",
+    "genSshKey": "Hasilkan Kunci SSH",
+    "keyType": "Jenis Kunci",
+    "selectKeyType": "Pilih Jenis Kunci",
+    "sshPass": "Password SSH",
+    "unlockExpertOptions": "BUKA OPSI AHLI",
+    "optionalSshPass": "TENTUKAN PASSWORD SSH OPSIONAL",
+    "savePath": "JALUR SIMPAN",
+    "specCypher": "TENTUKAN CYPHER",
+    "bitAmount": "JUMLAH BIT",
+    "useCostumCypher": "GUNAKAN CYPHER KHUSUS",
+    "specSshBitAmount": "TENTUKAN JUMLAH BIT SSH",
+    "gen": "HASILKAN",
+    "saveServerCon": "KONEKSI SERVER TERSIMPAN",
+    "serch": "Cari",
+    "serchFor": "Cari...",
+    "addServer": "TAMBAHKAN KONEKSI SERVER BARU",
+    "serverAccMang": "Manajemen Server"
+  },
+  "oneClick": {
+    "installedService": "LAYANAN YANG TERINSTAL",
+    "addOption": "OPSI TAMBAHAN",
+    "chooseNetwork": "PILIH KASUS PENGGUNAAN DAN JARINGAN ANDA. SETELAH MEMILIH DAN MENGEKLIK MULAI, SELEKSI KLIEN ACAK AKAN DIAMBIL UNTUK MELAYANI KASUS PENGGUNAAN ANDA",
+    "oneClckInstall": "INSTALASI SATU KLIK",
+    "setNodeClient": "Atur bagaimana Klien Node akan menyinkronkan data blockchain mereka dari",
+    "process": "Memproses"
+  },
+  "serviceModal": {
+    "confirm": "Konfirmasi",
+    "distributedValidator": "PEMBANGKITAN KUNCI TERDISTRIBUSI",
+    "generateEnr": "MENGHASILKAN ENR BARU",
+    "open": "BUKA",
+    "createEnr": "BUAT ENR BARU",
+    "openObol": "BUKA OBOL LAUNCHPAD",
+    "generateEnrToJoin": "Hasilkan ENR baru untuk digunakan membuat atau bergabung dengan klaster yang ada",
+    "joinCluster": "Buat/bergabung dengan Klaster Obol sendiri atau dengan kelompok menggunakan Distributed Validator Launchpad.",
+    "openBrowser": "BUKA DI BROWSER",
+    "importEnr": "IMPOR ENR YANG ADA",
+    "entrEnr": "Masukkan ENR",
+    "import": "impor",
+    "copy": "SALIN",
+    "rem": "HAPUS",
+    "backUpFile": "KELOLA KLASTER",
+    "startDkg": "MULAI DKG",
+    "exportBackup": "Ekspor file cadangan deposito Anda dari server untuk mencadangkannya atau menghapus semua data yang terkait dengan klaster",
+    "allEnrSign": "Ketika semua ENR ditandatangani, Anda akan disajikan dengan perintah. Semua Operator Node harus menjalankan perintah ini pada waktu yang sama!",
+    "srart": "MULAI",
+    "pasteUrl": "TEMPALKAN URL YANG DIBERIKAN ATAU PERINTAH LENGKAP",
+    "entrUrl": "Masukkan URL",
+    "oops": "Ups! Ada Yang Salah",
+    "wentWrong": "Ada yang salah. Silakan klik tombol segarkan dan coba lagi.",
+    "pubKey": "Kunci operator publik",
+    "genPair": "HASILKAN PASANGAN TERENKRIPSI",
+    "confWarning": "KONFIRMASI PERINGATAN",
+    "opDash": "DASHBOARD OPERATOR ({network})",
+    "runOp": "Cara paling aman untuk menjalankan node Operator Anda, adalah dengan menghasilkan pasangan kunci terenkripsi.",
+    "dnldBackup": "Pastikan untuk menuliskan kata sandi Anda & mengunduh cadangan. Tidak ada yang bisa membantu Anda memulihkan kata sandi atau kunci privat terenkripsi jika Anda kehilangannya!",
+    "registerOperator": "Buka aplikasi web SSV di browser default Anda untuk mendaftarkan operator Anda.",
+    "apiUnavailable": "Status dashboard tidak diketahui (API SSV saat ini tidak tersedia).",
+    "showPerformance": "Menunjukkan gambaran umum kinerja node Anda untuk operator terdaftar \"{opname}\" dengan ID {opid} di Jaringan SSV di {network} serta semua kunci yang ditugaskan kepadanya.",
+    "copyKey": "SALIN KUNCI OPERATOR PUBLIK",
+    "copyKeyDesc": "Salin kunci operator publik node Anda ke clipboard.",
+    "skPk": "Kunci Operator Rahasia (SK) & Kunci Operator Publik (PK)",
+    "selPk": "TEMPALKAN ATAU PILIH KUNCI RAHASIA (TIDAK TERENKRIPSI) UNTUK DIIMPOR",
+    "selEnc": "TEMPALKAN ATAU PILIH KUNCI PRIVAT TERENKRIPSI UNTUK DIIMPOR",
+    "sel": "PILIH",
+    "dnldBk": "UNDUH CADANGAN",
+    "dkKey": "MASUKKAN ATAU PILIH KATA SANDI UNTUK MENDEKRIPSI KUNCI PRIVAT",
+    "dlPk": "Unduh kunci privat untuk mencadangkannya. Pastikan untuk juga menuliskan kata sandi yang Anda gunakan untuk enkripsi!",
+    "dlBak": "Unduh cadangan kunci operator SSV Anda. Simpan file ini di lokasi yang aman!",
+    "dl": "UNDUH",
+    "imp": "IMPOR",
+    "mngEnr": "KELOLA ENR",
+    "copyEnr": "Salin 'Ethereum Node Record' yang dihasilkan atau diimpor - pengenal node Anda menggunakan Obol.",
+    "areYouSure": "Apakah Anda yakin ingin menghapus ENR Anda?",
+    "areYouSureCluster": "Apakah Anda yakin ingin menghapus klaster Anda?",
+    "areYouSureMsg": "Ini tidak dapat dibatalkan!",
+    "save": "CADANGAN..."
+  },
+  "stakingPage": {
+    "somethingWrong": "Ada yang salah",
+    "enteredGraffitti": "Graffiti yang Dimasukkan Tidak Valid.",
+    "writeGrpName": "Tulis di sini nama grup Anda",
+    "noVal": "Tidak ada kunci Validator yang diimpor.",
+    "noMatch": "Tidak Ada Kecocokan.",
+    "reward": "Hadiah",
+    "ttl": "Total",
+    "pleaseWait": "Mohon tunggu sampai kunci jarak jauh diimpor.",
+    "imp": "Mengimpor",
+    "yes": "YA",
+    "no": "TIDAK",
+    "noFile": "Tidak ada file yang dipilih",
+    "impDet": "Detail Impor :",
+    "grpId": "ID Grup:",
+    "grpNam": "Nama Grup:",
+    "keys": "Kunci:",
+    "remGrp": "Hapus Grup",
+    "areYouSure": "Apakah Anda yakin ingin menghapus grup ini?",
+    "remValKey": "Hapus Kunci Validator",
+    "areXouSure": "Apakah Anda yakin ingin menghapus Kunci ini?",
+    "stopImport": " Jika tidak, klik di luar untuk menghentikan impor.",
+    "expMsg": "Pesan Ekspor",
+    "riskWarning": "Peringatan Risiko",
+    "process": "Memproses...",
+    "withdrawExit": "Tarik & Keluar Kunci Validator",
+    "vldExited": "Validator Berhasil Keluar.",
+    "vldFailed": "Validator Gagal keluar.",
+    "successExit": "Berhasil Keluar.",
+    "exitFailed": "Gagal Keluar.",
+    "readConeq": "SAYA TELAH MEMBACA TEKS DAN SAYA MENYADARI KONSEKUENSINYA"
+  },
+  "welcomePage": {
+    "logedOut": "Anda akan keluar dari Stereum Launcher. Anda perlu login kembali untuk mengakses node Anda.",
+    "logOut": "Keluar",
+    "logOutMsg": "Apakah Anda yakin ingin keluar?",
+    "logOutBtn": "Logout",
+    "chooseInstallNode": "Pada langkah ini Anda memilih bagaimana Anda ingin menginstal node Anda. Untuk pemula, kami menyarankan opsi Instalasi Satu Klik!",
+    "welcomeStereum": "Selamat Datang di Stereum"
+  }
+}

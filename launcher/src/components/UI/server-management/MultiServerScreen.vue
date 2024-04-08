@@ -113,6 +113,7 @@ const loginHandler = async () => {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
       await ControlService.logout();
+      await ControlService.stopShell();
       await login(loginAbortController.signal);
 
       setTimeout(() => {

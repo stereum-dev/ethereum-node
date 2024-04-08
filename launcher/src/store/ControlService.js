@@ -397,6 +397,7 @@ class ControlService extends EventEmitter {
   async checkActiveValidators(args) {
     //resolve proxy
     let files = [];
+    let passwordFiles = [];
     if (args.isRemote) {
       files = args.files;
     } else {
@@ -404,8 +405,15 @@ class ControlService extends EventEmitter {
         files.push({ name: file.name, path: file.path });
       });
     }
+    if (args.passwordFiles && Array.isArray(args.passwordFiles)) {
+      args.passwordFiles.forEach((file) => {
+        passwordFiles.push({ name: file.name, path: file.path });
+      });
+
+    }
     return await this.promiseIpc.send("checkActiveValidators", {
       files: files,
+      passwordFiles: passwordFiles,
       password: args.password,
       serviceID: args.serviceID,
       slashingDB: args.slashingDB,
@@ -550,6 +558,18 @@ class ControlService extends EventEmitter {
 
   async upgradeToNoble() {
     return await this.promiseIpc.send("upgradeToNoble");
+  }
+
+  async startShell() {
+    return this.promiseIpc.send("startShell");
+  }
+
+  async stopShell() {
+    return this.promiseIpc.send("stopShell");
+  }
+
+  async executeCommand(args) {
+    return this.promiseIpc.send("executeCommand", args);
   }
 }
 if (!instance) {

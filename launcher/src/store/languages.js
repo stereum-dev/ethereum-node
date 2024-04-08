@@ -6,6 +6,7 @@ export const useLangStore = defineStore("languages", {
       currentVolume: 1,
       selectedDeviceId: "",
       dialogIsVisible: false,
+      settingPageIsVisible: false,
       langOptions: [
         {
           name: "english",
@@ -113,6 +114,61 @@ export const useLangStore = defineStore("languages", {
           name: "Việt Nam",
           flag: "img/flag/vietnam.png",
           label: "vi",
+          isSelected: false,
+        },
+        //new languages added
+        {
+          name: "हिन्दी",
+          flag: "img/flag/india.png",
+          label: "hi",
+          isSelected: false,
+        },
+        {
+          name: "বাংলা",
+          flag: "img/flag/bangladesh.png",
+          label: "bn",
+          isSelected: false,
+        },
+        {
+          name: "اردو",
+          flag: "img/flag/pakistan.png",
+          label: "ur",
+          isSelected: false,
+        },
+        {
+          name: "Bahasa Indonesia",
+          flag: "img/flag/indonesia.png",
+          label: "id",
+          isSelected: false,
+        },
+        {
+          name: "Kiswahili",
+          flag: "img/flag/kenya.png",
+          label: "sw",
+          isSelected: false,
+        },
+        {
+          name: "मराठी",
+          flag: "img/flag/india.png",
+          label: "mr",
+          isSelected: false,
+        },
+        {
+          name: "తెలుగు",
+          flag: "img/flag/india.png",
+          label: "te",
+          isSelected: false,
+        },
+        {
+          name: "தமிழ்",
+          flag: "img/flag/india.png",
+          label: "ta",
+          isSelected: false,
+        },
+        {
+          name: "한국어",
+          flag: "img/flag/korea.png",
+          label: "ko",
           isSelected: false,
         },
       ],
