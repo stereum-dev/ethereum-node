@@ -9,12 +9,12 @@ export function useWeb3() {
   const metadata = {
     name: "Web3Modal",
     description: "Web3Modal Example",
-    url: "https://web3modal.com", // origin must match your domain & subdomain
+    url: "https://web3modal.com",
     icons: ["https://avatars.githubusercontent.com/u/37784886"],
   };
 
   // Define reactive properties if needed
-  const chains = ref([mainnet, arbitrum]);
+  const chains = ref([mainnet]);
   const wagmiConfig = ref(
     defaultWagmiConfig({
       chains: chains.value,
@@ -28,10 +28,15 @@ export function useWeb3() {
     reconnect(wagmiConfig.value);
 
     createWeb3Modal({
+      themeMode: "light",
+      themeVariables: {
+        "--w3m-color-mix": "#00BB7F",
+        "--w3m-border-radius-master": "0.5rem",
+      },
       wagmiConfig: wagmiConfig.value,
       projectId,
-      enableAnalytics: true, // Optional - defaults to your Cloud configuration
-      enableOnramp: true, // Optional - false as default
+      enableAnalytics: true,
+      enableOnramp: true,
     });
   };
 

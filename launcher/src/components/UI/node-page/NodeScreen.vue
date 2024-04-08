@@ -12,39 +12,34 @@
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection @open-expert="openExpertModal" @open-logs="openLogPage" />
       </div>
-      <TransitionGroup name="slide-fade">
-        <div
-          v-if="headerStore.displayWalletConnectModal"
-          class="col-start-21 col-end-25 px-1 flex flex-col justify-between bg-black"
-        >
-          <div class="w-96 h-full bg-black">
-            <w3m-button />
-          </div>
+
+      <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
+        <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
+          <button
+            class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
+            @click="alarmToggle"
+            @mouseenter="
+              footerStore.cursorLocation = nodeStore.infoAlarm
+                ? `${$t('nodeSidebarVideo.stereumTutorial')}`
+                : `${$t('nodeSidebarVideo.statBox')}`
+            "
+            @mouseleave="footerStore.cursorLocation = ''"
+          >
+            <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
+          </button>
         </div>
-        <div v-else class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-          <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
-            <button
-              class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
-              @click="alarmToggle"
-              @mouseenter="
-                footerStore.cursorLocation = nodeStore.infoAlarm
-                  ? `${$t('nodeSidebarVideo.stereumTutorial')}`
-                  : `${$t('nodeSidebarVideo.statBox')}`
-              "
-              @mouseleave="footerStore.cursorLocation = ''"
-            >
-              <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
-            </button>
-          </div>
-          <AlertSection :info-aralm="nodeStore.infoAlarm" />
-        </div>
-      </TransitionGroup>
+        <AlertSection :info-aralm="nodeStore.infoAlarm" />
+      </div>
+
       <LogsSection
         v-if="isLogsPageActive"
         :client="nodeStore.clientToLogs"
         @close-log="closeLogPage"
         @export-log="exportLogs"
       />
+      <transition name="slide">
+        <WalletSection v-if="headerStore.displayWalletConnectModal" />
+      </transition>
     </div>
 
     <!-- End Node main layout -->
@@ -56,6 +51,7 @@ import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import LogsSection from "./sections/LogsSection.vue";
+import WalletSection from "./sections/WalletSection.vue";
 import { ref, onMounted, onUnmounted, watchEffect } from "vue";
 import ExpertWindow from "./sections/ExpertWindow.vue";
 import { useNodeStore } from "@/store/theNode";
@@ -66,7 +62,7 @@ import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
-import { useWeb3Modal } from "@/composables/useWagmi";
+import { useWeb3 } from "@/composables/useWeb3";
 import { useFooter } from "@/store/theFooter";
 import { saveAs } from "file-saver";
 
@@ -86,9 +82,11 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const router = useRouter();
 const footerStore = useFooter();
-const modal = useWeb3Modal();
+const { setupWeb3Modal } = useWeb3();
 
 //Computed & Watchers
+
+console.log(headerStore.displayWalletConnectModal);
 
 watchEffect(() => {
   if (router.currentRoute.value.path !== "/node") {
@@ -116,6 +114,7 @@ watchEffect(() => {
 
 //Lifecycle Hooks
 onMounted(() => {
+  setupWeb3Modal();
   setTimeout(() => {
     refreshStats.value = true;
   }, 2000);
@@ -262,5 +261,18 @@ const closeLogPage = () => {
 .slide-fade-leave-to {
   transform: translateX(20px);
   opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(100%);
+}
+.slide-leave-from,
+.slide-enter-to {
+  transform: translateX(0);
 }
 </style>
