@@ -29,8 +29,6 @@ const title = t("shellPage.title");
 
 const footerStore = useFooter();
 
-console.log(title);
-
 const tabs = ref([
   { page: "Node", path: "/node", relativePath: "/edit" },
   { page: "Control", path: "/control" },
