@@ -908,5 +908,18 @@
     "logOutBtn": "Одјави се",
     "chooseInstallNode": "У овом кораку бирате како желите да инсталирате свој чвор. За почетнике препоручујемо опцију инсталације једним кликом!",
     "welcomeStereum": "Добродошли у Стереум"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }
