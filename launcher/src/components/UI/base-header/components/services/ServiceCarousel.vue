@@ -10,6 +10,8 @@
       <div
         class="w-full flex justify-center items-center cursor-pointer border border-transparent hover:border-gray-100 transition-all duration-300 ease-in-out rounded-md"
         @click="handleModal(slide)"
+        @mouseenter="footerStore.cursorLocation = `${slide.name}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-full h-full z-0" :src="slide.sIcon" alt="Service Icon" />
       </div>
@@ -24,6 +26,9 @@ import "swiper/css/virtual";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Mousewheel, Navigation, Virtual } from "swiper/modules";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useFooter } from "@/store/theFooter";
+
+const footerStore = useFooter();
 
 const { slides } = defineProps({
   slides: Array,
