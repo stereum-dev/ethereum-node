@@ -917,6 +917,9 @@
     "settings": "server settings"
   },
   "shellPage": {
-    "title": "SECURE SHELL - SERVER CONNECTION TERMINAL |  IP:{serverIp}"
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }
