@@ -915,5 +915,8 @@
     "ssh": "ssh key management",
     "osUpdate": "operating system update",
     "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION TERMINAL |  IP:{serverIp}"
   }
 }
