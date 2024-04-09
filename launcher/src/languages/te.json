@@ -908,5 +908,18 @@
     "logOutBtn": "లాగ్ అవుట్",
     "chooseInstallNode": "ఈ దశలో మీరు మీ నోడ్‌ను ఎలా ఇన్‌స్టాల్ చేయాలో ఎంచుకోండి. ప్రారంభికులకు మేము వన్-క్లిక్ ఇన్‌స్టాలేషన్ ఎంపికను సిఫారసు చేస్తాము!",
     "welcomeStereum": "స్టీరియంకు స్వాగతం"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }
