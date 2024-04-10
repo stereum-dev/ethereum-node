@@ -54,6 +54,7 @@ import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
+import { useMultiConfigs } from "../../../composables/multiConfigs";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
@@ -75,6 +76,7 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const router = useRouter();
 const footerStore = useFooter();
+const { loadConfigs, getAllServices } = useMultiConfigs();
 
 //Computed & Watchers
 
@@ -104,7 +106,8 @@ watchEffect(() => {
 
 //Lifecycle Hooks
 onMounted(() => {
-  readMultiConfigs();
+  loadConfigs();
+  getAllServices();
   setTimeout(() => {
     refreshStats.value = true;
   }, 2000);
@@ -126,16 +129,6 @@ onUnmounted(() => {
 });
 
 //Methods
-
-const readMultiConfigs = async () => {
-  try {
-    const data = await ControlService.readMultiConfigYaml();
-    console.log(data);
-    return data;
-  } catch (e) {
-    console.log("Couldn't read multi config yaml");
-  }
-};
 
 const alarmToggle = () => {
   nodeStore.infoAlarm = !nodeStore.infoAlarm;
