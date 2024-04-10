@@ -28,6 +28,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
+    <UpdateModal v-if="louncherUpdater" />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
   </div>
 </template>
@@ -38,6 +39,7 @@ import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
 import SwitchAnimation from "./components/SwitchAnimation.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
+import UpdateModal from "./components/modals/UpdateModal.vue";
 
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
@@ -55,6 +57,7 @@ const keyLocation = ref("");
 let loginAbortController = new AbortController();
 console.log("Server Management Screen", loginAbortController);
 const serverBodyComponentKey = ref(0);
+const louncherUpdater = ref(true);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");

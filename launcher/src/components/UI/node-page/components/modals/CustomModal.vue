@@ -8,7 +8,7 @@
       :class="bgColor ? bgColor : 'bg-gray-100'"
     >
       <div class="flex flex-col justify-between gap-5">
-        <div class="text-center p-2 flex-auto justify-center space-y-4">
+        <div class="text-center p-2 flex-auto justify-center space-y-4 relative">
           <div v-if="icon">
             <img
               class="-m-1 flex items-center text-red-500 mx-auto"
@@ -16,6 +16,9 @@
               :alt="altText"
               :class="iconSize !== '' ? iconSize : 'w-24 '"
             />
+          </div>
+          <div v-if="animation" class="animation-icon flex justify-center items-center h-24">
+            <img :src="animation" alt="animation" class="w-[30%] absolute" />
           </div>
           <div v-if="mainTitle" class="text-xl font-bold py-2 text-gray-200 uppercase">
             <p>{{ mainTitle }}</p>
@@ -71,5 +74,11 @@ const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, bg
     bgColor: String,
     btnColor: String,
     iconSize: String,
+    animation: String,
   });
 </script>
+<style scoped>
+.animation-icon img {
+  top: -30%;
+}
+</style>
