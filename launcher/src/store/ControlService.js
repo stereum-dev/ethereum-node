@@ -409,7 +409,6 @@ class ControlService extends EventEmitter {
       args.passwordFiles.forEach((file) => {
         passwordFiles.push({ name: file.name, path: file.path });
       });
-
     }
     return await this.promiseIpc.send("checkActiveValidators", {
       files: files,
@@ -570,6 +569,10 @@ class ControlService extends EventEmitter {
 
   async executeCommand(args) {
     return this.promiseIpc.send("executeCommand", args);
+  }
+
+  async readMultiConfigYaml() {
+    return this.promiseIpc.send("readMultiConfigYaml");
   }
 }
 if (!instance) {
