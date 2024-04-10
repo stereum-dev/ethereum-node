@@ -22,7 +22,7 @@ const monitoring = new Monitoring(nodeConnection);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
-const configManager = new ConfigManager();
+const configManager = new ConfigManager(nodeConnection);
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
@@ -586,6 +586,7 @@ ipcMain.handle("copyExecutionJWT", async (event, args) => {
 });
 
 ipcMain.handle("readMultiConfigYaml", async () => {
+  console.log("background.js------------------------------");
   return await configManager.readMultiConfigYaml();
 });
 
