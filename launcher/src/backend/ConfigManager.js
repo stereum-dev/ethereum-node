@@ -1,16 +1,16 @@
-import { SSHService } from "./SSHService";
+// import { SSHService } from "./SSHService";
 const log = require("electron-log");
 // import YAML from "yaml";
 
 export class ConfigManager {
-  constructor() {
-    this.sshService = new SSHService();
+  constructor(nodeConnection) {
+    this.nodeConnection = nodeConnection;
   }
 
   async readMultiConfigYaml() {
     let multiConfigYaml;
     try {
-      multiConfigYaml = await this.sshService.exec("cat /etc/stereum/multiConfig.yaml");
+      multiConfigYaml = await this.nodeConnection.sshService.exec("cat /etc/stereum/multiConfig.yaml");
       console.log("Multi config output---------------------------", multiConfigYaml);
     } catch (err) {
       log.error("Can't read multiConfig file");
@@ -18,7 +18,9 @@ export class ConfigManager {
     }
 
     if (this.sshService.checkExecError(multiConfigYaml)) {
-      throw new Error("Failed reading service yaml " + this.sshService.extractExecError(multiConfigYaml));
+      throw new Error(
+        "Failed reading service yaml " + this.nodeConnection.sshService.extractExecError(multiConfigYaml)
+      );
     }
     return multiConfigYaml.stdout;
   }
