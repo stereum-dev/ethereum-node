@@ -908,5 +908,18 @@
     "logOutBtn": "Logout",
     "chooseInstallNode": "In this step you choose how you want to install your node. For beginners we recommend the One Click Installation option!",
     "welcomeStereum": "Welcome to Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

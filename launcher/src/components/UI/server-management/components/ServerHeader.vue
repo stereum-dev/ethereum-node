@@ -18,6 +18,8 @@ import { ref, watchEffect } from 'vue';
               : '',
           ]"
           @click="isLoginRoute && (tab.name === 'info' || tab.name === 'ssh') ? null : tabPicker(tab.name)"
+          @mouseenter="footerStore.cursorLocation = `${tabTooltip(tab)}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         >
           <img class="w-7 h-7 mx-auto hover:scale-110 transition-all duration-200" :src="tab.icon" alt="Server Icon" />
         </div>
@@ -30,6 +32,18 @@ import { ref, watchEffect } from 'vue';
 import { useRoute } from "vue-router";
 import { useServers } from "@/store/servers";
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const login = t("serverHeader.login");
+const info = t("serverHeader.info");
+const ssh = t("serverHeader.ssh");
+const osUpdate = t("serverHeader.osUpdate");
+const settings = t("serverHeader.settings");
+
+const footerStore = useFooter();
 
 const route = useRoute();
 const serverStore = useServers();
@@ -37,6 +51,21 @@ const emit = defineEmits(["tabPicker"]);
 
 // Computed property to check if current route is '/login'
 const isLoginRoute = computed(() => route.path === "/login");
+
+const tabTooltip = (tab) => {
+  if (tab.name === "login") {
+    return login;
+  } else if (tab.name === "info") {
+    return info;
+  } else if (tab.name === "ssh") {
+    return ssh;
+  } else if (tab.name === "update") {
+    return osUpdate;
+  } else if (tab.name === "settings") {
+    return settings;
+  }
+  return null; // Default case if none of the conditions match
+};
 
 const tabPicker = (tabName) => {
   serverStore.setActiveTab(tabName);
