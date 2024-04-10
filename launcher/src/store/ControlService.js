@@ -572,7 +572,6 @@ class ControlService extends EventEmitter {
   }
 
   async readMultiConfigYaml() {
-    console.log("control service------------------------------------");
     return this.promiseIpc.send("readMultiConfigYaml");
   }
 }
