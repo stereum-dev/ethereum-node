@@ -10,6 +10,7 @@ import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
+import { ConfigManager } from "./backend/ConfigManager.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -21,6 +22,7 @@ const monitoring = new Monitoring(nodeConnection);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
+const configManager = new ConfigManager();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
@@ -581,6 +583,10 @@ ipcMain.handle("importObolBackup", async (event, args) => {
 
 ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
+});
+
+ipcMain.handle("readMultiConfigYaml", async () => {
+  return await configManager.readMultiConfigYaml();
 });
 
 ipcMain.handle("startShell", async (event) => {
