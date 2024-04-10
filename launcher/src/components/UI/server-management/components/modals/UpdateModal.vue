@@ -20,9 +20,14 @@
           type="password"
         /> -->
         <div
-          class="agree col-start-3 col-end-10 row-start-7 row-span-4 h-full rounded-2xl px-2 font-semibold text-xl text-gray-700 bg-[#70E763] flex items-center justify-center uppercase cursor-pointer"
+          class="btn-modal col-start-3 col-end-10 row-start-7 row-span-4 h-full rounded-2xl px-2 font-semibold text-xl text-gray-700 bg-[#70E763] flex items-center justify-center uppercase cursor-pointer"
         >
-          agree
+          <span>agree</span>
+        </div>
+        <div
+          class="btn-modal col-start-16 col-end-23 row-start-7 row-span-4 h-full rounded-2xl px-2 font-semibold text-xl text-gray-100 bg-[#EB5353] flex items-center justify-center uppercase cursor-pointer"
+        >
+          <span>deny</span>
         </div>
       </div>
     </template>
@@ -38,7 +43,10 @@ const version = ref("dummy version");
 </script>
 
 <style scoped>
-.agree:active {
+.btn-modal:active {
   box-shadow: 1px 1px 10px 1px #171717 inset;
+}
+.btn-modal:active span {
+  transform: scale(0.9);
 }
 </style>

@@ -1145,6 +1145,10 @@ video {
   grid-column-start: 9;
 }
 
+.col-start-16{
+  grid-column-start: 16;
+}
+
 .col-end-10{
   grid-column-end: 10;
 }
@@ -3855,6 +3859,11 @@ video {
 .bg-\[\#70E763\]{
   --tw-bg-opacity: 1;
   background-color: rgb(112 231 99 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#EB5353\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(235 83 83 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
