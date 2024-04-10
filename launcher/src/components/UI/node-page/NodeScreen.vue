@@ -104,6 +104,7 @@ watchEffect(() => {
 
 //Lifecycle Hooks
 onMounted(() => {
+  readMultiConfigs();
   setTimeout(() => {
     refreshStats.value = true;
   }, 2000);
@@ -125,6 +126,16 @@ onUnmounted(() => {
 });
 
 //Methods
+
+const readMultiConfigs = async () => {
+  try {
+    const data = await ControlService.readMultiConfigYaml();
+    console.log(data);
+    return data;
+  } catch (e) {
+    console.log("Couldn't read multi config yaml");
+  }
+};
 
 const alarmToggle = () => {
   nodeStore.infoAlarm = !nodeStore.infoAlarm;
