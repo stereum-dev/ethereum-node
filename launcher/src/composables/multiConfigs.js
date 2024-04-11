@@ -8,7 +8,6 @@ export const useMultiConfigs = () => {
   const loadConfigs = async () => {
     try {
       const data = await ControlService.readMultiConfigYaml();
-      console.log("data", data);
       configs.value = parseYAMLData(data);
     } catch (e) {
       console.error("Couldn't read multi config yaml", e);
@@ -26,31 +25,36 @@ export const useMultiConfigs = () => {
   const parseYAMLData = (data) => {
     const parsedConfigs = [];
     const lines = data.split("\n");
-    let currentConfig = null;
+    let currentConfig = {};
 
     lines.forEach((line) => {
-      if (line.endsWith(":")) {
-        if (currentConfig) parsedConfigs.push(currentConfig);
-        const regex = /-(?=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/;
-        const parts = line.slice(0, -1).split(regex);
-        currentConfig = {
-          configName: parts.slice(0, -1).join("-"),
-          configId: parts[parts.length - 1],
-          serviceIds: [],
-        };
+      // Check for UUID line indicating the start of a new config
+      if (line.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:$/)) {
+        if (Object.keys(currentConfig).length) parsedConfigs.push(currentConfig);
+        currentConfig = { configId: line.slice(0, -1), serviceIds: [] }; // Remove ':' at the end
+      } else if (line.includes("name:")) {
+        currentConfig.name = line.split(":")[1].trim().replace(/"/g, ""); // Remove quotes and trim
+      } else if (line.includes("network:")) {
+        currentConfig.network = line.split(":")[1].trim().replace(/"/g, ""); // Remove quotes and trim
+      } else if (line.includes("color:")) {
+        // Handling color similarly
+        currentConfig.color = line.split(":")[1].trim().replace(/"/g, ""); // Remove quotes and trim
       } else if (line.trim().startsWith("-")) {
-        currentConfig.serviceIds.push(line.trim().slice(2));
+        currentConfig.serviceIds.push(line.trim().slice(2)); // Assuming service IDs don't need quotes removed
       }
     });
 
-    if (currentConfig) parsedConfigs.push(currentConfig);
+    // Add the last config if exists
+    if (Object.keys(currentConfig).length) parsedConfigs.push(currentConfig);
+
     return parsedConfigs;
   };
 
   const getAllConfigs = () => {
     return configs.value.map((config) => ({
-      configId: config.configId,
-      configName: config.configName,
+      setupId: config.configId,
+      setupName: config.name,
+      network: config.network,
       color: config.color,
       services: services.value.filter((service) => config.serviceIds.includes(service.id)),
     }));

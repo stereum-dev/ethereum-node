@@ -68,7 +68,7 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const router = useRouter();
 const footerStore = useFooter();
-const configStore = useConfigs();
+const setupStore = useConfigs();
 const { loadConfigs, loadServices, getAllConfigs } = useMultiConfigs();
 
 const expertModeClient = ref(null);
@@ -136,10 +136,10 @@ onUnmounted(() => {
 const getConfigsData = async () => {
   await loadConfigs(); // Load configs first
   await loadServices(); // Then, load services
-  configStore.allConfigs = getAllConfigs(); // Get combined configs
+  setupStore.allSetups = getAllConfigs(); // Get combined configs
 };
 
-console.log("All Configs", configStore.allConfigs);
+console.log("All Configs", setupStore.allSetups);
 
 const alarmToggle = () => {
   nodeStore.infoAlarm = !nodeStore.infoAlarm;
