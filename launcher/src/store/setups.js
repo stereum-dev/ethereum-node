@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 
-export const useConfigs = defineStore("multiConfigs", {
+export const useSetups = defineStore("setups", {
   state: () => {
     return {
       //Configs
       allSetups: [],
+      isServerViewActive: false,
       selectedSetup: null,
     };
   },

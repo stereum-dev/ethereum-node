@@ -1,11 +1,11 @@
 import ControlService from "@/store/ControlService";
 import { ref } from "vue";
 
-export const useMultiConfigs = () => {
+export const useMultiSetups = () => {
   const configs = ref([]);
   const services = ref([]);
 
-  const loadConfigs = async () => {
+  const loadSetups = async () => {
     try {
       const data = await ControlService.readMultiConfigYaml();
       configs.value = parseYAMLData(data);
@@ -50,15 +50,19 @@ export const useMultiConfigs = () => {
     return parsedConfigs;
   };
 
-  const getAllConfigs = () => {
-    return configs.value.map((config) => ({
+  const getAllSetups = () => {
+    let setups = [];
+    setups = configs.value.map((config) => ({
       setupId: config.configId,
       setupName: config.name,
       network: config.network,
       color: config.color,
       services: services.value.filter((service) => config.serviceIds.includes(service.id)),
     }));
-  };
 
-  return { loadConfigs, loadServices, getAllConfigs };
+    return setups;
+  };
+  console.log("Composable Configs", configs.value);
+
+  return { loadSetups, loadServices, getAllSetups };
 };

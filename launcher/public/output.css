@@ -1620,6 +1620,10 @@ video {
   height: 1.25rem;
 }
 
+.h-52{
+  height: 13rem;
+}
+
 .h-6{
   height: 1.5rem;
 }
@@ -2082,6 +2086,10 @@ video {
   width: 2rem;
 }
 
+.w-80{
+  width: 20rem;
+}
+
 .w-9{
   width: 2.25rem;
 }
@@ -2214,6 +2222,14 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-1{
+  width: 0.25rem;
+}
+
+.w-\[1px\]{
+  width: 1px;
 }
 
 .min-w-\[100px\]{
@@ -2449,6 +2465,10 @@ video {
 .auto-rows-max{
   grid-auto-rows: -webkit-max-content;
   grid-auto-rows: max-content;
+}
+
+.auto-rows-fr{
+  grid-auto-rows: minmax(0, 1fr);
 }
 
 .grid-cols-1{
@@ -2739,6 +2759,12 @@ video {
   --tw-divide-y-reverse: 0;
   border-top-width: calc(2px * calc(1 - var(--tw-divide-y-reverse)));
   border-bottom-width: calc(2px * var(--tw-divide-y-reverse));
+}
+
+.divide-x-2 > :not([hidden]) ~ :not([hidden]){
+  --tw-divide-x-reverse: 0;
+  border-right-width: calc(2px * var(--tw-divide-x-reverse));
+  border-left-width: calc(2px * calc(1 - var(--tw-divide-x-reverse)));
 }
 
 .divide-gray-300 > :not([hidden]) ~ :not([hidden]){

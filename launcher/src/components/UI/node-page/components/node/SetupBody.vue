@@ -1,25 +1,61 @@
 <template>
-  <div
-    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-y-auto mt-1 bg-[#151618] relative"
-  >
+  <div class="w-full h-full max-h-full rounded-md grid grid-cols-24 grid-rows-12">
     <div
-      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
+      class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px]"
     ></div>
-    <div class="w-full h-full grid grid-cols-3 pt-8">
-      <ClientSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
+    <div
+      class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 auto-rows-fr scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
+    >
+      <ClientSkeleton v-for="i in skeletonRunning" :key="i" />
+      <SingleSetup v-for="setup in setupsRunning" :key="setup.name" :setup="setup" />
     </div>
   </div>
 </template>
 
 <script setup>
 import ClientSkeleton from "./clients/ClientSkeleton.vue";
-import { ref } from "vue";
-import { useConfigs } from "@/store/multiConfigs";
+import SingleSetup from "./setups/SingleSetup.vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useSetups } from "@/store/setups";
 
-const configStore = useConfigs();
+const setupStore = useSetups();
 const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-console.log(configStore.configs);
+const loadingSetupSkeleton = ref(false);
 
-const loadingClients = ref(true);
+watch(
+  () => setupStore.allSetups.length,
+  () => {
+    if (setupStore.allSetups.length > 0) {
+      setTimeout(() => {
+        loadingSetupSkeleton.value = false;
+        setupStore.isServerViewActive = true;
+      }, 3000);
+    } else {
+      loadingSetupSkeleton.value = true;
+    }
+  }
+);
+
+const skeletonRunning = computed(() => {
+  let items = [];
+
+  if (loadingSetupSkeleton.value && !setupStore.isServerViewActive) {
+    items = skeletons.value;
+  }
+  return items;
+});
+
+const setupsRunning = computed(() => {
+  let items = [];
+
+  if (!loadingSetupSkeleton.value && setupStore.isServerViewActive) {
+    items = setupStore.allSetups;
+  }
+  return items;
+});
+
+onMounted(() => {
+  loadingSetupSkeleton.value = true;
+});
 </script>

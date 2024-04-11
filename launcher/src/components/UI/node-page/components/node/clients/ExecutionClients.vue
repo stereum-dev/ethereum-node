@@ -38,8 +38,8 @@
 </template>
 
 <script setup>
-import PrunningModal from "../modals/PrunningModal.vue";
-import ResyncModal from "../modals/ResyncModal.vue";
+import PrunningModal from "../../modals/PrunningModal.vue";
+import ResyncModal from "../../modals/ResyncModal.vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";

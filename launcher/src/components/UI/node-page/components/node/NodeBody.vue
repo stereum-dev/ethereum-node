@@ -1,15 +1,17 @@
-<!-- eslint-disable vue/return-in-computed-property -->
-import { mapState, map } from 'pinia';
 <template>
   <div
-    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-y-auto mt-1 bg-[#151618] relative"
+    class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center relative"
   >
-    <ConfigBody />
+    <SetupBody />
+    <!-- <ConfigBody v-else /> -->
     <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
   </div>
 </template>
 
 <script setup>
+import ConfigBody from "./ConfigBody.vue";
+import SetupBody from "./SetupBody.vue";
+import PluginLogs from "../../sections/PluginLogs.vue";
 import { ref, watchEffect } from "vue";
 
 import { useNodeStore } from "@/store/theNode";
@@ -18,6 +20,7 @@ import ControlService from "@/store/ControlService";
 
 import LeaderLine from "leader-line-new";
 import { useStateHandler, useRestartService } from "@/composables/services";
+import { useSetups } from "@/store/setups";
 
 const emit = defineEmits(["openExpert", "openLog"]);
 
@@ -30,6 +33,7 @@ const loadingClients = ref(false);
 const isLineDrawHandlerReady = ref(false);
 
 // Store and router
+const setupStore = useSetups();
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 

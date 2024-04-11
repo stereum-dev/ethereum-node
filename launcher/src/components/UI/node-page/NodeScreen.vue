@@ -54,11 +54,11 @@ import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
-import { useMultiConfigs } from "../../../composables/multiConfigs";
+import { useMultiSetups } from "../../../composables/multiSetups";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
-import { useConfigs } from "@/store/setups";
+import { useSetups } from "@/store/setups";
 import { saveAs } from "file-saver";
 
 //*****************  Store & Refs *****************
@@ -68,8 +68,8 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const router = useRouter();
 const footerStore = useFooter();
-const setupStore = useConfigs();
-const { loadConfigs, loadServices, getAllConfigs } = useMultiConfigs();
+const setupStore = useSetups();
+const { loadSetups, loadServices, getAllSetups } = useMultiSetups();
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
@@ -101,6 +101,7 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
+  console.log("All Configs", setupStore.allSetups);
   if (refreshStats.value) {
     updateConnectionStats();
     refreshStats.value = false;
@@ -108,8 +109,8 @@ watchEffect(() => {
 });
 
 //*****************  Lifecycle Hooks *****************
-onMounted(async () => {
-  getConfigsData();
+onMounted(() => {
+  getSetupDatas();
   setTimeout(() => {
     refreshStats.value = true;
   }, 2000);
@@ -133,13 +134,11 @@ onUnmounted(() => {
 //*************  Methods *************
 
 //get all configs and services
-const getConfigsData = async () => {
-  await loadConfigs(); // Load configs first
+const getSetupDatas = async () => {
+  await loadSetups(); // Load configs first
   await loadServices(); // Then, load services
-  setupStore.allSetups = getAllConfigs(); // Get combined configs
+  setupStore.allSetups = getAllSetups(); // Get combined configs
 };
-
-console.log("All Configs", setupStore.allSetups);
 
 const alarmToggle = () => {
   nodeStore.infoAlarm = !nodeStore.infoAlarm;

@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import ResyncModal from "../modals/ResyncModal.vue";
+import ResyncModal from "../../modals/ResyncModal.vue";
 import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
