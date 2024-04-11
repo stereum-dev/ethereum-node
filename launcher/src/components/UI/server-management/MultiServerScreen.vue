@@ -63,7 +63,7 @@ let loginAbortController = new AbortController();
 console.log("Server Management Screen", loginAbortController);
 const serverBodyComponentKey = ref(0);
 //launcher updater
-const louncherUpdater = ref(true);
+const louncherUpdater = ref(false);
 //available version for the launcher updater
 const availableVersion = "dummy version";
 
