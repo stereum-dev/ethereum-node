@@ -276,6 +276,7 @@ const switchClientConfirm = (properties) => {
         installDir: "/opt/stereum",
         executionClients: [],
         consensusClients: [],
+        otherServices: [],
         checkpointURL: properties.checkPointSyncUrl ? properties.checkPointSyncUrl : false,
       },
     },
@@ -298,6 +299,7 @@ const confirmModifyingService = (item) => {
     data: {
       executionClients: item.executionClients,
       consensusClients: item.consensusClients,
+      otherServices: item.otherServices,
     },
   });
   manageStore.isLineHidden = false;
@@ -450,6 +452,7 @@ const addServiceHandler = (item) => {
     installDir: item.installDir || "/opt/stereum",
     executionClients: item.executionClients,
     consensusClients: item.consensusClients,
+    otherServices: item.otherServices,
     relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
     checkpointURL: item.checkPointSyncUrl || false,
     //CustomService Attributes
