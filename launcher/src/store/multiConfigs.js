@@ -4,7 +4,7 @@ export const useConfigs = defineStore("multiConfigs", {
   state: () => {
     return {
       //Configs
-      configs: [],
+      allConfigs: [],
       selectedConfig: null,
     };
   },

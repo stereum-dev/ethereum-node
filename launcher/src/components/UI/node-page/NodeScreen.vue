@@ -58,7 +58,18 @@ import { useMultiConfigs } from "../../../composables/multiConfigs";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
+import { useConfigs } from "@/store/multiConfigs";
 import { saveAs } from "file-saver";
+
+//*****************  Store & Refs *****************
+const nodeStore = useNodeStore();
+const headerStore = useNodeHeader();
+const serviceStore = useServices();
+const controlStore = useControlStore();
+const router = useRouter();
+const footerStore = useFooter();
+const configStore = useConfigs();
+const { loadConfigs, loadServices, getAllConfigs } = useMultiConfigs();
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
@@ -70,15 +81,7 @@ let pollingVitals = null;
 let pollingNodeStats = null;
 let pollingListingKeys = null;
 
-const nodeStore = useNodeStore();
-const headerStore = useNodeHeader();
-const serviceStore = useServices();
-const controlStore = useControlStore();
-const router = useRouter();
-const footerStore = useFooter();
-const { loadConfigs, getAllServices } = useMultiConfigs();
-
-//Computed & Watchers
+//*****************  Watchers *****************
 
 watchEffect(() => {
   if (router.currentRoute.value.path !== "/node") {
@@ -104,10 +107,9 @@ watchEffect(() => {
   }
 });
 
-//Lifecycle Hooks
-onMounted(() => {
-  loadConfigs();
-  getAllServices();
+//*****************  Lifecycle Hooks *****************
+onMounted(async () => {
+  getConfigsData();
   setTimeout(() => {
     refreshStats.value = true;
   }, 2000);
@@ -128,7 +130,16 @@ onUnmounted(() => {
   clearInterval(pollingListingKeys);
 });
 
-//Methods
+//*************  Methods *************
+
+//get all configs and services
+const getConfigsData = async () => {
+  await loadConfigs(); // Load configs first
+  await loadServices(); // Then, load services
+  configStore.allConfigs = getAllConfigs(); // Get combined configs
+};
+
+console.log("All Configs", configStore.allConfigs);
 
 const alarmToggle = () => {
   nodeStore.infoAlarm = !nodeStore.infoAlarm;

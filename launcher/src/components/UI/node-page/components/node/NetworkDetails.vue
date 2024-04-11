@@ -1,4 +1,3 @@
-import { useNodeManage } from '@/store/nodeManage';
 <template>
   <div
     class="col-start-7 col-span-3 flex flex-col justify-between items-center bg-[#151618] border h-full border-gray-600 rounded-md px-2 py-1"
