@@ -375,9 +375,16 @@ export class OneClickInstall {
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
-      let yamlStr = yaml
-        .safeDump({ ["eth-" + this.network + "-" + uuid.v4()]: configs.map((config) => config.id) })
-        .replace(/`/g, "\\`");
+      let configObject = {
+        [uuid.v4()]: {
+          name: "config1",
+          network: this.network,
+          color: "default",
+          services: configs.map((config) => config.id),
+        },
+      };
+
+      let yamlStr = yaml.safeDump(configObject).replace(/`/g, "\\`");
       await this.nodeConnection.sshService.exec(`echo -e "${yamlStr}" > /etc/stereum/multiconfig.yaml`);
       return configs;
     }
