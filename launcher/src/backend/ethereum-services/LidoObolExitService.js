@@ -55,7 +55,7 @@ export class LidoObolExitService extends NodeService {
       null, // env
       ports, // ports
       volumes, // volumes
-      null, // user
+      "root", // user
       network, // network
       [], // executionClients
       consensusClients[0] ? [consensusClients[0]] : [], // consensusClients
