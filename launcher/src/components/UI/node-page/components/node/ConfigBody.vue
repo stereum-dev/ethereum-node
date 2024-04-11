@@ -48,11 +48,11 @@
 </template>
 
 <script setup>
-import ExecutionClients from "./ExecutionClients.vue";
-import ConsensusClients from "./ConsensusClients.vue";
-import ValidatorClients from "./ValidatorClients.vue";
+import ExecutionClients from "./clients/ExecutionClients.vue";
+import ConsensusClients from "./clients/ConsensusClients.vue";
+import ValidatorClients from "./clients/ValidatorClients.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
-import ClientSkeleton from "./ClientSkeleton.vue";
+import ClientSkeleton from "./clients/ClientSkeleton.vue";
 
 import { ref, watchEffect } from "vue";
 

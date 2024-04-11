@@ -8,6 +8,7 @@ export const useMultiConfigs = () => {
   const loadConfigs = async () => {
     try {
       const data = await ControlService.readMultiConfigYaml();
+      console.log("data", data);
       configs.value = parseYAMLData(data);
     } catch (e) {
       console.error("Couldn't read multi config yaml", e);
@@ -50,6 +51,7 @@ export const useMultiConfigs = () => {
     return configs.value.map((config) => ({
       configId: config.configId,
       configName: config.configName,
+      color: config.color,
       services: services.value.filter((service) => config.serviceIds.includes(service.id)),
     }));
   };

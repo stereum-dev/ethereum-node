@@ -58,7 +58,7 @@ import { useMultiConfigs } from "../../../composables/multiConfigs";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
-import { useConfigs } from "@/store/multiConfigs";
+import { useConfigs } from "@/store/setups";
 import { saveAs } from "file-saver";
 
 //*****************  Store & Refs *****************
