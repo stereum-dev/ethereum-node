@@ -102,6 +102,13 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/one-click-icons/preset-icons/archive-preset.png",
           includedPlugins: [],
         },
+        {
+          id: 6,
+          name: "lidoobol",
+          defaultPath: "/opt/stereum",
+          icon: "/img/icon/one-click-icons/preset-icons/obol-charon-preset.png",
+          includedPlugins: [],
+        },
       ],
       services: [
         {
