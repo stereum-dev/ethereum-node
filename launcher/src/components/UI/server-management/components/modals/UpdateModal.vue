@@ -30,8 +30,8 @@
 
 <script setup>
 import CustomModal from "../../../node-page/components/modals/CustomModal.vue";
-import i18n from "@/includes/i18n";
-const t = i18n.global.t;
+// import i18n from "@/includes/i18n";
+// const t = i18n.global.t;
 defineProps({
   version: String,
 });
