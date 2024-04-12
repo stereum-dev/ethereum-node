@@ -316,7 +316,12 @@ const buttonDisabled = computed(() => {
     ipError.value.length > 0 ||
     usernameError.value.length > 0 ||
     (useSSHKey.value && sshError.value.length > 0) ||
-    (!useSSHKey.value && passwordError.value.length > 0)
+
+    (!useSSHKey.value && passwordError.value.length > 0) ||
+    serverStore.loginState.hostName === "" ||
+    serverStore.loginState.ip === "" ||
+    serverStore.loginState.username === ""
+
   );
 });
 
