@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include switch_repos"
+      include_role:
+        name: "switch_repos"

@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # wait for server to come back online
+  - pause:
+      seconds: 30
+
+  # check for updates
+  - name: list available updates
+    command: apt list --upgradable
+    register: os_update_list
+    become: yes
+  - debug:
+      msg: "{{ os_update_list }}"
+  - name: check os update
+    assert:
+      that:
+        - os_update_list.stdout_lines | length == 1
+        - os_update_list.stdout_lines[0] is match("Listing*")
+
+# EOF
