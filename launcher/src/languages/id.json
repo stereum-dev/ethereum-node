@@ -908,5 +908,18 @@
     "logOutBtn": "Logout",
     "chooseInstallNode": "Pada langkah ini Anda memilih bagaimana Anda ingin menginstal node Anda. Untuk pemula, kami menyarankan opsi Instalasi Satu Klik!",
     "welcomeStereum": "Selamat Datang di Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

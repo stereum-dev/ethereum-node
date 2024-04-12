@@ -908,5 +908,18 @@
     "logOutBtn": "লগ আউট",
     "chooseInstallNode": "এই ধাপে আপনি আপনার নোড কীভাবে ইনস্টল করতে চান তা নির্বাচন করেন। শুরুকারীদের জন্য আমরা ওয়ান ক্লিক ইনস্টলেশন অপশনটি সুপারিশ করি!",
     "welcomeStereum": "স্টেরিয়ামে স্বাগতম"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

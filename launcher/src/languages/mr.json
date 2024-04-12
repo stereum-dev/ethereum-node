@@ -908,5 +908,18 @@
     "logOutBtn": "लॉग आउट",
     "chooseInstallNode": "या चरणात तुम्ही तुमचा नोड कसा स्थापित करू इच्छिता ते निवडता. सुरुवातीसाठी आम्ही एका क्लिक स्थापना पर्यायाची शिफारस करतो!",
     "welcomeStereum": "स्टेरियममध्ये आपले स्वागत आहे"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

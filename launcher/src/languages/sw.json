@@ -908,5 +908,18 @@
     "logOutBtn": "Ondoka",
     "chooseInstallNode": "Katika hatua hii chagua jinsi unavyotaka kusakinisha nodi yako. Kwa wanaoanza tunapendekeza chaguo la Usakinishaji wa Bonyeza Moja!",
     "welcomeStereum": "Karibu kwa Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }
