@@ -263,6 +263,24 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args));
     }
 
+    if (constellation.includes("ValidatorEjectorService")) {
+      //ValidatorEjectorService
+      this.extraServices.push(this.serviceManager.getService("ValidatorEjectorService", {
+        ...args,
+        consensusClients: [this.beaconService],
+        executionClients: [this.executionClient],
+      }));
+    }
+
+    if (constellation.includes("LidoObolExitService")) {
+      //LidoObolExitService
+      this.extraServices.push(this.serviceManager.getService("LidoObolExitService", {
+        ...args,
+        consensusClients: [this.beaconService].concat(this.extraServices.filter((s) => s.service === "CharonService")),
+        otherServices: this.extraServices.filter((s) => s.service === "ValidatorEjectorService"),
+      }));
+    }
+
     this.handleArchiveTags(selectedPreset);
 
 
@@ -452,6 +470,17 @@ export class OneClickInstall {
         break;
       case "archive":
         break;
+      case "lidoobol":
+        services = [
+          "NethermindService",
+          "LighthouseBeaconService",
+          "LodestarValidatorService",
+          "GrafanaService",
+          "PrometheusNodeExporterService",
+          "PrometheusService",
+          "NotificationService",
+        ];
+        services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService");
     }
     return services;
   }

@@ -152,7 +152,7 @@ const updateConnectionStats = async () => {
 };
 const updateServiceLogs = async () => {
   if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
-    const data = await ControlService.getServiceLogs();
+    const data = await ControlService.getServiceLogs({ logs_tail: 150 });
     nodeStore.serviceLogs = data;
   }
 };

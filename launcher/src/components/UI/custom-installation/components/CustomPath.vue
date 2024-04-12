@@ -118,7 +118,7 @@ watch(userSelectedPath, (newValue) => {
 });
 
 watchEffect(() => {
-  if (userSelectedPath.value === "") {
+  if (userSelectedPath.value === "" || !selectedNetworkName.value) {
     nextBtnDisabled.value = true;
   } else {
     nextBtnDisabled.value = false;
@@ -144,7 +144,7 @@ const selectNetwork = (network) => {
   selectedNetworkName.value = network.name;
   manageStore.currentNetwork = network;
   displayItem.value = network;
-  nextBtnDisabled.value = true;
+  nextBtnDisabled.value = false;
   networkListDropdown.value = false;
 };
 
