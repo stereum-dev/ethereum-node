@@ -908,5 +908,18 @@
     "logOutBtn": "Sair",
     "chooseInstallNode": "Nesta etapa você escolhe como quer instalar seu nó. Para iniciantes, recomendamos a opção de Instalação com Um Clique!",
     "welcomeStereum": "Bem-vindo ao Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

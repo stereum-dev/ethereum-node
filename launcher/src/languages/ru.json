@@ -908,5 +908,18 @@
     "logOutBtn": "Выйти",
     "chooseInstallNode": "На этом этапе вы выбираете, как вы хотите установить свой узел. Для начинающих мы рекомендуем опцию Установки в один клик!",
     "welcomeStereum": "Добро пожаловать в Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

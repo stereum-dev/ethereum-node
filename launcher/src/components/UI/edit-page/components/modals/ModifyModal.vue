@@ -32,6 +32,7 @@ const properties = ref({
   client: props.client,
   executionClients: [],
   consensusClients: [],
+  otherServices: [],
 });
 
 const emit = defineEmits(["closeWindow", "confirmModify"]);

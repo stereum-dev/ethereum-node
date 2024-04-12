@@ -908,5 +908,18 @@
     "logOutBtn": "Đăng xuất",
     "chooseInstallNode": "Trong bước này bạn chọn cách bạn muốn cài đặt node của mình. Đối với người mới bắt đầu, chúng tôi khuyên dùng tùy chọn Cài đặt Một Cú Nhấp Chuột!",
     "welcomeStereum": "Chào mừng đến với Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

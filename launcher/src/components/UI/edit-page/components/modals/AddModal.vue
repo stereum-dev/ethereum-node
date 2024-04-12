@@ -49,6 +49,7 @@ const properties = ref({
   installDir: "/opt/stereum",
   executionClients: [],
   consensusClients: [],
+  otherServices: [],
   relays: [],
   checkPointSyncUrl: null,
 });
@@ -64,7 +65,8 @@ const getConfirmText = computed(() => {
       text = "confirm";
     } else if (
       props.client.category === "consensus" ||
-      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service))
+      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service)) ||
+      /LidoObolExit|ValidatorEjector/.test(props.client.service)
     ) {
       text = "next";
     } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
@@ -123,7 +125,8 @@ const confirmInstall = () => {
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||
-    (props.client.category === "validator" && getConfirmText.value === "next")
+    (props.client.category === "validator" && getConfirmText.value === "next") ||
+    /LidoObolExit|ValidatorEjector/.test(props.client.service)
   ) {
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;
