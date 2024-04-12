@@ -1,4 +1,4 @@
-![Gitcoin_Stereum_Banner](https://github.com/stereum-dev/ethereum-node/assets/82385103/66a46c61-3a99-4d06-be05-97e79b3480e5)
+![hero](https://github.com/stereum-dev/ethereum-node/assets/82385103/43703351-bee7-4f18-883c-6bc2d8a5e8ef)
 
 
 ---
