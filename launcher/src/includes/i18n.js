@@ -18,28 +18,46 @@ import tr from "../languages/tr.json";
 import zh from "../languages/zh.json";
 import cs from "../languages/cs.json";
 import vi from "../languages/vi.json";
+import bn from "../languages/bn.json";
+import hi from "../languages/hi.json";
+import id from "../languages/id.json";
+import ko from "../languages/ko.json";
+import mr from "../languages/mr.json";
+import sw from "../languages/sw.json";
+import ta from "../languages/ta.json";
+import te from "../languages/te.json";
+import ur from "../languages/ur.json";
 
 const i18n = createI18n({
   locale: "en", //focus lang
   messages: {
-    ar,
-    bg,
-    de,
-    en,
-    es,
-    fa,
-    fr,
-    it,
-    ja,
-    mn,
-    nl,
-    pt,
-    ru,
-    sr,
-    tr,
-    zh,
-    cs,
-    vi,
+    ar, //arabic
+    bg, //bulgarian
+    de, //german
+    en, //english
+    es, //spanish
+    fa, //persian
+    fr, //french
+    it, //italian
+    ja, //japanese
+    mn, //mongolian
+    nl, //dutch
+    pt, //portuguese
+    ru, //russian
+    sr, //serbian
+    tr, //turkish
+    zh, //chinese
+    cs, //czech
+    vi, //vietnamese
+    bn, //bengali
+    hi, //hindi
+    id, //indonesian
+    ko, //korean
+    mr, //marathi
+    sw, //swahili
+    ta, //tamil
+    te, //telugu
+    ur, //urdu
   },
 });
 export default i18n;
