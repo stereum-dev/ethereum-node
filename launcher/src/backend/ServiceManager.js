@@ -1840,4 +1840,3 @@ export class ServiceManager {
     return jwtContent.stdout;
   }
 }
-

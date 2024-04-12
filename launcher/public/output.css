@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -217,8 +217,6 @@ textarea {
   /* 1 */
   line-height: inherit;
   /* 1 */
-  letter-spacing: inherit;
-  /* 1 */
   color: inherit;
   /* 1 */
   margin: 0;
@@ -242,9 +240,9 @@ select {
 */
 
 button,
-input:where([type='button']),
-input:where([type='reset']),
-input:where([type='submit']) {
+[type='button'],
+[type='reset'],
+[type='submit'] {
   -webkit-appearance: button;
   /* 1 */
   background-color: transparent;
@@ -526,10 +524,6 @@ video {
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
-  --tw-contain-size:  ;
-  --tw-contain-layout:  ;
-  --tw-contain-paint:  ;
-  --tw-contain-style:  ;
 }
 
 ::-ms-backdrop{
@@ -580,10 +574,6 @@ video {
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
-  --tw-contain-size:  ;
-  --tw-contain-layout:  ;
-  --tw-contain-paint:  ;
-  --tw-contain-style:  ;
 }
 
 ::backdrop{
@@ -634,10 +624,6 @@ video {
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
-  --tw-contain-size:  ;
-  --tw-contain-layout:  ;
-  --tw-contain-paint:  ;
-  --tw-contain-style:  ;
 }
 
 ::-webkit-scrollbar {
@@ -771,6 +757,10 @@ video {
   bottom: -2rem;
 }
 
+.-left-12{
+  left: -3rem;
+}
+
 .-left-\[1px\]{
   left: -1px;
 }
@@ -801,6 +791,10 @@ video {
 
 .-top-20{
   top: -5rem;
+}
+
+.-top-7{
+  top: -1.75rem;
 }
 
 .-top-8{
@@ -885,6 +879,10 @@ video {
 
 .left-32{
   left: 8rem;
+}
+
+.left-4{
+  left: 1rem;
 }
 
 .left-\[1\.3rem\]{
@@ -3310,6 +3308,11 @@ video {
   background-color: rgb(22 23 23 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#16181b\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 24 27 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#171D22\]{
   --tw-bg-opacity: 1;
   background-color: rgb(23 29 34 / var(--tw-bg-opacity));
@@ -3368,6 +3371,11 @@ video {
 .bg-\[\#1b1d1f\]{
   --tw-bg-opacity: 1;
   background-color: rgb(27 29 31 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#1b1d20\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(27 29 32 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#1b3231\]{
