@@ -10,16 +10,11 @@
     <div
       class="obol-modal-plugin_spaceWindow"
       :style="{
-        backgroundImage:
-          backupDistributedValidator || distributedCompleted
-            ? distrubutedValidatorAnimation
-            : '',
+        backgroundImage: backupDistributedValidator || distributedCompleted ? distrubutedValidatorAnimation : '',
       }"
     >
       <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
-        <span v-if="!headerStore.distrubutedValidatorGenerator">{{
-          headerStore.generatedENR
-        }}</span>
+        <span v-if="!headerStore.distrubutedValidatorGenerator">{{ headerStore.generatedENR }}</span>
         <div v-else class="span-wrapper">
           <span v-for="item in dkgLogs" :key="item">{{ item }}</span>
         </div>
@@ -64,9 +59,7 @@ const enrGeneratedSuccess = ref(false);
 const enrGeneratedFailed = ref(false);
 const enrGeneratedContinue = ref(false);
 const backupDistributedValidator = ref(false);
-const distrubutedValidatorAnimation = ref(
-  "url('./animation/services/obol/obol-animation.gif')"
-);
+const distrubutedValidatorAnimation = ref("url('./animation/services/obol/obol-animation.gif')");
 const distributedCompleted = ref(false);
 const polling = ref(null);
 const dkgLogs = ref([]);
@@ -232,7 +225,7 @@ const btnHandling = async () => {
     backupDistributedValidator.value = true;
     headerStore.distrubutedValidatorGenerator = false;
     distributedCompleted.value = true;
-  } else if (enrBtnToShow.value === "COMPLETE") {
+  } else if (enrBtnToShow.value === "COMPLETE" || enrBtnToShow.value === "BACKUP") {
     if (!backupPath.value || backupPath.value === "") {
       //check if user has selected a path
       openDirectoryPicker(); // if not prompt selection again
