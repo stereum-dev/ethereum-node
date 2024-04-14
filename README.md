@@ -29,9 +29,14 @@ After installing the launcher start it up and connect to a server of your choice
 Want to get involved? Create a pull request and we'll have a look at it!
 
 - [Contribution Guidelines](launcher/CONTRIBUTING.md)
-- Our Art is provided by [ProudHands](https://www.instagram.com/proud_hands/) 
 
 Not sure how to help or where to start? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email to [stereum@stereum.net](mailto:stereum@stereum.net).
+
+## Credits
+
+- Core Contributors
+   - [RockLogic Team](https://rocklogic.at/)
+- Art is provided by [ProudHands](https://www.instagram.com/proud_hands/) 
 
 ### Tech Stack
 
