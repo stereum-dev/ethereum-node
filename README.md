@@ -32,11 +32,9 @@ Want to get involved? Create a pull request and we'll have a look at it!
 
 Not sure how to help or where to start? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email to [stereum@stereum.net](mailto:stereum@stereum.net).
 
-## Credits
+![ProudHands Contribution Banner](https://github.com/stereum-dev/ethereum-node/assets/82385103/eb944b0d-6a45-4dda-a0e4-f0f9754d3659)
 
-- Core Contributors
-   - [RockLogic Team](https://rocklogic.at/)
-- Art is provided by [ProudHands](https://www.instagram.com/proud_hands/) 
+
 
 ### Tech Stack
 
