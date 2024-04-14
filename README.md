@@ -68,9 +68,4 @@ For development, automated tests running for each commit.
 
 
 
-
-## Credits
-
-
-
   
