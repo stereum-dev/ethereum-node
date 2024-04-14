@@ -28,6 +28,12 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
+    <UpdateModal
+      v-if="louncherUpdater"
+      :version="availableVersion"
+      @update="updateModalHandler"
+      @close-window="closeUpdateModale"
+    />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
   </div>
 </template>
@@ -38,6 +44,7 @@ import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
 import SwitchAnimation from "./components/SwitchAnimation.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
+import UpdateModal from "./components/modals/UpdateModal.vue";
 
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
@@ -55,6 +62,10 @@ const keyLocation = ref("");
 let loginAbortController = new AbortController();
 console.log("Server Management Screen", loginAbortController);
 const serverBodyComponentKey = ref(0);
+//launcher updater
+const louncherUpdater = ref(false);
+//available version for the launcher updater
+const availableVersion = "dummy version";
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -99,6 +110,15 @@ onUnmounted(() => {
 });
 
 //Methods
+
+// update modal handler
+const updateModalHandler = () => {
+  console.log("Update acceptd");
+};
+
+const closeUpdateModale = () => {
+  louncherUpdater.value = false;
+};
 
 //Server Management Login Handler
 

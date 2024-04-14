@@ -1,64 +1,51 @@
 <template>
-  <div class="update-parent">
-    <div class="loading-icon">
-      <img src="/animation/launcher-update/update-loading.gif" />
+  <div class="update-parent rounded-lg w-full h-full flex flex-col justify-center items-center bg-[#336666]">
+    <div class="update-page-title w-full h-1/6 flex justify-center items-center text-gray-50 text-3xl font-semibold">
+      <span>Updating Stereum Launcher to {{ version }} </span>
     </div>
-    <div class="update-text">
-      <span>{{ `${updateState.message}${updateState.MBps ? " " + updateState.MBps.toFixed(2) + " MBps" : ""}` }}</span>
+    <div class="loading-icon w-full flex justify-center items-center h-3/6">
+      <img src="/animation/launcher-update/update-loading.gif" class="w-2/4 mt-40" />
     </div>
-    <div v-if="updateState.state === 'downloading'" id="progressbar">
-      <div :style="{ width: updateState.percent }"></div>
+
+    <div class="progressbar-box flex justify-center items-center w-full h-1/6">
+      <div v-if="updateState.state === 'downloading'" id="progressbar" class="w-full">
+        <div :style="{ width: updateState.percent }"></div>
+      </div>
+    </div>
+    <div class="update-text h-1/6 w-full flex justify-center items-center text-2xl text-gray-50 font-semibold">
+      <span>{{ `${updateState.message}${updateState.MBps ? "" + updateState.MBps.toFixed(2) + " MBps" : ""}` }}</span>
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import ControlService from "@/store/ControlService";
-export default {
-  data() {
-    return {
-      updateState: {
-        state: "",
-        message: "Starting Update...",
-      },
-    };
-  },
-  mounted() {
-    ControlService.addListener("UpdateEvents", this.updateHandler);
-  },
-  unmounted() {
-    ControlService.removeListener("UpdateEvents", this.updateHandler);
-  },
-  methods: {
-    updateHandler(event, data) {
-      this.updateState.MBps = data.data?.MBps;
-      this.updateState.percent = data.data?.percent + "%";
-      this.updateState.state = data.type;
-      this.updateState.message = data.message;
-    },
-  },
+import { ref, onMounted, onUnmounted } from "vue";
+
+const updateState = ref({
+  state: "",
+  message: "Starting Update...",
+  MBps: 0,
+  percent: "0%",
+});
+
+const version = "dummy version";
+
+onMounted(() => {
+  ControlService.addListener("UpdateEvents", updateHandler);
+});
+
+onUnmounted(() => {
+  ControlService.removeListener("UpdateEvents", updateHandler);
+});
+
+const updateHandler = (event, data) => {
+  updateState.value.MBps = data.data?.MBps;
+  updateState.value.percent = data.data?.percent + "%";
+  updateState.value.state = data.type;
+  updateState.value.message = data.message;
 };
 </script>
-<style>
-.update-parent {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: grey;
-}
-.loading-icon {
-  display: flex;
-  align-items: center;
-}
-.loading-icon img {
-  margin-top: -300px;
-  margin-bottom: -550px;
-}
-.update-text {
-  font-size: 30px;
-  font-weight: bold;
-}
+<style scoped>
 #progressbar {
   width: 80%;
   background-color: black;
