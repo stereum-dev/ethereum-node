@@ -908,5 +908,18 @@
     "logOutBtn": "Se déconnecter",
     "chooseInstallNode": "Dans cette étape, vous choisissez comment vous souhaitez installer votre nœud. Pour les débutants, nous recommandons l'option d'installation en un clic !",
     "welcomeStereum": "Bienvenue chez Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

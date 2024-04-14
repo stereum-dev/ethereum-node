@@ -908,5 +908,18 @@
     "logOutBtn": "登出",
     "chooseInstallNode": "在这一步，您选择如何安装您的节点。对于初学者，我们推荐使用一键安装选项！",
     "welcomeStereum": "欢迎使用Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

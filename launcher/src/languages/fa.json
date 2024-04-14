@@ -908,5 +908,18 @@
     "logOutBtn": "خروج",
     "chooseInstallNode": "در این مرحله، شما انتخاب می‌کنید که چگونه می‌خواهید نود خود را نصب کنید. برای مبتدیان، ما گزینه نصب با یک کلیک را توصیه می‌کنیم!",
     "welcomeStereum": "به استریوم خوش آمدید"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

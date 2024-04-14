@@ -1175,7 +1175,7 @@ export class ServiceManager {
   }
 
   updateInfoForDependencies(task, services, newServices, ELInstalls, CLInstalls, PInstalls) {
-    if (task.data.executionClients.length > 0) {
+    if (task.data.executionClients?.length > 0) {
       task.data.executionClients = task.data.executionClients.map((ec) => {
         let id = ec.config ? ec.config.serviceID : ec.id;
         if (id) {
@@ -1185,7 +1185,7 @@ export class ServiceManager {
         return newServices.find((s) => s.id === id);
       });
     }
-    if (task.data.consensusClients.length > 0) {
+    if (task.data.consensusClients?.length > 0) {
       task.data.consensusClients = task.data.consensusClients.map((cc) => {
         let id = cc.config ? cc.config.serviceID : cc.id;
         if (id) {
@@ -1195,7 +1195,7 @@ export class ServiceManager {
         return newServices.find((s) => s.id === id);
       });
     }
-    if (task.data.otherServices.length > 0) {
+    if (task.data.otherServices?.length > 0) {
       task.data.otherServices = task.data.otherServices.map((bc) => {
         let id = bc.config ? bc.config.serviceID : bc.id;
         if (id) {
