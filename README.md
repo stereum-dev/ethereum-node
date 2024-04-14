@@ -27,8 +27,6 @@ This repository contains the code and scripts for Stereum 2.0
 
 🍄 With Stereum, you can actively participate in the Ethereum network and engage with its diverse protocols such as the Lido SDVTM, SSV Network, MEV Boost, and more. Dive into the ecosystem and start benefiting from the decentralized technologies that Stereum facilitates.
 
-<br>
-
 
 ## Get Started
 
