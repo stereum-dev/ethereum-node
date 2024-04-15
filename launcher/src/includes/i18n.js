@@ -29,35 +29,36 @@ import te from "../languages/te.json";
 import ur from "../languages/ur.json";
 
 const i18n = createI18n({
+  legacy: false,
   locale: "en", //focus lang
   messages: {
-    ar, //arabic
-    bg, //bulgarian
-    de, //german
-    en, //english
-    es, //spanish
-    fa, //persian
-    fr, //french
-    it, //italian
-    ja, //japanese
-    mn, //mongolian
-    nl, //dutch
-    pt, //portuguese
-    ru, //russian
-    sr, //serbian
-    tr, //turkish
-    zh, //chinese
-    cs, //czech
-    vi, //vietnamese
-    bn, //bengali
-    hi, //hindi
-    id, //indonesian
-    ko, //korean
-    mr, //marathi
-    sw, //swahili
-    ta, //tamil
-    te, //telugu
-    ur, //urdu
+    ar,
+    bg,
+    de,
+    en,
+    es,
+    fa,
+    fr,
+    it,
+    ja,
+    mn,
+    nl,
+    pt,
+    ru,
+    sr,
+    tr,
+    zh,
+    cs,
+    vi,
+    bn,
+    hi,
+    id,
+    ko,
+    mr,
+    sw,
+    ta,
+    te,
+    ur,
   },
 });
 export default i18n;
