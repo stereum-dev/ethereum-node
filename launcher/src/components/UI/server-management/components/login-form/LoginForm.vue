@@ -32,21 +32,18 @@
           <img
             class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :src="getTrashImg"
-            alt=""
+            alt="Trash Icon"
             :class="removeButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
             @mousedown.prevent
-            @mouseenter="(hovered = true), (removeHovered = true)"
-            @mouseleave="(hovered = false), (removeHovered = false)"
+            @mouseenter="removeHovered = true"
+            @mouseleave="removeHovered = false"
             @click="removeServer"
           />
 
           <div
             v-if="removeHovered"
-            class="absolute -top-11 right-5 w-28 break-words rounded bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+            class="absolute -top-11 right-5 w-36 rounded-sm bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none capitalize"
           >
-            <span
-              class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
-            ></span>
             {{ $t("loginServer.removeServer") }}
           </div>
 
@@ -62,11 +59,8 @@
           />
           <div
             v-if="addHovered"
-            class="absolute -top-11 -right-5 w-28 rounded bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+            class="absolute -top-11 -right-5 w-28 rounded-sm uppercase bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
           >
-            <span
-              class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
-            ></span>
             {{ $t("multiServer.saveServer") }}
           </div>
         </div>
@@ -307,6 +301,7 @@ const router = useRouter();
 const { add } = useServerLogin();
 
 //Refs
+
 const serverNameError = ref("");
 const ipError = ref("");
 const usernameError = ref("");
@@ -314,7 +309,6 @@ const passwordError = ref("");
 const sshError = ref("");
 const message = ref("");
 const devices = ref([]);
-const hovered = ref(false);
 const removeHovered = ref(false);
 const addHovered = ref(false);
 const isFormValid = ref(false);
@@ -332,7 +326,7 @@ const buttonDisabled = computed(() => {
 });
 
 const getTrashImg = computed(() => {
-  if (hovered.value) {
+  if (removeHovered.value) {
     return "./img/icon/server-management-icons/trash-can-2.png";
   } else {
     return "./img/icon/server-management-icons/trash-can.png";
