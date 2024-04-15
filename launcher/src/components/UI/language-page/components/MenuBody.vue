@@ -49,6 +49,7 @@ import { EffectCoverflow, Mousewheel, Keyboard, Scrollbar, Thumbs } from "swiper
 import { useLangStore } from "@/store/languages";
 import ControlService from "@/store/ControlService";
 import { useRouter } from "vue-router";
+import i18n from "@/includes/i18n";
 
 const langStore = useLangStore();
 const router = useRouter();
@@ -99,6 +100,7 @@ const selectItem = async (lang, playSound = true) => {
   lang.isSelected = true;
   selectedLanguage.value = lang;
   langStore.setSelectedLang(lang.label);
+  i18n.global.locale.value = lang.label;
   await updateSettings(lang);
 };
 

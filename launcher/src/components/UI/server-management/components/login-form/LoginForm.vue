@@ -1,20 +1,28 @@
+import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch,
+watchEffect, onUnmounted } from 'vue';
 <template>
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
   >
-    <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
+    <div
+      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center"
+    >
       <span class="text-md font-semibold text-gray-300 uppercase">Login to server</span>
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
       @submit.prevent="internalLogin"
     >
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <label
           for="servername"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold"
           :class="serverNameError ? 'text-red-500' : 'text-gray-300'"
-          >{{ serverNameError ? serverNameError : `${$t("multiServer.serverName")}` }}</label
+          >{{
+            serverNameError ? serverNameError : `${$t("multiServer.serverName")}`
+          }}</label
         >
         <input
           id="servername"
@@ -65,7 +73,9 @@
           </div>
         </div>
       </div>
-      <div class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1">
+      <div
+        class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1"
+      >
         <label
           for="hostname"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
@@ -89,7 +99,7 @@
             class="w-6 h-6 col-start-11 col-span-full self-center p-[2px] cursor-pointer hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 justify-self-center"
             src="/img/icon/server-management-icons/local-lan.png"
             alt="Scanner Icon"
-            @click="IpScanner"
+            @click="IpScanLan1"
           />
           <span
             v-else
@@ -97,7 +107,9 @@
           ></span>
         </div>
       </div>
-      <div class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <label
           for="port"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
@@ -112,7 +124,9 @@
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
         />
       </div>
-      <div class="col-start-1 col-end-7 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        class="col-start-1 col-end-7 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <label
           for="username"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold mb-2"
@@ -129,7 +143,9 @@
           @change="validateForm"
         />
       </div>
-      <div class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <span
           class="w-full col-start-1 col-span-full row-start-1 row-span-1 text-gray-300 font-semibold text-xs ml-1 capitalize text-center"
           >{{ $t("formsetup.usessh") }}</span
@@ -137,7 +153,7 @@
 
         <label
           for="AcceptConditions"
-          class="col-start-6 col-end-9 row-start-2 row-span-full self-center relative h-6 w-12 cursor-pointer flex justify-center items-center"
+          class="col-start-6 col-end-9 row-start-2 row-span-full self-center relative h-6 w-12 cursor-pointer [-webkit-tap-highlight-color:_transparent] flex justify-center items-center"
         >
           <input
             id="AcceptConditions"
@@ -179,7 +195,9 @@
             </svg>
           </span>
 
-          <span class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"></span>
+          <span
+            class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"
+          ></span>
         </label>
       </div>
 
@@ -206,13 +224,20 @@
           for="keypath-file"
           class="h-8 col-start-12 col-span-full row-start-2 row-span-2 self-center w-full flex justify-center items-center cursor-pointer bg-gray-200 rounded-r-md"
         >
-          <div class="w-6 h-6 border-2 border-gray-400 rounded-full flex justify-center items-center">
+          <div
+            class="w-6 h-6 border-2 border-gray-400 rounded-full flex justify-center items-center"
+          >
             <span
               class="text-xl text-teal-700 text-center font-bold hover:scale-125 active:scale-100 transition-all duration-150 ease-in-out"
               >+</span
             >
           </div>
-          <input id="keypath-file" type="file" class="hidden" @change="handleFileSelect" />
+          <input
+            id="keypath-file"
+            type="file"
+            class="hidden"
+            @change="handleFileSelect"
+          />
         </label>
       </div>
       <div
@@ -253,14 +278,16 @@
         />
       </div>
 
-      <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
+      <div
+        class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center"
+      >
         <button
           v-if="!serverStore.connectingProcess"
-          class="w-full h-[50px] font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline transition-all ease-in-out duration-100 shadow-lg shadow-black text-md uppercase"
+          class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
           :class="
-            buttonDisabled
-              ? 'bg-gray-600 text-gray-200 cursor-not-allowed'
-              : 'bg-gray-300 hover:text-white hover:bg-teal-700 text-gray-800 active:scale-95 active:shadow-none'
+            serverStore.isIpScannerModalActive || buttonDisabled
+              ? 'bg-gray-400 opacity-50 pointer-events-none '
+              : 'bg-gray-200'
           "
           type="submit"
           :disabled="buttonDisabled"
@@ -285,19 +312,16 @@
 
 <script setup>
 import { computed, ref, onUnmounted, watchEffect, watch, onMounted } from "vue";
-import { useServers } from "@/store/servers";
-import { useRouter } from "vue-router";
-import ControlService from "@/store/ControlService";
-import { useServerLogin } from "@/composables/useLogin";
 
-//Props and Emits
+import { useServers } from "@/store/servers";
+import { useServerLogin } from "@/composables/useLogin";
+import ControlService from "@/store/ControlService";
+import { useRouter } from "vue-router";
+
 const emit = defineEmits(["serverLogin"]);
 
-//Stores
 const serverStore = useServers();
-const router = useRouter();
 
-//Composables
 const { add } = useServerLogin();
 
 //Refs
@@ -307,7 +331,6 @@ const ipError = ref("");
 const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
-const message = ref("");
 const devices = ref([]);
 const removeHovered = ref(false);
 const addHovered = ref(false);
@@ -330,6 +353,14 @@ const getTrashImg = computed(() => {
     return "./img/icon/server-management-icons/trash-can-2.png";
   } else {
     return "./img/icon/server-management-icons/trash-can.png";
+  }
+});
+
+const useSSHKey = computed(() => {
+  if (serverStore.loginState.useAuth) {
+    return true;
+  } else {
+    return false;
   }
 });
 
@@ -462,6 +493,21 @@ const toggleSSH = () => {
   }
 };
 
+// Lifecycle
+
+onUnmounted(() => {
+  serverStore.loginState.hostName = "";
+  serverStore.loginState.ip = "";
+  serverStore.loginState.port = "";
+  serverStore.loginState.username = "";
+  serverStore.loginState.useAuth = false;
+  serverStore.loginState.keyPath = "";
+  serverStore.loginState.password = "";
+  serverStore.loginState.passphrase = "";
+  serverStore.connectExistingServer = false;
+  serverStore.selectedServerToConnect = null;
+});
+
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
@@ -480,7 +526,6 @@ const IpScanner = async () => {
   serverStore.isIpScannerModalActive = true;
   try {
     let res = await ControlService.IpScanLan();
-    console.log(res);
     devices.value = res;
     if (devices.value.length > 0) {
       const ip = devices.value[0].ip;
@@ -490,9 +535,7 @@ const IpScanner = async () => {
       serverStore.isIpScannerModalActive = false;
     }
   } catch (error) {
-    console.error("An error occurred during IP scanning:", error);
-  } finally {
-    serverStore.isIpScannerModalActive = false;
+    console.error("An error occurred:", error);
   }
 };
 
