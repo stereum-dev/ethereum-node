@@ -7,7 +7,7 @@
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
-      @submit.prevent="onSubmit"
+      @submit.prevent="internalLogin"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
@@ -206,7 +206,7 @@
           placeholder="/user/.ssh/id_rsa"
           class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
-          @change="validateForm"
+          @change="validateSSHKeyPath"
         />
         <label
           for="keypath-file"
@@ -255,8 +255,7 @@
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           placeholder="******************"
           required
-          @keydown.enter="internalLogin"
-          @change="validateForm"
+          @change="validatePassword"
         />
       </div>
 
@@ -269,9 +268,8 @@
               ? 'bg-gray-600 text-gray-200 cursor-not-allowed'
               : 'bg-gray-300 hover:text-white hover:bg-teal-700 text-gray-800 active:scale-95 active:shadow-none'
           "
-          type="button"
+          type="submit"
           :disabled="buttonDisabled"
-          @click="internalLogin"
         >
           {{ $t("multiServer.login") }}
         </button>
@@ -326,7 +324,7 @@ const usePassword = ref(false);
 //*********** Computed ***********//
 
 const buttonDisabled = computed(() => {
-  if (isFormValid.value) {
+  if (serverNameError.value || ipError.value || usernameError.value) {
     return true;
   } else {
     return false;
@@ -401,6 +399,14 @@ watchEffect(() => {
   }
 });
 
+watchEffect(() => {
+  if (!serverNameError.value && !ipError.value && !usernameError.value) {
+    isFormValid.value = true;
+  } else {
+    isFormValid.value = false;
+  }
+});
+
 //*********** Lifecycle Hooks ***********//
 
 onMounted(() => {
@@ -444,11 +450,6 @@ const validateForm = () => {
   validateServerName();
   validateIP();
   validateUsername();
-  if (useSSHKey.value) {
-    validateSSHKeyPath();
-  } else {
-    validatePassword();
-  }
 
   if (!serverNameError.value && !ipError.value && !usernameError.value) {
     isFormValid.value = true;
@@ -504,6 +505,12 @@ const IpScanner = async () => {
 const saveServer = async () => {
   if (isFormValid.value) {
     await add();
+    serverStore.selectedServerToConnect = null;
+    serverStore.loginState.hostName = "";
+    serverStore.loginState.ip = "";
+    serverStore.loginState.port = "";
+    serverStore.loginState.username = "";
+    serverStore.loginState.useAuth = false;
   }
 };
 
@@ -511,14 +518,14 @@ const removeServer = () => {
   serverStore.isRemoveModalActive = true;
 };
 
-const updateCurrentServer = async () => {
-  const currentServer = serverStore.selectedServerToConnect;
-  const config = await ControlService.readConfig();
-  const server = config.savedConnections.find((item) => item.host === currentServer.host);
-  const index = config.savedConnections.indexOf(server);
-  config.savedConnections[index] = currentServer;
-  await ControlService.writeConfig(config);
-};
+// const updateCurrentServer = async () => {
+//   const currentServer = serverStore.selectedServerToConnect;
+//   const config = await ControlService.readConfig();
+//   const server = config.savedConnections.find((item) => item.host === currentServer.host);
+//   const index = config.savedConnections.indexOf(server);
+//   config.savedConnections[index] = currentServer;
+//   await ControlService.writeConfig(config);
+// };
 
 const internalLogin = () => {
   validateForm();

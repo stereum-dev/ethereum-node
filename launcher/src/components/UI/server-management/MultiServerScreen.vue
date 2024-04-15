@@ -53,7 +53,6 @@ const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
 let loginAbortController = new AbortController();
-console.log("Server Management Screen", loginAbortController);
 const serverBodyComponentKey = ref(0);
 
 watchEffect(() => {
@@ -215,6 +214,12 @@ const removeServerHandler = async () => {
   );
 
   await remove();
+  serverStore.selectedServerToConnect = null;
+  serverStore.loginState.hostName = "";
+  serverStore.loginState.ip = "";
+  serverStore.loginState.port = "";
+  serverStore.loginState.username = "";
+  serverStore.loginState.useAuth = false;
   serverStore.isRemoveProcessing = false;
   serverStore.isRemoveModalActive = false;
   serverBodyComponentKey.value++;
