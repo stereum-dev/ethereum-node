@@ -908,5 +908,18 @@
     "logOutBtn": "로그아웃",
     "chooseInstallNode": "이 단계에서는 노드를 설치하는 방법을 선택합니다. 초보자는 원 클릭 설치 옵션을 추천합니다!",
     "welcomeStereum": "Stereum에 오신 것을 환영합니다"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

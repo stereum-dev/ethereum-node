@@ -908,5 +908,18 @@
     "logOutBtn": "لاگ آؤٹ کریں",
     "chooseInstallNode": "اس مرحلے میں آپ اپنے نوڈ کو انسٹال کرنے کا طریقہ منتخب کرتے ہیں۔ شروعاتیوں کے لیے ہم ایک کلک انسٹالیشن کی سفارش کرتے ہیں!",
     "welcomeStereum": "سٹیریم میں خوش آمدید"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

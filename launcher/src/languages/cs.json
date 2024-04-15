@@ -908,5 +908,18 @@
     "logOutBtn": "Odhlásit se",
     "chooseInstallNode": "V tomto kroku si vyberete, jak chcete nainstalovat svůj uzel. Začátečníkům doporučujeme možnost Instalace na jedno kliknutí!",
     "welcomeStereum": "Vítejte ve Stereumu"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

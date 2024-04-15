@@ -996,7 +996,26 @@ export const useServices = defineStore("services", {
             "https://enchanted-direction-844.notion.site/Validator-Exits-NO-Setup-Overview-07436e1694ce4b7091473602049664d7",
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Staking Module ID",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/service-setting-icons/Operator_ID.png",
+              pattern: ['(STAKING_MODULE_ID: \\")(.*)(\\"\\n)'],
+              commands: ["STAKING_MODULE_ID: "],
+              isENV: true,
+            },
+            {
+              title: "Operator ID",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/service-setting-icons/Operator_ID.png",
+              pattern: ['(OPERATOR_ID: \\")(.*)(\\"\\n)'],
+              commands: ["OPERATOR_ID: "],
+              isENV: true,
+            },
+          ],
           drag: true,
           state: "exited",
           config: {

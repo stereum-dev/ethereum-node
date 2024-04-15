@@ -908,5 +908,18 @@
     "logOutBtn": "Disconnetti",
     "chooseInstallNode": "In questo passaggio scegli come vuoi installare il tuo nodo. Per i principianti, consigliamo l'opzione di Installazione con un Clic!",
     "welcomeStereum": "Benvenuto in Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

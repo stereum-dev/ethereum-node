@@ -21,8 +21,7 @@ import { onMounted, computed } from 'vue';
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
-            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700':
-              option.isConnected,
+            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700': option.isConnected,
             'bg-[#282a2c] text-teal-600 border-2 border-gray-600 hover:border-teal-600': !option.isConnected,
             ' w-[190px] h-[55px]': props.client.service === 'SSVNetworkService',
             'w-[200px] h-[65px] text-md': props.client.service !== 'SSVNetworkService',
@@ -63,8 +62,7 @@ import { onMounted, computed } from 'vue';
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
-            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700':
-              option.isConnected,
+            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700': option.isConnected,
             'bg-[#282a2c] text-teal-600 border-2 border-gray-600 hover:border-teal-600': !option.isConnected,
             ' w-[190px] h-[55px]': props.client.service === 'SSVNetworkService',
             'w-[200px] h-[65px] text-md': props.client.service !== 'SSVNetworkService',
@@ -105,8 +103,48 @@ import { onMounted, computed } from 'vue';
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
-            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700':
-              option.isConnected,
+            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700': option.isConnected,
+            'bg-[#282a2c] text-teal-600 border-2 border-gray-600 hover:border-teal-600': !option.isConnected,
+            ' w-[190px] h-[55px]': props.client.service === 'SSVNetworkService',
+            'w-[200px] h-[65px] text-md': props.client.service !== 'SSVNetworkService',
+          }"
+          @click="toggleConnection(option)"
+        >
+          <div class="w-full h-full flex justify-start items-center">
+            <div class="p-1 flex justify-center items-center">
+              <img class="w-9 h-9" :src="option.sIcon" alt="Service Icon" />
+            </div>
+            <div class="flex flex-col justify-center items-start space-y-1">
+              <div class="font-semibold capitalize">
+                <span> {{ option.name }}</span>
+              </div>
+              <div
+                class="text-xs font-normal overflow-x-hidden"
+                :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'"
+              >
+                <span> {{ shortID(option) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="list.length && list.some((e) => e.category === 'service')"
+      class="w-1/3 h-[280px] flex flex-col justify-start items-center"
+    >
+      <div class="w-full h-5 flex justify-center items-center mt-2">
+        <span class="text-lg font-semibold text-gray-500">{{ "Other Services" }}</span>
+      </div>
+      <div
+        class="w-full h-[250px] overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
+      >
+        <div
+          v-for="option in list.filter((e) => e.category === 'service')"
+          :key="option.service"
+          class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
+          :class="{
+            'bg-teal-600 hover:bg-teal-600 text-gray-200 border-2 border-teal-700': option.isConnected,
             'bg-[#282a2c] text-teal-600 border-2 border-gray-600 hover:border-teal-600': !option.isConnected,
             ' w-[190px] h-[55px]': props.client.service === 'SSVNetworkService',
             'w-[200px] h-[65px] text-md': props.client.service !== 'SSVNetworkService',
@@ -173,12 +211,11 @@ const toggleConnection = (option) => {
   } else {
     option.isConnected = false;
   }
-  props.properties.executionClients = list.value.filter(
-    (e) => e.category === "execution" && e.isConnected
-  );
+  props.properties.executionClients = list.value.filter((e) => e.category === "execution" && e.isConnected);
   props.properties.consensusClients = list.value.filter(
     (e) => (e.category === "consensus" || e.service === "CharonService") && e.isConnected
   );
+  props.properties.otherServices = list.value.filter((e) => e.category === "service" && e.isConnected);
 };
 
 const getConnectionOptions = () => {
@@ -195,9 +232,7 @@ const getConnectionOptions = () => {
       return manageStore.newConfiguration.filter((e) => e.category === "execution");
     case "validator":
       if (props.client.service === "SSVNetworkService") {
-        return manageStore.newConfiguration.filter(
-          (e) => e.category === "consensus" || e.category === "execution"
-        );
+        return manageStore.newConfiguration.filter((e) => e.category === "consensus" || e.category === "execution");
       }
       if (props.client.service === "Web3SignerService") {
         return [];
@@ -205,14 +240,19 @@ const getConnectionOptions = () => {
       if (props.client.service === "CharonService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
-      return manageStore.newConfiguration.filter(
-        (e) => e.category === "consensus" || e.service === "CharonService"
-      );
+      return manageStore.newConfiguration.filter((e) => e.category === "consensus" || e.service === "CharonService");
     case "service":
       if (props.client.service === "FlashbotsMevBoostService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
-
+      if (props.client.service === "LidoObolExitService") {
+        return manageStore.newConfiguration.filter(
+          (e) => /ValidatorEjector|Charon/.test(e.service) || e.category === "consensus"
+        );
+      }
+      if (props.client.service === "ValidatorEjectorService") {
+        return manageStore.newConfiguration.filter((e) => /consensus|execution/.test(e.category));
+      }
       break;
     default:
       return [];
@@ -221,9 +261,7 @@ const getConnectionOptions = () => {
 
 const shortID = (client) => {
   if (client?.config?.serviceID) {
-    return (
-      client.config.serviceID.slice(0, 8) + "..." + client.config.serviceID.slice(-8)
-    );
+    return client.config.serviceID.slice(0, 8) + "..." + client.config.serviceID.slice(-8);
   }
   return client.id;
 };

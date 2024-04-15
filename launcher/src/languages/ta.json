@@ -908,5 +908,18 @@
     "logOutBtn": "வெளியேறு",
     "chooseInstallNode": "இந்த படியில் நீங்கள் உங்கள் நோட்டை எப்படி நிறுவ விரும்புகிறீர்கள் என்பதை தெரிவு செய்கிறீர்கள். ஆரம்பநிலையாளர்களுக்கு ஒரு கிளிக் நிறுவல் விருப்பத்தை நாங்கள் பரிந்துரைக்கிறோம்!",
     "welcomeStereum": "Stereum க்கு வரவேற்கிறோம்"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
   }
 }

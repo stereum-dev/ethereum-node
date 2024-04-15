@@ -324,18 +324,22 @@ export class SSHService {
 
   async readSSHKeyFile(sshDirPath = `~/.ssh`) {
     let authorizedKeys = [];
-    try {
-      if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
-      let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
-      if (SSHService.checkExecError(result)) {
-        throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+    if (this.connected) {
+      try {
+        if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
+        let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
+        if (SSHService.checkExecError(result)) {
+          throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+        }
+        authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
+      } catch (err) {
+        log.error("Can't read authorized keys ", err);
+        return [];
       }
-      authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
-    } catch (err) {
-      log.error("Can't read authorized keys ", err);
-      return [];
+      console.log("authorizedKeys: ", authorizedKeys);
+    } else {
+      log.error("SSH not connected, can't read authorized keys");
     }
-    console.log("authorizedKeys: ", authorizedKeys);
     return authorizedKeys;
   }
 

@@ -458,24 +458,34 @@ export default {
                       );
                     }
                   }
-
+                  if (!/^["'`].*["'`]$/.test(option.isENV)) {
+                    option.changeValue = `"${option.changeValue}"`;
+                  }
                   this.item.yaml = this.item.yaml.replace(
                     new RegExp(`${command}([=]?)([\\S*]*)`),
                     `${command}$1${option.changeValue}`
                   );
                 } else if (option.changeValue && !this.item.yaml.includes(command)) {
-                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
-                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
-                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
-                  let spaces = " ";
-                  if (matchSpaces) {
-                    spaces = matchSpaces[1];
-                  }
+                  let matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
+                  if (matchAllCommands) {
+                    const lastCommand = matchAllCommands[matchAllCommands.length - 1];
+                    const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
+                    let spaces = " ";
+                    if (matchSpaces) {
+                      spaces = matchSpaces[1];
+                    }
 
-                  this.item.yaml = this.item.yaml.replace(
-                    new RegExp(`${lastCommand}`),
-                    `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${option.changeValue}`
-                  );
+                    this.item.yaml = this.item.yaml.replace(
+                      new RegExp(`${lastCommand}`),
+                      `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${option.changeValue}`
+                    );
+                  } else {
+                    const matchENV = this.item.yaml.match(/env:([\s]+)/);
+                    this.item.yaml = this.item.yaml.replace(
+                      new RegExp(matchENV[0]),
+                      matchENV[0] + command + '"' + option.changeValue + '"' + matchENV[1]
+                    );
+                  }
                 } else if (!option.changeValue && this.item.yaml.includes(command)) {
                   this.item.yaml = this.item.yaml.replace(new RegExp(`\n.*${command}.*`), "");
                 }
