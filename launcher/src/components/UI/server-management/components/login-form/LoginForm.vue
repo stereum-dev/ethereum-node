@@ -1,5 +1,3 @@
-import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch,
-watchEffect, onUnmounted } from 'vue';
 <template>
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
