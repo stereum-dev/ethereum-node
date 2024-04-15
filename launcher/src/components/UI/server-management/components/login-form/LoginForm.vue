@@ -99,7 +99,7 @@ watchEffect, onUnmounted } from 'vue';
             class="w-6 h-6 col-start-11 col-span-full self-center p-[2px] cursor-pointer hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 justify-self-center"
             src="/img/icon/server-management-icons/local-lan.png"
             alt="Scanner Icon"
-            @click="IpScanLan1"
+            @click="IpScanner"
           />
           <span
             v-else
@@ -321,6 +321,7 @@ import { useRouter } from "vue-router";
 const emit = defineEmits(["serverLogin"]);
 
 const serverStore = useServers();
+const router = useRouter();
 
 const { add } = useServerLogin();
 
@@ -335,7 +336,6 @@ const devices = ref([]);
 const removeHovered = ref(false);
 const addHovered = ref(false);
 const isFormValid = ref(false);
-const useSSHKey = ref(false);
 const usePassword = ref(false);
 
 //*********** Computed ***********//
@@ -515,7 +515,6 @@ const handleFileSelect = (event) => {
       serverStore.loginState.keyPath = selectedFile.path;
     } else {
       serverStore.loginState.keyPath = "";
-      message.value = "Selected file is empty.";
     }
   } else {
     serverStore.loginState.keyPath = "";
@@ -554,15 +553,6 @@ const saveServer = async () => {
 const removeServer = () => {
   serverStore.isRemoveModalActive = true;
 };
-
-// const updateCurrentServer = async () => {
-//   const currentServer = serverStore.selectedServerToConnect;
-//   const config = await ControlService.readConfig();
-//   const server = config.savedConnections.find((item) => item.host === currentServer.host);
-//   const index = config.savedConnections.indexOf(server);
-//   config.savedConnections[index] = currentServer;
-//   await ControlService.writeConfig(config);
-// };
 
 const internalLogin = () => {
   validateForm();
