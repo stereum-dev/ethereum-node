@@ -334,16 +334,13 @@ const devices = ref([]);
 const removeHovered = ref(false);
 const addHovered = ref(false);
 const isFormValid = ref(false);
+const useSSHKey = ref(false);
 const usePassword = ref(false);
 
 //*********** Computed ***********//
 
 const buttonDisabled = computed(() => {
-  if (serverNameError.value || ipError.value || usernameError.value) {
-    return true;
-  } else {
-    return false;
-  }
+  return !!(serverNameError.value || ipError.value || usernameError.value);
 });
 
 const getTrashImg = computed(() => {
@@ -354,28 +351,12 @@ const getTrashImg = computed(() => {
   }
 });
 
-const useSSHKey = computed(() => {
-  if (serverStore.loginState.useAuth) {
-    return true;
-  } else {
-    return false;
-  }
-});
-
 const addButtonDisabled = computed(() => {
-  if (isFormValid.value) {
-    return false;
-  } else {
-    return true;
-  }
+  return !isFormValid.value;
 });
 
 const removeButtonDisabled = computed(() => {
-  if (serverStore.selectedServerToConnect) {
-    return false;
-  } else {
-    return true;
-  }
+  return !serverStore.selectedServerToConnect;
 });
 
 //*********** Watchers ***********//
