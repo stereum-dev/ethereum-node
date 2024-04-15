@@ -96,7 +96,10 @@ watch(
       await loadStoredConnections();
     }
 
-    filteredServers.value = getFilteredServers();
+    filteredServers.value = null;
+    setTimeout(() => {
+      filteredServers.value = getFilteredServers();
+    }, 10);
   },
   { deep: true }
 );

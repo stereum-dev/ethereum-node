@@ -1,3 +1,5 @@
+import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch, watchEffect, onUnmounted } from
+'vue';
 <template>
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
@@ -95,7 +97,7 @@
             class="w-6 h-6 col-start-11 col-span-full self-center p-[2px] cursor-pointer hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 justify-self-center"
             src="/img/icon/server-management-icons/local-lan.png"
             alt="Scanner Icon"
-            @click="IpScanner"
+            @click="IpScanLan1"
           />
           <span
             v-else
@@ -143,7 +145,7 @@
 
         <label
           for="AcceptConditions"
-          class="col-start-6 col-end-9 row-start-2 row-span-full self-center relative h-6 w-12 cursor-pointer flex justify-center items-center"
+          class="col-start-6 col-end-9 row-start-2 row-span-full self-center relative h-6 w-12 cursor-pointer [-webkit-tap-highlight-color:_transparent] flex justify-center items-center"
         >
           <input
             id="AcceptConditions"
@@ -206,7 +208,9 @@
           placeholder="/user/.ssh/id_rsa"
           class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
+
           @change="validateSSHKeyPath"
+
         />
         <label
           for="keypath-file"
@@ -262,14 +266,16 @@
       <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
         <button
           v-if="!serverStore.connectingProcess"
-          class="w-full h-[50px] font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline transition-all ease-in-out duration-100 shadow-lg shadow-black text-md uppercase"
+          class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
           :class="
-            buttonDisabled
-              ? 'bg-gray-600 text-gray-200 cursor-not-allowed'
-              : 'bg-gray-300 hover:text-white hover:bg-teal-700 text-gray-800 active:scale-95 active:shadow-none'
+            serverStore.isIpScannerModalActive || buttonDisabled
+              ? 'bg-gray-400 opacity-50 pointer-events-none '
+              : 'bg-gray-200'
           "
+
           type="submit"
           :disabled="buttonDisabled"
+
         >
           {{ $t("multiServer.login") }}
         </button>
@@ -290,29 +296,29 @@
 </template>
 
 <script setup>
-import { computed, ref, onUnmounted, watchEffect, watch, onMounted } from "vue";
-import { useServers } from "@/store/servers";
-import { useRouter } from "vue-router";
-import ControlService from "@/store/ControlService";
-import { useServerLogin } from "@/composables/useLogin";
 
-//Props and Emits
+import { computed, ref, onUnmounted, watchEffect, watch, onMounted } from "vue";
+
+import { useServers } from "@/store/servers";
+import { useServerLogin } from "@/composables/useLogin";
+import ControlService from "@/store/ControlService";
+import { useRouter } from "vue-router";
+
 const emit = defineEmits(["serverLogin"]);
 
-//Stores
 const serverStore = useServers();
-const router = useRouter();
 
-//Composables
 const { add } = useServerLogin();
 
-//Refs
+const hovered = ref(false);
+const removeHovered = ref(false);
+const addHovered = ref(false);
+const message = ref("");
 const serverNameError = ref("");
 const ipError = ref("");
 const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
-const message = ref("");
 const devices = ref([]);
 const hovered = ref(false);
 const removeHovered = ref(false);
@@ -331,6 +337,7 @@ const buttonDisabled = computed(() => {
   }
 });
 
+
 const getTrashImg = computed(() => {
   if (hovered.value) {
     return "./img/icon/server-management-icons/trash-can-2.png";
@@ -339,8 +346,18 @@ const getTrashImg = computed(() => {
   }
 });
 
+const useSSHKey = computed(() => {
+  if (serverStore.loginState.useAuth) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
 const addButtonDisabled = computed(() => {
+
   if (isFormValid.value) {
+
     return false;
   } else {
     return true;
@@ -354,6 +371,7 @@ const removeButtonDisabled = computed(() => {
     return true;
   }
 });
+
 
 //*********** Watchers ***********//
 
@@ -377,6 +395,7 @@ watchEffect(() => {
 
 watchEffect(() => {
   if (serverStore.selectedServerToConnect) {
+
     serverStore.loginState.hostName = serverStore.selectedServerToConnect.name;
     serverStore.loginState.ip = serverStore.selectedServerToConnect.host;
     serverStore.loginState.port = serverStore.selectedServerToConnect.port;
@@ -465,8 +484,24 @@ const toggleSSH = () => {
   } else {
     useSSHKey.value = false;
     usePassword.value = true;
+
   }
-};
+});
+
+// Lifecycle
+
+onUnmounted(() => {
+  serverStore.loginState.hostName = "";
+  serverStore.loginState.ip = "";
+  serverStore.loginState.port = "";
+  serverStore.loginState.username = "";
+  serverStore.loginState.useAuth = false;
+  serverStore.loginState.keyPath = "";
+  serverStore.loginState.password = "";
+  serverStore.loginState.passphrase = "";
+  serverStore.connectExistingServer = false;
+  serverStore.selectedServerToConnect = null;
+});
 
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
@@ -483,10 +518,10 @@ const handleFileSelect = (event) => {
 };
 
 const IpScanner = async () => {
+
   serverStore.isIpScannerModalActive = true;
   try {
     let res = await ControlService.IpScanLan();
-    console.log(res);
     devices.value = res;
     if (devices.value.length > 0) {
       const ip = devices.value[0].ip;
@@ -496,9 +531,7 @@ const IpScanner = async () => {
       serverStore.isIpScannerModalActive = false;
     }
   } catch (error) {
-    console.error("An error occurred during IP scanning:", error);
-  } finally {
-    serverStore.isIpScannerModalActive = false;
+    console.error("An error occurred:", error);
   }
 };
 
@@ -512,6 +545,7 @@ const saveServer = async () => {
     serverStore.loginState.username = "";
     serverStore.loginState.useAuth = false;
   }
+
 };
 
 const removeServer = () => {
@@ -537,4 +571,5 @@ const internalLogin = () => {
     router.push("/login");
   }
 };
+
 </script>
