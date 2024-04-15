@@ -7,6 +7,7 @@
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
+      @submit.prevent="onSubmit"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
@@ -22,13 +23,14 @@
           :placeholder="`${$t('multiServer.serverName')}`"
           class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
+          @change="validateForm"
         />
 
         <div
           class="w-full h-full col-start-10 col-span-full row-start-2 row-span-2 flex justify-evenly items-center relative"
         >
           <img
-            class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
+            class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :src="getTrashImg"
             alt=""
             :class="removeButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
@@ -49,7 +51,7 @@
           </div>
 
           <img
-            class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
+            class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :class="addButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
             src="/img/icon/server-management-icons/plus-icon.png"
             alt="icon"
@@ -86,6 +88,7 @@
             placeholder="114.72.86.90"
             class="h-8 self-center col-start-1 col-end-11 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
             required
+            @change="validateForm"
           />
           <img
             v-if="!serverStore.isIpScannerModalActive"
@@ -129,6 +132,7 @@
           placeholder="root"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
+          @change="validateForm"
         />
       </div>
       <div class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -146,7 +150,7 @@
             v-model="serverStore.loginState.useAuth"
             type="checkbox"
             class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden bg-gray-200"
-            @change="changeLabel"
+            @change="toggleSSH"
           />
 
           <span
@@ -185,25 +189,10 @@
         </label>
       </div>
 
-      <div v-if="!useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
-        <label
-          for="password"
-          class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
-          :class="passwordError ? 'text-red-500' : 'text-gray-300'"
-          >{{ passwordError ? passwordError : $t("multiServer.pass") }}</label
-        >
-        <input
-          id="password"
-          v-model="serverStore.loginState.password"
-          type="password"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-          placeholder="******************"
-          :disabled="useSSHKey"
-          required
-          @keydown.enter="internalLogin"
-        />
-      </div>
-      <div v-if="useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        v-if="useSSHKey && !usePassword"
+        class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <label
           for="keypath"
           class="col-start-1 col-end-12 row-start-1 row-span-1 block text-xs font-bold"
@@ -216,9 +205,8 @@
           type="text"
           placeholder="/user/.ssh/id_rsa"
           class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-          :disabled="!useSSHKey"
           required
-          @change="toggleSSH"
+          @change="validateForm"
         />
         <label
           for="keypath-file"
@@ -230,10 +218,13 @@
               >+</span
             >
           </div>
-          <input id="keypath-file" type="file" class="hidden" :disabled="!useSSHKey" @change="handleFileSelect" />
+          <input id="keypath-file" type="file" class="hidden" @change="handleFileSelect" />
         </label>
       </div>
-      <div v-if="useSSHKey" class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        v-if="useSSHKey && !usePassword"
+        class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <label
           for="password"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
@@ -245,6 +236,27 @@
           type="password"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           placeholder="******************"
+        />
+      </div>
+      <div
+        v-if="usePassword && !useSSHKey"
+        class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
+        <label
+          for="password"
+          class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
+          :class="passwordError ? 'text-red-500' : 'text-gray-300'"
+          >{{ passwordError ? passwordError : $t("multiServer.pass") }}</label
+        >
+        <input
+          id="password"
+          v-model="serverStore.loginState.password"
+          type="password"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          placeholder="******************"
+          required
+          @keydown.enter="internalLogin"
+          @change="validateForm"
         />
       </div>
 
@@ -280,7 +292,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onUnmounted, watchEffect } from "vue";
+import { computed, ref, onUnmounted, watchEffect, watch, onMounted } from "vue";
 import { useServers } from "@/store/servers";
 import { useRouter } from "vue-router";
 import ControlService from "@/store/ControlService";
@@ -307,25 +319,19 @@ const devices = ref([]);
 const hovered = ref(false);
 const removeHovered = ref(false);
 const addHovered = ref(false);
+const isFormValid = ref(false);
+const useSSHKey = ref(false);
+const usePassword = ref(false);
 
-//Computed
+//*********** Computed ***********//
 
 const buttonDisabled = computed(() => {
-  return (
-    serverNameError.value.length > 0 ||
-    ipError.value.length > 0 ||
-    usernameError.value.length > 0 ||
-    (useSSHKey.value && sshError.value.length > 0) ||
-
-    (!useSSHKey.value && passwordError.value.length > 0) ||
-    serverStore.loginState.hostName === "" ||
-    serverStore.loginState.ip === "" ||
-    serverStore.loginState.username === ""
-
-  );
+  if (isFormValid.value) {
+    return true;
+  } else {
+    return false;
+  }
 });
-
-const useSSHKey = computed(() => serverStore.loginState.useAuth);
 
 const getTrashImg = computed(() => {
   if (hovered.value) {
@@ -336,14 +342,10 @@ const getTrashImg = computed(() => {
 });
 
 const addButtonDisabled = computed(() => {
-  const existingServer = serverStore.savedServers?.savedConnections?.some(
-    (item) => item.host === serverStore.selectedServerToConnect?.host
-  );
-
-  if (existingServer || buttonDisabled.value) {
-    return true;
-  } else {
+  if (isFormValid.value) {
     return false;
+  } else {
+    return true;
   }
 });
 
@@ -355,53 +357,116 @@ const removeButtonDisabled = computed(() => {
   }
 });
 
+//*********** Watchers ***********//
+
+watch(
+  () => serverStore.loginState.useAuth,
+  () => {
+    toggleSSH();
+  }
+);
+
+watchEffect(() => {
+  if (serverStore.addNewServer) {
+    serverStore.selectedServerToConnect = null;
+    serverStore.loginState.hostName = "";
+    serverStore.loginState.ip = "";
+    serverStore.loginState.port = "";
+    serverStore.loginState.username = "";
+    serverStore.loginState.useAuth = false;
+  }
+});
+
+watchEffect(() => {
+  if (serverStore.selectedServerToConnect) {
+    serverStore.loginState.hostName = serverStore.selectedServerToConnect.name;
+    serverStore.loginState.ip = serverStore.selectedServerToConnect.host;
+    serverStore.loginState.port = serverStore.selectedServerToConnect.port;
+    serverStore.loginState.username = serverStore.selectedServerToConnect.user;
+    serverStore.loginState.useAuth = serverStore.selectedServerToConnect.useAuthKey;
+
+    if (serverStore.loginState.useAuth) {
+      useSSHKey.value = true;
+      usePassword.value = false;
+      serverStore.loginState.keyPath = serverStore.selectedServerToConnect.keylocation;
+      serverStore.loginState.passphrase = serverStore.selectedServerToConnect?.passphrase;
+      serverStore.loginState.password = "";
+    } else {
+      useSSHKey.value = false;
+      usePassword.value = true;
+      serverStore.loginState.keyPath = "";
+      serverStore.loginState.passphrase = "";
+      serverStore.loginState.password = serverStore.selectedServerToConnect.password;
+    }
+  }
+});
+
+//*********** Lifecycle Hooks ***********//
+
+onMounted(() => {
+  serverStore.loginState = {};
+});
+
+onUnmounted(() => {
+  serverStore.loginState = {};
+});
+
 //*********** Methods ***********//
 
-const toggleSSH = () => {
-  serverStore.loginState.useAuth = !serverStore.loginState.useAuth;
-  if (useSSHKey.value) {
-    serverStore.loginState.password = "";
-    validateSSHKeyPath();
-  } else {
-    serverStore.loginState.keyPath = "";
-    validatePassword();
-  }
-};
-
 // Validation functions
-
 const validateServerName = () => {
-  serverNameError.value = serverStore.loginState.hostName.trim() ? "" : "Server name is required.";
+  const serverName = serverStore.loginState.hostName || ""; // Default to empty string if undefined or null
+  serverNameError.value = serverName.trim() ? "" : "Server name is required.";
 };
 
 const validateIP = () => {
-  const ipPattern = /^[0-9]{1,3}(\.[0-9]{1,3}){3}$/; // Simplified pattern for IP addresses
-  ipError.value = ipPattern.test(serverStore.loginState.ip.trim()) ? "" : "Invalid IP address.";
+  const ip = serverStore.loginState.ip || ""; // Default to empty string if undefined or null
+  const ipPattern = /^[0-9]{1,3}(\.[0-9]{1,3}){3}$/;
+  ipError.value = ipPattern.test(ip.trim()) ? "" : "Invalid IP address.";
 };
 
 const validateUsername = () => {
-  usernameError.value = serverStore.loginState.username.trim() ? "" : "Username is required.";
+  const username = serverStore.loginState.username || ""; // Default to empty string if undefined or null
+  usernameError.value = username.trim() ? "" : "Username is required.";
 };
 
 const validateSSHKeyPath = () => {
-  sshError.value = serverStore.loginState.keyPath.trim() ? "" : "SSH key path is required.";
+  const keyPath = serverStore.loginState.keyPath || ""; // Default to empty string if undefined or null
+  sshError.value = keyPath.trim() ? "" : "SSH key path is required.";
 };
 
 const validatePassword = () => {
-  passwordError.value = serverStore.loginState.password.trim() ? "" : "Password is required.";
+  const password = serverStore.loginState.password || ""; // Default to empty string if undefined or null
+  passwordError.value = password.trim() ? "" : "Password is required.";
 };
 
-const internalLogin = () => {
-  if (!buttonDisabled.value) {
-    serverStore.isServerAnimationActive = true;
-    serverStore.connectingProcess = true;
-    emit("serverLogin");
+const validateForm = () => {
+  validateServerName();
+  validateIP();
+  validateUsername();
+  if (useSSHKey.value) {
+    validateSSHKeyPath();
   } else {
-    router.push("/login");
+    validatePassword();
+  }
+
+  if (!serverNameError.value && !ipError.value && !usernameError.value) {
+    isFormValid.value = true;
+  } else {
+    isFormValid.value = false;
   }
 };
 
-// Methods
+const toggleSSH = () => {
+  if (serverStore.loginState.useAuth) {
+    useSSHKey.value = true;
+    usePassword.value = false;
+  } else {
+    useSSHKey.value = false;
+    usePassword.value = true;
+  }
+};
+
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
@@ -413,12 +478,6 @@ const handleFileSelect = (event) => {
     }
   } else {
     serverStore.loginState.keyPath = "";
-  }
-};
-
-const changeLabel = () => {
-  if (serverStore.loginState.useAuth) {
-    serverStore.loginState.password = "";
   }
 };
 
@@ -443,98 +502,32 @@ const IpScanner = async () => {
 };
 
 const saveServer = async () => {
-  await add();
+  if (isFormValid.value) {
+    await add();
+  }
 };
 
 const removeServer = () => {
   serverStore.isRemoveModalActive = true;
 };
 
-// Watchers
-watch(
-  () => serverStore.loginState.hostName,
-  () => validateServerName()
-);
-watch(
-  () => serverStore.loginState.ip,
-  () => validateIP()
-);
-watch(
-  () => serverStore.loginState.username,
-  () => validateUsername()
-);
-watch(
-  () => serverStore.loginState.keyPath,
-  () => {
-    if (useSSHKey.value) {
-      validateSSHKeyPath();
-    }
-  }
-);
-watch(
-  () => serverStore.loginState.password,
-  () => {
-    if (!useSSHKey.value) {
-      validatePassword();
-    }
-  }
-);
+const updateCurrentServer = async () => {
+  const currentServer = serverStore.selectedServerToConnect;
+  const config = await ControlService.readConfig();
+  const server = config.savedConnections.find((item) => item.host === currentServer.host);
+  const index = config.savedConnections.indexOf(server);
+  config.savedConnections[index] = currentServer;
+  await ControlService.writeConfig(config);
+};
 
-watch(
-  () => useSSHKey.value,
-  (newVal) => {
-    if (newVal) {
-      serverStore.loginState.password = "";
-      validateSSHKeyPath();
-    } else {
-      serverStore.loginState.keyPath = "";
-      validatePassword();
-    }
-  }
-);
-
-// Handle existing server data
-watchEffect(() => {
-  if (serverStore.connectExistingServer) {
-    serverStore.loginState.hostName = serverStore.selectedServerToConnect.name;
-    serverStore.loginState.ip = serverStore.selectedServerToConnect.host;
-    serverStore.loginState.port = serverStore.selectedServerToConnect.port;
-    serverStore.loginState.username = serverStore.selectedServerToConnect.user;
-    serverStore.loginState.useAuth = serverStore.selectedServerToConnect.useAuthKey;
-    serverStore.loginState.keyPath = serverStore.selectedServerToConnect.keylocation;
-    serverStore.loginState.password = "";
-    serverStore.loginState.passphrase = "";
-
-    validateServerName();
-    validateIP();
-    validateUsername();
-    useSSHKey.value ? validateSSHKeyPath() : validatePassword();
+const internalLogin = () => {
+  validateForm();
+  if (isFormValid.value) {
+    serverStore.isServerAnimationActive = true;
+    serverStore.connectingProcess = true;
+    emit("serverLogin");
   } else {
-    // Reset the form
-    serverStore.selectedServerToConnect = null;
-    serverStore.loginState.hostName = "";
-    serverStore.loginState.ip = "";
-    serverStore.loginState.port = "";
-    serverStore.loginState.username = "";
-    serverStore.loginState.useAuth = false;
-    serverStore.loginState.keyPath = "";
-    serverStore.loginState.password = "";
-    serverStore.loginState.passphrase = "";
+    router.push("/login");
   }
-});
-
-// Lifecycle
-
-onUnmounted(() => {
-  serverStore.loginState.hostName = "";
-  serverStore.loginState.ip = "";
-  serverStore.loginState.port = "";
-  serverStore.loginState.username = "";
-  serverStore.loginState.useAuth = false;
-  serverStore.loginState.keyPath = "";
-  serverStore.loginState.password = "";
-  serverStore.loginState.passphrase = "";
-  serverStore.connectExistingServer = false;
-  serverStore.selectedServerToConnect = null;
-});
+};
 </script>
