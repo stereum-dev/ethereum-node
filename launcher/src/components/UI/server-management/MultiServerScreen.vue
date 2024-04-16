@@ -4,7 +4,10 @@ import ServerHeader from './components/ServerHeader.vue';
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
     <SwitchAnimation
-      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
+      v-if="
+        (serverStore.isServerAnimationActive || serverStore.connectingProcess) &&
+        !serverStore.errorMsgExists
+      "
       @cancel-login="cancelLoginHandler"
     />
     <ServerHeader @tab-picker="tabPicker" />
@@ -28,7 +31,11 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
-    <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
+    <ErrorModal
+      v-if="serverStore.errorMsgExists"
+      :description="serverStore.error"
+      @close-window="closeErrorDialog"
+    />
   </div>
 </template>
 
@@ -53,7 +60,6 @@ const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
 const keyLocation = ref("");
 let loginAbortController = new AbortController();
-console.log("Server Management Screen", loginAbortController);
 const serverBodyComponentKey = ref(0);
 
 watchEffect(() => {
@@ -113,6 +119,8 @@ const loginHandler = async () => {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
       await ControlService.logout();
+      serverStore.loginState = {};
+      // serverStore.selectedServerToConnect
       await ControlService.stopShell();
       await login(loginAbortController.signal);
 
@@ -179,7 +187,9 @@ const serverHandler = (server) => {
     server.isSelected = true;
   }
 
-  serverStore.savedServers.savedConnections = [...serverStore.savedServers.savedConnections];
+  serverStore.savedServers.savedConnections = [
+    ...serverStore.savedServers.savedConnections,
+  ];
 };
 
 //Change password handling
@@ -211,10 +221,17 @@ const removeServerHandler = async () => {
   serverStore.isRemoveProcessing = true;
   serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
     (item) =>
-      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
+      item.host !== serverStore.selectedServerToConnect?.host &&
+      item.name !== serverStore.selectedServerToConnect?.name
   );
 
   await remove();
+  serverStore.selectedServerToConnect = null;
+  serverStore.loginState.hostName = "";
+  serverStore.loginState.ip = "";
+  serverStore.loginState.port = "";
+  serverStore.loginState.username = "";
+  serverStore.loginState.useAuth = false;
   serverStore.isRemoveProcessing = false;
   serverStore.isRemoveModalActive = false;
   serverBodyComponentKey.value++;
@@ -229,7 +246,9 @@ const readSSHKeyFile = async () => {
 const confirmDelete = async (key) => {
   serverStore.sshKeys = serverStore.sshKeys.filter((item) => item !== key);
   try {
-    await ControlService.writeSSHKeyFile(serverStore.sshKeys.filter((item) => item !== key));
+    await ControlService.writeSSHKeyFile(
+      serverStore.sshKeys.filter((item) => item !== key)
+    );
     await readSSHKeyFile();
   } catch (err) {
     console.log(err);

@@ -153,8 +153,8 @@ export const useServerLogin = () => {
     let savedConnections = storageSavedConnections.savedConnections || [];
     const server = serverStore.selectedServerToConnect;
 
-    serverStore.connections = serverStore.connections.filter((conn) => conn?.host !== server?.host);
-    savedConnections = savedConnections.filter((conn) => conn?.host !== server?.host);
+    serverStore.connections = serverStore.connections.filter((conn) => conn?.name !== server?.name);
+    savedConnections = savedConnections.filter((conn) => conn?.name !== server?.name);
 
     const updatedConfig = {
       ...storageSavedConnections,
