@@ -1,33 +1,34 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
     <ServerDetails />
-
-    <ConfigDetails :list="configsToDisplay" />
-
+    <SetupDetails :list="setupsList" />
     <NetworkDetails />
   </div>
 </template>
+
 <script setup>
-import { useNodeManage } from "@/store/nodeManage";
 import ServerDetails from "./ServerDetails.vue";
 import NetworkDetails from "./NetworkDetails.vue";
-import ConfigDetails from "./ConfigDetails.vue";
+import SetupDetails from "./setups/SetupDetails.vue";
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { useSetups } from "../../../../../store/setups";
 
-const nodeStore = useNodeManage();
-const route = useRoute();
+const setupStore = useSetups();
 
-const configsToDisplay = computed(() => {
-  let configs;
-  if (route.path === "/node") {
-    configs = nodeStore.nodeConfigs;
-  } else {
-    configs = nodeStore.nodeConfigs.slice(0, 4);
-  }
-  return configs;
+const setupsList = computed(() => {
+  let list;
+  list = setupStore.allSetups.map((setup) => {
+    return {
+      name: setup.setupName,
+      color: setup.color,
+    };
+  });
+  return list;
 });
+
+console.log(setupsList.value);
 </script>
+
 <style scoped>
 .fade-move,
 .fade-enter-active,
