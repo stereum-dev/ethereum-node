@@ -18,8 +18,18 @@ import tr from "../languages/tr.json";
 import zh from "../languages/zh.json";
 import cs from "../languages/cs.json";
 import vi from "../languages/vi.json";
+import bn from "../languages/bn.json";
+import hi from "../languages/hi.json";
+import id from "../languages/id.json";
+import ko from "../languages/ko.json";
+import mr from "../languages/mr.json";
+import sw from "../languages/sw.json";
+import ta from "../languages/ta.json";
+import te from "../languages/te.json";
+import ur from "../languages/ur.json";
 
 const i18n = createI18n({
+  legacy: false,
   locale: "en", //focus lang
   messages: {
     ar,
@@ -40,6 +50,15 @@ const i18n = createI18n({
     zh,
     cs,
     vi,
+    bn,
+    hi,
+    id,
+    ko,
+    mr,
+    sw,
+    ta,
+    te,
+    ur,
   },
 });
 export default i18n;
