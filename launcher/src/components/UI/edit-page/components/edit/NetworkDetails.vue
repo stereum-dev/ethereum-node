@@ -5,12 +5,31 @@
     @mouseenter="footerStore.cursorLocation = `${currIs} ${getNetworkName}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
-    <div class="w-full self-start text-xs font-semibold text-teal-700">
+    <div
+      v-if="!setupStore.isServerViewActive"
+      class="w-full self-start text-xs font-semibold text-teal-700"
+    >
       {{ t("networkDetails.currentNet") }}
     </div>
-    <div class="w-full flex justify-center items-center">
+    <div
+      v-else
+      class="w-full self-start text-xs font-semibold text-teal-700 overflow-hidden"
+    >
+      TOTAL NETWORKS ON SERVER
+    </div>
+    <div
+      v-if="!setupStore.isServerViewActive"
+      class="w-full flex justify-center items-center"
+    >
       <img v-if="getNetworkIcon" :src="getNetworkIcon" alt="Networks" class="w-5 mr-1" />
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ getNetworkName }}</span>
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
+        getNetworkName
+      }}</span>
+    </div>
+    <div v-else class="w-full flex justify-center items-center">
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
+        totalNetworks
+      }}</span>
     </div>
   </div>
 </template>
@@ -20,6 +39,7 @@ import { ref, onMounted, computed } from "vue";
 import { useFooter } from "@/store/theFooter";
 import { useDeepClone } from "@/composables/utils";
 import i18n from "@/includes/i18n";
+import { useSetups } from "../../../../../store/setups";
 
 const t = i18n.global.t;
 
@@ -27,6 +47,7 @@ const currIs = t("networkDetails.currIs");
 
 const footerStore = useFooter();
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 const network = ref(null);
 
 const getNetworkName = computed(() => {
@@ -35,6 +56,13 @@ const getNetworkName = computed(() => {
 
 const getNetworkIcon = computed(() => {
   return manageStore.currentNetwork?.icon;
+});
+
+const totalNetworks = computed(() => {
+  let total = 0;
+  total = setupStore.allSetups.filter((setup) => setup.network).length;
+
+  return total;
 });
 
 onMounted(() => {

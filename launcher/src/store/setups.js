@@ -9,9 +9,10 @@ export const useSetups = defineStore("setups", {
       isServerViewActive: true,
       isSetupViewActive: false,
       isConfigViewActive: false,
-
+      isRenameSetupActive: false,
       /* End Setup Configs */
       selectedSetup: null,
+      setupToRename: null,
     };
   },
 
