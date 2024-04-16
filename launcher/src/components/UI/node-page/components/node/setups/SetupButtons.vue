@@ -1,5 +1,8 @@
 <template>
-  <div class="col-start-2 col-span-1 grid grid-cols-2 grid-rows-2 gap-2 p-2 pr-0 relative" @pointerdown.prevent.stop>
+  <div
+    class="col-start-2 col-span-1 grid grid-cols-2 grid-rows-2 gap-2 p-2 relative"
+    @pointerdown.prevent.stop
+  >
     <div
       class="p-1 w-8 h-8 col-start-1 col-span-1 row-start-1 row-span-1 flex justify-center items-center transition-colors duration-200 bg-gray-600 border border-gray-600 hover:border-gray-300 rounded-md active:scale-95"
     >
@@ -10,7 +13,11 @@
         @mouseenter="footerStore.cursorLocation = `${turnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/node-page-icons/service-command-turn-off.png" alt="icon" class="w-5 active:scale-95" />
+        <img
+          src="/img/icon/node-page-icons/service-command-turn-off.png"
+          alt="icon"
+          class="w-5 active:scale-95"
+        />
       </button>
 
       <button
@@ -20,7 +27,11 @@
         @mouseenter="footerStore.cursorLocation = `${turnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/node-page-icons/service-command-turn-on.png" alt="icon" class="w-5 active:scale-95" />
+        <img
+          src="/img/icon/node-page-icons/service-command-turn-on.png"
+          alt="icon"
+          class="w-5 active:scale-95"
+        />
       </button>
     </div>
     <button
@@ -29,7 +40,11 @@
       @mouseenter="footerStore.cursorLocation = `${exportConfig}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img class="w-5 active:scale-95" src="/img/icon/node-page-icons/export-config-icon.png" alt="Export Icon" />
+      <img
+        class="w-5 active:scale-95"
+        src="/img/icon/node-page-icons/export-config-icon.png"
+        alt="Export Icon"
+      />
     </button>
 
     <button

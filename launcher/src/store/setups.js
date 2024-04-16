@@ -3,9 +3,14 @@ import { defineStore } from "pinia";
 export const useSetups = defineStore("setups", {
   state: () => {
     return {
-      //Configs
+      /* Start Setup Configs */
       allSetups: [],
-      isServerViewActive: false,
+
+      isServerViewActive: true,
+      isSetupViewActive: false,
+      isConfigViewActive: false,
+
+      /* End Setup Configs */
       selectedSetup: null,
     };
   },
