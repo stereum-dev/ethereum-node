@@ -18,19 +18,12 @@
 import EntryAnimation from "./sections/EntryAnimation.vue";
 import LogoSection from "./sections/LogoSection.vue";
 import MenuSection from "./sections/MenuSection.vue";
-import { useRouter } from "vue-router";
 
 import { useLangStore } from "@/store/languages";
 
 const langStore = useLangStore();
-const router = useRouter();
 
 const buttonHandler = () => {
-  if (!langStore.settingPageIsVisible) {
-    langStore.runEntryAnimation();
-  } else {
-    router.push("/setting");
-    langStore.settingPageIsVisible = false;
-  }
+  langStore.runEntryAnimation();
 };
 </script>
