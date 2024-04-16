@@ -979,10 +979,6 @@ video {
   top: 5rem;
 }
 
-.top-5{
-  top: 1.25rem;
-}
-
 .top-8{
   top: 2rem;
 }
@@ -993,10 +989,6 @@ video {
 
 .top-\[7rem\]{
   top: 7rem;
-}
-
-.-z-10{
-  z-index: -10;
 }
 
 .z-0{
@@ -2214,14 +2206,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-60{
-  width: 15rem;
-}
-
-.w-40{
-  width: 10rem;
 }
 
 .min-w-\[100px\]{

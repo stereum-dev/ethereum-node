@@ -29,7 +29,7 @@
           :placeholder="`${$t('multiServer.serverName')}`"
           class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
-          @change="validateForm"
+          @change="serverNameChanged = true"
         />
 
         <div
@@ -90,7 +90,7 @@
             placeholder="114.72.86.90"
             class="h-8 self-center col-start-1 col-end-11 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
             required
-            @change="validateForm"
+            @change="serverIPChanged = true"
           />
           <img
             v-if="!serverStore.isIpScannerModalActive"
@@ -138,7 +138,7 @@
           placeholder="root"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
-          @change="validateForm"
+          @change="serverUsernameChanged = true"
         />
       </div>
       <div
@@ -158,7 +158,7 @@
             v-model="serverStore.loginState.useAuth"
             type="checkbox"
             class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden bg-gray-200"
-            @change="toggleSSH"
+            @input="toggleSSH"
           />
 
           <span
@@ -216,7 +216,7 @@
           placeholder="/user/.ssh/id_rsa"
           class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
-          @change="validateSSHKeyPath"
+          @input="validateSSHKeyPath"
         />
         <label
           for="keypath-file"
@@ -272,7 +272,7 @@
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           placeholder="******************"
           required
-          @change="validatePassword"
+          @input="validatePassword"
         />
       </div>
 
@@ -336,6 +336,9 @@ const addHovered = ref(false);
 const isFormValid = ref(false);
 const useSSHKey = ref(false);
 const usePassword = ref(false);
+const serverNameChanged = ref(false);
+const serverIPChanged = ref(false);
+const serverUsernameChanged = ref(false);
 
 //*********** Computed ***********//
 
@@ -352,7 +355,18 @@ const getTrashImg = computed(() => {
 });
 
 const addButtonDisabled = computed(() => {
-  return !isFormValid.value;
+  if (
+    !ipError.value &&
+    !usernameError.value &&
+    !serverNameError.value &&
+    serverStore.loginState.hostName &&
+    serverStore.loginState.ip &&
+    serverStore.loginState.username
+  ) {
+    return false;
+  } else {
+    return true;
+  }
 });
 
 const removeButtonDisabled = computed(() => {
@@ -375,6 +389,7 @@ watchEffect(() => {
     serverStore.loginState.ip = "";
     serverStore.loginState.port = "";
     serverStore.loginState.username = "";
+    serverStore.loginState.keyPath = "";
     serverStore.loginState.useAuth = false;
   }
 });
@@ -403,6 +418,33 @@ watchEffect(() => {
   }
 });
 
+watch(
+  () => serverStore.loginState.hostName,
+  () => {
+    if (serverNameChanged.value) {
+      validateServerName();
+    }
+  }
+);
+
+watch(
+  () => serverStore.loginState.ip,
+  () => {
+    if (serverIPChanged.value) {
+      validateIP();
+    }
+  }
+);
+
+watch(
+  () => serverStore.loginState.username,
+  () => {
+    if (serverUsernameChanged.value) {
+      validateUsername();
+    }
+  }
+);
+
 watchEffect(() => {
   if (!serverNameError.value && !ipError.value && !usernameError.value) {
     isFormValid.value = true;
@@ -414,6 +456,10 @@ watchEffect(() => {
 //*********** Lifecycle Hooks ***********//
 
 onMounted(() => {
+  ipError.value = "";
+  usernameError.value = "";
+  serverNameError.value = "";
+
   serverStore.loginState = {};
 });
 
@@ -432,7 +478,7 @@ const validateServerName = () => {
 const validateIP = () => {
   const ip = serverStore.loginState.ip || ""; // Default to empty string if undefined or null
   const ipPattern = /^[0-9]{1,3}(\.[0-9]{1,3}){3}$/;
-  ipError.value = ipPattern.test(ip.trim()) ? "" : "Invalid IP address.";
+  ipError.value = ipPattern.test(ip.trim()) ? "" : "Server IP is required .";
 };
 
 const validateUsername = () => {
