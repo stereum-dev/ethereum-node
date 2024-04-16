@@ -2,25 +2,19 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
   >
-    <div
-      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center"
-    >
+    <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
       <span class="text-md font-semibold text-gray-300 uppercase">Login to server</span>
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
       @submit.prevent="internalLogin"
     >
-      <div
-        class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="servername"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold"
           :class="serverNameError ? 'text-red-500' : 'text-gray-300'"
-          >{{
-            serverNameError ? serverNameError : `${$t("multiServer.serverName")}`
-          }}</label
+          >{{ serverNameError ? serverNameError : `${$t("multiServer.serverName")}` }}</label
         >
         <input
           id="servername"
@@ -71,9 +65,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1"
-      >
+      <div class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1">
         <label
           for="hostname"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
@@ -105,9 +97,7 @@
           ></span>
         </div>
       </div>
-      <div
-        class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="port"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
@@ -122,9 +112,7 @@
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
         />
       </div>
-      <div
-        class="col-start-1 col-end-7 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-1 col-end-7 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="username"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold mb-2"
@@ -141,9 +129,7 @@
           @change="serverUsernameChanged = true"
         />
       </div>
-      <div
-        class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
         <span
           class="w-full col-start-1 col-span-full row-start-1 row-span-1 text-gray-300 font-semibold text-xs ml-1 capitalize text-center"
           >{{ $t("formsetup.usessh") }}</span
@@ -193,9 +179,7 @@
             </svg>
           </span>
 
-          <span
-            class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"
-          ></span>
+          <span class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"></span>
         </label>
       </div>
 
@@ -222,20 +206,13 @@
           for="keypath-file"
           class="h-8 col-start-12 col-span-full row-start-2 row-span-2 self-center w-full flex justify-center items-center cursor-pointer bg-gray-200 rounded-r-md"
         >
-          <div
-            class="w-6 h-6 border-2 border-gray-400 rounded-full flex justify-center items-center"
-          >
+          <div class="w-6 h-6 border-2 border-gray-400 rounded-full flex justify-center items-center">
             <span
               class="text-xl text-teal-700 text-center font-bold hover:scale-125 active:scale-100 transition-all duration-150 ease-in-out"
               >+</span
             >
           </div>
-          <input
-            id="keypath-file"
-            type="file"
-            class="hidden"
-            @change="handleFileSelect"
-          />
+          <input id="keypath-file" type="file" class="hidden" @change="handleFileSelect" />
         </label>
       </div>
       <div
@@ -276,9 +253,7 @@
         />
       </div>
 
-      <div
-        class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center"
-      >
+      <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
         <button
           v-if="!serverStore.connectingProcess"
           class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
