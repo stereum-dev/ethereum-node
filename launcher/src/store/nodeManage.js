@@ -71,7 +71,6 @@ export const useNodeManage = defineStore("nodeManage", {
           isRemoved: false,
           freeCensorship: false,
         },
-
         {
           icon: "/img/icon/one-click-icons/mevboost-icons/manifold.png",
           name: "Manifold",
@@ -91,6 +90,8 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay.ultrasound.money",
           goerli:
             "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money",
+          holesky:
+            "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money",
           id: 7,
           isSelected: false,
           isRemoved: false,
@@ -103,6 +104,8 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0xa15b52576bcbf1072f4a011c0f99f9fb6c66f3e1ff321f11f461d15e31b1cb359caa092c71bbded0bae5b5ea401aab7e@aestus.live",
           goerli:
             "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@goerli.aestus.live",
+          holesky:
+            "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@holesky.aestus.live",
           id: 8,
           isSelected: false,
           isRemoved: false,
@@ -127,10 +130,32 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io/",
           goerli:
             "https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-goerli.edennetwork.io/",
+          holesky:
+            "https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-holesky.edennetwork.io",
           id: 10,
           isSelected: false,
           isRemoved: false,
           freeCensorship: false,
+        },
+        {
+          icon: "/img/icon/one-click-icons/mevboost-icons/flashbots.png",
+          name: "Titan Relay",
+          holesky:
+            "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz",
+          id: 11,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: true,
+        },
+        {
+          icon: "/img/icon/one-click-icons/mevboost-icons/bloxroute.png",
+          name: "BloXroute",
+          holesky:
+            "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.holesky.blxrbdn.com",
+          id: 12,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: true,
         },
       ],
       newConfiguration: [],
