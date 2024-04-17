@@ -32,10 +32,10 @@ export const useSetups = defineStore("setups", {
 
     //Setup Dropwdown
     getBGColor: (state) => (color) => {
-      return state.colorMappings[color]?.background;
+      return state.colorMappings[color]?.background || "bg-[#336666]";
     },
     getTextColor: (state) => (color) => {
-      return state.colorMappings[color]?.text;
+      return state.colorMappings[color]?.text || "text-gray-100";
     },
   },
   actions: {},
