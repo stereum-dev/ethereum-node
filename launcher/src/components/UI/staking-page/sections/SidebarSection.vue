@@ -1,10 +1,12 @@
 <template>
   <aside
-    class="h-full col-start-1 col-span-1 row-start-1 row-span-full grid grid-cols-1 grid-rows-12 bg-[#33393E] items-center"
+    class="h-full col-start-1 col-span-1 row-start-1 row-span-full grid grid-cols-1 grid-rows-12 items-center custom-gradient"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start">
+    <div
+      class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start"
+    >
       <div
         v-for="(item, index) in installedValidators"
         :key="item.config?.serviceID"
@@ -12,7 +14,8 @@
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             currentService === item.config?.serviceID,
-          'bg-[#202123] border border-gray-600': currentService !== item.config?.serviceID,
+          'bg-[#202123] border border-gray-600':
+            currentService !== item.config?.serviceID,
         }"
         @click="getService(index)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
@@ -91,3 +94,9 @@ const filterByService = (item) => {
   stakingStore.currentGroup = null;
 };
 </script>
+
+<style scoped>
+.custom-gradient {
+  background: linear-gradient(to bottom, #264744 10%, #33393e 90%);
+}
+</style>

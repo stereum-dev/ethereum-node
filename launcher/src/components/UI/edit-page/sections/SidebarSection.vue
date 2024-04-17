@@ -1,5 +1,9 @@
 <template>
-  <aside class="flex flex-col items-center w-18 h-full bg-[#33393E]" @pointerdown.prevent.stop @mousedown.prevent.stop>
+  <aside
+    class="flex flex-col items-center w-18 h-full custom-gradient"
+    @pointerdown.prevent.stop
+    @mousedown.prevent.stop
+  >
     <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-5">
       <div
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
@@ -7,7 +11,11 @@
         @mouseenter="footerStore.cursorLocation = `${toNode}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-8 h-5" src="/img/icon/edit-node-icons/back-to-node.png" alt="Manage Icon" />
+        <img
+          class="w-8 h-5"
+          src="/img/icon/edit-node-icons/back-to-node.png"
+          alt="Manage Icon"
+        />
       </div>
       <Transition name="slide-fade">
         <router-link
@@ -16,8 +24,14 @@
           class="w-fit h-9 absolute col-span-1 row-start-1 row-end-2 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-between items-center space-x-2 ml-1 transition duration-200 shadow-md shadow-[#23272a] z-50"
           @mouseleave="routerHovered = false"
         >
-          <img class="w-6 h-4 mr-1" src="/img/icon/edit-node-icons/back-to-node.png" alt="Manage Icon" />
-          <span class="text-sm text-gray-200 font-semibold">{{ $t("sidebarSect.toNode") }}</span>
+          <img
+            class="w-6 h-4 mr-1"
+            src="/img/icon/edit-node-icons/back-to-node.png"
+            alt="Manage Icon"
+          />
+          <span class="text-sm text-gray-200 font-semibold">{{
+            $t("sidebarSect.toNode")
+          }}</span>
         </router-link>
       </Transition>
       <button
@@ -26,7 +40,11 @@
         @mouseenter="footerStore.cursorLocation = `${setchNet}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-6" src="/img/icon/edit-node-icons/change-network.png" alt="Network" />
+        <img
+          class="w-6"
+          src="/img/icon/edit-node-icons/change-network.png"
+          alt="Network"
+        />
       </button>
       <Transition name="slide-fade">
         <button
@@ -35,7 +53,11 @@
           @mouseleave="networkHovered = false"
           @click="networkModal"
         >
-          <img class="w-4 mr-1" src="/img/icon/edit-node-icons/change-network.png" alt="Network Icon" />
+          <img
+            class="w-4 mr-1"
+            src="/img/icon/edit-node-icons/change-network.png"
+            alt="Network Icon"
+          />
           <span class="text-sm text-gray-200 font-semibold">{{ setchNet }}</span>
         </button>
       </Transition>
@@ -46,7 +68,11 @@
         @mouseenter="footerStore.cursorLocation = `${nukTheNud}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-6" src="/img/icon/edit-node-icons/nuke-node.png" alt="Export Icon" />
+        <img
+          class="w-6"
+          src="/img/icon/edit-node-icons/nuke-node.png"
+          alt="Export Icon"
+        />
       </button>
       <Transition name="slide-fade">
         <button
@@ -55,8 +81,14 @@
           @mouseleave="nukeHovered = false"
           @click="nukeNode"
         >
-          <img class="w-4" src="/img/icon/edit-node-icons/nuke-node.png" alt="Export Icon" />
-          <span class="text-xs text-gray-200 font-semibold">{{ $t("sidebarSect.nukNod") }}</span>
+          <img
+            class="w-4"
+            src="/img/icon/edit-node-icons/nuke-node.png"
+            alt="Export Icon"
+          />
+          <span class="text-xs text-gray-200 font-semibold">{{
+            $t("sidebarSect.nukNod")
+          }}</span>
         </button>
       </Transition>
     </div>
@@ -132,6 +164,10 @@ const hoverNuke = () => {
 .slide-fade-leave-to {
   transform: translateX(30px);
   opacity: 0;
+}
+
+.custom-gradient {
+  background: linear-gradient(to bottom, #264744 20%, #33393e 80%);
 }
 .showManageBtn {
   grid-column: 1;
