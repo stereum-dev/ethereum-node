@@ -72,7 +72,6 @@ watchEffect(() => {
   }
 });
 
-console.log(serviceStore.installedServices);
 //Lifecycle
 
 // Methods

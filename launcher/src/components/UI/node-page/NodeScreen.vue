@@ -7,13 +7,19 @@
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <NodeSection @open-expert="openExpertModal" @open-log="openLogPage" />
-        <ExpertWindow v-if="isExpertModeOpen" :item="expertModeClient" @hide-modal="closeExpertMode" />
+        <ExpertWindow
+          v-if="isExpertModeOpen"
+          :item="expertModeClient"
+          @hide-modal="closeExpertMode"
+        />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
         <ServiceSection @open-expert="openExpertModal" @open-logs="openLogPage" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
+        <div
+          class="h-[60px] self-center w-full flex flex-col justify-center items-center"
+        >
           <button
             class="w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
             @click="alarmToggle"
@@ -24,7 +30,11 @@
             "
             @mouseleave="footerStore.cursorLocation = ''"
           >
-            <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
+            <img
+              class="w-8"
+              src="/img/icon/node-page-icons/access-tutorial-icon.png"
+              alt="information"
+            />
           </button>
         </div>
         <AlertSection :info-aralm="nodeStore.infoAlarm" />
@@ -101,7 +111,6 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-  console.log("All Configs", setupStore.allSetups);
   if (refreshStats.value) {
     updateConnectionStats();
     refreshStats.value = false;
@@ -151,7 +160,10 @@ const checkForListingKeys = async () => {
     serviceStore.installedServices &&
     serviceStore.installedServices.length > 0 &&
     serviceStore.installedServices.some(
-      (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
+      (s) =>
+        s.category === "validator" &&
+        s.state === "running" &&
+        (!s.config.keys || !s.config.keys.length > 0)
     )
   ) {
     clearInterval(pollingListingKeys);
@@ -165,14 +177,22 @@ const updateConnectionStats = async () => {
   controlStore.ipAddress = stats.ipAddress;
 };
 const updateServiceLogs = async () => {
-  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+  if (
+    serviceStore.installedServices &&
+    serviceStore.installedServices.length > 0 &&
+    headerStore.refresh
+  ) {
     const data = await ControlService.getServiceLogs({ logs_tail: 150 });
     nodeStore.serviceLogs = data;
   }
 };
 const updateServerVitals = async () => {
   try {
-    if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+    if (
+      serviceStore.installedServices &&
+      serviceStore.installedServices.length > 0 &&
+      headerStore.refresh
+    ) {
       const data = await ControlService.getServerVitals();
       controlStore.cpu = data.cpu;
       controlStore.availDisk = data.availDisk;
@@ -207,12 +227,18 @@ const exportLogs = async (client) => {
     (service) => service.config?.serviceID === client.config?.serviceID
   );
 
-  const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
+  const fileName = nodeStore.exportLogs
+    ? `${client.name}_150_logs.txt`
+    : `${client.name}_all_logs.txt`;
 
   // Select the data based on the condition
-  const data = nodeStore.exportLogs ? currentService.logs.slice(-150).reverse() : currentService.logs.reverse();
+  const data = nodeStore.exportLogs
+    ? currentService.logs.slice(-150).reverse()
+    : currentService.logs.reverse();
 
-  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const lineByLine = data
+    .map((line, index) => `#${data.length - index}: ${line}`)
+    .join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
 };

@@ -1,6 +1,10 @@
 <template>
   <div
-    class="h-full w-[154px] col-start-1 col-span-full row-start-1 row-span-1 rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-white text-[10px] capitalize"
+    class="h-full w-[154px] col-start-1 col-span-full row-start-1 row-span-1 rounded-r-full pl-2 flex justify-between items-center text-[10px] font-semibold capitalize"
+    :class="[
+      setupStore.getBGColor(setupStore.selectedSetup?.color),
+      setupStore.getTextColor(setupStore.selectedSetup?.color),
+    ]"
   >
     {{ props.client.name }}
     <span class="w-5 h-[18px]" :class="clientStatus"></span>
@@ -9,10 +13,13 @@
 
 <script setup>
 import { computed } from "vue";
+import { useSetups } from "../../../../../store/setups";
 
 const props = defineProps({
   client: { type: Object, required: true },
 });
+
+const setupStore = useSetups();
 
 const clientStatus = computed(() => {
   if (props.client.state === "running") {
