@@ -30,7 +30,7 @@
 import ConfigBody from "./ConfigBody.vue";
 import SetupBody from "./SetupBody.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
-import { onMounted, ref, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
