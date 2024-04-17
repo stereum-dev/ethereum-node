@@ -65,6 +65,10 @@ import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 import { ref } from "vue";
 
+const props = defineProps({
+  setup: Object,
+});
+
 const t = i18n.global.t;
 
 const turnOn = t("clientButtons.turnOn");
@@ -75,10 +79,6 @@ const openConfig = "Open Setup Config";
 const isConfigActive = ref(true);
 
 const footerStore = useFooter();
-
-const props = defineProps({
-  setup: Object,
-});
 
 const emit = defineEmits(["exportSetup", "stateHandler", "openSetup"]);
 

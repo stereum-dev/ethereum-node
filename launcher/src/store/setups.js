@@ -2,12 +2,10 @@ import { defineStore } from "pinia";
 
 export const useSetups = defineStore("setups", {
   state: () => ({
-    /* Start Setup Configs */
     allSetups: [],
     isServerViewActive: false,
     isConfigViewActive: false,
     isRenameSetupActive: false,
-    /* End Setup Configs */
     selectedSetup: null,
     setupToRename: null,
     serverServices: ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"],
@@ -34,10 +32,10 @@ export const useSetups = defineStore("setups", {
 
     //Setup Dropwdown
     getBGColor: (state) => (color) => {
-      return state.colorMappings[color]?.background || "white";
+      return state.colorMappings[color]?.background;
     },
     getTextColor: (state) => (color) => {
-      return state.colorMappings[color]?.text || "text-white";
+      return state.colorMappings[color]?.text;
     },
   },
   actions: {},

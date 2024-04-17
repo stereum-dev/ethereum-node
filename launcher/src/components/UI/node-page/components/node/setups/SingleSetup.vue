@@ -4,7 +4,12 @@
   >
     <SetupLayout :setup="props.setup" />
 
-    <SetupButtons :setup="props.setup" />
+    <SetupButtons
+      :setup="props.setup"
+      @open-setup="openSetup"
+      @export-setup="exportSetup"
+      @state-handler="setupState"
+    />
   </div>
 </template>
 
@@ -15,4 +20,18 @@ import SetupButtons from "./SetupButtons.vue";
 const props = defineProps({
   setup: Object,
 });
+
+const emit = defineEmits(["openSetup", "exportSetup", "setupState"]);
+
+const openSetup = (item) => {
+  emit("openSetup", item);
+};
+
+const exportSetup = (item) => {
+  emit("exportSetup", item);
+};
+
+const setupState = (item) => {
+  emit("setupState", item);
+};
 </script>

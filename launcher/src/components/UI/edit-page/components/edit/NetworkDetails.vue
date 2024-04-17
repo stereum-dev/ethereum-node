@@ -6,7 +6,7 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
-      v-if="!setupStore.isServerViewActive"
+      v-if="setupStore.isConfigViewActive"
       class="w-full self-start text-xs font-semibold text-teal-700"
     >
       {{ t("networkDetails.currentNet") }}
@@ -18,7 +18,7 @@
       TOTAL NETWORKS ON SERVER
     </div>
     <div
-      v-if="!setupStore.isServerViewActive"
+      v-if="setupStore.isConfigViewActive"
       class="w-full flex justify-center items-center"
     >
       <img v-if="getNetworkIcon" :src="getNetworkIcon" alt="Networks" class="w-5 mr-1" />

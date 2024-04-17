@@ -5,7 +5,7 @@
     <div
       class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
     >
-      <span v-if="!setupStore.isServerViewActive" class="self-center"
+      <span v-if="setupStore.isConfigViewActive" class="self-center"
         >Server Services
       </span>
     </div>
@@ -63,7 +63,7 @@ const getServices = computed(() => {
     .filter((e) => e.category === "service")
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  if (setupStore.isServerViewActive) {
+  if (!setupStore.isConfigViewActive) {
     const seen = new Set();
     services = services.filter((service) => {
       if (setupStore.serverServices.includes(service.service)) {

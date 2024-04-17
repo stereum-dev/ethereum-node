@@ -62,7 +62,6 @@ export const useMultiSetups = () => {
 
     return setups;
   };
-  console.log("Composable Configs", configs.value);
 
   return { loadSetups, loadServices, getAllSetups };
 };

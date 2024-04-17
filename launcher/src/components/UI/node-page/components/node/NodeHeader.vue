@@ -17,15 +17,12 @@ const setupStore = useSetups();
 const setupsList = computed(() => {
   let list;
   list = setupStore.allSetups.map((setup) => {
-    return {
-      name: setup.setupName,
-      color: setup.color,
-    };
+    return setup;
   });
   return list;
 });
 
-console.log(setupsList.value);
+// End of script
 </script>
 <style scoped>
 .fade-move,

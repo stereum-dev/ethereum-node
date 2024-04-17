@@ -21,15 +21,14 @@
     >
       <span
         v-if="setupStore.selectedSetup !== null"
-        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center z-10 shadow-md shadow-black"
+        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-md shadow-black"
         :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
       ></span>
       <span
-        class="col-start-2 col-end-11 text-sm font-semibold overflow-hidden truncate"
-        :class="setupStore.getTextColor(setupStore.selectedSetup?.color)"
+        class="col-start-2 col-end-11 text-sm font-semibold overflow-hidden truncate text-gray-200"
         >{{
           setupStore.selectedSetup !== null
-            ? setupStore.selectedSetup?.name
+            ? setupStore.selectedSetup?.setupName
             : "Server View"
         }}</span
       >
@@ -88,7 +87,7 @@
     >
       <div
         v-if="setupStore.isConfigViewActive"
-        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-700 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
         @click="selectServerView"
       >
         <span
@@ -98,17 +97,17 @@
       </div>
       <div
         v-for="setup in list"
-        :key="setup.name"
+        :key="setup.setupName"
         class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
         @click="selectSetup(setup)"
       >
         <span
-          class="col-start-1 col-span-1 w-5 h-5 rounded-full self-center justify-self-start z-10 shadow-sm shadow-black boxShadow"
-          :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
+          class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start"
+          :class="setupStore.getBGColor(setup.color)"
         ></span>
         <span
           class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate"
-          >{{ setup.name }}</span
+          >{{ setup.setupName }}</span
         >
       </div>
     </div>
@@ -153,20 +152,12 @@ const confirmRename = () => {
 
 const selectSetup = (setup) => {
   setupStore.selectedSetup = setup;
-  setupStore.isServerViewActive = false;
   setupStore.isConfigViewActive = true;
   emit("selectSetup", setup);
 };
 
 const selectServerView = () => {
   setupStore.selectedSetup = null;
-  setupStore.isServerViewActive = true;
   setupStore.isConfigViewActive = false;
 };
 </script>
-
-<style scoped>
-.boxShadow {
-  box-shadow: inset 1px 1px 10px 0px #adaca8, 0px 1px 3px 1px #3d3b40;
-}
-</style>

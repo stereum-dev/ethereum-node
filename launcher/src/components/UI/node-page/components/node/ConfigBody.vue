@@ -5,9 +5,15 @@
     <div
       class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
     >
-      <span class="col-start-1 justify-self-center self-center">{{ $t("editModals.executionClients") }}</span>
-      <span class="col-start-2 justify-self-center self-center">{{ $t("editModals.consensusClients") }}</span>
-      <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }} </span>
+      <span class="col-start-1 justify-self-center self-center">{{
+        $t("editModals.executionClients")
+      }}</span>
+      <span class="col-start-2 justify-self-center self-center">{{
+        $t("editModals.consensusClients")
+      }}</span>
+      <span class="col-start-3 justify-self-center self-center"
+        >{{ $t("editBody.validator") }}
+      </span>
     </div>
     <div class="w-full h-full grid grid-cols-3 pt-8">
       <ClientSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
@@ -18,8 +24,8 @@
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
         @open-doc="openDocs"
-        @mouse-over="lineDrawHandler"
-        @mouse-leave="removeConnectionLines"
+        @mouse-over="lineDraw"
+        @mouse-leave="removeLines"
         @copy-jwt="copyJwt"
       />
       <ConsensusClients
@@ -29,8 +35,8 @@
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
         @open-doc="openDocs"
-        @mouse-over="lineDrawHandler"
-        @mouse-leave="removeConnectionLines"
+        @mouse-over="lineDraw"
+        @mouse-leave="removeLines"
       />
       <ValidatorClients
         @open-expert="openExpert"
@@ -39,11 +45,10 @@
         @state-handler="useStateHandler"
         @restart-handler="useRestartService"
         @open-doc="openDocs"
-        @mouse-over="lineDrawHandler"
-        @mouse-leave="removeConnectionLines"
+        @mouse-over="lineDraw"
+        @mouse-leave="removeLines"
       />
     </div>
-    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
   </div>
 </template>
 
@@ -51,10 +56,70 @@
 import ExecutionClients from "./clients/ExecutionClients.vue";
 import ConsensusClients from "./clients/ConsensusClients.vue";
 import ValidatorClients from "./clients/ValidatorClients.vue";
-import PluginLogs from "../../sections/PluginLogs.vue";
 import ClientSkeleton from "./clients/ClientSkeleton.vue";
-
 import { ref, watchEffect } from "vue";
-
 import { useNodeStore } from "@/store/theNode";
+import { useStateHandler, useRestartService } from "@/composables/services";
+
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "openDocs",
+  "clickOutside",
+  "useStateHandler",
+  "useRestartService",
+  "lineDraw",
+  "removeLines",
+  "copyJwt",
+]);
+
+// Refs
+
+const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+const loadingClients = ref(false);
+
+// Store and router
+
+const nodeStore = useNodeStore();
+
+watchEffect(() => {
+  if (nodeStore.skeletonLoading) {
+    loadingClients.value = true;
+  } else {
+    loadingClients.value = false;
+  }
+});
+
+//Lifecycle
+
+// Methods
+
+const openExpert = (item) => {
+  emit("openExpert", item);
+};
+
+const openLog = (item) => {
+  emit("openLog", item);
+};
+
+const openDocs = (item) => {
+  emit("openDocs", item);
+};
+
+const clickOutside = () => {
+  emit("clickOutside");
+};
+
+const lineDraw = (item) => {
+  emit("lineDraw", item);
+};
+
+const removeLines = () => {
+  emit("removeLines");
+};
+
+const copyJwt = (jwt) => {
+  emit("copyJwt", jwt);
+};
 </script>
