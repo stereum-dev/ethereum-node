@@ -23,7 +23,7 @@ export class BesuService extends NodeService {
         `--network=${network}`,
         `--data-path=${dataDir}`,
         "--data-storage-format=BONSAI",
-        "--sync-mode=X_SNAP",
+        "--sync-mode=SNAP",
         "--p2p-port=30303",
         "--p2p-host=0.0.0.0",
         "--rpc-http-enabled=true",
@@ -38,7 +38,6 @@ export class BesuService extends NodeService {
         "--metrics-host=0.0.0.0",
         "--metrics-port=9545",
         "--logging=INFO",
-        "--engine-rpc-enabled=true",
         "--engine-host-allowlist=*",
         "--engine-rpc-port=8551",
         "--engine-jwt-enabled=true",
@@ -85,9 +84,8 @@ export class BesuService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id
+      }\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }
 
