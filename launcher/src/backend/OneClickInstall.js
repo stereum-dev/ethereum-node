@@ -480,7 +480,7 @@ export class OneClickInstall {
           "PrometheusService",
           "NotificationService",
         ];
-        services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService");
+        services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
     }
     return services;
   }
