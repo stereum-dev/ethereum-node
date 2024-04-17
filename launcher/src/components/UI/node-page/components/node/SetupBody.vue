@@ -56,6 +56,13 @@ const setupsRunning = computed(() => {
 });
 
 onMounted(() => {
-  loadingSetupSkeleton.value = true;
+  if (setupStore.allSetups.length > 0) {
+    setTimeout(() => {
+      loadingSetupSkeleton.value = false;
+      setupStore.isServerViewActive = true;
+    }, 3000);
+  } else {
+    loadingSetupSkeleton.value = true;
+  }
 });
 </script>

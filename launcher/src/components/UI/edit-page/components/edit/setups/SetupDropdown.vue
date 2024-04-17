@@ -16,21 +16,21 @@
     </label>
     <button
       v-else
-      class="w-full col-start-1 col-end-6 relative z-10 p-2 text-gray-800 bg-[#232528] rounded-sm grid grid-cols-12 border border-gray-600"
+      class="w-full col-start-1 col-end-6 relative p-2 text-gray-800 bg-[#232528] rounded-sm grid grid-cols-12 border border-gray-600"
       @click="isOpen = !isOpen"
     >
       <span
         v-if="setupStore.selectedSetup !== null"
         class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center z-10 shadow-md shadow-black"
-        :class="getBGColor"
+        :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
       ></span>
       <span
         class="col-start-2 col-end-11 text-sm font-semibold overflow-hidden truncate"
-        :class="getTextColor"
+        :class="setupStore.getTextColor(setupStore.selectedSetup?.color)"
         >{{
           setupStore.selectedSetup !== null
             ? setupStore.selectedSetup?.name
-            : "Select Setup"
+            : "Server View"
         }}</span
       >
       <svg
@@ -82,19 +82,29 @@
     <!-- Dropdown menu -->
     <div
       v-if="isOpen"
-      class="absolute right-8 top-9 z-20 w-40 min-h-20 py-2 mt-2 origin-top-right rounded-md shadow-xl bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
+      class="absolute right-8 top-9 z-20 w-40 min-h-20 mt-2 origin-top-right rounded-sm shadow-xl bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
       @click="isOpen = false"
       @mouseleave="isOpen = false"
     >
       <div
+        v-if="setupStore.isConfigViewActive"
+        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-700 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+        @click="selectServerView"
+      >
+        <span
+          class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate"
+          >Server View</span
+        >
+      </div>
+      <div
         v-for="setup in list"
         :key="setup.name"
-        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-700 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
         @click="selectSetup(setup)"
       >
         <span
           class="col-start-1 col-span-1 w-5 h-5 rounded-full self-center justify-self-start z-10 shadow-sm shadow-black boxShadow"
-          :class="getBGColor"
+          :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
         ></span>
         <span
           class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate"
@@ -106,7 +116,7 @@
 </template>
 <script setup>
 import { useFooter } from "@/store/theFooter";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useSetups } from "@/store/setups";
 import { useRoute } from "vue-router";
 
@@ -125,67 +135,9 @@ const footerStore = useFooter();
 
 const isOpen = ref(false);
 
-const getBGColor = computed(() => {
-  let bg;
-  if (setupStore.selectedSetup !== null) {
-    if (setupStore.selectedSetup?.color === "default") {
-      bg = "bg-gray-100";
-    } else if (setupStore.selectedSetup?.color === "blue") {
-      bg = "bg-[#1d4ed8]";
-    } else if (setupStore.selectedSetup?.color === "red") {
-      bg = "bg-[#C51605]";
-    } else if (setupStore.selectedSetup?.color === "yellow") {
-      bg = "bg-[#F7C566]";
-    } else if (setupStore.selectedSetup?.color === "orange") {
-      bg = "bg-[#FF9800]";
-    } else if (setupStore.selectedSetup?.color === "green") {
-      bg = "bg-[#436850]";
-    } else if (setupStore.selectedSetup?.color === "beige") {
-      bg = "bg-[#D1BB9E]";
-    } else if (setupStore.selectedSetup?.color === "purple") {
-      bg = "bg-[#8E7AB5]";
-    } else if (setupStore.selectedSetup?.color === "brown") {
-      bg = "bg-[#503C3C]";
-    } else if (setupStore.selectedSetup?.color === "gray") {
-      bg = "bg-[#5E5E5E]";
-    }
-  } else {
-    bg = "white";
-  }
+//Lifecycle Hooks
 
-  return bg;
-});
-
-const getTextColor = computed(() => {
-  let text;
-  if (setupStore.selectedSetup !== null) {
-    if (setupStore.selectedSetup?.color === "default") {
-      text = "text-gray-100";
-    } else if (setupStore.selectedSetup?.color === "blue") {
-      text = "text-[#074173]";
-    } else if (setupStore.selectedSetup?.color === "red") {
-      text = "text-[#C51605]";
-    } else if (setupStore.selectedSetup?.color === "yellow") {
-      text = "text-[#F7C566]";
-    } else if (setupStore.selectedSetup?.color === "orange") {
-      text = "text-[#FF9800]";
-    } else if (setupStore.selectedSetup?.color === "green") {
-      text = "text-[#436850]";
-    } else if (setupStore.selectedSetup?.color === "beige") {
-      text = "text-[#D1BB9E]";
-    } else if (setupStore.selectedSetup?.color === "purple") {
-      text = "text-[#8E7AB5]";
-    } else if (setupStore.selectedSetup?.color === "brown") {
-      text = "text-[#503C3C]";
-    } else if (setupStore.selectedSetup?.color === "gray") {
-      text = "text-[#5E5E5E]";
-    }
-  } else {
-    text = "text-white";
-  }
-
-  return text;
-});
+// Methods
 
 const renameSetup = () => {
   if (setupStore.selectedSetup !== null) {
@@ -195,15 +147,21 @@ const renameSetup = () => {
   }
 };
 
-console.log("setupStore.selectedSetup", setupStore.selectedSetup);
-
 const confirmRename = () => {
   emit("confirmRename", setupStore.selectedSetup);
 };
 
 const selectSetup = (setup) => {
   setupStore.selectedSetup = setup;
+  setupStore.isServerViewActive = false;
+  setupStore.isConfigViewActive = true;
   emit("selectSetup", setup);
+};
+
+const selectServerView = () => {
+  setupStore.selectedSetup = null;
+  setupStore.isServerViewActive = true;
+  setupStore.isConfigViewActive = false;
 };
 </script>
 
