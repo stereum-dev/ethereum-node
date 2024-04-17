@@ -167,7 +167,7 @@ const hoverNuke = () => {
 }
 
 .custom-gradient {
-  background: linear-gradient(to bottom, #264744 20%, #33393e 80%);
+  background: linear-gradient(to bottom, #264744 15%, #33393e 85%);
 }
 .showManageBtn {
   grid-column: 1;

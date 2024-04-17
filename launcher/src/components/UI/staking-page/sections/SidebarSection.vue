@@ -97,6 +97,6 @@ const filterByService = (item) => {
 
 <style scoped>
 .custom-gradient {
-  background: linear-gradient(to bottom, #264744 10%, #33393e 90%);
+  background: linear-gradient(to bottom, #264744 15%, #33393e 85%);
 }
 </style>
