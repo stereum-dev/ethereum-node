@@ -26,4 +26,4 @@
         path: "{{ item.path }}"
         regexp: "--engine-jwt-enabled"
         state: absent
-  when: service_configuration.service == "NethermindService"
+  when: service_configuration.service == "BesuService"
