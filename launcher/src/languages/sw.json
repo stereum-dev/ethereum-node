@@ -1,0 +1,925 @@
+{
+  "formsetup": {
+    "login": "Ingia",
+    "server": "Unganisha na seva yako",
+    "servername": "JINA LA SEVA",
+    "iphost": "IP / JINA LA MWENYEJI",
+    "username": "JINA LA MTUMIAJI",
+    "password": "NENO LA SIRI",
+    "keylocation": "MAHALI PA UFUNGUO",
+    "usessh": "TUMIA UFUNGUO WA SSH",
+    "fillFields": "Tafadhali jaza sehemu zilizoachwa wazi!",
+    "KeyPassphrase": "NENO LA SIRI LA UFUNGUO"
+  },
+  "comingsoon": {
+    "comingsoon": "INAKUJA HIVI KARIBUNI"
+  },
+  "journalnode": {
+    "serverip": "IP",
+    "servername": "JINA"
+  },
+  "pagesnav": {
+    "staking": "UTAKASAJI"
+  },
+  "supportModal": {
+    "support": "usaidizi",
+    "supportText": "Njia ya haraka zaidi ya kufikia mtu kwa usaidizi ni kujiunga na seva yetu ya Discord!",
+    "bugReport": "RIPOTI YA HITILAFU",
+    "emailText": "au andika barua pepe kwenda:",
+    "docsTitle": "nyaraka za mnyororo",
+    "docsText": "Kiungo handy kwenye nyaraka za kumbukumbu za mitandao kwa usanidi wako uliochaguliwa wa node."
+  },
+  "settingPanel": {
+    "stereumName": "mipangilio ya stereum",
+    "langName": "Uchaguzi wa Lugha",
+    "confirm": "TUMIA",
+    "general": "KUU",
+    "credits": "Credits",
+    "open": "fungua",
+    "update": "SASISHA",
+    "launcherVersion": "Toleo la Launcher",
+    "nodeVersion": "Toleo la Node",
+    "on": "washa",
+    "off": "zima",
+    "updateConfig": "Mipangilio ya Sasisho la Stereum",
+    "manual": "MANUAL",
+    "auto": "AUTO",
+    "sxConf": "Hamisha Mipangilio",
+    "chngAppr": "Mabadiliko ya kutumika",
+    "creditInfo": "bonyeza kitufe kuona wachangiaji",
+    "langInfo": "bonyeza kitufe kubadilisha lugha",
+    "exportInfo": "bonyeza kitufe kuhamisha mipangilio katika faili ya yaml",
+    "stereumUpd": "Bonyeza kitufe kusanidi sasisho la Stereum"
+  },
+  "nodeSidebarVideo": {
+    "stake": "Stake na 32 ETH",
+    "rpc": "Muunganisho wa RPC",
+    "written": "Mwongozo Uliyoandikwa",
+    "video": "Mwongozo wa Video",
+    "stereumTutorial": "miongozo ya stereum",
+    "statBox": "sanduku la hali"
+  },
+  "pluginZone": {
+    "client": "mteja"
+  },
+  "theNode": {
+    "execution": "utekelezaji",
+    "consensus": "maafikiano",
+    "validator": "validator",
+    "servicePlugin": "PLUG-IN YA HUDUMA",
+    "message": "Mtandao wa sasa ni ",
+    "chckTutorial": "Angalia miongozo",
+    "returnStatus": "Rudi kwenye sanduku la hali"
+  },
+  "modifyPanel": {
+    "backNode": "rudi kwenye NODE",
+    "nukeNode": "HARIBU NODE"
+  },
+  "changeConfirm": {
+    "confirm": "THIBITISHA MABADILIKO",
+    "process": "inachakata...",
+    "change": "MABADILIKO YA KUTHIBITISHA",
+    "delete": "FUTA"
+  },
+  "updatePanel": {
+    "launcherTitle": "launcher",
+    "version": "toleo",
+    "current": "la sasa",
+    "nodeTitle": "sasisho za node",
+    "latest": "la karibuni",
+    "auto": "Sasisho la Auto",
+    "available": "linapatikana",
+    "searching": "inatafuta sasisho mpya",
+    "serviceTitle": "sasisho za plug-in",
+    "serviceDesc": "Sasisho kwa uteuzi uliowekwa wa PLUG-INs",
+    "availablePlugin": "SASISHO ZA PLUG-IN ZINAZOPATIKANA",
+    "all": "sasisha yote",
+    "osTitle": "sasisho za os ya seva"
+  },
+  "controlPage": {
+    "node": "NODE",
+    "disk": "KASI YA DISKI",
+    "write": "ANDIKA",
+    "read": "SOMA",
+    "inclusionDistance": "UMBALI WA KUJUMUISHA",
+    "rpc": "MWISHO-RPC",
+    "ws": "MWISHO-WS",
+    "syncStatus": "HALI YA USANIFU",
+    "hard": "UJAZO WA HIFADHI",
+    "free": "HURU",
+    "total": "JUMLA",
+    "network": "MTANDAO",
+    "receive": "Kupokea Data",
+    "transmit": "Kutuma Data",
+    "ram": "RAM",
+    "used": "imetumika",
+    "totalram": "jumla",
+    "storage": "HIFADHI",
+    "active": "HAI",
+    "rating": "TATHMINI",
+    "usage": "Matumizi",
+    "netSel": "Mtandao uliochaguliwa ni",
+    "machineName": "Jina la Mashine",
+    "storVol": "Ujazo wa hifadhi ya seva",
+    "stor": "Muhtasari wa hifadhi ya seva",
+    "diskSpeed": "Kasi ya diski",
+    "p2p": "Muunganisho wa rika kwa rika",
+    "cpuUse": "Matumizi ya CPU",
+    "syncInfo": "Hali ya usanifu",
+    "ramUse": "Matumizi ya RAM",
+    "netSpeed": "Kasi ya Mtandao",
+    "listPort": "Orodha ya bandari za huduma",
+    "endPoint": "mwisho",
+    "data": "data",
+    "enteredKeys": "Idadi ya funguo za validator zilizoagizwa",
+    "ttlBal": "Jumla ya salio",
+    "finEPOCH": "EPOCH Ilimalizika",
+    "pending": "huduma inasubiri",
+    "off": "Zima huduma",
+    "on": "Washa huduma",
+    "settingService": "Kuanzisha huduma",
+    "restart": "anza upya huduma",
+    "currentEpoch": "EPOCH ya Sasa",
+    "currentSlot": "SLOT ya Sasa",
+    "p2pNet": "Mtandao wa rika kwa rika",
+    "selConcensus": "Chagua mteja wa makubaliano",
+    "selExecution": "Chagua mteja wa utekelezaji",
+    "subsribeSubnet": "subneti zilizojiandikisha"
+  },
+  "taskManager": {
+    "clickDisplay": "Bonyeza kwenye kazi kuonyesha"
+  },
+  "displayValidator": {
+    "pk": "Ufunguo wa Umma",
+    "rm": "Ufunguo wa mbali",
+    "service": "HUDUMA",
+    "active": "HAI TANGU",
+    "state": "Kiashiria cha Hali",
+    "balance": "SALIO",
+    "option": "CHAGUO",
+    "importKey": "Kuagiza ufunguo wa validator",
+    "waitMessage": "Inaweza kuchukua muda",
+    "waitForImport": "Tafadhali subiri mpaka ufunguo uagizwe",
+    "warningMessage": "Ukaguzi wetu wa ziada wa Kuzuia Kukatwa umeonyesha kuwa mmoja wa validators unaotaka kuagiza ameshuhudia katika epoch mbili zilizopita.",
+    "warningAlarm": "ONYO: Unakabiliwa na hatari kubwa ya kukatwa!",
+    "warningQuestion": "UNA HAKIKA UNATAKA KUAGIZA UFUNGUO WA VALIDATOR?",
+    "sure": "Nina hakika",
+    "cancel": "ghairi",
+    "serviceExpl": "Huduma iliyochaguliwa kwa ufunguo wa validator ulioingizwa",
+    "activeExpl": "Muda tangu validator amekuwa hai",
+    "balExpl": "Salio la validator",
+    "copyPub": "Nakili ufunguo wa umma",
+    "copiedPub": "Ufunguo wa umma umenakiliwa",
+    "setFee": "weka mpokeaji wa ada ya block kwa funguo zilizochaguliwa",
+    "renameVal": "badilisha jina la ufunguo wa validator",
+    "removVal": "ondoa ufunguo wa validator",
+    "exitChain": "ondoka kwenye mnyororo na funguo zilizochaguliwa",
+    "waitEnt": "Lazima usubiri funguo za validator ziingie",
+    "grpNam": "jina la kundi ni",
+    "keyNumGrp": "Idadi ya Funguo Zilizomo",
+    "grpBal": "salio la kundi",
+    "openGrp": "fungua Kundi",
+    "renameGrp": "badilisha jina la kundi",
+    "removGrp": "ondoa kundi",
+    "inserValidator": "ingiza ufunguo wa validator",
+    "backList": "rudi kwenye orodha",
+    "web3Import": "UAGIZAJI WA UFUNGUO WA MBALI WA WEB3SIGNER",
+    "crteGrp": "unda kundi jipya",
+    "openSrch": "tafuta ufunguo wa validator au kundi",
+    "showValKey": "onyesha funguo za validator",
+    "showKeyNam": "onyesha majina ya funguo",
+    "upcomingSync": "majukumu ya kamati ya usanifu yanayokuja",
+    "upcomingBlocProd": "majukumu ya uzalishaji wa block yanayokuja",
+    "clentSel": "mteja aliyechaguliwa",
+    "selValClint": "mteja wa validator aliyechaguliwa",
+    "upcomEpochDuti": "majukumu ya epoch yanayokuja",
+    "graffitiPanel": "badilisha graffiti kwa funguo zote katika mteja wa validator",
+    "removeMultiple": "ondoa funguo zote kutoka kwa mteja wa validator",
+    "withdrawMultiple": "ondoka & toa funguo zote kutoka kwa mteja wa validator",
+    "importRemote": "agiza funguo za mbali katika mteja wa validator",
+    "valClint": "mteja wa validator",
+    "valStat": "hali ya validator",
+    "numValidator": "nambari iliyotumika funguo za validator",
+    "attestReward": "zawadi ya uthibitisho",
+    "blockProdreward": "zawadi za uzalishaji wa block",
+    "syncCommitteeReward": "zawadi za kamati ya usanifu",
+    "ttlKeys": "funguo jumla",
+    "ttlBal": "jumla ya salio"
+  },
+  "enterPass": {
+    "enterPass": "INGIZA NYWILA & AGIZA"
+  },
+  "exitMultipleValidator": {
+    "passMessage": "INGIZA NYWILA YAKO YA VALIDATOR KUONDOKA MNYORORO NA UFUNGUO HUU...",
+    "confirm": "THIBITISHA"
+  },
+  "exitValidatorModal": {
+    "modalMessage": "Una hakika unataka kuondoka kwenye mnyororo na UFUNGUO WA VALIDATOR ULIOTEULIWA? Hii inasitisha jukumu lako la validator & HAIWEZI kubadilishwa. Fedha zako pia zinaweza tu kutoa, ikiwa mnyororo unaruhusu.",
+    "exitApprove": "NIMESOMA MAANDISHI NA NINAFAHAMU MADHARA",
+    "exitChain": "ONDOKA MNYORORO",
+    "clickClose": "Bonyeza nje kufunga."
+  },
+  "feeRecipient": {
+    "textPlaceHolder": "Ingiza anwani halali ya Ethereum kutuma zawadi zako za block kwa ... ",
+    "setBlock": "WEKA ANWANI YA MPATAJI WA ADA YA BLOCK"
+  },
+  "grafitiMultipleValidator": {
+    "textPlaceHolder": "Ingiza hadi herufi 32 kuongeza kwenye mnyororo unapotengeneza block!"
+  },
+  "renameValidator": {
+    "textPlaceHolder": "Ingiza hadi herufi 32 kubadilisha jina la validator!"
+  },
+  "insertValidator": {
+    "insertText": "BONYEZA AU BURUTA KUINGIZA UFUNGUO"
+  },
+  "removeSingleModal": {
+    "question": "UNATAKA KUPAKUA DATABASE YAKO YA KUKATWA?"
+  },
+  "removeMultiModal": {
+    "sure": "Una hakika unataka kuondoa ufunguo huu kutoka kwa mashine yako?",
+    "slashing": "Na Database ya Kuzuia Kukatwa?",
+    "remove": "Ondoa"
+  },
+  "removeMultipleValidators": {
+    "sureText": "Una hakika unataka kuondoa funguo zote za Validator KUTOKA KWA MASHINE HII?"
+  },
+  "timeReward": {
+    "totalText": "JUMLA YA SALIO LA",
+    "validators": "VALIDATORS"
+  },
+  "installOption": {
+    "back": "RUDI",
+    "install": "SINSTALL"
+  },
+  "installitionMenu": {
+    "osCheck": "KUANGALIA IWAPO OS YA SEVA YAKO INAUNGANISHWA",
+    "osSupported": "NI OS INAYOUNGWA MKONO"
+  },
+  "pluginName": {
+    "path": "NJIA YA USAKINISHAJI",
+    "installOpt": "CHAGUO ZA USAKINISHAJI",
+    "startOnInstall": "Anzisha mteja baada ya usakinishaji?",
+    "monitor": "UFUATILIAJI",
+    "instMonit": "Sakinisha Ufuatiliaji?"
+  },
+  "creditPanel": {
+    "techTitle": "CREDITS > Michango ya Kiufundi",
+    "techText": "Pata GitPOAP! Jifunze jinsi ya kushiriki kwa kutembelea GitHub yetu!",
+    "testTitle": "CREDITS > Uchunguzi, Maoni & Mapendekezo",
+    "testText": "Toa pendekezo la kujenga, kutatua suala, kwenye GitHub yetu!",
+    "translateTitle": "CREDITS > Tafsiri",
+    "translateText": "Si neno sahihi? Tusaidie kusambaza Stereum kwa lugha yako kwenye Crowdin!",
+    "financialPage": "MCHANGO WA KIFEDHA",
+    "developers": "WATENGENEZAJI",
+    "testers": "WAPIMAJI"
+  },
+  "verifyInstallation": {
+    "name": "JINA",
+    "cat": "KATEGORIA",
+    "path": "NJIA"
+  },
+  "warningModal": {
+    "warningText": "Tunapendekeza usubiri hadi usakinishaji wa awali umekamilika kabla ya kufanya mabadiliko zaidi"
+  },
+  "frontPageSsv": {
+    "newRegistritionTitle": "SAJILI OPERETA MPYA",
+    "newRegistritionText": "Tumia ufunguo mpya wa opereta uliotengenezwa kusajili opereta mpya wa nodi kwenye Mtandao wa SSV",
+    "register": "Sajili",
+    "insertTitle": "weka ufunguo wa opereta kwa opereta aliyepo",
+    "insertText": "Tumia ufunguo wa kibinafsi wa opereta uliopo kurejesha michakato ya opereta wako wa nodi iliyopo"
+  },
+  "registerSSV": {
+    "pubKey": "Ufunguo wa umma wa opereta",
+    "copied": "imenakiliwa!",
+    "secKey": "Ufunguo wa Siri wa Opereta",
+    "makeSureText": "Tafadhali hakikisha kuhifadhi na kuunga mkono ufunguo wako wa siri wa opereta mahali salama. Usishiriki ufunguo huu na mtu yeyote.",
+    "copyMessage": "Nakili ufunguo wako wa umma wa opereta kwenye uwanja huu kuthibitisha kwamba umehifadhi funguo zako!"
+  },
+  "ssvDashboard": {
+    "operatorPage": "Ukurasa Wangu wa Opereta",
+    "SSVNodeGrafna": "Ubao wa Grafana wa Nodi ya SSV"
+  },
+  "secretKeyReg": {
+    "modalLabel": "INGIZA UFUNGUO WA OPERETA BINAFSI ULIOPO ILI UTUMIKE KAMA UFUNGUO WAKO WA OPERETA",
+    "apply": "TUMIA"
+  },
+  "dataAPIAndRPC": {
+    "copy": "Bonyeza kunakili!",
+    "closed": "Washa Kwanza",
+    "turnOnMessage": "Tafadhali washa TUNELI YA DATA-API kwanza!",
+    "copiedMessage": "DATA-API-URL imenakiliwa kwenye ubao wa kunakili!",
+    "RPCTurnOnMessage": "Tafadhali washa tuneli ya RPC kwanza!",
+    "RPCCopiedMessage": "RPC-URL imenakiliwa kwenye ubao wa kunakili!",
+    "WSTurnOnMessage": "Tafadhali washa tuneli ya WS kwanza!",
+    "WSCopiedMessage": "WS-URL imenakiliwa kwenye ubao wa kunakili!"
+  },
+  "pluginLogs": {
+    "pageTitle": "LOGI ZA PLUG-IN",
+    "noLogFound": "Hakuna logi iliyopatikana katika orodha",
+    "clickCopy": "Bonyeza mara mbili kunakili Logi",
+    "serviceId": "ID ya Huduma:",
+    "exportAll": "Hamisha Logi Zote",
+    "export150": "Hamisha Logi 150",
+    "cat": "Kategoria:",
+    "ver": "Toleo:"
+  },
+  "serviceModals": {
+    "localApp": "PROGRAMU YA NDANI",
+    "localAppText": "Fungua huduma kwenye mashine yako ya ndani",
+    "openBrowser": "FUNGUA KWENYE KIVINJARI",
+    "availBlockRel": "RELAY ZA BLOKI ZINAZOPATIKANA",
+    "process": "Inashughulikia",
+    "blockRel": "Relay ya bloki",
+    "blockRelTxt": "Chagua relay moja au nyingi kupokea bloki kutoka"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "USAKINISHAJI MAALUM",
+    "customInstallationText": "Modi hii imekusudiwa kwa watumiaji wa kiwango cha juu na inahitaji uelewa wako wa jinsi wateja wanavyoingiliana na kila mmoja. Utahitaji kuchagua na kusakinisha kila sehemu ya nodi yako na UI mwenyewe kabla haijafanya kazi!"
+  },
+  "mevboostConfig": {
+    "availRelays": "RELAY ZA BLOKI ZINAZOPATIKANA",
+    "usedRelays": "RELAY ZA BLOKI ZILIZOTUMIKA"
+  },
+  "addModifyPanel": {
+    "installPath": "NJIA YA USAKINISHAJI",
+    "syncMessage": "INASAWAZISHA MTEJA WAKO KUTOKA MWANZO WA MLANJANO",
+    "portused": "BANDARI INAYOTUMIKA",
+    "cancel": "ghairi",
+    "save": "HIFADHI",
+    "add": "ONGEZA",
+    "clickAndAdd": "Bonyeza kwenye ONGEZA"
+  },
+  "importSlashingModal": {
+    "slashModalMessage": "Je, unataka kuingiza na Database ya Ulinzi wa Kukata?",
+    "importMessage": "Ingiza faili yako ya database ya kukata.",
+    "chooseFile": "Chagua Faili",
+    "continue": "Endelea"
+  },
+  "logOutModal": {
+    "logOutTitle": "ONDOKA",
+    "logOutQuestion": "UNA HAKIKA UNATAKA KUTOKA KWENYE SEVA YAKO YA NODI?",
+    "logOutBtn": "Ondoka"
+  },
+  "reconnectModal": {
+    "reconnectTitle": "Muunganisho umepotea",
+    "reconnectMessage": "Kagua muunganisho wako na ujaribu tena.",
+    "reconnectingMessage": "Inaunganisha tena...",
+    "reconnectBtn": "Unganisha tena"
+  },
+  "prunningModal": {
+    "prunningText": "GETH hutumia nafasi ya uhifadhi inavyoendelea kufanya kazi. Inachukua MASAA MENGI kuchakata database ya Geth, kuondoa data zisizohitajika na kufungua nafasi ya uhifadhi iliyotumika. Hii lazima ifanyike wakati Geth haiendeshwi. KUANZISHA MCHAKATO WA KUPUNGUZA NODI YAKO ITAZIMA NA KUSIMAMISHA MAJUKUMU YA UTHIBITISHO YANAYOWEZEKANA.",
+    "prunningChecked": "NIMESOMA MAANDISHI NA NINAFAHAMU MADHARA",
+    "prunningStart": "Anza Kupunguza",
+    "close": "bonyeza nje kufunga"
+  },
+  "restartModal": {
+    "restartMessage": "nodi yako inaweza kuzima wakati wa kufanya hivyo!",
+    "restart": "anaza upya",
+    "confirmMessage": "Una uhakika unataka kugeuza nodi yako",
+    "areYouSure": "una uhakika unataka kufanya"
+  },
+  "nukeModal": {
+    "nukeQ": "UNA HAKIKA UNATAKA KUONDOA STEREUM & HUDUMA ZAKE ZOTE KUTOKA KWENYE SEVA?",
+    "nukeTitle": "futa nodi",
+    "backToLogin": "Rudi kuingia"
+  },
+  "noData": {
+    "noData": "hakuna data",
+    "turnOn": "tafadhali washa"
+  },
+  "rpcGuide": {
+    "clickNav": "Bonyeza kwenye “CONTROL” ili kuingia kwenye Jopo la Udhibiti.",
+    "toggleMessage": "Bonyeza kwenye kitufe cha “ON/OFF” kufungua bandari yako",
+    "clickExtention": "Bonyeza kwenye kitufe cha “mteja wako wa Utekelezaji” kunakili URL ya RPC",
+    "clickCancel": "Bonyeza x kughairi",
+    "firstMessage": "Wijeti ya RPC-Endpoint iliyopo kwenye dashibodi. Tafadhali geuza kitufe cha “ON” na uchague “Mteja wa Utekelezaji” kuendelea kwenye hatua inayofuata.",
+    "secondMessage": "Sasa unaweza kutuma muamala WAKO KUPITIA NODI YAKO NA METAMASK. Unapomaliza kutuma muamala wako, bonyeza “ON” kufunga bandari yako",
+    "firstSlide": "Sasa ingia kwenye dAPP au mkoba unataka kutumia (katika kesi yetu MetaMask)",
+    "secondSlide": "Bonyeza kwenye kitufe cha Mtandao",
+    "thirdSlide": "Bonyeza kwenye “Ongeza Mtandao”",
+    "fourthSlide": "Andika jina kwa mtandao wako",
+    "fivethSlide": "Bandika URL uliyonakili kutoka Stereum",
+    "sixthSlide": "Andika ID ya CHAIN ambayo nodi yako inaendesha (kwa GoerliTestnet ni 5)",
+    "seventhSlide": "Andika “ETH” kama alama ya sarafu",
+    "eightthSlide": "HIARI - unaweza kubandika URL ya Mtafiti wa Bloki",
+    "ninethSlide": "Bonyeza “HIFADHI”"
+  },
+  "stakeGuide": {
+    "syncCheck": "Kwanza Angalia kama Nodi yako imeunganishwa",
+    "scrollMessage": "Skrola kubadilisha slaidi haraka",
+    "stake": "kustawisha",
+    "scrollClick": "Bonyeza kwenye Kustawisha",
+    "drag": "Buruta au bonyeza kwenye “BONYEZA AU BURUTA KUINGIZA UFUNGUO”",
+    "clickIcon": "Bonyeza kwenye ikoni ya mteja wako wa uthibitishaji",
+    "cong": "Hongera umemaliza!",
+    "clickPass": "Tafadhali bonyeza hapa kuingiza nywila yako na kuthibitisha.",
+    "noSlash": "Chagua “Hapana” ikiwa huna Database ya Ulinzi wa Kukata kutoka kwa Nodi ya awali"
+  },
+  "blockProduct": {
+    "status": "HADHI",
+    "assignSlot": "Slot Ilipangwa",
+    "noAsign": "Haijapangwa",
+    "nxtBlck": "Pendekezo la Bloki Inayofuata ndani ya:"
+  },
+  "disableStake": {
+    "message": "INAHITAJI KUENDESHA MTEJA WA UTHIBITISHAJI KWENYE SEVA KUFIKIA KUSTAWISHA"
+  },
+  "selectionOption": {
+    "graffiti": "graffiti",
+    "removeKeys": "Ondoa funguo zote"
+  },
+  "syncCommitte": {
+    "total": "jumla",
+    "status": "HADHI",
+    "particip": "INASHIRIKI",
+    "noParticip": "HAIJASHIRIKI",
+    "start": "Anza",
+    "end": "Mwisho",
+    "newSync": "Kamati Mpya ya Usawazishaji katika",
+    "hours": "masaa"
+  },
+  "theAttes": {
+    "lastAttest": "Slot ya Uthibitisho ya Mwisho:",
+    "keyStatus": "Hadhi ya Ufunguo:",
+    "attest": "KUTHIBITISHA",
+    "pending": "INASUBIRI",
+    "noKey": "CHAGUA UFUNGUO",
+    "nxtAttest": "slot ya uthibitisho inayofuata:",
+    "slotRem": "Slot zilizosalia",
+    "tillAtest": "hadi uthibitisho"
+  },
+  "confirmModal": {
+    "off": "UNA HAKIKA UNATAKA KUZIMA NODI YAKO?",
+    "on": "UNA HAKIKA UNATAKA KUWASHA NODI YAKO?",
+    "messageOff": "Nodi yako itakwenda nje ya mtandao!",
+    "messageOn": "Nodi yako itaenda mtandaoni!",
+    "turnOn": "washa",
+    "turnOff": "zima",
+    "close": "bonyeza nje kufunga"
+  },
+  "nodeAlert": {
+    "lowSpace": "UHIFADHI MDOGO",
+    "use": "MATUMIZI",
+    "noFee": "hakuna mpokeaji ada",
+    "stereumUpt": "SASISHO LA STEREUM",
+    "clkFee": "Mipangilio ya Huduma",
+    "clkUpdate": "Bonyeza kufungua jopo la sasisho",
+    "sync": "Hitilafu ya Usawazishaji",
+    "taskFail": "Kazi Imeshindwa",
+    "stats": "HADHI: WAZI",
+    "clientService": "MTEJA / HUDUMA"
+  },
+  "resyncModal": {
+    "message": "MTEJA WAKO Huhifadhi data ya blockchain KWENYE SEVA YAKO ili nodi yako iweze kuhudumia mtandao. hii ni muhimu kwa nodi yako KUCHUKUA jukumu lake la UTHIBITISHO katika KUSTAWISHA. KWA KUTUMIA CHAGUO HILI UNAFUTA DATA YA BLOCKCHAIN YA MTEJA WAKO ILIYOPO & TUMIA CHAGUO LILILOCHAGULIWA KAMA CHANZO CHA KUSAWAZISHA NODI YAKO UPYA.",
+    "sync": "USAWEZISHAJI",
+    "gen": "GENESIS",
+    "chkSync": "USAWAZISHAJI WA KIPEO",
+    "syncMsg": "INASAWAZISHA MTEJA WAKO KUTOKA MWANZO WA MLANJANO",
+    "cont": "ENDELEA",
+    "resync": "RESYNC",
+    "close": "bonyeza nje kufunga"
+  },
+  "resyncSeparateService": {
+    "message": "kwa kuanzisha upya utafuta database ya",
+    "msgPartTwo": "chanzo kitatumika kwa usawazishaji upya",
+    "resync": "resync",
+    "close": "bonyeza nje kufunga"
+  },
+  "notifModal": {
+    "addNotif": "ongeza njia ya arifa",
+    "chooseNotif": "Chagua aina ya Njia ya Arifa unayotaka kusanidi",
+    "stereumMonitor": "Kichunguzi cha Nodi ya Stereum",
+    "stepOne": "Hakikisha kusakinisha & kuwasha Huduma ya Arifa.",
+    "stepTwo": "Tembelea duka la programu au tovuti yetu kupakua 'Kichunguzi cha Nodi ya Stereum'",
+    "stepThree": "Fungua 'Kichunguzi cha Nodi ya Stereum' kwenye simu yako janja",
+    "stepFour": "Skeni Msimbo wa QR kwenye App.",
+    "stepFive": "Tuma arifa ya majaribio katika Grafana.",
+    "close": "bonyeza nje kufunga",
+    "dash": "Dashibodi",
+    "chooseVal": "CHAGUA MTEJA WA UTHIBITISHAJI KUUNGANISHA UFUATILIAJI",
+    "goTo": "Nenda",
+    "machinename": "Jina la Mashine",
+    "apikey": "Ufunguo wa API",
+    "apply": "TUMIA"
+  },
+  "replacePanel": {
+    "client": "Mteja",
+    "sync": "USAWEZISHAJI",
+    "gen": "GENESIS",
+    "chkPoint": "KIPEO",
+    "genActiv": "INASAWAZISHA MTEJA WAKO KUTOKA MWANZO WA MLANJANO",
+    "cancel": "GHAIRI",
+    "confirm": "THIBITISHA"
+  },
+  "executionSync": {
+    "gen": "GENESIS",
+    "syncClient": "Inasawazisha wateja wako"
+  },
+  "importingList": {
+    "nodeConf": "Usanidi wa Nodi"
+  },
+  "importingSyncing": {
+    "message": "Wekea jinsi wateja wa Nodi watasawazisha data yao ya blockchain.",
+    "client": "WATEJA",
+    "syncSrc": "CHANZO CHA USAWEZISHAJI"
+  },
+  "importingVerify": {
+    "pluginInst": "Vipengele vya Kusakinisha",
+    "cat": "kategoria",
+    "path": "njia"
+  },
+  "uploadConfig": {
+    "message": "Kwa chaguo hili la usakinishaji unaweza kuagiza faili ya usanidi wa Stereum iliyotumika kurejelea usanidi wa nodi yako.",
+    "selectConfig": "CHAGUA FAILI YA USANIDI WA STEREUM KUIPAKIA"
+  },
+  "fastSync": {
+    "header": "Wekea jinsi wateja wa Nodi watasawazisha data yao ya blockchain.",
+    "client": "WATEJA",
+    "syncSrc": "CHANZO CHA USAWEZISHAJI",
+    "gen": "GENESIS",
+    "sync": "Inasawazisha kutoka mwanzo",
+    "message": "Baada ya kusakinisha nodi yako, wateja wako wataanza kusawazisha na chanzo cha usawazishaji ulichochagua. Mchakato huu unaweza kuchukua masaa mengi au siku. Kwa kawaida, Mteja wa Makubaliano husawazisha kwanza, ikifuatiwa na Mteja wa Utekelezaji."
+  },
+  "deleteModal": {
+    "rem": "Ondoa",
+    "close": "bonyeza nje kufunga"
+  },
+  "errTerminal": {
+    "copy": "imenakiliwa!",
+    "close": "bonyeza nje kufunga"
+  },
+  "sliderTutorial": {
+    "visitUrl": "Tembelea tovuti",
+    "becomeValidator": "Bonyeza kwenye “KUWA MTHIBITISHAJI”",
+    "proofStake": "Soma kuhusu Uthibitisho wa hisa na bonyeza “ENDELEA”",
+    "deposit": "Soma kuhusu amana na bonyeza “NAKUBALI”",
+    "usingTerminal": "Soma kuhusu Kutumia terminal na bonyeza “NAKUBALI”",
+    "validatorUptime": "Soma kuhusu Muda wa mtandaoni wa mthibitishaji na bonyeza “NAKUBALI”",
+    "validatorBahavior": "Soma kuhusu Tabia mbaya ya mthibitishaji na bonyeza “NAKUBALI”",
+    "keyManagement": "Soma kuhusu Usimamizi wa funguo na bonyeza “NAKUBALI”",
+    "validatingLongterm": "Soma kuhusu Kuthibitisha ni ahadi ya muda mrefu na bonyeza “NAKUBALI”",
+    "earlyAdaptor": "Soma kuhusu Hatari za mwanzilishi na bonyeza “NAKUBALI”",
+    "stakingChecklist": "Soma kuhusu Orodha ya kukagua Uwekaji hisa na bonyeza “NAKUBALI”",
+    "clickCont": "Bonyeza “ENDELEA”",
+    "executionClient": "Chagua mteja wako wa utekelezaji kwa kubonyeza juu yake",
+    "scrollDown": "Peleka chini na bonyeza “ENDELEA”",
+    "consensusClient": "Chagua mteja wako wa makubaliano kwa kubonyeza juu yake",
+    "numValidator": "Andika idadi ya wathibitishaji unataka kuendesha",
+    "generateKey": "Chagua mfumo wa uendeshaji unatumia ili kutengeneza ufunguo",
+    "keyGUI": "Bonyeza “Pakua programu ya Key Gen GUI”",
+    "dlGithub": "Bonyeza “Pakua kutoka GitHub”",
+    "clickInstaller": "Peleka chini na bonyeza kwenye programu ya usakinishaji unayohitaji na uipakue",
+    "setupPage": "Rudi kwenye ukurasa wa usanidi na peleka chini na bonyeza kwenye kisanduku cha tiki",
+    "wagueKey": "Badilisha kwenda kwenye programu ya WAGYU Key Generator",
+    "secratePhrase": "Bonyeza “Tengeneza Kauli Mbiu ya Siri Mpya”",
+    "selectNetwork": "Chagua mtandao ambao unataka nodi yako iendeshe",
+    "clickOk": "Bonyeza “SAWA”",
+    "clickCreate": "Bonyeza “TENGENEZA”",
+    "recoveryPhrase": "Baada ya Kauli Mbiu ya Siri kujengwa ihifadhi mahali salama. Bonyeza kitufe cha nakili.",
+    "clickNext": "Bonyeza “IFUATAYO”",
+    "imSure": "Bonyeza “NI HAKIKA”",
+    "pasteRecovery": "Bandika Kauli Mbiu yako ya Siri",
+    "clickCheck": "Bonyeza “ANGALIA”",
+    "needKey": "Andika idadi ya funguo unazohitaji",
+    "typPass": "Andika nywila",
+    "retypPass": "Andika tena nywila yako",
+    "clickBrowse": "Bonyeza “VINJARI”",
+    "chooseFolder": "Chagua folda unayotaka kuhifadhi funguo zako na uziweke mahali salama",
+    "clickCreateWait": "Bonyeza “TENGENEZA” na subiri kwa sekunde chache",
+    "clickClose": "Angalia kama funguo zako zimetengenezwa na bonyeza “FUNGA”",
+    "switchSetup": "Rudia kwenye ukurasa wa usanidi",
+    "dragFile": "Bonyeza “Buruta faili ili kupakia au vinjari” na buruta faili yako ya amana katika uwanja",
+    "connWalet": "Unganisha pochi yako, angalia mtandao na salio lako",
+    "understandRisk": "Soma sehemu “Elewa hatari” na tiki kila kisanduku",
+    "readSection": "Soma sehemu “Hakikisha haukudanganywa” na tiki kisanduku",
+    "protectYourself": "Soma sehemu “Jikinga dhidi ya amana mara mbili” na tiki kisanduku",
+    "dblCheck": "Kagua kila kitu mara mbili na bonyeza “ENDELEA”",
+    "sendDeposit": "Bonyeza “TUMA AMANA”",
+    "walletPopup": "Pochi yako itatokea, bonyeza “Thibitisha” kutuma muamala",
+    "contCong": "Bonyeza “ENDELEA”, hongera umetengeneza ufunguo wa mthibitishaji"
+  },
+  "balWid": {
+    "fin": "IMETHIBITISHWA",
+    "bal": "MABADILIKO YA SALIO"
+  },
+  "headerBtn": {
+    "help": "msaada",
+    "notif": "Usimamizi wa njia za taarifa",
+    "availableUpdt": "Sasisho jipya linapatikana",
+    "updtPan": "jopo la sasisho",
+    "setting": "Mipangilio ya Stereum",
+    "logOutBtn": "Ondoka",
+    "rem": "ONDOA",
+    "node": "NODI",
+    "control": "DIBITI",
+    "staking": "UWEKAJI HISA"
+  },
+  "switchNetwork": {
+    "message": "Huu ni mtandao wa sasa, unaweza kubonyeza kuchagua mtandao mwingine"
+  },
+  "searchOption": {
+    "switchShow": "Badilisha kati ya kuonyesha ufunguo wa umma & jina lako lililochaguliwa",
+    "group": "Kundi la funguo nyingi",
+    "searchFilter": "Tafuta & chuja"
+  },
+  "serverManagement": {
+    "serverAccMange": "Usimamizi wa Upatikanaji wa Seva",
+    "serverNam": "Jina la Seva",
+    "ipHOST": "IP au JINA LA HOSTI",
+    "userNam": "Jina la Mtumiaji",
+    "machineNam": "Jina la Mashine",
+    "port": "Bandari",
+    "pass": "Nywila",
+    "chngPass": "Badilisha Nywila",
+    "passmessage": "Tafadhali andika nywila kubadilisha",
+    "confirmPass": "tafadhali andika tena nywila",
+    "confirmPassMessage": "thibitisha nywila yako",
+    "cancel": "GHAIIRISHA",
+    "clckChngPass": "bonyeza kubadilisha nywila yako",
+    "key": "Funguo",
+    "createKey": "tengeneza funguo mpya",
+    "clckCreateKey": "bonyeza kutengeneza funguo mpya",
+    "addKey": "ongeza funguo iliyopo",
+    "clckAddKey": "bonyeza kuongeza funguo iliyopo"
+  },
+  "taskMang": {
+    "taskMng": "Meneja wa Kazi"
+  },
+  "ipScanModal": {
+    "message": "Je, unataka kiotomatiki kuchunguza IP ya seva yako ya nodi kwa kutafuta mtandao wako wa nyumbani kwa ping iliyotumwa na Stereum's Ubuntu ISO? Hii inaweza kuchukua muda...",
+    "clockClose": "Bonyeza nje kufunga"
+  },
+  "serviceBtn": {
+    "turnOff": "Zima huduma",
+    "turnOn": "Washa huduma",
+    "restart": "Anzisha upya huduma",
+    "pending": "Huduma inasubiri",
+    "settings": "mipangilio ya huduma",
+    "logs": "fungua magogo",
+    "docs": "fungua nyaraka"
+  },
+  "serviceLay": {
+    "srvice": "huduma"
+  },
+  "clientButtons": {
+    "turnOn": "Washa huduma",
+    "turnOff": "Zima huduma",
+    "restart": "Anzisha upya huduma",
+    "pending": "Huduma inasubiri",
+    "settings": "Fikia mipangilio ya huduma",
+    "logs": "Fungua magogo ya huduma",
+    "docs": "Fungua nyaraka ya huduma katika kivinjari chako",
+    "removeLock": "Ondoa faili za Lock za huduma",
+    "pruning": "Pogoa database ya huduma",
+    "resync": "Resync huduma kutoka chanzo kilichochaguliwa"
+  },
+  "clientLay": {
+    "client": "mteja",
+    "keyMsg": "funguo zimeingizwa",
+    "syncStatus": "hali ya usawazishaji:"
+  },
+  "serverDetails": {
+    "machineName": "Jina la Mashine",
+    "machineIp": "Anwani ya IP ya Mashine"
+  },
+  "changesBox": {
+    "clickToCancel": "Bonyeza hapa kughairi mabadiliko haya"
+  },
+  "editClientLay": {
+    "clkEdit": "Bonyeza kuhariri huduma yako"
+  },
+  "generalMenu": {
+    "modify": "modifisha",
+    "connection": "unganisho",
+    "switchClient": "badilisha mteja",
+    "delete": "futa",
+    "service": "huduma",
+    "info": "taarifa"
+  },
+  "networkDetails": {
+    "currIs": "Mtandao wa sasa ni",
+    "currentNet": "Mtandao wa Sasa"
+  },
+  "changeSect": {
+    "clkConfirm": "Bonyeza hapa kuthibitisha mabadiliko"
+  },
+  "sidebarSect": {
+    "toNode": "Rudi kwenye Ukurasa wa Nodi",
+    "toEdit": "Nenda kwenye Ukurasa wa Kuhariri Nodi",
+    "setchNet": "Badilisha Mtandao katika usanidi wa Nodi",
+    "nukTheNud": "Haribu Nodi ya Stereum na huduma zake zote",
+    "nukNod": "Haribu Nodi",
+    "trnOn": "Washa nodi yako",
+    "trnOff": "Zima nodi yako",
+    "expNode": "Hamisha Usanidi wa Nodi yako"
+  },
+  "customAnim": {
+    "processing": "Inashughulikiwa"
+  },
+  "customFooter": {
+    "back": "RUDI",
+    "next": "IFUATAYO"
+  },
+  "configDetails": {
+    "addConfig": "Ongeza Usanidi"
+  },
+  "editBody": {
+    "executionClient": "Mteja wa Utekelezaji",
+    "consensusClient": "Mteja wa Makubaliano",
+    "validator": "Mthibitishaji"
+  },
+  "editModals": {
+    "noAvailService": "Hakuna huduma inayopatikana",
+    "executionClients": "Wateja wa Utekelezaji",
+    "consensusClients": "Wateja wa Makubaliano",
+    "validatorClients": "Wateja wa Mthibitishaji",
+    "installationPath": "Njia ya Usakinishaji",
+    "syncMode": "Modi ya Usawazishaji",
+    "serviceId": "Kitambulisho cha Huduma",
+    "serviceCat": "Kundi la Huduma",
+    "modifyConnection": "Badilisha Unganisho",
+    "confirm": "Thibitisha",
+    "clckOutside": "Bonyeza nje kufunga",
+    "switchNetwork": "Badilisha Mtandao",
+    "selectNetwork": "Chagua mtandao wa kubadilisha",
+    "switchTo": "Badilisha Kwenda",
+    "trnOn": "Washa",
+    "trnOff": "Zima",
+    "selectClient": "Chagua Mteja Kutoka Orodha",
+    "switchClient": "badilisha mteja",
+    "selectNet": "Chagua Mtandao"
+  },
+  "editPageServices": {
+    "services": "Huduma",
+    "service": "Huduma",
+    "delete": "Futa"
+  },
+  "guideInfo": {
+    "close": "Funga"
+  },
+  "ImportConfigHeader": {
+    "toImport": "Kuagiza",
+    "rem": "Ondoa"
+  },
+  "loginServer": {
+    "wait": "Tafadhali subiri . . .",
+    "chckServerDetails": "Tafadhali angalia maelezo ya seva yako.",
+    "serverRem": "Seva yako itaondolewa.",
+    "removeServer": "ONDOA SEVA",
+    "removeServerText": "Una uhakika unataka kuiondoa?"
+  },
+  "multiServer": {
+    "serverName": "Jina la Seva",
+    "saveServer": "Hifadhi Seva",
+    "ipOrHost": "IP au Jina la Mwenyeji",
+    "port": "Bandari",
+    "userName": "Jina la Mtumiaji",
+    "pass": "Nywila",
+    "keyPath": "Njia ya Funguo",
+    "login": "Ingia",
+    "cancel": "Ghairi Ingia",
+    "conecting": "Inaunganisha . . .",
+    "newPass": "Nywila Mpya",
+    "EnterNewPass": "Ingiza Nywila Mpya",
+    "verifyPass": "Thibitisha Nywila",
+    "chngResPass": "Badilisha / Reseti Nywila",
+    "chngPass": "Badilisha Nywila",
+    "machineName": "Jina la Mashine",
+    "chngAvatar": "Badilisha Avatar",
+    "sshkeyMang": "USIMAMIZI WA FUNGUO za SSH",
+    "createNewKey": "TENGENEZA FUNGUO MPYA",
+    "addExistingKey": "ONGEZA FUNGUO ILIYOPO",
+    "loginFailed": "Kuingia Kutofaulu",
+    "ok": "SAWA",
+    "genSshKey": "Tengeneza Funguo ya SSH",
+    "keyType": "Aina ya Funguo",
+    "selectKeyType": "Chagua Aina ya Funguo",
+    "sshPass": "Nywila ya SSH",
+    "unlockExpertOptions": "FUNGUA CHAGUO ZA WATAALAM",
+    "optionalSshPass": "WEKA NYWILA YA HIARI YA SSH",
+    "savePath": "NJIA YA KUHIFADHI",
+    "specCypher": "WEKA CYPHER",
+    "bitAmount": "KIASI CHA BITI",
+    "useCostumCypher": "TUMIA CYPHER MAALUM",
+    "specSshBitAmount": "ELEZA KIASI CHA BITI CHA SSH",
+    "gen": "TENGENEZA",
+    "saveServerCon": "UHIFADHI WA UNGANISHO WA SEVA",
+    "serch": "Tafuta",
+    "serchFor": "Tafuta...",
+    "addServer": "ONGEZA UNGANISHO MPYA WA SEVA",
+    "serverAccMang": "Usimamizi wa Seva"
+  },
+  "oneClick": {
+    "installedService": "HUDUMA ZILIZOSAKINISHWA",
+    "addOption": "CHAGUO ZA ZIADA",
+    "chooseNetwork": "CHAGUA KESI YA MATUMIZI NA MTANDAO. BAADA YA KUCHAGUA NA KUBONYEZA ANZA UTEUZI WA MTEJA ATAKAYECHAGULIWA ATUMIKE KWA KESI YAKO YA MATUMIZI",
+    "oneClckInstall": "USAKINISHAJI WA BONYEZA MOJA",
+    "setNodeClient": "Wekea jinsi wateja wa Nodi watakapo sawazisha data zao za blockchain kutoka",
+    "process": "Inashughulikiwa"
+  },
+  "serviceModal": {
+    "confirm": "Thibitisha",
+    "distributedValidator": "UTENGENEZAJI WA FUNGUO ZILIZOSAMBAZWA",
+    "generateEnr": "KUTENGENEZA ENR MPYA",
+    "open": "FUNGUA",
+    "createEnr": "TENGENEZA ENR MPYA",
+    "openObol": "FUNGUA OBOL LAUNCHPAD",
+    "generateEnrToJoin": "Tengeneza ENR mpya kutumia kuunda au kujiunga na kikundi kilichopo",
+    "joinCluster": "Tengeneza/jiunge na Kikundi cha Obol peke yako au na kundi kwa kutumia Launchpad ya Validator iliyosambazwa.",
+    "openBrowser": "FUNGUA KATIKA KIVINJARI",
+    "importEnr": "INGIZA ENR ILIYOPO",
+    "entrEnr": "Ingiza ENR",
+    "import": "ingiza",
+    "copy": "NAKILI",
+    "rem": "ONDOA",
+    "backUpFile": "SIMAMIA KIKUNDI",
+    "startDkg": "ANZA DKG",
+    "exportBackup": "Hamisha faili yako ya amana ya akiba kutoka kwenye seva ili kuihifadhi au kuondoa data zote zinazohusiana na kikundi",
+    "allEnrSign": "Wakati ENR zote zimetia saini, utapewa amri. Waendeshaji wote wa Nodi lazima waendeshe amri hii kwa wakati mmoja!",
+    "srart": "ANZA",
+    "pasteUrl": "BANDIKA URL ILIYOTOLEWA AU AMRI KAMILI",
+    "entrUrl": "Ingiza URL",
+    "oops": "Ooops! Kuna Kitu Hakikwenda Sawa",
+    "wentWrong": "Kuna kitu hakikwenda sawa. Tafadhali bonyeza kitufe cha kuburudisha na ujaribu tena.",
+    "pubKey": "Ufunguo wa umma wa mwendeshaji",
+    "genPair": "TENGENEZA JOZI ILIYOFICHA",
+    "confWarning": "THIBITISHA ONYO",
+    "opDash": "DASHIBODI YA MWEHESHIMIWA ({network})",
+    "runOp": "Njia salama zaidi ya kuendesha nodi yako ya Mwendeshaji, ni kuzalisha jozi ya ufunguo iliyofichwa.",
+    "dnldBackup": "Tafadhali hakikisha umeandika nywila yako & kupakua akiba. Hakuna mtu anayeweza kukusaidia kurejesha nywila yako au ufunguo binafsi uliofichwa ikiwa utapoteza!",
+    "registerOperator": "Fungua programu ya wavuti ya SSV kwenye kivinjari chako cha msingi kusajili mwendeshaji wako.",
+    "apiUnavailable": "Hali ya dashibodi isiyofahamika (API ya SSV haipatikani kwa sasa).",
+    "showPerformance": "Inaonyesha muhtasari wa utendaji wa nodi yako kwa mwendeshaji wako aliyosajiliwa \"{opname}\" na kitambulisho {opid} kwenye Mtandao wa SSV kwa {network} na pia funguo zote zilizotengwa kwake.",
+    "copyKey": "NAKILI UFUNGUO WA UMMA WA MWEHESHIMIWA",
+    "copyKeyDesc": "Nakili ufunguo wa umma wa nodi yako kwenye ubao wa kunakili.",
+    "skPk": "Ufunguo wa Siri wa Mweheshimiwa (SK) & Ufunguo wa Umma wa Mweheshimiwa (PK)",
+    "selPk": "BANDIKA AU CHAGUA UFUNGUO WA SIRI (USIYOFICHA) KUINGIZA",
+    "selEnc": "BANDIKA AU CHAGUA UFUNGUO BINAFSI ULIOFICHWA KUINGIZA",
+    "sel": "CHAGUA",
+    "dnldBk": "PAKUA AKIBA",
+    "dkKey": "INGIZA AU CHAGUA NYWILA KUFICHA UFUNGUO BINAFSI",
+    "dlPk": "Pakua ufunguo binafsi kuuhifadhi. Hakikisha pia umeandika nywila uliyotumia kwa ufichaji!",
+    "dlBak": "Pakua akiba ya funguo za mwendeshaji wako wa SSV. Weka faili hii mahali salama!",
+    "dl": "PAKUA",
+    "imp": "INGIZA",
+    "mngEnr": "SIMAMIA ENR",
+    "copyEnr": "Nakili 'Kumbukumbu ya Nodi ya Ethereum' iliyotengenezwa au iliyoingizwa - kitambulisho cha nodi yako kwa kutumia Obol.",
+    "areYouSure": "Una uhakika unataka kuondoa ENR yako?",
+    "areYouSureCluster": "Una uhakika unataka kuondoa kikundi chako?",
+    "areYouSureMsg": "Haiwezi kubatilishwa!",
+    "save": "AKIBA..."
+  },
+  "stakingPage": {
+    "somethingWrong": "Kuna kitu hakikwenda sawa",
+    "enteredGraffitti": "Graffiti iliyowekwa sio sahihi.",
+    "writeGrpName": "Andika jina la kikundi chako hapa",
+    "noVal": "Hakuna ufunguo wa mthibitishaji ulioingizwa.",
+    "noMatch": "Hakuna Mechi.",
+    "reward": "Zawadi",
+    "ttl": "Jumla",
+    "pleaseWait": "Tafadhali subiri hadi ufunguo wa mbali uingizwe.",
+    "imp": "Inaingizwa",
+    "yes": "NDIYO",
+    "no": "HAPANA",
+    "noFile": "Hakuna faili iliyochaguliwa",
+    "impDet": "Maelezo ya Kuagiza:",
+    "grpId": "Kitambulisho cha Kikundi:",
+    "grpNam": "Jina la Kikundi:",
+    "keys": "Funguo:",
+    "remGrp": "Ondoa Kikundi",
+    "areYouSure": "Una uhakika unataka kufuta kikundi hiki?",
+    "remValKey": "Ondoa Funguo ya Mthibitishaji",
+    "areXouSure": "Una uhakika unataka kufuta Funguo hizi?",
+    "stopImport": " Vinginevyo, bonyeza nje kusitisha kuagiza.",
+    "expMsg": "Ujumbe wa Kuhamisha",
+    "riskWarning": "Onyo la Hatari",
+    "process": "Inashughulikiwa...",
+    "withdrawExit": "Toa & Toka Funguo za Mthibitishaji",
+    "vldExited": "Mthibitishaji amefanikiwa kutoka.",
+    "vldFailed": "Mthibitishaji ameshindwa kutoka.",
+    "successExit": "Umetoka kwa Mafanikio.",
+    "exitFailed": "Kutoka Kushindwa.",
+    "readConeq": "NIMESOMA MAANDISHI NA NINAFAMU MADHARA"
+  },
+  "welcomePage": {
+    "logedOut": "Utaondolewa kwenye Stereum Launcher. Utahitaji kuingia tena kufikia nodi yako.",
+    "logOut": "Kuondoka",
+    "logOutMsg": "Una uhakika unataka kutoka?",
+    "logOutBtn": "Ondoka",
+    "chooseInstallNode": "Katika hatua hii chagua jinsi unavyotaka kusakinisha nodi yako. Kwa wanaoanza tunapendekeza chaguo la Usakinishaji wa Bonyeza Moja!",
+    "welcomeStereum": "Karibu kwa Stereum"
+  },
+  "serverHeader": {
+    "login": "server login",
+    "info": "server information",
+    "ssh": "ssh key management",
+    "osUpdate": "operating system update",
+    "settings": "server settings"
+  },
+  "shellPage": {
+    "title": "SECURE SHELL - SERVER CONNECTION ",
+    "clear": "Clear",
+    "kill": "Kill",
+    "newTerminal": "New Terminal"
+  }
+}

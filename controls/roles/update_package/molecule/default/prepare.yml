@@ -1,0 +1,26 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: "../"
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+    - name: Update cache & OS (Ubuntu)
+      apt:
+        update_cache: true
+        upgrade: dist
+      become: true
+      changed_when: false
+    - name: Install specific version of Git
+      apt:
+        name: git=1:2.34.1-1ubuntu1.9
+        state: present
+      become: true
+    - name: Update package cache (Ubuntu)
+      apt:
+        update_cache: true
+      become: true
+      changed_when: false
+# EOF

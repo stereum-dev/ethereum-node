@@ -19,6 +19,8 @@ export class SSHService {
     this.checkPoolPolling = setInterval(async () => {
       await this.checkConnectionPool();
     }, 100);
+    this.shellConn = null;
+    this.shellStream = null;
   }
 
   static checkExecError(err, accept_empty_result = false) {
@@ -322,18 +324,22 @@ export class SSHService {
 
   async readSSHKeyFile(sshDirPath = `~/.ssh`) {
     let authorizedKeys = [];
-    try {
-      if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
-      let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
-      if (SSHService.checkExecError(result)) {
-        throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+    if (this.connected) {
+      try {
+        if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
+        let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
+        if (SSHService.checkExecError(result)) {
+          throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+        }
+        authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
+      } catch (err) {
+        log.error("Can't read authorized keys ", err);
+        return [];
       }
-      authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
-    } catch (err) {
-      log.error("Can't read authorized keys ", err);
-      return [];
+      console.log("authorizedKeys: ", authorizedKeys);
+    } else {
+      log.error("SSH not connected, can't read authorized keys");
     }
-    console.log("authorizedKeys: ", authorizedKeys);
     return authorizedKeys;
   }
 
@@ -569,6 +575,88 @@ export class SSHService {
     } catch (error) {
       log.error("Failed to upload directory via SSH: ", error);
       return false;
+    }
+  }
+
+  async startShell(connectionInfo, onDataCallback, onErrorCallback) {
+    return new Promise((resolve, reject) => {
+      this.shellConn = new Client();
+
+      this.shellConn.on("ready", () => {
+        console.info("Client :: ready");
+        this.shellConn.shell(
+          {
+            pty: {
+              term: "xterm-256color",
+              cols: process.stdout.columns,
+              rows: process.stdout.rows,
+            },
+          },
+          (err, stream) => {
+            if (err) {
+              onErrorCallback(err);
+              reject(err);
+              return;
+            }
+
+            this.shellStream = stream;
+
+            stream.on("data", (data) => {
+              onDataCallback(data);
+            });
+
+            stream
+              .on("close", () => {
+                console.info("Stream :: close");
+                if (this.shellConn) {
+                  this.shellConn.end();
+                }
+              })
+              .stderr.on("data", onErrorCallback);
+
+            resolve(this);
+          }
+        );
+      });
+
+      this.shellConn.on("error", (err) => {
+        onErrorCallback(err);
+        reject(err);
+        return;
+      });
+
+      this.shellConn.connect({
+        host: connectionInfo.host,
+        port: parseInt(connectionInfo.port) || 22,
+        username: connectionInfo.user || "root",
+        password: connectionInfo.password || undefined,
+        privateKey: connectionInfo.privateKey || undefined,
+        passphrase: connectionInfo.passphrase || undefined,
+        keepaliveInterval: 60000,
+      });
+    });
+  }
+
+  async executeCommand(command) {
+    if (this.shellStream) {
+      this.shellStream.write(command);
+    } else {
+      console.error("Shell not started");
+    }
+  }
+
+  async stopShell() {
+    try {
+      if (this.shellStream) {
+        this.shellStream.end();
+        this.shellStream = null;
+      }
+      if (this.shellConn) {
+        this.shellConn.end();
+        this.shellConn = null;
+      }
+    } catch (error) {
+      console.error("An error occurred while stopping the shell:", error);
     }
   }
 }

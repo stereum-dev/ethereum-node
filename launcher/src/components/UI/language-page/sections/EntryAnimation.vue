@@ -6,13 +6,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
+import { useLangStore } from "@/store/languages";
+
+const langStore = useLangStore();
 
 const anims = ref([
   { path: "/animation/language/lang1.gif", duration: 1000 },
   { path: "/animation/language/lang2.gif", duration: 1000 },
   { path: "/animation/language/lang3.gif", duration: 800 },
+]);
+
+const settingsStereum = ref([
+  {
+    path: "/animation/language-stereum-settings/language-stereum-settings-1.gif",
+    duration: 1000,
+  },
+  {
+    path: "/animation/language-stereum-settings/language-stereum-settings-2.gif",
+    duration: 1000,
+  },
+  {
+    path: "/animation/language-stereum-settings/language-stereum-settings-3.gif",
+    duration: 800,
+  },
 ]);
 
 const currentGif = ref("");
@@ -22,13 +40,19 @@ onMounted(() => {
   playGifsSequentially(0);
 });
 
+onUnmounted(() => {
+  langStore.isEntryAnimationActive = false;
+});
+
 function playGifsSequentially(index) {
   if (index >= anims.value.length) {
-    router.push("/login"); // Navigate to /login route after the last GIF
+    langStore.settingPageIsVisible ? router.push("/setting") : router.push("/login"); // Navigate to /login route after the last GIF
+    langStore.settingPageIsVisible = false;
+
     return;
   }
 
-  currentGif.value = anims.value[index].path;
+  currentGif.value = langStore.settingPageIsVisible ? settingsStereum.value[index].path : anims.value[index].path;
 
   setTimeout(() => {
     playGifsSequentially(index + 1);
