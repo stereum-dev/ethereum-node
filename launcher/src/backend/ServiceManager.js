@@ -1900,14 +1900,9 @@ export class ServiceManager {
         avatar: tester.avatarUrl,
         tests: tester.testsCount,
       }));
-      console.log("testttttt =>", JSON.stringify(testers));
       return testers;
     } catch (error) {
       console.error("Failed to fetch GitHub testers:", error);
     }
   }
 }
-
-const manager = new ServiceManager();
-
-manager.fetchGitHubTesters();
