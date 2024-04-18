@@ -20,7 +20,15 @@
           <div class="flip-box-inner">
             <img class="flip-box-front" src="/img/icon/service-icons/Other/ssv-network.png" alt="icon" />
 
-            <img class="flip-box-back" src="/img/icon/network-icons/ethereum-testnet-icon.png" alt="icon" />
+            <img
+              class="flip-box-back"
+              :src="`${
+                currentNetwork.network == 'mainnet'
+                  ? '/img/icon/network-icons/ethereum-mainnet.png'
+                  : '/img/icon/network-icons/ethereum-testnet-icon.png'
+              }`"
+              alt="icon"
+            />
           </div>
         </div>
 
@@ -159,7 +167,7 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import axios from "axios";
 import { toRaw } from "vue";
@@ -167,6 +175,7 @@ import ConfirmBox from "./plugin/ConfirmBox.vue";
 import ImportBox from "./plugin/ImportBox.vue";
 import PasswordBox from "./plugin/PasswordBox";
 import { useRestartService } from "@/composables/services";
+import { useNodeManage } from "@/store/nodeManage";
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
 const semver = require("semver");
@@ -248,6 +257,9 @@ export default {
       operators: "operators",
       importBoxModel: "importBoxModel",
       passwordBoxModel: "passwordBoxModel",
+    }),
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
     }),
     //new ssv start hereeeeeeeeeeee
     passControlGenerateEncryptKeyTitle() {
@@ -348,6 +360,7 @@ export default {
   },
 
   mounted() {
+    console.log(this.currentNetwork.network);
     this.getKeys();
     this.passwordBoxModel = "";
     this.importBoxModel = "";

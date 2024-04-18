@@ -1,24 +1,6 @@
 // const path = require("path");
 
 module.exports = {
-  devServer: {
-    proxy: {
-      "/testers": {
-        target: "https://stereum.net",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/testers": "/api/github/testers",
-        },
-      },
-      "/translators": {
-        target: "https://stereum.net",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/translators": "/api/translators",
-        },
-      },
-    },
-  },
   parallel: false,
   pluginOptions: {
     electronBuilder: {

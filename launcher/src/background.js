@@ -590,6 +590,13 @@ ipcMain.handle("readMultiConfigYaml", async () => {
   return await configManager.readMultiConfigYaml();
 });
 
+ipcMain.handle("fetchTranslators", async (event, args) => {
+  return await serviceManager.fetchTranslators(args);
+});
+
+ipcMain.handle("fetchGitHubTesters", async (event, args) => {
+  return await serviceManager.fetchGitHubTesters(args);
+});
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {
