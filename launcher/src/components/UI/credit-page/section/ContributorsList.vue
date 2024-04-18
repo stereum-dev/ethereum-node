@@ -23,9 +23,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import TheContributor from "../components/TheContributor.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
+import ControlService from "@/store/ControlService";
 
 const headerStore = useNodeHeader();
 
@@ -44,45 +45,39 @@ onMounted(() => {
   }
 });
 
-const fetchStereumTesters = async () => {
+onUnmounted(() => {
+  results.value = [];
   isLoading.value = true;
+});
+
+const fetchStereumTranslators = async () => {
   try {
-    const response = await fetch("/testers");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    const translators = await ControlService.fetchTranslators();
+    if (translators && Array.isArray(translators)) {
+      results.value = translators.sort((a, b) => a.name.localeCompare(b.name));
+      isLoading.value = results.value.length === 0;
+    } else {
+      console.error("fetchTranslators did not return an array");
     }
-    const responseData = await response.json();
-    results.value = responseData.data.testers.map((tester) => ({
-      name: tester.username,
-      avatar: tester.avatarUrl,
-      score: tester.testsCount,
-    }));
   } catch (error) {
-    console.error("Error fetching data:", error);
-  } finally {
-    isLoading.value = false;
+    console.error("Error fetching translators:", error);
+    isLoading.value = true;
   }
 };
 
-const fetchStereumTranslators = async () => {
-  isLoading.value = true;
+const fetchStereumTesters = async () => {
   try {
-    const response = await fetch("/translators");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    const testers = await ControlService.fetchGitHubTesters();
+    if (testers && Array.isArray(testers)) {
+      results.value = testers;
+      console.log("testers fetched:", JSON.stringify(results.value));
+      isLoading.value = results.value.length === 0;
+    } else {
+      console.error("fetchTesters did not return an array");
     }
-    const responseData = await response.json();
-    results.value = responseData.data.translators
-      .map((translator) => ({
-        name: translator.username,
-        avatar: translator.avatarUrl,
-        score: translator.testsCount,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
-    console.error("Error fetching data:", error);
-  } finally {
-    isLoading.value = false;
+    console.error("Error fetching Testers:", error);
+    isLoading.value = true;
   }
 };
 

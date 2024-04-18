@@ -32,6 +32,7 @@ import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionS
 import { CustomService } from "./ethereum-services/CustomService";
 import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import YAML from "yaml";
+const axios = require("axios");
 
 const log = require("electron-log");
 
@@ -333,20 +334,22 @@ export class ServiceManager {
     for (let task of tasks) {
       let ssvConfig;
       let service = services.find((s) => s.id === task.service.config.serviceID);
-      let dependencies = task.data.executionClients.concat(task.data.consensusClients, task.data.otherServices).map((s) =>
-        services.find((e) => {
-          if (e.id === s.config.serviceID) {
-            return true;
-          } else if (
-            newInstallTasks &&
-            newInstallTasks.length > 0 &&
-            e.id === newInstallTasks.find((i) => i.service.id === s.id).service.config.serviceID
-          ) {
-            return true;
-          }
-          return false;
-        })
-      );
+      let dependencies = task.data.executionClients
+        .concat(task.data.consensusClients, task.data.otherServices)
+        .map((s) =>
+          services.find((e) => {
+            if (e.id === s.config.serviceID) {
+              return true;
+            } else if (
+              newInstallTasks &&
+              newInstallTasks.length > 0 &&
+              e.id === newInstallTasks.find((i) => i.service.id === s.id).service.config.serviceID
+            ) {
+              return true;
+            }
+            return false;
+          })
+        );
 
       if (service.service === "FlashbotsMevBoostService") {
         modifiedServices.push(service);
@@ -460,16 +463,28 @@ export class ServiceManager {
       case "SSVNetwork":
         return this.addSSVNetworkConnection(service, dependencies, ssvConfig);
       case "LidoObolExit":
-        return this.addLidoObolExitConnection(service, dependencies)
+        return this.addLidoObolExitConnection(service, dependencies);
       case "Ejector":
         // create a new function to handle dependencies for env vars
         keyValuePairs = [
-          { key: "EXECUTION_NODE", value: (e) => e.buildExecutionClientHttpEndpointUrl(), filter: (d) => typeof d.buildExecutionClientHttpEndpointUrl === "function" },
-          { key: "CONSENSUS_NODE", value: (e) => e.buildConsensusClientHttpEndpointUrl(), filter: (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function" },
-        ]
+          {
+            key: "EXECUTION_NODE",
+            value: (e) => e.buildExecutionClientHttpEndpointUrl(),
+            filter: (d) => typeof d.buildExecutionClientHttpEndpointUrl === "function",
+          },
+          {
+            key: "CONSENSUS_NODE",
+            value: (e) => e.buildConsensusClientHttpEndpointUrl(),
+            filter: (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function",
+          },
+        ];
         this.addENVConnction(service, dependencies, keyValuePairs);
-        service.dependencies.executionClients = dependencies.filter((d) => typeof d.buildExecutionClientHttpEndpointUrl === "function");
-        service.dependencies.consensusClients = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function");
+        service.dependencies.executionClients = dependencies.filter(
+          (d) => typeof d.buildExecutionClientHttpEndpointUrl === "function"
+        );
+        service.dependencies.consensusClients = dependencies.filter(
+          (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function"
+        );
         return service;
       default:
         return service;
@@ -570,7 +585,9 @@ export class ServiceManager {
 
   addLidoObolExitConnection(service, dependencies) {
     // handle beacon node command dependency
-    const consensusClient = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function" && d.service != "CharonService")[0];
+    const consensusClient = dependencies.filter(
+      (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function" && d.service != "CharonService"
+    )[0];
     let filter = (e) => e.buildConsensusClientHttpEndpointUrl();
     let command = "--beacon-node-url=";
     service.command = this.addCommandConnection(service, command, consensusClient ? [consensusClient] : [], filter);
@@ -586,7 +603,7 @@ export class ServiceManager {
     const ejector = dependencies.find((d) => d.service === "ValidatorEjectorService");
     service.volumes = service.volumes.filter((v) => !v.servicePath.includes("exitmessages"));
     if (ejector) {
-      let messageVolume = ejector.volumes.find((volume) => volume.servicePath === '/app/messages');
+      let messageVolume = ejector.volumes.find((volume) => volume.servicePath === "/app/messages");
       if (messageVolume) {
         service.volumes.push(new ServiceVolume(messageVolume.destinationPath, "/exitmessages"));
       }
@@ -623,7 +640,10 @@ export class ServiceManager {
     );
     for (const prop in service.env) {
       if (service.env[prop].includes(serviceToDelete.id)) {
-        service.env[prop] = service.env[prop].split(",").filter((e) => !e.includes(serviceToDelete.id)).join();
+        service.env[prop] = service.env[prop]
+          .split(",")
+          .filter((e) => !e.includes(serviceToDelete.id))
+          .join();
       }
     }
     if (service.service.includes("PrysmValidator") && serviceToDelete.service.includes("ExternalConsensus")) {
@@ -988,7 +1008,12 @@ export class ServiceManager {
         return MetricsExporterService.buildByUserInput(args.network);
 
       case "ValidatorEjectorService":
-        return ValidatorEjectorService.buildByUserInput(args.network, args.installDir + "/validatorejector", args.executionClients, args.consensusClients);
+        return ValidatorEjectorService.buildByUserInput(
+          args.network,
+          args.installDir + "/validatorejector",
+          args.executionClients,
+          args.consensusClients
+        );
 
       case "KeysAPIService":
         ports = [new ServicePort("127.0.0.1", 3600, 3600, servicePortProtocol.tcp)];
@@ -1028,10 +1053,24 @@ export class ServiceManager {
         );
       case "CustomService":
         ports = [];
-        return CustomService.buildByUserInput(args.network, args.installDir + "/custom", args.image, args.entrypoint, args.command, args.ports, args.volumes);
+        return CustomService.buildByUserInput(
+          args.network,
+          args.installDir + "/custom",
+          args.image,
+          args.entrypoint,
+          args.command,
+          args.ports,
+          args.volumes
+        );
       case "LidoObolExitService":
         ports = [];
-        return LidoObolExitService.buildByUserInput(args.network, ports, args.installDir + "/lidodvexit", args.consensusClients, args.otherServices);
+        return LidoObolExitService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/lidodvexit",
+          args.consensusClients,
+          args.otherServices
+        );
     }
   }
 
@@ -1165,7 +1204,7 @@ export class ServiceManager {
           .join("/");
         await this.nodeConnection.sshService.exec(
           `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-          (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
+            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
@@ -1242,8 +1281,8 @@ export class ServiceManager {
     // Sort the array
     PInstalls.sort((a, b) => {
       // Check if the task is the specific one you want to be last
-      if (a.service.service === 'LidoObolExitService') return 1;
-      if (b.service.service === 'LidoObolExitService') return -1;
+      if (a.service.service === "LidoObolExitService") return 1;
+      if (b.service.service === "LidoObolExitService") return -1;
 
       // For all other cases, don't change the order
       return 0;
@@ -1643,7 +1682,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1652,7 +1691,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1661,7 +1700,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1679,7 +1718,7 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
           metricsExporterCommands[firstConsensusClient.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
         await this.manageServiceState(firstConsensusClient.id, "started");
@@ -1838,5 +1877,32 @@ export class ServiceManager {
     let jwtContent = "";
     jwtContent = await this.nodeConnection.sshService.exec(`cat ${volume}`);
     return jwtContent.stdout;
+  }
+
+  async fetchTranslators() {
+    try {
+      const response = await axios.get("https://stereum.com/api/translators");
+      const translators = response.data.data.translators.map((translator) => ({
+        name: translator.username,
+        avatar: translator.avatarUrl,
+      }));
+      return translators;
+    } catch (error) {
+      console.error("Failed to fetch translators:", error);
+    }
+  }
+
+  async fetchGitHubTesters() {
+    try {
+      const response = await axios.get("https://stereum.com/api/github/testers");
+      const testers = response.data.data.testers.map((tester) => ({
+        name: tester.username,
+        avatar: tester.avatarUrl,
+        tests: tester.testsCount,
+      }));
+      return testers;
+    } catch (error) {
+      console.error("Failed to fetch GitHub testers:", error);
+    }
   }
 }
