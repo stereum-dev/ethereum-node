@@ -1886,23 +1886,28 @@ export class ServiceManager {
         name: translator.username,
         avatar: translator.avatarUrl,
       }));
-      console.log("testttt", JSON.stringify(translators));
       return translators;
     } catch (error) {
       console.error("Failed to fetch translators:", error);
     }
   }
 
-  async fetchAndLogGitHubTesters() {
+  async fetchGitHubTesters() {
     try {
-      const response = await axios.get("https://stereum.net/api/github/testers");
-      console.log(response.data);
+      const response = await axios.get("https://stereum.com/api/github/testers");
+      const testers = response.data.data.testers.map((tester) => ({
+        name: tester.username,
+        avatar: tester.avatarUrl,
+        tests: tester.testsCount,
+      }));
+      console.log("testttttt =>", JSON.stringify(testers));
+      return testers;
     } catch (error) {
       console.error("Failed to fetch GitHub testers:", error);
     }
   }
 }
 
-// const manager = new ServiceManager();
-// manager.fetchTranslators();
-// manager.fetchAndLogGitHubTesters();
+const manager = new ServiceManager();
+
+manager.fetchGitHubTesters();
