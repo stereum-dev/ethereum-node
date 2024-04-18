@@ -739,10 +739,6 @@ video {
   inset: 0px;
 }
 
-.inset-4{
-  inset: 1rem;
-}
-
 .inset-x-0{
   left: 0px;
   right: 0px;
@@ -1331,6 +1327,10 @@ video {
   grid-row-start: 8;
 }
 
+.row-start-9{
+  grid-row-start: 9;
+}
+
 .row-end-10{
   grid-row-end: 10;
 }
@@ -1521,6 +1521,10 @@ video {
 
 .mt-8{
   margin-top: 2rem;
+}
+
+.mt-\[2px\]{
+  margin-top: 2px;
 }
 
 .box-border{
@@ -1782,6 +1786,14 @@ video {
   height: 100vh;
 }
 
+.h-\[130px\]{
+  height: 130px;
+}
+
+.h-\[120px\]{
+  height: 120px;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -1914,20 +1926,16 @@ video {
   max-height: 503px;
 }
 
+.max-h-\[60px\]{
+  max-height: 60px;
+}
+
 .max-h-\[78px\]{
   max-height: 78px;
 }
 
 .max-h-full{
   max-height: 100%;
-}
-
-.max-h-\[80px\]{
-  max-height: 80px;
-}
-
-.max-h-\[60px\]{
-  max-height: 60px;
 }
 
 .min-h-11{
@@ -2130,6 +2138,10 @@ video {
   width: 120px;
 }
 
+.w-\[130px\]{
+  width: 130px;
+}
+
 .w-\[150px\]{
   width: 150px;
 }
@@ -2244,8 +2256,8 @@ video {
   width: 100vw;
 }
 
-.w-\[130px\]{
-  width: 130px;
+.w-\[140px\]{
+  width: 140px;
 }
 
 .min-w-\[100px\]{
@@ -2274,6 +2286,14 @@ video {
 
 .max-w-xs{
   max-width: 20rem;
+}
+
+.max-w-16{
+  max-width: 4rem;
+}
+
+.max-w-14{
+  max-width: 3.5rem;
 }
 
 .flex-auto{
@@ -2659,10 +2679,6 @@ video {
   gap: 0.5rem;
 }
 
-.gap-3{
-  gap: 0.75rem;
-}
-
 .gap-4{
   gap: 1rem;
 }
@@ -2978,6 +2994,11 @@ video {
 .rounded-t-md{
   border-top-left-radius: 0.375rem;
   border-top-right-radius: 0.375rem;
+}
+
+.rounded-t-sm{
+  border-top-left-radius: 0.125rem;
+  border-top-right-radius: 0.125rem;
 }
 
 .rounded-bl-\[37px\]{
@@ -5496,6 +5517,11 @@ html body {
   background-color: rgb(4 47 46 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-gray-400:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-opacity-10:hover{
   --tw-bg-opacity: 0.1;
 }
@@ -5713,12 +5739,6 @@ html body {
 }
 
 @media (min-width: 640px){
-  .sm\:gap-x-5{
-    -webkit-column-gap: 1.25rem;
-       -moz-column-gap: 1.25rem;
-            column-gap: 1.25rem;
-  }
-
   .sm\:text-sm{
     font-size: 0.875rem;
     line-height: 1.25rem;
