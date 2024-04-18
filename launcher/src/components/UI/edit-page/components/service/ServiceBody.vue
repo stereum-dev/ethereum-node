@@ -6,7 +6,10 @@
     <div
       class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-[10px] font-semibold z-10"
     >
-      <span>{{ $t("editPageServices.services") }} </span>
+      <span v-if="setupStore.isEditConfigViewActive" class="self-center"
+        >Config Services
+      </span>
+      <span v-else class="self-center">Server Services </span>
     </div>
     <div
       ref="service"
@@ -19,15 +22,18 @@
         class="w-full max-h-[78px] grid grid-cols-2 p-2 rounded-md border border-gray-600 shadow-md mx-auto bg-[#212629]"
         :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
         style="cursor: default"
-        @mouseenter="footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`"
+        @mouseenter="
+          footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`
+        "
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <ServiceLayout :client="item" />
         <div class="w-full h-full grid grid-cols-2 items-center">
           <div
             v-if="
-              /FlashbotsMevBoostService|LidoObolExitService|ValidatorEjectorService/.test(item.service) &&
-              !item.isRemoveProcessing
+              /FlashbotsMevBoostService|LidoObolExitService|ValidatorEjectorService/.test(
+                item.service
+              ) && !item.isRemoveProcessing
             "
             class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 hover:border-gray-300"
             @click="changeConnection(item)"
@@ -47,9 +53,9 @@
             }"
             @click="deleteService(item)"
             @mouseenter="
-              footerStore.cursorLocation = `${$t('editPageServices.delete')} ${item.name} ${$t(
-                'editPageServices.service'
-              )}`
+              footerStore.cursorLocation = `${$t('editPageServices.delete')} ${
+                item.name
+              } ${$t('editPageServices.service')}`
             "
             @mouseleave="footerStore.cursorLocation = ''"
           >
@@ -71,29 +77,40 @@ import { useNodeManage } from "@/store/nodeManage";
 import ServiceLayout from "./ServiceLayout.vue";
 import { computed } from "vue";
 import { useFooter } from "@/store/theFooter";
+import { useSetups } from "../../../../../store/setups";
 
 const footerStore = useFooter();
 
 const emit = defineEmits(["changeConnection", "deleteService"]);
 
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
-const getServices = computed(() =>
-  manageStore.newConfiguration
-    .filter((e) => e?.category === "service")
-    .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
+const getServices = computed(() => {
+  let services = manageStore.newConfiguration
+    .filter((e) => e.category === "service")
+    .sort((a, b) => a.name.localeCompare(b.name));
 
-      if (fa < fb) {
-        return -1;
+  if (!setupStore.isConfigViewActive) {
+    const seen = new Set();
+    services = services.filter((service) => {
+      if (setupStore.serverServices.includes(service.service)) {
+        if (!seen.has(service.service)) {
+          seen.add(service.service);
+          return true;
+        }
+        return false; // Exclude duplicate
       }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
-    })
-);
+      return false; // services not in serverServices
+    });
+  } else {
+    services = services.filter(
+      (service) => !setupStore.serverServices.includes(service.service)
+    );
+  }
+
+  return services;
+});
 
 // Methods
 const changeConnection = (item) => {

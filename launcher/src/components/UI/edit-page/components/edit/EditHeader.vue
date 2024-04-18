@@ -16,17 +16,11 @@ import { useSetups } from "../../../../../store/setups";
 const setupStore = useSetups();
 
 const setupsList = computed(() => {
-  let list;
-  list = setupStore.allSetups.map((setup) => {
-    return {
-      name: setup.setupName,
-      color: setup.color,
-    };
+  const list = setupStore.allSetups.map((setup) => {
+    return setup;
   });
   return list;
 });
-
-console.log(setupsList.value);
 </script>
 
 <style scoped>

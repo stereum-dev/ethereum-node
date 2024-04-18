@@ -38,4 +38,3 @@ const selectSetup = (setup) => {
   console.log("selectSetup", setup);
 };
 </script>
-<style scoped></style>

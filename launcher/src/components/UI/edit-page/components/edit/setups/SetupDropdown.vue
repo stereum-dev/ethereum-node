@@ -25,11 +25,21 @@
         :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
       ></span>
       <span
+        v-if="route.path === '/node'"
         class="col-start-2 col-end-11 text-sm font-semibold overflow-hidden truncate text-gray-200"
         >{{
           setupStore.selectedSetup !== null
             ? setupStore.selectedSetup?.setupName
             : "Server View"
+        }}</span
+      >
+      <span
+        v-if="route.path === '/edit'"
+        class="col-start-2 col-end-11 text-sm font-semibold overflow-hidden truncate text-gray-200"
+        >{{
+          setupStore.selectedSetup !== null
+            ? setupStore.selectedSetup?.setupName
+            : "Edit View"
         }}</span
       >
       <svg
@@ -86,13 +96,23 @@
       @mouseleave="isOpen = false"
     >
       <div
-        v-if="setupStore.isConfigViewActive"
+        v-if="setupStore.isConfigViewActive && route.path === '/node'"
         class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
         @click="selectServerView"
       >
         <span
           class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate"
           >Server View</span
+        >
+      </div>
+      <div
+        v-if="route.path === '/edit' && !setupStore.isConfigViewActive"
+        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+        @click="selectServerView"
+      >
+        <span
+          class="col-start-1 col-span-full self-center text-sm font-bold overflow-hidden truncate"
+          >Edit Server View</span
         >
       </div>
       <div

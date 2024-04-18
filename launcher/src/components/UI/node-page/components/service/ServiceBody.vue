@@ -6,8 +6,9 @@
       class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
     >
       <span v-if="setupStore.isConfigViewActive" class="self-center"
-        >Server Services
+        >Config Services
       </span>
+      <span v-else class="self-center">Server Services </span>
     </div>
     <div
       ref="service"

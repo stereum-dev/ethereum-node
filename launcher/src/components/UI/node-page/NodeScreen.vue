@@ -138,6 +138,7 @@ onUnmounted(() => {
   clearInterval(pollingVitals);
   clearInterval(pollingNodeStats);
   clearInterval(pollingListingKeys);
+  setupStore.isConfigViewActive = false;
 });
 
 //*************  Methods *************

@@ -3,11 +3,19 @@ import { defineStore } from "pinia";
 export const useSetups = defineStore("setups", {
   state: () => ({
     allSetups: [],
+    editSetups: [],
+
+    //Setup Node Page
     isServerViewActive: false,
     isConfigViewActive: false,
     isRenameSetupActive: false,
     selectedSetup: null,
+
+    //Setup Edit Page
     setupToRename: null,
+    isEditConfigViewActive: false,
+
+    //Setup Others
     serverServices: ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"],
 
     colorMappings: {

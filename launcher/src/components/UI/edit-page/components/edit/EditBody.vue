@@ -1,78 +1,31 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between items-center">
     <EditHeader />
-    <div
-      class="w-full h-full max-h-[430px] rounded-md border overflow-hidden mt-1 bg-[#151618] relative"
-      :class="[
-        isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-600',
-        manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : '',
-      ]"
-    >
-      <div
-        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
-      >
-        <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>
-        <span class="col-start-2 justify-self-center self-center">{{ $t("editBody.consensusClient") }}</span>
-        <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }}</span>
-      </div>
-      <div
-        ref="dropZoneRef"
-        class="w-full h-full max-h-[428px] grid grid-cols-3 pt-5 z-10"
-        :class="{
-          'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto':
-            activateScrollBar,
-        }"
-        @drop="onDrop($event)"
-        @dragover.prevent="isOverDropZone = true"
-        @dragleave.prevent="isOverDropZone = false"
-      >
-        <span
-          v-if="isOverDropZone"
-          class="col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center text-xl text-blue-400"
-          >+</span
-        >
-        <ExecutionClients
-          v-if="!isOverDropZone"
-          @delete-service="deleteService"
-          @switch-client="switchClient"
-          @confirm-consensus="confirmConsensus"
-          @info-modal="infoModal"
-          @mouse-over="lineDrawHandler"
-          @mouse-leave="removeConnectionLines"
-        />
-
-        <ConsensusClients
-          v-if="!isOverDropZone"
-          @delete-service="deleteService"
-          @confirm-connection="confirmConnection"
-          @switch-client="switchClient"
-          @modify-service="modifyService"
-          @info-modal="infoModal"
-          @mouse-over="lineDrawHandler"
-          @mouse-leave="removeConnectionLines"
-        />
-        <ValidatorClients
-          v-if="!isOverDropZone"
-          @delete-service="deleteService"
-          @switch-client="switchClient"
-          @modify-service="modifyService"
-          @info-modal="infoModal"
-          @mouse-over="lineDrawHandler"
-          @mouse-leave="removeConnectionLines"
-        />
-      </div>
-    </div>
+    <ConfigBody
+      v-if="setupStore.isEditConfigViewActive"
+      @on-drop="onDrop"
+      @confirm-connection="confirmConnection"
+      @switch-client="switchClient"
+      @delete-service="deleteService"
+      @confirm-consensus="confirmConsensus"
+      @info-modal="infoModal"
+      @modify-service="modifyService"
+      @remove-lines="removeConnectionLines"
+      @line-draw="lineDrawHandler"
+    />
+    <SetupBody />
   </div>
 </template>
 
 <script setup>
 import EditHeader from "./EditHeader.vue";
-import ExecutionClients from "./ExecutionClients.vue";
-import ConsensusClients from "./ConsensusClients.vue";
-import ValidatorClients from "./ValidatorClients.vue";
+import ConfigBody from "./ConfigBody.vue";
+import SetupBody from "./SetupBody.vue";
+
 import LeaderLine from "leader-line-new";
 import { computed, ref, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
+import { useSetups } from "@/store/setups";
 
 const emit = defineEmits([
   "onDrop",
@@ -86,6 +39,7 @@ const emit = defineEmits([
 
 //Pinia stores
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
 // refs
 
@@ -104,17 +58,6 @@ const displayDropZone = computed(() => {
   return dropClass;
 });
 
-const activateScrollBar = computed(() => {
-  const validators = manageStore.newConfiguration.filter((service) => service.category === "validator");
-  const consensus = manageStore.newConfiguration.filter((service) => service.category === "consensus");
-  const execution = manageStore.newConfiguration.filter((service) => service.category === "execution");
-  if (validators.length > 3 || consensus.length > 3 || execution.length > 3) {
-    return true;
-  } else {
-    return false;
-  }
-});
-
 watchEffect(
   () => manageStore.isLineHidden,
   (newValue) => {
@@ -128,7 +71,12 @@ watchEffect(
 
 const oneWayConnection = (start, end, startSocket, endSocket) => {
   if (start && end) {
-    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    let newLine = new LeaderLine(
+      start,
+      end,
+      { dash: { animation: true } },
+      { hide: true }
+    );
     newLine.position();
     newLine.setOptions({
       size: 2,
@@ -150,7 +98,9 @@ const lineDrawHandler = (item) => {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
             s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
+            s.config?.dependencies?.executionClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "consensus") {
@@ -167,8 +117,12 @@ const lineDrawHandler = (item) => {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
             (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
+              s.config?.dependencies?.consensusClients.some(
+                (d) => d.id === item.config?.serviceID
+              )) ||
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -191,9 +145,15 @@ const lineDrawHandler = (item) => {
       case "validator": {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
-            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
-            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            item.config?.dependencies?.consensusClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            s.config?.dependencies?.consensusClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -225,7 +185,7 @@ const lineDrawHandler = (item) => {
         break;
       }
     }
-  } else if (item && item.displayPluginMenu) {
+  } else if (item?.displayPluginMenu) {
     removeConnectionLines();
   }
   isLineDrawHandlerReady.value = true;
