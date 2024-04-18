@@ -1,6 +1,5 @@
 "use strict";
 
-require("dotenv").config();
 import { app, protocol, BrowserWindow, shell, dialog, Menu, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import { StorageService } from "./storageservice.js";
@@ -28,8 +27,6 @@ const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 stereumUpdater.initUpdater();
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
-
-require("dotenv").config();
 
 let remoteHost = {};
 
