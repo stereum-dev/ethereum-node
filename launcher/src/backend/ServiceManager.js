@@ -1879,10 +1879,15 @@ export class ServiceManager {
     return jwtContent.stdout;
   }
 
-  async fetchAndLogTranslators() {
+  async fetchTranslators() {
     try {
-      const response = await axios.get("https://stereum.net/api/translators");
-      console.log("testttt", response.data);
+      const response = await axios.get("https://stereum.com/api/translators");
+      const translators = response.data.data.translators.map((translator) => ({
+        name: translator.username,
+        avatar: translator.avatarUrl,
+      }));
+      console.log("testttt", JSON.stringify(translators));
+      return translators;
     } catch (error) {
       console.error("Failed to fetch translators:", error);
     }
@@ -1898,6 +1903,6 @@ export class ServiceManager {
   }
 }
 
-const manager = new ServiceManager();
-manager.fetchAndLogTranslators();
+// const manager = new ServiceManager();
+// manager.fetchTranslators();
 // manager.fetchAndLogGitHubTesters();

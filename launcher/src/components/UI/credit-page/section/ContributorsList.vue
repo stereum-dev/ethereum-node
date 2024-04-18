@@ -26,6 +26,9 @@
 import { ref, computed, onMounted } from "vue";
 import TheContributor from "../components/TheContributor.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
+import ControlService from "@/store/ControlService";
+
+// const translator = ref([]);
 
 const headerStore = useNodeHeader();
 
@@ -38,11 +41,27 @@ onMounted(() => {
   if (headerStore.choosedCreditType === "technical contribution") {
     fetchGithubContributors();
   } else if (headerStore.choosedCreditType === "feedback, testing & suggestions") {
-    fetchStereumTesters();
+    // fetchStereumTesters();
   } else if (headerStore.choosedCreditType === "translation") {
     fetchStereumTranslators();
   }
 });
+
+const fetchStereumTranslators = async () => {
+  try {
+    const translators = await ControlService.fetchTranslators();
+    if (translators && Array.isArray(translators)) {
+      results.value = translators.sort((a, b) => a.name.localeCompare(b.name));
+      console.log("Translators fetched:", JSON.stringify(results.value));
+      isLoading.value = results.value.length === 0;
+    } else {
+      console.error("fetchTranslators did not return an array");
+    }
+  } catch (error) {
+    console.error("Error fetching translators:", error);
+    isLoading.value = true;
+  }
+};
 
 // const fetchStereumTesters = async () => {
 //   isLoading.value = true;
@@ -64,71 +83,25 @@ onMounted(() => {
 //   }
 // };
 
-const fetchStereumTesters = async () => {
-  isLoading.value = true;
-  try {
-    const response = await fetch(process.env.VUE_APP_TESTERS_API);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const responseData = await response.json();
-    results.value = responseData.data.testers.map((tester) => ({
-      name: tester.username,
-      avatar: tester.avatarUrl,
-      score: tester.testsCount,
-    }));
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-// const fetchStereumTranslators = async () => {
+// const fetchStereumTesters = async () => {
 //   isLoading.value = true;
 //   try {
-//     const response = await fetch("/translators");
+//     const response = await fetch(process.env.VUE_APP_TESTERS_API);
 //     if (!response.ok) {
 //       throw new Error("Network response was not ok");
 //     }
 //     const responseData = await response.json();
-//     results.value = responseData.data.translators
-//       .map((translator) => ({
-//         name: translator.username,
-//         avatar: translator.avatarUrl,
-//         score: translator.testsCount,
-//       }))
-//       .sort((a, b) => a.name.localeCompare(b.name));
+//     results.value = responseData.data.testers.map((tester) => ({
+//       name: tester.username,
+//       avatar: tester.avatarUrl,
+//       score: tester.testsCount,
+//     }));
 //   } catch (error) {
 //     console.error("Error fetching data:", error);
 //   } finally {
 //     isLoading.value = false;
 //   }
 // };
-
-const fetchStereumTranslators = async () => {
-  isLoading.value = true;
-  try {
-    const response = await fetch(
-      process.env.NODE_ENV === "production" ? "https://stereum.net/api/translators" : "/translators"
-    );
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const responseData = await response.json();
-    results.value = responseData.data.translators
-      .map((translator) => ({
-        name: translator.username,
-        avatar: translator.avatarUrl,
-        score: translator.testsCount,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
 
 const fetchGithubContributors = () => {
   isLoading.value = true;

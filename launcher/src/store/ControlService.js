@@ -544,6 +544,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("downloadObolBackup", args);
   }
 
+  async fetchTranslators(args) {
+    return await this.promiseIpc.send("fetchTranslators", args);
+  }
+
   async importObolBackup(args) {
     return await this.promiseIpc.send("importObolBackup", args);
   }
