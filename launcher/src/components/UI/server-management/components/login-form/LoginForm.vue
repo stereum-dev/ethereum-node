@@ -1,5 +1,3 @@
-import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted, watch, watchEffect, onUnmounted } from
-'vue';
 <template>
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
@@ -9,6 +7,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
+      @submit.prevent="internalLogin"
     >
       <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
@@ -24,34 +23,32 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           :placeholder="`${$t('multiServer.serverName')}`"
           class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
+          @change="serverNameChanged = true"
         />
 
         <div
           class="w-full h-full col-start-10 col-span-full row-start-2 row-span-2 flex justify-evenly items-center relative"
         >
           <img
-            class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
+            class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :src="getTrashImg"
-            alt=""
+            alt="Trash Icon"
             :class="removeButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
             @mousedown.prevent
-            @mouseenter="(hovered = true), (removeHovered = true)"
-            @mouseleave="(hovered = false), (removeHovered = false)"
+            @mouseenter="removeHovered = true"
+            @mouseleave="removeHovered = false"
             @click="removeServer"
           />
 
           <div
             v-if="removeHovered"
-            class="absolute -top-11 right-5 w-28 break-words rounded bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+            class="absolute -top-11 right-5 w-36 rounded-sm bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none capitalize"
           >
-            <span
-              class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
-            ></span>
             {{ $t("loginServer.removeServer") }}
           </div>
 
           <img
-            class="w-8 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
+            class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :class="addButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
             src="/img/icon/server-management-icons/plus-icon.png"
             alt="icon"
@@ -62,11 +59,8 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           />
           <div
             v-if="addHovered"
-            class="absolute -top-11 -right-5 w-28 rounded bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+            class="absolute -top-11 -right-5 w-28 rounded-sm uppercase bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
           >
-            <span
-              class="bg-dark dark:bg-dark-2 absolute top-5 left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45"
-            ></span>
             {{ $t("multiServer.saveServer") }}
           </div>
         </div>
@@ -88,13 +82,14 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
             placeholder="114.72.86.90"
             class="h-8 self-center col-start-1 col-end-11 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
             required
+            @change="serverIPChanged = true"
           />
           <img
             v-if="!serverStore.isIpScannerModalActive"
             class="w-6 h-6 col-start-11 col-span-full self-center p-[2px] cursor-pointer hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 justify-self-center"
             src="/img/icon/server-management-icons/local-lan.png"
             alt="Scanner Icon"
-            @click="IpScanLan1"
+            @click="IpScanner"
           />
           <span
             v-else
@@ -131,6 +126,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           placeholder="root"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
+          @change="serverUsernameChanged = true"
         />
       </div>
       <div class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
@@ -148,7 +144,7 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
             v-model="serverStore.loginState.useAuth"
             type="checkbox"
             class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden bg-gray-200"
-            @change="changeLabel"
+            @input="toggleSSH"
           />
 
           <span
@@ -187,25 +183,10 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
         </label>
       </div>
 
-      <div v-if="!useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
-        <label
-          for="password"
-          class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
-          :class="passwordError ? 'text-red-500' : 'text-gray-300'"
-          >{{ passwordError ? passwordError : $t("multiServer.pass") }}</label
-        >
-        <input
-          id="password"
-          v-model="serverStore.loginState.password"
-          type="password"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-          placeholder="******************"
-          :disabled="useSSHKey"
-          required
-          @keydown.enter="internalLogin"
-        />
-      </div>
-      <div v-if="useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        v-if="useSSHKey && !usePassword"
+        class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <label
           for="keypath"
           class="col-start-1 col-end-12 row-start-1 row-span-1 block text-xs font-bold"
@@ -218,8 +199,8 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           type="text"
           placeholder="/user/.ssh/id_rsa"
           class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-          :disabled="!useSSHKey"
           required
+          @input="validateSSHKeyPath"
         />
         <label
           for="keypath-file"
@@ -231,10 +212,13 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
               >+</span
             >
           </div>
-          <input id="keypath-file" type="file" class="hidden" :disabled="!useSSHKey" @change="handleFileSelect" />
+          <input id="keypath-file" type="file" class="hidden" @change="handleFileSelect" />
         </label>
       </div>
-      <div v-if="useSSHKey" class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 grid-rows-3">
+      <div
+        v-if="useSSHKey && !usePassword"
+        class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
         <label
           for="password"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
@@ -248,6 +232,26 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
           placeholder="******************"
         />
       </div>
+      <div
+        v-if="usePassword && !useSSHKey"
+        class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3"
+      >
+        <label
+          for="password"
+          class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
+          :class="passwordError ? 'text-red-500' : 'text-gray-300'"
+          >{{ passwordError ? passwordError : $t("multiServer.pass") }}</label
+        >
+        <input
+          id="password"
+          v-model="serverStore.loginState.password"
+          type="password"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          placeholder="******************"
+          required
+          @input="validatePassword"
+        />
+      </div>
 
       <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
         <button
@@ -258,8 +262,8 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
               ? 'bg-gray-400 opacity-50 pointer-events-none '
               : 'bg-gray-200'
           "
-          type="button"
-          @click="internalLogin"
+          type="submit"
+          :disabled="buttonDisabled"
         >
           {{ $t("multiServer.login") }}
         </button>
@@ -280,7 +284,8 @@ import { V2_MetaFunction } from "@remix-run/react"; import { computed, onMounted
 </template>
 
 <script setup>
-import { computed, onUnmounted, ref, watchEffect } from "vue";
+import { computed, ref, onUnmounted, watchEffect, watch, onMounted } from "vue";
+
 import { useServers } from "@/store/servers";
 import { useServerLogin } from "@/composables/useLogin";
 import ControlService from "@/store/ControlService";
@@ -289,89 +294,204 @@ import { useRouter } from "vue-router";
 const emit = defineEmits(["serverLogin"]);
 
 const serverStore = useServers();
+const router = useRouter();
 
 const { add } = useServerLogin();
 
-const hovered = ref(false);
-const removeHovered = ref(false);
-const addHovered = ref(false);
-const message = ref("");
+//Refs
+
 const serverNameError = ref("");
 const ipError = ref("");
 const usernameError = ref("");
 const passwordError = ref("");
 const sshError = ref("");
 const devices = ref([]);
-const buttonDisabled = ref(false);
+const removeHovered = ref(false);
+const addHovered = ref(false);
+const isFormValid = ref(false);
+const useSSHKey = ref(false);
+const usePassword = ref(false);
+const serverNameChanged = ref(false);
+const serverIPChanged = ref(false);
+const serverUsernameChanged = ref(false);
 
-const router = useRouter();
+//*********** Computed ***********//
+
+const buttonDisabled = computed(() => {
+  return !!(serverNameError.value || ipError.value || usernameError.value);
+});
 
 const getTrashImg = computed(() => {
-  if (hovered.value) {
+  if (removeHovered.value) {
     return "./img/icon/server-management-icons/trash-can-2.png";
   } else {
     return "./img/icon/server-management-icons/trash-can.png";
   }
 });
 
-const useSSHKey = computed(() => {
-  if (serverStore.loginState.useAuth) {
-    return true;
-  } else {
-    return false;
-  }
-});
-
 const addButtonDisabled = computed(() => {
-  const existingServer = serverStore.savedServers?.savedConnections?.some(
-    (item) => item.host === serverStore.selectedServerToConnect?.host
-  );
-
-  if (existingServer) {
-    return true;
-  } else {
+  if (
+    !ipError.value &&
+    !usernameError.value &&
+    !serverNameError.value &&
+    serverStore.loginState.hostName &&
+    serverStore.loginState.ip &&
+    serverStore.loginState.username
+  ) {
     return false;
+  } else {
+    return true;
   }
 });
 
 const removeButtonDisabled = computed(() => {
-  if (serverStore.selectedServerToConnect) {
-    return false;
-  } else {
-    return true;
-  }
+  return !serverStore.selectedServerToConnect;
 });
 
+//*********** Watchers ***********//
+
+watch(
+  () => serverStore.loginState.useAuth,
+  () => {
+    toggleSSH();
+  }
+);
+
 watchEffect(() => {
-  if (serverStore.connectExistingServer) {
-    serverStore.loginState.hostName = serverStore.selectedServerToConnect.name;
-    serverStore.loginState.ip = serverStore.selectedServerToConnect.host;
-    serverStore.loginState.port = serverStore.selectedServerToConnect.port;
-    serverStore.loginState.username = serverStore.selectedServerToConnect.user;
-    serverStore.loginState.useAuth = serverStore.selectedServerToConnect.useAuthKey;
-    serverStore.loginState.keyPath = serverStore.selectedServerToConnect.keylocation;
-    serverStore.loginState.password = "";
-    serverStore.loginState.passphrase = "";
-  } else {
+  if (serverStore.addNewServer) {
     serverStore.selectedServerToConnect = null;
     serverStore.loginState.hostName = "";
     serverStore.loginState.ip = "";
     serverStore.loginState.port = "";
     serverStore.loginState.username = "";
-    serverStore.loginState.useAuth = false;
     serverStore.loginState.keyPath = "";
-    serverStore.loginState.password = "";
-    serverStore.loginState.passphrase = "";
+    serverStore.loginState.useAuth = false;
   }
 });
 
 watchEffect(() => {
-  if (!useSSHKey.value && serverStore.loginState.password === "") {
-    buttonDisabled.value = true;
-  } else {
-    buttonDisabled.value = false;
+  if (serverStore.selectedServerToConnect) {
+    serverStore.loginState.hostName = serverStore.selectedServerToConnect.name;
+    serverStore.loginState.ip = serverStore.selectedServerToConnect.host;
+    serverStore.loginState.port = serverStore.selectedServerToConnect.port;
+    serverStore.loginState.username = serverStore.selectedServerToConnect.user;
+    serverStore.loginState.useAuth = serverStore.selectedServerToConnect.useAuthKey;
+
+    if (serverStore.loginState.useAuth) {
+      useSSHKey.value = true;
+      usePassword.value = false;
+      serverStore.loginState.keyPath = serverStore.selectedServerToConnect.keylocation;
+      serverStore.loginState.passphrase = serverStore.selectedServerToConnect?.passphrase;
+      serverStore.loginState.password = "";
+    } else {
+      useSSHKey.value = false;
+      usePassword.value = true;
+      serverStore.loginState.keyPath = "";
+      serverStore.loginState.passphrase = "";
+      serverStore.loginState.password = serverStore.selectedServerToConnect.password;
+    }
   }
 });
+
+watch(
+  () => serverStore.loginState.hostName,
+  () => {
+    if (serverNameChanged.value) {
+      validateServerName();
+    }
+  }
+);
+
+watch(
+  () => serverStore.loginState.ip,
+  () => {
+    if (serverIPChanged.value) {
+      validateIP();
+    }
+  }
+);
+
+watch(
+  () => serverStore.loginState.username,
+  () => {
+    if (serverUsernameChanged.value) {
+      validateUsername();
+    }
+  }
+);
+
+watchEffect(() => {
+  if (!serverNameError.value && !ipError.value && !usernameError.value) {
+    isFormValid.value = true;
+  } else {
+    isFormValid.value = false;
+  }
+});
+
+//*********** Lifecycle Hooks ***********//
+
+onMounted(() => {
+  ipError.value = "";
+  usernameError.value = "";
+  serverNameError.value = "";
+
+  serverStore.loginState = {};
+});
+
+onUnmounted(() => {
+  serverStore.loginState = {};
+});
+
+//*********** Methods ***********//
+
+// Validation functions
+const validateServerName = () => {
+  const serverName = serverStore.loginState.hostName || ""; // Default to empty string if undefined or null
+  serverNameError.value = serverName.trim() ? "" : "Server name is required.";
+};
+
+const validateIP = () => {
+  const ip = serverStore.loginState.ip || ""; // Default to empty string if undefined or null
+  const ipPattern = /^[0-9]{1,3}(\.[0-9]{1,3}){3}$/;
+  ipError.value = ipPattern.test(ip.trim()) ? "" : "Server IP is required .";
+};
+
+const validateUsername = () => {
+  const username = serverStore.loginState.username || ""; // Default to empty string if undefined or null
+  usernameError.value = username.trim() ? "" : "Username is required.";
+};
+
+const validateSSHKeyPath = () => {
+  const keyPath = serverStore.loginState.keyPath || ""; // Default to empty string if undefined or null
+  sshError.value = keyPath.trim() ? "" : "SSH key path is required.";
+};
+
+const validatePassword = () => {
+  const password = serverStore.loginState.password || ""; // Default to empty string if undefined or null
+  passwordError.value = password.trim() ? "" : "Password is required.";
+};
+
+const validateForm = () => {
+  validateServerName();
+  validateIP();
+  validateUsername();
+
+  if (!serverNameError.value && !ipError.value && !usernameError.value) {
+    isFormValid.value = true;
+  } else {
+    isFormValid.value = false;
+  }
+};
+
+const toggleSSH = () => {
+  if (serverStore.loginState.useAuth) {
+    useSSHKey.value = true;
+    usePassword.value = false;
+  } else {
+    useSSHKey.value = false;
+    usePassword.value = true;
+  }
+};
 
 // Lifecycle
 
@@ -388,7 +508,6 @@ onUnmounted(() => {
   serverStore.selectedServerToConnect = null;
 });
 
-// Methods
 const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
@@ -396,103 +515,13 @@ const handleFileSelect = (event) => {
       serverStore.loginState.keyPath = selectedFile.path;
     } else {
       serverStore.loginState.keyPath = "";
-      message.value = "Selected file is empty.";
     }
   } else {
     serverStore.loginState.keyPath = "";
   }
 };
 
-const validateServerName = () => {
-  if (!serverStore.loginState.hostName) {
-    serverNameError.value = "Server name is required.";
-    return false;
-  }
-  serverNameError.value = "";
-  return true;
-};
-
-const validateIPorHostname = () => {
-  const ipRegex =
-    /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-
-  const hostnameRegex = /^[a-zA-Z0-9.-]+$/;
-
-  const input = serverStore.loginState.ip;
-
-  if (ipRegex.test(input.trim()) || hostnameRegex.test(input.trim())) {
-    ipError.value = "";
-    return true;
-  } else {
-    ipError.value = "Invalid IP address or hostname.";
-    return false;
-  }
-};
-
-const validateUsername = () => {
-  if (!serverStore.loginState.username) {
-    usernameError.value = "Username is required.";
-    return false;
-  }
-  usernameError.value = "";
-  return true;
-};
-
-const validateSshKey = () => {
-  if (serverStore.loginState.keyPath) {
-    sshError.value = "";
-    return true;
-  } else {
-    sshError.value = "SSH key path is required.";
-    return false;
-  }
-};
-
-const validatePassword = () => {
-  if (serverStore.loginState.password) {
-    passwordError.value = "";
-    return true;
-  } else {
-    passwordError.value = "Password is required.";
-    return false;
-  }
-};
-
-const changeLabel = () => {
-  if (serverStore.loginState.useAuth) {
-    serverStore.loginState.password = "";
-  }
-};
-
-const internalLogin = async () => {
-  serverStore.isServerAnimationActive = true;
-  serverStore.connectingProcess = true;
-  serverNameError.value = "";
-  ipError.value = "";
-  usernameError.value = "";
-  passwordError.value = "";
-  sshError.value = "";
-
-  let isValid = true;
-  isValid = isValid && validateServerName();
-  isValid = isValid && validateIPorHostname();
-  isValid = isValid && validateUsername();
-
-  if (useSSHKey.value) {
-    isValid = isValid && validateSshKey();
-  } else {
-    isValid = isValid && validatePassword();
-  }
-
-  if (isValid) {
-    emit("serverLogin");
-  } else {
-    serverStore.isServerAnimationActive = false;
-    router.push("/login");
-  }
-};
-
-const IpScanLan1 = async () => {
+const IpScanner = async () => {
   serverStore.isIpScannerModalActive = true;
   try {
     let res = await ControlService.IpScanLan();
@@ -510,11 +539,29 @@ const IpScanLan1 = async () => {
 };
 
 const saveServer = async () => {
-  await add();
-  //reload the page
+  if (isFormValid.value) {
+    await add();
+    serverStore.selectedServerToConnect = null;
+    serverStore.loginState.hostName = "";
+    serverStore.loginState.ip = "";
+    serverStore.loginState.port = "";
+    serverStore.loginState.username = "";
+    serverStore.loginState.useAuth = false;
+  }
 };
 
 const removeServer = () => {
   serverStore.isRemoveModalActive = true;
+};
+
+const internalLogin = () => {
+  validateForm();
+  if (isFormValid.value) {
+    serverStore.isServerAnimationActive = true;
+    serverStore.connectingProcess = true;
+    emit("serverLogin");
+  } else {
+    router.push("/login");
+  }
 };
 </script>

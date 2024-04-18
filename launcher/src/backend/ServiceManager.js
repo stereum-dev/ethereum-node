@@ -1041,7 +1041,7 @@ export class ServiceManager {
       const dbUser = "postgres";
       const dbName = "node_operator_keys_service_db";
       await this.nodeConnection.sshService.exec(
-        `docker run --name=cachingDB-${keyAPI.id} --network=stereum -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
+        `docker run --restart=unless-stopped --name=cachingDB-${keyAPI.id} --network=stereum -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
       );
       keyAPI.env.DB_NAME = dbName;
       keyAPI.env.DB_USER = dbUser;
