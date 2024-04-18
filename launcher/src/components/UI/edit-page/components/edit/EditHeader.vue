@@ -1,26 +1,44 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
     <ServerDetails />
-    <SetupDetails :list="setupsList" />
+    <SetupDetails
+      :list="setupsList"
+      @rename-setup="renameSetup"
+      @confirm-rename="confirmRename"
+      @select-setup="selectSetup"
+    />
     <NetworkDetails />
   </div>
 </template>
 
 <script setup>
-import ServerDetails from "./ServerDetails.vue";
-import NetworkDetails from "./NetworkDetails.vue";
-import SetupDetails from "./setups/SetupDetails.vue";
+import ServerDetails from "./header/ServerDetails.vue";
+import NetworkDetails from "./header/NetworkDetails.vue";
+import SetupDetails from "./header/SetupDetails.vue";
 import { computed } from "vue";
-import { useSetups } from "../../../../../store/setups";
+import { useSetups } from "@/store/setups";
 
+const emit = defineEmits(["renameSetup", "confirmRename", "selectSetup"]);
 const setupStore = useSetups();
 
 const setupsList = computed(() => {
-  const list = setupStore.allSetups.map((setup) => {
+  const list = setupStore.editSetups.map((setup) => {
     return setup;
   });
   return list;
 });
+
+const renameSetup = (setup) => {
+  emit("renameSetup", setup);
+};
+
+const confirmRename = (setup) => {
+  emit("confirmRename", setup);
+};
+
+const selectSetup = (setup) => {
+  emit("selectSetup", setup);
+};
 </script>
 
 <style scoped>

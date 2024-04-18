@@ -1,7 +1,13 @@
 <template>
   <div
-    class="w-[180px] h-[100px] col-span-1 row-span-1 grid grid-cols-2 items-center p-1 border border-gray-500 rounded-md mx-auto"
+    class="w-[180px] h-[100px] col-span-1 row-span-1 grid grid-cols-2 grid-rows-12 items-center border border-gray-500 rounded-md mx-auto"
   >
+    <div
+      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate rounded-t-sm"
+      :class="[textColor, bgColor]"
+    >
+      <span>{{ props.setup.setupName }}</span>
+    </div>
     <SetupLayout :setup="props.setup" />
 
     <SetupButtons
@@ -16,12 +22,19 @@
 <script setup>
 import SetupLayout from "./SetupLayout.vue";
 import SetupButtons from "./SetupButtons.vue";
+import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
 const props = defineProps({
   setup: Object,
 });
 
 const emit = defineEmits(["openSetup", "exportSetup", "setupState"]);
+
+const setupStore = useSetups();
+
+const textColor = computed(() => setupStore.getColor(props.setup.color, "text"));
+const bgColor = computed(() => setupStore.getColor(props.setup.color, "background"));
 
 const openSetup = (item) => {
   emit("openSetup", item);

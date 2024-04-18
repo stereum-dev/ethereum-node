@@ -1,9 +1,15 @@
 <template>
   <div
-    class="w-[130px] h-[110px] col-span-1 row-span-1 flex justify-center items-center p-1 border border-gray-500 rounded-md mx-auto relative"
+    class="w-[130px] h-[120px] col-span-1 row-span-1 items-center border border-gray-500 rounded-md mx-auto relative grid grid-cols-2 grid-rows-12"
   >
-    <SetupLayout :setup="props.setup" />
+    <div
+      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1 rounded-t-sm"
+      :class="[textColor, bgColor]"
+    >
+      <span>{{ props.setup.setupName }}</span>
+    </div>
 
+    <SetupLayout :setup="props.setup" />
     <Transition name="slide-fade">
       <SetupMenu
         v-if="setupStore.isSetupMenuActive"
@@ -20,6 +26,7 @@
 import SetupLayout from "./SetupLayout.vue";
 import SetupMenu from "./SetupMenu.vue";
 import { useSetups } from "../../../../../../store/setups";
+import { computed } from "vue";
 
 // props & emits
 const props = defineProps({
@@ -32,6 +39,10 @@ const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal"]);
 
 const setupStore = useSetups();
 // refs
+
+//Computed
+const textColor = computed(() => setupStore.getColor(props.setup.color, "text"));
+const bgColor = computed(() => setupStore.getColor(props.setup.color, "background"));
 
 //Methods
 const deleteSetup = (item) => {

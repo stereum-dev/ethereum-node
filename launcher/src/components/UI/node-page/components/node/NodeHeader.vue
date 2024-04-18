@@ -6,10 +6,10 @@
   </div>
 </template>
 <script setup>
-import SetupDetails from "../../../edit-page/components/edit/setups/SetupDetails.vue";
-import ServerDetails from "./ServerDetails.vue";
-import NetworkDetails from "../../../edit-page/components/edit/NetworkDetails.vue";
-import { useSetups } from "../../../../../store/setups";
+import SetupDetails from "../../../edit-page/components/edit/header/SetupDetails.vue";
+import ServerDetails from "../../../edit-page/components/edit/header/ServerDetails.vue";
+import NetworkDetails from "../../../edit-page/components/edit/header/NetworkDetails.vue";
+import { useSetups } from "@/store/setups";
 import { computed } from "vue";
 
 const setupStore = useSetups();

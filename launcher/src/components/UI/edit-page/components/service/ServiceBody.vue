@@ -4,7 +4,11 @@
     :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
   >
     <div
-      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-[10px] font-semibold z-10"
+      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 border border-gray-950 rounded-t-[5px] text-[10px] font-semibold z-10"
+      :class="[
+        setupStore.getBGColor(setupStore.selectedSetup?.color),
+        setupStore.getTextColor(setupStore.selectedSetup?.color),
+      ]"
     >
       <span v-if="setupStore.isEditConfigViewActive" class="self-center"
         >Config Services
@@ -91,7 +95,7 @@ const getServices = computed(() => {
     .filter((e) => e.category === "service")
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  if (!setupStore.isConfigViewActive) {
+  if (!setupStore.isEditConfigViewActive) {
     const seen = new Set();
     services = services.filter((service) => {
       if (setupStore.serverServices.includes(service.service)) {

@@ -1,30 +1,27 @@
 <template>
-  <div class="w-full h-full flex justify-center items-center">
-    <div
-      class="relative w-full h-full grid grid-cols-6 grid-rows-4 items-center"
-      :class="setupStore.isSetupMenuActive ? 'bg-black opacity-45 z-0' : ''"
-      @pointerdown.prevent.stop
-      @mousedown.prevent.stop
-      @mouseenter="
-        [
-          (footerStore.cursorLocation = `${props.setup.setupName}`),
-          (setupStore.isSetupMenuActive = true),
-        ]
-      "
-      @mouseleave="footerStore.cursorLocation = ''"
-    >
-      <div
-        class="col-start-1 col-span-full row-start-1 row-span-1 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1"
-        :class="[textColor, bgColor]"
-      >
-        <span>{{ props.setup.setupName }}</span>
-      </div>
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-2 grid-rows-12 items-center"
+    :class="setupStore.isSetupMenuActive ? 'bg-black opacity-45 z-0 rounded-b-md' : ''"
+    @pointerdown.prevent.stop
+    @mousedown.prevent.stop
+    @mouseenter="
+      [
+        (footerStore.cursorLocation = `${props.setup.setupName}`),
+        (setupStore.isSetupMenuActive = true),
+      ]
+    "
+    @mouseleave="footerStore.cursorLocation = ''"
+  >
+    <img
+      class="max-h-[60px] col-start-1 col-span-full row-start-2 row-end-10 justify-self-center self-start mt-1"
+      :src="matchedNetworkIcon"
+      alt="icon"
+    />
 
-      <img
-        class="max-h-[60px] col-start-2 col-end-6 row-start-2 row-span-full justify-self-center self-start mt-1"
-        :src="matchedNetworkIcon"
-        alt="icon"
-      />
+    <div
+      class="col-start-1 col-span-full row-start-10 row-span-full text-[8px] mt-2 text-center font-semibold overflow-hidden whitespace-nowrap truncate flex justify-center items-center text-gray-200"
+    >
+      <span>{{ NodeConfigName }}</span>
     </div>
   </div>
 </template>
@@ -47,9 +44,24 @@ const matchedNetworkIcon = computed(() => {
   const matchedNetwork = manageStore.networkList.find(
     (network) => network.network === props.setup.network
   );
+
   return matchedNetwork ? matchedNetwork.icon : "";
 });
 
-const textColor = computed(() => setupStore.getColor(props.setup.color, "text"));
-const bgColor = computed(() => setupStore.getColor(props.setup.color, "background"));
+const NodeConfigName = computed(() => {
+  let shortName;
+  const matchedNetwork = manageStore.networkList.find(
+    (network) => network.network === props.setup.network
+  );
+
+  if (matchedNetwork?.network === "mainnet") {
+    shortName = "ETH NODE CONFIG";
+  } else if (matchedNetwork?.network === "holisky") {
+    shortName = "HLS NODE CONFIG";
+  } else if (matchedNetwork?.network === "optimism") {
+    shortName = "OPITMISM CONFIG";
+  }
+
+  return shortName;
+});
 </script>

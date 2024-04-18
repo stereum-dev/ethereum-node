@@ -14,9 +14,9 @@
           v-for="setup in setupsRunning"
           :key="setup.name"
           :setup="setup"
-          @open-setup="openSetup"
-          @export-setup="exportSetup"
-          @setup-state="setupState"
+          @delete-setup="deleteSetup"
+          @connect-setup="connectSetup"
+          @info-modal="infoModal"
         />
       </div>
     </div>
@@ -28,6 +28,8 @@ import SingleSetup from "./setups/SingleSetup.vue";
 import { computed, onMounted, watch } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "../../../../../store/setups";
+
+const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
@@ -65,4 +67,18 @@ onMounted(() => {
     }, 3000);
   }
 });
+
+// Methods
+
+const deleteSetup = (item) => {
+  emit("deleteSetup", item);
+};
+
+const connectSetup = (item) => {
+  emit("connectSetup", item);
+};
+
+const infoModal = (item) => {
+  emit("infoModal", item);
+};
 </script>

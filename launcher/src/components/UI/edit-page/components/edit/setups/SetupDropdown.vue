@@ -106,7 +106,7 @@
         >
       </div>
       <div
-        v-if="route.path === '/edit' && !setupStore.isConfigViewActive"
+        v-if="route.path === '/edit' && setupStore.isEditConfigViewActive"
         class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
         @click="selectServerView"
       >
@@ -172,12 +172,23 @@ const confirmRename = () => {
 
 const selectSetup = (setup) => {
   setupStore.selectedSetup = setup;
-  setupStore.isConfigViewActive = true;
+  if (route.path === "/edit") {
+    setupStore.isConfigViewActive = false;
+    setupStore.isEditConfigViewActive = true;
+  } else if (route.path === "/node") {
+    setupStore.isEditConfigViewActive = false;
+    setupStore.isConfigViewActive = true;
+  }
+
   emit("selectSetup", setup);
 };
 
 const selectServerView = () => {
   setupStore.selectedSetup = null;
-  setupStore.isConfigViewActive = false;
+  if (route.path === "/edit") {
+    setupStore.isEditConfigViewActive = false;
+  } else if (route.path === "/node") {
+    setupStore.isConfigViewActive = false;
+  }
 };
 </script>

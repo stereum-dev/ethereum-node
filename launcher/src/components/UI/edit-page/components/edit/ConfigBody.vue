@@ -7,7 +7,11 @@
     ]"
   >
     <div
-      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
+      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 border border-gray-950 rounded-t-[5px] text-[10px] font-semibold"
+      :class="[
+        setupStore.getBGColor(setupStore.selectedSetup?.color),
+        setupStore.getTextColor(setupStore.selectedSetup?.color),
+      ]"
     >
       <span class="col-start-1 justify-self-center self-center">{{
         $t("editBody.executionClient")
@@ -52,6 +56,7 @@
         @modify-service="modifyService"
         @info-modal="infoModal"
         @mouse-over="lineDraw"
+        @mouse-leave="removeLines"
       />
       <ValidatorClients
         v-if="!isOverDropZone"
@@ -73,6 +78,7 @@ import ValidatorClients from "./clients/ValidatorClients.vue";
 
 import { useNodeManage } from "@/store/nodeManage";
 import { computed, ref } from "vue";
+import { useSetups } from "../../../../../store/setups";
 
 const emit = defineEmits([
   "onDrop",
@@ -87,6 +93,7 @@ const emit = defineEmits([
 ]);
 
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
 const isOverDropZone = ref(false);
 

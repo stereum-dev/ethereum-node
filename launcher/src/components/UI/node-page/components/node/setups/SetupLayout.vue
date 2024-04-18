@@ -1,24 +1,21 @@
 <template>
-  <div class="w-full h-full border-r border-gray-500">
-    <div
-      class="grid-col-1 col-span-1 relative w-full h-full grid grid-cols-6 grid-rows-4 items-center pr-1"
-      @pointerdown.prevent.stop
-      @mousedown.prevent.stop
-      @mouseenter="footerStore.cursorLocation = `${props.setup.setupName}`"
-      @mouseleave="footerStore.cursorLocation = ''"
-    >
-      <div
-        class="col-start-1 col-span-full row-start-1 row-span-1 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1"
-        :class="[textColor, bgColor]"
-      >
-        <span>{{ props.setup.setupName }}</span>
-      </div>
+  <div
+    class="w-full h-full col-start-1 col-span-1 row-start-3 row-span-full border-r rounded-l-md border-gray-500 grid grid-cols-2 grid-rows-12"
+    @pointerdown.prevent.stop
+    @mousedown.prevent.stop
+    @mouseenter="footerStore.cursorLocation = `${props.setup.setupName}`"
+    @mouseleave="footerStore.cursorLocation = ''"
+  >
+    <img
+      class="max-w-14 col-start-1 col-span-full row-start-2 row-end-10 mx-auto"
+      :src="matchedNetworkIcon"
+      alt="icon"
+    />
 
-      <img
-        class="col-start-2 col-end-6 row-start-2 row-span-full self-start mt-1"
-        :src="matchedNetworkIcon"
-        alt="icon"
-      />
+    <div
+      class="col-start-1 col-span-full row-start-10 row-span-full text-[8px] text-center font-semibold overflow-hidden whitespace-nowrap truncate flex justify-center items-center text-gray-400"
+    >
+      <span>{{ NodeConfigName }}</span>
     </div>
   </div>
 </template>
@@ -26,11 +23,9 @@
 import { computed } from "vue";
 import { useFooter } from "@/store/theFooter";
 import { useNodeManage } from "@/store/nodeManage";
-import { useSetups } from "../../../../../../store/setups";
 
 const footerStore = useFooter();
 const manageStore = useNodeManage();
-const setupStore = useSetups();
 
 const props = defineProps({
   setup: Object,
@@ -44,6 +39,20 @@ const matchedNetworkIcon = computed(() => {
   return matchedNetwork ? matchedNetwork.icon : "";
 });
 
-const textColor = computed(() => setupStore.getColor(props.setup.color, "text"));
-const bgColor = computed(() => setupStore.getColor(props.setup.color, "background"));
+const NodeConfigName = computed(() => {
+  let shortName;
+  const matchedNetwork = manageStore.networkList.find(
+    (network) => network.network === props.setup.network
+  );
+
+  if (matchedNetwork?.network === "mainnet") {
+    shortName = "ETH NODE CONFIG";
+  } else if (matchedNetwork?.network === "holisky") {
+    shortName = "HLS NODE CONFIG";
+  } else if (matchedNetwork?.network === "optimism") {
+    shortName = "OPITMISM CONFIG";
+  }
+
+  return shortName;
+});
 </script>

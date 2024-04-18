@@ -190,6 +190,9 @@ onMounted(() => {
   if (!manageStore.architecture) setArchitecture();
 });
 onMounted(() => {
+  setupStore.isSetupMenuActive = false;
+  setupStore.selectedSetup = null;
+  setupStore.isEditConfigViewActive = false;
   setupStore.editSetups = setupStore.allSetups;
   isLoadingNewConfiguration.value = false;
   updateDisplayNetworkList();
@@ -216,6 +219,11 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  setupStore.editSetups = [];
+  setupStore.isEditConfigViewActive = false;
+  setupStore.isRenameSetupActive = false;
+  setupStore.setupToRename = null;
+  setupStore.selectedSetup = null;
   manageStore.confirmChanges = [];
   manageStore.newConfiguration = [];
   manageStore.selectedNetwork = {};

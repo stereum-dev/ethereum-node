@@ -1,6 +1,10 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between items-center">
-    <EditHeader />
+    <EditHeader
+      @rename-setup="renameSetup"
+      @confirm-rename="confirmRename"
+      @select-setup="selectSetup"
+    />
     <ConfigBody
       v-if="setupStore.isEditConfigViewActive"
       @on-drop="onDrop"
@@ -13,7 +17,15 @@
       @remove-lines="removeConnectionLines"
       @line-draw="lineDrawHandler"
     />
-    <SetupBody />
+    <SetupBody
+      v-else
+      @delete-setup="deleteSetup"
+      @connect-setup="connectSetup"
+      @info-modal="infoSetup"
+      @rename-setup="renameSetup"
+      @confirm-rename="confirmRename"
+      @select-setup="selectSetup"
+    />
   </div>
 </template>
 
@@ -35,6 +47,9 @@ const emit = defineEmits([
   "confirmConsensus",
   "infoModal",
   "modifyService",
+  "renameSetup",
+  "confirmRename",
+  "selectSetup",
 ]);
 
 //Pinia stores
@@ -230,6 +245,36 @@ const confirmConsensus = (item) => {
 const infoModal = (item) => {
   manageStore.isLineHidden = true;
   emit("infoModal", item);
+};
+
+const renameSetup = (setup) => {
+  setupStore.setupToRename = setup.setupName;
+  setupStore.isRenameSetupActive = true;
+  console.log("renameSetup", setup);
+  // emit("renameSetup", setup);
+};
+
+const confirmRename = (setup) => {
+  setupStore.setupToRename = null;
+  setupStore.isRenameSetupActive = false;
+  console.log("confirmRename", setup);
+  // emit("confirmRename", setup);
+};
+
+const selectSetup = (setup) => {
+  emit("selectSetup", setup);
+};
+
+const deleteSetup = (item) => {
+  console.log("deleteSetup", item);
+};
+
+const connectSetup = (item) => {
+  console.log("connectSetup", item);
+};
+
+const infoSetup = (item) => {
+  console.log("infoSetup", item);
 };
 </script>
 
