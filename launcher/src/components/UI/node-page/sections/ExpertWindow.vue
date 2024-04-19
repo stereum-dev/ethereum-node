@@ -459,7 +459,7 @@ export default {
                     }
                   }
                   if (!/^["'`].*["'`]$/.test(option.isENV)) {
-                    option.changeValue = `"${option.changeValue}"`;
+                    option.changeValue = `${option.changeValue}`;
                   }
                   this.item.yaml = this.item.yaml.replace(
                     new RegExp(`${command}([=]?)([\\S*]*)`),
