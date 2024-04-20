@@ -409,7 +409,6 @@ class ControlService extends EventEmitter {
       args.passwordFiles.forEach((file) => {
         passwordFiles.push({ name: file.name, path: file.path });
       });
-
     }
     return await this.promiseIpc.send("checkActiveValidators", {
       files: files,
@@ -550,6 +549,14 @@ class ControlService extends EventEmitter {
 
   async downloadObolBackup(args) {
     return await this.promiseIpc.send("downloadObolBackup", args);
+  }
+
+  async fetchTranslators(args) {
+    return await this.promiseIpc.send("fetchTranslators", args);
+  }
+
+  async fetchGitHubTesters(args) {
+    return await this.promiseIpc.send("fetchGitHubTesters", args);
   }
 
   async importObolBackup(args) {
