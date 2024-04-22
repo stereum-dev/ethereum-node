@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      stereumTesters: [],
+      stereumTranslators: [],
       //Service Modals begin
       isServiceAvailable: true,
       showGrafanaWindow: false,
