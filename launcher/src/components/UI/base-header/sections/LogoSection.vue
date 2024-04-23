@@ -13,7 +13,7 @@
 <script setup>
 import LogoButton from "../../server-management/components/LogoButton.vue";
 import { useFooter } from "@/store/theFooter";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import i18n from "@/includes/i18n";
 import { useServers } from "@/store/servers";
 import { useRouter } from "vue-router";
@@ -54,4 +54,23 @@ const btnHandler = () => {
     return;
   }
 };
+
+const handleKeyCombination = (event) => {
+  // For macOS, using Cmd+Shift+M
+  const cmdShiftM = event.metaKey && event.shiftKey && event.key === "m";
+  // For Windows/Linux, using Ctrl+Shift+M
+  const ctrlShiftM = event.ctrlKey && event.shiftKey && event.key === "m";
+
+  if (cmdShiftM || ctrlShiftM) {
+    btnHandler();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyCombination);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeyCombination);
+});
 </script>
