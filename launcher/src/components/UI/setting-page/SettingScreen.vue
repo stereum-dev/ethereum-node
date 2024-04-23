@@ -41,12 +41,10 @@ import { useLangStore } from "@/store/languages";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 
-const headerStore = useNodeHeader();
-
 const mainBox = ref("general");
-// const langActive = ref(false);
 const router = useRouter();
 const langStore = useLangStore();
+const headerStore = useNodeHeader();
 
 const sidebarButtons = ref([
   { name: "general", label: "General" },
@@ -93,7 +91,6 @@ const fetchStereumTranslators = async () => {
 };
 
 const langActiveBox = () => {
-  // langActive.value = !langActive.value;
   router.push("/");
   langStore.settingPageIsVisible = true;
 };
