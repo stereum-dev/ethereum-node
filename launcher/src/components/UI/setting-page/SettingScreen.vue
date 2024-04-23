@@ -34,16 +34,17 @@ import VolumeSlider from "./components/VolumeSlider";
 import OutputOptions from "./components/OutputOptions.vue";
 import LanguageBtn from "./components/LanguageBtn.vue";
 import CreditButtons from "./section/CreditButtons.vue";
-import { ref, computed } from "vue";
-// import LanguagePanel from "./section/LanguagePanel.vue";
+import { ref, computed, onMounted } from "vue";
 import CreditBtn from "./components/CreditBtn.vue";
 import { useRouter } from "vue-router";
 import { useLangStore } from "@/store/languages";
+import { useNodeHeader } from "@/store/nodeHeader";
+import ControlService from "@/store/ControlService";
 
 const mainBox = ref("general");
-// const langActive = ref(false);
 const router = useRouter();
 const langStore = useLangStore();
+const headerStore = useNodeHeader();
 
 const sidebarButtons = ref([
   { name: "general", label: "General" },
@@ -56,8 +57,40 @@ const toggleSettings = (name) => {
   mainBox.value = name;
 };
 
+onMounted(() => {
+  if (!headerStore.stereumTesters.length || !headerStore.stereumTranslators.length) {
+    fetchStereumTesters();
+    fetchStereumTranslators();
+  }
+});
+
+const fetchStereumTesters = async () => {
+  try {
+    const testers = await ControlService.fetchGitHubTesters();
+    if (testers && Array.isArray(testers)) {
+      headerStore.stereumTesters = testers;
+    } else {
+      console.error("fetchTesters did not return an array");
+    }
+  } catch (error) {
+    console.error("Error fetching Testers:", error);
+  }
+};
+
+const fetchStereumTranslators = async () => {
+  try {
+    const translators = await ControlService.fetchTranslators();
+    if (translators && Array.isArray(translators)) {
+      headerStore.stereumTranslators = translators.sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      console.error("fetchTranslators did not return an array");
+    }
+  } catch (error) {
+    console.error("Error fetching translators:", error);
+  }
+};
+
 const langActiveBox = () => {
-  // langActive.value = !langActive.value;
   router.push("/");
   langStore.settingPageIsVisible = true;
 };
