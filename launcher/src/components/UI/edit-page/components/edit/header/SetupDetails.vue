@@ -7,6 +7,7 @@
       @rename-setup="renameSetup"
       @confirm-rename="confirmRename"
       @select-setup="selectSetup"
+      @server-view="serverView"
     />
   </div>
 </template>
@@ -20,7 +21,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["renameSetup", "confirmRename", "selectSetup"]);
+const emit = defineEmits(["renameSetup", "confirmRename", "selectSetup", "serverView"]);
 
 const renameSetup = (setup) => {
   emit("renameSetup", setup);
@@ -32,5 +33,8 @@ const confirmRename = (setup) => {
 
 const selectSetup = (setup) => {
   emit("selectSetup", setup);
+};
+const serverView = () => {
+  emit("serverView");
 };
 </script>

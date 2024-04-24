@@ -6,7 +6,7 @@
       class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate rounded-t-[0.28rem]"
       :class="[textColor, bgColor]"
     >
-      <span>{{ props.setup.setupName }}</span>
+      <span class="font-sans">{{ props.setup.setupName }}</span>
     </div>
     <SetupLayout :setup="props.setup" />
 

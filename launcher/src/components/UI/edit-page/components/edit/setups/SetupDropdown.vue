@@ -18,7 +18,7 @@
 
     <div
       v-else
-      class="col-start-1 relative p-2 text-gray-800 bg-[#336666] rounded-sm grid grid-cols-12 border border-gray-600"
+      class="col-start-1 relative p-2 bg-[#232528] rounded-sm grid grid-cols-12 border border-gray-600"
       :class="route.path === '/edit' ? 'col-end-6' : 'col-span-full'"
       @click="toggleDropdown"
     >
@@ -27,7 +27,13 @@
         class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
         :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
       ></span>
-      <span class="col-start-2 col-end-11 text-sm font-normal font-sans overflow-hidden truncate text-gray-200 ml-2">{{
+      <img
+        v-else
+        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
+        src="/img/icon/stereum-icons/stereum_logo_extern.png"
+        alt="Server View"
+      />
+      <span class="col-start-2 col-end-11 text-sm font-normal font-sans overflow-hidden truncate text-gray-400 ml-2">{{
         getSelectedOption
       }}</span>
 
@@ -53,24 +59,35 @@
     >
       <div
         v-if="isOpen"
-        class="absolute right-8 top-9 z-20 w-40 min-h-20 mt-2 origin-top-right rounded-sm shadow-md bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
+        class="absolute top-9 z-20 min-h-20 mt-2 origin-top-right rounded-sm shadow-md bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
+        :class="route.path === '/edit' ? 'w-40 right-8' : 'w-48 right-0'"
         @mouseleave="isOpen = false"
       >
         <div
           v-if="setupStore.isConfigViewActive && route.path === '/node'"
-          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-700 hover:bg-blue-300 cursor-pointer flex justify-center items-center"
+          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-[#336666] hover:bg-blue-300 cursor-pointer grid grid-cols-6 items-center"
           @click="selectServerView"
         >
-          <span class="col-start-2 col-span-full self-center text-center text-sm font-semibold overflow-hidden truncate"
+          <img
+            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start bg-gray-100"
+            src="/img/icon/stereum-icons/stereum_logo_extern.png"
+            alt="Node Server View"
+          />
+          <span class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate"
             >Node Server View</span
           >
         </div>
         <div
           v-if="route.path === '/edit' && setupStore.isEditConfigViewActive"
-          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-700 hover:bg-blue-300 cursor-pointer flex justify-center items-center"
+          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-[#336666] hover:bg-blue-300 cursor-pointer grid grid-cols-6 items-center"
           @click="selectServerView"
         >
-          <span class="col-start-1 col-span-full self-center text-center text-sm font-bold overflow-hidden truncate"
+          <img
+            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start bg-gray-100"
+            src="/img/icon/stereum-icons/stereum_logo_extern.png"
+            alt="Node Server View"
+          />
+          <span class="col-start-1 col-span-full self-center text-left text-sm font-bold overflow-hidden truncate"
             >Edit Server View</span
           >
         </div>

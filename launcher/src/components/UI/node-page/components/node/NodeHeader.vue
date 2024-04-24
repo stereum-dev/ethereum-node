@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
     <ServerDetails />
-    <SetupDetails :list="setupsList" />
+    <SetupDetails :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
     <NetworkDetails />
   </div>
 </template>
@@ -10,7 +10,7 @@ import SetupDetails from "../../../edit-page/components/edit/header/SetupDetails
 import ServerDetails from "../../../edit-page/components/edit/header/ServerDetails.vue";
 import NetworkDetails from "../../../edit-page/components/edit/header/NetworkDetails.vue";
 import { useSetups } from "@/store/setups";
-import { computed } from "vue";
+import { computed, watchEffect } from "vue";
 
 const setupStore = useSetups();
 
@@ -21,6 +21,18 @@ const setupsList = computed(() => {
   });
   return list;
 });
+
+watchEffect(() => {
+  console.log("allSetups changed", setupStore.allSetups);
+});
+
+const selectSetup = (setup) => {
+  setupStore.selectNodeConfigView(setup);
+};
+
+const serverView = () => {
+  setupStore.selectNodeServerView();
+};
 
 // End of script
 </script>

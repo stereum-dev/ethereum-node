@@ -6,6 +6,7 @@
       @rename-setup="renameSetup"
       @confirm-rename="confirmRename"
       @select-setup="selectSetup"
+      @server-view="serverView"
     />
     <NetworkDetails />
   </div>
@@ -18,7 +19,7 @@ import SetupDetails from "./header/SetupDetails.vue";
 import { computed } from "vue";
 import { useSetups } from "@/store/setups";
 
-const emit = defineEmits(["renameSetup", "confirmRename", "selectSetup"]);
+const emit = defineEmits(["renameSetup", "confirmRename"]);
 const setupStore = useSetups();
 
 const setupsList = computed(() => {
@@ -37,7 +38,11 @@ const confirmRename = (setup) => {
 };
 
 const selectSetup = (setup) => {
-  emit("selectSetup", setup);
+  setupStore.selectEditConfigView(setup);
+};
+
+const serverView = () => {
+  setupStore.selectEditServerView(setupStore.selectedSetup);
 };
 </script>
 
