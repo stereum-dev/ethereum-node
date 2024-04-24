@@ -20,30 +20,18 @@
             :top-line="`${topConfirmBox.topLine}`"
             :bottom-line="`${topConfirmBox.bottomLine}`"
             :btn-name="`${topConfirmBox.btnName}`"
-            :btn-bg-color="`#A0A0A0`"
+            :btn-bg-color="`${topConfirmBox.btnBgColor}`"
             @confirmPluginClick="topConfirmBoxClick"
           />
         </div>
         <div v-if="secondRowVisible" class="browserBox">
-          <ConfirmBox
-            v-if="!generationPage"
-            :top-line="`${configured2fa ? $t('authenticatorModal.removeTitel') : $t('authenticatorModal.importTitel')}`"
-            :bottom-line="`${
-              configured2fa ? $t('authenticatorModal.removeText') : $t('authenticatorModal.importText')
-            }`"
-            :btn-name="`${
-              configured2fa ? $t('authenticatorModal.removeButton') : $t('authenticatorModal.importButton')
-            }`"
-            :btn-bg-color="`${configured2fa ? '#ff0000' : '#A0A0A0'}`"
-            @confirmPluginClick="importOrRemove"
-          /><AuthContainer
-            v-else
+          <AuthContainer
+            v-if="generationPage"
             :secret-key="secretKey"
             :verification-code="verificationCode"
             :qr-code="QRcode"
             :time-base="authKeyTimeBase"
             @save-click="saveScratch"
-            @update="handleVerificationCode"
           />
         </div>
         <div v-if="setupPage || generationPage || setupConfirmPage" class="checkContainer">
@@ -72,7 +60,7 @@
 </template>
 
 <script>
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import ControlService from "@/store/ControlService";
 import { saveAs } from "file-saver";
 import { useNodeHeader } from "@/store/nodeHeader";
@@ -80,6 +68,8 @@ import { useNodeStore } from "@/store/theNode";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
 import checkContainer from "./plugin/CheckContainer.vue";
 import AuthContainer from "./plugin/AuthContainer.vue";
+import { useControlStore } from "@/store/theControl";
+
 export default {
   components: {
     ConfirmBox,
@@ -101,10 +91,15 @@ export default {
       QRcode: "/img/icon/base-header-icons/notification-modal-dummy-qr-code.png", //dummy qr code
       authKeyTimeBase: true,
       confirmSuccessAuth: false,
+      authInstalled: false,
     };
   },
 
   computed: {
+    ...mapState(useControlStore, {
+      ServerName: "ServerName",
+      ipAddress: "ipAddress",
+    }),
     ...mapWritableState(useNodeHeader, {
       resetConfig: "resetConfig",
       runningServices: "runningServices",
@@ -120,9 +115,9 @@ export default {
       if (!this.setupConfirmPage && this.generationPage && !this.setupPage && !this.configured2fa) {
         return true;
       } else if (!this.setupConfirmPage && !this.generationPage && !this.setupPage && !this.configured2fa) {
-        return true;
+        return false;
       } else if (this.configured2fa && !this.setupConfirmPage && !this.generationPage && !this.setupPage) {
-        return true;
+        return false;
       } else {
         return false;
       }
@@ -158,10 +153,10 @@ export default {
         };
       } else if (!this.setupPage && !this.generationPage && !this.setupConfirmPage && this.configured2fa) {
         return {
-          topLine: `${this.$t("authenticatorModal.configureTitel")}`,
-          bottomLine: `${this.$t("authenticatorModal.configureText")}`,
-          btnName: `${this.$t("authenticatorModal.configureButton")}`,
-          btnBgColor: `#A0A0A0`,
+          topLine: `${this.$t("authenticatorModal.removeTitel")}`,
+          bottomLine: `${this.$t("authenticatorModal.removeText")}`,
+          btnName: `${this.$t("authenticatorModal.removeButton")}`,
+          btnBgColor: `#FF0000`,
         };
       } else {
         return {
@@ -213,6 +208,7 @@ export default {
     },
   },
   mounted() {
+    this.checkAuth();
     this.filterAuthenticatorService();
     ControlService.addListener("2FAEvents", this.authenticatorHandler);
   },
@@ -220,6 +216,10 @@ export default {
     ControlService.removeListener("2FAEvents", this.authenticatorHandler);
   },
   methods: {
+    async checkAuth(){
+      this.configured2fa = await ControlService.checkForAuthenticator();
+      console.log(this.configured2fa)
+    },
     authenticatorHandler(event, data) {
       this.loadOutput(data);
     },
@@ -229,21 +229,11 @@ export default {
         console.log("Checkbox updated:", value);
         console.log("auth key", this.authKeyTimeBase && !this.setupConfirmPage);
       } else if (!this.setupPage && this.generationPage) {
-        console.log("testttt");
         this.confirmSuccessAuth = value;
         console.log("confirm", this.confirmSuccessAuth);
       } else if (!this.setupPage && !this.generationPage && this.setupConfirmPage) {
         this.orginalGenerationTimeLimit = value;
         console.log("orginal Generation Time Limit", this.orginalGenerationTimeLimit);
-      }
-    },
-    async handleVerificationCode(value) {
-      if (this.authKeyTimeBase && value.length == 6) {
-        this.verificationOutput = await ControlService.authenticatorVerification(value);
-        /*if(this.verificationOutput != "wrong code")
-        {
-          this.validVerificationCode = true;
-        }*/
       }
     },
     handleRateLimit(value) {
@@ -270,9 +260,9 @@ export default {
     },
     async topConfirmBoxClick() {
       if (!this.setupPage && this.generationPage && !this.setupConfirmPage) {
-        //backup not needed anymore
-        this.confirmSuccessAuth = true;
-      } else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
+        await ControlService.authenticatorVerification(this.verificationCode);
+      }
+      else if ((this.setupPage && !this.generationPage) || this.setupConfirmPage) {
         this.authKeyTimeBase = true;
         this.resetConfig = true;
 
@@ -281,15 +271,12 @@ export default {
         }, 1000);
         this.orginalGenerationTimeLimit = false;
         this.enableRateLimit = true;
-      } else if (!this.setupPage && !this.generationPage) {
-        this.setupPage = true;
       }
-    },
-    async importOrRemove() {
-      if (this.configurePage) {
-        //import code
-      } else {
+      else if(this.configured2fa){
         await ControlService.removeAuthenticator();
+      }
+      else if (!this.setupPage && !this.generationPage) {
+        this.setupPage = true;
       }
     },
     async mainBtnClick() {
@@ -315,12 +302,23 @@ export default {
     },
     loadOutput(data) {
       console.log(data);
-      this.QRcode = data[0].trim().replace("www.google", "chart.googleapis");
-      this.secretKey = data[1].split(": ").pop();
-      if (data.length > 5) {
-        this.verificationCode = data[2].split("is ").pop();
+
+      if(data[0] != "skip"){
+        this.secretKey = data[1].split(": ").pop();
+        let QRadress = `https://quickchart.io/qr?chs=200x200&chld=M|0&cht=qr&text=otpauth://totp/${this.ipAddress}@${this.ServerName}%3Fsecret%3D[SECRETKEY]%26issuer%3D${this.ServerName}`
+        this.QRcode = QRadress.replace("[SECRETKEY]",this.secretKey);
+        console.log(this.QRcode)
+        console.log("first")
+      }
+      
+      if(data.length > 5){
+        if(data[0] != "skip"){
+          this.QRcode = this.QRcode.replace("totp","hotp");
+          this.verificationCode = data[2].split("is ").pop();
+        }
         this.validVerificationCode = this.verificationCode;
         this.verificationOutput = data.slice(3, 9);
+        console.log("second")
       }
     },
     saveScratch() {

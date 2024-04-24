@@ -11,6 +11,7 @@ import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
 import { AuthenticationService } from "./backend/AuthenticationService.js";
+import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -23,6 +24,7 @@ const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const authenticationService = new AuthenticationService(nodeConnection);
+const sshService = new SSHService;
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
@@ -44,7 +46,7 @@ ipcMain.handle("connect", async (event, arg) => {
     });
   }
   nodeConnection.nodeConnectionParams = remoteHost;
-  await nodeConnection.establish(taskManager);
+  await nodeConnection.establish(taskManager, event.sender);
   await monitoring.login();
   return 0;
 });
@@ -486,8 +488,20 @@ ipcMain.handle("finishAuthSetup", async (event, args) => {
   return await authenticationService.finishAuthSetup(args.increaseTimeLimit, args.enableRateLimit)
 });
 
+ipcMain.handle("authenticatorVerification", async (event, args) => {
+  return await authenticationService.authenticatorVerification(args)
+});
+
 ipcMain.handle("removeAuthenticator", async (event, args) => {
-  return await monitoring.removeAuthenticator(args);
+  return await authenticationService.removeAuthenticator(args);
+});
+
+ipcMain.handle("checkForAuthenticator", async (event, args) => {
+  return await authenticationService.checkForAuthenticator(args);
+});
+
+ipcMain.handle("submitVerification", async (event, args) => {
+  return await sshService.submitVerification(args)
 });
 
 ipcMain.handle("changePassword", async (event, args) => {

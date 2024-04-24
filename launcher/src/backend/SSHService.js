@@ -7,12 +7,13 @@ import { StringUtils } from "./StringUtils";
 import * as fs from "fs";
 import * as path from "path";
 const log = require("electron-log");
+let authConnectionInfo = null;
+let authCurrentWindow = null;
 
 export class SSHService {
   constructor() {
     this.connectionPool = [];
     this.connectionInfo = null;
-    this.timeoutTime = 50000;
     this.connected = false;
     this.tunnels = [];
     this.addingConnection = false;
@@ -57,6 +58,7 @@ export class SSHService {
         password: connectionInfo.password || undefined,
         privateKey: connectionInfo.privateKey || undefined,
         passphrase: connectionInfo.passphrase || undefined,
+        tryKeyboard: true,
         readyTimeout: timeout, // Set the readyTimeout parameter
       });
     });
@@ -94,10 +96,15 @@ export class SSHService {
     return conn;
   }
 
-  async connect(connectionInfo, twoFactorAuthentication = false) {
-    this.connectionInfo = connectionInfo;
+  async connect(connectionInfo, currentWindow = null, verificationCode = null) {
+    if(authConnectionInfo != null){
+      this.connectionInfo = authConnectionInfo;
+    }
+    else{
+      this.connectionInfo = connectionInfo;
+    }
     this.addingConnection = true;
-    const conn = new Client();
+    let conn = new Client();
     return new Promise((resolve, reject) => {
       conn.on("error", (error) => {
         this.addingConnection = false;
@@ -114,14 +121,15 @@ export class SSHService {
           reject(msg);
         }
       });
-      conn.on("keyboard-interactive", () => {
-        if(!twoFactorAuthentication){
-          this.timeoutTime = 300000
-          this.connect(this.connectionInfo, true);
+      conn.on("keyboard-interactive", function redo(name, instructions, lang, prompts, finish){
+        if(verificationCode == null && authConnectionInfo == null){
+          authConnectionInfo = connectionInfo;
+          authCurrentWindow = currentWindow;
+          currentWindow.send("require2FA", true);
           conn.end();
         }
         else{
-          //
+          finish([authConnectionInfo.authCode.toString()]);
         }
       });
       conn
@@ -147,11 +155,17 @@ export class SSHService {
           password: connectionInfo.password || undefined,
           privateKey: connectionInfo.privateKey || undefined,
           passphrase: connectionInfo.passphrase || undefined,
+          authCode: connectionInfo.authCode || undefined,
           keepaliveInterval: 30000,
           tryKeyboard: true,
-          readyTimeout: this.timeoutTime,
+          readyTimeout: 20000,
         });
     });
+  }
+
+  async submitVerification(verificationCode) {
+    authConnectionInfo.authCode = verificationCode.toString();
+    this.connect(authConnectionInfo, authCurrentWindow, verificationCode);
   }
 
   async disconnect() {
@@ -172,8 +186,8 @@ export class SSHService {
     });
   }
 
-  async exec(command, useSudo = true) {
-    const ensureSudoCommand = "sudo -u 'root' -i <<'=====EOF'\n" + command + "\n=====EOF";
+  async exec(command, useSudo = true, useRoot = true) {
+    const ensureSudoCommand = `sudo -u ${useRoot ? 'root' : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
     return this.execCommand(useSudo ? ensureSudoCommand : command);
   }
 

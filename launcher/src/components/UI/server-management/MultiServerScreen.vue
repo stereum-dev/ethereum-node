@@ -6,8 +6,7 @@ import ServerHeader from './components/ServerHeader.vue';
     <SwitchAnimation
       v-if="
         (serverStore.isServerAnimationActive || serverStore.connectingProcess) &&
-        !serverStore.errorMsgExists
-      "
+        !serverStore.errorMsgExists && !isTwoFactorAuthActive"
       @cancel-login="cancelLoginHandler"
     />
     <ServerHeader @tab-picker="tabPicker" />
@@ -31,7 +30,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
-    <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeWindow" />
+    <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
     <ErrorModal
       v-if="serverStore.errorMsgExists"
       :description="serverStore.error"
@@ -102,17 +101,28 @@ onMounted(async () => {
     tabPicker("update");
     serverStore.isUpdatePanelActive = false;
   }
+  ControlService.addListener("require2FA", openTwoFactorModal);
 });
 
 onUnmounted(() => {
   serverStore.setActiveState(null);
+  ControlService.removeListener("require2FA", openTwoFactorModal);
 });
 
 //Methods
 
+const openTwoFactorModal = () => {
+  isTwoFactorAuthActive.value = true;
+};
+
+const closeAndCancel = () => {
+  closeWindow();
+  cancelLoginHandler();
+};
+
 // authentification handling
-const submitAuthHandler = (val) => {
-  console.log("submitAuthHandler", val);
+const submitAuthHandler = async (val) => {
+  await ControlService.submitVerification(val);
 };
 
 //Server Management Login Handler

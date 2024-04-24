@@ -30,8 +30,8 @@ export class NodeConnection {
     this.nodeUpdates = new NodeUpdates(this);
   }
 
-  async establish(taskManager) {
-    await this.sshService.connect(this.nodeConnectionParams);
+  async establish(taskManager, currentWindow) {
+    await this.sshService.connect(this.nodeConnectionParams, currentWindow);
     await this.findStereumSettings();
     this.taskManager = taskManager;
   }
