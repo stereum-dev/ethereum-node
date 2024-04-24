@@ -3,6 +3,11 @@ import { defineStore } from "pinia";
 export const useNodeHeader = defineStore("nodeHeader", {
   state: () => {
     return {
+      //Stereum contributers begin (credit page)
+      stereumTesters: [],
+      stereumTranslators: [],
+      //Stereum contributers end
+
       //Service Modals begin
       isServiceAvailable: true,
       showGrafanaWindow: false,

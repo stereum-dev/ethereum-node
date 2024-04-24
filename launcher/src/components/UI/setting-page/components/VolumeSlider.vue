@@ -19,7 +19,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useLangStore } from "@/store/languages";
+import { useSoundStore } from "@/store/sound";
 
+const soundStore = useSoundStore();
 const langStore = useLangStore();
 
 const sliderBar = ref(null);
@@ -32,8 +34,8 @@ const updateVolume = (clientX) => {
   volumePercentage.value = newVolume * 100;
 };
 
-const playSoundEffect = async (path) => {
-  const audio = new Audio(path);
+const playSoundEffect = async (base64Data) => {
+  const audio = new Audio(base64Data);
   audio.volume = langStore.currentVolume;
 
   if ("setSinkId" in audio && langStore.selectedDeviceId) {
@@ -61,7 +63,7 @@ const onMouseMove = (event) => {
 const onMouseUp = () => {
   document.removeEventListener("mousemove", onMouseMove);
   document.removeEventListener("mouseup", onMouseUp);
-  playSoundEffect("/sound/click.wav", langStore.selectedDeviceId);
+  playSoundEffect(soundStore.click, langStore.selectedDeviceId);
 };
 
 const startDrag = () => {
