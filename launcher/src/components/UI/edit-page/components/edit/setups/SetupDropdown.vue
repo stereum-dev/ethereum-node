@@ -18,8 +18,10 @@
 
     <div
       v-else
-      class="col-start-1 relative p-2 bg-[#232528] rounded-sm grid grid-cols-12 border border-gray-600"
-      :class="route.path === '/edit' ? 'col-end-6' : 'col-span-full'"
+      class="col-start-1 relative p-2 grid rounded-[4px] border border-gray-600"
+      :class="
+        route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'
+      "
       @click="toggleDropdown"
     >
       <span
@@ -29,22 +31,32 @@
       ></span>
       <img
         v-else
-        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
+        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center border border-[#c7c9ca] shadow-sm shadow-black"
         src="/img/icon/stereum-icons/stereum_logo_extern.png"
         alt="Server View"
       />
-      <span class="col-start-2 col-end-11 text-sm font-normal font-sans overflow-hidden truncate text-gray-400 ml-2">{{
-        getSelectedOption
-      }}</span>
+      <span
+        class="col-start-2 text-sm font-sans font-[500] overflow-hidden truncate text-gray-200 ml-2"
+        :class="route.path === '/edit' ? ' col-end-9' : 'col-end-11'"
+        >{{ getSelectedOption }}</span
+      >
 
       <svg
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
-        class="h-4 w-4 text-white col-start-12 col-end-13 transform transition-transform duration-200 ease-in-out"
-        :class="isOpen ? 'rotate-180' : 'rotate-0'"
+        class="h-3 w-3 text-white self-center col-span-1 transform transition-transform duration-200 ease-in-out"
+        :class="[
+          isOpen ? 'rotate-180' : 'rotate-0',
+          route.path === '/edit' ? 'col-start-9' : 'col-start-12',
+        ]"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
       </svg>
     </div>
 
@@ -73,7 +85,8 @@
             src="/img/icon/stereum-icons/stereum_logo_extern.png"
             alt="Node Server View"
           />
-          <span class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate"
+          <span
+            class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
             >Node Server View</span
           >
         </div>
@@ -83,11 +96,12 @@
           @click="selectServerView"
         >
           <img
-            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start bg-gray-100"
+            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center bg-gray-100"
             src="/img/icon/stereum-icons/stereum_logo_extern.png"
             alt="Node Server View"
           />
-          <span class="col-start-1 col-span-full self-center text-left text-sm font-bold overflow-hidden truncate"
+          <span
+            class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
             >Edit Server View</span
           >
         </div>
@@ -102,16 +116,21 @@
             class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start"
             :class="setupStore.getBGColor(setup.color)"
           ></span>
-          <span class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate">{{
-            setup.setupName
-          }}</span>
+          <span
+            class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate font-sans"
+            >{{ setup.setupName }}</span
+          >
         </div>
       </div>
     </Transition>
 
     <!-- Rename setup button -->
     <!-- Rename Button  -->
-    <RenameSetup v-if="route.path === '/edit'" @confirm-rename="confirmRename" @rename-setup="renameSetup" />
+    <RenameSetup
+      v-if="route.path === '/edit'"
+      @confirm-rename="confirmRename"
+      @rename-setup="renameSetup"
+    />
   </div>
 </template>
 <script setup>
@@ -139,7 +158,7 @@ const getSelectedOption = computed(() => {
   if (route.path === "/node" && setupStore.selectedSetup === null) {
     option = "Node Server View";
   } else if (route.path === "/edit" && setupStore.selectedSetup === null) {
-    option = "Edit Server View";
+    option = "Server View";
   } else {
     option = setupStore.selectedSetup?.setupName;
   }

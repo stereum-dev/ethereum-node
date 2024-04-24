@@ -11,7 +11,7 @@
         class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 auto-rows-fr scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
       >
         <SingleSetup
-          v-for="setup in setupsRunning"
+          v-for="setup in setupStore.editSetups"
           :key="setup.name"
           :setup="setup"
           @delete-setup="deleteSetup"
@@ -25,7 +25,6 @@
 
 <script setup>
 import SingleSetup from "./setups/SingleSetup.vue";
-import { computed, onMounted, watch } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "../../../../../store/setups";
 
@@ -33,40 +32,6 @@ const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
-
-// Computed
-
-const setupsRunning = computed(() => {
-  let items = [];
-
-  if (!setupStore.isEditConfigViewActive) {
-    items = setupStore.editSetups;
-  }
-  return items;
-});
-
-// Watchers
-
-watch(
-  () => setupStore.allSetups.length,
-  () => {
-    if (setupStore.allSetups.length > 0) {
-      setTimeout(() => {
-        setupStore.isEditConfigViewActive = false;
-      }, 3000);
-    }
-  }
-);
-
-// Lifecycle
-
-onMounted(() => {
-  if (setupStore.allSetups.length > 0) {
-    setTimeout(() => {
-      setupStore.isEditConfigViewActive = false;
-    }, 3000);
-  }
-});
 
 // Methods
 

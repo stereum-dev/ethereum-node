@@ -2,7 +2,7 @@
   <div
     class="absolute inset-0 w-full h-full flex justify-center items-center mx-auto mt-2"
     @mousedown.prevent
-    @mouseleave="setupStore.isSetupMenuActive = false"
+    @mouseleave="props.setup.isActive = false"
   >
     <div
       class="w-20 h-20 bg-gray-700 border border-gray-600 p-1 rounded-md gap-1 z-10 grid grid-cols-2 grid-rows-2 items-center shadow-lg shadow-black overflow-hidden"
@@ -23,7 +23,7 @@
 
 <script setup>
 import { useFooter } from "@/store/theFooter";
-import { useSetups } from "../../../../../../store/setups";
+
 // import i18n from "@/includes/i18n";
 
 // props & emits
@@ -40,7 +40,6 @@ const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal"]);
 
 //Store
 const footerStore = useFooter();
-const setupStore = useSetups();
 
 //Methods
 const handleAction = (item) => {

@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-2 grid-rows-12 items-center"
-    :class="setupStore.isSetupMenuActive ? 'bg-black opacity-45 z-0 rounded-b-md' : ''"
+    :class="props.setup.isActive ? 'bg-black opacity-45 z-0 rounded-b-md' : ''"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
     @mouseenter="

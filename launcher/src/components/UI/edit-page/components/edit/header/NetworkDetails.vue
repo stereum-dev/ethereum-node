@@ -5,31 +5,18 @@
     @mouseenter="footerStore.cursorLocation = `${currIs} ${getNetworkName}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
-    <div
-      v-if="setupStore.isConfigViewActive"
-      class="w-full self-start text-xs font-semibold text-teal-700"
-    >
+    <div v-if="setupStore.isConfigViewActive" class="w-full self-start text-xs font-semibold text-teal-700">
       {{ t("networkDetails.currentNet") }}
     </div>
-    <div
-      v-else
-      class="w-full self-start text-xs font-semibold text-teal-700 overflow-hidden"
-    >
-      TOTAL NETWORKS ON SERVER
+    <div v-else class="w-full self-start text-xs font-semibold text-teal-700 overflow-hidden">
+      TOTAL SETUPS ON SERVER
     </div>
-    <div
-      v-if="setupStore.isConfigViewActive"
-      class="w-full flex justify-center items-center"
-    >
+    <div v-if="setupStore.isConfigViewActive" class="w-full flex justify-center items-center">
       <img v-if="getNetworkIcon" :src="getNetworkIcon" alt="Networks" class="w-5 mr-1" />
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
-        getNetworkName
-      }}</span>
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ getNetworkName }}</span>
     </div>
     <div v-else class="w-full flex justify-center items-center">
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
-        totalNetworks
-      }}</span>
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ totalNetworks }}</span>
     </div>
   </div>
 </template>
@@ -60,7 +47,7 @@ const getNetworkIcon = computed(() => {
 
 const totalNetworks = computed(() => {
   let total = 0;
-  total = setupStore.allSetups.filter((setup) => setup.network).length;
+  total = setupStore.allSetups.map((setup) => setup).length;
 
   return total;
 });

@@ -1,9 +1,11 @@
 <template>
   <div
     class="w-[130px] h-[120px] col-span-1 row-span-1 items-center border border-gray-500 rounded-md mx-auto relative grid grid-cols-2 grid-rows-12"
+    @mouseenter="props.setup.isActive = true"
+    @mouseleave="props.setup.isActive = false"
   >
     <div
-      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1 rounded-t-sm"
+      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1 rounded-t-[0.28rem]"
       :class="[textColor, bgColor]"
     >
       <span>{{ props.setup.setupName }}</span>
@@ -12,7 +14,7 @@
     <SetupLayout :setup="props.setup" />
     <Transition name="slide-fade">
       <SetupMenu
-        v-if="setupStore.isSetupMenuActive"
+        v-if="props.setup.isActive"
         :setup="props.setup"
         @delete-setup="deleteSetup"
         @connect-setup="connectSetup"
@@ -26,7 +28,7 @@
 import SetupLayout from "./SetupLayout.vue";
 import SetupMenu from "./SetupMenu.vue";
 import { useSetups } from "../../../../../../store/setups";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
 // props & emits
 const props = defineProps({
@@ -44,6 +46,16 @@ const setupStore = useSetups();
 const textColor = computed(() => setupStore.getColor(props.setup.color, "text"));
 const bgColor = computed(() => setupStore.getColor(props.setup.color, "background"));
 
+//Lifecycle Hooks
+
+onMounted(() => {
+  setupStore.editSetups = setupStore.editSetups.map((setup) => {
+    return {
+      ...setup,
+      isActive: false,
+    };
+  });
+});
 //Methods
 const deleteSetup = (item) => {
   emit("deleteSetup", item);
