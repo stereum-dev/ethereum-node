@@ -68,7 +68,7 @@
 
 <script setup>
 import { useClickInstall } from "@/store/clickInstallation";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 
 const clickStore = useClickInstall();
 
@@ -76,6 +76,12 @@ onMounted(() => {
   clickStore.installMonitoring = false;
   clickStore.startServicesAfterInstall = true;
 });
+watch(
+  () => clickStore.startServicesAfterInstall,
+  () => {
+    console.log(clickStore.startServicesAfterInstall);
+  }
+);
 </script>
 <style scoped>
 .checkpoint-part {
