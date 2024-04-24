@@ -18,14 +18,7 @@ export const useNodeManage = defineStore("nodeManage", {
       lines: [],
       hideConnectingLines: false,
       addConfigButton: false,
-      nodeConfigs: [
-        { id: 1, configName: "config", status: true },
-        { id: 2, configName: "config", status: false },
-        { id: 3, configName: "config", status: false },
-        { id: 4, configName: "config", status: false },
-        { id: 5, configName: "config", status: false },
-        { id: 6, configName: "config", status: false },
-      ],
+
       isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},

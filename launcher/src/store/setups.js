@@ -47,5 +47,31 @@ export const useSetups = defineStore("setups", {
       return state.colorMappings[color]?.text || "text-gray-100";
     },
   },
-  actions: {},
+  actions: {
+    selectEditServerView() {
+      this.editSetups.forEach((s) => (s.isActive = false));
+      this.selectedSetup = null;
+      this.isEditConfigViewActive = false;
+    },
+
+    selectEditConfigView(setup) {
+      this.editSetups.forEach((s) => (s.isActive = false));
+      setup.isActive = true;
+      this.selectedSetup = setup;
+      this.isEditConfigViewActive = true;
+    },
+
+    selectNodeServerView() {
+      this.allSetups.forEach((s) => (s.isActive = false));
+      this.isConfigViewActive = false;
+      this.selectedSetup = null;
+    },
+
+    selectNodeConfigView(setup) {
+      this.allSetups.forEach((s) => (s.isActive = false));
+      setup.isActive = true;
+      this.selectedSetup = setup;
+      this.isConfigViewActive = true;
+    },
+  },
 });

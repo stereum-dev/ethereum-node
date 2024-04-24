@@ -1,6 +1,5 @@
 <template>
-  <div class="relative col-start-1 col-span-full grid grid-cols-6 gap-x-1">
-    <!-- Dropdown toggle button -->
+  <div class="relative h-full col-start-1 col-span-full grid grid-cols-6 gap-x-1">
     <label
       v-if="setupStore.isRenameSetupActive && route.path === '/edit'"
       for="rename"
@@ -14,128 +13,93 @@
         focusable
       />
     </label>
-    <button
+
+    <!-- Dropdown toggle button -->
+
+    <div
       v-else
-      class="w-full col-start-1 col-end-6 relative p-2 text-gray-800 bg-[#232528] rounded-sm grid grid-cols-12 border border-gray-600"
-      @click="isOpen = !isOpen"
+      class="col-start-1 relative p-2 text-gray-800 bg-[#336666] rounded-sm grid grid-cols-12 border border-gray-600"
+      :class="route.path === '/edit' ? 'col-end-6' : 'col-span-full'"
+      @click="toggleDropdown"
     >
       <span
-        v-if="setupStore.selectedSetup !== null"
-        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-md shadow-black"
+        v-if="setupStore.selectedSetup !== null && setupStore.selectedSetup?.isActive"
+        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
         :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
       ></span>
-      <span
-        v-if="route.path === '/node'"
-        class="col-start-2 col-end-11 text-sm font-semibold overflow-hidden truncate text-gray-200"
-        >{{
-          setupStore.selectedSetup !== null
-            ? setupStore.selectedSetup?.setupName
-            : "Server View"
-        }}</span
-      >
-      <span
-        v-if="route.path === '/edit'"
-        class="col-start-2 col-end-11 text-sm font-semibold overflow-hidden truncate text-gray-200"
-        >{{
-          setupStore.selectedSetup !== null
-            ? setupStore.selectedSetup?.setupName
-            : "Edit View"
-        }}</span
-      >
+      <span class="col-start-2 col-end-11 text-sm font-normal font-sans overflow-hidden truncate text-gray-200 ml-2">{{
+        getSelectedOption
+      }}</span>
+
       <svg
-        class="w-5 h-5 text-white col-start-12 col-end-13"
-        :class="{ 'transform rotate-180': isOpen }"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        class="h-4 w-4 text-white col-start-12 col-end-13 transform transition-transform duration-200 ease-in-out"
+        :class="isOpen ? 'rotate-180' : 'rotate-0'"
       >
-        <path
-          fill-rule="evenodd"
-          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-          clip-rule="evenodd"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
-    </button>
-    <div
-      v-if="setupStore.isRenameSetupActive && route.path === '/edit'"
-      class="w-full h-full col-start-6 col-span-1 flex justify-center items-center bg-teal-800 border border-gray-600 rounded-sm p-[2px]"
-      @click="confirmRename"
-      @mouseenter="footerStore.cursorLocation = 'Rename Node Setup'"
-      @mouseleave="footerStore.cursorLocation = ''"
-    >
-      <img
-        class="w-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-        src="/img/icon/service-setting-icons/confirm.png"
-        alt="Avatar"
-      />
-    </div>
-    <div
-      v-else
-      class="w-full h-full col-start-6 col-span-1 flex justify-center items-center bg-[#333539] border border-gray-600 rounded-sm p-[2px]"
-      :class="{
-        'pointer-events-none opacity-45 ':
-          setupStore.selectedSetup === null || route.path !== '/edit',
-      }"
-      @click="renameSetup"
-      @mouseenter="footerStore.cursorLocation = 'Rename Node Setup'"
-      @mouseleave="footerStore.cursorLocation = ''"
-    >
-      <img
-        class="w-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-        src="/img/icon/edit-node-icons/rename.png"
-        alt="Icon"
-        @mousedown.prevent
-      />
     </div>
 
     <!-- Dropdown menu -->
-    <div
-      v-if="isOpen"
-      class="absolute right-8 top-9 z-20 w-40 min-h-20 mt-2 origin-top-right rounded-sm shadow-xl bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
-      @click="isOpen = false"
-      @mouseleave="isOpen = false"
+    <Transition
+      enter-active-class="transform transition duration-500 ease-custom"
+      enter-class="-translate-y-1/2 scale-y-0 opacity-0"
+      enter-to-class="translate-y-0 scale-y-100 opacity-100"
+      leave-active-class="transform transition duration-300 ease-custom"
+      leave-class="translate-y-0 scale-y-100 opacity-100"
+      leave-to-class="-translate-y-1/2 scale-y-0 opacity-0"
     >
       <div
-        v-if="setupStore.isConfigViewActive && route.path === '/node'"
-        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
-        @click="selectServerView"
+        v-if="isOpen"
+        class="absolute right-8 top-9 z-20 w-40 min-h-20 mt-2 origin-top-right rounded-sm shadow-md bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
+        @mouseleave="isOpen = false"
       >
-        <span
-          class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate"
-          >Server View</span
+        <div
+          v-if="setupStore.isConfigViewActive && route.path === '/node'"
+          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-700 hover:bg-blue-300 cursor-pointer flex justify-center items-center"
+          @click="selectServerView"
         >
-      </div>
-      <div
-        v-if="route.path === '/edit' && setupStore.isEditConfigViewActive"
-        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
-        @click="selectServerView"
-      >
-        <span
-          class="col-start-1 col-span-full self-center text-sm font-bold overflow-hidden truncate"
-          >Edit Server View</span
+          <span class="col-start-2 col-span-full self-center text-center text-sm font-semibold overflow-hidden truncate"
+            >Node Server View</span
+          >
+        </div>
+        <div
+          v-if="route.path === '/edit' && setupStore.isEditConfigViewActive"
+          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-700 hover:bg-blue-300 cursor-pointer flex justify-center items-center"
+          @click="selectServerView"
         >
-      </div>
-      <div
-        v-for="setup in list"
-        :key="setup.setupName"
-        class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
-        @click="selectSetup(setup)"
-      >
-        <span
-          class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start"
-          :class="setupStore.getBGColor(setup.color)"
-        ></span>
-        <span
-          class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate"
-          >{{ setup.setupName }}</span
+          <span class="col-start-1 col-span-full self-center text-center text-sm font-bold overflow-hidden truncate"
+            >Edit Server View</span
+          >
+        </div>
+        <div
+          v-for="setup in list"
+          v-show="!setup.isActive"
+          :key="setup.setupName"
+          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+          @click="selectSetup(setup)"
         >
+          <span
+            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start"
+            :class="setupStore.getBGColor(setup.color)"
+          ></span>
+          <span class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate">{{
+            setup.setupName
+          }}</span>
+        </div>
       </div>
-    </div>
+    </Transition>
+
+    <!-- Rename setup button -->
+    <!-- Rename Button  -->
+    <RenameSetup v-if="route.path === '/edit'" @confirm-rename="confirmRename" @rename-setup="renameSetup" />
   </div>
 </template>
 <script setup>
-import { useFooter } from "@/store/theFooter";
-import { ref } from "vue";
+import RenameSetup from "./RenameSetup.vue";
+import { computed, ref } from "vue";
 import { useSetups } from "@/store/setups";
 import { useRoute } from "vue-router";
 
@@ -146,49 +110,55 @@ const { list } = defineProps({
   },
 });
 
-const emit = defineEmits(["renameSetup", "selectSetup", "confirmRename"]);
+const emit = defineEmits(["renameSetup", "selectSetup", "serverView"]);
 
 const route = useRoute();
 const setupStore = useSetups();
-const footerStore = useFooter();
 
 const isOpen = ref(false);
 
-//Lifecycle Hooks
+const getSelectedOption = computed(() => {
+  let option;
+  if (route.path === "/node" && setupStore.selectedSetup === null) {
+    option = "Node Server View";
+  } else if (route.path === "/edit" && setupStore.selectedSetup === null) {
+    option = "Edit Server View";
+  } else {
+    option = setupStore.selectedSetup?.setupName;
+  }
+
+  return option;
+});
 
 // Methods
 
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
 const renameSetup = () => {
-  if (setupStore.selectedSetup !== null) {
+  if (setupStore.selectedSetup) {
     emit("renameSetup", setupStore.selectedSetup);
-  } else {
-    return;
   }
 };
 
 const confirmRename = () => {
-  emit("confirmRename", setupStore.selectedSetup);
+  setupStore.isRenameSetupActive = false;
 };
 
 const selectSetup = (setup) => {
-  setupStore.selectedSetup = setup;
-  if (route.path === "/edit") {
-    setupStore.isConfigViewActive = false;
-    setupStore.isEditConfigViewActive = true;
-  } else if (route.path === "/node") {
-    setupStore.isEditConfigViewActive = false;
-    setupStore.isConfigViewActive = true;
-  }
-
+  isOpen.value = false;
   emit("selectSetup", setup);
 };
 
 const selectServerView = () => {
-  setupStore.selectedSetup = null;
-  if (route.path === "/edit") {
-    setupStore.isEditConfigViewActive = false;
-  } else if (route.path === "/node") {
-    setupStore.isConfigViewActive = false;
-  }
+  isOpen.value = false;
+  emit("serverView");
 };
 </script>
+
+<style scoped>
+.ease-custom {
+  transition-timing-function: cubic-bezier(0.61, -0.53, 0.43, 1.43);
+}
+</style>

@@ -7,15 +7,20 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <img
-      class="max-w-14 col-start-1 col-span-full row-start-2 row-end-10 mx-auto"
+      class="max-w-10 col-start-1 col-span-full row-start-2 row-end-9 mx-auto"
       :src="matchedNetworkIcon"
       alt="icon"
     />
 
     <div
+      class="col-start-1 col-span-full row-start-9 row-span-1 text-[8px] text-center font-semibold overflow-hidden whitespace-nowrap truncate flex justify-center items-center text-gray-400"
+    >
+      <span>{{ setupType }}</span>
+    </div>
+    <div
       class="col-start-1 col-span-full row-start-10 row-span-full text-[8px] text-center font-semibold overflow-hidden whitespace-nowrap truncate flex justify-center items-center text-gray-400"
     >
-      <span>{{ NodeConfigName }}</span>
+      <span>Node Config</span>
     </div>
   </div>
 </template>
@@ -33,24 +38,20 @@ const props = defineProps({
 
 // find the matching network and its icon
 const matchedNetworkIcon = computed(() => {
-  const matchedNetwork = manageStore.networkList.find(
-    (network) => network.network === props.setup.network
-  );
+  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
   return matchedNetwork ? matchedNetwork.icon : "";
 });
 
-const NodeConfigName = computed(() => {
+const setupType = computed(() => {
   let shortName;
-  const matchedNetwork = manageStore.networkList.find(
-    (network) => network.network === props.setup.network
-  );
+  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
 
   if (matchedNetwork?.network === "mainnet") {
-    shortName = "ETH NODE CONFIG";
-  } else if (matchedNetwork?.network === "holisky") {
-    shortName = "HLS NODE CONFIG";
+    shortName = "ETH ";
+  } else if (matchedNetwork?.network === "holesky") {
+    shortName = "HOLESKY";
   } else if (matchedNetwork?.network === "optimism") {
-    shortName = "OPITMISM CONFIG";
+    shortName = "OPT";
   }
 
   return shortName;

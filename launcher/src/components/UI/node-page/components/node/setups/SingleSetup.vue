@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-[180px] h-[100px] col-span-1 row-span-1 grid grid-cols-2 grid-rows-12 items-center border border-gray-500 rounded-md mx-auto"
+    class="w-[180px] h-[100px] col-span-1 row-span-1 grid grid-cols-2 grid-rows-12 items-center border border-gray-500 rounded-md mx-auto box-border"
   >
     <div
-      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate rounded-t-sm"
+      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate rounded-t-[0.28rem]"
       :class="[textColor, bgColor]"
     >
       <span>{{ props.setup.setupName }}</span>
