@@ -6,7 +6,11 @@
       class="col-start-14 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
     >
       <LoginPanel v-if="isLoginActive" @server-login="serverLogin" />
-      <DetailsPanel v-if="isDetailsActive" @change-password="changePassword" @set-avatar="setServerAvatar" />
+      <DetailsPanel
+        v-if="isDetailsActive"
+        @change-password="changePassword"
+        @set-avatar="setServerAvatar"
+      />
       <UpdatePanel v-if="isUpdateActive" />
       <SshPanel v-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
       <SettingsPanel v-if="isSettingsActive" />
@@ -14,7 +18,11 @@
     <div
       class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
     >
-      <ServerPanel @select-server="selectServer" @server-login="addNewServer" @quick-login="quickLogin" />
+      <ServerPanel
+        @select-server="selectServer"
+        @server-login="addNewServer"
+        @quick-login="quickLogin"
+      />
     </div>
   </div>
 </template>
@@ -32,17 +40,34 @@ import { useControlStore } from "@/store/theControl";
 import { computed, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
-const emit = defineEmits(["selectServer", "serverLogin", "changePassword", "fileUpload", "deleteKey", "quickLogin"]);
+const emit = defineEmits([
+  "selectServer",
+  "serverLogin",
+  "changePassword",
+  "fileUpload",
+  "deleteKey",
+  "quickLogin",
+]);
 
 const serverStore = useServers();
 const controlStore = useControlStore();
 const route = useRoute();
 
-const isLoginActive = computed(() => route.path === "/login" || serverStore.isServerLoginActive);
-const isSSHActive = computed(() => route.path !== "/login" && serverStore.isServerSSHActive);
-const isDetailsActive = computed(() => route.path !== "/login" && serverStore.isServerDetailsActive);
-const isUpdateActive = computed(() => route.path !== "/login" && serverStore.isServerUpdateActive);
-const isSettingsActive = computed(() => route.path !== "/login" && serverStore.isServerSettingsActive);
+const isLoginActive = computed(
+  () => route.path === "/login" || serverStore.isServerLoginActive
+);
+const isSSHActive = computed(
+  () => route.path !== "/login" && serverStore.isServerSSHActive
+);
+const isDetailsActive = computed(
+  () => route.path !== "/login" && serverStore.isServerDetailsActive
+);
+const isUpdateActive = computed(
+  () => route.path !== "/login" && serverStore.isServerUpdateActive
+);
+const isSettingsActive = computed(
+  () => route.path !== "/login" && serverStore.isServerSettingsActive
+);
 
 watch(
   () => serverStore.selectedServerConnection,
@@ -92,7 +117,11 @@ const selectServer = (server) => {
 };
 
 const addNewServer = () => {
+  serverStore.savedServers.savedConnections.forEach((s) => {
+    if (s.isSelected) s.isSelected = false;
+  });
   if (serverStore.connectExistingServer) {
+    serverStore.addNewServer = false;
     serverStore.connectExistingServer = false;
     serverStore.selectServerToConnect = null;
   }

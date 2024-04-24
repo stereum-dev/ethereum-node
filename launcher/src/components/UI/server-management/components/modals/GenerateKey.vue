@@ -146,7 +146,12 @@
               ></span>
             </label>
           </div>
-          <div class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 items-center">
+          <div
+            class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 items-center"
+            :class="{
+              'opacity-50 pointer-events-none cursor-not-allowed': disableDiv,
+            }"
+          >
             <span
               class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
               >{{ $t("multiServer.specCypher") }}</span
@@ -245,7 +250,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed, watchEffect, onMounted } from "vue";
 import { useServers } from "@/store/servers";
 import { useDeepClone } from "@/composables/utils";
 import ControlService from "@/store/ControlService";
@@ -266,7 +271,19 @@ const isDisabled = ref(true);
 // serverStore.bitAmount: "",
 // serverStore.selectedKeyType: "",
 
+onMounted(() => {
+  serverStore.savePath = "";
+  serverStore.sshPassword = "";
+  serverStore.selectedCyper = "";
+  serverStore.bitAmount = "";
+  serverStore.selectedKeyType = "";
+});
+
 //Computed
+
+const disableDiv = computed(() => {
+  return expertOptions.value && (serverStore.selectedKeyType === "" || serverStore.selectedKeyType === "ED25519");
+});
 
 const typesAmount = computed(() => {
   if (serverStore.selectedKeyType === "RSA") {

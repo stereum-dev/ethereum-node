@@ -53,7 +53,6 @@
       </div>
       <SyncCarousel
         v-if="isSyncingActived && (client.category === 'execution' || client.category === 'consensus')"
-        :properties="properties"
         :cat="client.category"
       />
     </div>

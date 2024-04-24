@@ -22,16 +22,21 @@ export class ValidatorAccountManager {
     this.batches = [];
   }
 
-  createBatch(files, password, slashingDB, chunkSize = 100) {
+  createBatch(files, passwordFiles, password, slashingDB, chunkSize = 100) {
     // this function can be called both with or without "slashing_protection_content" ---> README & REMOVE ME!!!
     if (slashingDB) var slashing_protection_content = JSON.parse(readFileSync(slashingDB, { encoding: "utf8" }));
-    const content = files.map((file) => {
+    let passwords = Array(files.length).fill(password);
+    const content = files.map((file, index) => {
+      const passwordFile = passwordFiles.find((p) => path.basename(p.name, ".txt") === path.basename(file.name, ".json"));
+      if (passwordFile) {
+        passwords[index] = readFileSync(passwordFile.path, { encoding: "utf8" });
+      }
       return readFileSync(file.path, { encoding: "utf8" });
     });
 
     for (let i = 0; i < content.length; i += chunkSize) {
       const contentChunk = content.slice(i, i + chunkSize);
-      const passwords = Array(contentChunk.length).fill(password);
+
       this.batches.push({
         keystores: contentChunk,
         passwords: passwords,
@@ -40,7 +45,7 @@ export class ValidatorAccountManager {
     }
   }
 
-  async checkActiveValidators(files, password, serviceID, slashingDB, isRemote = false) {
+  async checkActiveValidators(files, passwordFiles, password, serviceID, slashingDB, isRemote = false) {
     let services = await this.serviceManager.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
     let pubkeys = [];
@@ -48,7 +53,7 @@ export class ValidatorAccountManager {
       pubkeys = files;
     } else {
       this.batches = [];
-      this.createBatch(files, password, slashingDB, isRemote ? 20 : 100);
+      this.createBatch(files, passwordFiles, password, slashingDB, isRemote ? 20 : 100);
       pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
     }
 

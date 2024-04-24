@@ -46,7 +46,8 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
+
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import TheFooter from "../layers/TheFooter.vue";
 import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
@@ -139,6 +140,8 @@ const runOsUpdate = async () => {
 const loggingOut = async () => {
   serverStore.connectingAnimActive = false;
   headerStore.refresh = false;
+  serverStore.isTerminalStopped = true;
+  await ControlService.stopShell();
   await ControlService.logout();
   router.push("/login").then(() => {
     location.reload();

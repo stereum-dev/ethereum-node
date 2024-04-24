@@ -23,6 +23,7 @@ import AddConnection from "./AddConnection";
 import MevboostRelays from "./MevboostRelays.vue";
 import { ref, onMounted, computed } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
+import { useClickInstall } from "@/store/clickInstallation";
 
 const props = defineProps({
   client: {
@@ -34,6 +35,7 @@ const props = defineProps({
 const emit = defineEmits(["closeWindow", "confirmInstall", "selectService"]);
 
 const manageStore = useNodeManage();
+const installStore = useClickInstall();
 
 //Refs
 const isAddPanelActivated = ref(false);
@@ -47,7 +49,9 @@ const properties = ref({
   installDir: "/opt/stereum",
   executionClients: [],
   consensusClients: [],
+  otherServices: [],
   relays: [],
+  checkPointSyncUrl: null,
 });
 
 //Computed & Watcher
@@ -61,7 +65,8 @@ const getConfirmText = computed(() => {
       text = "confirm";
     } else if (
       props.client.category === "consensus" ||
-      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service))
+      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service)) ||
+      /LidoObolExit|ValidatorEjector/.test(props.client.service)
     ) {
       text = "next";
     } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
@@ -116,10 +121,12 @@ onMounted(() => {
 const confirmInstall = () => {
   if (getConfirmText.value === "confirm") {
     props.client.addPanel = false;
+    properties.value.checkPointSyncUrl = installStore.checkPointSync;
     emit("confirmInstall", properties.value);
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||
-    (props.client.category === "validator" && getConfirmText.value === "next")
+    (props.client.category === "validator" && getConfirmText.value === "next") ||
+    /LidoObolExit|ValidatorEjector/.test(props.client.service)
   ) {
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;
