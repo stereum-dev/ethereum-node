@@ -2208,6 +2208,10 @@ video {
   width: 100vw;
 }
 
+.w-\[50\%\]{
+  width: 50%;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }

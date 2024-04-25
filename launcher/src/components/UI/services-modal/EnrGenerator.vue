@@ -14,7 +14,7 @@
       }"
     >
       <div v-if="enrGeneratorAnim" class="generatingAnim w-full h-full items-center justify-center flex">
-        <img class="w-1/2" src="/animation/services/obol/obol-animation.gif" alt="" />
+        <img class="w-1/2" src="/animation/services/obol/obol-animation.gif" alt="ENR generating" />
       </div>
 
       <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
