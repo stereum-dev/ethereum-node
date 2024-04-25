@@ -15,7 +15,7 @@
         <ul class="notif-box">
           <li @click="qrPage = false">
             <div class="notif-row_icon">
-              <img src="/img/icon/stereum-icons/stereum_logo_extern.png" alt="notif logo" />
+              <img src="/img/icon/stereum-icons/stereum-node-monitor-logo.png" alt="notif logo" />
             </div>
             <div class="notif-row_name">
               <span>{{ $t("notifModal.stereumMonitor") }} (Mobile App)</span>
@@ -35,7 +35,7 @@
       <div v-if="!qrPage && !beaconchaDashboard" class="qrPage_content">
         <div class="banner" @click="qrViewer">
           <div class="banner_icon">
-            <img src="/img/icon/stereum-icons/stereum_logo_extern.png" />
+            <img src="/img/icon/stereum-icons/stereum-node-monitor-logo.png" />
           </div>
           <div class="banner_title">
             <span>{{ $t("notifModal.stereumMonitor") }}</span>
