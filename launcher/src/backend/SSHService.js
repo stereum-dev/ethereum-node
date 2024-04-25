@@ -327,7 +327,7 @@ export class SSHService {
     if (this.connected) {
       try {
         if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
-        let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
+        let result = await this.exec(`cat ${sshDirPath}/authorized_keys`, false);
         if (SSHService.checkExecError(result)) {
           throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
         }
@@ -336,7 +336,6 @@ export class SSHService {
         log.error("Can't read authorized keys ", err);
         return [];
       }
-      console.log("authorizedKeys: ", authorizedKeys);
     } else {
       log.error("SSH not connected, can't read authorized keys");
     }
@@ -348,7 +347,7 @@ export class SSHService {
       if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
       let newKeys = keys.join("\n");
       let result = await this.exec(
-        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`
+        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`, false
       );
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));
