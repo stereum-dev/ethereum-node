@@ -4,7 +4,7 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "upgrade_prep--default--ubuntu-22.04"
+  - name: "upgrade-prep--default--ubuntu-22.04"
     server_type: cx11
     image: ubuntu-22.04
 provisioner:
