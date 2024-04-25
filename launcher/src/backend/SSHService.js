@@ -143,20 +143,27 @@ export class SSHService {
 
   async disconnect() {
     log.info("DISCONNECT: connectionInfo", this.connectionInfo.host);
-
-    return new Promise((resolve, reject) => {
-      try {
-        this.connected = false;
-        this.connectionInfo = null;
+    try {
+      this.connected = false;
+      this.connectionInfo = null;
+      let counter = 0;
+      while (this.connectionPool.some((conn) => conn._chanMgr?._count > 0 && counter < 30)) {
         this.connectionPool.forEach((conn) => {
-          conn.end();
+          if (conn._chanMgr?._count > 0) {
+            conn.end();
+          }
         });
-        this.connectionPool = [];
-        resolve(true);
-      } catch (error) {
-        reject(error);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        counter++;
       }
-    });
+      log.info("SSH Channels left open: ", this.connectionPool.map(c => c._chanMgr?._count).reduce((accumulator, currentValue) => {
+        return accumulator + currentValue
+      }, 0))
+      this.connectionPool = [];
+      return true;
+    } catch (error) {
+      return error;
+    }
   }
 
   async exec(command, useSudo = true) {
