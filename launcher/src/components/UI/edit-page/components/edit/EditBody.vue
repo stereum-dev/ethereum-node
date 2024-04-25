@@ -72,6 +72,9 @@ const displayDropZone = computed(() => {
   }
   return dropClass;
 });
+watchEffect(() => {
+  console.log("setupStore.selectedSetup", setupStore.selectedSetup);
+});
 
 watchEffect(
   () => manageStore.isLineHidden,

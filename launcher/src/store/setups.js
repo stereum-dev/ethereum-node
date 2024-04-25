@@ -20,11 +20,11 @@ export const useSetups = defineStore("setups", {
 
     colorMappings: {
       // default: { text: "text-gray-100", background: "bg-[#336666]" },
-      default: { text: "text-gray-800", background: "bg-[#FF9800]" },
+      default: { text: "text-gray-800", background: "bg-[#D1BB9E]" },
       blue: { text: "text-gray-100", background: "bg-blue-900" }, //#172554
       red: { text: "text-gray-800", background: "bg-red-300" }, //#fca5a5
       yellow: { text: "text-gray-800", background: "bg-[#F7C566]" },
-      orange: { text: "text-gray-800", background: "bg-[#FF9800]" },
+      orange: { text: "text-gray-800", background: "bg-[#fb923c]" },
       green: { text: "text-gray-100", background: "bg-lime-900" }, //#365314
       beige: { text: "text-gray-800", background: "bg-[#D1BB9E]" },
       purple: { text: "text-gray-100", background: "bg-violet-900" }, //#4c1d95
@@ -41,10 +41,10 @@ export const useSetups = defineStore("setups", {
 
     //Setup Dropwdown
     getBGColor: (state) => (color) => {
-      return state.colorMappings[color]?.background || "bg-[#336666]";
+      return state.colorMappings[color]?.background || "bg-[#33393E]";
     },
     getTextColor: (state) => (color) => {
-      return state.colorMappings[color]?.text || "text-gray-100";
+      return state.colorMappings[color]?.text || "text-gray-300";
     },
   },
   actions: {

@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      //Installed services on edit page
+      newConfiguration: [],
+      // End of Installed services on edit page
+
       //  Beginning Custom Service
       customConfig: {
         image: "",
@@ -151,7 +155,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
       ],
-      newConfiguration: [],
+
       selectedItemToRemove: [],
       actionContents: [
         {

@@ -1,13 +1,13 @@
 <template>
   <div
-    class="w-full h-full max-h-[430px] rounded-md border overflow-hidden mt-1 bg-[#151618] relative"
+    class="w-full h-full max-h-[430px] rounded-md border overflow-hidden bg-[#151618] relative"
     :class="[
       isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-600',
       manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : '',
     ]"
   >
     <div
-      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 border border-gray-950 rounded-t-[5px] text-[10px] font-semibold"
+      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 border border-gray-950 rounded-t-[5px] text-xs font-[400] font-sans"
       :class="[
         setupStore.getBGColor(setupStore.selectedSetup?.color),
         setupStore.getTextColor(setupStore.selectedSetup?.color),

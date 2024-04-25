@@ -4,16 +4,14 @@
     :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
   >
     <div
-      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 border border-gray-950 rounded-t-[5px] text-[10px] font-semibold z-10"
+      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 border border-gray-950 text-gray-300 rounded-t-[5px] z-10"
       :class="[
         setupStore.getBGColor(setupStore.selectedSetup?.color),
         setupStore.getTextColor(setupStore.selectedSetup?.color),
       ]"
     >
-      <span v-if="setupStore.isEditConfigViewActive" class="self-center"
-        >Config Services
-      </span>
-      <span v-else class="self-center">Server Services </span>
+      <span v-if="setupStore.isEditConfigViewActive" class="text-xs text-center font-sans">Config Services </span>
+      <span v-else class="text-xs text-center font-sans">Server Services </span>
     </div>
     <div
       ref="service"
@@ -26,18 +24,15 @@
         class="w-full max-h-[78px] grid grid-cols-2 p-2 rounded-md border border-gray-600 shadow-md mx-auto bg-[#212629]"
         :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
         style="cursor: default"
-        @mouseenter="
-          footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`
-        "
+        @mouseenter="footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <ServiceLayout :client="item" />
         <div class="w-full h-full grid grid-cols-2 items-center">
           <div
             v-if="
-              /FlashbotsMevBoostService|LidoObolExitService|ValidatorEjectorService/.test(
-                item.service
-              ) && !item.isRemoveProcessing
+              /FlashbotsMevBoostService|LidoObolExitService|ValidatorEjectorService/.test(item.service) &&
+              !item.isRemoveProcessing
             "
             class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 hover:border-gray-300"
             @click="changeConnection(item)"
@@ -57,9 +52,9 @@
             }"
             @click="deleteService(item)"
             @mouseenter="
-              footerStore.cursorLocation = `${$t('editPageServices.delete')} ${
-                item.name
-              } ${$t('editPageServices.service')}`
+              footerStore.cursorLocation = `${$t('editPageServices.delete')} ${item.name} ${$t(
+                'editPageServices.service'
+              )}`
             "
             @mouseleave="footerStore.cursorLocation = ''"
           >
@@ -108,9 +103,7 @@ const getServices = computed(() => {
       return false; // services not in serverServices
     });
   } else {
-    services = services.filter(
-      (service) => !setupStore.serverServices.includes(service.service)
-    );
+    services = services.filter((service) => !setupStore.serverServices.includes(service.service));
   }
 
   return services;
