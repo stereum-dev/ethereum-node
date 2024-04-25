@@ -436,11 +436,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-            jsonrpc: "2.0",
-            method: rpc_method.trim(),
-            params: rpc_params,
-            id: 1,
-          })
+          jsonrpc: "2.0",
+          method: rpc_method.trim(),
+          params: rpc_params,
+          id: 1,
+        })
         : rpc_method;
 
     // Define default response
@@ -1472,7 +1472,7 @@ export class Monitoring {
           // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50) + 10%
           // See extra dealing with + 10% below!
           optnam = "--targetPeers";
-          defval = 50;
+          defval = 100;
         } else if (clt.service == "GethService") {
           // [MAXVAL: --maxpeers (Default: 50)]
           optnam = "--maxpeers";
@@ -2615,8 +2615,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-      ? "str"
-      : "invalid";
+        ? "str"
+        : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2704,7 +2704,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-        serviceInfos[i].config.dependencies.executionClients.length
+          serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({
