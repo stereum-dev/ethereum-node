@@ -9,6 +9,8 @@
             controls_install_path: "/opt/stereum"
     - debug:
         msg: "{{ stereum }}"
-    - name: "Include upgrade_prep"
+    - name: "Include update-package"
       include_role:
-        name: "upgrade_prep"
+        name: "update-package"
+      vars:
+        packages_list: "git"

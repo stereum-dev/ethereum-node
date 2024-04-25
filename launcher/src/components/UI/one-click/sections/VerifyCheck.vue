@@ -32,8 +32,7 @@ const runInstalltion = async () => {
       relayURL: installStore.relayURL,
       selectedPreset: installStore.selectedPreset.name,
     });
-
-    await ControlService.startOneClickServices();
+    installStore.startServicesAfterInstall ? await ControlService.startOneClickServices() : null;
 
     router.push("/node");
   } catch (err) {
