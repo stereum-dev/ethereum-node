@@ -31,6 +31,7 @@ import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusS
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
 import { CustomService } from "./ethereum-services/CustomService";
 import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
+import { ConfigManager } from "./ConfigManager";
 import YAML from "yaml";
 const axios = require("axios");
 
@@ -52,6 +53,7 @@ export const serivceState = {
 export class ServiceManager {
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
+    this.configManager = new ConfigManager(this.nodeConnection);
   }
 
   /**
@@ -742,6 +744,7 @@ export class ServiceManager {
   }
 
   async switchServices(switchTask) {
+    await this.configManager.deleteServiceFromSetup(switchTask.id, switchTask.setupId);
     let services = await this.readServiceConfigurations();
 
     let previousService = services.find((service) => service.id === switchTask.service.config.serviceID);
@@ -1248,10 +1251,12 @@ export class ServiceManager {
 
   async addServices(tasks, services) {
     let newServices = [];
+    let setupAndServiceIds = {};
     let ELInstalls = tasks.filter((t) => t.service.category === "execution");
     ELInstalls.forEach((t) => {
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
+      setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
     let CLInstalls = tasks.filter((t) => t.service.category === "consensus");
@@ -1259,6 +1264,7 @@ export class ServiceManager {
       this.updateInfoForDependencies(t, services, newServices, ELInstalls);
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
+      setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
     let SSVInstalls = tasks.filter((t) => t.service.service === "SSVNetworkService");
@@ -1266,6 +1272,7 @@ export class ServiceManager {
       this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls);
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
+      setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
     let VLInstalls = tasks.filter(
@@ -1275,6 +1282,7 @@ export class ServiceManager {
       this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls);
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
+      setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
     let PInstalls = tasks.filter((t) => t.service.category === "service");
@@ -1304,6 +1312,7 @@ export class ServiceManager {
         });
       }
       t.service.config.serviceID = service.id;
+      setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
 
@@ -1356,11 +1365,10 @@ export class ServiceManager {
       if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
     });
 
-    await Promise.all(
-      newServices.map(async (service) => {
-        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
-      })
-    );
+    for (const service of newServices) {
+      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration(), setupAndServiceIds[service.id]);
+    }
+
     await this.createKeystores(
       newServices.filter(
         (s) =>
@@ -1467,6 +1475,9 @@ export class ServiceManager {
       let ssvConfigs = await this.getSSVConfigs(services);
       let before = this.nodeConnection.nodeUpdates.getTimeStamp();
       try {
+        for (const task of tasks) {
+          await this.configManager.deleteServiceFromSetup(task.id, task.setupId);
+        }
         await Promise.all(
           tasks.filter(ServiceManager.uniqueByID("DELETE")).map((task, index, tasks) => {
             return this.deleteService(task, tasks, services, ssvConfigs);
@@ -1537,18 +1548,41 @@ export class ServiceManager {
   }
 
   async exportConfig() {
-    let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
-    let serviceNameConfig = [];
-    for (let i = 0; i < arrayOfServices.length; i++) {
-      let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Exporting Configuration`);
+    try {
+      let multiSetups = await this.configManager.readMultiSetup();
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Read Multi Setup`, true);
+      let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
+      let serviceNameConfig = [];
+      for (let i = 0; i < arrayOfServices.length; i++) {
+        let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Read Service YAML for ${arrayOfServices[i]}`, true);
 
-      const exportObject = {
-        filename: arrayOfServices[i],
-        content: serviceObject,
-      };
-      serviceNameConfig.push(exportObject);
+        const exportObject = {
+          filename: arrayOfServices[i],
+          content: serviceObject,
+        };
+        serviceNameConfig.push(exportObject);
+      }
+
+      serviceNameConfig.push({
+        filename: "multisetup.yaml",
+        content: multiSetups,
+      });
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Export Configuration Completed`, true);
+      return serviceNameConfig;
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Export Failed`,
+        false,
+        `Failed to export config: ${error}`
+      );
+      console.error(`Failed to export config: ${error}`);
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
     }
-    return serviceNameConfig;
   }
 
   async importConfig(configFiles, removedServices, checkPointSync) {

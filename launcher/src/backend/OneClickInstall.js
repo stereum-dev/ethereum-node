@@ -1,8 +1,7 @@
 import { ServiceManager } from "./ServiceManager";
 import YAML from "yaml";
 import { StringUtils } from "./StringUtils";
-const yaml = require("js-yaml");
-const uuid = require("uuid");
+import { ConfigManager } from "./ConfigManager";
 
 const log = require("electron-log");
 
@@ -15,6 +14,7 @@ export class OneClickInstall {
     this.installDir = installDir;
     this.nodeConnection = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
+    this.configManager = new ConfigManager(this.nodeConnection);
     const arch = await this.nodeConnection.getCPUArchitecture();
     const settings = {
       stereum_settings: {
@@ -32,8 +32,8 @@ export class OneClickInstall {
     };
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
     mkdir -p /etc/stereum/services &&\
-    echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml &&\
-    touch /etc/stereum/multiconfig.yaml`);
+    echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
+    await this.configManager.createMultiSetupYaml({}, "");
     await this.nodeConnection.findStereumSettings();
     return await this.nodeConnection.prepareStereumNode(
       this.nodeConnection.settings.stereum.settings.controls_install_path
@@ -393,24 +393,13 @@ export class OneClickInstall {
   async writeConfig() {
     const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
+      let setupID = await this.configManager.createMultiSetupYaml(configs, this.network);
       await Promise.all(
         configs.map(async (config) => {
-          await this.nodeConnection.writeServiceConfiguration(config);
+          await this.nodeConnection.writeServiceConfiguration(config, setupID);
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
-      let configObject = {
-        [uuid.v4()]: {
-          name: "config1",
-          network: this.network,
-          color: "default",
-          setupType: "ETH",
-          services: configs.map((config) => config.id),
-        },
-      };
-
-      let yamlStr = yaml.safeDump(configObject).replace(/`/g, "\\`");
-      await this.nodeConnection.sshService.exec(`echo -e "${yamlStr}" > /etc/stereum/multiconfig.yaml`);
       return configs;
     }
   }

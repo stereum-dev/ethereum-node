@@ -5,6 +5,7 @@ import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import net from "net";
 import YAML from "yaml";
 import { NodeUpdates } from "./NodeUpdates";
+import { ConfigManager } from "./ConfigManager";
 const log = require("electron-log");
 const electron = require("electron");
 const Evilscan = require("evilscan");
@@ -28,6 +29,7 @@ export class NodeConnection {
     this.os = null;
     this.osv = null;
     this.nodeUpdates = new NodeUpdates(this);
+    this.configManager = new ConfigManager(this);
   }
 
   async establish(taskManager) {
@@ -338,17 +340,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -1342,10 +1344,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -1384,18 +1386,19 @@ export class NodeConnection {
    *
    * @param serviceConfiguration servicd configuration to write to the node
    */
-  async writeServiceConfiguration(serviceConfiguration) {
+  async writeServiceConfiguration(serviceConfiguration, setupID = null) {
     let configStatus;
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
+      await this.configManager.addServiceIntoSetup(serviceConfiguration.id, serviceConfiguration.network, setupID);
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + serviceConfiguration.service + " config",
@@ -1416,9 +1419,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({

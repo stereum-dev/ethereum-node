@@ -585,9 +585,8 @@ ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
 });
 
-ipcMain.handle("readMultiConfigYaml", async () => {
-  console.log("background.js------------------------------");
-  return await configManager.readMultiConfigYaml();
+ipcMain.handle("readMultiSetup", async () => {
+  return await configManager.readMultiSetup();
 });
 
 ipcMain.handle("fetchTranslators", async (event, args) => {

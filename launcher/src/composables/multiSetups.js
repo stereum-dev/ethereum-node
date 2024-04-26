@@ -7,7 +7,7 @@ export const useMultiSetups = () => {
 
   const loadSetups = async () => {
     try {
-      const data = await ControlService.readMultiConfigYaml();
+      const data = await ControlService.readMultiSetup();
       configs.value = parseYAMLData(data);
       console.log("Configs", configs.value);
     } catch (e) {
