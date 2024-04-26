@@ -561,7 +561,7 @@ test("writeServiceConfiguration success", async () => {
     ports: ["0.0.0.0:9000:9000/tcp", "0.0.0.0:9000:9000/udp"],
   });
 
-  expect(mMock.mock.calls.length).toBe(1);
+  expect(mMock.mock.calls.length).toBe(2);
 
   expect(mMock.mock.calls[0][0]).toMatch(/2000/);
   expect(mMock.mock.calls[0][0]).toMatch(/id: some-id/);

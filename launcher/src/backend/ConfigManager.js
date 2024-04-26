@@ -146,8 +146,8 @@ export class ConfigManager {
         let services = setupsObj[setupID]?.services;
         if (!services.includes(serviceID)) {
           services.push(serviceID);
-          await this.writeMultiSetup(setupsObj);
         }
+        await this.writeMultiSetup(setupsObj);
       } else {
         console.log("Setup not found!");
       }
