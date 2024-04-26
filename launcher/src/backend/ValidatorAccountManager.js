@@ -27,7 +27,9 @@ export class ValidatorAccountManager {
     if (slashingDB) var slashing_protection_content = JSON.parse(readFileSync(slashingDB, { encoding: "utf8" }));
     let passwords = Array(files.length).fill(password);
     const content = files.map((file, index) => {
-      const passwordFile = passwordFiles.find((p) => path.basename(p.name, ".txt") === path.basename(file.name, ".json"));
+      const passwordFile = passwordFiles.find(
+        (p) => path.basename(p.name, ".txt") === path.basename(file.name, ".json")
+      );
       if (passwordFile) {
         passwords[index] = readFileSync(passwordFile.path, { encoding: "utf8" });
       }
@@ -320,7 +322,8 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
       }${apiPath}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -584,7 +587,9 @@ export class ValidatorAccountManager {
           walletPath = service.volumes.find((v) => v.servicePath == "/opt/app/data/wallets").destinationPath;
         }
         //Make sure keystores have correct permissions
-        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + walletPath + "/direct/accounts/*");
+        const chmodResult = await this.nodeConnection.sshService.exec(
+          "chmod -Rv 600 " + walletPath + "/direct/accounts/*"
+        );
         log.info(chmodResult.stdout);
         if (walletPath) {
           result = await this.nodeConnection.sshService.exec("cat " + walletPath + "/auth-token");
@@ -926,14 +931,14 @@ export class ValidatorAccountManager {
         result = await this.nodeConnection.sshService.exec(charonClient.getWriteENRPrivateKeyCommand(privateKey));
         if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
 
-        let enr = await this.getObolENRPublicKey()
+        let enr = await this.getObolENRPublicKey();
         return enr;
       } else {
         let result = await this.nodeConnection.sshService.exec(charonClient.getCreateEnrCommand());
         if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
-        const data = result.stdout.split('\n')
-        const enr = data.find((line) => line.includes('enr:-'));
-        return enr
+        const data = result.stdout.split("\n");
+        const enr = data.find((line) => line.includes("enr:-"));
+        return enr;
       }
     } catch (err) {
       log.error("Error creating Obol ENR: ", err);
@@ -951,12 +956,12 @@ export class ValidatorAccountManager {
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
       const data = result.stdout;
       return {
-        privateKey: data.includes('charon-enr-private-key'),          //ENR Created
-        clusterDefinition: data.includes('cluster-definition.json'),  //Cluster Definition Created / Successfull DKG
-        depositData: data.includes('deposit-data.json'),              //Successfull DKG
-        clusterLock: data.includes('cluster-lock.json'),              //Successfull DKG
-        validatorKeys: data.includes('validator_keys'),              //Successfull DKG
-      }
+        privateKey: data.includes("charon-enr-private-key"), //ENR Created
+        clusterDefinition: data.includes("cluster-definition.json"), //Cluster Definition Created / Successfull DKG
+        depositData: data.includes("deposit-data.json"), //Successfull DKG
+        clusterLock: data.includes("cluster-lock.json"), //Successfull DKG
+        validatorKeys: data.includes("validator_keys"), //Successfull DKG
+      };
     } catch (err) {
       log.error("Error checking Obol ENR: ", err);
       return {
@@ -965,8 +970,8 @@ export class ValidatorAccountManager {
         depositData: false,
         clusterLock: false,
         validatorKeys: false,
-        error: err
-      }
+        error: err,
+      };
     }
   }
 
@@ -1042,9 +1047,12 @@ export class ValidatorAccountManager {
       if (!charonClient) throw "Couldn't find CharonService";
 
       let contentResult = await this.nodeConnection.sshService.exec(charonClient.getListCharonFolderContentsCommand());
-      if (SSHService.checkExecError(contentResult) && contentResult.stderr) throw SSHService.extractExecError(contentResult);
+      if (SSHService.checkExecError(contentResult) && contentResult.stderr)
+        throw SSHService.extractExecError(contentResult);
       const content = contentResult.stdout;
-      const dkgCommand = charonClient.getDKGCommand(content.includes('cluster-definition.json') ? "" : input.match(/http(s)?:.*\/[0-9a-zA-z]*/)[0]);
+      const dkgCommand = charonClient.getDKGCommand(
+        content.includes("cluster-definition.json") ? "" : input.match(/http(s)?:.*\/[0-9a-zA-z]*/)[0]
+      );
 
       let result = await this.nodeConnection.sshService.exec(dkgCommand);
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -1058,10 +1066,9 @@ export class ValidatorAccountManager {
   async checkObolDKG() {
     try {
       //get all names of running docker containers
-      const result = await this.nodeConnection.sshService.exec("docker ps --format '{{.Names}}'")
-      const containerNames = result.stdout.split('\n');
-      if (containerNames.includes('dkg-container'))
-        return true;
+      const result = await this.nodeConnection.sshService.exec("docker ps --format '{{.Names}}'");
+      const containerNames = result.stdout.split("\n");
+      if (containerNames.includes("dkg-container")) return true;
       return false;
     } catch (error) {
       log.error("Error checking Status of Obol DKG: ", error);
@@ -1071,7 +1078,7 @@ export class ValidatorAccountManager {
 
   async getObolDKGLogs() {
     try {
-      const result = await this.nodeConnection.sshService.exec("docker logs dkg-container")
+      const result = await this.nodeConnection.sshService.exec("docker logs dkg-container");
       return result.stdout + result.stderr;
     } catch (error) {
       log.error("Error getting Obol DKG Logs: ", error);
@@ -1108,5 +1115,4 @@ export class ValidatorAccountManager {
       log.error("Error uploading Obol Backup: ", err);
     }
   }
-
 }
