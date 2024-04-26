@@ -1204,7 +1204,7 @@ export class ServiceManager {
           .join("/");
         await this.nodeConnection.sshService.exec(
           `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
+          (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
@@ -1213,7 +1213,7 @@ export class ServiceManager {
     }
   }
 
-  updateInfoForDependencies(task, services, newServices, ELInstalls, CLInstalls, PInstalls) {
+  updateInfoForDependencies(task, services, newServices, ELInstalls, CLInstalls, PInstalls, DVTInstalls) {
     if (task.data.executionClients?.length > 0) {
       task.data.executionClients = task.data.executionClients.map((ec) => {
         let id = ec.config ? ec.config.serviceID : ec.id;
@@ -1230,7 +1230,10 @@ export class ServiceManager {
         if (id) {
           return services.find((s) => s.id === id);
         }
-        id = CLInstalls.find((el) => el.service.id === cc.id).service.config.serviceID;
+        id = CLInstalls.find((el) => el.service.id === cc.id)?.service.config.serviceID;
+        if (!id) {
+          id = DVTInstalls.find((el) => el.service.id === cc.id).service.config.serviceID;
+        }
         return newServices.find((s) => s.id === id);
       });
     }
@@ -1261,18 +1264,18 @@ export class ServiceManager {
       t.service.config.serviceID = service.id;
       newServices.push(service);
     });
-    let SSVInstalls = tasks.filter((t) => t.service.service === "SSVNetworkService");
-    SSVInstalls.forEach((t) => {
+    let DVTInstalls = tasks.filter((t) => /SSVNetwork|Charon/.test(t.service.service));
+    DVTInstalls.forEach((t) => {
       this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls);
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
       newServices.push(service);
     });
     let VLInstalls = tasks.filter(
-      (t) => t.service.category === "validator" && t.service.service !== "SSVNetworkService"
+      (t) => t.service.category === "validator" && !/SSVNetwork|Charon/.test(t.service.service)
     );
     VLInstalls.forEach((t) => {
-      this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls);
+      this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls, undefined, DVTInstalls);
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
       newServices.push(service);
@@ -1288,7 +1291,7 @@ export class ServiceManager {
       return 0;
     });
     PInstalls.forEach((t) => {
-      this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls, PInstalls);
+      this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls, PInstalls, DVTInstalls);
       let service = this.getService(t.service.service, t.data);
 
       // Make sure dependencies are correctly set for MEVBoost
@@ -1682,7 +1685,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1691,7 +1694,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1700,7 +1703,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1718,7 +1721,7 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
           metricsExporterCommands[firstConsensusClient.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
         await this.manageServiceState(firstConsensusClient.id, "started");
