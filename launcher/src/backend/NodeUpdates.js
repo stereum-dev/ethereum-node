@@ -10,7 +10,7 @@ export class NodeUpdates {
   /**
    * runs the "upgrade-prep" role
    * executes do-release-upgrade
-   * runs the "switch_repos" role
+   * runs the "switch-repos" role
    * @returns {number}
    */
   async upgrade() {
@@ -24,7 +24,7 @@ export class NodeUpdates {
       await this.nodeConnection.restartServer();
       if (SSHService.checkExecError(result)) throw SSHService.extractExecError(result);
       log.info("Switching third party repos to noble numbat ...");
-      await this.nodeConnection.runPlaybook("switch_repos", { stereum_role: "switch_repos" });
+      await this.nodeConnection.runPlaybook("switch-repos", { stereum_role: "switch-repos" });
     } catch (err) {
       log.error(err);
       return 0;

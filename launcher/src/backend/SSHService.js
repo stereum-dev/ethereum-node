@@ -143,20 +143,27 @@ export class SSHService {
 
   async disconnect() {
     log.info("DISCONNECT: connectionInfo", this.connectionInfo.host);
-
-    return new Promise((resolve, reject) => {
-      try {
-        this.connected = false;
-        this.connectionInfo = null;
+    try {
+      this.connected = false;
+      this.connectionInfo = null;
+      let counter = 0;
+      while (this.connectionPool.some((conn) => conn._chanMgr?._count > 0 && counter < 30)) {
         this.connectionPool.forEach((conn) => {
-          conn.end();
+          if (conn._chanMgr?._count > 0) {
+            conn.end();
+          }
         });
-        this.connectionPool = [];
-        resolve(true);
-      } catch (error) {
-        reject(error);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        counter++;
       }
-    });
+      log.info("SSH Channels left open: ", this.connectionPool.map(c => c._chanMgr?._count).reduce((accumulator, currentValue) => {
+        return accumulator + currentValue
+      }, 0))
+      this.connectionPool = [];
+      return true;
+    } catch (error) {
+      return error;
+    }
   }
 
   async exec(command, useSudo = true) {
@@ -327,7 +334,7 @@ export class SSHService {
     if (this.connected) {
       try {
         if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
-        let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
+        let result = await this.exec(`cat ${sshDirPath}/authorized_keys`, false);
         if (SSHService.checkExecError(result)) {
           throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
         }
@@ -336,7 +343,6 @@ export class SSHService {
         log.error("Can't read authorized keys ", err);
         return [];
       }
-      console.log("authorizedKeys: ", authorizedKeys);
     } else {
       log.error("SSH not connected, can't read authorized keys");
     }
@@ -348,7 +354,7 @@ export class SSHService {
       if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
       let newKeys = keys.join("\n");
       let result = await this.exec(
-        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`
+        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`, false
       );
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));
