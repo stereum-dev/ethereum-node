@@ -72,7 +72,7 @@
                 <ExpertWindow
                   v-if="isExpertWindowOpen"
                   :item="expertModeClient"
-                  left-distance="left-[100px]"
+                  left-distance="left-[45px]"
                   bg-opacity="opacity-25"
                   @hide-modal="hideExpertMode(item)"
                 />
