@@ -106,7 +106,12 @@ export class ConfigManager {
   async readMultiSetup() {
     try {
       let result = await this.nodeConnection.sshService.exec(`cat ${this.multiSetupPath}`);
-      return result.stdout;
+      if (result) {
+        return result.stdout;
+      } else {
+        log.error("Result is undefined");
+        return undefined;
+      }
     } catch (err) {
       log.error("Can't read multiConfig file", err);
       return undefined;
@@ -131,7 +136,7 @@ export class ConfigManager {
       }
 
       // If there are no setups, create a new one
-      if (currentSetups.length === 0 || Object.keys(setupsObj).length === 0) {
+      if (!currentSetups || Object.keys(setupsObj).length === 0) {
         await this.createMultiSetupContent(serviceID, network, setupID);
         return;
       }
