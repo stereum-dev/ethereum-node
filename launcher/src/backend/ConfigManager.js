@@ -205,6 +205,29 @@ export class ConfigManager {
     }
   }
 
+  async getSetup(setupID) {
+    let currentSetups = await this.readMultiSetup();
+    let setupsObj = yaml.load(currentSetups);
+
+    return setupsObj[setupID];
+  }
+
+  async setSetup(setupID, setup) {
+    let currentSetups = await this.readMultiSetup();
+    let setupsObj = yaml.load(currentSetups);
+
+    setupsObj[setupID] = setup;
+
+    await this.writeMultiSetup(setupsObj);
+  }
+
+  async getSetups() {
+    let currentSetups = await this.readMultiSetup();
+    let setupsObj = yaml.load(currentSetups);
+
+    return setupsObj;
+  }
+
   // to do-s for setup
 
   // add setup

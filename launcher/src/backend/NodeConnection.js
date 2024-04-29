@@ -1385,6 +1385,7 @@ export class NodeConnection {
    * write a specific service configuration
    *
    * @param serviceConfiguration servicd configuration to write to the node
+   * @param {string|null} setupID - The setup ID. Defaults to null.
    */
   async writeServiceConfiguration(serviceConfiguration, setupID = null) {
     let configStatus;
