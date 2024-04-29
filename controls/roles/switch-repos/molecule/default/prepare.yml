@@ -21,8 +21,7 @@
 
     - name: Add Ansible PPA repository
       apt_repository:
-        repo_name: ppa-ansible-ansible
-        src: ppa:ansible/ansible
+        repo: ppa:ansible/ansible
         state: present
 
     - name: Update package lists after adding repository
