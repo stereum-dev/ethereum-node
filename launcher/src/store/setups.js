@@ -6,7 +6,6 @@ export const useSetups = defineStore("setups", {
     editSetups: [],
 
     //Setup Node Page
-    isServerViewActive: false,
     isConfigViewActive: false,
     isRenameSetupActive: false,
     selectedSetup: null,
