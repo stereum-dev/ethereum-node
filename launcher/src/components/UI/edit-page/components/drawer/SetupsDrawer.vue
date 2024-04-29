@@ -3,10 +3,10 @@
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-6 grid-rows-15 items-center gap-y-2"
   >
     <div
-      class="col-start-1 col-span-full row-start-1 row-end-7 w-full h-full bg-[#151618] rounded-md"
+      class="col-start-1 col-span-full row-start-1 row-end-7 w-full h-full bg-[#292e32] rounded-md"
     ></div>
     <div
-      class="col-start-1 col-span-full row-start-7 row-end-9 w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1"
+      class="col-start-1 col-span-full row-start-7 row-end-9 w-full h-full bg-[#292e32] rounded-md flex flex-col justify-between items-center p-1"
     >
       <span class="text-xs text-center text-gray-100 font-sans uppercase"
         >Create a setup</span
@@ -15,7 +15,7 @@
       <div class="w-full h-8 bg-teal-700 rounded-sm text-center">Create</div>
     </div>
     <div
-      class="col-start-1 col-span-full row-start-9 row-end-11 w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1"
+      class="col-start-1 col-span-full row-start-9 row-end-11 w-full h-full bg-[#292e32] rounded-md flex flex-col justify-between items-center p-1"
     >
       <span class="text-xs text-center text-gray-100 font-sans uppercase"
         >IMPORT A CONFIG</span
@@ -24,14 +24,14 @@
       <div class="w-full h-8 bg-teal-700 rounded-sm text-center">Import...</div>
     </div>
     <div
-      class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full bg-[#151618] rounded-md grid grid-cols-6 grid-rows-6 items-start gap-y-1 p-1"
+      class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full bg-[#292e32] rounded-md grid grid-cols-6 grid-rows-6 items-start gap-y-1 p-1"
     >
       <span
         class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-100 font-sans uppercase"
         >ADD A SERVER SERVICE</span
       >
       <div
-        class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full max-h-full overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center space-y-1"
+        class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full max-h-full overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center space-y-1 bg-[#151618]"
       >
         <div
           v-for="service in serverServices"
