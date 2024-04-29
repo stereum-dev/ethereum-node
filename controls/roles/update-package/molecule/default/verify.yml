@@ -3,14 +3,13 @@
   hosts: all
   gather_facts: false
   tasks:
-    - name: Check if specified packages are installed
-      package_facts:
-      register: installed_packages
+    - name: Get updated version of Git package
+      shell: dpkg -s git | grep '^Version:'
+      register: git_version_after
 
-    - name: Assert packages are upgraded
+    - name: Compare versions
       assert:
         that:
-          - git == 'latest'
-        fail_msg: "Package 'git' not upgraded to latest version."
-        msg: "Package 'git' is upgraded to the latest version."
+          - git_version.stdout != git_version_after.stdout
+        msg: "Git package version has not been updated."
 # EOF
