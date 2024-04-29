@@ -38,18 +38,26 @@ const props = defineProps({
 
 // find the matching network and its icon
 const matchedNetworkIcon = computed(() => {
-  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
+  const matchedNetwork = manageStore.networkList.find(
+    (network) => network.network === props.setup.network
+  );
   return matchedNetwork ? matchedNetwork.icon : "";
 });
 
 const setupType = computed(() => {
   let shortName;
-  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
+  const matchedNetwork = manageStore.networkList.find(
+    (network) => network.network === props.setup.network
+  );
 
-  if (matchedNetwork?.network === "mainnet") {
+  if (
+    matchedNetwork?.network === "mainnet" ||
+    matchedNetwork?.network === "holesky" ||
+    matchedNetwork?.network === "gnosis" ||
+    matchedNetwork?.network === "goerli" ||
+    matchedNetwork?.network === "sepolia"
+  ) {
     shortName = "ETH ";
-  } else if (matchedNetwork?.network === "holesky") {
-    shortName = "HOLESKY";
   } else if (matchedNetwork?.network === "optimism") {
     shortName = "OPT";
   }
