@@ -16,14 +16,19 @@ export const useNodeManage = defineStore("nodeManage", {
       },
 
       //End Custom Service
+
+      // Beginning of Drawer Box
+      isDrawerOpen: false,
+      isSetupsDrawerActive: true,
+      isServicesDrawerActive: false,
+
+      // End of Drawer Box
       externalConsensusSelectedService: "",
       reloadEditBody: false,
       isLineHidden: false,
       lines: [],
       hideConnectingLines: false,
       addConfigButton: false,
-
-      isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
       availableBlocks: [],

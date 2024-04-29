@@ -2248,8 +2248,8 @@ video {
   width: 100vw;
 }
 
-.w-\[50\%\]{
-  width: 50%;
+.w-44{
+  width: 11rem;
 }
 
 .min-w-\[100px\]{
@@ -3961,6 +3961,11 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#9fe66f\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(159 230 111 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
