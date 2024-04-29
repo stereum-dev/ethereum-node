@@ -46,11 +46,13 @@
       @mouseleave="footerStore.cursorLocation = ''"
     />
     <transition name="drawerSlide" mode="out-in">
-      <drawer-box @mouseleave="manageStore.isDrawerOpen = false">
+      <drawer-box v-if="manageStore.isDrawerOpen" @mouseleave="drawerMouseLeave">
         <template #default>
-          <SetupsDrawer v-if="manageStore.isSetupsDrawerActive" />
+          <SetupsDrawer
+            v-if="manageStore.isSetupsDrawerActive && !manageStore.isServicesDrawerActive"
+          />
           <ServicesDrawer
-            v-if="manageStore.isServicesDrawerActive"
+            v-if="manageStore.isServicesDrawerActive && !manageStore.isSetupsDrawerActive"
             :dragging="startDrag"
             @add-services="addServices"
           />
@@ -401,7 +403,19 @@ const confirmConnection = (item) => {
 // Drawer methods
 
 const openDrawer = () => {
-  manageStore.isDrawerOpen = true;
+  if (setupStore.isEditConfigViewActive) {
+    manageStore.isDrawerOpen = true;
+    manageStore.isServicesDrawerActive = true;
+  } else {
+    manageStore.isDrawerOpen = true;
+    manageStore.isSetupsDrawerActive = true;
+  }
+};
+
+const drawerMouseLeave = () => {
+  manageStore.isDrawerOpen = false;
+  manageStore.isServicesDrawerActive = false;
+  manageStore.isSetupsDrawerActive = false;
 };
 
 //Change Box methods
