@@ -204,6 +204,7 @@ const exportLogs = async (client) => {
 };
 
 const openLogPage = (item) => {
+  console.log("item", item);
   nodeStore.clientToLogs = item;
   isLogsPageActive.value = true;
 };

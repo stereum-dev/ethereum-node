@@ -63,7 +63,7 @@
                       </div>
                     </div>
                     <div class="icon-bg">
-                      <div class="seting-icon" @click.stop="expertModeHandler(item)">
+                      <div class="seting-icon" @click.stop="openLogPage(item)">
                         <img src="/img/icon/service-setting-icons/setting8.png" alt="icon" />
                       </div>
                     </div>
@@ -77,6 +77,7 @@
                   @hide-modal="hideExpertMode(item)"
                 />
               </div>
+              <LogsSection v-if="isLogsPageActive" @close-log="closeLogPage" @export-log="exportLogs" />
             </div>
             <div class="arrow-down" @click="scrollDown">
               <img src="/img/icon/control-page-icons/arrow-down-1.png" alt="icon" />
@@ -95,21 +96,23 @@
   </base-layout>
 </template>
 <script>
+import LogsSection from "../node-page/sections/LogsSection.vue";
 import { useStateHandler } from "@/composables/services";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
-
+import { saveAs } from "file-saver";
 import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useNodeStore } from "@/store/theNode";
 import { useFooter } from "@/store/theFooter";
 export default {
   components: {
     ControlDashboard,
     ControlPlugins,
     ControlAlert,
-
+    LogsSection,
     ExpertWindow,
   },
   data() {
@@ -120,6 +123,7 @@ export default {
       off: this.$t("controlPage.off"),
       on: this.$t("controlPage.on"),
       settingService: this.$t("controlPage.settingService"),
+      isLogsPageActive: false,
     };
   },
   create() {
@@ -134,6 +138,10 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+    }),
+    ...mapWritableState(useNodeStore, {
+      serviceLogs: "serviceLogs",
+      exportLogs: "exportLogs",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -169,6 +177,7 @@ export default {
     expertModeHandler(el) {
       this.expertModeClient = el;
       this.isExpertWindowOpen = true;
+      console.log("expertModeHandler", el);
     },
     expertModeHandlerAlert(validator) {
       this.expertModeClient = validator;
@@ -177,6 +186,48 @@ export default {
     stateHandler(item) {
       useStateHandler(item);
     },
+
+    //   const exportLogs = async (client) => {
+    // const currentService = nodeStore.serviceLogs.find(
+    //   (service) => service.config?.serviceID === client.config?.serviceID
+    // );
+
+    // const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
+
+    // // Select the data based on the condition
+    // const data = nodeStore.exportLogs ? currentService.logs.slice(-150).reverse() : currentService.logs.reverse();
+
+    // const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+    // const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+    // saveAs(blob, fileName);
+    //   };
+
+    openLogPage(item) {
+      this.isLogsPageActive = true;
+      this.serviceLogs = item;
+    },
+
+    closeLogPage() {
+      this.isLogsPageActive = false;
+      this.serviceLogs = null;
+    },
+
+    // async exportLogs() {
+    //   const currentService = this.serviceLogs.find(
+    //     (service) => service.config?.serviceID === this.serviceLogs.config?.serviceID
+    //   );
+
+    //   const fileName = this.exportLogs
+    //     ? `${this.serviceLogs.name}_150_logs.txt`
+    //     : `${this.serviceLogs.name}_all_logs.txt`;
+
+    //   const data = this.exportLogs ? currentService.logs.slice(-150).reverse() : currentService.logs.reverse();
+
+    //   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+
+    //   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+    //   saveAs(blob, fileName);
+    // },
   },
 };
 </script>
