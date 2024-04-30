@@ -31,11 +31,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @close-window="closeWindow"
     />
     <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
-    <ErrorModal
-      v-if="serverStore.errorMsgExists"
-      :description="serverStore.error"
-      @close-window="closeErrorDialog"
-    />
+    <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
   </div>
 </template>
 
@@ -138,7 +134,6 @@ const loginHandler = async () => {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
       await ControlService.logout();
-      serverStore.loginState = {};
       // serverStore.selectedServerToConnect
       await ControlService.stopShell();
       await login(loginAbortController.signal);
@@ -206,9 +201,7 @@ const serverHandler = (server) => {
     server.isSelected = true;
   }
 
-  serverStore.savedServers.savedConnections = [
-    ...serverStore.savedServers.savedConnections,
-  ];
+  serverStore.savedServers.savedConnections = [...serverStore.savedServers.savedConnections];
 };
 
 //Change password handling
@@ -241,8 +234,7 @@ const removeServerHandler = async () => {
   serverStore.isRemoveProcessing = true;
   serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
     (item) =>
-      item.host !== serverStore.selectedServerToConnect?.host &&
-      item.name !== serverStore.selectedServerToConnect?.name
+      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
   );
 
   await remove();
@@ -266,9 +258,7 @@ const readSSHKeyFile = async () => {
 const confirmDelete = async (key) => {
   serverStore.sshKeys = serverStore.sshKeys.filter((item) => item !== key);
   try {
-    await ControlService.writeSSHKeyFile(
-      serverStore.sshKeys.filter((item) => item !== key)
-    );
+    await ControlService.writeSSHKeyFile(serverStore.sshKeys.filter((item) => item !== key));
     await readSSHKeyFile();
   } catch (err) {
     console.log(err);

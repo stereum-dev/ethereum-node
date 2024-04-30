@@ -1,5 +1,4 @@
-![Stereum Ethereum Node Setup & Manager](https://github.com/stereum-dev/ethereum-node/assets/82385103/91bacf27-f9ff-486d-a02b-69676c082c0b)
-
+![Stereum Ethereum Node Setup & Manager](https://github.com/stereum-dev/ethereum-node/assets/82385103/f2e797cd-ef2c-4ebe-9ec1-6b3a495f0677)
 
 
 ---

@@ -8,15 +8,15 @@ export class NodeUpdates {
   }
 
   /**
-   * runs the "upgrade_prep" role
+   * runs the "upgrade-prep" role
    * executes do-release-upgrade
-   * runs the "switch_repos" role
+   * runs the "switch-repos" role
    * @returns {number}
    */
   async upgrade() {
     try {
       log.info("Preparing for Upgrade to noble numbat ...");
-      await this.nodeConnection.runPlaybook("upgrade_prep", { stereum_role: "upgrade_prep" });
+      await this.nodeConnection.runPlaybook("upgrade-prep", { stereum_role: "upgrade-prep" });
       log.info("Starting Upgrade to noble numbat ...");
       const result = await this.nodeConnection.sshService.exec(
         "do-release-upgrade -d -f DistUpgradeViewNonInteractive --allow-third-party"
@@ -24,7 +24,7 @@ export class NodeUpdates {
       await this.nodeConnection.restartServer();
       if (SSHService.checkExecError(result)) throw SSHService.extractExecError(result);
       log.info("Switching third party repos to noble numbat ...");
-      await this.nodeConnection.runPlaybook("switch_repos", { stereum_role: "switch_repos" });
+      await this.nodeConnection.runPlaybook("switch-repos", { stereum_role: "switch-repos" });
     } catch (err) {
       log.error(err);
       return 0;
@@ -180,23 +180,23 @@ export class NodeUpdates {
   }
 
   /**
-   * runs the "update_package" role, update of one or more specific packages
+   * runs the "update-package" role, update of one or more specific packages
    * @param {string[]} packages - Array of Packagenames to upgrade
    * @returns {number} - playbook runtime
    */
   async updatePackage(packages) {
     let packagesListString = packages.join(',');
     let extraVars = {
-      stereum_role: "update_package",
+      stereum_role: "update-package",
       packages_list: packagesListString,
     };
     try {
       let before = this.getTimeStamp();
-      await this.nodeConnection.runPlaybook("update_package", extraVars);
+      await this.nodeConnection.runPlaybook("update-package", extraVars);
       let after = this.getTimeStamp();
       return after - before;
     } catch (err) {
-      log.error("Error occurred running update_package:\n", err);
+      log.error("Error occurred running update-package:\n", err);
       return 0;
     }
   }
@@ -214,7 +214,7 @@ export class NodeUpdates {
 
       // Ensure the stdout ends with a newline character
       const outputWithNewline = stdout.endsWith("\n") ? stdout : stdout + "\n";
-      
+
       // Split the output into lines
       const lines = outputWithNewline.split("\n");
 
