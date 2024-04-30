@@ -26,7 +26,9 @@
       >
         <TransitionGroup name="fade" tag="div" class="w-full space-y-2">
           <div
-            v-for="(plugin, index) in configServices"
+            v-for="(plugin, index) in configServices.filter(
+              (item) => item.category !== undefined
+            )"
             :key="`${plugin.name} + ${index}`"
             class="w-full h-10 grid grid-cols-12 bg-[#32363A] rounded-md px-2"
           >
