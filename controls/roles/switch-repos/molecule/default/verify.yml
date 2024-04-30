@@ -10,7 +10,7 @@
         recurse: false
       register: third_party_repos
     - name: Check if 3rd-party repos have been switched from jammy to noble
-      ansible.builtin.shell: cat /etc/apt/sources.list.d/{{ item.name }}
+      ansible.builtin.shell: cat "{{ item.path }}"
       register: repo_content
       loop: "{{ third_party_repos.files }}"
       loop_control:
