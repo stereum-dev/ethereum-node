@@ -36,6 +36,7 @@ import YAML from "yaml";
 const axios = require("axios");
 
 const log = require("electron-log");
+const yaml = require("js-yaml");
 
 async function Sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1586,80 +1587,111 @@ export class ServiceManager {
   }
 
   async importConfig(configFiles, removedServices, checkPointSync) {
-    let consensusClients = [];
-    //remove existing config files
-    await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing Configuration`);
+    try {
+      let multiSetup = {};
+      let consensusClients = [];
+      //remove existing config files
+      await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Removed existing config files`, true);
 
-    //write config files
-    for (let file of configFiles.concat(removedServices)) {
-      await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
-      if (file.category === "consensus") {
-        consensusClients.push(file.id);
-      }
-    }
-    let services = await this.readServiceConfigurations();
-
-    for (let serviceToDelete of removedServices) {
-      let dependents = [];
-      services.forEach((service) => {
-        for (const dependency in service.dependencies) {
-          service.dependencies[dependency].forEach((s) => {
-            if (s.id === serviceToDelete.id) dependents.push(service);
-          });
+      //write config files
+      for (let file of configFiles.concat(removedServices)) {
+        if (file.id && file.content && file.service && file.category) {
+          await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
+          if (file.category === "consensus") {
+            consensusClients.push(file.id);
+          }
+        } else {
+          multiSetup = yaml.safeLoad(file.content);
         }
-      });
-      dependents.forEach((service) => {
-        this.removeDependencies(service, serviceToDelete);
-      });
-      services = services.filter((s) => s.id !== serviceToDelete.id);
-    }
+      }
 
-    //Add or Remove Checkpoint Sync
-    for (let service of services.filter((s) => consensusClients.includes(s.id))) {
-      this.updateSyncCommand(service, checkPointSync);
-    }
+      await this.configManager.writeMultiSetup(multiSetup);
 
-    // create stereum config file
-    await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
-    const settings = {
-      stereum_settings: {
-        settings: {
-          controls_install_path: "/opt/stereum",
-          updates: {
-            lane: "stable",
-            unattended: {
-              install: false,
+      let services = await this.readServiceConfigurations();
+
+      for (let serviceToDelete of removedServices) {
+        for (let setupId of Object.keys(multiSetup)) {
+          await this.configManager.deleteServiceFromSetup(serviceToDelete.id, setupId);
+        }
+        let dependents = [];
+        services.forEach((service) => {
+          for (const dependency in service.dependencies) {
+            service.dependencies[dependency].forEach((s) => {
+              if (s.id === serviceToDelete.id) dependents.push(service);
+            });
+          }
+        });
+        dependents.forEach((service) => {
+          this.removeDependencies(service, serviceToDelete);
+        });
+        services = services.filter((s) => s.id !== serviceToDelete.id);
+      }
+
+      let updatedMultiSetup = await this.configManager.readMultiSetup();
+
+      //Add or Remove Checkpoint Sync
+      for (let service of services.filter((s) => consensusClients.includes(s.id))) {
+        this.updateSyncCommand(service, checkPointSync);
+      }
+
+      // create stereum config file
+      await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+      const settings = {
+        stereum_settings: {
+          settings: {
+            controls_install_path: "/opt/stereum",
+            updates: {
+              lane: "stable",
+              unattended: {
+                install: false,
+              },
             },
           },
         },
-      },
-    };
-    await this.nodeConnection.sshService.exec(
-      `echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`
-    );
+      };
+      await this.nodeConnection.sshService.exec(
+        `echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`
+      );
+      await this.configManager.writeMultiSetup(yaml.load(updatedMultiSetup));
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Wrote multi setup`, true);
 
-    //prepare node
-    await this.nodeConnection.findStereumSettings();
-    await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path);
+      //prepare node
+      await this.nodeConnection.findStereumSettings();
+      await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path);
 
-    await Promise.all(
-      services.map(async (service) => {
-        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
-      })
-    );
-
-    await this.createKeystores(services);
-
-    // start service
-    const runRefs = [];
-    if (services[0] !== undefined) {
       await Promise.all(
-        services.map(async (service, index) => {
-          Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
+        services.map(async (service) => {
+          await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
         })
       );
+
+      await this.createKeystores(services);
+
+      // start service
+      const runRefs = [];
+      if (services[0] !== undefined) {
+        await Promise.all(
+          services.map(async (service, index) => {
+            Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
+          })
+        );
+      }
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Configuration Completed`, true);
+      return runRefs;
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Import Failed`,
+        false,
+        `Failed to import config: ${error}`
+      );
+      console.error(`Failed to import config: ${error}`);
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
     }
-    return runRefs;
   }
 
   async removeTekuLockFiles(serviceID) {
