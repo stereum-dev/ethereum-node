@@ -914,7 +914,8 @@
     "info": "server information",
     "ssh": "ssh key management",
     "osUpdate": "operating system update",
-    "settings": "server settings"
+    "settings": "server settings",
+    "twoFactorAuth": "two factor authentication"
   },
   "shellPage": {
     "title": "SECURE SHELL - SERVER CONNECTION ",
