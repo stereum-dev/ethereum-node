@@ -19,6 +19,9 @@
     - name: Assert repo contents
       ansible.builtin.assert:
         that:
-          - "'noble' in repo_content.stdout"
-          - "'jammy' not in repo_content.stdout"
+          - "'noble' in item.stdout"
+          - "'jammy' not in item.stdout"
+      loop: "{{ repo_content.results }}"
+      loop_control:
+        label: "{{ item.item.path }}"
 # EOF
