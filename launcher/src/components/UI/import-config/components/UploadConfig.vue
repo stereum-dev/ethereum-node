@@ -127,7 +127,7 @@ const handleFileUpload = async (event) => {
   let rootPath = "";
   for (const file of yamlFiles) {
     const data = await file.async("string");
-    let serviceVolume = YAML.parse(data).volumes.find((el) => el.includes(YAML.parse(data).id));
+    let serviceVolume = YAML.parse(data).volumes?.find((el) => el.includes(YAML.parse(data).id));
     let split = {};
 
     if (serviceVolume) {
@@ -151,13 +151,15 @@ const handleFileUpload = async (event) => {
 
   message.value = "";
 
+  const additionalSetups = installStore.unzippedData.filter((item) => {
+    return item.service === undefined && item.id === undefined && item.network === undefined;
+  });
+
   installStore.configServices = servicesStore.allServices
     .map((service) => {
-      const sameItems = installStore.unzippedData.find((item) => {
-        return item.service === service.service;
-      });
+      const sameItems = installStore.unzippedData.find((item) => item.service === service.service);
       if (!sameItems) {
-        return false;
+        return false; // Skip if no matching item found
       }
       return {
         ...sameItems,
@@ -166,7 +168,12 @@ const handleFileUpload = async (event) => {
         name: service.name,
       };
     })
-    .filter((item) => item !== false);
+    .filter((item) => item);
+
+  if (additionalSetups.length) {
+    installStore.configServices.push(...additionalSetups);
+  }
+
   isConfirmMessageActive.value = true;
   message.value = "STEREUM CONFIG RECOGNIZED - PRESS NEXT TO CONTINUE";
   if (installStore.configServices.length && isConfirmMessageActive.value) {

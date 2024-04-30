@@ -66,7 +66,8 @@ const currentStepComponent = computed(() => {
 });
 
 const installHandler = async () => {
-  router.push({ path: "/config/play" });
+  // router.push({ path: "/config/play" });
+
   try {
     const configData = {
       configServices: JSON.parse(JSON.stringify(installStore.configServices)),
@@ -76,7 +77,7 @@ const installHandler = async () => {
 
     await ControlService.importConfig(configData);
 
-    router.push({ path: "/node" });
+    // router.push({ path: "/node" });
   } catch (error) {
     console.log(error);
     router.push({ path: "/config/verify" });
