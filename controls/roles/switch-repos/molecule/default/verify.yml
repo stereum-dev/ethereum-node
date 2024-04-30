@@ -3,6 +3,12 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: Find all 3rd-party repos
+      ansible.builtin.find:
+        paths: /etc/apt/sources.list.d
+        patterns: "*"
+        recurse: false
+      register: third_party_repos
     - name: Check if 3rd-party repos have been switched from jammy to noble
       ansible.builtin.shell: cat /etc/apt/sources.list.d/{{ item.name }}
       register: repo_content
