@@ -23,6 +23,10 @@ export const useNodeManage = defineStore("nodeManage", {
       isServicesDrawerActive: false,
 
       // End of Drawer Box
+
+      //Import Setup Yaml File
+      isImportSetupYamlActive: false,
+
       externalConsensusSelectedService: "",
       reloadEditBody: false,
       isLineHidden: false,
