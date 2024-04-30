@@ -6,10 +6,13 @@
     - name: Get updated version of Git package
       shell: dpkg -s git | grep '^Version:'
       register: git_version_after
-
+    - name: Read old git-version from file
+      slurp:
+        src: /tmp/git_version.txt
+      register: git_version_file
     - name: Compare versions
       assert:
         that:
-          - git_version.stdout != git_version_after.stdout
+          - git_version_file.content != git_version_after.stdout
         msg: "Git package version has not been updated."
 # EOF
