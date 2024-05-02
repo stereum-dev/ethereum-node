@@ -18,8 +18,9 @@ export const useNodeManage = defineStore("nodeManage", {
       //End Custom Service
 
       // Beginning of Drawer Box
-      isDrawerOpen: false,
-      isSetupsDrawerActive: false,
+      isDrawerOpen: true,
+      isDrawerMenuActive: false,
+      isSetupsDrawerActive: true,
       isServicesDrawerActive: false,
 
       // End of Drawer Box

@@ -588,6 +588,9 @@ ipcMain.handle("copyExecutionJWT", async (event, args) => {
 ipcMain.handle("readMultiSetup", async () => {
   return await configManager.readMultiSetup();
 });
+ipcMain.handle("createMultiSetupContent", async (event, args) => {
+  return await configManager.createMultiSetupContent(args);
+});
 
 ipcMain.handle("fetchTranslators", async (event, args) => {
   return await serviceManager.fetchTranslators(args);

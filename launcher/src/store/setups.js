@@ -14,6 +14,10 @@ export const useSetups = defineStore("setups", {
     setupToRename: null,
     isEditConfigViewActive: false,
 
+    //Create Setup
+    selectedSetupNetwork: null,
+    isCreateSetupModalActive: false,
+
     //Import Setup YAML
 
     importedSetupFile: [],

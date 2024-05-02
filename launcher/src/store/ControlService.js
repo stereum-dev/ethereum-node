@@ -582,6 +582,9 @@ class ControlService extends EventEmitter {
   async readMultiSetup() {
     return this.promiseIpc.send("readMultiSetup");
   }
+  async createMultiSetupContent(args) {
+    return this.promiseIpc.send("createMultiSetupContent", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

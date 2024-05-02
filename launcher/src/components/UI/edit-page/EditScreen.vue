@@ -39,13 +39,19 @@
     <transition name="drawerSlide" mode="out-in">
       <drawer-box v-if="manageStore.isDrawerOpen" @mouseleave="drawerMouseLeave">
         <template #default>
-          <SetupsDrawer
-            v-if="manageStore.isSetupsDrawerActive && !manageStore.isServicesDrawerActive"
+          <DrawerMenu
+            v-if="manageStore.isDrawerMenuActive"
             @import-setup="importSetup"
-            @create-setup="createSetup"
+            @create-setup="openNetworkMenu"
+          />
+          <SetupsDrawer
+            v-else-if="manageStore.isSetupsDrawerActive"
+            @close-window="closeSetupModal"
+            @create-custom="createCustomSetup"
+            @get-network="getSetupNetwork"
           />
           <ServicesDrawer
-            v-if="manageStore.isServicesDrawerActive && !manageStore.isSetupsDrawerActive"
+            v-else-if="manageStore.isServicesDrawerActive"
             :dragging="startDrag"
             @add-services="addServices"
           />
@@ -121,6 +127,9 @@
         @confirm-import="manageStore.isImportSetupYamlActive = false"
       />
       <!-- End Import Setup -->
+      <!-- Start Create Setup -->
+      <CreateSetup v-if="serverStore.isCreateSetupModalActive" :network="selectedSetupNetwork" />
+      <!-- End Create Setup -->
     </TransitionGroup>
     <ChangeAnimation v-if="manageStore.disableConfirmButton" />
   </base-layout>
@@ -141,6 +150,7 @@ import AddCustom from "./components/modals/custom-service/AddCustom.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import ImportSetup from "./components/modals/setups/ImportSetup.vue";
+import CreateSetup from "./components/modals/setups/CreateSetup.vue";
 import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
@@ -154,6 +164,7 @@ import { useFooter } from "@/store/theFooter";
 import { useListKeys } from "@/composables/validators";
 import { useServers } from "@/store/servers";
 import { useSetups } from "../../../store/setups";
+import DrawerMenu from "./components/drawer/DrawerMenu.vue";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -180,6 +191,7 @@ const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
+const selectedSetupNetwork = ref("");
 
 // Computed & Watcher
 
@@ -404,8 +416,25 @@ const openDrawer = () => {
     manageStore.isServicesDrawerActive = true;
   } else {
     manageStore.isDrawerOpen = true;
-    manageStore.isSetupsDrawerActive = true;
+    manageStore.isDrawerMenuActive = true;
   }
+};
+
+const openNetworkMenu = () => {
+  manageStore.isDrawerMenuActive = false;
+  manageStore.isServicesDrawerActive = false;
+  manageStore.isSetupsDrawerActive = true;
+};
+const createCustomSetup = () => {
+  console.log("Create Custom Setup");
+};
+
+const getSetupNetwork = (network) => {
+  console.log("Get Setup Network", network);
+  selectedSetupNetwork.value = network.network;
+  manageStore.isDrawerOpen = false;
+  manageStore.isSetupsDrawerActive = false;
+  serverStore.isCreateSetupModalActive = true;
 };
 
 const drawerMouseLeave = () => {
@@ -719,10 +748,6 @@ const backToLogin = async () => {
   await ControlService.logout();
 };
 
-const createSetup = () => {
-  console.log("Create New Setup");
-};
-
 const importSetup = () => {
   console.log("Import Setup Yaml");
   manageStore.isImportSetupYamlActive = true;
@@ -747,6 +772,10 @@ const closeInfoModal = () => {
 const closeNukeModal = () => {
   isNukeModalOpen.value = false;
   manageStore.isLineHidden = false;
+};
+
+const closeSetupModal = () => {
+  setupStore.isCreateSetupModalActive;
 };
 </script>
 
