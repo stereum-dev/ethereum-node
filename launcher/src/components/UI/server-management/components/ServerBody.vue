@@ -10,7 +10,7 @@
       <UpdatePanel v-if="isUpdateActive" />
       <SshPanel v-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
       <SettingsPanel v-if="isSettingsActive" />
-      <twoFAPanel v-if="isTwoFactorAuthActive" />
+      <TwoFAPanel v-if="isTwoFactorAuthActive" />
     </div>
     <div
       class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
@@ -26,7 +26,7 @@ import LoginPanel from "./login-form/LoginPanel.vue";
 import DetailsPanel from "./server-details/DetailsPanel.vue";
 import UpdatePanel from "./server-update/UpdatePanel.vue";
 import SshPanel from "./ssh-management/SshPanel.vue";
-import twoFAPanel from "./two-factor-auth/twoFAPanel.vue";
+import TwoFAPanel from "./two-factor-auth/TwoFAPanel.vue";
 import SettingsPanel from "./server-settings/SettingsPanel.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
