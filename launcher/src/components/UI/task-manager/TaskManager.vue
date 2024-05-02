@@ -53,6 +53,7 @@ import { mapWritableState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import { useTaskManager } from "@/store/taskManager";
 import ControlService from "@/store/ControlService";
+import { useServers } from "../../../store/servers";
 export default {
   components: { SubTasks, DropTasks },
   data() {
@@ -82,6 +83,9 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+    }),
+    ...mapWritableState(useServers, {
+      allTasks: "allTasks",
     }),
     mainTaskIcon() {
       if (this.Tasks.some((task) => task.status === null)) {
@@ -141,6 +145,7 @@ export default {
   methods: {
     getTasks: async function () {
       const freshTasks = await ControlService.getTasks();
+      this.allTasks = freshTasks;
       this.Tasks = Array.isArray(freshTasks) ? freshTasks : this.Tasks;
       if (!this.showDropDownList) {
         this.displayingTasks = this.Tasks;

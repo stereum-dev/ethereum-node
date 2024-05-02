@@ -16,6 +16,7 @@
       </div>
       <div class="w-full h-full col-start-10 col-span-full row-start-1 row-span-1 flex justify-center items-center">
         <div
+          v-if="serverStore.isMajorUpgradeButtonActive"
           class="w-full h-full bg-[#336666] rounded-sm max-h-6 shadow-md shadow-black hover:bg-teal-700 active:shadow-none hover:scale-105 transition-all duration-100 ease-in-out cursor-pointer active:scale-100 flex justify-center items-center text-xs font-normal font-sans text-gray-200 uppercase p-1"
           @click="runUpdateToNoble"
         >
@@ -89,7 +90,7 @@
 <script setup>
 import UpdateRow from "./UpdateRow.vue";
 import ControlService from "@/store/ControlService";
-import { ref, onMounted, computed, reactive } from "vue";
+import { ref, onMounted, computed, reactive, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 
 const serverStore = useServers();
@@ -107,18 +108,35 @@ const stereumApp = ref({
 const numberOfUpdatablePackages = ref(null);
 const searchingForUpdatablePackages = ref(false);
 
+console.log("getAllTasks", serverStore.allTasks);
 const newUpdates = computed(() => serverStore.upgradablePackages);
 const onOff = computed(() => (stereumApp.value.autoUpdate == "on" ? "text-green-700" : "text-red-700"));
 
+//Watchers
+
+watchEffect(() => {
+  if (osVersionCurrent.value.includes("24.04")) {
+    serverStore.isMajorUpgradeButtonActive = false;
+  } else {
+    serverStore.isMajorUpgradeButtonActive = true;
+  }
+});
+
+//Lifecycle
 onMounted(async () => {
   await getUpgradablePackages();
   await getOsVersion();
   await getSettings();
 });
 
+//Methods
+
 const runUpdateToNoble = async () => {
   serverStore.isMajorUpgradeActive = true;
   await ControlService.upgradeToNoble();
+  setTimeout(() => {
+    serverStore.isMajorUpgradeButtonActive = false;
+  }, 3000);
 };
 
 const getSettings = async () => {

@@ -95,7 +95,9 @@ export const useServers = defineStore("servers", {
       serverUpdates: [],
       isUpdateProcessing: false,
       upgradablePackages: [],
-      isMajorUpgradeActive: true,
+      allTasks: [],
+      isMajorUpgradeActive: false,
+      isMajorUpgradeButtonActive: false,
 
       //Form
       addNewServer: false,
