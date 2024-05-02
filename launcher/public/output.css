@@ -891,6 +891,10 @@ video {
   left: 1.3rem;
 }
 
+.left-\[100px\]{
+  left: 100px;
+}
+
 .left-\[17rem\]{
   left: 17rem;
 }
@@ -901,10 +905,6 @@ video {
 
 .left-\[40\%\]{
   left: 40%;
-}
-
-.left-\[45px\]{
-  left: 45px;
 }
 
 .left-\[920px\]{
@@ -989,10 +989,6 @@ video {
 
 .top-\[7rem\]{
   top: 7rem;
-}
-
-.left-\[100px\]{
-  left: 100px;
 }
 
 .z-0{
@@ -2190,12 +2186,12 @@ video {
   width: 74px;
 }
 
-.w-\[8rem\]{
-  width: 8rem;
+.w-\[807px\]{
+  width: 807px;
 }
 
-.w-\[925px\]{
-  width: 925px;
+.w-\[8rem\]{
+  width: 8rem;
 }
 
 .w-fit{
@@ -2210,10 +2206,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-\[807px\]{
-  width: 807px;
 }
 
 .min-w-\[100px\]{
