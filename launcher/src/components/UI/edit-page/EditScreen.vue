@@ -128,7 +128,7 @@
       />
       <!-- End Import Setup -->
       <!-- Start Create Setup -->
-      <CreateSetup v-if="serverStore.isCreateSetupModalActive" :network="selectedSetupNetwork" />
+      <CreateSetup v-if="setupStore.isCreateSetupModalActive" :network="selectedSetupNetwork" />
       <!-- End Create Setup -->
     </TransitionGroup>
     <ChangeAnimation v-if="manageStore.disableConfirmButton" />
@@ -434,7 +434,7 @@ const getSetupNetwork = (network) => {
   selectedSetupNetwork.value = network.network;
   manageStore.isDrawerOpen = false;
   manageStore.isSetupsDrawerActive = false;
-  serverStore.isCreateSetupModalActive = true;
+  setupStore.isCreateSetupModalActive = true;
 };
 
 const drawerMouseLeave = () => {
@@ -775,7 +775,7 @@ const closeNukeModal = () => {
 };
 
 const closeSetupModal = () => {
-  setupStore.isCreateSetupModalActive;
+  setupStore.isCreateSetupModalActive = false;
 };
 </script>
 

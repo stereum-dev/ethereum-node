@@ -23,7 +23,7 @@ import ControlService from "@/store/ControlService";
 import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps({
-  network: Object,
+  network: String,
 });
 
 const emit = defineEmits(["closeWindow"]);
