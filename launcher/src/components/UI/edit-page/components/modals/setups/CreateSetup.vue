@@ -25,7 +25,6 @@ const props = defineProps({
   network: String,
 });
 
-const emit = defineEmits(["closeWindow"]);
 const setupStore = useSetups();
 const setupName = ref("");
 const setupType = ref("");
@@ -51,6 +50,8 @@ const confrim = async () => {
 };
 
 const closeWindow = () => {
-  emit("closeWindow");
+  setupName.value = "";
+  setupType.value = "";
+  setupStore.isCreateSetupModalActive = false;
 };
 </script>

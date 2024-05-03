@@ -1,10 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between items-center">
-    <EditHeader
-      @rename-setup="renameSetup"
-      @confirm-rename="confirmRename"
-      @select-setup="selectSetup"
-    />
+    <EditHeader @rename-setup="renameSetup" @confirm-rename="confirmRename" @select-setup="selectSetup" />
     <ConfigBody
       v-if="setupStore.isEditConfigViewActive"
       @on-drop="onDrop"
@@ -50,6 +46,7 @@ const emit = defineEmits([
   "renameSetup",
   "confirmRename",
   "selectSetup",
+  "deleteSetup",
 ]);
 
 //Pinia stores
@@ -89,12 +86,7 @@ watchEffect(
 
 const oneWayConnection = (start, end, startSocket, endSocket) => {
   if (start && end) {
-    let newLine = new LeaderLine(
-      start,
-      end,
-      { dash: { animation: true } },
-      { hide: true }
-    );
+    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
     newLine.position();
     newLine.setOptions({
       size: 2,
@@ -116,9 +108,7 @@ const lineDrawHandler = (item) => {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
             s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some(
-              (d) => d.id === item.config?.serviceID
-            )
+            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
         );
         dependencies.forEach((d) => {
           if (d.category === "consensus") {
@@ -135,12 +125,8 @@ const lineDrawHandler = (item) => {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
             (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some(
-                (d) => d.id === item.config?.serviceID
-              )) ||
-            item.config?.dependencies?.executionClients.some(
-              (d) => d.id === s.config?.serviceID
-            )
+              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
+            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -163,15 +149,9 @@ const lineDrawHandler = (item) => {
       case "validator": {
         const dependencies = manageStore.newConfiguration.filter(
           (s) =>
-            item.config?.dependencies?.executionClients.some(
-              (d) => d.id === s.config?.serviceID
-            ) ||
-            item.config?.dependencies?.consensusClients.some(
-              (d) => d.id === s.config?.serviceID
-            ) ||
-            s.config?.dependencies?.consensusClients.some(
-              (d) => d.id === item.config?.serviceID
-            )
+            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
+            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
+            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -269,7 +249,7 @@ const selectSetup = (setup) => {
 };
 
 const deleteSetup = (item) => {
-  console.log("deleteSetup", item);
+  emit("deleteSetup", item);
 };
 
 const connectSetup = (item) => {

@@ -14,6 +14,7 @@
           @switch-client="switchClientModalhandler"
           @modify-service="serviceModifyHandler"
           @delete-service="selectedServiceToRemove"
+          @delete-setup="deleteSetup"
           @confirm-consensus="confirmConsensusConnection"
           @info-modal="openInfoModal"
         />
@@ -43,6 +44,7 @@
             v-if="manageStore.isDrawerMenuActive"
             @import-setup="importSetup"
             @create-setup="openNetworkMenu"
+            @add-service="addServerServices"
           />
           <SetupsDrawer
             v-else-if="manageStore.isSetupsDrawerActive"
@@ -250,17 +252,6 @@ onUnmounted(() => {
 });
 
 // Methods
-
-const editSetupsPrepration = () => {
-  setupStore.editSetups = setupStore.allSetups.map((setup) => {
-    if (setup.isActive) {
-      setup.isActive = false;
-    }
-    return setup;
-  });
-  setupStore.isSetupMenuActive = false;
-  setupStore.selectedSetup = null;
-};
 
 const listKeys = async (forceRefresh) => {
   await useListKeys(forceRefresh);
@@ -475,6 +466,22 @@ const removeChangeHandler = (item) => {
 // Add service with double click
 
 const addServices = (service) => {
+  let item = useDeepClone(service);
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+    return;
+  } else {
+    item.id = manageStore.newConfiguration.length;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+    };
+    manageStore.newConfiguration.push(newItem);
+    clientToInstall.value = newItem;
+    clientToInstall.value.addPanel = true;
+  }
+};
+
+const addServerServices = (service) => {
   let item = useDeepClone(service);
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
@@ -723,6 +730,8 @@ const destroyNode = async () => {
     nukeModalComponent.value.loginBtn = false;
   }
 };
+
+// Confirm Changes methods
 const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
@@ -746,6 +755,23 @@ const backToLogin = async () => {
     location.reload();
   });
   await ControlService.logout();
+};
+
+// Setups methods
+const editSetupsPrepration = () => {
+  setupStore.editSetups = setupStore.allSetups.map((setup) => {
+    if (setup.isActive) {
+      setup.isActive = false;
+    }
+    return setup;
+  });
+  setupStore.isSetupMenuActive = false;
+  setupStore.selectedSetup = null;
+};
+
+const deleteSetup = async (item) => {
+  const setupId = item.setupId;
+  await ControlService.deleteSetup(setupId);
 };
 
 const importSetup = () => {
