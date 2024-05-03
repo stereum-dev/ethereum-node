@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'check-line-parent bg-[#393939] w-full h-5/6 rounded-md col-start-1 col-span-full pl-2 flex justify-start items-center',
+      'check-line-parent bg-[#393939] w-full h-full rounded-md col-start-1 col-span-full pl-2 flex justify-start items-center',
       { 'row-span-2': multiLine, 'row-span-1': !multiLine },
     ]"
   >
