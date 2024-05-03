@@ -20,7 +20,6 @@ import { onMounted, ref } from "vue";
 import CustomModal from "../CustomModal.vue";
 import { useSetups } from "@/store/setups";
 import ControlService from "@/store/ControlService";
-import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps({
   network: String,
@@ -40,7 +39,6 @@ onMounted(() => {
 
 const confrim = async () => {
   const data = {
-    id: uuidv4(),
     name: setupName.value,
     network: props.network,
     color: "blue",
@@ -48,7 +46,7 @@ const confrim = async () => {
     services: [],
   };
   console.log("confirm clicked", data);
-  await ControlService.createMultiSetupContent(data);
+  await ControlService.createSetup(data);
   setupStore.isCreateSetupModalActive = false;
 };
 

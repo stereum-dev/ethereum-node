@@ -582,8 +582,13 @@ class ControlService extends EventEmitter {
   async readMultiSetup() {
     return this.promiseIpc.send("readMultiSetup");
   }
-  async createMultiSetupContent(args) {
-    return this.promiseIpc.send("createMultiSetupContent", args);
+
+  async createSetup(args) {
+    return this.promiseIpc.send("createSetup", args);
+  }
+
+  async deleteSetup(args) {
+    return this.promiseIpc.send("deleteSetup", args);
   }
 }
 if (!instance) {

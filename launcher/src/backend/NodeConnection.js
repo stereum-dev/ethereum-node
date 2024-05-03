@@ -1399,7 +1399,7 @@ export class NodeConnection {
           serviceConfiguration.id +
           ".yaml"
       );
-      await this.configManager.addServiceIntoSetup(serviceConfiguration.id, serviceConfiguration.network, setupID);
+      if (setupID) await this.configManager.addServiceIntoSetup(serviceConfiguration, setupID);
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + serviceConfiguration.service + " config",
