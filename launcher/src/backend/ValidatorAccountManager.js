@@ -320,8 +320,9 @@ export class ValidatorAccountManager {
   async keymanagerAPI(service, method = "GET", apiPath, data, args = [], apiToken) {
     if (!apiPath.startsWith("/")) apiPath = "/" + apiPath;
     if (!apiToken) apiToken = await this.getApiToken(service);
+    const curlTag = await this.nodeConnection.ensureCurlImage();
     let command = [
-      "docker run --rm --network=stereum curlimages/curl",
+      "docker run --rm --network=stereum curlimages/curl:" + curlTag,
       `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${apiPath}`,
       `-X ${method.toUpperCase()}`,
@@ -509,9 +510,9 @@ export class ValidatorAccountManager {
           //Nimbus only supports Graffiti changes while running via their rest api
           let command = client.command.find((c) => c.includes("--rest-port="));
           let port = command.replace("--rest-port=", "");
-
+          const curlTag = await this.nodeConnection.ensureCurlImage();
           let CurlCommand = [
-            "docker run --rm --network=stereum curlimages/curl",
+            "docker run --rm --network=stereum curlimages/curl:" + curlTag,
             `curl http://stereum-${client.id}:${port}/nimbus/v1/graffiti`,
             `-X POST`,
             `-H 'Content-Type: text/plain'`,
@@ -840,8 +841,9 @@ export class ValidatorAccountManager {
 
       // For remote Web3Singer Instances (url is defined and serviceID is undefined)
       if (url) {
+        const curlTag = await this.nodeConnection.ensureCurlImage();
         let CurlCommand = [
-          "docker run --rm --network=stereum curlimages/curl",
+          "docker run --rm --network=stereum curlimages/curl:" + curlTag,
           `curl ${url}/api/v1/eth2/publicKeys`,
           `-X GET`,
           `-H 'Content-Type: application/json'`,
