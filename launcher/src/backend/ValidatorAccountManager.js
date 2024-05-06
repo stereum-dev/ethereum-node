@@ -322,8 +322,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${apiPath}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -1107,9 +1106,10 @@ export class ValidatorAccountManager {
       let charonClient = services.find((service) => service.service === "CharonService");
       if (!charonClient) throw "Couldn't find CharonService";
       const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
+      this.nodeConnection.sshService.exec(`rm -rf ${dataDir}`);
       const result = await this.nodeConnection.sshService.uploadDirectorySSH(path.normalize(localPath), dataDir);
       if (result) {
-        log.info("Obol Backup uownloaded from: ", localPath);
+        log.info("Obol Backup downloaded from: ", localPath);
       }
     } catch (err) {
       log.error("Error uploading Obol Backup: ", err);
