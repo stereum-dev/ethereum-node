@@ -1457,7 +1457,7 @@ export class Monitoring {
           // --target-peers (Default: 80) + 10%
           // See extra dealing with + 10% below!
           optnam = "--target-peers";
-          defval = 80;
+          defval = 100;
         } else if (clt.service == "PrysmBeaconService") {
           // --p2p-max-peers (Default: 45)
           optnam = "--p2p-max-peers";
