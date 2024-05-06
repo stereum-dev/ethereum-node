@@ -108,6 +108,8 @@ export class SSHService {
     return new Promise((resolve, reject) => {
       conn.on("error", (error) => {
         this.addingConnection = false;
+        this.connectionInfo = null;
+        authConnectionInfo = null;
         log.error(error);
         reject(error);
       });
@@ -166,6 +168,11 @@ export class SSHService {
   async submitVerification(verificationCode) {
     authConnectionInfo.authCode = verificationCode.toString();
     this.connect(authConnectionInfo, authCurrentWindow, verificationCode);
+  }
+
+  async cancelVerification() {
+    authConnectionInfo = null;
+    this.connectionInfo = null;
   }
 
   async disconnect() {

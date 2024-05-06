@@ -470,6 +470,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("submitVerification", args);
   }
 
+  async cancelVerification(args) {
+    return await this.promiseIpc.send("cancelVerification", args);
+  }
+
   async changePassword(args) {
     return await this.promiseIpc.send("changePassword", args);
   }

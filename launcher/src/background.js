@@ -504,6 +504,10 @@ ipcMain.handle("submitVerification", async (event, args) => {
   return await sshService.submitVerification(args)
 });
 
+ipcMain.handle("cancelVerification", async (event, args) => {
+  return await sshService.cancelVerification(args)
+});
+
 ipcMain.handle("changePassword", async (event, args) => {
   return await nodeConnection.sshService.changePassword(args);
 });

@@ -108,17 +108,19 @@ onUnmounted(() => {
 //Methods
 
 const openTwoFactorModal = () => {
+  cancelLoginHandler();
   isTwoFactorAuthActive.value = true;
 };
 
-const closeAndCancel = () => {
+const closeAndCancel = async () => {
   closeWindow();
-  cancelLoginHandler();
+  await ControlService.cancelVerification();
 };
 
 // authentification handling
 const submitAuthHandler = async (val) => {
   await ControlService.submitVerification(val);
+  loginHandler();
 };
 
 //Server Management Login Handler
@@ -228,6 +230,7 @@ const closeWindow = () => {
 const closeErrorDialog = () => {
   serverStore.errorMsgExists = false;
   serverStore.connectingProcess = false;
+  closeAndCancel();
 };
 
 const removeServerHandler = async () => {
