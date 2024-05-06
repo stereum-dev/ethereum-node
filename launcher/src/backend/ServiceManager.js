@@ -429,6 +429,9 @@ export class ServiceManager {
           filter = (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beaconNodes=";
         }
+        if (dependencies.some(d => d.service === "CharonService")) {
+          service.command.push("--distributed");
+        }
         break;
       case "Nimbus":
         if (service.service.includes("Beacon")) {
