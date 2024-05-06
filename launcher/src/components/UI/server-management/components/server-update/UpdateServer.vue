@@ -131,13 +131,13 @@ onMounted(async () => {
 
 //Methods
 
-const runUpdateToNoble = async () => {
+/*const runUpdateToNoble = async () => {
   serverStore.isMajorUpgradeActive = true;
   await ControlService.upgradeToNoble();
   setTimeout(() => {
     serverStore.isMajorUpgradeButtonActive = false;
   }, 3000);
-};
+};*/
 
 const getSettings = async () => {
   const settings = await ControlService.getStereumSettings();
