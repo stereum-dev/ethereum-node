@@ -1934,8 +1934,9 @@ export class NodeConnection {
 
       return "latest"
     } catch (error) {
-
+      // if pulling the latest image fails, try fetching the latest installed image
       try {
+        // get all installed curl images
         const fetchedImages = await this.sshService.exec("docker images curlimages/curl --format json");
         if (SSHService.checkExecError(fetchedImages)) {
           throw new Error(SSHService.extractExecError(fetchedImages));
@@ -1945,6 +1946,7 @@ export class NodeConnection {
         log.info(`installed images: ${images}`)
         if (images.length === 0) return "latest";
 
+        // get the latest installed image
         let latestImage = images[0];
         for (const image of images) {
           if (Date.parse(image.CreatedAt) > Date.parse(latestImage.CreatedAt)) {
