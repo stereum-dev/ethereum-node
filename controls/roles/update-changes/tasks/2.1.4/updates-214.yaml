@@ -8,7 +8,7 @@
 
 - name: Set CharonService id
   set_fact:
-    charon_service_id: "{{ charon_service_files.files[0].path | basename | regex_replace('([0-9]+)(\\.yaml)', '\\2') }}"
+    charon_service_id: "{{ charon_service_files.files[0].path | basename | split(".") | first }}"
   when: charon_service_files.matched > 0
 
 - debug:
