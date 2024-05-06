@@ -17,7 +17,9 @@
     read_whole_file: true
     contains: "{{ charon_service_id }}"
   register: service_config_files
+  when: charon_service_files.matched > 0
 
 - name: Include SDVT Changes
   include_tasks: sdvt_changes.yaml
   loop: "{{ service_config_files.files }}"
+  when: charon_service_files.matched > 0
