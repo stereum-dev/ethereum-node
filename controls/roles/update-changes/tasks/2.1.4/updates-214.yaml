@@ -11,12 +11,20 @@
     charon_service_id: "{{ charon_service_files.files[0].path | basename | regex_replace('([0-9]+).yaml', '\\1') }}"
   when: charon_service_files.matched > 0
 
+- debug:
+    var: charon_service_id
+  when: charon_service_files.matched > 0
+
 - name: Find service configs which contain CharonService ID
   find:
     paths: "/etc/stereum/services"
     read_whole_file: true
     contains: "{{ charon_service_id }}"
   register: service_config_files
+  when: charon_service_files.matched > 0
+
+- debug:
+    var: service_config_files
   when: charon_service_files.matched > 0
 
 - name: Include SDVT Changes
