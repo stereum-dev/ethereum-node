@@ -19,6 +19,7 @@
         @delete-setup="deleteSetup"
         @connect-setup="connectSetup"
         @info-modal="infoModal"
+        @open-configs="openConfigs"
       />
     </Transition>
   </div>
@@ -35,7 +36,7 @@ const props = defineProps({
   setup: Object,
 });
 
-const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal"]);
+const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfigs"]);
 
 //Store
 
@@ -67,6 +68,11 @@ const connectSetup = (item) => {
 
 const infoModal = (item) => {
   emit("infoModal", item);
+};
+
+const openConfigs = (item) => {
+  console.log("openConfigs 2222", item);
+  emit("openConfigs", item);
 };
 </script>
 <style scoped>

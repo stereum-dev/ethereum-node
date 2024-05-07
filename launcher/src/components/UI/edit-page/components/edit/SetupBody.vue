@@ -21,6 +21,7 @@
           @delete-setup="deleteSetup"
           @connect-setup="connectSetup"
           @info-modal="infoModal"
+          @open-configs="openConfigs"
         />
       </div>
     </div>
@@ -32,7 +33,7 @@ import SingleSetup from "./setups/SingleSetup.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "../../../../../store/setups";
 
-const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal"]);
+const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfigs"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
@@ -49,5 +50,10 @@ const connectSetup = (item) => {
 
 const infoModal = (item) => {
   emit("infoModal", item);
+};
+
+const openConfigs = (item) => {
+  console.log("openConfigs 3333", item);
+  emit("openConfigs", item);
 };
 </script>

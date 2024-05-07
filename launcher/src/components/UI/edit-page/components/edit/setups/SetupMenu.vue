@@ -34,7 +34,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal"]);
+const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfigs"]);
 
 // const t = i18n.global.t;
 
@@ -62,6 +62,11 @@ const infoModal = () => {
   footerStore.cursorLocation = "";
 };
 
+const openConfigs = () => {
+  console.log("openConfigs 1111", props.setup);
+  emit("openConfigs", props.setup);
+};
+
 // Now reference these functions in the icons array
 const icons = [
   {
@@ -81,6 +86,12 @@ const icons = [
     src: "/img/icon/edit-node-icons/service-info.png",
     tooltip: "Setup Informations",
     action: infoModal,
+  },
+  {
+    name: "open",
+    src: "/img/icon/edit-node-icons/link.png",
+    tooltip: "Configs Page",
+    action: openConfigs,
   },
 ];
 </script>
