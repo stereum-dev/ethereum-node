@@ -31,6 +31,8 @@
       check-text="Do you want to enable rate-limiting?"
       @update="rateLimiting"
     />
+    <!-- barcode and secret-key are passed as props to TwoFactoSetupBox and they have to bind ':' before theme to bind, at the moment is 
+    hardcoded to test -->
     <TwoFactoSetupBox
       v-if="TwoFactoSetupIsActive"
       barcode=""
@@ -42,7 +44,7 @@
     <TwoFactorBackup v-if="TwoFactoSetupIsActive" class="row-start-7" @save-backup="onSaveBackup" />
     <TwoFactorBtn
       v-if="twoFatorIsEnabled || TwoFactoSetupIsActive"
-      class="row-start-13 col-start-8"
+      :class="['row-start-13', 'col-start-8', TwoFactoSetupIsActive && !authStore.varificationCode ? 'disabled' : '']"
       btn-name="Setup"
       @btnClick="startSetup"
     />
@@ -58,25 +60,35 @@ import { ref, computed } from "vue";
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 
 const authStore = useTwoFactorAuth();
-
+//enable two factor authentication
 const twoFatorIsEnabled = ref(false);
+//setup two factor authentication
 const TwoFactoSetupIsActive = ref(false);
+//first check box value to enable time based authentication
 const isTimeBaseActive = ref(true);
+//second check box value to increase the original generation time limit
 const isOrgGenTimeLimit = ref(false);
+//third check box value to enable rate limiting
 const isRateLimiting = ref(true);
 
+//function to enable two factor authentication
 const enableTwoFactor = () => {
   twoFatorIsEnabled.value = true;
 };
+
+//setup button functions
 const startSetup = () => {
   if (twoFatorIsEnabled.value) {
+    //first check box value to enable time based authentication
     twoFatorIsEnabled.value = false;
     TwoFactoSetupIsActive.value = true;
   } else {
+    //setup two factor authentication
     console.log("Setup is already active");
   }
 };
 
+//title manager
 const titleManager = computed(() => {
   if (twoFatorIsEnabled.value) {
     return "2 FACTOR AUTHENTICATION CONFIGURATION";
@@ -86,26 +98,31 @@ const titleManager = computed(() => {
   return "2 FACTOR AUTHENTICATION";
 });
 
+//function to enable time based authentication
 const timaBaseActive = (value) => {
   isTimeBaseActive.value = value;
   console.log(value);
 };
 
+//function to increase the original generation time limit
 const orgGenTimeLimit = (value) => {
   isOrgGenTimeLimit.value = value;
   console.log(value);
 };
 
+//function to enable rate limiting
 const rateLimiting = (value) => {
   isRateLimiting.value = value;
   console.log(value);
 };
 
+//function to send the code
 const sendTheCode = () => {
   console.log("Code sent", authStore.varificationCode);
   authStore.varificationCode = "";
 };
 
+//function to save the backup
 const onSaveBackup = () => {
   console.log("Backup saved");
 };
@@ -122,5 +139,10 @@ const onSaveBackup = () => {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 </style>
