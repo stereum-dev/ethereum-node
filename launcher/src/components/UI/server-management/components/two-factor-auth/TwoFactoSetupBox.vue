@@ -9,12 +9,21 @@
       <div class="key-code w-[65%] bg-black h-full flex justify-center items-center rounded-lg text-gray-50">aaa</div>
     </div>
     <div
-      class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-2 row-span-1 bg-[#A0A0A0] rounded-lg flex justify-start items-center"
+      class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-2 row-span-1 bg-[#A0A0A0] rounded-lg flex justify-start items-center relative"
     >
       <span class="w-40 h-full text-xs text-black flex justify-normal items-center pl-2"
         >Your verification code is:</span
       >
-      <div class="key-code w-[65%] bg-black h-full flex justify-center items-center rounded-lg text-gray-50">aAa</div>
+      <input
+        type="text"
+        class="key-code w-[65%] bg-black h-full flex justify-center items-center rounded-lg text-gray-50 pl-2 text-xs"
+      />
+      <div
+        v-if="props.timeBased"
+        class="send-btn w-16 h-[95%] rounded-xl text-xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-0"
+      >
+        <span>send</span>
+      </div>
     </div>
     <span
       class="row-start-3 row-span-1 col-start-1 col-end-9 flex justify-start items-end pl-2 text-left text-2xs text-gray-100 w-full h-full"
@@ -31,5 +40,14 @@
     </div>
   </div>
 </template>
-
-<script setup></script>
+<script setup>
+const props = defineProps({ timeBased: { type: Boolean, default: true } });
+</script>
+<style scoped>
+.send-btn:active {
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+}
+.send-btn:active span {
+  transform: scale(0.95);
+}
+</style>
