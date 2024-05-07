@@ -4,6 +4,9 @@
     :class="[
       isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-600',
       manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : '',
+      setupStore.isEditConfigViewActive
+        ? 'animate__animated animate__fadeIn animate__faster'
+        : 'animate__animated animate__fadeOut animate__faster',
     ]"
   >
     <div

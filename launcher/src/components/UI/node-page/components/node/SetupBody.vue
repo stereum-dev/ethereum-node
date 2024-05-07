@@ -1,5 +1,12 @@
 <template>
-  <div class="w-full h-full max-h-full rounded-md grid grid-cols-24 grid-rows-12">
+  <div
+    class="w-full h-full max-h-full rounded-md grid grid-cols-24 grid-rows-12"
+    :class="
+      setupStore.isConfigViewActive
+        ? 'animate__animated animate__fadeOut animate__faster'
+        : 'animate__animated animate__fadeIn animate__faster'
+    "
+  >
     <div
       class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] flex justify-center items-center overflow-hidden"
     >

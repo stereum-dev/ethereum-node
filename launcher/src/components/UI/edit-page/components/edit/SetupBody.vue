@@ -1,7 +1,12 @@
 <template>
   <div
     class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden mt-1 bg-[#151618] relative"
-    :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
+    :class="[
+      manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : '',
+      setupStore.isEditConfigViewActive
+        ? 'animate__animated animate__fadeOut animate__faster'
+        : 'animate__animated animate__fadeIn animate__faster',
+    ]"
   >
     <div class="w-full h-full max-h-full rounded-md grid grid-cols-24 grid-rows-12">
       <div
@@ -53,7 +58,6 @@ const infoModal = (item) => {
 };
 
 const openConfigs = (item) => {
-  console.log("openConfigs 3333", item);
   emit("openConfigs", item);
 };
 </script>

@@ -1,6 +1,11 @@
 <template>
   <div
     class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-y-auto bg-[#151618] relative"
+    :class="
+      setupStore.isConfigViewActive
+        ? 'animate__animated animate__fadeIn animate__faster'
+        : 'animate__animated animate__fadeOut animate__faster'
+    "
   >
     <div
       class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-xs font-[400] font-sans"
@@ -60,6 +65,7 @@ import ClientSkeleton from "./clients/ClientSkeleton.vue";
 import { ref, watchEffect } from "vue";
 import { useNodeStore } from "@/store/theNode";
 import { useStateHandler, useRestartService } from "@/composables/services";
+import { useSetups } from "../../../../../store/setups";
 
 const emit = defineEmits([
   "openExpert",
@@ -82,6 +88,7 @@ const loadingClients = ref(false);
 // Store and router
 
 const nodeStore = useNodeStore();
+const setupStore = useSetups();
 
 watchEffect(() => {
   if (nodeStore.skeletonLoading) {
