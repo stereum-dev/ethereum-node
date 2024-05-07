@@ -56,11 +56,11 @@ test("lodestar validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  let geth = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
 
-  let lBC = serviceManager.getService("LodestarBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] });
+  let lBC = serviceManager.getService("LodestarBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] });
 
-  let lVC = serviceManager.getService("LodestarValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [lBC] });
+  let lVC = serviceManager.getService("LodestarValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [lBC] });
 
   //get latest versions
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
