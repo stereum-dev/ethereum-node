@@ -31,8 +31,8 @@
       ></span>
       <img
         v-else
-        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center border border-[#c7c9ca] shadow-sm shadow-black"
-        src="/img/icon/stereum-icons/stereum_logo_extern.png"
+        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
+        src="/img/icon/stereum-icons/stereum-logo.png"
         alt="Server View"
       />
       <span
