@@ -63,7 +63,6 @@ const infoModal = () => {
 };
 
 const openConfigs = () => {
-  console.log("openConfigs 1111", props.setup);
   emit("openConfigs", props.setup);
 };
 

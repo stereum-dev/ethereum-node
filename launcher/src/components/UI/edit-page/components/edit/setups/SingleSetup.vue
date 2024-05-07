@@ -71,7 +71,6 @@ const infoModal = (item) => {
 };
 
 const openConfigs = (item) => {
-  console.log("openConfigs 2222", item);
   emit("openConfigs", item);
 };
 </script>
