@@ -57,12 +57,12 @@ test("nimbus validator import", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install geth
-  let geth = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
 
   //install nimbus
-  let nimbusBC = serviceManager.getService("NimbusBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] })
+  let nimbusBC = serviceManager.getService("NimbusBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
 
-  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
+  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
