@@ -13,8 +13,10 @@
         class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 auto-rows-fr scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
       >
         <SingleSetup
-          v-for="setup in setupStore.editSetups"
-          :key="setup.name"
+          v-for="setup in setupStore.editSetups.filter(
+            (s) => s.setupName !== 'commonServices'
+          )"
+          :key="setup.setupName"
           :setup="setup"
           @delete-setup="deleteSetup"
           @connect-setup="connectSetup"

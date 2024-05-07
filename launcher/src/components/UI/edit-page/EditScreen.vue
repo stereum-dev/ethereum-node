@@ -4,7 +4,10 @@
 
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
-        <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
+        <SidebarSection
+          @network-modal="displaySwitchNetwork"
+          @nuke-node="openNukeNodeModal"
+        />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <EditBody
@@ -20,10 +23,16 @@
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection @change-connection="serviceModifyHandler" @delete-service="selectedServiceToRemove" />
+        <ServiceSection
+          @change-connection="serviceModifyHandler"
+          @delete-service="selectedServiceToRemove"
+        />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <ChangesSection @remove-change="removeChangeHandler" @confirm-changes="confirmHandler" />
+        <ChangesSection
+          @remove-change="removeChangeHandler"
+          @confirm-changes="confirmHandler"
+        />
       </div>
     </div>
     <!-- End Node main layout -->
@@ -130,7 +139,10 @@
       />
       <!-- End Import Setup -->
       <!-- Start Create Setup -->
-      <CreateSetup v-if="setupStore.isCreateSetupModalActive" :network="selectedSetupNetwork" />
+      <CreateSetup
+        v-if="setupStore.isCreateSetupModalActive"
+        :network="selectedSetupNetwork"
+      />
       <!-- End Create Setup -->
     </TransitionGroup>
     <ChangeAnimation v-if="manageStore.disableConfirmButton" />
@@ -209,7 +221,8 @@ watch(
 );
 
 onMounted(() => {
-  if (manageStore.currentNetwork.id) manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
+  if (manageStore.currentNetwork.id)
+    manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
   manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
   if (!manageStore.architecture) setArchitecture();
 });
@@ -320,7 +333,9 @@ const switchClientConfirm = (properties) => {
         executionClients: [],
         consensusClients: [],
         otherServices: [],
-        checkpointURL: properties.checkPointSyncUrl ? properties.checkPointSyncUrl : false,
+        checkpointURL: properties.checkPointSyncUrl
+          ? properties.checkPointSyncUrl
+          : false,
       },
     },
   });
@@ -357,7 +372,9 @@ const serviceModifyHandler = (item) => {
 const hideModifyModal = () => {
   manageStore.isLineHidden = false;
   isModifyModalOpen.value = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = JSON.parse(
+    JSON.stringify(serviceStore.installedServices)
+  );
 };
 const confirmConsensusConnection = (item) => {
   clientToConnect.value.isNotConnectedToConsensus = false;
@@ -449,7 +466,9 @@ const removeChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
-      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+      manageStore.newConfiguration = JSON.parse(
+        JSON.stringify(serviceStore.installedServices)
+      );
     }
 
     if (item.content === "MODIFY") {
@@ -467,7 +486,10 @@ const removeChangeHandler = (item) => {
 
 const addServices = (service) => {
   let item = useDeepClone(service);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -483,7 +505,10 @@ const addServices = (service) => {
 
 const addServerServices = (service) => {
   let item = useDeepClone(service);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -513,7 +538,10 @@ const onDrop = (event) => {
   const allServices = useDeepClone(serviceStore.allServices);
   const itemId = event.dataTransfer.getData("itemId");
   let item = allServices.find((item) => item.id == itemId);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -542,7 +570,9 @@ const addServiceHandler = (item) => {
     executionClients: item.executionClients,
     consensusClients: item.consensusClients,
     otherServices: item.otherServices,
-    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+    relays: item.relays
+      .map((r) => r[manageStore.configNetwork.network.toLowerCase()])
+      .join(),
     checkpointURL: item.checkPointSyncUrl || false,
     //CustomService Attributes
     image: item.image,
@@ -589,7 +619,9 @@ const cancelInstallation = (item) => {
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = JSON.parse(
+    JSON.stringify(serviceStore.installedServices)
+  );
 };
 
 // Network switch methods
@@ -602,7 +634,9 @@ const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
   if (!(network.network == manageStore.configNetwork.network)) {
     if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
-      let index = manageStore.confirmChanges.findIndex((j) => j.content.includes("CHANGE NETWORK"));
+      let index = manageStore.confirmChanges.findIndex((j) =>
+        j.content.includes("CHANGE NETWORK")
+      );
       if (manageStore.currentNetwork.network === network.network) {
         manageStore.confirmChanges.splice(index, 1);
       } else {
@@ -635,6 +669,11 @@ const openNukeNodeModal = async () => {
 const selectedServiceToRemove = (item) => {
   manageStore.isLineHidden = true;
   item.displayPluginMenu = false;
+  const commonServiceExistance = setupStore.serverServices.includes(item.service);
+  let commonService = setupStore.editSetups.find((s) => {
+    return s.setupName === "commonServices";
+  });
+  console.log("commonService", commonService);
   if (
     item.isNotConnectedToConsensus ||
     item.isNotConnectedToValidator ||
@@ -654,9 +693,13 @@ const selectedServiceToRemove = (item) => {
     content: "DELETE",
     contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
-    setupId: setupStore.selectedSetup?.setupId,
+    setupId: commonServiceExistance
+      ? commonService.setupId
+      : setupStore.selectedSetup?.setupId,
   };
-  const itemExists = manageStore.confirmChanges.some((e) => e.id === item.config.serviceID && e.content === "DELETE");
+  const itemExists = manageStore.confirmChanges.some(
+    (e) => e.id === item.config.serviceID && e.content === "DELETE"
+  );
   if (!itemExists) {
     manageStore.confirmChanges.push(confirmDelete);
   }
@@ -673,39 +716,31 @@ const destroyNode = async () => {
     let condition = true;
     await ControlService.clearTasks();
     ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
-    var uxtStart = Math.floor(Date.now() / 1000);
-    var secMax = 30; // wait max X seconds to finish destroy process
+    const uxtStart = Math.floor(Date.now() / 1000);
+    const secMax = 30; // wait max X seconds to finish destroy process
     while (condition) {
-      var secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
+      const secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
       if (secElapsed >= secMax) {
         console.log("abort -> timeout -> secElapsed", secElapsed);
         await ControlService.clearTasks();
         break;
       }
-      var tasks = await ControlService.getTasks();
-      var task = tasks.findLast((t) => t.name.includes("Delete Node"));
-      var subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
-      var status = task && task.hasOwnProperty("status") ? task.status : null;
-      // console.log("tasks => ", tasks);
-      // console.log("task => ", task);
-      // console.log("subtasks => ", subtasks);
-      // console.log("status => ", status);
-      var myresult = [];
+      const tasks = await ControlService.getTasks();
+      const task = tasks.findLast((t) => t.name.includes("Delete Node"));
+      const subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
+      let status = task && task.hasOwnProperty("status") ? task.status : null;
+      const myresult = [];
       myresult.push("nuke node executed (ok)");
       if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
         myresult.push("gathering facts (ok)");
-        for (var i = 0; i < subtasks.length; i++) {
-          var subtask = subtasks[i];
+        for (const element of subtasks) {
+          const subtask = element;
           myresult.push(subtask.name + " (" + subtask.status + ")");
         }
-      } else {
-        if (secElapsed >= 2) {
-          myresult.push("gathering facts (ok)");
-        }
-        // console.log("waiting for subtasks");
+      } else if (secElapsed >= 2) {
+        myresult.push("gathering facts (ok)");
       }
       nukeModalComponent.value.nukeData = myresult;
-      // Intentionally as last check since last subtask could be retrieved at exact same frame
       if (status != null) {
         status = status === "success" ? "ok" : status;
         myresult.push("node nuked (" + status + ")");
@@ -734,9 +769,13 @@ const destroyNode = async () => {
 // Confirm Changes methods
 const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
-  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+  await ControlService.handleServiceChanges(
+    JSON.parse(JSON.stringify(manageStore.confirmChanges))
+  );
   setTimeout(() => {
-    manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+    manageStore.newConfiguration = JSON.parse(
+      JSON.stringify(serviceStore.installedServices)
+    );
     manageStore.confirmChanges = [];
     manageStore.disableConfirmButton = false;
     manageStore.isLineHidden = false;
@@ -787,7 +826,9 @@ const closeNetworkModal = () => {
 const closeSwitchModal = () => {
   isSwitchModalOpen.value = false;
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = JSON.parse(
+    JSON.stringify(serviceStore.installedServices)
+  );
 };
 
 const closeInfoModal = () => {

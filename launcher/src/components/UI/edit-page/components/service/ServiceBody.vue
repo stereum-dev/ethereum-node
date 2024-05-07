@@ -4,7 +4,7 @@
     :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
   >
     <div
-      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 border border-gray-950 text-gray-300 rounded-t-[5px] z-10"
+      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 border border-gray-950 text-gray-300 rounded-t-[5px]"
       :class="[
         setupStore.getBGColor(setupStore.selectedSetup?.color),
         setupStore.getTextColor(setupStore.selectedSetup?.color),
