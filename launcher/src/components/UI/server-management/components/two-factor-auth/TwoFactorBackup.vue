@@ -5,13 +5,20 @@
     <span class="w-1/2 text-sm uppercase text-black">BACKUP</span>
     <div
       class="backup-btn w-1/2 h-full rounded-xl text-sm uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer"
+      @click="saveBackup"
     >
       <span>save...</span>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const emit = defineEmits(["saveBackup"]);
+
+const saveBackup = () => {
+  emit("saveBackup");
+};
+</script>
 
 <style scoped>
 .backup-btn:active {

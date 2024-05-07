@@ -1756,6 +1756,10 @@ video {
   height: 90px;
 }
 
+.h-\[95\%\]{
+  height: 95%;
+}
+
 .h-fit{
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -1768,18 +1772,6 @@ video {
 
 .h-screen{
   height: 100vh;
-}
-
-.h-3\/4{
-  height: 75%;
-}
-
-.h-\[90\%\]{
-  height: 90%;
-}
-
-.h-\[95\%\]{
-  height: 95%;
 }
 
 .max-h-10{

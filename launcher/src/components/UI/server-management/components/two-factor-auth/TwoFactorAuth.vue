@@ -22,16 +22,24 @@
       class="row-start-3"
       check-text="Increase the original generation time limit? This will permit a time skew of up to 4 minutes!"
       multi-line="true"
+      @update="orgGenTimeLimit"
     />
     <TwoFactorCheckLine
       v-if="twoFatorIsEnabled"
       default-checked="true"
       class="row-start-5"
       check-text="Do you want to enable rate-limiting?"
+      @update="rateLimiting"
     />
-    <!-- <span v-if="TwoFactoSetupIsActive" class="top-ttl row-start-6">2 FACTOR SETUP</span> -->
-    <TwoFactoSetupBox v-if="TwoFactoSetupIsActive" :time-based="isTimeBaseActive" class="row-start-2" />
-    <TwoFactorBackup v-if="TwoFactoSetupIsActive" class="row-start-7" />
+    <TwoFactoSetupBox
+      v-if="TwoFactoSetupIsActive"
+      barcode=""
+      secret-key="test"
+      :time-based="isTimeBaseActive"
+      class="row-start-2"
+      @send-code="sendTheCode"
+    />
+    <TwoFactorBackup v-if="TwoFactoSetupIsActive" class="row-start-7" @save-backup="onSaveBackup" />
     <TwoFactorBtn
       v-if="twoFatorIsEnabled || TwoFactoSetupIsActive"
       class="row-start-13 col-start-8"
@@ -47,17 +55,26 @@ import TwoFactorCheckLine from "./TwoFactorCheckLine.vue";
 import TwoFactoSetupBox from "./TwoFactoSetupBox";
 import TwoFactorBackup from "./TwoFactorBackup.vue";
 import { ref, computed } from "vue";
+import { useTwoFactorAuth } from "@/store/twoFactorAuth";
+
+const authStore = useTwoFactorAuth();
 
 const twoFatorIsEnabled = ref(false);
 const TwoFactoSetupIsActive = ref(false);
 const isTimeBaseActive = ref(true);
+const isOrgGenTimeLimit = ref(false);
+const isRateLimiting = ref(true);
 
 const enableTwoFactor = () => {
   twoFatorIsEnabled.value = true;
 };
 const startSetup = () => {
-  twoFatorIsEnabled.value = false;
-  TwoFactoSetupIsActive.value = true;
+  if (twoFatorIsEnabled.value) {
+    twoFatorIsEnabled.value = false;
+    TwoFactoSetupIsActive.value = true;
+  } else {
+    console.log("Setup is already active");
+  }
 };
 
 const titleManager = computed(() => {
@@ -72,6 +89,25 @@ const titleManager = computed(() => {
 const timaBaseActive = (value) => {
   isTimeBaseActive.value = value;
   console.log(value);
+};
+
+const orgGenTimeLimit = (value) => {
+  isOrgGenTimeLimit.value = value;
+  console.log(value);
+};
+
+const rateLimiting = (value) => {
+  isRateLimiting.value = value;
+  console.log(value);
+};
+
+const sendTheCode = () => {
+  console.log("Code sent", authStore.varificationCode);
+  authStore.varificationCode = "";
+};
+
+const onSaveBackup = () => {
+  console.log("Backup saved");
 };
 </script>
 <style scoped>
