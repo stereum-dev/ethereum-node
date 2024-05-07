@@ -2,11 +2,11 @@
   <div
     class="col-start-7 col-span-3 flex flex-col justify-between items-center bg-[#151618] border h-full border-gray-600 rounded-md px-2 py-1"
     style="cursor: default"
-    @mouseenter="footerStore.cursorLocation = `${currIs} ${getNetworkName}`"
+    @mouseenter="footerStore.cursorLocation = `${currIs} ${network}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
-      v-if="setupStore.isConfigViewActive"
+      v-if="setupStore.isConfigViewActive || setupStore.isEditConfigViewActive"
       class="w-full self-start text-xs font-semibold text-teal-700"
     >
       {{ t("networkDetails.currentNet") }}
@@ -18,12 +18,17 @@
       TOTAL SETUPS ON SERVER
     </div>
     <div
-      v-if="setupStore.isConfigViewActive"
+      v-if="setupStore.isConfigViewActive || setupStore.isEditConfigViewActive"
       class="w-full flex justify-center items-center"
     >
-      <img v-if="getNetworkIcon" :src="getNetworkIcon" alt="Networks" class="w-5 mr-1" />
+      <img
+        v-if="getSetupNetwork"
+        :src="getSetupNetwork?.icon"
+        alt="Networks"
+        class="w-5 mr-1"
+      />
       <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
-        getNetworkName
+        getSetupNetwork?.name
       }}</span>
     </div>
     <div v-else class="w-full flex justify-center items-center">
@@ -35,9 +40,8 @@
 </template>
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, computed } from "vue";
+import { computed } from "vue";
 import { useFooter } from "@/store/theFooter";
-import { useDeepClone } from "@/composables/utils";
 import i18n from "@/includes/i18n";
 import { useSetups } from "@/store/setups";
 
@@ -48,27 +52,23 @@ const currIs = t("networkDetails.currIs");
 const footerStore = useFooter();
 const manageStore = useNodeManage();
 const setupStore = useSetups();
-const network = ref(null);
-
-const getNetworkName = computed(() => {
-  return manageStore.currentNetwork?.name;
-});
-
-const getNetworkIcon = computed(() => {
-  return manageStore.currentNetwork?.icon;
-});
 
 const totalNetworks = computed(() => {
   let total = 0;
   total = setupStore.allSetups
-    .filter((setup) => setup.network !== "default")
+    .filter((setup) => setup.setupName !== "commonServices")
     .map((setup) => setup).length;
 
   return total;
 });
 
-onMounted(() => {
-  network.value = useDeepClone(manageStore.currentNetwork);
+const getSetupNetwork = computed(() => {
+  let setupNet;
+  const net = setupStore.selectedSetup?.network;
+  if (net) {
+    setupNet = manageStore.networkList.find((network) => network.network === net);
+  }
+  return setupNet;
 });
 </script>
 
