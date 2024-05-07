@@ -38,32 +38,43 @@ import ClientLayout from "./ClientLayout.vue";
 
 import GeneralMenu from "./GeneralMenu.vue";
 import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
 // Variables & Constants
 
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
+const emit = defineEmits([
+  "deleteService",
+  "switchClient",
+  "modifyService",
+  "infoModal",
+  "mouseOver",
+  "mouseLeave",
+]);
 
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
 // Computed & Watchers
 
 const getValidators = computed(() => {
-  let service;
-  service = manageStore.newConfiguration
-    .filter((e) => e.category == "validator")
-    .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
+  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
+    return [];
+  }
 
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
+  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
+
+  const services = manageStore.newConfiguration
+    .filter(
+      (s) => s.category === "validator" && selectedServiceIds.includes(s.config.serviceID)
+    )
+    .sort((a, b) => {
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
+
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
     });
-  return service;
+
+  return services;
 });
 
 const getDynamicClasses = (item) => {

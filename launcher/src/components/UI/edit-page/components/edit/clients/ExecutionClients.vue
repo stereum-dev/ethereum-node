@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full col-start-1 col-end-2 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative">
+  <div
+    class="w-full col-start-1 col-end-2 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative"
+  >
     <div
       v-for="item in getExecutions"
       :key="item"
@@ -36,26 +38,39 @@ import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
 import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
-const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
+const emit = defineEmits([
+  "deleteService",
+  "switchClient",
+  "connectClient",
+  "infoModal",
+  "mouseOver",
+  "mouseLeave",
+]);
 const manageStore = useNodeManage();
 const serviceStore = useServices();
+const setupStore = useSetups();
 
 const getExecutions = computed(() => {
-  return manageStore.newConfiguration
-    .filter((e) => e.category == "execution")
-    .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
+  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
+    return [];
+  }
 
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
+  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
+
+  const services = manageStore.newConfiguration
+    .filter(
+      (s) => s.category === "execution" && selectedServiceIds.includes(s.config.serviceID)
+    )
+    .sort((a, b) => {
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
+
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
     });
+
+  return services;
 });
 
 // Methods

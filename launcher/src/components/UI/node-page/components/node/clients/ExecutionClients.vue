@@ -45,6 +45,7 @@ import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { computed, ref } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
 //Emits
 const emit = defineEmits([
@@ -64,14 +65,26 @@ const showPruningModal = ref(false);
 //Stores
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
+const setupStore = useSetups();
 
-//Computed & Watchers
 const getExecutionServices = computed(() => {
-  return serviceStore.installedServices
-    .filter((e) => e.category === "execution")
-    .sort((a, b) => a.name.localeCompare(b.name));
-});
+  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
+    return [];
+  }
 
+  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
+
+  const services = serviceStore.installedServices
+    .filter((s) => s.category === "execution" && selectedServiceIds.includes(s.config.serviceID))
+    .sort((a, b) => {
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
+
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
+    });
+
+  return services;
+});
 //Methods
 const mouseOver = (item) => {
   emit("mouseOver", item);

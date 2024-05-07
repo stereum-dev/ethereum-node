@@ -41,6 +41,7 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
+import { useSetups } from "../../../../../../store/setups";
 
 const emit = defineEmits([
   "openExpert",
@@ -55,11 +56,28 @@ const emit = defineEmits([
 //Refs
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
+const setupStore = useSetups();
 
-//Computed & Watchers
-const getConsensusServices = computed(() =>
-  serviceStore.installedServices.filter((e) => e.category === "consensus").sort((a, b) => a.name.localeCompare(b.name))
-);
+const getConsensusServices = computed(() => {
+  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
+    return [];
+  }
+
+  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
+
+  const services = serviceStore.installedServices
+    .filter(
+      (s) => s.category === "consensus" && selectedServiceIds.includes(s.config.serviceID)
+    )
+    .sort((a, b) => {
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
+
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
+    });
+
+  return services;
+});
 //Methods
 const mouseOver = (item) => {
   emit("mouseOver", item);
