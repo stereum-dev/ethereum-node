@@ -82,7 +82,7 @@
         >
           <img
             class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start bg-gray-100"
-            src="/img/icon/stereum-icons/stereum_logo_extern.png"
+            src="/img/icon/stereum-icons/stereum-logo.png"
             alt="Node Server View"
           />
           <span
@@ -97,7 +97,7 @@
         >
           <img
             class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center bg-gray-100"
-            src="/img/icon/stereum-icons/stereum_logo_extern.png"
+            src="/img/icon/stereum-icons/stereum-logo.png"
             alt="Node Server View"
           />
           <span
