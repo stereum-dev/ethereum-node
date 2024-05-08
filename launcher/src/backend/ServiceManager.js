@@ -1,3 +1,4 @@
+import { SSVDKGService } from "./ethereum-services/SSVDKGService";
 import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconService";
 import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
 import { LodestarBeaconService } from "./ethereum-services/LodestarBeaconService";
@@ -162,6 +163,8 @@ export class ServiceManager {
               services.push(CustomService.buildByConfiguration(config));
             } else if (config.service == "LidoObolExitService") {
               services.push(LidoObolExitService.buildByConfiguration(config));
+            } else if (config.service == "SSVDKGService") {
+              services.push(SSVDKGService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");

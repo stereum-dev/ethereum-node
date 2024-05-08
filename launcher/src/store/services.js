@@ -1294,7 +1294,7 @@ export const useServices = defineStore("services", {
           addPanel: false,
           configPanel: false,
           category: "service", //TODO: change category
-          path: "/ssv_dkg", //TODO: change path
+          path: "/ssvdkg", //TODO: change path
           icon: "/img/icon/service-icons/Other/SSV-Network-DKG-Service.png",
           sIcon: "/img/icon/service-icons/Other/SSV-Network-DKG-s.png",
           hIcon: "/img/icon/service-icons/Other/SSV-Network-DKG-s.png",
