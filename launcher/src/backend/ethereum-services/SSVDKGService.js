@@ -1,5 +1,5 @@
 import { NodeService } from "./NodeService.js";
-// import { ServicePortDefinition } from "./SerivcePortDefinition.js";
+import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class SSVDKGService extends NodeService {
@@ -8,14 +8,12 @@ export class SSVDKGService extends NodeService {
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
-    const image = "sigp/lighthouse";
+    const image = "bloxstaking/ssv-dkg";
 
-    const dataDir = "/opt/app/validator";
-    const graffitiDir = "/opt/app/graffitis";
-
+    // TODO: use shared volume with SSVNetworkService!!!!
     const volumes = [
-      new ServiceVolume(workingDir + "/validator", dataDir),
-      new ServiceVolume(workingDir + "/graffitis", graffitiDir),
+      new ServiceVolume(workingDir + "/data", "/data"),
+      new ServiceVolume(workingDir + "/secrets", "/secrets"),
     ];
 
     // const eth2Nodes = consensusClients
@@ -30,8 +28,8 @@ export class SSVDKGService extends NodeService {
       service.id, //id
       1, //configVersion
       image, //image
-      "v3.1.2", //imageVersion
-      ["start-operator", "--configPath=/data/config.yaml"], //command
+      "v2.1.0", //imageVersion
+      ["start-operator", "--configPath /data/config.yaml"], //command
       null, // entrypoint
       null, // env
       ports, //ports
@@ -58,13 +56,12 @@ export class SSVDKGService extends NodeService {
     return service;
   }
 
-  // buildValidatorClientMetricsEndpoint() {
-  //   return "stereum-" + this.id + ":5064";
-  // }
-
-  // getAvailablePorts() {
-  //   return [new ServicePortDefinition(5062, "tcp", "Validator Client API")];
-  // }
+  getAvailablePorts() {
+    return [
+      new ServicePortDefinition(3030, "tcp", "TCP connections"),
+      new ServicePortDefinition(3030, "udp", "UDP connections"),
+    ];
+  }
 }
 
 // EOF

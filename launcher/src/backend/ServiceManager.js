@@ -1077,6 +1077,18 @@ export class ServiceManager {
           args.consensusClients,
           args.otherServices
         );
+      case "SSVDKGService":
+        ports = [
+          new ServicePort(null, 3030, 3030, servicePortProtocol.udp),
+          new ServicePort(null, 3030, 3030, servicePortProtocol.tcp),
+        ];
+        return SSVDKGService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/ssvdkg",
+          args.consensusClients, // TOOD: remove later!
+          args.otherServices
+        );
     }
   }
 
@@ -1376,8 +1388,7 @@ export class ServiceManager {
           s.service.includes("Teku") ||
           s.service.includes("Nimbus") ||
           s.service.includes("SSVNetwork") ||
-          s.service.includes("External") ||
-          s.service.includes("SSVDKGService") //just for testing
+          s.service.includes("External")
       )
     );
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));

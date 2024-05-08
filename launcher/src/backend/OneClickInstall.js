@@ -288,18 +288,16 @@ export class OneClickInstall {
     }
 
     // add the dkgservice here
-    // if (constellation.includes("LidoObolExitService")) {
-    //   //LidoObolExitService
-    //   this.extraServices.push(
-    //     this.serviceManager.getService("LidoObolExitService", {
-    //       ...args,
-    //       consensusClients: [this.beaconService].concat(
-    //         this.extraServices.filter((s) => s.service === "CharonService")
-    //       ),
-    //       otherServices: this.extraServices.filter((s) => s.service === "ValidatorEjectorService"),
-    //     })
-    //   );
-    // }
+    if (constellation.includes("SSVDKGService")) {
+      //LidoObolExitService
+      this.extraServices.push(
+        this.serviceManager.getService("SSVDKGService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          otherServices: this.extraServices.filter((s) => s.service === "SSVNetworkService"),
+        })
+      );
+    }
 
     this.handleArchiveTags(selectedPreset);
 
