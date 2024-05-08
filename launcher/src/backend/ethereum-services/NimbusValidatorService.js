@@ -57,11 +57,6 @@ export class NimbusValidatorService extends NodeService {
       null, //executionClients
       consensusClients //consensusClients
     );
-
-    if (consensusClients.some(c => c.service === "CharonService")) {
-      service.command[service.command.findIndex(c => c === "--doppelganger-detection=true")] = "--doppelganger-detection=false"
-    }
-
     return service;
   }
 

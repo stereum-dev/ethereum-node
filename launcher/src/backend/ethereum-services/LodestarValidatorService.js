@@ -52,11 +52,8 @@ export class LodestarValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
-    if (consensusClients.some(c => c.service === "CharonService")) {
+    if(consensusClients.some(c => c.service === "CharonService"))
       service.command.push("--distributed")
-      service.command.push("--useProduceBlockV3=false")
-      service.command[service.command.findIndex(c => c === "--doppelgangerProtection=true")] = "--doppelgangerProtection=false"
-    }
 
     return service;
   }

@@ -458,9 +458,8 @@ export default {
                       );
                     }
                   }
-                  // this ensures that specific values are wrapped in quotes
-                  if (!/^["'`].*["'`]$/.test(option.changeValue) && option.isENV) {
-                    option.changeValue = `"${option.changeValue}"`;
+                  if (!/^["'`].*["'`]$/.test(option.isENV)) {
+                    option.changeValue = `${option.changeValue}`;
                   }
                   this.item.yaml = this.item.yaml.replace(
                     new RegExp(`${command}([=]?)([\\S*]*)`),
