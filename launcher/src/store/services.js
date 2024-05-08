@@ -980,7 +980,7 @@ export const useServices = defineStore("services", {
         },
         {
           id: 22,
-          name: "ValidatorEjector",
+          name: "Validator Ejector",
           service: "ValidatorEjectorService",
           displayPluginMenu: false,
           serviceIsPending: false,
@@ -1268,6 +1268,38 @@ export const useServices = defineStore("services", {
           sIcon: "/img/icon/service-icons/Other/LidoObolExitService-s.png",
           linkUrl: "",
           docsUrl: "https://github.com/ObolNetwork/lido-charon-distributed-validator-node/tree/main",
+          headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [],
+          drag: true,
+          state: "exited",
+          config: {
+            serviceID: "",
+            configVersion: "",
+            image: "",
+            imageVersion: "",
+            ports: [],
+            volumes: [],
+            network: "",
+          },
+        },
+        {
+          id: 31,
+          name: "SSV DKG", //TODO: change name
+          service: "SSVDKGService", //TODO: change service
+          displayPluginMenu: false,
+          serviceIsPending: false,
+          modifierPanel: false,
+          replacePanel: false,
+          addPanel: false,
+          configPanel: false,
+          category: "service", //TODO: change category
+          path: "/ssv_dkg", //TODO: change path
+          icon: "/img/icon/service-icons/Other/SSV-Network-DKG-Service.png",
+          sIcon: "/img/icon/service-icons/Other/SSV-Network-DKG-s.png",
+          hIcon: "/img/icon/service-icons/Other/SSV-Network-DKG-s.png",
+          linkUrl: "",
+          docsUrl: "https://docs.ssv.network/developers/tools/ssv-dkg-client/",
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [],
