@@ -58,11 +58,11 @@ test("prysm validator import", async () => {
 
 
   //install geth
-  let geth = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
 
-  let prysmBC = serviceManager.getService("PrysmBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] })
+  let prysmBC = serviceManager.getService("PrysmBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
 
-  let prysmVC = serviceManager.getService("PrysmValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [prysmBC] })
+  let prysmVC = serviceManager.getService("PrysmValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [prysmBC] })
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();

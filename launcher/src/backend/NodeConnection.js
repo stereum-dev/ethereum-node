@@ -1916,4 +1916,49 @@ export class NodeConnection {
       return [{ containerId: "ERROR", logs: err }];
     }
   }
+
+  /**
+   * Ensures a curl image is installed on the node.
+   * Will use already installed curl image if latest is not installable.
+   * Will pull latest curl image from docker hub if not already installed on the node
+   * @returns {string} - The version of the latest curl image installed on the node
+   */
+  async ensureCurlImage() {
+    // try pulling the latest curl image
+    try {
+      const result = await this.sshService.exec("docker pull curlimages/curl");
+
+      if (SSHService.checkExecError(result)) {
+        throw new Error(SSHService.extractExecError(result));
+      }
+
+      return "latest"
+    } catch (error) {
+      // if pulling the latest image fails, try fetching the latest installed image
+      try {
+        // get all installed curl images
+        const fetchedImages = await this.sshService.exec("docker images curlimages/curl --format json");
+        if (SSHService.checkExecError(fetchedImages)) {
+          throw new Error(SSHService.extractExecError(fetchedImages));
+        }
+
+        const images = fetchedImages.stdout.split(/\n/).slice(0, -1).map((json) => { return JSON.parse(json) });
+        log.info(`installed images: ${images}`)
+        if (images.length === 0) return "latest";
+
+        // get the latest installed image
+        let latestImage = images[0];
+        for (const image of images) {
+          if (Date.parse(image.CreatedAt) > Date.parse(latestImage.CreatedAt)) {
+            latestImage = image;
+          }
+        }
+
+        return latestImage ? latestImage.Tag : "latest";
+      } catch (error) {
+        log.error("Error fetching installed curl images: ", error);
+        return "latest";
+      }
+    }
+  }
 }
