@@ -81,6 +81,10 @@ watchEffect(() => {
     case "settings":
       serverStore.setActiveState("isServerSettingsActive");
       break;
+
+    case "2fa":
+      serverStore.setActiveState("isTwoFactorAuthActive");
+      break;
     case null:
       serverStore.setActiveState("isServerDetailsActive");
       break;

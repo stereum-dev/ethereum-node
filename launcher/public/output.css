@@ -1272,6 +1272,10 @@ video {
   grid-row-start: 12;
 }
 
+.row-start-13{
+  grid-row-start: 13;
+}
+
 .row-start-2{
   grid-row-start: 2;
 }
@@ -1601,6 +1605,10 @@ video {
   height: 1.25rem;
 }
 
+.h-5\/6{
+  height: 83.333333%;
+}
+
 .h-6{
   height: 1.5rem;
 }
@@ -1735,6 +1743,10 @@ video {
 
 .h-\[90px\]{
   height: 90px;
+}
+
+.h-\[95\%\]{
+  height: 95%;
 }
 
 .h-fit{
@@ -2019,6 +2031,10 @@ video {
   width: 66.666667%;
 }
 
+.w-40{
+  width: 10rem;
+}
+
 .w-5{
   width: 1.25rem;
 }
@@ -2159,6 +2175,10 @@ video {
   width: 60%;
 }
 
+.w-\[65\%\]{
+  width: 65%;
+}
+
 .w-\[70px\]{
   width: 70px;
 }
@@ -2187,10 +2207,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-\[50\%\]{
-  width: 50%;
 }
 
 .min-w-\[100px\]{
@@ -2488,6 +2504,10 @@ video {
   grid-template-rows: repeat(12 , minmax(0,1fr));
 }
 
+.grid-rows-14{
+  grid-template-rows: repeat(14 , minmax(0,1fr));
+}
+
 .grid-rows-15{
   grid-template-rows: repeat(15 , minmax(0,1fr));
 }
@@ -2552,6 +2572,12 @@ video {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.justify-normal{
+  -webkit-box-pack: normal;
+      -ms-flex-pack: normal;
+          justify-content: normal;
 }
 
 .justify-start{
@@ -3536,6 +3562,11 @@ video {
   background-color: rgb(56 114 114 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#393939\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 57 57 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#3d4244\]{
   --tw-bg-opacity: 1;
   background-color: rgb(61 66 68 / var(--tw-bg-opacity));
@@ -3584,6 +3615,11 @@ video {
 .bg-\[\#609879\]{
   --tw-bg-opacity: 1;
   background-color: rgb(96 152 121 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#A0A0A0\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(160 160 160 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#a7aeb5\]{
@@ -4162,6 +4198,10 @@ video {
   text-transform: capitalize;
 }
 
+.leading-5{
+  line-height: 1.25rem;
+}
+
 .leading-6{
   line-height: 1.5rem;
 }
@@ -4205,6 +4245,11 @@ video {
 .text-\[\#e6e4e4\]{
   --tw-text-opacity: 1;
   color: rgb(230 228 228 / var(--tw-text-opacity));
+}
+
+.text-\[greenyellow\]{
+  --tw-text-opacity: 1;
+  color: rgb(173 255 47 / var(--tw-text-opacity));
 }
 
 .text-amber-200{
