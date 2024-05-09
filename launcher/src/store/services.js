@@ -1300,7 +1300,7 @@ export const useServices = defineStore("services", {
           hIcon: "/img/icon/service-icons/Other/SSV-Network-DKG-s.png",
           linkUrl: "",
           docsUrl: "https://docs.ssv.network/developers/tools/ssv-dkg-client/",
-          headerOption: false,
+          headerOption: true,
           expertOptionsModal: false,
           expertOptions: [],
           drag: true,
