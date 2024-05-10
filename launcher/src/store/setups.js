@@ -14,6 +14,7 @@ export const useSetups = defineStore("setups", {
     //Setup Edit Page
     setupToRename: null,
     isEditConfigViewActive: false,
+    selectedSetupInfos: null,
 
     //Create Setup
     selectedSetupNetwork: null,

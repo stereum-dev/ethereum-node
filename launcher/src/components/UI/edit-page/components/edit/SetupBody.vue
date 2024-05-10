@@ -38,7 +38,7 @@ import { useSetups } from "../../../../../store/setups";
 import { computed, watch } from "vue";
 import { useMultiSetups } from "@/composables/multiSetups";
 
-const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfigs"]);
+const emit = defineEmits(["deleteSetup", "connectSetup", "setupInfos", "openConfigs"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
@@ -67,7 +67,7 @@ const connectSetup = (item) => {
 };
 
 const infoModal = (item) => {
-  emit("infoModal", item);
+  emit("setupInfos", item);
 };
 
 const openConfigs = (item) => {

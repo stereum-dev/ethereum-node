@@ -144,6 +144,9 @@
         :network="selectedSetupNetwork"
       />
       <!-- End Create Setup -->
+
+      <!-- Start Setup Infos -->
+      <SetupInfos v-if="setupStore.selectedSetupInfos" />
     </TransitionGroup>
     <ChangeAnimation v-if="manageStore.disableConfirmButton" />
   </base-layout>
@@ -165,6 +168,7 @@ import AddModal from "./components/modals/AddModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import ImportSetup from "./components/modals/setups/ImportSetup.vue";
 import CreateSetup from "./components/modals/setups/CreateSetup.vue";
+import SetupInfos from "./components/modals/setups/SetupInfos.vue";
 import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";

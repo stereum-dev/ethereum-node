@@ -17,7 +17,7 @@
       v-else
       @delete-setup="deleteSetup"
       @connect-setup="connectSetup"
-      @info-modal="infoSetup"
+      @setup-infos="setupInfos"
       @rename-setup="renameSetup"
       @confirm-rename="confirmRename"
       @open-configs="openConfigs"
@@ -270,8 +270,8 @@ const connectSetup = (item) => {
   console.log("connectSetup", item);
 };
 
-const infoSetup = (item) => {
-  console.log("infoSetup", item);
+const setupInfos = (item) => {
+  setupStore.selectedSetupInfos = item;
 };
 </script>
 
