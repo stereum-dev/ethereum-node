@@ -111,26 +111,22 @@ const dragStart = props.dragging;
 const emit = defineEmits(["addServices", "startDrag"]);
 
 const filteredServices = computed(() => {
-  let services = [];
-  serviceStore.filteredServices.filter((service) => {
-    const isNotServerServices = setupStore.serverServices.includes(service.service);
-    const isNotCustomServices = service.service === "CustomService";
-    const isMatch = service.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    if (isMatch && !isNotServerServices && !isNotCustomServices) {
-      services.push(service);
-    }
-  });
-  return services;
+  return serviceStore.filteredServices
+    .filter((service) => {
+      return !setupStore.serverServices.includes(service.service);
+    })
+    .filter((service) => {
+      return service.service !== "CustomService";
+    })
+    .filter((service) => {
+      return service.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+    });
 });
-console.log("filteredServices", filteredServices.value);
+
 const customService = computed(() => {
   return manageStore.newConfiguration.find(
     (service) => service.service === "CustomService"
   );
-});
-
-watchEffect(() => {
-  console.log("filteredServices", serviceStore.filteredServices);
 });
 
 function addServices(service) {
