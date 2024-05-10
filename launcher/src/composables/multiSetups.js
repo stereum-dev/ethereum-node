@@ -1,15 +1,16 @@
 import ControlService from "@/store/ControlService";
 import { ref } from "vue";
+import { useSetups } from "@/store/setups";
 
 export const useMultiSetups = () => {
-  const configs = ref([]);
   const services = ref([]);
+  const setupStore = useSetups();
 
   const loadSetups = async () => {
     try {
       const data = await ControlService.readMultiSetup();
-      configs.value = parseYAMLData(data);
-      console.log("Configs", configs.value);
+      setupStore.serverSetups = parseYAMLData(data);
+      console.log("Configs", setupStore.serverSetups);
     } catch (e) {
       console.error("Couldn't read multi config yaml", e);
     }
@@ -53,7 +54,7 @@ export const useMultiSetups = () => {
 
   const getAllSetups = () => {
     let setups = [];
-    setups = configs.value.map((config) => ({
+    setups = setupStore.serverSetups.map((config) => ({
       setupId: config.configId,
       setupName: config.name,
       setupType: config.setupType,

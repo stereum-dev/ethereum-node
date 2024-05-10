@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 
 export const useSetups = defineStore("setups", {
   state: () => ({
+    serverSetups: [],
     allSetups: [],
     editSetups: [],
 

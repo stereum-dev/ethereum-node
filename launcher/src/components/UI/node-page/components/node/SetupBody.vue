@@ -14,12 +14,10 @@
     </div>
     <div
       v-if="setupStore.allSetups.length > 0"
-      class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 auto-rows-fr scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
+      class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 grid-rows-3 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
     >
       <SingleSetup
-        v-for="setup in setupStore.allSetups.filter(
-          (s) => s.setupName !== 'commonServices'
-        )"
+        v-for="setup in allNodeSetups.filter((s) => s.setupName !== 'commonServices')"
         :key="setup.name"
         :setup="setup"
         @open-setup="openSetup"
@@ -37,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import ClientSkeleton from "./clients/ClientSkeleton.vue";
 import SingleSetup from "./setups/SingleSetup.vue";
 import { useSetups } from "@/store/setups";
@@ -45,6 +43,10 @@ import { useSetups } from "@/store/setups";
 const emit = defineEmits(["openSetup", "exportSetup", "setupState"]);
 const setupStore = useSetups();
 const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+const allNodeSetups = computed(() => {
+  return setupStore.allSetups;
+});
 
 // Methods
 

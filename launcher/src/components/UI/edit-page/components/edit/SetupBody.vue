@@ -15,12 +15,10 @@
         <span class="text-xs text-gray-300 text-center font-sans">All Setups</span>
       </div>
       <div
-        class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 auto-rows-fr scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
+        class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 grid-rows-3 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
       >
         <SingleSetup
-          v-for="setup in setupStore.editSetups.filter(
-            (s) => s.setupName !== 'commonServices'
-          )"
+          v-for="setup in getEditSetups.filter((s) => s.setupName !== 'commonServices')"
           :key="setup.setupName"
           :setup="setup"
           @delete-setup="deleteSetup"
@@ -37,11 +35,26 @@
 import SingleSetup from "./setups/SingleSetup.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "../../../../../store/setups";
+import { computed, watch } from "vue";
+import { useMultiSetups } from "@/composables/multiSetups";
 
 const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfigs"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
+const { getAllSetups } = useMultiSetups();
+
+const getEditSetups = computed(() => {
+  return setupStore.editSetups;
+});
+
+watch(
+  () => setupStore.serverSetups,
+  () => {
+    setupStore.allSetups = getAllSetups();
+    setupStore.editSetups = setupStore.allSetups;
+  }
+);
 
 // Methods
 
