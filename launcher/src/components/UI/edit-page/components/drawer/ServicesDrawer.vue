@@ -46,7 +46,7 @@
       class="col-start-1 col-span-full row-start-4 row-end-14 w-full h-full flex flex-col justify-start items-center space-y-1 bg-[#151618] border border-gray-700 rounded-md overflow-y-scroll py-1 overflow-x-hidden"
     >
       <div
-        v-for="service in filteredServers.filter(
+        v-for="service in filteredServices.filter(
           (service) => service.service !== 'CustomService'
         )"
         :key="service.serviceID"
@@ -88,7 +88,9 @@ import DrawerFilter from "./DrawerFilter.vue";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
-import { computed, ref } from "vue";
+import { computed, onUnmounted, ref, watchEffect } from "vue";
+import { useSetups } from "../../../../../store/setups";
+import { useNodeManage } from "@/store/nodeManage";
 
 const t = i18n.global.t;
 
@@ -97,6 +99,8 @@ const searchQuery = ref("");
 
 const footerStore = useFooter();
 const serviceStore = useServices();
+const setupStore = useSetups();
+const manageStore = useNodeManage();
 const props = defineProps({
   dragging: Function,
 });
@@ -106,22 +110,34 @@ const dragStart = props.dragging;
 
 const emit = defineEmits(["addServices", "startDrag"]);
 
-const filteredServers = computed(() => {
-  if (!searchQuery.value) {
-    return serviceStore.filteredServices;
-  }
-  return serviceStore.filteredServices.filter((service) =>
-    service.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+const filteredServices = computed(() => {
+  let services = [];
+  serviceStore.filteredServices.filter((service) => {
+    const isNotServerServices = setupStore.serverServices.includes(service.service);
+    const isNotCustomServices = service.service === "CustomService";
+    const isMatch = service.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+    if (isMatch && !isNotServerServices && !isNotCustomServices) {
+      services.push(service);
+    }
+  });
+  return services;
+});
+console.log("filteredServices", filteredServices.value);
+const customService = computed(() => {
+  return manageStore.newConfiguration.find(
+    (service) => service.service === "CustomService"
   );
 });
 
-const customService = computed(() => {
-  return serviceStore.filteredServices.find(
-    (service) => service.service === "CustomService"
-  );
+watchEffect(() => {
+  console.log("filteredServices", serviceStore.filteredServices);
 });
 
 function addServices(service) {
   emit("addServices", service);
 }
+
+onUnmounted(() => {
+  searchQuery.value = "";
+});
 </script>

@@ -55,6 +55,7 @@ export const useSetups = defineStore("setups", {
     },
   },
   actions: {
+    //Setup On Edit Page
     selectEditServerView() {
       this.editSetups.forEach((s) => (s.isActive = false));
       this.selectedSetup = null;
@@ -62,12 +63,15 @@ export const useSetups = defineStore("setups", {
     },
 
     selectEditConfigView(setup) {
+      this.selectedSetup = null;
+      this.isEditConfigViewActive = false;
       this.editSetups.forEach((s) => (s.isActive = false));
       setup.isActive = true;
       this.selectedSetup = setup;
       this.isEditConfigViewActive = true;
     },
 
+    //Setup On Node Page
     selectNodeServerView() {
       this.allSetups.forEach((s) => (s.isActive = false));
       this.isConfigViewActive = false;
@@ -75,6 +79,8 @@ export const useSetups = defineStore("setups", {
     },
 
     selectNodeConfigView(setup) {
+      this.selectedSetup = null;
+      this.isConfigViewActive = false;
       this.allSetups.forEach((s) => (s.isActive = false));
       setup.isActive = true;
       this.selectedSetup = setup;

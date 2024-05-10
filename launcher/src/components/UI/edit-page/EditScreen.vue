@@ -42,7 +42,7 @@
       src="/img/icon/edit-node-icons/sidebar-out.png"
       alt="Arrow Icon"
       @mousedown.prevent.stop
-      @click="openDrawer"
+      @click="handleDrawer"
       @mouseenter="footerStore.cursorLocation = 'all services'"
       @mouseleave="footerStore.cursorLocation = ''"
     />
@@ -421,11 +421,19 @@ const confirmConnection = (item) => {
 const openDrawer = () => {
   if (setupStore.isEditConfigViewActive) {
     manageStore.isDrawerOpen = true;
+    manageStore.isDrawerMenuActive = false;
     manageStore.isServicesDrawerActive = true;
+    manageStore.isSetupsDrawerActive = false;
   } else {
     manageStore.isDrawerOpen = true;
+    manageStore.isServicesDrawerActive = false;
+    manageStore.isSetupsDrawerActive = false;
     manageStore.isDrawerMenuActive = true;
   }
+};
+
+const handleDrawer = () => {
+  openDrawer();
 };
 
 const openNetworkMenu = () => {
@@ -438,7 +446,6 @@ const createCustomSetup = () => {
 };
 
 const getSetupNetwork = (network) => {
-  console.log("Get Setup Network", network);
   selectedSetupNetwork.value = network.network;
   manageStore.isDrawerOpen = false;
   manageStore.isSetupsDrawerActive = false;
@@ -632,7 +639,7 @@ const displaySwitchNetwork = () => {
 
 const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
-  if (!(network.network == manageStore.configNetwork.network)) {
+  if (network.network != manageStore.configNetwork.network) {
     if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
       let index = manageStore.confirmChanges.findIndex((j) =>
         j.content.includes("CHANGE NETWORK")

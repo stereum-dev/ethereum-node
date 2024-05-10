@@ -2956,6 +2956,10 @@ video {
   border-radius: 55px;
 }
 
+.rounded-\[5px\]{
+  border-radius: 5px;
+}
+
 .rounded-\[75px\]{
   border-radius: 75px;
 }
@@ -2978,10 +2982,6 @@ video {
 
 .rounded-xl{
   border-radius: 0.75rem;
-}
-
-.rounded-\[5px\]{
-  border-radius: 5px;
 }
 
 .rounded-b-lg{
@@ -3166,11 +3166,6 @@ video {
 .border-\[\#6c7e78\]{
   --tw-border-opacity: 1;
   border-color: rgb(108 126 120 / var(--tw-border-opacity));
-}
-
-.border-\[\#c7c9ca\]{
-  --tw-border-opacity: 1;
-  border-color: rgb(199 201 202 / var(--tw-border-opacity));
 }
 
 .border-blue-100{
