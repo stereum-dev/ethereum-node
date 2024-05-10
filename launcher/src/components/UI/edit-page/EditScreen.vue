@@ -446,7 +446,7 @@ const createCustomSetup = () => {
 };
 
 const getSetupNetwork = (network) => {
-  selectedSetupNetwork.value = network.network;
+  selectedSetupNetwork.value = network;
   manageStore.isDrawerOpen = false;
   manageStore.isSetupsDrawerActive = false;
   setupStore.isCreateSetupModalActive = true;
@@ -816,6 +816,8 @@ const editSetupsPrepration = () => {
 };
 
 const deleteSetup = async (item) => {
+  setupStore.allSetups = setupStore.allSetups.filter((e) => e.setupId !== item.setupId);
+  setupStore.editSetups = setupStore.editSetups.filter((e) => e.setupId !== item.setupId);
   const setupId = item.setupId;
   await ControlService.deleteSetup(setupId);
 };
