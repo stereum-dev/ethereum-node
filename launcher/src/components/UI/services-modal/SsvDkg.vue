@@ -5,7 +5,7 @@
       @click="$emit('closeWindow')"
     ></div>
     <div class="browser-modal">
-      <div class="prometheus-header">
+      <div class="SSVDKG-header">
         <div class="icon-box">
           <img :src="SSVDKGService.icon" alt="icon" />
         </div>
@@ -20,7 +20,36 @@
         </div>
       </div>
       <div class="content">
-        <div class="browserBox"></div>
+        <div class="browserBox">
+          <div class="title flex text-sm text-gray-100 justify-start items-start w-full h-1/3 pl-2 pt-2">
+            IF YOU ARE THE CLUSTER LEADER PAST THE PROVIDED COMMAND
+          </div>
+          <div class="input-box flex justify-center items-center w-full h-2/3 relative">
+            <input v-model="providedCommand" type="text" />
+            <div
+              :class="[
+                'btn',
+                'bg-[#1BA5F8]',
+                'w-24',
+                ' h-1/2',
+                'rounded-2xl',
+                'absolute',
+                'right-7',
+                'flex',
+                'justify-center',
+                'items-center',
+                'cursor-pointer',
+                'text-base',
+                'text-gray-100',
+                'font-bold',
+                'uppercase',
+                { disabled: !providedCommand },
+              ]"
+            >
+              start
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -29,11 +58,10 @@
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted } from "vue";
 
-const SSVDKGService = ref({});
-// const isprometheusAvailable = ref(false);
-// const refreshStereum = ref(false);
-
 const headerStore = useNodeHeader();
+
+const SSVDKGService = ref({});
+const providedCommand = ref("");
 
 onMounted(() => {
   filterSSVDKGService();
@@ -43,7 +71,6 @@ const filterSSVDKGService = () => {
   headerStore.runningServices.forEach((item) => {
     if (item.name === "SSV DKG") SSVDKGService.value = item;
   });
-  // isprometheusAvailable.value = true;
 };
 
 const openBrowser = () => {
@@ -55,21 +82,6 @@ const openGitHub = () => {
   let url = "https://github.com/ssvlabs/gitbook-docs/blob/main/developers/tools/ssv-dkg-client/README.md";
   window.open(url, "_blank");
 };
-
-// const openLocalApp = () => {
-//   if (SSVDKGService.value.linkUrl === "http://localhost:undefined") {
-//     refreshStereum.value = true;
-//   } else {
-//     console.log(SSVDKGService.value.linkUrl);
-//     let url = SSVDKGService.value.linkUrl;
-//     window.open(url, "_blank");
-//   }
-// };
-
-// const stereumRefresher = () => {
-//   refreshStereum.value = false;
-//   window.location.reload();
-// };
 </script>
 <style scoped>
 .service-modal_parent {
@@ -109,7 +121,7 @@ const openGitHub = () => {
   cursor: default;
 }
 
-.prometheus-header {
+.SSVDKG-header {
   width: 100%;
   height: 20%;
   display: flex;
@@ -186,5 +198,25 @@ const openGitHub = () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2%;
+  flex-direction: column;
+}
+.input-box input {
+  width: 90%;
+  height: 50%;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding-left: 10px;
+}
+.input-box .btn:active {
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+  transform: scale(0.98);
+}
+
+.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 </style>
