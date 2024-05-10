@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="content">
-        <div class="browserBox">
+        <div v-if="!activeDkgGenerator" class="browserBox">
           <div class="title flex text-sm text-gray-100 justify-start items-start w-full h-1/3 pl-2 pt-2">
             IF YOU ARE THE CLUSTER LEADER PAST THE PROVIDED COMMAND
           </div>
@@ -45,11 +45,13 @@
                 'uppercase',
                 { disabled: !providedCommand },
               ]"
+              @click="startSSVDkgCommand"
             >
               start
             </div>
           </div>
         </div>
+        <DkgGenerator v-else />
       </div>
     </div>
   </div>
@@ -57,11 +59,13 @@
 <script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted } from "vue";
+import DkgGenerator from "./plugin/DkgGenerator";
 
 const headerStore = useNodeHeader();
 
 const SSVDKGService = ref({});
 const providedCommand = ref("");
+const activeDkgGenerator = ref(false);
 
 onMounted(() => {
   filterSSVDKGService();
@@ -81,6 +85,10 @@ const openBrowser = () => {
 const openGitHub = () => {
   let url = "https://github.com/ssvlabs/gitbook-docs/blob/main/developers/tools/ssv-dkg-client/README.md";
   window.open(url, "_blank");
+};
+
+const startSSVDkgCommand = () => {
+  activeDkgGenerator.value = true;
 };
 </script>
 <style scoped>

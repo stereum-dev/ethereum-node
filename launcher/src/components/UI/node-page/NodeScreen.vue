@@ -156,7 +156,6 @@ const updateServiceLogs = async () => {
     nodeStore.serviceLogs = data;
   }
 };
-console.log(serviceStore.installedServices);
 const updateServerVitals = async () => {
   try {
     if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
