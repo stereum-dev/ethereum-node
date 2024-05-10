@@ -58,8 +58,15 @@ import TwoFactoSetupBox from "./TwoFactoSetupBox";
 import TwoFactorBackup from "./TwoFactorBackup.vue";
 import { ref, computed } from "vue";
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
+import { useControlStore } from "@/store/theControl";
 
 const authStore = useTwoFactorAuth();
+const controlStore = useControlStore();
+
+//TODO: you can use them like these
+console.log(controlStore.ServerName);
+console.log(controlStore.ipAddress);
+
 //enable two factor authentication
 const twoFatorIsEnabled = ref(false);
 //setup two factor authentication
