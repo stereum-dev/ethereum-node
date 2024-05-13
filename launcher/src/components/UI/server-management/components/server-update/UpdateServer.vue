@@ -108,7 +108,6 @@ const stereumApp = ref({
 const numberOfUpdatablePackages = ref(null);
 const searchingForUpdatablePackages = ref(false);
 
-console.log("getAllTasks", serverStore.allTasks);
 const newUpdates = computed(() => serverStore.upgradablePackages);
 const onOff = computed(() => (stereumApp.value.autoUpdate == "on" ? "text-green-700" : "text-red-700"));
 
