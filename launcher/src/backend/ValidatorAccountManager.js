@@ -38,10 +38,11 @@ export class ValidatorAccountManager {
 
     for (let i = 0; i < content.length; i += chunkSize) {
       const contentChunk = content.slice(i, i + chunkSize);
+      const passwordChunk = passwords.slice(i, i + chunkSize);
 
       this.batches.push({
         keystores: contentChunk,
-        passwords: passwords,
+        passwords: passwordChunk,
         ...(slashing_protection_content && { slashing_protection: slashing_protection_content }),
       });
     }
@@ -320,10 +321,10 @@ export class ValidatorAccountManager {
   async keymanagerAPI(service, method = "GET", apiPath, data, args = [], apiToken) {
     if (!apiPath.startsWith("/")) apiPath = "/" + apiPath;
     if (!apiToken) apiToken = await this.getApiToken(service);
+    const curlTag = await this.nodeConnection.ensureCurlImage();
     let command = [
-      "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      "docker run --rm --network=stereum curlimages/curl:" + curlTag,
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${apiPath}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -510,9 +511,9 @@ export class ValidatorAccountManager {
           //Nimbus only supports Graffiti changes while running via their rest api
           let command = client.command.find((c) => c.includes("--rest-port="));
           let port = command.replace("--rest-port=", "");
-
+          const curlTag = await this.nodeConnection.ensureCurlImage();
           let CurlCommand = [
-            "docker run --rm --network=stereum curlimages/curl",
+            "docker run --rm --network=stereum curlimages/curl:" + curlTag,
             `curl http://stereum-${client.id}:${port}/nimbus/v1/graffiti`,
             `-X POST`,
             `-H 'Content-Type: text/plain'`,
@@ -841,8 +842,9 @@ export class ValidatorAccountManager {
 
       // For remote Web3Singer Instances (url is defined and serviceID is undefined)
       if (url) {
+        const curlTag = await this.nodeConnection.ensureCurlImage();
         let CurlCommand = [
-          "docker run --rm --network=stereum curlimages/curl",
+          "docker run --rm --network=stereum curlimages/curl:" + curlTag,
           `curl ${url}/api/v1/eth2/publicKeys`,
           `-X GET`,
           `-H 'Content-Type: application/json'`,
@@ -1107,9 +1109,10 @@ export class ValidatorAccountManager {
       let charonClient = services.find((service) => service.service === "CharonService");
       if (!charonClient) throw "Couldn't find CharonService";
       const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
+      this.nodeConnection.sshService.exec(`rm -rf ${dataDir}`);
       const result = await this.nodeConnection.sshService.uploadDirectorySSH(path.normalize(localPath), dataDir);
       if (result) {
-        log.info("Obol Backup uownloaded from: ", localPath);
+        log.info("Obol Backup downloaded from: ", localPath);
       }
     } catch (err) {
       log.error("Error uploading Obol Backup: ", err);
