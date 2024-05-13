@@ -187,15 +187,29 @@ export class ConfigManager {
     }
   }
 
+  /**
+   * Renames an existing setup.
+   *
+   * @param {Object} setup - The setup object.
+   * @param {string} setup.setupId - The id of the setup to rename.
+   * @param {string} setup.setupName - The new name for the setup.
+   */
   async renameSetup(setup) {
-    let currentSetups = await this.readMultiSetup();
-    let setupsObj = yaml.load(currentSetups);
+    try {
+      let currentSetups = await this.readMultiSetup();
+      let setupsObj = yaml.load(currentSetups);
 
-    if (setupsObj[setup.setupId]) {
-      setupsObj[setup.setupId].name = setup.setupName;
+      if (setupsObj[setup.setupId]) {
+        setupsObj[setup.setupId].name = setup.setupName;
+      } else {
+        throw new Error(`Setup with id ${setup.setupId} not found.`);
+      }
+
+      await this.writeMultiSetup(setupsObj);
+    } catch (error) {
+      console.error(`Failed to rename setup: ${error.message}`);
+      throw error;
     }
-
-    await this.writeMultiSetup(setupsObj);
   }
 
   /**
