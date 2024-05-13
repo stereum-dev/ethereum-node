@@ -17,6 +17,7 @@
       apt:
         name: git=1:2.34.1-1ubuntu1.9
         state: present
+        allow_downgrade: true
       become: true
     - name: Update package cache (Ubuntu)
       apt:

@@ -55,13 +55,13 @@ test("lighthouse validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  let geth = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
 
 
-  let lhBC = serviceManager.getService("LighthouseBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] })
+  let lhBC = serviceManager.getService("LighthouseBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
 
 
-  let lhVC = serviceManager.getService("LighthouseValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [lhBC] })
+  let lhVC = serviceManager.getService("LighthouseValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [lhBC] })
 
   //get latest versions
   let versions = await nodeConnection.nodeUpdates.checkUpdates();

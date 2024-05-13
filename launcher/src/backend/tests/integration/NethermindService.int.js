@@ -55,7 +55,7 @@ test("nethermind installationm", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install nethermind
-  let executionClient = serviceManager.getService("NethermindService", { network: "goerli", installDir: "/opt/stereum" })
+  let executionClient = serviceManager.getService("NethermindService", { network: "holesky", installDir: "/opt/stereum" })
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();

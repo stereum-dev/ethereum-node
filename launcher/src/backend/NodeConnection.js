@@ -563,9 +563,11 @@ export class NodeConnection {
       } catch (e) {
         throw new Error("Given encrypted SSV private_key (keystore) is invalid (not JSON format)");
       }
-      if (!private_key_data?.publicKey) {
+      // SSV generated keystore uses "pubKey" since v1.3.3, previously it was "publicKey"
+      if (!private_key_data?.publicKey && !private_key_data?.pubKey) {
         throw new Error("Given encrypted SSV private_key (keystore) is invalid (no public key available)");
       }
+      private_key_data.publicKey = private_key_data?.publicKey ? private_key_data.publicKey : private_key_data?.pubKey;
       const newPubKey = private_key_data.publicKey;
 
       // Add password_file and keystore_file to secrets dir
@@ -813,6 +815,7 @@ export class NodeConnection {
       }
       const keystore_content = keystore_read.stdout;
       const keystore_data = JSON.parse(keystore_content);
+      keystore_data.publicKey = keystore_data?.publicKey ? keystore_data.publicKey : keystore_data?.pubKey;
       const newPubKey = keystore_data.publicKey;
 
       // Write network config
@@ -918,6 +921,7 @@ export class NodeConnection {
       }
       const keystore_content = keystore_read.stdout;
       const keystore_data = JSON.parse(keystore_content);
+      keystore_data.publicKey = keystore_data?.publicKey ? keystore_data.publicKey : keystore_data?.pubKey;
       const newPubKey = keystore_data.publicKey;
 
       // Write network config
@@ -1184,7 +1188,9 @@ export class NodeConnection {
         privateKeyFilePath: keyStorePrivateKeyFile,
         privateKeyFileData: (() => {
           try {
-            return JSON.parse(keyStorePrivateKeyFileContent);
+            let pkfdata = JSON.parse(keyStorePrivateKeyFileContent);
+            pkfdata.publicKey = pkfdata?.publicKey ? pkfdata.publicKey : pkfdata?.pubKey;
+            return pkfdata;
           } catch (e) {
             return keyStorePrivateKeyFileContent;
           }
@@ -1743,7 +1749,7 @@ export class NodeConnection {
 
   async logout() {
     this.sshService.stopShell();
-    this.sshService.disconnect();
+    await this.sshService.disconnect();
     this.settings = undefined;
     await this.closeTunnels();
     this.os = null;
@@ -1914,6 +1920,56 @@ export class NodeConnection {
     } catch (err) {
       log.error("Failed to dump Docker Logs: ", err);
       return [{ containerId: "ERROR", logs: err }];
+    }
+  }
+
+  /**
+   * Ensures a curl image is installed on the node.
+   * Will use already installed curl image if latest is not installable.
+   * Will pull latest curl image from docker hub if not already installed on the node
+   * @returns {string} - The version of the latest curl image installed on the node
+   */
+  async ensureCurlImage() {
+    // try pulling the latest curl image
+    try {
+      const result = await this.sshService.exec("docker pull curlimages/curl");
+
+      if (SSHService.checkExecError(result)) {
+        throw new Error(SSHService.extractExecError(result));
+      }
+
+      return "latest";
+    } catch (error) {
+      // if pulling the latest image fails, try fetching the latest installed image
+      try {
+        // get all installed curl images
+        const fetchedImages = await this.sshService.exec("docker images curlimages/curl --format json");
+        if (SSHService.checkExecError(fetchedImages)) {
+          throw new Error(SSHService.extractExecError(fetchedImages));
+        }
+
+        const images = fetchedImages.stdout
+          .split(/\n/)
+          .slice(0, -1)
+          .map((json) => {
+            return JSON.parse(json);
+          });
+        log.info(`installed images: ${images}`);
+        if (images.length === 0) return "latest";
+
+        // get the latest installed image
+        let latestImage = images[0];
+        for (const image of images) {
+          if (Date.parse(image.CreatedAt) > Date.parse(latestImage.CreatedAt)) {
+            latestImage = image;
+          }
+        }
+
+        return latestImage ? latestImage.Tag : "latest";
+      } catch (error) {
+        log.error("Error fetching installed curl images: ", error);
+        return "latest";
+      }
     }
   }
 }

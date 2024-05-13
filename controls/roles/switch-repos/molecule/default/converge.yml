@@ -9,6 +9,6 @@
             controls_install_path: "/opt/stereum"
     - debug:
         msg: "{{ stereum }}"
-    - name: "Include switch_repos"
+    - name: "Include switch-repos"
       include_role:
-        name: "switch_repos"
+        name: "switch-repos"

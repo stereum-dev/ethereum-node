@@ -13,6 +13,10 @@
         backgroundImage: backupDistributedValidator || distributedCompleted ? distrubutedValidatorAnimation : '',
       }"
     >
+      <div v-if="enrGeneratorAnim" class="generatingAnim w-full h-full items-center justify-center flex">
+        <img class="w-1/2" src="/animation/services/obol/obol-animation.gif" alt="ENR generating" />
+      </div>
+
       <div v-if="!backupDistributedValidator" class="obol-modal-plugin_wapper">
         <span v-if="!headerStore.distrubutedValidatorGenerator">{{ headerStore.generatedENR }}</span>
         <div v-else class="span-wrapper">
@@ -46,7 +50,7 @@
 </template>
 <script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
-import { ref, onMounted, computed, onBeforeUnmount } from "vue";
+import { ref, onMounted, computed, onBeforeUnmount, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { saveToFile } from "@/composables/utils";
 
@@ -65,6 +69,7 @@ const polling = ref(null);
 const dkgLogs = ref([]);
 const backupPath = ref("");
 const runningBackup = ref(false);
+const enrGeneratorAnim = ref(false);
 
 const headerStore = useNodeHeader();
 
@@ -115,11 +120,16 @@ const enrBtnToShow = computed(() => {
 onMounted(() => {
   if (!headerStore.distrubutedValidatorGenerator && headerStore.enrIsGenerating) {
     createEnr();
+    enrGeneratorAnim.value = true;
   }
   headerStore.generatedENR = "";
   if (headerStore.distrubutedValidatorGenerator && !headerStore.enrIsGenerating) {
     startDKG(props.clusterDefinition);
   }
+});
+
+onUnmounted(() => {
+  enrGeneratorAnim.value = false;
 });
 
 onBeforeUnmount(() => {
@@ -140,8 +150,10 @@ const createEnr = async () => {
     headerStore.generatedENR = enr;
 
     if (enr.includes("enr:-")) {
+      enrGeneratorAnim.value = false;
       enrGeneratedSuccess.value = true;
     } else {
+      enrGeneratedFailed.value = false;
       enrGeneratedFailed.value = true;
     }
 
