@@ -38,10 +38,11 @@ export class ValidatorAccountManager {
 
     for (let i = 0; i < content.length; i += chunkSize) {
       const contentChunk = content.slice(i, i + chunkSize);
+      const passwordChunk = passwords.slice(i, i + chunkSize);
 
       this.batches.push({
         keystores: contentChunk,
-        passwords: passwords,
+        passwords: passwordChunk,
         ...(slashing_protection_content && { slashing_protection: slashing_protection_content }),
       });
     }
