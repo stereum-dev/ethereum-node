@@ -1031,13 +1031,22 @@ export default {
             content: this.ssvTotalConfig.passwordFileData,
           });
           let keyFileName = this.getFilenameFromPath(this.ssvTotalConfig.privateKeyFilePath);
+          let keyFileData = this.ssvTotalConfig.privateKeyFileData;
+          if (
+            typeof this.ssvTotalConfig.privateKeyFileData === "object" &&
+            this.ssvTotalConfig.privateKeyFileData !== null
+          ) {
+            // SSV generated keystore uses "pubKey" since v1.3.3, previously it was "publicKey"
+            // If we have both here then the backend attached "publicKey" for consistency -> remove it from the backup
+            if (keyFileData?.publicKey && keyFileData?.pubKey) {
+              delete keyFileData["publicKey"];
+            }
+            // Convert object to string for backup
+            keyFileData = JSON.stringify(this.ssvTotalConfig.privateKeyFileData);
+          }
           downloadObjects.push({
             filename: keyFileName, // "encrypted_private_key.json"
-            content:
-              typeof this.ssvTotalConfig.privateKeyFileData === "object" &&
-              this.ssvTotalConfig.privateKeyFileData !== null
-                ? JSON.stringify(this.ssvTotalConfig.privateKeyFileData)
-                : this.ssvTotalConfig.privateKeyFileData,
+            content: keyFileData,
           });
           let backupFileName = "";
           if (this.operatorData) {
