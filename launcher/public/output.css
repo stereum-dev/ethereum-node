@@ -887,6 +887,10 @@ video {
   left: 1.3rem;
 }
 
+.left-\[100px\]{
+  left: 100px;
+}
+
 .left-\[17rem\]{
   left: 17rem;
 }
@@ -897,10 +901,6 @@ video {
 
 .left-\[40\%\]{
   left: 40%;
-}
-
-.left-\[45px\]{
-  left: 45px;
 }
 
 .left-\[920px\]{
@@ -997,6 +997,10 @@ video {
 
 .-top-1{
   top: -0.25rem;
+}
+
+.left-\[45px\]{
+  left: 45px;
 }
 
 .z-0{
@@ -1429,6 +1433,10 @@ video {
 
 .mb-2{
   margin-bottom: 0.5rem;
+}
+
+.mb-3{
+  margin-bottom: 0.75rem;
 }
 
 .mb-\[1px\]{
@@ -2250,12 +2258,12 @@ video {
   width: 74px;
 }
 
-.w-\[8rem\]{
-  width: 8rem;
+.w-\[807px\]{
+  width: 807px;
 }
 
-.w-\[925px\]{
-  width: 925px;
+.w-\[8rem\]{
+  width: 8rem;
 }
 
 .w-fit{
@@ -2270,6 +2278,10 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-\[925px\]{
+  width: 925px;
 }
 
 .min-w-\[100px\]{
@@ -2968,6 +2980,10 @@ video {
   border-radius: 55px;
 }
 
+.rounded-\[5px\]{
+  border-radius: 5px;
+}
+
 .rounded-\[75px\]{
   border-radius: 75px;
 }
@@ -3174,11 +3190,6 @@ video {
 .border-\[\#6c7e78\]{
   --tw-border-opacity: 1;
   border-color: rgb(108 126 120 / var(--tw-border-opacity));
-}
-
-.border-\[\#c7c9ca\]{
-  --tw-border-opacity: 1;
-  border-color: rgb(199 201 202 / var(--tw-border-opacity));
 }
 
 .border-blue-100{
@@ -3561,6 +3572,11 @@ video {
 .bg-\[\#224141\]{
   --tw-bg-opacity: 1;
   background-color: rgb(34 65 65 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#232428\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(35 36 40 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#232528\]{
@@ -3987,6 +4003,11 @@ video {
   background-color: transparent;
 }
 
+.bg-violet-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(139 92 246 / var(--tw-bg-opacity));
+}
+
 .bg-violet-900{
   --tw-bg-opacity: 1;
   background-color: rgb(76 29 149 / var(--tw-bg-opacity));
@@ -4000,11 +4021,6 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#232428\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(35 36 40 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#38504e\]{
@@ -5379,6 +5395,11 @@ html body {
 .hover\:border-gray-300:hover{
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.hover\:border-gray-500:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
 }
 
 .hover\:border-gray-600:hover{
