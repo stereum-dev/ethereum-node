@@ -47,7 +47,7 @@
       :class="['row-start-2' , !secretKey ? 'disabled' : '']"
       @send-code="sendTheCode"
     />
-    <TwoFactorBackup v-if="TwoFactoSetupIsActive" :class="['row-start-7', !authStore.validVerificationCode ? 'disabled' : '']" @save-backup="onSaveBackup" />
+    <TwoFactorBackup v-if="TwoFactoSetupIsActive" :class="['row-start-7', !authStore.validVerificationCode ? 'disabled' : '']" @save-scratch="onSaveScratch" />
     <TwoFactorBtn
       v-if="twoFatorIsEnabled || TwoFactoSetupIsActive"
       :class="['row-start-13', 'col-start-8', TwoFactoSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
@@ -130,51 +130,41 @@ const titleManager = computed(() => {
 
 //function to enable time based authentication
 const timaBaseActive = (value) => {
-  console.log(controlStore.ipAddress)
   isTimeBaseActive.value = value;
-  console.log(value);
 };
 
 //function to increase the original generation time limit
 const orgGenTimeLimit = (value) => {
   isOrgGenTimeLimit.value = value;
-  console.log(value);
 };
 
 //function to enable rate limiting
 const rateLimiting = (value) => {
   isRateLimiting.value = value;
-  console.log(value);
 };
 
 //function to send the code
 const sendTheCode = async () => {
   await ControlService.authenticatorVerification(authStore.varificationCode);
-  console.log("Code sent", authStore.varificationCode);
 };
 
-//function to save the backup
-const onSaveBackup = () => {
-  console.log("Backup saved");
+//function to save the scratch Code
+const onSaveScratch = () => {
   const blob = new Blob([verificationOutput.value], { type: "text/plain;charset=utf-8" });
   saveAs(blob, "2FA_ScratchCodes.txt");
   authStore.scratchCodeSaved = true;
 };
 
 const authenticatorHandler = (event, data) => {
-console.log(data)
   loadOutput(data);
 }
 
 const loadOutput = (data) => {
-  console.log(data);
 
   if(data[0] != "skip"){
     secretKey.value = data[1].split(": ").pop();
     let QRadress = `https://quickchart.io/qr?chs=200x200&chld=M|0&cht=qr&text=otpauth://totp/${controlStore.ipAddress}@${controlStore.ServerName}%3Fsecret%3D[SECRETKEY]%26issuer%3D${controlStore.ServerName}`
     QRcode.value = QRadress.replace("[SECRETKEY]",secretKey.value);
-    console.log(QRcode.value)
-    console.log("first")
   }
   
   if(data.length > 5){
@@ -184,13 +174,11 @@ const loadOutput = (data) => {
     }
     authStore.validVerificationCode = true;
     verificationOutput.value = data.slice(3, 9);
-    console.log("second")
   }
 }
 
 const checkAuth = async () => {
   configured2fa.value = await ControlService.checkForAuthenticator();
-  console.log(configured2fa.value)
 }
 
 const removeTwoFactor = async () => {
