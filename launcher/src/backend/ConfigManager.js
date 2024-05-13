@@ -188,9 +188,12 @@ export class ConfigManager {
   }
 
   async renameSetup(setup) {
-    console.log("rename setup logssssssssssssss-----------", setup);
     let currentSetups = await this.readMultiSetup();
     let setupsObj = yaml.load(currentSetups);
+
+    if (setupsObj[setup.setupId]) {
+      setupsObj[setup.setupId].name = setup.setupName;
+    }
 
     await this.writeMultiSetup(setupsObj);
   }
