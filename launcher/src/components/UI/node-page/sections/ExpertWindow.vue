@@ -6,7 +6,7 @@
       @click="$emit('hideModal')"
     ></div>
     <div
-      class="w-[807px] absolute inset-y-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      class="w-[925px] absolute inset-y-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
       :class="leftDistance ? leftDistance : 'left-0'"
       aria-labelledby="modal-title"
       role="dialog"
@@ -803,7 +803,7 @@ export default {
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
   transition-duration: 200ms;
 }
@@ -994,7 +994,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 .toggleTextBox .toggleTextInput {
-  grid-column: 5/7;
+  grid-column: 9/13;
   grid-row: 1;
   width: 100%;
   height: 94%;
@@ -1012,7 +1012,7 @@ input:checked + .slider:before {
   pointer-events: none !important;
 }
 .toggleTextBox span {
-  grid-column: 2/5;
+  grid-column: 5/9;
   grid-row: 1;
   width: 96%;
   height: 100%;
@@ -1020,7 +1020,7 @@ input:checked + .slider:before {
   text-transform: capitalize;
 }
 .toggleTextBox .buttonOn {
-  grid-column: 4/5;
+  grid-column: 8/9;
   grid-row: 1;
   width: 20px;
   height: 20px;
@@ -1029,7 +1029,7 @@ input:checked + .slider:before {
   margin-right: 10px;
 }
 .toggleTextBox .buttonOff {
-  grid-column: 4/5;
+  grid-column: 8/9;
   grid-row: 1;
   width: 20px;
   height: 20px;
