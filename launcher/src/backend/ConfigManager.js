@@ -187,6 +187,14 @@ export class ConfigManager {
     }
   }
 
+  async renameSetup(setup) {
+    console.log("rename setup logssssssssssssss-----------", setup);
+    let currentSetups = await this.readMultiSetup();
+    let setupsObj = yaml.load(currentSetups);
+
+    await this.writeMultiSetup(setupsObj);
+  }
+
   /**
    * Adds a service to a setup in the multi-setup configuration.
    *

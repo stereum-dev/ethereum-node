@@ -597,6 +597,10 @@ ipcMain.handle("deleteSetup", async (event, args) => {
   return await configManager.deleteSetup(args);
 });
 
+ipcMain.handle("renameSetup", async (event, args) => {
+  return await configManager.renameSetup(args);
+});
+
 ipcMain.handle("fetchTranslators", async (event, args) => {
   return await serviceManager.fetchTranslators(args);
 });

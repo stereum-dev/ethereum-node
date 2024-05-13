@@ -590,6 +590,10 @@ class ControlService extends EventEmitter {
   async deleteSetup(args) {
     return this.promiseIpc.send("deleteSetup", args);
   }
+
+  async renameSetup(args) {
+    return this.promiseIpc.send("renameSetup", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
