@@ -63,8 +63,8 @@
                       </div>
                     </div>
                     <div class="icon-bg">
-                      <div class="seting-icon" @click.stop="expertModeHandler(item)">
-                        <img src="/img/icon/service-setting-icons/setting8.png" alt="icon" />
+                      <div class="seting-icon" @click.stop="openLogPage(item)">
+                        <img src="/img/icon/node-page-icons/service-command-open-logs.png" alt="icon" />
                       </div>
                     </div>
                   </div>
@@ -77,7 +77,6 @@
                   @hide-modal="hideExpertMode(item)"
                 />
               </div>
-              <!-- <LogsSection v-if="isLogsPageActive" @close-log="closeLogPage" @export-log="exportLogs" /> -->
             </div>
             <div class="arrow-down" @click="scrollDown">
               <img src="/img/icon/control-page-icons/arrow-down-1.png" alt="icon" />
@@ -92,48 +91,56 @@
         <control-alert @expert-handler="expertModeHandlerAlert"></control-alert>
       </div>
     </div>
+    <LogsSection
+      v-if="isLogsPageActive"
+      :client="nodeStore.clientToLogs"
+      @close-log="closeLogPage"
+      @export-log="exportLogs"
+    />
     <!-- End Control main layout -->
   </base-layout>
 </template>
 <script setup>
-// injs ro composition kardam, hala mesle nodeScreen bayad log ro inja ham bezarim
-// faghat log be jay expert modal az tarafe service ha bayad baz beshe
-
-// import LogsSection from "../node-page/sections/LogsSection.vue";
+import ControlService from "@/store/ControlService";
+import LogsSection from "../node-page/sections/LogsSection.vue";
 import { useStateHandler } from "@/composables/services";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlAlert from "./ControlAlert.vue";
-// import { saveAs } from "file-saver";
+import { saveAs } from "file-saver";
 import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { useServices } from "@/store/services";
-// import { useNodeStore } from "@/store/theNode";
+import { useNodeStore } from "@/store/theNode";
 import { useFooter } from "@/store/theFooter";
-// import { useControlStore } from "@/store/theControl";
-import { ref, onMounted, computed, watch } from "vue";
-// import i18n from "@/includes/i18n";
+import { useControlStore } from "@/store/theControl";
+import { useNodeHeader } from "@/store/nodeHeader";
+import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 
-// const t = i18n.global.t;
 const pluginsTable = ref(null);
 
 const expertModeClient = ref(null);
 const isExpertWindowOpen = ref(false);
-// const pending = t("controlPage.pending");
-// const off = t("controlPage.off");
-// const on = t("controlPage.on");
-// const settingService = t("controlPage.settingService");
-// const isLogsPageActive = ref(false);
+const isLogsPageActive = ref(false);
 
-// const nodeStore = useNodeStore();
+const nodeStore = useNodeStore();
 const serviceStore = useServices();
-// const controlStore = useControlStore();
+const controlStore = useControlStore();
 const footerStore = useFooter();
+const headerStore = useNodeHeader();
+let polling = null;
 
 onMounted(() => {
+  updateServiceLogs();
+  polling = setInterval(updateServiceLogs, 10000); // refresh logs
+
   serviceStore.installedServices = serviceStore.installedServices.map((service) => ({
     isServicePending: false,
     ...service,
   }));
+});
+
+onUnmounted(() => {
+  clearInterval(polling);
 });
 
 const isAnyConsensusRunning = computed(() => {
@@ -162,11 +169,6 @@ const hideExpertMode = (el) => {
   isExpertWindowOpen.value = false;
 };
 
-const expertModeHandler = (el) => {
-  expertModeClient.value = el;
-  isExpertWindowOpen.value = true;
-};
-
 const expertModeHandlerAlert = (validator) => {
   expertModeClient.value = validator;
   isExpertWindowOpen.value = true;
@@ -176,15 +178,36 @@ const stateHandler = (item) => {
   useStateHandler(item);
 };
 
-// const openLogPage = (item) => {
-//   isLogsPageActive.value = true;
-//   controlStore.serviceLogs = item;
-// };
+const openLogPage = (item) => {
+  console.log("item", item);
+  nodeStore.clientToLogs = item;
+  isLogsPageActive.value = true;
+};
 
-// const closeLogPage = () => {
-//   isLogsPageActive.value = false;
-//   controlStore.serviceLogs = null;
-// };
+const closeLogPage = () => {
+  isLogsPageActive.value = false;
+  controlStore.serviceLogs = null;
+};
+const exportLogs = async (client) => {
+  const currentService = nodeStore.serviceLogs.find(
+    (service) => service.config?.serviceID === client.config?.serviceID
+  );
+
+  const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
+
+  // Select the data based on the condition
+  const data = nodeStore.exportLogs ? currentService.logs.slice(-150).reverse() : currentService.logs.reverse();
+
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+  saveAs(blob, fileName);
+};
+const updateServiceLogs = async () => {
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+    const data = await ControlService.getServiceLogs({ logs_tail: 150 });
+    nodeStore.serviceLogs = data;
+  }
+};
 </script>
 
 <style scoped>
