@@ -42,8 +42,7 @@ const emit = defineEmits([
   "confirmConsensus",
   "infoModal",
   "modifyService",
-  "selectRename",
-  "confirmRename",
+
   "openConfigs",
   "deleteSetup",
 ]);
