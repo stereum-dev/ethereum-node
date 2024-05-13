@@ -3,7 +3,7 @@
     <ServerDetails />
     <SetupDetails
       :list="setupsList"
-      @rename-setup="renameSetup"
+      @select-rename="selectRename"
       @confirm-rename="confirmRename"
       @select-setup="selectSetup"
       @server-view="serverView"
@@ -19,7 +19,7 @@ import SetupDetails from "./header/SetupDetails.vue";
 import { computed } from "vue";
 import { useSetups } from "@/store/setups";
 
-const emit = defineEmits(["renameSetup", "confirmRename"]);
+const emit = defineEmits(["selectRename", "confirmRename"]);
 const setupStore = useSetups();
 
 const setupsList = computed(() => {
@@ -29,12 +29,12 @@ const setupsList = computed(() => {
   return list;
 });
 
-const renameSetup = (setup) => {
-  emit("renameSetup", setup);
+const selectRename = (setup) => {
+  emit("selectRename", setup);
 };
 
-const confirmRename = (setup) => {
-  emit("confirmRename", setup);
+const confirmRename = () => {
+  emit("confirmRename");
 };
 
 const selectSetup = (setup) => {

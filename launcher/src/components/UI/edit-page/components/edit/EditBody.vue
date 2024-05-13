@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between items-center">
-    <EditHeader @rename-setup="renameSetup" @confirm-rename="confirmRename" />
+    <EditHeader @select-rename="selectRename" @confirm-rename="confirmRename" />
     <ConfigBody
       v-if="setupStore.isEditConfigViewActive"
       @on-drop="onDrop"
@@ -18,8 +18,6 @@
       @delete-setup="deleteSetup"
       @connect-setup="connectSetup"
       @setup-infos="setupInfos"
-      @rename-setup="renameSetup"
-      @confirm-rename="confirmRename"
       @open-configs="openConfigs"
     />
   </div>
@@ -34,6 +32,7 @@ import LeaderLine from "leader-line-new";
 import { computed, ref, watchEffect } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "@/store/setups";
+import ControlService from "@/store/ControlService";
 
 const emit = defineEmits([
   "onDrop",
@@ -43,7 +42,7 @@ const emit = defineEmits([
   "confirmConsensus",
   "infoModal",
   "modifyService",
-  "renameSetup",
+  "selectRename",
   "confirmRename",
   "openConfigs",
   "deleteSetup",
@@ -244,18 +243,20 @@ const infoModal = (item) => {
   emit("infoModal", item);
 };
 
-const renameSetup = (setup) => {
+const selectRename = async (setup) => {
   setupStore.setupToRename = setup.setupName;
   setupStore.isRenameSetupActive = true;
-  console.log("renameSetup", setup);
-  // emit("renameSetup", setup);
 };
 
-const confirmRename = (setup) => {
-  setupStore.setupToRename = null;
+const confirmRename = async () => {
+  const setup = {
+    setupId: setupStore.selectedSetup.setupId,
+    setupName: setupStore.setupToRename,
+  };
+  await ControlService.renameSetup(setup);
   setupStore.isRenameSetupActive = false;
-  console.log("confirmRename", setup);
-  // emit("confirmRename", setup);
+  setupStore.setupToRename = null;
+  setupStore.selectedSetup = null;
 };
 
 const openConfigs = (setup) => {

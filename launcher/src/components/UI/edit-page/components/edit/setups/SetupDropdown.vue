@@ -129,7 +129,7 @@
     <RenameSetup
       v-if="route.path === '/edit'"
       @confirm-rename="confirmRename"
-      @rename-setup="renameSetup"
+      @rename-setup="selectRename"
     />
   </div>
 </template>
@@ -146,7 +146,7 @@ const { list } = defineProps({
   },
 });
 
-const emit = defineEmits(["renameSetup", "selectSetup", "serverView"]);
+const emit = defineEmits(["selectRename", "selectSetup", "serverView", "confirmRename"]);
 
 const route = useRoute();
 const setupStore = useSetups();
@@ -172,14 +172,16 @@ const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
-const renameSetup = () => {
+const selectRename = () => {
   if (setupStore.selectedSetup) {
-    emit("renameSetup", setupStore.selectedSetup);
+    emit("selectRename", setupStore.selectedSetup);
   }
 };
 
 const confirmRename = () => {
   setupStore.isRenameSetupActive = false;
+
+  emit("confirmRename");
 };
 
 const selectSetup = (setup) => {

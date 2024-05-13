@@ -4,7 +4,7 @@
   >
     <SetupDropdown
       :list="props.list"
-      @rename-setup="renameSetup"
+      @select-rename="selectRename"
       @confirm-rename="confirmRename"
       @select-setup="selectSetup"
       @server-view="serverView"
@@ -21,14 +21,14 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["renameSetup", "confirmRename", "selectSetup", "serverView"]);
+const emit = defineEmits(["selectRename", "confirmRename", "selectSetup", "serverView"]);
 
-const renameSetup = (setup) => {
-  emit("renameSetup", setup);
+const selectRename = (setup) => {
+  emit("selectRename", setup);
 };
 
-const confirmRename = (setup) => {
-  emit("confirmRename", setup);
+const confirmRename = () => {
+  emit("confirmRename");
 };
 
 const selectSetup = (setup) => {
