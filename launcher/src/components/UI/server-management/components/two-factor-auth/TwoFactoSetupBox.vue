@@ -6,7 +6,7 @@
       class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#A0A0A0] rounded-lg flex justify-start items-center"
     >
       <span class="w-40 h-full text-xs text-black flex justify-normal items-center pl-2">Your secret key is:</span>
-      <div class="key-code w-[65%] bg-black h-full flex justify-center items-center rounded-lg text-gray-50">
+      <div class="key-code w-[65%] bg-black h-full flex justify-center items-center rounded-lg text-gray-50 pl-2 text-xs">
         {{ !props.secretKey ? "wait..." : props.secretKey }}
       </div>
     </div>

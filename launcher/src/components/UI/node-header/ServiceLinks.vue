@@ -17,7 +17,6 @@
       <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser" />
       <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser"></mevboost-modal>
       <ObolModal v-if="showObolCharonWindow" @close-window="closeServiceBrowser" />
-      <authenticatorModal v-if="showAuthenticatorWindow" @close-window="closeServiceBrowser"></authenticatorModal>
     </div>
     <div class="arrow-box">
       <div class="right-arrow left-paddle paddle" @click="scrollRight">
@@ -39,10 +38,9 @@ import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
 import MevboostModal from "../services-modal//MevboostModal.vue";
 import ObolModal from "../services-modal/ObolModal.vue";
-import AuthenticatorModal from "../services-modal/AuthenticatorModal.vue";
 import { useNodeStore } from "@/store/theNode";
 export default {
-  components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal, ObolModal, AuthenticatorModal },
+  components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal, ObolModal },
   data() {
     return {
       isServiceAvailable: true,

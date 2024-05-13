@@ -446,16 +446,16 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getCurrentEpochSlot", args);
   }
 
-  async beginAuthSetup(args) {
-    return await this.promiseIpc.send("beginAuthSetup", args);
+  async beginAuthSetup(timeBased, increaseTimeLimit, enableRateLimit) {
+    return await this.promiseIpc.send("beginAuthSetup", {timeBased, increaseTimeLimit, enableRateLimit});
   }
 
   async authenticatorVerification(args) {
     return await this.promiseIpc.send("authenticatorVerification", args);
   }
 
-  async finishAuthSetup(increaseTimeLimit, enableRateLimit) {
-    return await this.promiseIpc.send("finishAuthSetup", { increaseTimeLimit, enableRateLimit} );
+  async finishAuthSetup() {
+    return await this.promiseIpc.send("finishAuthSetup");
   }
 
   async removeAuthenticator(args) {

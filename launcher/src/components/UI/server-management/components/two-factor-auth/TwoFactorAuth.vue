@@ -4,10 +4,16 @@
   >
     <span class="top-ttl row-start-1">{{ titleManager }}</span>
     <TwoFactorBtn
-      v-if="!twoFatorIsEnabled && !TwoFactoSetupIsActive"
+      v-if="!twoFatorIsEnabled && !TwoFactoSetupIsActive && !configured2fa"
       class="row-start-2"
       btn-name="Setup"
       @btnClick="enableTwoFactor"
+    />
+    <TwoFactorBtn
+      v-if="!twoFatorIsEnabled && !TwoFactoSetupIsActive && configured2fa"
+      class="row-start-2 remove-btn"
+      btn-name="Remove 2FA"
+      @btnClick="removeTwoFactor"
     />
     <TwoFactorCheckLine
       v-if="twoFatorIsEnabled"
@@ -35,16 +41,16 @@
     hardcoded to test -->
     <TwoFactoSetupBox
       v-if="TwoFactoSetupIsActive"
-      barcode=""
-      secret-key="test"
+      :barcode="QRcode"
+      :secret-key="secretKey"
       :time-based="isTimeBaseActive"
-      class="row-start-2"
+      :class="['row-start-2' , !secretKey ? 'disabled' : '']"
       @send-code="sendTheCode"
     />
-    <TwoFactorBackup v-if="TwoFactoSetupIsActive" class="row-start-7" @save-backup="onSaveBackup" />
+    <TwoFactorBackup v-if="TwoFactoSetupIsActive" :class="['row-start-7', !authStore.validVerificationCode ? 'disabled' : '']" @save-backup="onSaveBackup" />
     <TwoFactorBtn
       v-if="twoFatorIsEnabled || TwoFactoSetupIsActive"
-      :class="['row-start-13', 'col-start-8', TwoFactoSetupIsActive && !authStore.varificationCode ? 'disabled' : '']"
+      :class="['row-start-13', 'col-start-8', TwoFactoSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
       btn-name="Setup"
       @btnClick="startSetup"
     />
@@ -56,10 +62,15 @@ import TwoFactorBtn from "./TwoFactorBtn.vue";
 import TwoFactorCheckLine from "./TwoFactorCheckLine.vue";
 import TwoFactoSetupBox from "./TwoFactoSetupBox";
 import TwoFactorBackup from "./TwoFactorBackup.vue";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
+import { useControlStore } from "@/store/theControl";
+import ControlService from "@/store/ControlService";
+import { saveAs } from "file-saver";
+
 
 const authStore = useTwoFactorAuth();
+const controlStore = useControlStore(); 
 //enable two factor authentication
 const twoFatorIsEnabled = ref(false);
 //setup two factor authentication
@@ -71,20 +82,39 @@ const isOrgGenTimeLimit = ref(false);
 //third check box value to enable rate limiting
 const isRateLimiting = ref(true);
 
+
+const verificationOutput = ref("");
+const secretKey = ref("");
+const QRcode = ref("");
+const configured2fa = ref();
+
+
+onMounted(() => {
+    checkAuth();
+    ControlService.addListener("2FAEvents", authenticatorHandler);
+  });
+onUnmounted(() => {
+    ControlService.removeListener("2FAEvents", authenticatorHandler);
+  });
+
 //function to enable two factor authentication
 const enableTwoFactor = () => {
   twoFatorIsEnabled.value = true;
 };
 
 //setup button functions
-const startSetup = () => {
+const startSetup = async () => {
   if (twoFatorIsEnabled.value) {
     //first check box value to enable time based authentication
     twoFatorIsEnabled.value = false;
     TwoFactoSetupIsActive.value = true;
+    authStore.varificationCode = "";
+    authStore.validVerificationCode = false;
+    authStore.scratchCodeSaved = false;
+    await ControlService.beginAuthSetup(isTimeBaseActive.value, isOrgGenTimeLimit.value, isRateLimiting.value);
   } else {
     //setup two factor authentication
-    console.log("Setup is already active");
+    await ControlService.finishAuthSetup();
   }
 };
 
@@ -100,6 +130,7 @@ const titleManager = computed(() => {
 
 //function to enable time based authentication
 const timaBaseActive = (value) => {
+  console.log(controlStore.ipAddress)
   isTimeBaseActive.value = value;
   console.log(value);
 };
@@ -117,14 +148,53 @@ const rateLimiting = (value) => {
 };
 
 //function to send the code
-const sendTheCode = () => {
+const sendTheCode = async () => {
+  await ControlService.authenticatorVerification(authStore.varificationCode);
   console.log("Code sent", authStore.varificationCode);
-  authStore.varificationCode = "";
 };
 
 //function to save the backup
 const onSaveBackup = () => {
   console.log("Backup saved");
+  const blob = new Blob([verificationOutput.value], { type: "text/plain;charset=utf-8" });
+  saveAs(blob, "2FA_ScratchCodes.txt");
+  authStore.scratchCodeSaved = true;
+};
+
+const authenticatorHandler = (event, data) => {
+console.log(data)
+  loadOutput(data);
+}
+
+const loadOutput = (data) => {
+  console.log(data);
+
+  if(data[0] != "skip"){
+    secretKey.value = data[1].split(": ").pop();
+    let QRadress = `https://quickchart.io/qr?chs=200x200&chld=M|0&cht=qr&text=otpauth://totp/${controlStore.ipAddress}@${controlStore.ServerName}%3Fsecret%3D[SECRETKEY]%26issuer%3D${controlStore.ServerName}`
+    QRcode.value = QRadress.replace("[SECRETKEY]",secretKey.value);
+    console.log(QRcode.value)
+    console.log("first")
+  }
+  
+  if(data.length > 5){
+    if(data[0] != "skip"){
+      QRcode.value = QRcode.value.replace("totp","hotp");
+      authStore.varificationCode = data[2].split("is ").pop();
+    }
+    authStore.validVerificationCode = true;
+    verificationOutput.value = data.slice(3, 9);
+    console.log("second")
+  }
+}
+
+const checkAuth = async () => {
+  configured2fa.value = await ControlService.checkForAuthenticator();
+  console.log(configured2fa.value)
+}
+
+const removeTwoFactor = async () => {
+  await ControlService.removeAuthenticator();
 };
 </script>
 <style scoped>
@@ -144,5 +214,8 @@ const onSaveBackup = () => {
   opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
+}
+.remove-btn {
+  background: #ff0000;
 }
 </style>

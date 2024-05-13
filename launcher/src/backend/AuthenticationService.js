@@ -3,10 +3,14 @@ export class AuthenticationService {
     this.nodeConnection = nodeConnection;
     this.authStream = null;
     this.timeBased = null;
+    this.increaseTimeLimit = false;
+    this.enableRateLimit = true;
   }
 
-  async beginAuthSetup(timeBased, win){
+  async beginAuthSetup(timeBased, increaseTimeLimit, enableRateLimit, win){
     this.timeBased = timeBased;
+    this.increaseTimeLimit = increaseTimeLimit;
+    this.enableRateLimit = enableRateLimit;
     let outputString;
     let sendKey = false;
     let validCode = false;
@@ -38,6 +42,7 @@ export class AuthenticationService {
       this.authStream.write('n\n');
     }
     this.authStream.stdout.on('data', (data) => {
+      console.log(data.toString())
       outputString += data.toString();
 
       if(timeBased && outputString.includes("secret key") && !sendKey){
@@ -108,18 +113,18 @@ export class AuthenticationService {
     this.authStream.write(verificationCode + '\n');
   }
 
-  async finishAuthSetup(increaseTimeLimit, enableRateLimit){
+  async finishAuthSetup(){
       this.authStream.write('y\n');
       if(this.timeBased){
         this.authStream.write('n\n');
       }
-      if(increaseTimeLimit){
+      if(this.increaseTimeLimit){
         this.authStream.write('y\n');
       }
       else{
         this.authStream.write('n\n');
       }
-      if(enableRateLimit){
+      if(this.enableRateLimit){
         this.authStream.write('y\n');
       }
       else{

@@ -481,11 +481,11 @@ ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
 
 ipcMain.handle("beginAuthSetup", async (event, args) => {
   const current_window = event.sender;
-  return await authenticationService.beginAuthSetup(args, current_window)
+  return await authenticationService.beginAuthSetup(args.timeBased, args.increaseTimeLimit, args.enableRateLimit, current_window)
 });
 
-ipcMain.handle("finishAuthSetup", async (event, args) => {
-  return await authenticationService.finishAuthSetup(args.increaseTimeLimit, args.enableRateLimit)
+ipcMain.handle("finishAuthSetup", async () => {
+  return await authenticationService.finishAuthSetup()
 });
 
 ipcMain.handle("authenticatorVerification", async (event, args) => {
