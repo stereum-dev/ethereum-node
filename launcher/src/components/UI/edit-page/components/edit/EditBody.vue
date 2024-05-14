@@ -252,10 +252,16 @@ const confirmRename = async () => {
     setupId: setupStore.selectedSetup.setupId,
     setupName: setupStore.setupToRename,
   };
+  setupStore.selectedSetup.setupName = setupStore.setupToRename;
+  setupStore.editSetups = setupStore.editSetups.map((s) => {
+    if (s.setupId === setup.setupId) {
+      s.setupName = setup.setupName;
+    }
+    return s;
+  });
   await ControlService.renameSetup(setup);
   setupStore.isRenameSetupActive = false;
   setupStore.setupToRename = null;
-  setupStore.selectedSetup = null;
 };
 
 const openConfigs = (setup) => {
