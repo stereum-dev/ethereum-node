@@ -30,6 +30,7 @@ import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorSer
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 import { ExternalConsensusService } from "./ethereum-services/ExternalConsensusService";
 import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionService";
+import { AuthenticatorService } from "./ethereum-services/AuthenticatorService";
 import { CustomService } from "./ethereum-services/CustomService";
 import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import YAML from "yaml";
@@ -159,6 +160,8 @@ export class ServiceManager {
               services.push(ExternalConsensusService.buildByConfiguration(config));
             } else if (config.service == "ExternalExecutionService") {
               services.push(ExternalExecutionService.buildByConfiguration(config));
+            } else if (config.service == "AuthenticatorService") {
+              services.push(AuthenticatorService.buildByConfiguration(config));
             } else if (config.service == "CustomService") {
               services.push(CustomService.buildByConfiguration(config));
             } else if (config.service == "LidoObolExitService") {
@@ -166,6 +169,7 @@ export class ServiceManager {
             } else if (config.service == "SSVDKGService") {
               services.push(SSVDKGService.buildByConfiguration(config));
             }
+
           } else {
             log.error("found configuration without service!");
             log.error(config);
@@ -1057,6 +1061,8 @@ export class ServiceManager {
           args.source,
           args.gateway ? args.gateway : ""
         );
+      case "AuthenticatorService":
+        return AuthenticatorService.buildByUserInput(args.network);
       case "CustomService":
         ports = [];
         return CustomService.buildByUserInput(

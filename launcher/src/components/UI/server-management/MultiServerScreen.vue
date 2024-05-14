@@ -4,7 +4,9 @@ import ServerHeader from './components/ServerHeader.vue';
     class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
     <SwitchAnimation
-      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists"
+      v-if="
+        (serverStore.isServerAnimationActive || serverStore.connectingProcess) &&
+        !serverStore.errorMsgExists && !isTwoFactorAuthActive"
       @cancel-login="cancelLoginHandler"
     />
     <ServerHeader @tab-picker="tabPicker" />
@@ -28,6 +30,7 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
+    <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
   </div>
 </template>
@@ -37,6 +40,7 @@ import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
 import SwitchAnimation from "./components/SwitchAnimation.vue";
+import TwofactorModal from "./components/modals/TwofactorModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
 
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
@@ -54,6 +58,7 @@ const router = useRouter();
 const keyLocation = ref("");
 let loginAbortController = new AbortController();
 const serverBodyComponentKey = ref(0);
+const isTwoFactorAuthActive = ref(false);
 
 watchEffect(() => {
   serverStore.setActiveState("isServerDetailsActive");
@@ -76,11 +81,16 @@ watchEffect(() => {
     case "settings":
       serverStore.setActiveState("isServerSettingsActive");
       break;
+
+    case "2fa":
+      serverStore.setActiveState("isTwoFactorAuthActive");
+      break;
     case null:
       serverStore.setActiveState("isServerDetailsActive");
       break;
   }
 });
+
 // const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
 
 onMounted(async () => {
@@ -91,13 +101,31 @@ onMounted(async () => {
     tabPicker("update");
     serverStore.isUpdatePanelActive = false;
   }
+  ControlService.addListener("require2FA", openTwoFactorModal);
 });
 
 onUnmounted(() => {
   serverStore.setActiveState(null);
+  ControlService.removeListener("require2FA", openTwoFactorModal);
 });
 
 //Methods
+
+const openTwoFactorModal = () => {
+  cancelLoginHandler();
+  isTwoFactorAuthActive.value = true;
+};
+
+const closeAndCancel = async () => {
+  closeWindow();
+  await ControlService.cancelVerification();
+};
+
+// authentification handling
+const submitAuthHandler = async (val) => {
+  await ControlService.submitVerification(val);
+  loginHandler();
+};
 
 //Server Management Login Handler
 
@@ -200,11 +228,13 @@ const acceptChangePass = async (pass) => {
 
 const closeWindow = () => {
   serverStore.isRemoveModalActive = false;
+  isTwoFactorAuthActive.value = false;
 };
 
 const closeErrorDialog = () => {
   serverStore.errorMsgExists = false;
   serverStore.connectingProcess = false;
+  closeAndCancel();
 };
 
 const removeServerHandler = async () => {

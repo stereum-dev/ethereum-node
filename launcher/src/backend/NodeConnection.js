@@ -30,8 +30,8 @@ export class NodeConnection {
     this.nodeUpdates = new NodeUpdates(this);
   }
 
-  async establish(taskManager) {
-    await this.sshService.connect(this.nodeConnectionParams);
+  async establish(taskManager, currentWindow) {
+    await this.sshService.connect(this.nodeConnectionParams, currentWindow);
     await this.findStereumSettings();
     this.taskManager = taskManager;
   }
@@ -563,9 +563,11 @@ export class NodeConnection {
       } catch (e) {
         throw new Error("Given encrypted SSV private_key (keystore) is invalid (not JSON format)");
       }
-      if (!private_key_data?.publicKey) {
+      // SSV generated keystore uses "pubKey" since v1.3.3, previously it was "publicKey"
+      if (!private_key_data?.publicKey && !private_key_data?.pubKey) {
         throw new Error("Given encrypted SSV private_key (keystore) is invalid (no public key available)");
       }
+      private_key_data.publicKey = private_key_data?.publicKey ? private_key_data.publicKey : private_key_data?.pubKey;
       const newPubKey = private_key_data.publicKey;
 
       // Add password_file and keystore_file to secrets dir
@@ -813,6 +815,7 @@ export class NodeConnection {
       }
       const keystore_content = keystore_read.stdout;
       const keystore_data = JSON.parse(keystore_content);
+      keystore_data.publicKey = keystore_data?.publicKey ? keystore_data.publicKey : keystore_data?.pubKey;
       const newPubKey = keystore_data.publicKey;
 
       // Write network config
@@ -918,6 +921,7 @@ export class NodeConnection {
       }
       const keystore_content = keystore_read.stdout;
       const keystore_data = JSON.parse(keystore_content);
+      keystore_data.publicKey = keystore_data?.publicKey ? keystore_data.publicKey : keystore_data?.pubKey;
       const newPubKey = keystore_data.publicKey;
 
       // Write network config
@@ -1184,7 +1188,9 @@ export class NodeConnection {
         privateKeyFilePath: keyStorePrivateKeyFile,
         privateKeyFileData: (() => {
           try {
-            return JSON.parse(keyStorePrivateKeyFileContent);
+            let pkfdata = JSON.parse(keyStorePrivateKeyFileContent);
+            pkfdata.publicKey = pkfdata?.publicKey ? pkfdata.publicKey : pkfdata?.pubKey;
+            return pkfdata;
           } catch (e) {
             return keyStorePrivateKeyFileContent;
           }

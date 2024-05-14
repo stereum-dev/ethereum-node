@@ -19,6 +19,13 @@
         state: present
         allow_downgrade: true
       become: true
+    - name: Get current version of Git package
+      shell: dpkg -s git | grep '^Version:'
+      register: git_version
+    - name: Write Git version to file
+      copy:
+        content: "{{ git_version.stdout }}"
+        dest: /tmp/git_version.txt
     - name: Update package cache (Ubuntu)
       apt:
         update_cache: true
