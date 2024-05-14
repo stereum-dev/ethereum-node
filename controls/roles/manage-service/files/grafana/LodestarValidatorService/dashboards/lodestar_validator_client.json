@@ -78,7 +78,9 @@
       "icon": "external link",
       "includeVars": true,
       "keepTime": true,
-      "tags": ["lodestar"],
+      "tags": [
+        "lodestar"
+      ],
       "targetBlank": false,
       "title": "Lodestar dashboards",
       "tooltip": "",
@@ -246,7 +248,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -261,7 +265,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "lodestar_version{scrape_location=\"validator\"}",
+          "expr": "lodestar_version{job=\"lodestar_validator\"}",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -313,7 +317,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -328,7 +334,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "nodejs_version_info{scrape_location=\"validator\"}",
+          "expr": "nodejs_version_info{job=\"lodestar_validator\"}",
           "interval": "",
           "legendFormat": "{{version}}",
           "refId": "A"
@@ -377,7 +383,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -392,7 +400,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "lodestar_version{scrape_location=\"validator\"}",
+          "expr": "lodestar_version{job=\"lodestar_validator\"}",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -443,7 +451,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -507,7 +517,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -521,7 +533,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "process_heap_bytes{scrape_location=\"validator\"}",
+          "expr": "process_heap_bytes{job=\"lodestar_validator\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -571,7 +583,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -585,7 +599,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "nodejs_heap_size_used_bytes{scrape_location=\"validator\"}",
+          "expr": "nodejs_heap_size_used_bytes{job=\"lodestar_validator\"}",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1912,7 +1926,9 @@
   "refresh": false,
   "schemaVersion": 35,
   "style": "dark",
-  "tags": ["lodestar"],
+  "tags": [
+    "lodestar"
+  ],
   "templating": {
     "list": [
       {
