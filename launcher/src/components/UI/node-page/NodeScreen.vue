@@ -6,7 +6,11 @@
         <SidebarSection />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
-        <NodeSection @open-expert="openExpertModal" @open-log="openLogPage" />
+        <NodeSection
+          @open-expert="openExpertModal"
+          @open-log="openLogPage"
+          @export-setup="exportSetup"
+        />
         <ExpertWindow
           v-if="isExpertModeOpen"
           :item="expertModeClient"

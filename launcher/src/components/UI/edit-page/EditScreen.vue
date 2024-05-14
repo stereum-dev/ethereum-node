@@ -30,7 +30,7 @@
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <ChangesSection
-          @remove-change="removeChangeHandler"
+          @remove-change="cancelChangeHandler"
           @confirm-changes="confirmHandler"
         />
       </div>
@@ -464,7 +464,7 @@ const drawerMouseLeave = () => {
 
 //Change Box methods
 
-const removeChangeHandler = (item) => {
+const cancelChangeHandler = (item) => {
   isAddModalOpen.value = false;
   item.service.isRemoveProcessing = false;
   if (item) {
@@ -700,7 +700,7 @@ const selectedServiceToRemove = (item) => {
   item.displayTooltip = false;
   manageStore.selectedItemToRemove.push(item);
   const confirmDelete = {
-    id: item.config.serviceID,
+    id: item.config?.serviceID || item.id,
     content: "DELETE",
     contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
@@ -709,7 +709,7 @@ const selectedServiceToRemove = (item) => {
       : setupStore.selectedSetup?.setupId,
   };
   const itemExists = manageStore.confirmChanges.some(
-    (e) => e.id === item.config.serviceID && e.content === "DELETE"
+    (e) => (e.id === item.config?.serviceID || e.id === item.id) && e.content === "DELETE"
   );
   if (!itemExists) {
     manageStore.confirmChanges.push(confirmDelete);
@@ -786,14 +786,23 @@ const confirmHandler = async () => {
   if (setupExists) {
     manageStore.disableConfirmButton = true;
     const setup = setupStore.selectedSetupToRemove;
+    console.log("setup", setup);
+    console.log(manageStore.confirmChanges);
     setupStore.allSetups = setupStore.allSetups.filter(
       (e) => e.setupId !== setup.setupId
     );
     setupStore.editSetups = setupStore.editSetups.filter(
       (e) => e.setupId !== setup.setupId
     );
+
     const setupId = setup.setupId;
     await ControlService.deleteSetup(setupId);
+    const subTask = manageStore.confirmChanges.map((e) => {
+      return e.subTasks;
+    });
+
+    await ControlService.handleServiceChanges(useDeepClone(subTask));
+
     setTimeout(() => {
       manageStore.confirmChanges = [];
       setupStore.editSetups = setupStore.allSetups;
@@ -850,6 +859,14 @@ const deleteSetup = async (item) => {
     }
     return e;
   });
+  const subtasks = item?.services.map((service) => {
+    return {
+      id: service.id,
+      content: "DELETE",
+      contentIcon: "/img/icon/edit-node-icons/delete-service.png",
+      service: service,
+    };
+  });
 
   manageStore.selectedItemToRemove.push(item);
   const confirmDelete = {
@@ -857,19 +874,15 @@ const deleteSetup = async (item) => {
     content: "DELETE",
     contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
+    subTasks: subtasks,
   };
+
   const itemExists = manageStore.confirmChanges.some(
     (e) => e.id === item.setupId && e.content === "DELETE"
   );
   if (!itemExists) {
     manageStore.confirmChanges.push(confirmDelete);
   }
-
-  console.log(manageStore.confirmChanges);
-  // setupStore.allSetups = setupStore.allSetups.filter((e) => e.setupId !== item.setupId);
-  // setupStore.editSetups = setupStore.editSetups.filter((e) => e.setupId !== item.setupId);
-  // const setupId = item.setupId;
-  // await ControlService.deleteSetup(setupId);
 };
 
 const importSetup = () => {

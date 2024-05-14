@@ -16,9 +16,12 @@
       v-if="!setupStore.isConfigViewActive"
       @open-setup="openSetup"
       @export-setup="exportSetup"
-      @setup-state="setupState"
     />
-    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
+    <PluginLogs
+      v-if="isPluginLogPageActive"
+      :item="itemToLogs"
+      @close-log="closePluginLogsPage"
+    />
   </div>
 </template>
 
@@ -35,7 +38,7 @@ import ControlService from "@/store/ControlService";
 import LeaderLine from "leader-line-new";
 import { useSetups } from "@/store/setups";
 
-const emit = defineEmits(["openExpert", "openLog", "setupState"]);
+const emit = defineEmits(["openExpert", "openLog", "setupState", "exportSetup"]);
 
 // Refs
 const isPluginLogPageActive = ref(false);
@@ -68,7 +71,12 @@ watchEffect(() => {
 
 const oneWayConnection = (start, end, startSocket, endSocket) => {
   if (start && end) {
-    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    let newLine = new LeaderLine(
+      start,
+      end,
+      { dash: { animation: true } },
+      { hide: true }
+    );
     newLine.position();
     newLine.setOptions({
       size: 2,
@@ -90,7 +98,9 @@ const lineDrawHandler = (item) => {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
             s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
+            s.config?.dependencies?.executionClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "consensus") {
@@ -107,8 +117,12 @@ const lineDrawHandler = (item) => {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
             (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
+              s.config?.dependencies?.consensusClients.some(
+                (d) => d.id === item.config?.serviceID
+              )) ||
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -131,9 +145,15 @@ const lineDrawHandler = (item) => {
       case "validator": {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
-            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
-            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            item.config?.dependencies?.consensusClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            s.config?.dependencies?.consensusClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -209,7 +229,9 @@ const openSetup = (setup) => {
 
   serviceStore.installedServices = serviceStore.installedServices.filter((service) => {
     const isNotServerService = !setupStore.serverServices.includes(service.name);
-    const isServiceInSetup = setup.services.some((svc) => svc.id === service.config?.serviceID);
+    const isServiceInSetup = setup.services.some(
+      (svc) => svc.id === service.config?.serviceID
+    );
 
     return isNotServerService && isServiceInSetup;
   });
@@ -217,10 +239,6 @@ const openSetup = (setup) => {
 
 const exportSetup = (setup) => {
   emit("exportSetup", setup);
-};
-
-const setupState = (setup) => {
-  emit("setupState", setup);
 };
 
 const copyJwt = async (item) => {
