@@ -19,7 +19,7 @@ export class NodeUpdates {
       await this.nodeConnection.runPlaybook("upgrade-prep", { stereum_role: "upgrade-prep" });
       log.info("Starting Upgrade to noble numbat ...");
       const result = await this.nodeConnection.sshService.exec(
-        "do-release-upgrade -d -f DistUpgradeViewNonInteractive --allow-third-party"
+        "do-release-upgrade -f DistUpgradeViewNonInteractive --allow-third-party && touch /var/run/reboot-required"
       );
       await this.nodeConnection.restartServer();
       if (SSHService.checkExecError(result)) throw SSHService.extractExecError(result);

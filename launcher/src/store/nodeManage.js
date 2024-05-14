@@ -208,6 +208,7 @@ export const useNodeManage = defineStore("nodeManage", {
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://goerli.beaconcha.in/api/v1",
           support: ["staking", "ssv.network", "mev boost", "obol", "stereum on arm", "archive"],
+          state: "disabled",
         },
 
         {

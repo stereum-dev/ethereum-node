@@ -1,13 +1,21 @@
 import { ref, onMounted, watch } from 'vue';
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
+  >
     <div
       class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
     >
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
-        <span class="text-center text-gray-200 text-sm uppercase">{{ $t("oneClick.chooseNetwork") }}</span>
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center"
+      >
+        <span class="text-center text-gray-200 text-sm uppercase">{{
+          $t("oneClick.chooseNetwork")
+        }}</span>
       </div>
-      <div class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5">
+      <div
+        class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5"
+      >
         <div
           class="col-start-3 col-span-8 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
           @click="dropdownHandler"
@@ -43,6 +51,7 @@ import { ref, onMounted, watch } from 'vue';
               v-for="item in manageStore.networkList"
               :key="item.name"
               class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+              :class="item?.state === 'disabled' ? 'pointer-events-none opacity-50' : ''"
               @click="getNetwork(item)"
             >
               <img
@@ -66,7 +75,8 @@ import { ref, onMounted, watch } from 'vue';
             class="col-span-1 row-span-1 justify-self-center self-center hover:border hover:border-teal-500 rounded-md hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
             :class="{
               'opacity-30 pointer-events-none':
-                !manageStore.currentNetwork?.support?.includes(preset.name) || !displayItem?.name,
+                !manageStore.currentNetwork?.support?.includes(preset.name) ||
+                !displayItem?.name,
             }"
             @click="getPreset(preset)"
           >

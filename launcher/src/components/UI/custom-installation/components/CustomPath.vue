@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12"
+  >
     <CustomHeader />
     <div
       class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
@@ -7,8 +9,12 @@
       <div
         class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
       >
-        <div class="col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center p-2">
-          <span class="text-left text-gray-200 text-sm"> {{ $t("customInstallation.customInstallationText") }}</span>
+        <div
+          class="col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center p-2"
+        >
+          <span class="text-left text-gray-200 text-sm">
+            {{ $t("customInstallation.customInstallationText") }}</span
+          >
         </div>
         <div
           class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7 relative duration-500"
@@ -50,6 +56,7 @@
               v-for="item in manageStore.networkList"
               :key="item.name"
               class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+              :class="item?.state === 'disabled' ? 'pointer-events-none opacity-50' : ''"
               @click="selectNetwork(item)"
             >
               <img
@@ -70,8 +77,12 @@
               <span class="text-center text-gray-200 text-md">{{ inputTitle }}:</span>
             </div>
 
-            <div class="w-full h-20 flex justify-center items-center p-4 bg-[#3d4449] rounded-full">
-              <div class="w-full h-full bg-gray-300 rounded-full flex justify-start items-center">
+            <div
+              class="w-full h-20 flex justify-center items-center p-4 bg-[#3d4449] rounded-full"
+            >
+              <div
+                class="w-full h-full bg-gray-300 rounded-full flex justify-start items-center"
+              >
                 <input
                   v-model="userSelectedPath"
                   type="text"
@@ -151,7 +162,9 @@ const selectNetwork = (network) => {
 const getInstallPath = async () => {
   let largestVolumePath = await ControlService.getLargestVolumePath();
   if (largestVolumePath === "/") largestVolumePath += "opt";
-  const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
+  const stereumInstallationPath = [largestVolumePath, "/stereum"]
+    .join("/")
+    .replace(/\/{2,}/, "/");
   clickStore.installationPath = stereumInstallationPath;
 };
 
