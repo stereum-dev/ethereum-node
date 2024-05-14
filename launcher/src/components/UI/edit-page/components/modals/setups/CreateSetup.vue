@@ -223,7 +223,8 @@ const confirm = async () => {
   setupStore.isCreateSetupModalActive = false;
   loadSetups();
   loadServices();
-  getAllSetups();
+  setupStore.allSetups = getAllSetups();
+  setupStore.editSetups = setupStore.allSetups;
 };
 
 const closeWindow = () => {

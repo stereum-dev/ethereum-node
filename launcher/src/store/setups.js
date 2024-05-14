@@ -20,6 +20,10 @@ export const useSetups = defineStore("setups", {
     selectedSetupNetwork: null,
     isCreateSetupModalActive: false,
 
+    //Remove Setup
+    isRemoveSetupActive: false,
+    selectedSetupToRemove: null,
+
     //Import Setup YAML
 
     importedSetupFile: [],

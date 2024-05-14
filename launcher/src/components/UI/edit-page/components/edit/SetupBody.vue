@@ -35,47 +35,28 @@
 import SingleSetup from "./setups/SingleSetup.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "../../../../../store/setups";
-import { computed, onMounted, watch } from "vue";
+import { computed, watch } from "vue";
 import { useMultiSetups } from "@/composables/multiSetups";
 
 const emit = defineEmits(["deleteSetup", "connectSetup", "setupInfos", "openConfigs"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
-const { loadSetups, getAllSetups } = useMultiSetups();
+const { getAllSetups } = useMultiSetups();
 
 const getEditSetups = computed(() => {
   return setupStore.editSetups;
 });
 
-// watch(
-//   () => setupStore.serverSetups,
-//   () => {
-//     setupStore.allSetups = getAllSetups();
-//     setupStore.editSetups = getAllSetups();
-//   }
-// );
 watch(
-  () => setupStore.allSetups,
+  () => setupStore.serverSetups,
   () => {
-    getSetupsafterchange();
+    setupStore.allSetups = getAllSetups();
+    setupStore.editSetups = setupStore.allSetups;
   }
 );
 
-onMounted(() => {
-  getSetupsafterchange();
-});
-
 // Methods
-
-const getSetupsafterchange = async () => {
-  await loadSetups();
-
-  setupStore.editSetups = setupStore.allSetups;
-
-  console.log("All Setups", setupStore.allSetups);
-  console.log("Edit Setups", setupStore.editSetups);
-};
 
 const deleteSetup = (item) => {
   emit("deleteSetup", item);
