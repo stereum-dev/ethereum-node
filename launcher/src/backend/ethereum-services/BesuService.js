@@ -40,7 +40,6 @@ export class BesuService extends NodeService {
         "--logging=INFO",
         "--engine-host-allowlist=*",
         "--engine-rpc-port=8551",
-        "--engine-jwt-enabled=true",
         "--engine-jwt-secret=/engine.jwt",
       ], // command
       ["besu"], // entrypoint
