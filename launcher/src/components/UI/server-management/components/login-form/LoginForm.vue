@@ -477,10 +477,9 @@ const validateServerName = () => {
 
 const validateIP = () => {
   const ipOrHostname = serverStore.loginState.ip || "";
-  const pattern = /^((\b25[0-5]\b|\b2[0-4][0-9]\b|\b[01]?[0-9][0-9]?\b)\.){3}(\b25[0-5]\b|\b2[0-4][0-9]\b|\b[01]?[0-9][0-9]?\b)$|^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/;
-  ipError.value = pattern.test(ipOrHostname.trim())
-    ? ""
-    : "Invalid IP address or hostname.";
+
+  ipError.value =
+    ipOrHostname.trim().length > 0 ? "" : "IP address or hostname is required.";
 };
 
 const validateUsername = () => {
