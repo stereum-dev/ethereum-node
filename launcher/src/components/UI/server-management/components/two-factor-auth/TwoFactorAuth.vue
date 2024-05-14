@@ -44,10 +44,14 @@
       :barcode="QRcode"
       :secret-key="secretKey"
       :time-based="isTimeBaseActive"
-      :class="['row-start-2' , !secretKey ? 'disabled' : '']"
+      :class="['row-start-2', !secretKey ? 'disabled' : '']"
       @send-code="sendTheCode"
     />
-    <TwoFactorBackup v-if="TwoFactoSetupIsActive" :class="['row-start-7', !authStore.validVerificationCode ? 'disabled' : '']" @save-scratch="onSaveScratch" />
+    <TwoFactorBackup
+      v-if="TwoFactoSetupIsActive"
+      :class="['row-start-7', !authStore.validVerificationCode ? 'disabled' : '']"
+      @save-backup="onSaveScratch"
+    />
     <TwoFactorBtn
       v-if="twoFatorIsEnabled || TwoFactoSetupIsActive"
       :class="['row-start-13', 'col-start-8', TwoFactoSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
@@ -68,9 +72,8 @@ import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 import { saveAs } from "file-saver";
 
-
 const authStore = useTwoFactorAuth();
-const controlStore = useControlStore(); 
+const controlStore = useControlStore();
 //enable two factor authentication
 const twoFatorIsEnabled = ref(false);
 //setup two factor authentication
@@ -82,20 +85,18 @@ const isOrgGenTimeLimit = ref(false);
 //third check box value to enable rate limiting
 const isRateLimiting = ref(true);
 
-
 const verificationOutput = ref("");
 const secretKey = ref("");
 const QRcode = ref("");
 const configured2fa = ref();
 
-
 onMounted(() => {
-    checkAuth();
-    ControlService.addListener("2FAEvents", authenticatorHandler);
-  });
+  checkAuth();
+  ControlService.addListener("2FAEvents", authenticatorHandler);
+});
 onUnmounted(() => {
-    ControlService.removeListener("2FAEvents", authenticatorHandler);
-  });
+  ControlService.removeListener("2FAEvents", authenticatorHandler);
+});
 
 //function to enable two factor authentication
 const enableTwoFactor = () => {
@@ -157,29 +158,28 @@ const onSaveScratch = () => {
 
 const authenticatorHandler = (event, data) => {
   loadOutput(data);
-}
+};
 
 const loadOutput = (data) => {
-
-  if(data[0] != "skip"){
+  if (data[0] != "skip") {
     secretKey.value = data[1].split(": ").pop();
-    let QRadress = `https://quickchart.io/qr?chs=200x200&chld=M|0&cht=qr&text=otpauth://totp/${controlStore.ipAddress}@${controlStore.ServerName}%3Fsecret%3D[SECRETKEY]%26issuer%3D${controlStore.ServerName}`
-    QRcode.value = QRadress.replace("[SECRETKEY]",secretKey.value);
+    let QRadress = `https://quickchart.io/qr?chs=200x200&chld=M|0&cht=qr&text=otpauth://totp/${controlStore.ipAddress}@${controlStore.ServerName}%3Fsecret%3D[SECRETKEY]%26issuer%3D${controlStore.ServerName}`;
+    QRcode.value = QRadress.replace("[SECRETKEY]", secretKey.value);
   }
-  
-  if(data.length > 5){
-    if(data[0] != "skip"){
-      QRcode.value = QRcode.value.replace("totp","hotp");
+
+  if (data.length > 5) {
+    if (data[0] != "skip") {
+      QRcode.value = QRcode.value.replace("totp", "hotp");
       authStore.varificationCode = data[2].split("is ").pop();
     }
     authStore.validVerificationCode = true;
     verificationOutput.value = data.slice(3, 9);
   }
-}
+};
 
 const checkAuth = async () => {
   configured2fa.value = await ControlService.checkForAuthenticator();
-}
+};
 
 const removeTwoFactor = async () => {
   await ControlService.removeAuthenticator();
