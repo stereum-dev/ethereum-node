@@ -779,19 +779,42 @@ const destroyNode = async () => {
 
 // Confirm Changes methods
 const confirmHandler = async () => {
-  manageStore.disableConfirmButton = true;
-  await ControlService.handleServiceChanges(
-    JSON.parse(JSON.stringify(manageStore.confirmChanges))
+  const setupExists = manageStore.confirmChanges.some((item) =>
+    item.service?.hasOwnProperty("setupName")
   );
-  setTimeout(() => {
-    manageStore.newConfiguration = JSON.parse(
-      JSON.stringify(serviceStore.installedServices)
+
+  if (setupExists) {
+    manageStore.disableConfirmButton = true;
+    const setup = setupStore.selectedSetupToRemove;
+    setupStore.allSetups = setupStore.allSetups.filter(
+      (e) => e.setupId !== setup.setupId
     );
-    manageStore.confirmChanges = [];
-    manageStore.disableConfirmButton = false;
-    manageStore.isLineHidden = false;
-  }, 4000);
-  await listKeys(true);
+    setupStore.editSetups = setupStore.editSetups.filter(
+      (e) => e.setupId !== setup.setupId
+    );
+    const setupId = setup.setupId;
+    await ControlService.deleteSetup(setupId);
+    setTimeout(() => {
+      manageStore.confirmChanges = [];
+      setupStore.editSetups = setupStore.allSetups;
+      manageStore.disableConfirmButton = false;
+      manageStore.isLineHidden = false;
+    }, 4000);
+  } else {
+    manageStore.disableConfirmButton = true;
+    await ControlService.handleServiceChanges(
+      JSON.parse(JSON.stringify(manageStore.confirmChanges))
+    );
+    setTimeout(() => {
+      manageStore.newConfiguration = JSON.parse(
+        JSON.stringify(serviceStore.installedServices)
+      );
+      manageStore.confirmChanges = [];
+      manageStore.disableConfirmButton = false;
+      manageStore.isLineHidden = false;
+    }, 4000);
+    await listKeys(true);
+  }
 };
 
 const nukeConfirmation = () => {
@@ -820,10 +843,33 @@ const editSetupsPrepration = () => {
 };
 
 const deleteSetup = async (item) => {
-  setupStore.allSetups = setupStore.allSetups.filter((e) => e.setupId !== item.setupId);
-  setupStore.editSetups = setupStore.editSetups.filter((e) => e.setupId !== item.setupId);
-  const setupId = item.setupId;
-  await ControlService.deleteSetup(setupId);
+  setupStore.selectedSetupToRemove = item;
+  setupStore.editSetups = setupStore.editSetups.map((e) => {
+    if (e.setupId === item.setupId) {
+      e.isRemoveProcessing = true;
+    }
+    return e;
+  });
+
+  manageStore.selectedItemToRemove.push(item);
+  const confirmDelete = {
+    id: item.setupId,
+    content: "DELETE",
+    contentIcon: "/img/icon/edit-node-icons/delete-service.png",
+    service: item,
+  };
+  const itemExists = manageStore.confirmChanges.some(
+    (e) => e.id === item.setupId && e.content === "DELETE"
+  );
+  if (!itemExists) {
+    manageStore.confirmChanges.push(confirmDelete);
+  }
+
+  console.log(manageStore.confirmChanges);
+  // setupStore.allSetups = setupStore.allSetups.filter((e) => e.setupId !== item.setupId);
+  // setupStore.editSetups = setupStore.editSetups.filter((e) => e.setupId !== item.setupId);
+  // const setupId = item.setupId;
+  // await ControlService.deleteSetup(setupId);
 };
 
 const importSetup = () => {

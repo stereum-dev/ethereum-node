@@ -1,6 +1,7 @@
 <template>
   <div
-    class="w-[130px] h-[120px] col-span-1 row-span-1 items-center border border-gray-500 rounded-md mx-auto relative grid grid-cols-2 grid-rows-12"
+    class="w-[130px] h-[120px] col-span-1 row-span-1 items-center border rounded-md mx-auto relative grid grid-cols-2 grid-rows-12"
+    :class="getDynamicClasses(props.setup)"
     @mouseenter="props.setup.isActive = true"
     @mouseleave="props.setup.isActive = false"
   >
@@ -14,7 +15,7 @@
     <SetupLayout :setup="props.setup" />
     <Transition name="slide-fade">
       <SetupMenu
-        v-if="props.setup.isActive"
+        v-if="props.setup.isActive && !props.setup.isRemoveProcessing"
         :setup="props.setup"
         @delete-setup="deleteSetup"
         @connect-setup="connectSetup"
@@ -44,6 +45,13 @@ const setupStore = useSetups();
 // refs
 
 //Computed
+const getDynamicClasses = (item) => {
+  if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
+    return "border bg-red-500 border-white";
+  } else {
+    return "border-gray-500";
+  }
+};
 const textColor = computed(() => setupStore.getColor(props.setup.color, "text"));
 const bgColor = computed(() => setupStore.getColor(props.setup.color, "background"));
 
