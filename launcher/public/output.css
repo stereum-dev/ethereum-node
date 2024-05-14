@@ -991,6 +991,7 @@ video {
   top: 7rem;
 }
 
+
 .left-\[100px\]{
   left: 100px;
 }
@@ -1002,6 +1003,7 @@ video {
 .top-9{
   top: 2.25rem;
 }
+
 
 .z-0{
   z-index: 0;
@@ -1331,6 +1333,7 @@ video {
   grid-row-start: 9;
 }
 
+
 .row-end-10{
   grid-row-end: 10;
 }
@@ -1382,6 +1385,7 @@ video {
 .row-end-9{
   grid-row-end: 9;
 }
+
 
 .float-right{
   float: right;
@@ -1950,9 +1954,11 @@ video {
   max-height: 60px;
 }
 
+
 .min-h-11{
   min-height: 2.75rem;
 }
+
 
 .min-h-7{
   min-height: 1.75rem;
@@ -2260,6 +2266,7 @@ video {
   width: 100vw;
 }
 
+
 .w-44{
   width: 11rem;
 }
@@ -2283,6 +2290,7 @@ video {
 .w-\[807px\]{
   width: 807px;
 }
+
 
 .min-w-\[100px\]{
   min-width: 100px;
@@ -2357,18 +2365,14 @@ video {
 
 .translate-x-8{
   --tw-translate-x: 2rem;
+
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .-translate-y-1\/2{
   --tw-translate-y: -50%;
-  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
 
-.translate-y-0{
-  --tw-translate-y: 0px;
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -2428,18 +2432,6 @@ video {
 .scale-95{
   --tw-scale-x: .95;
   --tw-scale-y: .95;
-  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.scale-y-0{
-  --tw-scale-y: 0;
-  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.scale-y-100{
-  --tw-scale-y: 1;
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -3949,9 +3941,11 @@ video {
 }
 
 .bg-\[\#232428\]{
+
   --tw-bg-opacity: 1;
   background-color: rgb(35 36 40 / var(--tw-bg-opacity));
 }
+
 
 .bg-\[\#292e32\]{
   --tw-bg-opacity: 1;
@@ -4027,6 +4021,7 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
 }
+
 
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
@@ -5884,22 +5879,6 @@ html body {
   .dark\:hover\:text-white:hover{
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
-  }
-}
-
-@media (forced-colors: active){
-  .forced-colors\:block{
-    display: block;
-  }
-
-  .forced-colors\:hidden{
-    display: none;
-  }
-
-  .forced-colors\:appearance-auto{
-    -webkit-appearance: auto;
-       -moz-appearance: auto;
-            appearance: auto;
   }
 }
 
