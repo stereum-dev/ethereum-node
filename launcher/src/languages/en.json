@@ -332,6 +332,38 @@
     "blockRel": "Block relay",
     "blockRelTxt": "Select one or multiple relays to receive blocks from"
   },
+  "authenticatorModal": {
+    "newSetupTitel":"SETUP NEW 2FA LOGIN",
+    "newSetupText":"Setup new 2FA method with Google Authenticator for additional security when logging into your server",
+    "newSetupButton":"START",
+    "importTitel":"IMPORT EXISTING AUTHENTICAROR FILE",
+    "importText":"Use a previously generated google authenticator file to set up your 2FA method",
+    "importButton":"IMPORT",
+    "resetTitel":"RESET CONFIGURATION",
+    "resetText":"Reset the Google Authenticator Configuration to the recommended settings",
+    "resetButton":"Reset",
+    "timedTokens":"Do you want authentication tokens to be time-based?",
+    "generateKeyButton":"GENERATE KEY",
+    "backupTitel":"BACKUP & CONNECT",
+    "backupText":"Back up the generated secrets & your Google Authenticator file & scan the QR code in your Google Authenticator app before continuing",
+    "backupButton":"connect",
+    "keyText":"Your secret key is:",
+    "codeText":"Your verification code is:",
+    "saveText":"Save your emergency scratch codes!",
+    "saveButton":"SAVE...",
+    "confirmText":"Confirm that you successfully set up the Google Authenticator!",
+    "setupButton":"SETUP 2FA",
+    "increaseTime":"Increase the original generation time limit? This will permit a time skew of up to 4 minutes!",
+    "rateLimit":"Do you want to enable rate-limiting?",
+    "configureConfirmButton":"CONFIGURE",
+    "configureTitel":"CONFIGURE 2FA OPTION",
+    "configureText":"Configure your 2FA connection options",
+    "configureButton":"OPEN",
+    "removeTitel":"REMOVE 2FA",
+    "removeText":"Use this option to remove Google Authenticator 2FA from your server",
+    "removeButton":"REMOVE 2FA",
+    "removeConfirmButton":"CONFIRM"
+},
   "customInstallation": {
     "customInstallationTitle": "CUSTOM INSTALLATION",
     "customInstallationText": "This mode is meant for more advanced users and requires you to have an understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!"
@@ -914,7 +946,8 @@
     "info": "server information",
     "ssh": "ssh key management",
     "osUpdate": "operating system update",
-    "settings": "server settings"
+    "settings": "server settings",
+    "twoFactorAuth": "two factor authentication"
   },
   "shellPage": {
     "title": "SECURE SHELL - SERVER CONNECTION ",

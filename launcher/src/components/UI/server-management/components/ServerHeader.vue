@@ -42,6 +42,7 @@ const info = t("serverHeader.info");
 const ssh = t("serverHeader.ssh");
 const osUpdate = t("serverHeader.osUpdate");
 const settings = t("serverHeader.settings");
+const twoFactorAuth = t("serverHeader.twoFactorAuth");
 
 const footerStore = useFooter();
 
@@ -63,6 +64,8 @@ const tabTooltip = (tab) => {
     return osUpdate;
   } else if (tab.name === "settings") {
     return settings;
+  } else if (tab.name === "2fa") {
+    return twoFactorAuth;
   }
   return null; // Default case if none of the conditions match
 };
