@@ -29,7 +29,11 @@
         }"
         @click="handleClick(lang, index)"
       >
-        <img :src="lang.flag" :alt="`${lang.name} Flag`" class="col-start-1 col-span-3 w-10 h-10 rounded-full" />
+        <img
+          :src="lang.flag"
+          :alt="`${lang.name} Flag`"
+          class="col-start-1 col-span-3 w-10 h-10 rounded-full"
+        />
         <span
           class="col-start-4 col-span-full text-lg font-bold uppercase"
           :class="{ 'text-gray-700': selectedLanguage }"
@@ -71,6 +75,7 @@ onBeforeMount(async () => {
     router.push("/");
   }
 });
+
 // langStore.settingPageIsVisible ? "/setting" :
 const checkSettings = async () => {
   try {
@@ -108,7 +113,7 @@ const selectItem = async (lang, playSound = true) => {
 
 const playSoundBase = (base64Data) => {
   const audio = new Audio(base64Data);
-  audio.volume = langStore.currentVolume; 
+  audio.volume = langStore.currentVolume;
   audio.play().catch((e) => console.error("Failed to play sound:", e));
 };
 
