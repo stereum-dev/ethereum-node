@@ -35,11 +35,9 @@
 4. Use the user's configured `sans` font-family by default.
 5. Use the user's configured `sans` font-feature-settings by default.
 6. Use the user's configured `sans` font-variation-settings by default.
-7. Disable tap highlights on iOS
 */
 
-html,
-:host {
+html {
   line-height: 1.5;
   /* 1 */
   -webkit-text-size-adjust: 100%;
@@ -49,15 +47,13 @@ html,
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
   -webkit-font-feature-settings: normal;
           font-feature-settings: normal;
   /* 5 */
   font-variation-settings: normal;
   /* 6 */
-  -webkit-tap-highlight-color: transparent;
-  /* 7 */
 }
 
 /*
@@ -129,10 +125,8 @@ strong {
 }
 
 /*
-1. Use the user's configured `mono` font-family by default.
-2. Use the user's configured `mono` font-feature-settings by default.
-3. Use the user's configured `mono` font-variation-settings by default.
-4. Correct the odd `em` font sizing in all browsers.
+1. Use the user's configured `mono` font family by default.
+2. Correct the odd `em` font sizing in all browsers.
 */
 
 code,
@@ -141,13 +135,8 @@ samp,
 pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   /* 1 */
-  -webkit-font-feature-settings: normal;
-          font-feature-settings: normal;
-  /* 2 */
-  font-variation-settings: normal;
-  /* 3 */
   font-size: 1em;
-  /* 4 */
+  /* 2 */
 }
 
 /*
@@ -1283,6 +1272,14 @@ video {
   grid-row-start: 12;
 }
 
+.row-start-13{
+  grid-row-start: 13;
+}
+  
+.row-start-14{
+  grid-row-start: 14;
+}
+
 .row-start-2{
   grid-row-start: 2;
 }
@@ -1612,6 +1609,10 @@ video {
   height: 1.25rem;
 }
 
+.h-5\/6{
+  height: 83.333333%;
+}
+
 .h-6{
   height: 1.5rem;
 }
@@ -1746,6 +1747,10 @@ video {
 
 .h-\[90px\]{
   height: 90px;
+}
+
+.h-\[95\%\]{
+  height: 95%;
 }
 
 .h-fit{
@@ -2178,6 +2183,10 @@ video {
   width: 60%;
 }
 
+.w-\[65\%\]{
+  width: 65%;
+}
+
 .w-\[70px\]{
   width: 70px;
 }
@@ -2499,16 +2508,12 @@ video {
   grid-template-rows: repeat(1, minmax(0, 1fr));
 }
 
-.grid-rows-10{
-  grid-template-rows: repeat(10, minmax(0, 1fr));
-}
-
-.grid-rows-11{
-  grid-template-rows: repeat(11, minmax(0, 1fr));
-}
-
 .grid-rows-12{
   grid-template-rows: repeat(12 , minmax(0,1fr));
+}
+
+.grid-rows-14{
+  grid-template-rows: repeat(14 , minmax(0,1fr));
 }
 
 .grid-rows-15{
@@ -2575,6 +2580,12 @@ video {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.justify-normal{
+  -webkit-box-pack: normal;
+      -ms-flex-pack: normal;
+          justify-content: normal;
 }
 
 .justify-start{
@@ -2828,14 +2839,6 @@ video {
 
 .whitespace-pre-wrap{
   white-space: pre-wrap;
-}
-
-.text-wrap{
-  text-wrap: wrap;
-}
-
-.text-nowrap{
-  text-wrap: nowrap;
 }
 
 .break-words{
@@ -3567,6 +3570,11 @@ video {
   background-color: rgb(56 114 114 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#393939\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 57 57 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#3d4244\]{
   --tw-bg-opacity: 1;
   background-color: rgb(61 66 68 / var(--tw-bg-opacity));
@@ -3615,6 +3623,21 @@ video {
 .bg-\[\#609879\]{
   --tw-bg-opacity: 1;
   background-color: rgb(96 152 121 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#A0A0A0\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(160 160 160 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#D1BB9E\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 187 158 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#F7C566\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(247 197 102 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#a7aeb5\]{
@@ -4078,7 +4101,7 @@ video {
 }
 
 .font-sans{
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .font-serif{
@@ -4193,6 +4216,10 @@ video {
   text-transform: capitalize;
 }
 
+.leading-5{
+  line-height: 1.25rem;
+}
+
 .leading-6{
   line-height: 1.5rem;
 }
@@ -4236,6 +4263,11 @@ video {
 .text-\[\#e6e4e4\]{
   --tw-text-opacity: 1;
   color: rgb(230 228 228 / var(--tw-text-opacity));
+}
+
+.text-\[greenyellow\]{
+  --tw-text-opacity: 1;
+  color: rgb(173 255 47 / var(--tw-text-opacity));
 }
 
 .text-amber-200{
@@ -4500,10 +4532,6 @@ video {
 
 .opacity-50{
   opacity: 0.5;
-}
-
-.opacity-65{
-  opacity: 0.65;
 }
 
 .opacity-70{
@@ -4801,6 +4829,10 @@ video {
           transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
+.scrollbar{
+  scrollbar-color: var(--scrollbar-thumb, initial) var(--scrollbar-track, initial);
+}
+
 .scrollbar::-webkit-scrollbar-track{
   background-color: var(--scrollbar-track);
   border-radius: var(--scrollbar-track-radius);
@@ -4842,13 +4874,16 @@ video {
 
 .scrollbar{
   scrollbar-width: auto;
-  scrollbar-color: var(--scrollbar-thumb, initial) var(--scrollbar-track, initial);
 }
 
 .scrollbar::-webkit-scrollbar{
   display: block;
   width: var(--scrollbar-width, 16px);
   height: var(--scrollbar-height, 16px);
+}
+
+.scrollbar-thin{
+  scrollbar-color: var(--scrollbar-thumb, initial) var(--scrollbar-track, initial);
 }
 
 .scrollbar-thin::-webkit-scrollbar-track{
@@ -4892,7 +4927,6 @@ video {
 
 .scrollbar-thin{
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb, initial) var(--scrollbar-track, initial);
 }
 
 .scrollbar-thin::-webkit-scrollbar{
@@ -5622,7 +5656,7 @@ html body {
   left: 0px;
 }
 
-.rtl\:right-auto:where([dir="rtl"], [dir="rtl"] *){
+:is([dir="rtl"] .rtl\:right-auto){
   right: auto;
 }
 
@@ -5645,6 +5679,41 @@ html body {
   .dark\:hover\:text-white:hover{
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
+  }
+}
+
+@media (min-width: 640px){
+  .sm\:gap-x-5{
+    -webkit-column-gap: 1.25rem;
+       -moz-column-gap: 1.25rem;
+            column-gap: 1.25rem;
+  }
+
+  .sm\:text-sm{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+@media (min-width: 768px){
+  .md\:mb-0{
+    margin-bottom: 0px;
+  }
+}
+
+@media (forced-colors: active){
+  .forced-colors\:block{
+    display: block;
+  }
+
+  .forced-colors\:hidden{
+    display: none;
+  }
+
+  .forced-colors\:appearance-auto{
+    -webkit-appearance: auto;
+       -moz-appearance: auto;
+            appearance: auto;
   }
 }
 
