@@ -332,6 +332,38 @@
     "blockRel": "블록 릴레이",
     "blockRelTxt": "블록을 받기 위해 하나 이상의 릴레이를 선택하세요"
   },
+  "authenticatorModal": {
+    "newSetupTitel": "SETUP NEW 2FA LOGIN",
+    "newSetupText": "Setup new 2FA method with Google Authenticator for additional security when logging into your server",
+    "newSetupButton": "START",
+    "importTitel": "IMPORT EXISTING AUTHENTICAROR FILE",
+    "importText": "Use a previously generated google authenticator file to set up your 2FA method",
+    "importButton": "IMPORT",
+    "resetTitel": "RESET CONFIGURATION",
+    "resetText": "Reset the Google Authenticator Configuration to the recommended settings",
+    "resetButton": "Reset",
+    "timedTokens": "Do you want authentication tokens to be time-based?",
+    "generateKeyButton": "GENERATE KEY",
+    "backupTitel": "BACKUP & CONNECT",
+    "backupText": "Back up the generated secrets & your Google Authenticator file & scan the QR code in your Google Authenticator app before continuing",
+    "backupButton": "connect",
+    "keyText": "Your secret key is:",
+    "codeText": "Your verification code is:",
+    "saveText": "Save your emergency scratch codes!",
+    "saveButton": "SAVE...",
+    "confirmText": "Confirm that you successfully set up the Google Authenticator!",
+    "setupButton": "SETUP 2FA",
+    "increaseTime": "Increase the original generation time limit? This will permit a time skew of up to 4 minutes!",
+    "rateLimit": "Do you want to enable rate-limiting?",
+    "configureConfirmButton": "CONFIGURE",
+    "configureTitel": "CONFIGURE 2FA OPTION",
+    "configureText": "Configure your 2FA connection options",
+    "configureButton": "OPEN",
+    "removeTitel": "REMOVE 2FA",
+    "removeText": "Use this option to remove Google Authenticator 2FA from your server",
+    "removeButton": "REMOVE 2FA",
+    "removeConfirmButton": "CONFIRM"
+  },
   "customInstallation": {
     "customInstallationTitle": "사용자 정의 설치",
     "customInstallationText": "이 모드는 보다 숙련된 사용자를 위한 것이며 클라이언트가 서로 어떻게 상호 작용하는지에 대한 이해가 필요합니다. 사용자가 모든 부분을 직접 선택, 설치 및 연결해야 하며 UI를 통해 작업하기 전에 노드가 기능적으로 됩니다!"
@@ -914,7 +946,8 @@
     "info": "server information",
     "ssh": "ssh key management",
     "osUpdate": "operating system update",
-    "settings": "server settings"
+    "settings": "server settings",
+    "twoFactorAuth": "two factor authentication"
   },
   "shellPage": {
     "title": "SECURE SHELL - SERVER CONNECTION ",
