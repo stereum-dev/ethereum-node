@@ -1286,6 +1286,7 @@ video {
 
 .row-start-13{
   grid-row-start: 13;
+}
   
 .row-start-14{
   grid-row-start: 14;
@@ -3780,6 +3781,7 @@ video {
 .bg-\[\#A0A0A0\]{
   --tw-bg-opacity: 1;
   background-color: rgb(160 160 160 / var(--tw-bg-opacity));
+}
 
 .bg-\[\#D1BB9E\]{
   --tw-bg-opacity: 1;
@@ -5921,6 +5923,8 @@ html body {
 @media (min-width: 768px){
   .md\:mb-0{
     margin-bottom: 0px;
+  }
+}
 
 @media (forced-colors: active){
   .forced-colors\:block{
