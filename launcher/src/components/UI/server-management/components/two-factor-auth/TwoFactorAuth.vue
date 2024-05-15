@@ -55,7 +55,7 @@
     <TwoFactorBtn
       v-if="twoFatorIsEnabled || TwoFactoSetupIsActive"
       :class="['row-start-13', 'col-start-8', TwoFactoSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
-      btn-name="Setup"
+      :btn-name='!authStore.scratchCodeSaved ? "Setup" : "Finish"'
       @btnClick="startSetup"
     />
   </div>
