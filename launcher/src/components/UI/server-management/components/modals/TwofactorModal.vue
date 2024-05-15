@@ -18,7 +18,7 @@
         <input
           v-model="password"
           class="col-start-6 col-end-20 row-start-5 row-span-2 h-full rounded-lg px-2 text-md text-gray-800"
-          type="password"
+          type="text"
         />
       </div>
     </template>
