@@ -20,6 +20,25 @@ export async function useBackendServices(force = false) {
   return serviceStore.backendServices;
 }
 
+let watchSSVLock = null;
+async function watchSSV() {
+  if (watchSSVLock) {
+    //console.log("watchSSV -> locked");
+    return;
+  }
+  watchSSVLock = true;
+  try {
+    //console.log("watchSSV -> Triggered...");
+    await ControlService.watchSSVDKG();
+    //await new Promise((r) => setTimeout(r, 5000));
+  } catch (e) {
+    //console.log("watchSSV -> e", e);
+  } finally {
+    //console.log("watchSSV -> finally");
+    watchSSVLock = false;
+  }
+}
+
 export async function useFrontendServices() {
   const serviceStore = useServices();
   const nodeHeaderStore = useNodeHeader();
@@ -136,6 +155,8 @@ export async function useFrontendServices() {
         nodeManageStore.currentNetwork = nodeManageStore.networkList.find((item) => item.network === "goerli");
       }
     }
+    // Trigger watchSSV in background (thus, intentionally without await!)
+    watchSSV();
   }
 }
 

@@ -265,24 +265,38 @@ export class OneClickInstall {
 
     if (constellation.includes("ValidatorEjectorService")) {
       //ValidatorEjectorService
-      this.extraServices.push(this.serviceManager.getService("ValidatorEjectorService", {
-        ...args,
-        consensusClients: [this.beaconService],
-        executionClients: [this.executionClient],
-      }));
+      this.extraServices.push(
+        this.serviceManager.getService("ValidatorEjectorService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+        })
+      );
     }
 
     if (constellation.includes("LidoObolExitService")) {
       //LidoObolExitService
-      this.extraServices.push(this.serviceManager.getService("LidoObolExitService", {
+      this.extraServices.push(
+        this.serviceManager.getService("LidoObolExitService", {
+          ...args,
+          consensusClients: [this.beaconService].concat(
+            this.extraServices.filter((s) => s.service === "CharonService")
+          ),
+          otherServices: this.extraServices.filter((s) => s.service === "ValidatorEjectorService"),
+        })
+      );
+    }
+
+    if (constellation.includes("SSVDKGService")) {
+      let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
         ...args,
-        consensusClients: [this.beaconService].concat(this.extraServices.filter((s) => s.service === "CharonService")),
-        otherServices: this.extraServices.filter((s) => s.service === "ValidatorEjectorService"),
-      }));
+        consensusClients: [this.beaconService],
+        otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
+      });
+      this.extraServices.push(SSVDKGService);
     }
 
     this.handleArchiveTags(selectedPreset);
-
 
     let versions;
     try {
@@ -339,10 +353,11 @@ export class OneClickInstall {
         case "NethermindService":
           this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
             "_archive";
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))
-          ] = "--Pruning.Mode=None";
-          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--Pruning.FullPruningTrigger"));
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))] =
+            "--Pruning.Mode=None";
+          this.executionClient.command = this.executionClient.command.filter(
+            (c) => !c.includes("--Pruning.FullPruningTrigger")
+          );
           break;
       }
       switch (this.beaconService.service) {
@@ -353,18 +368,17 @@ export class OneClickInstall {
           this.beaconService.command = this.beaconService.command.filter((c) => !c.includes("--checkpointSyncUrl"));
           break;
         case "NimbusBeaconService":
-          if (this.beaconService.command.some(c => c.includes("--trusted-node-url="))) {
-            this.beaconService.command.push("--backfill=true")
+          if (this.beaconService.command.some((c) => c.includes("--trusted-node-url="))) {
+            this.beaconService.command.push("--backfill=true");
           }
-          this.beaconService.command.push("--history=archive")
+          this.beaconService.command.push("--history=archive");
           break;
         case "PrysmBeaconService":
           this.beaconService.command += " --slots-per-archive-point=32";
           break;
         case "TekuBeaconService":
-          this.beaconService.command[
-            this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))
-          ] = "--data-storage-mode=archive";
+          this.beaconService.command[this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))] =
+            "--data-storage-mode=archive";
       }
     }
   }
@@ -391,6 +405,7 @@ export class OneClickInstall {
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
+      await this.serviceManager.prepareSSVDKG(this.extraServices.find((s) => s.service === "SSVDKGService"));
       return configs;
     }
   }
@@ -481,6 +496,9 @@ export class OneClickInstall {
           "NotificationService",
         ];
         services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
+        break;
+      case "lidossv":
+        services.push("SSVNetworkService", "SSVDKGService");
     }
     return services;
   }
