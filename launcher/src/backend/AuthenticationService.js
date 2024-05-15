@@ -147,7 +147,7 @@ export class AuthenticationService {
       `sed -i 's/^KbdInteractiveAuthentication[ ]no$/KbdInteractiveAuthentication yes/g' /etc/ssh/sshd_config`
     );
     await this.nodeConnection.sshService.exec(
-      `echo "AuthenticationMethods publickey,password publickey,keyboard-interactive" >> /etc/ssh/sshd_config`
+      `echo "AuthenticationMethods keyboard-interactive,publickey keyboard-interactive,password" >> /etc/ssh/sshd_config`
     );
     await this.nodeConnection.sshService.exec(
       `echo 'auth required pam_google_authenticator.so grace_period=43200' >> /etc/pam.d/sshd`
@@ -159,7 +159,7 @@ export class AuthenticationService {
 
   async removeAuthenticator() {
     await this.nodeConnection.sshService.exec(
-      `sed -i '/AuthenticationMethods publickey,password publickey,keyboard-interactive/d' /etc/ssh/sshd_config`
+      `sed -i '/AuthenticationMethods keyboard-interactive,publickey keyboard-interactive,password/d' /etc/ssh/sshd_config`
     );
     await this.nodeConnection.sshService.exec(
       `sed -i '/auth required pam_google_authenticator.so grace_period=86400/d' /etc/pam.d/sshd`
