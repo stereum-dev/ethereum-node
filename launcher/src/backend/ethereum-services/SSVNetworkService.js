@@ -7,6 +7,10 @@ export class SSVNetworkService extends NodeService {
     return `global:
   # Console output log level 
   LogLevel: info
+
+  # Number of log files preserved (roughly equivalent to number of days)
+  # Increase if you want to preserve log files for longer. This would require more disk space
+  LogFileBackups: 10
   
   # Debug logs file path
   #LogFilePath: ./data/debug.log
@@ -51,7 +55,7 @@ MetricsAPIPort: 15000`;
 
     const volumes = [
       new ServiceVolume(workingDir + "/data", "/data"),
-      new ServiceVolume(workingDir + "/secrets", "/secrets")
+      new ServiceVolume(workingDir + "/secrets", "/secrets"),
     ];
 
     // build service

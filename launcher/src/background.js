@@ -29,7 +29,7 @@ const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 stereumUpdater.initUpdater();
-log.transports.console.level = "info";
+log.transports.console.level = process.env.LOG_LEVEL || "info";
 log.transports.file.level = "debug";
 
 let remoteHost = {};
@@ -79,6 +79,10 @@ ipcMain.handle("destroy", async () => {
   const returnValue = await nodeConnection.destroyNode(serviceConfigs);
   app.showExitPrompt = false;
   return returnValue;
+});
+
+ipcMain.handle("watchSSVDKG", async () => {
+  return serviceManager.watchSSVDKG();
 });
 
 ipcMain.handle("tunnel", async (event, arg) => {
@@ -412,6 +416,18 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getSSVDKGTotalConfig", async (event, args) => {
+  return await nodeConnection.getSSVDKGTotalConfig(args);
+});
+
+ipcMain.handle("readSSVDKGConfig", async (event, args) => {
+  return await nodeConnection.readSSVDKGConfig(args);
+});
+
+ipcMain.handle("writeSSVDKGConfig", async (event, args) => {
+  return await nodeConnection.writeSSVDKGConfig(args.serviceID, args.config);
+});
+
 ipcMain.handle("readPrometheusConfig", async (event, args) => {
   return await nodeConnection.readPrometheusConfig(args);
 });
@@ -641,6 +657,10 @@ ipcMain.handle("startShell", async (event) => {
       return `Error starting shell: ${error.message}`;
     }
   }
+});
+
+ipcMain.handle("exec", async (event, command, use_sudo) => {
+  return await nodeConnection.sshService.exec(command, use_sudo);
 });
 
 ipcMain.handle("executeCommand", async (event, args) => {

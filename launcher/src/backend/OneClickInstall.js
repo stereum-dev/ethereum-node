@@ -287,16 +287,13 @@ export class OneClickInstall {
       );
     }
 
-    // add the dkgservice here
     if (constellation.includes("SSVDKGService")) {
-      //LidoObolExitService
-      this.extraServices.push(
-        this.serviceManager.getService("SSVDKGService", {
-          ...args,
-          consensusClients: [this.beaconService],
-          otherServices: this.extraServices.filter((s) => s.service === "SSVNetworkService"),
-        })
-      );
+      let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
+        ...args,
+        consensusClients: [this.beaconService],
+        otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
+      });
+      this.extraServices.push(SSVDKGService);
     }
 
     this.handleArchiveTags(selectedPreset);
@@ -408,6 +405,7 @@ export class OneClickInstall {
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
+      await this.serviceManager.prepareSSVDKG(this.extraServices.find((s) => s.service === "SSVDKGService"));
       return configs;
     }
   }
@@ -498,6 +496,9 @@ export class OneClickInstall {
           "NotificationService",
         ];
         services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
+        break;
+      case "lidossv":
+        services.push("SSVNetworkService", "SSVDKGService");
     }
     return services;
   }

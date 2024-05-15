@@ -1285,22 +1285,22 @@ export const useServices = defineStore("services", {
         },
         {
           id: 31,
-          name: "SSV DKG", //TODO: change name
-          service: "SSVDKGService", //TODO: change service
+          name: "SSV DKG",
+          service: "SSVDKGService",
           displayPluginMenu: false,
           serviceIsPending: false,
           modifierPanel: false,
           replacePanel: false,
           addPanel: false,
           configPanel: false,
-          category: "service", //TODO: change category
-          path: "/ssvdkg", //TODO: change path
+          category: "service",
+          path: "/ssvdkg",
           icon: "/img/icon/service-icons/Other/SSV-Network-DKG-Service.png",
           sIcon: "/img/icon/service-icons/Other/SSV-Network-DKG-s.png",
           hIcon: "/img/icon/service-icons/Other/SSV-Network-DKG-s.png",
           linkUrl: "",
           docsUrl: "https://docs.ssv.network/developers/tools/ssv-dkg-client/",
-          headerOption: true,
+          headerOption: false, // TODO: Wire and enable DKG modal ASAP
           expertOptionsModal: false,
           expertOptions: [],
           drag: true,
