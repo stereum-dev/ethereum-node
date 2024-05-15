@@ -23,7 +23,7 @@
       <div class="w-full h-[30px] space-y-4 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- expert mode row -->
         <div
-          v-if="!ssvExpertModeActive && !prometheusExpertModeActive"
+          v-if="!ssvExpertModeActive && !ssvDkgExpertModeActive && !prometheusExpertModeActive"
           class="z-10 dataTitleBox"
           @click="openExpertMode"
         >
@@ -43,6 +43,23 @@
           <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
           <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
         </div>
+        <!-- DKG START -->
+        <div
+          v-if="
+            item.service === 'SSVDKGService' &&
+            !ssvExpertModeActive &&
+            !isExpertModeActive &&
+            !prometheusExpertModeActive
+          "
+          class="dataTitleBox"
+          @click="openSSVDKGExpertMode"
+        >
+          <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
+          <span>SSV DKG Configuration</span>
+          <img v-if="ssvDkgExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+        </div>
+        <!-- DKG END -->
         <div
           v-if="item.service === 'PrometheusService' && !isExpertModeActive"
           class="dataTitleBox"
@@ -69,7 +86,8 @@
           :key="index"
           class="selectBox"
           :class="{
-            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+            invisible:
+              isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
@@ -87,7 +105,8 @@
           :key="index"
           class="toggleTextBox"
           :class="{
-            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+            invisible:
+              isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
@@ -133,7 +152,8 @@
           :key="index"
           class="actionBox"
           :class="{
-            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+            invisible:
+              isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
           <img :src="option.icon" alt="icon" />
@@ -161,7 +181,8 @@
           :key="index"
           class="actionBox"
           :class="{
-            invisible: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+            invisible:
+              isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
           <img :src="option.icon" alt="icon" />
@@ -188,7 +209,8 @@
       <div
         class="expertTable"
         :class="{
-          showExpertTable: isExpertModeActive || ssvExpertModeActive || prometheusExpertModeActive,
+          showExpertTable:
+            isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
         }"
       >
         <div v-if="isExpertModeActive" class="expertMode">
@@ -201,6 +223,13 @@
         <div v-if="ssvExpertModeActive" class="expertMode">
           <textarea
             v-model="item.ssvConfig"
+            class="overflow-x-scroll overflow-y-scroll font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
+            @input="somethingIsChanged"
+          ></textarea>
+        </div>
+        <div v-if="ssvDkgExpertModeActive" class="expertMode">
+          <textarea
+            v-model="item.ssvDkgConfig"
             class="overflow-x-scroll overflow-y-scroll font-mono w-full h-full bg-[#171a1b] whitespace-pre text-sm text-gray-200 p-4"
             @input="somethingIsChanged"
           ></textarea>
@@ -275,6 +304,7 @@ export default {
       enterPortIsEnabled: false,
       isExpertModeActive: false,
       ssvExpertModeActive: false,
+      ssvDkgExpertModeActive: false,
       prometheusExpertModeActive: false,
       prometheusConfig: null,
       ramUsage: null,
@@ -320,6 +350,9 @@ export default {
 
       if (this.item.service === "SSVNetworkService") {
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
+      }
+      if (this.item.service === "SSVDKGService") {
+        this.item.ssvDkgConfig = await ControlService.readSSVDKGConfig(this.item.config.serviceID);
       }
       if (this.item.service === "PrometheusService") {
         this.item.prometheusConfig = await ControlService.readPrometheusConfig(this.item.config.serviceID);
@@ -503,6 +536,11 @@ export default {
           serviceID: this.item.config.serviceID,
           config: this.item.ssvConfig,
         });
+      if (this.item.service === "SSVDKGService")
+        await ControlService.writeSSVDKGConfig({
+          serviceID: this.item.config.serviceID,
+          config: this.item.ssvDkgConfig,
+        });
       if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig) {
         if (!this.item.yaml.includes("overwrite: false")) {
           this.item.yaml = this.item.yaml.trim() + "\noverwrite: false";
@@ -541,6 +579,9 @@ export default {
     },
     openSSVExpertMode() {
       this.ssvExpertModeActive = !this.ssvExpertModeActive;
+    },
+    openSSVDKGExpertMode() {
+      this.ssvDkgExpertModeActive = !this.ssvDkgExpertModeActive;
     },
     openPrometheusExpertMode() {
       this.prometheusExpertModeActive = !this.prometheusExpertModeActive;

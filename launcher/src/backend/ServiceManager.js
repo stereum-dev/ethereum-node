@@ -7,6 +7,7 @@ import { RethService } from "./ethereum-services/RethService";
 import { ErigonService } from "./ethereum-services/ErigonService";
 import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
+import { SSVDKGService } from "./ethereum-services/SSVDKGService";
 import { CharonService } from "./ethereum-services/CharonService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
 import { NimbusValidatorService } from "./ethereum-services/NimbusValidatorService";
@@ -34,7 +35,7 @@ import { CustomService } from "./ethereum-services/CustomService";
 import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import YAML from "yaml";
 const axios = require("axios");
-
+const path = require("path");
 const log = require("electron-log");
 
 async function Sleep(ms) {
@@ -53,6 +54,8 @@ export const serivceState = {
 export class ServiceManager {
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
+    this.watchSSVDKGLock = false;
+    this.lastKnownOperatorIdCheckUnixTime = 0;
   }
 
   /**
@@ -123,6 +126,8 @@ export class ServiceManager {
               services.push(NethermindService.buildByConfiguration(config));
             } else if (config.service == "SSVNetworkService") {
               services.push(SSVNetworkService.buildByConfiguration(config));
+            } else if (config.service == "SSVDKGService") {
+              services.push(SSVDKGService.buildByConfiguration(config));
             } else if (config.service == "NimbusBeaconService") {
               services.push(NimbusBeaconService.buildByConfiguration(config));
             } else if (config.service == "NimbusValidatorService") {
@@ -166,7 +171,6 @@ export class ServiceManager {
             } else if (config.service == "LidoObolExitService") {
               services.push(LidoObolExitService.buildByConfiguration(config));
             }
-
           } else {
             log.error("found configuration without service!");
             log.error(config);
@@ -433,7 +437,7 @@ export class ServiceManager {
           filter = (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beaconNodes=";
         }
-        if (dependencies.some(d => d.service === "CharonService")) {
+        if (dependencies.some((d) => d.service === "CharonService")) {
           service.command.push("--distributed");
         }
         break;
@@ -1080,6 +1084,18 @@ export class ServiceManager {
           args.consensusClients,
           args.otherServices
         );
+      case "SSVDKGService":
+        ports = [
+          new ServicePort(null, 3030, 3030, servicePortProtocol.udp),
+          new ServicePort(null, 3030, 3030, servicePortProtocol.tcp),
+        ];
+        return SSVDKGService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/ssvdkg",
+          args.consensusClients, // TOOD: remove later!
+          args.otherServices
+        );
     }
   }
 
@@ -1213,7 +1229,7 @@ export class ServiceManager {
           .join("/");
         await this.nodeConnection.sshService.exec(
           `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-          (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
+            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
@@ -1275,6 +1291,14 @@ export class ServiceManager {
     });
     let DVTInstalls = tasks.filter((t) => /SSVNetwork|Charon/.test(t.service.service));
     DVTInstalls.forEach((t) => {
+      if (
+        t.service.service == "SSVNetworkService" &&
+        services.filter((s) => s.service === "SSVNetworkService").length
+      ) {
+        // TODO: Make SSVNetworkService multiservice (which depends also on SSVDKGService)
+        log.error("Multiple SSVNetworkService services currently not supported - ignoring setup!");
+        return;
+      }
       this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls);
       let service = this.getService(t.service.service, t.data);
       t.service.config.serviceID = service.id;
@@ -1382,9 +1406,258 @@ export class ServiceManager {
           s.service.includes("External")
       )
     );
+    await this.prepareSSVDKG(newServices.find((s) => s.service === "SSVDKGService"));
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
     await this.initKeysAPI(newServices.filter((s) => s.service === "KeysAPIService"));
     return ELInstalls.concat(CLInstalls, VLInstalls);
+  }
+
+  async readServiceInfos(services = null) {
+    const serviceConfigs = services ? services : await this.readServiceConfigurations();
+    const serviceStates = await this.nodeConnection.listServices();
+    if (serviceConfigs && serviceConfigs.length > 0 && serviceStates && Array.isArray(serviceStates)) {
+      let newInfo = serviceConfigs.map((config) => {
+        const newState = serviceStates.find((state) => state.Names.replace("stereum-", "") === config.id);
+        return {
+          service: config.service,
+          state: newState ? newState.State : "exited",
+          config: {
+            serviceID: config.id,
+            configVersion: config.configVersion,
+            image: config.image,
+            imageVersion: config.imageVersion,
+            runningImageVersion: newState?.Image ? newState.Image.split(":").pop() : null,
+            ports: config.ports,
+            volumes: config.volumes,
+            network: config.network,
+            dependencies: config.dependencies,
+          },
+        };
+      });
+      return newInfo;
+    }
+    return [];
+  }
+
+  // Prepares the SSVDKGService on installation
+  async prepareSSVDKG(service) {
+    console.log("prepareSSVDKG", service);
+    log.debug("prepareSSVDKG", service);
+    if (!service) return;
+    // Prepare service's config file
+    //const ssvDkgServiceConfig = await this.nodeConnection.readServiceConfiguration(service.id);
+    let ssvDkgConfig = service.getServiceConfiguration(0);
+    const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
+    const escapedConfigFile = StringUtils.escapeStringForShell(ssvDkgConfig);
+    this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
+  }
+
+  // This one is triggered each few seconds from frontend and manages relation between SSVDKGService and SSVNetworkService
+  async watchSSVDKG(_internal = false) {
+    if (this.watchSSVDKGLock && _internal != "_internal") {
+      return;
+    }
+    this.watchSSVDKGLock = true;
+    try {
+      // General tasks:
+      // - Regularly check last known operator ID and update if needed
+      // - Add or remove secrets volume to DKG container
+      // - Adjust SSV operator ID in DKG config file
+      // - Restart the DKG container if chages was applied
+
+      const from = _internal == "_internal" ? " (internal)" : "";
+      log.silly(`watchSSVDKG -> Run${from}...`);
+
+      const services = await this.readServiceConfigurations();
+      const serviceInfos = await this.readServiceInfos(services);
+      const SSVDKGService = services.find((s) => s.service === "SSVDKGService");
+      const SSVNetworkService = services.find((s) => s.service === "SSVNetworkService");
+      const SSVDKGClient = serviceInfos.find((s) => s.service === "SSVDKGService");
+      //const SSVNetworkClient = serviceInfos.find((s) => s.service === "SSVNetworkService");
+
+      let getSSVTotalConfig;
+      try {
+        if (SSVNetworkService.id) getSSVTotalConfig = await this.nodeConnection.getSSVTotalConfig(SSVNetworkService.id);
+      } catch (e) {}
+      let getSSVDKGTotalConfig;
+      try {
+        if (SSVDKGService.id) getSSVDKGTotalConfig = await this.nodeConnection.getSSVDKGTotalConfig(SSVDKGService.id);
+      } catch (e) {}
+
+      const ssvTotalConfig = getSSVTotalConfig;
+      const ssvDkgTotalConfig = getSSVDKGTotalConfig;
+
+      // Disable watch if "nossvwatch: true" is set in DGK service config (DKG container expert mode)
+      const nowatch = ssvDkgTotalConfig?.ssvDkgServiceConfig?.nossvwatch;
+      if (nowatch) {
+        log.debug("watchSSVDKG disabled by SSV DKG service setting -> nossvwatch: true");
+        return;
+      }
+
+      // console.log("TTT :: SSVDKGService", SSVDKGService);
+      // console.log("TTT :: SSVNetworkService", SSVNetworkService);
+      // console.log("TTT :: ssvTotalConfig", ssvTotalConfig);
+      // console.log("TTT :: ssvDkgTotalConfig", ssvDkgTotalConfig);
+      // console.log("TTT :: services", services);
+      // console.log("TTT :: serviceInfos", serviceInfos);
+      //await new Promise((r) => setTimeout(r, 2000000));
+
+      // If SSVNetworkService exists:
+      // Regularly check and update last known operator ID (if needed)
+      // Note that the last known operator ID is set in SsvModal.vue instantly on key import (*IF REGISTERED*).
+      // Therefore it is ok to run this check a bit less frequent here to avoid API spamming.
+      if (ssvTotalConfig) {
+        const checkLastKnownOperatorIdInterval = 20;
+        const uxtsNow = Math.floor(Date.now() / 1000);
+        const elapsedSeconds = uxtsNow - this.lastKnownOperatorIdCheckUnixTime;
+        let currentNetwork = SSVNetworkService.network;
+        let lastKnownPublicKey = ssvTotalConfig.lastKnownPublicKeyFileData;
+        let lastKnownOperatorId = ssvTotalConfig.lastKnownOperatorId;
+        if (lastKnownPublicKey && elapsedSeconds >= checkLastKnownOperatorIdInterval) {
+          log.silly("Check last known operator ID");
+          this.lastKnownOperatorIdCheckUnixTime = uxtsNow;
+          const result = await this.nodeConnection.getSSVOperatorDataFromApi(currentNetwork, lastKnownPublicKey, false);
+          if (!result.code) {
+            const operatorId = result.data.operatorData.id;
+            if (lastKnownOperatorId != operatorId) {
+              log.info(`Set last known operator ID to ${operatorId}`);
+              try {
+                await this.nodeConnection.setSSVLastKnownOperatorId(SSVNetworkService.id, operatorId);
+                return await this.watchSSVDKG("_internal"); // refresh
+              } catch (e) {
+                log.error(`Failed to set last known operator ID to ${operatorId} (${e.message})`);
+              }
+            } else {
+              log.silly(`The last known operator ID ${operatorId} is up to date`);
+            }
+          } else if (result.code == 99 && lastKnownOperatorId) {
+            // At this point the opertor is not registered *anymore* at SSV (thus, was previously)
+            // Do *never* remove the last know operator id file, not even on result.code == 99!
+            // Istead advice the user to reinstall the SSVNetworkService and import an existing or register a new operator.
+            log.silly(`The last known operator ID is set but wont be updated anymore (${result.info})`);
+          } else {
+            // No matter if already set or not, no update in errors...
+            log.silly(`The last known operator ID wont be updated (${result.info})`);
+          }
+        } else if (lastKnownPublicKey) {
+          const nextCheckInSeconds =
+            elapsedSeconds > checkLastKnownOperatorIdInterval
+              ? elapsedSeconds - checkLastKnownOperatorIdInterval
+              : checkLastKnownOperatorIdInterval - elapsedSeconds;
+          log.silly(`Next check for last known operator ID in ${nextCheckInSeconds} seconds`);
+        }
+      }
+
+      // If SSVDKGService exists:
+      // 1. Add or remove secrets volume to DKG container
+      // 2. Adjust SSV operator ID in DKG config file
+      // 3. Restart the DKG container if chages was applied
+      // .. depending if SSVNetworkService exists and/or operator is registered
+      if (ssvDkgTotalConfig) {
+        // Option to log changes
+        let changes = false;
+
+        // 1. Add or remove secrets volume to DKG container
+        log.silly("Check shared secrets volume at DKG container");
+        // Set dataDir and secretsDir that is *currently* added to SSVDKGService
+        const dataDir = SSVDKGService.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
+        const secretsDir = SSVDKGService.volumes.find((vol) => vol.servicePath === "/secrets").destinationPath;
+        // Set local secretsDir that that is added to SSVDKGService by default on installation
+        const workingDir = path.dirname(dataDir);
+        const localSecretsDir = workingDir + "/secrets";
+        const localSecretsVolume = new ServiceVolume(localSecretsDir, "/secrets");
+        if (ssvTotalConfig) {
+          // Change local (SSVDKGService) secrets volume with shared (SSVNetworkService) secrets volume
+          if (!secretsDir.includes(SSVNetworkService.id)) {
+            log.silly("SSVNetworkService exists");
+            log.info("Add shared secrets volume to DKG container");
+            const index = SSVDKGService.volumes.findIndex((vol) => vol.servicePath === "/secrets");
+            if (index !== -1) {
+              SSVDKGService.volumes.splice(index, 1);
+            }
+            SSVDKGService.volumes.push(new ServiceVolume(ssvTotalConfig.ssvSecretsDir, "/secrets"));
+            await this.nodeConnection.writeServiceConfiguration(SSVDKGService.buildConfiguration());
+            changes = true;
+          } else {
+            log.silly("Shared secrets volume already added to DKG container");
+          }
+        } else {
+          // Change shared (SSVNetworkService) secrets volume with local (SSVDKGService) secrets volume
+          if (!secretsDir.includes(SSVDKGService.id)) {
+            log.silly("SSVNetworkService does not exist");
+            log.info("Add local secrets volume to DKG container");
+            const index = SSVDKGService.volumes.findIndex((vol) => vol.servicePath === "/secrets");
+            if (index !== -1) {
+              SSVDKGService.volumes.splice(index, 1);
+            }
+            SSVDKGService.volumes.push(localSecretsVolume);
+            await this.nodeConnection.writeServiceConfiguration(SSVDKGService.buildConfiguration());
+            changes = true;
+          } else {
+            log.silly("Local secrets volume already added to DKG container");
+          }
+        }
+
+        // 2. Adjust SSV operator ID in DKG config
+        if (ssvTotalConfig) {
+          // Set operator ID to last known operator ID (revert or 0) in DKG config file (if needed)
+          if (
+            ssvTotalConfig.lastKnownOperatorId &&
+            ssvDkgTotalConfig.operatorId != ssvTotalConfig.lastKnownOperatorId
+          ) {
+            log.silly("SSVNetworkService exists");
+            log.info(`Update operator ID in DKG config file to ${ssvTotalConfig.lastKnownOperatorId}`);
+            ssvDkgTotalConfig.ssvDkgConfig.operatorID = parseInt(ssvTotalConfig.lastKnownOperatorId, 10);
+            const ssvDkgConfigYamlString = YAML.stringify(ssvDkgTotalConfig.ssvDkgConfig);
+            await this.nodeConnection.writeSSVDKGConfig(SSVDKGClient.config.serviceID, ssvDkgConfigYamlString);
+            changes = true;
+          } else if (!ssvTotalConfig.lastKnownOperatorId && ssvDkgTotalConfig.operatorId) {
+            // This case shouldn't happen without strange end-user activities (e.g.: removing last_known_* files on shell..)
+            log.silly("SSVNetworkService does not exist");
+            log.info(`Revert operator ID in DKG config file to 0`);
+            ssvDkgTotalConfig.ssvDkgConfig.operatorID = 0;
+            const ssvDkgConfigYamlString = YAML.stringify(ssvDkgTotalConfig.ssvDkgConfig);
+            await this.nodeConnection.writeSSVDKGConfig(SSVDKGClient.config.serviceID, ssvDkgConfigYamlString);
+            changes = true;
+          } else {
+            log.silly(`The operator ID ${ssvDkgTotalConfig.operatorId} is up to date in DKG config file`);
+          }
+        } else {
+          // Reset operator ID to 0 in DKG config file (if needed)
+          if (ssvDkgTotalConfig.operatorId) {
+            log.silly("SSVNetworkService does not exist");
+            log.info(`Reset operator ID in DKG config file to 0`);
+            ssvDkgTotalConfig.ssvDkgConfig.operatorID = 0;
+            const ssvDkgConfigYamlString = YAML.stringify(ssvDkgTotalConfig.ssvDkgConfig);
+            await this.nodeConnection.writeSSVDKGConfig(SSVDKGClient.config.serviceID, ssvDkgConfigYamlString);
+            changes = true;
+          } else {
+            log.silly(`The operator ID ${ssvDkgTotalConfig.operatorId} is up to date in DKG config file`);
+          }
+        }
+
+        // 3. Restart the DKG container if chages was applied
+        if (changes) {
+          if (SSVDKGClient.state == "running" || SSVDKGClient.state == "restarting") {
+            log.info("Restart DKG container");
+            await this.restartService(SSVDKGClient);
+          }
+          return await this.watchSSVDKG("_internal"); // refresh
+        }
+      }
+    } catch (e) {
+      log.debug("watchSSVDKG -> Catched unhandled error ->", e);
+    } finally {
+      if (_internal != "_internal") {
+        // Sleep to avoid API or disk spamming
+        let secsleep = 10;
+        log.silly(`watchSSVDKG -> Sleep ${secsleep} seconds...`);
+        await new Promise((r) => setTimeout(r, secsleep * 1000));
+        // Release lock
+        log.silly("watchSSVDKG -> Finally");
+        this.watchSSVDKGLock = false;
+      }
+    }
   }
 
   //make sure there are no double tasks (for example: TekuBeaconService, TekuValidatorService share the same id)
@@ -1694,7 +1967,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1703,7 +1976,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1712,7 +1985,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -1730,7 +2003,7 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
           metricsExporterCommands[firstConsensusClient.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
         await this.manageServiceState(firstConsensusClient.id, "started");

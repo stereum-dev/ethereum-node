@@ -175,6 +175,7 @@ const checkPluginCategory = (element) => {
       }
       break;
     case "ssv.network":
+    case "lidossv":
       filter = (item) => {
         if (element.category === "validator") {
           return item.service === "SSVNetworkService";

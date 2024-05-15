@@ -77,6 +77,7 @@ const router = useRouter();
 const footerStore = useFooter();
 
 //Computed & Watchers
+// TODO: maybe add watchSSV from service.js here?
 
 watchEffect(() => {
   if (router.currentRoute.value.path !== "/node") {
