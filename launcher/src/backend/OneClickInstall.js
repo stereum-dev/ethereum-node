@@ -290,6 +290,15 @@ export class OneClickInstall {
       );
     }
 
+    if (constellation.includes("SSVDKGService")) {
+      let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
+        ...args,
+        consensusClients: [this.beaconService],
+        otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
+      });
+      this.extraServices.push(SSVDKGService);
+    }
+
     this.handleArchiveTags(selectedPreset);
 
     let versions;
@@ -402,6 +411,7 @@ export class OneClickInstall {
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
+      await this.serviceManager.prepareSSVDKG(this.extraServices.find((s) => s.service === "SSVDKGService"));
       return configs;
     }
   }
@@ -492,6 +502,9 @@ export class OneClickInstall {
           "NotificationService",
         ];
         services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
+        break;
+      case "lidossv":
+        services.push("SSVNetworkService", "SSVDKGService");
     }
     return services;
   }

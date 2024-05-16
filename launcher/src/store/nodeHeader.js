@@ -9,12 +9,15 @@ export const useNodeHeader = defineStore("nodeHeader", {
       //Stereum contributers end
 
       //Service Modals begin
+      resetConfig: false,
       isServiceAvailable: true,
       showGrafanaWindow: false,
       showSsvWindow: false,
       showPrometheusWindow: false,
       showMevboostWindow: false,
       showObolCharonWindow: false,
+      showSsvDkgWindow: false,
+      showAuthenticatorWindow: false,
       //Service Modals end
 
       //Menu Modals begin
@@ -41,6 +44,8 @@ export const useNodeHeader = defineStore("nodeHeader", {
       deactivateBtnToWaitForLogs: false,
 
       runningServices: [],
+      varificationCode: "",
+      validVarificationCode: "",
       refresh: true,
       stereumUpdate: {},
       searchingForUpdates: false,
@@ -91,13 +96,23 @@ export const useNodeHeader = defineStore("nodeHeader", {
         case "CharonService":
           this.showObolCharonWindow = true;
           break;
+        case "SSVDKGService":
+          this.showSsvDkgWindow = true;
+          break;
+        case "AuthenticatorService":
+          this.showAuthenticatorWindow = true;
+          break;
         case null:
           this.showGrafanaWindow = false;
           this.showSsvWindow = false;
           this.showPrometheusWindow = false;
           this.showMevboostWindow = false;
           this.showObolCharonWindow = false;
+          this.showSsvDkgWindow = false;
           this.displayUpdatePanel = false;
+          this.logoutModalIsActive = false;
+
+          this.showAuthenticatorWindow = false;
           break;
         default:
           console.error(`No modal associated with the service name: ${serviceName}`);

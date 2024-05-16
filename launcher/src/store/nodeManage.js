@@ -205,7 +205,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/network-icons/ethereum-mainnet.png",
           currencyIcon: "/img/icon/control-page-icons/mainnet-currency-symbol.png",
           dataEndpoint: "https://mainnet.beaconcha.in/api/v1",
-          support: ["staking", "mev boost", "stereum on arm", "ssv.network", "obol", "archive", "lidoobol"],
+          support: ["staking", "mev boost", "stereum on arm", "ssv.network", "obol", "archive", "lidoobol", "lidossv"],
         },
         {
           id: 2,
@@ -243,7 +243,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://holesky.beaconcha.in/api/v1",
-          support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol", "lidoobol"],
+          support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol", "lidoobol", "lidossv"],
         },
       ],
       currentNetwork: {},

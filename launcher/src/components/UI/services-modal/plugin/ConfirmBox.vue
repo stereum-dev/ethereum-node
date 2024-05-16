@@ -7,7 +7,10 @@
     <div class="btn-box">
       <div
         class="btn"
-        :style="{ backgroundColor: dynamicBackgroundColor, color: btnNameColor }"
+        :style="{
+          backgroundColor: dynamicBackgroundColor,
+          color: btnNameColor,
+        }"
         @mouseover="handleMouseOver"
         @mouseleave="handleMouseLeave"
         @click="confirmPluginClick"

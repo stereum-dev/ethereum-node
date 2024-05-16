@@ -11,6 +11,8 @@ import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
 import { ConfigManager } from "./backend/ConfigManager.js";
+import { AuthenticationService } from "./backend/AuthenticationService.js";
+import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -23,11 +25,13 @@ const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const configManager = new ConfigManager(nodeConnection);
+const authenticationService = new AuthenticationService(nodeConnection);
+const sshService = new SSHService;
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 stereumUpdater.initUpdater();
-log.transports.console.level = "info";
+log.transports.console.level = process.env.LOG_LEVEL || "info";
 log.transports.file.level = "debug";
 
 let remoteHost = {};
@@ -44,7 +48,7 @@ ipcMain.handle("connect", async (event, arg) => {
     });
   }
   nodeConnection.nodeConnectionParams = remoteHost;
-  await nodeConnection.establish(taskManager);
+  await nodeConnection.establish(taskManager, event.sender);
   await monitoring.login();
   return 0;
 });
@@ -77,6 +81,10 @@ ipcMain.handle("destroy", async () => {
   const returnValue = await nodeConnection.destroyNode(serviceConfigs);
   app.showExitPrompt = false;
   return returnValue;
+});
+
+ipcMain.handle("watchSSVDKG", async () => {
+  return serviceManager.watchSSVDKG();
 });
 
 ipcMain.handle("tunnel", async (event, arg) => {
@@ -410,6 +418,18 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getSSVDKGTotalConfig", async (event, args) => {
+  return await nodeConnection.getSSVDKGTotalConfig(args);
+});
+
+ipcMain.handle("readSSVDKGConfig", async (event, args) => {
+  return await nodeConnection.readSSVDKGConfig(args);
+});
+
+ipcMain.handle("writeSSVDKGConfig", async (event, args) => {
+  return await nodeConnection.writeSSVDKGConfig(args.serviceID, args.config);
+});
+
 ipcMain.handle("readPrometheusConfig", async (event, args) => {
   return await nodeConnection.readPrometheusConfig(args);
 });
@@ -475,6 +495,35 @@ ipcMain.handle("checkRemoteKeys", async (event, args) => {
 
 ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
   return await monitoring.getCurrentEpochSlot(args);
+});
+
+ipcMain.handle("beginAuthSetup", async (event, args) => {
+  const current_window = event.sender;
+  return await authenticationService.beginAuthSetup(args.timeBased, args.increaseTimeLimit, args.enableRateLimit, current_window)
+});
+
+ipcMain.handle("finishAuthSetup", async () => {
+  return await authenticationService.finishAuthSetup()
+});
+
+ipcMain.handle("authenticatorVerification", async (event, args) => {
+  return await authenticationService.authenticatorVerification(args)
+});
+
+ipcMain.handle("removeAuthenticator", async (event, args) => {
+  return await authenticationService.removeAuthenticator(args);
+});
+
+ipcMain.handle("checkForAuthenticator", async (event, args) => {
+  return await authenticationService.checkForAuthenticator(args);
+});
+
+ipcMain.handle("submitVerification", async (event, args) => {
+  return await sshService.submitVerification(args)
+});
+
+ipcMain.handle("cancelVerification", async (event, args) => {
+  return await sshService.cancelVerification(args)
 });
 
 ipcMain.handle("changePassword", async (event, args) => {
@@ -626,6 +675,10 @@ ipcMain.handle("startShell", async (event) => {
       return `Error starting shell: ${error.message}`;
     }
   }
+});
+
+ipcMain.handle("exec", async (event, command, use_sudo) => {
+  return await nodeConnection.sshService.exec(command, use_sudo);
 });
 
 ipcMain.handle("executeCommand", async (event, args) => {

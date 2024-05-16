@@ -13,7 +13,11 @@ import { ref, watchEffect } from 'vue';
             'col-span-1 w-8 h-8 bg-gray-500 hover:text-teal-500 border border-gray-500 hover:border-teal-200 rounded-sm shadow-md shadow-black flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 active:shadow-none',
             tab.isActive ? 'bg-teal-500 border-teal-200' : '',
             isLoginRoute &&
-            (tab.name === 'info' || tab.name === 'ssh' || tab.name === 'update' || tab.name === 'settings')
+            (tab.name === 'info' ||
+              tab.name === 'ssh' ||
+              tab.name === 'update' ||
+              tab.name === 'settings' ||
+              tab.name === '2fa')
               ? ' opacity-30 pointer-events-none scale-90 shadow-none'
               : '',
           ]"
@@ -42,6 +46,7 @@ const info = t("serverHeader.info");
 const ssh = t("serverHeader.ssh");
 const osUpdate = t("serverHeader.osUpdate");
 const settings = t("serverHeader.settings");
+const twoFactorAuth = t("serverHeader.twoFactorAuth");
 
 const footerStore = useFooter();
 
@@ -63,6 +68,8 @@ const tabTooltip = (tab) => {
     return osUpdate;
   } else if (tab.name === "settings") {
     return settings;
+  } else if (tab.name === "2fa") {
+    return twoFactorAuth;
   }
   return null; // Default case if none of the conditions match
 };
