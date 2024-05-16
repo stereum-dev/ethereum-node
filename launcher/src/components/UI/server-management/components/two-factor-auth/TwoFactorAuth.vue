@@ -5,10 +5,22 @@
     <span class="top-ttl row-start-1 text-gray-300">{{ titleManager }}</span>
     <TwoFactorBtn
       v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && !configured2fa"
-      class="row-start-2"
+      class="row-start-7 row-span-1"
       btn-name="Setup"
       @btnClick="enableTwoFactor"
     />
+    <div
+      v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && !configured2fa"
+      class="col-start-1 col-span-full row-start-2 row-end-6 flex flex-col justify-start items-start text-red-500"
+    >
+      <h3 class="text-lg font-semibold">EXPERIMENTAL!</h3>
+      <span class="text-sm">Before using note: </span>
+      <span class="text-sm">- Use at your own risk</span>
+      <span class="text-sm">- Have an SSH session</span>
+      <span class="text-sm">- Have a backup </span>
+      <span class="text-sm">- Have a snapshot of your VM</span>
+    </div>
+
     <TwoFactorBtn
       v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && configured2fa"
       class="row-start-2 remove-btn"

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full fixed inset-0 flex justify-center items-center">
+  <div class="w-full h-full fixed inset-0 flex justify-center items-center z-40">
     <div class="w-full h-full fixed inset-0 bg-black opacity-80 rounded-lg z-10" @click="closeWindow"></div>
     <div
       class="w-3/5 h-2/3 grid grid-cols-12 grid-rows-8 p-2 mx-auto bg-[#2a2e30] z-20 border-2 border-gray-400 rounded-[75px] shadow-lg shadow-black"
