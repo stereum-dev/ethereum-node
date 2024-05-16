@@ -402,11 +402,9 @@ export class OneClickInstall {
   async writeConfig() {
     const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
-      // let setupID = await this.configManager.createMultiSetupYaml(configs, this.network);
       this.configManager.createMultiSetupYaml(configs, this.network);
       await Promise.all(
         configs.map(async (config) => {
-          // await this.nodeConnection.writeServiceConfiguration(config, setupID);
           await this.nodeConnection.writeServiceConfiguration(config);
         })
       );
