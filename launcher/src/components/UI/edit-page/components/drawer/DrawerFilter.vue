@@ -2,12 +2,8 @@
   <div class="col-start-1 col-span-full row-start-2 row-span-1 z-10 flex">
     <Listbox v-model="selectedfilter">
       <div class="w-full relative mt-1">
-        <ListboxButton
-          class="relative w-full cursor-default rounded-md bg-gray-200 p-1 text-left shadow-md text-sm"
-        >
-          <span
-            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-          >
+        <ListboxButton class="relative w-full cursor-default rounded-md bg-gray-200 p-1 text-left shadow-md text-sm">
+          <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon class="h-3 w-3 text-gray-400" aria-hidden="true" />
           </span>
           <span class="block truncate text-center">{{ selectedfilter.name }}</span>
@@ -37,10 +33,7 @@
                 <span v-if="selected" class="flex items-center text-cyan-600">
                   <CheckIcon class="h-3 w-3" aria-hidden="true" />
                 </span>
-                <span
-                  :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']"
-                  >{{ filter.name }}</span
-                >
+                <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']">{{ filter.name }}</span>
               </li>
             </ListboxOption>
           </ListboxOptions>
@@ -75,9 +68,7 @@ serviceStore.filteredServices = computed(() => {
     return serviceStore.allServices.filter(getFilterbyNetwork());
   } else {
     return serviceStore.allServices
-      .filter(
-        (item) => item.category.toLowerCase() === selectedfilter.value.name.toLowerCase()
-      )
+      .filter((item) => item.category.toLowerCase() === selectedfilter.value.name.toLowerCase())
       .filter(getFilterbyNetwork());
   }
 });
@@ -92,8 +83,7 @@ const getFilterbyNetwork = () => {
       return (item) => item.service != "SSVNetworkService" && archFilter(item.service);
     case "gnosis":
       return (item) =>
-        /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(item.service) &&
-        archFilter(item.service);
+        /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(item.service) && archFilter(item.service);
     default:
       return (item) => item.service != "SSVNetworkService" && archFilter(item.service);
   }

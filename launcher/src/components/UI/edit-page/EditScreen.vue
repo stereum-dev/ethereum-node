@@ -478,7 +478,7 @@ const cancelChangeHandler = (item) => {
 
 const addServices = (service) => {
   let item = useDeepClone(service);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (item?.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -755,14 +755,14 @@ const confirmHandler = async () => {
       let subtasks = manageStore.confirmChanges.flatMap((e) => e.subTasks);
 
       // Delete setups services
-      await ControlService.handleServiceChanges(useDeepClone(subtasks));
+      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(subtasks)));
 
       // Delete setups
       for (const e of setupStore.selectedSetupToRemove) {
         await ControlService.deleteSetup(e.setupId);
       }
     } else {
-      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
+      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
     }
   } catch (error) {
     console.error("Error processing changes:", error);

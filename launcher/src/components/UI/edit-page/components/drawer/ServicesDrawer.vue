@@ -2,8 +2,7 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-6 grid-rows-15 items-center gap-y-1 bg-[#292e32] p-1 rounded-md"
   >
-    <span
-      class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-100 font-sans uppercase"
+    <span class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-100 font-sans uppercase"
       >ADD A CONFIG SERVICE</span
     >
     <DrawerFilter />
@@ -46,9 +45,7 @@
       class="col-start-1 col-span-full row-start-4 row-end-14 w-full h-full flex flex-col justify-start items-center space-y-1 bg-[#151618] border border-gray-700 rounded-md overflow-y-scroll py-1 overflow-x-hidden"
     >
       <div
-        v-for="service in filteredServices.filter(
-          (service) => service.service !== 'CustomService'
-        )"
+        v-for="service in filteredServices"
         :key="service.serviceID"
         class="w-full h-10 border border-gray-800 rounded-sm cursor-pointer grid grid-cols-5 p-1 hover:bg-gray-700 transition-all duration-100"
         draggable="true"
@@ -56,23 +53,16 @@
         @dblclick="addServices(service)"
         @mouseenter="footerStore.cursorLocation = `${service.name} ${serv}`"
       >
-        <img
-          :src="service.icon"
-          alt="Client Icon"
-          class="col-start-1 col-span-1 w-full mx-auto"
-        />
-        <span
-          class="col-start-2 col-span-full w-full self-center text-xs text-gray-100 truncate ml-2"
-          >{{ service.name }}</span
-        >
+        <img :src="service.icon" alt="Client Icon" class="col-start-1 col-span-1 w-full mx-auto" />
+        <span class="col-start-2 col-span-full w-full self-center text-xs text-gray-100 truncate ml-2">{{
+          service.name
+        }}</span>
       </div>
     </div>
     <div
       class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700"
     >
-      <span class="text-xs text-center text-gray-100 font-sans uppercase mt-1"
-        >CUSTOM SERVICE</span
-      >
+      <span class="text-xs text-center text-gray-100 font-sans uppercase mt-1">CUSTOM SERVICE</span>
 
       <div
         class="w-full h-8 bg-teal-700 rounded-sm text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"
@@ -90,7 +80,6 @@ import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 import { computed, onUnmounted, ref } from "vue";
 import { useSetups } from "../../../../../store/setups";
-import { useNodeManage } from "@/store/nodeManage";
 
 const t = i18n.global.t;
 
@@ -100,7 +89,6 @@ const searchQuery = ref("");
 const footerStore = useFooter();
 const serviceStore = useServices();
 const setupStore = useSetups();
-const manageStore = useNodeManage();
 const props = defineProps({
   dragging: Function,
 });
@@ -124,9 +112,7 @@ const filteredServices = computed(() => {
 });
 
 const customService = computed(() => {
-  return manageStore.newConfiguration.find(
-    (service) => service.service === "CustomService"
-  );
+  return serviceStore.allServices.find((service) => service.service === "CustomService");
 });
 
 function addServices(service) {
