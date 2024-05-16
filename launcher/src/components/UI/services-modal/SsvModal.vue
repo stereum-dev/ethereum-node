@@ -430,12 +430,29 @@ export default {
       // console.log("this.pubkey", this.pubkey);
       // console.log("this.lastKnownPublicKey", this.lastKnownPublicKey);
 
-      // Get last backed public key from backend (TODO: add this to backend outtput of ssvTotalConfig)
+      // console.log("this.ssvTotalConfig.lastBackedPublicKey", this.ssvTotalConfig.lastBackedPublicKey);
+      // console.log("this.ssvTotalConfig.lastKnownOperatorId", this.ssvTotalConfig.lastKnownOperatorId);
+
+      // Get last backed public key from backend (TODO: take this from backend outtput of ssvTotalConfig)
+      // const getSSVOperatorDataFromApi = await this.sendSSVCommand({
+      //   command: "getSSVOperatorDataFromApi",
+      //   arguments: [this.network, this.pubkey],
+      // });
+      // console.log("getSSVOperatorDataFromApi", getSSVOperatorDataFromApi);
+
+      // Get last backed public key from backend (TODO: take this from backend outtput of ssvTotalConfig)
       const lastBackedPublicKey = await this.sendSSVCommand({
         command: "getSSVLastBackedPublicKey",
         arguments: [this.ssvService.config.serviceID],
       });
       // console.log("lastBackedPublicKey", lastBackedPublicKey);
+
+      // Get last known operator id from backend (TODO: take this from backend outtput of ssvTotalConfig)
+      const lastKnownOperatorId = await this.sendSSVCommand({
+        command: "getSSVLastKnownOperatorId",
+        arguments: [this.ssvService.config.serviceID],
+      });
+      // console.log("lastKnownOperatorId", lastKnownOperatorId);
 
       // If pubkey was already generated/imported at least once by the end-user via "generate/import" buttons
       if (this.lastKnownPublicKey) {
@@ -468,6 +485,16 @@ export default {
                 this.operatorData = opresp.data;
                 console.log("Operator registered");
                 console.log("SSV: this.operatorData", this.operatorData);
+                // Set last known operator data to have it handy for SSVDKGService
+                if (lastKnownOperatorId != this.operatorData.id) {
+                  // Ignore any errors because its monitored in ssvWatch -> watchSSVDKG anyway
+                  try {
+                    await this.sendSSVCommand({
+                      command: "setSSVLastKnownOperatorId",
+                      arguments: [this.ssvService.config.serviceID, this.operatorData.id, false, true],
+                    });
+                  } catch (e) {}
+                }
               } else {
                 this.apiUnavailable = true;
                 console.log(`SSV API did not respond metadata for operator ${operator_id}`);

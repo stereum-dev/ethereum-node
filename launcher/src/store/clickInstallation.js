@@ -109,6 +109,13 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/one-click-icons/preset-icons/OBOL-LIDO-SDVT.png",
           includedPlugins: [],
         },
+        {
+          id: 7,
+          name: "lidossv",
+          defaultPath: "/opt/stereum",
+          icon: "/img/icon/one-click-icons/preset-icons/SSV-LIDO-SDVT.png",
+          includedPlugins: [],
+        },
       ],
       services: [
         {

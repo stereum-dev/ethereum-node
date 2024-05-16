@@ -5,6 +5,7 @@ import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import net from "net";
 import YAML from "yaml";
 import { NodeUpdates } from "./NodeUpdates";
+import axios from "axios";
 const log = require("electron-log");
 const electron = require("electron");
 const Evilscan = require("evilscan");
@@ -462,6 +463,200 @@ export class NodeConnection {
     } catch (err) {
       log.error("Can't forward SSV command ", err);
       throw new Error("Can't forward SSV command: " + err);
+    }
+  }
+
+  async getSSVOperatorDataFromApi(network, pubkey, throwErr = true) {
+    try {
+      // Check vars
+      if (!network || typeof network !== "string") {
+        let info = `ERROR: Invalid or undefined network specified`;
+        if (throwErr) throw new Error(info);
+        return {
+          code: 2,
+          info: `ERROR: Could not request operator data from SSV-API (${info})`,
+          data: {
+            network: network,
+          },
+        };
+      }
+      if (!pubkey || typeof pubkey !== "string") {
+        let info = `ERROR: Invalid or undefined pubkey specified`;
+        if (throwErr) throw new Error(info);
+        return {
+          code: 3,
+          info: `ERROR: Could not request operator data from SSV-API (${info})`,
+          data: {
+            pubkey: pubkey,
+          },
+        };
+      }
+
+      // Get operator ID from SSV
+      let opidresp;
+      try {
+        opidresp = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/public_key/` + pubkey);
+      } catch (e) {
+        let info = `API endpoint to get operator ID is unavailable`;
+        if (throwErr) throw new Error(`${info} (${e.message})`);
+        return {
+          code: 4,
+          info: `ERROR: Could not request operator data from SSV-API (${info})`,
+          data: e,
+        };
+      }
+      const operator_id = opidresp ? opidresp?.data?.data?.id : null;
+      if (!operator_id) {
+        let info = `WARNING: SSV API reported unknown operator`;
+        if (throwErr) throw new Error(info);
+        return {
+          code: 99, // API available but operator not registered (yet), special error!
+          info: `${info}`,
+          data: {
+            opidresp: opidresp,
+          },
+        };
+      }
+
+      // Get operator metadata from SSV
+      let opmdresp;
+      try {
+        opmdresp = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/` + operator_id);
+      } catch (e) {
+        let info = `API endpoint to get metadata for operator ${operator_id} is unavailable`;
+        if (throwErr) throw new Error(info);
+        return {
+          code: 5,
+          info: `ERROR: Could not request operator data from SSV-API (${info})`,
+          data: {
+            opidresp: opidresp,
+            opmdresp: opmdresp,
+          },
+        };
+      }
+      const operatorData = opmdresp ? opmdresp?.data : null;
+      if (!operatorData || !operatorData?.id) {
+        let info = `API endpoint to get metadata responded for operator ${operator_id} reponded and invalid format`;
+        if (throwErr) throw new Error(info);
+        return {
+          code: 6,
+          info: `ERROR: Could not request operator data from SSV-API (${info})`,
+          data: {
+            opidresp: opidresp,
+            opmdresp: opmdresp,
+          },
+        };
+      }
+
+      // Success (fully registered operator)
+      if (throwErr) return operatorData;
+      return {
+        code: 0,
+        info: "SUCCESS: operaor registered",
+        data: {
+          operatorData: operatorData,
+          // opidresp: opidresp,
+          // opmdresp: opmdresp,
+        },
+      };
+    } catch (e) {
+      let info = `ERROR: Could not request operator data from SSV-API (${e.message})`;
+      if (throwErr) throw new Error(`${info} (${e.message})`);
+      // This response would only happens on an uncaught error
+      return {
+        code: 1,
+        info: info,
+        data: e,
+      };
+    }
+  }
+
+  async getSSVLastKnownOperatorIdFilePath(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const getSSVNetworkConfig = getSsvNetworkCfg
+        ? getSsvNetworkCfg
+        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const ssvNetworkConfigDir = getSSVNetworkConfig.ssvNetworkConfigDir;
+      return ssvNetworkConfigDir + "/last_known_operator_id";
+    } catch (err) {
+      log.error("Can't get SSV last known operator id file path from service " + serviceID, err);
+      throw new Error("Can't get SSV last known operator id file path from service " + serviceID + ": " + err);
+    }
+  }
+
+  async setSSVLastKnownOperatorId(
+    serviceID,
+    operatorId,
+    return_details = false,
+    force = false,
+    getSsvServiceCfg = null,
+    getSsvNetworkCfg = null
+  ) {
+    const strOperatorId = `${operatorId}`;
+    try {
+      try {
+        if (!force) {
+          const existing = await this.getSSVLastKnownOperatorId(
+            serviceID,
+            return_details,
+            getSsvServiceCfg,
+            getSsvNetworkCfg
+          );
+          const existingLastKnownOperatorId = return_details ? existing.lastKnownOperatorIdFileData : existing;
+          if (existingLastKnownOperatorId == strOperatorId.trim()) {
+            return existing;
+          }
+        }
+      } catch (err) {}
+      const lastKnownOperatorIdFilePath = await this.getSSVLastKnownOperatorIdFilePath(
+        serviceID,
+        getSsvServiceCfg,
+        getSsvNetworkCfg
+      );
+      const lastKnownOperatorIdFileData = strOperatorId.trim();
+      const result = await this.sshService.exec(
+        `echo -n "${lastKnownOperatorIdFileData}" > "${lastKnownOperatorIdFilePath}"`
+      );
+      if (SSHService.checkExecError(result, true)) {
+        throw new Error(SSHService.extractExecError(result));
+      }
+      if (!return_details) return lastKnownOperatorIdFileData;
+      return {
+        lastKnownOperatorIdFilePath: lastKnownOperatorIdFilePath,
+        lastKnownOperatorIdFileData: lastKnownOperatorIdFileData,
+      };
+    } catch (err) {
+      log.error("Can't write SSV last known operator id for service " + serviceID, err);
+      throw new Error("Can't write SSV last known operator id for for service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVLastKnownOperatorId(serviceID, return_details = false, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
+    try {
+      const lastKnownOperatorIdFilePath = await this.getSSVLastKnownOperatorIdFilePath(
+        serviceID,
+        getSsvServiceCfg,
+        getSsvNetworkCfg
+      );
+      let lastKnownOperatorIdFileContent = "";
+      if (lastKnownOperatorIdFilePath) {
+        let lastKnownOperatorIdFileRequest = await this.sshService.exec(
+          `if [ -f "${lastKnownOperatorIdFilePath}" ]; then cat "${lastKnownOperatorIdFilePath}"; else echo ""; fi`
+        );
+        if (SSHService.checkExecError(lastKnownOperatorIdFileRequest, true)) {
+          throw new Error(lastKnownOperatorIdFileRequest.stderr);
+        } else {
+          lastKnownOperatorIdFileContent = lastKnownOperatorIdFileRequest.stdout;
+        }
+      }
+      if (!return_details) return lastKnownOperatorIdFileContent.trim();
+      return {
+        lastKnownOperatorIdFilePath: lastKnownOperatorIdFilePath,
+        lastKnownOperatorIdFileData: lastKnownOperatorIdFileContent.trim(),
+      };
+    } catch (err) {
+      log.error("Can't read SSV last known operator id from service " + serviceID, err);
+      throw new Error("Can't read SSV last known operator id from service " + serviceID + ": " + err);
     }
   }
 
@@ -1168,6 +1363,28 @@ export class NodeConnection {
       const lastKnownPublicKeyFilePath = getSSVLastKnownPublicKeyFile.lastKnownPublicKeyFilePath;
       const lastKnownPublicKeyFileData = getSSVLastKnownPublicKeyFile.lastKnownPublicKeyFileData;
 
+      // Last backed public key (empty as long as user did not do any backup)
+      let lastBackedPublicKey = "";
+      try {
+        lastBackedPublicKey = await this.getSSVLastBackedPublicKey(
+          serviceID,
+          false,
+          getSsvServiceConfig,
+          getSsvNetworkConfig
+        );
+      } catch (err) {}
+
+      // Last known operator id that was responded by SSV API (empty as long as operator is not registered or SSV-API is unreachable)
+      let lastKnownOperatorId = "";
+      try {
+        lastKnownOperatorId = await this.getSSVLastKnownOperatorId(
+          serviceID,
+          false,
+          getSsvServiceConfig,
+          getSsvNetworkConfig
+        );
+      } catch (err) {}
+
       return {
         serviceID: serviceID,
         getSsvServiceConfig: getSsvServiceConfig,
@@ -1195,12 +1412,15 @@ export class NodeConnection {
             return keyStorePrivateKeyFileContent;
           }
         })(),
+        lastBackedPublicKey: lastBackedPublicKey,
+        lastKnownOperatorId: lastKnownOperatorId,
       };
     } catch (err) {
       log.error("Can't read SSV total config from service " + serviceID, err);
       throw new Error("Can't read SSV total config from service " + serviceID + ": " + err);
     }
   }
+
   // <-------- NEW SSVMODAL END --------->
 
   async readSSVNetworkConfig(serviceID) {
@@ -1266,6 +1486,207 @@ export class NodeConnection {
     this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
     return;
   }
+
+  // <-------- NEW SSVDKGMODAL START --------->
+
+  async getSSVDKGServiceConfig(serviceID) {
+    try {
+      const ssvDkgServiceConfig = await this.readServiceConfiguration(serviceID);
+      return {
+        ssvDkgServiceConfig: ssvDkgServiceConfig,
+        ssvDkgServiceConfigDir: "/etc/stereum/services",
+      };
+    } catch (err) {
+      log.error("Can't read SSVDKG service config from service " + serviceID, err);
+      throw new Error("Can't read SSVDKG service config from service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVDKGConfig(serviceID, getSsvDkgServiceCfg = null) {
+    try {
+      const getSsvDkgServiceConfig = getSsvDkgServiceCfg
+        ? getSsvDkgServiceCfg
+        : await this.getSSVDKGServiceConfig(serviceID);
+      const ssvDkgServiceConfig = getSsvDkgServiceConfig.ssvDkgServiceConfig;
+      const ssvDkgServiceConfigDir = getSsvDkgServiceConfig.ssvDkgServiceConfigDir;
+      let ssvDkgConfigDir = ".";
+      try {
+        ssvDkgConfigDir = ServiceVolume.buildByConfig(
+          ssvDkgServiceConfig.volumes.find((v) => v.split(":").slice(-1) == "/data")
+        ).destinationPath;
+        if (ssvDkgConfigDir.endsWith("/")) ssvDkgConfigDir = ssvDkgConfigDir.slice(0, -1, ""); //if path ends with '/' remove it
+      } catch (e) {}
+      const ssvDkgConfigContent = await this.sshService.exec(`cat ${ssvDkgConfigDir}/config.yaml`);
+      if (SSHService.checkExecError(ssvDkgConfigContent)) {
+        throw new Error(SSHService.extractExecError(ssvDkgConfigContent));
+      }
+      const ssvDkgConfig = YAML.parse(ssvDkgConfigContent.stdout);
+      return {
+        getSsvDkgServiceConfig: getSsvDkgServiceConfig,
+        ssvDkgServiceConfig: ssvDkgServiceConfig,
+        ssvDkgConfig: ssvDkgConfig,
+        ssvDkgServiceConfigDir: ssvDkgServiceConfigDir,
+        ssvDkgConfigDir: ssvDkgConfigDir,
+      };
+    } catch (err) {
+      log.error("Can't read SSVDKG config from service " + serviceID, err);
+      throw new Error("Can't read SSVDKG config from service " + serviceID + ": " + err);
+    }
+  }
+
+  async getSSVDKGTotalConfig(serviceID, getSsvDkgServiceCfg = null, getSsvDkgCfg = null) {
+    try {
+      const getSsvDkgConfig = getSsvDkgCfg ? getSsvDkgCfg : await this.getSSVDKGConfig(serviceID, getSsvDkgServiceCfg);
+      const getSsvDkgServiceConfig = getSsvDkgConfig.getSsvDkgServiceConfig;
+      const ssvDkgServiceConfig = getSsvDkgConfig.ssvDkgServiceConfig;
+      const ssvDkgServiceConfigDir = getSsvDkgConfig.ssvDkgServiceConfigDir;
+      const ssvDkgConfig = getSsvDkgConfig.ssvDkgConfig;
+      const ssvDkgConfigDir = getSsvDkgConfig.ssvDkgConfigDir;
+      // Secrets dir mounted from *SSVNetworkService*!
+      let ssvDkgSecretsDir = ServiceVolume.buildByConfig(
+        ssvDkgServiceConfig.volumes.find((v) => v.split(":").slice(-1) == "/secrets")
+      ).destinationPath;
+      if (ssvDkgSecretsDir.endsWith("/")) ssvDkgSecretsDir = ssvDkgSecretsDir.slice(0, -1, ""); //if path ends with '/' remove it
+      const regexC = /^(?:\.\/|\/?)data\//; // string starts with "./data/" or "data/" or "/data/"
+      const regexS = /^(?:\.\/|\/?)secrets\//; // string starts with "./secrets/" or "secrets/" or "/secrets/"
+      //let keyStorePasswordFile = ssvDkgConfig?.KeyStore?.PasswordFile ? ssvDkgConfig.KeyStore.PasswordFile : "";
+      let keyStorePasswordFile = ssvDkgConfig?.privKeyPassword ? ssvDkgConfig.privKeyPassword : "";
+      if (regexC.test(keyStorePasswordFile)) {
+        keyStorePasswordFile = ssvDkgConfigDir + "/" + keyStorePasswordFile.replace(regexC, ""); // password file found in config dir
+      } else if (regexS.test(keyStorePasswordFile)) {
+        keyStorePasswordFile = ssvDkgSecretsDir + "/" + keyStorePasswordFile.replace(regexS, ""); // password file found in secrets dir
+      }
+      // let keyStorePrivateKeyFile = ssvDkgConfig?.KeyStore?.PrivateKeyFile
+      //   ? ssvDkgConfig.KeyStore.PrivateKeyFile
+      //   : "";
+      let keyStorePrivateKeyFile = ssvDkgConfig?.privKey ? ssvDkgConfig?.privKey : "";
+      if (regexC.test(keyStorePrivateKeyFile)) {
+        keyStorePrivateKeyFile = ssvDkgConfigDir + "/" + keyStorePrivateKeyFile.replace(regexC, ""); // keystore file found in config dir
+      } else if (regexS.test(keyStorePrivateKeyFile)) {
+        keyStorePrivateKeyFile = ssvDkgSecretsDir + "/" + keyStorePrivateKeyFile.replace(regexS, ""); // keystore file found in secrets dir
+      }
+      let keyStorePasswordFileContent = "";
+      if (keyStorePasswordFile) {
+        let keyStorePasswordFileRequest = await this.sshService.exec(
+          `if [ -f "${keyStorePasswordFile}" ]; then cat "${keyStorePasswordFile}"; else echo ""; fi`
+        );
+        if (SSHService.checkExecError(keyStorePasswordFileRequest, true)) {
+          log.error(
+            "Can't read SSVDKG keystore password file content from service " + serviceID,
+            keyStorePasswordFileRequest.stderr
+          );
+        } else {
+          keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
+        }
+      }
+      let keyStorePrivateKeyFileContent = "";
+      if (keyStorePrivateKeyFile) {
+        let keyStorePrivateKeyFileRequest = await this.sshService.exec(
+          `if [ -f "${keyStorePrivateKeyFile}" ]; then cat "${keyStorePrivateKeyFile}"; else echo ""; fi`
+        );
+        if (SSHService.checkExecError(keyStorePrivateKeyFileRequest, true)) {
+          log.error(
+            "Can't read SSVDKG keystore private key file content from service " + serviceID,
+            keyStorePrivateKeyFileRequest.stderr
+          );
+        } else {
+          keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
+        }
+      }
+      return {
+        serviceID: serviceID,
+        getSsvDkgServiceConfig: getSsvDkgServiceConfig,
+        getSsvDkgConfig: getSsvDkgConfig,
+        ssvDkgServiceConfig: ssvDkgServiceConfig,
+        ssvDkgConfig: ssvDkgConfig,
+        ssvDkgServiceConfigDir: ssvDkgServiceConfigDir,
+        ssvDkgConfigDir: ssvDkgConfigDir,
+        ssvDkgSecretsDir: ssvDkgSecretsDir,
+        passwordFilePath: keyStorePasswordFile,
+        passwordFileData: keyStorePasswordFileContent.trim(),
+        privateKeyFilePath: keyStorePrivateKeyFile,
+        privateKeyFileData: (() => {
+          try {
+            let pkfdata = JSON.parse(keyStorePrivateKeyFileContent);
+            pkfdata.publicKey = pkfdata?.publicKey ? pkfdata.publicKey : pkfdata?.pubKey;
+            return pkfdata;
+          } catch (e) {
+            return keyStorePrivateKeyFileContent;
+          }
+        })(),
+        operatorId: ssvDkgConfig.operatorID,
+      };
+    } catch (err) {
+      log.error("Can't read SSVDKG total config from service " + serviceID, err);
+      throw new Error("Can't read SSVDKG total config from service " + serviceID + ": " + err);
+    }
+  }
+
+  async readSSVDKGConfig(serviceID) {
+    let SSVDKGConfig;
+    try {
+      const service = await this.readServiceConfiguration(serviceID);
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+
+      SSVDKGConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
+    } catch (err) {
+      log.error("Can't read SSVDKG config " + serviceID, err);
+      throw new Error("Can't read SSVDKG config " + serviceID + ": " + err);
+    }
+
+    if (SSHService.checkExecError(SSVDKGConfig)) {
+      throw new Error("Failed reading SSVDKG config " + serviceID + ": " + SSHService.extractExecError(SSVDKGConfig));
+    }
+
+    return SSVDKGConfig.stdout;
+  }
+
+  async writeSSVDKGConfig(serviceID, config) {
+    let configStatus;
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "write SSVDKG config", otherRunRef: ref });
+    const service = await this.readServiceConfiguration(serviceID);
+    try {
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+      configStatus = await this.sshService.exec(
+        "echo -e " + StringUtils.escapeStringForShell(config.trim()) + ` > ${configPath}/config.yaml`
+      );
+    } catch (err) {
+      this.taskManager.otherSubTasks.push({
+        name: "write SSVDKG config yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      log.error("Can't write SSVDKG config", err);
+      throw new Error("Can't write SSVDKG config: " + err);
+    }
+
+    if (SSHService.checkExecError(configStatus)) {
+      this.taskManager.otherSubTasks.push({
+        name: "write SSVDKG config yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("Can't write SSVDKG config: " + SSHService.extractExecError(configStatus));
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "write SSVDKG config yaml",
+      otherRunRef: ref,
+      status: true,
+    });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    return;
+  }
+
+  // <-------- NEW SSVDKGMODAL END --------->
 
   async readPrometheusConfig(serviceID) {
     let prometheusConfig;

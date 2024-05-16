@@ -51,6 +51,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("destroy");
   }
 
+  async watchSSVDKG() {
+    return await this.promiseIpc.send("watchSSVDKG");
+  }
+
   async openTunnels(args) {
     return await this.promiseIpc.send("tunnel", args);
   }
@@ -366,6 +370,18 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
 
+  async getSSVDKGTotalConfig(args) {
+    return await this.promiseIpc.send("getSSVDKGTotalConfig", args);
+  }
+
+  async readSSVDKGConfig(args) {
+    return await this.promiseIpc.send("readSSVDKGConfig", args);
+  }
+
+  async writeSSVDKGConfig(args) {
+    return await this.promiseIpc.send("writeSSVDKGConfig", args);
+  }
+
   async readPrometheusConfig(args) {
     return await this.promiseIpc.send("readPrometheusConfig", args);
   }
@@ -601,6 +617,10 @@ class ControlService extends EventEmitter {
 
   async stopShell() {
     return this.promiseIpc.send("stopShell");
+  }
+
+  async exec(command, use_sudo = true) {
+    return this.promiseIpc.send("exec", command, use_sudo);
   }
 
   async executeCommand(args) {
