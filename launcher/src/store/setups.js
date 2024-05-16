@@ -22,7 +22,7 @@ export const useSetups = defineStore("setups", {
 
     //Remove Setup
     isRemoveSetupActive: false,
-    selectedSetupToRemove: null,
+    selectedSetupToRemove: [],
 
     //Import Setup YAML
 

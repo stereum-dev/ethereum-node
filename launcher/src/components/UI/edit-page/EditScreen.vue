@@ -4,10 +4,7 @@
 
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
-        <SidebarSection
-          @network-modal="displaySwitchNetwork"
-          @nuke-node="openNukeNodeModal"
-        />
+        <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <EditBody
@@ -23,16 +20,10 @@
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection
-          @change-connection="serviceModifyHandler"
-          @delete-service="selectedServiceToRemove"
-        />
+        <ServiceSection @change-connection="serviceModifyHandler" @delete-service="selectedServiceToRemove" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <ChangesSection
-          @remove-change="cancelChangeHandler"
-          @confirm-changes="confirmHandler"
-        />
+        <ChangesSection @remove-change="cancelChangeHandler" @confirm-changes="confirmHandler" />
       </div>
     </div>
     <!-- End Node main layout -->
@@ -139,10 +130,7 @@
       />
       <!-- End Import Setup -->
       <!-- Start Create Setup -->
-      <CreateSetup
-        v-if="setupStore.isCreateSetupModalActive"
-        :network="selectedSetupNetwork"
-      />
+      <CreateSetup v-if="setupStore.isCreateSetupModalActive" :network="selectedSetupNetwork" />
       <!-- End Create Setup -->
 
       <!-- Start Setup Infos -->
@@ -225,8 +213,7 @@ watch(
 );
 
 onMounted(() => {
-  if (manageStore.currentNetwork.id)
-    manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
+  if (manageStore.currentNetwork.id) manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
   manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
   if (!manageStore.architecture) setArchitecture();
 });
@@ -337,9 +324,7 @@ const switchClientConfirm = (properties) => {
         executionClients: [],
         consensusClients: [],
         otherServices: [],
-        checkpointURL: properties.checkPointSyncUrl
-          ? properties.checkPointSyncUrl
-          : false,
+        checkpointURL: properties.checkPointSyncUrl ? properties.checkPointSyncUrl : false,
       },
     },
   });
@@ -376,9 +361,7 @@ const serviceModifyHandler = (item) => {
 const hideModifyModal = () => {
   manageStore.isLineHidden = false;
   isModifyModalOpen.value = false;
-  manageStore.newConfiguration = JSON.parse(
-    JSON.stringify(serviceStore.installedServices)
-  );
+  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 };
 const confirmConsensusConnection = (item) => {
   clientToConnect.value.isNotConnectedToConsensus = false;
@@ -477,9 +460,7 @@ const cancelChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
-      manageStore.newConfiguration = JSON.parse(
-        JSON.stringify(serviceStore.installedServices)
-      );
+      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
     }
 
     if (item.content === "MODIFY") {
@@ -497,10 +478,7 @@ const cancelChangeHandler = (item) => {
 
 const addServices = (service) => {
   let item = useDeepClone(service);
-  if (
-    item.category === "service" &&
-    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
-  ) {
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -516,10 +494,7 @@ const addServices = (service) => {
 
 const addServerServices = (service) => {
   let item = useDeepClone(service);
-  if (
-    item.category === "service" &&
-    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
-  ) {
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -549,10 +524,7 @@ const onDrop = (event) => {
   const allServices = useDeepClone(serviceStore.allServices);
   const itemId = event.dataTransfer.getData("itemId");
   let item = allServices.find((item) => item.id == itemId);
-  if (
-    item.category === "service" &&
-    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
-  ) {
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -581,9 +553,7 @@ const addServiceHandler = (item) => {
     executionClients: item.executionClients,
     consensusClients: item.consensusClients,
     otherServices: item.otherServices,
-    relays: item.relays
-      .map((r) => r[manageStore.configNetwork.network.toLowerCase()])
-      .join(),
+    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
     checkpointURL: item.checkPointSyncUrl || false,
     //CustomService Attributes
     image: item.image,
@@ -630,9 +600,7 @@ const cancelInstallation = (item) => {
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(
-    JSON.stringify(serviceStore.installedServices)
-  );
+  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 };
 
 // Network switch methods
@@ -645,9 +613,7 @@ const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
   if (network.network != manageStore.configNetwork.network) {
     if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
-      let index = manageStore.confirmChanges.findIndex((j) =>
-        j.content.includes("CHANGE NETWORK")
-      );
+      let index = manageStore.confirmChanges.findIndex((j) => j.content.includes("CHANGE NETWORK"));
       if (manageStore.currentNetwork.network === network.network) {
         manageStore.confirmChanges.splice(index, 1);
       } else {
@@ -704,9 +670,7 @@ const selectedServiceToRemove = (item) => {
     content: "DELETE",
     contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
-    setupId: commonServiceExistance
-      ? commonService.setupId
-      : setupStore.selectedSetup?.setupId,
+    setupId: commonServiceExistance ? commonService.setupId : setupStore.selectedSetup?.setupId,
   };
   const itemExists = manageStore.confirmChanges.some(
     (e) => (e.id === item.config?.serviceID || e.id === item.id) && e.content === "DELETE"
@@ -779,45 +743,49 @@ const destroyNode = async () => {
 
 // Confirm Changes methods
 const confirmHandler = async () => {
-  const setupExists = manageStore.confirmChanges.some((item) =>
-    item.service?.hasOwnProperty("setupName")
-  );
+  const setupExists = manageStore.confirmChanges.some((item) => item.service?.hasOwnProperty("setupName"));
 
   if (setupExists) {
     manageStore.disableConfirmButton = true;
-    const setup = setupStore.selectedSetupToRemove;
-    console.log("setup", setup);
-    console.log(manageStore.confirmChanges);
-    setupStore.allSetups = setupStore.allSetups.filter(
-      (e) => e.setupId !== setup.setupId
-    );
-    setupStore.editSetups = setupStore.editSetups.filter(
-      (e) => e.setupId !== setup.setupId
-    );
 
-    const setupId = setup.setupId;
-    await ControlService.deleteSetup(setupId);
-    const subTask = manageStore.confirmChanges.map((e) => {
-      return e.subTasks;
+    //Filtering Flow
+    setupStore.allSetups = setupStore.allSetups.filter((e) => {
+      const innerServices = e.services.map((e) => e);
+      e.setupId !== innerServices.forEach((s) => s.setupId);
+    });
+    setupStore.editSetups = setupStore.editSetups.filter((e) => {
+      const innerServices = e.services.map((e) => e);
+      e.setupId !== innerServices.forEach((s) => s.setupId);
     });
 
-    await ControlService.handleServiceChanges(useDeepClone(subTask));
+    //Setup services
+    let subtasks = [];
+    manageStore.confirmChanges.forEach((e) => {
+      e.subTasks.forEach((sub) => {
+        subtasks.push(sub);
+      });
+    });
+
+    await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(subtasks)));
+
+    setupStore.selectedSetupToRemove.forEach(async (e) => {
+      const setupId = e.setupId;
+      await ControlService.deleteSetup(setupId);
+    });
 
     setTimeout(() => {
       manageStore.confirmChanges = [];
+      setupStore.selectedSetupToRemove = [];
       setupStore.editSetups = setupStore.allSetups;
       manageStore.disableConfirmButton = false;
       manageStore.isLineHidden = false;
     }, 4000);
   } else {
     manageStore.disableConfirmButton = true;
-    await ControlService.handleServiceChanges(
-      JSON.parse(JSON.stringify(manageStore.confirmChanges))
-    );
+    console.log("manageStore.confirmChanges", JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+    // await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
     setTimeout(() => {
-      manageStore.newConfiguration = JSON.parse(
-        JSON.stringify(serviceStore.installedServices)
-      );
+      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
       manageStore.confirmChanges = [];
       manageStore.disableConfirmButton = false;
       manageStore.isLineHidden = false;
@@ -852,21 +820,27 @@ const editSetupsPrepration = () => {
 };
 
 const deleteSetup = async (item) => {
-  setupStore.selectedSetupToRemove = item;
+  setupStore.selectedSetupToRemove.push(item);
   setupStore.editSetups = setupStore.editSetups.map((e) => {
     if (e.setupId === item.setupId) {
       e.isRemoveProcessing = true;
     }
     return e;
   });
-  const subtasks = item?.services.map((service) => {
-    return {
-      id: service.id,
-      content: "DELETE",
-      contentIcon: "/img/icon/edit-node-icons/delete-service.png",
-      service: service,
-    };
-  });
+  const subtasks =
+    item?.services.flatMap((service) => {
+      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.id);
+
+      return matchedServices.map((e) => ({
+        id: e.config?.serviceID,
+        content: "DELETE",
+        contentIcon: "/img/icon/edit-node-icons/delete-service.png",
+        service: e,
+        setupId: item.setupId,
+      }));
+    }) || [];
+
+  console.log("subtasks in deleteSetup", subtasks);
 
   manageStore.selectedItemToRemove.push(item);
   const confirmDelete = {
@@ -877,9 +851,7 @@ const deleteSetup = async (item) => {
     subTasks: subtasks,
   };
 
-  const itemExists = manageStore.confirmChanges.some(
-    (e) => e.id === item.setupId && e.content === "DELETE"
-  );
+  const itemExists = manageStore.confirmChanges.some((e) => e.id === item.setupId && e.content === "DELETE");
   if (!itemExists) {
     manageStore.confirmChanges.push(confirmDelete);
   }
@@ -898,9 +870,7 @@ const closeNetworkModal = () => {
 const closeSwitchModal = () => {
   isSwitchModalOpen.value = false;
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(
-    JSON.stringify(serviceStore.installedServices)
-  );
+  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 };
 
 const closeInfoModal = () => {
