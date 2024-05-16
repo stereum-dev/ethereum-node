@@ -3,7 +3,7 @@
   find:
     paths: "/etc/stereum/services"
     read_whole_file: true
-    contains: "service: CharonService"
+    contains: "^\s*service:\s*CharonService"
   register: charon_service_files
 
 - name: Set CharonService id
