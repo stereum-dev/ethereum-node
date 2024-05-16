@@ -742,55 +742,41 @@ const destroyNode = async () => {
 };
 
 // Confirm Changes methods
+
 const confirmHandler = async () => {
   const setupExists = manageStore.confirmChanges.some((item) => item.service?.hasOwnProperty("setupName"));
+  manageStore.disableConfirmButton = true;
 
-  if (setupExists) {
-    manageStore.disableConfirmButton = true;
+  try {
+    if (setupExists) {
+      const setupsToRemoveIds = new Set(setupStore.selectedSetupToRemove.map((s) => s.setupId));
+      setupStore.allSetups = setupStore.allSetups.filter((e) => !setupsToRemoveIds.has(e.setupId));
+      setupStore.editSetups = setupStore.editSetups.filter((e) => !setupsToRemoveIds.has(e.setupId));
+      let subtasks = manageStore.confirmChanges.flatMap((e) => e.subTasks);
 
-    //Filtering Flow
-    setupStore.allSetups = setupStore.allSetups.filter((e) => {
-      const innerServices = e.services.map((e) => e);
-      e.setupId !== innerServices.forEach((s) => s.setupId);
-    });
-    setupStore.editSetups = setupStore.editSetups.filter((e) => {
-      const innerServices = e.services.map((e) => e);
-      e.setupId !== innerServices.forEach((s) => s.setupId);
-    });
+      // Delete setups services
+      await ControlService.handleServiceChanges(useDeepClone(subtasks));
 
-    //Setup services
-    let subtasks = [];
-    manageStore.confirmChanges.forEach((e) => {
-      e.subTasks.forEach((sub) => {
-        subtasks.push(sub);
-      });
-    });
-
-    await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(subtasks)));
-
-    setupStore.selectedSetupToRemove.forEach(async (e) => {
-      const setupId = e.setupId;
-      await ControlService.deleteSetup(setupId);
-    });
-
-    setTimeout(() => {
-      manageStore.confirmChanges = [];
-      setupStore.selectedSetupToRemove = [];
+      // Delete setups
+      for (const e of setupStore.selectedSetupToRemove) {
+        await ControlService.deleteSetup(e.setupId);
+      }
+    } else {
+      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
+    }
+  } catch (error) {
+    console.error("Error processing changes:", error);
+  } finally {
+    manageStore.confirmChanges = [];
+    setupStore.selectedSetupToRemove = [];
+    if (setupExists) {
       setupStore.editSetups = setupStore.allSetups;
-      manageStore.disableConfirmButton = false;
-      manageStore.isLineHidden = false;
-    }, 4000);
-  } else {
-    manageStore.disableConfirmButton = true;
-    console.log("manageStore.confirmChanges", JSON.parse(JSON.stringify(manageStore.confirmChanges)));
-    // await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
-    setTimeout(() => {
-      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
-      manageStore.confirmChanges = [];
-      manageStore.disableConfirmButton = false;
-      manageStore.isLineHidden = false;
-    }, 4000);
-    await listKeys(true);
+    } else {
+      manageStore.newConfiguration = serviceStore.installedServices;
+    }
+    await listKeys();
+    manageStore.disableConfirmButton = false;
+    manageStore.isLineHidden = false;
   }
 };
 

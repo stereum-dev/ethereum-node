@@ -1,5 +1,5 @@
 export function useDeepClone(obj) {
-  if (obj) return JSON.parse(JSON.stringify(obj));
+  if (obj) return structuredClone(obj);
 }
 
 export function useTruncate(str, frontChars, endChars) {

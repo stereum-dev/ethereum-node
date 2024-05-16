@@ -10,7 +10,7 @@ import SetupDetails from "../../../edit-page/components/edit/header/SetupDetails
 import ServerDetails from "../../../edit-page/components/edit/header/ServerDetails.vue";
 import NetworkDetails from "../../../edit-page/components/edit/header/NetworkDetails.vue";
 import { useSetups } from "@/store/setups";
-import { computed, watchEffect } from "vue";
+import { computed } from "vue";
 
 const setupStore = useSetups();
 
@@ -20,10 +20,6 @@ const setupsList = computed(() => {
     return setup;
   });
   return list;
-});
-
-watchEffect(() => {
-  console.log("allSetups changed", setupStore.allSetups);
 });
 
 const selectSetup = (setup) => {

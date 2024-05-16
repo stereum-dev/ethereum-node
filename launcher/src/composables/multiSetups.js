@@ -10,7 +10,6 @@ export const useMultiSetups = () => {
     try {
       const data = await ControlService.readMultiSetup();
       setupStore.serverSetups = parseYAMLData(data);
-      console.log("Configs", setupStore.serverSetups);
     } catch (e) {
       console.error("Couldn't read multi config yaml", e);
     }
