@@ -1,0 +1,40 @@
+---
+# Install Google Authenticator PAM module
+- name: Update apt package index
+  apt:
+    update_cache: yes
+
+- name: Install required packages
+  apt:
+    name:
+      - libqrencode-dev
+      - libtool
+      - libpam-dev
+      - autoconf
+      - make
+    state: present
+
+- name: Clone google-authenticator-libpam repository
+  git:
+    repo: https://github.com/google/google-authenticator-libpam.git
+    dest: /root/google-authenticator-libpam
+    update: no
+
+- name: Run bootstrap.sh
+  command: ./bootstrap.sh
+  args:
+    chdir: /root/google-authenticator-libpam
+
+- name: Run configure with libdir
+  command: ./configure --libdir=/lib/x86_64-linux-gnu
+  args:
+    chdir: /root/google-authenticator-libpam
+
+- name: Compile the google-authenticator-libpam
+  make:
+    chdir: /root/google-authenticator-libpam
+
+- name: Install the google-authenticator-libpam
+  make:
+    target: install
+    chdir: /root/google-authenticator-libpam
