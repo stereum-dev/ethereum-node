@@ -82,12 +82,12 @@ let pollingNodeStats = null;
 let pollingListingKeys = null;
 
 //*****************  Watchers *****************
-const nodeStore = useNodeStore();
-const headerStore = useNodeHeader();
-const serviceStore = useServices();
-const controlStore = useControlStore();
-const router = useRouter();
-const footerStore = useFooter();
+// const nodeStore = useNodeStore();
+// const headerStore = useNodeHeader();
+// const serviceStore = useServices();
+// const controlStore = useControlStore();
+// const router = useRouter();
+// const footerStore = useFooter();
 
 //Computed & Watchers
 // TODO: maybe add watchSSV from service.js here?
