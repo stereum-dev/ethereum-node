@@ -826,8 +826,6 @@ const deleteSetup = async (item) => {
       }));
     }) || [];
 
-  console.log("subtasks in deleteSetup", subtasks);
-
   manageStore.selectedItemToRemove.push(item);
   const confirmDelete = {
     id: item.setupId,
