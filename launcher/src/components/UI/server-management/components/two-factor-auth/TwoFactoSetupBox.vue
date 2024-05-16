@@ -41,11 +41,18 @@
     </div>
     <div class="col-start-1 col-end-10 row-start-3 row-span-2 w-full h-full grid grid-cols-2 grid-rows-2 py-2">
       <span class="col-start-1 col-span-full row-start-1 row-span-1 text-left text-xs text-gray-200 w-full h-full"
-        >SCAN THE CODE WITH YOUR AUTHENTICATOR APP</span
-      >
-      <span class="col-start-1 col-span-full row-start-2 row-span-1 text-left text-xs text-gray-200 w-full h-full"
+        ><ol>
+          <li>1. Scan the code with your authenticator app</li>
+          <li>2. Enter the verification code an click send</li>
+          <li>3. Do a backup by pressing the save button</li>
+          <li>4. Finally click on confirm to activate 2FA</li>
+        </ol>
+        <br />
+        You will be logged out as soon as you click the final confirm button. The next login requires 2FA.
+      </span>
+      <!-- <span class="col-start-1 col-span-full row-start-2 row-span-1 text-left text-xs text-gray-200 w-full h-full"
         >CLICK TO ENLARGEN</span
-      >
+      > -->
     </div>
 
     <div

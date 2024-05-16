@@ -23,7 +23,7 @@
 
     <TwoFactorBtn
       v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && configured2fa"
-      class="row-start-2 remove-btn"
+      :class="['row-start-2 ', 'remove-btn', removeTwoFactorActive ? 'disabled' : '']"
       btn-name="Remove 2FA"
       @btnClick="removeTwoFactor"
     />
@@ -69,7 +69,7 @@
       class="row-start-10 row-span-1 col-start-1 col-span-full flex justify-center items-center p-2 mt-2"
     >
       <span class="text-xs text-gray-300 text-left font-sans"
-        >If you click confirm you will lose connection with your server!</span
+        >If you click confirm you need to re-login on your server!</span
       >
     </div>
     <TwoFactorBtn
@@ -80,7 +80,11 @@
     />
     <TwoFactorBtn
       v-if="twoFactorSetupIsActive"
-      :class="['row-start-13', 'col-start-8', twoFactorSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
+      :class="[
+        'row-start-13',
+        'col-start-8',
+        (twoFactorSetupIsActive && !authStore.scratchCodeSaved) || finishSetupActive ? 'disabled' : '',
+      ]"
       btn-name="Confirm"
       @btnClick="startSetup"
     />
@@ -97,7 +101,9 @@ import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 import { saveAs } from "file-saver";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const authStore = useTwoFactorAuth();
 const controlStore = useControlStore();
 //enable two factor authentication
@@ -115,6 +121,9 @@ const verificationOutput = ref("");
 const secretKey = ref("");
 const QRcode = ref("");
 const configured2fa = ref();
+
+const finishSetupActive = ref(false);
+const removeTwoFactorActive = ref(false);
 
 onMounted(() => {
   checkAuth();
@@ -141,8 +150,20 @@ const startSetup = async () => {
     await ControlService.beginAuthSetup(isTimeBaseActive.value, isOrgGenTimeLimit.value, isRateLimiting.value);
   } else {
     //setup two factor authentication
+    finishSetupActive.value = true;
     await ControlService.finishAuthSetup();
+    loggingOut();
   }
+};
+
+const loggingOut = async () => {
+  try {
+    await ControlService.stopShell();
+    await ControlService.logout();
+  } catch (e) {}
+  router.push("/login").then(() => {
+    location.reload();
+  });
 };
 
 //title manager
@@ -208,7 +229,11 @@ const checkAuth = async () => {
 };
 
 const removeTwoFactor = async () => {
-  await ControlService.removeAuthenticator();
+  if (!removeTwoFactorActive.value) {
+    removeTwoFactorActive.value = true;
+    await ControlService.removeAuthenticator();
+    loggingOut();
+  }
 };
 </script>
 <style scoped>
