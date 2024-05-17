@@ -247,7 +247,9 @@ export class ConfigManager {
     let currentSetups = await this.readMultiSetup();
     let setupsObj = yaml.load(currentSetups);
 
-    return setupsObj[setupID];
+    return {
+      [setupID]: setupsObj[setupID],
+    };
   }
 
   /**
