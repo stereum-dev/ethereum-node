@@ -463,7 +463,7 @@ class ControlService extends EventEmitter {
   }
 
   async beginAuthSetup(timeBased, increaseTimeLimit, enableRateLimit) {
-    return await this.promiseIpc.send("beginAuthSetup", {timeBased, increaseTimeLimit, enableRateLimit});
+    return await this.promiseIpc.send("beginAuthSetup", { timeBased, increaseTimeLimit, enableRateLimit });
   }
 
   async authenticatorVerification(args) {
@@ -641,6 +641,10 @@ class ControlService extends EventEmitter {
 
   async renameSetup(args) {
     return this.promiseIpc.send("renameSetup", args);
+  }
+
+  async exportSingleSetup(args) {
+    return this.promiseIpc.send("exportSingleSetup", args);
   }
 }
 if (!instance) {

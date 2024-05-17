@@ -26,7 +26,7 @@ const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const configManager = new ConfigManager(nodeConnection);
 const authenticationService = new AuthenticationService(nodeConnection);
-const sshService = new SSHService;
+const sshService = new SSHService();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
@@ -499,15 +499,20 @@ ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
 
 ipcMain.handle("beginAuthSetup", async (event, args) => {
   const current_window = event.sender;
-  return await authenticationService.beginAuthSetup(args.timeBased, args.increaseTimeLimit, args.enableRateLimit, current_window)
+  return await authenticationService.beginAuthSetup(
+    args.timeBased,
+    args.increaseTimeLimit,
+    args.enableRateLimit,
+    current_window
+  );
 });
 
 ipcMain.handle("finishAuthSetup", async () => {
-  return await authenticationService.finishAuthSetup()
+  return await authenticationService.finishAuthSetup();
 });
 
 ipcMain.handle("authenticatorVerification", async (event, args) => {
-  return await authenticationService.authenticatorVerification(args)
+  return await authenticationService.authenticatorVerification(args);
 });
 
 ipcMain.handle("removeAuthenticator", async (event, args) => {
@@ -519,11 +524,11 @@ ipcMain.handle("checkForAuthenticator", async (event, args) => {
 });
 
 ipcMain.handle("submitVerification", async (event, args) => {
-  return await sshService.submitVerification(args)
+  return await sshService.submitVerification(args);
 });
 
 ipcMain.handle("cancelVerification", async (event, args) => {
-  return await sshService.cancelVerification(args)
+  return await sshService.cancelVerification(args);
 });
 
 ipcMain.handle("changePassword", async (event, args) => {
@@ -648,6 +653,10 @@ ipcMain.handle("deleteSetup", async (event, args) => {
 
 ipcMain.handle("renameSetup", async (event, args) => {
   return await configManager.renameSetup(args);
+});
+
+ipcMain.handle("exportSingleSetup", async (event, args) => {
+  return await configManager.exportSingleSetup(args);
 });
 
 ipcMain.handle("fetchTranslators", async (event, args) => {

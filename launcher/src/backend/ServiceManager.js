@@ -1833,6 +1833,44 @@ export class ServiceManager {
     }
   }
 
+  async exportSingleSetup(setupId) {
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Exporting Setup`);
+    try {
+      let setup = await this.configManager.getSetup(setupId);
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Read Multi Setup`, true);
+      let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
+      let serviceNameConfig = [];
+      for (let i = 0; i < arrayOfServices.length; i++) {
+        let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Read Service YAML for ${arrayOfServices[i]}`, true);
+
+        const exportObject = {
+          filename: arrayOfServices[i],
+          content: serviceObject,
+        };
+        serviceNameConfig.push(exportObject);
+      }
+
+      serviceNameConfig.push({
+        filename: +".yaml",
+        content: setup,
+      });
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Export Configuration Completed`, true);
+      return serviceNameConfig;
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Export Failed`,
+        false,
+        `Failed to export setup: ${error}`
+      );
+      console.error(`Failed to export setup: ${error}`);
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+    }
+  }
+
   async exportConfig() {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Exporting Configuration`);
