@@ -60,6 +60,7 @@ import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
 import { useSetups } from "@/store/setups";
 import { saveAs } from "file-saver";
+import JSZip from "jszip";
 
 //*****************  Store & Refs *****************
 const nodeStore = useNodeStore();
@@ -167,7 +168,25 @@ const getSetupDatas = async () => {
 
 const exportSetup = async (setup) => {
   const setupId = setup.setupId;
-  await ControlService.exportSingleSetup(setupId);
+  const setupName = setup.setupName;
+  if (setupId) {
+    try {
+      const setupConfig = await ControlService.exportSingleSetup(setupId);
+      if (setupConfig.length > 0) {
+        const zip = new JSZip();
+
+        setupConfig.forEach((item) => {
+          zip.file(item.filename, item.content);
+        });
+
+        zip.generateAsync({ type: "blob" }).then(function (blob) {
+          saveAs(blob, `${setupName}.zip`);
+        });
+      }
+    } catch (err) {
+      console.log("Failed exporting setup: ", err);
+    }
+  }
 };
 
 const alarmToggle = () => {
