@@ -16,6 +16,7 @@
       <h3 class="text-lg font-semibold">EXPERIMENTAL!</h3>
       <span class="text-sm">Before using note: </span>
       <span class="text-sm">- Use at your own risk</span>
+      <span class="text-sm">- Only supports <b>Ubuntu 22.04</b></span>
       <span class="text-sm">- Have an SSH session</span>
       <span class="text-sm">- Have a backup </span>
       <span class="text-sm">- Have a snapshot of your VM</span>
