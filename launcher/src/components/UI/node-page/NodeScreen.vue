@@ -165,11 +165,9 @@ const getSetupDatas = async () => {
   setupStore.allSetups = getAllSetups(); // Get combined configs
 };
 
-const exportSetup = async () => {
-  console.log("exporting setup");
-  // const data = await ControlService.exportSetup();
-  // const blob = new Blob([data], { type: "application/json" });
-  // saveAs(blob, "setup.json");
+const exportSetup = async (setup) => {
+  const setupId = setup.setupId;
+  await ControlService.exportSingleSetup(setupId);
 };
 
 const alarmToggle = () => {

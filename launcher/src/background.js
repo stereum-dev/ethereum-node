@@ -656,7 +656,7 @@ ipcMain.handle("renameSetup", async (event, args) => {
 });
 
 ipcMain.handle("exportSingleSetup", async (event, args) => {
-  return await configManager.exportSingleSetup(args);
+  return await serviceManager.exportSingleSetup(args);
 });
 
 ipcMain.handle("fetchTranslators", async (event, args) => {
