@@ -791,6 +791,7 @@ export class ServiceManager {
       installTask.push({
         service: switchTask.data.itemToInstall,
         data: switchTask.data.data,
+        setupId: switchTask.setupId,
       });
 
       await this.addServices(installTask, services);
@@ -1401,9 +1402,11 @@ export class ServiceManager {
       }
       if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
     });
-
     for (const service of newServices) {
-      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration(), setupAndServiceIds[service.id]);
+      await this.nodeConnection.writeServiceConfiguration(
+        service.buildConfiguration(),
+        setupAndServiceIds[service.id] ? setupAndServiceIds[service.id] : tasks[0].setupId
+      );
     }
 
     await this.createKeystores(

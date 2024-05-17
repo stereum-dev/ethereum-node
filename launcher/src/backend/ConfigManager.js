@@ -21,11 +21,10 @@ export class ConfigManager {
    * it is treated as a single configuration ID. If an object is provided, it should map configuration IDs
    * to configuration objects.
    * @param {string} network - The network of the setup.
-   * @returns {string} The ID of the created setup.
    */
   async createMultiSetupYaml(services, network) {
     try {
-      // Check if the multi-setup configuration file exists
+      // Check if the multiSetup configuration file exists
       const fileExistResult = await this.nodeConnection.sshService.exec(
         `test -f ${this.multiSetupPath} && echo "exist" || echo "notExist"`
       );
@@ -45,6 +44,12 @@ export class ConfigManager {
     }
   }
 
+  /**
+   * Creates the content for a multi-setup configuration file.
+   * @param {Object|string} services - The configurations to include in the setup.
+   * @param {string} network - The network of the setup.
+   * @returns {Promise<void>} - does not return anything.
+   */
   async createMultiSetupContent(services, network) {
     let setupServicesObj = await this.createSetupContent(services, network);
     let commonServicesObj = await this.createCommonContent(services);
@@ -52,6 +57,13 @@ export class ConfigManager {
     await this.writeMultiSetup(setups);
   }
 
+  /**
+   * Creates the content for a setup
+   *
+   * @param {Array} services - The services to include in the setup.
+   * @param {string} network - The network of the setup.
+   * @returns {Object} - An object representing the setup configuration.
+   */
   async createSetupContent(services, network) {
     const setupServices = services.filter((item) => !this.commonServices.includes(item.service));
     let setupServicesObj = {};
@@ -70,6 +82,12 @@ export class ConfigManager {
     return setupServicesObj;
   }
 
+  /**
+   * Creates the content for a common setup
+   *
+   * @param {Array} services - The services to include in the setup.
+   * @returns {Promise<Object>} - An object representing the common services setup configuration.
+   */
   async createCommonContent(services) {
     const commonServices = services.filter((item) => this.commonServices.includes(item.service));
     let currentSetups = await this.readMultiSetup();
@@ -174,10 +192,8 @@ export class ConfigManager {
   /**
    * Adds a service to a setup in the multi-setup configuration.
    *
-   * @param {string} serviceID - The ID of the service to add.
-   * @param {string} network - The network of the service.
+   * @param {string} service - The ID of the service to add.
    * @param {string} [setupID=null] - The ID of the setup to add the service to.
-   * If not provided and there is only one setup, this setup's ID will be used.
    */
   async addServiceIntoSetup(service, setupID) {
     try {
@@ -243,6 +259,12 @@ export class ConfigManager {
     }
   }
 
+  /**
+   * retrieves a specific setup by its ID
+   *
+   * @param {string} setupID - The ID of the setup to retrieve.
+   * @returns {Promise<Object>} A promise that resolves to the setup configuration.
+   */
   async getSetup(setupID) {
     let currentSetups = await this.readMultiSetup();
     let setupsObj = yaml.load(currentSetups);
@@ -277,8 +299,7 @@ export class ConfigManager {
     return setupsObj;
   }
 
-  // to do-s for setup
+  // to do - s for setup
 
-  // export specific setup
   // import specific setup
 }
