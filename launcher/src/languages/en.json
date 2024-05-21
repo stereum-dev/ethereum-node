@@ -991,5 +991,12 @@
     "ubuntu": "Ubuntu",
     "opSysVersion": "OPERATING SYSTEM VERSION",
     "availServerOsUpdate": "AVAILABLE SERVER OS UPDATES"
+  },
+  "controlScreenTooltips": {
+    "isPending": "The {service} is pending",
+    "turnon": "Turn on the {service}",
+    "turnoff": "Turn off the {service}",
+    "restart": "Restart the {service}",
+    "log": "Open the logs of the {service}"
   }
 }
