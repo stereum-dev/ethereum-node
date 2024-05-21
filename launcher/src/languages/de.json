@@ -809,7 +809,7 @@
     "pass": "Passwort",
     "keyPath": "Schlüsselpfad",
     "login": "Anmelden",
-    "cancel": "Cancel Login",
+    "cancel": "Anmeldung abbrechen",
     "conecting": "Verbinden . . .",
     "newPass": "Neues Passwort",
     "EnterNewPass": "Neues Passwort eingeben",
@@ -850,7 +850,7 @@
     "process": "Verarbeitung"
   },
   "serviceModal": {
-    "confirm": "Confirm",
+    "confirm": "Bestätigen",
     "distributedValidator": "VERTEILTE VALIDATORGENERIERUNG",
     "generateEnr": "NEUE ENR GENERIEREN",
     "open": "ÖFFNEN",
@@ -907,7 +907,7 @@
     "writeGrpName": "Schreiben Sie hier Ihren Gruppennamen",
     "noVal": "Kein Validator-Schlüssel importiert.",
     "noMatch": "Keine Übereinstimmungen.",
-    "reward": "Belohnung",
+    "reward": "Prämie",
     "ttl": "Gesamt",
     "pleaseWait": "Bitte warten Sie, bis der Fernschlüssel importiert ist.",
     "imp": "Importieren",
@@ -942,7 +942,7 @@
     "welcomeStereum": "Willkommen bei Stereum"
   },
   "serverHeader": {
-    "login": "server login",
+    "login": "Server Login",
     "info": "server information",
     "ssh": "ssh key management",
     "osUpdate": "operating system update",
