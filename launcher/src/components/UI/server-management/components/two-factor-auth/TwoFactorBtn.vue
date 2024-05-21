@@ -10,7 +10,11 @@
 <script setup>
 // Defining props
 const props = defineProps({
-  btnName: String,
+  btnName: {
+    type: String,
+    required: true,
+    default: "",
+  },
 });
 
 // Defining emits

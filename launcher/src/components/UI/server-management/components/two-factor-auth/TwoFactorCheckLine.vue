@@ -39,7 +39,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  props.defaultChecked == "true" ? (isChecked.value = true) : (isChecked.value = false);
+  isChecked.value = props.defaultChecked;
 });
 
 // Computed property to style the checkbox

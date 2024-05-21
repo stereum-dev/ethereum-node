@@ -143,8 +143,10 @@ const loggingOut = async () => {
   serverStore.connectingAnimActive = false;
   headerStore.refresh = false;
   serverStore.isTerminalStopped = true;
-  await ControlService.stopShell();
-  await ControlService.logout();
+  try {
+    await ControlService.stopShell();
+    await ControlService.logout();
+  } catch (e) {}
   router.push("/login").then(() => {
     location.reload();
   });
@@ -152,7 +154,9 @@ const loggingOut = async () => {
 
 const reconnect = async () => {
   headerStore.reconnecting = true;
-  await ControlService.reconnect();
+  try {
+    await ControlService.reconnect();
+  } catch (e) {}
   headerStore.reconnecting = false;
   headerStore.refresh = true;
 };

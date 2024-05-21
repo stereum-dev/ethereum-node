@@ -15,21 +15,12 @@ export class AuthenticationService {
     let sendKey = false;
     let validCode = false;
 
-    await this.nodeConnection.sshService.exec("apt update");
-    await this.nodeConnection.sshService.exec("apt install libqrencode-dev -y");
-    await this.nodeConnection.sshService.exec("apt install libtool -y");
-    await this.nodeConnection.sshService.exec("apt install libpam-dev -y");
-    await this.nodeConnection.sshService.exec("apt install autoconf -y");
-    await this.nodeConnection.sshService.exec("apt install make -y");
-    await this.nodeConnection.sshService.exec(
-      "cd /root && git clone https://github.com/google/google-authenticator-libpam.git"
-    );
-    await this.nodeConnection.sshService.exec("cd /root/google-authenticator-libpam && ./bootstrap.sh");
-    await this.nodeConnection.sshService.exec(
-      "cd /root/google-authenticator-libpam && ./configure --libdir=/lib/x86_64-linux-gnu"
-    );
-    await this.nodeConnection.sshService.exec("cd /root/google-authenticator-libpam && make && make install");
+    // Setup Google Authenticator PAM module
+    await this.nodeConnection.runPlaybook("2FA Setup", {
+      stereum_role: "2fa-setup",
+    });
 
+    // Start 2FA user setup with google-authenticator
     const conn = this.nodeConnection.sshService.getConnectionFromPool();
     conn.shell((err, stream) => {
       if (err) throw err;
@@ -142,39 +133,27 @@ export class AuthenticationService {
     } else {
       this.authStream.write("n\n");
     }
-
-    await this.nodeConnection.sshService.exec(
-      `sed -i 's/^KbdInteractiveAuthentication[ ]no$/KbdInteractiveAuthentication yes/g' /etc/ssh/sshd_config`
-    );
-    await this.nodeConnection.sshService.exec(
-      `echo "AuthenticationMethods publickey,password publickey,keyboard-interactive" >> /etc/ssh/sshd_config`
-    );
-    await this.nodeConnection.sshService.exec(
-      `echo 'auth required pam_google_authenticator.so grace_period=43200' >> /etc/pam.d/sshd`
-    );
-    await this.nodeConnection.sshService.exec(`sed -i '/^@include common-auth$/s/^/#/' /etc/pam.d/sshd`);
-    await this.nodeConnection.sshService.exec("systemctl restart sshd.service");
+    // Enable 2FA configs and restart SSH server
+    await this.nodeConnection.runPlaybook("Enable 2FA", {
+      stereum_role: "2fa-enable",
+    });
     this.authStream.end();
   }
 
   async removeAuthenticator() {
-    await this.nodeConnection.sshService.exec(
-      `sed -i '/AuthenticationMethods publickey,password publickey,keyboard-interactive/d' /etc/ssh/sshd_config`
-    );
-    await this.nodeConnection.sshService.exec(
-      `sed -i '/auth required pam_google_authenticator.so grace_period=86400/d' /etc/pam.d/sshd`
-    );
-    await this.nodeConnection.sshService.exec("rm ~/.google_authenticator", true, false);
-    await this.nodeConnection.sshService.exec("cd /root && rm -rf google-authenticator-libpam");
-    await this.nodeConnection.sshService.exec("apt remove libtool -y");
-    await this.nodeConnection.sshService.exec("apt remove libpam-dev -y");
-    await this.nodeConnection.sshService.exec("apt remove autoconf -y");
-    await this.nodeConnection.sshService.exec("apt remove make -y");
-    await this.nodeConnection.sshService.exec("systemctl restart sshd.service");
+    let resultuser = await this.nodeConnection.sshService.exec(`whoami`, false);
+    if (resultuser.rc == 0) {
+      let user = resultuser.stdout.trim();
+      let result = await this.nodeConnection.runPlaybook("Remove 2FA", {
+        stereum_role: "2fa-remove",
+        myuser: user,
+      });
+      console.log(result);
+    }
   }
 
   async checkForAuthenticator() {
-    let result = await this.nodeConnection.sshService.exec(`test -a ~/.google_authenticator`, true, false);
+    let result = await this.nodeConnection.sshService.exec(`test -a ~/.google_authenticator`, false);
     if (result.rc == 0) {
       return true;
     } else {

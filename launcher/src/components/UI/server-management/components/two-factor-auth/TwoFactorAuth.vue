@@ -2,37 +2,49 @@
   <div
     class="2-fa-auth w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-24 grid-rows-14 p-2 gap-1"
   >
-    <span class="top-ttl row-start-1">{{ titleManager }}</span>
+    <span class="top-ttl row-start-1 text-gray-300">{{ titleManager }}</span>
     <TwoFactorBtn
-      v-if="!twoFatorIsEnabled && !TwoFactoSetupIsActive && !configured2fa"
-      class="row-start-2"
+      v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && !configured2fa"
+      class="row-start-7 row-span-1"
       btn-name="Setup"
       @btnClick="enableTwoFactor"
     />
+    <div
+      v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && !configured2fa"
+      class="col-start-1 col-span-full row-start-2 row-end-6 flex flex-col justify-start items-start text-red-500"
+    >
+      <h3 class="text-lg font-semibold">EXPERIMENTAL!</h3>
+      <span class="text-sm">Before using note: </span>
+      <span class="text-sm">- Use at your own risk</span>
+      <span class="text-sm">- Have an SSH session</span>
+      <span class="text-sm">- Have a backup </span>
+      <span class="text-sm">- Have a snapshot of your VM</span>
+    </div>
+
     <TwoFactorBtn
-      v-if="!twoFatorIsEnabled && !TwoFactoSetupIsActive && configured2fa"
-      class="row-start-2 remove-btn"
+      v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && configured2fa"
+      :class="['row-start-2 ', 'remove-btn', removeTwoFactorActive ? 'disabled' : '']"
       btn-name="Remove 2FA"
       @btnClick="removeTwoFactor"
     />
     <TwoFactorCheckLine
-      v-if="twoFatorIsEnabled"
-      default-checked="true"
+      v-if="twoFactorIsEnabled"
+      :default-checked="true"
       class="row-start-2"
       check-text="Do you want authentication tokens to be time-based?"
       @update="timaBaseActive"
     />
     <TwoFactorCheckLine
-      v-if="twoFatorIsEnabled"
-      default-checked="false"
+      v-if="twoFactorIsEnabled"
+      :default-checked="false"
       class="row-start-3"
       check-text="Increase the original generation time limit? This will permit a time skew of up to 4 minutes!"
-      multi-line="true"
+      :multi-line="true"
       @update="orgGenTimeLimit"
     />
     <TwoFactorCheckLine
-      v-if="twoFatorIsEnabled"
-      default-checked="true"
+      v-if="twoFactorIsEnabled"
+      :default-checked="true"
       class="row-start-5"
       check-text="Do you want to enable rate-limiting?"
       @update="rateLimiting"
@@ -40,7 +52,7 @@
     <!-- barcode and secret-key are passed as props to TwoFactoSetupBox and they have to bind ':' before theme to bind, at the moment is 
     hardcoded to test -->
     <TwoFactoSetupBox
-      v-if="TwoFactoSetupIsActive"
+      v-if="twoFactorSetupIsActive"
       :barcode="QRcode"
       :secret-key="secretKey"
       :time-based="isTimeBaseActive"
@@ -48,14 +60,32 @@
       @send-code="sendTheCode"
     />
     <TwoFactorBackup
-      v-if="TwoFactoSetupIsActive"
-      :class="['row-start-7', !authStore.validVerificationCode ? 'disabled' : '']"
+      v-if="twoFactorSetupIsActive"
+      :class="['row-start-9', !authStore.validVerificationCode ? 'disabled' : '']"
       @save-backup="onSaveScratch"
     />
+    <div
+      v-if="twoFactorSetupIsActive"
+      class="row-start-10 row-span-1 col-start-1 col-span-full flex justify-center items-center p-2 mt-2"
+    >
+      <span class="text-xs text-gray-300 text-left font-sans"
+        >If you click confirm you need to re-login on your server!</span
+      >
+    </div>
     <TwoFactorBtn
-      v-if="twoFatorIsEnabled || TwoFactoSetupIsActive"
-      :class="['row-start-13', 'col-start-8', TwoFactoSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
-      btn-name="Setup"
+      v-if="twoFactorIsEnabled"
+      :class="['row-start-13', 'col-start-8', twoFactorSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
+      btn-name="Next"
+      @btnClick="startSetup"
+    />
+    <TwoFactorBtn
+      v-if="twoFactorSetupIsActive"
+      :class="[
+        'row-start-13',
+        'col-start-8',
+        (twoFactorSetupIsActive && !authStore.scratchCodeSaved) || finishSetupActive ? 'disabled' : '',
+      ]"
+      btn-name="Confirm"
       @btnClick="startSetup"
     />
   </div>
@@ -71,13 +101,15 @@ import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 import { saveAs } from "file-saver";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const authStore = useTwoFactorAuth();
 const controlStore = useControlStore();
 //enable two factor authentication
-const twoFatorIsEnabled = ref(false);
+const twoFactorIsEnabled = ref(false);
 //setup two factor authentication
-const TwoFactoSetupIsActive = ref(false);
+const twoFactorSetupIsActive = ref(false);
 //first check box value to enable time based authentication
 const isTimeBaseActive = ref(true);
 //second check box value to increase the original generation time limit
@@ -90,6 +122,9 @@ const secretKey = ref("");
 const QRcode = ref("");
 const configured2fa = ref();
 
+const finishSetupActive = ref(false);
+const removeTwoFactorActive = ref(false);
+
 onMounted(() => {
   checkAuth();
   ControlService.addListener("2FAEvents", authenticatorHandler);
@@ -100,30 +135,42 @@ onUnmounted(() => {
 
 //function to enable two factor authentication
 const enableTwoFactor = () => {
-  twoFatorIsEnabled.value = true;
+  twoFactorIsEnabled.value = true;
 };
 
 //setup button functions
 const startSetup = async () => {
-  if (twoFatorIsEnabled.value) {
+  if (twoFactorIsEnabled.value) {
     //first check box value to enable time based authentication
-    twoFatorIsEnabled.value = false;
-    TwoFactoSetupIsActive.value = true;
+    twoFactorIsEnabled.value = false;
+    twoFactorSetupIsActive.value = true;
     authStore.varificationCode = "";
     authStore.validVerificationCode = false;
     authStore.scratchCodeSaved = false;
     await ControlService.beginAuthSetup(isTimeBaseActive.value, isOrgGenTimeLimit.value, isRateLimiting.value);
   } else {
     //setup two factor authentication
+    finishSetupActive.value = true;
     await ControlService.finishAuthSetup();
+    loggingOut();
   }
+};
+
+const loggingOut = async () => {
+  try {
+    await ControlService.stopShell();
+    await ControlService.logout();
+  } catch (e) {}
+  router.push("/login").then(() => {
+    location.reload();
+  });
 };
 
 //title manager
 const titleManager = computed(() => {
-  if (twoFatorIsEnabled.value) {
+  if (twoFactorIsEnabled.value) {
     return "2 FACTOR AUTHENTICATION CONFIGURATION";
-  } else if (TwoFactoSetupIsActive.value) {
+  } else if (twoFactorSetupIsActive.value) {
     return "2 FACTOR SETUP";
   }
   return "2 FACTOR AUTHENTICATION";
@@ -182,7 +229,11 @@ const checkAuth = async () => {
 };
 
 const removeTwoFactor = async () => {
-  await ControlService.removeAuthenticator();
+  if (!removeTwoFactorActive.value) {
+    removeTwoFactorActive.value = true;
+    await ControlService.removeAuthenticator();
+    loggingOut();
+  }
 };
 </script>
 <style scoped>
