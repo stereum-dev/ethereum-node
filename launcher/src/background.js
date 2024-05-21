@@ -659,6 +659,10 @@ ipcMain.handle("exportSingleSetup", async (event, args) => {
   return await serviceManager.exportSingleSetup(args);
 });
 
+ipcMain.handle("importSingleSetup", async (event, args) => {
+  return await serviceManager.importSingleSetup(args);
+});
+
 ipcMain.handle("fetchTranslators", async (event, args) => {
   return await serviceManager.fetchTranslators(args);
 });
@@ -666,6 +670,7 @@ ipcMain.handle("fetchTranslators", async (event, args) => {
 ipcMain.handle("fetchGitHubTesters", async (event, args) => {
   return await serviceManager.fetchGitHubTesters(args);
 });
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {

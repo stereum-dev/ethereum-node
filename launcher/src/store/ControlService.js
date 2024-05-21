@@ -646,6 +646,9 @@ class ControlService extends EventEmitter {
   async exportSingleSetup(args) {
     return this.promiseIpc.send("exportSingleSetup", args);
   }
+  async importSingleSetup(args) {
+    return this.promiseIpc.send("importSingleSetup", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

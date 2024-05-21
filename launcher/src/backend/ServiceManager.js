@@ -1920,6 +1920,50 @@ export class ServiceManager {
     }
   }
 
+  async importSingleSetup(configFiles) {
+    console.log("configFiles----------------------", configFiles);
+    // const ref = StringUtils.createRandomString();
+    // this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing Configuration`);
+    // try {
+    //   let multiSetup = {};
+    //   let consensusClients = [];
+    //   //write config files
+    //   multiSetup = yaml.safeLoad(file.content);
+    //   await this.configManager.writeMultiSetup(multiSetup);
+    //   let services = await this.readServiceConfigurations();
+    //   let updatedMultiSetup = await this.configManager.readMultiSetup();
+    //   await this.configManager.writeMultiSetup(yaml.load(updatedMultiSetup));
+    //   this.nodeConnection.taskManager.otherTasksHandler(ref, `Wrote multi setup`, true);
+    //   await Promise.all(
+    //     services.map(async (service) => {
+    //       await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+    //     })
+    //   );
+    //   await this.createKeystores(services);
+    //   // start service
+    //   const runRefs = [];
+    //   if (services[0] !== undefined) {
+    //     await Promise.all(
+    //       services.map(async (service, index) => {
+    //         Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
+    //       })
+    //     );
+    //   }
+    //   this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Configuration Completed`, true);
+    //   return runRefs;
+    // } catch (error) {
+    //   this.nodeConnection.taskManager.otherTasksHandler(
+    //     ref,
+    //     `Import Failed`,
+    //     false,
+    //     `Failed to import config: ${error}`
+    //   );
+    //   console.error(`Failed to import config: ${error}`);
+    // } finally {
+    //   this.nodeConnection.taskManager.otherTasksHandler(ref);
+    // }
+  }
+
   async importConfig(configFiles, removedServices, checkPointSync) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing Configuration`);
