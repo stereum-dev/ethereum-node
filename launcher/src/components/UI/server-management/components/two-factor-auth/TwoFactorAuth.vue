@@ -13,32 +13,32 @@
       v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && !configured2fa"
       class="col-start-1 col-span-full row-start-2 row-end-6 flex flex-col justify-start items-start text-red-500"
     >
-      <h3 class="text-lg font-semibold">EXPERIMENTAL!</h3>
-      <span class="text-sm">Before using note: </span>
-      <span class="text-sm">- Use at your own risk</span>
-      <span class="text-sm">- Have an SSH session</span>
-      <span class="text-sm">- Have a backup </span>
-      <span class="text-sm">- Have a snapshot of your VM</span>
+      <h3 class="text-lg font-semibold">{{ expr }}</h3>
+      <span class="text-sm">{{ beforeUse }} </span>
+      <span class="text-sm">- {{ useUrOwnRisk }}</span>
+      <span class="text-sm">- {{ havSSH }}</span>
+      <span class="text-sm">- {{ havBackup }} </span>
+      <span class="text-sm">- {{ havSnapshot }}</span>
     </div>
 
     <TwoFactorBtn
       v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && configured2fa"
       :class="['row-start-2 ', 'remove-btn', removeTwoFactorActive ? 'disabled' : '']"
-      btn-name="Remove 2FA"
+      :btn-name="`${rem2fa}`"
       @btnClick="removeTwoFactor"
     />
     <TwoFactorCheckLine
       v-if="twoFactorIsEnabled"
       :default-checked="true"
       class="row-start-2"
-      check-text="Do you want authentication tokens to be time-based?"
+      :check-text="`${timeBased}`"
       @update="timaBaseActive"
     />
     <TwoFactorCheckLine
       v-if="twoFactorIsEnabled"
       :default-checked="false"
       class="row-start-3"
-      check-text="Increase the original generation time limit? This will permit a time skew of up to 4 minutes!"
+      :check-text="`${increaseTime}`"
       :multi-line="true"
       @update="orgGenTimeLimit"
     />
@@ -46,7 +46,7 @@
       v-if="twoFactorIsEnabled"
       :default-checked="true"
       class="row-start-5"
-      check-text="Do you want to enable rate-limiting?"
+      :check-text="`${rateLimit}`"
       @update="rateLimiting"
     />
     <!-- barcode and secret-key are passed as props to TwoFactoSetupBox and they have to bind ':' before theme to bind, at the moment is 
@@ -68,14 +68,12 @@
       v-if="twoFactorSetupIsActive"
       class="row-start-10 row-span-1 col-start-1 col-span-full flex justify-center items-center p-2 mt-2"
     >
-      <span class="text-xs text-gray-300 text-left font-sans"
-        >If you click confirm you need to re-login on your server!</span
-      >
+      <span class="text-xs text-gray-300 text-left font-sans">{{ t("twoFactorAuth.confirmDesc") }}</span>
     </div>
     <TwoFactorBtn
       v-if="twoFactorIsEnabled"
       :class="['row-start-13', 'col-start-8', twoFactorSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
-      btn-name="Next"
+      :btn-name="`${t('twoFactorAuth.nxt')}`"
       @btnClick="startSetup"
     />
     <TwoFactorBtn
@@ -85,7 +83,7 @@
         'col-start-8',
         (twoFactorSetupIsActive && !authStore.scratchCodeSaved) || finishSetupActive ? 'disabled' : '',
       ]"
-      btn-name="Confirm"
+      :btn-name="`${t('twoFactorAuth.conf')}`"
       @btnClick="startSetup"
     />
   </div>
@@ -102,6 +100,23 @@ import { useControlStore } from "@/store/theControl";
 import ControlService from "@/store/ControlService";
 import { saveAs } from "file-saver";
 import { useRouter } from "vue-router";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const twoFaTtl = t("twoFactorAuth.2faTtl");
+const twoFaConf = t("twoFactorAuth.2faConf");
+const twoFaSetup = t("twoFactorAuth.2faSetup");
+const expr = t("twoFactorAuth.expr");
+const beforeUse = t("twoFactorAuth.beforeUse");
+const useUrOwnRisk = t("twoFactorAuth.useUrOwnRisk");
+const havSSH = t("twoFactorAuth.havSSH");
+const havBackup = t("twoFactorAuth.havBackup");
+const havSnapshot = t("twoFactorAuth.havSnapshot");
+const rem2fa = t("twoFactorAuth.rem2fa");
+const timeBased = t("twoFactorAuth.timeBased");
+const increaseTime = t("twoFactorAuth.increaseTime");
+const rateLimit = t("twoFactorAuth.rateLimit");
 
 const router = useRouter();
 const authStore = useTwoFactorAuth();
@@ -169,11 +184,11 @@ const loggingOut = async () => {
 //title manager
 const titleManager = computed(() => {
   if (twoFactorIsEnabled.value) {
-    return "2 FACTOR AUTHENTICATION CONFIGURATION";
+    return twoFaConf;
   } else if (twoFactorSetupIsActive.value) {
-    return "2 FACTOR SETUP";
+    return twoFaSetup;
   }
-  return "2 FACTOR AUTHENTICATION";
+  return twoFaTtl;
 });
 
 //function to enable time based authentication
