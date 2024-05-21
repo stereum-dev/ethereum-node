@@ -971,6 +971,17 @@
     "rateLimit": "Do you want to enable rate-limiting?",
     "confirmDesc": "If you click confirm you need to re-login on your server!",
     "nxt": "Next",
-    "conf": "Confirm"
+    "conf": "Confirm",
+    "backup": "BACKUP",
+    "save": "save...",
+    "wait": "Wait...",
+    "enterCode": "Enter verification code:",
+    "send": "Send",
+    "urSecret": "Your secret key is:",
+    "scanCode": "Scan the code with your authenticator app",
+    "enterCodeApp": "Enter the verification code an click send",
+    "doBackup": "Do a backup by pressing the save button",
+    "confirm2fa": "Finally click on confirm to activate 2FA!",
+    "2faAlarm": "You will be logged out as soon as you click the final confirm button. The next login requires 2FA."
   }
 }
