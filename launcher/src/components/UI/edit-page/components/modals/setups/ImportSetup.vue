@@ -3,18 +3,23 @@
     main-title="IMPORT CONFIG FILES"
     confirm-text="Import"
     click-outside-text="Click outside to cancel"
-    :disabled-button="installStore.isConfigButtonEnbabled"
+    :disabled-button="!installStore.isConfigButtonEnbabled"
     @close-window="closeWindow"
     @confirm-action="confirmImport"
   >
     <template #content>
       <div class="w-full h-full grid grid-cols-6 grid-rows-3 py-4 px-8 mt-12 gap-y-1">
-        <div class="col-start-2 col-end-6 row-start-1 row-span-1 flex justify-center items-center px-2">
+        <div
+          class="col-start-2 col-end-6 row-start-1 row-span-1 flex justify-center items-center px-2"
+        >
           <span class="text-sm text-left text-gray-400"
-            >Select the zip folder containing the yaml configs files to import a new config into Stereum.</span
+            >Select the zip folder containing the yaml configs files to import a new
+            config into Stereum.</span
           >
         </div>
-        <div class="col-start-2 col-end-6 row-start-2 row-span-1 flex justify-center items-center p-1">
+        <div
+          class="col-start-2 col-end-6 row-start-2 row-span-1 flex justify-center items-center p-1"
+        >
           <label
             for="file-upload"
             class="w-full h-full p-1 cursor-pointer grid grid-cols-12 bg-[#151618] border border-gray-700 rounded-md"
@@ -30,20 +35,30 @@
               alt="Check Icon"
               @mousedown.prevent
             />
-            <input id="file-upload" name="file-upload" type="file" class="hidden" @change="handleFileUpload" />
+            <input
+              id="file-upload"
+              name="file-upload"
+              type="file"
+              class="hidden"
+              @change="handleFileUpload"
+            />
           </label>
         </div>
         <div
           v-if="sucessMessage !== ''"
           class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center"
         >
-          <span class="text-sm text-green-500 font-sans text-center">{{ sucessMessage }}</span>
+          <span class="text-sm text-green-500 font-sans text-center">{{
+            sucessMessage
+          }}</span>
         </div>
         <div
           v-if="errorMessage !== ''"
           class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center"
         >
-          <span class="text-sm text-red-500 font-sans text-center">{{ errorMessage }}</span>
+          <span class="text-sm text-red-500 font-sans text-center">{{
+            errorMessage
+          }}</span>
         </div>
       </div>
     </template>
@@ -119,7 +134,9 @@ const handleFileUpload = async (event) => {
   let rootPath = "";
   for (const file of yamlFiles) {
     const data = await file.async("string");
-    let serviceVolume = YAML.parse(data).volumes?.find((el) => el.includes(YAML.parse(data).id));
+    let serviceVolume = YAML.parse(data).volumes?.find((el) =>
+      el.includes(YAML.parse(data).id)
+    );
     let split = {};
 
     if (serviceVolume) {
@@ -142,8 +159,13 @@ const handleFileUpload = async (event) => {
   }
 
   setupStore.setupDataToImport = installStore.unzippedData;
-  errorMessage.value = "";
-  sucessMessage.value = "STEREUM SETUP RECOGNIZED - PRESS IMPORT TO CONTINUE";
+  if (setupStore.setupDataToImport.length) {
+    installStore.isConfigButtonEnbabled = true;
+    errorMessage.value = "";
+    sucessMessage.value = "STEREUM SETUP RECOGNIZED - PRESS IMPORT TO CONTINUE";
+  } else {
+    errorMessage.value = "Invalid configuration file.";
+  }
 };
 
 const confirmImport = async () => {

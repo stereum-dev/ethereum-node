@@ -148,7 +148,10 @@
       <!-- Start Setup Infos -->
       <SetupInfos v-if="setupStore.selectedSetupInfos" />
     </TransitionGroup>
-    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
+    <LoaderAnime
+      v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive"
+      :anime="getAimationSrc"
+    />
   </base-layout>
 </template>
 <script setup>
@@ -169,11 +172,11 @@ import NukeModal from "./components/modals/NukeModal.vue";
 import ImportSetup from "./components/modals/setups/ImportSetup.vue";
 import CreateSetup from "./components/modals/setups/CreateSetup.vue";
 import SetupInfos from "./components/modals/setups/SetupInfos.vue";
-import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
+import LoaderAnime from "./components/loader-anime/LoaderAnime.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, computed, onUnmounted, watch } from "vue";
+import { ref, onMounted, computed, onUnmounted, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useStakingStore } from "@/store/theStaking";
@@ -210,10 +213,22 @@ const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
 const selectedSetupNetwork = ref("");
+const changeAnime = ref("/animation/confirm-changes/modify.gif");
+const setupImportAnime = ref("/animation/setup/loader.gif");
 
 // Computed & Watcher
 
 const isLoadingNewConfiguration = ref(true);
+
+const getAimationSrc = computed(() => {
+  let animationSrc = "";
+  if (manageStore.disableConfirmButton) {
+    animationSrc = changeAnime.value;
+  } else if (setupStore.isImportAnimeActive) {
+    animationSrc = setupImportAnime.value;
+  }
+  return animationSrc;
+});
 
 watch(
   () => manageStore.newConfiguration,
@@ -223,6 +238,14 @@ watch(
   },
   { deep: true }
 );
+
+watchEffect(() => {
+  if (setupStore.isImportAnimeActive) {
+    setTimeout(() => {
+      setupStore.isImportAnimeActive = false;
+    }, 5000);
+  }
+});
 
 onMounted(() => {
   if (manageStore.currentNetwork.id)
@@ -923,6 +946,7 @@ const confirmImportSingleSetup = async (data) => {
   await ControlService.importSingleSetup(useDeepClone(data));
   setupStore.setupDataToImport = [];
   manageStore.isImportSetupYamlActive = false;
+  setupStore.isImportAnimeActive = true;
 };
 
 const closeNetworkModal = () => {

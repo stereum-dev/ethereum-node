@@ -25,7 +25,7 @@ export const useSetups = defineStore("setups", {
     selectedSetupToRemove: [],
 
     //Import Setup YAML
-
+    isImportAnimeActive: false,
     setupDataToImport: [],
 
     //Setup Others
