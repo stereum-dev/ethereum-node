@@ -123,9 +123,9 @@ const customService = computed(() => {
   return serviceStore.allServices.find((service) => service.service === "CustomService");
 });
 
-function addServices(service) {
+const addServices = (service) => {
   emit("addServices", service);
-}
+};
 
 onUnmounted(() => {
   searchQuery.value = "";

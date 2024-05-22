@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watchEffect } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/vue/20/solid";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
@@ -65,7 +65,6 @@ const filters = [
 ];
 
 const serviceStore = useServices();
-const allServices = ref([]);
 const manageStore = useNodeManage();
 const selectedFilter = ref(filters[0]);
 const isOpen = ref(false);
@@ -80,8 +79,8 @@ const selectFilter = (filter) => {
 };
 
 const networkArchFilteredServices = computed(() => {
-  return allServices.value.filter((service) => {
-    return archFilter(service) && networkFilter(service);
+  return serviceStore.allServices.filter((service) => {
+    return networkFilter(service) && archFilter(service);
   });
 });
 
@@ -90,16 +89,22 @@ const filteredServices = () => {
   return filterName === "all"
     ? networkArchFilteredServices.value
     : networkArchFilteredServices.value.filter(
-        (service) => service.category.toLowerCase() === filterName
+        (service) => service.category.toLowerCase() === filterName.toLowerCase()
       );
 };
-watchEffect(() => {
+
+onMounted(() => {
   serviceStore.filteredServices = filteredServices();
 });
 
+watch(selectedFilter, () => {
+  serviceStore.filteredServices = filteredServices();
+});
+
+//serviceStore.filteredServices
 //Methods
 
-function networkFilter(service) {
+const networkFilter = (service) => {
   switch (manageStore.configNetwork.network) {
     case "mainnet":
       return true;
@@ -114,14 +119,14 @@ function networkFilter(service) {
     default:
       return service.service !== "SSVNetworkService";
   }
-}
+};
 
-function archFilter(service) {
+const archFilter = (service) => {
   const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"];
   return armArchs.includes(manageStore.architecture)
     ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service.service)
     : true;
-}
+};
 </script>
 
 <style>
