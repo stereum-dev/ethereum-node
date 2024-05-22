@@ -1933,10 +1933,29 @@ export class ServiceManager {
         currentPath = YAML.parse(stereumConfig.stdout).stereum_settings.settings.controls_install_path;
       }
 
+      let installedServices = await this.readServiceConfigurations();
+      let allPorts = installedServices
+        .map((s) => s.ports)
+        .flat(1)
+        .map((p) => p.destinationPort + "/" + p.servicePortProtocol);
+
       //write config files
       for (let file of configFiles) {
         if (file.id && file.content && file.service) {
           file.content = file.content.replace(/(\s+-\s)\/[^\s]+\/([a-zA-Z]+-[^/]+\/[^:]+):/g, `$1${currentPath}/$2:`);
+          const findUniquePort = (port, protocol, allPorts) => {
+            while (allPorts.includes(`${port}/${protocol}`)) {
+              port += 1;
+            }
+            allPorts.push(`${port}/${protocol}`);
+            return port;
+          };
+
+          file.content = file.content.replace(/(\d+\.\d+\.\d+\.\d+:\d+):(\d+\/(tcp|udp))/g, (match, p1, p2, p3) => {
+            const [ip, originalPort] = p1.split(":");
+            const newPort = findUniquePort(parseInt(originalPort), p3, allPorts);
+            return `${ip}:${newPort}:${originalPort}/${p3}`;
+          });
           await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
         } else {
           multiSetup = yaml.safeLoad(file.content);
@@ -1989,7 +2008,6 @@ export class ServiceManager {
   }
 
   async importConfig(configFiles, removedServices, checkPointSync) {
-    console.log("configFiles-------------------", configFiles);
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing Configuration`);
     try {
