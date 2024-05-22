@@ -26,7 +26,7 @@ export const useSetups = defineStore("setups", {
 
     //Import Setup YAML
 
-    importedSetupFile: [],
+    setupDataToImport: [],
 
     //Setup Others
     serverServices: ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"],

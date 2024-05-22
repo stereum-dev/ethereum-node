@@ -3,7 +3,7 @@
     main-title="IMPORT CONFIG FILES"
     confirm-text="Import"
     click-outside-text="Click outside to cancel"
-    :disabled-button="sucessMessage === ''"
+    :disabled-button="installStore.isConfigButtonEnbabled"
     @close-window="closeWindow"
     @confirm-action="confirmImport"
   >
@@ -40,7 +40,7 @@
               name="file-upload"
               type="file"
               class="hidden"
-              @change="onFileChanged"
+              @change="handleFileUpload"
             />
           </label>
         </div>
@@ -68,76 +68,114 @@
 <script setup>
 import { ref } from "vue";
 import CustomModal from "../CustomModal.vue";
-import jsYaml from "js-yaml";
 import JSZip from "jszip";
 import { useSetups } from "@/store/setups";
 import { useNodeManage } from "../../../../../../store/nodeManage";
+import YAML from "yaml";
+import { useServices } from "@/store/services";
+import { useClickInstall } from "@/store/clickInstallation";
 
 const emit = defineEmits(["confirmImport", "closeWindow"]);
 const setupStore = useSetups();
+const servicesStore = useServices();
+const installStore = useClickInstall();
 const manageStore = useNodeManage();
 
 const filePath = ref("");
+const fileName = ref("");
 const sucessMessage = ref("");
 const errorMessage = ref("");
 
-const onFileChanged = async (event) => {
+const handleFileUpload = async (event) => {
+  // Load config .zip file
   const file = event.target.files[0];
-  if (!file) {
-    errorMessage.value = "No file selected.";
+  if (file.type !== "application/zip" && file.type !== "application/x-zip-compressed") {
+    errorMessage.value = "Invalid file type. Please select a valid file.";
     return;
   }
 
+  // Extract, then check extensions of the files (.yaml)
+  errorMessage.value = "";
+  fileName.value = file.name;
   filePath.value = file.name;
-  if (!file.name.endsWith(".zip")) {
-    errorMessage.value = "Please upload a ZIP file.";
-    sucessMessage.value = "";
+  const zip = await JSZip.loadAsync(file);
+  const yamlFiles = zip.file(/\.yaml$/i).filter((file) => !file.name.includes("_MACOSX"));
+
+  if (yamlFiles.length === 0) {
+    errorMessage.value = "Invalid file type. Please try again with a valid file.";
     return;
   }
 
-  try {
-    const zip = new JSZip();
-    const content = await zip.loadAsync(file); // Read the ZIP file
-    let yamlFiles = [];
-    content.forEach((relativePath, zipEntry) => {
-      if (relativePath.endsWith(".yaml") || relativePath.endsWith(".yml")) {
-        yamlFiles.push(zipEntry.async("string"));
-        console.log("yaml  Files", yamlFiles);
+  // Check name of the config files
+  errorMessage.value = "";
+  let serviceName = [];
+  for (const file of yamlFiles) {
+    const data = await file.async("string");
+
+    if (data) {
+      const parsedData = YAML.parse(data);
+      if (parsedData.service !== undefined) {
+        serviceName.push({
+          name: parsedData.service,
+        });
       }
-    });
-
-    if (yamlFiles.length === 0) {
-      throw new Error("No YAML files found in the ZIP.");
     }
-
-    // Validate all YAML files in parallel
-    await Promise.all(
-      yamlFiles.map(async (filePromise) => {
-        const yamlContent = await filePromise;
-        const loadedYamls = jsYaml.load(yamlContent); // Validate YAML content
-        console.log("loadedYamls", loadedYamls);
-      })
-    );
-
-    sucessMessage.value = "All files are valid YAML.";
-    errorMessage.value = "";
-  } catch (error) {
-    errorMessage.value = error.message;
-    sucessMessage.value = "";
   }
+  const filteredServices = servicesStore.allServices.filter((service) => {
+    return serviceName.some((nameObj) => nameObj.name === service.service);
+  });
+
+  if (filteredServices.length === 0) {
+    errorMessage.value = "Invalid configuration file.";
+    return;
+  }
+
+  errorMessage.value = "";
+  let rootPath = "";
+  for (const file of yamlFiles) {
+    const data = await file.async("string");
+    let serviceVolume = YAML.parse(data).volumes?.find((el) =>
+      el.includes(YAML.parse(data).id)
+    );
+    let split = {};
+
+    if (serviceVolume) {
+      let path = serviceVolume.split(YAML.parse(data).id)[0];
+      split = path.split("/");
+    }
+    rootPath = serviceVolume
+      ? split.slice(0, split.length - 1).join("/") + "/"
+      : YAML.parse(data).service === "PrometheusNodeExporterService"
+      ? "/"
+      : rootPath;
+
+    installStore.unzippedData.push({
+      service: YAML.parse(data).service,
+      id: YAML.parse(data).id,
+      network: YAML.parse(data).network,
+      content: data,
+      path: rootPath,
+    });
+  }
+
+  setupStore.setupDataToImport = installStore.unzippedData;
+  errorMessage.value = "";
+  sucessMessage.value = "STEREUM SETUP RECOGNIZED - PRESS IMPORT TO CONTINUE";
 };
 
-const confirmImport = () => {
+const confirmImport = async () => {
   if (errorMessage.value) {
     console.log("Fix errors before importing.");
+    installStore.configServices = [];
+    setupStore.setupDataToImport = [];
     return;
   }
-  emit("confirmImport");
-  console.log("Importing ZIP file:", setupStore.importedSetupFile);
+  emit("confirmImport", setupStore.setupDataToImport);
 };
 
 const closeWindow = () => {
   manageStore.isImportSetupYamlActive = false;
+  installStore.configServices = [];
   filePath.value = "";
   sucessMessage.value = "";
   errorMessage.value = "";

@@ -4557,11 +4557,6 @@ video {
   color: rgb(34 211 238 / var(--tw-text-opacity));
 }
 
-.text-cyan-500{
-  --tw-text-opacity: 1;
-  color: rgb(6 182 212 / var(--tw-text-opacity));
-}
-
 .text-cyan-600{
   --tw-text-opacity: 1;
   color: rgb(8 145 178 / var(--tw-text-opacity));
@@ -5608,6 +5603,11 @@ html body {
 .hover\:bg-gray-100:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-gray-300:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-gray-500:hover{
