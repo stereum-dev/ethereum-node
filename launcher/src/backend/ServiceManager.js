@@ -35,6 +35,7 @@ import { CustomService } from "./ethereum-services/CustomService";
 import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import { ConfigManager } from "./ConfigManager";
 import YAML from "yaml";
+// import { config } from "process";
 const axios = require("axios");
 const path = require("path");
 const log = require("electron-log");
@@ -1921,50 +1922,139 @@ export class ServiceManager {
   }
 
   async importSingleSetup(configFiles) {
-    console.log("configFiles----------------------", configFiles);
-    // const ref = StringUtils.createRandomString();
-    // this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing Configuration`);
-    // try {
-    //   let multiSetup = {};
-    //   let consensusClients = [];
-    //   //write config files
-    //   multiSetup = yaml.safeLoad(file.content);
-    //   await this.configManager.writeMultiSetup(multiSetup);
-    //   let services = await this.readServiceConfigurations();
-    //   let updatedMultiSetup = await this.configManager.readMultiSetup();
-    //   await this.configManager.writeMultiSetup(yaml.load(updatedMultiSetup));
-    //   this.nodeConnection.taskManager.otherTasksHandler(ref, `Wrote multi setup`, true);
-    //   await Promise.all(
-    //     services.map(async (service) => {
-    //       await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
-    //     })
-    //   );
-    //   await this.createKeystores(services);
-    //   // start service
-    //   const runRefs = [];
-    //   if (services[0] !== undefined) {
-    //     await Promise.all(
-    //       services.map(async (service, index) => {
-    //         Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
-    //       })
-    //     );
-    //   }
-    //   this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Configuration Completed`, true);
-    //   return runRefs;
-    // } catch (error) {
-    //   this.nodeConnection.taskManager.otherTasksHandler(
-    //     ref,
-    //     `Import Failed`,
-    //     false,
-    //     `Failed to import config: ${error}`
-    //   );
-    //   console.error(`Failed to import config: ${error}`);
-    // } finally {
-    //   this.nodeConnection.taskManager.otherTasksHandler(ref);
-    // }
+    configFiles = [
+      {
+        service: "GethService",
+        id: "8361e9e8-5165-79a0-ec95-50cb07e0f057",
+        network: "mainnet",
+        content:
+          "service: GethService\n" +
+          "id: 8361e9e8-5165-79a0-ec95-50cb07e0f057\n" +
+          "configVersion: 1\n" +
+          "command:\n" +
+          "  - --mainnet\n" +
+          "  - --datadir=/opt/data/geth\n" +
+          "  - --state.scheme=path\n" +
+          "  - --http\n" +
+          "  - --http.port=8545\n" +
+          "  - --http.addr=0.0.0.0\n" +
+          "  - --http.vhosts=*\n" +
+          "  - --http.api=eth,web3,net\n" +
+          "  - --http.corsdomain=*\n" +
+          "  - --ws\n" +
+          "  - --ws.port=8546\n" +
+          "  - --ws.addr=0.0.0.0\n" +
+          "  - --ws.api=eth,net,web3\n" +
+          "  - --ws.origins=*\n" +
+          "  - --authrpc.port=8551\n" +
+          "  - --authrpc.addr=0.0.0.0\n" +
+          "  - --authrpc.vhosts=*\n" +
+          "  - --authrpc.jwtsecret=/engine.jwt\n" +
+          "  - --metrics\n" +
+          "  - --metrics.expensive\n" +
+          "  - --metrics.port=6060\n" +
+          "  - --metrics.addr=0.0.0.0\n" +
+          "entrypoint:\n" +
+          "  - geth\n" +
+          "env: {}\n" +
+          "image: ethereum/client-go:v1.13.15\n" +
+          "ports:\n" +
+          "  - 0.0.0.0:30303:30303/tcp\n" +
+          "  - 0.0.0.0:30303:30303/udp\n" +
+          "  - 127.0.0.1:8545:8545/tcp\n" +
+          "  - 127.0.0.1:8546:8546/tcp\n" +
+          "volumes:\n" +
+          "  - /opt/stereum/geth-8361e9e8-5165-79a0-ec95-50cb07e0f057/data:/opt/data/geth\n" +
+          "  - /opt/stereum/geth-8361e9e8-5165-79a0-ec95-50cb07e0f057/engine.jwt:/engine.jwt\n" +
+          "user: root\n" +
+          "autoupdate: true\n" +
+          "network: mainnet\n" +
+          "dependencies:\n" +
+          "  executionClients: []\n" +
+          "  consensusClients: []\n" +
+          "  mevboost: []\n" +
+          "  otherServices: []\n" +
+          "\n",
+        path: "/opt/stereum/",
+        icon: "/img/Geth.1e38c94c.png",
+        category: "execution",
+        name: "Geth",
+      },
+      {
+        content:
+          "60a26d79-99cc-464b-aee7-cab18415ca74:\n" +
+          "  name: setupTEST\n" +
+          "  network: mainnet\n" +
+          "  color: default\n" +
+          "  type: ETH\n" +
+          "  services:\n" +
+          "    - 8361e9e8-5165-79a0-ec95-50cb07e0f057\n" +
+          "\n",
+        path: "/opt/stereum/",
+      },
+    ];
+    // await this.nodeConnection.sshService.exec(`cat /etc/stereum/stereum.yaml`);
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing a setup`);
+    try {
+      let multiSetup = {};
+
+      //write config files
+      for (let file of configFiles) {
+        if (file.id && file.content && file.service && file.category) {
+          await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
+        } else {
+          multiSetup = yaml.safeLoad(file.content);
+        }
+      }
+
+      let currentSetups = await this.configManager.readMultiSetup();
+      let setupsObj = yaml.load(currentSetups);
+      let mergedSetup = { ...setupsObj, ...multiSetup };
+      await this.configManager.writeMultiSetup(mergedSetup);
+
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Wrote multi setup`, true);
+
+      let services = await this.readServiceConfigurations();
+      let importingSetupServices = services.filter((service) =>
+        multiSetup[Object.keys(multiSetup)[0]].services.includes(service.id)
+      );
+
+      await Promise.all(
+        importingSetupServices.map(async (service) => {
+          await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+        })
+      );
+
+      await this.createKeystores(importingSetupServices);
+
+      // start service
+      const runRefs = [];
+      if (importingSetupServices[0] !== undefined) {
+        await Promise.all(
+          importingSetupServices.map(async (service, index) => {
+            Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
+          })
+        );
+      }
+
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Configuration Completed`, true);
+      return runRefs;
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Import Failed`,
+        false,
+        `Failed to import config: ${error}`
+      );
+      console.error(`Failed to import config: ${error}`);
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+    }
   }
 
   async importConfig(configFiles, removedServices, checkPointSync) {
+    console.log("configFiles-------------------", configFiles);
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing Configuration`);
     try {
@@ -2048,7 +2138,7 @@ export class ServiceManager {
 
       await this.createKeystores(services);
 
-      // start service
+      // start service(s)
       const runRefs = [];
       if (services[0] !== undefined) {
         await Promise.all(
