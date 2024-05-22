@@ -24,14 +24,20 @@
         <!-- expert mode row -->
         <div
           v-if="!ssvExpertModeActive && !ssvDkgExpertModeActive && !prometheusExpertModeActive"
-          class="z-10 dataTitleBox"
+          class="dataTitleBox z-10"
           @click="openExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/crown.png" alt="icon" />
 
-          <span>Expert Mode</span>
-          <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >Expert Mode</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
         <div
           v-if="item.service === 'SSVNetworkService' && !isExpertModeActive && !prometheusExpertModeActive"
@@ -39,9 +45,15 @@
           @click="openSSVExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
-          <span>SSV Configuration</span>
-          <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >SSV Configuration</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
         <!-- DKG START -->
         <div
@@ -55,9 +67,15 @@
           @click="openSSVDKGExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
-          <span>SSV DKG Configuration</span>
-          <img v-if="ssvDkgExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >SSV DKG Configuration</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="ssvDkgExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
         <!-- DKG END -->
         <div
@@ -65,10 +83,15 @@
           class="dataTitleBox"
           @click="openPrometheusExpertMode"
         >
-          <span></span>
-          <span>Prometheus Configuration</span>
-          <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >Prometheus Configuration</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
 
         <!--
@@ -103,14 +126,16 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
-          class="toggleTextBox"
+          class="toggleTextBox col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
-          <span>{{ option.title }}</span>
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
+            option.title
+          }}</span>
           <Transition name="slide-up">
             <img
               v-if="option.buttonState"
@@ -186,7 +211,9 @@
           }"
         >
           <img :src="option.icon" alt="icon" />
-          <span class="actionBoxTitle">{{ option.title }}</span>
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
+            option.title
+          }}</span>
           <div class="w-full flex justify-end items-center">
             <label class="relative inline-flex items-center cursor-pointer">
               <input
@@ -250,6 +277,13 @@
         <!-- close text -->
         <span class="w-1/4 text-sm text-red-400">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
+        <button
+          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-red-500 rounded-lg hover:bg-red-700 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          @click="$emit('hideModal')"
+        >
+          close
+        </button>
+
         <button
           v-if="!nothingsChanged"
           class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
@@ -730,7 +764,9 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 100%;
   justify-content: space-between;
   align-items: center;
   transition-duration: 200ms;
@@ -863,6 +899,13 @@ export default {
   width: 20px;
   height: 20px;
 }
+.dataTitleBox .titleIcon {
+  grid-column: 1/2;
+  grid-row: 1;
+  width: 20px;
+  height: 20px;
+  align-self: center;
+}
 .actionBox {
   width: 100%;
   height: 25px;
@@ -877,7 +920,7 @@ export default {
   font-weight: 600;
   cursor: default;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
   transition-duration: 200ms;
   position: relative;
@@ -1053,7 +1096,7 @@ input:checked + .slider:before {
   pointer-events: none !important;
 }
 .toggleTextBox span {
-  grid-column: 5/9;
+  grid-column: 2/6;
   grid-row: 1;
   width: 96%;
   height: 100%;
