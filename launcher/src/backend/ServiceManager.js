@@ -35,6 +35,7 @@ import { CustomService } from "./ethereum-services/CustomService";
 import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import { ConfigManager } from "./ConfigManager";
 import YAML from "yaml";
+// import { file } from "jszip";
 // import { config } from "process";
 const axios = require("axios");
 const path = require("path");
@@ -1922,86 +1923,20 @@ export class ServiceManager {
   }
 
   async importSingleSetup(configFiles) {
-    configFiles = [
-      {
-        service: "GethService",
-        id: "8361e9e8-5165-79a0-ec95-50cb07e0f057",
-        network: "mainnet",
-        content:
-          "service: GethService\n" +
-          "id: 8361e9e8-5165-79a0-ec95-50cb07e0f057\n" +
-          "configVersion: 1\n" +
-          "command:\n" +
-          "  - --mainnet\n" +
-          "  - --datadir=/opt/data/geth\n" +
-          "  - --state.scheme=path\n" +
-          "  - --http\n" +
-          "  - --http.port=8545\n" +
-          "  - --http.addr=0.0.0.0\n" +
-          "  - --http.vhosts=*\n" +
-          "  - --http.api=eth,web3,net\n" +
-          "  - --http.corsdomain=*\n" +
-          "  - --ws\n" +
-          "  - --ws.port=8546\n" +
-          "  - --ws.addr=0.0.0.0\n" +
-          "  - --ws.api=eth,net,web3\n" +
-          "  - --ws.origins=*\n" +
-          "  - --authrpc.port=8551\n" +
-          "  - --authrpc.addr=0.0.0.0\n" +
-          "  - --authrpc.vhosts=*\n" +
-          "  - --authrpc.jwtsecret=/engine.jwt\n" +
-          "  - --metrics\n" +
-          "  - --metrics.expensive\n" +
-          "  - --metrics.port=6060\n" +
-          "  - --metrics.addr=0.0.0.0\n" +
-          "entrypoint:\n" +
-          "  - geth\n" +
-          "env: {}\n" +
-          "image: ethereum/client-go:v1.13.15\n" +
-          "ports:\n" +
-          "  - 0.0.0.0:30303:30303/tcp\n" +
-          "  - 0.0.0.0:30303:30303/udp\n" +
-          "  - 127.0.0.1:8545:8545/tcp\n" +
-          "  - 127.0.0.1:8546:8546/tcp\n" +
-          "volumes:\n" +
-          "  - /opt/stereum/geth-8361e9e8-5165-79a0-ec95-50cb07e0f057/data:/opt/data/geth\n" +
-          "  - /opt/stereum/geth-8361e9e8-5165-79a0-ec95-50cb07e0f057/engine.jwt:/engine.jwt\n" +
-          "user: root\n" +
-          "autoupdate: true\n" +
-          "network: mainnet\n" +
-          "dependencies:\n" +
-          "  executionClients: []\n" +
-          "  consensusClients: []\n" +
-          "  mevboost: []\n" +
-          "  otherServices: []\n" +
-          "\n",
-        path: "/opt/stereum/",
-        icon: "/img/Geth.1e38c94c.png",
-        category: "execution",
-        name: "Geth",
-      },
-      {
-        content:
-          "60a26d79-99cc-464b-aee7-cab18415ca74:\n" +
-          "  name: setupTEST\n" +
-          "  network: mainnet\n" +
-          "  color: default\n" +
-          "  type: ETH\n" +
-          "  services:\n" +
-          "    - 8361e9e8-5165-79a0-ec95-50cb07e0f057\n" +
-          "\n",
-        path: "/opt/stereum/",
-      },
-    ];
-    // await this.nodeConnection.sshService.exec(`cat /etc/stereum/stereum.yaml`);
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing a setup`);
     try {
+      let currentPath = "";
       let multiSetup = {};
+      const stereumConfig = await this.nodeConnection.sshService.exec("cat /etc/stereum/stereum.yaml");
+      if (stereumConfig.rc == 0) {
+        currentPath = YAML.parse(stereumConfig.stdout).stereum_settings.settings.controls_install_path;
+      }
 
       //write config files
       for (let file of configFiles) {
-        if (file.id && file.content && file.service && file.category) {
+        if (file.id && file.content && file.service) {
+          file.content = file.content.replace(/(\s+-\s)\/[^\s]+\/([a-zA-Z]+-[^/]+\/[^:]+):/g, `$1${currentPath}/$2:`);
           await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
         } else {
           multiSetup = yaml.safeLoad(file.content);
