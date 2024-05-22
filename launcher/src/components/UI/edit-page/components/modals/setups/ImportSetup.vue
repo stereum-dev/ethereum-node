@@ -9,17 +9,12 @@
   >
     <template #content>
       <div class="w-full h-full grid grid-cols-6 grid-rows-3 py-4 px-8 mt-12 gap-y-1">
-        <div
-          class="col-start-2 col-end-6 row-start-1 row-span-1 flex justify-center items-center px-2"
-        >
+        <div class="col-start-2 col-end-6 row-start-1 row-span-1 flex justify-center items-center px-2">
           <span class="text-sm text-left text-gray-400"
-            >Select the zip folder containing the yaml configs files to import a new
-            config into Stereum.</span
+            >Select the zip folder containing the yaml configs files to import a new config into Stereum.</span
           >
         </div>
-        <div
-          class="col-start-2 col-end-6 row-start-2 row-span-1 flex justify-center items-center p-1"
-        >
+        <div class="col-start-2 col-end-6 row-start-2 row-span-1 flex justify-center items-center p-1">
           <label
             for="file-upload"
             class="w-full h-full p-1 cursor-pointer grid grid-cols-12 bg-[#151618] border border-gray-700 rounded-md"
@@ -35,30 +30,20 @@
               alt="Check Icon"
               @mousedown.prevent
             />
-            <input
-              id="file-upload"
-              name="file-upload"
-              type="file"
-              class="hidden"
-              @change="onFileChanged"
-            />
+            <input id="file-upload" name="file-upload" type="file" class="hidden" @change="onFileChanged" />
           </label>
         </div>
         <div
           v-if="sucessMessage !== ''"
           class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center"
         >
-          <span class="text-sm text-green-500 font-sans text-center">{{
-            sucessMessage
-          }}</span>
+          <span class="text-sm text-green-500 font-sans text-center">{{ sucessMessage }}</span>
         </div>
         <div
           v-if="errorMessage !== ''"
           class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center"
         >
-          <span class="text-sm text-red-500 font-sans text-center">{{
-            errorMessage
-          }}</span>
+          <span class="text-sm text-red-500 font-sans text-center">{{ errorMessage }}</span>
         </div>
       </div>
     </template>
@@ -72,6 +57,7 @@ import jsYaml from "js-yaml";
 import JSZip from "jszip";
 import { useSetups } from "@/store/setups";
 import { useNodeManage } from "../../../../../../store/nodeManage";
+import ControlService from "@/store/ControlService";
 
 const emit = defineEmits(["confirmImport", "closeWindow"]);
 const setupStore = useSetups();
@@ -127,7 +113,8 @@ const onFileChanged = async (event) => {
   }
 };
 
-const confirmImport = () => {
+const confirmImport = async () => {
+  await ControlService.importSingleSetup("test");
   if (errorMessage.value) {
     console.log("Fix errors before importing.");
     return;
