@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useServices } from "@/store/services";
 import { useSetups } from "../../../../../store/setups";
 import { useNodeManage } from "../../../../../store/nodeManage";
@@ -73,12 +73,13 @@ const emit = defineEmits(["importSetup", "createSetup", "addService"]);
 const serviceStore = useServices();
 const setupStore = useSetups();
 const manageStore = useNodeManage();
+const allServices = ref([]);
 
 const getServerServices = computed(() => {
   const newConfigServices = new Set(manageStore.newConfiguration.map((e) => e.service));
   const serverServices = new Set(setupStore.serverServices.map((e) => e));
 
-  return serviceStore.allServices
+  return allServices.value
     .filter((e) => e.category === "service" && serverServices.has(e.service))
     .map((service) => ({
       ...service,
@@ -88,16 +89,9 @@ const getServerServices = computed(() => {
 });
 
 onMounted(() => {
-  serviceStore.allServices = serviceStore.allServices
+  allServices.value = serviceStore.allServices
     .filter((e) => e.category === "service")
-    .map((e) =>
-      e.category === "service"
-        ? {
-            ...e,
-            isDuplicated: false,
-          }
-        : e
-    );
+    .map((e) => ({ ...e, isDuplicated: false }));
 });
 
 // Methods
