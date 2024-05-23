@@ -6,7 +6,7 @@
       @click="$emit('hideModal')"
     ></div>
     <div
-      class="w-[925px] absolute inset-y-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      class="w-[970px] absolute inset-y-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
       :class="leftDistance ? leftDistance : 'left-0'"
       aria-labelledby="modal-title"
       role="dialog"
@@ -114,12 +114,13 @@
           }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
-          <span class="text-center">{{ option.title }}</span>
-          <div class="spaceParent">
-            <select id="value" v-model="option.changeValue" @change="somethingIsChanged(option)">
-              <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
-            </select>
-          </div>
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
+            option.title
+          }}</span>
+
+          <select id="value" v-model="option.changeValue" class="toggleTextInput" @change="somethingIsChanged(option)">
+            <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
+          </select>
         </div>
 
         <!-- Fee recipient -->
@@ -136,7 +137,7 @@
           <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
             option.title
           }}</span>
-          <Transition name="slide-up">
+          <!-- <Transition name="slide-up">
             <img
               v-if="option.buttonState"
               class="buttonOff"
@@ -151,16 +152,8 @@
               alt="icon"
               @click="buttonOn(option)"
             />
-          </Transition>
-          <input
-            v-model="option.changeValue"
-            class="toggleTextInput"
-            type="text"
-            :class="{
-              disabled: !option.buttonState,
-            }"
-            @input="somethingIsChanged(option)"
-          />
+          </Transition> -->
+          <input v-model="option.changeValue" class="toggleTextInput" type="text" @input="somethingIsChanged(option)" />
         </div>
 
         <!--
@@ -183,7 +176,7 @@
         >
           <img :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
-          <div class="w-full flex justify-end items-center">
+          <div class="w-full flex justify-end items-center col-start-12 col-span-1 row-start-1 row-span-1">
             <label class="relative inline-flex items-center cursor-pointer">
               <input
                 v-model="option.changeValue"
@@ -214,7 +207,7 @@
           <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
             option.title
           }}</span>
-          <div class="w-full flex justify-end items-center">
+          <div class="col-start-12 col-span-1 row-start-1 row-span-1 w-full flex justify-end items-center">
             <label class="relative inline-flex items-center cursor-pointer">
               <input
                 v-model="option.changeValue"
@@ -271,14 +264,14 @@
       </div>
       <div class="w-full flex justify-between items-center absolute bottom-1 px-2">
         <!-- service version -->
-        <p class="w-1/4 text-sm text-gray-200">
+        <p class="w-1/2 text-sm text-gray-200">
           version: <span>{{ item.config.imageVersion }}</span>
         </p>
         <!-- close text -->
-        <span class="w-1/4 text-sm text-red-400">{{ $t("exitValidatorModal.clickClose") }}</span>
+
         <!-- confirm button box -->
         <button
-          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-red-500 rounded-lg hover:bg-red-700 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          class="expert-modal-btn w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-red-500 rounded-lg hover:bg-red-700 focus:outline-none"
           @click="$emit('hideModal')"
         >
           close
@@ -286,7 +279,7 @@
 
         <button
           v-if="!nothingsChanged"
-          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          class="expert-modal-btn w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none"
           @click="confirmExpertChanges(item, false)"
         >
           Confirm
@@ -297,7 +290,7 @@
         </button>
         <button
           v-if="!nothingsChanged"
-          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          class="expert-modal-btn w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none"
           @click="confirmExpertChanges(item, true)"
         >
           Confirm & Restart
@@ -823,18 +816,21 @@ export default {
   width: 100%;
   height: 25px;
   margin: 2px auto;
+  padding: 1px 4px 0 20px;
   border: 1px solid #8a8a8a;
   border-radius: 25px;
   background-color: #8a8a8a;
+  text-align: center;
   color: #393939;
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
+  transition-duration: 200ms;
 }
 .selectBox .spaceParent {
-  grid-column: 3/4;
+  grid-column: 8/13;
   grid-row: 1;
   width: 100%;
   height: 21px;
@@ -863,9 +859,10 @@ export default {
 
 .selectBox img {
   grid-column: 1/2;
-  margin-left: 20px;
+  grid-row: 1;
   width: 20px;
   height: 20px;
+  align-self: center;
 }
 .toggleTextBox {
   width: 100%;
@@ -1090,6 +1087,19 @@ input:checked + .slider:before {
   color: rgb(44, 44, 44);
   justify-self: end;
 }
+.toggleTextInput {
+  grid-column: 9/13;
+  grid-row: 1;
+  width: 100%;
+  height: 94%;
+  border-radius: 20px;
+  padding: 0;
+  padding-left: 5px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgb(44, 44, 44);
+  justify-self: end;
+}
 .disabled {
   opacity: 0.6 !important;
   background-color: rgb(104, 104, 104) !important;
@@ -1291,5 +1301,9 @@ input:checked + .slider:before {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+.expert-modal-btn:active {
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+  transform: scale(0.99);
 }
 </style>

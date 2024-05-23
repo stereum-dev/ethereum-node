@@ -2244,6 +2244,26 @@ video {
   width: 100vw;
 }
 
+.w-\[940px\]{
+  width: 940px;
+}
+
+.w-\[950px\]{
+  width: 950px;
+}
+
+.w-\[960px\]{
+  width: 960px;
+}
+
+.w-\[965px\]{
+  width: 965px;
+}
+
+.w-\[970px\]{
+  width: 970px;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
