@@ -51,7 +51,7 @@
         class="w-full h-10 border border-gray-800 rounded-sm cursor-pointer grid grid-cols-5 p-1 hover:bg-gray-700 transition-all duration-100"
         draggable="true"
         @dragstart="dragStart($event, service)"
-        @dblclick="addServices(service)"
+        @click="addServices(service)"
         @mouseenter="footerStore.cursorLocation = `${service.name} ${serv}`"
       >
         <img
