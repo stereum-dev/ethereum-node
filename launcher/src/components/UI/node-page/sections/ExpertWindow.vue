@@ -6,7 +6,7 @@
       @click="$emit('hideModal')"
     ></div>
     <div
-      class="w-[925px] absolute inset-y-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      class="w-[970px] absolute inset-y-0 z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
       :class="leftDistance ? leftDistance : 'left-0'"
       aria-labelledby="modal-title"
       role="dialog"
@@ -20,28 +20,40 @@
         </p>
         <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
       </div>
-      <div class="w-full h-[30px] space-y-4 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
+      <div class="w-full h-[30px] space-y-2 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- expert mode row -->
         <div
           v-if="!ssvExpertModeActive && !ssvDkgExpertModeActive && !prometheusExpertModeActive"
-          class="z-10 dataTitleBox"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/crown.png" alt="icon" />
 
-          <span>Expert Mode</span>
-          <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >Expert Mode</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
         <div
           v-if="item.service === 'SSVNetworkService' && !isExpertModeActive && !prometheusExpertModeActive"
-          class="dataTitleBox"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openSSVExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
-          <span>SSV Configuration</span>
-          <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >SSV Configuration</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
         <!-- DKG START -->
         <div
@@ -51,24 +63,35 @@
             !isExpertModeActive &&
             !prometheusExpertModeActive
           "
-          class="dataTitleBox"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openSSVDKGExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
-          <span>SSV DKG Configuration</span>
-          <img v-if="ssvDkgExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >SSV DKG Configuration</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="ssvDkgExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
         <!-- DKG END -->
         <div
           v-if="item.service === 'PrometheusService' && !isExpertModeActive"
-          class="dataTitleBox"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openPrometheusExpertMode"
         >
-          <span></span>
-          <span>Prometheus Configuration</span>
-          <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
-          <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >Prometheus Configuration</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
+          </div>
         </div>
 
         <!--
@@ -84,34 +107,37 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
           :key="index"
-          class="selectBox"
+          class="selectBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
-          <span class="text-center">{{ option.title }}</span>
-          <div class="spaceParent">
-            <select id="value" v-model="option.changeValue" @change="somethingIsChanged(option)">
-              <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
-            </select>
-          </div>
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
+            option.title
+          }}</span>
+
+          <select id="value" v-model="option.changeValue" class="toggleTextInput" @change="somethingIsChanged(option)">
+            <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
+          </select>
         </div>
 
         <!-- Fee recipient -->
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
-          class="toggleTextBox"
+          class="toggleTextBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
-          <span>{{ option.title }}</span>
-          <Transition name="slide-up">
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
+            option.title
+          }}</span>
+          <!-- <Transition name="slide-up">
             <img
               v-if="option.buttonState"
               class="buttonOff"
@@ -126,16 +152,8 @@
               alt="icon"
               @click="buttonOn(option)"
             />
-          </Transition>
-          <input
-            v-model="option.changeValue"
-            class="toggleTextInput"
-            type="text"
-            :class="{
-              disabled: !option.buttonState,
-            }"
-            @input="somethingIsChanged(option)"
-          />
+          </Transition> -->
+          <input v-model="option.changeValue" class="toggleTextInput" type="text" @input="somethingIsChanged(option)" />
         </div>
 
         <!--
@@ -150,15 +168,15 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
           :key="index"
-          class="actionBox"
+          class="actionBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
-          <img :src="option.icon" alt="icon" />
+          <img class="titleIcon justify-self-center" :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
-          <div class="w-full flex justify-end items-center">
+          <div class="w-full flex justify-end items-center col-start-12 col-span-1 row-start-1 row-span-1">
             <label class="relative inline-flex items-center cursor-pointer">
               <input
                 v-model="option.changeValue"
@@ -179,15 +197,17 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
           :key="index"
-          class="actionBox"
+          class="actionBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
-          <img :src="option.icon" alt="icon" />
-          <span class="actionBoxTitle">{{ option.title }}</span>
-          <div class="w-full flex justify-end items-center">
+          <img class="titleIcon" :src="option.icon" alt="icon" />
+          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
+            option.title
+          }}</span>
+          <div class="col-start-12 col-span-1 row-start-1 row-span-1 w-full flex justify-end items-center">
             <label class="relative inline-flex items-center cursor-pointer">
               <input
                 v-model="option.changeValue"
@@ -244,15 +264,22 @@
       </div>
       <div class="w-full flex justify-between items-center absolute bottom-1 px-2">
         <!-- service version -->
-        <p class="w-1/4 text-sm text-gray-200">
+        <p class="w-1/2 text-sm text-gray-200">
           version: <span>{{ item.config.imageVersion }}</span>
         </p>
         <!-- close text -->
-        <span class="w-1/4 text-sm text-red-400">{{ $t("exitValidatorModal.clickClose") }}</span>
+
         <!-- confirm button box -->
         <button
+          class="expert-modal-btn w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-red-500 rounded-lg hover:bg-red-700 focus:outline-none"
+          @click="$emit('hideModal')"
+        >
+          close
+        </button>
+
+        <button
           v-if="!nothingsChanged"
-          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          class="expert-modal-btn w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none"
           @click="confirmExpertChanges(item, false)"
         >
           Confirm
@@ -263,7 +290,7 @@
         </button>
         <button
           v-if="!nothingsChanged"
-          class="w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          class="expert-modal-btn w-1/8 px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-lg hover:bg-[#4c7960] focus:outline-none"
           @click="confirmExpertChanges(item, true)"
         >
           Confirm & Restart
@@ -718,19 +745,18 @@ export default {
 
 .dataTitleBox {
   width: 100%;
-  height: 25px;
-  margin: 2px auto;
+  border: 1px solid #242529;
   padding: 3px 20px;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
+  box-sizing: border-box;
   text-align: center;
-  color: #393939;
+
   font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 100%;
   justify-content: space-between;
   align-items: center;
   transition-duration: 200ms;
@@ -784,21 +810,20 @@ export default {
   transform: scale(0.95);
 }
 .selectBox {
-  width: 100%;
-  height: 25px;
-  margin: 2px auto;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
-  color: #393939;
+  padding: 1px 4px 0 20px;
+  border: 1px solid #242529;
+
+  text-align: center;
+
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
+  transition-duration: 200ms;
 }
 .selectBox .spaceParent {
-  grid-column: 3/4;
+  grid-column: 8/13;
   grid-row: 1;
   width: 100%;
   height: 21px;
@@ -827,26 +852,24 @@ export default {
 
 .selectBox img {
   grid-column: 1/2;
-  margin-left: 20px;
+  grid-row: 1;
   width: 20px;
   height: 20px;
+  align-self: center;
 }
 .toggleTextBox {
   width: 100%;
-  height: 25px;
-  margin: 2px auto;
+
   padding: 1px 4px 0 20px;
   border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
+  border: 1px solid #242529;
   text-align: center;
-  color: #393939;
+
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
-  transition-duration: 200ms;
 }
 
 .dataTitleBox:hover {
@@ -863,21 +886,26 @@ export default {
   width: 20px;
   height: 20px;
 }
+.dataTitleBox .titleIcon {
+  grid-column: 1/2;
+  grid-row: 1;
+  width: 20px;
+  height: 20px;
+  align-self: center;
+}
 .actionBox {
   width: 100%;
-  height: 25px;
-  margin: 2px auto;
+
   padding: 1px 3px 1px 20px;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
+  border: 1px solid #242529;
+
   text-align: center;
-  color: #393939;
+
   font-size: 0.9rem;
   font-weight: 600;
   cursor: default;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
   transition-duration: 200ms;
   position: relative;
@@ -887,6 +915,7 @@ export default {
   grid-row: 1;
   width: 20px;
   height: 20px;
+  align-self: center;
 }
 .actionBox .actionBoxTitle {
   grid-column: 2/5;
@@ -1034,18 +1063,22 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-.toggleTextBox .toggleTextInput {
+
+.toggleTextInput {
   grid-column: 9/13;
   grid-row: 1;
   width: 100%;
-  height: 94%;
-  border-radius: 20px;
+  height: 80%;
+  margin-top: 1%;
   padding: 0;
   padding-left: 5px;
   font-size: 0.7rem;
   font-weight: 600;
   color: rgb(44, 44, 44);
   justify-self: end;
+  text-align: center;
+  text-align-last: center;
+  border-radius: 10px;
 }
 .disabled {
   opacity: 0.6 !important;
@@ -1053,7 +1086,7 @@ input:checked + .slider:before {
   pointer-events: none !important;
 }
 .toggleTextBox span {
-  grid-column: 5/9;
+  grid-column: 2/6;
   grid-row: 1;
   width: 96%;
   height: 100%;
@@ -1094,11 +1127,15 @@ input:checked + .slider:before {
 }
 .expertTable {
   width: 100%;
-  height: 100%;
-  max-height: 320px;
+  height: 63%;
+  max-height: 300px;
   justify-content: center;
   align-items: center;
   display: none;
+  position: relative;
+  z-index: 8;
+
+  margin-top: 2%;
 }
 .showExpertTable {
   display: flex;
@@ -1106,7 +1143,7 @@ input:checked + .slider:before {
 
 .expertTable .expertMode {
   width: 100%;
-  height: 80%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1248,5 +1285,9 @@ input:checked + .slider:before {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+.expert-modal-btn:active {
+  box-shadow: 1px 1px 10px 1px #171717 inset;
+  transform: scale(0.99);
 }
 </style>
