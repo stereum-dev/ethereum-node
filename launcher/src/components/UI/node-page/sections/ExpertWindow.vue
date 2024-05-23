@@ -20,11 +20,11 @@
         </p>
         <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
       </div>
-      <div class="w-full h-[30px] space-y-4 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
+      <div class="w-full h-[30px] space-y-2 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- expert mode row -->
         <div
           v-if="!ssvExpertModeActive && !ssvDkgExpertModeActive && !prometheusExpertModeActive"
-          class="dataTitleBox z-10"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/crown.png" alt="icon" />
@@ -41,7 +41,7 @@
         </div>
         <div
           v-if="item.service === 'SSVNetworkService' && !isExpertModeActive && !prometheusExpertModeActive"
-          class="dataTitleBox"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openSSVExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
@@ -63,7 +63,7 @@
             !isExpertModeActive &&
             !prometheusExpertModeActive
           "
-          class="dataTitleBox"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openSSVDKGExpertMode"
         >
           <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
@@ -80,7 +80,7 @@
         <!-- DKG END -->
         <div
           v-if="item.service === 'PrometheusService' && !isExpertModeActive"
-          class="dataTitleBox"
+          class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openPrometheusExpertMode"
         >
           <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
@@ -107,7 +107,7 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
           :key="index"
-          class="selectBox"
+          class="selectBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
@@ -127,7 +127,7 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
-          class="toggleTextBox col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+          class="toggleTextBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
@@ -168,13 +168,13 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
           :key="index"
-          class="actionBox"
+          class="actionBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
-          <img :src="option.icon" alt="icon" />
+          <img class="titleIcon justify-self-center" :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
           <div class="w-full flex justify-end items-center col-start-12 col-span-1 row-start-1 row-span-1">
             <label class="relative inline-flex items-center cursor-pointer">
@@ -197,13 +197,13 @@
         <div
           v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
           :key="index"
-          class="actionBox"
+          class="actionBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           :class="{
             invisible:
               isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
           }"
         >
-          <img :src="option.icon" alt="icon" />
+          <img class="titleIcon" :src="option.icon" alt="icon" />
           <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
             option.title
           }}</span>
@@ -745,14 +745,11 @@ export default {
 
 .dataTitleBox {
   width: 100%;
-  height: 25px;
-  margin: 2px auto;
+  border: 1px solid #242529;
   padding: 3px 20px;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
+  box-sizing: border-box;
   text-align: center;
-  color: #393939;
+
   font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -813,15 +810,11 @@ export default {
   transform: scale(0.95);
 }
 .selectBox {
-  width: 100%;
-  height: 25px;
-  margin: 2px auto;
   padding: 1px 4px 0 20px;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
+  border: 1px solid #242529;
+
   text-align: center;
-  color: #393939;
+
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
@@ -866,20 +859,17 @@ export default {
 }
 .toggleTextBox {
   width: 100%;
-  height: 25px;
-  margin: 2px auto;
+
   padding: 1px 4px 0 20px;
   border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
+  border: 1px solid #242529;
   text-align: center;
-  color: #393939;
+
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
-  transition-duration: 200ms;
 }
 
 .dataTitleBox:hover {
@@ -905,14 +895,12 @@ export default {
 }
 .actionBox {
   width: 100%;
-  height: 25px;
-  margin: 2px auto;
+
   padding: 1px 3px 1px 20px;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
+  border: 1px solid #242529;
+
   text-align: center;
-  color: #393939;
+
   font-size: 0.9rem;
   font-weight: 600;
   cursor: default;
@@ -927,6 +915,7 @@ export default {
   grid-row: 1;
   width: 20px;
   height: 20px;
+  align-self: center;
 }
 .actionBox .actionBoxTitle {
   grid-column: 2/5;
@@ -1074,27 +1063,13 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-.toggleTextBox .toggleTextInput {
-  grid-column: 9/13;
-  grid-row: 1;
-  width: 100%;
-  height: 94%;
-  border-radius: 20px;
-  padding: 0;
-  padding-left: 5px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgb(44, 44, 44);
-  justify-self: end;
-  text-align: center;
-  text-align-last: center;
-}
+
 .toggleTextInput {
   grid-column: 9/13;
   grid-row: 1;
   width: 100%;
-  height: 94%;
-  border-radius: 20px;
+  height: 80%;
+  margin-top: 1%;
   padding: 0;
   padding-left: 5px;
   font-size: 0.7rem;
@@ -1103,6 +1078,7 @@ input:checked + .slider:before {
   justify-self: end;
   text-align: center;
   text-align-last: center;
+  border-radius: 10px;
 }
 .disabled {
   opacity: 0.6 !important;
@@ -1151,11 +1127,15 @@ input:checked + .slider:before {
 }
 .expertTable {
   width: 100%;
-  height: 100%;
-  max-height: 320px;
+  height: 63%;
+  max-height: 300px;
   justify-content: center;
   align-items: center;
   display: none;
+  position: relative;
+  z-index: 8;
+
+  margin-top: 2%;
 }
 .showExpertTable {
   display: flex;
@@ -1163,7 +1143,7 @@ input:checked + .slider:before {
 
 .expertTable .expertMode {
   width: 100%;
-  height: 80%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
