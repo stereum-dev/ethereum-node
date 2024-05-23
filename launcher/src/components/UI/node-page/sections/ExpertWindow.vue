@@ -1086,6 +1086,8 @@ input:checked + .slider:before {
   font-weight: 600;
   color: rgb(44, 44, 44);
   justify-self: end;
+  text-align: center;
+  text-align-last: center;
 }
 .toggleTextInput {
   grid-column: 9/13;
@@ -1099,6 +1101,8 @@ input:checked + .slider:before {
   font-weight: 600;
   color: rgb(44, 44, 44);
   justify-self: end;
+  text-align: center;
+  text-align-last: center;
 }
 .disabled {
   opacity: 0.6 !important;

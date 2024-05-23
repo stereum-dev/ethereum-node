@@ -2226,8 +2226,8 @@ video {
   width: 8rem;
 }
 
-.w-\[925px\]{
-  width: 925px;
+.w-\[970px\]{
+  width: 970px;
 }
 
 .w-fit{
@@ -2242,26 +2242,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-\[940px\]{
-  width: 940px;
-}
-
-.w-\[950px\]{
-  width: 950px;
-}
-
-.w-\[960px\]{
-  width: 960px;
-}
-
-.w-\[965px\]{
-  width: 965px;
-}
-
-.w-\[970px\]{
-  width: 970px;
 }
 
 .min-w-\[100px\]{
@@ -5651,10 +5631,6 @@ html body {
 
 .focus\:ring-opacity-40:focus{
   --tw-ring-opacity: 0.4;
-}
-
-.focus\:ring-opacity-80:focus{
-  --tw-ring-opacity: 0.8;
 }
 
 .active\:scale-100:active{
