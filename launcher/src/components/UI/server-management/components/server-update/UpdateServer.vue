@@ -3,7 +3,7 @@
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0 gap-y-2"
   >
     <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center py-1">
-      <span class="text-md font-semibold text-gray-300">OPERATING SYSTEM UPDATES</span>
+      <span class="text-md font-semibold text-gray-300">{{ $t("updateServer.opSysUpdate") }}</span>
     </div>
     <div
       class="w-full h-full col-start-1 col-span-full row-start-2 row-end-4 grid grid-cols-12 grid-rows-2 items-center gap-x-1"
@@ -12,7 +12,7 @@
         <img class="w-full" src="/img/icon/control-page-icons/ubuntuIco.svg" />
       </div>
       <div class="w-full h-full col-start-3 col-end-10 row-start-1 row-span-1 flex justify-start items-center ml-2">
-        <span class="text-lg font-semibold text-gray-400 uppercase">Ubuntu</span>
+        <span class="text-lg font-semibold text-gray-400 uppercase">{{ $t("updateServer.ubuntu") }}</span>
       </div>
       <!-- <div class="w-full h-full col-start-10 col-span-full row-start-1 row-span-1 flex justify-center items-center">
         <div
@@ -25,9 +25,9 @@
       </div> -->
 
       <div class="w-full h-full col-start-3 col-span-full row-start-2 row-span-1 ml-2 grid grid-cols-3 items-center">
-        <span class="col-start-1 col-end-3 text-sm font-semibold text-gray-400 uppercase"
-          >OPERATING SYSTEM VERSION</span
-        >
+        <span class="col-start-1 col-end-3 text-sm font-semibold text-gray-400 uppercase">{{
+          $t("updateServer.opSysVersion")
+        }}</span>
         <span class="col-start-3 col-span-full justify-self-center text-sm font-semibold text-amber-400 uppercase">{{
           osVersionCurrent
         }}</span>
@@ -48,7 +48,9 @@
           <span class="text-sm font-semibold text-gray-300 text-center">{{ numberOfUpdatablePackages }}</span>
         </div>
 
-        <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">AVAILABLE SERVER OS UPDATES</span>
+        <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">{{
+          $t("updateServer.availServerOsUpdate")
+        }}</span>
       </div>
 
       <div

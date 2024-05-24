@@ -12,7 +12,13 @@
               <img src="/img/icon/control-page-icons/arrow-up-1.png" alt="" />
             </div>
             <div ref="pluginsTable" class="plugins-table">
-              <div v-for="(item, index) in serviceStore.installedServices" :key="index" class="plugins-row">
+              <div
+                v-for="(item, index) in serviceStore.installedServices"
+                :key="index"
+                class="plugins-row"
+                @mouseenter="footerStore.cursorLocation = `${item.name + ' / ' + item.category}`"
+                @mouseleave="footerStore.cursorLocation = ''"
+              >
                 <div
                   class="plugins-pending-state"
                   :class="{
@@ -41,29 +47,60 @@
                           class="pending"
                           src="/animation/loading/turning-circle.gif"
                           alt="icon"
+                          @mouseenter="
+                            footerStore.cursorLocation = `${t('controlScreenTooltips.isPending', {
+                              service: item.name,
+                            })}`
+                          "
+                          @mouseleave="footerStore.cursorLocation = ''"
                         />
                         <img
                           v-else-if="item.state == 'running'"
                           src="/img/icon/node-page-icons/service-command-turn-off.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
+                          @mouseenter="
+                            footerStore.cursorLocation = `${t('controlScreenTooltips.turnoff', {
+                              service: item.name,
+                            })}`
+                          "
+                          @mouseleave="footerStore.cursorLocation = ''"
                         />
                         <img
                           v-else-if="item.state == 'restarting'"
                           src="/img/icon//node-page-icons/service-command-restart.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
+                          @mouseenter="
+                            footerStore.cursorLocation = `${t('controlScreenTooltips.restart', {
+                              service: item.name,
+                            })}`
+                          "
+                          @mouseleave="footerStore.cursorLocation = ''"
                         />
                         <img
                           v-else
                           src="/img/icon/node-page-icons/service-command-turn-on.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
+                          @mouseenter="
+                            footerStore.cursorLocation = `${t('controlScreenTooltips.turnon', { service: item.name })}`
+                          "
+                          @mouseleave="footerStore.cursorLocation = ''"
                         />
                       </div>
                     </div>
                     <div class="icon-bg">
-                      <div class="seting-icon" @click.stop="openLogPage(item)">
+                      <div
+                        class="seting-icon"
+                        @click.stop="openLogPage(item)"
+                        @mouseenter="
+                          footerStore.cursorLocation = `${t('controlScreenTooltips.log', {
+                            service: item.name,
+                          })}`
+                        "
+                        @mouseleave="footerStore.cursorLocation = ''"
+                      >
                         <img src="/img/icon/node-page-icons/service-command-open-logs.png" alt="icon" />
                       </div>
                     </div>
@@ -115,18 +152,20 @@ import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
+import i18n from "@/includes/i18n";
 
-const pluginsTable = ref(null);
-
-const expertModeClient = ref(null);
-const isExpertWindowOpen = ref(false);
-const isLogsPageActive = ref(false);
+const t = i18n.global.t;
 
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 const controlStore = useControlStore();
 const footerStore = useFooter();
 const headerStore = useNodeHeader();
+
+const pluginsTable = ref(null);
+const expertModeClient = ref(null);
+const isExpertWindowOpen = ref(false);
+const isLogsPageActive = ref(false);
 let polling = null;
 
 onMounted(() => {
