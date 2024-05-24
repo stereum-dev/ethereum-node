@@ -168,7 +168,7 @@ export default {
     ...mapWritableState(useControlStore, {
       consensusName: "consensusName",
       pageNumber: "pageNumber",
-      synchronizationError: "synchronizationError",
+      synchronizationErrorControl: "synchronizationErrorControl",
       currentConsensusIcon: "currentConsensusIcon",
       currentExecutionIcon: "currentExecutionIcon",
     }),
@@ -243,18 +243,18 @@ export default {
     },
     syncSituation() {
       if (this.syncIcoError) {
-        this.synchronizationError = true;
+        this.synchronizationErrorControl = true;
         return this.errorIco;
       }
       if (this.syncIcoUnknown) {
-        this.synchronizationError = false;
+        this.synchronizationErrorControl = false;
         return this.unknownIco;
       }
       if (this.syncIcoSituation) {
-        this.synchronizationError = false;
+        this.synchronizationErrorControl = false;
         return this.activeIco;
       }
-      this.synchronizationError = false;
+      this.synchronizationErrorControl = false;
       return this.synchedIco;
     },
     refresh(instant = false, loadPage = "") {

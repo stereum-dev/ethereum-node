@@ -87,7 +87,7 @@
           </div>
         </div>
         <div
-          v-if="synchronizationError"
+          v-if="synchronizationErrorControl"
           class="alert-message_red"
           @mouseenter="cursorLocation = ` ${sync}`"
           @mouseleave="cursorLocation = ''"
@@ -219,7 +219,7 @@ export default {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
-      synchronizationError: "synchronizationError",
+      synchronizationErrorControl: "synchronizationErrorControl",
     }),
     ...mapWritableState(useNodeHeader, {
       displayUpdatePanel: "displayUpdatePanel",
