@@ -53,6 +53,16 @@ jobs:
         shell: cmd
         if: matrix.os == 'windows-latest'
 
+      - name: Set up build args
+        run: |
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            echo "BUILD_ARGS=" >> $GITHUB_ENV
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            echo "BUILD_ARGS=" >> $GITHUB_ENV
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
+          fi
+
       - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -63,7 +73,7 @@ jobs:
           build_script_name: dist
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
-          args: "--universal"
+          args: ${{ env.BUILD_ARGS }}
         env:
           APPLE_ID: ${{ secrets.apple_id }}
           APPLE_ID_PASSWORD: ${{ secrets.apple_id_password }}
