@@ -53,15 +53,9 @@ jobs:
         shell: cmd
         if: matrix.os == 'windows-latest'
 
-      - name: Set up build args
-        run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            echo "BUILD_ARGS=" >> $GITHUB_ENV
-          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-            echo "BUILD_ARGS=" >> $GITHUB_ENV
-          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
-          fi
+      - name: macOS build args
+        if: matrix.os == 'macos-latest'
+        run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
 
       - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1
