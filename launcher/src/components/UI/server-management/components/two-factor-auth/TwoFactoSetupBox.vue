@@ -15,7 +15,7 @@
       </div>
     </div>
     <div
-      class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-6 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center relative"
+      class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-6 mt-3 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center relative"
     >
       <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2">{{
         t("twoFactorAuth.enterCode")
