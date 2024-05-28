@@ -60,7 +60,7 @@
     </div>
     <TwoFactoSetupBox
       v-if="twoFactorSetupIsActive && secretKey"
-      :barcode="QRcode"
+      :barcode="authStore.QRcode"
       :secret-key="secretKey"
       :time-based="isTimeBaseActive"
       :class="['row-start-2', !secretKey ? 'disabled' : '']"
@@ -141,7 +141,7 @@ const isRateLimiting = ref(true);
 
 const verificationOutput = ref("");
 const secretKey = ref("");
-const QRcode = ref("");
+// const QRcode = ref("");
 const configured2fa = ref();
 
 const finishSetupActive = ref(false);
@@ -233,12 +233,12 @@ const loadOutput = (data) => {
   if (data[0] != "skip") {
     secretKey.value = data[1].split(": ").pop();
     let QRadress = `https://quickchart.io/qr?chs=200x200&chld=M|0&cht=qr&text=otpauth://totp/${controlStore.ipAddress}@${controlStore.ServerName}%3Fsecret%3D[SECRETKEY]%26issuer%3D${controlStore.ServerName}`;
-    QRcode.value = QRadress.replace("[SECRETKEY]", secretKey.value);
+    authStore.QRcode = QRadress.replace("[SECRETKEY]", secretKey.value);
   }
 
   if (data.length > 5) {
     if (data[0] != "skip") {
-      QRcode.value = QRcode.value.replace("totp", "hotp");
+      authStore.QRcode = authStore.QRcode.replace("totp", "hotp");
       authStore.varificationCode = data[2].split("is ").pop();
     }
     authStore.validVerificationCode = true;

@@ -51,7 +51,8 @@
     </div>
 
     <div
-      class="barcode-box w-full h-full flex justify-center items-center col-start-10 col-span-full row-start-3 row-span-full"
+      class="barcode-box w-full h-full flex justify-center items-center col-start-10 col-span-full row-start-3 row-span-full cursor-pointer"
+      @click="barcodeModal"
     >
       <img
         :src="props.barcode ? props.barcode : '/img/icon/base-header-icons/notification-modal-dummy-qr-code.png'"
@@ -78,6 +79,10 @@ const props = defineProps({
   barcode: { type: String, default: "" },
   secretKey: { type: String, default: "" },
 });
+
+const barcodeModal = () => {
+  authStore.isBarcodeModalActive = true;
+};
 
 const sendCode = () => {
   emit("sendCode");
