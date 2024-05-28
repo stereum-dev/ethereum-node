@@ -165,7 +165,6 @@ export class AuthenticationService {
 
   async create2FAQRCode(type, name, ip, secret) {
     let otpauth = `otpauth://${type}/${ip}@${name}?secret=${secret}&issuer=${name}`;
-    console.log(otpauth);
     const url = await QRCode.toDataURL(otpauth)
     return url;
   }
