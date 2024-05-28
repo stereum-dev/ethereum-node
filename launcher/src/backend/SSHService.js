@@ -7,6 +7,7 @@ import { StringUtils } from "./StringUtils";
 import * as fs from "fs";
 import * as path from "path";
 const log = require("electron-log");
+const ping = require("ping");
 let authConnectionInfo = null;
 let authCurrentWindow = null;
 
@@ -64,6 +65,33 @@ export class SSHService {
     });
   }
 
+  async checkConnectionQuality() {
+    const host = this.connectionInfo.host;
+
+    ping.promise
+      .probe(host, {
+        timeout: 2,
+      })
+      .then((res) => {
+        console.log(`Ping to ${host}: ${res.time} ms`);
+        if (res.alive && res.time < 100) {
+          console.log("Connection quality is good.");
+        } else {
+          console.log("Connection quality is poor. Reconnecting...");
+          this.reconnectToServer();
+        }
+      })
+      .catch((err) => {
+        console.error("Ping failed:", err);
+        this.reconnectToServer();
+      });
+  }
+
+  async reconnectToServer() {
+    this.disconnect();
+    setTimeout(this.connect(), 2000);
+  }
+
   async checkConnectionPool() {
     let lastIndex = this.connectionPool.length - 1;
     const threshholdIndex = lastIndex - 2;
@@ -97,10 +125,9 @@ export class SSHService {
   }
 
   async connect(connectionInfo, currentWindow = null, verificationCode = null) {
-    if(authConnectionInfo != null){
+    if (authConnectionInfo != null) {
       this.connectionInfo = authConnectionInfo;
-    }
-    else{
+    } else {
       this.connectionInfo = connectionInfo;
     }
     this.addingConnection = true;
@@ -123,14 +150,13 @@ export class SSHService {
           reject(msg);
         }
       });
-      conn.on("keyboard-interactive", function redo(name, instructions, lang, prompts, finish){
-        if(verificationCode == null && authConnectionInfo == null){
+      conn.on("keyboard-interactive", function redo(name, instructions, lang, prompts, finish) {
+        if (verificationCode == null && authConnectionInfo == null) {
           authConnectionInfo = connectionInfo;
           authCurrentWindow = currentWindow;
           currentWindow.send("require2FA", true);
           conn.end();
-        }
-        else{
+        } else {
           finish([authConnectionInfo.authCode.toString()]);
         }
       });
@@ -190,9 +216,14 @@ export class SSHService {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         counter++;
       }
-      log.info("SSH Channels left open: ", this.connectionPool.map(c => c._chanMgr?._count).reduce((accumulator, currentValue) => {
-        return accumulator + currentValue
-      }, 0))
+      log.info(
+        "SSH Channels left open: ",
+        this.connectionPool
+          .map((c) => c._chanMgr?._count)
+          .reduce((accumulator, currentValue) => {
+            return accumulator + currentValue;
+          }, 0)
+      );
       this.connectionPool = [];
       return true;
     } catch (error) {
@@ -201,7 +232,8 @@ export class SSHService {
   }
 
   async exec(command, useSudo = true, useRoot = true) {
-    const ensureSudoCommand = `sudo -u ${useRoot ? 'root' : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
+    const ensureSudoCommand =
+      `sudo -u ${useRoot ? "root" : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
     return this.execCommand(useSudo ? ensureSudoCommand : command);
   }
 
@@ -388,7 +420,8 @@ export class SSHService {
       if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
       let newKeys = keys.join("\n");
       let result = await this.exec(
-        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`, false
+        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`,
+        false
       );
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));

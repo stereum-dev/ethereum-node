@@ -1356,10 +1356,7 @@ export class ServiceManager {
       newServices.push(service);
     });
 
-    let allPorts = services
-      .map((s) => s.ports)
-      .flat(1)
-      .map((p) => p.destinationPort + "/" + p.servicePortProtocol);
+    let allPorts = this.getAllPorts(services);
     let changed;
     newServices.forEach((service) => {
       service.ports.forEach((newPort) => {
@@ -1922,22 +1919,30 @@ export class ServiceManager {
     }
   }
 
+  async getCurrentPath() {
+    const stereumConfig = await this.nodeConnection.sshService.exec("cat /etc/stereum/stereum.yaml");
+    if (stereumConfig.rc == 0) {
+      return YAML.parse(stereumConfig.stdout).stereum_settings.settings.controls_install_path;
+    }
+    return "/opt/stereum";
+  }
+
+  async getAllPorts(installedServices) {
+    return installedServices
+      .map((s) => s.ports)
+      .flat(1)
+      .map((p) => p.destinationPort + "/" + p.servicePortProtocol);
+  }
+
   async importSingleSetup(configFiles) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing a setup`);
     try {
-      let currentPath = "";
+      const currentPath = await this.getCurrentPath();
       let multiSetup = {};
-      const stereumConfig = await this.nodeConnection.sshService.exec("cat /etc/stereum/stereum.yaml");
-      if (stereumConfig.rc == 0) {
-        currentPath = YAML.parse(stereumConfig.stdout).stereum_settings.settings.controls_install_path;
-      }
 
       let installedServices = await this.readServiceConfigurations();
-      let allPorts = installedServices
-        .map((s) => s.ports)
-        .flat(1)
-        .map((p) => p.destinationPort + "/" + p.servicePortProtocol);
+      let allPorts = await this.getAllPorts(installedServices);
 
       //write config files
       for (let file of configFiles) {
