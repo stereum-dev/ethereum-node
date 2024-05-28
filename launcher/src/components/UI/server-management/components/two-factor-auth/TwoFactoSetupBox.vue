@@ -31,6 +31,7 @@
       <input
         v-model="authStore.varificationCode"
         type="text"
+        placeholder="Enter Code"
         class="key-code w-[60%] bg-black h-full flex justify-center items-center rounded-full text-gray-50 pl-2 text-xs rounded-l-none"
       />
       <div
