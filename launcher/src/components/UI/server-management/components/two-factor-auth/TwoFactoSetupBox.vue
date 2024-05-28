@@ -13,19 +13,21 @@
     <div
       class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center"
     >
-      <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2">Your secret key is:</span>
+      <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2">{{
+        t("twoFactorAuth.urSecret")
+      }}</span>
       <div
         class="key-code w-[60%] h-full bg-black flex justify-center items-center rounded-full text-gray-300 pl-2 text-xs rounded-l-none"
       >
-        {{ !props.secretKey ? "Wait..." : props.secretKey }}
+        {{ !props.secretKey ? wait : props.secretKey }}
       </div>
     </div>
     <div
       class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-2 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center relative"
     >
-      <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2"
-        >Enter verification code :</span
-      >
+      <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2">{{
+        t("twoFactorAuth.enterCode")
+      }}</span>
       <input
         v-model="authStore.varificationCode"
         type="text"
@@ -36,20 +38,20 @@
         class="send-btn w-16 h-[95%] rounded-xl text-xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-[1px]"
         @click="sendCode"
       >
-        <span>send</span>
+        <span>{{ t("twoFactorAuth.send") }}</span>
       </div>
     </div>
     <div class="col-start-1 col-end-10 row-start-3 row-span-2 w-full h-full grid grid-cols-2 grid-rows-2 py-2">
       <span class="col-start-1 col-span-full row-start-1 row-span-1 text-left text-xs text-gray-200 w-full h-full"
         ><ol>
-          <li>1. Scan the code with your authenticator app</li>
-          <li>2. Enter the verification code an click send</li>
-          <li>3. Do a backup by pressing the save button</li>
-          <li>4. Finally click on confirm to activate 2FA</li>
+          <li>1. {{ t("twoFactorAuth.scanCode") }}</li>
+          <li>2. {{ t("twoFactorAuth.enterCodeApp") }}</li>
+          <li>3. {{ t("twoFactorAuth.doBackup") }}</li>
+          <li>4. {{ t("twoFactorAuth.confirm2fa") }}</li>
         </ol>
         <br />
-        You will be logged out as soon as you click the final confirm button. The next login requires 2FA.
-      </span>
+        {{ t("twoFactorAuth.2faAlarm") }}</span
+      >
       <!-- <span class="col-start-1 col-span-full row-start-2 row-span-1 text-left text-xs text-gray-200 w-full h-full"
         >CLICK TO ENLARGEN</span
       > -->
@@ -69,6 +71,11 @@
 <script setup>
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import { computed } from "vue";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const wait = t("twoFactorAuth.wait");
 
 const authStore = useTwoFactorAuth();
 
