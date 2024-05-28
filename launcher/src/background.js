@@ -671,6 +671,10 @@ ipcMain.handle("fetchGitHubTesters", async (event, args) => {
   return await serviceManager.fetchGitHubTesters(args);
 });
 
+ipcMain.handle("checkConnectionQuality", async (event, args) => {
+  return await nodeConnection.sshService.checkConnectionQuality(args);
+});
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {

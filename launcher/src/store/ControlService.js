@@ -646,8 +646,13 @@ class ControlService extends EventEmitter {
   async exportSingleSetup(args) {
     return this.promiseIpc.send("exportSingleSetup", args);
   }
+
   async importSingleSetup(args) {
     return this.promiseIpc.send("importSingleSetup", args);
+  }
+
+  async checkConnectionQuality() {
+    return this.promiseIpc.send("checkConnectionQuality");
   }
 }
 if (!instance) {
