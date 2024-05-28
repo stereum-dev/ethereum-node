@@ -1279,6 +1279,10 @@ video {
   grid-row: 1 / -1;
 }
 
+.row-span-10{
+  grid-row: span 10 / span 10;
+}
+
 .row-start-1{
   grid-row-start: 1;
 }

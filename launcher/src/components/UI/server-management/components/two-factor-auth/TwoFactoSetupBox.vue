@@ -1,15 +1,7 @@
 <template>
   <div
     class="w-full h-5/6 rounded-md col-start-1 bg-[#393939] col-span-full row-start-1 row-span-8 grid-cols-12 grid-rows-6 grid p-2 items-center justify-center relative"
-    :class="isLoading ? 'z-0' : ''"
   >
-    <div
-      v-if="isLoading"
-      class="w-full h-full absolute inset-0 z-20 rounded-sm flex justify-center items-center"
-      :class="props.secretKey === '' ? 'bg-black opacity-90' : ''"
-    >
-      <img class="z-30" src="/animation/servers/loading-2fa.gif" alt="Loading" />
-    </div>
     <div
       class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center"
     >
@@ -71,7 +63,6 @@
 </template>
 <script setup>
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
-import { computed } from "vue";
 import i18n from "@/includes/i18n";
 
 const t = i18n.global.t;
@@ -86,14 +77,6 @@ const props = defineProps({
   timeBased: { type: Boolean, default: true },
   barcode: { type: String, default: "" },
   secretKey: { type: String, default: "" },
-});
-
-const isLoading = computed(() => {
-  let output = false;
-  if (props.secretKey === "") {
-    output = true;
-  }
-  return output;
 });
 
 const sendCode = () => {

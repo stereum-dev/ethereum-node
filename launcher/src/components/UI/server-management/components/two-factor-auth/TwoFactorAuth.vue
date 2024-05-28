@@ -51,8 +51,15 @@
     />
     <!-- barcode and secret-key are passed as props to TwoFactoSetupBox and they have to bind ':' before theme to bind, at the moment is 
     hardcoded to test -->
+    <div
+      v-if="twoFactorSetupIsActive && !secretKey"
+      class="animation-loading row-start-2 row-span-10 col-start-1 col-span-full flex flex-col justify-center items-center p-2"
+    >
+      <img src="/animation/servers/loading-2fa.gif" alt="loading" />
+      <span class="mt-8 text-gray-300 uppercase font-semibold font-sans">{{ t("twoFactorAuth.plzWait") }}</span>
+    </div>
     <TwoFactoSetupBox
-      v-if="twoFactorSetupIsActive"
+      v-if="twoFactorSetupIsActive && secretKey"
       :barcode="QRcode"
       :secret-key="secretKey"
       :time-based="isTimeBaseActive"
@@ -60,12 +67,12 @@
       @send-code="sendTheCode"
     />
     <TwoFactorBackup
-      v-if="twoFactorSetupIsActive"
+      v-if="twoFactorSetupIsActive && secretKey"
       :class="['row-start-9', !authStore.validVerificationCode ? 'disabled' : '']"
       @save-backup="onSaveScratch"
     />
     <div
-      v-if="twoFactorSetupIsActive"
+      v-if="twoFactorSetupIsActive && secretKey"
       class="row-start-10 row-span-1 col-start-1 col-span-full flex justify-center items-center p-2 mt-2"
     >
       <span class="text-xs text-gray-300 text-left font-sans">{{ t("twoFactorAuth.confirmDesc") }}</span>
