@@ -6,7 +6,9 @@ import ServerHeader from './components/ServerHeader.vue';
     <SwitchAnimation
       v-if="
         (serverStore.isServerAnimationActive || serverStore.connectingProcess) &&
-        !serverStore.errorMsgExists && !isTwoFactorAuthActive"
+        !serverStore.errorMsgExists &&
+        !isTwoFactorAuthActive
+      "
       @cancel-login="cancelLoginHandler"
     />
     <ServerHeader @tab-picker="tabPicker" />
@@ -123,26 +125,25 @@ const closeAndCancel = async () => {
 
 // authentification handling
 const submitAuthHandler = async (val) => {
-  await ControlService.submitVerification(val);
-  loginHandler();
+  loginHandler(val);
 };
 
 //Server Management Login Handler
 
-const loginHandler = async () => {
+const loginHandler = async (authCode) => {
   loginAbortController = new AbortController();
   serverStore.isServerAnimationActive = true;
   serverStore.connectingProcess = true;
   try {
     if (router.currentRoute.value.path === "/login") {
-      await login(loginAbortController.signal);
+      await login(loginAbortController.signal, authCode);
     } else {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
       await ControlService.logout();
       // serverStore.selectedServerToConnect
       await ControlService.stopShell();
-      await login(loginAbortController.signal);
+      await login(loginAbortController.signal, authCode);
 
       setTimeout(() => {
         serverStore.isServerAnimationActive = false;

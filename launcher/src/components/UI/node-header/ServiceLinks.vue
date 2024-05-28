@@ -49,7 +49,6 @@ export default {
       showPrometheusWindow: false,
       showMevboostWindow: false,
       showObolCharonWindow: false,
-      showAuthenticatorWindow: false,
     };
   },
 
@@ -88,8 +87,6 @@ export default {
         this.showPrometheusWindow = true;
       } else if (serviceName == "FlashbotsMevBoostService") {
         this.showMevboostWindow = true;
-      } else if (serviceName == "AuthenticatorService") {
-        this.showAuthenticatorWindow = true;
       } else if (serviceName == "CharonService") {
         return;
         // this.showObolCharonWindow = true;
@@ -105,7 +102,6 @@ export default {
       this.showPrometheusWindow = false;
       this.showMevboostWindow = false;
       this.showObolCharonWindow = false;
-      this.showAuthenticatorWindow = false;
     },
   },
 };
