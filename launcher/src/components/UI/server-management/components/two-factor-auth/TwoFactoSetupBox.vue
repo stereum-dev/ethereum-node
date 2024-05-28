@@ -1,15 +1,7 @@
 <template>
   <div
     class="w-full h-5/6 rounded-md col-start-1 bg-[#393939] col-span-full row-start-1 row-span-8 grid-cols-12 grid-rows-6 grid p-2 items-center justify-center relative"
-    :class="isLoading ? 'z-0' : ''"
   >
-    <div
-      v-if="isLoading"
-      class="w-full h-full absolute inset-0 z-20 rounded-sm flex justify-center items-center"
-      :class="props.secretKey === '' ? 'bg-black opacity-90' : ''"
-    >
-      <img class="z-30" src="/animation/servers/loading-2fa.gif" alt="Loading" />
-    </div>
     <div
       class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center"
     >
@@ -23,7 +15,7 @@
       </div>
     </div>
     <div
-      class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-2 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center relative"
+      class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-6 mt-3 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center relative"
     >
       <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2">{{
         t("twoFactorAuth.enterCode")
@@ -31,6 +23,7 @@
       <input
         v-model="authStore.varificationCode"
         type="text"
+        placeholder="Enter Code Here"
         class="key-code w-[60%] bg-black h-full flex justify-center items-center rounded-full text-gray-50 pl-2 text-xs rounded-l-none"
       />
       <div
@@ -41,7 +34,7 @@
         <span>{{ t("twoFactorAuth.send") }}</span>
       </div>
     </div>
-    <div class="col-start-1 col-end-10 row-start-3 row-span-2 w-full h-full grid grid-cols-2 grid-rows-2 py-2">
+    <div class="col-start-1 col-end-10 row-start-2 row-span-2 w-full h-full grid grid-cols-2 grid-rows-2 py-2">
       <span class="col-start-1 col-span-full row-start-1 row-span-1 text-left text-xs text-gray-200 w-full h-full"
         ><ol>
           <li>1. {{ t("twoFactorAuth.scanCode") }}</li>
@@ -58,7 +51,8 @@
     </div>
 
     <div
-      class="barcode-box w-full h-full flex justify-center items-center col-start-10 col-span-full row-start-3 row-span-full"
+      class="barcode-box w-full h-full flex justify-center items-center col-start-10 col-span-full row-start-2 row-span-full cursor-pointer"
+      @click="barcodeModal"
     >
       <img
         :src="props.barcode ? props.barcode : '/img/icon/base-header-icons/notification-modal-dummy-qr-code.png'"
@@ -70,7 +64,6 @@
 </template>
 <script setup>
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
-import { computed } from "vue";
 import i18n from "@/includes/i18n";
 
 const t = i18n.global.t;
@@ -87,13 +80,9 @@ const props = defineProps({
   secretKey: { type: String, default: "" },
 });
 
-const isLoading = computed(() => {
-  let output = false;
-  if (props.secretKey === "") {
-    output = true;
-  }
-  return output;
-});
+const barcodeModal = () => {
+  authStore.isBarcodeModalActive = true;
+};
 
 const sendCode = () => {
   emit("sendCode");
