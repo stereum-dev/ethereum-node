@@ -24,6 +24,7 @@ class ControlService extends EventEmitter {
       keyfileLocation: args.keyfileLocation,
       passphrase: args.passphrase,
       stereumRelease: args.stereumRelease,
+      authCode: args.authCode,
     });
   }
 
@@ -463,7 +464,7 @@ class ControlService extends EventEmitter {
   }
 
   async beginAuthSetup(timeBased, increaseTimeLimit, enableRateLimit) {
-    return await this.promiseIpc.send("beginAuthSetup", {timeBased, increaseTimeLimit, enableRateLimit});
+    return await this.promiseIpc.send("beginAuthSetup", { timeBased, increaseTimeLimit, enableRateLimit });
   }
 
   async authenticatorVerification(args) {
@@ -480,10 +481,6 @@ class ControlService extends EventEmitter {
 
   async checkForAuthenticator(args) {
     return await this.promiseIpc.send("checkForAuthenticator", args);
-  }
-
-  async submitVerification(args) {
-    return await this.promiseIpc.send("submitVerification", args);
   }
 
   async cancelVerification(args) {
@@ -619,12 +616,12 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("stopShell");
   }
 
-  async exec(command, use_sudo = true) {
-    return this.promiseIpc.send("exec", command, use_sudo);
-  }
-
   async executeCommand(args) {
     return this.promiseIpc.send("executeCommand", args);
+  }
+
+  async create2FAQRCode(args) {
+    return this.promiseIpc.send("create2FAQRCode", args);
   }
 }
 if (!instance) {

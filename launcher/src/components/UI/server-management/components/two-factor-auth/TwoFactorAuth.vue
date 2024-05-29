@@ -141,7 +141,6 @@ const isRateLimiting = ref(true);
 
 const verificationOutput = ref("");
 const secretKey = ref("");
-// const QRcode = ref("");
 const configured2fa = ref();
 
 const finishSetupActive = ref(false);
@@ -229,16 +228,27 @@ const authenticatorHandler = (event, data) => {
   loadOutput(data);
 };
 
-const loadOutput = (data) => {
+const loadOutput = async (data) => {
   if (data[0] != "skip") {
     secretKey.value = data[1].split(": ").pop();
-    let QRadress = `https://quickchart.io/qr?chs=200x200&chld=M|0&cht=qr&text=otpauth://totp/${controlStore.ipAddress}@${controlStore.ServerName}%3Fsecret%3D[SECRETKEY]%26issuer%3D${controlStore.ServerName}`;
-    authStore.QRcode = QRadress.replace("[SECRETKEY]", secretKey.value);
+    if (data.length <= 5) {
+      authStore.QRcode = await ControlService.create2FAQRCode({
+        type: "totp",
+        name: controlStore.ServerName.replace("\n", ""),
+        ip: controlStore.ipAddress,
+        secret: secretKey.value,
+      });
+    }
   }
 
   if (data.length > 5) {
     if (data[0] != "skip") {
-      authStore.QRcode = authStore.QRcode.replace("totp", "hotp");
+      authStore.QRcode = await ControlService.create2FAQRCode({
+        type: "hotp",
+        name: controlStore.ServerName.replace("\n", ""),
+        ip: controlStore.ipAddress,
+        secret: secretKey.value,
+      });
       authStore.varificationCode = data[2].split("is ").pop();
     }
     authStore.validVerificationCode = true;

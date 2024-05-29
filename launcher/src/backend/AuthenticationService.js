@@ -1,3 +1,5 @@
+import * as QRCode from "qrcode";
+
 export class AuthenticationService {
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
@@ -47,16 +49,16 @@ export class AuthenticationService {
 
           outputArray.push(
             outputString[
-              outputString.findIndex(function (item) {
-                return item.indexOf("https") !== -1;
-              })
+            outputString.findIndex(function (item) {
+              return item.indexOf("https") !== -1;
+            })
             ]
           );
           outputArray.push(
             outputString[
-              outputString.findIndex(function (item) {
-                return item.indexOf("secret key") !== -1;
-              })
+            outputString.findIndex(function (item) {
+              return item.indexOf("secret key") !== -1;
+            })
             ]
           );
           win.send("2FAEvents", outputArray);
@@ -94,9 +96,9 @@ export class AuthenticationService {
 
           outputArray.push(
             outputString[
-              outputString.findIndex(function (item) {
-                return item.indexOf("https") !== -1;
-              })
+            outputString.findIndex(function (item) {
+              return item.indexOf("https") !== -1;
+            })
             ]
           );
 
@@ -159,5 +161,11 @@ export class AuthenticationService {
     } else {
       return false;
     }
+  }
+
+  async create2FAQRCode(type, name, ip, secret) {
+    let otpauth = `otpauth://${type}/${ip}@${name}?secret=${secret}&issuer=${name}`;
+    const url = await QRCode.toDataURL(otpauth)
+    return url;
   }
 }

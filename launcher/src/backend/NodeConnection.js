@@ -157,10 +157,10 @@ export class NodeConnection {
       let installPkgResult;
       try {
         installPkgResult = await this.sshService.exec(
-          "apt update &&\
-                    apt install -y software-properties-common &&\
-                    add-apt-repository --yes --update ppa:ansible/ansible &&\
-                    apt install -y pip ansible tar gzip wget git"
+          "sudo -u root apt update &&\
+          sudo -u root apt install -y software-properties-common &&\
+          sudo -u root add-apt-repository --yes --update ppa:ansible/ansible &&\
+          sudo -u root apt install -y pip ansible tar gzip wget git", false
         );
       } catch (err) {
         log.error(err);
