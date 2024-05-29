@@ -9,7 +9,8 @@
         <NodeSection @open-expert="openExpertModal" @open-log="openLogPage" @export-setup="exportSetup" />
         <ExpertWindow v-if="isExpertModeOpen" :item="expertModeClient" @hide-modal="closeExpertMode" />
       </div>
-      <div class="col-start-17 col-end-21 ml-1">
+      <div class="col-start-17 col-end-21 ml-1 grid grid-cols-2 grid-rows-9">
+        <NetworkStatus />
         <ServiceSection @open-expert="openExpertModal" @open-logs="openLogPage" />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
@@ -41,27 +42,28 @@
   </base-layout>
 </template>
 <script setup>
-import SidebarSection from "./sections/SidebarSection";
-import NodeSection from "./sections/NodeSection.vue";
-import ServiceSection from "./sections/ServiceSection.vue";
-import AlertSection from "./sections/AlertSection.vue";
-import LogsSection from "./sections/LogsSection.vue";
-import { ref, onMounted, onUnmounted, watchEffect, watch, onBeforeMount } from "vue";
-import ExpertWindow from "./sections/ExpertWindow.vue";
-import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
-import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useServices } from "@/store/services";
+import { useSetups } from "@/store/setups";
 import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
+import { useNodeStore } from "@/store/theNode";
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
+import { onBeforeMount, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { useRouter } from "vue-router";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useMultiSetups } from "../../../composables/multiSetups";
 import { usePingQuality } from "../../../composables/pingQuality";
 import { useListKeys } from "../../../composables/validators";
-import { useRouter } from "vue-router";
-import { useFooter } from "@/store/theFooter";
-import { useSetups } from "@/store/setups";
-import { saveAs } from "file-saver";
-import JSZip from "jszip";
+import NetworkStatus from "../../layers/NetworkStatus.vue";
+import AlertSection from "./sections/AlertSection.vue";
+import ExpertWindow from "./sections/ExpertWindow.vue";
+import LogsSection from "./sections/LogsSection.vue";
+import NodeSection from "./sections/NodeSection.vue";
+import ServiceSection from "./sections/ServiceSection.vue";
+import SidebarSection from "./sections/SidebarSection";
 
 //*****************  Store & Refs *****************
 const nodeStore = useNodeStore();
