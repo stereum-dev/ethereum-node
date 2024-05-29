@@ -43,6 +43,7 @@
     "geoip-lite": "^1.4.7",
     "jszip": "^3.10.1",
     "leader-line-new": "^1.1.9",
+    "ping": "^0.4.4",
     "pinia": "^2.0.33",
     "qrcode": "^1.5.1",
     "semver": "^7.6.0",

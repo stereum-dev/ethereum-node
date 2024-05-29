@@ -8,7 +8,6 @@ import * as fs from "fs";
 import * as path from "path";
 const log = require("electron-log");
 const ping = require("ping");
-const { exec } = require("child_process");
 let authConnectionInfo = null;
 let authCurrentWindow = null;
 
@@ -66,52 +65,32 @@ export class SSHService {
     });
   }
 
-  // async checkConnectionQuality() {
-  //   const host = this.connectionInfo.host;
-  //   let connectionQuality = null;
-
-  //   try {
-  //     const res = await ping.promise.probe(host, {
-  //       timeout: 2,
-  //     });
-
-  //     console.log(`Ping to ${host}: ${res.time} ms`);
-  //     if (res.alive && res.time < 100) {
-  //       console.log("Connection quality is good.");
-  //       connectionQuality = { pingTime: res.time };
-  //     } else {
-  //       console.log("Connection quality is poor");
-  //       connectionQuality = { pingTime: res.time };
-  //     }
-  //   } catch (err) {
-  //     console.error("Ping failed:", err);
-  //     connectionQuality = { status: "failed", pingTime: null };
-  //   }
-  //   return connectionQuality;
-  // }
+  // Check the connection quality by pinging the host
 
   async checkConnectionQuality() {
     const host = this.connectionInfo.host;
     let connectionQuality = null;
 
-    exec(`ping -c 1 -W 2 ${host}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error("Ping failed:", error);
-        connectionQuality = { status: "failed", pingTime: null };
-      } else {
-        const timeMatch = stdout.match(/time=(\d+\.\d+)/);
-        const time = timeMatch ? parseFloat(timeMatch[1]) : null;
-        console.log(`Ping to ${host}: ${time} ms`);
-        if (time && time < 100) {
-          console.log("Connection quality is good.");
-          connectionQuality = { pingTime: time };
+    try {
+      const res = await ping.promise.probe(host, {
+        timeout: 2,
+      });
+
+      if (typeof res.time !== "undefined" && res.time !== null) {
+        if (res.alive && res.time < 100) {
+          connectionQuality = { status: "good", pingTime: res.time };
         } else {
-          console.log("Connection quality is poor");
-          connectionQuality = { pingTime: time };
+          connectionQuality = { status: "poor", pingTime: res.time };
         }
+      } else {
+        console.log(`Ping to ${host} failed or timed out`);
+        connectionQuality = { status: "failed", pingTime: null };
       }
-      return connectionQuality;
-    });
+    } catch (err) {
+      console.error("Ping failed:", err);
+      connectionQuality = { status: "failed", pingTime: null };
+    }
+    return connectionQuality;
   }
 
   async checkConnectionPool() {

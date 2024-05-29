@@ -55,6 +55,7 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useMultiSetups } from "../../../composables/multiSetups";
+import { usePingQuality } from "../../../composables/pingQuality";
 import { useListKeys } from "../../../composables/validators";
 import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
@@ -71,6 +72,7 @@ const router = useRouter();
 const footerStore = useFooter();
 const setupStore = useSetups();
 const { loadSetups, loadServices, getAllSetups } = useMultiSetups();
+const { checkConnectionQuality, startPolling, stopPolling } = usePingQuality();
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
@@ -81,14 +83,9 @@ let polling = null;
 let pollingVitals = null;
 let pollingNodeStats = null;
 let pollingListingKeys = null;
+let pollingPings = null;
 
 //*****************  Watchers *****************
-// const nodeStore = useNodeStore();
-// const headerStore = useNodeHeader();
-// const serviceStore = useServices();
-// const controlStore = useControlStore();
-// const router = useRouter();
-// const footerStore = useFooter();
 
 //Computed & Watchers
 // TODO: maybe add watchSSV from service.js here?
@@ -130,6 +127,7 @@ onBeforeMount(() => {
   getSetupDatas();
 });
 onMounted(() => {
+  checkConnectionQuality();
   getSetupDatas();
   nodeSetupsPrepration();
   setTimeout(() => {
@@ -143,6 +141,7 @@ onMounted(() => {
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
   pollingNodeStats = setInterval(updateNodeStats, 1000); // refresh server vitals
   pollingListingKeys = setInterval(checkForListingKeys, 1000); // check for validators which need validator listing
+  startPolling();
 });
 
 onUnmounted(() => {
@@ -150,10 +149,19 @@ onUnmounted(() => {
   clearInterval(pollingVitals);
   clearInterval(pollingNodeStats);
   clearInterval(pollingListingKeys);
+  clearInterval(pollingPings);
   setupStore.isConfigViewActive = false;
+  stopPolling();
 });
 
 //*************  Methods *************
+
+// const checkConnection = async () => {
+//   let num = 1;
+//   console.log("checking connection", num++);
+//   let connection = await ControlService.checkConnectionQuality();
+//   console.log("connected", connection);
+// };
 
 //get all configs and services
 const nodeSetupsPrepration = () => {
