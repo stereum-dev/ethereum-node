@@ -53,6 +53,10 @@ jobs:
         shell: cmd
         if: matrix.os == 'windows-latest'
 
+      - name: macOS build args
+        if: matrix.os == 'macos-latest'
+        run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
+
       - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
@@ -63,6 +67,7 @@ jobs:
           build_script_name: dist
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
+          args: ${{ env.BUILD_ARGS }}
         env:
           APPLE_ID: ${{ secrets.apple_id }}
           APPLE_ID_PASSWORD: ${{ secrets.apple_id_password }}

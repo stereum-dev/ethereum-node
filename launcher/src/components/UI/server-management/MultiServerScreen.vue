@@ -6,7 +6,9 @@ import ServerHeader from './components/ServerHeader.vue';
     <SwitchAnimation
       v-if="
         (serverStore.isServerAnimationActive || serverStore.connectingProcess) &&
-        !serverStore.errorMsgExists && !isTwoFactorAuthActive"
+        !serverStore.errorMsgExists &&
+        !isTwoFactorAuthActive
+      "
       @cancel-login="cancelLoginHandler"
     />
     <ServerHeader @tab-picker="tabPicker" />
@@ -32,10 +34,12 @@ import ServerHeader from './components/ServerHeader.vue';
     />
     <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
+    <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
   </div>
 </template>
 
 <script setup>
+import QRcodeModal from "./components/modals/QRcodeModal.vue";
 import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
@@ -46,12 +50,14 @@ import GenerateKey from "./components/modals/GenerateKey.vue";
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
+import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
 import { useServerLogin } from "@/composables/useLogin";
 import { useRouter } from "vue-router";
 
 const serverStore = useServers();
+const authStore = useTwoFactorAuth();
 
 const { login, remove, loadStoredConnections } = useServerLogin();
 const router = useRouter();
@@ -235,6 +241,10 @@ const closeErrorDialog = () => {
   serverStore.errorMsgExists = false;
   serverStore.connectingProcess = false;
   closeAndCancel();
+};
+
+const closeBarcode = () => {
+  authStore.isBarcodeModalActive = false;
 };
 
 const removeServerHandler = async () => {

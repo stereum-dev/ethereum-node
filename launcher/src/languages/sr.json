@@ -975,6 +975,7 @@
     "backup": "BACKUP",
     "save": "save...",
     "wait": "Wait...",
+    "plzWait": "Please wait...",
     "enterCode": "Enter verification code:",
     "send": "Send",
     "urSecret": "Your secret key is:",
