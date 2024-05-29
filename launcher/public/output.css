@@ -1251,6 +1251,10 @@ video {
   grid-row: span 1 / span 1;
 }
 
+.row-span-10{
+  grid-row: span 10 / span 10;
+}
+
 .row-span-2{
   grid-row: span 2 / span 2;
 }
@@ -1521,6 +1525,10 @@ video {
 
 .mt-8{
   margin-top: 2rem;
+}
+
+.mt-5{
+  margin-top: 1.25rem;
 }
 
 .box-border{
@@ -2242,6 +2250,14 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-40{
+  width: 10rem;
+}
+
+.w-60{
+  width: 15rem;
 }
 
 .min-w-\[100px\]{
@@ -4599,10 +4615,6 @@ video {
 
 .opacity-80{
   opacity: 0.8;
-}
-
-.opacity-90{
-  opacity: 0.9;
 }
 
 .shadow{
