@@ -1388,7 +1388,6 @@ export class Monitoring {
         data: prometheus_result,
       };
     }
-
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
@@ -1574,12 +1573,20 @@ export class Monitoring {
           if (xx.length) {
             services[clientType][clt.service].forEach(function (item, index) {
               try {
-                details[clientType]["numPeer"] = parseInt(
-                  xx
+                //Nethermind returns the peers per client type (e.g. Geth, Erigon, Nethermind ...), therefore we need to sum them up
+                if (clt.service == "NethermindService") {
+                  details[clientType]["numPeer"] = parseInt(xx
                     .filter((s) => s.metric.__name__ == services[clientType][clt.service][index])
-                    .pop()
-                    .value.pop()
-                );
+                    .reduce((total, obj) => total + parseInt(obj.value.pop()), 0)
+                  );
+                } else {
+                  details[clientType]["numPeer"] = parseInt(
+                    xx
+                      .filter((s) => s.metric.__name__ == services[clientType][clt.service][index])
+                      .pop()
+                      .value.pop()
+                  );
+                }
                 details[clientType]["numPeerBy"]["fields"].push(item);
               } catch (e) {}
             });
