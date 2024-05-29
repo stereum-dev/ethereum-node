@@ -51,21 +51,28 @@
     />
     <!-- barcode and secret-key are passed as props to TwoFactoSetupBox and they have to bind ':' before theme to bind, at the moment is 
     hardcoded to test -->
+    <div
+      v-if="twoFactorSetupIsActive && !secretKey"
+      class="animation-loading row-start-2 row-span-10 col-start-1 col-span-full flex flex-col justify-center items-center p-2"
+    >
+      <img src="/animation/servers/loading-2fa.gif" alt="loading" />
+      <span class="mt-8 text-gray-300 uppercase font-semibold font-sans">{{ t("twoFactorAuth.plzWait") }}</span>
+    </div>
     <TwoFactoSetupBox
-      v-if="twoFactorSetupIsActive"
-      :barcode="QRcode"
+      v-if="twoFactorSetupIsActive && secretKey"
+      :barcode="authStore.QRcode"
       :secret-key="secretKey"
       :time-based="isTimeBaseActive"
       :class="['row-start-2', !secretKey ? 'disabled' : '']"
       @send-code="sendTheCode"
     />
     <TwoFactorBackup
-      v-if="twoFactorSetupIsActive"
+      v-if="twoFactorSetupIsActive && secretKey"
       :class="['row-start-9', !authStore.validVerificationCode ? 'disabled' : '']"
       @save-backup="onSaveScratch"
     />
     <div
-      v-if="twoFactorSetupIsActive"
+      v-if="twoFactorSetupIsActive && secretKey"
       class="row-start-10 row-span-1 col-start-1 col-span-full flex justify-center items-center p-2 mt-2"
     >
       <span class="text-xs text-gray-300 text-left font-sans">{{ t("twoFactorAuth.confirmDesc") }}</span>
@@ -134,7 +141,6 @@ const isRateLimiting = ref(true);
 
 const verificationOutput = ref("");
 const secretKey = ref("");
-const QRcode = ref("");
 const configured2fa = ref();
 
 const finishSetupActive = ref(false);
@@ -226,7 +232,7 @@ const loadOutput = async (data) => {
   if (data[0] != "skip") {
     secretKey.value = data[1].split(": ").pop();
     if (data.length <= 5) {
-      QRcode.value = await ControlService.create2FAQRCode({
+      authStore.QRcode = await ControlService.create2FAQRCode({
         type: "totp",
         name: controlStore.ServerName.replace("\n", ""),
         ip: controlStore.ipAddress,
@@ -237,7 +243,7 @@ const loadOutput = async (data) => {
 
   if (data.length > 5) {
     if (data[0] != "skip") {
-      QRcode.value = await ControlService.create2FAQRCode({
+      authStore.QRcode = await ControlService.create2FAQRCode({
         type: "hotp",
         name: controlStore.ServerName.replace("\n", ""),
         ip: controlStore.ipAddress,
