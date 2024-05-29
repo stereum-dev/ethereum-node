@@ -516,10 +516,6 @@ ipcMain.handle("checkForAuthenticator", async (event, args) => {
   return await authenticationService.checkForAuthenticator(args);
 });
 
-ipcMain.handle("submitVerification", async (event, args) => {
-  return await sshService.submitVerification(args, event.sender)
-});
-
 ipcMain.handle("cancelVerification", async (event, args) => {
   return await sshService.cancelVerification(args)
 });

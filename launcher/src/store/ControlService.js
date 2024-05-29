@@ -483,10 +483,6 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("checkForAuthenticator", args);
   }
 
-  async submitVerification(args) {
-    return await this.promiseIpc.send("submitVerification", args);
-  }
-
   async cancelVerification(args) {
     return await this.promiseIpc.send("cancelVerification", args);
   }
