@@ -13,7 +13,7 @@ export const useNodeStore = defineStore("theNode", {
       runNodePowerModal: false,
       clientToLogs: null,
       logs: [],
-      exportAllLogs: false,
+      allLogsForExp: false,
       exportLogs: false,
       searchLogs: "",
       serviceLogs: [],

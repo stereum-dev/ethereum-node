@@ -82,7 +82,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["export-log"]);
+const emit = defineEmits(["export-log", "export-all-log"]);
 
 const nodeStore = useNodeStore();
 
@@ -92,7 +92,7 @@ const is150Hovered = ref(false);
 const exportAllLogs = () => {
   nodeStore.exportLogs = false;
   nodeStore.exportAllLogs = true;
-  emit("export-log", props.client);
+  emit("export-all-log", props.client);
 };
 
 const exportLogs = () => {

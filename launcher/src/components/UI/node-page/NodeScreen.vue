@@ -34,6 +34,7 @@
         :client="nodeStore.clientToLogs"
         @close-log="closeLogPage"
         @export-log="exportLogs"
+        @export-all-log="exportAllLogs"
       />
     </div>
 
@@ -68,6 +69,7 @@ let polling = null;
 let pollingVitals = null;
 let pollingNodeStats = null;
 let pollingListingKeys = null;
+let pollingLogs = null;
 
 const nodeStore = useNodeStore();
 const headerStore = useNodeHeader();
@@ -110,8 +112,9 @@ onMounted(() => {
   }, 2000);
 
   updateConnectionStats();
-
+  updateAllServiceLogs();
   updateServiceLogs();
+  pollingLogs = setInterval(updateAllServiceLogs, 10000); // refresh logs
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
   pollingNodeStats = setInterval(updateNodeStats, 1000); // refresh server vitals
@@ -123,6 +126,7 @@ onUnmounted(() => {
   clearInterval(pollingVitals);
   clearInterval(pollingNodeStats);
   clearInterval(pollingListingKeys);
+  clearInterval(pollingLogs);
 });
 
 //Methods
@@ -157,6 +161,12 @@ const updateServiceLogs = async () => {
     nodeStore.serviceLogs = data;
   }
 };
+const updateAllServiceLogs = async () => {
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+    const data = await ControlService.getAllServiceLogs();
+    nodeStore.allLogsForExp = data;
+  }
+};
 const updateServerVitals = async () => {
   try {
     if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
@@ -188,6 +198,18 @@ const closeExpertMode = () => {
   headerStore.selectedValidatorFromNodeAlert = null;
 };
 // ********** LOGS **********
+
+const exportAllLogs = async (client) => {
+  const currentService = nodeStore.allLogsForExp.find(
+    (service) => service.config?.serviceID === client.config?.serviceID
+  );
+  const fileName = `${client.name}_all_logs.txt`;
+  const data = currentService.logs.reverse();
+
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+  saveAs(blob, fileName);
+};
 
 const exportLogs = async (client) => {
   const currentService = nodeStore.serviceLogs.find(

@@ -133,6 +133,7 @@
       :client="nodeStore.clientToLogs"
       @close-log="closeLogPage"
       @export-log="exportLogs"
+      @export-all-log="exportAllLogs"
     />
     <!-- End Control main layout -->
   </base-layout>
@@ -167,10 +168,12 @@ const expertModeClient = ref(null);
 const isExpertWindowOpen = ref(false);
 const isLogsPageActive = ref(false);
 let polling = null;
+let logsPolling = null;
 
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
+  logsPolling = setInterval(updateAllServiceLogs, 10000); // refresh all logs
 
   serviceStore.installedServices = serviceStore.installedServices.map((service) => ({
     isServicePending: false,
@@ -180,6 +183,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearInterval(polling);
+  clearInterval(logsPolling);
 });
 
 const isAnyConsensusRunning = computed(() => {
@@ -226,6 +230,19 @@ const closeLogPage = () => {
   isLogsPageActive.value = false;
   controlStore.serviceLogs = null;
 };
+
+const exportAllLogs = async (client) => {
+  const currentService = nodeStore.allLogsForExp.find(
+    (service) => service.config?.serviceID === client.config?.serviceID
+  );
+  const fileName = `${client.name}_all_logs.txt`;
+  const data = currentService.logs.reverse();
+
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+  saveAs(blob, fileName);
+};
+
 const exportLogs = async (client) => {
   const currentService = nodeStore.serviceLogs.find(
     (service) => service.config?.serviceID === client.config?.serviceID
@@ -244,6 +261,12 @@ const updateServiceLogs = async () => {
   if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
     const data = await ControlService.getServiceLogs({ logs_tail: 150 });
     nodeStore.serviceLogs = data;
+  }
+};
+const updateAllServiceLogs = async () => {
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+    const data = await ControlService.getAllServiceLogs();
+    nodeStore.allLogsForExp = data;
   }
 };
 </script>

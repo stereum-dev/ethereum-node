@@ -436,11 +436,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-          jsonrpc: "2.0",
-          method: rpc_method.trim(),
-          params: rpc_params,
-          id: 1,
-        })
+            jsonrpc: "2.0",
+            method: rpc_method.trim(),
+            params: rpc_params,
+            id: 1,
+          })
         : rpc_method;
 
     // Define default response
@@ -2615,8 +2615,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-        ? "str"
-        : "invalid";
+      ? "str"
+      : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2704,7 +2704,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-          serviceInfos[i].config.dependencies.executionClients.length
+        serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({
@@ -2929,6 +2929,75 @@ rm -rf diskoutput
       }
       serviceInfos[i].logsSince = logsTail > 0 ? null : logsSince;
       serviceInfos[i].logsUntil = logsTail > 0 ? null : logsUntil;
+    }
+
+    // Return service infos with logs
+    return serviceInfos;
+  }
+
+  // Get all service logs from docker without any tail limit
+  // Accepts an optional object of arguments:
+  // [OPTIONAL] logs_since=<ISO8601DateString>: Get logs since (must be a valid ISO 8601 date string, e.g. 2013-01-02T13:23:37Z)
+  // [OPTIONAL] logs_until=<ISO8601DateString>: Get logs until (must be a valid ISO 8601 date string, e.g. 2013-01-02T13:23:37Z)
+  // [OPTIONAL] logs_ts=<bool>: When true each log line is prefixed with a ISO8601DateString timestamp (default is false)
+  // [OPTIONAL] service_name=<string>: When specified only logs for the specified case-sensitive service name (e.g.: "BesuService") are returned
+  // Returns array of services including their docker logs on success or empty array on errors
+  async getAllServiceLogs(args) {
+    // Extract arguments
+    var { logs_since, logs_until, logs_ts, service_name } = Object.assign(
+      {
+        logs_since: null,
+        logs_until: null,
+        logs_ts: null,
+        service_name: null,
+      },
+      typeof args === "object" ? args : {}
+    );
+
+    // Get all service configurations
+    const serviceInfos = service_name ? await this.getServiceInfos(service_name) : await this.getServiceInfos();
+    if (serviceInfos.length < 1) {
+      return [];
+    }
+
+    // Get container logs from server without tail limit
+    // Docker log options:
+    // --details        Show extra details provided to logs
+    // -f, --follow         Follow log output
+    //     --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+    // -n, --tail string    Number of lines to show from the end of the logs (default "all")
+    // -t, --timestamps     Show timestamps
+    // --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+    // --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+    const dateNow = Date.now();
+    const logsSince = typeof logs_since == "string" ? logs_since : new Date(dateNow - 1000 * 60 * 10).toISOString();
+    const logsUntil = typeof logs_until == "string" ? logs_until : new Date(dateNow).toISOString();
+    const logsTs = typeof logs_ts == "boolean" && logs_ts ? true : false;
+    var sshcommand = [];
+    var logArgs = `--since ${logsSince} --until ${logsUntil}`;
+    logArgs = logsTs ? `--timestamps ${logArgs}` : logArgs;
+
+    for (let i = 0; i < serviceInfos.length; i++) {
+      var containerName = serviceInfos[i].config.instanceID;
+      sshcommand.push(`docker logs ${logArgs} ${containerName} 2>&1 ; echo "---STEREUMSTRINGSPLITTER---"`);
+    }
+    sshcommand = sshcommand.join(" && ");
+    var result = await this.nodeConnection.sshService.exec(sshcommand);
+    if (result.rc || result.stdout == "" || result.stderr != "") {
+      return [];
+    }
+    result = result.stdout.trim().split("---STEREUMSTRINGSPLITTER---");
+
+    // Attach container logs to each service
+    for (let i = 0; i < serviceInfos.length; i++) {
+      try {
+        var logs = result[i].trim();
+        serviceInfos[i].logs = logs ? logs.split(/\n/) : [];
+      } catch (e) {
+        serviceInfos[i].logs = [];
+      }
+      serviceInfos[i].logsSince = logsSince;
+      serviceInfos[i].logsUntil = logsUntil;
     }
 
     // Return service infos with logs
@@ -3218,7 +3287,7 @@ rm -rf diskoutput
             if (result.data === undefined) {
               throw result;
             }
-            const curlTag = await this.nodeConnection.ensureCurlImage()
+            const curlTag = await this.nodeConnection.ensureCurlImage();
             const exitMsg = result.data;
             const exitCommand = `docker run --rm --network=stereum curlimages/curl:${curlTag} curl 'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' -H 'accept: */*' -H 'Content-Type: application/json' -d '${JSON.stringify(
               exitMsg

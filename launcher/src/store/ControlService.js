@@ -186,6 +186,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getServiceLogs", args);
   }
 
+  async getAllServiceLogs(args) {
+    return await this.promiseIpc.send("getAllServiceLogs", args);
+  }
+
   async getServiceConfig(args) {
     return await this.promiseIpc.send("getServiceConfig", args);
   }
@@ -463,7 +467,7 @@ class ControlService extends EventEmitter {
   }
 
   async beginAuthSetup(timeBased, increaseTimeLimit, enableRateLimit) {
-    return await this.promiseIpc.send("beginAuthSetup", {timeBased, increaseTimeLimit, enableRateLimit});
+    return await this.promiseIpc.send("beginAuthSetup", { timeBased, increaseTimeLimit, enableRateLimit });
   }
 
   async authenticatorVerification(args) {
