@@ -67,29 +67,26 @@ export class SSHService {
 
   async checkConnectionQuality() {
     const host = this.connectionInfo.host;
+    let connectionQuality = null;
 
-    ping.promise
-      .probe(host, {
+    try {
+      const res = await ping.promise.probe(host, {
         timeout: 2,
-      })
-      .then((res) => {
-        console.log(`Ping to ${host}: ${res.time} ms`);
-        if (res.alive && res.time < 100) {
-          console.log("Connection quality is good.");
-        } else {
-          console.log("Connection quality is poor. Reconnecting...");
-          this.reconnectToServer();
-        }
-      })
-      .catch((err) => {
-        console.error("Ping failed:", err);
-        this.reconnectToServer();
       });
-  }
 
-  async reconnectToServer() {
-    this.disconnect();
-    setTimeout(this.connect(), 2000);
+      console.log(`Ping to ${host}: ${res.time} ms`);
+      if (res.alive && res.time < 100) {
+        console.log("Connection quality is good.");
+        connectionQuality = { pingTime: res.time };
+      } else {
+        console.log("Connection quality is poor. Reconnecting...");
+        connectionQuality = { pingTime: res.time };
+      }
+    } catch (err) {
+      console.error("Ping failed:", err);
+      connectionQuality = { status: "failed", pingTime: null };
+    }
+    return connectionQuality;
   }
 
   async checkConnectionPool() {
