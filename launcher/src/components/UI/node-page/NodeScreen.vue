@@ -161,15 +161,29 @@ const updateServiceLogs = async () => {
 };
 
 const updateAndExportAllLogs = async (client) => {
-  console.log("Exporting all logs");
+  nodeStore.isLogLoading = true;
 
   if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
-    const data = await ControlService.getAllServiceLogs();
-    nodeStore.allLogsForExp = data;
+    nodeStore.allLogsForExp = await ControlService.getAllServiceLogs();
   }
 
-  while (!nodeStore.allLogsForExp || nodeStore.allLogsForExp.length === 0) {
+  // Wait until logs are updated, with a timeout
+  const maxRetries = 10;
+  let retries = 0;
+  while (
+    (!nodeStore.allLogsForExp ||
+      nodeStore.allLogsForExp.length === 0 ||
+      !nodeStore.allLogsForExp.find((service) => service.config?.serviceID === client.config?.serviceID)) &&
+    retries < maxRetries
+  ) {
     await new Promise((resolve) => setTimeout(resolve, 500));
+    retries += 1;
+  }
+
+  // Check if max retries were reached
+  if (retries === maxRetries) {
+    nodeStore.isLogLoading = false;
+    return;
   }
 
   const currentService = nodeStore.allLogsForExp.find(
@@ -177,16 +191,17 @@ const updateAndExportAllLogs = async (client) => {
   );
 
   if (!currentService || !currentService.logs) {
-    console.error("No logs found for the specified service.");
+    nodeStore.isLogLoading = false;
     return;
   }
 
   const fileName = `${client.name}_all_logs.txt`;
   const data = [...currentService.logs].reverse();
-
   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
+
+  nodeStore.isLogLoading = false;
 };
 
 const updateServerVitals = async () => {

@@ -18,7 +18,8 @@
 
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
-        src="/img/icon/service-log-icons/all-log-export-button.png"
+        :class="isLoadingSpinning"
+        :src="loadingIconsClass"
         alt=""
         @mousedown.prevent
         @click="exportAllLogs"
@@ -73,7 +74,7 @@
 
 <script setup>
 import { useNodeStore } from "@/store/theNode";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps({
   client: {
@@ -88,6 +89,16 @@ const nodeStore = useNodeStore();
 
 const isAllHovered = ref(false);
 const is150Hovered = ref(false);
+
+const loadingIconsClass = computed(() => {
+  return nodeStore.isLogLoading
+    ? "/img/icon/loading-icons/loading-circle.png"
+    : "/img/icon/service-log-icons/all-log-export-button.png";
+});
+
+const isLoadingSpinning = computed(() => {
+  return nodeStore.isLogLoading ? "animate-spin" : "";
+});
 
 const exportAllLogs = () => {
   nodeStore.exportLogs = false;
