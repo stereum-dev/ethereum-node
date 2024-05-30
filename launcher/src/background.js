@@ -221,7 +221,7 @@ ipcMain.handle("getServiceLogs", async (event, args) => {
 });
 
 ipcMain.handle("getAllServiceLogs", async (event, args) => {
-  return await monitoring.getAllServiceLogs(args);
+  return await nodeConnection.getAllServiceLogs(args);
 });
 
 ipcMain.handle("getServiceConfig", async (event, args) => {

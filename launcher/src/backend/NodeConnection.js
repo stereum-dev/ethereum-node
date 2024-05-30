@@ -160,7 +160,8 @@ export class NodeConnection {
           "sudo -u root apt update &&\
           sudo -u root apt install -y software-properties-common &&\
           sudo -u root add-apt-repository --yes --update ppa:ansible/ansible &&\
-          sudo -u root apt install -y pip ansible tar gzip wget git", false
+          sudo -u root apt install -y pip ansible tar gzip wget git",
+          false
         );
       } catch (err) {
         log.error(err);
@@ -2391,6 +2392,22 @@ export class NodeConnection {
         log.error("Error fetching installed curl images: ", error);
         return "latest";
       }
+    }
+  }
+
+  async getAllServiceLogs(args) {
+    const containerName = `stereum-${args}`;
+    try {
+      const logResult = await this.sshService.exec(`docker logs ${containerName} 2>&1`);
+
+      if (logResult.rc || !logResult.stdout || logResult.stderr) {
+        throw new Error(logResult.stderr || "Error fetching logs");
+      }
+
+      return { containerId: containerName, logs: logResult.stdout.trim().split("\n") };
+    } catch (err) {
+      log.error(`Failed to get logs for container ${containerName}: `, err);
+      return { containerId: "ERROR", logs: err.message };
     }
   }
 }

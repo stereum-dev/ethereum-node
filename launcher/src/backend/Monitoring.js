@@ -1575,9 +1575,10 @@ export class Monitoring {
               try {
                 //Nethermind returns the peers per client type (e.g. Geth, Erigon, Nethermind ...), therefore we need to sum them up
                 if (clt.service == "NethermindService") {
-                  details[clientType]["numPeer"] = parseInt(xx
-                    .filter((s) => s.metric.__name__ == services[clientType][clt.service][index])
-                    .reduce((total, obj) => total + parseInt(obj.value.pop()), 0)
+                  details[clientType]["numPeer"] = parseInt(
+                    xx
+                      .filter((s) => s.metric.__name__ == services[clientType][clt.service][index])
+                      .reduce((total, obj) => total + parseInt(obj.value.pop()), 0)
                   );
                 } else {
                   details[clientType]["numPeer"] = parseInt(
@@ -2940,34 +2941,6 @@ rm -rf diskoutput
 
     // Return service infos with logs
     return serviceInfos;
-  }
-
-  async getAllServiceLogs(args) {
-    try {
-      const { service_name = null } = args || {};
-      const serviceInfos = await this.getServiceInfos(service_name || undefined);
-      if (serviceInfos.length < 1) return [];
-
-      const logsPromises = serviceInfos.map(async (serviceInfo) => {
-        const containerName = serviceInfo.config.instanceID;
-        try {
-          const logResult = await this.nodeConnection.sshService.exec(`docker logs ${containerName} 2>&1`);
-          if (logResult.rc || !logResult.stdout || logResult.stderr) {
-            throw new Error(logResult.stderr || "Error fetching logs");
-          }
-          serviceInfo.logs = logResult.stdout.trim().split("\n");
-        } catch (err) {
-          log.error(`Failed to get logs for container ${containerName}: `, err);
-          serviceInfo.logs = [];
-        }
-        return serviceInfo;
-      });
-
-      return await Promise.all(logsPromises);
-    } catch (err) {
-      log.error("Failed to get all service logs: ", err);
-      return [{ containerId: "ERROR", logs: err.message }];
-    }
   }
 
   async getCurrentEpochandSlot() {
