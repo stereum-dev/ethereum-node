@@ -34,7 +34,7 @@
         :client="nodeStore.clientToLogs"
         @close-log="closeLogPage"
         @export-log="exportLogs"
-        @export-all-log="exportAllLogs"
+        @export-all-log="updateAndExportAllLogs"
       />
     </div>
 
@@ -69,7 +69,6 @@ let polling = null;
 let pollingVitals = null;
 let pollingNodeStats = null;
 let pollingListingKeys = null;
-let pollingLogs = null;
 
 const nodeStore = useNodeStore();
 const headerStore = useNodeHeader();
@@ -112,9 +111,9 @@ onMounted(() => {
   }, 2000);
 
   updateConnectionStats();
-  updateAllServiceLogs();
+
   updateServiceLogs();
-  pollingLogs = setInterval(updateAllServiceLogs, 10000); // refresh logs
+
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
   pollingNodeStats = setInterval(updateNodeStats, 1000); // refresh server vitals
@@ -126,7 +125,6 @@ onUnmounted(() => {
   clearInterval(pollingVitals);
   clearInterval(pollingNodeStats);
   clearInterval(pollingListingKeys);
-  clearInterval(pollingLogs);
 });
 
 //Methods
@@ -161,12 +159,36 @@ const updateServiceLogs = async () => {
     nodeStore.serviceLogs = data;
   }
 };
-const updateAllServiceLogs = async () => {
+
+const updateAndExportAllLogs = async (client) => {
+  console.log("Exporting all logs");
+
   if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
     const data = await ControlService.getAllServiceLogs();
     nodeStore.allLogsForExp = data;
   }
+
+  while (!nodeStore.allLogsForExp || nodeStore.allLogsForExp.length === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
+  const currentService = nodeStore.allLogsForExp.find(
+    (service) => service.config?.serviceID === client.config?.serviceID
+  );
+
+  if (!currentService || !currentService.logs) {
+    console.error("No logs found for the specified service.");
+    return;
+  }
+
+  const fileName = `${client.name}_all_logs.txt`;
+  const data = [...currentService.logs].reverse();
+
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+  saveAs(blob, fileName);
 };
+
 const updateServerVitals = async () => {
   try {
     if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
@@ -179,6 +201,7 @@ const updateServerVitals = async () => {
     console.log("couldn't check server vitals");
   }
 };
+
 const openExpertModal = (item) => {
   nodeStore.isLineHidden = true;
   expertModeClient.value = item;
@@ -198,18 +221,6 @@ const closeExpertMode = () => {
   headerStore.selectedValidatorFromNodeAlert = null;
 };
 // ********** LOGS **********
-
-const exportAllLogs = async (client) => {
-  const currentService = nodeStore.allLogsForExp.find(
-    (service) => service.config?.serviceID === client.config?.serviceID
-  );
-  const fileName = `${client.name}_all_logs.txt`;
-  const data = currentService.logs.reverse();
-
-  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
-  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
-  saveAs(blob, fileName);
-};
 
 const exportLogs = async (client) => {
   const currentService = nodeStore.serviceLogs.find(

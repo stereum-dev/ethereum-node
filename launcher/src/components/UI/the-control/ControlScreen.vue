@@ -133,7 +133,7 @@
       :client="nodeStore.clientToLogs"
       @close-log="closeLogPage"
       @export-log="exportLogs"
-      @export-all-log="exportAllLogs"
+      @export-all-log="updateAndExportAllLogs"
     />
     <!-- End Control main layout -->
   </base-layout>
@@ -168,12 +168,10 @@ const expertModeClient = ref(null);
 const isExpertWindowOpen = ref(false);
 const isLogsPageActive = ref(false);
 let polling = null;
-let logsPolling = null;
 
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
-  logsPolling = setInterval(updateAllServiceLogs, 10000); // refresh all logs
 
   serviceStore.installedServices = serviceStore.installedServices.map((service) => ({
     isServicePending: false,
@@ -183,7 +181,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearInterval(polling);
-  clearInterval(logsPolling);
 });
 
 const isAnyConsensusRunning = computed(() => {
@@ -231,12 +228,29 @@ const closeLogPage = () => {
   controlStore.serviceLogs = null;
 };
 
-const exportAllLogs = async (client) => {
+const updateAndExportAllLogs = async (client) => {
+  console.log("Exporting all logs");
+
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+    const data = await ControlService.getAllServiceLogs();
+    nodeStore.allLogsForExp = data;
+  }
+
+  while (!nodeStore.allLogsForExp || nodeStore.allLogsForExp.length === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
   const currentService = nodeStore.allLogsForExp.find(
     (service) => service.config?.serviceID === client.config?.serviceID
   );
+
+  if (!currentService || !currentService.logs) {
+    console.error("No logs found for the specified service.");
+    return;
+  }
+
   const fileName = `${client.name}_all_logs.txt`;
-  const data = currentService.logs.reverse();
+  const data = [...currentService.logs].reverse();
 
   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
@@ -261,12 +275,6 @@ const updateServiceLogs = async () => {
   if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
     const data = await ControlService.getServiceLogs({ logs_tail: 150 });
     nodeStore.serviceLogs = data;
-  }
-};
-const updateAllServiceLogs = async () => {
-  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
-    const data = await ControlService.getAllServiceLogs();
-    nodeStore.allLogsForExp = data;
   }
 };
 </script>
