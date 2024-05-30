@@ -18,7 +18,7 @@
 
       <img
         class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
-        :class="isLoadingSpinning"
+        :class="[isLoadingSpinning, { 'pointer-events-none opacity-50': nodeStore.isLogLoading }]"
         :src="loadingIconsClass"
         alt=""
         @mousedown.prevent
