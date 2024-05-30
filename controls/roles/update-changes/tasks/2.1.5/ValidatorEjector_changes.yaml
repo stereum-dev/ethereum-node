@@ -17,4 +17,4 @@
   when:
     - service_configuration.service == "ValidatorEjectorService"
     - service_configuration.network == "holesky"
-    - service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST.length < 8
+    - service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | length < 8
