@@ -22,9 +22,13 @@
 
     - debug:
         msg: "{{ Ejector_service_configuration }}"
+    - debug:
+        msg: "{{ Ejector_service_configuration_raw }}"
 
     - debug:
         msg: "{{ Ejector_service_configuration2 }}"
+    - debug:
+        msg: "{{ Ejector_service_configuration2_raw }}"
 
     - assert:
         that:
