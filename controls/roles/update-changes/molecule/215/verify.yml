@@ -23,15 +23,15 @@
     - debug:
         msg: "{{ Ejector_service_configuration }}"
     - debug:
-        msg: "{{ Ejector_service_configuration_raw }}"
+        msg: "{{ Ejector_service_configuration_raw['content'] | b64decode }}"
 
     - debug:
         msg: "{{ Ejector_service_configuration2 }}"
     - debug:
-        msg: "{{ Ejector_service_configuration2_raw }}"
+        msg: "{{ Ejector_service_configuration2_raw['content'] | b64decode }}"
 
     - assert:
         that:
-          - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | length == 10
-          - Ejector_service_configuration2.env.ORACLE_ADDRESSES_ALLOWLIST | length == 9
+          - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length == 10
+          - Ejector_service_configuration2.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length == 9
 # EOF
