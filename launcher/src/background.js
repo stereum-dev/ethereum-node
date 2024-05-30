@@ -525,13 +525,6 @@ ipcMain.handle("checkForAuthenticator", async (event, args) => {
   return await authenticationService.checkForAuthenticator(args);
 });
 
-<<<<<<< logBug
-ipcMain.handle("submitVerification", async (event, args) => {
-  return await sshService.submitVerification(args);
-});
-
-=======
->>>>>>> main
 ipcMain.handle("cancelVerification", async (event, args) => {
   return await sshService.cancelVerification(args);
 });
@@ -692,7 +685,7 @@ ipcMain.handle("stopShell", async () => {
 
 ipcMain.handle("create2FAQRCode", async (event, args) => {
   return await authenticationService.create2FAQRCode(args.type, args.name, args.ip, args.secret);
-})
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
