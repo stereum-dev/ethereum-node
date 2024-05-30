@@ -156,7 +156,9 @@ const reconnect = async () => {
   headerStore.reconnecting = true;
   try {
     await ControlService.reconnect();
-  } catch (e) {}
+  } catch (e) {
+    return;
+  }
   headerStore.reconnecting = false;
   headerStore.refresh = true;
 };

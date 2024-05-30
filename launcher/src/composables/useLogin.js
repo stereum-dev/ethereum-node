@@ -72,7 +72,7 @@ export const useServerLogin = () => {
     });
   };
 
-  const login = async (signal) => {
+  const login = async (signal, authCode) => {
     serverStore.isServerAnimationActive = true;
     serverStore.errorMsgExists = false;
 
@@ -86,6 +86,7 @@ export const useServerLogin = () => {
         keyfileLocation: serverStore.loginState.keyPath,
         passphrase: serverStore.loginState.passphrase,
         signal: signal,
+        authCode: authCode,
       });
 
       if (signal.aborted) {
