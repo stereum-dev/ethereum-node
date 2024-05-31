@@ -36,6 +36,7 @@ export const useNodeStore = defineStore("theNode", {
         },
       ],
       connectionStatus: null,
+      connectionStatusIsPoor: false,
       skeletonLoading: false,
       lines: [],
       isLineHidden: false,

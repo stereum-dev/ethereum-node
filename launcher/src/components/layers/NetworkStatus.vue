@@ -23,12 +23,14 @@
 
 <script setup>
 import { usePingQuality } from "../../composables/pingQuality";
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useNodeStore } from "../../store/theNode";
 import WiFiSign from "./WIFISign.vue";
 
 const nodeStore = useNodeStore();
 const { checkConnectionQuality, startPolling, stopPolling } = usePingQuality();
+
+const alertTimeout = ref(null);
 
 const circleClass = computed(() => {
   switch (nodeStore.connectionStatus?.status) {
@@ -53,6 +55,26 @@ const getPingTime = computed(() => {
 
 const getConnectionStatus = computed(() => {
   return nodeStore.connectionStatus?.status || "Unknown";
+});
+
+watchEffect(() => {
+  if (nodeStore.connectionStatus?.status === "very poor" || nodeStore.connectionStatus?.status === "poor") {
+    if (!alertTimeout.value) {
+      alertTimeout.value = setTimeout(() => {
+        if (nodeStore.connectionStatus?.status === "very poor" || nodeStore.connectionStatus?.status === "poor") {
+          nodeStore.connectionStatusIsPoor = true;
+          console.log("Connection status is poor mor than 10 seconds");
+        }
+        alertTimeout.value = null;
+      }, 10000); // 10 seconds
+    }
+  } else {
+    if (alertTimeout.value) {
+      clearTimeout(alertTimeout.value);
+      alertTimeout.value = null;
+    }
+    nodeStore.connectionStatusIsPoor = false;
+  }
 });
 
 onMounted(() => {

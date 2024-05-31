@@ -9,24 +9,11 @@
 
 <style scoped>
 .wifi-symbol {
-  display: none;
-}
-
-.wifi-symbol,
-.wifi-symbol [foo] {
   display: block;
-  position: absolute;
-  top: 50%;
-  display: inline-block;
-  width: 150px;
-  height: 150px;
-  margin-top: -187.5px;
-
-  -ms-transform: rotate(-45deg) translate(-100px);
-  -moz-transform: rotate(-45deg) translate(-100px);
-  -o-transform: rotate(-45deg) translate(-100px);
-  -webkit-transform: rotate(-45deg) translate(-100px);
-  transform: rotate(-45deg) translate(-100px);
+  width: 25px;
+  height: 25px;
+  transform: rotate(-45deg);
+  position: relative;
 }
 
 .wifi-symbol .wifi-circle {
@@ -37,11 +24,12 @@
   height: 100%;
   font-size: 21.4285714286px; /* 150px / 7 */
   position: absolute;
-  bottom: 0;
-  left: 0;
-  border-color: #ffffcc;
+  bottom: 6px;
+  left: 3px;
+  border-color: rgb(248, 246, 245);
   border-style: solid;
-  border-width: 1em 1em 0 0;
+  border-width: 3px 3px 0 0;
+  border-radius: 0 100% 0 0;
   -webkit-border-radius: 0 100% 0 0;
   border-radius: 0 100% 0 0;
   opacity: 0;
@@ -59,8 +47,8 @@
 }
 
 .wifi-symbol .wifi-circle.second {
-  width: 5em;
-  height: 5em;
+  width: 20px;
+  height: 20px;
   -o-animation-delay: 400ms;
   -moz-animation-delay: 400ms;
   -webkit-animation-delay: 400ms;
@@ -68,15 +56,15 @@
 }
 
 .wifi-symbol .wifi-circle.third {
-  width: 3em;
-  height: 3em;
+  width: 15px;
+  height: 15px;
 }
 
 .wifi-symbol .wifi-circle.fourth {
-  width: 1em;
-  height: 1em;
+  width: 10px;
+  height: 10px;
   opacity: 1;
-  background-color: #ffffcc;
+  background-color: white;
   -o-animation: none;
   -moz-animation: none;
   -webkit-animation: none;
@@ -91,10 +79,10 @@
     opacity: 1;
   }
   6% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
 }
 
@@ -106,10 +94,10 @@
     opacity: 1;
   }
   6% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
 }
 
@@ -121,10 +109,10 @@
     opacity: 1;
   }
   6% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
 }
 
@@ -136,10 +124,10 @@
     opacity: 1;
   }
   6% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0.5;
   }
 }
 </style>
