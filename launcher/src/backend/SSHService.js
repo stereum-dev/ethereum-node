@@ -8,8 +8,6 @@ import * as fs from "fs";
 import * as path from "path";
 const log = require("electron-log");
 const ping = require("ping");
-let authConnectionInfo = null;
-let authCurrentWindow = null;
 
 export class SSHService {
   constructor() {
@@ -149,8 +147,7 @@ export class SSHService {
         if (!connectionInfo.authCode) {
           currentWindow.send("require2FA", true);
           conn.end();
-        }
-        else {
+        } else {
           finish([connectionInfo.authCode.toString()]);
         }
       });
