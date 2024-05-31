@@ -1,13 +1,14 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 bg-[#151618] border border-gray-600 rounded-md px-1 mt-1 grid grid-cols-3"
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 bg-[#151618] border border-gray-600 rounded-md px-1 mt-1 grid grid-cols-3 relative"
   >
-    <WiFiSign :status="nodeStore.connectionStatus?.status" />
+    <div class="col-start-1 col-span-1 relative">
+      <WiFiSign :status="nodeStore.connectionStatus?.status" />
+    </div>
 
     <p class="col-start-2 col-span-full self-center ml-2 text-gray-300">
       Network {{ nodeStore.connectionStatus?.status }}
     </p>
-    <!-- <p>Description: {{ nodeStore.connectionStatus?.description }}</p>  -->
   </div>
 </template>
 

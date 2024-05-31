@@ -24,7 +24,7 @@ export const useNodeStore = defineStore("theNode", {
         },
         {
           id: 4,
-          maxRate: 150,
+          maxRate: 175,
           status: "poor",
           description: "Poor connection quality with high latency.Try reconnecting to the node.",
         },
