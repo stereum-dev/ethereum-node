@@ -38,10 +38,11 @@ const circleClass = computed(() => {
 <style scoped>
 .wifi-symbol {
   display: block;
+  width: 30px;
+  height: 30px;
+
+  transform: rotate(-45deg);
   position: relative;
-  width: 45px;
-  height: 45px;
-  transform: rotate(-45deg) translate(-100px);
 }
 
 .wifi-circle {
@@ -49,53 +50,58 @@ const circleClass = computed(() => {
   display: block;
   width: 100%;
   height: 100%;
-  font-size: 21.4285714286px;
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 5px;
+  left: 3px;
   border-style: solid;
-  border-width: 5px 5px 0 0;
+  border-width: 3px 3px 0 0;
   border-radius: 0 100% 0 0;
   opacity: 1; /* Make circles fully visible */
 }
 
 .first {
-  margin-bottom: 5px;
-  margin-left: 3px;
+  margin-bottom: 8% !important;
+  margin-left: 2px;
 }
 
 .second {
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
 }
 
 .third {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .fourth {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
+  background-color: white !important;
 }
 
 .circle-excellent {
   border-top-color: green;
+  border-right-color: green;
 }
 
 .circle-good {
   border-top-color: lightgreen;
+  border-right-color: lightgreen;
 }
 
 .circle-fair {
   border-top-color: yellow;
+  border-right-color: yellow;
 }
 
 .circle-poor {
   border-top-color: orange;
+  border-right-color: orange;
 }
 
 .circle-very-poor {
   border-top-color: red;
+  border-right-color: red;
 }
 </style>
