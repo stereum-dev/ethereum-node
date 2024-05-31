@@ -54,7 +54,7 @@ ipcMain.handle("connect", async (event, arg) => {
 });
 
 ipcMain.handle("reconnect", async () => {
-  if (nodeConnection.sshService.connectionPool.length > 0) await nodeConnection.sshService.disconnect();
+  if (nodeConnection.sshService.connectionPool.length > 0) await nodeConnection.sshService.disconnect(true);
   try {
     await nodeConnection.establish(taskManager);
   } catch (err) {
@@ -523,10 +523,6 @@ ipcMain.handle("checkForAuthenticator", async (event, args) => {
   return await authenticationService.checkForAuthenticator(args);
 });
 
-ipcMain.handle("submitVerification", async (event, args) => {
-  return await sshService.submitVerification(args);
-});
-
 ipcMain.handle("cancelVerification", async (event, args) => {
   return await sshService.cancelVerification(args);
 });
@@ -713,6 +709,10 @@ ipcMain.handle("stopShell", async () => {
     }
   }
 });
+
+ipcMain.handle("create2FAQRCode", async (event, args) => {
+  return await authenticationService.create2FAQRCode(args.type, args.name, args.ip, args.secret);
+})
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);

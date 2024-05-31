@@ -1255,6 +1255,10 @@ video {
   grid-row: span 1 / span 1;
 }
 
+.row-span-10{
+  grid-row: span 10 / span 10;
+}
+
 .row-span-2{
   grid-row: span 2 / span 2;
 }
@@ -1545,6 +1549,10 @@ video {
 
 .mt-8{
   margin-top: 2rem;
+}
+
+.mt-5{
+  margin-top: 1.25rem;
 }
 
 .box-border{
@@ -2286,8 +2294,8 @@ video {
   width: 8rem;
 }
 
-.w-\[925px\]{
-  width: 925px;
+.w-\[970px\]{
+  width: 970px;
 }
 
 .w-fit{
@@ -2302,6 +2310,14 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-40{
+  width: 10rem;
+}
+
+.w-60{
+  width: 15rem;
 }
 
 .min-w-\[100px\]{
@@ -4800,10 +4816,6 @@ video {
   opacity: 0.8;
 }
 
-.opacity-90{
-  opacity: 0.9;
-}
-
 .shadow{
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -5845,10 +5857,6 @@ html body {
 
 .focus\:ring-opacity-40:focus{
   --tw-ring-opacity: 0.4;
-}
-
-.focus\:ring-opacity-80:focus{
-  --tw-ring-opacity: 0.8;
 }
 
 .active\:scale-100:active{

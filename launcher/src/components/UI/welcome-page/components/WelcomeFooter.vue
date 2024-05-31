@@ -48,8 +48,8 @@ const display = async (osResponse, suResponse) => {
   const suData = await suResponse;
   const osName = osData && osData.hasOwnProperty("name") && osData.name ? osData.name : "";
   const osVers = osData && osData.hasOwnProperty("version") && osData.version ? osData.version : "";
-  if (osName == "Ubuntu" && osVers == "22.04") {
-    message.value = osName.toUpperCase() + " " + supportMessage;
+  if (osName === "Ubuntu" && (osVers === "22.04" || osVers === "24.04")) {
+    message.value = osName.toUpperCase() + " " + osVers + " " + supportMessage;
     if (suData.rc) {
       // Description of return codes (suData.rc):
       // 1 = FAIL: user can not sudo without password!

@@ -6,6 +6,7 @@ export const useControlStore = defineStore("theControl", {
       currentConsensusIcon: "",
       currentExecutionIcon: "",
       synchronizationError: false,
+      synchronizationErrorControl: false,
       pageNumber: 1,
       consensusName: "",
       request: [],

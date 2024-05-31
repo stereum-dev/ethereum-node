@@ -75,7 +75,7 @@
           </div>
         </router-link>
 
-        <router-link v-if="synchronizationError" to="/control" class="status-message_red">
+        <router-link v-if="synchronizationErrorControl" to="/control" class="status-message_red">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
           </div>
@@ -206,7 +206,7 @@ export default {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
-      synchronizationError: "synchronizationError",
+      synchronizationErrorControl: "synchronizationErrorControl",
     }),
     ...mapWritableState(useNodeHeader, {
       stereumUpdate: "stereumUpdate",
