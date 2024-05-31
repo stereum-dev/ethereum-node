@@ -54,7 +54,7 @@ const circleClass = computed(() => {
   bottom: 5px;
   left: 3px;
   border-style: solid;
-  border-width: 3px 3px 0 0;
+  border-width: 4px 4px 0 0;
   border-radius: 0 100% 0 0;
   opacity: 1; /* Make circles fully visible */
 }
