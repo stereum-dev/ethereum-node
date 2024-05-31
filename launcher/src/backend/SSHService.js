@@ -64,10 +64,9 @@ export class SSHService {
   }
 
   // Check the connection quality by pinging the host
-
   async checkConnectionQuality() {
     const host = this.connectionInfo.host;
-    let connectionQuality = null;
+    let connectionQuality = { pingTime: null };
 
     try {
       const res = await ping.promise.probe(host, {
@@ -75,18 +74,12 @@ export class SSHService {
       });
 
       if (typeof res.time !== "undefined" && res.time !== null) {
-        if (res.alive && res.time < 100) {
-          connectionQuality = { status: "good", pingTime: res.time };
-        } else {
-          connectionQuality = { status: "poor", pingTime: res.time };
-        }
+        connectionQuality.pingTime = res.time;
       } else {
         console.log(`Ping to ${host} failed or timed out`);
-        connectionQuality = { status: "failed", pingTime: null };
       }
     } catch (err) {
       console.error("Ping failed:", err);
-      connectionQuality = { status: "failed", pingTime: null };
     }
     return connectionQuality;
   }
