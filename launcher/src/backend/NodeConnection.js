@@ -340,17 +340,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-          playbookRunRef +
-          "\
+        playbookRunRef +
+        "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-          StringUtils.escapeStringForShell(extraVarsJson) +
-          "\
+        StringUtils.escapeStringForShell(extraVarsJson) +
+        "\
                         " +
-          this.settings.stereum.settings.controls_install_path +
-          "/ansible/controls/genericPlaybook.yaml\
+        this.settings.stereum.settings.controls_install_path +
+        "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -1770,10 +1770,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-          StringUtils.escapeStringForShell(service.data.trim()) +
-          " > /etc/stereum/services/" +
-          service.id +
-          ".yaml"
+        StringUtils.escapeStringForShell(service.data.trim()) +
+        " > /etc/stereum/services/" +
+        service.id +
+        ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -1819,10 +1819,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-          " > /etc/stereum/services/" +
-          serviceConfiguration.id +
-          ".yaml"
+        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+        " > /etc/stereum/services/" +
+        serviceConfiguration.id +
+        ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -1844,9 +1844,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-          serviceConfiguration.id +
-          ": " +
-          SSHService.extractExecError(configStatus)
+        serviceConfiguration.id +
+        ": " +
+        SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -2398,7 +2398,7 @@ export class NodeConnection {
   async getAllServiceLogs(args) {
     const containerName = `stereum-${args}`;
     try {
-      const logResult = await this.sshService.exec(`docker logs ${containerName} 2>&1`);
+      const logResult = await this.sshService.exec(`docker logs ${containerName} --tail=100000 2>&1`);
 
       if (logResult.rc || !logResult.stdout || logResult.stderr) {
         throw new Error(logResult.stderr || "Error fetching logs");
