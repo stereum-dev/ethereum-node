@@ -24,7 +24,7 @@ const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const authenticationService = new AuthenticationService(nodeConnection);
-const sshService = new SSHService;
+const sshService = new SSHService();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
@@ -218,6 +218,10 @@ ipcMain.handle("getServices", async () => {
 // get data for service logs
 ipcMain.handle("getServiceLogs", async (event, args) => {
   return await monitoring.getServiceLogs(args);
+});
+
+ipcMain.handle("getAllServiceLogs", async (event, args) => {
+  return await nodeConnection.getAllServiceLogs(args);
 });
 
 ipcMain.handle("getServiceConfig", async (event, args) => {
@@ -497,15 +501,20 @@ ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
 
 ipcMain.handle("beginAuthSetup", async (event, args) => {
   const current_window = event.sender;
-  return await authenticationService.beginAuthSetup(args.timeBased, args.increaseTimeLimit, args.enableRateLimit, current_window)
+  return await authenticationService.beginAuthSetup(
+    args.timeBased,
+    args.increaseTimeLimit,
+    args.enableRateLimit,
+    current_window
+  );
 });
 
 ipcMain.handle("finishAuthSetup", async () => {
-  return await authenticationService.finishAuthSetup()
+  return await authenticationService.finishAuthSetup();
 });
 
 ipcMain.handle("authenticatorVerification", async (event, args) => {
-  return await authenticationService.authenticatorVerification(args)
+  return await authenticationService.authenticatorVerification(args);
 });
 
 ipcMain.handle("removeAuthenticator", async (event, args) => {
@@ -517,7 +526,7 @@ ipcMain.handle("checkForAuthenticator", async (event, args) => {
 });
 
 ipcMain.handle("cancelVerification", async (event, args) => {
-  return await sshService.cancelVerification(args)
+  return await sshService.cancelVerification(args);
 });
 
 ipcMain.handle("changePassword", async (event, args) => {
@@ -676,7 +685,7 @@ ipcMain.handle("stopShell", async () => {
 
 ipcMain.handle("create2FAQRCode", async (event, args) => {
   return await authenticationService.create2FAQRCode(args.type, args.name, args.ip, args.secret);
-})
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);

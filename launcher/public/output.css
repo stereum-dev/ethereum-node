@@ -1519,16 +1519,16 @@ video {
   margin-top: 10rem;
 }
 
+.mt-5{
+  margin-top: 1.25rem;
+}
+
 .mt-6{
   margin-top: 1.5rem;
 }
 
 .mt-8{
   margin-top: 2rem;
-}
-
-.mt-5{
-  margin-top: 1.25rem;
 }
 
 .box-border{
@@ -2098,6 +2098,10 @@ video {
   width: 1.5rem;
 }
 
+.w-60{
+  width: 15rem;
+}
+
 .w-64{
   width: 16rem;
 }
@@ -2250,14 +2254,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-40{
-  width: 10rem;
-}
-
-.w-60{
-  width: 15rem;
 }
 
 .min-w-\[100px\]{
