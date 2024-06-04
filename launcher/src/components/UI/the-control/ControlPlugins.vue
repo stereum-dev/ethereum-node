@@ -1,5 +1,5 @@
 <template>
-  <div class="plugins-parent">
+  <div class="plugins-parent rounded-md">
     <!-- <div class="shape"></div> -->
 
     <slot></slot>
@@ -10,7 +10,7 @@
   width: 100%;
   height: 100%;
   background-color: #264744;
-  border-radius: 0 35px 35px 35px;
+  box-shadow: 0 1px 3px 1px rgb(20, 44, 34);
   display: flex;
   flex-direction: column;
   justify-content: center;

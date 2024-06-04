@@ -5,15 +5,15 @@
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
-            <span>PLUG-INs</span>
+            <SetupDetails :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
           </div>
-          <div class="plugins-table-bg">
+          <div class="plugins-table-bg rounded-md">
             <div class="arrow-up" @click="scrollUp">
               <img src="/img/icon/control-page-icons/arrow-up-1.png" alt="" />
             </div>
             <div ref="pluginsTable" class="plugins-table">
               <div
-                v-for="(item, index) in serviceStore.installedServices"
+                v-for="(item, index) in selecteConfigServices"
                 :key="index"
                 class="plugins-row"
                 @mouseenter="footerStore.cursorLocation = `${item.name + ' / ' + item.category}`"
@@ -133,6 +133,7 @@
       :client="nodeStore.clientToLogs"
       @close-log="closeLogPage"
       @export-log="exportLogs"
+      @export-all-log="updateAndExportAllLogs"
     />
     <!-- End Control main layout -->
   </base-layout>
@@ -153,6 +154,8 @@ import { useControlStore } from "@/store/theControl";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import i18n from "@/includes/i18n";
+import SetupDetails from "../edit-page/components/edit/header/SetupDetails.vue";
+import { useSetups } from "@/store/setups";
 
 const t = i18n.global.t;
 
@@ -161,21 +164,55 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const footerStore = useFooter();
 const headerStore = useNodeHeader();
+const setupStore = useSetups();
 
 const pluginsTable = ref(null);
 const expertModeClient = ref(null);
 const isExpertWindowOpen = ref(false);
 const isLogsPageActive = ref(false);
+
 let polling = null;
+
+const setupsList = computed(() => {
+  let list;
+  list = setupStore.allSetups.map((setup) => {
+    return setup;
+  });
+  return list;
+});
+
+const selecteConfigServices = computed(() => {
+  let test = [];
+  const selectedSetup = setupStore.selectedSetup;
+  if (selectedSetup && selectedSetup.services) {
+    const selectedServiceIds = selectedSetup.services.map((service) => service.id);
+    serviceStore.installedServices.forEach((service) => {
+      if (
+        (["execution", "validator", "consensus"].includes(service.category) &&
+          selectedServiceIds.includes(service.config.serviceID)) ||
+        service.category === "service"
+      ) {
+        test.push({
+          isServicePending: false,
+          ...service,
+        });
+      }
+    });
+  }
+  return test;
+});
+
+const selectSetup = (setup) => {
+  setupStore.selectNodeConfigView(setup);
+};
+
+const serverView = () => {
+  setupStore.selectNodeServerView();
+};
 
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
-
-  serviceStore.installedServices = serviceStore.installedServices.map((service) => ({
-    isServicePending: false,
-    ...service,
-  }));
 });
 
 onUnmounted(() => {
@@ -226,6 +263,21 @@ const closeLogPage = () => {
   isLogsPageActive.value = false;
   controlStore.serviceLogs = null;
 };
+
+const updateAndExportAllLogs = async (client) => {
+  nodeStore.isLogLoading = true;
+
+  nodeStore.allLogsForExp = await ControlService.getAllServiceLogs(client.config?.serviceID);
+
+  const fileName = `${client.name}_all_logs.txt`;
+  const data = [...nodeStore.allLogsForExp.logs].reverse();
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+  saveAs(blob, fileName);
+
+  nodeStore.isLogLoading = false;
+};
+
 const exportLogs = async (client) => {
   const currentService = nodeStore.serviceLogs.find(
     (service) => service.config?.serviceID === client.config?.serviceID
@@ -317,8 +369,8 @@ const updateServiceLogs = async () => {
   border-radius: 0 0 7px 7px;
 }
 .plugins-title {
-  width: 40%;
-  height: 25px;
+  width: 90%;
+  height: 10%;
   background-color: #23272a;
   padding: 2px;
   border: 1px solid #4a5150;
@@ -336,11 +388,11 @@ const updateServiceLogs = async () => {
 }
 .plugins-table-bg {
   width: 90%;
-  height: 86%;
+  height: 82%;
   background-color: #23272a;
   border: 1px solid #707070;
   box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
-  border-radius: 30px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
