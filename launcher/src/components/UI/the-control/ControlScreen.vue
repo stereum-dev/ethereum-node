@@ -5,14 +5,7 @@
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
-            <!-- <span>PLUG-INs</span> -->
-            <SetupDropdown
-              :list="setupsList"
-              @select-rename="selectRename"
-              @confirm-rename="confirmRename"
-              @select-setup="selectSetup"
-              @server-view="serverView"
-            />
+            <SetupDetails :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
           </div>
           <div class="plugins-table-bg rounded-md">
             <div class="arrow-up" @click="scrollUp">
@@ -161,7 +154,7 @@ import { useControlStore } from "@/store/theControl";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import i18n from "@/includes/i18n";
-import SetupDropdown from "../edit-page/components/edit/setups/SetupDropdown.vue";
+import SetupDetails from "../edit-page/components/edit/header/SetupDetails.vue";
 import { useSetups } from "@/store/setups";
 
 const t = i18n.global.t;
@@ -180,40 +173,19 @@ const isLogsPageActive = ref(false);
 let polling = null;
 
 const setupsList = computed(() => {
-  const list = setupStore.editSetups.map((setup) => {
+  let list;
+  list = setupStore.allSetups.map((setup) => {
     return setup;
   });
   return list;
 });
 
-const selectRename = async (setup) => {
-  setupStore.setupToRename = setup.setupName;
-  setupStore.isRenameSetupActive = true;
-};
-
-const confirmRename = async () => {
-  const setup = {
-    setupId: setupStore.selectedSetup.setupId,
-    setupName: setupStore.setupToRename,
-  };
-  setupStore.selectedSetup.setupName = setupStore.setupToRename;
-  setupStore.editSetups = setupStore.editSetups.map((s) => {
-    if (s.setupId === setup.setupId) {
-      s.setupName = setup.setupName;
-    }
-    return s;
-  });
-  await ControlService.renameSetup(setup);
-  setupStore.isRenameSetupActive = false;
-  setupStore.setupToRename = null;
-};
-
 const selectSetup = (setup) => {
-  setupStore.selectEditConfigView(setup);
+  setupStore.selectNodeConfigView(setup);
 };
 
 const serverView = () => {
-  setupStore.selectEditServerView(setupStore.selectedSetup);
+  setupStore.selectNodeServerView();
 };
 
 onMounted(() => {
