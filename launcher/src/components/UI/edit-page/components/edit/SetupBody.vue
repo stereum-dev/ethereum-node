@@ -51,8 +51,7 @@ const getEditSetups = computed(() => {
 watch(
   () => setupStore.serverSetups,
   () => {
-    setupStore.allSetups = getAllSetups();
-    setupStore.editSetups = setupStore.allSetups;
+    setupStore.editSetups = getAllSetups();
   }
 );
 
