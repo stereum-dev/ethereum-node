@@ -187,6 +187,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getServiceLogs", args);
   }
 
+  async getAllServiceLogs(args) {
+    return await this.promiseIpc.send("getAllServiceLogs", args);
+  }
+
   async getServiceConfig(args) {
     return await this.promiseIpc.send("getServiceConfig", args);
   }

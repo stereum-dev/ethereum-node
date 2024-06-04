@@ -162,7 +162,8 @@ export class NodeConnection {
           "sudo -u root apt update &&\
           sudo -u root apt install -y software-properties-common &&\
           sudo -u root add-apt-repository --yes --update ppa:ansible/ansible &&\
-          sudo -u root apt install -y pip ansible tar gzip wget git", false
+          sudo -u root apt install -y pip ansible tar gzip wget git",
+          false
         );
       } catch (err) {
         log.error(err);
@@ -2363,7 +2364,7 @@ export class NodeConnection {
         throw new Error(SSHService.extractExecError(result));
       }
 
-      return "latest"
+      return "latest";
     } catch (error) {
       // if pulling the latest image fails, try fetching the latest installed image
       try {
@@ -2373,8 +2374,13 @@ export class NodeConnection {
           throw new Error(SSHService.extractExecError(fetchedImages));
         }
 
-        const images = fetchedImages.stdout.split(/\n/).slice(0, -1).map((json) => { return JSON.parse(json) });
-        log.info(`installed images: ${images}`)
+        const images = fetchedImages.stdout
+          .split(/\n/)
+          .slice(0, -1)
+          .map((json) => {
+            return JSON.parse(json);
+          });
+        log.info(`installed images: ${images}`);
         if (images.length === 0) return "latest";
 
         // get the latest installed image
@@ -2390,6 +2396,22 @@ export class NodeConnection {
         log.error("Error fetching installed curl images: ", error);
         return "latest";
       }
+    }
+  }
+
+  async getAllServiceLogs(args) {
+    const containerName = `stereum-${args}`;
+    try {
+      const logResult = await this.sshService.exec(`docker logs ${containerName} --tail=100000 2>&1`);
+
+      if (logResult.rc || !logResult.stdout || logResult.stderr) {
+        throw new Error(logResult.stderr || "Error fetching logs");
+      }
+
+      return { containerId: containerName, logs: logResult.stdout.trim().split("\n") };
+    } catch (err) {
+      log.error(`Failed to get logs for container ${containerName}: `, err);
+      return { containerId: "ERROR", logs: err.message };
     }
   }
 }

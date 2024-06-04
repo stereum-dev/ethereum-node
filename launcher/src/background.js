@@ -222,6 +222,10 @@ ipcMain.handle("getServiceLogs", async (event, args) => {
   return await monitoring.getServiceLogs(args);
 });
 
+ipcMain.handle("getAllServiceLogs", async (event, args) => {
+  return await nodeConnection.getAllServiceLogs(args);
+});
+
 ipcMain.handle("getServiceConfig", async (event, args) => {
   return await nodeConnection.readServiceConfiguration(args);
 });
@@ -712,7 +716,7 @@ ipcMain.handle("stopShell", async () => {
 
 ipcMain.handle("create2FAQRCode", async (event, args) => {
   return await authenticationService.create2FAQRCode(args.type, args.name, args.ip, args.secret);
-})
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
