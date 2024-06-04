@@ -5,9 +5,16 @@
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
-            <span>PLUG-INs</span>
+            <!-- <span>PLUG-INs</span> -->
+            <SetupDropdown
+              :list="setupsList"
+              @select-rename="selectRename"
+              @confirm-rename="confirmRename"
+              @select-setup="selectSetup"
+              @server-view="serverView"
+            />
           </div>
-          <div class="plugins-table-bg">
+          <div class="plugins-table-bg rounded-md">
             <div class="arrow-up" @click="scrollUp">
               <img src="/img/icon/control-page-icons/arrow-up-1.png" alt="" />
             </div>
@@ -154,6 +161,8 @@ import { useControlStore } from "@/store/theControl";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import i18n from "@/includes/i18n";
+import SetupDropdown from "../edit-page/components/edit/setups/SetupDropdown.vue";
+import { useSetups } from "@/store/setups";
 
 const t = i18n.global.t;
 
@@ -162,12 +171,50 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const footerStore = useFooter();
 const headerStore = useNodeHeader();
+const setupStore = useSetups();
 
 const pluginsTable = ref(null);
 const expertModeClient = ref(null);
 const isExpertWindowOpen = ref(false);
 const isLogsPageActive = ref(false);
 let polling = null;
+
+const setupsList = computed(() => {
+  const list = setupStore.editSetups.map((setup) => {
+    return setup;
+  });
+  return list;
+});
+
+const selectRename = async (setup) => {
+  setupStore.setupToRename = setup.setupName;
+  setupStore.isRenameSetupActive = true;
+};
+
+const confirmRename = async () => {
+  const setup = {
+    setupId: setupStore.selectedSetup.setupId,
+    setupName: setupStore.setupToRename,
+  };
+  setupStore.selectedSetup.setupName = setupStore.setupToRename;
+  setupStore.editSetups = setupStore.editSetups.map((s) => {
+    if (s.setupId === setup.setupId) {
+      s.setupName = setup.setupName;
+    }
+    return s;
+  });
+  await ControlService.renameSetup(setup);
+  setupStore.isRenameSetupActive = false;
+  setupStore.setupToRename = null;
+};
+
+const selectSetup = (setup) => {
+  setupStore.selectEditConfigView(setup);
+};
+
+const serverView = () => {
+  setupStore.selectEditServerView(setupStore.selectedSetup);
+};
 
 onMounted(() => {
   updateServiceLogs();
@@ -333,8 +380,8 @@ const updateServiceLogs = async () => {
   border-radius: 0 0 7px 7px;
 }
 .plugins-title {
-  width: 40%;
-  height: 25px;
+  width: 90%;
+  height: 10%;
   background-color: #23272a;
   padding: 2px;
   border: 1px solid #4a5150;
@@ -352,11 +399,11 @@ const updateServiceLogs = async () => {
 }
 .plugins-table-bg {
   width: 90%;
-  height: 86%;
+  height: 82%;
   background-color: #23272a;
   border: 1px solid #707070;
   box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
-  border-radius: 30px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
