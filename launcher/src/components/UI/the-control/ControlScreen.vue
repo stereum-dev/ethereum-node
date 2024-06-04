@@ -13,7 +13,7 @@
             </div>
             <div ref="pluginsTable" class="plugins-table">
               <div
-                v-for="(item, index) in serviceStore.installedServices"
+                v-for="(item, index) in selecteConfigServices"
                 :key="index"
                 class="plugins-row"
                 @mouseenter="footerStore.cursorLocation = `${item.name + ' / ' + item.category}`"
@@ -170,6 +170,7 @@ const pluginsTable = ref(null);
 const expertModeClient = ref(null);
 const isExpertWindowOpen = ref(false);
 const isLogsPageActive = ref(false);
+
 let polling = null;
 
 const setupsList = computed(() => {
@@ -178,6 +179,27 @@ const setupsList = computed(() => {
     return setup;
   });
   return list;
+});
+
+const selecteConfigServices = computed(() => {
+  let test = [];
+  const selectedSetup = setupStore.selectedSetup;
+  if (selectedSetup && selectedSetup.services) {
+    const selectedServiceIds = selectedSetup.services.map((service) => service.id);
+    serviceStore.installedServices.forEach((service) => {
+      if (
+        (["execution", "validator", "consensus"].includes(service.category) &&
+          selectedServiceIds.includes(service.config.serviceID)) ||
+        service.category === "service"
+      ) {
+        test.push({
+          isServicePending: false,
+          ...service,
+        });
+      }
+    });
+  }
+  return test;
 });
 
 const selectSetup = (setup) => {
@@ -191,11 +213,6 @@ const serverView = () => {
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
-
-  serviceStore.installedServices = serviceStore.installedServices.map((service) => ({
-    isServicePending: false,
-    ...service,
-  }));
 });
 
 onUnmounted(() => {
