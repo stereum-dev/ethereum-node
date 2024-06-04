@@ -81,7 +81,7 @@ test("lighthouse validator import", async () => {
   await serviceManager.manageServiceState(lhVC.id, "started");
 
   //Waiting for the service to start properly
-  await testServer.Sleep(60000);
+  await testServer.Sleep(360000);
 
   //import validator
   const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);

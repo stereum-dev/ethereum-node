@@ -73,6 +73,7 @@ jobs:
             { role: "update-changes", test: "203" },
             { role: "update-changes", test: "213" },
             { role: "update-changes", test: "214" },
+            { role: "update-changes", test: "215" },
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
