@@ -81,7 +81,7 @@
           @click="callReconnectModal"
         >
           <div class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1">
-            <WifiSearch />
+            <img class="w-8" src="/img/icon/connection-status/searching.gif" alt="WIFI Icon" />
           </div>
           <div class="col-start-5 col-span-full flex flex-col justify-center items-start">
             <span class="text-[8px] text-gray-100 font-semibold uppercase">Poor Connection</span>
@@ -189,11 +189,9 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useNodeStore } from "@/store/theNode";
-import WifiSearch from "./../../../../layers/WifiSearch.vue";
 export default {
   components: {
     AlertSkeleton,
-    WifiSearch,
   },
   data() {
     return {

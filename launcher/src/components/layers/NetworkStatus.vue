@@ -35,17 +35,17 @@ const alertTimeout = ref(null);
 const circleClass = computed(() => {
   switch (nodeStore.connectionStatus?.status) {
     case "excellent":
-      return "circle-excellent";
+      return "text-green-500";
     case "good":
-      return "circle-good";
+      return "text-green-500";
     case "fair":
-      return "circle-fair";
+      return "text-yellow-400";
     case "poor":
-      return "circle-poor";
+      return "text-orange-500";
     case "very poor":
-      return "circle-very-poor";
+      return "text-red-500";
     default:
-      return "default";
+      return "text-white";
   }
 });
 
@@ -86,29 +86,3 @@ onUnmounted(() => {
   stopPolling(); // Stop polling when the component is unmounted
 });
 </script>
-
-<style scoped>
-.circle-excellent {
-  color: green;
-}
-
-.circle-good {
-  color: lightgreen;
-}
-
-.circle-fair {
-  color: yellow;
-}
-
-.circle-poor {
-  color: orange;
-}
-
-.circle-very-poor {
-  color: red;
-}
-
-.default {
-  color: white;
-}
-</style>
