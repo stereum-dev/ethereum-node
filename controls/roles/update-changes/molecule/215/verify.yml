@@ -1,0 +1,37 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # ValidatorEjectorService
+    - name: Read ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/f12b9300-d46c-c9cc-99a6-e437aa71ef5b.yaml"
+      register: Ejector_service_configuration_raw
+
+    # ValidatorEjectorService2
+    - name: Read ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/147c5807-b646-471f-aaa4-5e215ad98b75.yaml"
+      register: Ejector_service_configuration2_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        Ejector_service_configuration: "{{ Ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Ejector_service_configuration2: "{{ Ejector_service_configuration2_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ Ejector_service_configuration }}"
+    - debug:
+        msg: "{{ Ejector_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ Ejector_service_configuration2 }}"
+    - debug:
+        msg: "{{ Ejector_service_configuration2_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length == 10
+          - Ejector_service_configuration2.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length == 9
+# EOF

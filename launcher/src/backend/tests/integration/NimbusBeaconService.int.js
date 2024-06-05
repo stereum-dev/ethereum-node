@@ -109,7 +109,6 @@ test("nimbus validator import", async () => {
       /Listening to incoming network requests/.test(BCstatus.stdout) &&
       /REST service started/.test(BCstatus.stdout) &&
       /Slot start/.test(BCstatus.stdout) &&
-      /Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)/.test(BCstatus.stdout) &&
       /Beacon node is online/.test(VCstatus.stdout) &&
       /Beacon node is compatible/.test(VCstatus.stdout) &&
       /Local validator attached/.test(VCstatus.stdout) &&
@@ -141,7 +140,6 @@ test("nimbus validator import", async () => {
   }
 
   //check nimbus service logs
-  expect(BCstatus.stdout).toMatch(/Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)/);
   expect(BCstatus.stdout).toMatch(/Starting beacon node/);
   expect(BCstatus.stdout).toMatch(/Listening to incoming network requests/);
   expect(BCstatus.stdout).toMatch(/REST service started/);

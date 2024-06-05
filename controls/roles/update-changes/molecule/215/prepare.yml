@@ -1,0 +1,103 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create ValidatorEjectorService config
+      copy:
+        dest: "/etc/stereum/services/f12b9300-d46c-c9cc-99a6-e437aa71ef5b.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: f12b9300-d46c-c9cc-99a6-e437aa71ef5b
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-f34a2967-b99d-0edc-cfe9-43e47884fa66:8545
+            CONSENSUS_NODE: http://stereum-4c23e774-519b-62ca-9ccf-e9b274cfad8c:5052
+            LOCATOR_ADDRESS: "0x28FAB2059C713A7F9D8c86Db49f9bb0e96Af1ef8"
+            STAKING_MODULE_ID: "123"
+            OPERATOR_ID: "123"
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0x12A1D74F8697b9f4F1eEBb0a9d0FB6a751366399",
+              "0xD892c09b556b547c80B7d8c8cB8d75bf541B2284",
+              "0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5",
+              "0xD3b1e36A372Ca250eefF61f90E833Ca070559970",
+              "0xF0F23944EfC5A63c53632C571E7377b85d5E6B6f",
+              "0xb29dD2f6672C0DFF2d2f173087739A42877A5172",
+              "0x3799bDA7B884D33F79CEC926af21160dc47fbe05"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:1.6.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-f12b9300-d46c-c9cc-99a6-e437aa71ef5b/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: f34a2967-b99d-0edc-cfe9-43e47884fa66
+            consensusClients:
+              - service: LighthouseBeaconService
+                id: 4c23e774-519b-62ca-9ccf-e9b274cfad8c
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create ValidatorEjectorService config
+      copy:
+        dest: "/etc/stereum/services/147c5807-b646-471f-aaa4-5e215ad98b75.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: 147c5807-b646-471f-aaa4-5e215ad98b75
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-f34a2967-b99d-0edc-cfe9-43e47884fa66:8545
+            CONSENSUS_NODE: http://stereum-4c23e774-519b-62ca-9ccf-e9b274cfad8c:5052
+            LOCATOR_ADDRESS: "0x28FAB2059C713A7F9D8c86Db49f9bb0e96Af1ef8"
+            STAKING_MODULE_ID: "123"
+            OPERATOR_ID: "123"
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0x12A1D74F8697b9f4F1eEBb0a9d0FB6a751366399","0xD892c09b556b547c80B7d8c8cB8d75bf541B2284","0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5","0x31fa51343297FFce0CC1E67a50B2D3428057D1b1","0x81E411f1BFDa43493D7994F82fb61A415F6b8Fd4","0x4c75FA734a39f3a21C57e583c1c29942F021C6B7","0xD3b1e36A372Ca250eefF61f90E833Ca070559970","0xF0F23944EfC5A63c53632C571E7377b85d5E6B6f","0xb29dD2f6672C0DFF2d2f173087739A42877A5172"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:1.6.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-147c5807-b646-471f-aaa4-5e215ad98b75/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: f34a2967-b99d-0edc-cfe9-43e47884fa66
+            consensusClients:
+              - service: LighthouseBeaconService
+                id: 4c23e774-519b-62ca-9ccf-e9b274cfad8c
+            mevboost: []
+            otherServices: []
+      become: yes
+# EOF
