@@ -103,7 +103,10 @@ const getServices = computed(() => {
       return false; // services not in serverServices
     });
   } else {
-    services = services.filter((service) => !setupStore.serverServices.includes(service.service));
+    services = services.filter(
+      (service) =>
+        !setupStore.serverServices.includes(service.service) && service.setupId === setupStore.selectedSetup.setupId
+    );
   }
 
   return services;
