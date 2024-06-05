@@ -221,7 +221,7 @@ export const useServices = defineStore("services", {
               commands: ["--suggested-fee-recipient"],
             },
             {
-              title: "Doppelganger",
+              title: "Doppelganger Protection",
               type: "toggle",
               changeValue: true,
               icon: "/img/icon/service-setting-icons/doppelganger.png",
@@ -344,7 +344,7 @@ export const useServices = defineStore("services", {
               commands: ["--suggested-fee-recipient"],
             },
             {
-              title: "Doppelganger",
+              title: "Doppelganger Protection",
               type: "toggle",
               changeValue: true,
               icon: "/img/icon/service-setting-icons/doppelganger.png",
@@ -468,7 +468,7 @@ export const useServices = defineStore("services", {
               commands: ["--validators-proposer-default-fee-recipient"],
             },
             {
-              title: "Doppelganger",
+              title: "Doppelganger Protection",
               type: "toggle",
               changeValue: true,
               icon: "/img/icon/service-setting-icons/doppelganger.png",
@@ -896,7 +896,7 @@ export const useServices = defineStore("services", {
               commands: ["--suggestedFeeRecipient"],
             },
             {
-              title: "Doppelganger",
+              title: "Doppelganger Protection",
               type: "toggle",
               changeValue: true,
               icon: "/img/icon/service-setting-icons/doppelganger.png",
