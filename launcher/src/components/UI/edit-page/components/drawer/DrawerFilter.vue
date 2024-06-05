@@ -75,7 +75,6 @@ serviceStore.filteredServices = computed(() => {
 const getFilterbyNetwork = () => {
   switch (manageStore.configNetwork.network) {
     case "mainnet":
-    case "goerli":
       return (item) => archFilter(item.service);
     case "holesky":
       return (item) => item.service != archFilter(item.service);
