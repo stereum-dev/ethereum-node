@@ -61,7 +61,7 @@ export class TekuBeaconService extends NodeService {
         "--log-destination=CONSOLE",
       ], // command
       ["/opt/teku/bin/teku"], // entrypoint
-      { JAVA_OPTS: "-Xmx4g" }, // env
+      { JAVA_OPTS: "-Xmx6g" }, // env
       ports, // ports
       volumes, // volumes
       null, // user
