@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full col-start-1 col-end-2 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative"
-  >
+  <div class="w-full col-start-1 col-end-2 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative">
     <div
       v-for="item in getExecutions"
       :key="item"
@@ -40,14 +38,7 @@ import GeneralMenu from "./GeneralMenu.vue";
 import { computed } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 
-const emit = defineEmits([
-  "deleteService",
-  "switchClient",
-  "connectClient",
-  "infoModal",
-  "mouseOver",
-  "mouseLeave",
-]);
+const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
 const manageStore = useNodeManage();
 const serviceStore = useServices();
 const setupStore = useSetups();
@@ -61,7 +52,10 @@ const getExecutions = computed(() => {
 
   const services = manageStore.newConfiguration
     .filter(
-      (s) => s.category === "execution" && selectedServiceIds.includes(s.config.serviceID)
+      (s) =>
+        s.category === "execution" &&
+        selectedServiceIds.includes(s.config.serviceID) &&
+        s.setupId === setupStore.selectedSetup.setupId
     )
     .sort((a, b) => {
       const fa = a.name.toLowerCase();

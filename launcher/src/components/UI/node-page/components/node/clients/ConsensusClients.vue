@@ -64,10 +64,12 @@ const getConsensusServices = computed(() => {
   }
 
   const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
-
   const services = serviceStore.installedServices
     .filter(
-      (s) => s.category === "consensus" && selectedServiceIds.includes(s.config.serviceID)
+      (s) =>
+        s.category === "consensus" &&
+        selectedServiceIds.includes(s.config.serviceID) &&
+        s.setupId === setupStore.selectedSetup.setupId
     )
     .sort((a, b) => {
       const fa = a.name.toLowerCase();

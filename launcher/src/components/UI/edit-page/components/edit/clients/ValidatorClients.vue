@@ -36,23 +36,18 @@
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
 
-import GeneralMenu from "./GeneralMenu.vue";
+import { useServices } from "@/store/services";
 import { computed } from "vue";
 import { useSetups } from "../../../../../../store/setups";
+import GeneralMenu from "./GeneralMenu.vue";
 
 // Variables & Constants
 
-const emit = defineEmits([
-  "deleteService",
-  "switchClient",
-  "modifyService",
-  "infoModal",
-  "mouseOver",
-  "mouseLeave",
-]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
+const serviceStore = useServices();
 
 // Computed & Watchers
 
@@ -63,9 +58,12 @@ const getValidators = computed(() => {
 
   const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
 
-  const services = manageStore.newConfiguration
+  const services = serviceStore.installedServices
     .filter(
-      (s) => s.category === "validator" && selectedServiceIds.includes(s.config.serviceID)
+      (s) =>
+        s.category === "validator" &&
+        selectedServiceIds.includes(s.config.serviceID) &&
+        s.setupId === setupStore.selectedSetup.setupId
     )
     .sort((a, b) => {
       const fa = a.name.toLowerCase();

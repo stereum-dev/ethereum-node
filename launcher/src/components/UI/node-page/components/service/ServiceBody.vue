@@ -1,18 +1,12 @@
 <template>
-  <div
-    class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] grid grid-cols-6 grid-rows-15"
-  >
+  <div class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] grid grid-cols-6 grid-rows-15">
     <div
       class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px]"
     >
-      <span
-        v-if="setupStore.isConfigViewActive"
-        class="text-xs text-gray-300 text-center font-sans"
+      <span v-if="setupStore.isConfigViewActive" class="text-xs text-gray-300 text-center font-sans"
         >Config Services
       </span>
-      <span v-else class="text-xs text-gray-300 text-center font-sans"
-        >Server Services
-      </span>
+      <span v-else class="text-xs text-gray-300 text-center font-sans">Server Services </span>
     </div>
     <div
       ref="service"
@@ -82,7 +76,8 @@ const getServices = computed(() => {
     });
   } else {
     services = services.filter(
-      (service) => !setupStore.serverServices.includes(service.service)
+      (service) =>
+        !setupStore.serverServices.includes(service.service) && service.setupId === setupStore.selectedSetup?.setupId
     );
   }
 
