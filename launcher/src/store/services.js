@@ -117,7 +117,7 @@ export const useServices = defineStore("services", {
               commands: ["--suggested-fee-recipient"],
             },
             {
-              title: "Doppelganger",
+              title: "Doppelganger Protection",
               type: "toggle",
               changeValue: true,
               icon: "/img/icon/service-setting-icons/doppelganger.png",
