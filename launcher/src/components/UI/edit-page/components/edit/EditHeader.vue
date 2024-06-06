@@ -18,9 +18,11 @@ import NetworkDetails from "./header/NetworkDetails.vue";
 import SetupDetails from "./header/SetupDetails.vue";
 import { computed } from "vue";
 import { useSetups } from "@/store/setups";
+import { useMultiSetups } from "@/composables/multiSetups";
 
 const emit = defineEmits(["selectRename", "confirmRename"]);
 const setupStore = useSetups();
+const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const setupsList = computed(() => {
   const list = setupStore.editSetups.map((setup) => {
@@ -38,11 +40,11 @@ const confirmRename = () => {
 };
 
 const selectSetup = (setup) => {
-  setupStore.selectEditConfigView(setup);
+  getSelectedSetup(setup, true);
 };
 
 const serverView = () => {
-  setupStore.selectEditServerView(setupStore.selectedSetup);
+  getServerView();
 };
 </script>
 

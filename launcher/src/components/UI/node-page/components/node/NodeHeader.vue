@@ -6,13 +6,15 @@
   </div>
 </template>
 <script setup>
-import SetupDetails from "../../../edit-page/components/edit/header/SetupDetails.vue";
-import ServerDetails from "../../../edit-page/components/edit/header/ServerDetails.vue";
-import NetworkDetails from "../../../edit-page/components/edit/header/NetworkDetails.vue";
+import { useMultiSetups } from "@/composables/multiSetups";
 import { useSetups } from "@/store/setups";
 import { computed } from "vue";
+import NetworkDetails from "../../../edit-page/components/edit/header/NetworkDetails.vue";
+import ServerDetails from "../../../edit-page/components/edit/header/ServerDetails.vue";
+import SetupDetails from "../../../edit-page/components/edit/header/SetupDetails.vue";
 
 const setupStore = useSetups();
+const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const setupsList = computed(() => {
   let list;
@@ -23,11 +25,11 @@ const setupsList = computed(() => {
 });
 
 const selectSetup = (setup) => {
-  setupStore.selectNodeConfigView(setup);
+  getSelectedSetup(setup);
 };
 
 const serverView = () => {
-  setupStore.selectNodeServerView();
+  getServerView();
 };
 
 // End of script

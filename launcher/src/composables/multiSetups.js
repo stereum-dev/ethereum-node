@@ -1,10 +1,15 @@
 import ControlService from "@/store/ControlService";
-import { ref } from "vue";
+import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
+import { useNodeManage } from "@/store/nodeManage";
+import { useDeepClone } from "@/composables/utils";
+import { ref } from "vue";
 
 export const useMultiSetups = () => {
   const services = ref([]);
   const setupStore = useSetups();
+  const serviceStore = useServices();
+  const manageStore = useNodeManage();
 
   const loadSetups = async () => {
     try {
@@ -59,12 +64,55 @@ export const useMultiSetups = () => {
       setupType: config.setupType,
       network: config.network,
       color: config.color,
-      services: services.value.filter((service) => config.serviceIds.includes(service.id)),
+      services: services.value
+        .filter((service) => config.serviceIds.includes(service.id))
+        .map((s) => {
+          return {
+            ...s,
+            setupId: config.configId,
+            setupName: config.name,
+          };
+        }),
+
       isActive: false,
     }));
 
     return setups;
   };
 
-  return { loadSetups, loadServices, getAllSetups };
+  const getNodeServices = () => {
+    setupStore.allSetups.forEach((setup) => {
+      setup.services.forEach((service) => {
+        serviceStore.installedServices.map((s) => {
+          if (s.config?.serviceID === service.id) {
+            s.setupId = setup.setupId;
+            s.setupName = setup.setupName;
+          }
+        });
+      });
+    });
+  };
+
+  const getEditServices = () => {
+    manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
+  };
+
+  const getSelectedSetup = (setup, flag = false) => {
+    setupStore.allSetups.forEach((s) => (s.isActive = false));
+    setupStore.editSetups.forEach((s) => (s.isActive = false));
+    setup.isActive = true;
+    setupStore.selectedSetup = setup;
+    setupStore.isEditConfigViewActive = flag;
+    setupStore.isConfigViewActive = !flag;
+  };
+
+  const getServerView = () => {
+    setupStore.allSetups.forEach((s) => (s.isActive = false));
+    setupStore.editSetups.forEach((s) => (s.isActive = false));
+    setupStore.isConfigViewActive = false;
+    setupStore.isEditConfigViewActive = false;
+    setupStore.selectedSetup = null;
+  };
+
+  return { loadSetups, loadServices, getAllSetups, getNodeServices, getEditServices, getSelectedSetup, getServerView };
 };

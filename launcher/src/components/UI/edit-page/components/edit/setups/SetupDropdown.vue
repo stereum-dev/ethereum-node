@@ -66,22 +66,7 @@
         @mouseleave="isOpen = false"
       >
         <div
-          v-if="setupStore.isConfigViewActive && route.path === '/node'"
-          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-[#336666] hover:bg-blue-300 cursor-pointer grid grid-cols-6 items-center"
-          @click="selectServerView"
-        >
-          <img
-            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start bg-gray-100"
-            src="/img/icon/stereum-icons/stereum-logo.png"
-            alt="Node Server View"
-          />
-          <span
-            class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
-            >Node Server View</span
-          >
-        </div>
-        <div
-          v-if="route.path === '/edit' && setupStore.isEditConfigViewActive"
+          v-if="setupStore.isConfigViewActive || setupStore.isEditConfigViewActive"
           class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-[#336666] hover:bg-blue-300 cursor-pointer grid grid-cols-6 items-center"
           @click="selectServerView"
         >
@@ -92,7 +77,7 @@
           />
           <span
             class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
-            >Edit Server View</span
+            >Server View</span
           >
         </div>
         <div
@@ -119,10 +104,10 @@
   </div>
 </template>
 <script setup>
-import RenameSetup from "./RenameSetup.vue";
-import { computed, ref } from "vue";
 import { useSetups } from "@/store/setups";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import RenameSetup from "./RenameSetup.vue";
 
 const { list } = defineProps({
   list: {
@@ -140,9 +125,7 @@ const isOpen = ref(false);
 
 const getSelectedOption = computed(() => {
   let option;
-  if (route.path === "/node" && setupStore.selectedSetup === null) {
-    option = "Node Server View";
-  } else if (route.path === "/edit" && setupStore.selectedSetup === null) {
+  if (setupStore.selectedSetup === null) {
     option = "Server View";
   } else {
     option = setupStore.selectedSetup?.setupName;
@@ -150,6 +133,13 @@ const getSelectedOption = computed(() => {
 
   return option;
 });
+
+watch(
+  () => setupStore.selectedSetup,
+  (val) => {
+    console.log(val);
+  }
+);
 
 // Methods
 

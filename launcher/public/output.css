@@ -831,10 +831,6 @@ video {
   bottom: 1rem;
 }
 
-.bottom-\[2px\]{
-  bottom: 2px;
-}
-
 .bottom-\[3rem\]{
   bottom: 3rem;
 }
@@ -879,20 +875,12 @@ video {
   left: 0.75rem;
 }
 
-.left-32{
-  left: 8rem;
-}
-
 .left-\[1\.3rem\]{
   left: 1.3rem;
 }
 
 .left-\[17rem\]{
   left: 17rem;
-}
-
-.left-\[34px\]{
-  left: 34px;
 }
 
 .left-\[40\%\]{
@@ -1838,10 +1826,6 @@ video {
   height: 100vh;
 }
 
-.h-\[22px\]{
-  height: 22px;
-}
-
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -1984,18 +1968,6 @@ video {
 
 .max-h-full{
   max-height: 100%;
-}
-
-.max-h-9{
-  max-height: 2.25rem;
-}
-
-.max-h-8{
-  max-height: 2rem;
-}
-
-.max-h-7{
-  max-height: 1.75rem;
 }
 
 .min-h-11{
@@ -3930,19 +3902,9 @@ video {
   background-color: rgb(30 58 138 / var(--tw-bg-opacity));
 }
 
-.bg-cyan-200{
-  --tw-bg-opacity: 1;
-  background-color: rgb(165 243 252 / var(--tw-bg-opacity));
-}
-
 .bg-cyan-300{
   --tw-bg-opacity: 1;
   background-color: rgb(103 232 249 / var(--tw-bg-opacity));
-}
-
-.bg-cyan-500{
-  --tw-bg-opacity: 1;
-  background-color: rgb(6 182 212 / var(--tw-bg-opacity));
 }
 
 .bg-gray-100{
@@ -4003,6 +3965,11 @@ video {
 .bg-green-500{
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+}
+
+.bg-green-600{
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
 .bg-green-700{
@@ -4104,19 +4071,14 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-zinc-700{
-  --tw-bg-opacity: 1;
-  background-color: rgb(63 63 70 / var(--tw-bg-opacity));
-}
-
 .bg-yellow-400{
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
 }
 
-.bg-green-600{
+.bg-zinc-700{
   --tw-bg-opacity: 1;
-  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+  background-color: rgb(63 63 70 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
@@ -4666,6 +4628,11 @@ video {
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
+.text-green-400{
+  --tw-text-opacity: 1;
+  color: rgb(74 222 128 / var(--tw-text-opacity));
+}
+
 .text-green-500{
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity));
@@ -4744,11 +4711,6 @@ video {
 .text-yellow-500{
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
-}
-
-.text-green-400{
-  --tw-text-opacity: 1;
-  color: rgb(74 222 128 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-400\/70::-webkit-input-placeholder{
@@ -6002,22 +5964,6 @@ html body {
   .dark\:hover\:text-white:hover{
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
-  }
-}
-
-@media (forced-colors: active){
-  .forced-colors\:block{
-    display: block;
-  }
-
-  .forced-colors\:hidden{
-    display: none;
-  }
-
-  .forced-colors\:appearance-auto{
-    -webkit-appearance: auto;
-       -moz-appearance: auto;
-            appearance: auto;
   }
 }
 

@@ -9,7 +9,7 @@ export const useSetups = defineStore("setups", {
     //Setup Node Page
     isConfigViewActive: false,
     isRenameSetupActive: false,
-    selectedSetup: null,
+    selectedSetup: {},
 
     //Setup Edit Page
     setupToRename: null,
@@ -58,39 +58,6 @@ export const useSetups = defineStore("setups", {
     },
     getTextColor: (state) => (color) => {
       return state.colorMappings[color]?.text || "text-gray-300";
-    },
-  },
-  actions: {
-    //Setup On Edit Page
-    selectEditServerView() {
-      this.editSetups.forEach((s) => (s.isActive = false));
-      this.selectedSetup = null;
-      this.isEditConfigViewActive = false;
-    },
-
-    selectEditConfigView(setup) {
-      this.selectedSetup = null;
-      this.isEditConfigViewActive = false;
-      this.editSetups.forEach((s) => (s.isActive = false));
-      setup.isActive = true;
-      this.selectedSetup = setup;
-      this.isEditConfigViewActive = true;
-    },
-
-    //Setup On Node Page
-    selectNodeServerView() {
-      this.allSetups.forEach((s) => (s.isActive = false));
-      this.isConfigViewActive = false;
-      this.selectedSetup = null;
-    },
-
-    selectNodeConfigView(setup) {
-      this.selectedSetup = null;
-      this.isConfigViewActive = false;
-      this.allSetups.forEach((s) => (s.isActive = false));
-      setup.isActive = true;
-      this.selectedSetup = setup;
-      this.isConfigViewActive = true;
     },
   },
 });

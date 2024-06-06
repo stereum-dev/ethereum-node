@@ -10,15 +10,9 @@
     <div
       class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-xs font-[400] font-sans"
     >
-      <span class="col-start-1 justify-self-center self-center">{{
-        $t("editModals.executionClients")
-      }}</span>
-      <span class="col-start-2 justify-self-center self-center">{{
-        $t("editModals.consensusClients")
-      }}</span>
-      <span class="col-start-3 justify-self-center self-center"
-        >{{ $t("editBody.validator") }}
-      </span>
+      <span class="col-start-1 justify-self-center self-center">{{ $t("editModals.executionClients") }}</span>
+      <span class="col-start-2 justify-self-center self-center">{{ $t("editModals.consensusClients") }}</span>
+      <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }} </span>
     </div>
     <div class="w-full h-full grid grid-cols-3 pt-8">
       <ClientSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
@@ -62,10 +56,12 @@ import ExecutionClients from "./clients/ExecutionClients.vue";
 import ConsensusClients from "./clients/ConsensusClients.vue";
 import ValidatorClients from "./clients/ValidatorClients.vue";
 import ClientSkeleton from "./clients/ClientSkeleton.vue";
-import { ref, watchEffect } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 import { useNodeStore } from "@/store/theNode";
-import { useStateHandler, useRestartService } from "@/composables/services";
+import { useStateHandler, useRestartService, useFrontendServices } from "@/composables/services";
+import { useMultiSetups } from "@/composables/multiSetups";
 import { useSetups } from "../../../../../store/setups";
+import { useServices } from "@/store/services";
 
 const emit = defineEmits([
   "openExpert",
@@ -89,6 +85,8 @@ const loadingClients = ref(false);
 
 const nodeStore = useNodeStore();
 const setupStore = useSetups();
+const serviceStore = useServices();
+const { getNodeServices } = useMultiSetups();
 
 watchEffect(() => {
   if (nodeStore.skeletonLoading) {
@@ -98,7 +96,18 @@ watchEffect(() => {
   }
 });
 
+watch(
+  () => serviceStore.installedServices,
+  () => {
+    useFrontendServices();
+    getNodeServices();
+  }
+);
+
 //Lifecycle
+onMounted(() => {
+  getNodeServices();
+});
 
 // Methods
 
