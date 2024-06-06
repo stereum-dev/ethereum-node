@@ -143,7 +143,6 @@ export default {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
       mainnet: "mainnet",
-      goerli: "goerli",
       sepolia: "sepolia",
       gnosis: "gnosis",
     }),
@@ -213,16 +212,14 @@ export default {
         case 1:
           this.selectedLinks = this.mainnet;
           break;
+
         case 2:
-          this.selectedLinks = this.goerli;
-          break;
-        case 3:
           this.selectedLinks = this.sepolia;
           break;
-        case 4:
+        case 3:
           this.selectedLinks = this.gnosis;
           break;
-        case 5:
+        case 4:
           this.selectedLinks = this.holesky;
           break;
         default:

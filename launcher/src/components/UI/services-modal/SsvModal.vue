@@ -401,7 +401,7 @@ export default {
 
       this.ssvServiceConfig = this.ssvTotalConfig.ssvServiceConfig;
       this.ssvNetworkConfig = this.ssvTotalConfig.ssvNetworkConfig;
-      this.network = this.ssvServiceConfig.network === "goerli" ? "prater" : this.ssvServiceConfig.network;
+      this.network = this.ssvServiceConfig.network;
       this.lastKnownPublicKey = this.ssvTotalConfig.lastKnownPublicKeyFileData;
 
       // By default assume pk/sk are defined in ssvServiceConfig (unencrypted & deprecated by SSV)

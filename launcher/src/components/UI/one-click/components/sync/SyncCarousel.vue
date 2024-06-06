@@ -201,17 +201,14 @@ const linkPicker = async (item) => {
 };
 
 const setSelectedLinks = () => {
-
   const networkLinks = {
     1: installStore.mainnet,
-    2: installStore.goerli,
-    3: installStore.sepolia,
-    4: installStore.gnosis,
-    5: installStore.holesky,
+    2: installStore.sepolia,
+    3: installStore.gnosis,
+    4: installStore.holesky,
   };
 
   selectedLinks.value = networkLinks[manageStore.currentNetwork?.id] || [];
-
 };
 </script>
 <style scoped>

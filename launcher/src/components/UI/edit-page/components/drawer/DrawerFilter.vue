@@ -107,7 +107,7 @@ watch(selectedFilter, () => {
 const networkFilter = (service) => {
   switch (manageStore.configNetwork.network) {
     case "mainnet":
-      return true;
+      return (item) => archFilter(item.service);
     case "holesky":
       return service.service !== "SSVNetworkService";
     case "sepolia":
