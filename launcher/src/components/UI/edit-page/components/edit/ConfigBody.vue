@@ -16,16 +16,21 @@
         setupStore.getTextColor(setupStore.selectedSetup?.color),
       ]"
     >
-      <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>
-      <span class="col-start-2 justify-self-center self-center">{{ $t("editBody.consensusClient") }}</span>
-      <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }}</span>
+      <span class="col-start-1 justify-self-center self-center">{{
+        $t("editBody.executionClient")
+      }}</span>
+      <span class="col-start-2 justify-self-center self-center">{{
+        $t("editBody.consensusClient")
+      }}</span>
+      <span class="col-start-3 justify-self-center self-center">{{
+        $t("editBody.validator")
+      }}</span>
     </div>
     <div
       ref="dropZoneRef"
       class="w-full h-full max-h-[428px] grid grid-cols-3 pt-5 z-10"
       :class="{
-        'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto':
-          activateScrollBar,
+        'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto': activateScrollBar,
       }"
       @drop="onDrop($event)"
       @dragover.prevent="isOverDropZone = true"
@@ -70,15 +75,13 @@
 </template>
 
 <script setup>
-import ExecutionClients from "./clients/ExecutionClients.vue";
 import ConsensusClients from "./clients/ConsensusClients.vue";
+import ExecutionClients from "./clients/ExecutionClients.vue";
 import ValidatorClients from "./clients/ValidatorClients.vue";
 
 import { useNodeManage } from "@/store/nodeManage";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useSetups } from "../../../../../store/setups";
-import { useMultiSetups } from "@/composables/multiSetups";
-import { useFrontendServices } from "../../../../../composables/services";
 
 const emit = defineEmits([
   "onDrop",
@@ -94,23 +97,44 @@ const emit = defineEmits([
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
-const { getEditServices } = useMultiSetups();
 
 const isOverDropZone = ref(false);
 
 const activateScrollBar = computed(() => {
-  const validators = manageStore.newConfiguration.filter((service) => service.category === "validator");
-  const consensus = manageStore.newConfiguration.filter((service) => service.category === "consensus");
-  const execution = manageStore.newConfiguration.filter((service) => service.category === "execution");
+  const validators = manageStore.newConfiguration.filter(
+    (service) => service.category === "validator"
+  );
+  const consensus = manageStore.newConfiguration.filter(
+    (service) => service.category === "consensus"
+  );
+  const execution = manageStore.newConfiguration.filter(
+    (service) => service.category === "execution"
+  );
   return !!(validators.length > 3 || consensus.length > 3 || execution.length > 3);
 });
 
-//Lifecycle Hooks
+//Update selected setup
 
-onMounted(() => {
-  useFrontendServices();
-  getEditServices();
-});
+watch(
+  () => manageStore.newConfiguration,
+  () => {
+    updateSelectedSetup();
+  },
+  { deep: true }
+);
+
+// Update selectedSetup based on newConfiguration changes
+const updateSelectedSetup = () => {
+  const setupId = setupStore.selectedSetup?.setupId;
+  if (setupId) {
+    const updatedSetup = setupStore.editSetups.find((setup) => setup.setupId === setupId);
+    if (updatedSetup) {
+      setupStore.selectedSetup = updatedSetup;
+    }
+  }
+};
+
+//Lifecycle Hooks
 
 // Methods
 

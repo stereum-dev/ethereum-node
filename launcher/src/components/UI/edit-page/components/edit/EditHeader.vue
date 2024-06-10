@@ -13,22 +13,20 @@
 </template>
 
 <script setup>
-import ServerDetails from "./header/ServerDetails.vue";
-import NetworkDetails from "./header/NetworkDetails.vue";
-import SetupDetails from "./header/SetupDetails.vue";
-import { computed } from "vue";
-import { useSetups } from "@/store/setups";
 import { useMultiSetups } from "@/composables/multiSetups";
+import { useSetups } from "@/store/setups";
+import { computed } from "vue";
+import NetworkDetails from "./header/NetworkDetails.vue";
+import ServerDetails from "./header/ServerDetails.vue";
+import SetupDetails from "./header/SetupDetails.vue";
 
 const emit = defineEmits(["selectRename", "confirmRename"]);
 const setupStore = useSetups();
+
 const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const setupsList = computed(() => {
-  const list = setupStore.editSetups.map((setup) => {
-    return setup;
-  });
-  return list;
+  return setupStore.editSetups;
 });
 
 const selectRename = (setup) => {

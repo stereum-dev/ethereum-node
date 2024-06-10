@@ -44,19 +44,8 @@ const serviceStore = useServices();
 const setupStore = useSetups();
 
 const getExecutions = computed(() => {
-  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
-    return [];
-  }
-
-  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
-
   const services = manageStore.newConfiguration
-    .filter(
-      (s) =>
-        s.category === "execution" &&
-        selectedServiceIds.includes(s.config.serviceID) &&
-        s.setupId === setupStore.selectedSetup.setupId
-    )
+    .filter((s) => s.category === "execution" && s.setupId === setupStore.selectedSetup.setupId)
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
       const fb = b.name.toLowerCase();

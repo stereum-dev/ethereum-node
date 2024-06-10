@@ -24,15 +24,17 @@
 </template>
 
 <script setup>
-import EditHeader from "./EditHeader.vue";
 import ConfigBody from "./ConfigBody.vue";
+import EditHeader from "./EditHeader.vue";
 import SetupBody from "./SetupBody.vue";
 
-import LeaderLine from "leader-line-new";
-import { computed, ref, watchEffect } from "vue";
+import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "@/store/setups";
-import ControlService from "@/store/ControlService";
+import { computed, ref, watch } from "vue";
+import { useMultiSetups } from "../../../../../composables/multiSetups";
+
+const { getSelectedSetup } = useMultiSetups();
 
 const emit = defineEmits([
   "onDrop",
@@ -54,7 +56,7 @@ const setupStore = useSetups();
 // refs
 
 const isOverDropZone = ref(false);
-const isLineDrawHandlerReady = ref(false);
+// const isLineDrawHandlerReady = ref(false);
 
 // computed & watchers properties
 // eslint-disable-next-line no-unused-vars
@@ -68,7 +70,7 @@ const displayDropZone = computed(() => {
   return dropClass;
 });
 
-watchEffect(
+watch(
   () => manageStore.isLineHidden,
   (newValue) => {
     if (newValue) {
@@ -79,127 +81,110 @@ watchEffect(
 
 // methods
 
-const oneWayConnection = (start, end, startSocket, endSocket) => {
-  if (start && end) {
-    let newLine = new LeaderLine(
-      start,
-      end,
-      { dash: { animation: true } },
-      { hide: true }
-    );
-    newLine.position();
-    newLine.setOptions({
-      size: 2,
-      color: "#DBEF6A",
-      endPlug: "behind",
-      startSocket: startSocket || "right",
-      endSocket: endSocket || "left",
-    });
-    manageStore.lines.push(newLine);
-  }
-};
+// const oneWayConnection = (start, end, startSocket, endSocket) => {
+//   if (start && end) {
+//     let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+//     newLine.position();
+//     newLine.setOptions({
+//       size: 2,
+//       color: "#DBEF6A",
+//       endPlug: "behind",
+//       startSocket: startSocket || "right",
+//       endSocket: endSocket || "left",
+//     });
+//     manageStore.lines.push(newLine);
+//   }
+// };
 
-const lineDrawHandler = (item) => {
-  let start;
-  let end;
-  if (item && !item.displayPluginMenu) {
-    switch (item.category) {
-      case "execution": {
-        const dependencies = manageStore.newConfiguration.filter(
-          (s) =>
-            s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some(
-              (d) => d.id === item.config?.serviceID
-            )
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "consensus") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(end, start);
-            }
-          }
-        });
-        break;
-      }
-      case "consensus": {
-        const dependencies = manageStore.newConfiguration.filter(
-          (s) =>
-            (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some(
-                (d) => d.id === item.config?.serviceID
-              )) ||
-            item.config?.dependencies?.executionClients.some(
-              (d) => d.id === s.config?.serviceID
-            )
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "validator") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(end, start);
-            }
-          }
-          if (d.category === "execution") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-        });
-        break;
-      }
-      case "validator": {
-        const dependencies = manageStore.newConfiguration.filter(
-          (s) =>
-            item.config?.dependencies?.executionClients.some(
-              (d) => d.id === s.config?.serviceID
-            ) ||
-            item.config?.dependencies?.consensusClients.some(
-              (d) => d.id === s.config?.serviceID
-            ) ||
-            s.config?.dependencies?.consensusClients.some(
-              (d) => d.id === item.config?.serviceID
-            )
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "validator") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              if (item.service === "CharonService") {
-                oneWayConnection(end, start, "left", "left");
-              } else {
-                oneWayConnection(start, end, "left", "left");
-              }
-            }
-          }
-          if (d.category === "execution") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-          if (d.category === "consensus") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-        });
-        break;
-      }
-    }
-  } else if (item?.displayPluginMenu) {
-    removeConnectionLines();
-  }
-  isLineDrawHandlerReady.value = true;
-};
+// const lineDrawHandler = (item) => {
+//   let start;
+//   let end;
+//   if (item && !item.displayPluginMenu) {
+//     switch (item.category) {
+//       case "execution": {
+//         const dependencies = manageStore.newConfiguration.filter(
+//           (s) =>
+//             s.config?.dependencies?.executionClients?.length > 0 &&
+//             s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
+//         );
+//         dependencies.forEach((d) => {
+//           if (d.category === "consensus") {
+//             start = d?.ref;
+//             end = item?.ref;
+//             if (start && end) {
+//               oneWayConnection(end, start);
+//             }
+//           }
+//         });
+//         break;
+//       }
+//       case "consensus": {
+//         const dependencies = manageStore.newConfiguration.filter(
+//           (s) =>
+//             (s.config?.dependencies?.consensusClients?.length > 0 &&
+//               s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
+//             item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
+//         );
+//         dependencies.forEach((d) => {
+//           if (d.category === "validator") {
+//             start = d?.ref;
+//             end = item?.ref;
+//             if (start && end) {
+//               oneWayConnection(end, start);
+//             }
+//           }
+//           if (d.category === "execution") {
+//             start = d?.ref;
+//             end = item?.ref;
+//             if (start && end) {
+//               oneWayConnection(start, end);
+//             }
+//           }
+//         });
+//         break;
+//       }
+//       case "validator": {
+//         const dependencies = manageStore.newConfiguration.filter(
+//           (s) =>
+//             item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
+//             item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
+//             s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
+//         );
+//         dependencies.forEach((d) => {
+//           if (d.category === "validator") {
+//             start = d.ref;
+//             end = item.ref;
+//             if (start && end) {
+//               if (item.service === "CharonService") {
+//                 oneWayConnection(end, start, "left", "left");
+//               } else {
+//                 oneWayConnection(start, end, "left", "left");
+//               }
+//             }
+//           }
+//           if (d.category === "execution") {
+//             start = d.ref;
+//             end = item.ref;
+//             if (start && end) {
+//               oneWayConnection(start, end);
+//             }
+//           }
+//           if (d.category === "consensus") {
+//             start = d.ref;
+//             end = item.ref;
+//             if (start && end) {
+//               oneWayConnection(start, end);
+//             }
+//           }
+//         });
+//         break;
+//       }
+//     }
+//   } else if (item?.displayPluginMenu) {
+//     removeConnectionLines();
+//   }
+//   isLineDrawHandlerReady.value = true;
+// };
 
 const removeConnectionLines = () => {
   // Remove all existing connections
@@ -265,7 +250,7 @@ const confirmRename = async () => {
 };
 
 const openConfigs = (setup) => {
-  setupStore.selectEditConfigView(setup);
+  getSelectedSetup(setup, true);
 };
 
 const deleteSetup = (item) => {

@@ -27,10 +27,10 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 import SetupLayout from "./SetupLayout.vue";
 import SetupMenu from "./SetupMenu.vue";
-import { useSetups } from "../../../../../../store/setups";
-import { computed, onMounted } from "vue";
 
 // props & emits
 const props = defineProps({
@@ -57,14 +57,6 @@ const bgColor = computed(() => setupStore.getColor(props.setup.color, "backgroun
 
 //Lifecycle Hooks
 
-onMounted(() => {
-  setupStore.editSetups = setupStore.editSetups.map((setup) => {
-    return {
-      ...setup,
-      isActive: false,
-    };
-  });
-});
 //Methods
 const deleteSetup = (item) => {
   emit("deleteSetup", item);

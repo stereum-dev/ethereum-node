@@ -82,7 +82,7 @@
         </div>
         <div
           v-for="setup in list.filter((s) => s.setupName !== 'commonServices')"
-          v-show="!setup.isActive"
+          v-show="setup.setupId !== setupStore.selectedSetup?.setupId"
           :key="setup.setupName"
           class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
           @click="selectSetup(setup)"
