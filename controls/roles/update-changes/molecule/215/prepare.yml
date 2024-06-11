@@ -113,7 +113,7 @@
           configVersion: 1
           command:
             - run
-            - --beacon-node-endpoints=
+            - --beacon-node-endpoints=stereum-4dc79d62-ee8b-47f8-0af8-7514e3a5f445:5051,stereum-4c8bcca8-5464-2790-11f5-07b3d326ca7c:5052
             - --log-level=info
             - --log-format=console
             - --p2p-relays=https://0.relay.obol.tech
@@ -133,7 +133,11 @@
           network: holesky
           dependencies:
             executionClients: []
-            consensusClients: []
+            consensusClients: 
+              - service: TekuBeaconService
+                id: 4dc79d62-ee8b-47f8-0af8-7514e3a5f445
+              - service: NimbusBeaconService
+                id: 4c8bcca8-5464-2790-11f5-07b3d326ca7c
             mevboost: []
             otherServices: []
       become: yes
@@ -286,6 +290,108 @@
             consensusClients:
               - service: CharonService
                 id: 314b878c-0589-f5b1-5a59-46b07066e53a
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create Teku Beacon service config
+      copy:
+        dest: "/etc/stereum/services/4dc79d62-ee8b-47f8-0af8-7514e3a5f445.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: TekuBeaconService
+          id: 4dc79d62-ee8b-47f8-0af8-7514e3a5f445
+          configVersion: 2
+          command:
+            - --network=sepolia
+            - --p2p-enabled=true
+            - --p2p-port=9001
+            - --p2p-advertised-port=9001
+            - --ee-endpoint=
+            - --ee-jwt-secret-file=/engine.jwt
+            - --metrics-enabled=true
+            - --metrics-port=8008
+            - --metrics-interface=0.0.0.0
+            - --metrics-host-allowlist=*
+            - --metrics-publish-interval=10
+            - --data-path=/opt/app/data
+            - --data-storage-mode=prune
+            - --rest-api-port=5051
+            - --rest-api-host-allowlist=*
+            - --rest-api-interface=0.0.0.0
+            - --rest-api-docs-enabled=true
+            - --rest-api-enabled=true
+            - --log-destination=CONSOLE
+            - --ignore-weak-subjectivity-period-enabled
+          entrypoint:
+            - /opt/teku/bin/teku
+          env:
+            JAVA_OPTS: -Xmx4g
+          image: consensys/teku:24.4.0
+          ports:
+            - 0.0.0.0:9001:9001/tcp
+            - 0.0.0.0:9001:9001/udp
+            - 127.0.0.1:5053:5052/tcp
+            - 127.0.0.1:5051:5051/tcp
+          volumes:
+            - /opt/stereum/teku-4dc79d62-ee8b-47f8-0af8-7514e3a5f445/data:/opt/app/data
+          user: "2000"
+          autoupdate: true
+          network: sepolia
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create NimbusBeaconService config
+      copy:
+        dest: "/etc/stereum/services/4c8bcca8-5464-2790-11f5-07b3d326ca7c.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NimbusBeaconService
+          id: 4c8bcca8-5464-2790-11f5-07b3d326ca7c
+          configVersion: 2
+          command:
+            - --network=sepolia
+            - --data-dir=/opt/app/beacon
+            - --web3-url=ws://stereum-070cfe35-9fa3-20ac-388b-3b68edd92e54:8551
+            - --metrics
+            - --metrics-port=8008
+            - --metrics-address=0.0.0.0
+            - --rest
+            - --rest-address=0.0.0.0
+            - --rest-port=5052
+            - --jwt-secret=/engine.jwt
+            - --history=prune
+            - --tcp-port=9000
+            - --udp-port=9000
+            - --enr-auto-update=false
+            - --trusted-node-url=https://beaconstate-sepolia.chainsafe.io/
+          entrypoint:
+            - /home/user/nimbus_beacon_node
+          env: {}
+          image: statusim/nimbus-eth2:multiarch-v24.4.0
+          ports:
+            - 0.0.0.0:9000:9000/tcp
+            - 0.0.0.0:9000:9000/udp
+            - 127.0.0.1:5052:5052/tcp
+          volumes:
+            - /opt/stereum/nimbus-4c8bcca8-5464-2790-11f5-07b3d326ca7c/beacon:/opt/app/beacon
+            - /opt/stereum/geth-070cfe35-9fa3-20ac-388b-3b68edd92e54/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: sepolia
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: 070cfe35-9fa3-20ac-388b-3b68edd92e54
+            consensusClients: []
             mevboost: []
             otherServices: []
       become: yes

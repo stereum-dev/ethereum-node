@@ -47,3 +47,14 @@
   loop_control:
     loop_var: config_file_path
   when: files_with_uuids | length > 0
+
+- name: Include Charon Changes
+  include_tasks: charon_changes.yaml
+  loop: "{{ filtered_files }}"
+  loop_control:
+    loop_var: config_file_path
+  when: filtered_files | length > 0
+
+- name: Include Charon Teku Changes
+  include_tasks: charon_teku_changes.yaml
+  loop: "{{ service_config_files.files }}"

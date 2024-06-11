@@ -33,6 +33,18 @@
         src: "/etc/stereum/services/40e6f174-062b-45f0-8f61-83b568b96d6f.yaml"
       register: Lighthouse_service_configuration_raw
 
+    # Teku Beacon
+    - name: Read Teku Beacon file
+      slurp:
+        src: "/etc/stereum/services/4dc79d62-ee8b-47f8-0af8-7514e3a5f445.yaml"
+      register: Teku_Beacon_service_configuration_raw
+
+    # Charon
+    - name: Read Charon file
+      slurp:
+        src: "/etc/stereum/services/314b878c-0589-f5b1-5a59-46b07066e53a.yaml"
+      register: charon_service_configuration_raw
+
     - name: Parse Service configurations
       set_fact:
         Ejector_service_configuration: "{{ Ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
@@ -40,6 +52,8 @@
         Lodestar_service_configuration: "{{ Lodestar_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Teku_service_configuration: "{{ Teku_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Lighthouse_service_configuration: "{{ Lighthouse_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Teku_Beacon_service_configuration: "{{ Teku_Beacon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        charon_service_configuration: "{{ charon_service_configuration_raw['content'] | b64decode | from_yaml }}"
 
     - debug:
         msg: "{{ Ejector_service_configuration }}"
@@ -60,6 +74,12 @@
     - debug:
         msg: "{{ Lighthouse_service_configuration }}"
 
+    - debug:
+        msg: "{{ Teku_Beacon_service_configuration }}"
+
+    - debug:
+        msg: "{{ charon_service_configuration }}"
+
     - assert:
         that:
           - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length == 10
@@ -67,4 +87,6 @@
           - Lodestar_service_configuration.command | select('match', '--useProduceBlockV3=false') | length == 0
           - Teku_service_configuration.command | select('match', '--Xblock-v3-enabled=false') | length == 0
           - Lighthouse_service_configuration.command | select('match', '--produce-block-v3=false') | length == 0
+          - Teku_Beacon_service_configuration.command | select('match', '--validators-graffiti-client-append-format=DISABLED') | length == 1
+          - charon_service_configuration.command | select('match', '--feature-set-enable=json_requests') | length == 1
 # EOF

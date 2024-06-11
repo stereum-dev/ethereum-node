@@ -1,0 +1,17 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file_path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Adjust Charon Config if connected to "ssv-nimbus"
+  lineinfile:
+    path: "{{ config_file_path }}"
+    insertafter: "--beacon-node-endpoints"
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --beacon-node-endpoints') | first | split('-') | first }}- --feature-set-enable=json_requests"
+  when: service_configuration.dependencies.consensusClients | selectattr('service', 'equalto', 'NimbusBeaconService') | list | length > 0
