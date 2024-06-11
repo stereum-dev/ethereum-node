@@ -9,7 +9,7 @@
     service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
     service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
 
-- name: Adjust Charon Config if connected to "ssv-nimbus"
+- name: Adjust Charon Config if connected to a NimbusBeaconService
   lineinfile:
     path: "{{ config_file_path }}"
     insertafter: "--beacon-node-endpoints"
