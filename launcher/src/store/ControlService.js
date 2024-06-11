@@ -188,6 +188,7 @@ class ControlService extends EventEmitter {
   }
 
   async getAllServiceLogs(args) {
+    console.log("ControlService args =====>", args);
     return await this.promiseIpc.send("getAllServiceLogs", args);
   }
 
