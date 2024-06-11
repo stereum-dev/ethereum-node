@@ -11,7 +11,7 @@
 
 - name: Check if service_configuration.id is in any of the filtered_files
   set_fact:
-    id_in_filtered_files: "{{ filtered_files | map('lookup', 'file') | join(' ') | search(service_configuration.id) }}"
+    id_in_filtered_files: "{{ filtered_files | map('lookup', 'file') | join(' ') | regex_search(service_configuration.id) }}"
 
 - name: Adjust Teku Config if charon service connected to it
   lineinfile:
