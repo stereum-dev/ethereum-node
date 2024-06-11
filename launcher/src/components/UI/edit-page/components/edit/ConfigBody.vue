@@ -80,7 +80,7 @@ import ExecutionClients from "./clients/ExecutionClients.vue";
 import ValidatorClients from "./clients/ValidatorClients.vue";
 
 import { useNodeManage } from "@/store/nodeManage";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useSetups } from "../../../../../store/setups";
 
 const emit = defineEmits([
@@ -114,25 +114,6 @@ const activateScrollBar = computed(() => {
 });
 
 //Update selected setup
-
-watch(
-  () => manageStore.newConfiguration,
-  () => {
-    updateSelectedSetup();
-  },
-  { deep: true }
-);
-
-// Update selectedSetup based on newConfiguration changes
-const updateSelectedSetup = () => {
-  const setupId = setupStore.selectedSetup?.setupId;
-  if (setupId) {
-    const updatedSetup = setupStore.editSetups.find((setup) => setup.setupId === setupId);
-    if (updatedSetup) {
-      setupStore.selectedSetup = updatedSetup;
-    }
-  }
-};
 
 //Lifecycle Hooks
 

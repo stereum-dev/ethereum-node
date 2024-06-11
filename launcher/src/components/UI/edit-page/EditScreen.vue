@@ -308,10 +308,22 @@ onUnmounted(() => {
 
 // Methods
 
+// Update selectedSetup based on newConfiguration changes
+const updateSelectedSetup = () => {
+  const setupId = setupStore.selectedSetup?.setupId;
+  if (setupId) {
+    const updatedSetup = setupStore.editSetups.find((setup) => setup.setupId === setupId);
+    if (updatedSetup) {
+      setupStore.selectedSetup = updatedSetup;
+    }
+  }
+};
+
 const getSetupDatas = async () => {
   await loadSetups(); // Load configs first
   await loadServices(); // Then, load services
   setupStore.editSetups = getAllSetups(); // Get combined configs
+  updateSelectedSetup();
 };
 
 const listKeys = async (forceRefresh) => {
@@ -850,7 +862,6 @@ const confirmHandler = async () => {
     console.error("Error processing changes:", error);
   } finally {
     resetState();
-    await listKeys();
   }
 };
 
@@ -887,10 +898,10 @@ const handleSetupChanges = async () => {
 const resetState = async () => {
   manageStore.confirmChanges = [];
   setupStore.selectedSetupToRemove = [];
-  manageStore.disableConfirmButton = false;
   manageStore.isLineHidden = false;
-  await getSetupDatas();
   useFrontendServices();
+  await getSetupDatas();
+  await listKeys();
 };
 
 const nukeConfirmation = () => {
