@@ -71,7 +71,8 @@
         </div>
         <img
           class="w-6 h-6 hover:scale-110 active:scale-95 transition-all ease-in-out duration-150 select-none"
-          src="/img/icon/service-log-icons/150-log-export-button.png"
+          :class="[customizedSpininng, { 'pointer-events-none opacity-50': nodeStore.is150Hovered }]"
+          :src="loadingIconsClassCustomized"
           alt=""
           @mousedown.prevent
           @click="activeCustomLinesActive"
@@ -93,7 +94,7 @@
           :src="loadingIconsClass"
           alt=""
           @mousedown.prevent
-          @click="exportAllLogs"
+          @click="exportAllLogs('allLogs')"
           @mouseenter="isAllHovered = true"
           @mouseleave="isAllHovered = false"
         />
@@ -185,8 +186,18 @@ const loadingIconsClass = computed(() => {
     : "/img/icon/service-log-icons/all-log-export-button.png";
 });
 
+const loadingIconsClassCustomized = computed(() => {
+  return nodeStore.isExportCustomizedDateLoading
+    ? "/img/icon/loading-icons/loading-circle.png"
+    : "/img/icon/service-log-icons/customized-log-export-button.png";
+});
+
 const isLoadingSpinning = computed(() => {
   return nodeStore.isLogLoading ? "animate-spin" : "";
+});
+
+const customizedSpininng = computed(() => {
+  return nodeStore.isExportCustomizedDateLoading ? "animate-spin" : "";
 });
 
 const searchLogsOrTail = computed({
@@ -229,6 +240,7 @@ watch(isExportCustomizedLines, (value) => {
 });
 
 const exportAllLogs = () => {
+  nodeStore.isLogLoading = true;
   nodeStore.exportLogs = false;
   nodeStore.exportAllLogs = true;
   isCustomLinesActive.value = false;
@@ -238,6 +250,7 @@ const exportAllLogs = () => {
 };
 
 const exportCustomizedLogs = () => {
+  nodeStore.isExportCustomizedDateLoading = true;
   nodeStore.exportLogs = false;
   nodeStore.exportAllLogs = false;
   isCustomLinesActive.value = false;

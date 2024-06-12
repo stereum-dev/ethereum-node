@@ -18,6 +18,7 @@ export const useNodeStore = defineStore("theNode", {
       logs: [],
       allLogsForExp: false,
       isLogLoading: false,
+      isExportCustomizedDateLoading: false,
       exportLogs: false,
       searchLogs: "",
       logTail: null,

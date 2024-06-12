@@ -2311,37 +2311,30 @@ export class NodeConnection {
   async dumpDockerLogs() {
     try {
       const services = await this.listServices();
-      log.info(services);
-      const containerIds = services.map((service) => service.ID);
 
-      const logsPromises = containerIds.map(async (containerId) => {
-        try {
-          let jsonFilePathsResult = await this.sshService.exec(
-            `ls /var/lib/docker/containers/${containerId}/${containerId}*`
-          );
+      if (!services || !Array.isArray(services)) {
+        throw new Error("Invalid service list format");
+      }
 
-          if (SSHService.checkExecError(jsonFilePathsResult)) {
-            throw new Error("Failed reading docker logs: " + SSHService.extractExecError(jsonFilePathsResult));
-          }
+      const serviceNames = services.map((service) => service.Names);
 
-          const jsonFilePaths = jsonFilePathsResult.stdout.split("\n").filter((i) => i);
-
-          for (const jsonFilePath of jsonFilePaths) {
-            const logs = await this.sshService.exec(`cat ${jsonFilePath}`);
-
-            return { containerId, logs };
-          }
-        } catch (err) {
-          log.error("Failed to dump Docker Logs: ", err);
-          return { containerId, logs: "" };
-        }
+      const serviceLogPromises = serviceNames.map((serviceName) => {
+        const strippedServiceName = serviceName.startsWith("stereum-") ? serviceName.slice(8) : serviceName;
+        const args = {
+          serviceID: strippedServiceName,
+          since: 7,
+          lines: 100000,
+          until: 0,
+          dateOrLines: "lines",
+        };
+        return this.getAllServiceLogs(args);
       });
 
-      const allLogs = await Promise.all(logsPromises);
+      const allLogs = await Promise.all(serviceLogPromises);
       return allLogs;
     } catch (err) {
-      log.error("Failed to dump Docker Logs: ", err);
-      return [{ containerId: "ERROR", logs: err }];
+      console.error(`Failed to get all service logs: `, err);
+      throw err;
     }
   }
 

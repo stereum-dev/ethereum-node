@@ -221,7 +221,6 @@ ipcMain.handle("getServiceLogs", async (event, args) => {
 });
 
 ipcMain.handle("getAllServiceLogs", async (event, args) => {
-  console.log("tttfgjskahlkjcjkalk ====> ", args);
   return await nodeConnection.getAllServiceLogs(args);
 });
 

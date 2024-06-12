@@ -162,8 +162,6 @@ const updateServiceLogs = async () => {
 };
 
 const updateAndExportAllLogs = async (client) => {
-  nodeStore.isLogLoading = true;
-
   nodeStore.allLogsForExp = await ControlService.getAllServiceLogs({
     serviceID: client.config?.serviceID,
     lines: !nodeStore.logTail ? 100000 : nodeStore.logTail,
@@ -179,6 +177,7 @@ const updateAndExportAllLogs = async (client) => {
   saveAs(blob, fileName);
 
   nodeStore.isLogLoading = false;
+  nodeStore.isExportCustomizedDateLoading = false;
   nodeStore.logTail = null;
   nodeStore.exportLogsType = "";
 };
