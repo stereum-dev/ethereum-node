@@ -89,4 +89,5 @@
           - Lighthouse_service_configuration.command | select('match', '--produce-block-v3=false') | length == 0
           - Teku_Beacon_service_configuration.command | select('match', '--validators-graffiti-client-append-format=DISABLED') | length == 1
           - charon_service_configuration.command | select('match', '--feature-set-enable=json_requests') | length == 1
+          - charon_service_configuration.command | select('match', '--builder-api') | length == 1
 # EOF
