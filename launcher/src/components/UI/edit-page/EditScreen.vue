@@ -258,6 +258,16 @@ watchEffect(() => {
   }
 });
 
+watch(
+  () => setupStore.serverSetups,
+  () => {
+    // getSetupDatas();
+    getEditServices();
+  }
+);
+
+// Methods
+
 onMounted(() => {
   getEditServices();
 
@@ -701,12 +711,12 @@ const displaySwitchNetwork = () => {
 
 const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
-  if (network.network != manageStore.configNetwork.network) {
+  if (network.network != setupStore.selectedSetup.network) {
     if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
       let index = manageStore.confirmChanges.findIndex((j) =>
         j.content.includes("CHANGE NETWORK")
       );
-      if (manageStore.currentNetwork.network === network.network) {
+      if (setupStore.selectedSetup.network === network.network) {
         manageStore.confirmChanges.splice(index, 1);
       } else {
         manageStore.confirmChanges[index].data.network = network.network;
@@ -720,8 +730,15 @@ const switchNetworkConfirm = (network) => {
         service: network,
         data: { network: network.network },
       });
+      setupStore.selectedSetup.network = network.network;
+      setupStore.editSetups = setupStore.editSetups.map((s) => {
+        if (s.setupId === setupStore.selectedSetup.setupId) {
+          s.network = network.network;
+        }
+        return s;
+      });
     } else if (manageStore.newConfiguration.length === 0) {
-      manageStore.currentNetwork = network;
+      return;
     }
   }
   manageStore.isLineHidden = false;
@@ -837,6 +854,7 @@ const destroyNode = async () => {
 
 // Confirm Changes methods
 const confirmHandler = async () => {
+  manageStore.disableConfirmButton = true;
   const setupExists = manageStore.confirmChanges.some((item) =>
     item.service?.hasOwnProperty("setupName")
   );
@@ -846,13 +864,23 @@ const confirmHandler = async () => {
       setupStore.serverServices.includes(change.service.service)
   );
 
-  manageStore.disableConfirmButton = true;
-
   try {
     if (serverServiceExists) {
       await handleServerServiceChanges();
-    } else if (setupExists) {
+    } else if (
+      setupExists &&
+      manageStore.confirmChanges.some((e) => e.content === "DELETE")
+    ) {
       await handleSetupChanges();
+    } else if (manageStore.confirmChanges.some((e) => e.content === "NETWORK")) {
+      await handleSwitchSetupNetwork();
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
+    } else if (manageStore.confirmChanges.some((e) => e.content === "MODIFY")) {
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
     } else {
       await ControlService.handleServiceChanges(
         JSON.parse(JSON.stringify(manageStore.confirmChanges))
@@ -895,12 +923,25 @@ const handleSetupChanges = async () => {
   }
 };
 
+const handleSwitchSetupNetwork = async () => {
+  const setupId = setupStore.selectedSetup?.setupId;
+  const network = manageStore.selectedNetwork.network;
+  const data = {
+    setupId: setupId,
+    network: network,
+  };
+  await ControlService.switchSetupNetwork(data);
+};
+
 const resetState = async () => {
   manageStore.confirmChanges = [];
+  manageStore.selectedNetwork = {};
   setupStore.selectedSetupToRemove = [];
   manageStore.isLineHidden = false;
+  manageStore.disableConfirmButton = false;
   useFrontendServices();
-  await getSetupDatas();
+  getSetupDatas();
+  getEditServices();
   await listKeys();
 };
 

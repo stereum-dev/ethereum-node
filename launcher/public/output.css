@@ -3106,11 +3106,6 @@ video {
   border-top-right-radius: 0.375rem;
 }
 
-.rounded-t-none{
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-}
-
 .rounded-bl-\[37px\]{
   border-bottom-left-radius: 37px;
 }
@@ -3450,11 +3445,6 @@ video {
 .bg-\[\#131313\]{
   --tw-bg-opacity: 1;
   background-color: rgb(19 19 19 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#131617\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(19 22 23 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#141516\]{
@@ -4320,12 +4310,12 @@ video {
   padding-top: 0.25rem;
 }
 
-.pt-2{
-  padding-top: 0.5rem;
+.pt-10{
+  padding-top: 2.5rem;
 }
 
-.pt-20{
-  padding-top: 5rem;
+.pt-2{
+  padding-top: 0.5rem;
 }
 
 .pt-4{
@@ -4881,11 +4871,6 @@ video {
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.shadow-\[\#0e0f0f\]{
-  --tw-shadow-color: #0e0f0f;
-  --tw-shadow: var(--tw-shadow-colored);
-}
-
 .shadow-\[\#101010\]{
   --tw-shadow-color: #101010;
   --tw-shadow: var(--tw-shadow-colored);
@@ -5219,24 +5204,24 @@ video {
   --scrollbar-track: #f3f4f6 !important;
 }
 
-.scrollbar-track-transparent{
-  --scrollbar-track: transparent !important;
-}
-
 .scrollbar-track-gray-800{
   --scrollbar-track: #1f2937 !important;
+}
+
+.scrollbar-track-transparent{
+  --scrollbar-track: transparent !important;
 }
 
 .scrollbar-thumb-gray-300{
   --scrollbar-thumb: #d1d5db !important;
 }
 
-.scrollbar-thumb-teal-800{
-  --scrollbar-thumb: #115e59 !important;
-}
-
 .scrollbar-thumb-gray-500{
   --scrollbar-thumb: #6b7280 !important;
+}
+
+.scrollbar-thumb-teal-800{
+  --scrollbar-thumb: #115e59 !important;
 }
 
 .\[-webkit-tap-highlight-color\:_transparent\]{
