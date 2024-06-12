@@ -7,3 +7,54 @@
 - name: Include ValidatorEjector Changes
   include_tasks: ValidatorEjector_changes.yaml
   loop: "{{ service_config_files.files }}"
+
+- name: Filter files that contain both regex patterns
+  shell: "grep -rlE 'service: CharonService' /etc/stereum/services | xargs grep -lE 'image: obolnetwork/charon:v1\\.[0-9]+\\.[0-9]+'"
+  register: grep_result
+  failed_when: false
+  changed_when: false
+
+- name: Set fact for filtered files
+  set_fact:
+    filtered_files: "{{ grep_result.stdout_lines }}"
+
+- name: Extract UUIDs from filtered filenames
+  set_fact:
+    uuids: "{{ filtered_files | map('basename') | map('regex_replace', '\\.yaml$', '') | list }}"
+  when: filtered_files | length > 0
+
+- name: Check if files contain any of the extracted UUIDs
+  shell: "grep -lE '{{ uuids | join('|') }}' {{ item.path }}"
+  with_items: "{{ service_config_files.files }}"
+  register: uuid_grep_result
+  failed_when: false
+  changed_when: false
+  when: uuids | length > 0
+
+- name: Set fact for files containing UUIDs
+  set_fact:
+    files_with_uuids: "{{ uuid_grep_result.results | selectattr('rc', 'eq', 0) | map(attribute='item.path') | list }}"
+  when: uuids | length > 0
+
+- name: Debug files with UUIDs
+  debug:
+    var: files_with_uuids
+  when: files_with_uuids | length > 0
+
+- name: Include SDVT Changes
+  include_tasks: sdvt_changes.yaml
+  loop: "{{ files_with_uuids }}"
+  loop_control:
+    loop_var: config_file_path
+  when: files_with_uuids | length > 0
+
+- name: Include Charon Changes
+  include_tasks: charon_changes.yaml
+  loop: "{{ filtered_files }}"
+  loop_control:
+    loop_var: config_file_path
+  when: filtered_files | length > 0
+
+- name: Include Charon Teku Changes
+  include_tasks: charon_teku_changes.yaml
+  loop: "{{ service_config_files.files }}"
