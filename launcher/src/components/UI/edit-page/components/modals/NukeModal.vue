@@ -103,8 +103,8 @@ export default {
     async dumpLogs() {
       this.loadingDump = true;
       const allLogs = await ControlService.dumpDockerLogs();
-      console.log(allLogs);
-      // this.exportLogs(allLogs);
+      // console.log(allLogs);
+      this.exportLogs(allLogs);
       this.loadingDump = false;
     },
     exportLogs(logs) {
