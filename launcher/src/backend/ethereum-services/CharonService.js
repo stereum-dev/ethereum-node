@@ -43,8 +43,20 @@ export class CharonService extends NodeService {
       null, // executionClients
       consensusClients // consensusClients    
     );
+
+    if (consensusClients.map(s => s.service).includes("NimbusBeaconService")) {
+      service.command.push("--feature-set-enable=json_requests")
+    }
+
+    if (consensusClients.map(s => s.service).includes("TekuBeaconService")) {
+      consensusClients.filter(s => s.service === "TekuBeaconService").forEach(s => {
+        s.command.push(`--validators-graffiti-client-append-format=DISABLED`)
+      })
+    }
+
     return service;
   }
+
 
   static buildByConfiguration(config) {
     const service = new CharonService();
