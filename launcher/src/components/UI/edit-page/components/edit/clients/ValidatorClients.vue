@@ -5,7 +5,7 @@
   >
     <div
       v-for="item in getValidators"
-      :key="item"
+      :key="item.name"
       :ref="
         (el) => {
           item.ref = el;
