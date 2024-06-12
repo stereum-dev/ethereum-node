@@ -12,7 +12,7 @@
 - name: Check if service_configuration.id is in any of the filtered_files
   shell: "grep -lq '{{ service_configuration.id }}' {{ item }}"
   loop: "{{ filtered_files }}"
-  ignore_errors: true
+  failed_when: false
   register: grep_result
   changed_when: false
 

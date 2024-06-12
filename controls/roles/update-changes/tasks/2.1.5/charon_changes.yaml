@@ -12,8 +12,8 @@
 - name: Adjust Charon Config if connected to a NimbusBeaconService
   lineinfile:
     path: "{{ config_file_path }}"
-    insertafter: "--beacon-node-endpoints"
-    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --beacon-node-endpoints') | first | split('-') | first }}- --feature-set-enable=json_requests"
+    insertafter: "--validator-api-address"
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --validator-api-address') | first | split('-') | first }}- --feature-set-enable=json_requests"
   when:
     - service_configuration.dependencies.consensusClients | selectattr('service', 'equalto', 'NimbusBeaconService') | list | length > 0
     - service_configuration.command | select('match', '--feature-set-enable=json_requests') | length == 0
@@ -21,7 +21,7 @@
 - name: add builder tag if not present
   lineinfile:
     path: "{{ config_file_path }}"
-    insertafter: "--beacon-node-endpoints"
-    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --beacon-node-endpoints') | first | split('-') | first }}- --builder-api"
+    insertafter: "--validator-api-address"
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --validator-api-address') | first | split('-') | first }}- --builder-api"
   when:
     - service_configuration.command | select('match', '--builder-api') | length == 0
