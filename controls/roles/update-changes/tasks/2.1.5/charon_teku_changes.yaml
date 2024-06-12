@@ -10,7 +10,7 @@
     service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
 
 - name: Check if service_configuration.id is in any of the filtered_files
-  shell: "grep -lq '{{ service_configuration.id }}' {{ item }}"
+  shell: "grep -lq '{{ service_configuration.id }}' {{ item }} || true"
   loop: "{{ filtered_files }}"
   ignore_errors: true
   register: grep_result
