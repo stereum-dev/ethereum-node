@@ -19,7 +19,9 @@
     <div
       v-else
       class="col-start-1 relative p-2 grid rounded-[4px] border border-gray-600"
-      :class="route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'"
+      :class="
+        route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'
+      "
       @click="toggleDropdown"
     >
       <span
@@ -44,9 +46,17 @@
         viewBox="0 0 24 24"
         stroke="currentColor"
         class="h-3 w-3 text-white self-center col-span-1 transform transition-transform duration-200 ease-in-out"
-        :class="[isOpen ? 'rotate-180' : 'rotate-0', route.path === '/edit' ? 'col-start-9' : 'col-start-12']"
+        :class="[
+          isOpen ? 'rotate-180' : 'rotate-0',
+          route.path === '/edit' ? 'col-start-9' : 'col-start-12',
+        ]"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
       </svg>
     </div>
 
@@ -91,21 +101,26 @@
             class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start"
             :class="setupStore.getBGColor(setup.color)"
           ></span>
-          <span class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate font-sans">{{
-            setup.setupName
-          }}</span>
+          <span
+            class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate font-sans"
+            >{{ setup.setupName }}</span
+          >
         </div>
       </div>
     </Transition>
 
     <!-- Rename setup button -->
     <!-- Rename Button  -->
-    <RenameSetup v-if="route.path === '/edit'" @confirm-rename="confirmRename" @rename-setup="selectRename" />
+    <RenameSetup
+      v-if="route.path === '/edit'"
+      @confirm-rename="confirmRename"
+      @rename-setup="selectRename"
+    />
   </div>
 </template>
 <script setup>
 import { useSetups } from "@/store/setups";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import RenameSetup from "./RenameSetup.vue";
 
@@ -133,13 +148,6 @@ const getSelectedOption = computed(() => {
 
   return option;
 });
-
-watch(
-  () => setupStore.selectedSetup,
-  (val) => {
-    console.log(val);
-  }
-);
 
 // Methods
 
