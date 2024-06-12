@@ -663,6 +663,10 @@ ipcMain.handle("importSingleSetup", async (event, args) => {
   return await serviceManager.importSingleSetup(args);
 });
 
+ipcMain.handle("switchSetupNetwork", async (event, args) => {
+  return await serviceManager.switchSetupNetwork(args);
+});
+
 ipcMain.handle("fetchTranslators", async (event, args) => {
   return await serviceManager.fetchTranslators(args);
 });
