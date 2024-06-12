@@ -3106,6 +3106,11 @@ video {
   border-top-right-radius: 0.375rem;
 }
 
+.rounded-t-none{
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
 .rounded-bl-\[37px\]{
   border-bottom-left-radius: 37px;
 }
@@ -5218,12 +5223,20 @@ video {
   --scrollbar-track: transparent !important;
 }
 
+.scrollbar-track-gray-800{
+  --scrollbar-track: #1f2937 !important;
+}
+
 .scrollbar-thumb-gray-300{
   --scrollbar-thumb: #d1d5db !important;
 }
 
 .scrollbar-thumb-teal-800{
   --scrollbar-thumb: #115e59 !important;
+}
+
+.scrollbar-thumb-gray-500{
+  --scrollbar-thumb: #6b7280 !important;
 }
 
 .\[-webkit-tap-highlight-color\:_transparent\]{
