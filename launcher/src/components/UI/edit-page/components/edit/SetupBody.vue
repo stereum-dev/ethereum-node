@@ -32,30 +32,19 @@
 </template>
 
 <script setup>
-import SingleSetup from "./setups/SingleSetup.vue";
 import { useNodeManage } from "@/store/nodeManage";
+import { computed } from "vue";
 import { useSetups } from "../../../../../store/setups";
-import { computed, watch } from "vue";
-import { useMultiSetups } from "@/composables/multiSetups";
+import SingleSetup from "./setups/SingleSetup.vue";
 
 const emit = defineEmits(["deleteSetup", "connectSetup", "setupInfos", "openConfigs"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
-const { getAllSetups } = useMultiSetups();
 
 const getEditSetups = computed(() => {
   return setupStore.editSetups;
 });
-
-watch(
-  () => setupStore.serverSetups,
-  () => {
-    setupStore.editSetups = getAllSetups();
-  }
-);
-
-// Methods
 
 const deleteSetup = (item) => {
   emit("deleteSetup", item);
