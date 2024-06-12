@@ -35,6 +35,7 @@
         </router-link>
       </Transition>
       <button
+        v-if="setupStore.isEditConfigViewActive && setupStore.selectedSetup"
         class="col-span-1 row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
         @click="hoverNetwork"
         @mouseenter="footerStore.cursorLocation = `${setchNet}`"
@@ -98,6 +99,7 @@
 import { ref } from "vue";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { useSetups } from "../../../../store/setups";
 
 const t = i18n.global.t;
 
@@ -109,6 +111,7 @@ const routerHovered = ref(false);
 const networkHovered = ref(false);
 const nukeHovered = ref(false);
 const footerStore = useFooter();
+const setupStore = useSetups();
 
 const emit = defineEmits(["nukeNode", "networkModal"]);
 
