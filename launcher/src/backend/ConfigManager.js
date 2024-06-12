@@ -299,26 +299,20 @@ export class ConfigManager {
     return setupsObj;
   }
 
-  async switchSetupNetwork(setupId, network) {
-    if (typeof setupId !== "string" || typeof network !== "string") {
+  async switchSetupNetwork(data) {
+    if (typeof data.setupId !== "string" || typeof data.network !== "string") {
       console.error("Invalid parameters");
       return false;
     }
 
     let currentSetups = await this.readMultiSetup();
     let setupsObj = yaml.load(currentSetups);
-
-    if (setupsObj.hasOwnProperty(setupId)) {
-      setupsObj[setupId].network = network;
-      await this.writeMultiSetup(yaml.dump(setupsObj));
-      console.log(`Network for setup ${setupId} updated to ${network}.`);
+    if (setupsObj.hasOwnProperty(data.setupId)) {
+      setupsObj[data.setupId].network = data.network;
+      await this.writeMultiSetup(setupsObj);
       return true;
     } else {
       throw new Error("Setup ID not found"); // Enhanced error handling
     }
   }
-
-  // to do - s for setup
-
-  // import specific setup
 }
