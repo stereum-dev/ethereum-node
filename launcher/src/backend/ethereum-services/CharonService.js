@@ -33,6 +33,7 @@ export class CharonService extends NodeService {
         "--p2p-tcp-address=0.0.0.0:3610",
         "--validator-api-address=0.0.0.0:3600",
         "--monitoring-address=0.0.0.0:3620",
+        "--builder-api"
       ], // command
       ["/usr/local/bin/charon"], // entrypoint
       null, // env
