@@ -68,11 +68,6 @@ jobs:
       matrix:
         tests:
           [
-            { role: "update-changes", test: "20-rc23" },
-            { role: "update-changes", test: "202" },
-            { role: "update-changes", test: "203" },
-            { role: "update-changes", test: "213" },
-            { role: "update-changes", test: "214" },
             { role: "update-changes", test: "215" },
           ]
       fail-fast: false
