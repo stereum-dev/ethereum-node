@@ -1,7 +1,11 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
     <ServerDetails />
-    <SetupDetails :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
+    <SetupDetails
+      :list="setupsList"
+      @select-setup="selectSetup"
+      @server-view="serverView"
+    />
     <NetworkDetails />
   </div>
 </template>
@@ -17,11 +21,7 @@ const setupStore = useSetups();
 const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const setupsList = computed(() => {
-  let list;
-  list = setupStore.allSetups.map((setup) => {
-    return setup;
-  });
-  return list;
+  return setupStore.allSetups;
 });
 
 const selectSetup = (setup) => {
