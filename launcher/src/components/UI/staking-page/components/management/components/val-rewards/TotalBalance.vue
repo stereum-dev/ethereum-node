@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full border border-gray-500 rounded-md grid grid-cols-7 items-center"
+    class="w-full h-full border border-gray-600 rounded-[4px] grid grid-cols-7 items-center"
   >
     <div
       class="col-start-1 col-end-4 flex justify-between items-center px-1 space-x-1"
@@ -23,7 +23,7 @@
       }}</span>
     </div>
     <div
-      class="w-full h-full col-start-4 col-span-full bg-[#151618] rounded-r-md overflow-hidden flex justify-center items-center px-1 text-center"
+      class="w-full h-full col-start-4 col-span-full bg-[#151618] rounded-r-sm overflow-hidden flex justify-center items-center px-1 text-center"
       @mouseenter="footerStore.cursorLocation = `${ttlBal}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
