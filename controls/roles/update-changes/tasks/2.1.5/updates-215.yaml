@@ -57,3 +57,7 @@
 - name: Include Charon Teku Changes
   include_tasks: charon_teku_changes.yaml
   loop: "{{ service_config_files.files }}"
+
+- name: Include Lighthouse Changes
+  include_tasks: lighthouse_changes.yaml
+  loop: "{{ service_config_files.files }}"
