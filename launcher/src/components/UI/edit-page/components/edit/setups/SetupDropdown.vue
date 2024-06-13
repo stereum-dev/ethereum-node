@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative col-start-1 col-span-full grid grid-cols-6 gap-x-1"
+    class="w-full relative col-start-1 col-span-full grid grid-cols-6 gap-x-1"
     :class="newHeight"
   >
     <label
@@ -153,7 +153,7 @@ const getDropdownWidth = computed(() => {
   } else if (route.path === "/node") {
     width = "w-48 right-0";
   } else if (route.path === "/staking") {
-    width = "w-48 right-1";
+    width = "w-52 right-1";
   } else if (route.path === "/control") {
     width = "w-44";
   } else {

@@ -1,11 +1,22 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 bg-[#151618] border border-gray-600 rounded-md px-1 mt-1 grid grid-cols-3 relative"
+    class="w-full h-full col-start-1 col-span-full bg-[#151618] border border-gray-600 px-1 grid grid-cols-3 relative"
+    :class="route.path === '/staking' ? 'rounded-[4px]' : 'mt-1 rounded-md'"
   >
-    <div class="col-start-1 col-span-1 flex justify-center items-center">
+    <div
+      class="w-full col-start-1 col-span-1 flex justify-center items-center"
+      :class="compatibleSize"
+    >
       <WiFiSign :status="nodeStore.connectionStatus?.status" />
     </div>
-    <div class="col-start-2 col-span-full flex flex-col justify-center items-start ml-1">
+    <div
+      class="col-start-2 col-span-full"
+      :class="
+        route.path === '/staking'
+          ? 'flex justify-start items-center space-x-4'
+          : 'flex flex-col  justify-center items-start ml-1'
+      "
+    >
       <div class="flex justify-start items-center space-x-1">
         <span class="text-xs text-gray-200">status:</span>
         <p class="text-xs capitalize" :class="circleClass">
@@ -26,11 +37,23 @@ import { usePingQuality } from "../../composables/pingQuality";
 import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useNodeStore } from "../../store/theNode";
 import WiFiSign from "./WIFISign.vue";
+import { useRoute } from "vue-router";
 
 const nodeStore = useNodeStore();
+const route = useRoute();
 const { checkConnectionQuality, startPolling, stopPolling } = usePingQuality();
 
 const alertTimeout = ref(null);
+
+const compatibleSize = computed(() => {
+  let output;
+  if (route.path === "/staking") {
+    output = "w-[32px] h-[32px] ";
+  } else {
+    output = "";
+  }
+  return output;
+});
 
 const circleClass = computed(() => {
   switch (nodeStore.connectionStatus?.status) {
@@ -58,10 +81,16 @@ const getConnectionStatus = computed(() => {
 });
 
 watchEffect(() => {
-  if (nodeStore.connectionStatus?.status === "very poor" || nodeStore.connectionStatus?.status === "poor") {
+  if (
+    nodeStore.connectionStatus?.status === "very poor" ||
+    nodeStore.connectionStatus?.status === "poor"
+  ) {
     if (!alertTimeout.value) {
       alertTimeout.value = setTimeout(() => {
-        if (nodeStore.connectionStatus?.status === "very poor" || nodeStore.connectionStatus?.status === "poor") {
+        if (
+          nodeStore.connectionStatus?.status === "very poor" ||
+          nodeStore.connectionStatus?.status === "poor"
+        ) {
           nodeStore.connectionStatusIsPoor = true;
           console.log("Connection status is poor mor than 10 seconds");
         }
