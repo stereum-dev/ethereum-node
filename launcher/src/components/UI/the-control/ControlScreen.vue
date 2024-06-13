@@ -156,6 +156,9 @@ import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import i18n from "@/includes/i18n";
 import SetupDetails from "../edit-page/components/edit/header/SetupDetails.vue";
 import { useSetups } from "@/store/setups";
+import { useMultiSetups } from "@/composables/multiSetups";
+
+const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const t = i18n.global.t;
 
@@ -203,11 +206,11 @@ const selecteConfigServices = computed(() => {
 });
 
 const selectSetup = (setup) => {
-  setupStore.selectNodeConfigView(setup);
+  getSelectedSetup(setup);
 };
 
 const serverView = () => {
-  setupStore.selectNodeServerView();
+  getServerView();
 };
 
 onMounted(() => {
