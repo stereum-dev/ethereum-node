@@ -45,6 +45,12 @@
         src: "/etc/stereum/services/314b878c-0589-f5b1-5a59-46b07066e53a.yaml"
       register: charon_service_configuration_raw
 
+    # Charon
+    - name: Read LighthouseBeacon file
+      slurp:
+        src: "/etc/stereum/services/9f852a5c-2f52-c1a6-24ff-5256fed2cdb9.yaml"
+      register: lh_beacon_service_configuration_raw
+
     - name: Parse Service configurations
       set_fact:
         Ejector_service_configuration: "{{ Ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
@@ -54,6 +60,7 @@
         Lighthouse_service_configuration: "{{ Lighthouse_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Teku_Beacon_service_configuration: "{{ Teku_Beacon_service_configuration_raw['content'] | b64decode | from_yaml }}"
         charon_service_configuration: "{{ charon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        lh_beacon_service_configuration: "{{ lh_beacon_service_configuration_raw['content'] | b64decode | from_yaml }}"
 
     - debug:
         msg: "{{ Ejector_service_configuration }}"
@@ -80,6 +87,9 @@
     - debug:
         msg: "{{ charon_service_configuration }}"
 
+    - debug:
+        msg: "{{ lh_beacon_service_configuration }}"
+
     - assert:
         that:
           - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length == 10
@@ -90,4 +100,5 @@
           - Teku_Beacon_service_configuration.command | select('match', '--validators-graffiti-client-append-format=DISABLED') | length == 1
           - charon_service_configuration.command | select('match', '--feature-set-enable=json_requests') | length == 1
           - charon_service_configuration.command | select('match', '--builder-api') | length == 1
+          - lh_beacon_service_configuration.command | select('match', '--disable-enr-auto-update=false') | length == 0
 # EOF
