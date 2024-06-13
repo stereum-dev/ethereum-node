@@ -1,5 +1,8 @@
 <template>
-  <div class="relative h-full col-start-1 col-span-full grid grid-cols-6 gap-x-1">
+  <div
+    class="relative col-start-1 col-span-full grid grid-cols-6 gap-x-1"
+    :class="newHeight"
+  >
     <label
       v-if="setupStore.isRenameSetupActive && route.path === '/edit'"
       for="rename"
@@ -9,7 +12,7 @@
         id="rename"
         v-model="setupStore.setupToRename"
         type="text"
-        class="w-full h-8 pl-2 bg-[#232528] text-gray-200 text-xs"
+        class="w-full h-full pl-2 bg-[#232528] text-gray-200 text-xs"
         focusable
       />
     </label>
@@ -18,7 +21,7 @@
 
     <div
       v-else
-      class="col-start-1 relative p-2 grid rounded-[4px] border border-gray-600"
+      class="col-start-1 relative p-1 grid rounded-[4px] border border-gray-600"
       :class="
         route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'
       "
@@ -36,8 +39,8 @@
         alt="Server View"
       />
       <span
-        class="col-start-2 text-sm font-sans font-[500] overflow-hidden truncate text-gray-200 ml-2"
-        :class="route.path === '/edit' ? ' col-end-9' : 'col-end-11'"
+        class="self-center col-start-2 text-sm font-sans font-[500] overflow-hidden truncate text-gray-200 ml-2"
+        :class="route.path === '/edit' ? 'col-end-9' : 'col-end-11'"
         >{{ getSelectedOption }}</span
       >
 
@@ -71,8 +74,8 @@
     >
       <div
         v-if="isOpen"
-        class="absolute top-9 z-20 min-h-20 mt-2 origin-top-right rounded-sm shadow-md bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
-        :class="route.path === '/edit' ? 'w-40 right-8' : 'w-48 right-0'"
+        class="absolute top-9 z-20 min-h-20 mt-1 origin-top-right rounded-sm shadow-md bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
+        :class="getDropdownWidth"
         @mouseleave="isOpen = false"
       >
         <div
@@ -124,10 +127,15 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import RenameSetup from "./RenameSetup.vue";
 
-const { list } = defineProps({
+const { list, newHeight } = defineProps({
   list: {
     type: Array,
     required: true,
+  },
+  newHeight: {
+    type: String,
+    required: false,
+    default: "h-full",
   },
 });
 
@@ -137,6 +145,22 @@ const route = useRoute();
 const setupStore = useSetups();
 
 const isOpen = ref(false);
+
+const getDropdownWidth = computed(() => {
+  let width;
+  if (route.path === "/edit") {
+    width = "w-40 right-8";
+  } else if (route.path === "/node") {
+    width = "w-48 right-0";
+  } else if (route.path === "/staking") {
+    width = "w-48 right-1";
+  } else if (route.path === "/control") {
+    width = "w-44";
+  } else {
+    width = "w-48";
+  }
+  return width;
+});
 
 const getSelectedOption = computed(() => {
   let option;
