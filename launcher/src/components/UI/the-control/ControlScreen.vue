@@ -177,11 +177,7 @@ const isLogsPageActive = ref(false);
 let polling = null;
 
 const setupsList = computed(() => {
-  let list;
-  list = setupStore.allSetups.map((setup) => {
-    return setup;
-  });
-  return list;
+  return setupStore.allSetups;
 });
 
 const selecteConfigServices = computed(() => {

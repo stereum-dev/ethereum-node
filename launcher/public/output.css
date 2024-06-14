@@ -2775,10 +2775,6 @@ video {
   gap: 1.25rem;
 }
 
-.gap-3{
-  gap: 0.75rem;
-}
-
 .gap-x-1{
   -webkit-column-gap: 0.25rem;
      -moz-column-gap: 0.25rem;
@@ -5927,12 +5923,6 @@ html body {
 }
 
 @media (min-width: 640px){
-  .sm\:gap-x-5{
-    -webkit-column-gap: 1.25rem;
-       -moz-column-gap: 1.25rem;
-            column-gap: 1.25rem;
-  }
-
   .sm\:text-sm{
     font-size: 0.875rem;
     line-height: 1.25rem;
