@@ -347,6 +347,58 @@
             otherServices: []
       become: yes
 
+    - name: Create LighthouseBeaconService config
+      copy:
+        dest: "/etc/stereum/services/9f852a5c-2f52-c1a6-24ff-5256fed2cdb9.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseBeaconService
+          id: 9f852a5c-2f52-c1a6-24ff-5256fed2cdb9
+          configVersion: 1
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=info
+            - --network=holesky
+            - --execution-endpoint=
+            - --execution-jwt=/engine.jwt
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --port=9000
+            - --enr-tcp-port=9000
+            - --enr-udp-port=9000
+            - --disable-enr-auto-update=false
+            - --allow-insecure-genesis-sync
+          entrypoint: []
+          env: {}
+          image: sigp/lighthouse:v5.2.0
+          ports:
+            - 0.0.0.0:9002:9000/tcp
+            - 0.0.0.0:9002:9000/udp
+            - 127.0.0.1:5054:5052/tcp
+          volumes:
+            - /opt/stereum/lighthouse-9f852a5c-2f52-c1a6-24ff-5256fed2cdb9/beacon:/opt/app/beacon
+            - /opt/stereum/lighthouse-9f852a5c-2f52-c1a6-24ff-5256fed2cdb9/slasher:/opt/app/slasher
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
     - name: Create NimbusBeaconService config
       copy:
         dest: "/etc/stereum/services/4c8bcca8-5464-2790-11f5-07b3d326ca7c.yaml"
