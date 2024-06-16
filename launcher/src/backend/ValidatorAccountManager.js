@@ -324,7 +324,8 @@ export class ValidatorAccountManager {
     const curlTag = await this.nodeConnection.ensureCurlImage();
     let command = [
       "docker run --rm --network=stereum curlimages/curl:" + curlTag,
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
       }${apiPath}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -658,7 +659,12 @@ export class ValidatorAccountManager {
       }
 
       //Push successful task
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, data);
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Get signed voluntary exit message`,
+        true,
+        JSON.stringify(data)
+      );
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       return data;
     } catch (error) {
