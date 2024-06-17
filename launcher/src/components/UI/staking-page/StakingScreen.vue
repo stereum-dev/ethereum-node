@@ -574,11 +574,32 @@ const withdrawValidatorKey = async () => {
   //if single key
   const key = stakingStore.selectedSingleKeyToWithdraw;
   try {
+    let res;
     if (key && key !== null) {
-      stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+      //stakingStore.withdrawAndExitResponse
+      res = await ControlService.exitValidatorAccount({
         pubkey: key.key,
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
       });
+      if (res.code === 0) {
+        stakingStore.withdrawAndExitResponse = [
+          {
+            pubkey: res.pubkey,
+            code: res.code,
+            msg: res.msg,
+            flag: "approved",
+          },
+        ];
+      } else {
+        stakingStore.withdrawAndExitResponse = [
+          {
+            pubkey: key.key,
+            code: res.code,
+            msg: res.info,
+            flag: "rejected",
+          },
+        ];
+      }
     } else {
       //if multiple keys
       const multiKeys = stakingStore.keys
@@ -588,7 +609,6 @@ const withdrawValidatorKey = async () => {
           }
         })
         .filter((key) => key !== undefined);
-
       stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
         pubkey: multiKeys,
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
