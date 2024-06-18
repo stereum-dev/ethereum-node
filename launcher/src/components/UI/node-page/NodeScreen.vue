@@ -35,6 +35,7 @@
         @close-log="closeLogPage"
         @export-log="exportLogs"
         @export-all-log="updateAndExportAllLogs"
+        @export-customized-logs="updateAndExportAllLogs"
       />
     </div>
 
@@ -161,17 +162,24 @@ const updateServiceLogs = async () => {
 };
 
 const updateAndExportAllLogs = async (client) => {
-  nodeStore.isLogLoading = true;
+  nodeStore.allLogsForExp = await ControlService.getAllServiceLogs({
+    serviceID: client.config?.serviceID,
+    lines: !nodeStore.logTail ? 100000 : nodeStore.logTail,
+    dateOrLines: nodeStore.exportLogsType,
+    since: nodeStore.exportLogsType === "lines" ? 0 : nodeStore.sinceDateParsDays,
+    until: nodeStore.untilDateParsDays,
+  });
 
-  nodeStore.allLogsForExp = await ControlService.getAllServiceLogs(client.config?.serviceID);
-
-  const fileName = `${client.name}_all_logs.txt`;
+  const fileName = `${client.name}_${nodeStore.isExportCustomizedDateLoading ? "customized" : "all"}_logs.txt`;
   const data = [...nodeStore.allLogsForExp.logs].reverse();
   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
 
   nodeStore.isLogLoading = false;
+  nodeStore.isExportCustomizedDateLoading = false;
+  nodeStore.logTail = null;
+  nodeStore.exportLogsType = "";
 };
 
 const updateServerVitals = async () => {
