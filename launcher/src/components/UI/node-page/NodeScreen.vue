@@ -170,7 +170,7 @@ const updateAndExportAllLogs = async (client) => {
     until: nodeStore.untilDateParsDays,
   });
 
-  const fileName = `${client.name}_all_logs.txt`;
+  const fileName = `${client.name}_${nodeStore.isExportCustomizedDateLoading ? "customized" : "all"}_logs.txt`;
   const data = [...nodeStore.allLogsForExp.logs].reverse();
   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
