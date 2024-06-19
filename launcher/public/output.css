@@ -2118,7 +2118,6 @@ video {
   width: 10rem;
 }
 
-
 .w-44{
   width: 11rem;
 }
@@ -2126,7 +2125,6 @@ video {
 .w-48{
   width: 12rem;
 }
-
 
 .w-5{
   width: 1.25rem;
@@ -5676,15 +5674,14 @@ html body {
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-lime-900:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(54 83 20 / var(--tw-bg-opacity));
+}
 
 .hover\:bg-red-500:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(239 68 68 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-lime-900:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(54 83 20 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-red-600:hover{
