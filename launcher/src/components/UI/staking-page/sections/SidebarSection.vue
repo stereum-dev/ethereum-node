@@ -47,11 +47,13 @@
   </aside>
 </template>
 <script setup>
-import { ref, computed, onMounted, watchEffect } from "vue";
 import { useServices } from "@/store/services";
+import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
+import { computed, onMounted, ref } from "vue";
 
+const setupStore = useSetups();
 const footerStore = useFooter();
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
@@ -59,17 +61,30 @@ const currentService = ref(null);
 
 const hoveredIndex = ref(null);
 
+//Computed
 const installedValidators = computed(() => {
-  return serviceStore.installedServices
-    .filter((s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service))
-    .map((service) => ({ ...service, selected: false }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-});
+  let services;
 
-watchEffect(() => {
-  if (stakingStore.selectedServiceToFilter === null) {
-    stakingStore.selectedServiceToFilter = installedValidators.value[0];
+  if (setupStore.selectedSetup) {
+    services = serviceStore.installedServices
+      .filter(
+        (client) =>
+          setupStore.selectedSetup.services.some(
+            (installedValidator) =>
+              installedValidator.id === client.config?.serviceID &&
+              client.category === "validator"
+          ) && !/SSVNetwork|Charon/.test(client.service)
+      )
+      .map((service) => ({
+        ...service,
+        selected: false,
+      }));
+  } else {
+    services = serviceStore.installedServices
+      .filter((s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service))
+      .map((service) => ({ ...service, selected: false }));
   }
+  return services.sort((a, b) => a.name.localeCompare(b.name));
 });
 
 //Lifecycle Hooks
