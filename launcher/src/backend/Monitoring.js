@@ -3254,21 +3254,40 @@ rm -rf diskoutput
                 `Exiting Account Failed ${pubkey[i]} Failed:\n` + runExitCommand.stdout
               );
               this.nodeConnection.taskManager.otherTasksHandler(ref);
+              return runExitCommand.stdout;
             }
 
             // add pubkey into the runExitCommands' result
             runExitCommand["pubkey"] = `${pubkey[i]}`;
 
-            // Extract the JSON payload from the stdout
-            const jsonStartIndex = runExitCommand.stdout.indexOf("{");
-            const jsonEndIndex = runExitCommand.stdout.lastIndexOf("}");
-            const stdoutJson = runExitCommand.stdout.substring(jsonStartIndex, jsonEndIndex + 1);
+            if (!runExitCommand.stdout.includes("{") && !runExitCommand.stdout.includes("}")) {
+              results.push({
+                pubkey: runExitCommand.pubkey,
+                code: null,
+                msg: runExitCommand.stdout,
+              });
+            } else {
+              // Extract the JSON payload from the stdout
+              const jsonStartIndex = runExitCommand.stdout.indexOf("{");
+              const jsonEndIndex = runExitCommand.stdout.lastIndexOf("}");
+              const stdoutJson = runExitCommand.stdout.substring(jsonStartIndex, jsonEndIndex + 1);
 
-            results.push({
-              pubkey: runExitCommand.pubkey,
-              code: JSON.parse(stdoutJson).code,
-              msg: JSON.parse(stdoutJson).message,
-            });
+              let parsedJson = {};
+              try {
+                parsedJson = JSON.parse(stdoutJson);
+              } catch (error) {
+                console.error("Error parsing JSON, result does not include valid JSON", error);
+                return runExitCommand.stdout;
+              }
+
+              const code = parsedJson.code ? parsedJson.code : null;
+
+              results.push({
+                pubkey: runExitCommand.pubkey,
+                code: code,
+                msg: parsedJson.message ? parsedJson.message : runExitCommand.stdout,
+              });
+            }
           } catch (error) {
             this.nodeConnection.taskManager.otherTasksHandler(
               ref,
