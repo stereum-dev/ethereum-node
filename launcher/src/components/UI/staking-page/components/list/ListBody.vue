@@ -1,11 +1,13 @@
 import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 <template>
   <div
-    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 py-2 flex justify-start items-center space-y-2 border bg-[#151618] rounded-b-sm mb-[1px]"
+    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 flex justify-start items-center space-y-2 border bg-[#151618] rounded-b-sm mb-[1px]"
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed  border-blue-500 ' : 'border-gray-600',
       stakingStore.inputWrongKey ? 'border-red-500' : '',
-      stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
+      stakingStore.isPreviewListActive ||
+      stakingStore.isRemoteListActive ||
+      stakingStore.isGroupListActive
         ? 'row-start-2 row-end-12'
         : 'row-start-1 row-end-12 rounded-t-md',
     ]"
@@ -33,7 +35,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       >
       <div
         v-if="!stakingStore.isOverDropZone"
-        class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto"
+        class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto pt-2"
       >
         <span
           v-if="
@@ -84,7 +86,11 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <GroupRow
           v-for="group in getCorrectValidatorGroups"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0 && !isLoading"
+          v-show="
+            !stakingStore.isPreviewListActive &&
+            stakingStore.validatorKeyGroups.length > 0 &&
+            !isLoading
+          "
           :key="group.groupID"
           :item="group"
           @open-group="openGroup"
@@ -94,7 +100,12 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <KeyRow
           v-for="key in getFilteredValidators"
-          v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
+          v-show="
+            !isKeyInGroup(key) &&
+            !stakingStore.isPreviewListActive &&
+            stakingStore.keys.length > 0 &&
+            !isLoading
+          "
           :key="key.pubkey"
           :item="key"
           @remove-single="removeSingle"
@@ -140,7 +151,8 @@ stakingStore.filteredKeys = computed(() => {
   }
   return stakingStore.keys.filter(
     (key) =>
-      (key.key && key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
+      (key.key &&
+        key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
       (key.displayName &&
         key.displayName !== "" &&
         key.displayName.toLowerCase().includes(stakingStore.searchContent.toLowerCase()))
@@ -156,7 +168,8 @@ const getFilteredValidators = computed(() => {
 const getCorrectValidatorGroups = computed(() => {
   return stakingStore.validatorKeyGroups.filter(
     (group) =>
-      group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
+      group.keys.length > 0 &&
+      group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   );
 });
 
@@ -281,7 +294,9 @@ const listKeys = async () => {
 };
 
 const isKeyInGroup = (key) => {
-  return stakingStore.validatorKeyGroups.some((group) => group.keys.some((groupKey) => groupKey.key === key.key));
+  return stakingStore.validatorKeyGroups.some((group) =>
+    group.keys.some((groupKey) => groupKey.key === key.key)
+  );
 };
 
 const onDrop = (event) => {
