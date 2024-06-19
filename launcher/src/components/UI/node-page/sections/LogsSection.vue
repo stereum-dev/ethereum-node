@@ -4,7 +4,12 @@
   >
     <LogsHeader :client="client" @close-log="closeLog" />
     <LogsBody :client="client" />
-    <LogsFooter :client="client" @export-log="exportLog" @export-all-log="exportAllLog" />
+    <LogsFooter
+      :client="client"
+      @export-log="exportLog"
+      @export-all-log="exportAllLog"
+      @export-customized-logs="exportCustomizedLogs"
+    />
   </div>
 </template>
 
@@ -24,7 +29,7 @@ const { client } = defineProps({
   },
 });
 
-const emit = defineEmits(["close-log", "export-log", "export-all-log"]);
+const emit = defineEmits(["close-log", "export-log", "export-all-log", "export-customized-logs"]);
 
 const closeLog = () => {
   emit("close-log");
@@ -36,5 +41,9 @@ const exportLog = (item) => {
 
 const exportAllLog = (item) => {
   emit("export-all-log", item);
+};
+
+const exportCustomizedLogs = (item) => {
+  emit("export-customized-logs", item);
 };
 </script>
