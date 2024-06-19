@@ -86,8 +86,11 @@ export default {
       selectedSetup: "selectedSetup",
     }),
     filteredRpcItems() {
-      const serviceIds = this.selectedSetup.services.map((service) => service.id);
-      return this.rpcItems.filter((item) => serviceIds.includes(item.id));
+      if (this.selectedSetup && Array.isArray(this.selectedSetup.services)) {
+        const serviceIds = this.selectedSetup.services.map((service) => service.id);
+        return this.rpcItems.filter((item) => serviceIds.includes(item.id));
+      }
+      return [];
     },
 
     onoff() {

@@ -87,8 +87,11 @@ export default {
       return this.isActive ? "ON" : "OFF";
     },
     filteredWSItems() {
-      const serviceIds = this.selectedSetup.services.map((service) => service.id);
-      return this.wsItems.filter((item) => serviceIds.includes(item.id));
+      if (this.selectedSetup && Array.isArray(this.selectedSetup.services)) {
+        const serviceIds = this.selectedSetup.services.map((service) => service.id);
+        return this.wsItems.filter((item) => serviceIds.includes(item.id));
+      }
+      return [];
     },
   },
   watch: {
@@ -98,9 +101,6 @@ export default {
       } else {
         this.wsState = false;
       }
-    },
-    wsItems(newVal) {
-      console.log("wsItems", newVal);
     },
   },
   mounted() {
