@@ -4,8 +4,7 @@
     :class="route.path === '/staking' ? 'rounded-[4px]' : 'mt-1 rounded-md'"
   >
     <div
-      class="w-full col-start-1 col-span-1 flex justify-center items-center"
-      :class="compatibleSize"
+      class="w-[32px] h-[32px] self-center col-start-1 col-span-1 flex justify-center items-center"
     >
       <WiFiSign :status="nodeStore.connectionStatus?.status" />
     </div>
@@ -44,16 +43,6 @@ const route = useRoute();
 const { checkConnectionQuality, startPolling, stopPolling } = usePingQuality();
 
 const alertTimeout = ref(null);
-
-const compatibleSize = computed(() => {
-  let output;
-  if (route.path === "/staking") {
-    output = "w-[32px] h-[32px] ";
-  } else {
-    output = "";
-  }
-  return output;
-});
 
 const circleClass = computed(() => {
   switch (nodeStore.connectionStatus?.status) {
