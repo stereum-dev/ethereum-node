@@ -1748,6 +1748,10 @@ video {
   height: 30px;
 }
 
+.h-\[32px\]{
+  height: 32px;
+}
+
 .h-\[34px\]{
   height: 34px;
 }
@@ -1824,10 +1828,6 @@ video {
 
 .h-screen{
   height: 100vh;
-}
-
-.h-\[32px\]{
-  height: 32px;
 }
 
 .max-h-10{
@@ -2254,6 +2254,10 @@ video {
   width: 30%;
 }
 
+.w-\[32px\]{
+  width: 32px;
+}
+
 .w-\[38px\]{
   width: 38px;
 }
@@ -2326,10 +2330,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-\[32px\]{
-  width: 32px;
 }
 
 .min-w-\[100px\]{
