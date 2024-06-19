@@ -154,7 +154,6 @@ const setupLayouts = computed(() => {
   if (
     props.network?.network === "mainnet" ||
     props.network?.network === "holesky" ||
-    props.network?.network === "goerli" ||
     props.network?.network === "sepolia" ||
     props.network?.network === "gnosis"
   ) {
@@ -221,16 +220,19 @@ const confirm = async () => {
   await ControlService.createSetup(data);
 
   setupStore.isCreateSetupModalActive = false;
-  loadSetups();
-  loadServices();
+  await refreshSetups();
+};
+
+const refreshSetups = async () => {
+  await loadSetups();
+  await loadServices();
   setupStore.allSetups = getAllSetups();
-  setupStore.editSetups = setupStore.allSetups;
+  setupStore.editSetups = getAllSetups();
 };
 
 const closeWindow = () => {
   setupName.value = "";
   setupColor.value = "";
-
   setupStore.isCreateSetupModalActive = false;
 };
 </script>
