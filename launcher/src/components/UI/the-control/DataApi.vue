@@ -101,9 +101,6 @@ export default {
         this.dataState = false;
       }
     },
-    dataApiItems(newVal) {
-      console.log("dataApiItems", newVal);
-    },
   },
   created() {
     this.beaconControler();
