@@ -3049,6 +3049,7 @@ rm -rf diskoutput
             const chunk = validatorPublicKeys.slice(i, i + chunkSize);
             const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${chunk.join()}' -H 'accept: application/json'`;
             beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd);
+            console.log(beaconAPICmd, beaconAPIRunCmd);
             //check response
             validatorNotFound =
               beaconAPIRunCmd.rc != 0 ||
