@@ -3067,7 +3067,9 @@ rm -rf diskoutput
               balance: key.balance,
               status: key.validator.slashed === "true" ? "slashed" : key.status.replace(/_.*/, ""),
               pubkey: key.validator.pubkey,
-              activationepoch: key.validator.activation_epoch,
+              activationEpoch: key.validator.activation_epoch,
+              activationElgibilityEpoch: key.validator.activation_eligibility_epoch,
+              exitEpoch: key.validator.exit_epoch,
               latestEpoch: parseInt(JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.current_justified.epoch) + 1,
             };
           });
