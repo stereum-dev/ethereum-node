@@ -154,7 +154,7 @@ export default {
       pageNumber: "pageNumber",
     }),
     proposedBlock() {
-      if (this.currentNetwork.id === 4) {
+      if (this.currentNetwork.id === 3) {
         return Array.from({ length: 16 }, () => ({
           slotNumber: 0,
           slotStatus: "pending",
@@ -271,7 +271,7 @@ export default {
     },
 
     refreshTimer() {
-      if (this.currentNetwork.id === 4) {
+      if (this.currentNetwork.id === 3) {
         this.polling = setInterval(() => {
           if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
             this.currentEpochSlot(this.consensusName);
@@ -292,7 +292,7 @@ export default {
     },
 
     initializeProposedBlock() {
-      if (this.currentNetwork.id === 4) {
+      if (this.currentNetwork.id === 3) {
         return Array.from({ length: 16 }, () => ({
           slotNumber: 0,
           slotStatus: "pending",
