@@ -1,0 +1,31 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Check if service_configuration.id is in any of the filtered_files
+  shell: "grep -lq '{{ service_configuration.id }}' {{ item }}"
+  loop: "{{ filtered_files }}"
+  failed_when: false
+  register: grep_result
+  changed_when: false
+
+- name: debug grep_result
+  debug:
+    var: grep_result
+
+- name: Adjust Teku Config if charon service connected to it
+  lineinfile:
+    path: "{{ item.path }}"
+    insertafter: "--network"
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --network') | first | split('-') | first }}- --validators-graffiti-client-append-format=DISABLED"
+  when: 
+    - grep_result.results | selectattr('rc', 'equalto', 0) | list | length > 0
+    - service_configuration.service == "TekuBeaconService"
+    - service_configuration.command | select('match', '--validators-graffiti-client-append-format') | length == 0

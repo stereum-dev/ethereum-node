@@ -9,11 +9,10 @@
     service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
     service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
 
-- name: Add DB Tag to Erigon
+- name: Adjust Lighthouse Config
   lineinfile:
     path: "{{ item.path }}"
-    insertafter: "- erigon"
-    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --datadir.*') | first | split('-') | first }}- --db.size.limit=8TB"
+    regexp: "--disable-enr-auto-update=false"
+    state: absent
   when:
-    - service_configuration.service == "ErigonService"
-    - service_configuration.command | select('match', '--db.size.limit.*') | length == 0
+    - service_configuration.service == "LighthouseBeaconService"

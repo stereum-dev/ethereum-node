@@ -574,11 +574,34 @@ const withdrawValidatorKey = async () => {
   //if single key
   const key = stakingStore.selectedSingleKeyToWithdraw;
   try {
+    let res;
     if (key && key !== null) {
-      stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+      //stakingStore.withdrawAndExitResponse
+      res = await ControlService.exitValidatorAccount({
         pubkey: key.key,
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
       });
+
+      let responseObj = {
+        pubkey: key.key,
+        code: null,
+        msg: [],
+        flag: "rejected",
+      };
+
+      if (typeof res !== "string") {
+        responseObj.code = res.code;
+        if (res.code === 0) {
+          responseObj.pubkey = res.pubkey;
+          responseObj.msg = res.msg;
+          responseObj.flag = "approved";
+        } else {
+          responseObj.msg = res.info;
+        }
+      } else {
+        responseObj.msg = res.split("\n");
+      }
+      stakingStore.withdrawAndExitResponse = [responseObj];
     } else {
       //if multiple keys
       const multiKeys = stakingStore.keys
@@ -588,10 +611,35 @@ const withdrawValidatorKey = async () => {
           }
         })
         .filter((key) => key !== undefined);
+      // stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+      //   pubkey: multiKeys,
+      //   serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      // });
+      res = await Promise.all(
+        multiKeys.map(async (key) => {
+          return await ControlService.exitValidatorAccount({
+            pubkey: key,
+            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+          });
+        })
+      );
+      stakingStore.withdrawAndExitResponse = res.map((item) => {
+        let responseObj = {
+          pubkey: "multi keys",
+          code: null,
+          msg: [],
+          flag: "rejected",
+        };
 
-      stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
-        pubkey: multiKeys,
-        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+        if (typeof item !== "string") {
+          responseObj.pubkey = item.pubkey || "multi keys";
+          responseObj.code = item.code;
+          responseObj.msg = item.code === 0 ? item.msg : item.info;
+          responseObj.flag = item.code === 0 ? "approved" : "rejected";
+        } else {
+          responseObj.msg = item.split("\n");
+        }
+        return responseObj;
       });
     }
   } catch (e) {

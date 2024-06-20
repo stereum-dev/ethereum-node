@@ -1,0 +1,34 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file_path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Adjust Lodestar Config
+  lineinfile:
+    path: "{{ config_file_path }}"
+    regexp: "--useProduceBlockV3"
+    state: absent
+  when:
+    - service_configuration.service == "LodestarValidatorService"
+
+- name: Adjust Teku Config
+  lineinfile:
+    path: "{{ config_file_path }}"
+    regexp: "--Xblock-v3-enabled"
+    state: absent
+  when:
+    - service_configuration.service == "TekuValidatorService"
+
+- name: Adjust Lighthouse Config
+  lineinfile:
+    path: "{{ config_file_path }}"
+    regexp: "--produce-block-v3"
+    state: absent
+  when:
+    - service_configuration.service == "LighthouseValidatorService"
