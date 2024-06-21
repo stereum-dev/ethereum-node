@@ -18,7 +18,13 @@ import { computed } from 'vue';
           alt="Key Icon"
           @mousedown.prevent
         />
-        <img v-else class="w-full h-full" src="/img/icon/staking-page-icons/key-icon.png" alt="Key Icon" @mousedown.prevent />
+        <img
+          v-else
+          class="w-full h-full"
+          src="/img/icon/staking-page-icons/key-icon.png"
+          alt="Key Icon"
+          @mousedown.prevent
+        />
       </div>
     </div>
     <div
@@ -41,12 +47,17 @@ import { computed } from 'vue';
       @mouseenter="footerStore.cursorLocation = `${serviceExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
     />
+
     <span
       class="col-start-9 col-end-12 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
-      @mouseenter="footerStore.cursorLocation = `${activeExpl}`"
+      @mouseenter="
+        footerStore.cursorLocation = `${t('displayValidator.activeExpl', {
+          status: getKeyHanlingFooter,
+        })}`
+      "
       @mouseleave="footerStore.cursorLocation = ''"
-      >{{ props.item.activeSince }}</span
+      >{{ getKeyHanlingTime }}</span
     >
 
     <div
@@ -168,7 +179,6 @@ const pk = t("displayValidator.pk");
 const rm = t("displayValidator.rm");
 const state = t("displayValidator.state");
 const serviceExpl = t("displayValidator.serviceExpl");
-const activeExpl = t("displayValidator.activeExpl");
 const balExpl = t("displayValidator.balExpl");
 const copyPub = t("displayValidator.copyPub");
 const setFee = t("displayValidator.setFee");
@@ -199,6 +209,46 @@ const getKeyState = computed(() => {
       return apiLoading;
     default:
       return depositStatusIcon;
+  }
+});
+
+const getKeyHanlingTime = computed(() => {
+  const item = props.item.status;
+  switch (item) {
+    case "active_online":
+    case "active":
+    case "active_offline":
+    case "slashed":
+      return props.item.activeSince;
+    case "pending":
+      return props.item.elgibilitySince;
+    case "exited":
+    case "withdrawal":
+      return props.item.exitSince;
+    case "NA":
+    case "loading":
+    default:
+      return "-";
+  }
+});
+
+const getKeyHanlingFooter = computed(() => {
+  const item = props.item.status;
+  switch (item) {
+    case "active_online":
+    case "active":
+    case "active_offline":
+    case "slashed":
+      return "activated";
+    case "pending":
+      return "pending";
+    case "exited":
+    case "withdrawal":
+      return "exited";
+    case "NA":
+    case "loading":
+    default:
+      return "-";
   }
 });
 
