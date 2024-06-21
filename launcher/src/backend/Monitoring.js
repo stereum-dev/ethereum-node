@@ -3070,6 +3070,7 @@ rm -rf diskoutput
               pubkey: key.validator.pubkey,
               activationEpoch: key.validator.activation_epoch,
               activationElgibilityEpoch: key.validator.activation_eligibility_epoch,
+              withdrawable_epoch: key.validator.withdrawable_epoch,
               exitEpoch: key.validator.exit_epoch,
               latestEpoch: parseInt(JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.current_justified.epoch) + 1,
             };
