@@ -115,6 +115,7 @@ export async function useUpdateValidatorStats() {
 
   try {
     data = await ControlService.getValidatorState(stakingStore.keys.map((key) => key.key));
+
     if (!data || data.length == 0) {
       data = [];
       let latestEpochResponse = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/epoch/latest", {
@@ -151,15 +152,18 @@ export async function useUpdateValidatorStats() {
 
   stakingStore.keys.forEach((key) => {
     let info = data.find((k) => k.pubkey === key.key);
+
     if (info) {
       let dateActive = new Date();
       let dateExit = new Date();
       let dateEligibility = new Date();
+      let dateWithdrawable = new Date();
       let now = new Date();
       latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
       let activationEpoch = parseInt(info.activationEpoch);
       let exitEpoch = parseInt(info.exitEpoch);
       let elgibilityEpoch = parseInt(info.activationElgibilityEpoch);
+      let withdrawableEpoch = parseInt(info.withdrawableEpoch);
 
       if (key.network === "gnosis") {
         dateActive.setMilliseconds(dateActive.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
@@ -167,6 +171,14 @@ export async function useUpdateValidatorStats() {
           exitEpoch > latestEpoch
             ? null
             : dateExit.setMilliseconds(dateExit.getMilliseconds() - (latestEpoch - exitEpoch) * 80000);
+        dateWithdrawable =
+          withdrawableEpoch > latestEpoch
+            ? null
+            : new Date(
+                dateWithdrawable.setMilliseconds(
+                  dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 80000
+                )
+              );
         dateEligibility.setMilliseconds(dateEligibility.getMilliseconds() - (latestEpoch - elgibilityEpoch) * 80000);
       } else {
         dateActive.setMilliseconds(dateActive.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
@@ -174,6 +186,14 @@ export async function useUpdateValidatorStats() {
           exitEpoch > latestEpoch
             ? null
             : new Date(dateExit.setMilliseconds(dateExit.getMilliseconds() - (latestEpoch - exitEpoch) * 384000));
+        dateWithdrawable =
+          withdrawableEpoch > latestEpoch
+            ? null
+            : new Date(
+                dateWithdrawable.setMilliseconds(
+                  dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 384000
+                )
+              );
         dateEligibility.setMilliseconds(dateEligibility.getMilliseconds() - (latestEpoch - elgibilityEpoch) * 384000);
       }
 
@@ -183,6 +203,10 @@ export async function useUpdateValidatorStats() {
       key.activeSince = ((now.getTime() - dateActive.getTime()) / 86400000).toFixed(1) + " Days";
       key.exitSince = dateExit === null ? null : ((now.getTime() - dateExit.getTime()) / 86400000).toFixed(1) + " Days";
       key.elgibilitySince = ((now.getTime() - dateEligibility.getTime()) / 86400000).toFixed(1) + " Days";
+      key.withdrawableSince =
+        dateWithdrawable === null
+          ? null
+          : ((now.getTime() - dateWithdrawable.getTime()) / 86400000).toFixed(1) + " Days";
       if (key.isRemote) {
         if (!stakingStore.keys.some((k) => k.key === key.key && !k.isRemote)) {
           totalBalance += key.balance;

@@ -51,13 +51,14 @@ import { computed } from 'vue';
     <span
       class="col-start-9 col-end-12 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
+      :style="{ color: getStatusColor }"
       @mouseenter="
         footerStore.cursorLocation = `${t('displayValidator.activeExpl', {
           status: getKeyHanlingFooter,
         })}`
       "
       @mouseleave="footerStore.cursorLocation = ''"
-      >{{ getKeyHanlingTime }}</span
+      >{{ getKeyHandlingTime }}</span
     >
 
     <div
@@ -212,7 +213,7 @@ const getKeyState = computed(() => {
   }
 });
 
-const getKeyHanlingTime = computed(() => {
+const getKeyHandlingTime = computed(() => {
   const item = props.item.status;
   switch (item) {
     case "active_online":
@@ -223,8 +224,9 @@ const getKeyHanlingTime = computed(() => {
     case "pending":
       return props.item.elgibilitySince;
     case "exited":
-    case "withdrawal":
       return props.item.exitSince;
+    case "withdrawal":
+      return props.item.withdrawableSince;
     case "NA":
     case "loading":
     default:
@@ -243,12 +245,32 @@ const getKeyHanlingFooter = computed(() => {
     case "pending":
       return "pending";
     case "exited":
-    case "withdrawal":
       return "exited";
+    case "withdrawal":
+      return "withdrawable";
     case "NA":
     case "loading":
     default:
       return "-";
+  }
+});
+const getStatusColor = computed(() => {
+  const item = props.item.status;
+  switch (item) {
+    case "active_online":
+    case "active":
+    case "active_offline":
+    case "slashed":
+      return "#eee";
+    case "pending":
+      return "#06a5ff";
+    case "exited":
+    case "withdrawal":
+      return "#f00";
+    case "NA":
+    case "loading":
+    default:
+      return "yellow";
   }
 });
 
