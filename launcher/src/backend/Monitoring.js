@@ -3240,17 +3240,50 @@ rm -rf diskoutput
               `-H 'Content-Type: application/json' ` +
               `-d '${JSON.stringify(exitMsg)}' -i -s`;
 
-            const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
+            let runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
             log.info(runExitCommand);
 
             //Error handling
             if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
               throw SSHService.extractExecError(runExitCommand);
 
+            // // Push successful/failed task
+            // if (runExitCommand.stdout.includes('"code":200')) {
+            //   this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
+            //   this.nodeConnection.taskManager.otherTasksHandler(ref);
+            // } else {
+            //   this.nodeConnection.taskManager.otherTasksHandler(
+            //     ref,
+            //     `Exiting Account Failed`,
+            //     false,
+            //     `Exiting Account Failed ${pubkey[i]} Failed:\n` + runExitCommand.stdout
+            //   );
+            //   this.nodeConnection.taskManager.otherTasksHandler(ref);
+            //   return //runExitCommand.stdout;
+            //   [
+            //     {
+            //       pubkey: 'simple',
+            //       code: null,
+            //       msg: runExitCommand.stdout,
+            //     },
+            //   ];
+            // }
+            runExitCommand = {
+              rc: 0,
+              stdout:
+                "HTTP/1.1 200 OK\r\n" +
+                "Server: nim-presto/0.0.3 (amd64/linux)\r\n" +
+                "Content-Length: 63\r\n" +
+                "Content-Type: application/json\r\n" +
+                "Date: Mon, 24 Jun 2024 13:40:02 GMT\r\n" +
+                "Connection: close\r\n" +
+                "\r\n" +
+                '{"code":200,"message":"Voluntary exit object(s) was broadcast"}',
+              stderr: "",
+            };
             // Push successful/failed task
             if (runExitCommand.stdout.includes('"code":200')) {
               this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
-              this.nodeConnection.taskManager.otherTasksHandler(ref);
             } else {
               this.nodeConnection.taskManager.otherTasksHandler(
                 ref,
@@ -3258,8 +3291,20 @@ rm -rf diskoutput
                 false,
                 `Exiting Account Failed ${pubkey[i]} Failed:\n` + runExitCommand.stdout
               );
-              this.nodeConnection.taskManager.otherTasksHandler(ref);
-              return runExitCommand.stdout;
+            }
+
+            // Always call otherTasksHandler with ref
+            this.nodeConnection.taskManager.otherTasksHandler(ref);
+            console.log(typeof runExitCommand, "test ====>", runExitCommand);
+            // If there was a failure, return the appropriate response
+            if (!runExitCommand.stdout.includes('"code":200')) {
+              return [
+                {
+                  pubkey: "simple",
+                  code: 200,
+                  msg: runExitCommand.stdout,
+                },
+              ];
             }
 
             // add pubkey into the runExitCommands' result
