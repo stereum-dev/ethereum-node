@@ -26,8 +26,11 @@
               {{ getStatus.success }} {{ $t("stakingPage.vldExited") }}</span
             >
           </div>
-          <div v-if="getStatus?.failure" class="w-full h-full flex justify-center items-center overflow-hidden">
-            <span class="text-md text-red-500 font-semibold text-center">
+          <div
+            v-if="getStatus?.failure"
+            class="w-full h-full flex justify-center items-center overflow-x-hidden overflow-y-auto"
+          >
+            <span class="max-w-full text-md text-red-500 font-semibold text-center overflow-x-hidden overflow-y-auto">
               {{ getStatus.failure }} {{ $t("stakingPage.vldFailed") }}</span
             >
           </div>
@@ -48,19 +51,28 @@
           </div>
           <div
             v-else-if="item.pubkey && item.code !== '200'"
-            class="w-full h-24 flex flex-col justify-center items-start overflow-hidden"
+            class="w-full h-24 flex flex-col justify-center items-start overflow-x-hidden overflow-y-auto"
           >
-            <p v-if="!regectedService" class="text-sm text-amber-400 text-left font-semibold">
+            <p
+              v-if="!regectedService"
+              class="text-sm text-amber-400 text-left font-semibold overflow-x-hidden overflow-y-auto"
+            >
               {{ useTruncate(item?.pubkey, 20, 20) }}:
-              <span class="text-md text-red-500 font-semibold text-left">{{ $t("stakingPage.exitFailed") }}</span>
+              <span class="text-md text-red-500 font-semibold text-left overflow-x-hidden overflow-y-auto">{{
+                $t("stakingPage.exitFailed")
+              }}</span>
             </p>
-            <span class="text-sm text-gray-400 text-left font-semibold">{{ item.msg }}</span>
+            <span class="max-w-full text-sm text-gray-400 text-left font-semibold overflow-x-hidden overflow-y-auto">{{
+              item.msg
+            }}</span>
           </div>
         </div>
       </div>
       <div v-else class="col-start-1 col-span-full row-start-2 row-end-6 w-full h-full grid grid-cols-12 grid-rows-5">
         <div class="col-start-2 col-end-12 row-start-1 row-end-5 flex justify-center items-center px-3">
-          <span class="text-md text-gray-200 text-left font-semibold">{{ getTextMessage }}</span>
+          <span class="text-md text-gray-200 text-left font-semibold overflow-x-hidden overflow-y-auto">{{
+            getTextMessage
+          }}</span>
         </div>
         <div class="col-start-3 col-end-11 row-start-5 row-span-1 flex justify-center items-center">
           <label for="MarketingAccept" class="flex gap-4">
@@ -111,11 +123,7 @@ const getTextMessage = computed(() => {
 const buttonClicked = ref(false);
 
 const activeButton = computed(() => {
-  if (stakingStore.withdrawIsChecked) {
-    return true;
-  } else {
-    return false;
-  }
+  return !!stakingStore.withdrawIsChecked;
 });
 
 const isProcessing = computed(() => {
@@ -135,6 +143,7 @@ const getNumberOfKeys = () => {
   let failureCount = 0;
 
   if (Array.isArray(displayResponse.value)) {
+    console.log("displayResponse before loop", displayResponse.value);
     displayResponse.value.forEach((item) => {
       if (item.flag === "approved" && item.code === "200") {
         regectedService.value = false;
