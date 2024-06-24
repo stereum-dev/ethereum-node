@@ -35,7 +35,7 @@
     <div v-if="showData && filteredRpcItems.length > 0" class="compTtl" :class="{ active: isActive }">
       <span>{{ copyVal }}</span>
     </div>
-    <div v-show="!showData || filteredRpcItems.length === 0" class="spinner">
+    <div v-if="!showData || filteredRpcItems.length === 0" class="spinner">
       <img src="/animation/loading/mushroom-spinner.gif" alt="loading" />
     </div>
   </div>
@@ -86,8 +86,11 @@ export default {
       selectedSetup: "selectedSetup",
     }),
     filteredRpcItems() {
-      const serviceIds = this.selectedSetup.services.map((service) => service.id);
-      return this.rpcItems.filter((item) => serviceIds.includes(item.id));
+      if (this.selectedSetup && Array.isArray(this.selectedSetup.services)) {
+        const serviceIds = this.selectedSetup.services.map((service) => service.id);
+        return this.rpcItems.filter((item) => serviceIds.includes(item.id));
+      }
+      return [];
     },
 
     onoff() {

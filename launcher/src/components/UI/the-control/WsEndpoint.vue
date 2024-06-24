@@ -8,7 +8,7 @@
         </div>
       </div>
     </control-dialog>
-    <div v-show="showData" class="ws-box">
+    <div v-if="showData && filteredWSItems.length > 0" class="ws-box">
       <!-- removed node-connection-row template start -->
       <div class="rowParent">
         <div class="title">
@@ -21,26 +21,33 @@
       </div>
       <!-- removed node-connection-row template end -->
       <div class="scrollable">
-        <div v-for="item in wsItems" :key="item.id" ref="clone" class="ws-data" @click="copy(item.value, item.title)">
+        <div
+          v-for="item in filteredWSItems"
+          :key="item.id"
+          ref="clone"
+          class="ws-data"
+          @click="copy(item.value, item.title)"
+        >
           <span>{{ item.title }}</span>
         </div>
       </div>
     </div>
-    <div v-show="showData" class="compTtl" :class="{ active: isActive }">
+    <div v-if="showData && filteredWSItems.length > 0" class="compTtl" :class="{ active: isActive }">
       <span>{{ copyVal }}</span>
     </div>
-    <div v-show="!showData" class="spinner">
-      <img src="../../../../public/animation/loading/mushroom-spinner.gif" alt="loading" />
+    <div v-if="!showData || filteredWSItems.length === 0" class="spinner">
+      <img src="/animation/loading/mushroom-spinner.gif" alt="loading" />
     </div>
   </div>
 </template>
 
 <script>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlDialog from "./ControlDialog.vue";
+import { useSetups } from "@/store/setups";
 export default {
   components: { ControlDialog },
   data() {
@@ -72,9 +79,19 @@ export default {
     ...mapWritableState(useNodeHeader, {
       wsState: "wsState",
     }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
+    }),
     onoff() {
       if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
+    },
+    filteredWSItems() {
+      if (this.selectedSetup && Array.isArray(this.selectedSetup.services)) {
+        const serviceIds = this.selectedSetup.services.map((service) => service.id);
+        return this.wsItems.filter((item) => serviceIds.includes(item.id));
+      }
+      return [];
     },
   },
   watch: {

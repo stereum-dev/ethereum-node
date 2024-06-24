@@ -50,7 +50,7 @@
             v-else-if="item.pubkey && item.code !== '200'"
             class="w-full h-24 flex flex-col justify-center items-start overflow-hidden"
           >
-            <p class="text-sm text-amber-400 text-left font-semibold">
+            <p v-if="!regectedService" class="text-sm text-amber-400 text-left font-semibold">
               {{ useTruncate(item?.pubkey, 20, 20) }}:
               <span class="text-md text-red-500 font-semibold text-left">{{ $t("stakingPage.exitFailed") }}</span>
             </p>
@@ -89,6 +89,7 @@ const emit = defineEmits(["confirmWithdraw", "exportMessage"]);
 
 const stakingStore = useStakingStore();
 const clickOut = ref("Click outside to cancel");
+let regectedService = ref(false);
 
 const responseList = ref([]);
 
@@ -133,21 +134,25 @@ const getNumberOfKeys = () => {
   let successCount = 0;
   let failureCount = 0;
 
-  if(Array.isArray(displayResponse.value)) {
+  if (Array.isArray(displayResponse.value)) {
     displayResponse.value.forEach((item) => {
-      if (item.code === "200") {
+      if (item.flag === "approved" && item.code === "200") {
+        regectedService.value = false;
         successCount++;
-      } else {
+      } else if (item.flag === "approved" && item.code !== "200") {
+        regectedService.value = false;
+        failureCount++;
+      } else if (item.flag === "rejected") {
+        regectedService.value = true;
         failureCount++;
       }
     });
+    // Combine the counts with the original displayResponse
+    const combinedResponse = [...useDeepClone(displayResponse.value), { success: successCount, failure: failureCount }];
+
+    // Update the responseList with the combined data
+    responseList.value = combinedResponse;
   }
-
-  // Combine the counts with the original displayResponse
-  const combinedResponse = [...useDeepClone(displayResponse.value), { success: successCount, failure: failureCount }];
-
-  // Update the responseList with the combined data
-  responseList.value = combinedResponse;
 };
 
 // Set up the watcher after ensuring the store is properly initialized
