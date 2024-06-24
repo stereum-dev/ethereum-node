@@ -135,6 +135,7 @@ const getNumberOfKeys = () => {
   let failureCount = 0;
 
   if (Array.isArray(displayResponse.value)) {
+    console.log("hahahah--------------", displayResponse.value);
     displayResponse.value.forEach((item) => {
       if (item.flag === "approved" && item.code === "200") {
         regectedService.value = false;
