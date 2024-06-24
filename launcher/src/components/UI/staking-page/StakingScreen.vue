@@ -582,6 +582,8 @@ const withdrawValidatorKey = async () => {
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
       });
 
+      console.log("111111111111111111-------------", res);
+
       let responseObj = {
         pubkey: key.key,
         code: null,
@@ -590,19 +592,27 @@ const withdrawValidatorKey = async () => {
       };
 
       if (typeof res !== "string") {
-        responseObj.code = res.code;
-        if (res.code === 0) {
-          responseObj.pubkey = res.pubkey;
-          responseObj.msg = res.msg;
+        console.log("22222222222222222222-------------");
+        console.log("hahaha1111111111", res[0].code);
+        responseObj.code = res[0].code;
+        console.log("hahahah222222222", responseObj.code);
+        if (res[0].code === 0 || res[0].code === 200) {
+          console.log("9999999999999999999999999999999999999-------------", res[0]);
+          responseObj.pubkey = res[0].pubkey;
+          responseObj.msg = res[0].msg;
           responseObj.flag = "approved";
         } else {
-          responseObj.msg = res.info;
+          console.log("3333333333333333333333-------------");
+          responseObj.msg = res[0].info;
         }
       } else {
+        console.log("444444444444444444-------------");
         responseObj.msg = res.split("\n");
       }
+
       stakingStore.withdrawAndExitResponse = [responseObj];
     } else {
+      console.log("555555555555555555555555-------------");
       //if multiple keys
       const multiKeys = stakingStore.keys
         .map((item) => {
