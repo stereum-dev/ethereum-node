@@ -69,7 +69,7 @@ const installedValidators = computed(() => {
     services = serviceStore.installedServices
       .filter(
         (client) =>
-          setupStore.selectedSetup.services.some(
+          setupStore.selectedSetup?.services.some(
             (installedValidator) =>
               installedValidator.id === client.config?.serviceID &&
               client.category === "validator"
