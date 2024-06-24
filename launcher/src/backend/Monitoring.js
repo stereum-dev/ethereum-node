@@ -3215,146 +3215,139 @@ rm -rf diskoutput
 
   async exitValidatorAccount(pubkey, serviceID) {
     const beaconStatus = await this.getBeaconStatus();
-    if (beaconStatus.code === 0) {
-      try {
-        const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
-        const serviceId = beaconStatus.data[0].sid;
-        if (!Array.isArray(pubkey)) {
-          pubkey = [pubkey];
-        }
-        let results = [];
-        for (let i = 0; i < pubkey.length; i++) {
-          const ref = StringUtils.createRandomString(); // Create a random string to identify the task
-          this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit Account ${pubkey[i].substring(0, 6)}..`);
-          try {
-            const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey[i], serviceID);
-            if (result.data === undefined) {
-              throw result;
-            }
-            const curlTag = await this.nodeConnection.ensureCurlImage();
-            const exitMsg = result.data;
-            const exitCommand =
-              `docker run --rm --network=stereum curlimages/curl:${curlTag} curl ` +
-              `'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' ` +
-              `-H 'accept: */*' ` +
-              `-H 'Content-Type: application/json' ` +
-              `-d '${JSON.stringify(exitMsg)}' -i -s`;
 
-            let runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
-            log.info(runExitCommand);
-
-            //Error handling
-            if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
-              throw SSHService.extractExecError(runExitCommand);
-
-            //--------------------------------------------------
-            runExitCommand = {
-              rc: 0,
-              stdout:
-                "HTTP/1.1 400 OK\r\n" +
-                "Server: nim-presto/0.0.3 (amd64/linux)\r\n" +
-                "Content-Length: 63\r\n" +
-                "Content-Type: application/json\r\n" +
-                "Date: Mon, 24 Jun 2024 13:40:02 GMT\r\n" +
-                "Connection: close\r\n" +
-                "\r\n" +
-                '{"code":500,"message":"Voluntary exit object(s) was broadcast"}',
-              stderr: "",
-            };
-            //--------------------------------------------------
-
-            // Push successful/failed task
-            if (runExitCommand.stdout.includes('"code":200')) {
-              this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
-            } else {
-              this.nodeConnection.taskManager.otherTasksHandler(
-                ref,
-                `Exiting Account Failed`,
-                false,
-                `Exiting Account Failed ${pubkey[i]} Failed:\n` + runExitCommand.stdout
-              );
-            }
-            this.nodeConnection.taskManager.otherTasksHandler(ref);
-
-            // If there was a failure, return the appropriate response
-            if (!runExitCommand.stdout.includes('"code":200')) {
-              if (!runExitCommand.stdout.includes("{") && !runExitCommand.stdout.includes("}")) {
-                results.push({
-                  pubkey: pubkey[i],
-                  code: null,
-                  msg: runExitCommand.stdout,
-                });
-              } else {
-                const jsonStartIndex1 = runExitCommand.stdout.indexOf("{");
-                const jsonEndIndex1 = runExitCommand.stdout.lastIndexOf("}");
-                const stdoutJson = runExitCommand.stdout.substring(jsonStartIndex1, jsonEndIndex1 + 1);
-                let parsedJson = {};
-                parsedJson = JSON.parse(stdoutJson);
-
-                const code = parsedJson.code ? parsedJson.code : null;
-
-                results.push({
-                  pubkey: runExitCommand.pubkey,
-                  code: code,
-                  msg: parsedJson.message ? parsedJson.message : runExitCommand.stdout,
-                });
-              }
-            } else if (runExitCommand.stdout.includes('"code":200')) {
-              if (!runExitCommand.stdout.includes("{") && !runExitCommand.stdout.includes("}")) {
-                results.push({
-                  pubkey: pubkey[i],
-                  code: null,
-                  msg: runExitCommand.stdout,
-                });
-              } else {
-                // Extract the JSON payload from the stdout
-                const jsonStartIndex = runExitCommand.stdout.indexOf("{");
-                const jsonEndIndex = runExitCommand.stdout.lastIndexOf("}");
-                const stdoutJson = runExitCommand.stdout.substring(jsonStartIndex, jsonEndIndex + 1);
-
-                let parsedJson = {};
-
-                parsedJson = JSON.parse(stdoutJson);
-
-                const code = parsedJson.code ? parsedJson.code : null;
-
-                results.push({
-                  pubkey: runExitCommand.pubkey,
-                  code: code,
-                  msg: parsedJson.message ? parsedJson.message : runExitCommand.stdout,
-                });
-              }
-            }
-          } catch (error) {
-            this.nodeConnection.taskManager.otherTasksHandler(
-              ref,
-              `Exiting Account Failed`,
-              false,
-              `Exiting Account Failed ${pubkey[i]} Failed:\n` + error
-            );
-            this.nodeConnection.taskManager.otherTasksHandler(ref);
-            log.error("Exiting signed voluntary account Failed:\n", error);
-            return error;
-          }
-        }
-        return results;
-      } catch (error) {
-        const ref = StringUtils.createRandomString();
-        this.nodeConnection.taskManager.otherTasksHandler(
-          ref,
-          "Error occurred to get Beacon service ID & port",
-          false,
-          `Error occurred to get Beacon service ID & port: ${error}`
-        );
-        this.nodeConnection.taskManager.otherTasksHandler(ref);
-        return error;
-      }
-    } else if (beaconStatus.code !== 0) {
+    if (beaconStatus.code !== 0) {
       return [
         {
           pubkey: undefined,
           code: null,
           msg: beaconStatus.info,
+        },
+      ];
+    }
+
+    try {
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const serviceId = beaconStatus.data[0].sid;
+      if (!Array.isArray(pubkey)) {
+        pubkey = [pubkey];
+      }
+      let results = [];
+
+      const parseRunExitCommandOutput = (output, pubkey) => {
+        if (!output.includes("{") || !output.includes("}")) {
+          return {
+            pubkey: pubkey,
+            code: null,
+            msg: output,
+          };
+        }
+
+        const jsonStartIndex = output.indexOf("{");
+        const jsonEndIndex = output.lastIndexOf("}");
+        const stdoutJson = output.substring(jsonStartIndex, jsonEndIndex + 1);
+        const parsedJson = JSON.parse(stdoutJson);
+
+        return {
+          pubkey: pubkey,
+          code: parsedJson.code || null,
+          msg: parsedJson.message || output,
+        };
+      };
+
+      const handleExitCommand = async (pubkey, serviceId, beaconAPIPort) => {
+        const ref = StringUtils.createRandomString();
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit Account ${pubkey.substring(0, 6)}..`);
+        try {
+          const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey, serviceID);
+          if (result.data === undefined || !("data" in result)) {
+            throw new Error(result);
+          }
+
+          const curlTag = await this.nodeConnection.ensureCurlImage();
+          const exitMsg = result.data;
+          const exitCommand =
+            `docker run --rm --network=stereum curlimages/curl:${curlTag} curl ` +
+            `'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' ` +
+            `-H 'accept: */*' ` +
+            `-H 'Content-Type: application/json' ` +
+            `-d '${JSON.stringify(exitMsg)}' -i -s`;
+
+          let runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
+          log.info(runExitCommand);
+
+          //-------------------------dummy for testing-------------------------
+          runExitCommand = {
+            rc: 0,
+            stdout:
+              "HTTP/1.1 200 OK\r\n" +
+              "Server: nim-presto/0.0.3 (amd64/linux)\r\n" +
+              "Content-Length: 63\r\n" +
+              "Content-Type: application/json\r\n" +
+              "Date: Mon, 24 Jun 2024 13:40:02 GMT\r\n" +
+              "Connection: close\r\n" +
+              "\r\n" +
+              '{"code":200,"message":"Voluntary exit object(s) was broadcast"}',
+            stderr: "",
+          };
+          //--------------------------------------------------
+
+          if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr) {
+            throw new Error(SSHService.extractExecError(runExitCommand));
+          }
+
+          const response = parseRunExitCommandOutput(runExitCommand.stdout, pubkey);
+
+          if (response.code === 200) {
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
+          } else {
+            this.nodeConnection.taskManager.otherTasksHandler(
+              ref,
+              `Exiting Account Failed`,
+              false,
+              `Exiting Account Failed ${pubkey}:\n${runExitCommand.stdout}`
+            );
+          }
+
+          this.nodeConnection.taskManager.otherTasksHandler(ref);
+          return response;
+        } catch (error) {
+          this.nodeConnection.taskManager.otherTasksHandler(
+            ref,
+            `Exiting Account Failed`,
+            false,
+            `Exiting Account Failed ${pubkey}:\n${error}`
+          );
+          this.nodeConnection.taskManager.otherTasksHandler(ref);
+          log.error(`Exiting signed voluntary account failed for ${pubkey}:\n`, error);
+          return {
+            pubkey: pubkey,
+            code: null,
+            msg: error.toString(),
+          };
+        }
+      };
+
+      for (let i = 0; i < pubkey.length; i++) {
+        const result = await handleExitCommand(pubkey[i], serviceId, beaconAPIPort);
+        results.push(result);
+      }
+
+      return results;
+    } catch (error) {
+      const ref = StringUtils.createRandomString();
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        "Error occurred to get Beacon service ID & port",
+        false,
+        `Error occurred to get Beacon service ID & port: ${error}`
+      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+      return [
+        {
+          pubkey: undefined,
+          code: null,
+          msg: error.toString(),
         },
       ];
     }

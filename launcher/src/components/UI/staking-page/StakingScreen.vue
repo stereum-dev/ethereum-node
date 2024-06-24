@@ -592,27 +592,20 @@ const withdrawValidatorKey = async () => {
       };
 
       if (typeof res !== "string") {
-        console.log("22222222222222222222-------------");
-        console.log("hahaha1111111111", res[0].code);
         responseObj.code = res[0].code;
-        console.log("hahahah222222222", responseObj.code);
         if (res[0].code === 0 || res[0].code === 200) {
-          console.log("9999999999999999999999999999999999999-------------", res[0]);
           responseObj.pubkey = res[0].pubkey;
           responseObj.msg = res[0].msg;
           responseObj.flag = "approved";
         } else {
-          console.log("3333333333333333333333-------------");
           responseObj.msg = res[0].info;
         }
       } else {
-        console.log("444444444444444444-------------");
         responseObj.msg = res.split("\n");
       }
 
       stakingStore.withdrawAndExitResponse = [responseObj];
     } else {
-      console.log("555555555555555555555555-------------");
       //if multiple keys
       const multiKeys = stakingStore.keys
         .map((item) => {
@@ -621,18 +614,19 @@ const withdrawValidatorKey = async () => {
           }
         })
         .filter((key) => key !== undefined);
-      // stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
-      //   pubkey: multiKeys,
-      //   serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-      // });
-      res = await Promise.all(
-        multiKeys.map(async (key) => {
-          return await ControlService.exitValidatorAccount({
-            pubkey: key,
-            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-          });
-        })
-      );
+      res = stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+        pubkey: multiKeys,
+        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      });
+      // res = await Promise.all(
+      //   multiKeys.map(async (key) => {
+      //     return await ControlService.exitValidatorAccount({
+      //       pubkey: key,
+      //       serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      //     });
+      //   })
+      // );
+      console.log("222222222222222222222-------------", res);
       stakingStore.withdrawAndExitResponse = res.map((item) => {
         let responseObj = {
           pubkey: "multi keys",

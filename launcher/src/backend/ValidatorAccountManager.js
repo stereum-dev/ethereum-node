@@ -653,7 +653,7 @@ export class ValidatorAccountManager {
       const data = JSON.parse(result.stdout);
       if (data.data === undefined) {
         if (data.code === undefined || data.message === undefined) {
-          throw "Undexpected Error: " + result;
+          throw "Undexpected Error: " + result.stdout;
         }
         throw data.code + " " + data.message;
       }
