@@ -127,6 +127,7 @@ import { useListGroups } from "@/composables/groups";
 import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import { useListKeys } from "@/composables/validators";
+import { useSetups } from "@/store/setups";
 
 const emit = defineEmits([
   "onDrop",
@@ -139,6 +140,7 @@ const emit = defineEmits([
   "renameSingle",
 ]);
 const stakingStore = useStakingStore();
+const setupStore = useSetups();
 const { listGroups } = useListGroups();
 const isLoading = ref(true);
 const dropZoneRef = ref(null);
@@ -160,10 +162,19 @@ stakingStore.filteredKeys = computed(() => {
 });
 
 const getFilteredValidators = computed(() => {
-  return stakingStore.filteredKeys.filter(
-    (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
-  );
+  if (!setupStore.selectedSetup) {
+    // If selectedSetup is null, return all keys
+    return stakingStore.filteredKeys;
+  } else {
+    const serviceIds = setupStore.selectedSetup.services.map((service) => service.id);
+    // Filter keys by checking if validatorID exists in serviceIds
+    return stakingStore.filteredKeys.filter((key) =>
+      serviceIds.includes(key.validatorID)
+    );
+  }
 });
+
+console.log(setupStore.selectedSetup);
 
 const getCorrectValidatorGroups = computed(() => {
   return stakingStore.validatorKeyGroups.filter(
