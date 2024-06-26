@@ -166,7 +166,7 @@
     "sure": "确定",
     "cancel": "取消",
     "serviceExpl": "为输入的验证器密钥选择的服务",
-    "activeExpl": "验证器激活以来的时间",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "验证器的余额",
     "copyPub": "复制公钥",
     "copiedPub": "公钥已复制",
