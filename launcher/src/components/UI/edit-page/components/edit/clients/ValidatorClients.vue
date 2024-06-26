@@ -1,61 +1,70 @@
 <template>
-  <div class="w-full col-start-1 col-end-2 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative">
+  <div
+    class="col-start-3 col-end-4 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative"
+    @mousedown.prevent
+  >
     <div
-      v-for="item in getExecutions"
-      :key="item"
+      v-for="item in getValidators"
+      :key="item.name"
       :ref="
         (el) => {
           item.ref = el;
         }
       "
-      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md self-center justify-self-center cursor-pointer relative"
+      class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md shadow-md divide-x divide-gray-700 self-center justify-self-center cursor-pointer"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
       @mouseenter="mouseOver(item)"
     >
       <ClientLayout :client="item" />
-      <TransitionGroup name="slide-fade">
+      <Transition name="slide-fade">
         <GeneralMenu
           v-if="item.displayPluginMenu"
           :item="item"
           @switch-client="switchClient"
-          @connect-client="connectClient"
+          @modify-service="modifyService"
           @delete-service="deleteService"
           @info-modal="infoModal"
         />
-      </TransitionGroup>
+      </Transition>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
+import { computed } from "vue";
+import { useSetups } from "@/store/setups";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
-import { computed } from "vue";
+const emit = defineEmits([
+  "deleteService",
+  "switchClient",
+  "modifyService",
+  "infoModal",
+  "mouseOver",
+  "mouseLeave",
+]);
 
-const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
 const manageStore = useNodeManage();
-const serviceStore = useServices();
+const setupStore = useSetups();
 
-const getExecutions = computed(() => {
-  return manageStore.newConfiguration
-    .filter((e) => e.category == "execution")
+// Use computed for reactivity
+const getValidators = computed(() => {
+  const services = manageStore.newConfiguration
+    .filter(
+      (s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "validator"
+    )
     .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
 
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
     });
+
+  return services;
 });
 
 // Methods
@@ -63,31 +72,34 @@ const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "border bg-red-600 border-white hover:bg-red-600";
   } else if (item.hasOwnProperty("isNewClient") && item.isNewClient) {
-    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629] border border-gray-700";
   } else if (item.hasOwnProperty("modifierPanel") && item.modifierPanel) {
-    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629] border border-gray-700";
   } else {
     return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
 };
 
 const displayMenu = (item) => {
-  serviceStore.installedServices.forEach((service) => {
+  manageStore.newConfiguration.forEach((service) => {
     service.displayPluginMenu = false;
   });
   if (
-    !item.isNotConnectedToConsensus &&
-    !item.isNotConnectedToValidator &&
-    !item.isRemoveProcessing &&
-    !item.isNewClient
+    item.isNotConnectedToConsensus ||
+    item.isNotConnectedToValidator ||
+    item.isNotConnectedToMevboost ||
+    item.isRemoveProcessing ||
+    item.isNewClient ||
+    item.modifierPanel
   ) {
+    return;
+  } else {
     item.displayPluginMenu = true;
   }
 };
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
-
   emit("mouseLeave", item);
 };
 
@@ -96,13 +108,6 @@ const mouseOver = (item) => {
     emit("mouseOver", item);
   }
 };
-const connectClient = (item) => {
-  emit("connectClient", item);
-};
-
-// const confirmConnection = (item) => {
-//   emit("confirmConnection", item);
-// };
 
 const deleteService = (item) => {
   emit("deleteService", item);
@@ -112,10 +117,15 @@ const switchClient = (item) => {
   emit("switchClient", item);
 };
 
+const modifyService = (item) => {
+  emit("modifyService", item);
+};
+
 const infoModal = (item) => {
   emit("infoModal", item);
 };
 </script>
+
 <style scoped>
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;

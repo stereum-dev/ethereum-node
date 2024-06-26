@@ -1,71 +1,62 @@
 <template>
-  <div
-    class="col-start-3 col-end-4 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative"
-    @mousedown.prevent
-  >
+  <div class="w-full col-start-1 col-end-2 pt-4 pb-2 gap-1 space-y-4 grid grid-flow-row auto-rows-max relative">
     <div
-      v-for="item in getValidators"
+      v-for="item in getExecutions"
       :key="item"
       :ref="
         (el) => {
           item.ref = el;
         }
       "
-      class="h-[110px] w-[110px] relative flex justify-center py-1 items-center rounded-md shadow-md divide-x divide-gray-700 self-center justify-self-center cursor-pointer"
+      class="h-[110px] w-[110px] flex justify-center items-center py-1 rounded-md shadow-md self-center justify-self-center cursor-pointer relative"
       :class="getDynamicClasses(item)"
       @click="displayMenu(item)"
       @mouseleave="hideMenu(item)"
       @mouseenter="mouseOver(item)"
     >
       <ClientLayout :client="item" />
-      <Transition name="slide-fade">
+      <TransitionGroup name="slide-fade">
         <GeneralMenu
           v-if="item.displayPluginMenu"
           :item="item"
           @switch-client="switchClient"
-          @modify-service="modifyService"
+          @connect-client="connectClient"
           @delete-service="deleteService"
           @info-modal="infoModal"
         />
-      </Transition>
+      </TransitionGroup>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import ClientLayout from "./ClientLayout.vue";
-
 import GeneralMenu from "./GeneralMenu.vue";
+
 import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
-// Variables & Constants
-
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
-
+const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
 const manageStore = useNodeManage();
+const serviceStore = useServices();
+const setupStore = useSetups();
 
-// Computed & Watchers
-
-const getValidators = computed(() => {
-  let service;
-  service = manageStore.newConfiguration
-    .filter((e) => e.category == "validator")
+const getExecutions = computed(() => {
+  const services = manageStore.newConfiguration
+    .filter((s) => s.category === "execution" && s.setupId === setupStore.selectedSetup.setupId)
     .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
 
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
     });
-  return service;
+
+  return services;
 });
 
+// Methods
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "border bg-red-600 border-white hover:bg-red-600";
@@ -77,27 +68,24 @@ const getDynamicClasses = (item) => {
     return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
 };
-// Methods
+
 const displayMenu = (item) => {
-  manageStore.newConfiguration.forEach((service) => {
+  serviceStore.installedServices.forEach((service) => {
     service.displayPluginMenu = false;
   });
   if (
-    item.isNotConnectedToConsensus ||
-    item.isNotConnectedToValidator ||
-    item.isNotConnectedToMevboost ||
-    item.isRemoveProcessing ||
-    item.isNewClient ||
-    item.modifierPanel
+    !item.isNotConnectedToConsensus &&
+    !item.isNotConnectedToValidator &&
+    !item.isRemoveProcessing &&
+    !item.isNewClient
   ) {
-    return;
-  } else {
     item.displayPluginMenu = true;
   }
 };
 
 const hideMenu = (item) => {
   item.displayPluginMenu = false;
+
   emit("mouseLeave", item);
 };
 
@@ -106,6 +94,13 @@ const mouseOver = (item) => {
     emit("mouseOver", item);
   }
 };
+const connectClient = (item) => {
+  emit("connectClient", item);
+};
+
+// const confirmConnection = (item) => {
+//   emit("confirmConnection", item);
+// };
 
 const deleteService = (item) => {
   emit("deleteService", item);
@@ -113,10 +108,6 @@ const deleteService = (item) => {
 
 const switchClient = (item) => {
   emit("switchClient", item);
-};
-
-const modifyService = (item) => {
-  emit("modifyService", item);
 };
 
 const infoModal = (item) => {

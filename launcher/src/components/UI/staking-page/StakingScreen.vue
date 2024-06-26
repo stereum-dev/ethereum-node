@@ -1,6 +1,8 @@
 <template>
   <base-layout>
-    <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
+    <div
+      class="w-full h-full max-h-[492px] grid grid-cols-24 grid-rows-12 pt-1 select-none"
+    >
       <SidebarSection />
 
       <ListSection
@@ -35,7 +37,11 @@
       enter-active-class="animate__animated animate__fadeIn"
       leave-active-class="animate__animated animate__fadeOut"
     >
-      <component :is="activeModal?.component" v-bind="activeModal?.props" v-on="activeModal?.events" />
+      <component
+        :is="activeModal?.component"
+        v-bind="activeModal?.props"
+        v-on="activeModal?.events"
+      />
     </transition>
   </base-layout>
 </template>
@@ -184,24 +190,37 @@ const uploadValidatorKey = (event) => {
   let uploadedFiles = event.target.files;
   stakingStore.previewKeys = [];
   handleFiles(uploadedFiles);
-  stakingStore.passwordFiles = [...uploadedFiles].filter((file) => file.type === "text/plain");
-  stakingStore.keyFiles = [...uploadedFiles].filter((file) => file.type === "application/json");
+  stakingStore.passwordFiles = [...uploadedFiles].filter(
+    (file) => file.type === "text/plain"
+  );
+  stakingStore.keyFiles = [...uploadedFiles].filter(
+    (file) => file.type === "application/json"
+  );
   stakingStore.isOverDropZone = false;
   stakingStore.isPreviewListActive = true;
   stakingStore.setActivePanel("validator");
 };
 
 const onDrop = (event) => {
-  let validator = serviceStore.installedServices.filter((s) => s.category === "validator");
+  let validator = serviceStore.installedServices.filter(
+    (s) => s.category === "validator"
+  );
   if (validator && validator.map((e) => e.state).includes("running")) {
     stakingStore.previewKeys = [];
     let droppedFiles = event.dataTransfer.files;
-    if (droppedFiles[0]["type"] === "application/json" || droppedFiles[0]["type"] === "text/plain") {
+    if (
+      droppedFiles[0]["type"] === "application/json" ||
+      droppedFiles[0]["type"] === "text/plain"
+    ) {
       stakingStore.isOverDropZone = false;
       stakingStore.isPreviewListActive = true;
       handleFiles(droppedFiles);
-      stakingStore.passwordFiles = [...droppedFiles].filter((file) => file.type === "text/plain");
-      stakingStore.keyFiles = [...droppedFiles].filter((file) => file.type === "application/json");
+      stakingStore.passwordFiles = [...droppedFiles].filter(
+        (file) => file.type === "text/plain"
+      );
+      stakingStore.keyFiles = [...droppedFiles].filter(
+        (file) => file.type === "application/json"
+      );
       stakingStore.setActivePanel("validator");
     } else {
       stakingStore.inputWrongKey = true;
@@ -229,7 +248,10 @@ const importKey = async (val) => {
 
   stakingStore.importEnteredPassword = "";
   stakingStore.forceRefresh = true;
-  if (stakingStore.isDoppelgangerProtectionActive && stakingStore.doppelgangerKeys.length > 0) {
+  if (
+    stakingStore.isDoppelgangerProtectionActive &&
+    stakingStore.doppelgangerKeys.length > 0
+  ) {
     setTimeout(() => {
       stakingStore.setActiveModal(null);
     }, 10000);
@@ -246,7 +268,9 @@ const riskAccepted = async () => {
       useDeepClone({
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
         url: stakingStore.previewRemoteKeys[0]?.url, //url is for all keys the same
-        pubkeys: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
+        pubkeys: stakingStore.previewRemoteKeys
+          .filter((k) => k.selected)
+          .map((k) => k.pubkey),
       })
     );
   } else {
@@ -263,13 +287,15 @@ const confirmPassword = async (pass) => {
 };
 
 const importValidatorProcessing = async () => {
-  stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
-    files: stakingStore.keyFiles,
-    passwordFiles: stakingStore.passwordFiles,
-    password: stakingStore.importEnteredPassword,
-    serviceID: stakingStore.selectedValidatorService.config?.serviceID,
-    slashingDB: stakingStore.slashingDB?.path || null,
-  });
+  stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators(
+    {
+      files: stakingStore.keyFiles,
+      passwordFiles: stakingStore.passwordFiles,
+      password: stakingStore.importEnteredPassword,
+      serviceID: stakingStore.selectedValidatorService.config?.serviceID,
+      slashingDB: stakingStore.slashingDB?.path || null,
+    }
+  );
 
   if (
     stakingStore.checkActiveValidatorsResponse.length === 0 ||
@@ -429,7 +455,9 @@ const removeGroupConfirm = async (item) => {
   // stakingStore.currentGroup.keys.forEach((key) => {
   //   stakingStore.keys.push(key);
   // });
-  stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter((group) => group?.id !== item.id);
+  stakingStore.validatorKeyGroups = stakingStore.validatorKeyGroups.filter(
+    (group) => group?.id !== item.id
+  );
   stakingStore.setActiveModal(null);
   stakingStore.setMode("create");
   stakingStore.currentGroup = "";
@@ -444,7 +472,9 @@ const removeGroupConfirm = async (item) => {
 
 //Confirm Rename Validator Key
 const confirmValidatorKeyRename = async (name) => {
-  stakingStore.keys.find((key) => key.key === stakingStore.selectKeyToRename.key).selected = false;
+  stakingStore.keys.find(
+    (key) => key.key === stakingStore.selectKeyToRename.key
+  ).selected = false;
   let el = stakingStore.selectKeyToRename;
 
   el.displayName = name;
@@ -470,7 +500,9 @@ const resetValidatorKeyName = async (el) => {
     console.log("Couldn't Reset Key Name!");
   }
 
-  stakingStore.keys.find((key) => key.key === stakingStore.selectKeyToRename.key).selected = false;
+  stakingStore.keys.find(
+    (key) => key.key === stakingStore.selectKeyToRename.key
+  ).selected = false;
 };
 
 //****End of Validator Key ****
@@ -480,8 +512,12 @@ const doppelgangerController = async (item) => {
   try {
     const res = await ControlService.getServiceYAML(item?.config.serviceID);
     item.expertOptions.map((option) => {
-      if (item.service === "LighthouseValidatorService" && option.title === "Doppelganger") {
-        stakingStore.doppelgangerStatus = res.indexOf(option.pattern[0]) === -1 ? false : true;
+      if (
+        item.service === "LighthouseValidatorService" &&
+        option.title === "Doppelganger"
+      ) {
+        stakingStore.doppelgangerStatus =
+          res.indexOf(option.pattern[0]) === -1 ? false : true;
       } else if (option.title === "Doppelganger") {
         const matchedValue = res.match(new RegExp(option.pattern[0]))
           ? [...res.match(new RegExp(option.pattern[0]))][2]
@@ -517,8 +553,12 @@ const pickValidatorService = async (service) => {
 //Delete Preview Key
 
 const deletePreviewKey = async (item) => {
-  stakingStore.previewKeys = stakingStore.previewKeys.filter((key) => key.filename !== item.filename);
-  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((key) => key.filename !== item.filename);
+  stakingStore.previewKeys = stakingStore.previewKeys.filter(
+    (key) => key.filename !== item.filename
+  );
+  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter(
+    (key) => key.filename !== item.filename
+  );
 
   const indexItem = stakingStore.keyFiles.findIndex((key) => key.name === item.filename);
   if (indexItem !== -1) {
@@ -606,7 +646,9 @@ const withdrawValidatorKey = async () => {
       //if multiple keys
       const multiKeys = stakingStore.keys
         .map((item) => {
-          if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
+          if (
+            item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID
+          ) {
             return item.key;
           }
         })
@@ -699,7 +741,10 @@ const exportExitMessage = async () => {
       saveExitMessage(result, "single");
     } else {
       const pubkeys = stakingStore.keys
-        .filter((item) => item.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID)
+        .filter(
+          (item) =>
+            item.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
+        )
         .map((item) => item.key);
 
       const results = await Promise.all(
@@ -724,7 +769,8 @@ const saveExitMessage = (data, type) => {
       ? JSON.stringify(data, null, 2)
       : data.map((entry) => JSON.stringify(entry, null, 2)).join("\n\n");
 
-  const fileName = type === "single" ? "single_exit_message.txt" : "multiple_exit_messages.txt";
+  const fileName =
+    type === "single" ? "single_exit_message.txt" : "multiple_exit_messages.txt";
   const blob = new Blob([content], { type: "application/json;charset=utf-8" });
   saveAs(blob, fileName);
 };
@@ -755,7 +801,11 @@ const removeValidatorKeys = async () => {
     if (changed === 1 && id) {
       // Remove all Local Keys if selected validator holds some
       if (localKeys && localKeys.length > 0) {
-        const returnVal = await deleteValidators(id, localKeys, stakingStore.pickedSlashing);
+        const returnVal = await deleteValidators(
+          id,
+          localKeys,
+          stakingStore.pickedSlashing
+        );
 
         if (stakingStore.pickedSlashing === "yes") {
           downloadFile(returnVal);
@@ -814,11 +864,15 @@ const importRemoteKey = async (args) => {
 
 const confirmImportRemoteKeys = async () => {
   stakingStore.setActiveModal("remote");
-  stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
-    files: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
-    serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-    isRemote: true,
-  });
+  stakingStore.checkActiveValidatorsResponse = await ControlService.checkActiveValidators(
+    {
+      files: stakingStore.previewRemoteKeys
+        .filter((k) => k.selected)
+        .map((k) => k.pubkey),
+      serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      isRemote: true,
+    }
+  );
   stakingStore.setActivePanel(null);
   if (
     stakingStore.checkActiveValidatorsResponse.length === 0 ||
@@ -828,7 +882,9 @@ const confirmImportRemoteKeys = async () => {
       useDeepClone({
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
         url: stakingStore.previewRemoteKeys[0]?.url,
-        pubkeys: stakingStore.previewRemoteKeys.filter((k) => k.selected).map((k) => k.pubkey),
+        pubkeys: stakingStore.previewRemoteKeys
+          .filter((k) => k.selected)
+          .map((k) => k.pubkey),
       })
     );
 

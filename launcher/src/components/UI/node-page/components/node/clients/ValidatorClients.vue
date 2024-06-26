@@ -33,6 +33,7 @@ import ClientButtons from "./ClientButtons.vue";
 import { computed } from "vue";
 import ControlService from "@/store/ControlService";
 import { useDeepClone } from "@/composables/utils";
+import { useSetups } from "../../../../../../store/setups";
 
 const emit = defineEmits([
   "openExpert",
@@ -46,10 +47,22 @@ const emit = defineEmits([
 ]);
 
 const serviceStore = useServices();
+const setupStore = useSetups();
 
-const getValidatorServices = computed(() =>
-  serviceStore.installedServices.filter((e) => e.category === "validator").sort((a, b) => a.name.localeCompare(b.name))
-);
+const getValidatorServices = computed(() => {
+  const services = serviceStore.installedServices
+    .filter(
+      (s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "validator"
+    )
+    .sort((a, b) => {
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
+
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
+    });
+
+  return services;
+});
 
 const mouseOver = (item) => {
   emit("mouseOver", item);

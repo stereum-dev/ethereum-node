@@ -2,7 +2,7 @@
   <div class="amsterdam-parent">
     <div
       class="icoTitle"
-      @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork.name}`"
+      @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork?.name}`"
       @mouseleave="cursorLocation = ''"
     >
       <div class="icoContainer">
@@ -19,8 +19,16 @@
         </div>
       </div>
       <no-data
-        v-else-if="consensusClientIsOff || prometheusIsOff || installedServicesController !== ''"
-        :service-cat="installedServicesController !== '' ? 'install' : prometheusIsOff ? 'prometheus' : ''"
+        v-else-if="
+          consensusClientIsOff || prometheusIsOff || installedServicesController !== ''
+        "
+        :service-cat="
+          installedServicesController !== ''
+            ? 'install'
+            : prometheusIsOff
+            ? 'prometheus'
+            : ''
+        "
       />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
@@ -35,9 +43,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
-                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
-                }`
+                cursorLocation = `the current epoch: ${
+                  currentResult.currentEpoch
+                } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -154,7 +162,7 @@ export default {
       pageNumber: "pageNumber",
     }),
     proposedBlock() {
-      if (this.currentNetwork.id === 4) {
+      if (this.currentNetwork?.id === 4) {
         return Array.from({ length: 16 }, () => ({
           slotNumber: 0,
           slotStatus: "pending",
@@ -168,7 +176,7 @@ export default {
     },
 
     networkIcon() {
-      return this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon;
+      return this.currentNetwork?.network ? this.currentNetwork?.icon : this.defaultIcon;
     },
     flag() {
       if (
@@ -212,11 +220,17 @@ export default {
     },
     currentResult: {
       handler(newResult) {
-        if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
-          const newArray = newResult.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
-            slotNumber: slot.slotNumber,
-            slotStatus: slot.slotStatus,
-          }));
+        if (
+          newResult &&
+          newResult.currentEpochStatus &&
+          newResult.currentEpochStatus[0]
+        ) {
+          const newArray = newResult.currentEpochStatus[0]
+            .slice(0, this.proposedBlock.length)
+            .map((slot) => ({
+              slotNumber: slot.slotNumber,
+              slotStatus: slot.slotStatus,
+            }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -261,17 +275,21 @@ export default {
       }
 
       const categories = ["consensus", "execution"];
-      const missingCategories = categories.filter((category) => !foundCategories.has(category));
+      const missingCategories = categories.filter(
+        (category) => !foundCategories.has(category)
+      );
 
       if (!hasPrometheus) {
         missingCategories.push("Prometheus");
       }
 
-      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
+      this.installedServicesController = missingCategories
+        .join(", ")
+        .replace(/, (?=[^,]*$)/, " and ");
     },
 
     refreshTimer() {
-      if (this.currentNetwork.id === 4) {
+      if (this.currentNetwork?.id === 4) {
         this.polling = setInterval(() => {
           if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
             this.currentEpochSlot(this.consensusName);
@@ -292,7 +310,7 @@ export default {
     },
 
     initializeProposedBlock() {
-      if (this.currentNetwork.id === 4) {
+      if (this.currentNetwork?.id === 4) {
         return Array.from({ length: 16 }, () => ({
           slotNumber: 0,
           slotStatus: "pending",

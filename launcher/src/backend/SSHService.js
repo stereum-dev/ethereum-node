@@ -7,6 +7,7 @@ import { StringUtils } from "./StringUtils";
 import * as fs from "fs";
 import * as path from "path";
 const log = require("electron-log");
+const ping = require("ping");
 
 export class SSHService {
   constructor() {
@@ -60,6 +61,27 @@ export class SSHService {
         readyTimeout: timeout, // Set the readyTimeout parameter
       });
     });
+  }
+
+  // Check the connection quality by pinging the host
+  async checkConnectionQuality() {
+    const host = this.connectionInfo.host;
+    let connectionQuality = { pingTime: null };
+
+    try {
+      const res = await ping.promise.probe(host, {
+        timeout: 2,
+      });
+
+      if (typeof res.time !== "undefined" && res.time !== null) {
+        connectionQuality.pingTime = res.time;
+      } else {
+        console.log(`Ping to ${host} failed or timed out`);
+      }
+    } catch (err) {
+      console.error("Ping failed:", err);
+    }
+    return connectionQuality;
   }
 
   async checkConnectionPool() {
@@ -118,8 +140,7 @@ export class SSHService {
         if (!connectionInfo.authCode) {
           currentWindow.send("require2FA", true);
           conn.end();
-        }
-        else {
+        } else {
           finish([connectionInfo.authCode.toString()]);
         }
       });
@@ -174,9 +195,14 @@ export class SSHService {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         counter++;
       }
-      log.info("SSH Channels left open: ", this.connectionPool.map(c => c._chanMgr?._count).reduce((accumulator, currentValue) => {
-        return accumulator + currentValue
-      }, 0))
+      log.info(
+        "SSH Channels left open: ",
+        this.connectionPool
+          .map((c) => c._chanMgr?._count)
+          .reduce((accumulator, currentValue) => {
+            return accumulator + currentValue;
+          }, 0)
+      );
       this.connectionPool = [];
       return true;
     } catch (error) {
@@ -185,7 +211,8 @@ export class SSHService {
   }
 
   async exec(command, useSudo = true, useRoot = true) {
-    const ensureSudoCommand = `sudo -u ${useRoot ? 'root' : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
+    const ensureSudoCommand =
+      `sudo -u ${useRoot ? "root" : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
     return this.execCommand(useSudo ? ensureSudoCommand : command);
   }
 
@@ -373,7 +400,8 @@ export class SSHService {
       if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
       let newKeys = keys.join("\n");
       let result = await this.exec(
-        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`, false
+        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`,
+        false
       );
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));

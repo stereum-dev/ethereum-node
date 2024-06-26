@@ -1,5 +1,7 @@
 <template>
-  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2">
+  <div
+    class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2"
+  >
     <Carousel
       ref="carousel"
       v-model="currentSlide"
@@ -14,10 +16,17 @@
           class="w-11/12 h-full bg-[#33393e] flex justify-center items-center border border-gray-600 rounded-lg"
           :style="{ 'pointer-events': getCategory === 'execution' ? 'none' : '' }"
         >
-          <div v-if="item.name === 'genesis'" class="w-full h-full flex justify-evenly items-center p-1">
-            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1">
+          <div
+            v-if="item.name === 'genesis'"
+            class="w-full h-full flex justify-evenly items-center p-1"
+          >
+            <div
+              class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1"
+            >
               <span class="w-full font-semibold text-md uppercase">{{ item.name }}</span>
-              <span class="w-full font-semibold text-md uppercase text-teal-600">{{ item.type }}</span>
+              <span class="w-full font-semibold text-md uppercase text-teal-600">{{
+                item.type
+              }}</span>
             </div>
           </div>
           <div
@@ -26,7 +35,9 @@
           >
             <div class="w-1/3 h-full flex flex-col justify-evenly items-center">
               <span class="text-sm text-gray-400 capitalize">{{ item.name }}</span>
-              <span class="text-xs font-semibold uppercase text-teal-600">{{ item.type }}</span>
+              <span class="text-xs font-semibold uppercase text-teal-600">{{
+                item.type
+              }}</span>
             </div>
             <div class="w-2/3 h-full cursor-pointer">
               <input
@@ -43,7 +54,9 @@
           >
             <div class="w-1/3 h-full flex flex-col justify-evenly items-center">
               <span class="text-sm text-gray-400 capitalize">{{ item.name }}</span>
-              <span class="text-xs font-semibold uppercase text-teal-600">{{ item.type }}</span>
+              <span class="text-xs font-semibold uppercase text-teal-600">{{
+                item.type
+              }}</span>
             </div>
 
             <div class="w-2/3 h-full cursor-pointer p-1">
@@ -61,14 +74,22 @@
                 <div v-if="selectedIcon !== ''" class="w-1/6" @click="openDropdown">
                   <img class="w-5 h-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
                 </div>
-                <div v-if="selectedIcon !== ''" class="w-4/6 text-md text-gray-300 font-semibold" @click="openDropdown">
+                <div
+                  v-if="selectedIcon !== ''"
+                  class="w-4/6 text-md text-gray-300 font-semibold"
+                  @click="openDropdown"
+                >
                   {{ selectedItem }}
                 </div>
                 <div v-else class="w-4/6 text-gray-500 text-sm" @click="openDropdown">
                   {{ selectedItem }}
                 </div>
                 <div class="w-1/6" @click="openWindow">
-                  <img class="w-6" src="/img/icon/service-modals-icons/internet.png" alt="Internet" />
+                  <img
+                    class="w-6"
+                    src="/img/icon/service-modals-icons/internet.png"
+                    alt="Internet"
+                  />
                 </div>
               </div>
             </div>
@@ -143,7 +164,10 @@ const getCategory = computed(() => {
 
 // Watchers
 watch(currentSlide, (val) => {
-  if (router.currentRoute.value.path === "/sync" || router.currentRoute.value.path === "/importingSyncing") {
+  if (
+    router.currentRoute.value.path === "/sync" ||
+    router.currentRoute.value.path === "/importingSyncing"
+  ) {
     if (val !== prevVal.value) {
       prevVal.value = val;
       installStore.checkPointSync = "";
@@ -167,7 +191,7 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  manageStore.currentNetwork = manageStore.currentNetwork.hasOwnProperty("id")
+  manageStore.currentNetwork = manageStore.currentNetwork?.hasOwnProperty("id")
     ? manageStore.currentNetwork
     : manageStore.configNetwork;
   setSelectedLinks();
