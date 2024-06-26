@@ -166,7 +166,7 @@
     "sure": "Би итгэлтэй байна",
     "cancel": "цуцлах",
     "serviceExpl": "Оруулсан валидатор түлхүүрт сонгогдсон сервис",
-    "activeExpl": "Валидатор идэвхжсэнээс хойшхи хугацаа",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Валидаторын баланс",
     "copyPub": "Нийтийн түлхүүрийг хуулна уу",
     "copiedPub": "Нийтийн түлхүүрийг хуулсан",
