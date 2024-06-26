@@ -166,7 +166,7 @@
     "sure": "Eminim",
     "cancel": "iptal",
     "serviceExpl": "Girilen Doğrulayıcı anahtar için seçilen hizmet",
-    "activeExpl": "Doğrulayıcının aktif olduğu süre",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Doğrulayıcının bakiyesi",
     "copyPub": "Açık anahtarı kopyala",
     "copiedPub": "Açık anahtar kopyalandı",
