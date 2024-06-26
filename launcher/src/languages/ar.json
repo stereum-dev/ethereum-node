@@ -166,7 +166,7 @@
     "sure": "أنا متأكد",
     "cancel": "إلغاء",
     "serviceExpl": "الخدمة المختارة لمفتاح الموثق المدخل",
-    "activeExpl": "الوقت منذ كان الموثق نشطًا",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "رصيد الموثق",
     "copyPub": "نسخ المفتاح العام",
     "copiedPub": "تم نسخ المفتاح العام",
