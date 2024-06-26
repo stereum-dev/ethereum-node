@@ -166,7 +166,7 @@
     "sure": "Сигуран сам",
     "cancel": "откажи",
     "serviceExpl": "Услуга изабрана за унети валидаторски кључ",
-    "activeExpl": "Време од када је валидатор активан",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Баланс валидатора",
     "copyPub": "Копирај јавни кључ",
     "copiedPub": "Јавни кључ копиран",
