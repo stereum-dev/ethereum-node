@@ -49,7 +49,6 @@ const updateSettings = async () => {
 
 watch(isAutoUpdateEnabled, () => {
   updateSettings();
-  console.log("Auto update enabled: ", isAutoUpdateEnabled.value);
 });
 
 onMounted(async () => {

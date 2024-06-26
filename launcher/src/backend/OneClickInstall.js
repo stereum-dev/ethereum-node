@@ -1,6 +1,7 @@
 import { ServiceManager } from "./ServiceManager";
 import YAML from "yaml";
 import { StringUtils } from "./StringUtils";
+import { ConfigManager } from "./ConfigManager";
 
 const log = require("electron-log");
 
@@ -13,6 +14,7 @@ export class OneClickInstall {
     this.installDir = installDir;
     this.nodeConnection = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
+    this.configManager = new ConfigManager(this.nodeConnection);
     const arch = await this.nodeConnection.getCPUArchitecture();
     const settings = {
       stereum_settings: {
@@ -31,6 +33,7 @@ export class OneClickInstall {
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
     mkdir -p /etc/stereum/services &&\
     echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
+    await this.configManager.createMultiSetupYaml({}, "");
     await this.nodeConnection.findStereumSettings();
     return await this.nodeConnection.prepareStereumNode(
       this.nodeConnection.settings.stereum.settings.controls_install_path
@@ -399,6 +402,7 @@ export class OneClickInstall {
   async writeConfig() {
     const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
+      this.configManager.createMultiSetupYaml(configs, this.network);
       await Promise.all(
         configs.map(async (config) => {
           await this.nodeConnection.writeServiceConfiguration(config);

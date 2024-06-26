@@ -8,7 +8,11 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
-      class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-white text-[10px] font-semibold capitalize bg-[#264744]"
+      class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-[10px] font-semibold capitalize"
+      :class="[
+        setupStore.getBGColor(setupStore.selectedSetup?.color),
+        setupStore.getTextColor(setupStore.selectedSetup?.color),
+      ]"
     >
       <span> {{ props.client.name }}</span>
 
@@ -31,7 +35,11 @@
         @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} ${keyMsg}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="w-5" src="/img/icon/node-page-icons/validator-key-icon.png" alt="icon" />
+        <img
+          class="w-5"
+          src="/img/icon/node-page-icons/validator-key-icon.png"
+          alt="icon"
+        />
         <span
           class="text-md font-semibold"
           :class="props.client.state === 'running' ? 'text-green-500' : 'text-red-600 '"
@@ -56,6 +64,7 @@ import { useDeepClone } from "@/composables/utils";
 import { ref } from "vue";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { useSetups } from "../../../../../../store/setups";
 
 const t = i18n.global.t;
 
@@ -71,6 +80,7 @@ const props = defineProps({
 
 const serviceStore = useServices();
 const controlStore = useControlStore();
+const setupStore = useSetups();
 
 const syncPercent = ref("-");
 const refreshSync = ref(null);
@@ -100,6 +110,10 @@ const syncIcons = ref([
 
 const syncIcon = ref(syncIcons.value[3].icon);
 
+//Computed
+
+//Lifecycle hooks
+
 onMounted(() => {
   if (props.client.category !== "validator") {
     getPercent();
@@ -115,11 +129,15 @@ onUnmounted(() => {
   }
 });
 
+//Methods
+
 const getPercent = () => {
   const syncResult = useDeepClone(controlStore.syncstatus);
   if (syncResult?.code === 0) {
     const flatArray = syncResult.data.flat();
-    let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());
+    let data = flatArray.find(
+      (e) => e.title.toLowerCase() === props.client.name.toLowerCase()
+    );
 
     if (data) {
       const lo = parseInt(data.frstVal);

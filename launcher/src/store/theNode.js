@@ -3,6 +3,40 @@ import { defineStore } from "pinia";
 export const useNodeStore = defineStore("theNode", {
   state: () => {
     return {
+      pingQuality: [
+        {
+          id: 1,
+          maxRate: 20,
+          status: "excellent",
+          description: "Excellent connection quality with very low latency.",
+        },
+        {
+          id: 2,
+          maxRate: 50,
+          status: "good",
+          description: "Good connection quality with low latency.",
+        },
+        {
+          id: 3,
+          maxRate: 150,
+          status: "fair",
+          description: "Fair connection quality with moderate latency.",
+        },
+        {
+          id: 4,
+          maxRate: 200,
+          status: "poor",
+          description: "Poor connection quality with high latency.Try reconnecting to the node.",
+        },
+        {
+          id: 5,
+          maxRate: Infinity,
+          status: "very poor",
+          description: "Very poor connection quality with high latency.Try reconnecting to the node.",
+        },
+      ],
+      connectionStatus: null,
+      connectionStatusIsPoor: false,
       skeletonLoading: false,
       lines: [],
       isLineHidden: false,

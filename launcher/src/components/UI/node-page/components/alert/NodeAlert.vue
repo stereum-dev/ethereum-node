@@ -75,6 +75,21 @@
           </div>
         </router-link>
 
+        <div
+          v-if="connectionStatusIsPoor"
+          class="w-full h-10 grid grid-cols-12 rounded-md bg-red-700 p-1 cursor-pointer hover:bg-red-500"
+          @click="callReconnectModal"
+        >
+          <div class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1">
+            <img class="w-8" src="/img/icon/connection-status/searching.gif" alt="WIFI Icon" />
+          </div>
+          <div class="col-start-5 col-span-full flex flex-col justify-center items-start">
+            <span class="text-[8px] text-gray-100 font-semibold uppercase">Poor Connection</span>
+
+            <span class="text-[8px] text-left text-gray-100 font-semibold lowercase">> Click to reconnect</span>
+          </div>
+        </div>
+
         <router-link v-if="synchronizationErrorControl" to="/control" class="status-message_red">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
@@ -225,9 +240,11 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      stereumStatus: "stereumStatus",
     }),
     ...mapWritableState(useNodeStore, {
       skeletonLoading: "skeletonLoading",
+      connectionStatusIsPoor: "connectionStatusIsPoor",
     }),
 
     usedPercInt() {
@@ -325,6 +342,9 @@ export default {
       setTimeout(() => {
         this.loadingAlerts = false;
       }, 4000);
+    },
+    callReconnectModal() {
+      this.stereumStatus = false;
     },
     expertHandler(el) {
       let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);

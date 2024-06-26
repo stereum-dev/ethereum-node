@@ -1,9 +1,12 @@
 <template>
   <div class="w-full h-[430px] rounded-md border border-gray-600 bg-[#151618] grid grid-cols-6 grid-rows-15">
     <div
-      class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
+      class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px]"
     >
-      <span class="self-center">{{ $t("editPageServices.services") }} </span>
+      <span v-if="setupStore.isConfigViewActive" class="text-xs text-gray-300 text-center font-sans"
+        >Config Services
+      </span>
+      <span v-else class="text-xs text-gray-300 text-center font-sans">Server Services </span>
     </div>
     <div
       ref="service"
@@ -43,19 +46,42 @@ import ClientStatus from "./ClientStatus.vue";
 import ServiceSkeleton from "./ServiceSkeleton.vue";
 import { computed, ref, watchEffect } from "vue";
 import { useNodeStore } from "@/store/theNode";
+import { useSetups } from "../../../../../store/setups";
 
 const emit = defineEmits(["openExpert", "openLogs"]);
 
 const serviceStore = useServices();
 const nodeStore = useNodeStore();
+const setupStore = useSetups();
 
 const skeletons = [1, 2, 3, 4];
 const loadingClients = ref(false);
 
 const getServices = computed(() => {
-  return serviceStore.installedServices
+  let services = serviceStore.installedServices
     .filter((e) => e.category === "service")
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (!setupStore.isConfigViewActive) {
+    const seen = new Set();
+    services = services.filter((service) => {
+      if (setupStore.serverServices.includes(service.service)) {
+        if (!seen.has(service.service)) {
+          seen.add(service.service);
+          return true;
+        }
+        return false; // Exclude duplicate
+      }
+      return false; // services not in serverServices
+    });
+  } else {
+    services = services.filter(
+      (service) =>
+        !setupStore.serverServices.includes(service.service) && service.setupId === setupStore.selectedSetup?.setupId
+    );
+  }
+
+  return services;
 });
 
 watchEffect(() => {
