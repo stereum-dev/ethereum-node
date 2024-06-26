@@ -166,7 +166,7 @@
     "sure": "আমি নিশ্চিত",
     "cancel": "বাতিল করুন",
     "serviceExpl": "প্রবেশ করানো ভ্যালিডেটর কীয়ের জন্য নির্বাচিত সার্ভিস",
-    "activeExpl": "ভ্যালিডেটর সক্রিয় হওয়ার সময়",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "ভ্যালিডেটরের ব্যালান্স",
     "copyPub": "পাবলিক কী কপি করুন",
     "copiedPub": "পাবলিক কী কপি করা হয়েছে",
