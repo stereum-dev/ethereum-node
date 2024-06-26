@@ -64,7 +64,6 @@ export const useSetups = defineStore("setups", {
     updateSelectedSetup() {
       const updatedSetup = this.editSetups.find((setup) => setup?.isActive === true);
       if (updatedSetup) {
-        console.log("Updating selected setup:", updatedSetup);
         this.selectedSetup = updatedSetup;
       }
     },

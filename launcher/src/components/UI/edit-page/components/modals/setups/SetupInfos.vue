@@ -95,8 +95,6 @@ import CustomModal from "../../modals/CustomModal.vue";
 
 const setupStore = useSetups();
 
-console.log("setupStore", setupStore.selectedSetupInfos);
-
 const getSelectedSetup = computed(() => {
   return setupStore.selectedSetupInfos;
 });

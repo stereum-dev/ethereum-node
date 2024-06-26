@@ -161,11 +161,10 @@ export default {
       const configs = this.configServices.filter(
         (item) => item.category === undefined && item.name === undefined
       );
-      console.log(configs);
+
       const content = configs[0].content;
-      console.log(content);
+
       this.setups = this.extractNameAndColor(content);
-      console.log(this.setups);
     },
 
     extractNameAndColor(content) {
