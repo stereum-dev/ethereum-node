@@ -166,7 +166,7 @@
     "sure": "నేను ఖచ్చితంగా ఉన్నాను",
     "cancel": "రద్దు చేయి",
     "serviceExpl": "ప్రవేశించిన వాలిడేటర్ కీ కోసం ఎంపిక చేసిన సేవ",
-    "activeExpl": "వాలిడేటర్ సక్రియంగా ఉన్న సమయం",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "వాలిడేటర్ బ్యాలెన్స్",
     "copyPub": "పబ్లిక్ కీ కాపీ చేయండి",
     "copiedPub": "పబ్లిక్ కీ కాపీ చేయబడింది",
