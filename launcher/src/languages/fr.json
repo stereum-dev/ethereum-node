@@ -166,7 +166,7 @@
     "sure": "Je suis sûr",
     "cancel": "annuler",
     "serviceExpl": "Le service sélectionné pour la clé de validateur entrée",
-    "activeExpl": "Le temps depuis que le validateur est actif",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Le solde du validateur",
     "copyPub": "Copier la clé publique",
     "copiedPub": "Clé publique copiée",
