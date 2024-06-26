@@ -21,7 +21,10 @@
         <div
           class="w-full h-20 flex flex-col justify-start items-start p-2 border border-gray-700 rounded-lg bg-[#111213] space-y-1 mx-auto"
         >
-          <div v-if="getStatus?.success" class="w-full h-full flex justify-center items-center overflow-hidden">
+          <div
+            v-if="getStatus?.success"
+            class="w-full h-full flex justify-center items-center overflow-hidden"
+          >
             <span class="text-md text-teal-700 font-semibold text-center">
               {{ getStatus.success }} {{ $t("stakingPage.vldExited") }}</span
             >
@@ -30,7 +33,9 @@
             v-if="getStatus?.failure"
             class="w-full h-full flex justify-center items-center overflow-x-hidden overflow-y-auto"
           >
-            <span class="max-w-full text-md text-red-500 font-semibold text-center overflow-x-hidden overflow-y-auto">
+            <span
+              class="max-w-full text-md text-red-500 font-semibold text-center overflow-x-hidden overflow-y-auto"
+            >
               {{ getStatus.failure }} {{ $t("stakingPage.vldFailed") }}</span
             >
           </div>
@@ -41,40 +46,51 @@
           class="w-full h-20 flex flex-col justify-start items-start p-2 border border-gray-700 rounded-lg bg-[#111213] space-y-1 mx-auto"
         >
           <div
-            v-if="item.pubkey && item.code === '200'"
+            v-if="item.code === '200'"
             class="w-full h-full flex flex-col justify-center items-start overflow-hidden"
           >
             <p class="text-sm text-amber-400 text-left font-semibold">
               {{ useTruncate(item.pubkey, 20, 20) }}:
-              <span class="text-md text-teal-700 font-semibold text-left"> {{ $t("stakingPage.successExit") }}</span>
+              <span class="text-md text-teal-700 font-semibold text-left">
+                {{ $t("stakingPage.successExit") }}</span
+              >
             </p>
           </div>
           <div
-            v-else-if="item.pubkey && item.code !== '200'"
+            v-else-if="item.code !== '200'"
             class="w-full h-24 flex flex-col justify-center items-start overflow-x-hidden overflow-y-auto"
           >
             <p
-              v-if="!regectedService"
               class="text-sm text-amber-400 text-left font-semibold overflow-x-hidden overflow-y-auto"
             >
               {{ useTruncate(item?.pubkey, 20, 20) }}:
-              <span class="text-md text-red-500 font-semibold text-left overflow-x-hidden overflow-y-auto">{{
-                $t("stakingPage.exitFailed")
-              }}</span>
+              <span
+                class="text-md text-red-500 font-semibold text-left overflow-x-hidden overflow-y-auto"
+                >{{ $t("stakingPage.exitFailed") }}</span
+              >
             </p>
-            <span class="max-w-full text-sm text-gray-400 text-left font-semibold overflow-x-hidden overflow-y-auto">{{
-              item.msg
-            }}</span>
+            <span
+              class="max-w-full text-sm text-gray-400 text-left font-semibold overflow-x-hidden overflow-y-auto"
+              >{{ item.msg }}</span
+            >
           </div>
         </div>
       </div>
-      <div v-else class="col-start-1 col-span-full row-start-2 row-end-6 w-full h-full grid grid-cols-12 grid-rows-5">
-        <div class="col-start-2 col-end-12 row-start-1 row-end-5 flex justify-center items-center px-3">
-          <span class="text-md text-gray-200 text-left font-semibold overflow-x-hidden overflow-y-auto">{{
-            getTextMessage
-          }}</span>
+      <div
+        v-else
+        class="col-start-1 col-span-full row-start-2 row-end-6 w-full h-full grid grid-cols-12 grid-rows-5"
+      >
+        <div
+          class="col-start-2 col-end-12 row-start-1 row-end-5 flex justify-center items-center px-3"
+        >
+          <span
+            class="text-md text-gray-200 text-left font-semibold overflow-x-hidden overflow-y-auto"
+            >{{ getTextMessage }}</span
+          >
         </div>
-        <div class="col-start-3 col-end-11 row-start-5 row-span-1 flex justify-center items-center">
+        <div
+          class="col-start-3 col-end-11 row-start-5 row-span-1 flex justify-center items-center"
+        >
           <label for="MarketingAccept" class="flex gap-4">
             <input
               id="MarketingAccept"
@@ -145,19 +161,19 @@ const getNumberOfKeys = () => {
   if (Array.isArray(displayResponse.value)) {
     // console.log("displayResponse before loop", displayResponse.value);
     displayResponse.value.forEach((item) => {
-      if (item.flag === "approved" && item.code === "200") {
-        regectedService.value = false;
+      if (item.flag === "approved" && item.code === 200) {
         successCount++;
-      } else if (item.flag === "approved" && item.code !== "200") {
-        regectedService.value = false;
+      } else if (item.flag === "approved" && item.code !== 200) {
         failureCount++;
       } else if (item.flag === "rejected") {
-        regectedService.value = true;
         failureCount++;
       }
     });
     // Combine the counts with the original displayResponse
-    const combinedResponse = [...useDeepClone(displayResponse.value), { success: successCount, failure: failureCount }];
+    const combinedResponse = [
+      ...useDeepClone(displayResponse.value),
+      { success: successCount, failure: failureCount },
+    ];
 
     // Update the responseList with the combined data
     responseList.value = combinedResponse;
@@ -187,7 +203,9 @@ const exportMessage = () => {
 
 const closeModal = () => {
   if (stakingStore.selectedSingleKeyToWithdraw) {
-    const keyToReset = stakingStore.keys.find((key) => key.key === stakingStore.selectedSingleKeyToWithdraw.key);
+    const keyToReset = stakingStore.keys.find(
+      (key) => key.key === stakingStore.selectedSingleKeyToWithdraw.key
+    );
     if (keyToReset) {
       keyToReset.showExitText = false;
     }

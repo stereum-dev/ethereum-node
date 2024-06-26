@@ -636,7 +636,7 @@ const withdrawValidatorKey = async () => {
         responseObj.code = resObj.code;
         responseObj.msg = resObj.msg;
         responseObj.pubkey = resObj.pubkey || key.key;
-        responseObj.flag = resObj.code === 0 ? "approved" : "rejected";
+        responseObj.flag = resObj.code === 200 ? "approved" : "rejected";
       }
 
       stakingStore.withdrawAndExitResponse = [responseObj];
@@ -644,7 +644,10 @@ const withdrawValidatorKey = async () => {
       // If multiple keys
       const multiKeys = stakingStore.keys
 
-        .filter((item) => item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID)
+        .filter(
+          (item) =>
+            item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID
+        )
         .map((item) => item.key);
 
       res = await Promise.all(
@@ -669,7 +672,7 @@ const withdrawValidatorKey = async () => {
           responseObj.code = resObj.code;
           responseObj.msg = resObj.msg;
           responseObj.pubkey = resObj.pubkey || multiKeys[index];
-          responseObj.flag = resObj.code === 0 ? "approved" : "rejected";
+          responseObj.flag = resObj.code === 200 ? "approved" : "rejected";
         }
 
         return responseObj;
