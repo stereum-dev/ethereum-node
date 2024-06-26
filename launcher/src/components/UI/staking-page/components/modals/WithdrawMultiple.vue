@@ -46,7 +46,7 @@
           class="w-full h-20 flex flex-col justify-start items-start p-2 border border-gray-700 rounded-lg bg-[#111213] space-y-1 mx-auto"
         >
           <div
-            v-if="item.code === '200'"
+            v-if="item.code === 200"
             class="w-full h-full flex flex-col justify-center items-start overflow-hidden"
           >
             <p class="text-sm text-amber-400 text-left font-semibold">
@@ -54,10 +54,15 @@
               <span class="text-md text-teal-700 font-semibold text-left">
                 {{ $t("stakingPage.successExit") }}</span
               >
+              <br />
+              <span
+                class="max-w-full text-sm text-gray-400 text-left font-semibold overflow-x-hidden overflow-y-auto"
+                >{{ item.msg }}</span
+              >
             </p>
           </div>
           <div
-            v-else-if="item.code !== '200'"
+            v-else-if="item.code !== 200"
             class="w-full h-24 flex flex-col justify-center items-start overflow-x-hidden overflow-y-auto"
           >
             <p
