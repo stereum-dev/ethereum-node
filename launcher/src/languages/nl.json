@@ -166,7 +166,7 @@
     "sure": "Ik ben zeker",
     "cancel": "annuleer",
     "serviceExpl": "De geselecteerde service voor de ingevoerde Validator sleutel",
-    "activeExpl": "De tijd sinds de validator actief is",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "De balans van de validator",
     "copyPub": "Kopieer de openbare sleutel",
     "copiedPub": "Openbare sleutel gekopieerd",
