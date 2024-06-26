@@ -166,7 +166,7 @@
     "sure": "確かです",
     "cancel": "キャンセル",
     "serviceExpl": "入力された検証者キーのために選択されたサービス",
-    "activeExpl": "検証者がアクティブになってからの時間",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "検証者のバランス",
     "copyPub": "公開キーをコピーする",
     "copiedPub": "公開キーがコピーされました",
