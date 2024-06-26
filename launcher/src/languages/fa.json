@@ -166,7 +166,7 @@
     "sure": "مطمئنم",
     "cancel": "انصراف",
     "serviceExpl": "خدمت انتخابی برای کلید اعتبارسنجی وارد شده",
-    "activeExpl": "زمانی که اعتبارسنج فعال شده است",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "موجودی اعتبارسنج",
     "copyPub": "کپی کلید عمومی",
     "copiedPub": "کلید عمومی کپی شد",
