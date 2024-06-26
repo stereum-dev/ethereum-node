@@ -166,7 +166,7 @@
     "sure": "Nina hakika",
     "cancel": "ghairi",
     "serviceExpl": "Huduma iliyochaguliwa kwa ufunguo wa validator ulioingizwa",
-    "activeExpl": "Muda tangu validator amekuwa hai",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Salio la validator",
     "copyPub": "Nakili ufunguo wa umma",
     "copiedPub": "Ufunguo wa umma umenakiliwa",
