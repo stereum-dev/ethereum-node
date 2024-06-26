@@ -166,7 +166,7 @@
     "sure": "Saya yakin",
     "cancel": "batal",
     "serviceExpl": "Layanan yang dipilih untuk kunci Validator yang dimasukkan",
-    "activeExpl": "Waktu sejak validator telah aktif",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Saldo dari validator",
     "copyPub": "Salin kunci publik",
     "copiedPub": "Kunci publik disalin",
