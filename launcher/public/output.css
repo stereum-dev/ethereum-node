@@ -1986,6 +1986,14 @@ video {
   max-height: 100%;
 }
 
+.max-h-\[493px\]{
+  max-height: 493px;
+}
+
+.max-h-\[492px\]{
+  max-height: 492px;
+}
+
 .min-h-11{
   min-height: 2.75rem;
 }
