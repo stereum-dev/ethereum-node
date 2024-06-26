@@ -117,7 +117,6 @@ const emit = defineEmits(["confirmWithdraw", "exportMessage"]);
 
 const stakingStore = useStakingStore();
 const clickOut = ref("Click outside to cancel");
-let regectedService = ref(false);
 
 const responseList = ref([]);
 
