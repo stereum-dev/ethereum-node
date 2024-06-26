@@ -166,7 +166,7 @@
     "sure": "Jsem si jistý(á)",
     "cancel": "zrušit",
     "serviceExpl": "Služba vybraná pro zadaný klíč validátoru",
-    "activeExpl": "Čas od doby, kdy byl validátor aktivní",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Zůstatek validátora",
     "copyPub": "Zkopírujte veřejný klíč",
     "copiedPub": "Veřejný klíč zkopírován",
