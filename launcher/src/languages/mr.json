@@ -166,7 +166,7 @@
     "sure": "मी सुनिश्चित आहे",
     "cancel": "रद्द करा",
     "serviceExpl": "एंटर केलेल्या व्हॅलिडेटर कीसाठी निवडलेली सेवा",
-    "activeExpl": "व्हॅलिडेटर सक्रिय झाल्यापासूनची वेळ",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "व्हॅलिडेटरचा शिल्लक",
     "copyPub": "सार्वजनिक की कॉपी करा",
     "copiedPub": "सार्वजनिक की कॉपी केली",
