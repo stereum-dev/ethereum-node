@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -1970,6 +1970,10 @@ video {
   max-height: 491px;
 }
 
+.max-h-\[492px\]{
+  max-height: 492px;
+}
+
 .max-h-\[503px\]{
   max-height: 503px;
 }
@@ -1984,14 +1988,6 @@ video {
 
 .max-h-full{
   max-height: 100%;
-}
-
-.max-h-\[493px\]{
-  max-height: 493px;
-}
-
-.max-h-\[492px\]{
-  max-height: 492px;
 }
 
 .min-h-11{
@@ -2368,6 +2364,10 @@ video {
 
 .max-w-\[180px\]{
   max-width: 180px;
+}
+
+.max-w-full{
+  max-width: 100%;
 }
 
 .max-w-lg{

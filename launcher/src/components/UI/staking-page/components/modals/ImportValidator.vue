@@ -96,7 +96,7 @@
             <div
               v-for="(line, index) in getMessage"
               :key="index"
-              class="w-full h-8 border border-gray-700 rounded-md bg-[#242628] p-1 flex justify-center items-center space-x-1"
+              class="w-full h-10 max-h-10 border border-gray-700 rounded-md bg-[#242628] p-1 flex justify-center items-center space-x-1"
               :class="getDescriptionClass(line)"
             >
               <span class="text-sm font-semibold text-left whitespace-pre-wrap">{{ line }}</span>
