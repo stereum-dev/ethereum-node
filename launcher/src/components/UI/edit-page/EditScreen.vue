@@ -277,7 +277,6 @@ onMounted(async () => {
   if (!manageStore.architecture) setArchitecture();
   editSetupsPrepration();
   isLoadingNewConfiguration.value = false;
-  updateDisplayNetworkList();
   manageStore.confirmChanges = [];
   manageStore.newConfiguration.forEach((el) => {
     return {
@@ -324,13 +323,13 @@ const listKeys = async (forceRefresh) => {
   await useListKeys(forceRefresh);
 };
 
-const updateDisplayNetworkList = () => {
-  if (manageStore.newConfiguration.length === 0) {
-    manageStore.displayNetworkList = true;
-  } else {
-    manageStore.displayNetworkList = false;
-  }
-};
+// const updateDisplayNetworkList = () => {
+//   if (manageStore.newConfiguration.length === 0) {
+//     manageStore.displayNetworkList = true;
+//   } else {
+//     manageStore.displayNetworkList = false;
+//   }
+// };
 
 // Random ID generator
 function generateRandomId() {
