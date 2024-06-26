@@ -60,4 +60,13 @@ export const useSetups = defineStore("setups", {
       return state.colorMappings[color]?.text || "text-gray-300";
     },
   },
+  actions: {
+    updateSelectedSetup() {
+      const updatedSetup = this.editSetups.find((setup) => setup?.isActive === true);
+      if (updatedSetup) {
+        console.log("Updating selected setup:", updatedSetup);
+        this.selectedSetup = updatedSetup;
+      }
+    },
+  },
 });

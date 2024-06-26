@@ -189,7 +189,6 @@ import SetupInfos from "./components/modals/setups/SetupInfos.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
-import { useFrontendServices } from "@/composables/services";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -223,8 +222,8 @@ const {
   loadSetups,
   loadServices,
   getAllSetups,
-  getEditServices,
   getServerView,
+  updateDom,
 } = useMultiSetups();
 
 // Computed & Watcher
@@ -241,13 +240,21 @@ const getAimationSrc = computed(() => {
   return animationSrc;
 });
 
+// watch(
+//   () => manageStore.newConfiguration,
+//   () => {
+//     isLoadingNewConfiguration.value = false;
+
+//     // updateDisplayNetworkList();
+//   },
+//   { deep: true }
+// );
+
 watch(
-  () => manageStore.newConfiguration,
+  () => manageStore.newConfiguration.length,
   () => {
-    isLoadingNewConfiguration.value = false;
-    // updateDisplayNetworkList();
-  },
-  { deep: true }
+    updateDom();
+  }
 );
 
 watchEffect(() => {
@@ -257,27 +264,17 @@ watchEffect(() => {
     }, 5000);
   }
 });
-
-watch(
-  () => setupStore.serverSetups,
-  () => {
-    // getSetupDatas();
-    getEditServices();
+watchEffect(() => {
+  if (setupStore.selectedSetup === null) {
+    setupStore.isEditConfigViewActive = false;
   }
-);
+});
 
 // Methods
 
-onMounted(() => {
-  getEditServices();
-
-  if (manageStore.currentNetwork.id)
-    manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
-
+onMounted(async () => {
+  await fetchSetups();
   if (!manageStore.architecture) setArchitecture();
-});
-onMounted(() => {
-  getSetupDatas();
   editSetupsPrepration();
   isLoadingNewConfiguration.value = false;
   updateDisplayNetworkList();
@@ -317,23 +314,10 @@ onUnmounted(() => {
 });
 
 // Methods
-
-// Update selectedSetup based on newConfiguration changes
-const updateSelectedSetup = () => {
-  const setupId = setupStore.selectedSetup?.setupId;
-  if (setupId) {
-    const updatedSetup = setupStore.editSetups.find((setup) => setup.setupId === setupId);
-    if (updatedSetup) {
-      setupStore.selectedSetup = updatedSetup;
-    }
-  }
-};
-
-const getSetupDatas = async () => {
-  await loadSetups(); // Load configs first
-  await loadServices(); // Then, load services
-  setupStore.editSetups = getAllSetups(); // Get combined configs
-  updateSelectedSetup();
+const fetchSetups = async () => {
+  await loadSetups();
+  await loadServices();
+  setupStore.editSetups = getAllSetups();
 };
 
 const listKeys = async (forceRefresh) => {
@@ -711,7 +695,7 @@ const displaySwitchNetwork = () => {
 
 const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
-  if (network.network != setupStore.selectedSetup.network) {
+  if (network?.network != setupStore.selectedSetup?.network) {
     if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
       let index = manageStore.confirmChanges.findIndex((j) =>
         j.content.includes("CHANGE NETWORK")
@@ -889,7 +873,7 @@ const confirmHandler = async () => {
   } catch (error) {
     console.error("Error processing changes:", error);
   } finally {
-    resetState();
+    await resetState();
   }
 };
 
@@ -934,15 +918,15 @@ const handleSwitchSetupNetwork = async () => {
 };
 
 const resetState = async () => {
+  updateDom();
   manageStore.confirmChanges = [];
   manageStore.selectedNetwork = {};
   setupStore.selectedSetupToRemove = [];
   manageStore.isLineHidden = false;
-  manageStore.disableConfirmButton = false;
-  useFrontendServices();
-  getSetupDatas();
-  getEditServices();
   await listKeys();
+  setTimeout(() => {
+    manageStore.disableConfirmButton = false;
+  }, 2000);
 };
 
 const nukeConfirmation = () => {

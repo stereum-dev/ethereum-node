@@ -13,7 +13,7 @@ export async function useListKeys(forceRefresh) {
   let clients = serviceStore.installedServices.filter(
     (s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService"
   );
-  if ((clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") || forceRefresh) {
+  if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
     for (let client of clients) {
       //if there is already a list of keys ()
       if (
@@ -27,24 +27,23 @@ export async function useListKeys(forceRefresh) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
-              return { validating_pubkey: e.pubkey, readonly: true };
-            })
+                return { validating_pubkey: e.pubkey, readonly: true };
+              })
             : [];
           result.data = result.data ? result.data.concat(remoteKeys) : remoteKeys;
 
           //make sure there are no duplicates
-          let validating_pubkeys = result.data.map(obj => obj.validating_pubkey);
+          let validating_pubkeys = result.data.map((obj) => obj.validating_pubkey);
           result.data = result.data.filter((obj, index) => {
             return validating_pubkeys.indexOf(obj.validating_pubkey) === index;
           });
-
         }
 
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-            return { key: e.validating_pubkey, isRemote: e.readonly };
-          })
+              return { key: e.validating_pubkey, isRemote: e.readonly };
+            })
           : [];
 
         //update service datasets in Pinia store
@@ -81,7 +80,10 @@ export async function useListKeys(forceRefresh) {
       }
     });
     for (let key in alias) {
-      if (keysToWrite[key] === undefined && serviceStore.installedServices.some((s) => s.config?.serviceID === alias[key].validatorID)) {
+      if (
+        keysToWrite[key] === undefined &&
+        serviceStore.installedServices.some((s) => s.config?.serviceID === alias[key].validatorID)
+      ) {
         keysToWrite[key] = alias[key];
       }
     }

@@ -54,12 +54,11 @@ const manageStore = useNodeManage();
 const setupStore = useSetups();
 
 const totalNetworks = computed(() => {
-  let total = 0;
-  total = setupStore.allSetups
-    .filter((setup) => setup.setupName !== "commonServices")
-    .map((setup) => setup).length;
-
-  return total;
+  return (
+    setupStore.allSetups
+      .filter((setup) => setup.setupName !== "commonServices")
+      .map((setup) => setup).length || 0
+  );
 });
 
 const getSetupNetwork = computed(() => {

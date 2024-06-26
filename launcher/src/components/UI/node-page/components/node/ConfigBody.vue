@@ -58,16 +58,14 @@
 </template>
 
 <script setup>
-import ExecutionClients from "./clients/ExecutionClients.vue";
-import ConsensusClients from "./clients/ConsensusClients.vue";
-import ValidatorClients from "./clients/ValidatorClients.vue";
-import ClientSkeleton from "./clients/ClientSkeleton.vue";
-import { onMounted, ref, watch, watchEffect } from "vue";
+import { useRestartService, useStateHandler } from "@/composables/services";
 import { useNodeStore } from "@/store/theNode";
-import { useStateHandler, useRestartService } from "@/composables/services";
-import { useMultiSetups } from "@/composables/multiSetups";
+import { ref, watchEffect } from "vue";
 import { useSetups } from "../../../../../store/setups";
-import { useServices } from "@/store/services";
+import ClientSkeleton from "./clients/ClientSkeleton.vue";
+import ConsensusClients from "./clients/ConsensusClients.vue";
+import ExecutionClients from "./clients/ExecutionClients.vue";
+import ValidatorClients from "./clients/ValidatorClients.vue";
 
 const emit = defineEmits([
   "openExpert",
@@ -91,8 +89,6 @@ const loadingClients = ref(false);
 
 const nodeStore = useNodeStore();
 const setupStore = useSetups();
-const serviceStore = useServices();
-const { getNodeServices } = useMultiSetups();
 
 watchEffect(() => {
   if (nodeStore.skeletonLoading) {
@@ -100,18 +96,6 @@ watchEffect(() => {
   } else {
     loadingClients.value = false;
   }
-});
-
-watch(
-  () => serviceStore.installedServices,
-  () => {
-    getNodeServices();
-  }
-);
-
-//Lifecycle
-onMounted(() => {
-  getNodeServices();
 });
 
 // Methods

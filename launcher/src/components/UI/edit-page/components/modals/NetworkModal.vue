@@ -1,13 +1,13 @@
 <template>
   <custom-modal
-    :main-title="network.name"
+    :main-title="network?.name"
     :client="
       manageStore.configNetwork.id
         ? manageStore.configNetwork
         : manageStore.currentNetwork
     "
     :sub-title="`${$t('editModals.switchNetwork')}`"
-    :message-text="`${$t('editModals.selectNetwork')} ${network.name}.`"
+    :message-text="`${$t('editModals.selectNetwork')} ${network?.name}.`"
     :confirm-text="`${$t('editModals.confirm')}`"
     :click-outside-text="`${$t('editModals.clckOutside')}`"
     @close-window="closeWindow"
@@ -54,7 +54,7 @@
               >
                 <li
                   v-for="item in manageStore.networkList"
-                  :key="item.name"
+                  :key="item?.name"
                   class="w-full grid grid-cols-6 px-4 hover:bg-blue-400"
                   :class="
                     item?.state === 'disabled' ? 'pointer-events-none opacity-50' : ''
@@ -68,7 +68,7 @@
                   />
                   <span
                     class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
-                    >{{ item.name }}</span
+                    >{{ item?.name }}</span
                   >
                 </li>
               </ul>

@@ -35,11 +35,9 @@
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import { computed } from "vue";
-import { useSetups } from "../../../../../../store/setups";
+import { useSetups } from "@/store/setups";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
-
-// Variables & Constants
 
 const emit = defineEmits([
   "deleteService",
@@ -53,12 +51,11 @@ const emit = defineEmits([
 const manageStore = useNodeManage();
 const setupStore = useSetups();
 
-// Computed & Watchers
-
+// Use computed for reactivity
 const getValidators = computed(() => {
   const services = manageStore.newConfiguration
     .filter(
-      (s) => s.category === "validator" && s.setupId === setupStore.selectedSetup.setupId
+      (s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "validator"
     )
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
@@ -71,19 +68,18 @@ const getValidators = computed(() => {
 });
 
 // Methods
-
 const getDynamicClasses = (item) => {
   if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
     return "border bg-red-600 border-white hover:bg-red-600";
   } else if (item.hasOwnProperty("isNewClient") && item.isNewClient) {
-    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629] border border-gray-700";
   } else if (item.hasOwnProperty("modifierPanel") && item.modifierPanel) {
-    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629]  border border-gray-700";
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629] border border-gray-700";
   } else {
     return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
   }
 };
-// Methods
+
 const displayMenu = (item) => {
   manageStore.newConfiguration.forEach((service) => {
     service.displayPluginMenu = false;
@@ -129,6 +125,7 @@ const infoModal = (item) => {
   emit("infoModal", item);
 };
 </script>
+
 <style scoped>
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;

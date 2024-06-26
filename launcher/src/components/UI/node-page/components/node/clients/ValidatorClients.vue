@@ -50,18 +50,9 @@ const serviceStore = useServices();
 const setupStore = useSetups();
 
 const getValidatorServices = computed(() => {
-  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
-    return [];
-  }
-
-  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
-
   const services = serviceStore.installedServices
     .filter(
-      (s) =>
-        s.category === "validator" &&
-        selectedServiceIds.includes(s.config.serviceID) &&
-        s.setupId === setupStore.selectedSetup.setupId
+      (s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "validator"
     )
     .sort((a, b) => {
       const fa = a.name.toLowerCase();

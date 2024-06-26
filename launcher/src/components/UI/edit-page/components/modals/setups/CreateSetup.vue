@@ -133,7 +133,7 @@ const layoutMsg = ref("");
 const nameMsg = ref("");
 const colorMsg = ref("");
 
-const { loadSetups, loadServices, getAllSetups } = useMultiSetups();
+const { updateDom } = useMultiSetups();
 
 const colorPalette = ref([
   { name: "default", bg: "bg-[#336666]", isSelected: false },
@@ -220,14 +220,7 @@ const confirm = async () => {
   await ControlService.createSetup(data);
 
   setupStore.isCreateSetupModalActive = false;
-  await refreshSetups();
-};
-
-const refreshSetups = async () => {
-  await loadSetups();
-  await loadServices();
-  setupStore.allSetups = getAllSetups();
-  setupStore.editSetups = getAllSetups();
+  await updateDom();
 };
 
 const closeWindow = () => {

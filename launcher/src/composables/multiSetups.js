@@ -80,23 +80,6 @@ export const useMultiSetups = () => {
     return setups;
   };
 
-  const getNodeServices = () => {
-    setupStore.allSetups.forEach((setup) => {
-      setup.services.forEach((service) => {
-        serviceStore.installedServices.map((s) => {
-          if (s.config?.serviceID === service.id) {
-            s.setupId = setup.setupId;
-            s.setupName = setup.setupName;
-          }
-        });
-      });
-    });
-  };
-
-  const getEditServices = () => {
-    manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
-  };
-
   const getSelectedSetup = (setup, flag = false) => {
     setupStore.allSetups.forEach((s) => (s.isActive = false));
     setupStore.editSetups.forEach((s) => (s.isActive = false));
@@ -114,5 +97,41 @@ export const useMultiSetups = () => {
     setupStore.selectedSetup = null;
   };
 
-  return { loadSetups, loadServices, getAllSetups, getNodeServices, getEditServices, getSelectedSetup, getServerView };
+  const updateInstalledServices = () => {
+    serviceStore.installedServices = serviceStore.installedServices.map((service) => {
+      if (!service.setupId) {
+        for (const setup of setupStore.allSetups) {
+          const matchingService = setup.services.find((s) => s.id === service?.config?.serviceID);
+
+          if (matchingService) {
+            return {
+              ...service,
+              setupId: setup.setupId,
+              setupName: setup.setupName,
+            };
+          }
+        }
+      }
+      return service;
+    });
+  };
+
+  const updateDom = async () => {
+    await loadSetups();
+    await loadServices();
+    setupStore.allSetups = getAllSetups();
+    setupStore.editSetups = getAllSetups();
+    updateInstalledServices();
+    manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
+    setupStore.updateSelectedSetup();
+  };
+
+  return {
+    loadSetups,
+    loadServices,
+    getAllSetups,
+    getSelectedSetup,
+    getServerView,
+    updateDom,
+  };
 };

@@ -80,8 +80,9 @@ import ExecutionClients from "./clients/ExecutionClients.vue";
 import ValidatorClients from "./clients/ValidatorClients.vue";
 
 import { useNodeManage } from "@/store/nodeManage";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useSetups } from "../../../../../store/setups";
+import { useMultiSetups } from "../../../../../composables/multiSetups";
 
 const emit = defineEmits([
   "onDrop",
@@ -97,6 +98,7 @@ const emit = defineEmits([
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
+const { updateDom } = useMultiSetups();
 
 const isOverDropZone = ref(false);
 
@@ -114,8 +116,17 @@ const activateScrollBar = computed(() => {
 });
 
 //Update selected setup
+watch(
+  () => manageStore.newConfiguration,
+  () => {
+    updateDom();
+  }
+);
 
 //Lifecycle Hooks
+onMounted(() => {
+  updateDom();
+});
 
 // Methods
 

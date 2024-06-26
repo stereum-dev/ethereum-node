@@ -174,8 +174,6 @@ const getFilteredValidators = computed(() => {
   }
 });
 
-console.log(setupStore.selectedSetup);
-
 const getCorrectValidatorGroups = computed(() => {
   return stakingStore.validatorKeyGroups.filter(
     (group) =>
