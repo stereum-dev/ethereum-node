@@ -166,7 +166,7 @@
     "sure": "Tôi chắc chắn",
     "cancel": "hủy",
     "serviceExpl": "Dịch vụ được chọn cho khóa xác thực đã nhập",
-    "activeExpl": "Thời gian kể từ khi người xác thực hoạt động",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Số dư của người xác thực",
     "copyPub": "Sao chép khóa công khai",
     "copiedPub": "Khóa công khai đã được sao chép",
