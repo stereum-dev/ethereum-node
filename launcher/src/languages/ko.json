@@ -166,7 +166,7 @@
     "sure": "확실합니다",
     "cancel": "취소",
     "serviceExpl": "입력한 검증자 키에 대해 선택된 서비스",
-    "activeExpl": "검증자가 활성화된 시간",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "검증자의 잔액",
     "copyPub": "공개 키 복사",
     "copiedPub": "공개 키가 복사되었습니다",
