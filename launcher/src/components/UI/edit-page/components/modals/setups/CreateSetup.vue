@@ -42,6 +42,7 @@
               >
               <input
                 id="setupName"
+                ref="setupNameInput"
                 v-model="setupName"
                 class="col-start-1 col-span-full row-start-2 row-span-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
@@ -112,7 +113,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import CustomModal from "../CustomModal.vue";
 import { useSetups } from "@/store/setups";
 import ControlService from "@/store/ControlService";
@@ -127,6 +128,7 @@ const props = defineProps({
 
 const setupStore = useSetups();
 const setupName = ref("");
+const setupNameInput = ref(null);
 const setupColor = ref("");
 const buttonDisabled = ref(true);
 const layoutMsg = ref("");
@@ -191,6 +193,12 @@ watch(
     }
   }
 );
+
+//Lifecycle Hooks
+
+onMounted(() => {
+  setupNameInput.value.focus();
+});
 
 //Methods
 
