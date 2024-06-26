@@ -166,7 +166,7 @@
     "sure": "Я уверен",
     "cancel": "отменить",
     "serviceExpl": "Выбранный сервис для введенного ключа валидатора",
-    "activeExpl": "Время с момента активации валидатора",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "Баланс валидатора",
     "copyPub": "Скопировать публичный ключ",
     "copiedPub": "Публичный ключ скопирован",
