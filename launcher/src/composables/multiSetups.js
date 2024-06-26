@@ -21,6 +21,8 @@ export const useMultiSetups = () => {
   };
 
   const loadServices = async () => {
+    // await ControlService.checkAndCreateMultiSetup();
+    // console.log("haha----------------------------------frontend", haha);
     try {
       services.value = await ControlService.getServices();
     } catch (e) {

@@ -5,6 +5,7 @@ const uuid = require("uuid");
 export class ConfigManager {
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
+    this.serviceManager = null;
     this.multiSetupPath = "/etc/stereum/multisetup.yaml";
     this.commonServices = [
       "PrometheusService",
@@ -12,6 +13,33 @@ export class ConfigManager {
       "PrometheusNodeExporterService",
       "NotificationService",
     ];
+  }
+  setServiceManager(serviceManager) {
+    this.serviceManager = serviceManager;
+  }
+
+  /**
+   * Checks if the multi-setup file exists, reads all installed services if not, and creates a multi-setup.yaml file.
+   */
+  async checkAndCreateMultiSetup() {
+    const fileExistResult = await this.checkFileExistence();
+    console.log("check existence----------------------------------", fileExistResult.stdout);
+    const services = await this.serviceManager.readServiceConfigurations();
+    if (fileExistResult.stdout.includes("notExist")) {
+      if (services.length === 0) {
+        await this.createMultiSetupYaml({}, "");
+      } else if (services.length > 0) {
+        const network = services[0].network;
+        await this.createMultiSetupYaml(services, network);
+      }
+    }
+  }
+
+  async checkFileExistence() {
+    const fileExistResult = await this.nodeConnection.sshService.exec(
+      `test -f ${this.multiSetupPath} && echo "exist" || echo "notExist"`
+    );
+    return fileExistResult;
   }
 
   /**
@@ -25,9 +53,7 @@ export class ConfigManager {
   async createMultiSetupYaml(services, network) {
     try {
       // Check if the multiSetup configuration file exists
-      const fileExistResult = await this.nodeConnection.sshService.exec(
-        `test -f ${this.multiSetupPath} && echo "exist" || echo "notExist"`
-      );
+      const fileExistResult = await this.checkFileExistence();
 
       // If the file does not exist, create it
       if (fileExistResult.stdout.includes("notExist")) {
@@ -136,6 +162,7 @@ export class ConfigManager {
     try {
       // Convert the setup object to a YAML string and escape backticks
       let setupYaml = yaml.safeDump(setup).replace(/`/g, "\\`");
+      console.log("setup yaml write------------------------", setupYaml);
 
       await this.nodeConnection.sshService.exec(`echo -e "${setupYaml}" > ${this.multiSetupPath}`);
     } catch (error) {

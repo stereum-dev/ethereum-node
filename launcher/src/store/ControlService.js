@@ -652,6 +652,10 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("switchSetupNetwork", args);
   }
 
+  async checkAndCreateMultiSetup(args) {
+    return this.promiseIpc.send("checkAndCreateMultiSetup", args);
+  }
+
   async checkConnectionQuality() {
     return this.promiseIpc.send("checkConnectionQuality");
   }

@@ -25,6 +25,7 @@ const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const configManager = new ConfigManager(nodeConnection);
+configManager.setServiceManager(serviceManager);
 const authenticationService = new AuthenticationService(nodeConnection);
 const sshService = new SSHService();
 const { globalShortcut } = require("electron");
@@ -673,6 +674,10 @@ ipcMain.handle("fetchTranslators", async (event, args) => {
 
 ipcMain.handle("fetchGitHubTesters", async (event, args) => {
   return await serviceManager.fetchGitHubTesters(args);
+});
+
+ipcMain.handle("checkAndCreateMultiSetup", async () => {
+  return await configManager.checkAndCreateMultiSetup();
 });
 
 ipcMain.handle("checkConnectionQuality", async (event, args) => {
