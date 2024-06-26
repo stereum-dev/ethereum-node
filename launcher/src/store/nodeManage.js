@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      //Installed services on edit page
+      newConfiguration: [],
+      // End of Installed services on edit page
+
       //  Beginning Custom Service
       customConfig: {
         image: "",
@@ -12,21 +16,24 @@ export const useNodeManage = defineStore("nodeManage", {
       },
 
       //End Custom Service
+
+      // Beginning of Drawer Box
+      isDrawerOpen: false,
+      isDrawerMenuActive: false,
+      isSetupsDrawerActive: false,
+      isServicesDrawerActive: false,
+
+      // End of Drawer Box
+
+      //Import Setup Yaml File
+      isImportSetupYamlActive: false,
+
       externalConsensusSelectedService: "",
       reloadEditBody: false,
       isLineHidden: false,
       lines: [],
       hideConnectingLines: false,
       addConfigButton: false,
-      nodeConfigs: [
-        { id: 1, configName: "config", status: true },
-        { id: 2, configName: "config", status: false },
-        { id: 3, configName: "config", status: false },
-        { id: 4, configName: "config", status: false },
-        { id: 5, configName: "config", status: false },
-        { id: 6, configName: "config", status: false },
-      ],
-      isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
       availableBlocks: [],
@@ -150,7 +157,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
       ],
-      newConfiguration: [],
+
       selectedItemToRemove: [],
       actionContents: [
         {

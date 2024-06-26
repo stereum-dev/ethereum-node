@@ -1,7 +1,7 @@
 <template>
-  <div class="col-start-1 col-span-1 gap-2 p-2 space-y-6 flex flex-col items-start">
+  <div class="col-start-2 col-end-3 gap-2 p-2 space-y-6 flex flex-col items-center">
     <div
-      v-for="item in getExecutionServices"
+      v-for="item in getConsensusServices"
       :key="item"
       :ref="
         (el) => {
@@ -15,14 +15,12 @@
       <ClientLayout :client="item" />
       <ClientButtons
         :client="item"
-        @open-expert="openExpert"
+        @open-expert="openExport(item)"
         @open-log="openLog"
         @state-handler="stateHandler"
         @restart-handler="restartHandler"
         @open-doc="openDoc"
         @open-resync="openResync(item)"
-        @open-pruning="openPruning"
-        @copy-jwt="copyJwt"
       />
       <TransitionGroup name="fadeModal">
         <ResyncModal
@@ -31,22 +29,20 @@
           :item="item"
           @close-window="closeResyncModal(item)"
         />
-        <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
       </TransitionGroup>
     </div>
   </div>
 </template>
 
 <script setup>
-import PrunningModal from "../modals/PrunningModal.vue";
-import ResyncModal from "../modals/ResyncModal.vue";
+import ResyncModal from "../../modals/ResyncModal.vue";
+import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
-import { computed, ref } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
-//Emits
 const emit = defineEmits([
   "openExpert",
   "openLog",
@@ -55,23 +51,35 @@ const emit = defineEmits([
   "restartHandler",
   "mouseOver",
   "mouseLeave",
-  "copyJwt",
 ]);
 
 //Refs
-const showPruningModal = ref(false);
-
-//Stores
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
+const setupStore = useSetups();
 
-//Computed & Watchers
-const getExecutionServices = computed(() => {
-  return serviceStore.installedServices
-    .filter((e) => e.category === "execution")
-    .sort((a, b) => a.name.localeCompare(b.name));
+const getConsensusServices = computed(() => {
+  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
+    return [];
+  }
+
+  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
+  const services = serviceStore.installedServices
+    .filter(
+      (s) =>
+        s.category === "consensus" &&
+        selectedServiceIds.includes(s.config.serviceID) &&
+        s.setupId === setupStore.selectedSetup.setupId
+    )
+    .sort((a, b) => {
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
+
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
+    });
+
+  return services;
 });
-
 //Methods
 const mouseOver = (item) => {
   emit("mouseOver", item);
@@ -89,16 +97,7 @@ const closeResyncModal = (item) => {
   item.isResyncModalOpen = false;
 };
 
-const openPruning = () => {
-  showPruningModal.value = true;
-};
-
-const closePruning = () => {
-  nodeStore.isLineHidden = false;
-  showPruningModal.value = false;
-};
-
-const openExpert = (item) => {
+const openExport = (item) => {
   emit("openExpert", item);
 };
 
@@ -116,10 +115,6 @@ const stateHandler = (item) => {
 
 const restartHandler = (item) => {
   emit("restartHandler", item);
-};
-
-const copyJwt = (item) => {
-  emit("copyJwt", item);
 };
 </script>
 

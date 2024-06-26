@@ -37,6 +37,7 @@ import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
 import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
 //Props & Emits
 const emit = defineEmits([
@@ -51,23 +52,22 @@ const emit = defineEmits([
 //Refs
 
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
 // computed & watchers properties
 const getConsensus = computed(() => {
-  return manageStore.newConfiguration
-    .filter((e) => e.category == "consensus")
+  const services = manageStore.newConfiguration
+    .filter(
+      (s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "consensus"
+    )
     .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
+      const fa = a.name.toLowerCase();
+      const fb = b.name.toLowerCase();
 
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
+      return fa < fb ? -1 : fa > fb ? 1 : 0;
     });
+
+  return services;
 });
 
 // methods

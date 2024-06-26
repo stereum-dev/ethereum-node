@@ -5,6 +5,7 @@ import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import net from "net";
 import YAML from "yaml";
 import { NodeUpdates } from "./NodeUpdates";
+import { ConfigManager } from "./ConfigManager";
 import axios from "axios";
 const log = require("electron-log");
 const electron = require("electron");
@@ -29,6 +30,7 @@ export class NodeConnection {
     this.os = null;
     this.osv = null;
     this.nodeUpdates = new NodeUpdates(this);
+    this.configManager = new ConfigManager(this);
   }
 
   async establish(taskManager, currentWindow) {
@@ -1811,8 +1813,9 @@ export class NodeConnection {
    * write a specific service configuration
    *
    * @param serviceConfiguration servicd configuration to write to the node
+   * @param {string|null} setupID - The setup ID. Defaults to null.
    */
-  async writeServiceConfiguration(serviceConfiguration) {
+  async writeServiceConfiguration(serviceConfiguration, setupID = null) {
     let configStatus;
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
@@ -1824,6 +1827,7 @@ export class NodeConnection {
           serviceConfiguration.id +
           ".yaml"
       );
+      if (setupID) await this.configManager.addServiceIntoSetup(serviceConfiguration, setupID);
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + serviceConfiguration.service + " config",

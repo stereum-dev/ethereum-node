@@ -8,7 +8,7 @@
         </div>
       </div>
     </control-dialog>
-    <div v-show="showData" class="rpc-box">
+    <div v-if="showData && filteredRpcItems.length > 0" class="rpc-box">
       <!-- removed node-connection-row template start -->
       <div class="rowParent">
         <div class="title">
@@ -21,15 +21,21 @@
       </div>
       <!-- removed node-connection-row template end -->
       <div class="scrollable">
-        <div v-for="item in rpcItems" :key="item.id" ref="clone" class="rpc-data" @click="copy(item.value, item.title)">
+        <div
+          v-for="item in filteredRpcItems"
+          :key="item.id"
+          ref="clone"
+          class="rpc-data"
+          @click="copy(item.value, item.title)"
+        >
           <span>{{ item.title }}</span>
         </div>
       </div>
     </div>
-    <div v-show="showData" class="compTtl" :class="{ active: isActive }">
+    <div v-if="showData && filteredRpcItems.length > 0" class="compTtl" :class="{ active: isActive }">
       <span>{{ copyVal }}</span>
     </div>
-    <div v-show="!showData" class="spinner">
+    <div v-if="!showData || filteredRpcItems.length === 0" class="spinner">
       <img src="/animation/loading/mushroom-spinner.gif" alt="loading" />
     </div>
   </div>
@@ -37,10 +43,11 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useControlStore } from "@/store/theControl";
 import ControlDialog from "./ControlDialog.vue";
+import { useSetups } from "@/store/setups";
 export default {
   components: { ControlDialog },
   data() {
@@ -75,6 +82,16 @@ export default {
       nextStepFlag: "nextStepFlag",
       rpcState: "rpcState",
     }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
+    }),
+    filteredRpcItems() {
+      if (this.selectedSetup && Array.isArray(this.selectedSetup.services)) {
+        const serviceIds = this.selectedSetup.services.map((service) => service.id);
+        return this.rpcItems.filter((item) => serviceIds.includes(item.id));
+      }
+      return [];
+    },
 
     onoff() {
       if (!this.toggleAllowed) return "";

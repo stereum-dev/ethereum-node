@@ -61,20 +61,22 @@ export async function useFrontendServices() {
           let oldService;
           if (
             serviceStore.installedServices &&
-            serviceStore.installedServices.map((s) => s?.config.serviceID).includes(service?.config.serviceID)
+            serviceStore.installedServices.map((s) => s?.config?.serviceID).includes(service?.config?.serviceID)
           ) {
             oldService = serviceStore.installedServices.find(
               (s) =>
-                s.service === service.service && s.config.serviceID && s.config.serviceID === service.config.serviceID
+                s.service === service.service &&
+                s?.config?.serviceID &&
+                s?.config?.serviceID === service?.config?.serviceID
             );
           } else {
             oldService = allServices.find((s) => s.service === service.service);
             if (oldService?.tunnelLink) needForTunnel.push(oldService);
           }
-          if (oldService?.config.keys) {
+          if (oldService?.config?.keys) {
             oldService.config = {
               ...service?.config,
-              keys: oldService?.config.keys,
+              keys: oldService?.config?.keys,
             };
           } else {
             oldService.config = service?.config;
@@ -82,12 +84,13 @@ export async function useFrontendServices() {
           oldService.state = service.state;
           if (
             (oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") &&
-            oldService.config.configVersion &&
-            oldService.config.configVersion < 2
+            oldService?.config?.configVersion &&
+            oldService?.config?.configVersion < 2
           ) {
             let existing = serviceStore.installedServices.find(
               (s) =>
-                s.config.serviceID === oldService.config.serviceID && s.service === oldService.name + "ValidatorService"
+                s?.config?.serviceID === oldService?.config?.serviceID &&
+                s?.service === oldService.name + "ValidatorService"
             );
             let vs;
             if (existing) {
@@ -102,7 +105,7 @@ export async function useFrontendServices() {
               vs.icon = require("/public/img/icon/service-icons/validator/Nimbus-Validator-Linked-Circle.png");
               vs.sIcon = require("/public/img/icon/service-icons/validator/Nimbus-Validator-Linked-s.png");
             }
-            vs.config = oldService.config;
+            vs.config = oldService?.config;
             vs.state = oldService.state;
             otherServices.push(vs);
           }
@@ -112,7 +115,7 @@ export async function useFrontendServices() {
           e.id = i;
           return e;
         });
-        let network = serviceStore.installedServices[0]?.config.network;
+        let network = serviceStore.installedServices[0]?.config?.network;
         nodeManageStore.currentNetwork = nodeManageStore.networkList.find((item) => item.network === network);
 
         if (needForTunnel.length != 0 && nodeHeaderStore.refresh) {
@@ -135,7 +138,7 @@ export async function useFrontendServices() {
             .filter((service) => service.tunnelLink)
             .map((service) => {
               return {
-                dstPort: service.config.ports[0].destinationPort,
+                dstPort: service?.config?.ports[0].destinationPort,
                 localPort: service.linkUrl.split(":").pop(),
               };
             });
@@ -143,7 +146,7 @@ export async function useFrontendServices() {
           await ControlService.openTunnels(ports);
         } else if (nodeHeaderStore.refresh) {
           nodeHeaderStore.runningServices = serviceStore.installedServices.filter((service) => service?.headerOption);
-//console.log(serviceStore.installedServices)
+          //console.log(serviceStore.installedServices)
         }
       } else {
         if (!nodeHeaderStore.updating) {
@@ -184,7 +187,7 @@ async function updateStates() {
   serviceStore.installedServices.forEach((s, idx) => {
     let updated = false;
     serviceInfos.forEach((i) => {
-      if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+      if (i.Names.replace("stereum-", "") === s?.config?.serviceID) {
         serviceStore.installedServices[idx].state = i.State;
         updated = true;
       }
@@ -196,7 +199,7 @@ async function updateStates() {
 }
 
 export async function useStateHandler(client) {
-  client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
+  client.yaml = await ControlService.getServiceYAML(client?.config?.serviceID);
   if (!client.yaml.includes("isPruning: true")) {
     client.serviceIsPending = true;
     let state = "stopped";
@@ -205,7 +208,7 @@ export async function useStateHandler(client) {
     }
     try {
       await ControlService.manageServiceState({
-        id: client.config.serviceID,
+        id: client?.config?.serviceID,
         state: state,
       });
     } catch (err) {
@@ -217,7 +220,7 @@ export async function useStateHandler(client) {
 }
 
 export async function useRestartService(client) {
-  client.yaml = await ControlService.getServiceYAML(client.config.serviceID);
+  client.yaml = await ControlService.getServiceYAML(client?.config?.serviceID);
   if (!client.yaml.includes("isPruning: true")) {
     client.serviceIsPending = true;
     await ControlService.restartService(useDeepClone(client));

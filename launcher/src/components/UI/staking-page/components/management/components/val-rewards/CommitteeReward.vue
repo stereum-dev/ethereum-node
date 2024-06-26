@@ -1,10 +1,12 @@
 <template>
   <div
-    class="w-full h-full max-h-6 col-start-1 col-span-full row-start-4 row-span-1 border border-gray-500 rounded-full grid grid-cols-6 bg-[#313539] items-center p-[1px]"
+    class="w-full h-full max-h-8 col-start-1 col-span-full row-start-3 row-span-1 border border-gray-500 rounded-full grid grid-cols-6 bg-[#313539] items-center p-[1px]"
     @mouseenter="footerStore.cursorLocation = `${syncCommitteeReward}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
-    <div class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]">
+    <div
+      class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]"
+    >
       <img
         class="col-start-1 col-span-1 w-4 h-4"
         src="/img/icon/staking-page-icons/sync-committee.png"
@@ -44,7 +46,8 @@ watchEffect(() => {
   if (stakingStore.secondsPerSlot > 0 && intervalID.value == null) {
     intervalID.value = setInterval(() => {
       if (stakingStore.currentSlot != lastSlotChecked.value) {
-        if (stakingStore.currentSlot % stakingStore.slotsPerEpoch == 0) totalRewards.value = 0;
+        if (stakingStore.currentSlot % stakingStore.slotsPerEpoch == 0)
+          totalRewards.value = 0;
         lastSlotChecked.value = stakingStore.currentSlot;
         ControlService.getSyncCommitteeRewards(
           stakingStore.keys.map((k) => k.index).filter((k) => k),

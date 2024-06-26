@@ -1,78 +1,40 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between items-center">
-    <EditHeader />
-    <div
-      class="w-full h-full max-h-[430px] rounded-md border overflow-hidden mt-1 bg-[#151618] relative"
-      :class="[
-        isOverDropZone ? 'border-dashed border-2 border-blue-500 ' : 'border-gray-600',
-        manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : '',
-      ]"
-    >
-      <div
-        class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
-      >
-        <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>
-        <span class="col-start-2 justify-self-center self-center">{{ $t("editBody.consensusClient") }}</span>
-        <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }}</span>
-      </div>
-      <div
-        ref="dropZoneRef"
-        class="w-full h-full max-h-[428px] grid grid-cols-3 pt-5 z-10"
-        :class="{
-          'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto':
-            activateScrollBar,
-        }"
-        @drop="onDrop($event)"
-        @dragover.prevent="isOverDropZone = true"
-        @dragleave.prevent="isOverDropZone = false"
-      >
-        <span
-          v-if="isOverDropZone"
-          class="col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center text-xl text-blue-400"
-          >+</span
-        >
-        <ExecutionClients
-          v-if="!isOverDropZone"
-          @delete-service="deleteService"
-          @switch-client="switchClient"
-          @confirm-consensus="confirmConsensus"
-          @info-modal="infoModal"
-          @mouse-over="lineDrawHandler"
-          @mouse-leave="removeConnectionLines"
-        />
-
-        <ConsensusClients
-          v-if="!isOverDropZone"
-          @delete-service="deleteService"
-          @confirm-connection="confirmConnection"
-          @switch-client="switchClient"
-          @modify-service="modifyService"
-          @info-modal="infoModal"
-          @mouse-over="lineDrawHandler"
-          @mouse-leave="removeConnectionLines"
-        />
-        <ValidatorClients
-          v-if="!isOverDropZone"
-          @delete-service="deleteService"
-          @switch-client="switchClient"
-          @modify-service="modifyService"
-          @info-modal="infoModal"
-          @mouse-over="lineDrawHandler"
-          @mouse-leave="removeConnectionLines"
-        />
-      </div>
-    </div>
+    <EditHeader @select-rename="selectRename" @confirm-rename="confirmRename" />
+    <ConfigBody
+      v-if="setupStore.isEditConfigViewActive"
+      @on-drop="onDrop"
+      @confirm-connection="confirmConnection"
+      @switch-client="switchClient"
+      @delete-service="deleteService"
+      @confirm-consensus="confirmConsensus"
+      @info-modal="infoModal"
+      @modify-service="modifyService"
+      @remove-lines="removeConnectionLines"
+      @line-draw="lineDrawHandler"
+    />
+    <SetupBody
+      v-else
+      @delete-setup="deleteSetup"
+      @connect-setup="connectSetup"
+      @setup-infos="setupInfos"
+      @open-configs="openConfigs"
+    />
   </div>
 </template>
 
 <script setup>
+import ConfigBody from "./ConfigBody.vue";
 import EditHeader from "./EditHeader.vue";
-import ExecutionClients from "./ExecutionClients.vue";
-import ConsensusClients from "./ConsensusClients.vue";
-import ValidatorClients from "./ValidatorClients.vue";
-import LeaderLine from "leader-line-new";
-import { computed, ref, watchEffect } from "vue";
+import SetupBody from "./SetupBody.vue";
+
+import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
+import { useSetups } from "@/store/setups";
+import { computed, ref, watch } from "vue";
+import { useMultiSetups } from "../../../../../composables/multiSetups";
+
+const { getSelectedSetup } = useMultiSetups();
 
 const emit = defineEmits([
   "onDrop",
@@ -82,15 +44,19 @@ const emit = defineEmits([
   "confirmConsensus",
   "infoModal",
   "modifyService",
+
+  "openConfigs",
+  "deleteSetup",
 ]);
 
 //Pinia stores
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
 // refs
 
 const isOverDropZone = ref(false);
-const isLineDrawHandlerReady = ref(false);
+// const isLineDrawHandlerReady = ref(false);
 
 // computed & watchers properties
 // eslint-disable-next-line no-unused-vars
@@ -104,18 +70,7 @@ const displayDropZone = computed(() => {
   return dropClass;
 });
 
-const activateScrollBar = computed(() => {
-  const validators = manageStore.newConfiguration.filter((service) => service.category === "validator");
-  const consensus = manageStore.newConfiguration.filter((service) => service.category === "consensus");
-  const execution = manageStore.newConfiguration.filter((service) => service.category === "execution");
-  if (validators.length > 3 || consensus.length > 3 || execution.length > 3) {
-    return true;
-  } else {
-    return false;
-  }
-});
-
-watchEffect(
+watch(
   () => manageStore.isLineHidden,
   (newValue) => {
     if (newValue) {
@@ -126,110 +81,110 @@ watchEffect(
 
 // methods
 
-const oneWayConnection = (start, end, startSocket, endSocket) => {
-  if (start && end) {
-    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    newLine.position();
-    newLine.setOptions({
-      size: 2,
-      color: "#DBEF6A",
-      endPlug: "behind",
-      startSocket: startSocket ? startSocket : "right",
-      endSocket: endSocket ? endSocket : "left",
-    });
-    manageStore.lines.push(newLine);
-  }
-};
+// const oneWayConnection = (start, end, startSocket, endSocket) => {
+//   if (start && end) {
+//     let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+//     newLine.position();
+//     newLine.setOptions({
+//       size: 2,
+//       color: "#DBEF6A",
+//       endPlug: "behind",
+//       startSocket: startSocket || "right",
+//       endSocket: endSocket || "left",
+//     });
+//     manageStore.lines.push(newLine);
+//   }
+// };
 
-const lineDrawHandler = (item) => {
-  let start;
-  let end;
-  if (item && !item.displayPluginMenu) {
-    switch (item.category) {
-      case "execution": {
-        const dependencies = manageStore.newConfiguration.filter(
-          (s) =>
-            s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "consensus") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(end, start);
-            }
-          }
-        });
-        break;
-      }
-      case "consensus": {
-        const dependencies = manageStore.newConfiguration.filter(
-          (s) =>
-            (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "validator") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(end, start);
-            }
-          }
-          if (d.category === "execution") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-        });
-        break;
-      }
-      case "validator": {
-        const dependencies = manageStore.newConfiguration.filter(
-          (s) =>
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
-            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
-            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "validator") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              if (item.service === "CharonService") {
-                oneWayConnection(end, start, "left", "left");
-              } else {
-                oneWayConnection(start, end, "left", "left");
-              }
-            }
-          }
-          if (d.category === "execution") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-          if (d.category === "consensus") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-        });
-        break;
-      }
-    }
-  } else if (item && item.displayPluginMenu) {
-    removeConnectionLines();
-  }
-  isLineDrawHandlerReady.value = true;
-};
+// const lineDrawHandler = (item) => {
+//   let start;
+//   let end;
+//   if (item && !item.displayPluginMenu) {
+//     switch (item.category) {
+//       case "execution": {
+//         const dependencies = manageStore.newConfiguration.filter(
+//           (s) =>
+//             s.config?.dependencies?.executionClients?.length > 0 &&
+//             s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
+//         );
+//         dependencies.forEach((d) => {
+//           if (d.category === "consensus") {
+//             start = d?.ref;
+//             end = item?.ref;
+//             if (start && end) {
+//               oneWayConnection(end, start);
+//             }
+//           }
+//         });
+//         break;
+//       }
+//       case "consensus": {
+//         const dependencies = manageStore.newConfiguration.filter(
+//           (s) =>
+//             (s.config?.dependencies?.consensusClients?.length > 0 &&
+//               s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
+//             item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
+//         );
+//         dependencies.forEach((d) => {
+//           if (d.category === "validator") {
+//             start = d?.ref;
+//             end = item?.ref;
+//             if (start && end) {
+//               oneWayConnection(end, start);
+//             }
+//           }
+//           if (d.category === "execution") {
+//             start = d?.ref;
+//             end = item?.ref;
+//             if (start && end) {
+//               oneWayConnection(start, end);
+//             }
+//           }
+//         });
+//         break;
+//       }
+//       case "validator": {
+//         const dependencies = manageStore.newConfiguration.filter(
+//           (s) =>
+//             item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
+//             item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
+//             s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
+//         );
+//         dependencies.forEach((d) => {
+//           if (d.category === "validator") {
+//             start = d.ref;
+//             end = item.ref;
+//             if (start && end) {
+//               if (item.service === "CharonService") {
+//                 oneWayConnection(end, start, "left", "left");
+//               } else {
+//                 oneWayConnection(start, end, "left", "left");
+//               }
+//             }
+//           }
+//           if (d.category === "execution") {
+//             start = d.ref;
+//             end = item.ref;
+//             if (start && end) {
+//               oneWayConnection(start, end);
+//             }
+//           }
+//           if (d.category === "consensus") {
+//             start = d.ref;
+//             end = item.ref;
+//             if (start && end) {
+//               oneWayConnection(start, end);
+//             }
+//           }
+//         });
+//         break;
+//       }
+//     }
+//   } else if (item?.displayPluginMenu) {
+//     removeConnectionLines();
+//   }
+//   isLineDrawHandlerReady.value = true;
+// };
 
 const removeConnectionLines = () => {
   // Remove all existing connections
@@ -271,24 +226,57 @@ const infoModal = (item) => {
   manageStore.isLineHidden = true;
   emit("infoModal", item);
 };
+
+const selectRename = async (setup) => {
+  setupStore.setupToRename = setup.setupName;
+  setupStore.isRenameSetupActive = true;
+};
+
+const confirmRename = async () => {
+  const setup = {
+    setupId: setupStore.selectedSetup.setupId,
+    setupName: setupStore.setupToRename,
+  };
+  setupStore.selectedSetup.setupName = setupStore.setupToRename;
+  setupStore.editSetups = setupStore.editSetups.map((s) => {
+    if (s.setupId === setup.setupId) {
+      s.setupName = setup.setupName;
+    }
+    return s;
+  });
+  await ControlService.renameSetup(setup);
+  setupStore.isRenameSetupActive = false;
+  setupStore.setupToRename = null;
+};
+
+const openConfigs = (setup) => {
+  getSelectedSetup(setup, true);
+};
+
+const deleteSetup = (item) => {
+  emit("deleteSetup", item);
+};
+
+const connectSetup = (item) => {
+  console.log("connectSetup", item);
+};
+
+const setupInfos = (item) => {
+  setupStore.selectedSetupInfos = item;
+};
 </script>
 
 <style scoped>
 ::-webkit-scrollbar {
   width: 3px;
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s ease;
+}
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-.slide-enter {
-  transform: scaleY(0);
-  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-leave-to {
-  transform: scaleY(0);
-  transition: opacity 0.5s ease-in-out;
 }
 </style>

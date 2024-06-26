@@ -13,7 +13,7 @@ export async function useListKeys(forceRefresh) {
   let clients = serviceStore.installedServices.filter(
     (s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService"
   );
-  if ((clients && clients.length > 0 && nodeManageStore.currentNetwork.network != "") || forceRefresh) {
+  if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
     for (let client of clients) {
       //if there is already a list of keys ()
       if (

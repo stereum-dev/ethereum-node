@@ -4,7 +4,10 @@
 
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
-        <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
+        <SidebarSection
+          @network-modal="displaySwitchNetwork"
+          @nuke-node="openNukeNodeModal"
+        />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <EditBody
@@ -14,35 +17,58 @@
           @switch-client="switchClientModalhandler"
           @modify-service="serviceModifyHandler"
           @delete-service="selectedServiceToRemove"
+          @delete-setup="deleteSetup"
           @confirm-consensus="confirmConsensusConnection"
           @info-modal="openInfoModal"
         />
       </div>
-      <div class="col-start-17 col-end-21 ml-1">
-        <ServiceSection @change-connection="serviceModifyHandler" @delete-service="selectedServiceToRemove" />
+      <div class="col-start-17 col-end-21 ml-1 grid grid-cols-2 grid-rows-9">
+        <NetworkStatus />
+        <ServiceSection
+          @change-connection="serviceModifyHandler"
+          @delete-service="selectedServiceToRemove"
+        />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <ChangesSection @remove-change="removeChangeHandler" @confirm-changes="confirmHandler" />
+        <ChangesSection
+          @remove-change="cancelChangeHandler"
+          @confirm-changes="confirmHandler"
+        />
       </div>
     </div>
     <!-- End Node main layout -->
     <!-- Start drawer layout -->
     <img
-      class="w-10 absolute top-50 -right-5 cursor-pointer"
+      class="w-10 absolute top-50 -right-5 cursor-pointer z-0"
       src="/img/icon/edit-node-icons/sidebar-out.png"
       alt="Arrow Icon"
       @mousedown.prevent.stop
-      @click="openDrawer"
+      @click="handleDrawer"
       @mouseenter="footerStore.cursorLocation = 'all services'"
       @mouseleave="footerStore.cursorLocation = ''"
     />
     <transition name="drawerSlide" mode="out-in">
-      <DrawerBox
-        v-if="manageStore.isDrawerOpen"
-        :dragging="startDrag"
-        @add-services="addServices"
-        @mouseleave="manageStore.isDrawerOpen = false"
-      />
+      <drawer-box v-if="manageStore.isDrawerOpen" @mouseleave="drawerMouseLeave">
+        <template #default>
+          <DrawerMenu
+            v-if="manageStore.isDrawerMenuActive"
+            @import-setup="importSetup"
+            @create-setup="openNetworkMenu"
+            @add-service="addServerServices"
+          />
+          <SetupsDrawer
+            v-else-if="manageStore.isSetupsDrawerActive"
+            @close-window="closeSetupModal"
+            @create-custom="createCustomSetup"
+            @get-network="getSetupNetwork"
+          />
+          <ServicesDrawer
+            v-else-if="manageStore.isServicesDrawerActive"
+            :dragging="startDrag"
+            @add-services="addServices"
+          />
+        </template>
+      </drawer-box>
     </transition>
     <!-- End drawer layout -->
     <!-- Custom Modals -->
@@ -106,42 +132,75 @@
         @back-to-login="backToLogin"
       />
       <!-- End Nuke Modal -->
+
+      <!-- Start Import Setup -->
+      <ImportSetup
+        v-if="manageStore.isImportSetupYamlActive"
+        @confirm-import="confirmImportSingleSetup"
+      />
+      <!-- End Import Setup -->
+      <!-- Start Create Setup -->
+      <CreateSetup
+        v-if="setupStore.isCreateSetupModalActive"
+        :network="selectedSetupNetwork"
+      />
+      <!-- End Create Setup -->
+
+      <!-- Start Setup Infos -->
+      <SetupInfos v-if="setupStore.selectedSetupInfos" />
     </TransitionGroup>
-    <ChangeAnimation v-if="manageStore.disableConfirmButton" />
+    <LoaderAnime
+      v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive"
+      :anime="getAimationSrc"
+    />
   </base-layout>
 </template>
 <script setup>
-import SidebarSection from "./sections/SidebarSection.vue";
-import EditBody from "./components/edit/EditBody";
-import ServiceSection from "./sections/ServiceSection.vue";
-import ChangesSection from "./sections/ChangesSection.vue";
+import { useDeepClone } from "@/composables/utils";
+import { useListKeys } from "@/composables/validators";
+import ControlService from "@/store/ControlService";
+import { useNodeHeader } from "@/store/nodeHeader";
+import { useNodeManage } from "@/store/nodeManage";
+import { useServers } from "@/store/servers";
+import { useServices } from "@/store/services";
+import { useFooter } from "@/store/theFooter";
+import { useStakingStore } from "@/store/theStaking";
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { useRouter } from "vue-router";
+import { useMultiSetups } from "../../../composables/multiSetups";
+import { useSetups } from "../../../store/setups";
+import NetworkStatus from "../../layers/NetworkStatus.vue";
 import DrawerBox from "./components/drawer/DrawerBox.vue";
-import NetworkModal from "./components/modals/NetworkModal.vue";
-import SwitchModal from "./components/modals/SwitchModal.vue";
+import DrawerMenu from "./components/drawer/DrawerMenu.vue";
+import ServicesDrawer from "./components/drawer/ServicesDrawer.vue";
+import SetupsDrawer from "./components/drawer/SetupsDrawer.vue";
+import EditBody from "./components/edit/EditBody";
+import LoaderAnime from "./components/loader-anime/LoaderAnime.vue";
+import AddModal from "./components/modals/AddModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
-import AddCustom from "./components/modals/custom-service/AddCustom.vue";
-import AddModal from "./components/modals/AddModal.vue";
+import NetworkModal from "./components/modals/NetworkModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
-import ChangeAnimation from "./components/changes/ChangeAnimation.vue";
-import ControlService from "@/store/ControlService";
-import { useServices } from "@/store/services";
-import { useNodeManage } from "@/store/nodeManage";
-import { ref, onMounted, computed, onUnmounted, watch } from "vue";
-import { useRouter } from "vue-router";
-import { useNodeHeader } from "@/store/nodeHeader";
-import { useStakingStore } from "@/store/theStaking";
-import { useDeepClone } from "@/composables/utils";
-import { useFooter } from "@/store/theFooter";
-import { useListKeys } from "@/composables/validators";
-import { useServers } from "@/store/servers";
+import SwitchModal from "./components/modals/SwitchModal.vue";
+import AddCustom from "./components/modals/custom-service/AddCustom.vue";
+import CreateSetup from "./components/modals/setups/CreateSetup.vue";
+import ImportSetup from "./components/modals/setups/ImportSetup.vue";
+import SetupInfos from "./components/modals/setups/SetupInfos.vue";
+import ChangesSection from "./sections/ChangesSection.vue";
+import ServiceSection from "./sections/ServiceSection.vue";
+import SidebarSection from "./sections/SidebarSection.vue";
 
+const setupStore = useSetups();
 const footerStore = useFooter();
 const serviceStore = useServices();
 const manageStore = useNodeManage();
 const headerStore = useNodeHeader();
 const stakingStore = useStakingStore();
+const serverStore = useServers();
+
+// Router
 const router = useRouter();
+// Refs
 const isOverDropZone = ref(false);
 const clientToRemove = ref(null);
 const clientToSwitch = ref(null);
@@ -156,30 +215,68 @@ const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
 const nukeModalComponent = ref();
-
-const serverStore = useServers();
+const selectedSetupNetwork = ref("");
+const changeAnime = ref("/animation/confirm-changes/modify.gif");
+const setupImportAnime = ref("/animation/setup/loader.gif");
+const {
+  loadSetups,
+  loadServices,
+  getAllSetups,
+  getServerView,
+  updateDom,
+} = useMultiSetups();
 
 // Computed & Watcher
 
 const isLoadingNewConfiguration = ref(true);
 
+const getAimationSrc = computed(() => {
+  let animationSrc = "";
+  if (manageStore.disableConfirmButton) {
+    animationSrc = changeAnime.value;
+  } else if (setupStore.isImportAnimeActive) {
+    animationSrc = setupImportAnime.value;
+  }
+  return animationSrc;
+});
+
+// watch(
+//   () => manageStore.newConfiguration,
+//   () => {
+//     isLoadingNewConfiguration.value = false;
+
+//     // updateDisplayNetworkList();
+//   },
+//   { deep: true }
+// );
+
 watch(
-  () => manageStore.newConfiguration,
+  () => manageStore.newConfiguration.length,
   () => {
-    isLoadingNewConfiguration.value = false;
-    updateDisplayNetworkList();
-  },
-  { deep: true }
+    updateDom();
+  }
 );
 
-onMounted(() => {
-  if (manageStore.currentNetwork.id) manageStore.configNetwork = useDeepClone(manageStore.currentNetwork);
-  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
-  if (!manageStore.architecture) setArchitecture();
+watchEffect(() => {
+  if (setupStore.isImportAnimeActive) {
+    setTimeout(() => {
+      setupStore.isImportAnimeActive = false;
+    }, 5000);
+  }
 });
-onMounted(() => {
+watchEffect(() => {
+  if (setupStore.selectedSetup === null) {
+    setupStore.isEditConfigViewActive = false;
+  }
+});
+
+// Methods
+
+onMounted(async () => {
+  await fetchSetups();
+  if (!manageStore.architecture) setArchitecture();
+  editSetupsPrepration();
   isLoadingNewConfiguration.value = false;
-  updateDisplayNetworkList();
   manageStore.confirmChanges = [];
   manageStore.newConfiguration.forEach((el) => {
     return {
@@ -203,25 +300,36 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  setupStore.editSetups = [];
+  setupStore.isEditConfigViewActive = false;
+  setupStore.isRenameSetupActive = false;
+  setupStore.setupToRename = null;
+  setupStore.selectedSetup = null;
   manageStore.confirmChanges = [];
   manageStore.newConfiguration = [];
   manageStore.selectedNetwork = {};
   manageStore.configNetwork = {};
+  getServerView();
 });
 
 // Methods
+const fetchSetups = async () => {
+  await loadSetups();
+  await loadServices();
+  setupStore.editSetups = getAllSetups();
+};
 
 const listKeys = async (forceRefresh) => {
   await useListKeys(forceRefresh);
 };
 
-const updateDisplayNetworkList = () => {
-  if (manageStore.newConfiguration.length === 0) {
-    manageStore.displayNetworkList = true;
-  } else {
-    manageStore.displayNetworkList = false;
-  }
-};
+// const updateDisplayNetworkList = () => {
+//   if (manageStore.newConfiguration.length === 0) {
+//     manageStore.displayNetworkList = true;
+//   } else {
+//     manageStore.displayNetworkList = false;
+//   }
+// };
 
 // Random ID generator
 function generateRandomId() {
@@ -269,6 +377,7 @@ const switchClientConfirm = (properties) => {
     content: "SWITCH CLIENT",
     contentIcon: "/img/icon/edit-node-icons/switch-client-icon.png",
     service: properties.itemToReplace,
+    setupId: setupStore.selectedSetup?.setupId,
     data: {
       itemToInstall: properties.itemToInstall,
       data: {
@@ -277,7 +386,9 @@ const switchClientConfirm = (properties) => {
         executionClients: [],
         consensusClients: [],
         otherServices: [],
-        checkpointURL: properties.checkPointSyncUrl ? properties.checkPointSyncUrl : false,
+        checkpointURL: properties.checkPointSyncUrl
+          ? properties.checkPointSyncUrl
+          : false,
       },
     },
   });
@@ -314,7 +425,9 @@ const serviceModifyHandler = (item) => {
 const hideModifyModal = () => {
   manageStore.isLineHidden = false;
   isModifyModalOpen.value = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = JSON.parse(
+    JSON.stringify(serviceStore.installedServices)
+  );
 };
 const confirmConsensusConnection = (item) => {
   clientToConnect.value.isNotConnectedToConsensus = false;
@@ -359,12 +472,48 @@ const confirmConnection = (item) => {
 // Drawer methods
 
 const openDrawer = () => {
-  manageStore.isDrawerOpen = true;
+  if (setupStore.isEditConfigViewActive) {
+    manageStore.isDrawerOpen = true;
+    manageStore.isDrawerMenuActive = false;
+    manageStore.isServicesDrawerActive = true;
+    manageStore.isSetupsDrawerActive = false;
+  } else {
+    manageStore.isDrawerOpen = true;
+    manageStore.isServicesDrawerActive = false;
+    manageStore.isSetupsDrawerActive = false;
+    manageStore.isDrawerMenuActive = true;
+  }
+};
+
+const handleDrawer = () => {
+  openDrawer();
+};
+
+const openNetworkMenu = () => {
+  manageStore.isDrawerMenuActive = false;
+  manageStore.isServicesDrawerActive = false;
+  manageStore.isSetupsDrawerActive = true;
+};
+const createCustomSetup = () => {
+  console.log("Create Custom Setup");
+};
+
+const getSetupNetwork = (network) => {
+  selectedSetupNetwork.value = network;
+  manageStore.isDrawerOpen = false;
+  manageStore.isSetupsDrawerActive = false;
+  setupStore.isCreateSetupModalActive = true;
+};
+
+const drawerMouseLeave = () => {
+  manageStore.isDrawerOpen = false;
+  manageStore.isServicesDrawerActive = false;
+  manageStore.isSetupsDrawerActive = false;
 };
 
 //Change Box methods
 
-const removeChangeHandler = (item) => {
+const cancelChangeHandler = (item) => {
   isAddModalOpen.value = false;
   item.service.isRemoveProcessing = false;
   if (item) {
@@ -377,7 +526,9 @@ const removeChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
-      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+      manageStore.newConfiguration = JSON.parse(
+        JSON.stringify(serviceStore.installedServices)
+      );
     }
 
     if (item.content === "MODIFY") {
@@ -391,11 +542,34 @@ const removeChangeHandler = (item) => {
   manageStore.isLineHidden = false;
 };
 
-// Add service with double click
+// Add service with  click
 
 const addServices = (service) => {
   let item = useDeepClone(service);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item?.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
+    return;
+  } else {
+    item.id = manageStore.newConfiguration.length;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+      setupId: setupStore.selectedSetup?.setupId,
+    };
+    manageStore.newConfiguration.push(newItem);
+    clientToInstall.value = newItem;
+    clientToInstall.value.addPanel = true;
+  }
+};
+
+const addServerServices = (service) => {
+  let item = useDeepClone(service);
+  if (
+    item.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -404,6 +578,9 @@ const addServices = (service) => {
       isNewClient: true,
     };
     manageStore.newConfiguration.push(newItem);
+    setupStore.editSetups
+      .find((s) => s.setupId === setupStore.selectedSetup?.setupId)
+      .services.push(newItem);
     clientToInstall.value = newItem;
     clientToInstall.value.addPanel = true;
   }
@@ -425,7 +602,10 @@ const onDrop = (event) => {
   const allServices = useDeepClone(serviceStore.allServices);
   const itemId = event.dataTransfer.getData("itemId");
   let item = allServices.find((item) => item.id == itemId);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -448,12 +628,15 @@ const addServiceHandler = (item) => {
     return;
   }
   let dataObject = {
+    setupId: setupStore.selectedSetup?.setupId,
     network: manageStore.configNetwork.network,
     installDir: item.installDir || "/opt/stereum",
     executionClients: item.executionClients,
     consensusClients: item.consensusClients,
     otherServices: item.otherServices,
-    relays: item.relays.map((r) => r[manageStore.configNetwork.network.toLowerCase()]).join(),
+    relays: item.relays
+      .map((r) => r[manageStore.configNetwork.network.toLowerCase()])
+      .join(),
     checkpointURL: item.checkPointSyncUrl || false,
     //CustomService Attributes
     image: item.image,
@@ -500,7 +683,7 @@ const cancelInstallation = (item) => {
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  // manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 };
 
 // Network switch methods
@@ -511,10 +694,12 @@ const displaySwitchNetwork = () => {
 
 const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
-  if (!(network.network == manageStore.configNetwork.network)) {
+  if (network?.network != setupStore.selectedSetup?.network) {
     if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
-      let index = manageStore.confirmChanges.findIndex((j) => j.content.includes("CHANGE NETWORK"));
-      if (manageStore.currentNetwork.network === network.network) {
+      let index = manageStore.confirmChanges.findIndex((j) =>
+        j.content.includes("CHANGE NETWORK")
+      );
+      if (setupStore.selectedSetup.network === network.network) {
         manageStore.confirmChanges.splice(index, 1);
       } else {
         manageStore.confirmChanges[index].data.network = network.network;
@@ -528,8 +713,15 @@ const switchNetworkConfirm = (network) => {
         service: network,
         data: { network: network.network },
       });
+      setupStore.selectedSetup.network = network.network;
+      setupStore.editSetups = setupStore.editSetups.map((s) => {
+        if (s.setupId === setupStore.selectedSetup.setupId) {
+          s.network = network.network;
+        }
+        return s;
+      });
     } else if (manageStore.newConfiguration.length === 0) {
-      manageStore.currentNetwork = network;
+      return;
     }
   }
   manageStore.isLineHidden = false;
@@ -546,6 +738,10 @@ const openNukeNodeModal = async () => {
 const selectedServiceToRemove = (item) => {
   manageStore.isLineHidden = true;
   item.displayPluginMenu = false;
+  const commonServiceExistance = setupStore.serverServices.includes(item.service);
+  let commonService = setupStore.editSetups.find((s) => {
+    return s.setupName === "commonServices";
+  });
   if (
     item.isNotConnectedToConsensus ||
     item.isNotConnectedToValidator ||
@@ -559,14 +755,20 @@ const selectedServiceToRemove = (item) => {
   }
 
   item.displayTooltip = false;
+
   manageStore.selectedItemToRemove.push(item);
   const confirmDelete = {
-    id: item.config.serviceID,
+    id: item.config?.serviceID || item.id,
     content: "DELETE",
     contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
+    setupId: commonServiceExistance
+      ? commonService.setupId
+      : setupStore.selectedSetup?.setupId,
   };
-  const itemExists = manageStore.confirmChanges.some((e) => e.id === item.config.serviceID && e.content === "DELETE");
+  const itemExists = manageStore.confirmChanges.some(
+    (e) => (e.id === item.config?.serviceID || e.id === item.id) && e.content === "DELETE"
+  );
   if (!itemExists) {
     manageStore.confirmChanges.push(confirmDelete);
   }
@@ -583,39 +785,31 @@ const destroyNode = async () => {
     let condition = true;
     await ControlService.clearTasks();
     ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
-    var uxtStart = Math.floor(Date.now() / 1000);
-    var secMax = 30; // wait max X seconds to finish destroy process
+    const uxtStart = Math.floor(Date.now() / 1000);
+    const secMax = 30; // wait max X seconds to finish destroy process
     while (condition) {
-      var secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
+      const secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
       if (secElapsed >= secMax) {
         console.log("abort -> timeout -> secElapsed", secElapsed);
         await ControlService.clearTasks();
         break;
       }
-      var tasks = await ControlService.getTasks();
-      var task = tasks.findLast((t) => t.name.includes("Delete Node"));
-      var subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
-      var status = task && task.hasOwnProperty("status") ? task.status : null;
-      // console.log("tasks => ", tasks);
-      // console.log("task => ", task);
-      // console.log("subtasks => ", subtasks);
-      // console.log("status => ", status);
-      var myresult = [];
+      const tasks = await ControlService.getTasks();
+      const task = tasks.findLast((t) => t.name.includes("Delete Node"));
+      const subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
+      let status = task && task.hasOwnProperty("status") ? task.status : null;
+      const myresult = [];
       myresult.push("nuke node executed (ok)");
       if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
         myresult.push("gathering facts (ok)");
-        for (var i = 0; i < subtasks.length; i++) {
-          var subtask = subtasks[i];
+        for (const element of subtasks) {
+          const subtask = element;
           myresult.push(subtask.name + " (" + subtask.status + ")");
         }
-      } else {
-        if (secElapsed >= 2) {
-          myresult.push("gathering facts (ok)");
-        }
-        // console.log("waiting for subtasks");
+      } else if (secElapsed >= 2) {
+        myresult.push("gathering facts (ok)");
       }
       nukeModalComponent.value.nukeData = myresult;
-      // Intentionally as last check since last subtask could be retrieved at exact same frame
       if (status != null) {
         status = status === "success" ? "ok" : status;
         myresult.push("node nuked (" + status + ")");
@@ -640,16 +834,98 @@ const destroyNode = async () => {
     nukeModalComponent.value.loginBtn = false;
   }
 };
+
+// Confirm Changes methods
 const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
-  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+  const setupExists = manageStore.confirmChanges.some((item) =>
+    item.service?.hasOwnProperty("setupName")
+  );
+  const serverServiceExists = manageStore.confirmChanges.some(
+    (change) =>
+      change.content === "INSTALL" &&
+      setupStore.serverServices.includes(change.service.service)
+  );
+
+  try {
+    if (serverServiceExists) {
+      await handleServerServiceChanges();
+    } else if (
+      setupExists &&
+      manageStore.confirmChanges.some((e) => e.content === "DELETE")
+    ) {
+      await handleSetupChanges();
+    } else if (manageStore.confirmChanges.some((e) => e.content === "NETWORK")) {
+      await handleSwitchSetupNetwork();
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
+    } else if (manageStore.confirmChanges.some((e) => e.content === "MODIFY")) {
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
+    } else {
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
+    }
+  } catch (error) {
+    console.error("Error processing changes:", error);
+  } finally {
+    await resetState();
+  }
+};
+
+const handleServerServiceChanges = async () => {
+  const commonServicesId = setupStore.editSetups.find(
+    (s) => s.setupName === "commonServices"
+  )?.setupId;
+  manageStore.confirmChanges.forEach((change) => {
+    change.data.setupId = commonServicesId ?? change.data.setupId;
+  });
+  await ControlService.handleServiceChanges(
+    JSON.parse(JSON.stringify(manageStore.confirmChanges))
+  );
+};
+
+const handleSetupChanges = async () => {
+  const setupsToRemoveIds = new Set(
+    setupStore.selectedSetupToRemove.map((s) => s.setupId)
+  );
+  setupStore.allSetups = setupStore.allSetups.filter(
+    (e) => !setupsToRemoveIds.has(e.setupId)
+  );
+  setupStore.editSetups = setupStore.editSetups.filter(
+    (e) => !setupsToRemoveIds.has(e.setupId)
+  );
+
+  let subtasks = manageStore.confirmChanges.flatMap((e) => e.subTasks);
+  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(subtasks)));
+  for (const setup of setupStore.selectedSetupToRemove) {
+    await ControlService.deleteSetup(setup.setupId);
+  }
+};
+
+const handleSwitchSetupNetwork = async () => {
+  const setupId = setupStore.selectedSetup?.setupId;
+  const network = manageStore.selectedNetwork.network;
+  const data = {
+    setupId: setupId,
+    network: network,
+  };
+  await ControlService.switchSetupNetwork(data);
+};
+
+const resetState = async () => {
+  updateDom();
+  manageStore.confirmChanges = [];
+  manageStore.selectedNetwork = {};
+  setupStore.selectedSetupToRemove = [];
+  manageStore.isLineHidden = false;
+  await listKeys();
   setTimeout(() => {
-    manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
-    manageStore.confirmChanges = [];
     manageStore.disableConfirmButton = false;
-    manageStore.isLineHidden = false;
-  }, 4000);
-  await listKeys(true);
+  }, 2000);
 };
 
 const nukeConfirmation = () => {
@@ -665,6 +941,68 @@ const backToLogin = async () => {
   await ControlService.logout();
 };
 
+// Setups methods
+const editSetupsPrepration = () => {
+  setupStore.editSetups = setupStore.allSetups.map((setup) => {
+    if (setup.isActive) {
+      setup.isActive = false;
+    }
+    return setup;
+  });
+  setupStore.isSetupMenuActive = false;
+  setupStore.selectedSetup = null;
+};
+
+const deleteSetup = async (item) => {
+  setupStore.selectedSetupToRemove.push(item);
+  setupStore.editSetups = setupStore.editSetups.map((e) => {
+    if (e.setupId === item.setupId) {
+      e.isRemoveProcessing = true;
+    }
+    return e;
+  });
+  const subtasks =
+    item?.services.flatMap((service) => {
+      const matchedServices = manageStore.newConfiguration.filter(
+        (e) => e.config?.serviceID === service.id
+      );
+
+      return matchedServices.map((e) => ({
+        id: e.config?.serviceID,
+        content: "DELETE",
+        contentIcon: "/img/icon/edit-node-icons/delete-service.png",
+        service: e,
+        setupId: item.setupId,
+      }));
+    }) || [];
+
+  manageStore.selectedItemToRemove.push(item);
+  const confirmDelete = {
+    id: item.setupId,
+    content: "DELETE",
+    contentIcon: "/img/icon/edit-node-icons/delete-service.png",
+    service: item,
+    subTasks: subtasks,
+  };
+
+  const itemExists = manageStore.confirmChanges.some(
+    (e) => e.id === item.setupId && e.content === "DELETE"
+  );
+  if (!itemExists) {
+    manageStore.confirmChanges.push(confirmDelete);
+  }
+};
+
+const importSetup = () => {
+  manageStore.isImportSetupYamlActive = true;
+};
+const confirmImportSingleSetup = async (data) => {
+  await ControlService.importSingleSetup(useDeepClone(data));
+  setupStore.setupDataToImport = [];
+  manageStore.isImportSetupYamlActive = false;
+  setupStore.isImportAnimeActive = true;
+};
+
 const closeNetworkModal = () => {
   manageStore.displayNetworkList = false;
   manageStore.isLineHidden = false;
@@ -673,7 +1011,9 @@ const closeNetworkModal = () => {
 const closeSwitchModal = () => {
   isSwitchModalOpen.value = false;
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = JSON.parse(
+    JSON.stringify(serviceStore.installedServices)
+  );
 };
 
 const closeInfoModal = () => {
@@ -684,6 +1024,10 @@ const closeInfoModal = () => {
 const closeNukeModal = () => {
   isNukeModalOpen.value = false;
   manageStore.isLineHidden = false;
+};
+
+const closeSetupModal = () => {
+  setupStore.isCreateSetupModalActive = false;
 };
 </script>
 

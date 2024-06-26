@@ -5,18 +5,24 @@
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
-            <span>PLUG-INs</span>
+            <SetupDetails
+              :list="setupsList"
+              @select-setup="selectSetup"
+              @server-view="serverView"
+            />
           </div>
-          <div class="plugins-table-bg">
+          <div class="plugins-table-bg rounded-md">
             <div class="arrow-up" @click="scrollUp">
               <img src="/img/icon/control-page-icons/arrow-up-1.png" alt="" />
             </div>
             <div ref="pluginsTable" class="plugins-table">
               <div
-                v-for="(item, index) in serviceStore.installedServices"
+                v-for="(item, index) in selecteConfigServices"
                 :key="index"
                 class="plugins-row"
-                @mouseenter="footerStore.cursorLocation = `${item.name + ' / ' + item.category}`"
+                @mouseenter="
+                  footerStore.cursorLocation = `${item.name + ' / ' + item.category}`
+                "
                 @mouseleave="footerStore.cursorLocation = ''"
               >
                 <div
@@ -38,7 +44,10 @@
                 <div class="service-edit">
                   <div class="edit-box">
                     <div
-                      v-if="item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'"
+                      v-if="
+                        item.service !== 'ExternalExecutionService' &&
+                        item.service !== 'ExternalConsensusService'
+                      "
                       class="icon-bg"
                     >
                       <div class="power-icon">
@@ -48,9 +57,12 @@
                           src="/animation/loading/turning-circle.gif"
                           alt="icon"
                           @mouseenter="
-                            footerStore.cursorLocation = `${t('controlScreenTooltips.isPending', {
-                              service: item.name,
-                            })}`
+                            footerStore.cursorLocation = `${t(
+                              'controlScreenTooltips.isPending',
+                              {
+                                service: item.name,
+                              }
+                            )}`
                           "
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
@@ -60,9 +72,12 @@
                           alt="icon"
                           @click.stop="stateHandler(item)"
                           @mouseenter="
-                            footerStore.cursorLocation = `${t('controlScreenTooltips.turnoff', {
-                              service: item.name,
-                            })}`
+                            footerStore.cursorLocation = `${t(
+                              'controlScreenTooltips.turnoff',
+                              {
+                                service: item.name,
+                              }
+                            )}`
                           "
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
@@ -72,9 +87,12 @@
                           alt="icon"
                           @click.stop="stateHandler(item)"
                           @mouseenter="
-                            footerStore.cursorLocation = `${t('controlScreenTooltips.restart', {
-                              service: item.name,
-                            })}`
+                            footerStore.cursorLocation = `${t(
+                              'controlScreenTooltips.restart',
+                              {
+                                service: item.name,
+                              }
+                            )}`
                           "
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
@@ -84,7 +102,10 @@
                           alt="icon"
                           @click.stop="stateHandler(item)"
                           @mouseenter="
-                            footerStore.cursorLocation = `${t('controlScreenTooltips.turnon', { service: item.name })}`
+                            footerStore.cursorLocation = `${t(
+                              'controlScreenTooltips.turnon',
+                              { service: item.name }
+                            )}`
                           "
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
@@ -101,7 +122,10 @@
                         "
                         @mouseleave="footerStore.cursorLocation = ''"
                       >
-                        <img src="/img/icon/node-page-icons/service-command-open-logs.png" alt="icon" />
+                        <img
+                          src="/img/icon/node-page-icons/service-command-open-logs.png"
+                          alt="icon"
+                        />
                       </div>
                     </div>
                   </div>
@@ -124,7 +148,9 @@
       <div class="dashboard-container border-4 border-gray-500 bg-black rounded-md">
         <control-dashboard></control-dashboard>
       </div>
-      <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
+      <div
+        class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2"
+      >
         <control-alert @expert-handler="expertModeHandlerAlert"></control-alert>
       </div>
     </div>
@@ -155,6 +181,11 @@ import { useControlStore } from "@/store/theControl";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted, computed, watch, onUnmounted } from "vue";
 import i18n from "@/includes/i18n";
+import SetupDetails from "../edit-page/components/edit/header/SetupDetails.vue";
+import { useSetups } from "@/store/setups";
+import { useMultiSetups } from "@/composables/multiSetups";
+
+const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const t = i18n.global.t;
 
@@ -163,30 +194,66 @@ const serviceStore = useServices();
 const controlStore = useControlStore();
 const footerStore = useFooter();
 const headerStore = useNodeHeader();
+const setupStore = useSetups();
 
 const pluginsTable = ref(null);
 const expertModeClient = ref(null);
 const isExpertWindowOpen = ref(false);
 const isLogsPageActive = ref(false);
+
 let polling = null;
+
+const setupsList = computed(() => {
+  return setupStore.allSetups;
+});
+
+const selecteConfigServices = computed(() => {
+  let test = [];
+  const selectedSetup = setupStore.selectedSetup;
+  if (selectedSetup && selectedSetup.services) {
+    const selectedServiceIds = selectedSetup.services.map((service) => service.id);
+    serviceStore.installedServices.forEach((service) => {
+      if (
+        (["execution", "validator", "consensus"].includes(service.category) &&
+          selectedServiceIds.includes(service.config.serviceID)) ||
+        service.category === "service"
+      ) {
+        test.push({
+          isServicePending: false,
+          ...service,
+        });
+      }
+    });
+  }
+  return test;
+});
+
+const selectSetup = (setup) => {
+  getSelectedSetup(setup);
+};
+
+const serverView = () => {
+  getServerView();
+};
 
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
-
-  serviceStore.installedServices = serviceStore.installedServices.map((service) => ({
-    isServicePending: false,
-    ...service,
-  }));
 });
 
 onUnmounted(() => {
+  serviceStore.selectedSetup = null;
   clearInterval(polling);
 });
 
 const isAnyConsensusRunning = computed(() => {
-  const consensusServices = serviceStore.installedServices.filter((service) => service.category === "consensus");
-  return consensusServices.length > 0 && consensusServices.some((service) => service.state === "running");
+  const consensusServices = serviceStore.installedServices.filter(
+    (service) => service.category === "consensus"
+  );
+  return (
+    consensusServices.length > 0 &&
+    consensusServices.some((service) => service.state === "running")
+  );
 });
 
 watch(isAnyConsensusRunning, (newValue) => {
@@ -238,9 +305,13 @@ const updateAndExportAllLogs = async (client) => {
     until: nodeStore.untilDateParsDays,
   });
 
-  const fileName = `${client.name}_${nodeStore.isExportCustomizedDateLoading ? "customized" : "all"}_logs.txt`;
+  const fileName = `${client.name}_${
+    nodeStore.isExportCustomizedDateLoading ? "customized" : "all"
+  }_logs.txt`;
   const data = [...nodeStore.allLogsForExp.logs].reverse();
-  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const lineByLine = data
+    .map((line, index) => `#${data.length - index}: ${line}`)
+    .join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
 
@@ -255,17 +326,27 @@ const exportLogs = async (client) => {
     (service) => service.config?.serviceID === client.config?.serviceID
   );
 
-  const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
+  const fileName = nodeStore.exportLogs
+    ? `${client.name}_150_logs.txt`
+    : `${client.name}_all_logs.txt`;
 
   // Select the data based on the condition
-  const data = nodeStore.exportLogs ? currentService.logs.slice(-150).reverse() : currentService.logs.reverse();
+  const data = nodeStore.exportLogs
+    ? currentService.logs.slice(-150).reverse()
+    : currentService.logs.reverse();
 
-  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+  const lineByLine = data
+    .map((line, index) => `#${data.length - index}: ${line}`)
+    .join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
 };
 const updateServiceLogs = async () => {
-  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
+  if (
+    serviceStore.installedServices &&
+    serviceStore.installedServices.length > 0 &&
+    headerStore.refresh
+  ) {
     const data = await ControlService.getServiceLogs({ logs_tail: 150 });
     nodeStore.serviceLogs = data;
   }
@@ -341,8 +422,8 @@ const updateServiceLogs = async () => {
   border-radius: 0 0 7px 7px;
 }
 .plugins-title {
-  width: 40%;
-  height: 25px;
+  width: 90%;
+  height: 10%;
   background-color: #23272a;
   padding: 2px;
   border: 1px solid #4a5150;
@@ -360,11 +441,11 @@ const updateServiceLogs = async () => {
 }
 .plugins-table-bg {
   width: 90%;
-  height: 86%;
+  height: 82%;
   background-color: #23272a;
   border: 1px solid #707070;
   box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
-  border-radius: 30px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
