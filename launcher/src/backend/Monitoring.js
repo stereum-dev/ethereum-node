@@ -3248,10 +3248,15 @@ rm -rf diskoutput
         const stdoutJson = output.substring(jsonStartIndex, jsonEndIndex + 1);
         const parsedJson = JSON.parse(stdoutJson);
 
+        let message =
+          `${parsedJson?.message || ""}${parsedJson?.message && parsedJson?.stacktraces ? "\n" : ""}${
+            parsedJson?.stacktraces || ""
+          }`.trim() || output;
+
         return {
           pubkey: pubkey,
           code: parsedJson.code || null,
-          msg: parsedJson.message || output,
+          msg: message,
         };
       };
 
@@ -3273,24 +3278,8 @@ rm -rf diskoutput
             `-H 'Content-Type: application/json' ` +
             `-d '${JSON.stringify(exitMsg)}' -i -s`;
 
-          let runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
+          const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
           log.info(runExitCommand);
-
-          //-------------------------dummy for testing-------------------------
-          runExitCommand = {
-            rc: 0,
-            stdout:
-              "HTTP/1.1 200 OK\r\n" +
-              "Server: nim-presto/0.0.3 (amd64/linux)\r\n" +
-              "Content-Length: 63\r\n" +
-              "Content-Type: application/json\r\n" +
-              "Date: Mon, 24 Jun 2024 13:40:02 GMT\r\n" +
-              "Connection: close\r\n" +
-              "\r\n" +
-              '{"code":200,"message":"Voluntary exit object(s) was broadcast"}',
-            stderr: "",
-          };
-          //--------------------------------------------------------------------
 
           if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr) {
             throw new Error(SSHService.extractExecError(runExitCommand));
