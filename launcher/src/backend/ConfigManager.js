@@ -22,19 +22,39 @@ export class ConfigManager {
    * Checks if the multi-setup file exists, reads all installed services if not, and creates a multi-setup.yaml file.
    */
   async checkAndCreateMultiSetup() {
-    const fileExistResult = await this.checkFileExistence();
-    console.log("check existence----------------------------------", fileExistResult.stdout);
-    const services = await this.serviceManager.readServiceConfigurations();
-    if (fileExistResult.stdout.includes("notExist")) {
-      if (services.length === 0) {
-        await this.createMultiSetupYaml({}, "");
-      } else if (services.length > 0) {
-        const network = services[0].network;
-        await this.createMultiSetupYaml(services, network);
+    try {
+      const fileExistResult = await this.checkFileExistence();
+      if (!fileExistResult || !fileExistResult.stdout) {
+        throw new Error("Invalid response from checkFileExistence");
       }
+
+      const services = await this.serviceManager.readServiceConfigurations();
+      if (!Array.isArray(services)) {
+        throw new Error("Invalid response from readServiceConfigurations");
+      }
+
+      if (fileExistResult.stdout.includes("notExist")) {
+        if (services.length === 0) {
+          await this.createMultiSetupYaml({}, "");
+        } else if (services.length > 0) {
+          const network = services[0]?.network;
+          if (!network) {
+            throw new Error("Service configuration is missing network information");
+          }
+          await this.createMultiSetupYaml(services, network);
+        }
+      }
+    } catch (error) {
+      console.error("Error in checkAndCreateMultiSetup:", error.message, error.stack);
     }
   }
 
+  /**
+   * Asynchronously checks if a specific file exists on a remote system using SSH.
+   * Executes 'test -f' to determine file presence, echoing "exist" or "notExist".
+   *
+   * @returns {Promise<Object>} Resolves with command execution result, indicating file existence.
+   */
   async checkFileExistence() {
     const fileExistResult = await this.nodeConnection.sshService.exec(
       `test -f ${this.multiSetupPath} && echo "exist" || echo "notExist"`
@@ -162,7 +182,6 @@ export class ConfigManager {
     try {
       // Convert the setup object to a YAML string and escape backticks
       let setupYaml = yaml.safeDump(setup).replace(/`/g, "\\`");
-      console.log("setup yaml write------------------------", setupYaml);
 
       await this.nodeConnection.sshService.exec(`echo -e "${setupYaml}" > ${this.multiSetupPath}`);
     } catch (error) {
