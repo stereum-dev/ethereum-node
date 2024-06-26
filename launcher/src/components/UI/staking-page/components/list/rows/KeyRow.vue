@@ -54,7 +54,7 @@ import { computed } from 'vue';
       :style="{ color: getStatusColor }"
       @mouseenter="
         footerStore.cursorLocation = `${t('displayValidator.activeExpl', {
-          status: getKeyHanlingFooter,
+          status: getKeyHandlingFooter,
         })}`
       "
       @mouseleave="footerStore.cursorLocation = ''"
@@ -234,7 +234,7 @@ const getKeyHandlingTime = computed(() => {
   }
 });
 
-const getKeyHanlingFooter = computed(() => {
+const getKeyHandlingFooter = computed(() => {
   const item = props.item.status;
   switch (item) {
     case "active_online":
