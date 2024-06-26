@@ -239,9 +239,12 @@ const getKeyHanlingFooter = computed(() => {
   switch (item) {
     case "active_online":
     case "active":
-    case "active_offline":
-    case "slashed":
       return "activated";
+    case "slashed":
+      return "slashed";
+
+    case "active_offline":
+      return "offline";
     case "pending":
       return "pending";
     case "exited":
@@ -249,7 +252,9 @@ const getKeyHanlingFooter = computed(() => {
     case "withdrawal":
       return "withdrawable";
     case "NA":
+      return "problems";
     case "loading":
+      return "loading";
     default:
       return "-";
   }

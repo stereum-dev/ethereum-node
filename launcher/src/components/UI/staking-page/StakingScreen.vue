@@ -571,78 +571,66 @@ const withdrawModalHandler = () => {
 
 const withdrawValidatorKey = async () => {
   stakingStore.withdrawAndExitResponse = null;
-  //if single key
   const key = stakingStore.selectedSingleKeyToWithdraw;
+
   try {
     let res;
+    let responseObj;
+
     if (key && key !== null) {
-      //stakingStore.withdrawAndExitResponse
+      // If single key
       res = await ControlService.exitValidatorAccount({
         pubkey: key.key,
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
       });
 
-      console.log("111111111111111111-------------", res);
-
-      let responseObj = {
+      responseObj = {
         pubkey: key.key,
         code: null,
-        msg: [],
+        msg: res.msd,
         flag: "rejected",
       };
 
-      if (typeof res !== "string") {
-        responseObj.code = res[0].code;
-        if (res[0].code === 0 || res[0].code === 200) {
-          responseObj.pubkey = res[0].pubkey;
-          responseObj.msg = res[0].msg;
-          responseObj.flag = "approved";
-        } else {
-          responseObj.msg = res[0].info;
-        }
-      } else {
-        responseObj.msg = res.split("\n");
+      if (Array.isArray(res) && res.length > 0) {
+        const resObj = res[0];
+        responseObj.code = resObj.code;
+        responseObj.msg = resObj.msg;
+        responseObj.pubkey = resObj.pubkey || key.key;
+        responseObj.flag = resObj.code === 0 ? "approved" : "rejected";
       }
 
       stakingStore.withdrawAndExitResponse = [responseObj];
     } else {
-      //if multiple keys
+      // If multiple keys
       const multiKeys = stakingStore.keys
-        .map((item) => {
-          if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
-            return item.key;
-          }
+        .filter((item) => item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID)
+        .map((item) => item.key);
+
+      res = await Promise.all(
+        multiKeys.map(async (key) => {
+          return await ControlService.exitValidatorAccount({
+            pubkey: key,
+            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+          });
         })
-        .filter((key) => key !== undefined);
-      res = stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
-        pubkey: multiKeys,
-        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-      });
-      // res = await Promise.all(
-      //   multiKeys.map(async (key) => {
-      //     return await ControlService.exitValidatorAccount({
-      //       pubkey: key,
-      //       serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
-      //     });
-      //   })
-      // );
-      console.log("222222222222222222222-------------", res);
-      stakingStore.withdrawAndExitResponse = res.map((item) => {
+      );
+
+      stakingStore.withdrawAndExitResponse = res.map((item, index) => {
         let responseObj = {
-          pubkey: "multi keys",
+          pubkey: multiKeys[index],
           code: null,
-          msg: [],
+          msg: item.msd,
           flag: "rejected",
         };
 
-        if (typeof item !== "string") {
-          responseObj.pubkey = item.pubkey || "multi keys";
-          responseObj.code = item.code;
-          responseObj.msg = item.code === 0 ? item.msg : item.info;
-          responseObj.flag = item.code === 0 ? "approved" : "rejected";
-        } else {
-          responseObj.msg = item.split("\n");
+        if (Array.isArray(item) && item.length > 0) {
+          const resObj = item[0];
+          responseObj.code = resObj.code;
+          responseObj.msg = resObj.msg;
+          responseObj.pubkey = resObj.pubkey || multiKeys[index];
+          responseObj.flag = resObj.code === 0 ? "approved" : "rejected";
         }
+
         return responseObj;
       });
     }
@@ -650,7 +638,6 @@ const withdrawValidatorKey = async () => {
     console.log(e);
   }
 };
-
 //****** End of Withdraw & Exit *******
 
 //****** Graffiti *******
