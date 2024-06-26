@@ -627,7 +627,7 @@ const withdrawValidatorKey = async () => {
       responseObj = {
         pubkey: key.key,
         code: null,
-        msg: res.msd,
+        msg: res.msg,
         flag: "rejected",
       };
 
@@ -663,7 +663,7 @@ const withdrawValidatorKey = async () => {
         let responseObj = {
           pubkey: multiKeys[index],
           code: null,
-          msg: item.msd,
+          msg: item.msg,
           flag: "rejected",
         };
 
