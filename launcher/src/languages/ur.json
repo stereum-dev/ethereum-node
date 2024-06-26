@@ -166,7 +166,7 @@
     "sure": "میں متفق ہوں",
     "cancel": "منسوخ کریں",
     "serviceExpl": "درآمد شدہ جانچنے والی چابی کے لیے منتخب خدمت",
-    "activeExpl": "جانچنے والا کب سے فعال ہے",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "جانچنے والے کا بیلنس",
     "copyPub": "عوامی چابی کاپی کریں",
     "copiedPub": "عوامی چابی کاپی ہو گئی",
