@@ -11,9 +11,10 @@
         v-for="icon in icons"
         :key="icon.name"
         class="w-8 col-span-1 bg-gray-900 hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200 border border-gray-700 rounded-md"
+        :class="{ 'opacity-50 pointer-events-none': icon.disabled }"
         :src="icon.src"
         :alt="`${icon.name} icon`"
-        @click="handleAction(icon.name)"
+        @click="handleAction(icon)"
         @mouseenter="footerStore.cursorLocation = `${icon.tooltip}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
@@ -23,8 +24,6 @@
 
 <script setup>
 import { useFooter } from "@/store/theFooter";
-
-// import i18n from "@/includes/i18n";
 
 // props & emits
 const props = defineProps({
@@ -36,17 +35,10 @@ const props = defineProps({
 
 const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfigs"]);
 
-// const t = i18n.global.t;
-
-//Store
+// Store
 const footerStore = useFooter();
 
-//Methods
-const handleAction = (item) => {
-  const action = icons.find((i) => i.name === item).action;
-
-  return action();
-};
+// Methods
 const deleteSetup = () => {
   emit("deleteSetup", props.setup);
   footerStore.cursorLocation = "";
@@ -66,31 +58,41 @@ const openConfigs = () => {
   emit("openConfigs", props.setup);
 };
 
-// Now reference these functions in the icons array
+const handleAction = (icon) => {
+  if (icon.action) {
+    icon.action();
+  }
+};
+
+// Icons array
 const icons = [
   {
     name: "connection",
     src: "/img/icon/edit-node-icons/service-connecting.png",
     action: connectSetup,
     tooltip: "Setup Connection",
+    disabled: true,
   },
   {
     name: "delete",
     src: "/img/icon/edit-node-icons/service-delete.png",
     tooltip: "Remove Setup",
     action: deleteSetup,
+    disabled: false,
   },
   {
     name: "info",
     src: "/img/icon/edit-node-icons/service-info.png",
     tooltip: "Setup Informations",
     action: infoModal,
+    disabled: false,
   },
   {
     name: "open",
     src: "/img/icon/edit-node-icons/link.png",
     tooltip: "Configs Page",
     action: openConfigs,
+    disabled: false,
   },
 ];
 </script>
