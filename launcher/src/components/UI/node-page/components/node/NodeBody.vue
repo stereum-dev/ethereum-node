@@ -1,79 +1,53 @@
-<!-- eslint-disable vue/return-in-computed-property -->
-import { mapState, map } from 'pinia';
 <template>
   <div
-    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-y-auto mt-1 bg-[#151618] relative"
+    class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center relative"
   >
-    <div
-      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-200 text-[10px] font-semibold"
-    >
-      <span class="col-start-1 justify-self-center self-center">{{ $t("editModals.executionClients") }}</span>
-      <span class="col-start-2 justify-self-center self-center">{{ $t("editModals.consensusClients") }}</span>
-      <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }} </span>
-    </div>
-    <div class="w-full h-full grid grid-cols-3 pt-8">
-      <ClientSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
-      <ExecutionClients
-        @open-expert="openExpert"
-        @open-log="openLog"
-        @hide-modal="clickOutside"
-        @state-handler="useStateHandler"
-        @restart-handler="useRestartService"
-        @open-doc="openDocs"
-        @mouse-over="lineDrawHandler"
-        @mouse-leave="removeConnectionLines"
-        @copy-jwt="copyJwt"
-      />
-      <ConsensusClients
-        @open-expert="openExpert"
-        @open-log="openLog"
-        @hide-modal="clickOutside"
-        @state-handler="useStateHandler"
-        @restart-handler="useRestartService"
-        @open-doc="openDocs"
-        @mouse-over="lineDrawHandler"
-        @mouse-leave="removeConnectionLines"
-      />
-      <ValidatorClients
-        @open-expert="openExpert"
-        @open-log="openLog"
-        @hide-modal="clickOutside"
-        @state-handler="useStateHandler"
-        @restart-handler="useRestartService"
-        @open-doc="openDocs"
-        @mouse-over="lineDrawHandler"
-        @mouse-leave="removeConnectionLines"
-      />
-    </div>
-    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
+    <ConfigBody
+      v-if="setupStore.isConfigViewActive"
+      @open-expert="openExpert"
+      @open-docs="openDocs"
+      @open-log="openLog"
+      @copy-jwt="copyJwt"
+      @click-outside="clickOutside"
+      @line-draw="lineDrawHandler"
+      @remove-lines="removeConnectionLines"
+    />
+    <SetupBody
+      v-if="!setupStore.isConfigViewActive"
+      @open-setup="openSetup"
+      @export-setup="exportSetup"
+    />
+    <PluginLogs
+      v-if="isPluginLogPageActive"
+      :item="itemToLogs"
+      @close-log="closePluginLogsPage"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
-import ExecutionClients from "./ExecutionClients.vue";
-import ConsensusClients from "./ConsensusClients.vue";
-import ValidatorClients from "./ValidatorClients.vue";
+import ConfigBody from "./ConfigBody.vue";
+import SetupBody from "./SetupBody.vue";
 import PluginLogs from "../../sections/PluginLogs.vue";
-import ClientSkeleton from "./ClientSkeleton.vue";
+import { ref, watchEffect } from "vue";
+
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 
 import LeaderLine from "leader-line-new";
-import { useStateHandler, useRestartService } from "@/composables/services";
+import { useSetups } from "@/store/setups";
 
-const emit = defineEmits(["openExpert", "openLog"]);
+const emit = defineEmits(["openExpert", "openLog", "setupState", "exportSetup"]);
 
 // Refs
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
-const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-
 const loadingClients = ref(false);
 const isLineDrawHandlerReady = ref(false);
 
 // Store and router
+const setupStore = useSetups();
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
 
@@ -91,11 +65,18 @@ watchEffect(() => {
   }
 });
 
+//Lifecycle
+
 // Methods
 
 const oneWayConnection = (start, end, startSocket, endSocket) => {
   if (start && end) {
-    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    let newLine = new LeaderLine(
+      start,
+      end,
+      { dash: { animation: true } },
+      { hide: true }
+    );
     newLine.position();
     newLine.setOptions({
       size: 2,
@@ -117,7 +98,9 @@ const lineDrawHandler = (item) => {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
             s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
+            s.config?.dependencies?.executionClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "consensus") {
@@ -134,8 +117,12 @@ const lineDrawHandler = (item) => {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
             (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
+              s.config?.dependencies?.consensusClients.some(
+                (d) => d.id === item.config?.serviceID
+              )) ||
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -158,9 +145,15 @@ const lineDrawHandler = (item) => {
       case "validator": {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
-            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
-            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            item.config?.dependencies?.consensusClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            s.config?.dependencies?.consensusClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -226,6 +219,26 @@ const openDocs = (item) => {
 
 const openExpert = (item) => {
   emit("openExpert", item);
+};
+
+const openSetup = (setup) => {
+  setup.isActive = true;
+  setupStore.selectedSetup = setup;
+  // setupStore.selectedSetup.isActive = true;
+  setupStore.isConfigViewActive = true;
+
+  serviceStore.installedServices = serviceStore.installedServices.filter((service) => {
+    const isNotServerService = !setupStore.serverServices.includes(service.name);
+    const isServiceInSetup = setup.services.some(
+      (svc) => svc.id === service.config?.serviceID
+    );
+
+    return isNotServerService && isServiceInSetup;
+  });
+};
+
+const exportSetup = (setup) => {
+  emit("exportSetup", setup);
 };
 
 const copyJwt = async (item) => {

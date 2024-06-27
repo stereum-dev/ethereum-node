@@ -3049,6 +3049,7 @@ rm -rf diskoutput
             const chunk = validatorPublicKeys.slice(i, i + chunkSize);
             const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${chunk.join()}' -H 'accept: application/json'`;
             beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd);
+
             //check response
             validatorNotFound =
               beaconAPIRunCmd.rc != 0 ||
@@ -3058,6 +3059,7 @@ rm -rf diskoutput
           }
           const beaconAPICmdLastEpoch = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`;
           beaconAPIRunCmdLastEpoch = await this.nodeConnection.sshService.exec(beaconAPICmdLastEpoch);
+
           const queryResult = data;
           validatorBalances = queryResult.map((key, id) => {
             return {
@@ -3066,7 +3068,10 @@ rm -rf diskoutput
               balance: key.balance,
               status: key.validator.slashed === "true" ? "slashed" : key.status.replace(/_.*/, ""),
               pubkey: key.validator.pubkey,
-              activationepoch: key.validator.activation_epoch,
+              activationEpoch: key.validator.activation_epoch,
+              activationElgibilityEpoch: key.validator.activation_eligibility_epoch,
+              withdrawableEpoch: key.validator.withdrawable_epoch,
+              exitEpoch: key.validator.exit_epoch,
               latestEpoch: parseInt(JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.current_justified.epoch) + 1,
             };
           });
@@ -3210,110 +3215,130 @@ rm -rf diskoutput
 
   async exitValidatorAccount(pubkey, serviceID) {
     const beaconStatus = await this.getBeaconStatus();
-    if (beaconStatus.code === 0) {
-      try {
-        const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
-        const serviceId = beaconStatus.data[0].sid;
-        if (!Array.isArray(pubkey)) {
-          pubkey = [pubkey];
+
+    if (beaconStatus.code !== 0) {
+      return [
+        {
+          pubkey: undefined,
+          code: null,
+          msg: beaconStatus.info,
+        },
+      ];
+    }
+
+    try {
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const serviceId = beaconStatus.data[0].sid;
+      if (!Array.isArray(pubkey)) {
+        pubkey = [pubkey];
+      }
+      let results = [];
+
+      const parseRunExitCommandOutput = (output, pubkey) => {
+        if (!output.includes("{") || !output.includes("}")) {
+          return {
+            pubkey: pubkey,
+            code: null,
+            msg: output,
+          };
         }
-        let results = [];
-        for (let i = 0; i < pubkey.length; i++) {
-          const ref = StringUtils.createRandomString(); // Create a random string to identify the task
-          this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit Account ${pubkey[i].substring(0, 6)}..`);
-          try {
-            const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey[i], serviceID);
-            if (result.data === undefined) {
-              throw result;
-            }
-            const curlTag = await this.nodeConnection.ensureCurlImage();
-            const exitMsg = result.data;
-            const exitCommand =
-              `docker run --rm --network=stereum curlimages/curl:${curlTag} curl ` +
-              `'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' ` +
-              `-H 'accept: */*' ` +
-              `-H 'Content-Type: application/json' ` +
-              `-d '${JSON.stringify(exitMsg)}' -i -s`;
 
-            const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
-            log.info(runExitCommand);
+        const jsonStartIndex = output.indexOf("{");
+        const jsonEndIndex = output.lastIndexOf("}");
+        const stdoutJson = output.substring(jsonStartIndex, jsonEndIndex + 1);
+        const parsedJson = JSON.parse(stdoutJson);
 
-            //Error handling
-            if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr)
-              throw SSHService.extractExecError(runExitCommand);
+        let message =
+          `${parsedJson?.message || ""}${parsedJson?.message && parsedJson?.stacktraces ? "\n" : ""}${
+            parsedJson?.stacktraces || ""
+          }`.trim() || output;
 
-            // Push successful/failed task
-            if (runExitCommand.stdout.includes('"code":200')) {
-              this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
-              this.nodeConnection.taskManager.otherTasksHandler(ref);
-            } else {
-              this.nodeConnection.taskManager.otherTasksHandler(
-                ref,
-                `Exiting Account Failed`,
-                false,
-                `Exiting Account Failed ${pubkey[i]} Failed:\n` + runExitCommand.stdout
-              );
-              this.nodeConnection.taskManager.otherTasksHandler(ref);
-              return runExitCommand.stdout;
-            }
+        return {
+          pubkey: pubkey,
+          code: parsedJson.code || null,
+          msg: message,
+        };
+      };
 
-            // add pubkey into the runExitCommands' result
-            runExitCommand["pubkey"] = `${pubkey[i]}`;
+      const handleExitCommand = async (pubkey, serviceId, beaconAPIPort) => {
+        const ref = StringUtils.createRandomString();
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit Account ${pubkey.substring(0, 6)}..`);
+        try {
+          const result = await this.validatorAccountManager.getExitValidatorMessage(pubkey, serviceID);
+          if (result.data === undefined || !("data" in result)) {
+            throw new Error(result);
+          }
 
-            if (!runExitCommand.stdout.includes("{") && !runExitCommand.stdout.includes("}")) {
-              results.push({
-                pubkey: runExitCommand.pubkey,
-                code: null,
-                msg: runExitCommand.stdout,
-              });
-            } else {
-              // Extract the JSON payload from the stdout
-              const jsonStartIndex = runExitCommand.stdout.indexOf("{");
-              const jsonEndIndex = runExitCommand.stdout.lastIndexOf("}");
-              const stdoutJson = runExitCommand.stdout.substring(jsonStartIndex, jsonEndIndex + 1);
+          const curlTag = await this.nodeConnection.ensureCurlImage();
+          const exitMsg = result.data;
+          const exitCommand =
+            `docker run --rm --network=stereum curlimages/curl:${curlTag} curl ` +
+            `'http://stereum-${serviceId}:${beaconAPIPort}/eth/v1/beacon/pool/voluntary_exits' ` +
+            `-H 'accept: */*' ` +
+            `-H 'Content-Type: application/json' ` +
+            `-d '${JSON.stringify(exitMsg)}' -i -s`;
 
-              let parsedJson = {};
-              try {
-                parsedJson = JSON.parse(stdoutJson);
-              } catch (error) {
-                console.error("Error parsing JSON, result does not include valid JSON", error);
-                return runExitCommand.stdout;
-              }
+          const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
+          log.info(runExitCommand);
 
-              const code = parsedJson.code ? parsedJson.code : null;
+          if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr) {
+            throw new Error(SSHService.extractExecError(runExitCommand));
+          }
 
-              results.push({
-                pubkey: runExitCommand.pubkey,
-                code: code,
-                msg: parsedJson.message ? parsedJson.message : runExitCommand.stdout,
-              });
-            }
-          } catch (error) {
+          const response = parseRunExitCommandOutput(runExitCommand.stdout, pubkey);
+
+          if (response.code === 200) {
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Exiting Account`, true, runExitCommand.stdout);
+          } else {
             this.nodeConnection.taskManager.otherTasksHandler(
               ref,
               `Exiting Account Failed`,
               false,
-              `Exiting Account Failed ${pubkey[i]} Failed:\n` + error
+              `Exiting Account Failed ${pubkey}:\n${runExitCommand.stdout}`
             );
-            this.nodeConnection.taskManager.otherTasksHandler(ref);
-            log.error("Exiting signed voluntary account Failed:\n", error);
-            return error;
           }
+
+          this.nodeConnection.taskManager.otherTasksHandler(ref);
+          return response;
+        } catch (error) {
+          this.nodeConnection.taskManager.otherTasksHandler(
+            ref,
+            `Exiting Account Failed`,
+            false,
+            `Exiting Account Failed ${pubkey}:\n${error}`
+          );
+          this.nodeConnection.taskManager.otherTasksHandler(ref);
+          log.error(`Exiting signed voluntary account failed for ${pubkey}:\n`, error);
+          return {
+            pubkey: pubkey,
+            code: null,
+            msg: error.toString(),
+          };
         }
-        return results;
-      } catch (error) {
-        const ref = StringUtils.createRandomString();
-        this.nodeConnection.taskManager.otherTasksHandler(
-          ref,
-          "Error occurred to get Beacon service ID & port",
-          false,
-          `Error occurred to get Beacon service ID & port: ${error}`
-        );
-        this.nodeConnection.taskManager.otherTasksHandler(ref);
-        return error;
+      };
+
+      for (let i = 0; i < pubkey.length; i++) {
+        const result = await handleExitCommand(pubkey[i], serviceId, beaconAPIPort);
+        results.push(result);
       }
-    } else if (beaconStatus.code !== 0) {
-      return beaconStatus;
+
+      return results;
+    } catch (error) {
+      const ref = StringUtils.createRandomString();
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        "Error occurred to get Beacon service ID & port",
+        false,
+        `Error occurred to get Beacon service ID & port: ${error}`
+      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+      return [
+        {
+          pubkey: undefined,
+          code: null,
+          msg: error.toString(),
+        },
+      ];
     }
   }
 }

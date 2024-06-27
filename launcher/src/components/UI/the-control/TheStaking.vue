@@ -12,12 +12,16 @@
         <NoData v-if="noDataFlag" />
         <div v-else class="wrapper">
           <div class="side-top">
-            <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
+            <div
+              class="top-value"
+              @mouseenter="cursorLocation = `${ttlBal}`"
+              @mouseleave="cursorLocation = ''"
+            >
               <span>{{ formattedBalance }}</span>
             </div>
             <div
               class="top-icon"
-              @mouseenter="cursorLocation = `${currentNetwork.name}`"
+              @mouseenter="cursorLocation = `${currentNetwork?.name}`"
               @mouseleave="cursorLocation = ''"
             >
               <img :src="selectedCurrency" alt="coin-icon" />
@@ -103,7 +107,7 @@ export default {
   },
   methods: {
     setSelectedCurrency() {
-      switch (this.currentNetwork.id) {
+      switch (this.currentNetwork?.id) {
         case 1:
           this.selectedCurrency =
             "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-ethereum-mainnet.png";

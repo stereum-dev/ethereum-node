@@ -10,6 +10,7 @@ import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
+import { ConfigManager } from "./backend/ConfigManager.js";
 import { AuthenticationService } from "./backend/AuthenticationService.js";
 import { SSHService } from "./backend/SSHService.js";
 import path from "path";
@@ -23,6 +24,8 @@ const monitoring = new Monitoring(nodeConnection);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
+const configManager = new ConfigManager(nodeConnection);
+configManager.setServiceManager(serviceManager);
 const authenticationService = new AuthenticationService(nodeConnection);
 const sshService = new SSHService();
 const { globalShortcut } = require("electron");
@@ -637,6 +640,34 @@ ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
 });
 
+ipcMain.handle("readMultiSetup", async () => {
+  return await configManager.readMultiSetup();
+});
+
+ipcMain.handle("createSetup", async (event, args) => {
+  return await configManager.createSetup(args);
+});
+
+ipcMain.handle("deleteSetup", async (event, args) => {
+  return await configManager.deleteSetup(args);
+});
+
+ipcMain.handle("renameSetup", async (event, args) => {
+  return await configManager.renameSetup(args);
+});
+
+ipcMain.handle("exportSingleSetup", async (event, args) => {
+  return await serviceManager.exportSingleSetup(args);
+});
+
+ipcMain.handle("importSingleSetup", async (event, args) => {
+  return await serviceManager.importSingleSetup(args);
+});
+
+ipcMain.handle("switchSetupNetwork", async (event, args) => {
+  return await configManager.switchSetupNetwork(args);
+});
+
 ipcMain.handle("fetchTranslators", async (event, args) => {
   return await serviceManager.fetchTranslators(args);
 });
@@ -644,6 +675,15 @@ ipcMain.handle("fetchTranslators", async (event, args) => {
 ipcMain.handle("fetchGitHubTesters", async (event, args) => {
   return await serviceManager.fetchGitHubTesters(args);
 });
+
+ipcMain.handle("checkAndCreateMultiSetup", async () => {
+  return await configManager.checkAndCreateMultiSetup();
+});
+
+ipcMain.handle("checkConnectionQuality", async (event, args) => {
+  return await nodeConnection.sshService.checkConnectionQuality(args);
+});
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {

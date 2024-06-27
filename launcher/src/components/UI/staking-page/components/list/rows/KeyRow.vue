@@ -18,7 +18,13 @@ import { computed } from 'vue';
           alt="Key Icon"
           @mousedown.prevent
         />
-        <img v-else class="w-full h-full" src="/img/icon/staking-page-icons/key-icon.png" alt="Key Icon" @mousedown.prevent />
+        <img
+          v-else
+          class="w-full h-full"
+          src="/img/icon/staking-page-icons/key-icon.png"
+          alt="Key Icon"
+          @mousedown.prevent
+        />
       </div>
     </div>
     <div
@@ -41,12 +47,18 @@ import { computed } from 'vue';
       @mouseenter="footerStore.cursorLocation = `${serviceExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
     />
+
     <span
       class="col-start-9 col-end-12 self-center text-center text-xs text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
-      @mouseenter="footerStore.cursorLocation = `${activeExpl}`"
+      :style="{ color: getStatusColor }"
+      @mouseenter="
+        footerStore.cursorLocation = `${t('displayValidator.activeExpl', {
+          status: getKeyHandlingFooter,
+        })}`
+      "
       @mouseleave="footerStore.cursorLocation = ''"
-      >{{ props.item.activeSince }}</span
+      >{{ getKeyHandlingTime }}</span
     >
 
     <div
@@ -168,7 +180,6 @@ const pk = t("displayValidator.pk");
 const rm = t("displayValidator.rm");
 const state = t("displayValidator.state");
 const serviceExpl = t("displayValidator.serviceExpl");
-const activeExpl = t("displayValidator.activeExpl");
 const balExpl = t("displayValidator.balExpl");
 const copyPub = t("displayValidator.copyPub");
 const setFee = t("displayValidator.setFee");
@@ -199,6 +210,72 @@ const getKeyState = computed(() => {
       return apiLoading;
     default:
       return depositStatusIcon;
+  }
+});
+
+const getKeyHandlingTime = computed(() => {
+  const item = props.item.status;
+  switch (item) {
+    case "active_online":
+    case "active":
+    case "active_offline":
+    case "slashed":
+      return props.item.activeSince;
+    case "pending":
+      return props.item.elgibilitySince;
+    case "exited":
+      return props.item.exitSince;
+    case "withdrawal":
+      return props.item.withdrawableSince;
+    case "NA":
+    case "loading":
+    default:
+      return "-";
+  }
+});
+
+const getKeyHandlingFooter = computed(() => {
+  const item = props.item.status;
+  switch (item) {
+    case "active_online":
+    case "active":
+      return "activated";
+    case "slashed":
+      return "slashed";
+
+    case "active_offline":
+      return "offline";
+    case "pending":
+      return "pending";
+    case "exited":
+      return "exited";
+    case "withdrawal":
+      return "withdrawable";
+    case "NA":
+      return "problems";
+    case "loading":
+      return "loading";
+    default:
+      return "-";
+  }
+});
+const getStatusColor = computed(() => {
+  const item = props.item.status;
+  switch (item) {
+    case "active_online":
+    case "active":
+    case "active_offline":
+    case "slashed":
+      return "#eee";
+    case "pending":
+      return "#06a5ff";
+    case "exited":
+    case "withdrawal":
+      return "#f00";
+    case "NA":
+    case "loading":
+    default:
+      return "yellow";
   }
 });
 

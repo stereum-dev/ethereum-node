@@ -99,7 +99,12 @@ export const useServerLogin = () => {
       const routePath = res ? "/node" : "/welcome";
 
       if (serverStore.connectingProcess) {
-        router.push(routePath).then(() => location.reload());
+        try {
+          await ControlService.checkAndCreateMultiSetup();
+          router.push(routePath).then(() => location.reload());
+        } catch (error) {
+          console.error("Upgrade failed:", error);
+        }
       } else {
         router.push(routePath);
       }

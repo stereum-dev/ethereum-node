@@ -4,9 +4,14 @@
     :class="manageStore.disableConfirmButton ? 'opacity-70 pointer-events-none' : ''"
   >
     <div
-      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-[10px] font-semibold z-10"
+      class="absolute inset-x-0 w-full mx-auto flex justify-center items-center h-6 border border-gray-950 text-gray-300 rounded-t-[5px]"
+      :class="[
+        setupStore.getBGColor(setupStore.selectedSetup?.color),
+        setupStore.getTextColor(setupStore.selectedSetup?.color),
+      ]"
     >
-      <span>{{ $t("editPageServices.services") }} </span>
+      <span v-if="setupStore.isEditConfigViewActive" class="text-xs text-center font-sans">Config Services </span>
+      <span v-else class="text-xs text-center font-sans">Server Services </span>
     </div>
     <div
       ref="service"
@@ -71,29 +76,41 @@ import { useNodeManage } from "@/store/nodeManage";
 import ServiceLayout from "./ServiceLayout.vue";
 import { computed } from "vue";
 import { useFooter } from "@/store/theFooter";
+import { useSetups } from "../../../../../store/setups";
 
 const footerStore = useFooter();
 
 const emit = defineEmits(["changeConnection", "deleteService"]);
 
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
-const getServices = computed(() =>
-  manageStore.newConfiguration
-    .filter((e) => e?.category === "service")
-    .sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-        fb = b.name.toLowerCase();
+const getServices = computed(() => {
+  let services = manageStore.newConfiguration
+    .filter((e) => e.category === "service")
+    .sort((a, b) => a.name.localeCompare(b.name));
 
-      if (fa < fb) {
-        return -1;
+  if (!setupStore.isEditConfigViewActive) {
+    const seen = new Set();
+    services = services.filter((service) => {
+      if (setupStore.serverServices.includes(service.service)) {
+        if (!seen.has(service.service)) {
+          seen.add(service.service);
+          return true;
+        }
+        return false; // Exclude duplicate
       }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
-    })
-);
+      return false; // services not in serverServices
+    });
+  } else {
+    services = services.filter(
+      (service) =>
+        !setupStore.serverServices.includes(service.service) && service.setupId === setupStore.selectedSetup.setupId
+    );
+  }
+
+  return services;
+});
 
 // Methods
 const changeConnection = (item) => {

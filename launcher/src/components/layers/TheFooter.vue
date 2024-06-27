@@ -1,36 +1,95 @@
 <template>
-  <div class="footer-parent bg-[#33393E]">
+  <div class="w-full h-6 grid grid-cols-24 items-center bg-[#33393E]">
     <div
-      class="w-24 h-6 absolute left-[34px] bottom-[2px] z-50 flex justify-start items-center bg-[#161717] rounded-r-full px-2"
+      class="col-start-2 col-end-7 h-5 bg-[#161717] rounded-r-full px-[2px] grid grid-cols-12"
       @mouseenter="cursorLocation = stereumStatus ? `stereum status` : `Attempting to reconnect...`"
       @mouseleave="cursorLocation = ''"
     >
-      <span class="animate-pulse w-3 h-3 rounded-full" :class="stereumStatus ? 'bg-green-500 ' : 'offlineState'">
-      </span>
-      <div class="w-2/3 h-full flex justify-center items-center">
-        <span class="text-sm font-semibold" :class="stereumStatus ? 'text-green-500 ' : 'text-red-500'">{{
-          stereumStatus ? "Online" : "Offline"
+      <div class="col-start-1 col-span-2 self-center flex justify-start items-center p-[2px]">
+        <img class="w-4 h-4" :src="getIcon" alt="WIFI Icon" />
+      </div>
+
+      <div class="col-start-3 col-end-8 flex justify-start items-center">
+        <span class="text-sm font-semibold" :class="getStatusClass">{{
+          footerStore.stereumStatus ? "Online" : "Offline"
         }}</span>
       </div>
+
+      <div class="w-full h-full col-start-8 col-span-full flex justify-end items-center">
+        <span class="w-2/3 text-2xs text-center font-sans rounded-full p-[1px]" :class="getPingTimeClass"
+          >{{ getPingTime }} ms</span
+        >
+      </div>
     </div>
-    <div class="w-full absolute left-32 bottom-0 text-sm text-gray-200 capitalize z-20">
-      <span class="ml-2">{{ cursorLocation }}</span>
+    <div
+      class="col-start-7 col-span-full rounded-full text-sm text-gray-200 capitalize z-20 flex justify-start items-center"
+    >
+      <span class="w-1/2 text-xs font-sans ml-2">{{ footerStore.cursorLocation }}</span>
     </div>
   </div>
 </template>
 
-<script>
-import { mapWritableState } from "pinia";
+<script setup>
 import { useFooter } from "@/store/theFooter";
-export default {
-  name: "TheFooter",
-  computed: {
-    ...mapWritableState(useFooter, {
-      cursorLocation: "cursorLocation",
-      stereumStatus: "stereumStatus",
-    }),
-  },
-};
+import { computed } from "vue";
+import { useNodeStore } from "../../store/theNode";
+
+const footerStore = useFooter();
+const nodeStore = useNodeStore();
+
+const getPingTime = computed(() => {
+  return Math.round(nodeStore.connectionStatus?.pingTime || 0);
+});
+
+const getIcon = computed(() => {
+  switch (nodeStore.connectionStatus?.status) {
+    case "excellent":
+      return "/img/icon/connection-status/excellent.png";
+    case "good":
+      return "/img/icon/connection-status/good.png";
+    case "fair":
+      return "/img/icon/connection-status/fair.png";
+    case "poor":
+      return "/img/icon/connection-status/poor.png";
+    case "very poor":
+      return "/img/icon/connection-status/very-poor.png";
+    default:
+      return "/img/icon/connection-status/searching.gif";
+  }
+});
+
+const getStatusClass = computed(() => {
+  switch (nodeStore.connectionStatus?.status) {
+    case "excellent":
+      return "text-green-400";
+    case "good":
+      return "text-green-400";
+    case "fair":
+      return "text-yellow-400";
+    case "poor":
+      return "text-orange-500";
+    case "very poor":
+      return "text-red-500";
+    default:
+      return "text-white";
+  }
+});
+const getPingTimeClass = computed(() => {
+  switch (nodeStore.connectionStatus?.status) {
+    case "excellent":
+      return "bg-green-600 text-gray-50";
+    case "good":
+      return "bg-green-600 text-gray-50";
+    case "fair":
+      return "bg-yellow-400 text-gray-800";
+    case "poor":
+      return "bg-orange-500 text-gray-50";
+    case "very poor":
+      return "bg-red-500 text-gray-50";
+    default:
+      return "bg-red-500 text-gray-50";
+  }
+});
 </script>
 
 <style scoped lang="css">
