@@ -72,7 +72,7 @@
                 class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md"
               >
                 <div v-if="selectedIcon !== ''" class="w-1/6" @click="openDropdown">
-                  <img class="w-5 h-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
+                  <img class="w-6 h-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
                 </div>
                 <div
                   v-if="selectedIcon !== ''"
@@ -103,18 +103,18 @@
     <Transition name="slide">
       <ul
         v-show="dropdown"
-        class="w-64 transition-all min-h-[100px] max-h-[110px] duration-400 ease-in-out absolute right-[5px] -bottom-25 bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-40 divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
+        class="w-72 transition-all min-h-[100px] max-h-[110px] duration-400 ease-in-out absolute right-[20px] -bottom-25 bg-gray-700 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-[9.5rem] divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
         @mouseleave="colseDropdown"
       >
         <li
           v-for="link in selectedLinks"
           :key="link"
-          class="w-full h-12 grid grid-cols-6 p-2 hover:bg-blue-400"
+          class="w-full h-12 grid grid-cols-6 p-2 hover:bg-blue-400 bg-[#212225]"
           @click="linkPicker(link)"
         >
           <img
             v-if="link.icon"
-            class="w-7 col-start-1 col-end-2 self-center justify-self-center"
+            class="w-7 h-7 col-start-1 col-end-2 self-center justify-self-center"
             :src="link.icon"
             alt="service Icon"
           />
@@ -131,15 +131,11 @@
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
-import { computed, onBeforeMount, ref, watch } from "vue";
+import { computed, onBeforeMount, ref, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Navigation, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 import { useSetups } from "../../../../../store/setups";
-
-const installStore = useClickInstall();
-const manageStore = useNodeManage();
-const router = useRouter();
 
 const props = defineProps({
   cat: {
@@ -150,6 +146,9 @@ const props = defineProps({
 
 //Store
 const setupStore = useSetups();
+const installStore = useClickInstall();
+const manageStore = useNodeManage();
+const router = useRouter();
 
 // Data
 const carousel = ref(null);
@@ -176,6 +175,12 @@ const currentNetwork = computed(() => {
 
 const selectedLinks = computed(() => {
   return installStore[currentNetwork.value?.network];
+});
+
+watchEffect(() => {
+  if (selectedLinks.value) {
+    installStore.selectedLink = selectedLinks.value[0];
+  }
 });
 
 // Watchers
