@@ -108,7 +108,7 @@
   </staking-custom-modal>
 </template>
 <script setup>
-import { computed, ref, watch, onMounted, nextTick } from "vue";
+import { computed, ref, watch, onMounted, nextTick, onUnmounted } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useListKeys } from "@/composables/validators";
 
@@ -123,9 +123,17 @@ const pickedSlashing = ref(null);
 const fileInput = ref(null);
 const checkProcessing = ref(false);
 const clickOut = ref("Click outside to close");
+const test = ref(false);
 
 const getMessage = computed(() => {
   return stakingStore.importKeyMessage.split("\n");
+});
+watch(getMessage, (newValue) => {
+  console.log("getMessage=>", newValue);
+});
+
+watch(pickedSlashing, (newValue) => {
+  console.log("pick=>", newValue);
 });
 
 const getActiveButton = computed(() => {
@@ -179,6 +187,15 @@ onMounted(() => {
   stakingStore.slashingDB = null;
 });
 
+onUnmounted(() => {
+  pickedSlashing.value = null;
+  stakingStore.importKeyMessage = "";
+  stakingStore.forceRefresh = !stakingStore.forceRefresh;
+  isSlashingActive.value = true;
+  checkProcessing.value = false;
+  activeButton.value = false;
+});
+
 //Methods
 
 const getNo = () => {
@@ -192,8 +209,13 @@ const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
     stakingStore.slashingDB = file;
+    test.value = true;
   }
 };
+
+watch(test, () => {
+  console.log("test=>", stakingStore.slashingDB);
+});
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);

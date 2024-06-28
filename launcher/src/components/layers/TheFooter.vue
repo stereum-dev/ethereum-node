@@ -57,7 +57,6 @@ const getIcon = computed(() => {
       return "/img/icon/connection-status/searching.gif";
   }
 });
-console.log(getIcon);
 
 const getStatusClass = computed(() => {
   switch (nodeStore.connectionStatus?.status) {
