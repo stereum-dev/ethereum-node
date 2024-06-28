@@ -11,7 +11,7 @@ export const useClickInstall = defineStore("clickInstallation", {
       currentSlide: 0,
       btnActive: false,
       selectedItem: "- SELECT A SOURCE -",
-      selectedLinks: null,
+      selectedLink: null,
       selectedIcon: null,
       syncType: [
         {

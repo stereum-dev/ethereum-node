@@ -125,6 +125,7 @@
 import { useSetups } from "@/store/setups";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
+
 import RenameSetup from "./RenameSetup.vue";
 
 const { list, newHeight } = defineProps({
