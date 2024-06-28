@@ -201,7 +201,6 @@ const handleFileUpload = (event) => {
   const file = event.target.files[0];
   if (file) {
     stakingStore.slashingDB = file;
-    test.value = true;
   }
 };
 
