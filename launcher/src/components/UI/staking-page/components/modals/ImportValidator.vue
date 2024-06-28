@@ -123,17 +123,9 @@ const pickedSlashing = ref(null);
 const fileInput = ref(null);
 const checkProcessing = ref(false);
 const clickOut = ref("Click outside to close");
-const test = ref(false);
 
 const getMessage = computed(() => {
   return stakingStore.importKeyMessage.split("\n");
-});
-watch(getMessage, (newValue) => {
-  console.log("getMessage=>", newValue);
-});
-
-watch(pickedSlashing, (newValue) => {
-  console.log("pick=>", newValue);
 });
 
 const getActiveButton = computed(() => {
@@ -212,10 +204,6 @@ const handleFileUpload = (event) => {
     test.value = true;
   }
 };
-
-watch(test, () => {
-  console.log("test=>", stakingStore.slashingDB);
-});
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
