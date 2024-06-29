@@ -7,7 +7,7 @@
     >
       <div class="w-full h-full rounded-sm flex justify-center items-center">
         <span
-          class="text-sm text-center text-gray-100 font-normal font-sans uppercase mt-1"
+          class="text-xs text-center text-gray-300 font-normal font-sans uppercase mt-1"
           >Select A Network</span
         >
       </div>
@@ -38,7 +38,7 @@
     </div>
 
     <div
-      class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700"
+      class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700 opacity-50 pointer-events-none"
     >
       <span
         class="text-2xs text-center text-gray-100 font-semibold font-sans uppercase mt-1"

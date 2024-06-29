@@ -5,7 +5,7 @@
     <div
       class="col-start-1 col-span-full row-start-1 row-end-3 w-full h-full bg-[#232428] rounded-md flex flex-col justify-between items-center p-1"
     >
-      <span class="text-xs text-center text-gray-100 font-sans uppercase mt-1"
+      <span class="text-xs text-center text-gray-300 font-sans uppercase mt-1"
         >Create a setup</span
       >
 
@@ -19,8 +19,8 @@
     <div
       class="col-start-1 col-span-full row-start-3 row-end-5 w-full h-full bg-[#232428] rounded-md flex flex-col justify-between items-center p-1"
     >
-      <span class="text-xs text-center text-gray-100 font-sans uppercase mt-1"
-        >IMPORT A CONFIG</span
+      <span class="text-xs text-center text-gray-300 font-sans uppercase mt-1"
+        >IMPORT A SETUP</span
       >
 
       <div
@@ -34,7 +34,7 @@
       class="col-start-1 col-span-full row-start-5 row-end-10 w-full h-full bg-[#232428] rounded-md grid grid-cols-6 grid-rows-6 items-start gap-y-1 p-1"
     >
       <span
-        class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-100 font-sans uppercase"
+        class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-300 font-sans uppercase self-center"
         >ADD A SERVER SERVICE</span
       >
       <div

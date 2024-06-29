@@ -11,7 +11,6 @@
       @info-modal="infoModal"
       @modify-service="modifyService"
       @remove-lines="removeConnectionLines"
-      @line-draw="lineDrawHandler"
     />
     <SetupBody
       v-else

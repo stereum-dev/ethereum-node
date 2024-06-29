@@ -629,7 +629,7 @@ const addServiceHandler = (item) => {
   }
   let dataObject = {
     setupId: setupStore.selectedSetup?.setupId,
-    network: manageStore.configNetwork.network,
+    network: setupStore.selectedSetup?.network,
     installDir: item.installDir || "/opt/stereum",
     executionClients: item.executionClients,
     consensusClients: item.consensusClients,
