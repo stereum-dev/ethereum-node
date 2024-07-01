@@ -999,5 +999,14 @@
     "turnoff": "Turn off the {service}",
     "restart": "Restart the {service}",
     "log": "Open the logs of the {service}"
+  },
+  "serverDetail": {
+    "serverName": "Server Name is {serverName}",
+    "serverIp": "Server IP is {serverIp}",
+    "machine": "Machine Name is {machineName}",
+    "port": "Port is {port}",
+    "userName": "Username is {userName}",
+    "chngAvatar": "Click to change the avatar",
+    "chngPass": "Click to change the password"
   }
 }
