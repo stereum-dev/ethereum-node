@@ -115,6 +115,7 @@ const handleInput = () => {
 };
 
 const changePassword = () => {
+  footerStore.cursorLocation = "";
   if (!isPasswordValid(serverStore.newPassword) || !isPasswordValid(serverStore.verifyPassword)) {
     error.value = true;
     errorMessage.value = "Password must be at least 8 characters and contain no spaces";
@@ -131,6 +132,7 @@ const changePassword = () => {
 };
 
 const denyPassChange = () => {
+  footerStore.cursorLocation = "";
   serverStore.newPassword = "";
   serverStore.verifyPassword = "";
   error.value = false;

@@ -1016,5 +1016,15 @@
   "serverList": {
     "search": "Search for a saved server",
     "addServer": "Add a new server connection"
+  },
+  "loginForm": {
+    "addServerName": "Add a server name",
+    "ipOrHost": "IP or Hostname",
+    "port": "default port is 22 but you can change it",
+    "uName": "Username",
+    "pass": "enter your password",
+    "tgll": "toggle to SSH key or password",
+    "save": "save added server",
+    "rem": "remove server"
   }
 }
