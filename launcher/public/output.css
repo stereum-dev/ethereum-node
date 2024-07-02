@@ -5517,6 +5517,11 @@ html body {
   border-color: rgb(77 117 117 / var(--tw-border-opacity));
 }
 
+.hover\:border-amber-300:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(252 211 77 / var(--tw-border-opacity));
+}
+
 .hover\:border-blue-400:hover{
   --tw-border-opacity: 1;
   border-color: rgb(96 165 250 / var(--tw-border-opacity));
@@ -5565,11 +5570,6 @@ html body {
 .hover\:border-teal-600:hover{
   --tw-border-opacity: 1;
   border-color: rgb(13 148 136 / var(--tw-border-opacity));
-}
-
-.hover\:border-amber-300:hover{
-  --tw-border-opacity: 1;
-  border-color: rgb(252 211 77 / var(--tw-border-opacity));
 }
 
 .hover\:bg-\[\#212325\]:hover{

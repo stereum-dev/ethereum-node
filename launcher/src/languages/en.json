@@ -1007,6 +1007,10 @@
     "port": "Port is {port}",
     "userName": "Username is {userName}",
     "chngAvatar": "Click to change the avatar",
-    "chngPass": "Click to change the password"
+    "chngPass": "Click to change the password",
+    "confirmPass": "Please enter a password to change it",
+    "confirmPass2": "Please enter the password again",
+    "confirmBtn": "click to change your password",
+    "cancel": "cancel password change"
   }
 }
