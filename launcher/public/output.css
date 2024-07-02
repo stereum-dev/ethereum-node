@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -1806,6 +1806,10 @@ video {
 
 .h-\[95\%\]{
   height: 95%;
+}
+
+.h-\[95\.5\%\]{
+  height: 95.5%;
 }
 
 .h-fit{
@@ -5511,6 +5515,11 @@ html body {
 .hover\:border-\[\#4d7575\]:hover{
   --tw-border-opacity: 1;
   border-color: rgb(77 117 117 / var(--tw-border-opacity));
+}
+
+.hover\:border-amber-300:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(252 211 77 / var(--tw-border-opacity));
 }
 
 .hover\:border-blue-400:hover{

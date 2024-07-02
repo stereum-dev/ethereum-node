@@ -13,8 +13,10 @@
         ref="searchInputRef"
         v-model="searchQuery"
         type="text"
-        :placeholder="`${$t('multiServer.serchFor')}`"
+        :placeholder="`${t('multiServer.serchFor')}`"
         class="w-full h-8 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm px-2"
+        @mouseenter="footerStore.cursorLocation = `${t('serverList.search')}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       />
 
       <span class="absolute inset-y-0 end-0 grid w-10 place-content-center">
@@ -49,11 +51,15 @@
         :server="server"
         @select-server="selectServer"
         @quick-login="quickLogin"
+        @mouseenter="footerStore.cursorLocation = `${server.name}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       />
     </div>
     <button
       class="w-full h-[50px] self-end col-start-1 col-span-full row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer space-x-4 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
       @click="serverLogin"
+      @mouseenter="footerStore.cursorLocation = `${t('serverList.addServer')}`"
+      @mouseleave="footerStore.cursorLocation = ''"
     >
       <img
         class="w-7 h-7 border border-gray-500 bg-teal-500 rounded-full p-1"
@@ -70,9 +76,14 @@ import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
 import { onMounted, watch, ref } from "vue";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
 
 const emit = defineEmits(["selectServer", "serverLogin", "quickLogin"]);
 
+const footerStore = useFooter();
 const serverStore = useServers();
 const controlStore = useControlStore();
 const searchQuery = ref("");

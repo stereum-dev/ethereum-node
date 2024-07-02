@@ -1,7 +1,7 @@
 import ServerHeader from './components/ServerHeader.vue';
 <template>
   <div
-    class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
+    class="w-full h-[95.5%] absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
     <SwitchAnimation
       v-if="
@@ -32,16 +32,8 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
-    <TwofactorModal
-      v-if="isTwoFactorAuthActive"
-      @submit-auth="submitAuthHandler"
-      @close-window="closeAndCancel"
-    />
-    <ErrorModal
-      v-if="serverStore.errorMsgExists"
-      :description="serverStore.error"
-      @close-window="closeErrorDialog"
-    />
+    <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
+    <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
     <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
   </div>
 </template>
@@ -220,9 +212,7 @@ const serverHandler = (server) => {
     server.isSelected = true;
   }
 
-  serverStore.savedServers.savedConnections = [
-    ...serverStore.savedServers.savedConnections,
-  ];
+  serverStore.savedServers.savedConnections = [...serverStore.savedServers.savedConnections];
 };
 
 //Change password handling
@@ -260,8 +250,7 @@ const removeServerHandler = async () => {
   serverStore.isRemoveProcessing = true;
   serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
     (item) =>
-      item.host !== serverStore.selectedServerToConnect?.host &&
-      item.name !== serverStore.selectedServerToConnect?.name
+      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
   );
 
   await remove();
@@ -285,9 +274,7 @@ const readSSHKeyFile = async () => {
 const confirmDelete = async (key) => {
   serverStore.sshKeys = serverStore.sshKeys.filter((item) => item !== key);
   try {
-    await ControlService.writeSSHKeyFile(
-      serverStore.sshKeys.filter((item) => item !== key)
-    );
+    await ControlService.writeSSHKeyFile(serverStore.sshKeys.filter((item) => item !== key));
     await readSSHKeyFile();
   } catch (err) {
     console.log(err);

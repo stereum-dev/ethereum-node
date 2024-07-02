@@ -103,7 +103,7 @@ export default {
         return [];
       }
 
-      const setupServices = this.selectedSetup.services.map((service) => service.service);
+      const setupServices = this.selectedSetup?.services.map((service) => service.service);
 
       const filtered = this.p2pstatus.data.filter((status) => {
         const consensusService = status.details.consensus.service;
@@ -182,7 +182,7 @@ export default {
       let clients = this.filteredP2PStatus[gid] || false;
 
       if (!clients) {
-        console.log("No clients found for the current page.");
+        // console.log("No clients found for the current page.");
         return;
       }
 
