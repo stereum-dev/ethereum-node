@@ -1026,5 +1026,9 @@
     "tgll": "toggle to SSH key or password",
     "save": "save added server",
     "rem": "remove server"
+  },
+  "sshManage": {
+    "genSshKey": "Generate SSH Key",
+    "addkey": "add an existing key"
   }
 }

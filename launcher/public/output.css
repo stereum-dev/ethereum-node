@@ -2384,12 +2384,6 @@ video {
       flex-shrink: 0;
 }
 
-.flex-grow{
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-}
-
 .origin-top-right{
   -webkit-transform-origin: top right;
           transform-origin: top right;
