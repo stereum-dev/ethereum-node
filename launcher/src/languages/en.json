@@ -1030,5 +1030,9 @@
   "sshManage": {
     "genSshKey": "Generate SSH Key",
     "addkey": "add an existing key"
+  },
+  "osUpdate": {
+    "updateBtn": "Ready to update “{name}” to the new version “{version}”",
+    "updateAll": "Update all available updates"
   }
 }
