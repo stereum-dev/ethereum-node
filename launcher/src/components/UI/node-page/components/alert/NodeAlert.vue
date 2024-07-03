@@ -14,7 +14,9 @@
         <div
           class="status-icon"
           :class="{
-            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
+            active:
+              stereumUpdate.current !== stereumUpdate.version ||
+              updatedNewUpdates.length > 0,
           }"
         >
           <img src="/img/icon/node-alert-icons/alert-settings.png" alt="green" />
@@ -26,7 +28,10 @@
       <div v-show="!loadingAlerts" class="status_innerBox">
         <router-link v-if="storageWarning" to="/control" class="status-message_yellow">
           <div class="message-icon">
-            <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
+            <img
+              src="/img/icon/node-alert-icons/alert-storage-yellow.png"
+              alt="warn_storage"
+            />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -37,7 +42,10 @@
         </router-link>
         <router-link v-if="cpuWarning" to="/control" class="status-message_yellow">
           <div class="message-icon">
-            <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
+            <img
+              src="/img/icon/node-alert-icons/alert-cpu-yellow.png"
+              alt="warn_storage"
+            />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -48,9 +56,17 @@
             </div>
           </div>
         </router-link>
-        <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow">
+        <router-link
+          v-for="point in pointStatus"
+          :key="point"
+          to="/control"
+          class="status-message_yellow"
+        >
           <div class="message-icon">
-            <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
+            <img
+              src="/img/icon/control-page-icons/PORT_LIST_ICON.png"
+              alt="warn_storage"
+            />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -80,19 +96,36 @@
           class="w-full h-10 grid grid-cols-12 rounded-md bg-red-700 p-1 cursor-pointer hover:bg-red-500"
           @click="callReconnectModal"
         >
-          <div class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1">
-            <img class="w-8" src="/img/icon/connection-status/searching.gif" alt="WIFI Icon" />
+          <div
+            class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1"
+          >
+            <img
+              class="w-8"
+              src="/img/icon/connection-status/searching.gif"
+              alt="WIFI Icon"
+            />
           </div>
           <div class="col-start-5 col-span-full flex flex-col justify-center items-start">
-            <span class="text-[8px] text-gray-100 font-semibold uppercase">Poor Connection</span>
+            <span class="text-[8px] text-gray-100 font-semibold uppercase"
+              >Poor Connection</span
+            >
 
-            <span class="text-[8px] text-left text-gray-100 font-semibold lowercase">> Click to reconnect</span>
+            <span class="text-[8px] text-left text-gray-100 font-semibold lowercase"
+              >> Click to reconnect</span
+            >
           </div>
         </div>
 
-        <router-link v-if="synchronizationErrorControl" to="/control" class="status-message_red">
+        <router-link
+          v-if="synchronizationErrorControl"
+          to="/control"
+          class="status-message_red"
+        >
           <div class="message-icon">
-            <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
+            <img
+              src="/img/icon/node-alert-icons/alert-sync-error.gif"
+              alt="warn_storage"
+            />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -103,9 +136,16 @@
             </div>
           </div>
         </router-link>
-        <div v-if="errorAlarm" class="status-message_red" @click="isTaskModalActive = true">
+        <div
+          v-if="errorAlarm"
+          class="status-message_red"
+          @click="isTaskModalActive = true"
+        >
           <div class="message-icon">
-            <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
+            <img
+              src="/img/icon/node-alert-icons/alert-task-error.png"
+              alt="warn_storage"
+            />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -143,7 +183,10 @@
           @click="showUpdate"
         >
           <div class="message-icon">
-            <img src="/img/icon/node-alert-icons/alert-notification-stereum-update.png" alt="warn_storage" />
+            <img
+              src="/img/icon/node-alert-icons/alert-notification-stereum-update.png"
+              alt="warn_storage"
+            />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -269,7 +312,8 @@ export default {
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
         const matchingService = this.allServices.find(
-          (service) => service.service.replace(/(Beacon|Validator|Service)/gm, "") === update.name
+          (service) =>
+            service.service.replace(/(Beacon|Validator|Service)/gm, "") === update.name
         );
         if (matchingService) {
           return {
@@ -347,7 +391,9 @@ export default {
       this.stereumStatus = false;
     },
     expertHandler(el) {
-      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
+      let selectedObject = this.installedServices.find(
+        (obj) => obj.config.serviceID === el
+      );
       this.selectedValidatorFromNodeAlert = selectedObject;
       this.openModalFromNodeAlert = true;
     },
@@ -366,11 +412,15 @@ export default {
           }
           if (!validator.yaml)
             try {
-              validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+              validator.yaml = await ControlService.getServiceYAML(
+                validator.config.serviceID
+              );
             } catch (e) {
               console.log("couldn't get service yaml");
             }
-          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
+          const patternIndex = validator.expertOptions.findIndex(
+            (o) => o.title === "Default Fee Recipient"
+          );
           if (patternIndex === -1 || !validator.yaml) {
             continue;
           }
@@ -388,7 +438,8 @@ export default {
           }
         }
         const notSetAddresses = addresses.filter(
-          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
+          (validator) =>
+            validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
       }
@@ -494,7 +545,6 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  position: relative;
   justify-content: space-between;
   align-items: flex-start;
 }
@@ -523,7 +573,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 1px 3px;
+  padding: 2px;
   overflow: hidden;
   overflow-y: scroll;
 }
@@ -560,6 +610,7 @@ export default {
   justify-content: center;
   align-items: center;
   opacity: 25%;
+  border-radius: 5px;
 }
 .active {
   opacity: 100%;
@@ -576,12 +627,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 95%;
+  width: 100%;
   height: 36px;
-  border-radius: 5px;
+  border-radius: 3px;
   margin: 2px 0;
   color: #eee;
-  position: relative;
 }
 
 .status-message_yellow {
@@ -617,6 +667,7 @@ export default {
 .message-icon img {
   width: 87%;
   height: 90%;
+  border-radius: 5px;
 }
 
 .message-text_container {
