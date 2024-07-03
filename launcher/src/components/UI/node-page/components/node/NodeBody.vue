@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center relative"
+    class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center"
   >
     <ConfigBody
       v-if="setupStore.isConfigViewActive"

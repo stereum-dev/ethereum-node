@@ -1,6 +1,8 @@
 <template>
   <div class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full">
-    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-10 items-center justify-start">
+    <div
+      class="w-full h-full row-start-2 row-span-full grid grid-rows-10 items-center justify-start py-4"
+    >
       <div
         v-for="(item, index) in installedClients"
         :key="item.config?.serviceID"
@@ -8,7 +10,8 @@
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             currentService === item.config?.serviceID,
-          ' bg-[#e8ebeb] border border-gray-600': currentService !== item.config?.serviceID,
+          ' bg-[#e8ebeb] border border-gray-600':
+            currentService !== item.config?.serviceID,
         }"
         @click="getService(index)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
@@ -67,7 +70,9 @@ const installedClients = computed(() => {
 });
 
 watch(currentService, (newService) => {
-  const selectedService = installedClients.value.find((service) => service.config?.serviceID === newService);
+  const selectedService = installedClients.value.find(
+    (service) => service.config?.serviceID === newService
+  );
   if (selectedService) {
     nodeStore.clientToLogs = selectedService;
   }

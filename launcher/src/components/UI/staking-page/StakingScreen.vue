@@ -179,10 +179,8 @@ const handleFiles = (files) => {
         readFileContent(file);
       }
     }
-  } else {
-    if (files[0].type === "application/json") {
-      readFileContent(files[0]);
-    }
+  } else if (files[0].type === "application/json") {
+    readFileContent(files[0]);
   }
 };
 

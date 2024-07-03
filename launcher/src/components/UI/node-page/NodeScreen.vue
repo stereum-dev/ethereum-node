@@ -1,11 +1,11 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
-    <div class="w-full h-full grid grid-cols-24 relative">
+    <div class="w-full h-full grid grid-cols-24">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection />
       </div>
-      <div class="col-start-2 col-end-17 w-full h-full relative">
+      <div class="col-start-2 col-end-17 w-full h-full">
         <NodeSection
           @open-expert="openExpertModal"
           @open-log="openLogPage"

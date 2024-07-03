@@ -23,10 +23,19 @@
         </div>
       </div>
     </div>
-    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md">
+    <div
+      class="status-box_messages bg-[#151618] border border-gray-600 rounded-md overflow-x-hidden overflow-y-auto"
+    >
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
-      <div v-show="!loadingAlerts" class="status_innerBox">
-        <router-link v-if="storageWarning" to="/control" class="status-message_yellow">
+      <div
+        v-show="!loadingAlerts"
+        class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]"
+      >
+        <router-link
+          v-if="storageWarning"
+          to="/control"
+          class="status-message_yellow h-9"
+        >
           <div class="message-icon">
             <img
               src="/img/icon/node-alert-icons/alert-storage-yellow.png"
@@ -40,7 +49,7 @@
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </router-link>
-        <router-link v-if="cpuWarning" to="/control" class="status-message_yellow">
+        <router-link v-if="cpuWarning" to="/control" class="status-message_yellow h-9">
           <div class="message-icon">
             <img
               src="/img/icon/node-alert-icons/alert-cpu-yellow.png"
@@ -60,7 +69,7 @@
           v-for="point in pointStatus"
           :key="point"
           to="/control"
-          class="status-message_yellow"
+          class="status-message_yellow h-9"
         >
           <div class="message-icon">
             <img
@@ -77,7 +86,7 @@
             </div>
           </div>
         </router-link>
-        <router-link v-if="cpuAlarm" to="/control" class="status-message_red">
+        <router-link v-if="cpuAlarm" to="/control" class="status-message_red h-9">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-cpu-red.png" alt="warn_storage" />
           </div>
@@ -119,7 +128,7 @@
         <router-link
           v-if="synchronizationErrorControl"
           to="/control"
-          class="status-message_red"
+          class="status-message_red h-9"
         >
           <div class="message-icon">
             <img
@@ -138,7 +147,7 @@
         </router-link>
         <div
           v-if="errorAlarm"
-          class="status-message_red"
+          class="status-message_red h-9"
           @click="isTaskModalActive = true"
         >
           <div class="message-icon">
@@ -157,7 +166,7 @@
         <div
           v-for="validator in notSetAddresses"
           :key="validator"
-          class="status-message_red pointer"
+          class="status-message_red h-9 pointer"
           @mouseenter="cursorLocation = `${clkFee}`"
           @mouseleave="cursorLocation = ''"
           @click="expertHandler(validator.serviceID)"
@@ -177,7 +186,7 @@
 
         <div
           v-if="stereumUpdate.current !== stereumUpdate.version"
-          class="status-message_green"
+          class="status-message_green h-9"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
           @click="showUpdate"
@@ -200,7 +209,7 @@
         <div
           v-for="item in updatedNewUpdates"
           :key="item"
-          class="status-message_green"
+          class="status-message_green h-9"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
           @click="showUpdate"
@@ -565,6 +574,8 @@ export default {
   align-items: center;
   flex-direction: column;
   padding-top: 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .status_innerBox {
@@ -574,8 +585,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 2px;
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow: hidden !important;
+  overflow-y: auto !important;
 }
 ::-webkit-scrollbar {
   width: 2px;
@@ -628,9 +639,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 36px;
+  min-height: 36px;
   border-radius: 3px;
-  margin: 2px 0;
   color: #eee;
 }
 
