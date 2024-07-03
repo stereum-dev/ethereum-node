@@ -20,6 +20,8 @@ import { useServers } from '@/store/servers';
       v-else
       class="w-full h-full col-start-11 col-span-full self-center flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] active:border-none active:shadow-none border border-transparent hover:border-[#4d7575] rounded-sm cursor-pointer transition-colors shadow-sm shadow-[#182020]"
       @click="updatePackage"
+      @mouseenter="footerStore.cursorLocation = `${update} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     >
       <img class="w-4" src="/img/icon/base-header-icons/update-modal-download.png" alt="icon" />
     </div>
@@ -28,13 +30,24 @@ import { useServers } from '@/store/servers';
 
 <script setup>
 import { useServers } from "@/store/servers";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
 
 const emit = defineEmits(["updatePackage"]);
 const serverStore = useServers();
+const footerStore = useFooter();
 
 const props = defineProps({
   item: Object,
 });
+
+const update = t("osUpdate.updateBtn", {
+  name: props.item.packageName,
+  version: props.item.newVersion,
+});
+
 const updatePackage = () => {
   emit("updatePackage", props.item);
 };
