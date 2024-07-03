@@ -125,7 +125,6 @@ const networkArchFilteredServices = computed(() => {
 
 const filteredServices = computed(() => {
   const filterName = selectedFilter.value ?? "all";
-  console.log(filterName);
   return filterName === "all"
     ? networkArchFilteredServices.value
     : networkArchFilteredServices.value.filter(
