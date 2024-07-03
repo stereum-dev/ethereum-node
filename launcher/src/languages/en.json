@@ -1034,5 +1034,10 @@
   "osUpdate": {
     "updateBtn": "Ready to update “{name}” to the new version “{version}”",
     "updateAll": "Update all available updates"
+  },
+  "serverSetting": {
+    "nodeServerTtl": "NODE & SERVER SETTINGS",
+    "auto": "Automated Node Updates",
+    "tgl": "Toggle to enable or disable automated node updates"
   }
 }
