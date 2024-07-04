@@ -179,8 +179,6 @@ const isLogsPageActive = ref(false);
 
 let polling = null;
 
-console.log(setupStore.allSetups);
-
 const setupsList = computed(() => {
   return setupStore.allSetups;
 });
