@@ -27,7 +27,7 @@
     "bugReport": "BUGMELDING",
     "emailText": "of schrijf een email naar:",
     "docsTitle": "ketting documentatie",
-    "docsText": "Een handige link naar de netwerklogs' documentatie voor uw geselecteerde node-configuratie."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "stereum instellingen",
