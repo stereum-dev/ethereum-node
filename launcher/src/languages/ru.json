@@ -27,7 +27,7 @@
     "bugReport": "СООБЩИТЬ ОБ ОШИБКЕ",
     "emailText": "или напишите на электронную почту:",
     "docsTitle": "документы по сети",
-    "docsText": "Удобная ссылка на документацию по сетевым журналам для выбранной конфигурации узла."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "настройки Stereum",
