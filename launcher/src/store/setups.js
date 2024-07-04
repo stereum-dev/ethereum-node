@@ -5,6 +5,7 @@ export const useSetups = defineStore("setups", {
     serverSetups: [],
     allSetups: [],
     editSetups: [],
+    stakingSetups: [],
 
     //Setup Node Page
     isConfigViewActive: false,

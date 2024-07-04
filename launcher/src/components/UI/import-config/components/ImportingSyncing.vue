@@ -37,7 +37,7 @@
           v-if="configServices.some((s) => s.category === 'consensus')"
           class="w-full h-14 col-start-1 col-span-full row-start-3 row-span-1"
         >
-          <ConsensusSync :client="consensusClient" :config-network="configNetwork" />
+          <ConsensusSync :client="consensusClient" />
         </div>
       </div>
     </div>

@@ -19,42 +19,20 @@
   </div>
 </template>
 <script setup>
+import { useMultiSetups } from "@/composables/multiSetups";
 import { computed } from "vue";
 import { useSetups } from "../../../../../store/setups";
-import SetupDropdown from "../../../edit-page/components/edit/setups/SetupDropdown.vue";
-import { useMultiSetups } from "@/composables/multiSetups";
-import TotalBalance from "../management/components/val-rewards/TotalBalance.vue";
 import NetworkStatus from "../../../../layers/NetworkStatus.vue";
-import { useServices } from "@/store/services";
-import { useDeepClone } from "@/composables/utils";
+import SetupDropdown from "../../../edit-page/components/edit/setups/SetupDropdown.vue";
+import TotalBalance from "../management/components/val-rewards/TotalBalance.vue";
 
 const setupStore = useSetups();
-const serviceStore = useServices();
 const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const newHeight = "h-8";
 
 const setupList = computed(() => {
-  const validators = serviceStore.installedServices
-    .filter((s) => s.category === "validator")
-    .map((v) => v.service);
-  let output = setupStore.allSetups.filter((s) => s.setupName !== "commonServices");
-
-  output = output.map((setup) => {
-    if (!setup.services || setup.services.length === 0) {
-      setup.noValidator = true;
-    } else {
-      const hasValidator = setup.services.some((service) =>
-        validators.includes(service.service)
-      );
-      if (!hasValidator) {
-        setup.noValidator = true;
-      }
-    }
-    return useDeepClone(setup);
-  });
-
-  return output;
+  return setupStore.stakingSetups;
 });
 
 const getNetworkSize = computed(() => {
