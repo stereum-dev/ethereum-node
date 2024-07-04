@@ -27,7 +27,7 @@
     "bugReport": "АЛДААГ МЭДЭЭЛЛЭХ",
     "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:",
     "docsTitle": "чэйний docs",
-    "docsText": "Таны сонгосон нөүдийн тохиргоонд зориулсан сүлжээний logs-ын баримт бичигт хэрэгтэй холбоос."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "stereum тохируулга",
