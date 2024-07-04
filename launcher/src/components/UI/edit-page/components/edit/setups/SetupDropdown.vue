@@ -94,10 +94,13 @@
           >
         </div>
         <div
-          v-for="setup in list.filter((s) => s.setupName !== 'commonServices')"
+          v-for="setup in setupLists"
           v-show="setup.setupId !== setupStore.selectedSetup?.setupId"
           :key="setup.setupName"
           class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+          :class="{
+            'pointer-events-none opacity-50': noValidatorHandler(setup),
+          }"
           @click="selectSetup(setup)"
         >
           <span
@@ -127,6 +130,8 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import RenameSetup from "./RenameSetup.vue";
+import { useDeepClone } from "@/composables/utils";
+import { useServices } from "@/store/services";
 
 const { list, newHeight } = defineProps({
   list: {
@@ -144,8 +149,34 @@ const emit = defineEmits(["selectRename", "selectSetup", "serverView", "confirmR
 
 const route = useRoute();
 const setupStore = useSetups();
+const serviceStore = useServices();
 
 const isOpen = ref(false);
+
+const setupLists = computed(() => {
+  const validators = serviceStore.installedServices
+    .filter((s) => s.category === "validator")
+    .map((v) => v.service);
+  let output = list.filter((s) => s.setupName !== "commonServices");
+
+  output = output.map((setup) => {
+    if (!setup.services || setup.services.length === 0) {
+      setup.noValidator = true;
+    } else {
+      const hasValidator = setup.services.some((service) =>
+        validators.includes(service.service)
+      );
+      if (!hasValidator) {
+        setup.noValidator = true;
+      }
+    }
+    return useDeepClone(setup);
+  });
+
+  return output;
+});
+
+console.log(setupLists.value);
 
 const getDropdownWidth = computed(() => {
   let width;
@@ -175,6 +206,10 @@ const getSelectedOption = computed(() => {
 });
 
 // Methods
+
+const noValidatorHandler = (setup) => {
+  return !!(route.path === "/staking" && setup.noValidator);
+};
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
