@@ -27,7 +27,7 @@
     "bugReport": "NAHLÁSIT CHYBU",
     "emailText": "nebo napište e-mail na:",
     "docsTitle": "dokumentace řetězce",
-    "docsText": "Užitečný odkaz na dokumentaci síťových záznamů pro vámi vybranou konfiguraci uzlu."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "nastavení stereum",
