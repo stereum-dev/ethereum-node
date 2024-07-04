@@ -131,10 +131,17 @@
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
-import { computed, onBeforeMount, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, ref, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Navigation, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
+
+const props = defineProps({
+  client: {
+    type: Object,
+    required: true,
+  },
+});
 
 //Store
 
@@ -151,6 +158,10 @@ const prevVal = ref(0);
 const selectedIcon = ref("");
 
 // Computed properties
+
+const getCategory = computed(() => {
+  return props.client.category;
+});
 
 const currentNetwork = computed(() => {
   let setupNetwork;
@@ -197,8 +208,8 @@ watch(currentSlide, (val) => {
 });
 
 // Lifecycle hooks
-onBeforeMount(() => {
-  currentSlide.value = 2;
+onMounted(() => {
+  currentSlide.value = 3;
 });
 
 // Methods
