@@ -11,14 +11,29 @@
     >
       <slide v-for="item in installStore.syncType" :key="item.name" aria-current="0">
         <div class="w-full h-full flex justify-center items-center pl-2">
-          <div v-if="item.name === 'genesis'" class="w-full h-full flex flex-col justify-center items-start">
-            <span class="text-md text-gray-300 font-semibold text-left uppercase">{{ item.name }}</span>
-            <span class="text-sm text-teal-600 font-semibold text-left">{{ item.type }}</span>
+          <div
+            v-if="item.name === 'genesis'"
+            class="w-full h-full flex flex-col justify-center items-start"
+          >
+            <span class="text-md text-gray-300 font-semibold text-left uppercase">{{
+              item.name
+            }}</span>
+            <span class="text-sm text-teal-600 font-semibold text-left">{{
+              item.type
+            }}</span>
           </div>
-          <div v-else-if="item.type === 'custom source'" class="w-full h-full flex justify-between items-center">
+          <div
+            v-else-if="item.type === 'custom source'"
+            class="w-full h-full flex justify-between items-center"
+          >
             <div class="w-fit h-full flex flex-col justify-center items-start">
-              <span class="w-fit h-5 text-sm text-gray-300 font-semibold text-left uppercase">{{ item.name }}</span>
-              <span class="w-fit text-xs text-teal-600 font-semibold text-left">{{ item.type }}</span>
+              <span
+                class="w-fit h-5 text-sm text-gray-300 font-semibold text-left uppercase"
+                >{{ item.name }}</span
+              >
+              <span class="w-fit text-xs text-teal-600 font-semibold text-left">{{
+                item.type
+              }}</span>
             </div>
             <div class="w-[60%] h-full flex justify-center items-center">
               <input
@@ -29,10 +44,18 @@
               />
             </div>
           </div>
-          <div v-else-if="item.type === 'recommended'" class="w-full h-full flex justify-between items-center">
+          <div
+            v-else-if="item.type === 'recommended'"
+            class="w-full h-full flex justify-between items-center"
+          >
             <div class="w-fit h-full flex flex-col justify-center items-start">
-              <span class="w-fit h-5 text-sm text-gray-300 font-semibold text-left uppercase">{{ item.name }}</span>
-              <span class="w-fit text-xs text-teal-600 font-semibold text-left">{{ item.type }}</span>
+              <span
+                class="w-fit h-5 text-sm text-gray-300 font-semibold text-left uppercase"
+                >{{ item.name }}</span
+              >
+              <span class="w-fit text-xs text-teal-600 font-semibold text-left">{{
+                item.type
+              }}</span>
             </div>
 
             <div class="w-[60%] h-10 flex justify-center items-center">
@@ -49,22 +72,38 @@
                 @click="openDropdown"
               >
                 <div class="col-start-1 col-span-1 self-center">
-                  <img v-if="selectedIcon" class="w-6 ml-1" :src="selectedIcon" :alt="selectedItem" />
+                  <img
+                    v-if="selectedIcon"
+                    class="w-6 ml-1"
+                    :src="selectedIcon"
+                    :alt="selectedItem"
+                  />
                 </div>
                 <div
                   v-if="selectedIcon"
                   class="extentions h-9 pt-5 col-start-2 col-end-6 text-md text-gray-300 flex justify-center items-center self-center"
                 >
-                  <span class="text-sm text-gray-300 text-center">{{ selectedItem }}</span>
+                  <span class="text-sm text-gray-300 text-center">{{
+                    selectedItem
+                  }}</span>
                 </div>
                 <div
                   v-else
                   class="extentions h-9 pt-5 col-start-2 col-end-6 text-md text-gray-300 flex justify-center items-center self-center"
                 >
-                  <span class="text-sm text-gray-300 text-center">{{ selectedItem }}</span>
+                  <span class="text-sm text-gray-300 text-center">{{
+                    selectedItem
+                  }}</span>
                 </div>
-                <div class="col-start-6 col-span-1 self-center justify-self-end" @click="openWindow">
-                  <img class="w-6" src="/img/icon/service-modals-icons/internet.png" alt="Internet" />
+                <div
+                  class="col-start-6 col-span-1 self-center justify-self-end"
+                  @click="openWindow"
+                >
+                  <img
+                    class="w-6"
+                    src="/img/icon/service-modals-icons/internet.png"
+                    alt="Internet"
+                  />
                 </div>
               </div>
             </div>
@@ -110,12 +149,12 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Navigation, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-// import { useSetups } from "../../../../store/setups";
+import { useSetups } from "../../../../store/setups";
 
 // Store
 const installStore = useClickInstall();
 const manageStore = useNodeManage();
-// const setupStore = useSetups();
+const setupStore = useSetups();
 const router = useRouter();
 
 // Data
@@ -128,17 +167,14 @@ const selectedIcon = ref("");
 
 // Computed properties
 
-// const currentNetwork = computed(() => {
-//   let setupNetwork;
-//   let current;
-//   if (setupStore.selectedSetup) {
-//     setupNetwork = setupStore.selectedSetup.network;
-//   }
-//   current = manageStore.networkList.find((network) => network.name === setupNetwork);
-//   return current;
-// });
 const currentNetwork = computed(() => {
-  return manageStore.currentNetwork;
+  let setupNetwork;
+  let current;
+  if (setupStore.selectedSetup) {
+    setupNetwork = setupStore.selectedSetup.network;
+  }
+  current = manageStore.networkList.find((network) => network.name === setupNetwork);
+  return current;
 });
 
 const selectedLinks = computed(() => {
