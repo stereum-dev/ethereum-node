@@ -125,9 +125,10 @@
 </template>
 
 <script>
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useSetups } from "@/store/setups";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
@@ -157,9 +158,25 @@ export default {
     ...mapWritableState(useNodeHeader, {
       notificationModalIsActive: "notificationModalIsActive",
     }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
+    }),
     installedValidators() {
-      const copyOfInstalledServices = [...this.installedServices];
-      return copyOfInstalledServices.filter(
+      let test = [];
+      const selectedSetup = this.selectedSetup;
+      if (selectedSetup && selectedSetup.services) {
+        const selectedServiceIds = selectedSetup.services.map((service) => service.id);
+        this.installedServices.forEach((service) => {
+          if ("validator".includes(service.category) && selectedServiceIds.includes(service.config.serviceID)) {
+            test.push({
+              isServicePending: false,
+              ...service,
+            });
+          }
+        });
+      }
+
+      return test.filter(
         (obj) => obj.category === "validator" && obj.name !== "ssv.network" && obj.name !== "Obol Charon"
       );
     },
@@ -201,7 +218,7 @@ export default {
 
     selectedValidator(arg) {
       //to select the validator
-      console.log(arg);
+
       if (this.fixedConnectedVal == false) {
         this.selectedVal = arg.config.serviceID;
         this.selectedValToConnect = true;
@@ -273,7 +290,6 @@ export default {
               }
             }
           } else if (item.service === "NimbusValidatorService") {
-            console.log(item);
             let nimbusServiceID = item.config.dependencies.consensusClients[0].id;
             //console.log("nimbusServiceID", nimbusServiceID);
             for (let idx = 0; idx < this.installedMetricsExporter.length; idx++) {

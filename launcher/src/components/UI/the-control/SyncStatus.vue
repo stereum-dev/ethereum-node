@@ -331,7 +331,7 @@ export default {
       let clients = this.filteredSyncStatus[gid] || false;
 
       if (!clients) {
-        console.log("No clients found for the current page.");
+        // console.log("No clients found for the current page.");
         this.syncItemsShow = false;
         return;
       }

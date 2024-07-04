@@ -2,34 +2,30 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0"
   >
-    <div
-      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center"
-    >
+    <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
       <span class="text-md font-semibold text-gray-300 uppercase">Login to server</span>
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
       @submit.prevent="internalLogin"
     >
-      <div
-        class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="servername"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold"
           :class="serverNameError ? 'text-red-500' : 'text-gray-300'"
-          >{{
-            serverNameError ? serverNameError : `${$t("multiServer.serverName")}`
-          }}</label
+          >{{ serverNameError ? serverNameError : `${t("multiServer.serverName")}` }}</label
         >
         <input
           id="servername"
           v-model="serverStore.loginState.hostName"
           type="text"
-          :placeholder="`${$t('multiServer.serverName')}`"
+          :placeholder="`${t('multiServer.serverName')}`"
           class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
           @change="serverNameChanged = true"
+          @mouseenter="footerStore.cursorLocation = `${t('loginForm.addServerName')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
 
         <div
@@ -41,8 +37,8 @@
             alt="Trash Icon"
             :class="removeButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
             @mousedown.prevent
-            @mouseenter="removeHovered = true"
-            @mouseleave="removeHovered = false"
+            @mouseenter="(removeHovered = true), (footerStore.cursorLocation = `${t('loginForm.rem')}`)"
+            @mouseleave="(removeHovered = false), (footerStore.cursorLocation = '')"
             @click="removeServer"
           />
 
@@ -59,8 +55,8 @@
             src="/img/icon/server-management-icons/plus-icon.png"
             alt="icon"
             @mousedown.prevent
-            @mouseenter="addHovered = true"
-            @mouseleave="addHovered = false"
+            @mouseenter="(addHovered = true), (footerStore.cursorLocation = `${t('loginForm.save')}`)"
+            @mouseleave="(addHovered = false), (footerStore.cursorLocation = '')"
             @click="saveServer"
           />
           <div
@@ -71,9 +67,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1"
-      >
+      <div class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1">
         <label
           for="hostname"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
@@ -90,6 +84,8 @@
             placeholder="114.72.86.90"
             class="h-8 self-center col-start-1 col-end-11 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
             required
+            @mouseenter="footerStore.cursorLocation = `${t('loginForm.ipOrHost')}`"
+            @mouseleave="footerStore.cursorLocation = ''"
             @change="serverIPChanged = true"
           />
           <img
@@ -105,9 +101,7 @@
           ></span>
         </div>
       </div>
-      <div
-        class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="port"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
@@ -120,11 +114,11 @@
           type="text"
           placeholder="22"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          @mouseenter="footerStore.cursorLocation = `${t('loginForm.port')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
       </div>
-      <div
-        class="col-start-1 col-end-7 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-1 col-end-7 row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="username"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-xs font-bold mb-2"
@@ -139,11 +133,11 @@
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           required
           @change="serverUsernameChanged = true"
+          @mouseenter="footerStore.cursorLocation = `${t('loginForm.uName')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
       </div>
-      <div
-        class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div class="col-start-7 col-span-full row-start-3 row-span-1 grid grid-cols-12 grid-rows-3">
         <span
           class="w-full col-start-1 col-span-full row-start-1 row-span-1 text-gray-300 font-semibold text-xs ml-1 capitalize text-center"
           >{{ $t("formsetup.usessh") }}</span
@@ -152,6 +146,8 @@
         <label
           for="AcceptConditions"
           class="col-start-6 col-end-9 row-start-2 row-span-full self-center relative h-6 w-12 cursor-pointer [-webkit-tap-highlight-color:_transparent] flex justify-center items-center"
+          @mouseenter="footerStore.cursorLocation = `${t('loginForm.tgll')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         >
           <input
             id="AcceptConditions"
@@ -193,9 +189,7 @@
             </svg>
           </span>
 
-          <span
-            class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"
-          ></span>
+          <span class="absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"></span>
         </label>
       </div>
 
@@ -222,20 +216,13 @@
           for="keypath-file"
           class="h-8 col-start-12 col-span-full row-start-2 row-span-2 self-center w-full flex justify-center items-center cursor-pointer bg-gray-200 rounded-r-md"
         >
-          <div
-            class="w-6 h-6 border-2 border-gray-400 rounded-full flex justify-center items-center"
-          >
+          <div class="w-6 h-6 border-2 border-gray-400 rounded-full flex justify-center items-center">
             <span
               class="text-xl text-teal-700 text-center font-bold hover:scale-125 active:scale-100 transition-all duration-150 ease-in-out"
               >+</span
             >
           </div>
-          <input
-            id="keypath-file"
-            type="file"
-            class="hidden"
-            @change="handleFileSelect"
-          />
+          <input id="keypath-file" type="file" class="hidden" @change="handleFileSelect" />
         </label>
       </div>
       <div
@@ -253,6 +240,8 @@
           type="password"
           class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
           placeholder="******************"
+          @mouseenter="footerStore.cursorLocation = `${t('loginForm.pass')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
       </div>
       <div
@@ -273,12 +262,12 @@
           placeholder="******************"
           required
           @input="validatePassword"
+          @mouseenter="footerStore.cursorLocation = `${t('loginForm.pass')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
       </div>
 
-      <div
-        class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center"
-      >
+      <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
         <button
           v-if="!serverStore.connectingProcess"
           class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
@@ -315,9 +304,14 @@ import { useServers } from "@/store/servers";
 import { useServerLogin } from "@/composables/useLogin";
 import ControlService from "@/store/ControlService";
 import { useRouter } from "vue-router";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
 
 const emit = defineEmits(["serverLogin"]);
 
+const footerStore = useFooter();
 const serverStore = useServers();
 const router = useRouter();
 
@@ -478,8 +472,7 @@ const validateServerName = () => {
 const validateIP = () => {
   const ipOrHostname = serverStore.loginState.ip || "";
 
-  ipError.value =
-    ipOrHostname.trim().length > 0 ? "" : "IP address or hostname is required.";
+  ipError.value = ipOrHostname.trim().length > 0 ? "" : "IP address or hostname is required.";
 };
 
 const validateUsername = () => {

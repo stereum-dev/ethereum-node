@@ -3,7 +3,7 @@
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0 gap-y-2"
   >
     <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center py-1">
-      <span class="text-md font-semibold text-gray-300">{{ $t("updateServer.opSysUpdate") }}</span>
+      <span class="text-md font-semibold text-gray-300">{{ t("updateServer.opSysUpdate") }}</span>
     </div>
     <div
       class="w-full h-full col-start-1 col-span-full row-start-2 row-end-4 grid grid-cols-12 grid-rows-2 items-center gap-x-1"
@@ -12,7 +12,7 @@
         <img class="w-full" src="/img/icon/control-page-icons/ubuntuIco.svg" />
       </div>
       <div class="w-full h-full col-start-3 col-end-10 row-start-1 row-span-1 flex justify-start items-center ml-2">
-        <span class="text-lg font-semibold text-gray-400 uppercase">{{ $t("updateServer.ubuntu") }}</span>
+        <span class="text-lg font-semibold text-gray-400 uppercase">{{ t("updateServer.ubuntu") }}</span>
       </div>
       <!-- <div class="w-full h-full col-start-10 col-span-full row-start-1 row-span-1 flex justify-center items-center">
         <div
@@ -26,7 +26,7 @@
 
       <div class="w-full h-full col-start-3 col-span-full row-start-2 row-span-1 ml-2 grid grid-cols-3 items-center">
         <span class="col-start-1 col-end-3 text-sm font-semibold text-gray-400 uppercase">{{
-          $t("updateServer.opSysVersion")
+          t("updateServer.opSysVersion")
         }}</span>
         <span class="col-start-3 col-span-full justify-self-center text-sm font-semibold text-amber-400 uppercase">{{
           osVersionCurrent
@@ -49,7 +49,7 @@
         </div>
 
         <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">{{
-          $t("updateServer.availServerOsUpdate")
+          t("updateServer.availServerOsUpdate")
         }}</span>
       </div>
 
@@ -72,15 +72,17 @@
               'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
                 serverStore.isUpdateProcessing || serverStore.isMajorUpgradeActive,
             }"
+            @mouseenter="footerStore.cursorLocation = `${t('osUpdate.updateAll')} `"
+            @mouseleave="footerStore.cursorLocation = ''"
             @click.prevent="updateAll"
           >
-            <span class="text-gray-100 text-sm font-semibold uppercase">{{ $t("updatePanel.all") }}</span>
+            <span class="text-gray-100 text-sm font-semibold uppercase">{{ t("updatePanel.all") }}</span>
             <img class="w-4" src="/img/icon/base-header-icons/update-modal-download.png" alt="icon" />
           </div>
         </div>
         <div class="w-full h-full col-start-7 col-span-full flex justify-center items-center p-1">
           <span class="text-gray-200 text-md font-semibold"
-            >{{ $t("updatePanel.auto") }} :
+            >{{ t("updatePanel.auto") }} :
             <span class="text-md uppercase font-semibold" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
           >
         </div>
@@ -94,7 +96,12 @@ import UpdateRow from "./UpdateRow.vue";
 import ControlService from "@/store/ControlService";
 import { ref, onMounted, computed, reactive, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
 
+const t = i18n.global.t;
+
+const footerStore = useFooter();
 const serverStore = useServers();
 
 const osVersionCurrent = ref("");
