@@ -207,13 +207,13 @@ const selectSetup = (setup) => {
 };
 
 const serverView = () => {
-  console.log(setupStore.allSetups);
   getServerView();
 };
 
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
+  getSelectedSetup(setupStore.allSetups[0]);
 });
 
 onUnmounted(() => {
