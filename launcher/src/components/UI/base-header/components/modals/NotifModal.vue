@@ -176,9 +176,6 @@ export default {
         });
       }
 
-      // return test;
-
-      // const copyOfInstalledServices = [...this.installedServices];
       return test.filter(
         (obj) => obj.category === "validator" && obj.name !== "ssv.network" && obj.name !== "Obol Charon"
       );
@@ -198,7 +195,6 @@ export default {
   mounted() {
     this.getqrcode();
     this.beaconChainConnectionController();
-    console.log("vallllll", this.installedValidators);
   },
   methods: {
     BeaconchainBtnHandling() {

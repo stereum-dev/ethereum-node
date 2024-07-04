@@ -27,7 +27,7 @@
     "bugReport": "BUG REPORT",
     "emailText": "or write an email to:",
     "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "stereum settings",
