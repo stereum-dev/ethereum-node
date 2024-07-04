@@ -5,7 +5,7 @@
       <div class="plugins-container">
         <control-plugins>
           <div class="plugins-title">
-            <SetupDetails :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
+            <SetupDetails :list="setupsList" @select-setup="selectSetup" />
           </div>
           <div class="plugins-table-bg rounded-md">
             <div class="arrow-up" @click="scrollUp">
@@ -158,8 +158,9 @@ import i18n from "@/includes/i18n";
 import SetupDetails from "../edit-page/components/edit/header/SetupDetails.vue";
 import { useSetups } from "@/store/setups";
 import { useMultiSetups } from "@/composables/multiSetups";
+import { useRouter } from "vue-router";
 
-const { getSelectedSetup, getServerView } = useMultiSetups();
+const { getSelectedSetup } = useMultiSetups();
 
 const t = i18n.global.t;
 
@@ -169,6 +170,7 @@ const controlStore = useControlStore();
 const footerStore = useFooter();
 const headerStore = useNodeHeader();
 const setupStore = useSetups();
+const router = useRouter();
 
 const pluginsTable = ref(null);
 const expertModeClient = ref(null);
@@ -176,6 +178,8 @@ const isExpertWindowOpen = ref(false);
 const isLogsPageActive = ref(false);
 
 let polling = null;
+
+console.log(setupStore.allSetups);
 
 const setupsList = computed(() => {
   return setupStore.allSetups;
@@ -206,18 +210,22 @@ const selectSetup = (setup) => {
   getSelectedSetup(setup);
 };
 
-const serverView = () => {
-  getServerView();
-};
+// const serverView = () => {
+//   getServerView();
+// };
 
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
-  getSelectedSetup(setupStore.allSetups[0]);
+  if (setupStore.allSetups[0] === undefined) {
+    router.push("/node");
+  } else {
+    getSelectedSetup(setupStore.allSetups[0]);
+  }
 });
 
 onUnmounted(() => {
-  serviceStore.selectedSetup = null;
+  setupStore.selectedSetup = null;
   clearInterval(polling);
 });
 
