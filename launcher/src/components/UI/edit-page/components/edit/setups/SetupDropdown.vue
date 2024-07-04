@@ -130,8 +130,6 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import RenameSetup from "./RenameSetup.vue";
-import { useDeepClone } from "@/composables/utils";
-import { useServices } from "@/store/services";
 
 const { list, newHeight } = defineProps({
   list: {
@@ -149,34 +147,12 @@ const emit = defineEmits(["selectRename", "selectSetup", "serverView", "confirmR
 
 const route = useRoute();
 const setupStore = useSetups();
-const serviceStore = useServices();
 
 const isOpen = ref(false);
 
 const setupLists = computed(() => {
-  const validators = serviceStore.installedServices
-    .filter((s) => s.category === "validator")
-    .map((v) => v.service);
-  let output = list.filter((s) => s.setupName !== "commonServices");
-
-  output = output.map((setup) => {
-    if (!setup.services || setup.services.length === 0) {
-      setup.noValidator = true;
-    } else {
-      const hasValidator = setup.services.some((service) =>
-        validators.includes(service.service)
-      );
-      if (!hasValidator) {
-        setup.noValidator = true;
-      }
-    }
-    return useDeepClone(setup);
-  });
-
-  return output;
+  return list.filter((s) => s.setupName !== "commonServices");
 });
-
-console.log(setupLists.value);
 
 const getDropdownWidth = computed(() => {
   let width;
