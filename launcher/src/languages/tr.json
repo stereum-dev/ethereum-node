@@ -27,7 +27,7 @@
     "bugReport": "HATA RAPORLA",
     "emailText": "veya şu adrese bir e-posta yazın:",
     "docsTitle": "zincir dökümanları",
-    "docsText": "Seçtiğiniz düğüm yapılandırması için ağ günlüklerinin belgelerine kullanışlı bir bağlantı."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "stereum ayarları",
