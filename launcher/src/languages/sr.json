@@ -27,7 +27,7 @@
     "bugReport": "ПРИЈАВА ГРЕШКЕ",
     "emailText": "или напишите емаил на:",
     "docsTitle": "документација ланца",
-    "docsText": "Згодна веза до документације мрежних дневника за одабрану конфигурацију чвора."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "поставке стереума",
