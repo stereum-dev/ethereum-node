@@ -27,7 +27,7 @@
     "bugReport": "버그 보고",
     "emailText": "또는 이메일을 작성해 주세요:",
     "docsTitle": "체인 문서",
-    "docsText": "선택한 노드 구성에 대한 네트워크 로그 문서로 가는 유용한 링크입니다."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "스테리움 설정",
