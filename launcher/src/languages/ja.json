@@ -27,7 +27,7 @@
     "bugReport": "バグ報告",
     "emailText": "またはメールを書いてください：",
     "docsTitle": "チェーンドキュメント",
-    "docsText": "選択したノード設定のネットワークログのドキュメントへの便利なリンクです。"
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "ステレウム設定",
