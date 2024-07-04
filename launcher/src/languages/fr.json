@@ -27,7 +27,7 @@
     "bugReport": "RAPPORT DE BUG",
     "emailText": "ou écrivez un e-mail à :",
     "docsTitle": "documentation de la chaîne",
-    "docsText": "Un lien pratique vers la documentation des journaux réseau pour votre configuration de nœud sélectionnée."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "paramètres de stereum",
