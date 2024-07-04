@@ -27,7 +27,7 @@
     "bugReport": "ДОКЛАД ЗА ГРЕШКИ",
     "emailText": "или пишете E-Mail на:",
     "docsTitle": "верижни документи",
-    "docsText": "Удобна връзка към документацията на мрежовите журнали за избраната конфигурация на възела."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "стереумни настройки",
