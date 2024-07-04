@@ -27,7 +27,7 @@
     "bugReport": "বাগ রিপোর্ট",
     "emailText": "অথবা ইমেইল করুন:",
     "docsTitle": "চেইন ডক্স",
-    "docsText": "আপনার নির্বাচিত নোড কনফিগারেশনের জন্য নেটওয়ার্ক লগসের ডকুমেন্টেশনের একটি সুবিধাজনক লিংক।"
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "স্টেরিয়াম সেটিংস",
