@@ -27,7 +27,7 @@
     "bugReport": "RELATAR BUG",
     "emailText": "ou escreva um email para:",
     "docsTitle": "documentos da cadeia",
-    "docsText": "Um link útil para a documentação dos registros da rede para a configuração do seu nó selecionado."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "configurações do stereum",
