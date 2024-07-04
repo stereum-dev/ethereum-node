@@ -1032,7 +1032,7 @@ export class ServiceManager {
 
       case "KeysAPIService":
         ports = [new ServicePort("127.0.0.1", 3600, 3600, servicePortProtocol.tcp)];
-        return KeysAPIService.buildByUserInput(args.network, ports);
+        return KeysAPIService.buildByUserInput(args.network, ports, args.executionClients, args.consensusClients);
 
       case "SSVNetworkService":
         ports = [
