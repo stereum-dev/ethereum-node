@@ -24,7 +24,7 @@
     <div
       class="col-start-7 col-span-full rounded-full text-sm text-gray-200 capitalize z-20 flex justify-start items-center"
     >
-      <span class="w-1/2 text-xs font-sans ml-2">{{ footerStore.cursorLocation }}</span>
+      <span class="w-full text-xs font-sans ml-2">{{ footerStore.cursorLocation }}</span>
     </div>
   </div>
 </template>

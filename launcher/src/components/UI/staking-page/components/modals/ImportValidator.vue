@@ -108,7 +108,7 @@
   </staking-custom-modal>
 </template>
 <script setup>
-import { computed, ref, watch, onMounted, nextTick } from "vue";
+import { computed, ref, watch, onMounted, nextTick, onUnmounted } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useListKeys } from "@/composables/validators";
 
@@ -177,6 +177,15 @@ watch(getMessage, () => {
 onMounted(() => {
   pickedSlashing.value = "no";
   stakingStore.slashingDB = null;
+});
+
+onUnmounted(() => {
+  pickedSlashing.value = null;
+  stakingStore.importKeyMessage = "";
+  stakingStore.forceRefresh = !stakingStore.forceRefresh;
+  isSlashingActive.value = true;
+  checkProcessing.value = false;
+  activeButton.value = false;
 });
 
 //Methods

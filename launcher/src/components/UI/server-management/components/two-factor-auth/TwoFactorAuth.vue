@@ -8,6 +8,8 @@
       class="row-start-7 row-span-1"
       btn-name="Setup"
       @btnClick="enableTwoFactor"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.setup')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <div
       v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && !configured2fa"
@@ -26,6 +28,8 @@
       :class="['row-start-2 ', 'remove-btn', removeTwoFactorActive ? 'disabled' : '']"
       :btn-name="`${rem2fa}`"
       @btnClick="removeTwoFactor"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.rem')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <TwoFactorCheckLine
       v-if="twoFactorIsEnabled"
@@ -33,6 +37,8 @@
       class="row-start-2"
       :check-text="`${timeBased}`"
       @update="timaBaseActive"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.timeBase')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <TwoFactorCheckLine
       v-if="twoFactorIsEnabled"
@@ -41,6 +47,8 @@
       :check-text="`${increaseTime}`"
       :multi-line="true"
       @update="orgGenTimeLimit"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.timeLimit')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <TwoFactorCheckLine
       v-if="twoFactorIsEnabled"
@@ -48,6 +56,8 @@
       class="row-start-5"
       :check-text="`${rateLimit}`"
       @update="rateLimiting"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.rateLimit')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <!-- barcode and secret-key are passed as props to TwoFactoSetupBox and they have to bind ':' before theme to bind, at the moment is 
     hardcoded to test -->
@@ -70,6 +80,8 @@
       v-if="twoFactorSetupIsActive && secretKey"
       :class="['row-start-9', !authStore.validVerificationCode ? 'disabled' : '']"
       @save-backup="onSaveScratch"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.confirm')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <div
       v-if="twoFactorSetupIsActive && secretKey"
@@ -82,6 +94,8 @@
       :class="['row-start-13', 'col-start-8', twoFactorSetupIsActive && !authStore.scratchCodeSaved ? 'disabled' : '']"
       :btn-name="`${t('twoFactorAuth.nxt')}`"
       @btnClick="startSetup"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.next')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
     <TwoFactorBtn
       v-if="twoFactorSetupIsActive"
@@ -92,6 +106,8 @@
       ]"
       :btn-name="`${t('twoFactorAuth.conf')}`"
       @btnClick="startSetup"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.confirm')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     />
   </div>
 </template>
@@ -108,6 +124,7 @@ import ControlService from "@/store/ControlService";
 import { saveAs } from "file-saver";
 import { useRouter } from "vue-router";
 import i18n from "@/includes/i18n";
+import { useFooter } from "@/store/theFooter";
 
 const t = i18n.global.t;
 
@@ -128,6 +145,7 @@ const rateLimit = t("twoFactorAuth.rateLimit");
 const router = useRouter();
 const authStore = useTwoFactorAuth();
 const controlStore = useControlStore();
+const footerStore = useFooter();
 //enable two factor authentication
 const twoFactorIsEnabled = ref(false);
 //setup two factor authentication
@@ -157,10 +175,12 @@ onUnmounted(() => {
 //function to enable two factor authentication
 const enableTwoFactor = () => {
   twoFactorIsEnabled.value = true;
+  footerStore.cursorLocation = "";
 };
 
 //setup button functions
 const startSetup = async () => {
+  footerStore.cursorLocation = "";
   if (twoFactorIsEnabled.value) {
     //first check box value to enable time based authentication
     twoFactorIsEnabled.value = false;
@@ -261,6 +281,7 @@ const checkAuth = async () => {
 };
 
 const removeTwoFactor = async () => {
+  footerStore.cursorLocation = "";
   if (!removeTwoFactorActive.value) {
     removeTwoFactorActive.value = true;
     await ControlService.removeAuthenticator();
