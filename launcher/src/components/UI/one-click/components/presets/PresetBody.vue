@@ -135,6 +135,7 @@ const getNetwork = (network) => {
   openDropdown.value = false;
   clickStore.presets.forEach((p) => (p.selected = false));
   manageStore.currentNetwork = network;
+  clickStore.selectedNetwork = network;
   displayItem.value = network;
 };
 
