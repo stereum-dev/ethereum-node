@@ -27,7 +27,7 @@
     "bugReport": "LAPORAN BUG",
     "emailText": "atau tulis email ke:",
     "docsTitle": "dokumentasi rantai",
-    "docsText": "Link berguna ke dokumentasi log jaringan untuk konfigurasi node pilihan Anda."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "pengaturan stereum",
