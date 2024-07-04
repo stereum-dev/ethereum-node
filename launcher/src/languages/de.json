@@ -27,7 +27,7 @@
     "bugReport": "FEHLERBERICHT",
     "emailText": "oder schreiben Sie eine E-Mail an:",
     "docsTitle": "Dokumente",
-    "docsText": "Ein praktischer Link zur Dokumentation der Netzwerkprotokolle für Ihre ausgewählte Node-Konfiguration."
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "Stereum-Einstellungen",
