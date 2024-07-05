@@ -634,9 +634,7 @@ const addServiceHandler = (item) => {
     executionClients: item.executionClients,
     consensusClients: item.consensusClients,
     otherServices: item.otherServices,
-    relays: item.relays
-      .map((r) => r[manageStore.configNetwork.network.toLowerCase()])
-      .join(),
+    relays: item.relays.map((r) => r[setupStore.selectedSetup?.network]).join(),
     checkpointURL: item.checkPointSyncUrl || false,
     //CustomService Attributes
     image: item.image,

@@ -51,7 +51,7 @@ import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -89,13 +89,34 @@ const installedValidators = computed(() => {
 
 //Lifecycle Hooks
 onMounted(() => {
-  if (installedValidators.value.length) {
-    currentService.value = installedValidators.value[0].config?.serviceID;
-    stakingStore.selectedServiceToFilter = installedValidators.value[0];
-  }
+  getCurrentService();
+  getActiveValidator();
 });
 
 //Methods
+
+const getCurrentService = () => {
+  if (setupStore.selectedSetup) {
+    const matchingService = installedValidators.value.find((validator) =>
+      setupStore.selectedSetup.services.some(
+        (service) => service.id === validator.config?.serviceID
+      )
+    );
+    currentService.value = matchingService.config?.serviceID;
+  } else {
+    currentService.value = installedValidators.value[0]?.config?.serviceID;
+  }
+};
+
+const getActiveValidator = () => {
+  if (setupStore.selectedSetup) {
+    stakingStore.selectedServiceToFilter = installedValidators.value.find(
+      (service) => service.setupId === setupStore.selectedSetup?.setupId
+    );
+  } else {
+    stakingStore.selectedServiceToFilter = installedValidators.value[0];
+  }
+};
 
 const getService = (index) => {
   hoveredIndex.value = null;
@@ -108,6 +129,14 @@ const filterByService = (item) => {
   stakingStore.isGroupListActive = false;
   stakingStore.currentGroup = null;
 };
+
+watch(
+  () => setupStore.selectedSetup,
+  () => {
+    getCurrentService();
+    getActiveValidator();
+  }
+);
 </script>
 
 <style scoped>

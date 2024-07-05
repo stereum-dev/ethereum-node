@@ -1822,6 +1822,10 @@ video {
   height: 100vh;
 }
 
+.h-\[95\.5\%\]{
+  height: 95.5%;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -1926,10 +1930,6 @@ video {
   max-height: 35px;
 }
 
-.max-h-\[409px\]{
-  max-height: 409px;
-}
-
 .max-h-\[40px\]{
   max-height: 40px;
 }
@@ -1976,6 +1976,10 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-\[409px\]{
+  max-height: 409px;
 }
 
 .min-h-11{
@@ -2154,10 +2158,6 @@ video {
   width: 15rem;
 }
 
-.w-64{
-  width: 16rem;
-}
-
 .w-7{
   width: 1.75rem;
 }
@@ -2228,10 +2228,6 @@ video {
 
 .w-\[200px\]{
   width: 200px;
-}
-
-.w-\[230px\]{
-  width: 230px;
 }
 
 .w-\[27px\]{
@@ -2324,6 +2320,14 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-64{
+  width: 16rem;
+}
+
+.w-\[230px\]{
+  width: 230px;
 }
 
 .min-w-\[100px\]{
@@ -2491,27 +2495,6 @@ video {
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-@-webkit-keyframes ping{
-  75%, 100%{
-    -webkit-transform: scale(2);
-            transform: scale(2);
-    opacity: 0;
-  }
-}
-
-@keyframes ping{
-  75%, 100%{
-    -webkit-transform: scale(2);
-            transform: scale(2);
-    opacity: 0;
-  }
-}
-
-.animate-ping{
-  -webkit-animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-          animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
 @-webkit-keyframes pulse{
   50%{
     opacity: .5;
@@ -2546,6 +2529,27 @@ video {
 .animate-spin{
   -webkit-animation: spin 1s linear infinite;
           animation: spin 1s linear infinite;
+}
+
+@-webkit-keyframes ping{
+  75%, 100%{
+    -webkit-transform: scale(2);
+            transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes ping{
+  75%, 100%{
+    -webkit-transform: scale(2);
+            transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping{
+  -webkit-animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+          animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 .cursor-default{
@@ -4125,6 +4129,11 @@ video {
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#664933\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(102 73 51 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
 }
@@ -4872,12 +4881,12 @@ video {
   opacity: 0.7;
 }
 
-.opacity-75{
-  opacity: 0.75;
-}
-
 .opacity-80{
   opacity: 0.8;
+}
+
+.opacity-75{
+  opacity: 0.75;
 }
 
 .shadow{
@@ -5563,6 +5572,11 @@ html body {
   border-color: rgb(13 148 136 / var(--tw-border-opacity));
 }
 
+.hover\:border-amber-300:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(252 211 77 / var(--tw-border-opacity));
+}
+
 .hover\:bg-\[\#212325\]:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(33 35 37 / var(--tw-bg-opacity));
@@ -5805,6 +5819,11 @@ html body {
 .hover\:text-white:hover{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.hover\:text-black:hover{
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .hover\:shadow-2xl:hover{

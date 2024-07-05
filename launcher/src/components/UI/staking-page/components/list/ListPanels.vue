@@ -77,13 +77,11 @@
     <div
       class="w-full h-full col-start-4 col-end-13 grid grid-cols-12 items-center self-center px-1 relative"
     >
-      <keep-alive>
-        <component
-          :is="activePanel.component"
-          v-bind="activePanel.props"
-          v-on="activePanel.events"
-        />
-      </keep-alive>
+      <component
+        :is="activePanel.component"
+        v-bind="activePanel.props"
+        v-on="activePanel.events"
+      />
     </div>
   </div>
 </template>

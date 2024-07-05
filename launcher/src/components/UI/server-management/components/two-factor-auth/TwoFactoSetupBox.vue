@@ -30,6 +30,8 @@
         v-if="props.timeBased"
         class="send-btn w-16 h-[95%] rounded-xl text-xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-[1px]"
         @click="sendCode"
+        @mouseenter="footerStore.cursorLocation = `${t('twoFactor.send')} `"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <span>{{ t("twoFactorAuth.send") }}</span>
       </div>
@@ -53,6 +55,8 @@
     <div
       class="barcode-box w-full h-full flex justify-center items-center col-start-10 col-span-full row-start-2 row-span-full cursor-pointer"
       @click="barcodeModal"
+      @mouseenter="footerStore.cursorLocation = `${t('twoFactor.zoomQr')} `"
+      @mouseleave="footerStore.cursorLocation = ''"
     >
       <img
         :src="props.barcode ? props.barcode : '/img/icon/base-header-icons/notification-modal-dummy-qr-code.png'"
@@ -65,11 +69,13 @@
 <script setup>
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import i18n from "@/includes/i18n";
+import { useFooter } from "@/store/theFooter";
 
 const t = i18n.global.t;
 
 const wait = t("twoFactorAuth.wait");
 
+const footerStore = useFooter();
 const authStore = useTwoFactorAuth();
 
 const emit = defineEmits(["sendCode"]);
@@ -82,6 +88,7 @@ const props = defineProps({
 
 const barcodeModal = () => {
   authStore.isBarcodeModalActive = true;
+  footerStore.cursorLocation = "";
 };
 
 const sendCode = () => {

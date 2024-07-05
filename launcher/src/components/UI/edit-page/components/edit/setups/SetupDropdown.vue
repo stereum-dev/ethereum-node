@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="w-full relative col-start-1 col-span-full grid grid-cols-6 gap-x-1"
-    :class="newHeight"
-  >
+  <div class="w-full relative col-start-1 col-span-full grid grid-cols-6 gap-x-1" :class="newHeight">
     <label
       v-if="setupStore.isRenameSetupActive && route.path === '/edit'"
       for="rename"
@@ -22,9 +19,7 @@
     <div
       v-else
       class="col-start-1 relative p-1 grid rounded-[4px] border border-gray-600"
-      :class="
-        route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'
-      "
+      :class="route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'"
       @click="toggleDropdown"
     >
       <span
@@ -49,17 +44,9 @@
         viewBox="0 0 24 24"
         stroke="currentColor"
         class="h-3 w-3 text-white self-center col-span-1 transform transition-transform duration-200 ease-in-out"
-        :class="[
-          isOpen ? 'rotate-180' : 'rotate-0',
-          route.path === '/edit' ? 'col-start-9' : 'col-start-12',
-        ]"
+        :class="[isOpen ? 'rotate-180' : 'rotate-0', route.path === '/edit' ? 'col-start-9' : 'col-start-12']"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </div>
 
@@ -74,17 +61,17 @@
     >
       <div
         v-if="isOpen"
-        class="absolute top-9 z-20 min-h-20 mt-1 origin-top-right rounded-sm shadow-md bg-gray-200 transition-all duration-100 divide-y-2 divide-gray-500 shadow-black"
+        class="absolute top-9 z-20 min-h-20 mt-1 origin-top-right shadow-md bg-gray-200 transition-all duration-100 divide-y divide-gray-400 shadow-black rounded-md p-1"
         :class="getDropdownWidth"
         @mouseleave="isOpen = false"
       >
         <div
-          v-if="setupStore.isConfigViewActive || setupStore.isEditConfigViewActive"
+          v-if="(setupStore.isConfigViewActive || setupStore.isEditConfigViewActive) && notShowServerViewInControl"
           class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-[#336666] hover:bg-blue-300 cursor-pointer grid grid-cols-6 items-center"
           @click="selectServerView"
         >
           <img
-            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center bg-gray-100"
+            class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-200 self-center bg-gray-100"
             src="/img/icon/stereum-icons/stereum-logo.png"
             alt="Node Server View"
           />
@@ -94,41 +81,41 @@
           >
         </div>
         <div
-          v-for="setup in list.filter((s) => s.setupName !== 'commonServices')"
+          v-for="setup in setupsList"
           v-show="setup.setupId !== setupStore.selectedSetup?.setupId"
           :key="setup.setupName"
-          class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+          class="p-2 bg-gray-200 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-sm font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
+          :class="{
+            'pointer-events-none opacity-50': noValidatorHandler(setup),
+          }"
           @click="selectSetup(setup)"
         >
           <span
             class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start"
             :class="setupStore.getBGColor(setup.color)"
           ></span>
-          <span
-            class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate font-sans"
-            >{{ setup.setupName }}</span
-          >
+          <span class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate font-sans">{{
+            setup.setupName
+          }}</span>
         </div>
       </div>
     </Transition>
 
     <!-- Rename setup button -->
     <!-- Rename Button  -->
-    <RenameSetup
-      v-if="route.path === '/edit'"
-      @confirm-rename="confirmRename"
-      @rename-setup="selectRename"
-    />
+    <RenameSetup v-if="route.path === '/edit'" @confirm-rename="confirmRename" @rename-setup="selectRename" />
   </div>
 </template>
 <script setup>
 import { useSetups } from "@/store/setups";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import RenameSetup from "./RenameSetup.vue";
+import { useServices } from "@/store/services";
+import { useDeepClone } from "@/composables/utils";
 
-const { list, newHeight } = defineProps({
+const { newHeight } = defineProps({
   list: {
     type: Array,
     required: true,
@@ -144,8 +131,32 @@ const emit = defineEmits(["selectRename", "selectSetup", "serverView", "confirmR
 
 const route = useRoute();
 const setupStore = useSetups();
+const serviceStore = useServices();
 
 const isOpen = ref(false);
+
+const setupsList = computed(() => {
+  const validators = serviceStore.installedServices
+    .filter((s) => s.category === "validator")
+    .map((v) => v.service);
+
+  let output = setupStore.allSetups.filter((s) => s.setupName !== "commonServices");
+  output = output.map((setup) => {
+    if (!setup.services || setup.services.length === 0) {
+      setup.noValidator = true;
+    } else {
+      const hasValidator = setup.services.some((service) =>
+        validators.includes(service.service)
+      );
+      if (!hasValidator) {
+        setup.noValidator = true;
+      }
+    }
+
+    return setup;
+  });
+  return useDeepClone(output);
+});
 
 const getDropdownWidth = computed(() => {
   let width;
@@ -163,6 +174,10 @@ const getDropdownWidth = computed(() => {
   return width;
 });
 
+const notShowServerViewInControl = computed(() => {
+  return route.path === "/control" ? false : true;
+});
+
 const getSelectedOption = computed(() => {
   let option;
   if (setupStore.selectedSetup === null) {
@@ -174,7 +189,19 @@ const getSelectedOption = computed(() => {
   return option;
 });
 
+//watchers
+watch(
+  () => setupsList.value,
+  () => {
+    setupStore.stakingSetups = setupsList.value;
+  }
+);
+
 // Methods
+
+const noValidatorHandler = (setup) => {
+  return !!(route.path === "/staking" && setup.noValidator);
+};
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;

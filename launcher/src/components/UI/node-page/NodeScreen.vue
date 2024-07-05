@@ -1,11 +1,11 @@
 <template>
   <base-layout>
     <!-- Start Node main layouts -->
-    <div class="w-full h-full grid grid-cols-24 relative">
+    <div class="w-full h-full grid grid-cols-24">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection />
       </div>
-      <div class="col-start-2 col-end-17 w-full h-full relative">
+      <div class="col-start-2 col-end-17 w-full h-full">
         <NodeSection
           @open-expert="openExpertModal"
           @open-log="openLogPage"
@@ -67,7 +67,7 @@ import { useFooter } from "@/store/theFooter";
 import { useNodeStore } from "@/store/theNode";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
-import { onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useMultiSetups } from "../../../composables/multiSetups";
@@ -89,7 +89,7 @@ const controlStore = useControlStore();
 const router = useRouter();
 const footerStore = useFooter();
 const setupStore = useSetups();
-const { loadSetups, loadServices, getAllSetups, updateDom } = useMultiSetups();
+const { updateDom } = useMultiSetups();
 const { checkConnectionQuality, startPolling, stopPolling } = usePingQuality();
 
 const expertModeClient = ref(null);
@@ -132,12 +132,11 @@ watchEffect(() => {
   }
 });
 
-watch(
-  () => serviceStore.installedServices.length,
-  () => {
+watchEffect(() => {
+  if (serviceStore.installedServices.length) {
     updateDom();
   }
-);
+});
 
 //*****************  Lifecycle Hooks *****************
 
@@ -174,9 +173,7 @@ onUnmounted(() => {
 //*************  Methods *************
 
 const fetchSetups = async () => {
-  await loadSetups();
-  await loadServices();
-  setupStore.allSetups = getAllSetups();
+  await updateDom();
 };
 
 // const checkConnection = async () => {

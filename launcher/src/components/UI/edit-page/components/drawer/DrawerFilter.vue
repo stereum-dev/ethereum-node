@@ -10,7 +10,7 @@
         >
           <ChevronUpDownIcon class="h-3 w-3 text-gray-400" aria-hidden="true" />
         </span>
-        <span class="block truncate text-center">{{ selectedFilter.name }}</span>
+        <span class="block truncate text-center capitalize">{{ selectedFilter }}</span>
       </button>
       <transition
         name="fade"
@@ -26,19 +26,19 @@
             v-for="filter in filters"
             :key="filter.name"
             class="flex justify-center cursor-default select-none p-1 text-gray-900 hover:bg-gray-300"
-            @click="selectFilter(filter)"
+            @click="selectFilter(filter.name)"
           >
             <span
-              v-if="selectedFilter.name === filter.name"
+              v-if="selectedFilter === filter.name"
               class="flex items-center text-cyan-600"
             >
               <CheckIcon class="h-3 w-3" aria-hidden="true" />
             </span>
             <span
-              class="block truncate"
+              class="block truncate capitalize"
               :class="{
-                'font-medium': selectedFilter.name === filter.name,
-                'font-normal': selectedFilter.name !== filter.name,
+                'font-medium': selectedFilter === filter.name,
+                'font-normal': selectedFilter !== filter.name,
               }"
             >
               {{ filter.name }}
@@ -51,24 +51,28 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
-import { ChevronUpDownIcon, CheckIcon } from "@heroicons/vue/20/solid";
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useSetups } from "../../../../../store/setups";
 
 const filters = [
-  { name: "All" },
-  { name: "Execution" },
-  { name: "Consensus" },
-  { name: "Validator" },
-  { name: "Service" },
+  { name: "all" },
+  { name: "execution" },
+  { name: "consensus" },
+  { name: "validator" },
+  { name: "service" },
 ];
 
 const serviceStore = useServices();
+const setupStore = useSetups();
 const manageStore = useNodeManage();
-const selectedFilter = ref(filters[0]);
+const selectedFilter = ref(filters[0].name);
 const isOpen = ref(false);
+const currentNetwork = ref(null);
 
+// Methods
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
@@ -78,38 +82,19 @@ const selectFilter = (filter) => {
   isOpen.value = false;
 };
 
-const networkArchFilteredServices = computed(() => {
-  return serviceStore.allServices.filter((service) => {
-    return networkFilter(service) && archFilter(service);
-  });
-});
+const archFilter = (service) => {
+  const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"];
 
-const filteredServices = () => {
-  const filterName = selectedFilter.value?.name?.toLowerCase() ?? "all";
-  return filterName === "all"
-    ? networkArchFilteredServices.value
-    : networkArchFilteredServices.value.filter(
-        (service) => service.category.toLowerCase() === filterName.toLowerCase()
-      );
+  return armArchs.includes(manageStore.architecture)
+    ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service.service)
+    : true;
 };
 
-onMounted(() => {
-  serviceStore.filteredServices = filteredServices();
-});
-
-watch(selectedFilter, () => {
-  serviceStore.filteredServices = filteredServices();
-});
-
-//serviceStore.filteredServices
-//Methods
-
 const networkFilter = (service) => {
-  switch (manageStore.configNetwork.network) {
+  switch (currentNetwork.value) {
     case "mainnet":
-      return (item) => archFilter(item.service);
+      return true;
     case "holesky":
-      return service.service !== "SSVNetworkService";
     case "sepolia":
       return service.service !== "SSVNetworkService";
     case "gnosis":
@@ -121,12 +106,51 @@ const networkFilter = (service) => {
   }
 };
 
-const archFilter = (service) => {
-  const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"];
-  return armArchs.includes(manageStore.architecture)
-    ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service.service)
-    : true;
+const determineCurrentNetwork = () => {
+  const selectedNetwork = setupStore.selectedSetup?.network;
+  if (selectedNetwork) {
+    const foundNetwork = manageStore.networkList.find(
+      (network) => network.network === selectedNetwork
+    );
+    currentNetwork.value = foundNetwork ? foundNetwork.network : null;
+  }
 };
+
+// Computed
+const networkArchFilteredServices = computed(() => {
+  return serviceStore.allServices.filter((service) => {
+    return networkFilter(service) && archFilter(service);
+  });
+});
+
+const filteredServices = computed(() => {
+  const filterName = selectedFilter.value ?? "all";
+  return filterName === "all"
+    ? networkArchFilteredServices.value
+    : networkArchFilteredServices.value.filter(
+        (service) => service.category === filterName
+      );
+});
+
+// Watchers
+
+watch(
+  [selectedFilter, networkArchFilteredServices],
+  () => {
+    serviceStore.filteredServices = filteredServices.value;
+  },
+  { immediate: true }
+);
+
+// Lifecycle Hooks
+onMounted(() => {
+  determineCurrentNetwork();
+  serviceStore.filteredServices = filteredServices.value;
+});
+
+onUnmounted(() => {
+  serviceStore.filteredServices = [];
+});
 </script>
 
 <style>

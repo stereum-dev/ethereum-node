@@ -1,6 +1,6 @@
 <template>
   <div
-    class="animate__animated animate__slideInLeft w-full h-full col-start-1 col-span-full items-center grid grid-cols-24 grid-rows-12 absolute"
+    class="fixed inset-0 animate__animated animate__slideInLeft w-full h-full col-start-1 col-span-full items-center grid grid-cols-24 grid-rows-12"
   >
     <LogsHeader :client="client" @close-log="closeLog" />
     <LogsBody :client="client" />
@@ -29,7 +29,12 @@ const { client } = defineProps({
   },
 });
 
-const emit = defineEmits(["close-log", "export-log", "export-all-log", "export-customized-logs"]);
+const emit = defineEmits([
+  "close-log",
+  "export-log",
+  "export-all-log",
+  "export-customized-logs",
+]);
 
 const closeLog = () => {
   emit("close-log");

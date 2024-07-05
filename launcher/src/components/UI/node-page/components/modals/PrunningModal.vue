@@ -79,7 +79,7 @@ export default {
   width: 100%;
   height: 91%;
   background-color: rgb(3, 3, 3);
-  border-radius: 0 20px 0 0;
+  border-radius: 0 0 10px 10px;
   position: fixed;
   left: 0;
   bottom: 0;
