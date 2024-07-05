@@ -1,12 +1,15 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full">
+  <div
+    class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full overflow-x-hidden overflow-y-auto"
+  >
     <div
-      class="w-full h-full row-start-2 row-span-full grid grid-rows-10 items-center justify-start py-4"
+      class="w-full h-full row-start-2 row-span-full grid grid-flow-row auto-rows-min items-center justify-start pt-4 gap-y-1 overflow-x-hidden overflow-y-auto"
+      style="grid-auto-rows: minmax(28px, auto)"
     >
       <div
         v-for="(item, index) in installedClients"
         :key="item.config?.serviceID"
-        class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 focus:outline-nones transition-colors duration-200 flex justify-center items-center cursor-pointer"
+        class="w-9 h-7 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 focus:outline-nones transition-colors duration-200 flex justify-center items-center cursor-pointer"
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             currentService === item.config?.serviceID,
@@ -22,8 +25,8 @@
           :src="item.icon"
           :alt="`${item.service} Icon`"
           :class="{
-            'w-7': currentService === item.config?.serviceID,
-            'w-6': currentService !== item.config?.serviceID,
+            'w-6': currentService === item.config?.serviceID,
+            'w-5': currentService !== item.config?.serviceID,
           }"
           @mousedown.prevent
         />
