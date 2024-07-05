@@ -11,11 +11,6 @@
           @open-log="openLogPage"
           @export-setup="exportSetup"
         />
-        <ExpertWindow
-          v-if="isExpertModeOpen"
-          :item="expertModeClient"
-          @hide-modal="closeExpertMode"
-        />
       </div>
       <div class="col-start-17 col-end-21 ml-1 grid grid-cols-2 grid-rows-9">
         <NetworkStatus />
@@ -51,6 +46,11 @@
         @export-log="exportLogs"
         @export-all-log="updateAndExportAllLogs"
         @export-customized-logs="updateAndExportAllLogs"
+      />
+      <ExpertWindow
+        v-if="isExpertModeOpen"
+        :item="expertModeClient"
+        @hide-modal="closeExpertMode"
       />
     </div>
 
