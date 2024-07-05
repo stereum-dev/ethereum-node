@@ -12,21 +12,21 @@
     />
 
     <div
-      class="col-start-2 col-end-5 flex justify-center items-center space-x-1"
+      class="col-start-2 col-end-5 flex justify-center items-center space-x-1 relative"
       @mouseenter="footerStore.cursorLocation = `${valStat}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span class="relative h-3 w-3 rounded-full col-start-2 col-span-1 flex justify-center items-center">
-        <span
-          class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-          :class="getStateColor"
-        ></span>
-        <span class="relative inline-flex rounded-full h-2 w-2" :class="getStateColor"></span>
+      <span
+        class="relative animate-pulse h-3 w-3 rounded-full col-start-2 col-span-1 flex justify-center items-center"
+        :class="getStateColor"
+      >
       </span>
 
-      <span class="text-xs font-semibold text-center col-start-3 col-end-5 capitalize" :class="getTextColor">{{
-        getServiceState
-      }}</span>
+      <span
+        class="text-xs font-semibold text-center col-start-3 col-end-5 capitalize"
+        :class="getTextColor"
+        >{{ getServiceState }}</span
+      >
     </div>
 
     <img
@@ -100,7 +100,9 @@ watch(
       stakingStore.keyNumbers = 0;
       return;
     }
-    stakingStore.keyNumbers = stakingStore.keys.filter((key) => key.validatorID === service.config.serviceID).length;
+    stakingStore.keyNumbers = stakingStore.keys.filter(
+      (key) => key.validatorID === service.config.serviceID
+    ).length;
   },
   { immediate: true }
 );

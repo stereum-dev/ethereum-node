@@ -1,12 +1,26 @@
 import { useNodeStore } from '@/store/theNode';
 <template>
-  <div class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-3 gap-1 p-1 relative" @pointerdown.prevent.stop>
+  <div
+    class="col-start-2 col-span-1 grid grid-cols-3 grid-rows-3 gap-1 p-1"
+    @pointerdown.prevent.stop
+  >
     <div
-      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' &&
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="p-1 col-start-1 col-span-1 flex justify-center items-center bg-gray-900 hover:bg-gray-600 rounded-md"
     >
-      <button v-if="props.client.serviceIsPending" type="button" class="w-full h-full rounded-md disabled">
-        <img src="/img/icon/loading-icons/loading-circle.png" alt="icon" class="w-4 animate-spin" />
+      <button
+        v-if="props.client.serviceIsPending"
+        type="button"
+        class="w-full h-full rounded-md disabled"
+      >
+        <img
+          src="/img/icon/loading-icons/loading-circle.png"
+          alt="icon"
+          class="w-4 animate-spin"
+        />
       </button>
       <button
         v-else-if="props.client.state == 'running'"
@@ -15,14 +29,22 @@ import { useNodeStore } from '@/store/theNode';
         @mouseenter="footerStore.cursorLocation = `${turnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/node-page-icons/service-command-turn-off.png" alt="icon" class="w-4 active:scale-95" />
+        <img
+          src="/img/icon/node-page-icons/service-command-turn-off.png"
+          alt="icon"
+          class="w-4 active:scale-95"
+        />
       </button>
       <button
         v-else-if="props.client.state == 'restarting'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
         @click="stateHandler"
       >
-        <img src="/img/icon/node-page-icons/service-command-pending.png" alt="icon" class="w-4 active:scale-95" />
+        <img
+          src="/img/icon/node-page-icons/service-command-pending.png"
+          alt="icon"
+          class="w-4 active:scale-95"
+        />
       </button>
       <button
         v-else
@@ -31,17 +53,28 @@ import { useNodeStore } from '@/store/theNode';
         @mouseenter="footerStore.cursorLocation = `${turnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img src="/img/icon/node-page-icons/service-command-turn-on.png" alt="icon" class="w-4 active:scale-95" />
+        <img
+          src="/img/icon/node-page-icons/service-command-turn-on.png"
+          alt="icon"
+          class="w-4 active:scale-95"
+        />
       </button>
     </div>
     <button
-      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' &&
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="col-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="restartHandler"
       @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon//node-page-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
+      <img
+        src="/img/icon//node-page-icons/service-command-restart.png"
+        alt="icon"
+        class="w-4 active:scale-95"
+      />
     </button>
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
@@ -50,25 +83,43 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${expert}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-page-icons/service-command-open-settings.png" alt="icon" class="w-8 active:scale-95" />
+      <img
+        src="/img/icon/node-page-icons/service-command-open-settings.png"
+        alt="icon"
+        class="w-8 active:scale-95"
+      />
     </button>
     <button
-      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' &&
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="col-start-1 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openLog"
       @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-page-icons/service-command-open-logs.png" alt="icon" class="w-4 active:scale-95" />
+      <img
+        src="/img/icon/node-page-icons/service-command-open-logs.png"
+        alt="icon"
+        class="w-4 active:scale-95"
+      />
     </button>
     <button
-      v-if="props.client.service !== 'ExternalExecutionService' && props.client.service !== 'ExternalConsensusService'"
+      v-if="
+        props.client.service !== 'ExternalExecutionService' &&
+        props.client.service !== 'ExternalConsensusService'
+      "
       class="col-start-2 row-start-2 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openDoc"
       @mouseenter="footerStore.cursorLocation = `${docs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-page-icons/service-command-open-docs.png" alt="icon" class="w-5 active:scale-95" />
+      <img
+        src="/img/icon/node-page-icons/service-command-open-docs.png"
+        alt="icon"
+        class="w-5 active:scale-95"
+      />
     </button>
     <button
       v-if="
@@ -81,7 +132,11 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${resync}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-page-icons/service-command-resync-client.png" alt="icon" class="w-4 active:scale-95" />
+      <img
+        src="/img/icon/node-page-icons/service-command-resync-client.png"
+        alt="icon"
+        class="w-4 active:scale-95"
+      />
     </button>
     <button
       v-if="props.client.service == 'TekuValidatorService'"
@@ -90,7 +145,11 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${removeLockBtn}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-page-icons/service-command-delete-lockfile.png" alt="icon" class="w-4 h-4 active:scale-95" />
+      <img
+        src="/img/icon/node-page-icons/service-command-delete-lockfile.png"
+        alt="icon"
+        class="w-4 h-4 active:scale-95"
+      />
     </button>
     <button
       v-if="props.client.service == 'GethService'"
@@ -99,17 +158,28 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${pruning}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-page-icons/service-command-pruning.png" alt="icon" class="active:scale-95" />
+      <img
+        src="/img/icon/node-page-icons/service-command-pruning.png"
+        alt="icon"
+        class="active:scale-95"
+      />
     </button>
     <button
-      v-if="props.client.category == 'execution' && props.client.service !== 'ExternalExecutionService'"
+      v-if="
+        props.client.category == 'execution' &&
+        props.client.service !== 'ExternalExecutionService'
+      "
       class="row-start-3 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       :class="props.client.service == 'GethService' ? 'col-start-2' : 'col-start-1'"
       @click="copyJwt"
       @mouseenter="footerStore.cursorLocation = `${copyToken}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon/node-page-icons/service-command-copy-jwt.png" alt="icon" class="w-4 h-4 active:scale-95" />
+      <img
+        src="/img/icon/node-page-icons/service-command-copy-jwt.png"
+        alt="icon"
+        class="w-4 h-4 active:scale-95"
+      />
     </button>
     <slot></slot>
   </div>

@@ -1,11 +1,11 @@
 <template>
   <div
-    class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none relative"
+    class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none"
   >
     <HeaderScreen />
 
     <div
-      class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E] relative"
+      class="flex justify-center items-center w-full h-full max-h-[503px] bg-[#33393E]"
     >
       <LoaderAnime v-if="isPageLoading" :anime="getLoadingAnime" />
       <slot></slot>
