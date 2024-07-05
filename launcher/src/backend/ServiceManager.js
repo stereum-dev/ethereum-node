@@ -499,6 +499,28 @@ export class ServiceManager {
           (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function"
         );
         return service;
+      case "KeysAPI":
+        // create a new function to handle dependencies for env vars
+        keyValuePairs = [
+          {
+            key: "PROVIDERS_URLS",
+            value: (e) => e.buildExecutionClientHttpEndpointUrl(),
+            filter: (d) => typeof d.buildExecutionClientHttpEndpointUrl === "function",
+          },
+          {
+            key: "CL_API_URLS",
+            value: (e) => e.buildConsensusClientHttpEndpointUrl(),
+            filter: (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function",
+          },
+        ];
+        this.addENVConnction(service, dependencies, keyValuePairs);
+        service.dependencies.executionClients = dependencies.filter(
+          (d) => typeof d.buildExecutionClientHttpEndpointUrl === "function"
+        );
+        service.dependencies.consensusClients = dependencies.filter(
+          (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function"
+        );
+        return service;
       default:
         return service;
     }
