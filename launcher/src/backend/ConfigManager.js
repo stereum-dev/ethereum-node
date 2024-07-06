@@ -46,6 +46,7 @@ export class ConfigManager {
       }
     } catch (error) {
       console.error("Error in checkAndCreateMultiSetup:", error.message, error.stack);
+      log.error("Error in checkAndCreateMultiSetup:", error.message, error.stack);
     }
   }
 
@@ -87,6 +88,7 @@ export class ConfigManager {
       await this.createMultiSetupContent(services, network);
     } catch (error) {
       console.error(`Failed to create multi-setup configuration file in YAML format: ${error}`);
+      log.error(`Failed to create multi-setup configuration file in YAML format: ${error}`);
     }
   }
 
@@ -97,8 +99,11 @@ export class ConfigManager {
    * @returns {Promise<void>} - does not return anything.
    */
   async createMultiSetupContent(services, network) {
+    log.debug("createMultiSetupContent", services, network);
     let setupServicesObj = await this.createSetupContent(services, network);
+    log.debug("setupServicesObj", setupServicesObj);
     let commonServicesObj = await this.createCommonContent(services);
+    log.debug("commonServicesObj", commonServicesObj);
     let setups = { ...setupServicesObj, ...commonServicesObj };
     await this.writeMultiSetup(setups);
   }
@@ -179,13 +184,16 @@ export class ConfigManager {
    * @param {Object} setup - The setup to write to the multi-setup configuration file.
    */
   async writeMultiSetup(setup) {
+    log.debug("writeMultiSetup", setup);
     try {
       // Convert the setup object to a YAML string and escape backticks
       let setupYaml = yaml.safeDump(setup).replace(/`/g, "\\`");
-
+      log.debug("setupYaml", setupYaml);
+      log.debug("this.multiSetupPath", this.multiSetupPath);
       await this.nodeConnection.sshService.exec(`echo -e "${setupYaml}" > ${this.multiSetupPath}`);
     } catch (error) {
       console.error(`Failed to write setup to multi-setup configuration file: ${error}`);
+      log.error(`Failed to write setup to multi-setup configuration file: ${error}`);
     }
   }
 
