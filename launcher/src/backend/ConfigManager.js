@@ -187,7 +187,7 @@ export class ConfigManager {
     log.debug("writeMultiSetup", setup);
     try {
       // Convert the setup object to a YAML string and escape backticks
-      let setupYaml = yaml.safeDump(setup).replace(/`/g, "\\`");
+      let setupYaml = yaml.dump(setup).replace(/`/g, "\\`");
       log.debug("setupYaml", setupYaml);
       log.debug("this.multiSetupPath", this.multiSetupPath);
       await this.nodeConnection.sshService.exec(`echo -e "${setupYaml}" > ${this.multiSetupPath}`);
