@@ -1121,7 +1121,7 @@ export class Monitoring {
         RethService: ["reth_sync_checkpoint", "reth_sync_checkpoint"], // OK [there is only one label] - query for job="reth"
         BesuService: ["ethereum_best_known_block_number", "ethereum_blockchain_height"], // OK - query for job="besu"
         NethermindService: ["nethermind_blocks", "nethermind_blocks"], // OK [there is only one label] - query for job="nethermind"
-        // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not availble thru Prometheus!
+        // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not available thru Prometheus!
         ErigonService: ["chain_head_header", "chain_head_block"], // TODO - query for job="erigon"
       },
     };
@@ -2590,7 +2590,7 @@ export class Monitoring {
     };
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availble either publicly, locally or thru specific ip addresses
+  // Get a list of all ports (including the associated service and protocol) that are available either publicly, locally or thru specific ip addresses
   // Accepts an optional object of arguments:
   // [OPTIONAL] addr=<string|array> (default: "public"):
   // - "public": retrieve only ports that are publicly available (which means not localhost/127.0.0.1)
