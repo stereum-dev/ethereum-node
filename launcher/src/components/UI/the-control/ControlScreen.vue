@@ -160,7 +160,7 @@ import { useSetups } from "@/store/setups";
 import { useMultiSetups } from "@/composables/multiSetups";
 import { useRouter } from "vue-router";
 
-const { getSelectedSetup } = useMultiSetups();
+const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const t = i18n.global.t;
 
@@ -214,16 +214,14 @@ const selectSetup = (setup) => {
 
 onMounted(() => {
   updateServiceLogs();
-  polling = setInterval(updateServiceLogs, 10000); // refresh logs
-  if (setupStore.allSetups[0] === undefined) {
-    router.push("/node");
-  } else {
-    getSelectedSetup(setupStore.allSetups[0]);
-  }
+  polling = setInterval(updateServiceLogs, 10000);
+  console.log(setupStore.allSetups); // refresh logs
+  existanceSetups();
 });
 
 onUnmounted(() => {
   setupStore.selectedSetup = null;
+  getServerView();
   clearInterval(polling);
 });
 
@@ -235,6 +233,18 @@ const isAnyConsensusRunning = computed(() => {
 watch(isAnyConsensusRunning, (newValue) => {
   footerStore.isConsensusRunning = newValue;
 });
+
+// Methods
+
+const existanceSetups = () => {
+  const filtered = setupStore.allSetups.filter((s) => s.setupName !== "commonServices");
+  console.log(filtered);
+  if (!filtered.length) {
+    router.push("/node");
+  } else {
+    getSelectedSetup(filtered[0]);
+  }
+};
 
 const scrollUp = () => {
   if (pluginsTable.value) {
