@@ -5,6 +5,7 @@ export const useSetups = defineStore("setups", {
     serverSetups: [],
     allSetups: [],
     editSetups: [],
+    stakingSetups: [],
 
     //Setup Node Page
     isConfigViewActive: false,
@@ -32,8 +33,7 @@ export const useSetups = defineStore("setups", {
     serverServices: ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"],
 
     colorMappings: {
-      // default: { text: "text-gray-100", background: "bg-[#336666]" },
-      default: { text: "text-gray-800", background: "bg-[#D1BB9E]" },
+      default: { text: "text-gray-100", background: "bg-[#336666]" },
       blue: { text: "text-gray-100", background: "bg-blue-900" }, //#172554
       red: { text: "text-gray-800", background: "bg-red-300" }, //#fca5a5
       yellow: { text: "text-gray-800", background: "bg-[#F7C566]" },

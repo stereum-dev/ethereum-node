@@ -31,8 +31,9 @@
         <div class="w-full h-full grid grid-cols-2 items-center">
           <div
             v-if="
-              /FlashbotsMevBoostService|LidoObolExitService|ValidatorEjectorService/.test(item.service) &&
-              !item.isRemoveProcessing
+              /FlashbotsMevBoostService|LidoObolExitService|ValidatorEjectorService|KeysAPIService/.test(
+                item.service
+              ) && !item.isRemoveProcessing
             "
             class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 rounded-md cursor-pointer p-1 transform active:scale-75 duration-200 hover:border-gray-300"
             @click="changeConnection(item)"

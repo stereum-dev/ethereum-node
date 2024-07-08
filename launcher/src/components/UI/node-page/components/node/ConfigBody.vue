@@ -1,26 +1,26 @@
 <template>
   <div
-    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-y-auto bg-[#151618] relative"
+    class="scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-y-auto bg-[#151618]"
     :class="
       setupStore.isConfigViewActive
         ? 'animate__animated animate__fadeIn animate__faster'
         : 'animate__animated animate__fadeOut animate__faster'
     "
   >
-    <div
-      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-xs font-[400] font-sans"
-    >
-      <span class="col-start-1 justify-self-center self-center">{{
-        $t("editModals.executionClients")
-      }}</span>
-      <span class="col-start-2 justify-self-center self-center">{{
-        $t("editModals.consensusClients")
-      }}</span>
-      <span class="col-start-3 justify-self-center self-center"
-        >{{ $t("editBody.validator") }}
-      </span>
-    </div>
-    <div class="w-full h-full grid grid-cols-3 pt-8">
+    <div class="w-full h-full grid grid-cols-3 grid-rows-15">
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-xs font-[400] font-sans"
+      >
+        <span class="col-start-1 justify-self-center self-center">{{
+          $t("editModals.executionClients")
+        }}</span>
+        <span class="col-start-2 justify-self-center self-center">{{
+          $t("editModals.consensusClients")
+        }}</span>
+        <span class="col-start-3 justify-self-center self-center"
+          >{{ $t("editBody.validator") }}
+        </span>
+      </div>
       <ClientSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
       <ExecutionClients
         @open-expert="openExpert"

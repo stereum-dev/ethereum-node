@@ -266,6 +266,17 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args));
     }
 
+    if (constellation.includes("KeysAPIService")) {
+      //KeysAPIService
+      this.extraServices.push(
+        this.serviceManager.getService("KeysAPIService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+        })
+      );
+    }
+
     if (constellation.includes("ValidatorEjectorService")) {
       //ValidatorEjectorService
       this.extraServices.push(
@@ -410,6 +421,7 @@ export class OneClickInstall {
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
       await this.serviceManager.prepareSSVDKG(this.extraServices.find((s) => s.service === "SSVDKGService"));
+      await this.serviceManager.initKeysAPI(this.extraServices.filter((s) => s.service === "KeysAPIService"));
       return configs;
     }
   }
@@ -503,6 +515,9 @@ export class OneClickInstall {
         break;
       case "lidossv":
         services.push("SSVNetworkService", "SSVDKGService");
+        break;
+      case "lidocsm":
+        services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService");
     }
     return services;
   }

@@ -10,7 +10,7 @@
     </div>
     <div class="col-start-18 col-span-full h-8 flex justify-end items-center">
       <SetupDropdown
-        :list="setupsList"
+        :list="setupList"
         :new-height="newHeight"
         @select-setup="selectSetup"
         @server-view="serverView"
@@ -19,20 +19,20 @@
   </div>
 </template>
 <script setup>
+import { useMultiSetups } from "@/composables/multiSetups";
 import { computed } from "vue";
 import { useSetups } from "../../../../../store/setups";
-import SetupDropdown from "../../../edit-page/components/edit/setups/SetupDropdown.vue";
-import { useMultiSetups } from "@/composables/multiSetups";
-import TotalBalance from "../management/components/val-rewards/TotalBalance.vue";
 import NetworkStatus from "../../../../layers/NetworkStatus.vue";
+import SetupDropdown from "../../../edit-page/components/edit/setups/SetupDropdown.vue";
+import TotalBalance from "../management/components/val-rewards/TotalBalance.vue";
 
 const setupStore = useSetups();
 const { getSelectedSetup, getServerView } = useMultiSetups();
 
 const newHeight = "h-8";
 
-const setupsList = computed(() => {
-  return setupStore.allSetups;
+const setupList = computed(() => {
+  return setupStore.stakingSetups;
 });
 
 const getNetworkSize = computed(() => {

@@ -2,8 +2,13 @@
   <div
     class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-sm grid grid-cols-12 items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-600"
   >
-    <div class="w-full h-full col-start-1 col-end-11 relative flex justify-start items-center">
-      <button class="absolute right-2 focus:outline-none rtl:left-0 rtl:right-auto" @click="togglePasswordVisibility">
+    <div
+      class="w-full h-full col-start-1 col-end-11 relative flex justify-start items-center"
+    >
+      <button
+        class="absolute right-2 focus:outline-none rtl:left-0 rtl:right-auto"
+        @click="togglePasswordVisibility"
+      >
         <img
           v-if="isPasswordVisible"
           class="w-4"
@@ -32,7 +37,12 @@
         class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
         @click="cancelPassword"
       >
-        <img class="w-4 h-4" src="/img/icon/staking-page-icons/close.png" alt="Close Icon" @mousedown.prevent />
+        <img
+          class="w-4 h-4"
+          src="/img/icon/staking-page-icons/close.png"
+          alt="Close Icon"
+          @mousedown.prevent
+        />
       </div>
     </div>
     <div class="col-start-12 col-span-1 flex justify-center items-center p-1">
@@ -40,7 +50,12 @@
         class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
         @click="confirmPassword"
       >
-        <img class="w-4 h-4" src="/img/icon/staking-page-icons/check.png" alt="Check Icon" @mousedown.prevent />
+        <img
+          class="w-4 h-4"
+          src="/img/icon/staking-page-icons/check.png"
+          alt="Check Icon"
+          @mousedown.prevent
+        />
       </div>
     </div>
   </div>
@@ -48,7 +63,7 @@
 
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const emit = defineEmits(["confirmPassword"]);
 
@@ -63,6 +78,7 @@ const togglePasswordVisibility = () => {
 };
 
 const cancelPassword = () => {
+  eneteredPassword.value = "";
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel(null);
   stakingStore.previewKeys = [];
@@ -74,4 +90,12 @@ const confirmPassword = () => {
   eneteredPassword.value = "";
   isPasswordVisible.value = false;
 };
+
+onMounted(() => {
+  eneteredPassword.value = "";
+});
+
+onUnmounted(() => {
+  eneteredPassword.value = "";
+});
 </script>

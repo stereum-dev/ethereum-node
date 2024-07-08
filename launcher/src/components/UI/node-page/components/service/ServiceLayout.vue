@@ -1,6 +1,6 @@
 <template>
   <div
-    class="col-start-1 col-span-1 row-start-1 row-span-full relative w-full h-full flex justify-center items-center box-border"
+    class="col-start-1 col-span-1 row-start-1 row-span-full w-full h-full flex justify-center items-center box-border"
     style="cursor: default"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
