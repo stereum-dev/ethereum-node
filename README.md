@@ -47,7 +47,7 @@ Not sure how to help or where to start? Then visit us on [Discord](https://disco
 
 ### `main`
 
-For development, automated tests running for each commit.
+For development automated tests running for each commit.
 
 #### Tests
 
