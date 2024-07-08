@@ -315,5 +315,8 @@ const generateKeyHandler = async () => {
   const keys = await ControlService.generateSSHKeyPair(data);
   await ControlService.writeSSHKeyFile(keys);
   serverStore.isGenerateModalActive = false;
+  setTimeout(() => {
+    readSSHKeyFile();
+  }, 1000);
 };
 </script>

@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -759,11 +759,6 @@ video {
   bottom: 0px;
 }
 
-.inset-x-2{
-  left: 0.5rem;
-  right: 0.5rem;
-}
-
 .-bottom-2{
   bottom: -0.5rem;
 }
@@ -824,6 +819,10 @@ video {
   bottom: 0.25rem;
 }
 
+.bottom-2{
+  bottom: 0.5rem;
+}
+
 .bottom-20{
   bottom: 5rem;
 }
@@ -882,6 +881,10 @@ video {
 
 .left-\[17rem\]{
   left: 17rem;
+}
+
+.left-\[1px\]{
+  left: 1px;
 }
 
 .left-\[40\%\]{
@@ -984,28 +987,16 @@ video {
   top: -18px;
 }
 
-.top-\[7rem\]{
-  top: 7rem;
-}
-
-.left-\[1px\]{
-  left: 1px;
+.top-\[1px\]{
+  top: 1px;
 }
 
 .top-\[56px\]{
   top: 56px;
 }
 
-.bottom-2{
-  bottom: 0.5rem;
-}
-
-.top-4{
-  top: 1rem;
-}
-
-.top-\[1px\]{
-  top: 1px;
+.top-\[7rem\]{
+  top: 7rem;
 }
 
 .z-0{
@@ -1797,8 +1788,16 @@ video {
   height: 48px;
 }
 
+.h-\[492px\]{
+  height: 492px;
+}
+
 .h-\[50px\]{
   height: 50px;
+}
+
+.h-\[554px\]{
+  height: 554px;
 }
 
 .h-\[55px\]{
@@ -1849,30 +1848,6 @@ video {
 
 .h-screen{
   height: 100vh;
-}
-
-.h-\[490px\]{
-  height: 490px;
-}
-
-.h-\[492px\]{
-  height: 492px;
-}
-
-.h-\[80\%\]{
-  height: 80%;
-}
-
-.h-\[540\]{
-  height: 540;
-}
-
-.h-\[540px\]{
-  height: 540px;
-}
-
-.h-\[554px\]{
-  height: 554px;
 }
 
 .max-h-10{
@@ -2341,10 +2316,6 @@ video {
 
 .w-\[8rem\]{
   width: 8rem;
-}
-
-.w-\[970px\]{
-  width: 970px;
 }
 
 .w-fit{
