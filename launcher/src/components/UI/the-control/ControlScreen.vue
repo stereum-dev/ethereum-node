@@ -238,7 +238,6 @@ watch(isAnyConsensusRunning, (newValue) => {
 
 const existanceSetups = () => {
   const filtered = setupStore.allSetups.filter((s) => s.setupName !== "commonServices");
-  console.log(filtered);
   if (!filtered.length) {
     router.push("/node");
   } else {
