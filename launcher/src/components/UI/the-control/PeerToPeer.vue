@@ -106,10 +106,21 @@ export default {
       const setupServices = this.selectedSetup?.services.map((service) => service.service);
 
       const filtered = this.p2pstatus.data.filter((status) => {
-        const consensusService = status.details.consensus.service;
-        const executionService = status.details.execution.service;
+        const details = status.details;
+        if (!details) {
+          return false;
+        }
+
+        const consensusService = details.consensus?.service;
+        const executionService = details.execution?.service;
+
+        if (!consensusService || !executionService) {
+          return false;
+        }
+
         const consensusMatch = setupServices.includes(consensusService);
         const executionMatch = setupServices.includes(executionService);
+
         return consensusMatch && executionMatch;
       });
 
