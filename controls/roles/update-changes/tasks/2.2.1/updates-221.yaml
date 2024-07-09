@@ -4,10 +4,6 @@
     paths: "/etc/stereum/services"
   register: service_config_files
 
-- name: debug result
-  debug:
-    var: service_config_files
-
 - name: Include Besu Changes
   include_tasks: besu_changes.yaml
   loop: "{{ service_config_files.files }}"

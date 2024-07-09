@@ -12,11 +12,23 @@
 - name: Remove tags from Besu Config
   lineinfile:
     path: "{{ config_file_path }}"
-    regexp: "{{ item }}"
+    regexp: "pruning-enabled"
     state: absent
-  loop: 
-    - pruning-enabled
-    - pruning-blocks-retained
-    - pruning-block-confirmations
+  when:
+    - service_configuration.service == "BesuService"
+    
+- name: Remove tags from Besu Config
+  lineinfile:
+    path: "{{ config_file_path }}"
+    regexp: "pruning-block-confirmations"
+    state: absent
+  when:
+    - service_configuration.service == "BesuService"
+
+- name: Remove tags from Besu Config
+  lineinfile:
+    path: "{{ config_file_path }}"
+    regexp: "pruning-blocks-retained"
+    state: absent
   when:
     - service_configuration.service == "BesuService"
