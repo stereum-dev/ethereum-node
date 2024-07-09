@@ -8,4 +8,4 @@
   include_tasks: besu_changes.yaml
   loop: "{{ service_config_files.files }}"
   loop_control:
-    loop_var: config_file_path
+    loop_var: config_file
