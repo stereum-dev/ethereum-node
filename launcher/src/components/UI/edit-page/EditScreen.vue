@@ -508,7 +508,11 @@ const cancelChangeHandler = (item) => {
 
 const addServices = (service) => {
   let item = useDeepClone(service);
-  if (item?.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item?.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service) &&
+    setupStore.selectedSetup?.setupId === service?.setupId
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -527,7 +531,6 @@ const addServerServices = (service) => {
   let item = useDeepClone(service);
 
   if (item.category === "service" && manageStore.newConfiguration.map((s) => s?.service).includes(item?.service)) {
-
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -850,7 +853,6 @@ const handleSwitchSetupNetwork = async () => {
 };
 
 const resetState = async () => {
-  updateDom();
   manageStore.confirmChanges = [];
   manageStore.selectedNetwork = {};
   setupStore.selectedSetupToRemove = [];
@@ -858,7 +860,8 @@ const resetState = async () => {
   await listKeys();
   setTimeout(() => {
     manageStore.disableConfirmButton = false;
-  }, 2000);
+  }, 3000);
+  await updateDom();
 };
 
 const nukeConfirmation = () => {
