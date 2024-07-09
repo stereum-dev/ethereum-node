@@ -5,9 +5,7 @@
     <div
       class="col-start-1 col-span-full row-start-1 row-end-3 w-full h-full bg-[#232428] rounded-md flex flex-col justify-between items-center p-1"
     >
-      <span class="text-xs text-center text-gray-300 font-sans uppercase mt-1"
-        >Create a setup</span
-      >
+      <span class="text-xs text-center text-gray-300 font-sans uppercase mt-1">Create a setup</span>
 
       <div
         class="w-full h-7 bg-teal-700 rounded-[5px] text-center cursor-pointer hover:bg-teal-900 hover:scale-95 active:scale-90 transition-all duration-100"
@@ -19,9 +17,7 @@
     <div
       class="col-start-1 col-span-full row-start-3 row-end-5 w-full h-full bg-[#232428] rounded-md flex flex-col justify-between items-center p-1"
     >
-      <span class="text-xs text-center text-gray-300 font-sans uppercase mt-1"
-        >IMPORT A SETUP</span
-      >
+      <span class="text-xs text-center text-gray-300 font-sans uppercase mt-1">IMPORT A SETUP</span>
 
       <div
         class="w-full h-7 bg-teal-700 rounded-[5px] text-center cursor-pointer hover:bg-teal-900 hover:scale-95 active:scale-90 transition-all duration-100"
@@ -44,18 +40,13 @@
           v-for="service in getServerServices"
           :key="service"
           class="w-full h-7 min-h-7 bg-[#282a2c] hover:bg-gray-700 rounded-sm border border-gray-600 mx-auto shadow-md shadow-black grid grid-cols-6 items-center p-[2px] cursor-pointer overflow-hidden"
-          :class="service.isDuplicated ? 'pointer-events-none opacity-50' : ''"
+          :class="service?.isDuplicated ? 'pointer-events-none opacity-50' : ''"
           @dblclick="addService(service)"
         >
-          <img
-            class="w-5 h-5 col-start-1 col-span-1 mx-auto self-center"
-            :src="service.icon"
-            alt="Service Icon"
-          />
-          <span
-            class="col-start-2 col-span-full self-center text-xs text-gray-200 text-left font-sans truncate"
-            >{{ service.service }}</span
-          >
+          <img class="w-5 h-5 col-start-1 col-span-1 mx-auto self-center" :src="service.icon" alt="Service Icon" />
+          <span class="col-start-2 col-span-full self-center text-xs text-gray-200 text-left font-sans truncate">{{
+            service?.service
+          }}</span>
         </div>
       </div>
     </div>
@@ -77,13 +68,13 @@ const allServices = ref([]);
 
 const getServerServices = computed(() => {
   const newConfigServices = new Set(manageStore.newConfiguration.map((e) => e.service));
-  const serverServices = new Set(setupStore.serverServices.map((e) => e));
+  const serverServices = new Set(setupStore?.serverServices.map((e) => e));
 
   return allServices.value
     .filter((e) => e.category === "service" && serverServices.has(e.service))
     .map((service) => ({
       ...service,
-      isDuplicated: newConfigServices.has(service.service),
+      isDuplicated: newConfigServices.has(service?.service),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 });
