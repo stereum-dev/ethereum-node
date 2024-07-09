@@ -9,47 +9,27 @@
     @confirm-action="okButton"
   >
     <template #content>
-      <div class="flex flex-col justify-between items-center py-2 px-4 space-y-2 mt-10">
+      <div class="flex flex-col justify-between items-center py-2 px-4 space-y-1">
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
-            <img
-              class="col-start-1 w-7 h-7"
-              src="/img/icon/edit-node-icons/service-item-icon.png"
-              alt="Client Icon"
-            />
+            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-item-icon.png" alt="Client Icon" />
             <span class="col-start-2 col-span-3 text-gray-400 text-left"> Setup ID </span>
-            <span class="col-start-6 col-end-13 text-amber-600 text-center">{{
-              getSelectedSetup.setupId
+            <span class="col-start-6 col-end-13 text-amber-600 text-center">{{ getSelectedSetup.setupId }}</span>
+          </div>
+        </div>
+        <div class="w-full flex justify-center items-center">
+          <div class="w-full grid grid-cols-12 items-center text-md">
+            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-category.png" alt="Client Icon" />
+            <span class="col-start-2 col-span-3 text-gray-400 text-left"> Setup Name </span>
+            <span v-if="getSelectedSetup" class="col-start-6 col-end-13 text-lg text-gray-400 text-center capitalize">{{
+              getSelectedSetup.setupName
             }}</span>
           </div>
         </div>
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
-            <img
-              class="col-start-1 w-7 h-7"
-              src="/img/icon/edit-node-icons/service-category.png"
-              alt="Client Icon"
-            />
-            <span class="col-start-2 col-span-3 text-gray-400 text-left">
-              Setup Name
-            </span>
-            <span
-              v-if="getSelectedSetup"
-              class="col-start-6 col-end-13 text-lg text-gray-400 text-center capitalize"
-              >{{ getSelectedSetup.setupName }}</span
-            >
-          </div>
-        </div>
-        <div class="w-full flex justify-center items-center">
-          <div class="w-full grid grid-cols-12 items-center text-md">
-            <img
-              class="col-start-1 w-7 h-7"
-              src="/img/icon/edit-node-icons/service-category.png"
-              alt="Client Icon"
-            />
-            <span class="col-start-2 col-span-3 text-gray-400 text-left">
-              Setup Color
-            </span>
+            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-category.png" alt="Client Icon" />
+            <span class="col-start-2 col-span-3 text-gray-400 text-left"> Setup Color </span>
             <span
               v-if="getSelectedSetup"
               class="w-6 h-6 rounded-full col-start-8 col-span-1 text-lg text-gray-400 font-sans text-center capitalize"
@@ -64,22 +44,16 @@
         </div>
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
-            <img
-              class="col-start-1 w-7 h-7"
-              src="/img/icon/edit-node-icons/service-category.png"
-              alt="Client Icon"
-            />
-            <span class="col-start-2 col-span-3 text-gray-400 text-left">
-              Included Services
-            </span>
+            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-category.png" alt="Client Icon" />
+            <span class="col-start-2 col-span-3 text-gray-400 text-left"> Included Services: </span>
           </div>
         </div>
 
-        <div class="w-full h-9 flex justify-start items-center space-x-2">
+        <div class="w-full h-9 grid grid-cols-3 gap-1">
           <span
             v-for="service in getSelectedSetup.services"
             :key="service.service"
-            class="col-start-2 col-span-1 text-xs text-gray-300 font-semibold text-center capitalize bg-teal-700 rounded-sm p-1"
+            class="col-span-1 text-xs text-gray-300 font-semibold text-center capitalize bg-teal-700 rounded-sm p-1"
             >{{ service.service }}</span
           >
         </div>

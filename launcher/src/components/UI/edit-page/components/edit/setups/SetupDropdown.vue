@@ -136,18 +136,14 @@ const serviceStore = useServices();
 const isOpen = ref(false);
 
 const setupsList = computed(() => {
-  const validators = serviceStore.installedServices
-    .filter((s) => s.category === "validator")
-    .map((v) => v.service);
+  const validators = serviceStore.installedServices.filter((s) => s.category === "validator").map((v) => v.service);
 
   let output = setupStore.allSetups.filter((s) => s.setupName !== "commonServices");
   output = output.map((setup) => {
     if (!setup.services || setup.services.length === 0) {
       setup.noValidator = true;
     } else {
-      const hasValidator = setup.services.some((service) =>
-        validators.includes(service.service)
-      );
+      const hasValidator = setup.services.some((service) => validators.includes(service.service));
       if (!hasValidator) {
         setup.noValidator = true;
       }
@@ -175,7 +171,7 @@ const getDropdownWidth = computed(() => {
 });
 
 const notShowServerViewInControl = computed(() => {
-  return route.path === "/control" ? false : true;
+  return route.path !== "/control";
 });
 
 const getSelectedOption = computed(() => {
