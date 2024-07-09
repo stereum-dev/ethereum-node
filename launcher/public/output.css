@@ -2571,6 +2571,11 @@ video {
           appearance: none;
 }
 
+.auto-cols-max{
+  grid-auto-columns: -webkit-max-content;
+  grid-auto-columns: max-content;
+}
+
 .grid-flow-row{
   grid-auto-flow: row;
 }
