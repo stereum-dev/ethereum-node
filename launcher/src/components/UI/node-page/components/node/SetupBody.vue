@@ -13,7 +13,7 @@
       <span class="text-xs text-gray-300 text-center font-sans">All Setups</span>
     </div>
     <div
-      v-if="setupStore.allSetups.length > 0"
+      v-if="allNodeSetups.filter((s) => s.setupName !== 'commonServices').length > 0"
       class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-3 grid-rows-3 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto overflow-x-hidden items-start"
     >
       <SingleSetup

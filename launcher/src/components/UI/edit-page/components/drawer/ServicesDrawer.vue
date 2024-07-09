@@ -2,8 +2,7 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-6 grid-rows-15 items-center gap-y-1 bg-[#292e32] p-1 rounded-md"
   >
-    <span
-      class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-100 font-sans uppercase"
+    <span class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-100 font-sans uppercase"
       >ADD A CONFIG SERVICE</span
     >
     <DrawerFilter />
@@ -54,23 +53,16 @@
         @click="addServices(service)"
         @mouseenter="footerStore.cursorLocation = `${service.name} ${serv}`"
       >
-        <img
-          :src="service.icon"
-          alt="Client Icon"
-          class="col-start-1 col-span-1 w-full mx-auto"
-        />
-        <span
-          class="col-start-2 col-span-full w-full self-center text-xs text-gray-100 truncate ml-2"
-          >{{ service.name }}</span
-        >
+        <img :src="service.icon" alt="Client Icon" class="col-start-1 col-span-1 w-full mx-auto" />
+        <span class="col-start-2 col-span-full w-full self-center text-xs text-gray-100 truncate ml-2">{{
+          service.name
+        }}</span>
       </div>
     </div>
     <div
       class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700"
     >
-      <span class="text-xs text-center text-gray-100 font-sans uppercase mt-1"
-        >CUSTOM SERVICE</span
-      >
+      <span class="text-xs text-center text-gray-100 font-sans uppercase mt-1">CUSTOM SERVICE</span>
 
       <div
         class="w-full h-8 bg-teal-700 rounded-sm text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"
@@ -109,13 +101,13 @@ const emit = defineEmits(["addServices", "startDrag"]);
 const filteredServices = computed(() => {
   return serviceStore.filteredServices
     .filter((service) => {
-      return !setupStore.serverServices.includes(service.service);
+      return !setupStore.serverServices.includes(service?.service);
     })
     .filter((service) => {
-      return service.service !== "CustomService";
+      return service?.service !== "CustomService";
     })
     .filter((service) => {
-      return service.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+      return service?.name.toLowerCase().includes(searchQuery.value.toLowerCase());
     });
 });
 
