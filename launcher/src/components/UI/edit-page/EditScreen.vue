@@ -299,14 +299,6 @@ const listKeys = async (forceRefresh) => {
   await useListKeys(forceRefresh);
 };
 
-// const updateDisplayNetworkList = () => {
-//   if (manageStore.newConfiguration.length === 0) {
-//     manageStore.displayNetworkList = true;
-//   } else {
-//     manageStore.displayNetworkList = false;
-//   }
-// };
-
 // Random ID generator
 function generateRandomId() {
   const timestamp = new Date().getTime().toString(16);
@@ -516,7 +508,11 @@ const cancelChangeHandler = (item) => {
 
 const addServices = (service) => {
   let item = useDeepClone(service);
-  if (item?.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item?.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service) &&
+    setupStore.selectedSetup?.setupId === service?.setupId
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -533,7 +529,8 @@ const addServices = (service) => {
 
 const addServerServices = (service) => {
   let item = useDeepClone(service);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+
+  if (item.category === "service" && manageStore.newConfiguration.map((s) => s?.service).includes(item?.service)) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -542,7 +539,9 @@ const addServerServices = (service) => {
       isNewClient: true,
     };
     manageStore.newConfiguration.push(newItem);
-    setupStore.editSetups.find((s) => s.setupId === setupStore.selectedSetup?.setupId).services.push(newItem);
+
+    setupStore.editSetups.find((s) => s.setupId === setupStore.selectedSetup?.setupId)?.services.push(newItem);
+
     clientToInstall.value = newItem;
     clientToInstall.value.addPanel = true;
   }
@@ -791,12 +790,14 @@ const destroyNode = async () => {
 // Confirm Changes methods
 const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
+
   const setupExists = manageStore.confirmChanges.some(
     (item) =>
       item.service?.hasOwnProperty("setupName") &&
       item.service?.hasOwnProperty("setupId") &&
       item.service.setupId == item.id
   );
+
   const serverServiceExists = manageStore.confirmChanges.some(
     (change) => change.content === "INSTALL" && setupStore.serverServices.includes(change.service.service)
   );
@@ -852,7 +853,6 @@ const handleSwitchSetupNetwork = async () => {
 };
 
 const resetState = async () => {
-  updateDom();
   manageStore.confirmChanges = [];
   manageStore.selectedNetwork = {};
   setupStore.selectedSetupToRemove = [];
@@ -860,7 +860,8 @@ const resetState = async () => {
   await listKeys();
   setTimeout(() => {
     manageStore.disableConfirmButton = false;
-  }, 2000);
+  }, 3000);
+  await updateDom();
 };
 
 const nukeConfirmation = () => {

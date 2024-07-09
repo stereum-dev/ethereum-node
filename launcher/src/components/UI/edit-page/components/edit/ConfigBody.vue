@@ -75,7 +75,7 @@ import ExecutionClients from "./clients/ExecutionClients.vue";
 import ValidatorClients from "./clients/ValidatorClients.vue";
 
 import { useNodeManage } from "@/store/nodeManage";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useMultiSetups } from "../../../../../composables/multiSetups";
 import { useSetups } from "../../../../../store/setups";
 
@@ -105,12 +105,13 @@ const activateScrollBar = computed(() => {
 });
 
 //Update selected setup
-watch(
-  () => manageStore.newConfiguration,
-  () => {
-    updateDom();
-  }
-);
+// watch(
+//   () => manageStore.newConfiguration,
+//   () => {
+//     updateDom();
+
+//   }
+// );
 
 //Lifecycle Hooks
 onMounted(() => {
