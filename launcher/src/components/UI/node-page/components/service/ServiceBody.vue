@@ -12,7 +12,10 @@
       ref="service"
       class="col-start-1 col-span-full row-start-2 row-span-full flex flex-col justify-start space-y-1 items-center overflow-x-hidden overflow-y-auto scrollbar scrollbar-rounded-* hover:scrollbar-thumb-teal-800 scrollbar-track-transparent px-1"
     >
-      <ServiceSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
+      <div v-if="loadingClients" class="space-y-3">
+        <ServiceSkeleton v-for="i in skeletons" :key="i" />
+      </div>
+
       <div
         v-for="item in getServices"
         :key="item"
