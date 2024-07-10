@@ -71,9 +71,7 @@ const getExecutionServices = computed(() => {
   if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
     return [];
   }
-
-  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
-
+  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s?.config?.serviceID);
   const services = serviceStore.installedServices
     .filter(
       (s) =>

@@ -63,7 +63,7 @@ const getConsensusServices = computed(() => {
     return [];
   }
 
-  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s.id);
+  const selectedServiceIds = setupStore.selectedSetup.services.map((s) => s?.config?.serviceID);
   const services = serviceStore.installedServices
     .filter(
       (s) =>

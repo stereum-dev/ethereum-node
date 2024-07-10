@@ -35,6 +35,7 @@ export const useNodeStore = defineStore("theNode", {
           description: "Very poor connection quality with high latency.Try reconnecting to the node.",
         },
       ],
+      pingHistory: [],
       connectionStatus: null,
       connectionStatusIsPoor: false,
       skeletonLoading: false,

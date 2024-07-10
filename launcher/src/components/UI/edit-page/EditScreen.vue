@@ -147,7 +147,7 @@ import { useServers } from "@/store/servers";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useMultiSetups } from "../../../composables/multiSetups";
 import { useSetups } from "../../../store/setups";
@@ -171,6 +171,7 @@ import SetupInfos from "./components/modals/setups/SetupInfos.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
+import { useFrontendServices } from "@/composables/services";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -200,7 +201,7 @@ const nukeModalComponent = ref();
 const selectedSetupNetwork = ref("");
 const changeAnime = ref("/animation/confirm-changes/modify.gif");
 const setupImportAnime = ref("/animation/setup/loader.gif");
-const { loadSetups, loadServices, getAllSetups, getServerView, updateDom } = useMultiSetups();
+const { loadSetups, getAllSetups, getServerView, updateDom } = useMultiSetups();
 
 // Computed & Watcher
 
@@ -225,13 +226,6 @@ const getAimationSrc = computed(() => {
 //   },
 //   { deep: true }
 // );
-
-watch(
-  () => manageStore.newConfiguration.length,
-  () => {
-    updateDom();
-  }
-);
 
 watchEffect(() => {
   if (setupStore.isImportAnimeActive) {
@@ -291,7 +285,6 @@ onUnmounted(() => {
 // Methods
 const fetchSetups = async () => {
   await loadSetups();
-  await loadServices();
   setupStore.editSetups = getAllSetups();
 };
 
@@ -818,6 +811,7 @@ const confirmHandler = async () => {
   } catch (error) {
     console.error("Error processing changes:", error);
   } finally {
+    await useFrontendServices();
     await resetState();
   }
 };
@@ -858,10 +852,10 @@ const resetState = async () => {
   setupStore.selectedSetupToRemove = [];
   manageStore.isLineHidden = false;
   await listKeys();
+  await updateDom();
   setTimeout(() => {
     manageStore.disableConfirmButton = false;
   }, 3000);
-  await updateDom();
 };
 
 const nukeConfirmation = () => {
