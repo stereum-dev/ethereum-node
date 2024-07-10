@@ -1,0 +1,22 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Remove tags from Besu Config
+  lineinfile:
+    path: "{{ config_file.path }}"
+    regexp: "{{ item }}"
+    state: absent
+  loop: 
+    - pruning-enabled
+    - pruning-blocks-retained
+    - pruning-block-confirmations
+  when:
+    - service_configuration.service == "BesuService"

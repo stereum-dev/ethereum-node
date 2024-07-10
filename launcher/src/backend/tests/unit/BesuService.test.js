@@ -13,7 +13,7 @@ test("buildByUserInput", () => {
   expect(besuService.command).toContain("--network=goerli");
   expect(besuService.command).toContain("--data-path=/opt/app/data");
   expect(besuService.entrypoint).toContain("besu");
-  expect(besuService.env).toHaveProperty("JAVA_OPTS", "-Xmx4g");
+  expect(besuService.env).toHaveProperty("JAVA_OPTS", "-Xmx6g");
   expect(besuService.ports).toHaveLength(1);
   expect(besuService.ports).toContain("0.0.0.0:4040:4040/tcp");
   expect(besuService.volumes).toContain("/opt/stereum/besu-" + besuService.id + "/data:/opt/app/data");

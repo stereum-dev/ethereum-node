@@ -36,7 +36,7 @@
                 - --network=goerli
                 - --data-path=/opt/app/data
                 - --data-storage-format=BONSAI
-                - --sync-mode=X_SNAP
+                - --sync-mode=SNAP
                 - --host-allowlist=*
                 - --rpc-http-enabled=true
                 - --rpc-http-host=0.0.0.0
