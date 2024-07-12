@@ -645,16 +645,7 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/service-icons/execution/HyperLedger-besu-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [
-            {
-              title: "Auto Pruning",
-              type: "toggle",
-              changeValue: true,
-              icon: "/img/icon/service-setting-icons/prunning.png",
-              pattern: ["(- --pruning-enabled=)(.*)(\\n)"],
-              commands: ["--pruning-enabled"],
-            },
-          ],
+          expertOptions: [],
           drag: true,
           state: "exited",
           config: {

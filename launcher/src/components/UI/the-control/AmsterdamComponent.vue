@@ -2,11 +2,11 @@
   <div class="amsterdam-parent">
     <div
       class="icoTitle"
-      @mouseenter="cursorLocation = `${footerInfo} ${currentNetwork?.name}`"
+      @mouseenter="cursorLocation = `${footerInfo} ${getSetupNetwork?.name}`"
       @mouseleave="cursorLocation = ''"
     >
       <div class="icoContainer">
-        <img :src="networkIcon" />
+        <img :src="getSetupNetwork?.icon" />
       </div>
       <span>{{ $t("controlPage.node") }}</span>
     </div>
@@ -19,16 +19,9 @@
         </div>
       </div>
       <no-data
-        v-else-if="
-          consensusClientIsOff || prometheusIsOff || installedServicesController !== ''
-        "
-        :service-cat="
-          installedServicesController !== ''
-            ? 'install'
-            : prometheusIsOff
-            ? 'prometheus'
-            : ''
-        "
+        v-else-if="missingServices.length > 0 || !isConsensusRunning || prometheusIsOff"
+        @mouseenter="cursorLocation = `${nodataMessage}`"
+        @mouseleave="cursorLocation = ''"
       />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
@@ -115,6 +108,7 @@ import { useControlStore } from "@/store/theControl";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 import NoData from "./NoData.vue";
+import { useSetups } from "@/store/setups";
 
 export default {
   components: {
@@ -133,13 +127,14 @@ export default {
       proposed: [],
       polling: {},
       loadingStrater: false,
-      prometheusIsOff: false,
+      // prometheusIsOff: false,
       consensusClientIsOff: false,
     };
   },
   computed: {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
+      networkList: "networkList",
     }),
     ...mapState(useServices, {
       installedServices: "installedServices",
@@ -152,6 +147,9 @@ export default {
       slot: "slot",
       status: "status",
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
+      nodataMessage: "nodataMessage",
     }),
     ...mapWritableState(useControlStore, {
       currentSlotData: "currentSlotData",
@@ -161,10 +159,11 @@ export default {
       consensusName: "consensusName",
       pageNumber: "pageNumber",
     }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
+    }),
     proposedBlock() {
-
-      if (this.currentNetwork.id === 3) {
-
+      if (this.selectedSetup?.network === "gnosis") {
         return Array.from({ length: 16 }, () => ({
           slotNumber: 0,
           slotStatus: "pending",
@@ -175,6 +174,14 @@ export default {
           slotStatus: "pending",
         }));
       }
+    },
+    getSetupNetwork() {
+      let setupNet;
+      const net = this.selectedSetup?.network;
+      if (net && this.networkList) {
+        setupNet = this.networkList.find((network) => network.network === net);
+      }
+      return setupNet;
     },
 
     networkIcon() {
@@ -207,6 +214,11 @@ export default {
   },
 
   watch: {
+    selectedSetup(newVal, oldVal) {
+      if (newVal?.network !== oldVal?.network) {
+        this.currentEpochSlot(this.consensusName);
+      }
+    },
     installedServices() {
       this.serviceController(this.installedServices);
       this.serviceStateController(this.consensusName, "consensusClientIsOff");
@@ -291,21 +303,13 @@ export default {
     },
 
     refreshTimer() {
+      const intervalTime = this.selectedSetup?.network === "gnosis" ? 5000 : 11000;
 
-      if (this.currentNetwork.id === 3) {
-
-        this.polling = setInterval(() => {
-          if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-            this.currentEpochSlot(this.consensusName);
-          }
-        }, 5000);
-      } else {
-        this.polling = setInterval(() => {
-          if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
-            this.currentEpochSlot(this.consensusName);
-          }
-        }, 12000);
-      }
+      this.polling = setInterval(() => {
+        if (this.currentSlotData && this.currentEpochData) {
+          this.currentEpochSlot(this.consensusName);
+        }
+      }, intervalTime);
     },
     refreshHandling() {
       this.currentResult = {};
@@ -313,21 +317,19 @@ export default {
       this.currentEpochSlot(this.consensusName);
     },
 
-    initializeProposedBlock() {
-
-      if (this.currentNetwork.id === 3) {
-
-        return Array.from({ length: 16 }, () => ({
-          slotNumber: 0,
-          slotStatus: "pending",
-        }));
-      } else {
-        return Array.from({ length: 32 }, () => ({
-          slotNumber: 0,
-          slotStatus: "pending",
-        }));
-      }
-    },
+    // initializeProposedBlock() {
+    //   if (this.selectedSetup.network === "gnosis") {
+    //     return Array.from({ length: 16 }, () => ({
+    //       slotNumber: 0,
+    //       slotStatus: "pending",
+    //     }));
+    //   } else {
+    //     return Array.from({ length: 32 }, () => ({
+    //       slotNumber: 0,
+    //       slotStatus: "pending",
+    //     }));
+    //   }
+    // },
     async currentEpochSlot() {
       try {
         let res = await ControlService.getCurrentEpochSlot(this.consensusName);

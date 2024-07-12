@@ -9,10 +9,11 @@
       </div>
       <div class="wrapper">
         <no-data
-          v-if="noDataLayerShow || installedServicesController !== ''"
-          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+          v-if="missingServices.length > 0 || prometheusIsOff || !isConsensusRunning"
+          @mouseenter="cursorLocation = `${nodataMessage}`"
+          @mouseleave="cursorLocation = ''"
         />
-        <div v-show="p2pItemsShow" class="p2pBarBox">
+        <div v-else class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
               <span>{{ consensusClient }}</span>
@@ -61,6 +62,7 @@ export default {
   components: { NoData },
   data() {
     return {
+      p2p: this.$t("controlPage.p2p"),
       pageNumber: 1,
       isMultiService: false,
       p2pItemsShow: false,
@@ -97,6 +99,10 @@ export default {
     }),
     ...mapState(useFooter, {
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
+      isConsensusRunning: "isConsensusRunning",
+      nodataMessage: "nodataMessage",
     }),
     filteredP2PStatus() {
       if (!Array.isArray(this.p2pstatus.data) || !this.selectedSetup) {
@@ -106,10 +112,21 @@ export default {
       const setupServices = this.selectedSetup?.services.map((service) => service.service);
 
       const filtered = this.p2pstatus.data.filter((status) => {
-        const consensusService = status.details.consensus.service;
-        const executionService = status.details.execution.service;
+        const details = status.details;
+        if (!details) {
+          return false;
+        }
+
+        const consensusService = details.consensus?.service;
+        const executionService = details.execution?.service;
+
+        if (!consensusService || !executionService) {
+          return false;
+        }
+
         const consensusMatch = setupServices.includes(consensusService);
         const executionMatch = setupServices.includes(executionService);
+
         return consensusMatch && executionMatch;
       });
 

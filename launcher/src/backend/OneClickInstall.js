@@ -361,7 +361,7 @@ export class OneClickInstall {
           break;
         case "BesuService":
           this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))
+            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))
           ] = "--sync-mode=FULL";
           break;
         case "NethermindService":
