@@ -10,23 +10,29 @@
       <div class="wrapper">
         <!--new form start-->
         <no-data
-          v-if="noDataLayerShow || installedServicesController !== ''"
-          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
-        ></no-data>
+          v-if="missingServices.length > 0 || prometheusIsOff"
+          @mouseenter="cursorLocation = `${nodataMessage}`"
+          @mouseleave="cursorLocation = ''"
+        />
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
               <span>{{ consensusName }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress :color="consensuColor" :sync-percent="consensusPer" />
+              <sync-circular-progress
+                :color="consensuColor"
+                :sync-percent="consensusPer"
+              />
             </div>
             <div class="syncStatusStatus" :class="consensusClass">
               <span>{{ consensusText }}</span>
             </div>
             <div
               class="consensusIconCons"
-              @mouseenter="cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`"
+              @mouseenter="
+                cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`
+              "
               @mouseleave="cursorLocation = ''"
             >
               <img :src="clientImage(consensusName)" alt="consensus" />
@@ -38,14 +44,19 @@
               <span>{{ executionName }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress :color="executionColor" :sync-percent="executionPer" />
+              <sync-circular-progress
+                :color="executionColor"
+                :sync-percent="executionPer"
+              />
             </div>
             <div class="syncStatusStatus" :class="executionClass">
               <span>{{ executionText }}</span>
             </div>
             <div
               class="executionIconCons"
-              @mouseenter="cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`"
+              @mouseenter="
+                cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`
+              "
               @mouseleave="cursorLocation = ''"
             >
               <img :src="clientImage(executionName)" alt="execution" />
@@ -158,6 +169,10 @@ export default {
       first: "first",
       second: "second",
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
+      isConsensusRunning: "isConsensusRunning",
+      nodataMessage: "nodataMessage",
     }),
     ...mapState(useControlStore, {
       code: "code",
@@ -233,7 +248,10 @@ export default {
           return false;
         }
 
-        return setupServices.includes(consensusService) && setupServices.includes(executionService);
+        return (
+          setupServices.includes(consensusService) &&
+          setupServices.includes(executionService)
+        );
       });
     },
   },
@@ -261,7 +279,9 @@ export default {
       }
       const lowerCaseInputValue = name.toLowerCase();
       const clientData = [...this.consensusClientsData, ...this.executionClientsData];
-      const matchingClient = clientData.find((client) => client.name.toLowerCase() === lowerCaseInputValue);
+      const matchingClient = clientData.find(
+        (client) => client.name.toLowerCase() === lowerCaseInputValue
+      );
 
       if (name === this.consensusName) {
         this.currentConsensusIcon = matchingClient.img;
