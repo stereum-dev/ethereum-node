@@ -2,46 +2,57 @@
   <div class="no-data_parent">
     <div class="no-data_box">
       <span class="big-sign"> &gt; {{ $t("noData.noData") }} &lt; </span>
-      <div v-if="serviceCat === 'prometheus' ? true : false" class="bottom-part">
+      <!-- <div v-if="serviceCat === 'prometheus' ? true : false" class="bottom-part">
         <div class="comment-part">
           <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
           <span class="comment-row2">Prometheus</span>
         </div>
         <div class="icon-part" :data-tooltip="serviceName">
           <img src="/img/icon/control-page-icons/PrometheusServiceCircle.png" alt="Prometheus" />
-        </div>
-      </div>
-      <div v-else class="bottom-part">
+        </div>v-else
+      </div> -->
+      <!-- <div class="bottom-part">
         <div class="comment-part">
           <span class="comment-row1"
             >{{ footerStore.installedServicesController !== "" ? $t("noData.turnOn") : "Please check the service" }}
           </span>
           <span class="comment-row2">{{ footerStore.installedServicesController }}</span>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
-<script>
-import { ref } from "vue";
+<script setup>
+// import { ref } from "vue";
 import { useFooter } from "@/store/theFooter";
 
-export default {
-  props: {
-    serviceCat: {
-      type: String,
-      default: "Prometheus",
-    },
-  },
-  setup(props) {
-    const serviceName = ref(props.serviceCat);
-    const footerStore = useFooter();
-    return {
-      serviceName,
-      footerStore,
-    };
-  },
-};
+// export default {
+//   props: {
+//     serviceCat: {
+//       type: String,
+//       default: "Prometheus",
+//     },
+//   },
+
+//I want to define serviceCat props
+// const props = defineProps({
+//   serviceCat: {
+//     type: String,
+//     default: "Prometheus",
+//   },
+// });
+
+// const serviceName = ref(props.serviceCat);
+const footerStore = useFooter();
+
+console.log(footerStore.installedServicesController);
+// setup(props) {
+
+// return {
+//   serviceName,
+//   footerStore,
+// };
+// },
 </script>
 
 <style scoped>
@@ -95,9 +106,9 @@ export default {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 40%;
+  height: 100%;
   text-transform: uppercase;
-  font-size: 100%;
+  font-size: 150%;
   font-weight: 800;
   animation: blink 1s linear infinite;
   text-shadow: rgb(86, 202, 234) 1px 0 4px;

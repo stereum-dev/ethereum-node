@@ -204,6 +204,27 @@ const selecteConfigServices = computed(() => {
   return test;
 });
 
+const missingServices = computed(() => {
+  const selectedServices = selecteConfigServices.value;
+  const hasValidator = selectedServices.some((service) => service.category === "validator");
+  const hasConsensus = selectedServices.some((service) => service.category === "consensus");
+
+  let missing = [];
+  if (!hasValidator) missing.push("validator");
+  if (!hasConsensus) missing.push("consensus");
+
+  // console.log("Missing Services:", missing);
+  return missing;
+});
+
+watch(
+  missingServices,
+  (newValue) => {
+    footerStore.missingServices = newValue;
+  },
+  { immediate: true }
+);
+
 const selectSetup = (setup) => {
   getSelectedSetup(setup);
 };
@@ -215,7 +236,6 @@ const selectSetup = (setup) => {
 onMounted(() => {
   updateServiceLogs();
   polling = setInterval(updateServiceLogs, 10000);
-  console.log(setupStore.allSetups); // refresh logs
   existanceSetups();
 });
 
@@ -227,12 +247,16 @@ onUnmounted(() => {
 
 const isAnyConsensusRunning = computed(() => {
   const consensusServices = serviceStore.installedServices.filter((service) => service.category === "consensus");
-  return consensusServices.length > 0 && consensusServices.some((service) => service.state === "running");
+  return !(consensusServices.length > 0 && consensusServices.some((service) => service.state === "running"));
 });
 
-watch(isAnyConsensusRunning, (newValue) => {
-  footerStore.isConsensusRunning = newValue;
-});
+watch(
+  isAnyConsensusRunning,
+  (newValue) => {
+    footerStore.isConsensusRunning = newValue;
+  },
+  { immediate: true }
+);
 
 // Methods
 

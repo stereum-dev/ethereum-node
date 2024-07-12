@@ -18,18 +18,7 @@
           <div class="square-3 square"></div>
         </div>
       </div>
-      <no-data
-        v-else-if="
-          consensusClientIsOff || prometheusIsOff || installedServicesController !== ''
-        "
-        :service-cat="
-          installedServicesController !== ''
-            ? 'install'
-            : prometheusIsOff
-            ? 'prometheus'
-            : ''
-        "
-      />
+      <no-data v-else-if="missingServices.length > 0 || prometheusIsOff || isConsensusRunning" />
       <div v-else class="box-wrapper">
         <div class="proposed-part">
           <div class="proposed-rows">
@@ -43,9 +32,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the current epoch: ${
-                  currentResult.currentEpoch
-                } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`
+                cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -133,7 +122,7 @@ export default {
       proposed: [],
       polling: {},
       loadingStrater: false,
-      prometheusIsOff: false,
+      // prometheusIsOff: false,
       consensusClientIsOff: false,
     };
   },
@@ -152,6 +141,8 @@ export default {
       slot: "slot",
       status: "status",
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
     }),
     ...mapWritableState(useControlStore, {
       currentSlotData: "currentSlotData",
@@ -162,9 +153,7 @@ export default {
       pageNumber: "pageNumber",
     }),
     proposedBlock() {
-
       if (this.currentNetwork.id === 3) {
-
         return Array.from({ length: 16 }, () => ({
           slotNumber: 0,
           slotStatus: "pending",
@@ -222,17 +211,11 @@ export default {
     },
     currentResult: {
       handler(newResult) {
-        if (
-          newResult &&
-          newResult.currentEpochStatus &&
-          newResult.currentEpochStatus[0]
-        ) {
-          const newArray = newResult.currentEpochStatus[0]
-            .slice(0, this.proposedBlock.length)
-            .map((slot) => ({
-              slotNumber: slot.slotNumber,
-              slotStatus: slot.slotStatus,
-            }));
+        if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
+          const newArray = newResult.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
+            slotNumber: slot.slotNumber,
+            slotStatus: slot.slotStatus,
+          }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -277,23 +260,17 @@ export default {
       }
 
       const categories = ["consensus", "execution"];
-      const missingCategories = categories.filter(
-        (category) => !foundCategories.has(category)
-      );
+      const missingCategories = categories.filter((category) => !foundCategories.has(category));
 
       if (!hasPrometheus) {
         missingCategories.push("Prometheus");
       }
 
-      this.installedServicesController = missingCategories
-        .join(", ")
-        .replace(/, (?=[^,]*$)/, " and ");
+      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
     },
 
     refreshTimer() {
-
       if (this.currentNetwork.id === 3) {
-
         this.polling = setInterval(() => {
           if (this.currentSlotData !== undefined && this.currentEpochData !== undefined) {
             this.currentEpochSlot(this.consensusName);
@@ -314,9 +291,7 @@ export default {
     },
 
     initializeProposedBlock() {
-
       if (this.currentNetwork.id === 3) {
-
         return Array.from({ length: 16 }, () => ({
           slotNumber: 0,
           slotStatus: "pending",

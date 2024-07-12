@@ -8,11 +8,8 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data
-          v-if="noDataLayerShow || installedServicesController !== ''"
-          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
-        />
-        <div v-show="p2pItemsShow" class="p2pBarBox">
+        <no-data v-if="missingServices.length > 0 || prometheusIsOff || isConsensusRunning" />
+        <div v-else class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
               <span>{{ consensusClient }}</span>
@@ -97,6 +94,9 @@ export default {
     }),
     ...mapState(useFooter, {
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
+      isConsensusRunning: "isConsensusRunning",
     }),
     filteredP2PStatus() {
       if (!Array.isArray(this.p2pstatus.data) || !this.selectedSetup) {

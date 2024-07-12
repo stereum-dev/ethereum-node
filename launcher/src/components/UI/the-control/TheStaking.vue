@@ -9,14 +9,10 @@
       </div>
 
       <div class="staking-container">
-        <NoData v-if="noDataFlag" />
+        <NoData v-if="flagNoData || isValidatorMissing" />
         <div v-else class="wrapper">
           <div class="side-top">
-            <div
-              class="top-value"
-              @mouseenter="cursorLocation = `${ttlBal}`"
-              @mouseleave="cursorLocation = ''"
-            >
+            <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
               <span>{{ formattedBalance }}</span>
             </div>
             <div
@@ -78,6 +74,7 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      missingServices: "missingServices",
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
@@ -86,12 +83,12 @@ export default {
       return this.keys.length.toString().padStart(3, "0");
     },
 
+    isValidatorMissing() {
+      return this.missingServices?.includes("validator");
+    },
+
     flagNoData() {
-      if (
-        this.currentResult !== undefined &&
-        this.currentResult.beaconStatus !== 0 &&
-        this.currentResult.beaconStatus === undefined
-      ) {
+      if (this.currentResult !== undefined && this.currentResult.beaconStatus === undefined) {
         return true;
       }
       return false;

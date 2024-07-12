@@ -9,10 +9,7 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <no-data
-          v-if="noDataLayerShow || installedServicesController !== ''"
-          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
-        ></no-data>
+        <no-data v-if="missingServices.length > 0 || prometheusIsOff || isConsensusRunning" />
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
@@ -158,6 +155,9 @@ export default {
       first: "first",
       second: "second",
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
+      isConsensusRunning: "isConsensusRunning",
     }),
     ...mapState(useControlStore, {
       code: "code",
