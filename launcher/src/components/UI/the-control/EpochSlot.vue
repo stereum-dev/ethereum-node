@@ -47,6 +47,7 @@ export default {
     ...mapWritableState(useFooter, {
       installedServicesController: "installedServicesController",
       missingServices: "missingServices",
+      nodataMessage: "nodataMessage",
     }),
     beaconControler() {
       if (this.currentResult === undefined) {

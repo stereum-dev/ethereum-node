@@ -8,7 +8,11 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data v-if="missingServices.length > 0 || prometheusIsOff || isConsensusRunning" />
+        <no-data
+          v-if="missingServices.length > 0 || prometheusIsOff || !isConsensusRunning"
+          @mouseenter="cursorLocation = `${nodataMessage}`"
+          @mouseleave="cursorLocation = ''"
+        />
         <div v-else class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
@@ -58,6 +62,7 @@ export default {
   components: { NoData },
   data() {
     return {
+      p2p: this.$t("controlPage.p2p"),
       pageNumber: 1,
       isMultiService: false,
       p2pItemsShow: false,
@@ -97,6 +102,7 @@ export default {
       missingServices: "missingServices",
       prometheusIsOff: "prometheusIsOff",
       isConsensusRunning: "isConsensusRunning",
+      nodataMessage: "nodataMessage",
     }),
     filteredP2PStatus() {
       if (!Array.isArray(this.p2pstatus.data) || !this.selectedSetup) {

@@ -17,6 +17,7 @@ export const useFooter = defineStore("theFooter", {
       installedServicesController: "",
       missingServices: false,
       prometheusIsOff: false,
+      nodataMessage: "",
     };
   },
   getters: {},

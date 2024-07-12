@@ -2,58 +2,10 @@
   <div class="no-data_parent">
     <div class="no-data_box">
       <span class="big-sign"> &gt; {{ $t("noData.noData") }} &lt; </span>
-      <!-- <div v-if="serviceCat === 'prometheus' ? true : false" class="bottom-part">
-        <div class="comment-part">
-          <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
-          <span class="comment-row2">Prometheus</span>
-        </div>
-        <div class="icon-part" :data-tooltip="serviceName">
-          <img src="/img/icon/control-page-icons/PrometheusServiceCircle.png" alt="Prometheus" />
-        </div>v-else
-      </div> -->
-      <!-- <div class="bottom-part">
-        <div class="comment-part">
-          <span class="comment-row1"
-            >{{ footerStore.installedServicesController !== "" ? $t("noData.turnOn") : "Please check the service" }}
-          </span>
-          <span class="comment-row2">{{ footerStore.installedServicesController }}</span>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
-<script setup>
-// import { ref } from "vue";
-import { useFooter } from "@/store/theFooter";
-
-// export default {
-//   props: {
-//     serviceCat: {
-//       type: String,
-//       default: "Prometheus",
-//     },
-//   },
-
-//I want to define serviceCat props
-// const props = defineProps({
-//   serviceCat: {
-//     type: String,
-//     default: "Prometheus",
-//   },
-// });
-
-// const serviceName = ref(props.serviceCat);
-const footerStore = useFooter();
-
-console.log(footerStore.installedServicesController);
-// setup(props) {
-
-// return {
-//   serviceName,
-//   footerStore,
-// };
-// },
-</script>
+<script setup></script>
 
 <style scoped>
 [data-tooltip] {
@@ -90,6 +42,8 @@ console.log(footerStore.installedServicesController);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  cursor: pointer;
 }
 .no-data_box {
   display: flex;
