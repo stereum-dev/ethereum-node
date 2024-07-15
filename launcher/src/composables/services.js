@@ -4,6 +4,9 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeManage } from "@/store/nodeManage";
 import { useFooter } from "@/store/theFooter";
 import { useDeepClone } from "@/composables/utils";
+import { useMultiSetups } from "@/composables/multiSetups";
+import { useSetups } from "@/store/setups";
+import { usePingQuality } from "@/composables/pingQuality";
 
 export async function useBackendServices(force = false) {
   const serviceStore = useServices();
@@ -43,13 +46,21 @@ export async function useFrontendServices() {
   const serviceStore = useServices();
   const nodeHeaderStore = useNodeHeader();
   const nodeManageStore = useNodeManage();
-
+  const setupStore = useSetups();
+  const { loadSetups, getAllSetups } = useMultiSetups();
+  const { checkConnectionQuality } = usePingQuality();
+  checkConnectionQuality();
   const allServices = JSON.parse(JSON.stringify(serviceStore.allServices));
   if (nodeHeaderStore.refresh) {
     if (await useConnectionCheck()) {
       let services;
+      let setups;
       try {
         services = await ControlService.refreshServiceInfos();
+        await loadSetups();
+        setups = getAllSetups();
+        setupStore.allSetups = setups;
+        setupStore.editSetups = setups;
       } catch (error) {
         console.log(error);
         return;
@@ -111,13 +122,27 @@ export async function useFrontendServices() {
           }
           return oldService;
         });
-        serviceStore.installedServices = newServices.concat(otherServices).map((e, i) => {
-          e.id = i;
-          return e;
+        serviceStore.installedServices = newServices.concat(otherServices).map((service, i) => {
+          service.id = i;
+          if (!service.setupId) {
+            for (const setup of setups) {
+              const matchingService = setup.services.find((s) => s?.config?.serviceID === service?.config?.serviceID);
+
+              if (matchingService) {
+                return {
+                  ...service,
+                  setupId: setup.setupId,
+                  setupName: setup.setupName,
+                };
+              }
+            }
+          }
+          return service;
         });
         let network = serviceStore.installedServices[0]?.config?.network;
         nodeManageStore.currentNetwork = nodeManageStore.networkList.find((item) => item.network === network);
 
+        // Mange Tunnels
         if (needForTunnel.length != 0 && nodeHeaderStore.refresh) {
           let localPorts = await ControlService.getAvailablePort({
             min: 9000,

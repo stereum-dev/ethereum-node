@@ -87,7 +87,7 @@ export default {
     },
     filteredDataApiItems() {
       if (this.selectedSetup && Array.isArray(this.selectedSetup.services)) {
-        const serviceIds = this.selectedSetup.services.map((service) => service.id);
+        const serviceIds = this.selectedSetup.services.map((service) => service?.config?.serviceID);
         return this.dataApiItems.filter((item) => serviceIds.includes(item.id));
       }
       return [];

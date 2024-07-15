@@ -71,7 +71,6 @@ import { onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useMultiSetups } from "../../../composables/multiSetups";
-import { usePingQuality } from "../../../composables/pingQuality";
 import { useListKeys } from "../../../composables/validators";
 import NetworkStatus from "../../layers/NetworkStatus.vue";
 import AlertSection from "./sections/AlertSection.vue";
@@ -90,12 +89,10 @@ const router = useRouter();
 const footerStore = useFooter();
 const setupStore = useSetups();
 const { updateDom } = useMultiSetups();
-const { checkConnectionQuality, startPolling, stopPolling } = usePingQuality();
 
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
 const isLogsPageActive = ref(false);
-const refreshStats = ref(false);
 
 let polling = null;
 let pollingVitals = null;
@@ -125,28 +122,11 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  if (refreshStats.value) {
-    updateConnectionStats();
-    refreshStats.value = false;
-  }
-});
-
-watchEffect(() => {
-  if (serviceStore.installedServices.length) {
-    updateDom();
-  }
-});
-
 //*****************  Lifecycle Hooks *****************
 
 onMounted(async () => {
-  await fetchSetups();
-  checkConnectionQuality();
+  await updateDom();
   nodeSetupsPrepration();
-  setTimeout(() => {
-    refreshStats.value = true;
-  }, 2000);
 
   updateConnectionStats();
 
@@ -156,7 +136,6 @@ onMounted(async () => {
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
   pollingNodeStats = setInterval(updateNodeStats, 1000); // refresh server vitals
   pollingListingKeys = setInterval(checkForListingKeys, 1000); // check for validators which need validator listing
-  startPolling();
 });
 
 onUnmounted(() => {
@@ -166,22 +145,12 @@ onUnmounted(() => {
   clearInterval(pollingListingKeys);
   clearInterval(pollingPings);
   setupStore.isConfigViewActive = false;
-  stopPolling();
   setupStore.selectedSetup = null;
 });
 
 //*************  Methods *************
 
-const fetchSetups = async () => {
-  await updateDom();
-};
 
-// const checkConnection = async () => {
-//   let num = 1;
-//   console.log("checking connection", num++);
-//   let connection = await ControlService.checkConnectionQuality();
-//   console.log("connected", connection);
-// };
 
 //get all configs and services
 const nodeSetupsPrepration = () => {

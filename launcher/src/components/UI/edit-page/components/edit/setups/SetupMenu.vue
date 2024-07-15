@@ -24,6 +24,7 @@
 
 <script setup>
 import { useFooter } from "@/store/theFooter";
+import { useNodeManage } from "../../../../../../store/nodeManage";
 
 // props & emits
 const props = defineProps({
@@ -37,6 +38,7 @@ const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfi
 
 // Store
 const footerStore = useFooter();
+const manageStore = useNodeManage();
 
 // Methods
 const deleteSetup = () => {
@@ -55,6 +57,7 @@ const infoModal = () => {
 };
 
 const openConfigs = () => {
+  manageStore.confirmChanges = [];
   emit("openConfigs", props.setup);
 };
 
