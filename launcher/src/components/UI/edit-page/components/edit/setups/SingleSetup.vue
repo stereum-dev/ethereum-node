@@ -1,8 +1,8 @@
 <template>
   <div
-    class="w-[130px] h-[120px] col-span-1 row-span-1 items-center border rounded-md mx-auto relative grid grid-cols-2 grid-rows-12"
+    class="w-[130px] h-[120px] col-span-1 row-span-1 items-center border rounded-md mx-auto relative grid grid-cols-2 grid-rows-12 cursor-pointer"
     :class="getDynamicClasses(props.setup)"
-    @mouseenter="props.setup.isActive = true"
+    @click="props.setup.isActive = true"
     @mouseleave="props.setup.isActive = false"
   >
     <div
