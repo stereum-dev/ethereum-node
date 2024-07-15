@@ -27,7 +27,7 @@
     "bugReport": "বাগ রিপোর্ট",
     "emailText": "অথবা ইমেইল করুন:",
     "docsTitle": "চেইন ডক্স",
-    "docsText": "আপনার নির্বাচিত নোড কনফিগারেশনের জন্য নেটওয়ার্ক লগসের ডকুমেন্টেশনের একটি সুবিধাজনক লিংক।"
+    "docsText": "A handy link to Stereum's web hosted software documentation."
   },
   "settingPanel": {
     "stereumName": "স্টেরিয়াম সেটিংস",
@@ -166,7 +166,7 @@
     "sure": "আমি নিশ্চিত",
     "cancel": "বাতিল করুন",
     "serviceExpl": "প্রবেশ করানো ভ্যালিডেটর কীয়ের জন্য নির্বাচিত সার্ভিস",
-    "activeExpl": "ভ্যালিডেটর সক্রিয় হওয়ার সময়",
+    "activeExpl": "The time since the validator has been {status}",
     "balExpl": "ভ্যালিডেটরের ব্যালান্স",
     "copyPub": "পাবলিক কী কপি করুন",
     "copiedPub": "পাবলিক কী কপি করা হয়েছে",
@@ -999,5 +999,57 @@
     "turnoff": "Turn off the {service}",
     "restart": "Restart the {service}",
     "log": "Open the logs of the {service}"
+  },
+  "serverDetail": {
+    "serverName": "Server Name is {serverName}",
+    "serverIp": "Server IP is {serverIp}",
+    "machine": "Machine Name is {machineName}",
+    "port": "Port is {port}",
+    "userName": "Username is {userName}",
+    "chngAvatar": "Click to change the avatar",
+    "chngPass": "Click to change the password",
+    "confirmPass": "Please enter a password to change it",
+    "confirmPass2": "Please enter the password again",
+    "confirmBtn": "click to change your password",
+    "cancel": "cancel password change"
+  },
+  "serverList": {
+    "search": "Search for a saved server",
+    "addServer": "Add a new server connection"
+  },
+  "loginForm": {
+    "addServerName": "Add a server name",
+    "ipOrHost": "IP or Hostname",
+    "port": "default port is 22 but you can change it",
+    "uName": "Username",
+    "pass": "enter your password",
+    "tgll": "toggle to SSH key or password",
+    "save": "save added server",
+    "rem": "remove server"
+  },
+  "sshManage": {
+    "genSshKey": "Generate SSH Key",
+    "addkey": "add an existing key"
+  },
+  "osUpdate": {
+    "updateBtn": "Ready to update “{name}” to the new version “{version}”",
+    "updateAll": "Update all available updates"
+  },
+  "serverSetting": {
+    "nodeServerTtl": "NODE & SERVER SETTINGS",
+    "auto": "Automated Node Updates",
+    "tgl": "Toggle to enable or disable automated node updates"
+  },
+  "twoFactor": {
+    "setup": "agree to the terms and conditions",
+    "timeBase": "check if you want authentication tokens to be time-based",
+    "timeLimit": "check if you want to increase the original generation time limit to permit a time skew of up to 4 minutes",
+    "rateLimit": "check if you want to enable rate-limiting",
+    "next": "if you already check configuration click next",
+    "backUp": "do a backup by pressing the save button",
+    "confirm": "click confirm to activate 2FA",
+    "rem": "click to remove 2FA",
+    "send": "click to send the verification code",
+    "zoomQr": "click to zoom in the QR code"
   }
 }
