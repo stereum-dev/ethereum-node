@@ -32,15 +32,13 @@
 </template>
 
 <script setup>
-import { usePingQuality } from "../../composables/pingQuality";
 import { computed, ref, watchEffect } from "vue";
+import { useRoute } from "vue-router";
 import { useNodeStore } from "../../store/theNode";
 import WiFiSign from "./WIFISign.vue";
-import { useRoute } from "vue-router";
 
 const nodeStore = useNodeStore();
 const route = useRoute();
-
 
 const alertTimeout = ref(null);
 
