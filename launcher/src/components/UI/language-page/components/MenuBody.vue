@@ -18,7 +18,7 @@
       :modules="swiperModules"
       class="w-full h-full space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-y snap-mandatory"
       @swiper="setThumbsSwiper"
-      @slideChange="playSoundEffect('/sound/change.wav')"
+      @slideChange="playSoundBase(soundStore.change)"
     >
       <swiper-slide
         v-for="(lang, index) in sortedLanguages"
@@ -29,7 +29,11 @@
         }"
         @click="handleClick(lang, index)"
       >
-        <img :src="lang.flag" :alt="`${lang.name} Flag`" class="col-start-1 col-span-3 w-10 h-10 rounded-full" />
+        <img
+          :src="lang.flag"
+          :alt="`${lang.name} Flag`"
+          class="col-start-1 col-span-3 w-10 h-10 rounded-full"
+        />
         <span
           class="col-start-4 col-span-full text-lg font-bold uppercase"
           :class="{ 'text-gray-700': selectedLanguage }"
@@ -47,11 +51,14 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { EffectCoverflow, Mousewheel, Keyboard, Scrollbar, Thumbs } from "swiper/modules";
 import { useLangStore } from "@/store/languages";
+import { useSoundStore } from "@/store/sound";
 import ControlService from "@/store/ControlService";
 import { useRouter } from "vue-router";
+import i18n from "@/includes/i18n";
 
 const langStore = useLangStore();
 const router = useRouter();
+const soundStore = useSoundStore();
 const selectedLanguage = ref(null);
 const thumbsSwiper = ref(null);
 const swiperModules = [Mousewheel, Keyboard, Scrollbar, EffectCoverflow, Thumbs];
@@ -68,6 +75,7 @@ onBeforeMount(async () => {
     router.push("/");
   }
 });
+
 // langStore.settingPageIsVisible ? "/setting" :
 const checkSettings = async () => {
   try {
@@ -87,23 +95,24 @@ const setThumbsSwiper = (swiper) => {
 };
 
 const handleClick = (lang) => {
-  playSoundEffect("/sound/click.wav");
+  playSoundBase(soundStore.click);
   selectItem(lang);
 };
 
 const selectItem = async (lang, playSound = true) => {
   if (playSound) {
-    playSoundEffect("/sound/click.wav");
+    playSoundBase(soundStore.click);
   }
   langStore.langOptions.forEach((option) => (option.isSelected = false));
   lang.isSelected = true;
   selectedLanguage.value = lang;
   langStore.setSelectedLang(lang.label);
+  i18n.global.locale.value = lang.label;
   await updateSettings(lang);
 };
 
-const playSoundEffect = (path) => {
-  const audio = new Audio(path);
+const playSoundBase = (base64Data) => {
+  const audio = new Audio(base64Data);
   audio.volume = langStore.currentVolume;
   audio.play().catch((e) => console.error("Failed to play sound:", e));
 };

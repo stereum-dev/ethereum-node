@@ -6,12 +6,13 @@ export const useClickInstall = defineStore("clickInstallation", {
       startServicesAfterInstall: false,
       isConfigButtonEnbabled: false,
       installMonitoring: false,
+      resetMevBoost: false,
       relayURL: "",
       checkPointSync: "",
       currentSlide: 0,
       btnActive: false,
       selectedItem: "- SELECT A SOURCE -",
-      selectedLinks: null,
+      selectedLink: null,
       selectedIcon: null,
       syncType: [
         {
@@ -102,6 +103,27 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/one-click-icons/preset-icons/archive-preset.png",
           includedPlugins: [],
         },
+        {
+          id: 6,
+          name: "lidoobol",
+          defaultPath: "/opt/stereum",
+          icon: "/img/icon/one-click-icons/preset-icons/OBOL-LIDO-SDVT.png",
+          includedPlugins: [],
+        },
+        {
+          id: 7,
+          name: "lidossv",
+          defaultPath: "/opt/stereum",
+          icon: "/img/icon/one-click-icons/preset-icons/SSV-LIDO-SDVT.png",
+          includedPlugins: [],
+        },
+        {
+          id: 7,
+          name: "lidocsm",
+          defaultPath: "/opt/stereum",
+          icon: "/img/icon/one-click-icons/preset-icons/LIDO-CSM.png",
+          includedPlugins: [],
+        },
       ],
       services: [
         {
@@ -184,56 +206,6 @@ export const useClickInstall = defineStore("clickInstallation", {
           name: "BeaconState.info",
           icon: "",
           url: "https://beaconstate.info/",
-        },
-      ],
-      goerli: [
-        {
-          id: 1,
-          name: "Sigma Prime",
-          icon: "/img/icon/checkpoint-sync-icons/sigmaprime-checkpoint-icon.png",
-          url: "https://prater.checkpoint.sigp.io/",
-        },
-        {
-          id: 2,
-          name: "invis.tools",
-          icon: "/img/icon/checkpoint-sync-icons/invis-tools-checkpoint-icon.png",
-          url: "https://goerli-sync.invis.tools/",
-        },
-        {
-          id: 3,
-          name: "Checkpoint",
-          icon: "/img/icon/checkpoint-sync-icons/checkpointz-checkpoint-icon.png",
-          url: "https://checkpoint-sync.goerli.ethpandaops.io/",
-        },
-        {
-          id: 4,
-          name: "beaconcha.in",
-          icon: "/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png",
-          url: "https://sync-goerli.beaconcha.in/",
-        },
-        {
-          id: 5,
-          name: "stakely.io",
-          icon: "/img/icon/checkpoint-sync-icons/stakely-io-checkpoint-icon.png",
-          url: "https://prater-checkpoint-sync.stakely.io/",
-        },
-        {
-          id: 6,
-          name: "EthStaker",
-          icon: "/img/icon/checkpoint-sync-icons/ethstaker-checkpoint-icon.png",
-          url: "https://goerli.beaconstate.ethstaker.cc/",
-        },
-        {
-          id: 7,
-          name: "Lodestar",
-          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
-          url: "https://beaconstate-goerli.chainsafe.io/",
-        },
-        {
-          id: 8,
-          name: "BeaconState.info",
-          icon: "",
-          url: "https://goerli.beaconstate.info/",
         },
       ],
       sepolia: [

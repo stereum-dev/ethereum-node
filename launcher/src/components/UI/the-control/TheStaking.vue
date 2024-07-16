@@ -9,18 +9,26 @@
       </div>
 
       <div class="staking-container">
-        <NoData v-if="noDataFlag" />
+        <NoData
+          v-if="flagNoData || isValidatorMissing"
+          @mouseenter="cursorLocation = `${nodataMessage}`"
+          @mouseleave="cursorLocation = ''"
+        />
         <div v-else class="wrapper">
           <div class="side-top">
-            <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
+            <div
+              class="top-value"
+              @mouseenter="cursorLocation = `${ttlBal}`"
+              @mouseleave="cursorLocation = ''"
+            >
               <span>{{ formattedBalance }}</span>
             </div>
             <div
               class="top-icon"
-              @mouseenter="cursorLocation = `${currentNetwork.name}`"
+              @mouseenter="cursorLocation = `${currentNetwork?.name}`"
               @mouseleave="cursorLocation = ''"
             >
-              <img :src="selectedCurrency" alt="coin-icon" />
+              <img :src="setSelectedCurrency" alt="coin-icon" />
             </div>
           </div>
           <div class="side-bottom">
@@ -48,6 +56,8 @@ import { mapWritableState, mapState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import NoData from "./NoData.vue";
+import { useSetups } from "@/store/setups";
+
 export default {
   components: {
     NoData,
@@ -74,6 +84,11 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      missingServices: "missingServices",
+      nodataMessage: "nodataMessage",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
@@ -82,46 +97,32 @@ export default {
       return this.keys.length.toString().padStart(3, "0");
     },
 
+    isValidatorMissing() {
+      return this.missingServices?.includes("validator");
+    },
+
+    setSelectedCurrency() {
+      switch (this.selectedSetup?.network) {
+        case "gnosis":
+          return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-gnosis-mainnet.png";
+        case "sepolia":
+          return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-sepolia-testnet.png";
+        case "mainnet":
+          return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-ethereum-mainnet.png";
+        case "holesky":
+          return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-holesky-testnet.png";
+        default:
+          return "";
+      }
+    },
     flagNoData() {
       if (
         this.currentResult !== undefined &&
-        this.currentResult.beaconStatus !== 0 &&
         this.currentResult.beaconStatus === undefined
       ) {
         return true;
       }
       return false;
-    },
-  },
-  watch: {
-    currentResult() {
-      console.log("currentResult", this.currentResult);
-    },
-  },
-  mounted() {
-    this.setSelectedCurrency();
-  },
-  methods: {
-    setSelectedCurrency() {
-      switch (this.currentNetwork.id) {
-        case 1:
-          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-ethereum-mainnet.png";
-          break;
-        case 2:
-          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png";
-          break;
-        case 3:
-          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-sepolia-testnet.png";
-          break;
-        case 4:
-          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-gnosis-mainnet.png";
-          break;
-        case 5:
-          this.selectedCurrency = "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-holesky-testnet.png";
-          break;
-        default:
-          break;
-      }
     },
   },
 };

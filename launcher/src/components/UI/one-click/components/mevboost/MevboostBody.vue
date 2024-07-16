@@ -69,6 +69,13 @@ onMounted(() => {
   manageStore.availableBlocks = shuffleRelaysList(
     manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network])
   );
+  if (installStore.resetMevBoost) {
+    removeAll();
+    installStore.resetMevBoost = false;
+  }
+  if (installStore.selectedPreset.name === "lidocsm") {
+    addAll();
+  }
 });
 
 // Methods
@@ -79,6 +86,27 @@ const shuffleRelaysList = (array) => {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+};
+
+// Add all items from availableBlocks to usedBlocks
+const addAll = () => {
+  manageStore.availableBlocks.forEach((item) => {
+    item.isSelected = true;
+  });
+  addBlocksToUse();
+  manageStore.availableBlocks.forEach((item) => {
+    item.isSelected = false;
+  });
+};
+
+// Remove all items from usedBlocks
+const removeAll = () => {
+  manageStore.usedBlocks.forEach((item) => {
+    item.isRemoved = false;
+    item.isSeected = false;
+  });
+  manageStore.usedBlocks = [];
+  installStore.relayURL = "";
 };
 
 // Add an item from availableBlocks to usedBlocks

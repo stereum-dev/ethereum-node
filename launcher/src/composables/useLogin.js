@@ -72,7 +72,7 @@ export const useServerLogin = () => {
     });
   };
 
-  const login = async (signal) => {
+  const login = async (signal, authCode) => {
     serverStore.isServerAnimationActive = true;
     serverStore.errorMsgExists = false;
 
@@ -86,6 +86,7 @@ export const useServerLogin = () => {
         keyfileLocation: serverStore.loginState.keyPath,
         passphrase: serverStore.loginState.passphrase,
         signal: signal,
+        authCode: authCode,
       });
 
       if (signal.aborted) {
@@ -98,7 +99,12 @@ export const useServerLogin = () => {
       const routePath = res ? "/node" : "/welcome";
 
       if (serverStore.connectingProcess) {
-        router.push(routePath).then(() => location.reload());
+        try {
+          await ControlService.checkAndCreateMultiSetup();
+          router.push(routePath).then(() => location.reload());
+        } catch (error) {
+          console.error("Upgrade failed:", error);
+        }
       } else {
         router.push(routePath);
       }
@@ -153,8 +159,8 @@ export const useServerLogin = () => {
     let savedConnections = storageSavedConnections.savedConnections || [];
     const server = serverStore.selectedServerToConnect;
 
-    serverStore.connections = serverStore.connections.filter((conn) => conn?.host !== server?.host);
-    savedConnections = savedConnections.filter((conn) => conn?.host !== server?.host);
+    serverStore.connections = serverStore.connections.filter((conn) => conn?.name !== server?.name);
+    savedConnections = savedConnections.filter((conn) => conn?.name !== server?.name);
 
     const updatedConfig = {
       ...storageSavedConnections,

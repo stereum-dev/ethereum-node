@@ -20,7 +20,15 @@
           <div class="flip-box-inner">
             <img class="flip-box-front" src="/img/icon/service-icons/Other/ssv-network.png" alt="icon" />
 
-            <img class="flip-box-back" src="/img/icon/network-icons/ethereum-testnet-icon.png" alt="icon" />
+            <img
+              class="flip-box-back"
+              :src="`${
+                currentNetwork.network == 'mainnet'
+                  ? '/img/icon/network-icons/ethereum-mainnet.png'
+                  : '/img/icon/network-icons/ethereum-testnet-icon.png'
+              }`"
+              alt="icon"
+            />
           </div>
         </div>
 
@@ -159,7 +167,7 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import axios from "axios";
 import { toRaw } from "vue";
@@ -167,6 +175,7 @@ import ConfirmBox from "./plugin/ConfirmBox.vue";
 import ImportBox from "./plugin/ImportBox.vue";
 import PasswordBox from "./plugin/PasswordBox";
 import { useRestartService } from "@/composables/services";
+import { useNodeManage } from "@/store/nodeManage";
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
 const semver = require("semver");
@@ -248,6 +257,9 @@ export default {
       operators: "operators",
       importBoxModel: "importBoxModel",
       passwordBoxModel: "passwordBoxModel",
+    }),
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
     }),
     //new ssv start hereeeeeeeeeeee
     passControlGenerateEncryptKeyTitle() {
@@ -348,6 +360,7 @@ export default {
   },
 
   mounted() {
+    console.log(this.currentNetwork.network);
     this.getKeys();
     this.passwordBoxModel = "";
     this.importBoxModel = "";
@@ -388,7 +401,7 @@ export default {
 
       this.ssvServiceConfig = this.ssvTotalConfig.ssvServiceConfig;
       this.ssvNetworkConfig = this.ssvTotalConfig.ssvNetworkConfig;
-      this.network = this.ssvServiceConfig.network === "goerli" ? "prater" : this.ssvServiceConfig.network;
+      this.network = this.ssvServiceConfig.network;
       this.lastKnownPublicKey = this.ssvTotalConfig.lastKnownPublicKeyFileData;
 
       // By default assume pk/sk are defined in ssvServiceConfig (unencrypted & deprecated by SSV)
@@ -417,12 +430,29 @@ export default {
       // console.log("this.pubkey", this.pubkey);
       // console.log("this.lastKnownPublicKey", this.lastKnownPublicKey);
 
-      // Get last backed public key from backend (TODO: add this to backend outtput of ssvTotalConfig)
+      // console.log("this.ssvTotalConfig.lastBackedPublicKey", this.ssvTotalConfig.lastBackedPublicKey);
+      // console.log("this.ssvTotalConfig.lastKnownOperatorId", this.ssvTotalConfig.lastKnownOperatorId);
+
+      // Get last backed public key from backend (TODO: take this from backend outtput of ssvTotalConfig)
+      // const getSSVOperatorDataFromApi = await this.sendSSVCommand({
+      //   command: "getSSVOperatorDataFromApi",
+      //   arguments: [this.network, this.pubkey],
+      // });
+      // console.log("getSSVOperatorDataFromApi", getSSVOperatorDataFromApi);
+
+      // Get last backed public key from backend (TODO: take this from backend outtput of ssvTotalConfig)
       const lastBackedPublicKey = await this.sendSSVCommand({
         command: "getSSVLastBackedPublicKey",
         arguments: [this.ssvService.config.serviceID],
       });
       // console.log("lastBackedPublicKey", lastBackedPublicKey);
+
+      // Get last known operator id from backend (TODO: take this from backend outtput of ssvTotalConfig)
+      const lastKnownOperatorId = await this.sendSSVCommand({
+        command: "getSSVLastKnownOperatorId",
+        arguments: [this.ssvService.config.serviceID],
+      });
+      // console.log("lastKnownOperatorId", lastKnownOperatorId);
 
       // If pubkey was already generated/imported at least once by the end-user via "generate/import" buttons
       if (this.lastKnownPublicKey) {
@@ -455,6 +485,16 @@ export default {
                 this.operatorData = opresp.data;
                 console.log("Operator registered");
                 console.log("SSV: this.operatorData", this.operatorData);
+                // Set last known operator data to have it handy for SSVDKGService
+                if (lastKnownOperatorId != this.operatorData.id) {
+                  // Ignore any errors because its monitored in ssvWatch -> watchSSVDKG anyway
+                  try {
+                    await this.sendSSVCommand({
+                      command: "setSSVLastKnownOperatorId",
+                      arguments: [this.ssvService.config.serviceID, this.operatorData.id, false, true],
+                    });
+                  } catch (e) {}
+                }
               } else {
                 this.apiUnavailable = true;
                 console.log(`SSV API did not respond metadata for operator ${operator_id}`);
@@ -1018,13 +1058,22 @@ export default {
             content: this.ssvTotalConfig.passwordFileData,
           });
           let keyFileName = this.getFilenameFromPath(this.ssvTotalConfig.privateKeyFilePath);
+          let keyFileData = this.ssvTotalConfig.privateKeyFileData;
+          if (
+            typeof this.ssvTotalConfig.privateKeyFileData === "object" &&
+            this.ssvTotalConfig.privateKeyFileData !== null
+          ) {
+            // SSV generated keystore uses "pubKey" since v1.3.3, previously it was "publicKey"
+            // If we have both here then the backend attached "publicKey" for consistency -> remove it from the backup
+            if (keyFileData?.publicKey && keyFileData?.pubKey) {
+              delete keyFileData["publicKey"];
+            }
+            // Convert object to string for backup
+            keyFileData = JSON.stringify(this.ssvTotalConfig.privateKeyFileData);
+          }
           downloadObjects.push({
             filename: keyFileName, // "encrypted_private_key.json"
-            content:
-              typeof this.ssvTotalConfig.privateKeyFileData === "object" &&
-              this.ssvTotalConfig.privateKeyFileData !== null
-                ? JSON.stringify(this.ssvTotalConfig.privateKeyFileData)
-                : this.ssvTotalConfig.privateKeyFileData,
+            content: keyFileData,
           });
           let backupFileName = "";
           if (this.operatorData) {

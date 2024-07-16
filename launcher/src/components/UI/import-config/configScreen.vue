@@ -67,6 +67,7 @@ const currentStepComponent = computed(() => {
 
 const installHandler = async () => {
   router.push({ path: "/config/play" });
+
   try {
     const configData = {
       configServices: JSON.parse(JSON.stringify(installStore.configServices)),

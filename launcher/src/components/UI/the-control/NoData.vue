@@ -2,47 +2,10 @@
   <div class="no-data_parent">
     <div class="no-data_box">
       <span class="big-sign"> &gt; {{ $t("noData.noData") }} &lt; </span>
-      <div v-if="serviceCat === 'prometheus' ? true : false" class="bottom-part">
-        <div class="comment-part">
-          <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
-          <span class="comment-row2">Prometheus</span>
-        </div>
-        <div class="icon-part" :data-tooltip="serviceName">
-          <img src="/img/icon/control-page-icons/PrometheusServiceCircle.png" alt="Prometheus" />
-        </div>
-      </div>
-      <div v-else class="bottom-part">
-        <div class="comment-part">
-          <span class="comment-row1"
-            >{{ footerStore.installedServicesController !== "" ? $t("noData.turnOn") : "Please check the service" }}
-          </span>
-          <span class="comment-row2">{{ footerStore.installedServicesController }}</span>
-        </div>
-      </div>
     </div>
   </div>
 </template>
-<script>
-import { ref } from "vue";
-import { useFooter } from "@/store/theFooter";
-
-export default {
-  props: {
-    serviceCat: {
-      type: String,
-      default: "Prometheus",
-    },
-  },
-  setup(props) {
-    const serviceName = ref(props.serviceCat);
-    const footerStore = useFooter();
-    return {
-      serviceName,
-      footerStore,
-    };
-  },
-};
-</script>
+<script setup></script>
 
 <style scoped>
 [data-tooltip] {
@@ -79,6 +42,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  cursor: pointer;
 }
 .no-data_box {
   display: flex;
@@ -95,9 +60,9 @@ export default {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 40%;
+  height: 100%;
   text-transform: uppercase;
-  font-size: 100%;
+  font-size: 150%;
   font-weight: 800;
   animation: blink 1s linear infinite;
   text-shadow: rgb(86, 202, 234) 1px 0 4px;

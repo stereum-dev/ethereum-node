@@ -7,6 +7,7 @@ import { StringUtils } from "./StringUtils";
 import * as fs from "fs";
 import * as path from "path";
 const log = require("electron-log");
+const ping = require("ping");
 
 export class SSHService {
   constructor() {
@@ -56,9 +57,31 @@ export class SSHService {
         password: connectionInfo.password || undefined,
         privateKey: connectionInfo.privateKey || undefined,
         passphrase: connectionInfo.passphrase || undefined,
+        tryKeyboard: true,
         readyTimeout: timeout, // Set the readyTimeout parameter
       });
     });
+  }
+
+  // Check the connection quality by pinging the host
+  async checkConnectionQuality() {
+    const host = this.connectionInfo.host;
+    let connectionQuality = { pingTime: null };
+
+    try {
+      const res = await ping.promise.probe(host, {
+        timeout: 2,
+      });
+
+      if (typeof res.time !== "undefined" && res.time !== null) {
+        connectionQuality.pingTime = res.time;
+      } else {
+        console.log(`Ping to ${host} failed or timed out`);
+      }
+    } catch (err) {
+      console.error("Ping failed:", err);
+    }
+    return connectionQuality;
   }
 
   async checkConnectionPool() {
@@ -93,10 +116,10 @@ export class SSHService {
     return conn;
   }
 
-  async connect(connectionInfo) {
+  async connect(connectionInfo, currentWindow = null) {
     this.connectionInfo = connectionInfo;
     this.addingConnection = true;
-    const conn = new Client();
+    let conn = new Client();
     return new Promise((resolve, reject) => {
       conn.on("error", (error) => {
         this.addingConnection = false;
@@ -111,6 +134,14 @@ export class SSHService {
             resolve(conn);
           }
           reject(msg);
+        }
+      });
+      conn.on("keyboard-interactive", function redo(name, instructions, lang, prompts, finish) {
+        if (!connectionInfo.authCode) {
+          currentWindow.send("require2FA", true);
+          conn.end();
+        } else {
+          finish([connectionInfo.authCode.toString()]);
         }
       });
       conn
@@ -137,30 +168,51 @@ export class SSHService {
           privateKey: connectionInfo.privateKey || undefined,
           passphrase: connectionInfo.passphrase || undefined,
           keepaliveInterval: 30000,
+          tryKeyboard: true,
+          readyTimeout: 20000,
         });
     });
   }
 
-  async disconnect() {
+  cancelVerification() {
+    this.connectionInfo = null;
+  }
+
+  async disconnect(reconnecting = false) {
     log.info("DISCONNECT: connectionInfo", this.connectionInfo.host);
-
-    return new Promise((resolve, reject) => {
-      try {
-        this.connected = false;
+    try {
+      this.connected = false;
+      if (!reconnecting) {
         this.connectionInfo = null;
-        this.connectionPool.forEach((conn) => {
-          conn.end();
-        });
-        this.connectionPool = [];
-        resolve(true);
-      } catch (error) {
-        reject(error);
       }
-    });
+      let counter = 0;
+      while (this.connectionPool.some((conn) => conn._chanMgr?._count > 0 && counter < 30)) {
+        this.connectionPool.forEach((conn) => {
+          if (conn._chanMgr?._count > 0) {
+            conn.end();
+          }
+        });
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        counter++;
+      }
+      log.info(
+        "SSH Channels left open: ",
+        this.connectionPool
+          .map((c) => c._chanMgr?._count)
+          .reduce((accumulator, currentValue) => {
+            return accumulator + currentValue;
+          }, 0)
+      );
+      this.connectionPool = [];
+      return true;
+    } catch (error) {
+      return error;
+    }
   }
 
-  async exec(command, useSudo = true) {
-    const ensureSudoCommand = "sudo -u 'root' -i <<'=====EOF'\n" + command + "\n=====EOF";
+  async exec(command, useSudo = true, useRoot = true) {
+    const ensureSudoCommand =
+      `sudo -u ${useRoot ? "root" : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
     return this.execCommand(useSudo ? ensureSudoCommand : command);
   }
 
@@ -210,6 +262,7 @@ export class SSHService {
         password: this.connectionInfo.password,
         privateKey: this.connectionInfo.privateKey || undefined,
         passphrase: this.connectionInfo.passphrase || undefined,
+        tryKeyboard: true,
       };
       const forwardOptions = {
         srcAddr: "localhost",
@@ -324,18 +377,21 @@ export class SSHService {
 
   async readSSHKeyFile(sshDirPath = `~/.ssh`) {
     let authorizedKeys = [];
-    try {
-      if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
-      let result = await this.exec(`cat ${sshDirPath}/authorized_keys`);
-      if (SSHService.checkExecError(result)) {
-        throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+    if (this.connected) {
+      try {
+        if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
+        let result = await this.exec(`cat ${sshDirPath}/authorized_keys`, false);
+        if (SSHService.checkExecError(result)) {
+          throw new Error("Failed reading authorized keys:\n" + SSHService.extractExecError(result));
+        }
+        authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
+      } catch (err) {
+        log.error("Can't read authorized keys ", err);
+        return [];
       }
-      authorizedKeys = result.stdout.split("\n").filter((e) => e); // split in new lines and remove empty lines
-    } catch (err) {
-      log.error("Can't read authorized keys ", err);
-      return [];
+    } else {
+      log.error("SSH not connected, can't read authorized keys");
     }
-    console.log("authorizedKeys: ", authorizedKeys);
     return authorizedKeys;
   }
 
@@ -344,7 +400,8 @@ export class SSHService {
       if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
       let newKeys = keys.join("\n");
       let result = await this.exec(
-        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`
+        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`,
+        false
       );
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));
@@ -629,6 +686,7 @@ export class SSHService {
         privateKey: connectionInfo.privateKey || undefined,
         passphrase: connectionInfo.passphrase || undefined,
         keepaliveInterval: 60000,
+        tryKeyboard: true,
       });
     });
   }

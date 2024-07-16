@@ -3,23 +3,32 @@
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 pt-0 gap-y-2"
   >
     <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center py-1">
-      <span class="text-md font-semibold text-gray-300">OPERATING SYSTEM UPDATES</span>
+      <span class="text-md font-semibold text-gray-300">{{ t("updateServer.opSysUpdate") }}</span>
     </div>
     <div
-      class="w-full h-full col-start-1 col-span-full row-start-2 row-end-4 grid grid-cols-6 grid-rows-2 items-center gap-x-1"
+      class="w-full h-full col-start-1 col-span-full row-start-2 row-end-4 grid grid-cols-12 grid-rows-2 items-center gap-x-1"
     >
-      <div class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full flex justify-center items-center">
+      <div class="w-full h-full col-start-1 col-end-3 row-start-1 row-span-full flex justify-center items-center">
         <img class="w-full" src="/img/icon/control-page-icons/ubuntuIco.svg" />
       </div>
-      <div class="w-full h-full col-start-2 col-span-full row-start-1 row-span-1 flex justify-start items-center ml-2">
-        <span class="text-lg font-semibold text-gray-400 uppercase">Ubuntu</span>
+      <div class="w-full h-full col-start-3 col-end-10 row-start-1 row-span-1 flex justify-start items-center ml-2">
+        <span class="text-lg font-semibold text-gray-400 uppercase">{{ t("updateServer.ubuntu") }}</span>
       </div>
-
-      <div class="w-full h-full col-start-2 col-span-full row-start-2 row-span-1 ml-2 grid grid-cols-4 items-center">
-        <span class="col-start-1 col-span-3 text-sm font-semibold text-gray-400 uppercase"
-          >OPERATING SYSTEM VERSION</span
+      <!-- <div class="w-full h-full col-start-10 col-span-full row-start-1 row-span-1 flex justify-center items-center">
+        <div
+          v-if="serverStore.isMajorUpgradeButtonActive"
+          class="w-full h-full bg-[#336666] rounded-sm max-h-6 shadow-md shadow-black hover:bg-teal-700 active:shadow-none hover:scale-105 transition-all duration-100 ease-in-out cursor-pointer active:scale-100 flex justify-center items-center text-xs font-normal font-sans text-gray-200 uppercase p-1"
+          @click="runUpdateToNoble"
         >
-        <span class="col-start-4 col-span-1 text-sm font-semibold text-amber-400 uppercase">{{
+          24.04 Update
+        </div>
+      </div> -->
+
+      <div class="w-full h-full col-start-3 col-span-full row-start-2 row-span-1 ml-2 grid grid-cols-3 items-center">
+        <span class="col-start-1 col-end-3 text-sm font-semibold text-gray-400 uppercase">{{
+          t("updateServer.opSysVersion")
+        }}</span>
+        <span class="col-start-3 col-span-full justify-self-center text-sm font-semibold text-amber-400 uppercase">{{
           osVersionCurrent
         }}</span>
       </div>
@@ -39,7 +48,9 @@
           <span class="text-sm font-semibold text-gray-300 text-center">{{ numberOfUpdatablePackages }}</span>
         </div>
 
-        <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">AVAILABLE SERVER OS UPDATES</span>
+        <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">{{
+          t("updateServer.availServerOsUpdate")
+        }}</span>
       </div>
 
       <div
@@ -58,17 +69,20 @@
           <div
             class="w-full h-full flex justify-evenly items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm active:scale-90 shadow-md shadow-black active:shadow-none transition-all duration-100 ease-in-out cursor-pointer"
             :class="{
-              'opacity-40 pointer-events-none bg-[#3d4244] scale-95': serverStore.isUpdateProcessing,
+              'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
+                serverStore.isUpdateProcessing || serverStore.isMajorUpgradeActive,
             }"
+            @mouseenter="footerStore.cursorLocation = `${t('osUpdate.updateAll')} `"
+            @mouseleave="footerStore.cursorLocation = ''"
             @click.prevent="updateAll"
           >
-            <span class="text-gray-100 text-sm font-semibold uppercase">{{ $t("updatePanel.all") }}</span>
+            <span class="text-gray-100 text-sm font-semibold uppercase">{{ t("updatePanel.all") }}</span>
             <img class="w-4" src="/img/icon/base-header-icons/update-modal-download.png" alt="icon" />
           </div>
         </div>
         <div class="w-full h-full col-start-7 col-span-full flex justify-center items-center p-1">
           <span class="text-gray-200 text-md font-semibold"
-            >{{ $t("updatePanel.auto") }} :
+            >{{ t("updatePanel.auto") }} :
             <span class="text-md uppercase font-semibold" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
           >
         </div>
@@ -80,9 +94,14 @@
 <script setup>
 import UpdateRow from "./UpdateRow.vue";
 import ControlService from "@/store/ControlService";
-import { ref, onMounted, computed, reactive } from "vue";
+import { ref, onMounted, computed, reactive, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
 
+const t = i18n.global.t;
+
+const footerStore = useFooter();
 const serverStore = useServers();
 
 const osVersionCurrent = ref("");
@@ -101,11 +120,32 @@ const searchingForUpdatablePackages = ref(false);
 const newUpdates = computed(() => serverStore.upgradablePackages);
 const onOff = computed(() => (stereumApp.value.autoUpdate == "on" ? "text-green-700" : "text-red-700"));
 
+//Watchers
+
+watchEffect(() => {
+  if (osVersionCurrent.value.includes("24.04")) {
+    serverStore.isMajorUpgradeButtonActive = false;
+  } else {
+    serverStore.isMajorUpgradeButtonActive = true;
+  }
+});
+
+//Lifecycle
 onMounted(async () => {
   await getUpgradablePackages();
   await getOsVersion();
   await getSettings();
 });
+
+//Methods
+
+/*const runUpdateToNoble = async () => {
+  serverStore.isMajorUpgradeActive = true;
+  await ControlService.upgradeToNoble();
+  setTimeout(() => {
+    serverStore.isMajorUpgradeButtonActive = false;
+  }, 3000);
+};*/
 
 const getSettings = async () => {
   const settings = await ControlService.getStereumSettings();

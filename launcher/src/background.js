@@ -10,6 +10,9 @@ import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
+import { ConfigManager } from "./backend/ConfigManager.js";
+import { AuthenticationService } from "./backend/AuthenticationService.js";
+import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -21,11 +24,15 @@ const monitoring = new Monitoring(nodeConnection);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
+const configManager = new ConfigManager(nodeConnection);
+configManager.setServiceManager(serviceManager);
+const authenticationService = new AuthenticationService(nodeConnection);
+const sshService = new SSHService();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 stereumUpdater.initUpdater();
-log.transports.console.level = "info";
+log.transports.console.level = process.env.LOG_LEVEL || "info";
 log.transports.file.level = "debug";
 
 let remoteHost = {};
@@ -42,13 +49,13 @@ ipcMain.handle("connect", async (event, arg) => {
     });
   }
   nodeConnection.nodeConnectionParams = remoteHost;
-  await nodeConnection.establish(taskManager);
+  await nodeConnection.establish(taskManager, event.sender);
   await monitoring.login();
   return 0;
 });
 
 ipcMain.handle("reconnect", async () => {
-  if (nodeConnection.sshService.connectionPool.length > 0) await nodeConnection.sshService.disconnect();
+  if (nodeConnection.sshService.connectionPool.length > 0) await nodeConnection.sshService.disconnect(true);
   try {
     await nodeConnection.establish(taskManager);
   } catch (err) {
@@ -75,6 +82,10 @@ ipcMain.handle("destroy", async () => {
   const returnValue = await nodeConnection.destroyNode(serviceConfigs);
   app.showExitPrompt = false;
   return returnValue;
+});
+
+ipcMain.handle("watchSSVDKG", async () => {
+  return serviceManager.watchSSVDKG();
 });
 
 ipcMain.handle("tunnel", async (event, arg) => {
@@ -210,6 +221,10 @@ ipcMain.handle("getServices", async () => {
 // get data for service logs
 ipcMain.handle("getServiceLogs", async (event, args) => {
   return await monitoring.getServiceLogs(args);
+});
+
+ipcMain.handle("getAllServiceLogs", async (event, args) => {
+  return await nodeConnection.getAllServiceLogs(args);
 });
 
 ipcMain.handle("getServiceConfig", async (event, args) => {
@@ -408,6 +423,18 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getSSVDKGTotalConfig", async (event, args) => {
+  return await nodeConnection.getSSVDKGTotalConfig(args);
+});
+
+ipcMain.handle("readSSVDKGConfig", async (event, args) => {
+  return await nodeConnection.readSSVDKGConfig(args);
+});
+
+ipcMain.handle("writeSSVDKGConfig", async (event, args) => {
+  return await nodeConnection.writeSSVDKGConfig(args.serviceID, args.config);
+});
+
 ipcMain.handle("readPrometheusConfig", async (event, args) => {
   return await nodeConnection.readPrometheusConfig(args);
 });
@@ -473,6 +500,36 @@ ipcMain.handle("checkRemoteKeys", async (event, args) => {
 
 ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
   return await monitoring.getCurrentEpochSlot(args);
+});
+
+ipcMain.handle("beginAuthSetup", async (event, args) => {
+  const current_window = event.sender;
+  return await authenticationService.beginAuthSetup(
+    args.timeBased,
+    args.increaseTimeLimit,
+    args.enableRateLimit,
+    current_window
+  );
+});
+
+ipcMain.handle("finishAuthSetup", async () => {
+  return await authenticationService.finishAuthSetup();
+});
+
+ipcMain.handle("authenticatorVerification", async (event, args) => {
+  return await authenticationService.authenticatorVerification(args);
+});
+
+ipcMain.handle("removeAuthenticator", async (event, args) => {
+  return await authenticationService.removeAuthenticator(args);
+});
+
+ipcMain.handle("checkForAuthenticator", async (event, args) => {
+  return await authenticationService.checkForAuthenticator(args);
+});
+
+ipcMain.handle("cancelVerification", async (event, args) => {
+  return await sshService.cancelVerification(args);
 });
 
 ipcMain.handle("changePassword", async (event, args) => {
@@ -583,6 +640,50 @@ ipcMain.handle("copyExecutionJWT", async (event, args) => {
   return await serviceManager.copyExecutionJWT(args);
 });
 
+ipcMain.handle("readMultiSetup", async () => {
+  return await configManager.readMultiSetup();
+});
+
+ipcMain.handle("createSetup", async (event, args) => {
+  return await configManager.createSetup(args);
+});
+
+ipcMain.handle("deleteSetup", async (event, args) => {
+  return await configManager.deleteSetup(args);
+});
+
+ipcMain.handle("renameSetup", async (event, args) => {
+  return await configManager.renameSetup(args);
+});
+
+ipcMain.handle("exportSingleSetup", async (event, args) => {
+  return await serviceManager.exportSingleSetup(args);
+});
+
+ipcMain.handle("importSingleSetup", async (event, args) => {
+  return await serviceManager.importSingleSetup(args);
+});
+
+ipcMain.handle("switchSetupNetwork", async (event, args) => {
+  return await configManager.switchSetupNetwork(args);
+});
+
+ipcMain.handle("fetchTranslators", async (event, args) => {
+  return await serviceManager.fetchTranslators(args);
+});
+
+ipcMain.handle("fetchGitHubTesters", async (event, args) => {
+  return await serviceManager.fetchGitHubTesters(args);
+});
+
+ipcMain.handle("checkAndCreateMultiSetup", async () => {
+  return await configManager.checkAndCreateMultiSetup();
+});
+
+ipcMain.handle("checkConnectionQuality", async (event, args) => {
+  return await nodeConnection.sshService.checkConnectionQuality(args);
+});
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {
@@ -603,6 +704,10 @@ ipcMain.handle("startShell", async (event) => {
   }
 });
 
+ipcMain.handle("exec", async (event, command, use_sudo) => {
+  return await nodeConnection.sshService.exec(command, use_sudo);
+});
+
 ipcMain.handle("executeCommand", async (event, args) => {
   return await nodeConnection.sshService.executeCommand(args);
 });
@@ -616,6 +721,10 @@ ipcMain.handle("stopShell", async () => {
       return `Error stopping shell: ${error.message}`;
     }
   }
+});
+
+ipcMain.handle("create2FAQRCode", async (event, args) => {
+  return await authenticationService.create2FAQRCode(args.type, args.name, args.ip, args.secret);
 });
 
 // Scheme must be registered before the app is ready

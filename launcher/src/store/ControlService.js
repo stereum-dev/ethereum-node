@@ -24,6 +24,7 @@ class ControlService extends EventEmitter {
       keyfileLocation: args.keyfileLocation,
       passphrase: args.passphrase,
       stereumRelease: args.stereumRelease,
+      authCode: args.authCode,
     });
   }
 
@@ -49,6 +50,10 @@ class ControlService extends EventEmitter {
 
   async destroy() {
     return await this.promiseIpc.send("destroy");
+  }
+
+  async watchSSVDKG() {
+    return await this.promiseIpc.send("watchSSVDKG");
   }
 
   async openTunnels(args) {
@@ -180,6 +185,10 @@ class ControlService extends EventEmitter {
 
   async getServiceLogs(args) {
     return await this.promiseIpc.send("getServiceLogs", args);
+  }
+
+  async getAllServiceLogs(args) {
+    return await this.promiseIpc.send("getAllServiceLogs", args);
   }
 
   async getServiceConfig(args) {
@@ -366,6 +375,18 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
 
+  async getSSVDKGTotalConfig(args) {
+    return await this.promiseIpc.send("getSSVDKGTotalConfig", args);
+  }
+
+  async readSSVDKGConfig(args) {
+    return await this.promiseIpc.send("readSSVDKGConfig", args);
+  }
+
+  async writeSSVDKGConfig(args) {
+    return await this.promiseIpc.send("writeSSVDKGConfig", args);
+  }
+
   async readPrometheusConfig(args) {
     return await this.promiseIpc.send("readPrometheusConfig", args);
   }
@@ -409,7 +430,6 @@ class ControlService extends EventEmitter {
       args.passwordFiles.forEach((file) => {
         passwordFiles.push({ name: file.name, path: file.path });
       });
-
     }
     return await this.promiseIpc.send("checkActiveValidators", {
       files: files,
@@ -445,6 +465,30 @@ class ControlService extends EventEmitter {
 
   async getCurrentEpochSlot(args) {
     return await this.promiseIpc.send("getCurrentEpochSlot", args);
+  }
+
+  async beginAuthSetup(timeBased, increaseTimeLimit, enableRateLimit) {
+    return await this.promiseIpc.send("beginAuthSetup", { timeBased, increaseTimeLimit, enableRateLimit });
+  }
+
+  async authenticatorVerification(args) {
+    return await this.promiseIpc.send("authenticatorVerification", args);
+  }
+
+  async finishAuthSetup() {
+    return await this.promiseIpc.send("finishAuthSetup");
+  }
+
+  async removeAuthenticator(args) {
+    return await this.promiseIpc.send("removeAuthenticator", args);
+  }
+
+  async checkForAuthenticator(args) {
+    return await this.promiseIpc.send("checkForAuthenticator", args);
+  }
+
+  async cancelVerification(args) {
+    return await this.promiseIpc.send("cancelVerification", args);
   }
 
   async changePassword(args) {
@@ -552,6 +596,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("downloadObolBackup", args);
   }
 
+  async fetchTranslators(args) {
+    return await this.promiseIpc.send("fetchTranslators", args);
+  }
+
+  async fetchGitHubTesters(args) {
+    return await this.promiseIpc.send("fetchGitHubTesters", args);
+  }
+
   async importObolBackup(args) {
     return await this.promiseIpc.send("importObolBackup", args);
   }
@@ -570,6 +622,46 @@ class ControlService extends EventEmitter {
 
   async executeCommand(args) {
     return this.promiseIpc.send("executeCommand", args);
+  }
+
+  async readMultiSetup() {
+    return this.promiseIpc.send("readMultiSetup");
+  }
+
+  async createSetup(args) {
+    return this.promiseIpc.send("createSetup", args);
+  }
+
+  async deleteSetup(args) {
+    return this.promiseIpc.send("deleteSetup", args);
+  }
+
+  async renameSetup(args) {
+    return this.promiseIpc.send("renameSetup", args);
+  }
+
+  async exportSingleSetup(args) {
+    return this.promiseIpc.send("exportSingleSetup", args);
+  }
+
+  async importSingleSetup(args) {
+    return this.promiseIpc.send("importSingleSetup", args);
+  }
+
+  async switchSetupNetwork(args) {
+    return this.promiseIpc.send("switchSetupNetwork", args);
+  }
+
+  async checkAndCreateMultiSetup(args) {
+    return this.promiseIpc.send("checkAndCreateMultiSetup", args);
+  }
+
+  async checkConnectionQuality() {
+    return this.promiseIpc.send("checkConnectionQuality");
+  }
+
+  async create2FAQRCode(args) {
+    return this.promiseIpc.send("create2FAQRCode", args);
   }
 }
 if (!instance) {

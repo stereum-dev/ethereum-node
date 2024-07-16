@@ -1,0 +1,58 @@
+---
+# Backup and configure SSH for 2FA
+- name: Check if /etc/ssh/sshd_config.stereum.bak exists
+  stat:
+    path: /etc/ssh/sshd_config.stereum.bak
+  register: sshd_config_backup
+
+- name: Check if /etc/pam.d/sshd.stereum.bak exists
+  stat:
+    path: /etc/pam.d/sshd.stereum.bak
+  register: pam_sshd_backup
+
+- name: Backup sshd_config if not already backed up
+  copy:
+    src: /etc/ssh/sshd_config
+    dest: /etc/ssh/sshd_config.stereum.bak
+    remote_src: yes
+  when: not sshd_config_backup.stat.exists
+
+- name: Backup pam-sshd if not already backed up
+  copy:
+    src: /etc/pam.d/sshd
+    dest: /etc/pam.d/sshd.stereum.bak
+    remote_src: yes
+  when: not pam_sshd_backup.stat.exists
+
+- name: Comment out KbdInteractiveAuthentication in sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^KbdInteractiveAuthentication.*$"
+    line: '# \0'
+    state: present
+
+- name: Add 2FA setup to sshd_config
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    marker: "# {mark} 2FA-Setup"
+    block: |
+      KbdInteractiveAuthentication yes
+      AuthenticationMethods publickey,keyboard-interactive password,keyboard-interactive
+
+- name: Comment out @include common-auth in pam-sshd
+  lineinfile:
+    path: /etc/pam.d/sshd
+    regexp: "^@include common-auth$"
+    line: "# @include common-auth"
+    state: present
+
+- name: Add Google Authenticator configuration to pam-sshd
+  lineinfile:
+    path: /etc/pam.d/sshd
+    line: "auth required pam_google_authenticator.so grace_period=43200"
+    insertafter: EOF
+
+- name: Restart SSH service
+  systemd:
+    name: sshd
+    state: restarted

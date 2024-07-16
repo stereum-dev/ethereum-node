@@ -112,7 +112,9 @@ export default {
           const zip = new JSZip();
 
           logs.forEach((item) => {
-            zip.file(item.containerId, item.logs.stdout);
+            const fileName = `${item.containerId}.txt`;
+            const fileContent = item.logs.join("\n");
+            zip.file(fileName, fileContent);
           });
 
           zip.generateAsync({ type: "blob" }).then(function (blob) {
