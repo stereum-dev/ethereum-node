@@ -80,7 +80,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref, watchEffect } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import TheFooter from "../layers/TheFooter.vue";
 import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
