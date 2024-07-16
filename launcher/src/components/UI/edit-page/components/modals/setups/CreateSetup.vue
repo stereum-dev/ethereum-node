@@ -181,7 +181,7 @@ watch(
       layoutMsg.value = "";
     } else {
       buttonDisabled.value = true;
-      if (setupName.value.trim() === "") {
+      if (setupName.value.trim() === "" || setupName.value.trim() === "commonServices") {
         nameMsg.value = "Please enter a name for your setup";
       }
       if (setupColor.value === "") {

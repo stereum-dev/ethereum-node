@@ -226,15 +226,6 @@ const openSetup = (setup) => {
   setupStore.selectedSetup = setup;
   // setupStore.selectedSetup.isActive = true;
   setupStore.isConfigViewActive = true;
-
-  serviceStore.installedServices = serviceStore.installedServices.filter((service) => {
-    const isNotServerService = !setupStore.serverServices.includes(service.name);
-    const isServiceInSetup = setup.services.some(
-      (svc) => svc.id === service.config?.serviceID
-    );
-
-    return isNotServerService && isServiceInSetup;
-  });
 };
 
 const exportSetup = (setup) => {
