@@ -1,0 +1,43 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: "../"
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+    - name: Update cache & os (Ubuntu)
+      apt:
+        update_cache: yes
+        upgrade: dist
+      become: true
+      changed_when: false
+
+    - name: Install software-properties-common
+      apt:
+        name: software-properties-common
+        state: present
+
+    - name: Add Ansible PPA repository
+      apt_repository:
+        repo: ppa:ansible/ansible
+        state: present
+
+    - name: Update package lists after adding repository
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3-pip
+        - expect
+        - ansible
+        - tar
+        - gzip
+        - wget
+        - git
+# EOF

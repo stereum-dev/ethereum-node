@@ -1,33 +1,51 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
     <ServerDetails />
-
-    <ConfigDetails :list="configsToDisplay" />
-
+    <SetupDetails
+      :list="setupsList"
+      @select-rename="selectRename"
+      @confirm-rename="confirmRename"
+      @select-setup="selectSetup"
+      @server-view="serverView"
+    />
     <NetworkDetails />
   </div>
 </template>
+
 <script setup>
-import { useNodeManage } from "@/store/nodeManage";
-import ServerDetails from "./ServerDetails.vue";
-import NetworkDetails from "./NetworkDetails.vue";
-import ConfigDetails from "./ConfigDetails.vue";
+import { useMultiSetups } from "@/composables/multiSetups";
+import { useSetups } from "@/store/setups";
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import NetworkDetails from "./header/NetworkDetails.vue";
+import ServerDetails from "./header/ServerDetails.vue";
+import SetupDetails from "./header/SetupDetails.vue";
 
-const nodeStore = useNodeManage();
-const route = useRoute();
+const emit = defineEmits(["selectRename", "confirmRename"]);
+const setupStore = useSetups();
 
-const configsToDisplay = computed(() => {
-  let configs;
-  if (route.path === "/node") {
-    configs = nodeStore.nodeConfigs;
-  } else {
-    configs = nodeStore.nodeConfigs.slice(0, 4);
-  }
-  return configs;
+const { getSelectedSetup, getServerView } = useMultiSetups();
+
+const setupsList = computed(() => {
+  return setupStore.editSetups;
 });
+
+const selectRename = (setup) => {
+  emit("selectRename", setup);
+};
+
+const confirmRename = () => {
+  emit("confirmRename");
+};
+
+const selectSetup = (setup) => {
+  getSelectedSetup(setup, true);
+};
+
+const serverView = () => {
+  getServerView();
+};
 </script>
+
 <style scoped>
 .fade-move,
 .fade-enter-active,

@@ -32,8 +32,7 @@ const runInstalltion = async () => {
       relayURL: installStore.relayURL,
       selectedPreset: installStore.selectedPreset.name,
     });
-
-    await ControlService.startOneClickServices();
+    installStore.startServicesAfterInstall ? await ControlService.startOneClickServices() : null;
 
     router.push("/node");
   } catch (err) {
@@ -46,9 +45,14 @@ const runInstalltion = async () => {
 };
 
 const loggingOut = async () => {
-  await ControlService.logout();
+  try {
+    await ControlService.stopShell();
+    await ControlService.logout();
+  } catch (e) {}
   router.push("/login").then(() => {
-    location.reload();
+    // do we really need this reaload here?
+    // it destroys the error message in the console if the installation failed
+    //location.reload();
   });
 };
 </script>

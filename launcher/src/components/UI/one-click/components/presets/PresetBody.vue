@@ -43,6 +43,7 @@ import { ref, onMounted, watch } from 'vue';
               v-for="item in manageStore.networkList"
               :key="item.name"
               class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+              :class="item?.state === 'disabled' ? 'pointer-events-none opacity-50' : ''"
               @click="getNetwork(item)"
             >
               <img
@@ -125,11 +126,13 @@ const getNetwork = (network) => {
   openDropdown.value = false;
   clickStore.presets.forEach((p) => (p.selected = false));
   manageStore.currentNetwork = network;
+  clickStore.selectedNetwork = network;
   displayItem.value = network;
 };
 
 const getPreset = (preset) => {
   if (displayItem?.value.name) {
+    clickStore.resetMevBoost = true;
     preset.selected = true;
     emit("installPreset", preset);
   }

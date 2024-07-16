@@ -105,11 +105,6 @@ export default {
       nextStep: 0,
       sliderTutorial: [
         {
-          id: 1,
-          img: "/img/icon/guide-page-icons/guide-staking-icons/1.jpg",
-          text: this.$t("sliderTutorial.visitUrl") + " “https://goerli.launchpad.ethereum.org/en/”",
-        },
-        {
           id: 2,
           img: "/img/icon/guide-page-icons/guide-staking-icons/2.jpg",
           text: this.$t("sliderTutorial.becomeValidator"),

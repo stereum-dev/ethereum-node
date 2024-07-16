@@ -1,6 +1,7 @@
 import { ServiceManager } from "./ServiceManager";
 import YAML from "yaml";
 import { StringUtils } from "./StringUtils";
+import { ConfigManager } from "./ConfigManager";
 
 const log = require("electron-log");
 
@@ -13,6 +14,7 @@ export class OneClickInstall {
     this.installDir = installDir;
     this.nodeConnection = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
+    this.configManager = new ConfigManager(this.nodeConnection);
     const arch = await this.nodeConnection.getCPUArchitecture();
     const settings = {
       stereum_settings: {
@@ -31,6 +33,7 @@ export class OneClickInstall {
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
     mkdir -p /etc/stereum/services &&\
     echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
+    await this.configManager.createMultiSetupYaml({}, "");
     await this.nodeConnection.findStereumSettings();
     return await this.nodeConnection.prepareStereumNode(
       this.nodeConnection.settings.stereum.settings.controls_install_path
@@ -263,8 +266,51 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args));
     }
 
-    this.handleArchiveTags(selectedPreset);
+    if (constellation.includes("KeysAPIService")) {
+      //KeysAPIService
+      this.extraServices.push(
+        this.serviceManager.getService("KeysAPIService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+        })
+      );
+    }
 
+    if (constellation.includes("ValidatorEjectorService")) {
+      //ValidatorEjectorService
+      this.extraServices.push(
+        this.serviceManager.getService("ValidatorEjectorService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+        })
+      );
+    }
+
+    if (constellation.includes("LidoObolExitService")) {
+      //LidoObolExitService
+      this.extraServices.push(
+        this.serviceManager.getService("LidoObolExitService", {
+          ...args,
+          consensusClients: [this.beaconService].concat(
+            this.extraServices.filter((s) => s.service === "CharonService")
+          ),
+          otherServices: this.extraServices.filter((s) => s.service === "ValidatorEjectorService"),
+        })
+      );
+    }
+
+    if (constellation.includes("SSVDKGService")) {
+      let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
+        ...args,
+        consensusClients: [this.beaconService],
+        otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
+      });
+      this.extraServices.push(SSVDKGService);
+    }
+
+    this.handleArchiveTags(selectedPreset);
 
     let versions;
     try {
@@ -315,16 +361,17 @@ export class OneClickInstall {
           break;
         case "BesuService":
           this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))
+            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))
           ] = "--sync-mode=FULL";
           break;
         case "NethermindService":
           this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
             "_archive";
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))
-          ] = "--Pruning.Mode=None";
-          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--Pruning.FullPruningTrigger"));
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))] =
+            "--Pruning.Mode=None";
+          this.executionClient.command = this.executionClient.command.filter(
+            (c) => !c.includes("--Pruning.FullPruningTrigger")
+          );
           break;
       }
       switch (this.beaconService.service) {
@@ -335,18 +382,17 @@ export class OneClickInstall {
           this.beaconService.command = this.beaconService.command.filter((c) => !c.includes("--checkpointSyncUrl"));
           break;
         case "NimbusBeaconService":
-          if (this.beaconService.command.some(c => c.includes("--trusted-node-url="))) {
-            this.beaconService.command.push("--backfill=true")
+          if (this.beaconService.command.some((c) => c.includes("--trusted-node-url="))) {
+            this.beaconService.command.push("--backfill=true");
           }
-          this.beaconService.command.push("--history=archive")
+          this.beaconService.command.push("--history=archive");
           break;
         case "PrysmBeaconService":
           this.beaconService.command += " --slots-per-archive-point=32";
           break;
         case "TekuBeaconService":
-          this.beaconService.command[
-            this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))
-          ] = "--data-storage-mode=archive";
+          this.beaconService.command[this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))] =
+            "--data-storage-mode=archive";
       }
     }
   }
@@ -367,12 +413,15 @@ export class OneClickInstall {
   async writeConfig() {
     const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
+      this.configManager.createMultiSetupYaml(configs, this.network);
       await Promise.all(
         configs.map(async (config) => {
           await this.nodeConnection.writeServiceConfiguration(config);
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
+      await this.serviceManager.prepareSSVDKG(this.extraServices.find((s) => s.service === "SSVDKGService"));
+      await this.serviceManager.initKeysAPI(this.extraServices.filter((s) => s.service === "KeysAPIService"));
       return configs;
     }
   }
@@ -452,6 +501,23 @@ export class OneClickInstall {
         break;
       case "archive":
         break;
+      case "lidoobol":
+        services = [
+          "NethermindService",
+          "LighthouseBeaconService",
+          "LodestarValidatorService",
+          "GrafanaService",
+          "PrometheusNodeExporterService",
+          "PrometheusService",
+          "NotificationService",
+        ];
+        services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
+        break;
+      case "lidossv":
+        services.push("SSVNetworkService", "SSVDKGService");
+        break;
+      case "lidocsm":
+        services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService");
     }
     return services;
   }

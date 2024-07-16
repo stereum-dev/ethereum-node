@@ -1,0 +1,34 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: "../"
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+    - name: Update cache & OS (Ubuntu)
+      apt:
+        update_cache: true
+        upgrade: dist
+      become: true
+      changed_when: false
+    - name: Install specific version of Git
+      apt:
+        name: git=1:2.34.1-1ubuntu1
+        state: present
+        allow_downgrade: true
+      become: true
+    - name: Get current version of Git package
+      shell: dpkg -s git | grep '^Version:'
+      register: git_version
+    - name: Write Git version to file
+      copy:
+        content: "{{ git_version.stdout }}"
+        dest: /tmp/git_version.txt
+    - name: Update package cache (Ubuntu)
+      apt:
+        update_cache: true
+      become: true
+      changed_when: false
+# EOF

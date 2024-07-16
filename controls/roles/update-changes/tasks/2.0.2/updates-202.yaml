@@ -1,9 +1,0 @@
----
-- name: Find service configs
-  find:
-    paths: "/etc/stereum/services"
-  register: service_config_files
-
-- name: Include Erigon DB Tag
-  include_tasks: erigon_dbTag.yaml
-  loop: "{{ service_config_files.files }}"

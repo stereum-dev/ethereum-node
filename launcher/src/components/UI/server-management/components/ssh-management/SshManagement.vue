@@ -9,12 +9,16 @@
       <button
         class="min-w-[170px] h-8 bg-teal-700 hover:bg-teal-900 rounded-full px-2 flex justify-center items-center active:scale-95 active:shadow-none shadow-lg shadow-black transition duration-150 ease-in-out"
         @click="generateModal"
+        @mouseenter="footerStore.cursorLocation = `${t('sshManage.genSshKey')}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <span class="text-[12px] font-semibold text-gray-100">{{ $t("multiServer.createNewKey") }}</span>
       </button>
       <label
         for="ssh"
         class="min-w-[170px] h-8 bg-teal-700 hover:bg-teal-900 rounded-full px-2 flex justify-center items-center active:scale-95 active:shadow-none shadow-lg shadow-black transition duration-150 ease-in-out cursor-pointer"
+        @mouseenter="footerStore.cursorLocation = `${t('sshManage.addkey')}`"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
         <input id="ssh" type="file" name="sshFile" accept=".pub" class="hidden" @change="fileUpload" />
         <span class="text-[12px] font-semibold text-gray-100"> {{ $t("multiServer.addExistingKey") }}</span>
@@ -31,10 +35,15 @@
 <script setup>
 import SshRow from "./SshRow.vue";
 import { useServers } from "@/store/servers";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
 
 const emit = defineEmits(["fileUpload", "deleteKey"]);
 
 const serverStore = useServers();
+const footerStore = useFooter();
 
 const generateModal = () => {
   serverStore.isGenerateModalActive = true;

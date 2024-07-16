@@ -1,27 +1,22 @@
 <template>
   <custom-modal
-    :main-title="network.name"
-    :client="manageStore.configNetwork.id ? manageStore.configNetwork : manageStore.currentNetwork"
+    :main-title="network?.name"
+    :client="
+      manageStore.configNetwork.id
+        ? manageStore.configNetwork
+        : manageStore.currentNetwork
+    "
     :sub-title="`${$t('editModals.switchNetwork')}`"
-    :message-text="`${$t('editModals.selectNetwork')} ${network.name}.`"
+    :message-text="`${$t('editModals.selectNetwork')} ${network?.name}.`"
     :confirm-text="`${$t('editModals.confirm')}`"
     :click-outside-text="`${$t('editModals.clckOutside')}`"
     @close-window="closeWindow"
     @confirm-action="switchConfirm"
   >
     <template #content>
-      <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto mt-4">
-        <!-- <div class="w-full flex flex-col justify-between items-center space-y-1">
-          <span class="w-full text-left text-teal-700 font-semibold">Current Network</span>
-          <div
-            class="flex justify-center items-center w-full bg-[#131617] shadow-sm shadow-[#0e0f0f] rounded-md py-1 px-2 font-semibold text-lg"
-          >
-            <img class="w-12 mr-2" :src="network.icon" alt="Client Icon" />
-            <div class="w-full flex flex-col justify-evenly items-start text-left font-normal capitalize">
-              <p class="text-gray-200">{{ network.name }}</p>
-            </div>
-          </div>
-        </div> -->
+      <div
+        class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto mt-4"
+      >
         <div class="w-full flex flex-col justify-between items-center space-y-1">
           <span class="w-full text-left text-teal-700 font-semibold">Switch To</span>
           <div class="w-full relative">
@@ -37,7 +32,9 @@
                 class="w-7"
               />
               <span>{{
-                manageStore.selectedNetwork?.id ? manageStore.selectedNetwork?.name : "Select Network From List"
+                manageStore.selectedNetwork?.id
+                  ? manageStore.selectedNetwork?.name
+                  : "Select Network From List"
               }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -52,19 +49,26 @@
             <Transition name="slide">
               <ul
                 v-show="networkDropdownOpen"
-                class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-20 w-full z-10 mt-1 divide-y overflow-x-hidden overflow-y-auto flex flex-col justify-evenly items-center"
+                class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-10 w-full z-10 mt-1 divide-y overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center"
                 @mouseleave="networkDropdownOpen = false"
               >
                 <li
                   v-for="item in manageStore.networkList"
-                  :key="item.name"
+                  :key="item?.name"
                   class="w-full grid grid-cols-6 px-4 hover:bg-blue-400"
+                  :class="
+                    item?.state === 'disabled' ? 'pointer-events-none opacity-50' : ''
+                  "
                   @click="switchNetwork(item)"
                 >
-                  <img class="col-start-1 col-end-2 w-10 p-1" :src="item.icon" alt="Network Icon" />
+                  <img
+                    class="col-start-1 col-end-2 w-10 p-1"
+                    :src="item.icon"
+                    alt="Network Icon"
+                  />
                   <span
                     class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
-                    >{{ item.name }}</span
+                    >{{ item?.name }}</span
                   >
                 </li>
               </ul>
@@ -87,7 +91,9 @@ const manageStore = useNodeManage();
 const network = ref({});
 
 onMounted(() => {
-  network.value = manageStore.configNetwork?.id ? manageStore.configNetwork : manageStore.currentNetwork;
+  network.value = manageStore.configNetwork?.id
+    ? manageStore.configNetwork
+    : manageStore.currentNetwork;
 });
 const switchNetwork = (network) => {
   manageStore.selectedNetwork = network;

@@ -33,6 +33,7 @@ export class CharonService extends NodeService {
         "--p2p-tcp-address=0.0.0.0:3610",
         "--validator-api-address=0.0.0.0:3600",
         "--monitoring-address=0.0.0.0:3620",
+        "--builder-api"
       ], // command
       ["/usr/local/bin/charon"], // entrypoint
       null, // env
@@ -43,8 +44,20 @@ export class CharonService extends NodeService {
       null, // executionClients
       consensusClients // consensusClients    
     );
+
+    if (consensusClients.map(s => s.service).includes("NimbusBeaconService")) {
+      service.command.push("--feature-set-enable=json_requests")
+    }
+
+    if (consensusClients.map(s => s.service).includes("TekuBeaconService")) {
+      consensusClients.filter(s => s.service === "TekuBeaconService").forEach(s => {
+        s.command.push(`--validators-graffiti-client-append-format=DISABLED`)
+      })
+    }
+
     return service;
   }
+
 
   static buildByConfiguration(config) {
     const service = new CharonService();

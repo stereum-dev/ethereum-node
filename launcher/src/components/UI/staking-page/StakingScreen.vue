@@ -1,6 +1,6 @@
 <template>
   <base-layout>
-    <div class="w-full h-full max-h-full grid grid-cols-24 grid-rows-12 py-1 select-none">
+    <div class="w-full h-full max-h-[492px] grid grid-cols-24 grid-rows-12 pt-1 select-none">
       <SidebarSection />
 
       <ListSection
@@ -52,17 +52,21 @@ import ImportRemote from "./components/modals/ImportRemote.vue";
 import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
 import { useListKeys } from "@/composables/validators";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, watch } from "vue";
+import { computed, watch, onUnmounted } from "vue";
 import { useServices } from "@/store/services";
 import { useListGroups } from "@/composables/groups";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
 import { useDeepClone } from "@/composables/utils";
 import { saveAs } from "file-saver";
+import { useSetups } from "@/store/setups";
+import { useMultiSetups } from "@/composables/multiSetups";
 
 //Store
 const stakingStore = useStakingStore();
 const serviceStore = useServices();
+const setupStore = useSetups();
 const { listGroups } = useListGroups();
+const { getServerView } = useMultiSetups();
 
 const modals = {
   import: {
@@ -125,6 +129,10 @@ watch(
 );
 
 //Lifecycle Hooks
+onUnmounted(() => {
+  setupStore.selectedSetup = null;
+  getServerView();
+});
 
 // *************** Methods *****************
 
@@ -173,10 +181,8 @@ const handleFiles = (files) => {
         readFileContent(file);
       }
     }
-  } else {
-    if (files[0].type === "application/json") {
-      readFileContent(files[0]);
-    }
+  } else if (files[0].type === "application/json") {
+    readFileContent(files[0]);
   }
 };
 
@@ -571,34 +577,74 @@ const withdrawModalHandler = () => {
 
 const withdrawValidatorKey = async () => {
   stakingStore.withdrawAndExitResponse = null;
-  //if single key
   const key = stakingStore.selectedSingleKeyToWithdraw;
+
   try {
+    let res;
+    let responseObj;
+
     if (key && key !== null) {
-      stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
+      // If single key
+      res = await ControlService.exitValidatorAccount({
         pubkey: key.key,
         serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
       });
-    } else {
-      //if multiple keys
-      const multiKeys = stakingStore.keys
-        .map((item) => {
-          if (item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID) {
-            return item.key;
-          }
-        })
-        .filter((key) => key !== undefined);
 
-      stakingStore.withdrawAndExitResponse = await ControlService.exitValidatorAccount({
-        pubkey: multiKeys,
-        serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+      responseObj = {
+        pubkey: key.key,
+        code: null,
+        msg: res.msg,
+        flag: "rejected",
+      };
+
+      if (Array.isArray(res) && res.length > 0) {
+        const resObj = res[0];
+        responseObj.code = resObj.code;
+        responseObj.msg = resObj.msg;
+        responseObj.pubkey = resObj.pubkey || key.key;
+        responseObj.flag = resObj.code === 200 ? "approved" : "rejected";
+      }
+
+      stakingStore.withdrawAndExitResponse = [responseObj];
+    } else {
+      // If multiple keys
+      const multiKeys = stakingStore.keys
+
+        .filter((item) => item.validatorID === stakingStore.selectedServiceToFilter.config?.serviceID)
+        .map((item) => item.key);
+
+      res = await Promise.all(
+        multiKeys.map(async (key) => {
+          return await ControlService.exitValidatorAccount({
+            pubkey: key,
+            serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+          });
+        })
+      );
+
+      stakingStore.withdrawAndExitResponse = res.map((item, index) => {
+        let responseObj = {
+          pubkey: multiKeys[index],
+          code: null,
+          msg: item.msg,
+          flag: "rejected",
+        };
+
+        if (Array.isArray(item) && item.length > 0) {
+          const resObj = item[0];
+          responseObj.code = resObj.code;
+          responseObj.msg = resObj.msg;
+          responseObj.pubkey = resObj.pubkey || multiKeys[index];
+          responseObj.flag = resObj.code === 200 ? "approved" : "rejected";
+        }
+
+        return responseObj;
       });
     }
   } catch (e) {
     console.log(e);
   }
 };
-
 //****** End of Withdraw & Exit *******
 
 //****** Graffiti *******

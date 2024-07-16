@@ -1,36 +1,70 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 p-1">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 p-1"
+  >
     <div
       class="w-full h-full col-start-5 col-end-21 row-start-3 row-end-11 grid grid-cols-12 grid-rows-12 p-2 mx-auto bg-[#1E2429] rounded-md"
     >
       <div
         class="col-start-1 col-span-full row-start-1 row-span-1 bg-teal-600 rounded-md py-1 px-2 flex justify-between items-center z-10"
       >
-        <span class="text-sm text-gray-200 font-normal uppercase">{{ $t("ImportConfigHeader.toImport") }}</span>
-        <span class="text-sm text-gray-200 font-normal uppercase">{{ $t("ImportConfigHeader.rem") }}</span>
+        <span class="text-sm text-gray-200 font-normal uppercase">{{
+          $t("ImportConfigHeader.toImport")
+        }}</span>
+        <span class="text-sm text-gray-200 font-normal uppercase">{{
+          $t("ImportConfigHeader.rem")
+        }}</span>
       </div>
       <div
         class="col-start-1 col-span-full row-start-2 row-span-full overflow-x-hidden overscroll-y-auto flex flex-col justify-start items-start space-y-2 mt-2"
       >
         <TransitionGroup name="fade">
-          <div v-if="configServices.length" class="configTitle">
-            <span class="text-sm text-gray-300 font-semibold uppercase">{{ $t("importingList.nodeConf") }}</span>
+          <div v-if="setups.length" class="serviceTitle">
+            <span class="text-sm text-gray-300 font-semibold uppercase">Setups</span>
           </div>
           <div
-            v-for="(plugin, index) in categoryConfig"
+            v-for="(setup, index) in setups.filter(
+              (item) => item.name !== 'commonServices'
+            )"
+            :key="`${setup.name} + ${index}`"
+            class="table-row duration-500"
+          >
+            <div
+              class="col-start-1 col-end-6 row-start-1 row-span-1 w-full h-full grid grid-cols-6"
+            >
+              <span
+                class="col-start-1 col-span-1 w-[27px] h-[27px] rounded-full self-center justify-self-start"
+                :style="getIconColor(setup)"
+              ></span>
+              <div class="pluginName">
+                <span>
+                  {{ setup.name }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div v-if="configServices.length" class="configTitle">
+            <span class="text-sm text-gray-300 font-semibold uppercase">{{
+              $t("importingList.nodeConf")
+            }}</span>
+          </div>
+          <div
+            v-for="(plugin, index) in categoryConfig.filter(
+              (item) => item.category !== undefined
+            )"
             :key="`${plugin.name} + ${index}`"
             class="table-row duration-500"
           >
             <div class="plugins">
-              <img :src="plugin.icon" alt="icon" class="pluginIcon" />
+              <img :src="plugin?.icon" alt="icon" class="pluginIcon" />
               <div class="pluginName">
                 <span>
-                  {{ plugin.name ? plugin.name : plugin.service }}
+                  {{ plugin?.name ? plugin?.name : plugin?.service }}
                 </span>
               </div>
               <div class="pluginCategory">
                 <span>
-                  {{ plugin.category }}
+                  {{ plugin?.category }}
                 </span>
               </div>
             </div>
@@ -82,6 +116,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "@/store/nodeManage";
+import jsYaml from "js-yaml";
 export default {
   data() {
     return {
@@ -89,6 +124,7 @@ export default {
       title: "IMPORTED CONFIG",
       categoryService: [],
       categoryConfig: [],
+      setups: [],
     };
   },
 
@@ -118,18 +154,57 @@ export default {
   },
   mounted() {
     this.categoryFilter();
+    this.getAllSetups();
   },
   methods: {
+    getAllSetups() {
+      const configs = this.configServices.filter(
+        (item) => item.category === undefined && item.name === undefined
+      );
+
+      const content = configs[0].content;
+
+      this.setups = this.extractNameAndColor(content);
+    },
+
+    extractNameAndColor(content) {
+      try {
+        const setups = jsYaml.load(content);
+        const extractedData = [];
+
+        // eslint-disable-next-line no-unused-vars
+        for (const [key, details] of Object.entries(setups)) {
+          if (details) {
+            // Assuming `name` and `color` are directly under each key in the parsed YAML
+            const { name, color } = details;
+            if (name && color) {
+              extractedData.push({ name, color });
+            }
+          }
+        }
+        return extractedData;
+      } catch (error) {
+        console.error("Failed to parse YAML content", error);
+        return [];
+      }
+    },
+
     removeServiceFromList(item, index) {
       if (item.category === "service") {
-        this.removedServices = this.removedServices.concat(this.categoryService.splice(index, 1));
+        this.removedServices = this.removedServices.concat(
+          this.categoryService.splice(index, 1)
+        );
       } else {
-        this.removedServices = this.removedServices.concat(this.categoryConfig.splice(index, 1));
+        this.removedServices = this.removedServices.concat(
+          this.categoryConfig.splice(index, 1)
+        );
       }
       this.configServices = this.categoryConfig.concat(this.categoryService);
     },
     extractNetwork() {
-      this.configNetwork = this.networkList.find((network) => network.network === this.configServices[0].network);
+      this.configNetwork = this.networkList.find(
+        (network) => network?.network === this.configServices[0]?.network
+      );
     },
     categoryFilter() {
       this.removedServices = [];
@@ -140,6 +215,15 @@ export default {
           this.categoryConfig.push(item);
         }
       });
+    },
+
+    getIconColor(item) {
+      let clr = item.color;
+      if (clr === "default") {
+        return { backgroundColor: "#38b2ac" };
+      } else {
+        return { backgroundColor: clr };
+      }
     },
   },
 };
@@ -248,6 +332,7 @@ export default {
   grid-row: 1/2;
   width: 100%;
   height: 100%;
+  max-height: "35px";
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 1fr;

@@ -57,12 +57,12 @@ test("nimbus validator import", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install geth
-  let geth = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
 
   //install nimbus
-  let nimbusBC = serviceManager.getService("NimbusBeaconService", { network: "goerli", installDir: "/opt/stereum", executionClients: [geth] })
+  let nimbusBC = serviceManager.getService("NimbusBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
 
-  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "goerli", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
+  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
@@ -109,7 +109,6 @@ test("nimbus validator import", async () => {
       /Listening to incoming network requests/.test(BCstatus.stdout) &&
       /REST service started/.test(BCstatus.stdout) &&
       /Slot start/.test(BCstatus.stdout) &&
-      /Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)/.test(BCstatus.stdout) &&
       /Beacon node is online/.test(VCstatus.stdout) &&
       /Beacon node is compatible/.test(VCstatus.stdout) &&
       /Local validator attached/.test(VCstatus.stdout) &&
@@ -141,7 +140,6 @@ test("nimbus validator import", async () => {
   }
 
   //check nimbus service logs
-  expect(BCstatus.stdout).toMatch(/Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)/);
   expect(BCstatus.stdout).toMatch(/Starting beacon node/);
   expect(BCstatus.stdout).toMatch(/Listening to incoming network requests/);
   expect(BCstatus.stdout).toMatch(/REST service started/);

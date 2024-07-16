@@ -2,9 +2,7 @@
   <div class="contributors-parent w-full h-full">
     <div v-if="loader" class="loader">
       <div class="spinner-square">
-        <div class="square-1 square"></div>
-        <div class="square-2 square"></div>
-        <div class="square-3 square"></div>
+        <div v-for="n in 3" :key="n" :class="['square', `square-${n}`]"></div>
       </div>
     </div>
     <div v-else class="contributors-list" name="contributors-list">
@@ -23,97 +21,86 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import TheContributor from "../components/TheContributor.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 
 const headerStore = useNodeHeader();
-
 const results = ref([]);
 const isLoading = ref(true);
+const DELAY_FOR_CHECKING_DATA = 1000;
 
-const loader = computed(() => results.value.length === 0);
+// Computed Properties
+const loader = computed(() => isLoading.value);
 
-onMounted(() => {
+// Watchers
+watch(
+  () => headerStore.stereumTesters,
+  (newTesters) => updateResults(newTesters, "feedback, testing & suggestions"),
+  { immediate: true }
+);
+
+watch(
+  () => headerStore.stereumTranslators,
+  (newTranslators) => updateResults(newTranslators, "translation"),
+  { immediate: true }
+);
+
+// Lifecycle Hooks
+onMounted(handleCreditType);
+
+onUnmounted(clearComponentState);
+
+// Methods
+function handleCreditType() {
+  isLoading.value = true;
   if (headerStore.choosedCreditType === "technical contribution") {
     fetchGithubContributors();
-  } else if (headerStore.choosedCreditType === "feedback, testing & suggestions") {
-    fetchStereumTesters();
-  } else if (headerStore.choosedCreditType === "translation") {
-    fetchStereumTranslators();
+  } else {
+    setTimeout(() => {
+      isLoading.value = results.value.length === 0;
+    }, DELAY_FOR_CHECKING_DATA);
   }
-});
+}
 
-const fetchStereumTesters = async () => {
-  isLoading.value = true;
+function updateResults(newData, creditType) {
+  if (headerStore.choosedCreditType === creditType) {
+    results.value = newData;
+    isLoading.value = false;
+  }
+}
+
+async function fetchGithubContributors() {
   try {
-    const response = await fetch("/testers");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const responseData = await response.json();
-    results.value = responseData.data.testers.map((tester) => ({
-      name: tester.username,
-      avatar: tester.avatarUrl,
-      score: tester.testsCount,
+    const response = await fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors");
+    if (!response.ok) throw new Error("Network response was not ok");
+    const contributors = await response.json();
+    results.value = contributors.map((contributor, index) => ({
+      id: index,
+      name: contributor.login,
+      avatar: contributor.avatar_url,
+      score: contributor.contributions,
     }));
   } catch (error) {
     console.error("Error fetching data:", error);
   } finally {
     isLoading.value = false;
   }
-};
+}
 
-const fetchStereumTranslators = async () => {
+function getClass(index) {
+  if (headerStore.choosedCreditType === "translation") return {};
+  return {
+    "gold-border": index === 0,
+    "silver-border": index === 1,
+    "bronze-border": index === 2,
+  };
+}
+
+function clearComponentState() {
+  results.value = [];
   isLoading.value = true;
-  try {
-    const response = await fetch("/translators");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const responseData = await response.json();
-    results.value = responseData.data.translators
-      .map((translator) => ({
-        name: translator.username,
-        avatar: translator.avatarUrl,
-        score: translator.testsCount,
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const fetchGithubContributors = () => {
-  isLoading.value = true;
-  fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
-    .then((data) => {
-      results.value = data.map((contributor, index) => ({
-        id: index,
-        name: contributor.login,
-        avatar: contributor.avatar_url,
-        score: contributor.contributions,
-      }));
-    })
-    .catch((error) => console.error("Error fetching data:", error))
-    .finally(() => (isLoading.value = false));
-};
-
-const getClass = (index) => {
-  const baseClasses = {};
-  if (headerStore.choosedCreditType !== "translation") {
-    if (index === 0) baseClasses["gold-border"] = true;
-    else if (index === 1) baseClasses["silver-border"] = true;
-    else if (index === 2) baseClasses["bronze-border"] = true;
-  }
-  return baseClasses;
-};
+}
 </script>
 
 <style scoped>

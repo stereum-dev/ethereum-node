@@ -10,6 +10,7 @@
       <UpdatePanel v-if="isUpdateActive" />
       <SshPanel v-if="isSSHActive" @file-upload="fileUpload" @delete-key="deleteKey" />
       <SettingsPanel v-if="isSettingsActive" />
+      <TwoFAPanel v-if="isTwoFactorAuthActive" />
     </div>
     <div
       class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
@@ -25,6 +26,7 @@ import LoginPanel from "./login-form/LoginPanel.vue";
 import DetailsPanel from "./server-details/DetailsPanel.vue";
 import UpdatePanel from "./server-update/UpdatePanel.vue";
 import SshPanel from "./ssh-management/SshPanel.vue";
+import TwoFAPanel from "./two-factor-auth/TwoFAPanel.vue";
 import SettingsPanel from "./server-settings/SettingsPanel.vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
@@ -43,6 +45,7 @@ const isSSHActive = computed(() => route.path !== "/login" && serverStore.isServ
 const isDetailsActive = computed(() => route.path !== "/login" && serverStore.isServerDetailsActive);
 const isUpdateActive = computed(() => route.path !== "/login" && serverStore.isServerUpdateActive);
 const isSettingsActive = computed(() => route.path !== "/login" && serverStore.isServerSettingsActive);
+const isTwoFactorAuthActive = computed(() => route.path !== "/login" && serverStore.isTwoFactorAuthActive);
 
 watch(
   () => serverStore.selectedServerConnection,
@@ -61,6 +64,7 @@ onUnmounted(() => {
   serverStore.isServerSSHActive = false;
   serverStore.isServerUpdateActive = false;
   serverStore.isServerSettingsActive = false;
+  serverStore.isTwoFactorAuthActive = false;
 });
 
 //Methods
@@ -92,7 +96,11 @@ const selectServer = (server) => {
 };
 
 const addNewServer = () => {
+  serverStore.savedServers.savedConnections.forEach((s) => {
+    if (s.isSelected) s.isSelected = false;
+  });
   if (serverStore.connectExistingServer) {
+    serverStore.addNewServer = false;
     serverStore.connectExistingServer = false;
     serverStore.selectServerToConnect = null;
   }

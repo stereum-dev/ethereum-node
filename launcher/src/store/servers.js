@@ -95,6 +95,9 @@ export const useServers = defineStore("servers", {
       serverUpdates: [],
       isUpdateProcessing: false,
       upgradablePackages: [],
+      allTasks: [],
+      isMajorUpgradeActive: false,
+      isMajorUpgradeButtonActive: false,
 
       //Form
       addNewServer: false,
@@ -108,6 +111,7 @@ export const useServers = defineStore("servers", {
       isServerSSHActive: false,
       isServerUpdateActive: false,
       isServerSettingsActive: false,
+      isTwoFactorAuthActive: false,
 
       tabs: [
         { name: "login", icon: "/img/icon/server-management-icons/login.png", isActive: true, isDisabled: false },
@@ -115,6 +119,7 @@ export const useServers = defineStore("servers", {
         { name: "ssh", icon: "/img/icon/server-management-icons/lock.png", isActive: false, isDisabled: false },
         { name: "update", icon: "/img/icon/server-management-icons/download.png", isActive: false, isDisabled: false },
         { name: "settings", icon: "/img/icon/setting-page-icons/setting_icon.png", isActive: false, isDisabled: false },
+        { name: "2fa", icon: "/img/icon/server-management-icons/2fa.png", isActive: false, isDisabled: false },
       ],
       selectedTab: null,
     };
@@ -138,6 +143,7 @@ export const useServers = defineStore("servers", {
         this.isServerSSHActive = false;
         this.isServerUpdateActive = false;
         this.isServerSettingsActive = false;
+        this.isTwoFactorAuthActive = false;
       }
       this.isServerAnimationActive = false;
       this.isServerLoginActive = false;
@@ -145,6 +151,7 @@ export const useServers = defineStore("servers", {
       this.isServerSSHActive = false;
       this.isServerUpdateActive = false;
       this.isServerSettingsActive = false;
+      this.isTwoFactorAuthActive = false;
 
       this[state] = true;
     },

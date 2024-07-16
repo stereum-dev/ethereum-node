@@ -1,0 +1,37 @@
+---
+# Restore SSH and PAM configurations and clean up Google Authenticator
+- name: Restore sshd_config from backup
+  copy:
+    src: /etc/ssh/sshd_config.stereum.bak
+    dest: /etc/ssh/sshd_config
+    remote_src: yes
+
+- name: Restore pam-sshd from backup
+  copy:
+    src: /etc/pam.d/sshd.stereum.bak
+    dest: /etc/pam.d/sshd
+    remote_src: yes
+
+- name: Remove Google Authenticator configuration file from {{ myuser }}
+  file:
+    path: "/home/{{ myuser }}/.google_authenticator"
+    state: absent
+  ignore_errors: yes
+
+- name: Remove Google Authenticator configuration file from root
+  file:
+    path: "/{{ myuser }}/.google_authenticator"
+    state: absent
+  when: myuser == "root"
+  ignore_errors: yes
+
+- name: Remove google-authenticator-libpam directory
+  file:
+    path: /root/google-authenticator-libpam
+    state: absent
+  ignore_errors: yes
+
+- name: Restart SSH service
+  systemd:
+    name: sshd
+    state: restarted
