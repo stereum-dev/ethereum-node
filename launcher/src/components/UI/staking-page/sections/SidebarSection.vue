@@ -102,7 +102,7 @@ const getCurrentService = () => {
         (service) => service.id === validator.config?.serviceID
       )
     );
-    currentService.value = matchingService.config?.serviceID;
+    currentService.value = matchingService?.config?.serviceID;
   } else {
     currentService.value = installedValidators.value[0]?.config?.serviceID;
   }
