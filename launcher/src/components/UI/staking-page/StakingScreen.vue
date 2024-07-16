@@ -47,25 +47,25 @@
 </template>
 
 <script setup>
-import SidebarSection from "./sections/SidebarSection.vue";
+import { useListGroups } from "@/composables/groups";
+import { useMultiSetups } from "@/composables/multiSetups";
+import { useDeepClone } from "@/composables/utils";
+import { useListKeys } from "@/composables/validators";
+import { useServices } from "@/store/services";
+import { useSetups } from "@/store/setups";
+import { useStakingStore } from "@/store/theStaking";
+import { saveAs } from "file-saver";
+import { computed, onUnmounted, watch, watchEffect } from "vue";
+import ControlService from "../../../store/ControlService";
+import ImportRemote from "./components/modals/ImportRemote.vue";
+import ImportValidator from "./components/modals/ImportValidator.vue";
+import RemoveGroup from "./components/modals/RemoveGroup.vue";
+import RemoveValidators from "./components/modals/RemoveValidators.vue";
+import RiskWarning from "./components/modals/RiskWarning.vue";
+import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
 import ListSection from "./sections/ListSection";
 import ManagementSection from "./sections/ManagementSection.vue";
-import ControlService from "../../../store/ControlService";
-import ImportValidator from "./components/modals/ImportValidator.vue";
-import RiskWarning from "./components/modals/RiskWarning.vue";
-import RemoveGroup from "./components/modals/RemoveGroup.vue";
-import ImportRemote from "./components/modals/ImportRemote.vue";
-import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
-import { useListKeys } from "@/composables/validators";
-import { useStakingStore } from "@/store/theStaking";
-import { computed, watch, onUnmounted, onMounted, watchEffect } from "vue";
-import { useServices } from "@/store/services";
-import { useListGroups } from "@/composables/groups";
-import RemoveValidators from "./components/modals/RemoveValidators.vue";
-import { useDeepClone } from "@/composables/utils";
-import { saveAs } from "file-saver";
-import { useSetups } from "@/store/setups";
-import { useMultiSetups } from "@/composables/multiSetups";
+import SidebarSection from "./sections/SidebarSection.vue";
 
 //Store
 const stakingStore = useStakingStore();
@@ -134,23 +134,6 @@ watch(
   }
 );
 
-watchEffect(() => {
-  if (stakingStore.keys.length > 0) {
-    getKeySetupColor();
-    console.log("Keys:", stakingStore.keys);
-  }
-});
-
-//Lifecycle Hooks
-onMounted(() => {
-  getKeySetupColor();
-});
-
-onUnmounted(() => {
-  setupStore.selectedSetup = null;
-  getServerView();
-});
-
 // *************** Methods *****************
 
 //**** List Keys ****
@@ -158,20 +141,6 @@ onUnmounted(() => {
 
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
-};
-
-const getKeySetupColor = () => {
-  if (!stakingStore.keys.length) return;
-  stakingStore.keys = stakingStore.keys.map((key) => {
-    const setup = setupStore.allSetups.find((s) =>
-      s.services.some((service) => service.id === key.validatorID)
-    );
-    const setupColor = setup ? setup.color : "default";
-    return {
-      ...key,
-      color: setupColor,
-    };
-  });
 };
 
 // const updateValidatorStats = async () => {
@@ -868,6 +837,25 @@ const downloadFile = (data) => {
   window.URL.revokeObjectURL(url);
 };
 
+// ******  Key Color *******
+const getKeySetupColor = () => {
+  try {
+    stakingStore.keys = stakingStore?.keys.map((key) => {
+      const allSetups = useDeepClone(setupStore.allSetups);
+      const setup = allSetups.find((s) =>
+        s?.services.some((service) => service.id === key.validatorID)
+      );
+      const setupColor = setup ? setup.color : "default";
+      return {
+        ...key,
+        color: setupColor,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching setup color:", error);
+  }
+};
+
 // ******  Remote Key *******
 
 const importRemoteKey = async (args) => {
@@ -922,4 +910,17 @@ const confirmImportRemoteKeys = async () => {
 };
 
 //****End of Client Commands Buttons ****
+
+watchEffect(() => {
+  if (stakingStore.keys.length > 0 && setupStore.allSetups.length > 0) {
+    getKeySetupColor();
+  }
+});
+
+//Lifecycle Hooks
+
+onUnmounted(() => {
+  setupStore.selectedSetup = null;
+  getServerView();
+});
 </script>
