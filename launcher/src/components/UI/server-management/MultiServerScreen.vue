@@ -38,11 +38,13 @@ import ServerHeader from './components/ServerHeader.vue';
       @update="updateModalHandler"
       @close-window="closeUpdateModale"
     />
+
     <TwofactorModal
       v-if="isTwoFactorAuthActive"
       @submit-auth="submitAuthHandler"
       @close-window="closeAndCancel"
     />
+
     <ErrorModal
       v-if="serverStore.errorMsgExists"
       :description="serverStore.error"
@@ -83,6 +85,7 @@ const serverBodyComponentKey = ref(0);
 const louncherUpdater = ref(false);
 //available version for the launcher updater
 const availableVersion = "dummy version";
+
 const isTwoFactorAuthActive = ref(false);
 
 watchEffect(() => {
