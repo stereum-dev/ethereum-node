@@ -893,7 +893,7 @@ const deleteSetup = async (item) => {
   });
   const subtasks =
     item?.services.flatMap((service) => {
-      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.id);
+      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
 
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,

@@ -166,7 +166,7 @@ const getFilteredValidators = computed(() => {
     // If selectedSetup is null, return all keys
     return stakingStore.filteredKeys;
   } else {
-    const serviceIds = setupStore.selectedSetup.services.map((service) => service.id);
+    const serviceIds = setupStore.selectedSetup.services.map((service) => service.config.serviceID);
     // Filter keys by checking if validatorID exists in serviceIds
     return stakingStore.filteredKeys.filter((key) =>
       serviceIds.includes(key.validatorID)

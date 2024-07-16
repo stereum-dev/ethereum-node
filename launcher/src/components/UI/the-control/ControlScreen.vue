@@ -209,7 +209,7 @@ const selecteConfigServices = computed(() => {
   let test = [];
   const selectedSetup = setupStore.selectedSetup;
   if (selectedSetup && selectedSetup.services) {
-    const selectedServiceIds = selectedSetup.services.map((service) => service.id);
+    const selectedServiceIds = selectedSetup.services.map((service) => service.config.serviceID);
     serviceStore.installedServices.forEach((service) => {
       if (
         (["execution", "validator", "consensus"].includes(service.category) &&
