@@ -3,10 +3,8 @@ import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
 import { useNodeManage } from "@/store/nodeManage";
 import { useDeepClone } from "@/composables/utils";
-import { ref } from "vue";
 
 export const useMultiSetups = () => {
-  const services = ref([]);
   const setupStore = useSetups();
   const serviceStore = useServices();
   const manageStore = useNodeManage();
@@ -17,14 +15,6 @@ export const useMultiSetups = () => {
       setupStore.serverSetups = parseYAMLData(data);
     } catch (e) {
       console.error("Couldn't read multi config yaml", e);
-    }
-  };
-
-  const loadServices = async () => {
-    try {
-      services.value = await ControlService.getServices();
-    } catch (e) {
-      console.error("Couldn't read services", e);
     }
   };
 
@@ -64,8 +54,8 @@ export const useMultiSetups = () => {
       setupType: config.setupType,
       network: config.network,
       color: config.color,
-      services: services.value
-        .filter((service) => config.serviceIds.includes(service.id))
+      services: serviceStore.installedServices
+        .filter((service) => config.serviceIds.includes(service.config.serviceID))
         .map((s) => {
           return {
             ...s,
@@ -97,38 +87,15 @@ export const useMultiSetups = () => {
     setupStore.selectedSetup = null;
   };
 
-  const updateInstalledServices = () => {
-    serviceStore.installedServices = serviceStore.installedServices.map((service) => {
-      if (!service.setupId) {
-        for (const setup of setupStore.allSetups) {
-          const matchingService = setup.services.find((s) => s.id === service?.config?.serviceID);
-
-          if (matchingService) {
-            return {
-              ...service,
-              setupId: setup.setupId,
-              setupName: setup.setupName,
-            };
-          }
-        }
-      }
-      return service;
-    });
-  };
-
   const updateDom = async () => {
-    await loadSetups();
-    await loadServices();
     setupStore.allSetups = getAllSetups();
     setupStore.editSetups = getAllSetups();
-    updateInstalledServices();
     manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
     setupStore.updateSelectedSetup();
   };
 
   return {
     loadSetups,
-    loadServices,
     getAllSetups,
     getSelectedSetup,
     getServerView,

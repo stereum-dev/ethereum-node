@@ -147,7 +147,7 @@ import { useServers } from "@/store/servers";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useMultiSetups } from "../../../composables/multiSetups";
 import { useSetups } from "../../../store/setups";
@@ -171,6 +171,7 @@ import SetupInfos from "./components/modals/setups/SetupInfos.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
+import { useFrontendServices } from "@/composables/services";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -200,7 +201,7 @@ const nukeModalComponent = ref();
 const selectedSetupNetwork = ref("");
 const changeAnime = ref("/animation/confirm-changes/modify.gif");
 const setupImportAnime = ref("/animation/setup/loader.gif");
-const { loadSetups, loadServices, getAllSetups, getServerView, updateDom } = useMultiSetups();
+const { loadSetups, getAllSetups, getServerView, updateDom } = useMultiSetups();
 
 // Computed & Watcher
 
@@ -225,13 +226,6 @@ const getAimationSrc = computed(() => {
 //   },
 //   { deep: true }
 // );
-
-watch(
-  () => manageStore.newConfiguration.length,
-  () => {
-    updateDom();
-  }
-);
 
 watchEffect(() => {
   if (setupStore.isImportAnimeActive) {
@@ -291,7 +285,6 @@ onUnmounted(() => {
 // Methods
 const fetchSetups = async () => {
   await loadSetups();
-  await loadServices();
   setupStore.editSetups = getAllSetups();
 };
 
@@ -334,12 +327,24 @@ const switchClientConfirm = (properties) => {
   const currentClientIndex = manageStore.newConfiguration.indexOf(current);
 
   manageStore.newConfiguration.splice(currentClientIndex, 1);
-  properties.itemToInstall = {
-    ...properties.itemToInstall,
-    isNewClient: true,
-  };
 
-  manageStore.newConfiguration.push(properties.itemToInstall);
+  let item = useDeepClone(properties.itemToInstall);
+  if (
+    item?.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service) &&
+    setupStore.selectedSetup?.setupId === properties.itemToInstall?.setupId
+  ) {
+    return;
+  } else {
+    item.id = manageStore.newConfiguration.length;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+      setupId: setupStore.selectedSetup?.setupId,
+    };
+    manageStore.newConfiguration.push(newItem);
+  }
+
   manageStore.confirmChanges.push({
     id: properties.itemToReplace.config?.serviceID,
     content: "SWITCH CLIENT",
@@ -818,6 +823,7 @@ const confirmHandler = async () => {
   } catch (error) {
     console.error("Error processing changes:", error);
   } finally {
+    await useFrontendServices();
     await resetState();
   }
 };
@@ -858,10 +864,10 @@ const resetState = async () => {
   setupStore.selectedSetupToRemove = [];
   manageStore.isLineHidden = false;
   await listKeys();
+  await updateDom();
   setTimeout(() => {
     manageStore.disableConfirmButton = false;
   }, 3000);
-  await updateDom();
 };
 
 const nukeConfirmation = () => {
@@ -899,7 +905,7 @@ const deleteSetup = async (item) => {
   });
   const subtasks =
     item?.services.flatMap((service) => {
-      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.id);
+      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
 
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,
