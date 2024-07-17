@@ -1,15 +1,24 @@
 <template>
   <div class="balance-parent">
-    <NoData v-if="missingServices.length > 0" service-cat="install" />
+    <NoData v-if="isConsensusMissing" />
     <div v-else class="wrapper">
       <div class="finalized-box">
-        <div class="finalized-value" @mouseenter="cursorLocation = `${finEPOCH} `" @mouseleave="cursorLocation = ''">
+        <div
+          class="finalized-value"
+          @mouseenter="cursorLocation = `${finEPOCH} `"
+          @mouseleave="cursorLocation = ''"
+        >
           {{ finalized_epoch }}
         </div>
         <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
       </div>
       <div class="balance-box">
-        <div class="balance-value" :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }">{{ fmtBalance }} GWei</div>
+        <div
+          class="balance-value"
+          :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }"
+        >
+          {{ fmtBalance }} GWei
+        </div>
         <div class="title">{{ $t("balWid.bal") }}</div>
       </div>
     </div>
@@ -43,6 +52,9 @@ export default {
       installedServicesController: "installedServicesController",
       missingServices: "missingServices",
     }),
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
+    },
   },
 
   watch: {

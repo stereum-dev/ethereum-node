@@ -19,7 +19,7 @@
         </div>
       </div>
       <no-data
-        v-else-if="missingServices.length > 0 || !isConsensusRunning || prometheusIsOff"
+        v-else-if="isConsensusMissing || !isConsensusRunning || prometheusIsOff"
         @mouseenter="cursorLocation = `${nodataMessage}`"
         @mouseleave="cursorLocation = ''"
       />
@@ -36,9 +36,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the current epoch: ${
-                  currentResult.currentEpoch
-                } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`
+                cursorLocation = `the current epoch: ${currentResult.currentEpoch} and the slot number is ${
+                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -175,6 +175,9 @@ export default {
         }));
       }
     },
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
+    },
     getSetupNetwork() {
       let setupNet;
       const net = this.selectedSetup?.network;
@@ -234,17 +237,11 @@ export default {
     },
     currentResult: {
       handler(newResult) {
-        if (
-          newResult &&
-          newResult.currentEpochStatus &&
-          newResult.currentEpochStatus[0]
-        ) {
-          const newArray = newResult.currentEpochStatus[0]
-            .slice(0, this.proposedBlock.length)
-            .map((slot) => ({
-              slotNumber: slot.slotNumber,
-              slotStatus: slot.slotStatus,
-            }));
+        if (newResult && newResult.currentEpochStatus && newResult.currentEpochStatus[0]) {
+          const newArray = newResult.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
+            slotNumber: slot.slotNumber,
+            slotStatus: slot.slotStatus,
+          }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -289,17 +286,13 @@ export default {
       }
 
       const categories = ["consensus", "execution"];
-      const missingCategories = categories.filter(
-        (category) => !foundCategories.has(category)
-      );
+      const missingCategories = categories.filter((category) => !foundCategories.has(category));
 
       if (!hasPrometheus) {
         missingCategories.push("Prometheus");
       }
 
-      this.installedServicesController = missingCategories
-        .join(", ")
-        .replace(/, (?=[^,]*$)/, " and ");
+      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
     },
 
     refreshTimer() {
