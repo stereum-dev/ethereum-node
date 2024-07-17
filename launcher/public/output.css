@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -807,10 +807,6 @@ video {
   top: -90px;
 }
 
-.bottom-0{
-  bottom: 0px;
-}
-
 .bottom-0\.5{
   bottom: 0.125rem;
 }
@@ -1085,10 +1081,6 @@ video {
 
 .col-start-14{
   grid-column-start: 14;
-}
-
-.col-start-16{
-  grid-column-start: 16;
 }
 
 .col-start-17{
@@ -1539,10 +1531,6 @@ video {
   margin-top: 1rem;
 }
 
-.mt-40{
-  margin-top: 10rem;
-}
-
 .mt-5{
   margin-top: 1.25rem;
 }
@@ -1616,10 +1604,6 @@ video {
   height: 33.333333%;
 }
 
-.h-1\/6{
-  height: 16.666667%;
-}
-
 .h-10{
   height: 2.5rem;
 }
@@ -1662,10 +1646,6 @@ video {
 
 .h-3\/4{
   height: 75%;
-}
-
-.h-3\/6{
-  height: 50%;
 }
 
 .h-32{
@@ -2114,10 +2094,6 @@ video {
   width: 66.666667%;
 }
 
-.w-2\/4{
-  width: 50%;
-}
-
 .w-20{
   width: 5rem;
 }
@@ -2282,10 +2258,6 @@ video {
   width: 32px;
 }
 
-.w-\[35\%\]{
-  width: 35%;
-}
-
 .w-\[38px\]{
   width: 38px;
 }
@@ -2404,11 +2376,6 @@ video {
   -webkit-box-flex: 0;
       -ms-flex: none;
           flex: none;
-}
-
-.flex-shrink{
-  -ms-flex-negative: 1;
-      flex-shrink: 1;
 }
 
 .flex-shrink-0{
@@ -2730,11 +2697,6 @@ video {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-}
-
-.flex-wrap{
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
 }
 
 .place-content-center{
@@ -3881,11 +3843,6 @@ video {
   background-color: rgb(96 152 121 / var(--tw-bg-opacity));
 }
 
-.bg-\[\#70E763\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(112 231 99 / var(--tw-bg-opacity));
-}
-
 .bg-\[\#A0A0A0\]{
   --tw-bg-opacity: 1;
   background-color: rgb(160 160 160 / var(--tw-bg-opacity));
@@ -3894,11 +3851,6 @@ video {
 .bg-\[\#D1BB9E\]{
   --tw-bg-opacity: 1;
   background-color: rgb(209 187 158 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#EB5353\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(235 83 83 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#F7C566\]{
@@ -5376,11 +5328,6 @@ html body {
 .after\:left-\[2px\]::after{
   content: var(--tw-content);
   left: 2px;
-}
-
-.after\:top-0::after{
-  content: var(--tw-content);
-  top: 0px;
 }
 
 .after\:top-0\.5::after{

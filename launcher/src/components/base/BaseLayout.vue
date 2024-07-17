@@ -118,7 +118,7 @@ const UpdatePanelCompRef = ref(null);
 const isPageLoading = ref(false);
 
 const getLoadingAnime = computed(() => {
-  return "/animation/loading/robot-loader.gif";
+  return "/animation/setup/loader.gif";
 });
 
 

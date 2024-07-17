@@ -12,16 +12,17 @@ import { ref, watchEffect } from 'vue';
           :class="[
             'col-span-1 w-8 h-8 bg-gray-500 hover:text-teal-500 border border-gray-500 hover:border-teal-200 rounded-sm shadow-md shadow-black flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 active:shadow-none',
             tab.isActive ? 'bg-teal-500 border-teal-200' : '',
-            isLoginRoute &&
-            (tab.name === 'info' ||
-              tab.name === 'ssh' ||
-              tab.name === 'update' ||
-              tab.name === 'settings' ||
-              tab.name === '2fa')
-              ? ' opacity-30 pointer-events-none scale-90 shadow-none'
-              : '',
+            isConnectedServer && tab.name === 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',
+            isServerToConnect && tab.name !== 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',
+            isLoginRoute && tab.name !== 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',
           ]"
-          @click="isLoginRoute && (tab.name === 'info' || tab.name === 'ssh') ? null : tabPicker(tab.name)"
+          @click="
+            (isServerToConnect && tab.name !== 'login') ||
+            (isConnectedServer && tab.name === 'login') ||
+            (isLoginRoute && tab.name !== 'login')
+              ? null
+              : tabPicker(tab.name)
+          "
           @mouseenter="footerStore.cursorLocation = `${tabTooltip(tab)}`"
           @mouseleave="footerStore.cursorLocation = ''"
         >
@@ -73,6 +74,14 @@ const tabTooltip = (tab) => {
   }
   return null; // Default case if none of the conditions match
 };
+
+const isConnectedServer = computed(() => {
+  return serverStore.selectedServerConnection && !serverStore.selectedServerToConnect;
+});
+
+const isServerToConnect = computed(() => {
+  return serverStore.selectedServerToConnect;
+});
 
 const tabPicker = (tabName) => {
   serverStore.setActiveTab(tabName);
