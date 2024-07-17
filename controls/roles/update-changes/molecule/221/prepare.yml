@@ -69,4 +69,48 @@
             otherServices: []
       become: yes
 
+    - name: Create Prysm config
+      copy:
+        dest: "/etc/stereum/services/192ffe7a-dd48-3ff1-b221-6a5fe3765e3c.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrysmValidatorService
+          id: 192ffe7a-dd48-3ff1-b221-6a5fe3765e3c
+          configVersion: 1
+          command: /app/cmd/validator/validator --accept-terms-of-use=true
+            --beacon-rpc-provider="stereum-e021e341-d3cc-003a-7ba4-8d062ea218e4:4000"
+            --beacon-rpc-gateway-provider="stereum-e021e341-d3cc-003a-7ba4-8d062ea218e4:3500"
+            --web --holesky=true --datadir=/opt/app/data/db
+            --wallet-dir=/opt/app/data/wallets
+            --wallet-password-file=/opt/app/data/passwords/wallet-password
+            --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0
+            --grpc-gateway-corsdomain="*"  --monitoring-host=0.0.0.0
+            --monitoring-port=8081
+            --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+            --graffiti-file=/opt/app/graffitis/graffitis.yaml --enable-builder=true
+            --enable-doppelganger=true
+          entrypoint: []
+          env: {}
+          image: prysmaticlabs/prysm-validator:v5.0.4
+          ports:
+            - 127.0.0.1:7500:7500/tcp
+          volumes:
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/data/db:/opt/app/data/db
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/data/wallets:/opt/app/data/wallets
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/data/passwords:/opt/app/data/passwords
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/graffitis:/opt/app/graffitis
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: PrysmBeaconService
+                id: e021e341-d3cc-003a-7ba4-8d062ea218e4
+            mevboost: []
+            otherServices: []
+
+
 #EOF

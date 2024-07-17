@@ -35,7 +35,7 @@ Want to get involved? Create a pull request and we'll have a look at it!
 
 - [Contribution Guidelines](launcher/CONTRIBUTING.md)
 
-Not sure how to help or where to start? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email to [stereum@stereum.net](mailto:stereum@stereum.net).
+Not sure how to help or where to start? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email at [stereum@stereum.net](mailto:stereum@stereum.net).
 
 
 
