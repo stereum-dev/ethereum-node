@@ -30,8 +30,6 @@ const pagesTabsHandler = computed(() => {
   return serviceStore.installedServices.length === 0;
 });
 
-console.log("pagesTabsHandler", pagesTabsHandler.value);
-
 const isActiveTab = computed(() => {
   return (
     router.currentRoute.value.fullPath === props.tab.path ||
