@@ -1,6 +1,6 @@
 <template>
   <div class="epockSlot_parent">
-    <NoData v-if="missingServices.length > 0 || isConsensusRunning" />
+    <NoData v-if="isConsensusMissing || isConsensusRunning" />
     <div v-else-if="flag" class="wrapper">
       {{ beaconControler }}
     </div>
@@ -49,6 +49,9 @@ export default {
       missingServices: "missingServices",
       nodataMessage: "nodataMessage",
     }),
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
+    },
     beaconControler() {
       if (this.currentResult === undefined) {
         return "Checking Beacon Status...";
