@@ -327,12 +327,24 @@ const switchClientConfirm = (properties) => {
   const currentClientIndex = manageStore.newConfiguration.indexOf(current);
 
   manageStore.newConfiguration.splice(currentClientIndex, 1);
-  properties.itemToInstall = {
-    ...properties.itemToInstall,
-    isNewClient: true,
-  };
 
-  manageStore.newConfiguration.push(properties.itemToInstall);
+  let item = useDeepClone(properties.itemToInstall);
+  if (
+    item?.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service) &&
+    setupStore.selectedSetup?.setupId === properties.itemToInstall?.setupId
+  ) {
+    return;
+  } else {
+    item.id = manageStore.newConfiguration.length;
+    const newItem = {
+      ...item,
+      isNewClient: true,
+      setupId: setupStore.selectedSetup?.setupId,
+    };
+    manageStore.newConfiguration.push(newItem);
+  }
+
   manageStore.confirmChanges.push({
     id: properties.itemToReplace.config?.serviceID,
     content: "SWITCH CLIENT",
@@ -893,7 +905,7 @@ const deleteSetup = async (item) => {
   });
   const subtasks =
     item?.services.flatMap((service) => {
-      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.id);
+      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
 
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,

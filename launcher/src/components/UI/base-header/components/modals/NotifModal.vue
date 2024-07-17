@@ -165,7 +165,7 @@ export default {
       let test = [];
       const selectedSetup = this.selectedSetup;
       if (selectedSetup && selectedSetup.services) {
-        const selectedServiceIds = selectedSetup.services.map((service) => service.id);
+        const selectedServiceIds = selectedSetup.services.map((service) => service.config.serviceID);
         this.installedServices.forEach((service) => {
           if ("validator".includes(service.category) && selectedServiceIds.includes(service.config.serviceID)) {
             test.push({
