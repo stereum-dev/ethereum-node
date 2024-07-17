@@ -743,6 +743,7 @@ export class NodeConnection {
       const service_config_dir = totalConfig.ssvServiceConfigDir;
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_db = network_config_dir + "/db";
       const network_config_file = network_config_dir + "/config.yaml";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
@@ -829,6 +830,12 @@ export class NodeConnection {
       // Set last backed public key
       await this.setSSVLastBackedPublicKey(totalConfig.serviceID, newPubKey);
 
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
+      }
+
       // Write last known public key file
       return await this.writeSSVLastKnownPublicKeyFile(
         totalConfig.serviceID,
@@ -850,6 +857,7 @@ export class NodeConnection {
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
       const network_config_file = network_config_dir + "/config.yaml";
+      const network_config_db = network_config_dir + "/db";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
       const password_file = secrets_dir + "/password";
@@ -931,6 +939,12 @@ export class NodeConnection {
       // Set last backed public key
       await this.setSSVLastBackedPublicKey(totalConfig.serviceID, newPubKey);
 
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
+      }
+
       // Write last known public key file
       return await this.writeSSVLastKnownPublicKeyFile(
         totalConfig.serviceID,
@@ -952,6 +966,7 @@ export class NodeConnection {
       const service_config_dir = totalConfig.ssvServiceConfigDir;
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_db = network_config_dir + "/db";
       const network_config_file = network_config_dir + "/config.yaml";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
@@ -1058,6 +1073,12 @@ export class NodeConnection {
         }
       }
 
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
+      }
+
       // Write last known public key file
       return await this.writeSSVLastKnownPublicKeyFile(
         totalConfig.serviceID,
@@ -1079,6 +1100,7 @@ export class NodeConnection {
       const service_config_dir = totalConfig.ssvServiceConfigDir;
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_db = network_config_dir + "/db";
       const network_config_file = network_config_dir + "/config.yaml";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
@@ -1162,6 +1184,12 @@ export class NodeConnection {
         if (SSHService.checkExecError(service_config_write, true)) {
           throw new Error(SSHService.extractExecError(service_config_write));
         }
+      }
+
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
       }
 
       // Write last known public key file
