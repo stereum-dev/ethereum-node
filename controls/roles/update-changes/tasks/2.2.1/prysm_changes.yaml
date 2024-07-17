@@ -12,7 +12,7 @@
   ansible.utils.update_fact:
     updates:
       - path: service_configuration.command
-        value: "{{ service_configuration.command + '  --keymanager-token-file=/opt/app/data/wallets/auth-token' s}}"
+        value: "{{ service_configuration.command + '  --keymanager-token-file=/opt/app/data/wallets/auth-token' }}"
   register: updated
   when: service_configuration.service == "PrysmValidatorService"
 
