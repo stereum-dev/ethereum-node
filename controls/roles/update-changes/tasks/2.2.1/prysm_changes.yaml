@@ -8,6 +8,9 @@
   set_fact:
     service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
 
+- debug:
+    var: service_configuration
+
 - name: set new config
   ansible.utils.update_fact:
     updates:
@@ -17,6 +20,9 @@
   when:
     - service_configuration.service == "PrysmValidatorService"
     - "'--keymanager-token-file=/opt/app/data/wallets/auth-token' not in service_configuration.command"
+
+- debug:
+    var: updated
 
 - name: update config
   set_fact:
