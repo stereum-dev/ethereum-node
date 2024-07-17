@@ -98,7 +98,10 @@ export class ValidatorAccountManager {
           .volumes.find((volume) => volume.includes("passwords"))
           .split(":")[0];
 
-        if ((await this.nodeConnection.sshService.exec(`cat ${passwords_path}/wallet-password`)).rc === 1) {
+        const walletPassword = await this.nodeConnection.sshService.exec(`cat ${passwords_path}/wallet-password`)
+        const walletDir = await this.nodeConnection.sshService.exec(`ls ${wallet_path}/direct/accounts`)
+
+        if (walletPassword.rc != 0 || walletDir.rc != 0) {
           log.error("No Wallet found");
           log.info("Generating one");
           this.nodeConnection.taskManager.otherTasksHandler(
@@ -115,7 +118,7 @@ export class ValidatorAccountManager {
           await this.nodeConnection.sshService.exec(`chown 2000:2000 ${passwords_path}/wallet-password`);
           //Prysm - Create wallet for account(s)
           await this.nodeConnection.sshService.exec(
-            `docker exec stereum-${client.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --prater`
+            `docker exec stereum-${client.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --${client.network}`
           );
 
           await this.nodeConnection.sshService.exec(`chown -R 2000:2000 ${wallet_path}`);
@@ -324,8 +327,7 @@ export class ValidatorAccountManager {
     const curlTag = await this.nodeConnection.ensureCurlImage();
     let command = [
       "docker run --rm --network=stereum curlimages/curl:" + curlTag,
-      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }${apiPath}`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
