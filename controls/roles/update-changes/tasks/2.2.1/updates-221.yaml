@@ -9,3 +9,9 @@
   loop: "{{ service_config_files.files }}"
   loop_control:
     loop_var: config_file
+
+- name: Include Prysm Changes
+  include_tasks: prysm_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file

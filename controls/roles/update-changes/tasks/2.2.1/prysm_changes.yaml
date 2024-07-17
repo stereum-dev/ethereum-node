@@ -1,0 +1,37 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: set new config
+  ansible.utils.update_fact:
+    updates:
+      - path: service_configuration.command
+        value: "{{ service_configuration.command + '  --keymanager-token-file=/opt/app/data/wallets/auth-token' }}"
+  register: updated
+  when:
+    - service_configuration.service == "PrysmValidatorService"
+    - "'--keymanager-token-file=/opt/app/data/wallets/auth-token' not in service_configuration.command"
+
+- name: update config
+  set_fact:
+    service_configuration: "{{ updated.service_configuration }}"
+  when:
+    - service_configuration.service == "PrysmValidatorService"
+    - "'--keymanager-token-file=/opt/app/data/wallets/auth-token' not in service_configuration.command"
+
+- name: Write Config
+  copy:
+    dest: "{{ config_file.path }}"
+    content: "{{ service_configuration | to_nice_yaml(indent=2) }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  when:
+    - service_configuration.service == "PrysmValidatorService"
+    - updated.changed
