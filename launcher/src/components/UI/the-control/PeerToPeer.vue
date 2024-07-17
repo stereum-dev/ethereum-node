@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <no-data
-          v-if="missingServices.length > 0 || prometheusIsOff || !isConsensusRunning"
+          v-if="isConsensusMissing || prometheusIsOff || !isConsensusRunning"
           @mouseenter="cursorLocation = `${nodataMessage}`"
           @mouseleave="cursorLocation = ''"
         />
@@ -143,6 +143,9 @@ export default {
     },
     secondBar() {
       return { width: this.executionValPeer + "%" };
+    },
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
     },
   },
   watch: {
