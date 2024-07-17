@@ -2,12 +2,18 @@ import { computed } from 'vue';
 <template>
   <div
     class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate__slideInLeft animate__delay-0.5s mt-1"
-    :class="[props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 ', props.item?.showExitText ? 'bg-red-500 z-10' : '']"
+    :class="[
+      props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 ',
+      props.item?.showExitText ? 'bg-red-500 z-10' : '',
+    ]"
     @click="selectKey(props.item)"
   >
-    <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
+    <div
+      class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center"
+    >
       <div
-        class="w-6 h-6 rounded-full cursor-pointer bg-white p-[2px]"
+        class="w-6 h-6 rounded-full cursor-pointer p-[2px]"
+        :class="setupStore.getBGColor(props.item?.color)"
         @mouseenter="footerStore.cursorLocation = `${props.item.isRemote ? rm : pk}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -155,6 +161,7 @@ import { computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { useSetups } from "../../../../../../store/setups";
 
 const props = defineProps({
   item: {
@@ -165,14 +172,17 @@ const props = defineProps({
 
 const stakingStore = useStakingStore();
 const footerStore = useFooter();
+const setupStore = useSetups();
 
 const t = i18n.global.t;
 //Key Status Icons
 const activeStatusIcon = "/img/icon/staking-page-icons/validator-state-active.png";
 const slashedStatusIcon = "/img/icon/staking-page-icons/validator-state-slashed.png";
-const depositStatusIcon = "/img/icon/staking-page-icons/validator-state-not-deposited.png";
+const depositStatusIcon =
+  "/img/icon/staking-page-icons/validator-state-not-deposited.png";
 const offlineStatusIcon = "/img/icon/staking-page-icons/validator-state-offline.png";
-const pendingStatusIcon = "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
+const pendingStatusIcon =
+  "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
 const exitedStatusIcon = "/img/icon/staking-page-icons/validator-state-exited.png";
 const apiProblems = "/img/icon/staking-page-icons/validator-state-unknown.png";
 const apiLoading = "/animation/loading/turning-circle.gif";

@@ -64,12 +64,21 @@ const hoveredIndex = ref(null);
 //Computed
 const installedValidators = computed(() => {
   let services = [];
-  if(setupStore.selectedSetup === null){
-    services =  serviceStore.installedServices.filter((s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service))
-  }else{
+  if (setupStore.selectedSetup === null) {
+    services = serviceStore.installedServices.filter(
+      (s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service)
+    );
+  } else {
     services = serviceStore.installedServices
-        .filter((s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service) && setupStore.selectedSetup?.services?.map(s => s.config.serviceID).includes(s.config.serviceID))
-        .map((service) => ({ ...service, selected: false }));
+      .filter(
+        (s) =>
+          s.category === "validator" &&
+          !/SSVNetwork|Charon/.test(s.service) &&
+          setupStore.selectedSetup?.services
+            ?.map((s) => s.config.serviceID)
+            .includes(s.config.serviceID)
+      )
+      .map((service) => ({ ...service, selected: false }));
   }
   return services.sort((a, b) => a.name.localeCompare(b.name));
 });
@@ -83,7 +92,16 @@ onMounted(() => {
 //Methods
 
 const getCurrentService = () => {
+  if (setupStore.selectedSetup) {
+    const matchingService = installedValidators.value.find((validator) =>
+      setupStore.selectedSetup.services.some(
+        (service) => service.id === validator.config?.serviceID
+      )
+    );
+    currentService.value = matchingService?.config?.serviceID;
+  } else {
     currentService.value = installedValidators.value[0]?.config?.serviceID;
+  }
 };
 
 const getActiveValidator = () => {

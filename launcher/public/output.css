@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -805,10 +805,6 @@ video {
 
 .-top-\[90px\]{
   top: -90px;
-}
-
-.bottom-0{
-  bottom: 0px;
 }
 
 .bottom-0\.5{
@@ -2382,11 +2378,6 @@ video {
           flex: none;
 }
 
-.flex-shrink{
-  -ms-flex-negative: 1;
-      flex-shrink: 1;
-}
-
 .flex-shrink-0{
   -ms-flex-negative: 0;
       flex-shrink: 0;
@@ -2706,11 +2697,6 @@ video {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-}
-
-.flex-wrap{
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
 }
 
 .place-content-center{
@@ -5342,11 +5328,6 @@ html body {
 .after\:left-\[2px\]::after{
   content: var(--tw-content);
   left: 2px;
-}
-
-.after\:top-0::after{
-  content: var(--tw-content);
-  top: 0px;
 }
 
 .after\:top-0\.5::after{
