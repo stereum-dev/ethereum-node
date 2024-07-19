@@ -19,7 +19,7 @@
         </div>
       </div>
       <no-data
-        v-else-if="missingServices.length > 0 || !isConsensusRunning || prometheusIsOff"
+        v-else-if="isConsensusMissing || !isConsensusRunning || prometheusIsOff"
         @mouseenter="cursorLocation = `${nodataMessage}`"
         @mouseleave="cursorLocation = ''"
       />
@@ -37,7 +37,7 @@
               }"
               @mouseenter="
                 cursorLocation = `the current epoch: ${
-                  currentResult.currentEpoch
+                  currentResult?.currentEpoch || 'N/A'
                 } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
@@ -47,7 +47,7 @@
         <div class="justified-part">
           <div class="Finalized-row">
             <div
-              v-for="n in currentResult.justifiedEpochStatus[0]"
+              v-for="n in currentResult?.justifiedEpochStatus?.[0] || []"
               :key="n"
               class="Finalized-square"
               :class="{
@@ -56,14 +56,16 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the justified epoch: ${currentResult.currentJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                cursorLocation = `the justified epoch: ${
+                  currentResult?.currentJustifiedEpoch || 'N/A'
+                } and the slot number is ${n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
           </div>
           <div class="Finalized-row">
             <div
-              v-for="n in currentResult.preJustifiedEpochStatus[0]"
+              v-for="n in currentResult?.preJustifiedEpochStatus?.[0] || []"
               :key="n"
               class="Finalized-square"
               :class="{
@@ -72,7 +74,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the previous justified epoch: ${currentResult.previousJustifiedEpoch} and the slot number is ${n.slotNumber}`
+                cursorLocation = `the previous justified epoch: ${
+                  currentResult?.previousJustifiedEpoch || 'N/A'
+                } and the slot number is ${n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -81,7 +85,7 @@
         <div class="Finalized-part">
           <div class="Finalized-row">
             <div
-              v-for="n in currentResult.finalizedEpochStatus[0]"
+              v-for="n in currentResult?.finalizedEpochStatus?.[0] || []"
               :key="n"
               class="Finalized-square"
               :class="{
@@ -90,7 +94,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the Finalized epoch: ${currentResult.finalizedEpoch} and the slot number is ${n.slotNumber}`
+                cursorLocation = `the Finalized epoch: ${
+                  currentResult?.finalizedEpoch || 'N/A'
+                } and the slot number is ${n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -109,6 +115,7 @@ import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 import NoData from "./NoData.vue";
 import { useSetups } from "@/store/setups";
+import { useRouter } from "vue-router";
 
 export default {
   components: {
@@ -175,6 +182,9 @@ export default {
         }));
       }
     },
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
+    },
     getSetupNetwork() {
       let setupNet;
       const net = this.selectedSetup?.network;
@@ -194,6 +204,8 @@ export default {
         this.installedServicesController === "consensus and Prometheus"
       ) {
         return false;
+      } else if (this.proposedBlock === undefined) {
+        return true;
       } else if (this.consensusClientIsOff === true) {
         return false;
       } else if (this.prometheusIsOff === true) {
@@ -237,9 +249,9 @@ export default {
         if (
           newResult &&
           newResult.currentEpochStatus &&
-          newResult.currentEpochStatus[0]
+          newResult?.currentEpochStatus[0]
         ) {
-          const newArray = newResult.currentEpochStatus[0]
+          const newArray = newResult?.currentEpochStatus[0]
             .slice(0, this.proposedBlock.length)
             .map((slot) => ({
               slotNumber: slot.slotNumber,
@@ -256,6 +268,14 @@ export default {
       deep: true,
     },
   },
+
+  created() {
+    const router = useRouter();
+    if (!this.proposedBlock) {
+      router.push("/node");
+    }
+  },
+
   mounted() {
     this.refreshTimer();
   },

@@ -80,7 +80,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref, watchEffect } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import TheFooter from "../layers/TheFooter.vue";
 import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
@@ -118,20 +118,9 @@ const UpdatePanelCompRef = ref(null);
 const isPageLoading = ref(false);
 
 const getLoadingAnime = computed(() => {
-  return "/animation/loading/robot-loader.gif";
+  return "/animation/setup/loader.gif";
 });
 
-watchEffect(() => {
-  if (
-    router.currentRoute.value.fullPath === "/node" ||
-    router.currentRoute.value.fullPath === "/edit"
-  ) {
-    isPageLoading.value = true;
-    setTimeout(() => {
-      isPageLoading.value = false;
-    }, 3000);
-  }
-});
 
 onMounted(() => {
   useUpdateCheck();

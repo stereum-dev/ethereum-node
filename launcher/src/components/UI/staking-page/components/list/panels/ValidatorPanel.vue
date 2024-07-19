@@ -7,13 +7,13 @@
         v-for="service in runningValidators"
         :key="service.config?.serviceID"
         class="col-span-1 colst w-24 h-full flex justify-start items-center hover:bg-slate-300 rounded-sm space-x-1 cursor-pointer transition-all duration-150 px-1"
-        :class="getBgColor(service.setupId).background"
+        :class="getBgColor(service.setupId)?.background"
         @click="pickValidator(service)"
       >
         <img class="w-5 h-5" :src="service.icon" alt="Service Icon" @mousedown.prevent />
         <span
           class="text-[10px] font-semibold hover:text-black transition-all duration-150"
-          :class="getBgColor(service.setupId).text"
+          :class="getBgColor(service.setupId)?.text"
           >{{ service.name }}</span
         >
       </div>

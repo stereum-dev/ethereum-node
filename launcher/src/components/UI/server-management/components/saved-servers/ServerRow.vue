@@ -110,13 +110,11 @@ const serverAvatar = computed(() => {
 });
 
 const connectedServer = computed(() => {
-  if (serverStore.selectedServerConnection?.name === props.server.name) return true;
-  else return false;
+  return serverStore.selectedServerConnection?.name === props.server.name;
 });
 
 const sshExists = computed(() => {
-  if (props.server.keylocation !== "") return true;
-  else return false;
+  return props.server.keylocation !== "";
 });
 
 watchEffect(() => {
