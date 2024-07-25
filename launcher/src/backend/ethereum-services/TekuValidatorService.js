@@ -66,7 +66,6 @@ export class TekuValidatorService extends NodeService {
     );
 
     if (consensusClients.some(c => c.service === "CharonService")) {
-      service.command.push("--Xblock-v3-enabled=false")
       service.command[service.command.findIndex(c => c === "--doppelganger-detection-enabled=true")] = "--doppelganger-detection-enabled=false"
     }
 
