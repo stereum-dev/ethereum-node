@@ -8,7 +8,7 @@
   set_fact:
     service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
 
-- name: Adjust Teku Config if charon service connected to it
+- name: Adjust Lodestar Config if charon service connected to it
   lineinfile:
     path: "{{ config_file.path }}"
     insertafter: "--builder"
@@ -16,4 +16,4 @@
   when: 
     - service_configuration.service == "LodestarValidatorService"
     - service_configuration.command | select('match', '--builder.selection') | length == 0
-    - "'CharonService' in service_configuration.dependencies.consensusClients | map(attribute='service') | list"
+    - service_configuration.dependencies.consensusClients | selectattr('service', 'equalto', 'CharonService') | list | length > 0
