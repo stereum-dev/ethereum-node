@@ -7,8 +7,9 @@
 - name: Parse service's configuration
   set_fact:
     service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
 
-- name: Adjust Teku Config if charon service connected to it
+- name: Adjust Lodestar Config if charon service connected to it
   lineinfile:
     path: "{{ config_file.path }}"
     insertafter: "--builder"
