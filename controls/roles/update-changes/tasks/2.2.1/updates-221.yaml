@@ -15,3 +15,9 @@
   loop: "{{ service_config_files.files }}"
   loop_control:
     loop_var: config_file
+
+- name: Include SDVT Changes
+  include_tasks: sdvt_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
