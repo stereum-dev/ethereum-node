@@ -375,6 +375,11 @@ export default {
     async readService() {
       this.item.yaml = await ControlService.getServiceYAML(this.item.config.serviceID);
 
+      let tekuGasLimit = "";
+      if(this.item.service === "TekuValidatorService"){
+        tekuGasLimit = await ControlService.readGasConfigFile(this.item.config.volumes[0].destinationPath)
+      }
+
       if (this.item.service === "SSVNetworkService") {
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
       }
@@ -398,6 +403,12 @@ export default {
               if (this.item.yaml.includes(command)) {
                 let match = this.item.yaml.match(new RegExp(`${command}[:=]?([\\S*]*)`));
                 option.changeValue = match ? match[match.length - 1] : "";
+              } else if(this.item.service === "TekuValidatorService" && command == "--gas-limit"){
+                if(tekuGasLimit != null){
+                  tekuGasLimit = tekuGasLimit.replace(/"/g, "");
+                }
+                option.changeValue = tekuGasLimit;
+                this.somethingIsChanged(option)
               } else {
                 option.changeValue = "";
               }
@@ -577,6 +588,26 @@ export default {
           config: this.item.prometheusConfig,
         });
       }
+      if (this.item.service === "TekuValidatorService") {
+        if (this.item.yaml.includes("--gas-limit")) {
+          await ControlService.createGasConfigFile({
+            gasLimit: this.item.yaml.match(/^.*--gas-limit.*$/gm)[0].split('=')[1],
+            feeRecipient: this.item.yaml.match(/^.*fee-recipient.*$/gm)[0].split('=')[1],
+            configPath: this.item.config.volumes[0].destinationPath,
+          });
+          if(!this.item.yaml.includes("validators-proposer-config")){
+            this.item.yaml = this.item.yaml.replace(/^.*--gas-limit.*$/gm,"  - --validators-proposer-config=" +  this.item.config.volumes[0].servicePath + "/gas_config.json");
+          }
+          else{
+            this.item.yaml = this.item.yaml.replace(/\n^.*--gas-limit.*$/gm,"");
+          }
+        }
+        else if (!this.item.yaml.includes("--gas-limit") && this.item.yaml.includes("validators-proposer-config")){
+          await ControlService.removeGasConfigFile(this.item.config.volumes[0].destinationPath)
+          this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*validators-proposer-config.*$/gm),"");
+        }
+      }
+      
       await ControlService.writeServiceYAML({
         id: this.item.config.serviceID,
         data: this.item.yaml,
