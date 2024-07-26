@@ -9,10 +9,11 @@
       </div>
       <div class="wrapper">
         <no-data
-          v-if="noDataLayerShow || installedServicesController !== ''"
-          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
+          v-if="isConsensusMissing || prometheusIsOff || !isConsensusRunning"
+          @mouseenter="cursorLocation = `${nodataMessage}`"
+          @mouseleave="cursorLocation = ''"
         />
-        <div v-show="p2pItemsShow" class="p2pBarBox">
+        <div v-else class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
               <span>{{ consensusClient }}</span>
@@ -56,10 +57,12 @@ import { mapState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
 import NoData from "./NoData.vue";
+import { useSetups } from "@/store/setups";
 export default {
   components: { NoData },
   data() {
     return {
+      p2p: this.$t("controlPage.p2p"),
       pageNumber: 1,
       isMultiService: false,
       p2pItemsShow: false,
@@ -87,13 +90,48 @@ export default {
   },
 
   computed: {
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
+    }),
     ...mapState(useControlStore, {
       code: "code",
       p2pstatus: "p2pstatus",
     }),
     ...mapState(useFooter, {
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
+      isConsensusRunning: "isConsensusRunning",
+      nodataMessage: "nodataMessage",
     }),
+    filteredP2PStatus() {
+      if (!Array.isArray(this.p2pstatus.data) || !this.selectedSetup) {
+        return [];
+      }
+
+      const setupServices = this.selectedSetup?.services.map((service) => service.service);
+
+      const filtered = this.p2pstatus.data.filter((status) => {
+        const details = status.details;
+        if (!details) {
+          return false;
+        }
+
+        const consensusService = details.consensus?.service;
+        const executionService = details.execution?.service;
+
+        if (!consensusService || !executionService) {
+          return false;
+        }
+
+        const consensusMatch = setupServices.includes(consensusService);
+        const executionMatch = setupServices.includes(executionService);
+
+        return consensusMatch && executionMatch;
+      });
+
+      return filtered;
+    },
     defaultIco() {
       return this.p2pIco[0].icon;
     },
@@ -105,6 +143,19 @@ export default {
     },
     secondBar() {
       return { width: this.executionValPeer + "%" };
+    },
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
+    },
+  },
+  watch: {
+    selectedSetup() {
+      this.pageNumber = 1;
+      this.p2pControler();
+    },
+    filteredP2PStatus() {
+      this.pageNumber = 1;
+      this.p2pControler();
     },
   },
   mounted() {
@@ -135,91 +186,37 @@ export default {
     },
     p2pControler(loadPage = "") {
       let pageNumber = this.pageNumber;
-      if (loadPage == "next") {
-        if (pageNumber >= 99) {
+      if (loadPage === "next") {
+        pageNumber++;
+        if (pageNumber > this.filteredP2PStatus.length) {
           pageNumber = 1; // cycle to first page
-        } else {
-          pageNumber++;
         }
-      } else if (loadPage == "prev") {
+      } else if (loadPage === "prev") {
         pageNumber--;
-      }
-      let gid = pageNumber - 1;
-      let clients =
-        this.p2pstatus &&
-        this.p2pstatus.hasOwnProperty("data") &&
-        Array.isArray(this.p2pstatus.data) &&
-        gid in this.p2pstatus.data
-          ? this.p2pstatus.data[gid]
-          : false;
-      if (!clients) {
-        let clients_first =
-          this.p2pstatus &&
-          this.p2pstatus.hasOwnProperty("data") &&
-          Array.isArray(this.p2pstatus.data) &&
-          this.p2pstatus.data.length > 0
-            ? this.p2pstatus.data[0]
-            : false;
-        let clients_last =
-          this.p2pstatus &&
-          this.p2pstatus.hasOwnProperty("data") &&
-          Array.isArray(this.p2pstatus.data) &&
-          this.p2pstatus.data.length > 0
-            ? this.p2pstatus.data[this.p2pstatus.data.length - 1]
-            : false;
-        if (pageNumber < 1 && clients_last !== false) {
-          // first page-1 reached when clicked on prev page, reset to last page
-          pageNumber = this.p2pstatus.data.length;
-          gid = pageNumber - 1;
-          clients = this.p2pstatus.data[gid];
-        } else if (clients_first) {
-          // last page+1 reached when clicked on next page, reset to first page
-          pageNumber = 1;
-          gid = pageNumber - 1;
-          clients = this.p2pstatus.data[gid];
-        } else {
-          // waiting for data on page load (or while invalid data is retrieved)
-          if (this.p2pstatus && this.p2pstatus.hasOwnProperty("data") && this.p2pstatus.data.hasOwnProperty("error")) {
-            if (this.p2pstatus.data.error == "prometheus service not running") {
-              this.p2pItemsShow = false;
-              this.p2pIcoUnknown = true;
-              this.noDataLayerShow = true;
-              //this.pageNumber = 1;
-              //this.isMultiService = false;
-            }
-          }
-          this.refresh();
-          return;
+        if (pageNumber < 1) {
+          pageNumber = this.filteredP2PStatus.length; // cycle to last page
         }
       }
-      let isMultiService = false;
-      let p2pItemsShow = false;
-      let p2pIcoUnknown = true;
-      let noDataLayerShow = false;
-      let consensusClient = this.consensusClient;
-      let consensusNumPeer = this.consensusNumPeer;
-      let consensusValPeer = this.consensusValPeer;
-      let executionClient = this.executionClient;
-      let executionNumPeer = this.executionNumPeer;
-      let executionValPeer = this.executionValPeer;
-      if (
-        this.code === 0 &&
-        this.p2pstatus.code === 0 &&
-        Array.isArray(this.p2pstatus.data) &&
-        //Array.isArray(this.p2pstatus.data[gid]) &&
-        typeof this.p2pstatus.data[gid] === "object" &&
-        this.p2pstatus.data[gid].hasOwnProperty("details")
-      ) {
-        isMultiService = this.p2pstatus.data.length > 1 ? true : false;
-        p2pItemsShow = true;
-        p2pIcoUnknown = false;
-        consensusClient = clients.details.consensus.client;
-        consensusNumPeer = clients.details.consensus.numPeer;
-        consensusValPeer = clients.details.consensus.valPeer;
-        executionClient = clients.details.execution.client;
-        executionNumPeer = clients.details.execution.numPeer;
-        executionValPeer = clients.details.execution.valPeer;
+
+      let gid = pageNumber - 1;
+      let clients = this.filteredP2PStatus[gid] || false;
+
+      if (!clients) {
+        // console.log("No clients found for the current page.");
+        return;
       }
+
+      let isMultiService = this.filteredP2PStatus.length > 1;
+      let p2pItemsShow = true;
+      let p2pIcoUnknown = false;
+      let noDataLayerShow = false;
+      let consensusClient = clients.details.consensus.client;
+      let consensusNumPeer = clients.details.consensus.numPeer;
+      let consensusValPeer = clients.details.consensus.valPeer;
+      let executionClient = clients.details.execution.client;
+      let executionNumPeer = clients.details.execution.numPeer;
+      let executionValPeer = clients.details.execution.valPeer;
+
       this.pageNumber = pageNumber;
       this.isMultiService = isMultiService;
       this.p2pItemsShow = p2pItemsShow;
@@ -231,7 +228,6 @@ export default {
       this.executionClient = executionClient;
       this.executionNumPeer = executionNumPeer;
       this.executionValPeer = executionValPeer;
-      this.refresh();
     },
   },
 };

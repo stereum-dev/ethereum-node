@@ -624,6 +624,42 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("executeCommand", args);
   }
 
+  async readMultiSetup() {
+    return this.promiseIpc.send("readMultiSetup");
+  }
+
+  async createSetup(args) {
+    return this.promiseIpc.send("createSetup", args);
+  }
+
+  async deleteSetup(args) {
+    return this.promiseIpc.send("deleteSetup", args);
+  }
+
+  async renameSetup(args) {
+    return this.promiseIpc.send("renameSetup", args);
+  }
+
+  async exportSingleSetup(args) {
+    return this.promiseIpc.send("exportSingleSetup", args);
+  }
+
+  async importSingleSetup(args) {
+    return this.promiseIpc.send("importSingleSetup", args);
+  }
+
+  async switchSetupNetwork(args) {
+    return this.promiseIpc.send("switchSetupNetwork", args);
+  }
+
+  async checkAndCreateMultiSetup(args) {
+    return this.promiseIpc.send("checkAndCreateMultiSetup", args);
+  }
+
+  async checkConnectionQuality() {
+    return this.promiseIpc.send("checkConnectionQuality");
+  }
+
   async create2FAQRCode(args) {
     return this.promiseIpc.send("create2FAQRCode", args);
   }

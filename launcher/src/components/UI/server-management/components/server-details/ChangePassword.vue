@@ -27,6 +27,8 @@
           class="w-full h-8 text-sm col-start-1 col-end-11 row-start-2 row-span-1 bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
           :class="error ? 'border-red-500' : 'border-transparent'"
           :placeholder="`${$t('multiServer.EnterNewPass')}`"
+          @mouseenter="footerStore.cursorLocation = `${t('serverDetail.confirmPass')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
           @input="handleInput"
         />
       </div>
@@ -44,6 +46,8 @@
             class="col-start-1 col-span-full w-full h-8 text-sm bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
             :class="error ? 'border-red-500' : 'border-transparent'"
             :placeholder="`${$t('multiServer.verifyPass')}`"
+            @mouseenter="footerStore.cursorLocation = `${t('serverDetail.confirmPass2')}`"
+            @mouseleave="footerStore.cursorLocation = ''"
             @input="handleInput"
             @keydown.enter="changePassword"
           />
@@ -55,12 +59,16 @@
         <div
           class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-teal-800 hover:bg-teal-950 p-[3px] border border-teal-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
           @click="changePassword"
+          @mouseenter="footerStore.cursorLocation = `${t('serverDetail.confirmBtn')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         >
           Confirm
         </div>
         <div
           class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-red-800 hover:bg-red-950 p-[3px] border border-red-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
           @click="denyPassChange"
+          @mouseenter="footerStore.cursorLocation = `${t('serverDetail.cancel')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
         >
           Cancel
         </div>
@@ -69,9 +77,11 @@
     <div v-else class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center">
       <button
         class="w-full h-10 bg-teal-700 hover:bg-teal-900 text-gray-200 font-semibold py-1 px-4 rounded-md flex justify-center items-center cursor-pointer space-x-2 transition-all duration-200 ease-in-out active:scale-95 shadow-lg shadow-black active:shadow-none"
-        @click="serverStore.isChangingPasswordActive = true"
+        @mouseenter="footerStore.cursorLocation = `${t('serverDetail.chngPass')}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+        @click="(serverStore.isChangingPasswordActive = true), (footerStore.cursorLocation = '')"
       >
-        <span class="text-md uppercase font-semibold text-gray-100">{{ $t("multiServer.chngPass") }}</span>
+        <span class="text-md uppercase font-semibold text-gray-100">{{ t("multiServer.chngPass") }}</span>
       </button>
     </div>
   </div>
@@ -80,6 +90,12 @@
 <script setup>
 import { ref } from "vue";
 import { useServers } from "@/store/servers";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
+
+const footerStore = useFooter();
 
 const emit = defineEmits(["changePassword"]);
 
@@ -99,6 +115,7 @@ const handleInput = () => {
 };
 
 const changePassword = () => {
+  footerStore.cursorLocation = "";
   if (!isPasswordValid(serverStore.newPassword) || !isPasswordValid(serverStore.verifyPassword)) {
     error.value = true;
     errorMessage.value = "Password must be at least 8 characters and contain no spaces";
@@ -115,6 +132,7 @@ const changePassword = () => {
 };
 
 const denyPassChange = () => {
+  footerStore.cursorLocation = "";
   serverStore.newPassword = "";
   serverStore.verifyPassword = "";
   error.value = false;

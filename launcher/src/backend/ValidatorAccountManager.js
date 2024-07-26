@@ -98,7 +98,10 @@ export class ValidatorAccountManager {
           .volumes.find((volume) => volume.includes("passwords"))
           .split(":")[0];
 
-        if ((await this.nodeConnection.sshService.exec(`cat ${passwords_path}/wallet-password`)).rc === 1) {
+        const walletPassword = await this.nodeConnection.sshService.exec(`cat ${passwords_path}/wallet-password`)
+        const walletDir = await this.nodeConnection.sshService.exec(`ls ${wallet_path}/direct/accounts`)
+
+        if (walletPassword.rc != 0 || walletDir.rc != 0) {
           log.error("No Wallet found");
           log.info("Generating one");
           this.nodeConnection.taskManager.otherTasksHandler(
@@ -115,7 +118,7 @@ export class ValidatorAccountManager {
           await this.nodeConnection.sshService.exec(`chown 2000:2000 ${passwords_path}/wallet-password`);
           //Prysm - Create wallet for account(s)
           await this.nodeConnection.sshService.exec(
-            `docker exec stereum-${client.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --prater`
+            `docker exec stereum-${client.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --${client.network}`
           );
 
           await this.nodeConnection.sshService.exec(`chown -R 2000:2000 ${wallet_path}`);
@@ -652,13 +655,18 @@ export class ValidatorAccountManager {
       const data = JSON.parse(result.stdout);
       if (data.data === undefined) {
         if (data.code === undefined || data.message === undefined) {
-          throw "Undexpected Error: " + result;
+          throw "Undexpected Error: " + result.stdout;
         }
         throw data.code + " " + data.message;
       }
 
       //Push successful task
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Get signed voluntary exit message`, true, data);
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Get signed voluntary exit message`,
+        true,
+        JSON.stringify(data)
+      );
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       return data;
     } catch (error) {

@@ -1,0 +1,207 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create Besu config
+      copy:
+        dest: "/etc/stereum/services/9bf280d1-72ae-d8f3-f4da-3684727e06a0.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: BesuService
+          id: 9bf280d1-72ae-d8f3-f4da-3684727e06a0
+          configVersion: 1
+          command:
+            - --network=holesky
+            - --data-path=/opt/app/data
+            - --data-storage-format=BONSAI
+            - --sync-mode=SNAP
+            - --p2p-port=30303
+            - --p2p-host=0.0.0.0
+            - --rpc-http-enabled=true
+            - --rpc-http-host=0.0.0.0
+            - --rpc-http-cors-origins=*
+            - --rpc-http-port=8545
+            - --rpc-ws-enabled=true
+            - --rpc-ws-host=0.0.0.0
+            - --rpc-ws-port=8546
+            - --host-allowlist=*
+            - --metrics-enabled
+            - --metrics-host=0.0.0.0
+            - --metrics-port=9545
+            - --logging=INFO
+            - --engine-host-allowlist=*
+            - --engine-rpc-port=8551
+            - --engine-jwt-secret=/engine.jwt
+            - --pruning-enabled=false
+            - --pruning-blocks-retained=0
+            - --pruning-block-confirmations=0
+          entrypoint:
+            - besu
+          env:
+            JAVA_OPTS: -Xmx4g
+          image: hyperledger/besu:24.3.3
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+            - 127.0.0.1:8545:8545/tcp
+            - 127.0.0.1:8546:8546/tcp
+          volumes:
+            - /opt/stereum/besu-9bf280d1-72ae-d8f3-f4da-3684727e06a0/data:/opt/app/data
+            - /opt/stereum/besu-9bf280d1-72ae-d8f3-f4da-3684727e06a0/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create Prysm config
+      copy:
+        dest: "/etc/stereum/services/192ffe7a-dd48-3ff1-b221-6a5fe3765e3c.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrysmValidatorService
+          id: 192ffe7a-dd48-3ff1-b221-6a5fe3765e3c
+          configVersion: 1
+          command: /app/cmd/validator/validator --accept-terms-of-use=true
+            --beacon-rpc-provider="stereum-e021e341-d3cc-003a-7ba4-8d062ea218e4:4000"
+            --beacon-rpc-gateway-provider="stereum-e021e341-d3cc-003a-7ba4-8d062ea218e4:3500"
+            --web --holesky=true --datadir=/opt/app/data/db
+            --wallet-dir=/opt/app/data/wallets
+            --wallet-password-file=/opt/app/data/passwords/wallet-password
+            --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0
+            --grpc-gateway-corsdomain="*"  --monitoring-host=0.0.0.0
+            --monitoring-port=8081
+            --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+            --graffiti-file=/opt/app/graffitis/graffitis.yaml --enable-builder=true
+            --enable-doppelganger=true
+          entrypoint: []
+          env: {}
+          image: prysmaticlabs/prysm-validator:v5.0.4
+          ports:
+            - 127.0.0.1:7500:7500/tcp
+          volumes:
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/data/db:/opt/app/data/db
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/data/wallets:/opt/app/data/wallets
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/data/passwords:/opt/app/data/passwords
+            - /opt/stereum/prysm-192ffe7a-dd48-3ff1-b221-6a5fe3765e3c/graffitis:/opt/app/graffitis
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: PrysmBeaconService
+                id: e021e341-d3cc-003a-7ba4-8d062ea218e4
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create Lodestar config 1
+      copy:
+        dest: "/etc/stereum/services/ac920956-a1d3-b414-7968-bda477b97390.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LodestarValidatorService
+          id: ac920956-a1d3-b414-7968-bda477b97390
+          configVersion: 1
+          command:
+            - validator
+            - --network=holesky
+            - --dataDir=/opt/app/validator
+            - --beaconNodes=http://stereum-abf6ae27-234e-468d-be1e-380ce9420d2a:3600
+            - --keymanager=true
+            - --keymanager.address=0.0.0.0
+            - --keymanager.port=5062
+            - --metrics=true
+            - --metrics.port=5064
+            - --metrics.address=0.0.0.0
+            - --builder
+            - --suggestedFeeRecipient=0x0000000000000000000000000000000000000000
+            - --doppelgangerProtection=false
+            - --distributed
+            - --useProduceBlockV3=false
+          entrypoint:
+            - node
+            - ./packages/cli/bin/lodestar
+          env: {}
+          image: chainsafe/lodestar:v1.20.1
+          ports:
+            - 127.0.0.1:5063:5062/tcp
+          volumes:
+            - /opt/stereum/lodestar-ac920956-a1d3-b414-7968-bda477b97390/validator:/opt/app/validator
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: CharonService
+                id: abf6ae27-234e-468d-be1e-380ce9420d2a
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create Lodestar config 2
+      copy:
+        dest: "/etc/stereum/services/9dc815f7-582e-4753-8aa3-3a24578c982d.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LodestarValidatorService
+          id: 9dc815f7-582e-4753-8aa3-3a24578c982d
+          configVersion: 1
+          command:
+            - validator
+            - --network=holesky
+            - --dataDir=/opt/app/validator
+            - --keymanager=true
+            - --keymanager.address=0.0.0.0
+            - --keymanager.port=5062
+            - --metrics=true
+            - --metrics.port=5064
+            - --metrics.address=0.0.0.0
+            - --builder
+            - --suggestedFeeRecipient=0x0000000000000000000000000000000000000000
+            - --doppelgangerProtection=false
+            - --distributed
+            - --useProduceBlockV3=false
+          entrypoint:
+            - node
+            - ./packages/cli/bin/lodestar
+          env: {}
+          image: chainsafe/lodestar:v1.20.1
+          ports:
+            - 127.0.0.1:5063:5062/tcp
+          volumes:
+            - /opt/stereum/lodestar-9dc815f7-582e-4753-8aa3-3a24578c982d/validator:/opt/app/validator
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+#EOF

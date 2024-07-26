@@ -1,21 +1,17 @@
 <template>
-  <div
-    class="animate__animated animate__slideInLeft w-full h-full col-start-1 col-span-full items-center grid grid-cols-24 grid-rows-12 absolute"
-  >
-    <LogsHeader :client="client" @close-log="closeLog" />
-    <LogsBody :client="client" />
-    <LogsFooter :client="client" @export-log="exportLog" @export-all-log="exportAllLog" />
+  <div class="absolute top-[1px] bottom-2 w-full h-[554px] p-2">
+    <LogsPage
+      :client="client"
+      @close-log="closeLog"
+      @export-log="exportLog"
+      @export-all-log="exportAllLog"
+      @export-customized-logs="exportCustomizedLogs"
+    />
   </div>
 </template>
 
 <script setup>
-import LogsHeader from "../components/logs/LogHeader.vue";
-import LogsBody from "../components/logs/LogBody.vue";
-import LogsFooter from "../components/logs/LogFooter.vue";
-// import ControlDialog from "../../the-control/ControlDialog.vue";
-// import { useNodeStore } from "@/store/theNode";
-// import { useServices } from "@/store/services";
-// import { saveAs } from "file-saver";
+import LogsPage from "@/components/UI/node-page/components/logs/LogsPage.vue";
 
 const { client } = defineProps({
   client: {
@@ -24,7 +20,12 @@ const { client } = defineProps({
   },
 });
 
-const emit = defineEmits(["close-log", "export-log", "export-all-log"]);
+const emit = defineEmits([
+  "close-log",
+  "export-log",
+  "export-all-log",
+  "export-customized-logs",
+]);
 
 const closeLog = () => {
   emit("close-log");
@@ -36,5 +37,9 @@ const exportLog = (item) => {
 
 const exportAllLog = (item) => {
   emit("export-all-log", item);
+};
+
+const exportCustomizedLogs = (item) => {
+  emit("export-customized-logs", item);
 };
 </script>

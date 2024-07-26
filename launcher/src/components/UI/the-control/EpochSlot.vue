@@ -1,6 +1,6 @@
 <template>
   <div class="epockSlot_parent">
-    <NoData v-if="installedServicesController !== ''" service-cat="install" />
+    <NoData v-if="isConsensusMissing || isConsensusRunning" />
     <div v-else-if="flag" class="wrapper">
       {{ beaconControler }}
     </div>
@@ -46,7 +46,12 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      nodataMessage: "nodataMessage",
     }),
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
+    },
     beaconControler() {
       if (this.currentResult === undefined) {
         return "Checking Beacon Status...";
@@ -58,19 +63,12 @@ export default {
       return "Loading...";
     },
     flag() {
-      if (this.currentResult === undefined) {
-        return true;
-      } else if (this.currentResult.beaconStatus === undefined) {
-        return true;
-      } else if (this.currentResult.beaconStatus !== 0) {
-        return true;
-      } else if (
+      if (
         this.currentResult === undefined ||
-        this.noDataFlag == true ||
         this.currentResult.beaconStatus === undefined ||
         this.currentResult.beaconStatus !== 0
       ) {
-        return false;
+        return true;
       }
 
       return false;

@@ -43,7 +43,7 @@ export class BesuService extends NodeService {
         "--engine-jwt-secret=/engine.jwt",
       ], // command
       ["besu"], // entrypoint
-      { JAVA_OPTS: "-Xmx4g" }, // env
+      { JAVA_OPTS: "-Xmx6g" }, // env
       ports, // ports
       volumes, // volumes
       null, // user

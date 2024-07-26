@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      //Installed services on edit page
+      newConfiguration: [],
+      // End of Installed services on edit page
+
       //  Beginning Custom Service
       customConfig: {
         image: "",
@@ -12,21 +16,24 @@ export const useNodeManage = defineStore("nodeManage", {
       },
 
       //End Custom Service
+
+      // Beginning of Drawer Box
+      isDrawerOpen: false,
+      isDrawerMenuActive: false,
+      isSetupsDrawerActive: false,
+      isServicesDrawerActive: false,
+
+      // End of Drawer Box
+
+      //Import Setup Yaml File
+      isImportSetupYamlActive: false,
+
       externalConsensusSelectedService: "",
       reloadEditBody: false,
       isLineHidden: false,
       lines: [],
       hideConnectingLines: false,
       addConfigButton: false,
-      nodeConfigs: [
-        { id: 1, configName: "config", status: true },
-        { id: 2, configName: "config", status: false },
-        { id: 3, configName: "config", status: false },
-        { id: 4, configName: "config", status: false },
-        { id: 5, configName: "config", status: false },
-        { id: 6, configName: "config", status: false },
-      ],
-      isDrawerOpen: false,
       architecture: "",
       selectedServiceToResync: {},
       availableBlocks: [],
@@ -150,7 +157,7 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
       ],
-      newConfiguration: [],
+
       selectedItemToRemove: [],
       actionContents: [
         {
@@ -218,7 +225,17 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://holesky.beaconcha.in/api/v1",
-          support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol", "lidoobol", "lidossv"],
+          support: [
+            "staking",
+            "ssv.network",
+            "stereum on arm",
+            "mev boost",
+            "archive",
+            "obol",
+            "lidoobol",
+            "lidossv",
+            "lidocsm",
+          ],
         },
       ],
       currentNetwork: {},

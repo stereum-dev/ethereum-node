@@ -1,0 +1,65 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # Besu
+    - name: Read Besu file
+      slurp:
+        src: "/etc/stereum/services/9bf280d1-72ae-d8f3-f4da-3684727e06a0.yaml"
+      register: Besu_service_configuration_raw
+
+    # Prysm
+    - name: Read Prysm file
+      slurp:
+        src: "/etc/stereum/services/192ffe7a-dd48-3ff1-b221-6a5fe3765e3c.yaml"
+      register: Prysm_service_configuration_raw
+
+    # Lodestar 1
+    - name: Read Lodestar file
+      slurp:
+        src: "/etc/stereum/services/ac920956-a1d3-b414-7968-bda477b97390.yaml"
+      register: Lodestar1_service_configuration_raw
+
+    # Lodestar 2
+    - name: Read Lodestar file
+      slurp:
+        src: "/etc/stereum/services/9dc815f7-582e-4753-8aa3-3a24578c982d.yaml"
+      register: Lodestar2_service_configuration_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        Besu_service_configuration: "{{ Besu_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Prysm_service_configuration: "{{ Prysm_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Lodestar1_service_configuration: "{{ Lodestar1_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Lodestar2_service_configuration: "{{ Lodestar2_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ Besu_service_configuration }}"
+    - debug:
+        msg: "{{ Besu_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ Prysm_service_configuration }}"
+    - debug:
+        msg: "{{ Prysm_service_configuration_raw['content'] | b64decode }}"
+    
+    - debug:
+        msg: "{{ Lodestar1_service_configuration }}"
+    - debug:
+        msg: "{{ Lodestar1_service_configuration_raw['content'] | b64decode }}"
+    
+    - debug:
+        msg: "{{ Lodestar2_service_configuration }}"
+    - debug:
+        msg: "{{ Lodestar2_service_configuration_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - Besu_service_configuration.command | select('match', '--pruning-enabled=false') | length == 0
+          - Besu_service_configuration.command | select('match', '--pruning-blocks-retained=0') | length == 0
+          - Besu_service_configuration.command | select('match', '--pruning-block-confirmations=0') | length == 0
+          - "'--keymanager-token-file=/opt/app/data/wallets/auth-token' in Prysm_service_configuration.command"
+          - Lodestar1_service_configuration.command | select('match', '--builder.selection=builderalways') | length == 1
+          - Lodestar2_service_configuration.command | select('match', '--builder.selection=builderalways') | length == 0
+# EOF

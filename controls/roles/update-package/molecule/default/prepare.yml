@@ -15,7 +15,7 @@
       changed_when: false
     - name: Install specific version of Git
       apt:
-        name: git=1:2.34.1-1ubuntu1.9
+        name: git=1:2.34.1-1ubuntu1
         state: present
         allow_downgrade: true
       become: true

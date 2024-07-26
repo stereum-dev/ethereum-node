@@ -61,7 +61,6 @@ export class LighthouseValidatorService extends NodeService {
     );
 
     if (consensusClients.some(c => c.service === "CharonService")) {
-      service.command.push("--produce-block-v3=false");
       service.command = service.command.filter(c => c !== "--enable-doppelganger-protection");
     }
 

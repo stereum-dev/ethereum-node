@@ -2,7 +2,9 @@
   <div
     class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-sm flex justify-center items-center cursor-pointer px-1"
   >
-    <div class="w-full flex justify-evenly items-center px-5 relative bg-[#171D22] rounded-sm">
+    <div
+      class="w-full flex justify-evenly items-center px-5 relative bg-[#171D22] rounded-sm"
+    >
       <div class="flex items-center pointer-events-none" @mousedown.prevent>
         <svg
           aria-hidden="true"
@@ -30,6 +32,15 @@
 
 <script setup>
 import { useStakingStore } from "@/store/theStaking";
+import { onMounted, onUnmounted } from "vue";
 
 const stakingStore = useStakingStore();
+
+onMounted(() => {
+  stakingStore.searchContent = "";
+});
+
+onUnmounted(() => {
+  stakingStore.searchContent = "";
+});
 </script>

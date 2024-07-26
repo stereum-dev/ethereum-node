@@ -1,10 +1,8 @@
 <template>
-  <div
-    class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-20 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
-  >
-    <div class="absolute bg-black opacity-80 inset-0 z-0" @click="closeModal"></div>
+  <div class="layer1 fixed inset-0 flex justify-center items-center">
+    <div class="layer2 fixed bg-black opacity-80 inset-0" @click="closeModal"></div>
     <div
-      class="w-2/3 min-h-[400px] py-2 px-2 relative mx-auto my-auto rounded-[35px] shadow-lg border-4 border-gray-400"
+      class="layer3 w-2/3 min-h-[400px] py-2 px-2 mx-auto my-auto rounded-[35px] shadow-lg border-4 border-gray-400"
       :class="bgColor ? bgColor : 'bg-gray-100'"
     >
       <div class="flex flex-col justify-between gap-5">
@@ -20,7 +18,11 @@
           <div v-if="mainTitle" class="text-xl font-bold py-2 text-gray-200 uppercase">
             <p>{{ mainTitle }}</p>
           </div>
-          <div v-if="messageText" class="text-md font-bold py-2" :class="bgColor ? 'text-gray-200' : null">
+          <div
+            v-if="messageText"
+            class="text-md font-bold py-2"
+            :class="bgColor ? 'text-gray-200' : null"
+          >
             <p>{{ messageText }}</p>
           </div>
           <slot name="content"></slot>
@@ -40,9 +42,10 @@
             {{ confirmText }}
           </button>
 
-          <span class="absolute bottom-1 left-[17rem] text-xs flex justify-center items-center text-red-500 mx-auto">{{
-            clickOutsideText
-          }}</span>
+          <span
+            class="absolute bottom-1 left-[17rem] text-xs flex justify-center items-center text-red-500 mx-auto"
+            >{{ clickOutsideText }}</span
+          >
         </div>
       </div>
     </div>
@@ -60,18 +63,48 @@ const emitConfirmAction = () => {
   emit("confirmAction");
 };
 
-const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, bgColor, btnColor, iconSize } =
-  defineProps({
-    icon: String,
-    altText: String,
-    mainTitle: String,
-    messageText: String,
-    confirmText: String,
-    confirmBtn: Boolean,
-    clickOutsideText: String,
-    bgColor: String,
-    btnColor: String,
-    iconSize: String,
-    isDisabled: Boolean,
-  });
+const {
+  icon,
+  altText,
+  mainTitle,
+  messageText,
+  confirmText,
+  clickOutsideText,
+  bgColor,
+  btnColor,
+  iconSize,
+} = defineProps({
+  icon: String,
+  altText: String,
+  mainTitle: String,
+  messageText: String,
+  confirmText: String,
+  confirmBtn: Boolean,
+  clickOutsideText: String,
+  bgColor: String,
+  btnColor: String,
+  iconSize: String,
+  isDisabled: Boolean,
+});
 </script>
+
+<style>
+.layer1 {
+  z-index: 1000 !important;
+}
+.layer2 {
+  z-index: 1001 !important;
+}
+.layer3 {
+  z-index: 1002 !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

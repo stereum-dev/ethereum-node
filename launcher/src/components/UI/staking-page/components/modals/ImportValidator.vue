@@ -96,7 +96,7 @@
             <div
               v-for="(line, index) in getMessage"
               :key="index"
-              class="w-full h-8 border border-gray-700 rounded-md bg-[#242628] p-1 flex justify-center items-center space-x-1"
+              class="w-full h-10 max-h-10 border border-gray-700 rounded-md bg-[#242628] p-1 flex justify-center items-center space-x-1"
               :class="getDescriptionClass(line)"
             >
               <span class="text-sm font-semibold text-left whitespace-pre-wrap">{{ line }}</span>
@@ -108,7 +108,7 @@
   </staking-custom-modal>
 </template>
 <script setup>
-import { computed, ref, watch, onMounted, nextTick } from "vue";
+import { computed, ref, watch, onMounted, nextTick, onUnmounted } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useListKeys } from "@/composables/validators";
 
@@ -177,6 +177,15 @@ watch(getMessage, () => {
 onMounted(() => {
   pickedSlashing.value = "no";
   stakingStore.slashingDB = null;
+});
+
+onUnmounted(() => {
+  pickedSlashing.value = null;
+  stakingStore.importKeyMessage = "";
+  stakingStore.forceRefresh = !stakingStore.forceRefresh;
+  isSlashingActive.value = true;
+  checkProcessing.value = false;
+  activeButton.value = false;
 });
 
 //Methods

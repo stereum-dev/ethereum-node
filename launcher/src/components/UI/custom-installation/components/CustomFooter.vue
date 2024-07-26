@@ -26,7 +26,6 @@ const props = defineProps({
   },
 });
 
-console.log("props", props.disabledBtn);
 const emit = defineEmits(["prepareStereum"]);
 
 const prepareStereum = () => {

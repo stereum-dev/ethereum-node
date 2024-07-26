@@ -10,9 +10,10 @@
       <div class="wrapper">
         <!--new form start-->
         <no-data
-          v-if="noDataLayerShow || installedServicesController !== ''"
-          :service-cat="installedServicesController !== '' ? 'install' : 'prometheus'"
-        ></no-data>
+          v-if="isConsensusMissing || prometheusIsOff"
+          @mouseenter="cursorLocation = `${nodataMessage}`"
+          @mouseleave="cursorLocation = ''"
+        />
         <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
@@ -74,6 +75,7 @@ import { mapState, mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
 import NoData from "./NoData.vue";
+import { useSetups } from "@/store/setups";
 
 export default {
   components: { NoData, SyncCircularProgress },
@@ -157,6 +159,10 @@ export default {
       first: "first",
       second: "second",
       installedServicesController: "installedServicesController",
+      missingServices: "missingServices",
+      prometheusIsOff: "prometheusIsOff",
+      isConsensusRunning: "isConsensusRunning",
+      nodataMessage: "nodataMessage",
     }),
     ...mapState(useControlStore, {
       code: "code",
@@ -172,6 +178,12 @@ export default {
       currentConsensusIcon: "currentConsensusIcon",
       currentExecutionIcon: "currentExecutionIcon",
     }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
+    }),
+    isConsensusMissing() {
+      return this.missingServices?.includes("consensus");
+    },
 
     errorIco() {
       return this.syncIco[0].icon;
@@ -196,6 +208,51 @@ export default {
     },
     displayConsensusPer() {
       return Math.floor(this.consensusPer);
+    },
+    filteredSyncStatus() {
+      if (!Array.isArray(this.syncstatus.data) || !this.selectedSetup) {
+        return [];
+      }
+
+      const serviceMapping = {
+        NIMBUS: "NimbusBeaconService",
+        LIGHTHOUSE: "LighthouseBeaconService",
+        PRYSM: "PrysmBeaconService",
+        GETH: "GethService",
+        RETH: "RethService",
+        BESU: "BesuService",
+        NETHERMIND: "NethermindService",
+        TEKU: "TekuBeaconService",
+        LODESTAR: "LodestarBeaconService",
+      };
+
+      const setupServices = this.selectedSetup.services.map((service) => service.service);
+
+      return this.syncstatus.data.filter((status) => {
+        if (status.length < 2) return false;
+
+        const consensusTitle = status[0]?.title.toUpperCase();
+        const executionTitle = status[1]?.title.toUpperCase();
+
+        const consensusService = serviceMapping[consensusTitle] || null;
+        const executionService = serviceMapping[executionTitle] || null;
+
+        if (!consensusService || !executionService) {
+          return false;
+        }
+
+        return setupServices.includes(consensusService) && setupServices.includes(executionService);
+      });
+    },
+  },
+  watch: {
+    selectedSetup() {
+      this.pageNumber = 1;
+      this.syncControler();
+    },
+    filteredSyncStatus() {
+      this.pageNumber = 1;
+      this.syncControler();
     },
   },
 
@@ -265,75 +322,31 @@ export default {
       }, 3000);
     },
     syncControler(loadPage = "") {
-      let pageNum = this.pageNumber;
-      if (loadPage == "next") {
-        if (pageNum >= 99) {
-          pageNum = 1; // cycle to first page
-        } else {
-          pageNum++;
+      let pageNumber = this.pageNumber;
+      if (loadPage === "next") {
+        pageNumber++;
+        if (pageNumber > this.filteredSyncStatus.length) {
+          pageNumber = 1; // cycle to first page
         }
-      } else if (loadPage == "prev") {
-        pageNum--;
+      } else if (loadPage === "prev") {
+        pageNumber--;
+        if (pageNumber < 1) {
+          pageNumber = this.filteredSyncStatus.length; // cycle to last page
+        }
       }
-      let gid = pageNum - 1;
-      let clients =
-        this.syncstatus &&
-        this.syncstatus.hasOwnProperty("data") &&
-        Array.isArray(this.syncstatus.data) &&
-        gid in this.syncstatus.data
-          ? this.syncstatus.data[gid]
-          : false;
+
+      let gid = pageNumber - 1;
+      let clients = this.filteredSyncStatus[gid] || false;
+
       if (!clients) {
-        let clients_first =
-          this.syncstatus &&
-          this.syncstatus.hasOwnProperty("data") &&
-          Array.isArray(this.syncstatus.data) &&
-          this.syncstatus.data.length > 0
-            ? this.syncstatus.data[0]
-            : false;
-        let clients_last =
-          this.syncstatus &&
-          this.syncstatus.hasOwnProperty("data") &&
-          Array.isArray(this.syncstatus.data) &&
-          this.syncstatus.data.length > 0
-            ? this.syncstatus.data[this.syncstatus.data.length - 1]
-            : false;
-        if (pageNum < 1 && clients_last !== false) {
-          // first page-1 reached when clicked on prev page, reset to last page
-          pageNum = this.syncstatus.data.length;
-          gid = pageNum - 1;
-          clients = this.syncstatus.data[gid];
-        } else if (clients_first) {
-          // last page+1 reached when clicked on next page, reset to first page
-          pageNum = 1;
-          gid = pageNum - 1;
-          clients = this.syncstatus.data[gid];
-        } else {
-          // waiting for data on page load (or while invalid data is retrieved)
-          if (
-            this.syncstatus &&
-            this.syncstatus.hasOwnProperty("data") &&
-            this.syncstatus.data.hasOwnProperty("error")
-          ) {
-            if (this.syncstatus.data.error == "prometheus service not running") {
-              this.syncItemsShow = false;
-              this.syncIcoUnknown = true;
-              this.syncIcoError = false;
-              this.syncIcoSituation = false;
-              this.noDataLayerShow = true;
-              this.pageNumber = 1;
-              //this.clients = [];
-              //this.isMultiService = false;
-            }
-          }
-          this.refresh();
-          return;
-        }
+        // console.log("No clients found for the current page.");
+        this.syncItemsShow = false;
+        return;
       }
-      //console.log('pageNum final',pageNum)
-      let isMultiService = false;
-      let syncItemsShow = false;
-      let syncIcoUnknown = true;
+
+      let isMultiService = this.filteredSyncStatus.length > 1;
+      let syncItemsShow = true;
+      let syncIcoUnknown = false;
       let syncIcoError = false;
       let syncIcoSituation = false;
       let noDataLayerShow = false;
@@ -344,72 +357,63 @@ export default {
         blue: [], // client not in-sync, thus currently synchronizing
         green: [], // client in-sync, thus synchronized
       };
-      if (
-        this.code === 0 &&
-        this.syncstatus.code === 0 &&
-        Array.isArray(this.syncstatus.data) &&
-        Array.isArray(this.syncstatus.data[gid]) &&
-        this.syncstatus.data[gid][0].hasOwnProperty("title")
-      ) {
-        isMultiService = this.syncstatus.data.length > 1 ? true : false;
-        syncItemsShow = true;
-        syncIcoUnknown = false;
-        for (let k in this.syncstatus.data[gid]) {
-          let lo = parseInt(this.syncstatus.data[gid][k].frstVal);
-          let hi = parseInt(this.syncstatus.data[gid][k].scndVal);
-          let st = this.syncstatus.data[gid][k].state;
-          if (st != "running") {
-            fonts.red.push(k);
-            syncIcoError = true;
-            continue;
-          }
-          if (lo > hi) {
-            fonts.orange.push(k);
-            syncIcoUnknown = true;
-            continue;
-          }
-          if (lo < 1 && hi < 1) {
-            fonts.grey.push(k);
-            syncIcoSituation = true;
-            continue;
-          }
-          if (lo < hi) {
-            fonts.blue.push(k);
-            syncIcoSituation = true;
-            continue;
-          }
-          fonts.green.push(k);
+
+      clients.forEach((client, index) => {
+        let lo = parseInt(client.frstVal);
+        let hi = parseInt(client.scndVal);
+        let st = client.state;
+
+        if (st !== "running") {
+          fonts.red.push(index);
+          syncIcoError = true;
+        } else if (lo > hi) {
+          fonts.orange.push(index);
+          syncIcoUnknown = true;
+        } else if (lo < 1 && hi < 1) {
+          fonts.grey.push(index);
+          syncIcoSituation = true;
+        } else if (lo < hi) {
+          fonts.blue.push(index);
+          syncIcoSituation = true;
+        } else {
+          fonts.green.push(index);
         }
-        if (fonts.grey.length && fonts.grey.length == this.syncstatus.data[gid].length) {
-          syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
-        }
-        for (let col in fonts) {
-          if (fonts[col].length) {
-            for (let i = 0; i < fonts[col].length; i++) {
-              let k = fonts[col][i];
-              // let ct = this.syncstatus.data[gid][k].type;
-              // console.log(ct + " client (" + this.syncstatus.data[gid][k].title + ") needs color " + col + " by class: client" + col + "!)");
-              this.syncstatus.data[gid][k].style = "client" + col;
-            }
-          }
-        }
+      });
+
+      if (fonts.grey.length && fonts.grey.length === clients.length) {
+        syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
       }
+
+      clients.forEach((client, index) => {
+        if (fonts.red.includes(index)) {
+          client.style = "clientred";
+        } else if (fonts.orange.includes(index)) {
+          client.style = "clientorange";
+        } else if (fonts.grey.includes(index)) {
+          client.style = "clientgrey";
+        } else if (fonts.blue.includes(index)) {
+          client.style = "clientblue";
+        } else if (fonts.green.includes(index)) {
+          client.style = "clientgreen";
+        }
+      });
+
       this.syncItemsShow = syncItemsShow;
       this.syncIcoUnknown = syncIcoUnknown;
       this.syncIcoError = syncIcoError;
       this.syncIcoSituation = syncIcoSituation;
-      this.pageNumber = pageNum;
+      this.pageNumber = pageNumber;
       this.clients = clients;
-      for (let k in clients) {
-        const item = clients[k];
-        if (item?.type == "consensus") {
+
+      clients.forEach((item) => {
+        if (item?.type === "consensus") {
           this.consensusName = item?.title;
           this.consensusFirstVal = item.frstVal;
           this.consensusSecondVal = item.scndVal;
           this.consensusClass = item.style;
           this.consensuColor = this.clientInfo[item.style]?.color;
           this.consensusText = this.clientInfo[item.style]?.text;
-          if (item.style == "clientblue") {
+          if (item.style === "clientblue") {
             this.consensusText = this.displayConsensusPer + "% " + this.consensusText;
           }
         } else {
@@ -419,11 +423,12 @@ export default {
           this.executionClass = item.style;
           this.executionColor = this.clientInfo[item.style]?.color;
           this.executionText = this.clientInfo[item.style]?.text;
-          if (item.style == "clientblue") {
+          if (item.style === "clientblue") {
             this.executionText = this.displayExecutionPer + "% " + this.executionText;
           }
         }
-      }
+      });
+
       this.isMultiService = isMultiService;
       this.noDataLayerShow = noDataLayerShow;
       this.refresh();

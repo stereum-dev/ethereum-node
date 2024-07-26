@@ -6,12 +6,13 @@ export const useClickInstall = defineStore("clickInstallation", {
       startServicesAfterInstall: false,
       isConfigButtonEnbabled: false,
       installMonitoring: false,
+      resetMevBoost: false,
       relayURL: "",
       checkPointSync: "",
       currentSlide: 0,
       btnActive: false,
       selectedItem: "- SELECT A SOURCE -",
-      selectedLinks: null,
+      selectedLink: null,
       selectedIcon: null,
       syncType: [
         {
@@ -114,6 +115,13 @@ export const useClickInstall = defineStore("clickInstallation", {
           name: "lidossv",
           defaultPath: "/opt/stereum",
           icon: "/img/icon/one-click-icons/preset-icons/SSV-LIDO-SDVT.png",
+          includedPlugins: [],
+        },
+        {
+          id: 7,
+          name: "lidocsm",
+          defaultPath: "/opt/stereum",
+          icon: "/img/icon/one-click-icons/preset-icons/LIDO-CSM.png",
           includedPlugins: [],
         },
       ],

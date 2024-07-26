@@ -1,6 +1,7 @@
 import { ServiceManager } from "./ServiceManager";
 import YAML from "yaml";
 import { StringUtils } from "./StringUtils";
+import { ConfigManager } from "./ConfigManager";
 
 const log = require("electron-log");
 
@@ -13,6 +14,7 @@ export class OneClickInstall {
     this.installDir = installDir;
     this.nodeConnection = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
+    this.configManager = new ConfigManager(this.nodeConnection);
     const arch = await this.nodeConnection.getCPUArchitecture();
     const settings = {
       stereum_settings: {
@@ -31,6 +33,7 @@ export class OneClickInstall {
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum &&\
     mkdir -p /etc/stereum/services &&\
     echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
+    await this.configManager.createMultiSetupYaml({}, "");
     await this.nodeConnection.findStereumSettings();
     return await this.nodeConnection.prepareStereumNode(
       this.nodeConnection.settings.stereum.settings.controls_install_path
@@ -263,6 +266,17 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("NotificationService", args));
     }
 
+    if (constellation.includes("KeysAPIService")) {
+      //KeysAPIService
+      this.extraServices.push(
+        this.serviceManager.getService("KeysAPIService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+        })
+      );
+    }
+
     if (constellation.includes("ValidatorEjectorService")) {
       //ValidatorEjectorService
       this.extraServices.push(
@@ -347,7 +361,7 @@ export class OneClickInstall {
           break;
         case "BesuService":
           this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=X_SNAP"))
+            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))
           ] = "--sync-mode=FULL";
           break;
         case "NethermindService":
@@ -399,6 +413,7 @@ export class OneClickInstall {
   async writeConfig() {
     const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
+      this.configManager.createMultiSetupYaml(configs, this.network);
       await Promise.all(
         configs.map(async (config) => {
           await this.nodeConnection.writeServiceConfiguration(config);
@@ -406,6 +421,7 @@ export class OneClickInstall {
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
       await this.serviceManager.prepareSSVDKG(this.extraServices.find((s) => s.service === "SSVDKGService"));
+      await this.serviceManager.initKeysAPI(this.extraServices.filter((s) => s.service === "KeysAPIService"));
       return configs;
     }
   }
@@ -499,6 +515,9 @@ export class OneClickInstall {
         break;
       case "lidossv":
         services.push("SSVNetworkService", "SSVDKGService");
+        break;
+      case "lidocsm":
+        services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService");
     }
     return services;
   }

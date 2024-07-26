@@ -1,9 +1,13 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12"
+  >
     <div
       class="w-full h-full col-start-5 col-end-21 row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto bg-[#1E2429] rounded-md"
     >
-      <div class="w-full col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center px-2">
+      <div
+        class="w-full col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center px-2"
+      >
         <span class="text-md text-gray-300 font-semibold text-left px-2">
           {{ t("uploadConfig.message") }}
         </span>
@@ -12,7 +16,9 @@
         class="col-start-1 col-span-full row-start-3 row-span-4 flex flex-col justify-start items-center px-1 gap-y-4"
       >
         <div class="uploadBox__title">
-          <span class="text-md text-gray-300 font-semibold text-left">{{ t("uploadConfig.selectConfig") }}</span>
+          <span class="text-md text-gray-300 font-semibold text-left">{{
+            t("uploadConfig.selectConfig")
+          }}</span>
         </div>
 
         <div
@@ -25,7 +31,11 @@
             <div
               class="w-full h-full col-start-1 col-end-11 self-center overflow-hidden flex justify-start items-center"
             >
-              <span class="w-fit self-center text-xl text-left font-semibold text-gray-800"> {{ fileName }}</span>
+              <span
+                class="w-fit self-center text-xl text-left font-semibold text-gray-800"
+              >
+                {{ fileName }}</span
+              >
             </div>
             <input
               id="file_input"
@@ -35,7 +45,9 @@
               accept=".zip"
               @change="handleFileUpload"
             />
-            <div class="w-full h-full col-start-12 col-span-1 flex justify-end items-center">
+            <div
+              class="w-full h-full col-start-12 col-span-1 flex justify-end items-center"
+            >
               <img
                 class="col-start-12 col-span-1 w-10 h-10 hover:scale-105 hover:shadow-lg hover:shadow-gray-900 active:scale-100 rounded-full justify-self-end transition-all duration-300 ease-in-out"
                 src="/img/icon/server-management-icons/plus-icon.png"
@@ -127,7 +139,9 @@ const handleFileUpload = async (event) => {
   let rootPath = "";
   for (const file of yamlFiles) {
     const data = await file.async("string");
-    let serviceVolume = YAML.parse(data).volumes.find((el) => el.includes(YAML.parse(data).id));
+    let serviceVolume = YAML.parse(data).volumes?.find((el) =>
+      el.includes(YAML.parse(data).id)
+    );
     let split = {};
 
     if (serviceVolume) {
@@ -151,13 +165,19 @@ const handleFileUpload = async (event) => {
 
   message.value = "";
 
+  const additionalSetups = installStore.unzippedData.filter((item) => {
+    return (
+      item.service === undefined && item.id === undefined && item.network === undefined
+    );
+  });
+
   installStore.configServices = servicesStore.allServices
     .map((service) => {
-      const sameItems = installStore.unzippedData.find((item) => {
-        return item.service === service.service;
-      });
+      const sameItems = installStore.unzippedData.find(
+        (item) => item.service === service.service
+      );
       if (!sameItems) {
-        return false;
+        return false; // Skip if no matching item found
       }
       return {
         ...sameItems,
@@ -166,7 +186,13 @@ const handleFileUpload = async (event) => {
         name: service.name,
       };
     })
-    .filter((item) => item !== false);
+    .filter((item) => item);
+
+  if (additionalSetups.length) {
+    installStore.configServices.push(...additionalSetups);
+  }
+  console.log("configServices", installStore.configServices);
+
   isConfirmMessageActive.value = true;
   message.value = "STEREUM CONFIG RECOGNIZED - PRESS NEXT TO CONTINUE";
   if (installStore.configServices.length && isConfirmMessageActive.value) {

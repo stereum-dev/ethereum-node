@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 p-1">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 p-1"
+  >
     <div
       class="w-full h-full col-start-5 col-end-21 row-start-3 row-end-11 grid grid-cols-12 grid-rows-12 p-2 mx-auto bg-[#1E2429] rounded-md"
     >
@@ -24,11 +26,17 @@
       >
         <TransitionGroup name="fade" tag="div" class="w-full space-y-2">
           <div
-            v-for="(plugin, index) in configServices"
+            v-for="(plugin, index) in configServices.filter(
+              (item) => item.category !== undefined
+            )"
             :key="`${plugin.name} + ${index}`"
             class="w-full h-10 grid grid-cols-12 bg-[#32363A] rounded-md px-2"
           >
-            <img class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-start" :src="plugin.icon" alt="icon" />
+            <img
+              class="w-8 h-8 col-start-1 col-span-1 self-center justify-self-start"
+              :src="plugin.icon"
+              alt="icon"
+            />
             <div class="col-start-2 col-end-5 flex justify-start items-center">
               <span class="text-sm text-gray-300 font-semibold capitalize">
                 {{ plugin.name ? plugin.name : plugin.service }}

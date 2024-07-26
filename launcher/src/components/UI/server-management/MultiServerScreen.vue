@@ -1,7 +1,7 @@
 import ServerHeader from './components/ServerHeader.vue';
 <template>
   <div
-    class="w-full h-full absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
+    class="w-full h-[95.5%] absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
   >
     <SwitchAnimation
       v-if="
@@ -292,7 +292,6 @@ const addExistingKeyHandler = async (event) => {
       let pathString = new String(filePath);
       let result = pathString.toString();
       keyLocation.value = result;
-      console.log(keyLocation.value);
       await ControlService.AddExistingSSHKey(keyLocation.value);
       await readSSHKeyFile();
     } else {
@@ -316,5 +315,8 @@ const generateKeyHandler = async () => {
   const keys = await ControlService.generateSSHKeyPair(data);
   await ControlService.writeSSHKeyFile(keys);
   serverStore.isGenerateModalActive = false;
+  setTimeout(() => {
+    readSSHKeyFile();
+  }, 1000);
 };
 </script>

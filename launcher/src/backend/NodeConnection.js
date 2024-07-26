@@ -5,6 +5,7 @@ import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import net from "net";
 import YAML from "yaml";
 import { NodeUpdates } from "./NodeUpdates";
+import { ConfigManager } from "./ConfigManager";
 import axios from "axios";
 const log = require("electron-log");
 const electron = require("electron");
@@ -29,6 +30,7 @@ export class NodeConnection {
     this.os = null;
     this.osv = null;
     this.nodeUpdates = new NodeUpdates(this);
+    this.configManager = new ConfigManager(this);
   }
 
   async establish(taskManager, currentWindow) {
@@ -340,17 +342,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -741,6 +743,7 @@ export class NodeConnection {
       const service_config_dir = totalConfig.ssvServiceConfigDir;
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_db = network_config_dir + "/db";
       const network_config_file = network_config_dir + "/config.yaml";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
@@ -827,6 +830,12 @@ export class NodeConnection {
       // Set last backed public key
       await this.setSSVLastBackedPublicKey(totalConfig.serviceID, newPubKey);
 
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
+      }
+
       // Write last known public key file
       return await this.writeSSVLastKnownPublicKeyFile(
         totalConfig.serviceID,
@@ -848,6 +857,7 @@ export class NodeConnection {
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
       const network_config_file = network_config_dir + "/config.yaml";
+      const network_config_db = network_config_dir + "/db";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
       const password_file = secrets_dir + "/password";
@@ -929,6 +939,12 @@ export class NodeConnection {
       // Set last backed public key
       await this.setSSVLastBackedPublicKey(totalConfig.serviceID, newPubKey);
 
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
+      }
+
       // Write last known public key file
       return await this.writeSSVLastKnownPublicKeyFile(
         totalConfig.serviceID,
@@ -950,6 +966,7 @@ export class NodeConnection {
       const service_config_dir = totalConfig.ssvServiceConfigDir;
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_db = network_config_dir + "/db";
       const network_config_file = network_config_dir + "/config.yaml";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
@@ -1056,6 +1073,12 @@ export class NodeConnection {
         }
       }
 
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
+      }
+
       // Write last known public key file
       return await this.writeSSVLastKnownPublicKeyFile(
         totalConfig.serviceID,
@@ -1077,6 +1100,7 @@ export class NodeConnection {
       const service_config_dir = totalConfig.ssvServiceConfigDir;
       const service_config_file = service_config_dir + "/" + totalConfig.serviceID + ".yaml";
       const network_config_dir = totalConfig.ssvNetworkConfigDir;
+      const network_config_db = network_config_dir + "/db";
       const network_config_file = network_config_dir + "/config.yaml";
       const secrets_dir = totalConfig.ssvSecretsDir;
       const keystore_file = secrets_dir + "/encrypted_private_key.json";
@@ -1160,6 +1184,12 @@ export class NodeConnection {
         if (SSHService.checkExecError(service_config_write, true)) {
           throw new Error(SSHService.extractExecError(service_config_write));
         }
+      }
+
+      // Remove database
+      const remove_db = await this.sshService.exec(`rm -rf ${network_config_db}`);
+      if (SSHService.checkExecError(remove_db, true)) {
+        throw new Error(SSHService.extractExecError(remove_db));
       }
 
       // Write last known public key file
@@ -1770,10 +1800,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -1811,19 +1841,21 @@ export class NodeConnection {
    * write a specific service configuration
    *
    * @param serviceConfiguration servicd configuration to write to the node
+   * @param {string|null} setupID - The setup ID. Defaults to null.
    */
-  async writeServiceConfiguration(serviceConfiguration) {
+  async writeServiceConfiguration(serviceConfiguration, setupID = null) {
     let configStatus;
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
+      if (setupID) await this.configManager.addServiceIntoSetup(serviceConfiguration, setupID);
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + serviceConfiguration.service + " config",
@@ -1844,9 +1876,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -2311,37 +2343,30 @@ export class NodeConnection {
   async dumpDockerLogs() {
     try {
       const services = await this.listServices();
-      log.info(services);
-      const containerIds = services.map((service) => service.ID);
 
-      const logsPromises = containerIds.map(async (containerId) => {
-        try {
-          let jsonFilePathsResult = await this.sshService.exec(
-            `ls /var/lib/docker/containers/${containerId}/${containerId}*`
-          );
+      if (!services || !Array.isArray(services)) {
+        throw new Error("Invalid service list format");
+      }
 
-          if (SSHService.checkExecError(jsonFilePathsResult)) {
-            throw new Error("Failed reading docker logs: " + SSHService.extractExecError(jsonFilePathsResult));
-          }
+      const serviceNames = services.map((service) => service.Names);
 
-          const jsonFilePaths = jsonFilePathsResult.stdout.split("\n").filter((i) => i);
-
-          for (const jsonFilePath of jsonFilePaths) {
-            const logs = await this.sshService.exec(`cat ${jsonFilePath}`);
-
-            return { containerId, logs };
-          }
-        } catch (err) {
-          log.error("Failed to dump Docker Logs: ", err);
-          return { containerId, logs: "" };
-        }
+      const serviceLogPromises = serviceNames.map((serviceName) => {
+        const strippedServiceName = serviceName.startsWith("stereum-") ? serviceName.slice(8) : serviceName;
+        const args = {
+          serviceID: strippedServiceName,
+          since: 7,
+          lines: 100000,
+          until: 0,
+          dateOrLines: "lines",
+        };
+        return this.getAllServiceLogs(args);
       });
 
-      const allLogs = await Promise.all(logsPromises);
+      const allLogs = await Promise.all(serviceLogPromises);
       return allLogs;
     } catch (err) {
-      log.error("Failed to dump Docker Logs: ", err);
-      return [{ containerId: "ERROR", logs: err }];
+      console.error(`Failed to get all service logs: `, err);
+      throw err;
     }
   }
 
@@ -2396,9 +2421,28 @@ export class NodeConnection {
   }
 
   async getAllServiceLogs(args) {
-    const containerName = `stereum-${args}`;
+    const containerName = `stereum-${args.serviceID}`;
+
+    const since = args.since ?? 7;
+    const lines = args.lines ?? 100000;
+    const until = args.until ?? 0;
+    const dateOrLines = args.dateOrLines ?? "lines";
+    let logResult = null;
+
+    // Calculate the timestamp for the 'since' days ago
+    const sinceDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * since).toISOString();
+    // Calculate the timestamp for the 'until' days ago
+    const untilDate =
+      until === 0 ? new Date().toISOString() : new Date(Date.now() - 1000 * 60 * 60 * 24 * until).toISOString();
+
     try {
-      const logResult = await this.sshService.exec(`docker logs ${containerName} --tail=100000 2>&1`);
+      if (dateOrLines === "lines") {
+        logResult = await this.sshService.exec(`docker logs ${containerName}  --tail=${lines} 2>&1`);
+      } else {
+        logResult = await this.sshService.exec(
+          `docker logs ${containerName} --since=${sinceDate} --until=${untilDate} 2>&1`
+        );
+      }
 
       if (logResult.rc || !logResult.stdout || logResult.stderr) {
         throw new Error(logResult.stderr || "Error fetching logs");

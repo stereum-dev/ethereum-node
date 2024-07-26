@@ -17,7 +17,9 @@ import { onMounted, computed } from 'vue';
         class="w-full h-[250px] overflow-y-auto overflow-x-hidden flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
       >
         <div
-          v-for="option in list.filter((e) => e.category === 'consensus')"
+          v-for="option in list.filter(
+            (e) => e.category === 'consensus' && e.setupId === setupStore.selectedSetup.setupId
+          )"
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
@@ -58,7 +60,9 @@ import { onMounted, computed } from 'vue';
         class="w-full h-[250px] overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
       >
         <div
-          v-for="option in list.filter((e) => e.category === 'execution')"
+          v-for="option in list.filter(
+            (e) => e.category === 'execution' && e.setupId === setupStore.selectedSetup.setupId
+          )"
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
@@ -99,7 +103,9 @@ import { onMounted, computed } from 'vue';
         class="w-full h-[250px] flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1 overflow-x-hidden overflow-y-auto"
       >
         <div
-          v-for="option in list.filter((e) => e.category === 'validator')"
+          v-for="option in list.filter(
+            (e) => e.category === 'validator' && e.setupId === setupStore.selectedSetup.setupId
+          )"
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
@@ -175,6 +181,7 @@ import { onMounted, computed } from 'vue';
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
 import { onMounted, ref } from "vue";
+import { useSetups } from "../../../../../store/setups";
 
 const emit = defineEmits(["select-service"]);
 
@@ -194,6 +201,7 @@ const props = defineProps({
 
 //Stores
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 
 //Lifecycle Hooks
 onMounted(() => {
@@ -251,6 +259,9 @@ const getConnectionOptions = () => {
         );
       }
       if (props.client.service === "ValidatorEjectorService") {
+        return manageStore.newConfiguration.filter((e) => /consensus|execution/.test(e.category));
+      }
+      if (props.client.service === "KeysAPIService") {
         return manageStore.newConfiguration.filter((e) => /consensus|execution/.test(e.category));
       }
       break;

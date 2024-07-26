@@ -1,0 +1,23 @@
+---
+- name: Find service configs
+  find:
+    paths: "/etc/stereum/services"
+  register: service_config_files
+
+- name: Include Besu Changes
+  include_tasks: besu_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include Prysm Changes
+  include_tasks: prysm_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include SDVT Changes
+  include_tasks: sdvt_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
