@@ -2,7 +2,9 @@
   <div class="ctrlParent gap-1 p-1">
     <div class="machineName_cell">
       <machine-name
-        @mouseenter="cursorLocation = `${machineName}`"
+        @mouseenter="
+          cursorLocation = `${$t('serverDetail.machine', { machineName: ServerName })}`
+        "
         @mouseleave="cursorLocation = ''"
       />
     </div>
@@ -94,7 +96,7 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useFooter } from "@/store/theFooter";
 import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
@@ -114,6 +116,8 @@ import WsEndpoint from "./WsEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
 import TheStaking from "./TheStaking.vue";
+import { useControlStore } from "@/store/theControl";
+
 // import NewPeerToPeer from "./NewPeerToPeer.vue";
 // import SubscribedSubnets from "./SubscribedSubnets.vue";
 export default {
@@ -159,6 +163,9 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
       nodataMessage: "nodataMessage",
+    }),
+    ...mapState(useControlStore, {
+      ServerName: "ServerName",
     }),
   },
   methods: {

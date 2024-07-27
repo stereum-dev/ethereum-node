@@ -6,7 +6,7 @@
       :class="bgColor ? bgColor : 'bg-gray-100'"
     >
       <div class="flex flex-col justify-between gap-5">
-        <div class="text-center p-2 flex-auto justify-center space-y-4">
+        <div class="text-center p-2 flex-auto justify-center space-y-4 relative">
           <div v-if="icon">
             <img
               class="-m-1 flex items-center text-red-500 mx-auto"
@@ -14,6 +14,12 @@
               :alt="altText"
               :class="iconSize !== '' ? iconSize : 'w-24 '"
             />
+          </div>
+          <div
+            v-if="animation"
+            class="animation-icon flex justify-center items-center h-32 relative"
+          >
+            <img :src="animation" alt="animation" class="w-[35%] absolute" />
           </div>
           <div v-if="mainTitle" class="text-xl font-bold py-2 text-gray-200 uppercase">
             <p>{{ mainTitle }}</p>
@@ -27,7 +33,10 @@
           </div>
           <slot name="content"></slot>
         </div>
-        <div class="flex justify-end text-md font-bold py-3 mt-2 text-center space-y-4">
+        <div
+          v-if="confirmText"
+          class="flex justify-end text-md font-bold py-3 mt-2 text-center space-y-4"
+        >
           <button
             v-if="confirmText !== ''"
             class="w-[8rem] mr-2 px-5 py-2 shadow-sm rounded-full hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-110 active:scale-100 text-gray-200 font-semibold uppercase"
@@ -88,7 +97,10 @@ const {
 });
 </script>
 
-<style>
+<style scoped>
+.animation-icon img {
+  top: -80%;
+}
 .layer1 {
   z-index: 1000 !important;
 }

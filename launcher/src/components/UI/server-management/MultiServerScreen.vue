@@ -32,8 +32,24 @@ import ServerHeader from './components/ServerHeader.vue';
       @remove-handler="removeServerHandler"
       @close-window="closeWindow"
     />
-    <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
-    <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
+    <UpdateModal
+      v-if="louncherUpdater"
+      :version="availableVersion"
+      @update="updateModalHandler"
+      @close-window="closeUpdateModale"
+    />
+
+    <TwofactorModal
+      v-if="isTwoFactorAuthActive"
+      @submit-auth="submitAuthHandler"
+      @close-window="closeAndCancel"
+    />
+
+    <ErrorModal
+      v-if="serverStore.errorMsgExists"
+      :description="serverStore.error"
+      @close-window="closeErrorDialog"
+    />
     <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
   </div>
 </template>
@@ -46,6 +62,7 @@ import PasswordModal from "./components/modals/PasswordModal.vue";
 import SwitchAnimation from "./components/SwitchAnimation.vue";
 import TwofactorModal from "./components/modals/TwofactorModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
+import UpdateModal from "./components/modals/UpdateModal.vue";
 
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
@@ -64,6 +81,11 @@ const router = useRouter();
 const keyLocation = ref("");
 let loginAbortController = new AbortController();
 const serverBodyComponentKey = ref(0);
+//launcher updater
+const louncherUpdater = ref(false);
+//available version for the launcher updater
+const availableVersion = "dummy version";
+
 const isTwoFactorAuthActive = ref(false);
 
 watchEffect(() => {
@@ -117,6 +139,14 @@ onUnmounted(() => {
 
 //Methods
 
+// update modal handler
+const updateModalHandler = () => {
+  console.log("Update acceptd");
+};
+
+const closeUpdateModale = () => {
+  louncherUpdater.value = false;
+};
 const openTwoFactorModal = () => {
   cancelLoginHandler();
   isTwoFactorAuthActive.value = true;
@@ -212,7 +242,9 @@ const serverHandler = (server) => {
     server.isSelected = true;
   }
 
-  serverStore.savedServers.savedConnections = [...serverStore.savedServers.savedConnections];
+  serverStore.savedServers.savedConnections = [
+    ...serverStore.savedServers.savedConnections,
+  ];
 };
 
 //Change password handling
@@ -250,7 +282,8 @@ const removeServerHandler = async () => {
   serverStore.isRemoveProcessing = true;
   serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
     (item) =>
-      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
+      item.host !== serverStore.selectedServerToConnect?.host &&
+      item.name !== serverStore.selectedServerToConnect?.name
   );
 
   await remove();
@@ -274,7 +307,9 @@ const readSSHKeyFile = async () => {
 const confirmDelete = async (key) => {
   serverStore.sshKeys = serverStore.sshKeys.filter((item) => item !== key);
   try {
-    await ControlService.writeSSHKeyFile(serverStore.sshKeys.filter((item) => item !== key));
+    await ControlService.writeSSHKeyFile(
+      serverStore.sshKeys.filter((item) => item !== key)
+    );
     await readSSHKeyFile();
   } catch (err) {
     console.log(err);
