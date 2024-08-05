@@ -209,7 +209,9 @@ const selecteConfigServices = computed(() => {
   let test = [];
   const selectedSetup = setupStore.selectedSetup;
   if (selectedSetup && selectedSetup.services) {
-    const selectedServiceIds = selectedSetup.services.map((service) => service.config.serviceID);
+    const selectedServiceIds = selectedSetup.services.map(
+      (service) => service.config.serviceID
+    );
     serviceStore.installedServices.forEach((service) => {
       if (
         (["execution", "validator", "consensus"].includes(service.category) &&
@@ -259,9 +261,13 @@ const isAnyConsensusRunning = computed(() => {
     consensusServices.some((service) => service.state === "running")
   );
 });
-watch(isAnyConsensusRunning, (newValue) => {
-  footerStore.isConsensusRunning = newValue;
-});
+watch(
+  isAnyConsensusRunning,
+  (newValue) => {
+    footerStore.isConsensusRunning = newValue;
+  },
+  { immediate: true }
+);
 
 //is prometheus off
 const isPrometheusOff = computed(() => {
@@ -271,9 +277,13 @@ const isPrometheusOff = computed(() => {
   return prometheusService?.state === "running" ? false : true;
 });
 
-watch(isPrometheusOff, (newValue) => {
-  footerStore.prometheusIsOff = newValue;
-});
+watch(
+  isPrometheusOff,
+  (newValue) => {
+    footerStore.prometheusIsOff = newValue;
+  },
+  { immediate: true }
+);
 
 const footerMessage = computed(() => {
   const missing = footerStore.missingServices;

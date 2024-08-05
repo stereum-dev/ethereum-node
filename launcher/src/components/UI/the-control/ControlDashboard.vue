@@ -1,10 +1,7 @@
 <template>
   <div class="ctrlParent gap-1 p-1">
     <div class="machineName_cell">
-      <machine-name
-        @mouseenter="cursorLocation = `${machineName}`"
-        @mouseleave="cursorLocation = ''"
-      />
+      <machine-name />
     </div>
     <div class="node-serve">
       <EpochSlot
@@ -114,6 +111,7 @@ import WsEndpoint from "./WsEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
 import TheStaking from "./TheStaking.vue";
+
 // import NewPeerToPeer from "./NewPeerToPeer.vue";
 // import SubscribedSubnets from "./SubscribedSubnets.vue";
 export default {
@@ -160,6 +158,10 @@ export default {
       cursorLocation: "cursorLocation",
       nodataMessage: "nodataMessage",
     }),
+  },
+
+  mounted() {
+    console.log(this.ServerName);
   },
   methods: {
     footerSetter(arg) {
