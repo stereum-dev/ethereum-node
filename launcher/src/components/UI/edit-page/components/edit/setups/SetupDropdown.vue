@@ -200,7 +200,11 @@ const noValidatorHandler = (setup) => {
 };
 
 const toggleDropdown = () => {
-  isOpen.value = !isOpen.value;
+  if (setupsList.value.length > 1 && route.path === "/control") {
+    isOpen.value = !isOpen.value;
+  } else if (setupsList.value.length > 0 && route.path !== "/control") {
+    isOpen.value = !isOpen.value;
+  }
 };
 
 const selectRename = () => {

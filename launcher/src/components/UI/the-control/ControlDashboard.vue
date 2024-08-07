@@ -4,89 +4,55 @@
       <machine-name />
     </div>
     <div class="node-serve">
-      <EpochSlot
-        @mouseenter="footerSetter('current EPOCH & current SLOT')"
-        @mouseleave="cursorLocation = ''"
-      />
+      <EpochSlot @mouseenter="footerSetter('current EPOCH & current SLOT')" @mouseleave="cursorLocation = ''" />
     </div>
     <div class="sandFull_cell">
-      <TheBalance
-        @mouseenter="footerSetter('Finalized EPOCH & Balance')"
-        @mouseleave="cursorLocation = ''"
-      />
+      <TheBalance @mouseenter="footerSetter('Finalized EPOCH & Balance')" @mouseleave="cursorLocation = ''" />
     </div>
     <dashboard-card class="hard-disk">
-      <the-hard
-        @mouseenter="cursorLocation = `${storVol}`"
-        @mouseleave="cursorLocation = ''"
-      />
+      <the-hard @mouseenter="cursorLocation = `${storVol}`" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
     <dashboard-card class="storage"
-      ><the-storage
-        @mouseenter="cursorLocation = `${stor}`"
-        @mouseleave="cursorLocation = ''"
+      ><the-storage @mouseenter="cursorLocation = `${stor}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="disk-speed"
-      ><disk-speed
-        @mouseenter="cursorLocation = `${diskSpeed}`"
-        @mouseleave="cursorLocation = ''"
+      ><disk-speed @mouseenter="cursorLocation = `${diskSpeed}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="p2p">
       <peer-to-peer @mouseenter="footerSetter(p2p)" @mouseleave="cursorLocation = ''" />
       <!-- <newPeerToPeer /> -->
     </dashboard-card>
     <dashboard-card class="the-cpu">
-      <the-cpu
-        @mouseenter="cursorLocation = `${cpuUse}`"
-        @mouseleave="cursorLocation = ''"
-      />
+      <the-cpu @mouseenter="cursorLocation = `${cpuUse}`" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
     <dashboard-card class="amsterdam">
       <amsterdam-component />
     </dashboard-card>
     <dashboard-card class="sync-status"
-      ><sync-status
-        @mouseenter="cursorLocation = `${syncInfo}`"
-        @mouseleave="cursorLocation = ''"
+      ><sync-status @mouseenter="cursorLocation = `${syncInfo}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="validatorComment_cell">
       <the-staking />
     </dashboard-card>
     <dashboard-card class="the-ram">
-      <the-ram
-        @mouseenter="cursorLocation = `${ramUse}`"
-        @mouseleave="cursorLocation = ''"
+      <the-ram @mouseenter="cursorLocation = `${ramUse}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="the-network"
-      ><the-network
-        @mouseenter="cursorLocation = `${netSpeed}`"
-        @mouseleave="cursorLocation = ''"
+      ><the-network @mouseenter="cursorLocation = `${netSpeed}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
     <dashboard-card class="portlist_card">
-      <port-list
-        @mouseenter="cursorLocation = `${listPort}`"
-        @mouseleave="cursorLocation = ''"
-      />
+      <port-list @mouseenter="cursorLocation = `${listPort}`" @mouseleave="cursorLocation = ''" />
       <!-- <SubscribedSubnets /> -->
     </dashboard-card>
     <div class="half-card">
-      <rpc-endpoint
-        @mouseenter="cursorLocation = `RPC ${endPoint}`"
-        @mouseleave="cursorLocation = ''"
-      />
+      <rpc-endpoint @mouseenter="cursorLocation = `RPC ${endPoint}`" @mouseleave="cursorLocation = ''" />
     </div>
     <div class="half-card2">
-      <ws-endpoint
-        @mouseenter="cursorLocation = `WS ${endPoint}`"
-        @mouseleave="cursorLocation = ''"
-      />
+      <ws-endpoint @mouseenter="cursorLocation = `WS ${endPoint}`" @mouseleave="cursorLocation = ''" />
     </div>
 
     <div class="half-card3">
-      <data-api
-        @mouseenter="cursorLocation = `${data} API`"
-        @mouseleave="cursorLocation = ''"
-      />
+      <data-api @mouseenter="cursorLocation = `${data} API`" @mouseleave="cursorLocation = ''" />
     </div>
   </div>
 </template>
@@ -160,9 +126,6 @@ export default {
     }),
   },
 
-  mounted() {
-    console.log(this.ServerName);
-  },
   methods: {
     footerSetter(arg) {
       this.cursorLocation = this.nodataMessage === "" ? arg : this.nodataMessage;
