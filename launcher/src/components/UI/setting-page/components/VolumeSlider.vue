@@ -20,6 +20,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useLangStore } from "@/store/languages";
 import { useSoundStore } from "@/store/sound";
+import ControlService from "@/store/ControlService";
 
 const soundStore = useSoundStore();
 const langStore = useLangStore();
@@ -27,11 +28,39 @@ const langStore = useLangStore();
 const sliderBar = ref(null);
 const volumePercentage = ref(95);
 
-const updateVolume = (clientX) => {
+const checkSettings = async () => {
+  try {
+    const savedConfig = await ControlService.readConfig();
+
+    if (savedConfig?.savedVolume?.volume) {
+      volumePercentage.value = savedConfig.savedVolume.volume;
+    } else {
+      volumePercentage.value = 95;
+    }
+  } catch (error) {
+    console.error("Failed to load saved settings:", error);
+  }
+};
+
+const updateSettings = async (vol) => {
+  try {
+    const prevConf = await ControlService.readConfig();
+    const conf = {
+      ...prevConf,
+      savedVolume: { volume: vol },
+    };
+    await ControlService.writeConfig(conf);
+  } catch (error) {
+    console.error("Failed to update settings:", error);
+  }
+};
+
+const updateVolume = async (clientX) => {
   const barRect = sliderBar.value.getBoundingClientRect();
   const newVolume = Math.max(0, Math.min(1, (clientX - barRect.left) / barRect.width));
   langStore.currentVolume = newVolume;
   volumePercentage.value = newVolume * 100;
+  await updateSettings(volumePercentage.value);
 };
 
 const playSoundEffect = async (base64Data) => {
@@ -72,6 +101,7 @@ const startDrag = () => {
 };
 
 onMounted(() => {
+  checkSettings();
   sliderBar.value.addEventListener("click", (event) => {
     updateVolume(event.clientX);
   });
