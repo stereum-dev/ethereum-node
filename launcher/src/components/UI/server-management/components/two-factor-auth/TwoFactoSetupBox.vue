@@ -109,9 +109,9 @@ const barcodeModal = () => {
 };
 
 const copyKey = () => {
-  let ipToCopy = props.secretKey;
+  let generatedSecretKey = props.secretKey;
   navigator.clipboard
-    .writeText(ipToCopy)
+    .writeText(generatedSecretKey)
     .then(() => {
       copy.value = true;
     })
