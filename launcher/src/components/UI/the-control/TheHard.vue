@@ -59,8 +59,6 @@ const combinedStyles = computed(() => ({
   width: getPerc.value,
   backgroundColor: storageStatus.value,
 }));
-
-console.log(getPerc.value);
 </script>
 <style scoped>
 .storageParent {
