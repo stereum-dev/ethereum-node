@@ -5,30 +5,38 @@
     <div
       class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-1 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center"
     >
-      <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2">{{
+      <span class="w-[32%] h-full text-2xs font-bold text-black flex justify-normal items-center pl-2">{{
         t("twoFactorAuth.urSecret")
       }}</span>
       <div
-        class="key-code w-[60%] h-full bg-black flex justify-center items-center rounded-full text-gray-300 pl-2 text-xs rounded-l-none"
+        class="key-code w-[68%] h-full bg-black flex justify-between items-center rounded-full text-gray-300 pl-2 text-xs rounded-l-none"
       >
         {{ !props.secretKey ? wait : props.secretKey }}
+        <div
+          class="send-btn w-16 h-[95%] rounded-xl text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer right-[1px]"
+          @click="copyKey"
+          @mouseenter="footerStore.cursorLocation = `${t('twoFactor.copy')} `"
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
+          <span>{{ !copy ? t("twoFactorAuth.copyBtn") : t("twoFactorAuth.copied") }}</span>
+        </div>
       </div>
     </div>
     <div
       class="secret-key-row w-full h-5/6 col-start-1 col-span-full row-start-6 mt-3 row-span-1 bg-[#A0A0A0] rounded-full flex justify-start items-center relative"
     >
-      <span class="w-[40%] h-full text-xs text-black flex justify-normal items-center pl-2">{{
+      <span class="w-[32%] h-full text-2xs font-bold text-black flex justify-normal items-center pl-2">{{
         t("twoFactorAuth.enterCode")
       }}</span>
       <input
         v-model="authStore.varificationCode"
         type="text"
         placeholder="Enter Code Here"
-        class="key-code w-[60%] bg-black h-full flex justify-center items-center rounded-full text-gray-50 pl-2 text-xs rounded-l-none"
+        class="key-code w-[68%] bg-black h-full flex justify-center items-center rounded-full text-gray-50 pl-2 text-xs rounded-l-none"
       />
       <div
         v-if="props.timeBased"
-        class="send-btn w-16 h-[95%] rounded-xl text-xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-[1px]"
+        class="send-btn w-16 h-[95%] rounded-xl text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-[1px]"
         @click="sendCode"
         @mouseenter="footerStore.cursorLocation = `${t('twoFactor.send')} `"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -70,6 +78,7 @@
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import i18n from "@/includes/i18n";
 import { useFooter } from "@/store/theFooter";
+import { ref, watch } from "vue";
 
 const t = i18n.global.t;
 
@@ -86,9 +95,29 @@ const props = defineProps({
   secretKey: { type: String, default: "" },
 });
 
+const copy = ref(false);
+
+watch(copy, () => {
+  setTimeout(() => {
+    copy.value = false;
+  }, 2000);
+});
+
 const barcodeModal = () => {
   authStore.isBarcodeModalActive = true;
   footerStore.cursorLocation = "";
+};
+
+const copyKey = () => {
+  let ipToCopy = props.secretKey;
+  navigator.clipboard
+    .writeText(ipToCopy)
+    .then(() => {
+      copy.value = true;
+    })
+    .catch(() => {
+      copy.value = false;
+    });
 };
 
 const sendCode = () => {
