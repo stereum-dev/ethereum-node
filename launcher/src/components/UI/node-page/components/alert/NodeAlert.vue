@@ -6,7 +6,7 @@
       >
         <div class="icon-line">
           <div class="status-icon" :class="{ active: perfect }">
-            <img src="/img/icon/node-alert-icons/alert-notification.png" alt="green" />
+            <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
           </div>
           <div class="status-icon" :class="{ active: warning || pointStatus.length !== 0 }">
             <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
@@ -17,12 +17,7 @@
         </div>
       </div>
       <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
-        <div
-          class="status-icon cursor-pointer"
-          :class="{
-            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
-          }"
-        >
+        <div class="cursor-pointer w-8">
           <img src="/img/icon/node-alert-icons/alert-settings.png" alt="green" />
         </div>
       </div>
