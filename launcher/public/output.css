@@ -891,10 +891,6 @@ video {
   left: 40%;
 }
 
-.left-\[45px\]{
-  left: 45px;
-}
-
 .left-\[920px\]{
   left: 920px;
 }
@@ -2336,6 +2332,22 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-\[35\%\]{
+  width: 35%;
+}
+
+.w-\[65\%\]{
+  width: 65%;
+}
+
+.w-\[32\%\]{
+  width: 32%;
+}
+
+.w-\[68\%\]{
+  width: 68%;
 }
 
 .min-w-\[100px\]{

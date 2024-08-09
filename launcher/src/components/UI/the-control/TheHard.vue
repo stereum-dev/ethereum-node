@@ -19,7 +19,7 @@
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
             <div class="valueBarPart_loader_value_bg">
-              <div class="valueBarPart_loader-value" :style="getPerc"></div>
+              <div class="valueBarPart_loader-value" :style="combinedStyles" />
             </div>
           </div>
         </div>
@@ -38,8 +38,27 @@ const totalDisk = computed(() => controlStore.totalDisk);
 const usedPerc = computed(() => controlStore.usedPerc);
 
 const getPerc = computed(() => {
-  return { width: `calc(100% - ${parseInt(usedPerc.value)}%)` };
+  return `calc(${parseInt(usedPerc.value)}%)`;
 });
+
+const storageStatus = computed(() => {
+  const usedPercentage = parseInt(usedPerc.value);
+
+  if (usedPercentage < 60) {
+    return "#448f49";
+  } else if (usedPercentage <= 75) {
+    return "#ffff00";
+  } else if (usedPercentage <= 85) {
+    return "#f7b800";
+  } else {
+    return "#ff0000";
+  }
+});
+
+const combinedStyles = computed(() => ({
+  width: getPerc.value,
+  backgroundColor: storageStatus.value,
+}));
 </script>
 <style scoped>
 .storageParent {
@@ -139,14 +158,14 @@ const getPerc = computed(() => {
 }
 .valueBarPart_loader-value {
   height: 100%;
-  background: #33393e;
+  border-radius: 5px;
 }
 .valueBarPart_loader_value_bg {
   width: 99%;
-  background-image: linear-gradient(to right, green 35%, yellow, red);
+  background-image: #33393e;
   height: 88%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   border-radius: 5px;
 }
