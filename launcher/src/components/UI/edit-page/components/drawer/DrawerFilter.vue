@@ -5,9 +5,7 @@
         class="relative w-full cursor-default rounded-md bg-gray-200 p-1 text-left shadow-md text-sm"
         @click="toggleDropdown"
       >
-        <span
-          class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
-        >
+        <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <ChevronUpDownIcon class="h-3 w-3 text-gray-400" aria-hidden="true" />
         </span>
         <span class="block truncate text-center capitalize">{{ selectedFilter }}</span>
@@ -28,10 +26,7 @@
             class="flex justify-center cursor-default select-none p-1 text-gray-900 hover:bg-gray-300"
             @click="selectFilter(filter.name)"
           >
-            <span
-              v-if="selectedFilter === filter.name"
-              class="flex items-center text-cyan-600"
-            >
+            <span v-if="selectedFilter === filter.name" class="flex items-center text-cyan-600">
               <CheckIcon class="h-3 w-3" aria-hidden="true" />
             </span>
             <span
@@ -95,12 +90,11 @@ const networkFilter = (service) => {
     case "mainnet":
       return true;
     case "holesky":
+      return true;
     case "sepolia":
       return service.service !== "SSVNetworkService";
     case "gnosis":
-      return /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(
-        service.service
-      );
+      return /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(service.service);
     default:
       return service.service !== "SSVNetworkService";
   }
@@ -109,9 +103,7 @@ const networkFilter = (service) => {
 const determineCurrentNetwork = () => {
   const selectedNetwork = setupStore.selectedSetup?.network;
   if (selectedNetwork) {
-    const foundNetwork = manageStore.networkList.find(
-      (network) => network.network === selectedNetwork
-    );
+    const foundNetwork = manageStore.networkList.find((network) => network.network === selectedNetwork);
     currentNetwork.value = foundNetwork ? foundNetwork.network : null;
   }
 };
@@ -127,9 +119,7 @@ const filteredServices = computed(() => {
   const filterName = selectedFilter.value ?? "all";
   return filterName === "all"
     ? networkArchFilteredServices.value
-    : networkArchFilteredServices.value.filter(
-        (service) => service.category === filterName
-      );
+    : networkArchFilteredServices.value.filter((service) => service.category === filterName);
 });
 
 // Watchers
