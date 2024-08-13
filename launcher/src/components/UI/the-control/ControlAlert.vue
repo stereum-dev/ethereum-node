@@ -1,23 +1,31 @@
 <template>
   <div class="alert-box_parent">
     <div class="alert-box">
-      <div class="alert-box_header">
-        <div class="icon_alarm" :class="{ active: perfect }">
-          <img src="/img/icon/node-alert-icons/alert-notification.png" alt="green" />
-        </div>
-        <div class="icon_alarm" :class="{ active: warning || pointStatus.length !== 0 }">
-          <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
-        </div>
-        <div class="icon_alarm" :class="{ active: alarm }">
-          <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
-        </div>
+      <div class="alert-box_header h-8 w-full flex justify-center items-center">
         <div
-          class="icon_alarm"
-          :class="{
-            active: stereumUpdate.current !== stereumUpdate.version || updatedNewUpdates.length > 0,
-          }"
+          class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center"
         >
-          <img src="/img/icon/node-alert-icons/alert-settings.png" alt="green" />
+          <div class="icon_alarm" :class="{ active: perfect }">
+            <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
+          </div>
+          <div class="icon_alarm" :class="{ active: warning || pointStatus.length !== 0 }">
+            <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
+          </div>
+          <div class="icon_alarm" :class="{ active: alarm }">
+            <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
+          </div>
+        </div>
+        <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
+          <div class="volBtn cursor-pointer w-8" @click="volToggle">
+            <img
+              :src="
+                volState
+                  ? '/img/icon/node-alert-icons/alert-settings.png'
+                  : '/img/icon/node-alert-icons/alert-settings-mute.png'
+              "
+              alt="green"
+            />
+          </div>
         </div>
       </div>
       <div class="alert-box_messages overflow-x-hidden overflow-y-auto">
@@ -238,6 +246,7 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      volState: "volState",
     }),
     pointStatus() {
       let port = [];
@@ -299,6 +308,7 @@ export default {
     },
   },
   mounted() {
+    this.checkSettings();
     this.readService();
     this.polling = setInterval(() => {
       this.readService();
@@ -312,6 +322,38 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    async checkSettings() {
+      try {
+        const savedConfig = await ControlService.readConfig();
+
+        if (savedConfig?.savedVolume?.volume !== undefined) {
+          this.volState = savedConfig.savedVolume.volume !== 0;
+          this.currentVolume = savedConfig.savedVolume.volume;
+        } else {
+          this.volState = false;
+          console.warn("Volume configuration is missing or invalid.");
+        }
+      } catch (error) {
+        console.error("Failed to load saved settings:", error);
+      }
+    },
+    async updateSettings(vol) {
+      try {
+        const prevConf = await ControlService.readConfig();
+        const conf = {
+          ...prevConf,
+          savedVolume: { volume: vol },
+        };
+        await ControlService.writeConfig(conf);
+      } catch (error) {
+        console.error("Failed to update settings:", error);
+      }
+    },
+
+    volToggle() {
+      this.volState = !this.volState;
+      this.updateSettings(this.volState ? 0.95 : 0);
+    },
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
         return "/img/icon/service-icons/Other/PrometheusNodeExporter-s.png";
@@ -416,6 +458,9 @@ export default {
 };
 </script>
 <style scoped>
+.volBtn:active {
+  transform: scale(0.9);
+}
 .pointer {
   cursor: pointer;
 }
@@ -464,20 +509,9 @@ export default {
   flex-direction: column;
   padding: 5px;
 }
-.alert-box_header {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  height: 30px;
-  background: #23272a;
-  border: 1px solid grey;
-  border-radius: 5px;
-  padding: 1px 2px;
-  box-sizing: border-box;
-}
+
 .icon_alarm {
-  width: 23%;
+  width: 26%;
   height: 100%;
   display: flex;
   justify-content: center;

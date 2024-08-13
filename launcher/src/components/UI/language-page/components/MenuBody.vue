@@ -29,11 +29,7 @@
         }"
         @click="handleClick(lang, index)"
       >
-        <img
-          :src="lang.flag"
-          :alt="`${lang.name} Flag`"
-          class="col-start-1 col-span-3 w-10 h-10 rounded-full"
-        />
+        <img :src="lang.flag" :alt="`${lang.name} Flag`" class="col-start-1 col-span-3 w-10 h-10 rounded-full" />
         <span
           class="col-start-4 col-span-full text-lg font-bold uppercase"
           :class="{ 'text-gray-700': selectedLanguage }"
@@ -80,11 +76,18 @@ onBeforeMount(async () => {
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
-    if (savedConfig?.savedLanguage.flag && savedConfig?.savedLanguage.label) {
+
+    // Handle language settings and routing
+    const { savedLanguage, savedVolume } = savedConfig || {};
+
+    if (savedLanguage?.flag && savedLanguage?.label) {
       router.push("/login");
     } else {
       router.push("/");
     }
+
+    // Handle volume settings
+    langStore.currentVolume = savedVolume?.volume ?? 0.95;
   } catch (error) {
     console.error("Failed to load saved settings:", error);
   }
