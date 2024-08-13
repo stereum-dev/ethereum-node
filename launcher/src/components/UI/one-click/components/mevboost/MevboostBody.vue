@@ -73,7 +73,7 @@ onMounted(() => {
     removeAll();
     installStore.resetMevBoost = false;
   }
-  if (installStore.selectedPreset.name === "lidocsm") {
+  if (/lidocsm|lidossv|lidoobol/.test(installStore.selectedPreset.name)) {
     addAll();
   }
 });

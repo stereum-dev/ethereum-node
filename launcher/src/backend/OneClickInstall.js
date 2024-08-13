@@ -514,7 +514,7 @@ export class OneClickInstall {
         services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
         break;
       case "lidossv":
-        services.push("SSVNetworkService", "SSVDKGService");
+        services.push("SSVNetworkService", "SSVDKGService", "FlashbotsMevBoostService");
         break;
       case "lidocsm":
         services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService");
