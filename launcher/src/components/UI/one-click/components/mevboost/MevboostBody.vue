@@ -73,8 +73,14 @@ onMounted(() => {
     removeAll();
     installStore.resetMevBoost = false;
   }
-  if (installStore.selectedPreset.name === "lidocsm") {
+  if (/lidocsm|lidoobol/.test(installStore.selectedPreset.name)) {
     addAll();
+  }
+  if(installStore.selectedPreset.name === "lidossv") {
+    const flashbots = manageStore.availableBlocks.find((r) => r.name.toLowerCase() === "flashbots");
+    flashbots.isSelected = true;
+    addBlocksToUse();
+    flashbots.isSelected = false;
   }
 });
 
