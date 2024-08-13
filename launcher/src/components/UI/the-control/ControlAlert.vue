@@ -16,8 +16,15 @@
           </div>
         </div>
         <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
-          <div class="cursor-pointer w-8">
-            <img src="/img/icon/node-alert-icons/alert-settings.png" alt="green" />
+          <div class="volBtn cursor-pointer w-8" @click="volToggle">
+            <img
+              :src="
+                volState
+                  ? '/img/icon/node-alert-icons/alert-settings.png'
+                  : '/img/icon/node-alert-icons/alert-settings-mute.png'
+              "
+              alt="green"
+            />
           </div>
         </div>
       </div>
@@ -239,6 +246,7 @@ export default {
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
+      volState: "volState",
     }),
     pointStatus() {
       let port = [];
@@ -300,6 +308,7 @@ export default {
     },
   },
   mounted() {
+    this.checkSettings();
     this.readService();
     this.polling = setInterval(() => {
       this.readService();
@@ -313,6 +322,38 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    async checkSettings() {
+      try {
+        const savedConfig = await ControlService.readConfig();
+
+        if (savedConfig?.savedVolume?.volume !== undefined) {
+          this.volState = savedConfig.savedVolume.volume !== 0;
+          this.currentVolume = savedConfig.savedVolume.volume;
+        } else {
+          this.volState = false;
+          console.warn("Volume configuration is missing or invalid.");
+        }
+      } catch (error) {
+        console.error("Failed to load saved settings:", error);
+      }
+    },
+    async updateSettings(vol) {
+      try {
+        const prevConf = await ControlService.readConfig();
+        const conf = {
+          ...prevConf,
+          savedVolume: { volume: vol },
+        };
+        await ControlService.writeConfig(conf);
+      } catch (error) {
+        console.error("Failed to update settings:", error);
+      }
+    },
+
+    volToggle() {
+      this.volState = !this.volState;
+      this.updateSettings(this.volState ? 0.95 : 0);
+    },
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
         return "/img/icon/service-icons/Other/PrometheusNodeExporter-s.png";
@@ -417,6 +458,9 @@ export default {
 };
 </script>
 <style scoped>
+.volBtn:active {
+  transform: scale(0.9);
+}
 .pointer {
   cursor: pointer;
 }

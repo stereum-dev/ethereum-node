@@ -7,7 +7,10 @@
           class="absolute h-2 rounded-full bg-teal-600"
         ></div>
         <div
-          :style="{ left: (volumePercentage <= 92 ? volumePercentage : 92) + '%' }"
+          :style="{
+            left: (volumePercentage <= 92 ? volumePercentage : 92) + '%',
+            background: langStore.currentVolume === 0 ? '#ff0000' : '#336666',
+          }"
           class="slider-thumb absolute h-4 flex items-center justify-center w-4 rounded-full shadow border border-gray-300 top-0 cursor-pointer"
           @mousedown="startDrag"
         ></div>
@@ -33,8 +36,13 @@ const checkSettings = async () => {
     const savedConfig = await ControlService.readConfig();
 
     if (savedConfig?.savedVolume?.volume) {
-      volumePercentage.value = savedConfig.savedVolume.volume;
+      langStore.currentVolume = savedConfig.savedVolume.volume;
+      volumePercentage.value = savedConfig.savedVolume.volume * 100;
+    } else if (savedConfig?.savedVolume?.volume === 0) {
+      langStore.currentVolume = 0;
+      volumePercentage.value = 0;
     } else {
+      langStore.currentVolume = 0.95;
       volumePercentage.value = 95;
     }
   } catch (error) {
@@ -60,7 +68,7 @@ const updateVolume = async (clientX) => {
   const newVolume = Math.max(0, Math.min(1, (clientX - barRect.left) / barRect.width));
   langStore.currentVolume = newVolume;
   volumePercentage.value = newVolume * 100;
-  await updateSettings(volumePercentage.value);
+  await updateSettings(langStore.currentVolume);
 };
 
 const playSoundEffect = async (base64Data) => {
@@ -115,7 +123,6 @@ onUnmounted(() => {
 
 <style>
 .slider-thumb {
-  background-color: #336666;
   cursor: pointer;
   touch-action: none;
 }
