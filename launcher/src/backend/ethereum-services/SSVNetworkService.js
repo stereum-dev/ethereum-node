@@ -10,7 +10,7 @@ export class SSVNetworkService extends NodeService {
 
   # Number of log files preserved (roughly equivalent to number of days)
   # Increase if you want to preserve log files for longer. This would require more disk space
-  LogFileBackups: 10
+  LogFileBackups: 28
   
   # Debug logs file path
   #LogFilePath: ./data/debug.log
