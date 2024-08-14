@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount } from "vue";
+import { ref, computed, onBeforeMount, onMounted } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -72,6 +72,10 @@ onBeforeMount(async () => {
   }
 });
 
+onMounted(async () => {
+  await checkVolume();
+});
+
 // langStore.settingPageIsVisible ? "/setting" :
 const checkSettings = async () => {
   try {
@@ -88,6 +92,18 @@ const checkSettings = async () => {
 
     // Handle volume settings
     langStore.currentVolume = savedVolume?.volume ?? 0.95;
+    console.log("Volume settings loaded:", langStore.currentVolume);
+  } catch (error) {
+    console.error("Failed to load saved settings:", error);
+  }
+};
+
+const checkVolume = async () => {
+  try {
+    const savedConfig = await ControlService.readConfig();
+    const { savedVolume } = savedConfig || {};
+    langStore.currentVolume = savedVolume?.volume ?? 0.95;
+    console.log("Volume settings loaded:", langStore.currentVolume);
   } catch (error) {
     console.error("Failed to load saved settings:", error);
   }
