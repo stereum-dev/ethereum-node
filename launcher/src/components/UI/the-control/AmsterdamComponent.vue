@@ -136,6 +136,8 @@ export default {
       loadingStrater: false,
       // prometheusIsOff: false,
       consensusClientIsOff: false,
+      changeCounter: 0,
+      networkFlag: false,
     };
   },
   computed: {
@@ -220,6 +222,8 @@ export default {
         return false;
       } else if (this.loadingStrater) {
         return true;
+      } else if (this.networkFlag) {
+        return true;
       }
       return false;
     },
@@ -228,6 +232,12 @@ export default {
   watch: {
     selectedSetup(newVal, oldVal) {
       if (newVal?.network !== oldVal?.network) {
+        // If the network changes to or from "gnosis", set the networkFlag to true
+        if (newVal?.network === "gnosis" || oldVal?.network === "gnosis") {
+          this.networkFlag = true;
+        }
+
+        // Existing logic
         this.currentEpochSlot(this.consensusName);
       }
     },
@@ -258,7 +268,19 @@ export default {
 
           this.proposedBlock.splice(0, this.proposedBlock.length, ...newArray);
         }
+
+        if (this.networkFlag) {
+          this.changeCounter++;
+          if (this.selectedSetup?.network === "gnosis" && this.changeCounter === 4) {
+            this.networkFlag = false;
+            this.changeCounter = 0;
+          } else if (this.selectedSetup?.network !== "gnosis" && this.changeCounter === 2) {
+            this.networkFlag = false;
+            this.changeCounter = 0;
+          }
+        }
       },
+
       deep: true,
       immediate: true,
     },
