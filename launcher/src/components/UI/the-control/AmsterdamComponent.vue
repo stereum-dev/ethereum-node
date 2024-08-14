@@ -36,9 +36,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the current epoch: ${
-                  currentResult?.currentEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`
+                cursorLocation = `the current epoch: ${currentResult?.currentEpoch || 'N/A'} and the slot number is ${
+                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -246,17 +246,11 @@ export default {
     },
     currentResult: {
       handler(newResult) {
-        if (
-          newResult &&
-          newResult.currentEpochStatus &&
-          newResult?.currentEpochStatus[0]
-        ) {
-          const newArray = newResult?.currentEpochStatus[0]
-            .slice(0, this.proposedBlock.length)
-            .map((slot) => ({
-              slotNumber: slot.slotNumber,
-              slotStatus: slot.slotStatus,
-            }));
+        if (newResult && newResult.currentEpochStatus && newResult?.currentEpochStatus[0]) {
+          const newArray = newResult?.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
+            slotNumber: slot.slotNumber,
+            slotStatus: slot.slotStatus,
+          }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -266,6 +260,7 @@ export default {
         }
       },
       deep: true,
+      immediate: true,
     },
   },
 
@@ -309,17 +304,13 @@ export default {
       }
 
       const categories = ["consensus", "execution"];
-      const missingCategories = categories.filter(
-        (category) => !foundCategories.has(category)
-      );
+      const missingCategories = categories.filter((category) => !foundCategories.has(category));
 
       if (!hasPrometheus) {
         missingCategories.push("Prometheus");
       }
 
-      this.installedServicesController = missingCategories
-        .join(", ")
-        .replace(/, (?=[^,]*$)/, " and ");
+      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
     },
 
     refreshTimer() {
