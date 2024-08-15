@@ -26,7 +26,11 @@ issue_templates:
     about: Propose a new service integration. Describe the service, how it integrates, and the value it adds to the project.
     file: "service_integration.yml"
     labels: ["integration"]
-    - name: "🛠️ Refactor"
+  - name: "🛠️ Refactor"
     description: "Propose a refactor to the existing codebase."
     labels: ["refactor"]
     file: "refactor.yml"
+  - name: 🤖 Automated Testing Improvement
+    about: Suggest an enhancement or report an issue related to automated testing.
+    file: "automated_testing.yml"
+    labels: ["enhancement", "automated testing"]

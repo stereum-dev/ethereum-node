@@ -123,6 +123,8 @@ jobs:
               SUB_TASK_NAME="Stereum | Refactor"
             elif [[ "$LABEL_NAME" == "service integration" ]]; then
               SUB_TASK_NAME="Stereum | Integration"
+            elif [[ "$LABEL_NAME" == "automated testing" ]]; then
+              SUB_TASK_NAME="Stereum | Testing"
             else
               SUB_TASK_NAME="Stereum | General"
             fi
