@@ -22,7 +22,7 @@
       </div>
 
       <div class="px-20">
-        <SyncCarousel :item="props.item" />
+        <SyncCarousel :service="props.item" />
       </div>
     </template>
   </custom-modal>
