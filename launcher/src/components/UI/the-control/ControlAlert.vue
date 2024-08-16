@@ -3,11 +3,11 @@
     <div class="alert-box">
       <div class="alert-box_header h-8 w-full flex justify-center items-center">
         <div
-          class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center"
+          class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pt-0.5"
         >
           <div
             v-if="alertShowState === 'showAll' || alertShowState === 'green'"
-            class="icon_alarm cursor-pointer"
+            class="icon_alarm"
             :class="{ active: perfect }"
             @click="alertPicker(perfect ? 'green' : 'showAll')"
           >
@@ -25,7 +25,7 @@
           </div>
           <div
             v-if="alertShowState === 'showAll' || alertShowState === 'red'"
-            class="icon_alarm cursor-pointer"
+            class="icon_alarm"
             :class="{
               active: alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm,
             }"
