@@ -2,16 +2,37 @@
   <div class="status-box flex flex-col justify-between items-center">
     <div class="status-box_header h-[8%] w-full flex">
       <div
-        class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-center items-center"
+        class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pl-2"
       >
         <div class="icon-line">
-          <div class="status-icon" :class="{ active: perfect }">
+          <div
+            v-if="alertShowState === 'showAll' || alertShowState === 'green'"
+            class="status-icon"
+            :class="{ active: perfect }"
+            @click="alertPicker(perfect ? 'green' : 'showAll')"
+          >
             <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
           </div>
-          <div class="status-icon" :class="{ active: warning || pointStatus.length !== 0 }">
+          <div
+            v-if="alertShowState === 'showAll' || alertShowState === 'yellow'"
+            class="status-icon"
+            :class="{ active: warning || pointStatus.length !== 0 }"
+            @click="alertPicker(warning || pointStatus.length !== 0 ? 'yellow' : 'showAll')"
+          >
             <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
           </div>
-          <div class="status-icon" :class="{ active: alarm }">
+          <div
+            v-if="alertShowState === 'showAll' || alertShowState === 'red'"
+            class="status-icon"
+            :class="{
+              active: alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm,
+            }"
+            @click="
+              alertPicker(
+                alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm ? 'red' : 'showAll'
+              )
+            "
+          >
             <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
           </div>
         </div>
@@ -33,7 +54,11 @@
     <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md overflow-x-hidden overflow-y-auto">
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
       <div v-show="!loadingAlerts" class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]">
-        <router-link v-if="storageWarning" to="/control" class="status-message_yellow h-9">
+        <router-link
+          v-if="storageWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
+          to="/control"
+          class="status-message_yellow h-9"
+        >
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
           </div>
@@ -44,7 +69,11 @@
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </router-link>
-        <router-link v-if="cpuWarning" to="/control" class="status-message_yellow h-9">
+        <router-link
+          v-if="cpuWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
+          to="/control"
+          class="status-message_yellow h-9"
+        >
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
           </div>
@@ -57,20 +86,26 @@
             </div>
           </div>
         </router-link>
-        <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow h-9">
-          <div class="message-icon">
-            <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
-          </div>
-          <div class="message-text_container">
-            <div class="main-message">
-              <span>{{ point }}</span>
+        <template v-if="pointStatus && (alertShowState === 'showAll' || alertShowState === 'yellow')">
+          <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow h-9">
+            <div class="message-icon">
+              <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
             </div>
-            <div class="val-message">
-              <span> > {{ $t("nodeAlert.stats") }}</span>
+            <div class="message-text_container">
+              <div class="main-message">
+                <span>{{ point }}</span>
+              </div>
+              <div class="val-message">
+                <span> > {{ $t("nodeAlert.stats") }}</span>
+              </div>
             </div>
-          </div>
-        </router-link>
-        <router-link v-if="cpuAlarm" to="/control" class="status-message_red h-9">
+          </router-link>
+        </template>
+        <router-link
+          v-if="cpuAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
+          to="/control"
+          class="status-message_red h-9"
+        >
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-cpu-red.png" alt="warn_storage" />
           </div>
@@ -85,7 +120,7 @@
         </router-link>
 
         <div
-          v-if="connectionStatusIsPoor"
+          v-if="connectionStatusIsPoor && (alertShowState === 'showAll' || alertShowState === 'red')"
           class="w-full h-10 grid grid-cols-12 rounded-md bg-red-700 p-1 cursor-pointer hover:bg-red-500"
           @click="callReconnectModal"
         >
@@ -99,7 +134,11 @@
           </div>
         </div>
 
-        <router-link v-if="synchronizationErrorControl" to="/control" class="status-message_red h-9">
+        <router-link
+          v-if="synchronizationErrorControl && (alertShowState === 'showAll' || alertShowState === 'red')"
+          to="/control"
+          class="status-message_red h-9"
+        >
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
           </div>
@@ -112,7 +151,11 @@
             </div>
           </div>
         </router-link>
-        <div v-if="errorAlarm" class="status-message_red h-9" @click="isTaskModalActive = true">
+        <div
+          v-if="errorAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
+          class="status-message_red h-9"
+          @click="isTaskModalActive = true"
+        >
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
           </div>
@@ -123,29 +166,34 @@
           </div>
         </div>
 
-        <div
-          v-for="validator in notSetAddresses"
-          :key="validator"
-          class="status-message_red h-9 pointer"
-          @mouseenter="cursorLocation = `${clkFee}`"
-          @mouseleave="cursorLocation = ''"
-          @click="expertHandler(validator.serviceID)"
-        >
-          <div class="message-icon">
-            <img :src="validator.icon" />
-          </div>
-          <div class="message-text_container">
-            <div class="main-message">
-              <span>{{ $t("nodeAlert.noFee") }}</span>
+        <template v-if="notSetAddresses && (alertShowState === 'showAll' || alertShowState === 'red')">
+          <div
+            v-for="validator in notSetAddresses"
+            :key="validator"
+            class="status-message_red h-9 pointer"
+            @mouseenter="cursorLocation = `${clkFee}`"
+            @mouseleave="cursorLocation = ''"
+            @click="expertHandler(validator.serviceID)"
+          >
+            <div class="message-icon">
+              <img :src="validator.icon" />
             </div>
-            <div class="val-message">
-              <span> > {{ validator.name }} vc</span>
+            <div class="message-text_container">
+              <div class="main-message">
+                <span>{{ $t("nodeAlert.noFee") }}</span>
+              </div>
+              <div class="val-message">
+                <span> > {{ validator.name }} vc</span>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
 
         <div
-          v-if="stereumUpdate.current !== stereumUpdate.version"
+          v-if="
+            stereumUpdate.current !== stereumUpdate.version &&
+            (alertShowState === 'showAll' || alertShowState === 'green')
+          "
           class="status-message_green h-9"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
@@ -163,26 +211,28 @@
             </div>
           </div>
         </div>
-        <div
-          v-for="item in updatedNewUpdates"
-          :key="item"
-          class="status-message_green h-9"
-          @mouseenter="cursorLocation = `${clkUpdate}`"
-          @mouseleave="cursorLocation = ''"
-          @click="showUpdate"
-        >
-          <div class="message-icon">
-            <img :src="item.sIcon" alt="warn_storage" />
-          </div>
-          <div class="message-text_container update-items">
-            <div class="main-message">
-              <span class="overflow-hidden truncate text-md">{{ item.name }} UPDATE</span>
+        <template v-if="updatedNewUpdates && (alertShowState === 'showAll' || alertShowState === 'green')">
+          <div
+            v-for="item in updatedNewUpdates"
+            :key="item"
+            class="status-message_green h-9"
+            @mouseenter="cursorLocation = `${clkUpdate}`"
+            @mouseleave="cursorLocation = ''"
+            @click="showUpdate"
+          >
+            <div class="message-icon">
+              <img :src="item.sIcon" alt="warn_storage" />
             </div>
-            <div class="val-message">
-              <span>{{ item.version }}</span>
+            <div class="message-text_container update-items">
+              <div class="main-message">
+                <span class="overflow-hidden truncate text-md">{{ item.name }} UPDATE</span>
+              </div>
+              <div class="val-message">
+                <span>{{ item.version }}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
   </div>
@@ -219,6 +269,7 @@ export default {
       clkUpdate: this.$t("nodeAlert.clkUpdate"),
       loadingAlerts: false,
       skeletons: [1, 2, 3, 4, 5, 6, 7, 8],
+      alertShowState: "showAll",
     };
   },
   computed: {
@@ -337,6 +388,13 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    alertPicker(color) {
+      if (this.alertShowState === color) {
+        this.alertShowState = "showAll";
+      } else {
+        this.alertShowState = color;
+      }
+    },
     async checkSettings() {
       try {
         const savedConfig = await ControlService.readConfig();
@@ -592,7 +650,7 @@ export default {
 
 .icon-line {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   padding-top: 4px;
   width: 100%;
   height: 30px;
@@ -606,9 +664,14 @@ export default {
   align-items: center;
   opacity: 25%;
   border-radius: 5px;
+  margin-right: 5px;
 }
 .active {
   opacity: 100%;
+  cursor: pointer;
+}
+.active:hover {
+  transform: scale(1.1);
 }
 
 .status-icon img {

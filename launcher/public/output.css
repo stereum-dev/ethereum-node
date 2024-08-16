@@ -4380,6 +4380,26 @@ video {
   padding-top: 2rem;
 }
 
+.pt-\[0\.20rel\]{
+  padding-top: 0.20rel;
+}
+
+.pt-\[0\.20rem\]{
+  padding-top: 0.20rem;
+}
+
+.pt-\[0\.10rem\]{
+  padding-top: 0.10rem;
+}
+
+.pt-\[0\.05rem\]{
+  padding-top: 0.05rem;
+}
+
+.pt-0\.5{
+  padding-top: 0.125rem;
+}
+
 .text-left{
   text-align: left;
 }
