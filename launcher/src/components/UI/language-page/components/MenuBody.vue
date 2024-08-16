@@ -91,7 +91,7 @@ const checkSettings = async () => {
     }
 
     // Handle volume settings
-    langStore.currentVolume = savedVolume?.volume ?? 0.95;
+    langStore.currentVolume = savedVolume?.volume ?? 0;
   } catch (error) {
     console.error("Failed to load saved settings:", error);
   }
@@ -101,7 +101,7 @@ const checkVolume = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
     const { savedVolume } = savedConfig || {};
-    langStore.currentVolume = savedVolume?.volume ?? 0.95;
+    langStore.currentVolume = savedVolume?.volume ?? 0;
   } catch (error) {
     console.error("Failed to load saved settings:", error);
   }
