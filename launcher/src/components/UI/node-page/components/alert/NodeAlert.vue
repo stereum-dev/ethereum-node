@@ -2,7 +2,7 @@
   <div class="status-box flex flex-col justify-between items-center">
     <div class="status-box_header h-[8%] w-full flex">
       <div
-        class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-center items-center"
+        class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pl-2"
       >
         <div class="icon-line">
           <div
@@ -650,7 +650,7 @@ export default {
 
 .icon-line {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   padding-top: 4px;
   width: 100%;
   height: 30px;
@@ -664,6 +664,7 @@ export default {
   align-items: center;
   opacity: 25%;
   border-radius: 5px;
+  margin-right: 5px;
 }
 .active {
   opacity: 100%;
