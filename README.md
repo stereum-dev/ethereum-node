@@ -1,20 +1,18 @@
 ![Stereum Ethereum Node Setup & Manager](https://github.com/stereum-dev/ethereum-node/assets/82385103/f2e797cd-ef2c-4ebe-9ec1-6b3a495f0677)
 
-
 ---
 
-[![IE](https://img.shields.io/badge/Website-0076D6?style=for-the-badge&logo=Internet%20Explorer&logoColor=white)](https://stereum.net) [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/8Znj8K6GjN)
+[![IE](https://img.shields.io/badge/Website-0076D6?style=for-the-badge&logo=Internet%20Explorer&logoColor=white)](https://www.stereum.com/?utm_source=github&utm_medium=website-repo&utm_id=0) [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/8Znj8K6GjN)
 [![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://twitter.com/stereumdev)
 [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/channel/UCq_LYa0idkQcSnxBUmiJm3Q)
 [![Gmail](https://img.shields.io/badge/EMail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:stereum@stereum.net) [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/nz/app/stereum-node-monitor/id1605910573) [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=cloud.stereum.monitor&hl=en_US&gl=US&pli=1)
 [![proudhands Contribution Banner](https://github.com/stereum-dev/ethereum-node/assets/82385103/0d7cbc47-3b20-4dbe-ac9f-33a041cddf23)](https://www.instagram.com/proud_hands/) [![GitPOAP Badge](https://public-api.gitpoap.io/v1/repo/stereum-dev/ethereum-node/badge)](https://www.gitpoap.io/gh/stereum-dev/ethereum-node)
 
-
 ---
 
-### 🍄 Stereum - Ethereum Node Setup & Manager 
-#### Become a Node Runner 
+### 🍄 Stereum - Ethereum Node Setup & Manager
 
+#### Become a Node Runner
 
 This repository contains the code and scripts for Stereum 2.0
 
@@ -23,7 +21,6 @@ This repository contains the code and scripts for Stereum 2.0
 🍄 Stereum aims to offer the most flexible approach to leveraging your Ethereum node for various purposes—whether for staking, data science, development, or any personal use case you envision. We hope to explore every Node Runners dream with you!
 
 🍄 With Stereum, you can actively participate in the Ethereum network and engage with its diverse protocols such as the Lido SDVTM, SSV Network, MEV Boost, and more. Dive into the ecosystem and start benefiting from the decentralized technologies that Stereum facilitates.
-
 
 ## Get Started
 
@@ -36,8 +33,6 @@ Want to get involved? Create a pull request and we'll have a look at it!
 - [Contribution Guidelines](launcher/CONTRIBUTING.md)
 
 Not sure how to help or where to start? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email at [stereum@stereum.net](mailto:stereum@stereum.net).
-
-
 
 ### Tech Stack
 
@@ -59,8 +54,3 @@ For development automated tests running for each commit.
 #### Build
 
 - [![Build: Release](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml/badge.svg)](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml) Building Stereum Launcher
-
-
-
-
-  
