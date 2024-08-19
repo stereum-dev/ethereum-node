@@ -16,13 +16,21 @@ contact_links:
 issue_templates:
   - name: 🪳 Bug Report
     about: Report a bug to help us improve. Describe the issue in detail, including steps to reproduce if possible.
-    template: bug_report.md
+    file: "bug_report.yml"
     labels: ["bug"]
   - name: 🍄 Enhancement Request
     about: Suggest a new feature or improvement. Describe the enhancement and its potential benefits.
-    template: enhancement_request.md
+    file: "enhancement_request.yml"
     labels: ["enhancement"]
   - name: 🔌 Service Integration
     about: Propose a new service integration. Describe the service, how it integrates, and the value it adds to the project.
-    template: service_integration.md
+    file: "service_integration.yml"
     labels: ["integration"]
+  - name: "🛠️ Refactor"
+    description: "Propose a refactor to the existing codebase."
+    labels: ["refactor"]
+    file: "refactor.yml"
+  - name: 🤖 Automated Testing Improvement
+    about: Suggest an enhancement or report an issue related to automated testing.
+    file: "automated_testing.yml"
+    labels: ["enhancement", "automated testing"]
