@@ -14,7 +14,7 @@
       <div class="w-full h-full col-start-3 col-end-10 row-start-1 row-span-1 flex justify-start items-center ml-2">
         <span class="text-lg font-semibold text-gray-400 uppercase">{{ t("updateServer.ubuntu") }}</span>
       </div>
-      <!-- <div class="w-full h-full col-start-10 col-span-full row-start-1 row-span-1 flex justify-center items-center">
+      <div class="w-full h-full col-start-10 col-span-full row-start-1 row-span-1 flex justify-center items-center">
         <div
           v-if="serverStore.isMajorUpgradeButtonActive"
           class="w-full h-full bg-[#336666] rounded-sm max-h-6 shadow-md shadow-black hover:bg-teal-700 active:shadow-none hover:scale-105 transition-all duration-100 ease-in-out cursor-pointer active:scale-100 flex justify-center items-center text-xs font-normal font-sans text-gray-200 uppercase p-1"
@@ -22,7 +22,7 @@
         >
           24.04 Update
         </div>
-      </div> -->
+      </div>
 
       <div class="w-full h-full col-start-3 col-span-full row-start-2 row-span-1 ml-2 grid grid-cols-3 items-center">
         <span class="col-start-1 col-end-3 text-sm font-semibold text-gray-400 uppercase">{{
@@ -139,13 +139,13 @@ onMounted(async () => {
 
 //Methods
 
-/*const runUpdateToNoble = async () => {
+const runUpdateToNoble = async () => {
   serverStore.isMajorUpgradeActive = true;
   await ControlService.upgradeToNoble();
   setTimeout(() => {
     serverStore.isMajorUpgradeButtonActive = false;
   }, 3000);
-};*/
+};
 
 const getSettings = async () => {
   const settings = await ControlService.getStereumSettings();

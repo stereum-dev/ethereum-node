@@ -17,12 +17,41 @@ export class NodeUpdates {
     try {
       log.info("Preparing for Upgrade to noble numbat ...");
       await this.nodeConnection.runPlaybook("upgrade-prep", { stereum_role: "upgrade-prep" });
+
       log.info("Starting Upgrade to noble numbat ...");
       const result = await this.nodeConnection.sshService.exec(
-        "do-release-upgrade -f DistUpgradeViewNonInteractive --allow-third-party && touch /var/run/reboot-required"
+        "do-release-upgrade -f DistUpgradeViewNonInteractive --allow-third-party && reboot"
       );
-      await this.nodeConnection.restartServer();
-      if (SSHService.checkExecError(result)) throw SSHService.extractExecError(result);
+
+      if (SSHService.checkExecError(result)) {
+        log.error("Error during upgrade process:", SSHService.extractExecError(result));
+        log.error("Standard output:", result.stdout);
+        log.error("Standard error:", result.stderr);
+        throw SSHService.extractExecError(result);
+      }
+
+      // Wait for server to reboot and reconnect
+      const maxWaitTime = 900000; // 15 minutes in milliseconds
+      const retryInterval = 5000; // 5 seconds in milliseconds
+      const startTime = Date.now();
+
+      log.info("Waiting for server to restart and reconnect...");
+
+      while (Date.now() - startTime < maxWaitTime) {
+        try {
+          await this.nodeConnection.restartServer();
+          log.info("Server reconnected successfully.");
+          break;
+        } catch (err) {
+          log.warn("Reconnection attempt failed. Retrying in 5 seconds...");
+          await new Promise((resolve) => setTimeout(resolve, retryInterval));
+        }
+      }
+
+      if (Date.now() - startTime >= maxWaitTime) {
+        throw new Error("Failed to reconnect to the server within 15 minutes.");
+      }
+
       log.info("Switching third party repos to noble numbat ...");
       await this.nodeConnection.runPlaybook("switch-repos", { stereum_role: "switch-repos" });
     } catch (err) {
@@ -185,7 +214,7 @@ export class NodeUpdates {
    * @returns {number} - playbook runtime
    */
   async updatePackage(packages) {
-    let packagesListString = packages.join(',');
+    let packagesListString = packages.join(",");
     let extraVars = {
       stereum_role: "update-package",
       packages_list: packagesListString,
