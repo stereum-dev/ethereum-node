@@ -1,0 +1,50 @@
+---
+- name: Wait for 5 seconds
+  pause:
+    seconds: 5
+- name: Run the go-ethereum execution client
+  docker_container:
+    name: geth
+    image: ethereum/client-go:latest
+    networks:
+      - name: "DevNet"
+    command:
+      - --http
+      - --http.api=eth,net,web3
+      - --http.port=8545
+      - --http.addr=0.0.0.0
+      - --http.corsdomain=*
+      - --ws
+      - --ws.api=eth,net,web3
+      - --ws.port=8546
+      - --ws.addr=0.0.0.0
+
+      - --ws.origins=*
+      - --authrpc.port=8551
+      - --authrpc.vhosts=*
+      - --authrpc.addr=0.0.0.0
+      - --authrpc.jwtsecret=execution/jwtsecret
+      - --datadir=execution
+
+      # ------------------------------------------------------
+      # - --allow-insecure-unlock
+      # - --unlock=0x123463a4b065722e99115d6c222f267d9cabb524 // doesnt need!!!!!!!!!!!!
+      # - --password=execution/geth_password.txt
+      # ------------------------------------------------------
+
+      - --nodiscover
+      - --syncmode=full
+
+        # "--metrics",
+        # "--metrics.expensive",
+        # "--metrics.port=6060",
+        # "--metrics.addr=0.0.0.0",
+    ports:
+      - "8551:8551"
+      - "8545:8545"
+      - "8546:8546"
+    volumes:
+      - "{{working_dir}}/execution:/execution"
+      - "{{working_dir}}/execution/jwtsecret:/execution/jwtsecret"
+      - "{{working_dir}}/execution/geth_password.txt:/execution/geth_password.txt"
+    restart_policy: always

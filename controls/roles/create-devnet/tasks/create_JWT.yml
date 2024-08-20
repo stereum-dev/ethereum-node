@@ -1,0 +1,19 @@
+---
+- name: Check if JWT secret file already exists
+  stat:
+    path: "{{ working_dir }}/execution/jwtsecret"
+  register: jwtsecret_file
+- name: Delete existing JWT secret file if it exists
+  when: jwtsecret_file.stat.exists
+  file:
+    path: "{{ working_dir }}/execution/jwtsecret"
+    state: absent
+- name: Run Python script and capture output
+  command: python3 {{ role_path }}/files/createJWT.py
+  register: script_output
+  changed_when: false
+- name: Save output to a file
+  copy:
+    content: "{{ script_output.stdout }}"
+    dest: "{{ working_dir }}/execution/jwtsecret"
+    mode: "0640"

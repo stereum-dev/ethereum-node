@@ -1,0 +1,18 @@
+---
+- name: Run Prysm validator container
+  docker_container:
+    name: validator
+    image: prysmaticlabs/prysm-validator
+    networks:
+      - name: "DevNet"
+    command:
+      - --beacon-rpc-provider=prysm-beacon-chain:4000
+      - --datadir=/consensus/validatordata
+      - --accept-terms-of-use
+      - --interop-num-validators=64
+      - --interop-start-index=0
+      - --chain-config-file=/consensus/config.yml
+      - --force-clear-db
+    volumes:
+      - "{{ working_dir }}/consensus:/consensus"
+    restart_policy: always

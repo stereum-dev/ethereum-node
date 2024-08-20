@@ -1,0 +1,31 @@
+---
+- name: Ensure consensus directory exists
+  ansible.builtin.file:
+    path: "{{ working_dir }}/consensus"
+    state: directory
+    mode: "0777"
+  register: consensus_dir_created
+- name: Copy config.yml to working_dir/consensus
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/config.yml"
+    dest: "{{ working_dir }}/consensus/config.yml"
+    mode: "0777"
+  tags: copy_files
+- name: Ensure execution directory exists
+  ansible.builtin.file:
+    path: "{{ working_dir }}/execution"
+    state: directory
+    mode: "0777"
+  register: execution_dir_created
+- name: Copy genesis.json to working_dir/execution
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/genesis.json"
+    dest: "{{ working_dir }}/execution/genesis.json"
+    mode: "0777"
+  tags: copy_files
+- name: Copy secret.json to working_dir/execution
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/secret.json"
+    dest: "{{ working_dir }}/execution/sk.json"
+    mode: "0777"
+  tags: copy_files

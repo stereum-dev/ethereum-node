@@ -1,0 +1,4 @@
+---
+- name: Remove Geth directory
+  command: "rm -rf {{ working_dir }}/execution/geth"
+  become: true

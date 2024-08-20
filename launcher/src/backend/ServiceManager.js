@@ -2417,4 +2417,10 @@ export class ServiceManager {
       console.error("Failed to fetch GitHub testers:", error);
     }
   }
+
+  async createDevnet() {
+    this.nodeConnection.runPlaybook("Create Devnet", {
+      stereum_role: "create-devnet",
+    });
+  }
 }
