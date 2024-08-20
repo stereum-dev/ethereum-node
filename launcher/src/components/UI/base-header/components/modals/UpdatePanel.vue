@@ -366,11 +366,11 @@ const searchOsUpdates = async () => {
 
 const getUpdatablePackagesCount = async () => {
   try {
-    const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
-    const numPackages = Number(packagesCount);
-    numberOfUpdatablePackages.value = isNaN(numPackages) || !numPackages ? 0 : numPackages;
+    const packages = await ControlService.getUpgradeablePackages();
+    numberOfUpdatablePackages.value = packages ? packages.length : 0;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to fetch upgradable packages:", error);
+    numberOfUpdatablePackages.value = 0;
   }
 };
 
