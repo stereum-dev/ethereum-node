@@ -307,4 +307,33 @@ scrape_configs:
 {% endfor %}
         ]
 
+# LCOMService
+  - job_name: csm_fast_metrics
+    scrape_interval: 10s
+    metrics_path: /metrics/fast
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "LCOMService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8000"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+        
+  - job_name: csm_slow_metrics
+    scrape_interval: 1m
+    metrics_path: /metrics/slow
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "LCOMService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8000"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
 # EOF
