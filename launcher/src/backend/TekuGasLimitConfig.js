@@ -25,8 +25,13 @@ export class TekuGasLimitConfig{
     let result = await this.nodeConnection.sshService.exec(`test -f ${configPath}/gas_config.json`)
     if(result.rc == 0){
       let gasLimit = await this.nodeConnection.sshService.exec(`cat ${configPath}/gas_config.json`)
-      gasLimit = gasLimit.stdout.match(/^.*gas_limit.*$/gm)[0].split(':')[1];
-      return gasLimit;
+      if(gasLimit.includes("gas_limit")){
+        gasLimit = gasLimit.stdout.match(/^.*gas_limit.*$/gm)[0].split(':')[1];
+        return gasLimit;
+      }
+      else{
+        return "";
+      }
     }
     else{
       return "";
