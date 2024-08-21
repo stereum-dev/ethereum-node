@@ -301,6 +301,23 @@ export class OneClickInstall {
       );
     }
 
+    if (constellation.includes("KuboIPFSService")) {
+      //KuboIPFSService
+      this.extraServices.push(this.serviceManager.getService("KuboIPFSService", args));
+    }
+
+    if (constellation.includes("LCOMService")) {
+      //LCOMService
+      this.extraServices.push(
+        this.serviceManager.getService("LCOMService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+          otherServices: this.extraServices.filter((s) => s.service === "KuboIPFSService"),
+        })
+      );
+    }
+
     if (constellation.includes("SSVDKGService")) {
       let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
         ...args,
@@ -360,9 +377,8 @@ export class OneClickInstall {
           this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--prune"));
           break;
         case "BesuService":
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))
-          ] = "--sync-mode=FULL";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))] =
+            "--sync-mode=FULL";
           break;
         case "NethermindService":
           this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
@@ -517,7 +533,13 @@ export class OneClickInstall {
         services.push("SSVNetworkService", "SSVDKGService", "FlashbotsMevBoostService");
         break;
       case "lidocsm":
-        services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService");
+        services.push(
+          "FlashbotsMevBoostService",
+          "KeysAPIService",
+          "ValidatorEjectorService",
+          "KuboIPFSService",
+          "LCOMService"
+        );
     }
     return services;
   }
