@@ -4,8 +4,17 @@ export class TekuGasLimitConfig{
   }
 
   async createGasConfigFile(gasLimit, feeRecipient, configPath){
-    await this.nodeConnection.sshService.exec(`cat > ${configPath}/gas_config.json`);
-    await this.nodeConnection.sshService.exec(`echo '{\n\t"default_config":\n\t{\n\t\t"fee_recipient":"${feeRecipient}",\n\t\t"builder":\n\t\t{\n\t\t\t"enabled":true,\n\t\t\t"gas_limit":"${gasLimit}"\n\t\t}\n\t}\n}' > ${configPath}/gas_config.json`);
+    const configContent =
+    `{
+      "default_config": {
+        "fee_recipient": "${feeRecipient}",
+        "builder": {
+          "enabled": true,
+          "gas_limit": "${gasLimit}"
+        }
+      }
+    }`;
+    await this.nodeConnection.sshService.exec(`echo '${configContent}' > ${configPath}/gas_config.json`);
   }
 
   async removeGasConfigFile(configPath){
@@ -18,6 +27,9 @@ export class TekuGasLimitConfig{
       let gasLimit = await this.nodeConnection.sshService.exec(`cat ${configPath}/gas_config.json`)
       gasLimit = gasLimit.stdout.match(/^.*gas_limit.*$/gm)[0].split(':')[1];
       return gasLimit;
+    }
+    else{
+      return "";
     }
   }
 }
