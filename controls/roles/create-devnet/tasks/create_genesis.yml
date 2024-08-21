@@ -14,5 +14,6 @@
       - --geth-genesis-json-in=/execution/genesis.json
       - --geth-genesis-json-out=/execution/genesis.json
     volumes:
-      - "{{ working_dir }}/consensus:/consensus"
-      - "{{ working_dir }}/execution:/execution"
+      - "{{ working_dir }}/{{ devnet_services.CL }}:/consensus"
+      - "{{ working_dir }}/{{ devnet_services.EL }}:/execution"
+#EOF

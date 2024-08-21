@@ -1,8 +1,8 @@
 ---
 - name: Create directories and copy files
   include_tasks: create_directories_copy_files.yml
-# - name: Include task create_genesis
-#   include_tasks: create_genesis.yml
+- name: Include task create_genesis
+  include_tasks: create_genesis.yml
 # - name: Remove any pre-existing Geth database folder if present
 #   include_tasks: geth_remove_db.yml
 # - name: Create a random JWT and safe it

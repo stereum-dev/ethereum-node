@@ -1,31 +1,26 @@
 ---
-- name: Ensure consensus directory exists
+- name: Ensure consensus and execution directories exist
   ansible.builtin.file:
-    path: "{{ working_dir }}/consensus"
+    path: "{{ working_dir }}/{{ item }}"
     state: directory
     mode: "0777"
-  register: consensus_dir_created
-- name: Copy config.yml to working_dir/consensus
+  loop:
+    - "{{ devnet_services.CL }}"
+    - "{{ devnet_services.EL }}"
+
+- name: Copy config.yml and genesis.json to respective directories
   ansible.builtin.copy:
-    src: "{{ role_path }}/files/config.yml"
-    dest: "{{ working_dir }}/consensus/config.yml"
+    src: "{{ item.src }}"
+    dest: "{{ working_dir }}/{{ item.dest }}"
     mode: "0777"
+  loop:
+    - {
+        src: "{{ role_path }}/files/config.yml",
+        dest: "{{ devnet_services.CL }}/config.yml",
+      }
+    - {
+        src: "{{ role_path }}/files/genesis.json",
+        dest: "{{ devnet_services.EL }}/genesis.json",
+      }
   tags: copy_files
-- name: Ensure execution directory exists
-  ansible.builtin.file:
-    path: "{{ working_dir }}/execution"
-    state: directory
-    mode: "0777"
-  register: execution_dir_created
-- name: Copy genesis.json to working_dir/execution
-  ansible.builtin.copy:
-    src: "{{ role_path }}/files/genesis.json"
-    dest: "{{ working_dir }}/execution/genesis.json"
-    mode: "0777"
-  tags: copy_files
-- name: Copy secret.json to working_dir/execution
-  ansible.builtin.copy:
-    src: "{{ role_path }}/files/secret.json"
-    dest: "{{ working_dir }}/execution/sk.json"
-    mode: "0777"
-  tags: copy_files
+# EOF
