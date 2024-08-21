@@ -1253,7 +1253,7 @@ export class ServiceManager {
           .join("/");
         await this.nodeConnection.sshService.exec(
           `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
+          (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
@@ -1726,13 +1726,13 @@ export class ServiceManager {
     } else if (service.service === "PrysmBeaconService") {
       let index = command.findIndex((c) => /--(mainnet|prater|goerli|sepolia|holesky)/.test(c));
       command[index] = "--" + newNetwork;
-      if (newNetwork === "mainnet" && command.includes("--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz")) {
-        command.splice(command.indexOf("--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz"), 1);
+      if (newNetwork === "mainnet" && command.some(c => c.includes("--genesis-state"))) {
+        command.splice(command.indexOf(command.find(c => c.includes("--genesis-state"))), 1);
       } else if (
         !newNetwork === "mainnet" &&
-        !command.includes("--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz")
+        !command.some(c => c.includes("--genesis-state"))
       ) {
-        command.push("--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz");
+        command.push(`--genesis-state=/opt/app/genesis/prysm-${newNetwork}-genesis.ssz`);
       }
     } else {
       command = command.map((c) => {
@@ -2194,7 +2194,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -2203,7 +2203,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -2212,7 +2212,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -2230,7 +2230,7 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
           metricsExporterCommands[firstConsensusClient.service] +
-            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
         await this.manageServiceState(firstConsensusClient.id, "started");
