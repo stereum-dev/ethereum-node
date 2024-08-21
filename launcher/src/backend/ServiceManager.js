@@ -33,6 +33,9 @@ import { ExternalExecutionService } from "./ethereum-services/ExternalExecutionS
 import { CustomService } from "./ethereum-services/CustomService";
 import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import { ConfigManager } from "./ConfigManager";
+import { LCOMService } from "./ethereum-services/LCOMService";
+import { KuboIPFSService } from "./ethereum-services/KuboIPFSService";
+
 import YAML from "yaml";
 // import { file } from "jszip";
 // import { config } from "process";
@@ -172,6 +175,10 @@ export class ServiceManager {
               services.push(CustomService.buildByConfiguration(config));
             } else if (config.service == "LidoObolExitService") {
               services.push(LidoObolExitService.buildByConfiguration(config));
+            } else if (config.service == "LCOMService") {
+              services.push(LCOMService.buildByConfiguration(config));
+            } else if (config.service == "KuboIPFSService") {
+              services.push(KuboIPFSService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -1120,6 +1127,25 @@ export class ServiceManager {
           args.consensusClients, // TOOD: remove later!
           args.otherServices
         );
+
+      case "LCOMService":
+        ports = [new ServicePort("127.0.0.1", 8000, 8000, servicePortProtocol.tcp)];
+        return LCOMService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/lcoms",
+          args.consensusClients,
+          args.executionClients,
+          args.otherServices
+        );
+
+      case "KuboIPFSService":
+        ports = [
+          new ServicePort(null, 4001, 4001, servicePortProtocol.tcp),
+          new ServicePort(null, 4001, 4001, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", 8080, 8080, servicePortProtocol.tcp),
+        ];
+        return KuboIPFSService.buildByUserInput(args.network, ports, args.installDir + "/ipfs");
     }
   }
 
@@ -1253,7 +1279,7 @@ export class ServiceManager {
           .join("/");
         await this.nodeConnection.sshService.exec(
           `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-          (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
+            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
         );
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
@@ -1726,12 +1752,9 @@ export class ServiceManager {
     } else if (service.service === "PrysmBeaconService") {
       let index = command.findIndex((c) => /--(mainnet|prater|goerli|sepolia|holesky)/.test(c));
       command[index] = "--" + newNetwork;
-      if (newNetwork === "mainnet" && command.some(c => c.includes("--genesis-state"))) {
-        command.splice(command.indexOf(command.find(c => c.includes("--genesis-state"))), 1);
-      } else if (
-        !newNetwork === "mainnet" &&
-        !command.some(c => c.includes("--genesis-state"))
-      ) {
+      if (newNetwork === "mainnet" && command.some((c) => c.includes("--genesis-state"))) {
+        command.splice(command.indexOf(command.find((c) => c.includes("--genesis-state"))), 1);
+      } else if (!newNetwork === "mainnet" && !command.some((c) => c.includes("--genesis-state"))) {
         command.push(`--genesis-state=/opt/app/genesis/prysm-${newNetwork}-genesis.ssz`);
       }
     } else {
@@ -2194,7 +2217,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -2203,7 +2226,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -2212,7 +2235,7 @@ export class ServiceManager {
         await this.manageServiceState(selectedValidator.id, "stopped");
         selectedValidator.command.push(
           metricsExporterCommands[selectedValidator.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(selectedValidator.buildConfiguration());
         await this.manageServiceState(selectedValidator.id, "started");
@@ -2230,7 +2253,7 @@ export class ServiceManager {
         await this.manageServiceState(firstConsensusClient.id, "stopped");
         firstConsensusClient.command.push(
           metricsExporterCommands[firstConsensusClient.service] +
-          `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
+            `https://beaconcha.in/api/v1/client/metrics?apikey=${data.apiKey}&machine=${data.machineName}`
         );
         await this.nodeConnection.writeServiceConfiguration(firstConsensusClient.buildConfiguration());
         await this.manageServiceState(firstConsensusClient.id, "started");
