@@ -39,13 +39,16 @@ const slides = computed(() => {
     return true;
   });
 
-  const mevBoostIndex = filteredServices.findIndex((service) => service.service === "FlashbotsMevBoostService");
+  const uniqueServices = ["FlashbotsMevBoostService", "SSVNetworkService", "CharonService"];
 
-  if (mevBoostIndex !== -1) {
-    filteredServices = filteredServices.filter(
-      (service, index) => service.service !== "FlashbotsMevBoostService" || index === mevBoostIndex
-    );
-  }
+  uniqueServices.forEach((uniqueService) => {
+    const serviceIndex = filteredServices.findIndex((service) => service.service === uniqueService);
+    if (serviceIndex !== -1) {
+      filteredServices = filteredServices.filter(
+        (service, index) => service.service !== uniqueService || index === serviceIndex
+      );
+    }
+  });
 
   return filteredServices;
 });
