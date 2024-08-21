@@ -60,7 +60,7 @@ test("prysm validator import", async () => {
   //install geth
   let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
 
-  let prysmBC = serviceManager.getService("PrysmBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
+  let prysmBC = serviceManager.getService("PrysmBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth], checkpointURL: "https://checkpoint-sync.holesky.ethpandaops.io/" })
 
   let prysmVC = serviceManager.getService("PrysmValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [prysmBC] })
 
