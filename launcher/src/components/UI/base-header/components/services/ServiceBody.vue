@@ -7,11 +7,46 @@
 <script setup>
 import ServiceCarousel from "./ServiceCarousel.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useSetups } from "@/store/setups";
 import { computed } from "vue";
 
 const headerStore = useNodeHeader();
+const setupsStore = useSetups();
 
 const slides = computed(() => {
-  return JSON.parse(JSON.stringify(headerStore.runningServices));
+  const services = headerStore.runningServices;
+  const selectedSetup = setupsStore.selectedSetup;
+
+  if (!selectedSetup) {
+    return services.filter(
+      (service) =>
+        service.service !== "FlashbotsMevBoostService" &&
+        service.service !== "SSVNetworkService" &&
+        service.service !== "CharonService"
+    );
+  }
+
+  const mevBoostInSetup = selectedSetup.services.some((service) => service.service === "FlashbotsMevBoostService");
+
+  const ssvInSetup = selectedSetup.services.some((service) => service.service === "SSVNetworkService");
+
+  const obolInSetup = selectedSetup.services.some((service) => service.service === "CharonService");
+
+  let filteredServices = services.filter((service) => {
+    if (!mevBoostInSetup && service.service === "FlashbotsMevBoostService") return false;
+    if (!ssvInSetup && service.service === "SSVNetworkService") return false;
+    if (!obolInSetup && service.service === "CharonService") return false;
+    return true;
+  });
+
+  const mevBoostIndex = filteredServices.findIndex((service) => service.service === "FlashbotsMevBoostService");
+
+  if (mevBoostIndex !== -1) {
+    filteredServices = filteredServices.filter(
+      (service, index) => service.service !== "FlashbotsMevBoostService" || index === mevBoostIndex
+    );
+  }
+
+  return filteredServices;
 });
 </script>
