@@ -20,11 +20,6 @@ export class PrysmBeaconService extends NodeService {
       new ServiceVolume(workingDir + "/genesis", genesisDir),
     ];
 
-    let genesisFile = ` --genesis-state=/opt/app/genesis/prysm-${network}-genesis.ssz`;
-    if (network === "mainnet") {
-      genesisFile = "";
-    }
-
     //execution endpoint
     const executionEndpoint = executionClients
       .map((client) => {
@@ -43,28 +38,28 @@ export class PrysmBeaconService extends NodeService {
       })
       .join();
 
-    let builderCommand = mevboostEndpoint ? " --http-mev-relay=" + mevboostEndpoint : "";
-    let checkpointCommand = checkpointURL ? " --checkpoint-sync-url=" + checkpointURL : "";
-
     service.init(
       "PrysmBeaconService", //service
       service.id, //id
       1, // configVersion
       image, //image
-      "v3.1.1", //imageVersion
-      "/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=" +
-      dataDir +
-      ' --p2p-host-dns="" --' +
-      network +
-      " --block-batch-limit=512" +
-      genesisFile +
-      " --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint=" +
-      executionEndpoint +
-      " --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=" +
-      JWTDir +
-      checkpointCommand +
-      builderCommand, //command
-      null, //entrypoint
+      "v5.1.0", //imageVersion
+      [
+        "--accept-terms-of-use=true",
+        `--${network}`,
+        `--datadir=${dataDir}`,
+        `--block-batch-limit=512`,
+        "--rpc-host=0.0.0.0",
+        "--grpc-gateway-host=0.0.0.0",
+        "--p2p-max-peers=100",
+        `--execution-endpoint=${executionEndpoint}`,
+        `--jwt-secret=${JWTDir}`,
+        "--monitoring-host=0.0.0.0",
+        "--monitoring-port=8080",
+        "--p2p-tcp-port=13001",
+        "--p2p-udp-port=12001",
+      ], //command
+      ['/app/cmd/beacon-chain/beacon-chain'], //entrypoint
       null, //env
       ports, //ports
       volumes, //volumes
@@ -74,6 +69,19 @@ export class PrysmBeaconService extends NodeService {
       null, //consensusClients
       mevboost //mevboost
     );
+
+    if (network == "holesky" || network == "sepolia") {
+      service.command.push(`--genesis-state=/opt/app/genesis/prysm-${network}-genesis.ssz`)
+    }
+
+    if (checkpointURL) {
+      service.command.push(`--checkpoint-sync-url=${checkpointURL}`)
+    }
+
+    if (mevboostEndpoint) {
+      service.command.push(`--http-mev-relay=${mevboostEndpoint}`)
+    }
+
     return service;
   }
 

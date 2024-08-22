@@ -404,7 +404,11 @@ export class OneClickInstall {
           this.beaconService.command.push("--history=archive");
           break;
         case "PrysmBeaconService":
-          this.beaconService.command += " --slots-per-archive-point=32";
+          if (Array.isArray(this.beaconService.command)) {
+            this.beaconService.command.push("--slots-per-archive-point=32");
+          } else {
+            this.beaconService.command += " --slots-per-archive-point=32";
+          }
           break;
         case "TekuBeaconService":
           this.beaconService.command[this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))] =
