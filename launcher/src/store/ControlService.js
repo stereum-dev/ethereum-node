@@ -675,6 +675,10 @@ class ControlService extends EventEmitter {
   async readGasConfigFile(args) {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
+
+  async createDevnet() {
+    return this.promiseIpc.send("createDevnet");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

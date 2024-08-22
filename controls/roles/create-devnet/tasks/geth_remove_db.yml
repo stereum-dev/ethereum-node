@@ -1,4 +1,7 @@
 ---
-- name: Remove Geth directory
-  command: "rm -rf {{ working_dir }}/execution/geth"
+- name: Ensure Geth directory is removed
+  ansible.builtin.file:
+    path: "{{ working_dir }}/execution/geth"
+    state: absent
   become: true
+#EOF

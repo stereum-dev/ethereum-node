@@ -2,7 +2,7 @@
 - name: Create beacon chain genesis
   docker_container:
     name: create-beacon-chain-genesis
-    image: gcr.io/prysmaticlabs/prysm/cmd/prysmctl
+    image: gcr.io/prysmaticlabs/prysm/cmd/prysmctl:v5.0.4
     command:
       - testnet
       - generate-genesis
@@ -16,4 +16,5 @@
     volumes:
       - "{{ working_dir }}/{{ devnet_services.CL }}:/consensus"
       - "{{ working_dir }}/{{ devnet_services.EL }}:/execution"
+    auto_remove: true
 #EOF

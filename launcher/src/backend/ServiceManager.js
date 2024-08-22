@@ -2442,8 +2442,21 @@ export class ServiceManager {
   }
 
   async createDevnet() {
+    const workingDir = await this.getCurrentPath();
+    const devnetServices = {
+      EL: "geth",
+      CL: "prysm",
+      VL: "prysm",
+    };
+
+    devnetServices.EL += `-${StringUtils.createRandomString()}`;
+    devnetServices.CL += `-${StringUtils.createRandomString()}`;
+    devnetServices.VL += `-${StringUtils.createRandomString()}`;
+
     this.nodeConnection.runPlaybook("Create Devnet", {
       stereum_role: "create-devnet",
+      working_dir: workingDir,
+      devnet_services: devnetServices,
     });
   }
 }
