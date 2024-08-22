@@ -92,7 +92,7 @@
     
     - name: Download genesis file
       ansible.builtin.get_url:
-        url: https://github.com/eth-clients/{{ stereum_service_configuration.network }}/blob/main/metadata/genesis.ssz
+        url: https://github.com/eth-clients/{{ stereum_service_configuration.network }}/raw/main/metadata/genesis.ssz
         dest: "{{ item.split(':') | first }}/prysm-{{ stereum_service_configuration.network }}-genesis.ssz"
         mode: 0644
         force: false
