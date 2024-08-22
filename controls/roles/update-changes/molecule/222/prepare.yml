@@ -1,0 +1,153 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create PrysmBeaconService config
+      copy:
+        dest: "/etc/stereum/services/bc148566-de35-88b8-6f5a-02e76360a2f1.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrysmBeaconService
+          id: bc148566-de35-88b8-6f5a-02e76360a2f1
+          configVersion: 1
+          command: /app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true
+            --datadir=/opt/app/beacon --p2p-host-dns="" --holesky=true
+            --block-batch-limit=512
+            --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0
+            --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100
+            --execution-endpoint=http://stereum-81fa4c43-8317-cd0f-2404-2c316523b9d5:8551
+            --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001
+            --p2p-udp-port=12001 --jwt-secret=/engine.jwt
+            --checkpoint-sync-url=https://checkpoint-sync.holesky.ethpandaops.io
+          entrypoint: []
+          env: {}
+          image: prysmaticlabs/prysm-beacon-chain:v5.0.4
+          ports:
+            - 0.0.0.0:13001:13001/tcp
+            - 0.0.0.0:12001:12001/udp
+            - 127.0.0.1:4000:4000/tcp
+            - 127.0.0.1:3500:3500/tcp
+          volumes:
+            - /opt/stereum/prysm-bc148566-de35-88b8-6f5a-02e76360a2f1/beacon:/opt/app/beacon
+            - /opt/stereum/prysm-bc148566-de35-88b8-6f5a-02e76360a2f1/genesis:/opt/app/genesis
+            - /opt/stereum/nethermind-81fa4c43-8317-cd0f-2404-2c316523b9d5/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients:
+              - service: NethermindService
+                id: 81fa4c43-8317-cd0f-2404-2c316523b9d5
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create PrysmValidator config
+      copy:
+        dest: "/etc/stereum/services/2b374159-df35-7afb-66d8-5114ac03dd5e.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrysmValidatorService
+          id: 2b374159-df35-7afb-66d8-5114ac03dd5e
+          configVersion: 1
+          command: /app/cmd/validator/validator --accept-terms-of-use=true
+            --beacon-rpc-provider="stereum-bc148566-de35-88b8-6f5a-02e76360a2f1:4000"
+            --beacon-rpc-gateway-provider="stereum-bc148566-de35-88b8-6f5a-02e76360a2f1:3500"
+            --web --holesky=true --datadir=/opt/app/data/db
+            --wallet-dir=/opt/app/data/wallets
+            --wallet-password-file=/opt/app/data/passwords/wallet-password
+            --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0
+            --grpc-gateway-corsdomain="*"  --monitoring-host=0.0.0.0
+            --monitoring-port=8081
+            --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+            --graffiti-file=/opt/app/graffitis/graffitis.yaml --enable-builder=true
+            --enable-doppelganger=true
+          entrypoint: []
+          env: {}
+          image: prysmaticlabs/prysm-validator:v5.0.4
+          ports:
+            - 127.0.0.1:7500:7500/tcp
+          volumes:
+            - /opt/stereum/prysm-2b374159-df35-7afb-66d8-5114ac03dd5e/data/db:/opt/app/data/db
+            - /opt/stereum/prysm-2b374159-df35-7afb-66d8-5114ac03dd5e/data/wallets:/opt/app/data/wallets
+            - /opt/stereum/prysm-2b374159-df35-7afb-66d8-5114ac03dd5e/data/passwords:/opt/app/data/passwords
+            - /opt/stereum/prysm-2b374159-df35-7afb-66d8-5114ac03dd5e/graffitis:/opt/app/graffitis
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: PrysmBeaconService
+                id: bc148566-de35-88b8-6f5a-02e76360a2f1
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create PrysmValidator config
+      copy:
+        dest: "/etc/stereum/services/fe23d5fb-055f-4475-bf66-b452e71582fb.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          autoupdate: true
+          command:
+          - --grpc-gateway-host=0.0.0.0
+          - --monitoring-host=0.0.0.0
+          - --accept-terms-of-use=true
+          - --monitoring-port=8081
+          - --web
+          - --beacon-rpc-gateway-provider="stereum-bc148566-de35-88b8-6f5a-02e76360a2f1:3500"
+          - --grpc-gateway-port=7500
+          - --graffiti-file=/opt/app/graffitis/graffitis.yaml
+          - --grpc-gateway-corsdomain="*"
+          - --holesky=true
+          - --beacon-rpc-provider="stereum-bc148566-de35-88b8-6f5a-02e76360a2f1:4000"
+          - --wallet-dir=/opt/app/data/wallets
+          - --enable-doppelganger=true
+          - --keymanager-token-file=/opt/app/data/wallets/auth-token
+          - --wallet-password-file=/opt/app/data/passwords/wallet-password
+          - --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+          - --enable-builder=true
+          - --datadir=/opt/app/data/db
+          configVersion: 1
+          dependencies:
+            consensusClients:
+            - id: bc148566-de35-88b8-6f5a-02e76360a2f1
+              service: PrysmBeaconService
+            executionClients: []
+            mevboost: []
+            otherServices: []
+          entrypoint:
+          - /app/cmd/validator/validator
+          env: {}
+          id: fe23d5fb-055f-4475-bf66-b452e71582fb
+          image: prysmaticlabs/prysm-validator:v5.0.4
+          network: holesky
+          ports:
+          - 127.0.0.1:7500:7500/tcp
+          service: PrysmValidatorService
+          user: '2000'
+          volumes:
+          - /opt/stereum/prysm-fe23d5fb-055f-4475-bf66-b452e71582fb/data/db:/opt/app/data/db
+          - /opt/stereum/prysm-fe23d5fb-055f-4475-bf66-b452e71582fb/data/wallets:/opt/app/data/wallets
+          - /opt/stereum/prysm-fe23d5fb-055f-4475-bf66-b452e71582fb/data/passwords:/opt/app/data/passwords
+          - /opt/stereum/prysm-fe23d5fb-055f-4475-bf66-b452e71582fb/graffitis:/opt/app/graffitis
+      become: yes
+
+#EOF
