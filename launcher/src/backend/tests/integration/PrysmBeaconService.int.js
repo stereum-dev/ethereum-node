@@ -60,7 +60,7 @@ test("prysm validator import", async () => {
   //install geth
   let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
 
-  let prysmBC = serviceManager.getService("PrysmBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
+  let prysmBC = serviceManager.getService("PrysmBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth], checkpointURL: "https://checkpoint-sync.holesky.ethpandaops.io/" })
 
   let prysmVC = serviceManager.getService("PrysmValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [prysmBC] })
 
@@ -117,7 +117,7 @@ test("prysm validator import", async () => {
       /Finished reading JWT secret/.test(BCstatus.stderr) &&
       /Starting beacon node/.test(BCstatus.stderr) &&
       /Starting initial chain sync/.test(BCstatus.stderr) &&
-      /Peer summary/.test(BCstatus.stderr) &&
+      /Connected peers/.test(BCstatus.stderr) &&
       /Connected to new endpoint/.test(BCstatus.stderr) &&
       /Beacon chain started/.test(VCstatus.stderr) &&
       /Waiting for beacon node to sync to latest chain head/.test(VCstatus.stderr)
@@ -180,7 +180,7 @@ test("prysm validator import", async () => {
   expect(BCstatus.stderr).toMatch(/Finished reading JWT secret/);
   expect(BCstatus.stderr).toMatch(/Starting beacon node/);
   expect(BCstatus.stderr).toMatch(/Starting initial chain sync/);
-  expect(BCstatus.stderr).toMatch(/Peer summary/);
+  expect(BCstatus.stderr).toMatch(/Connected peers/);
   expect(BCstatus.stderr).toMatch(/Connected to new endpoint/);
 
   //check prysm VC logs

@@ -12,6 +12,7 @@ import { Monitoring } from "./backend/Monitoring.js";
 import { StereumUpdater } from "./StereumUpdater.js";
 import { ConfigManager } from "./backend/ConfigManager.js";
 import { AuthenticationService } from "./backend/AuthenticationService.js";
+import { TekuGasLimitConfig } from "./backend/TekuGasLimitConfig.js";
 import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
@@ -27,6 +28,7 @@ const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serv
 const configManager = new ConfigManager(nodeConnection);
 configManager.setServiceManager(serviceManager);
 const authenticationService = new AuthenticationService(nodeConnection);
+const tekuGasLimitConfig = new TekuGasLimitConfig(nodeConnection);
 const sshService = new SSHService();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
@@ -725,6 +727,18 @@ ipcMain.handle("stopShell", async () => {
 
 ipcMain.handle("create2FAQRCode", async (event, args) => {
   return await authenticationService.create2FAQRCode(args.type, args.name, args.ip, args.secret);
+});
+
+ipcMain.handle("createGasConfigFile", async (event, args) => {
+  return await tekuGasLimitConfig.createGasConfigFile(args.gasLimit, args.feeRecipient, args.configPath);
+});
+
+ipcMain.handle("removeGasConfigFile", async (event, args) => {
+  return await tekuGasLimitConfig.removeGasConfigFile(args);
+});
+
+ipcMain.handle("readGasConfigFile", async (event, args) => {
+  return await tekuGasLimitConfig.readGasConfigFile(args);
 });
 
 // Scheme must be registered before the app is ready

@@ -11,11 +11,7 @@
         @mouseenter="footerStore.cursorLocation = `${toEdit}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img
-          class="w-7"
-          src="/img/icon/node-page-icons/edit-node-icon.png"
-          alt="Manage Icon"
-        />
+        <img class="w-7" src="/img/icon/node-page-icons/edit-node-icon.png" alt="Manage Icon" />
       </div>
       <Transition name="slide-fade">
         <router-link
@@ -24,24 +20,13 @@
           class="w-fit h-9 absolute col-span-1 row-start-1 row-end-2 py-1 px-2 rounded-md bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1 transition duration-200 shadow-md shadow-[#23272a]"
           @mouseleave="routerHovered = false"
         >
-          <img
-            class="w-6 mr-1"
-            src="/img/icon/node-page-icons/edit-node-icon.png"
-            alt="Manage Icon"
-          />
+          <img class="w-6 mr-1" src="/img/icon/node-page-icons/edit-node-icon.png" alt="Manage Icon" />
           <span class="text-sm text-gray-200 font-semibold">{{ toEdit }}</span>
         </router-link>
       </Transition>
 
-      <button
-        v-if="isloading"
-        class="row-start-2 row-end-3 p-1 rounded-md relative flex justify-center items-center"
-      >
-        <img
-          v-if="loading"
-          src="/animation/loading/turning-circle-blue.gif"
-          alt="loading"
-        />
+      <button v-if="isloading" class="row-start-2 row-end-3 p-1 rounded-md relative flex justify-center items-center">
+        <img v-if="loading" src="/animation/loading/turning-circle-blue.gif" alt="loading" />
       </button>
       <button
         v-else-if="checkStatus"
@@ -65,29 +50,21 @@
       <Transition name="slide-fade">
         <button
           v-if="checkStatus && powerHovered"
-          class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1"
+          class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1 top-[33%]"
           @mouseleave="powerHovered = false"
           @click="showPowerModal"
         >
-          <img
-            class="w-4 mr-1"
-            src="/img/icon/node-page-icons/turn-on.png"
-            alt="Stop Icon"
-          />
+          <img class="w-4 mr-1" src="/img/icon/node-page-icons/turn-on.png" alt="Stop Icon" />
           <span class="text-sm text-gray-200 font-semibold">{{ trnOn }}</span>
         </button>
 
         <button
           v-else-if="!checkStatus && powerHovered"
-          class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1"
+          class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1 top-[33%]"
           @mouseleave="powerHovered = false"
           @click="showPowerModal"
         >
-          <img
-            class="w-4 mr-1"
-            src="/img/icon/node-page-icons/turn-off.png"
-            alt="Stop Icon"
-          />
+          <img class="w-4 mr-1" src="/img/icon/node-page-icons/turn-off.png" alt="Stop Icon" />
           <span class="text-xs text-gray-200">{{ trnOff }}</span>
         </button>
       </Transition>
@@ -99,23 +76,15 @@
           @mouseenter="footerStore.cursorLocation = `${expNode}`"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <img
-            class="w-5"
-            src="/img/icon/node-page-icons/export-config-icon.png"
-            alt="Export Icon"
-          />
+          <img class="w-5" src="/img/icon/node-page-icons/export-config-icon.png" alt="Export Icon" />
         </button>
         <button
           v-else
-          class="w-fit h-9 absolute row-start-3 row-end-4 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1"
+          class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1 top-[42%]"
           @mouseleave="exportHovered = false"
           @click="exportData"
         >
-          <img
-            class="w-4"
-            src="/img/icon/node-page-icons/export-config-icon.png"
-            alt="Export Icon"
-          />
+          <img class="w-4" src="/img/icon/node-page-icons/export-config-icon.png" alt="Export Icon" />
           <span class="text-xs text-gray-200 font-semibold">{{ expNode }}</span>
         </button>
       </Transition>
@@ -171,9 +140,7 @@ const isloading = computed({
 });
 
 const checkStatus = computed(() => {
-  let servicesToManage = serviceStore.installedServices.filter(
-    (service) => service.name !== "Notifications"
-  );
+  let servicesToManage = serviceStore.installedServices.filter((service) => service.name !== "Notifications");
   return !servicesToManage.some((s) => s.state == "running");
 });
 
@@ -192,9 +159,7 @@ const stateButtonHandler = async (state) => {
   closeUpdatePowerStateModal();
   try {
     //this is the temporary solution until notification service is exiting correctly
-    let servicesToManage = serviceStore.installedServices.filter(
-      (service) => service.name !== "Notifications"
-    );
+    let servicesToManage = serviceStore.installedServices.filter((service) => service.name !== "Notifications");
 
     let promises = servicesToManage.map(async (service, index) => {
       new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {

@@ -1,46 +1,66 @@
 <template>
   <div class="status-box flex flex-col justify-between items-center">
-    <div class="status-box_header bg-[#151618] border border-gray-600 rounded-md">
-      <div class="icon-line">
-        <div class="status-icon" :class="{ active: perfect }">
-          <img src="/img/icon/node-alert-icons/alert-notification.png" alt="green" />
+    <div class="status-box_header h-[8%] w-full flex">
+      <div
+        class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pl-2"
+      >
+        <div class="icon-line">
+          <div
+            v-if="alertShowState === 'showAll' || alertShowState === 'green'"
+            class="status-icon"
+            :class="{ active: perfect }"
+            @click="alertPicker(perfect ? 'green' : 'showAll')"
+          >
+            <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
+          </div>
+          <div
+            v-if="alertShowState === 'showAll' || alertShowState === 'yellow'"
+            class="status-icon"
+            :class="{ active: warning || pointStatus.length !== 0 }"
+            @click="alertPicker(warning || pointStatus.length !== 0 ? 'yellow' : 'showAll')"
+          >
+            <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
+          </div>
+          <div
+            v-if="alertShowState === 'showAll' || alertShowState === 'red'"
+            class="status-icon"
+            :class="{
+              active: alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm,
+            }"
+            @click="
+              alertPicker(
+                alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm ? 'red' : 'showAll'
+              )
+            "
+          >
+            <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
+          </div>
         </div>
-        <div class="status-icon" :class="{ active: warning || pointStatus.length !== 0 }">
-          <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
-        </div>
-        <div class="status-icon" :class="{ active: alarm }">
-          <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
-        </div>
-        <div
-          class="status-icon"
-          :class="{
-            active:
-              stereumUpdate.current !== stereumUpdate.version ||
-              updatedNewUpdates.length > 0,
-          }"
-        >
-          <img src="/img/icon/node-alert-icons/alert-settings.png" alt="green" />
+      </div>
+      <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
+        <div class="volBtn cursor-pointer w-8" @click="volToggle">
+          <img
+            :src="
+              volState
+                ? '/img/icon/node-alert-icons/alert-settings.png'
+                : '/img/icon/node-alert-icons/alert-settings-mute.png'
+            "
+            alt="green"
+          />
         </div>
       </div>
     </div>
-    <div
-      class="status-box_messages bg-[#151618] border border-gray-600 rounded-md overflow-x-hidden overflow-y-auto"
-    >
+
+    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md overflow-x-hidden overflow-y-auto">
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
-      <div
-        v-show="!loadingAlerts"
-        class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]"
-      >
+      <div v-show="!loadingAlerts" class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]">
         <router-link
-          v-if="storageWarning"
+          v-if="storageWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
           to="/control"
           class="status-message_yellow h-9"
         >
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-storage-yellow.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -49,12 +69,13 @@
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </router-link>
-        <router-link v-if="cpuWarning" to="/control" class="status-message_yellow h-9">
+        <router-link
+          v-if="cpuWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
+          to="/control"
+          class="status-message_yellow h-9"
+        >
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-cpu-yellow.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -65,28 +86,26 @@
             </div>
           </div>
         </router-link>
+        <template v-if="pointStatus && (alertShowState === 'showAll' || alertShowState === 'yellow')">
+          <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow h-9">
+            <div class="message-icon">
+              <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
+            </div>
+            <div class="message-text_container">
+              <div class="main-message">
+                <span>{{ point }}</span>
+              </div>
+              <div class="val-message">
+                <span> > {{ $t("nodeAlert.stats") }}</span>
+              </div>
+            </div>
+          </router-link>
+        </template>
         <router-link
-          v-for="point in pointStatus"
-          :key="point"
+          v-if="cpuAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
           to="/control"
-          class="status-message_yellow h-9"
+          class="status-message_red h-9"
         >
-          <div class="message-icon">
-            <img
-              src="/img/icon/control-page-icons/PORT_LIST_ICON.png"
-              alt="warn_storage"
-            />
-          </div>
-          <div class="message-text_container">
-            <div class="main-message">
-              <span>{{ point }}</span>
-            </div>
-            <div class="val-message">
-              <span> > {{ $t("nodeAlert.stats") }}</span>
-            </div>
-          </div>
-        </router-link>
-        <router-link v-if="cpuAlarm" to="/control" class="status-message_red h-9">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-cpu-red.png" alt="warn_storage" />
           </div>
@@ -101,40 +120,27 @@
         </router-link>
 
         <div
-          v-if="connectionStatusIsPoor"
+          v-if="connectionStatusIsPoor && (alertShowState === 'showAll' || alertShowState === 'red')"
           class="w-full h-10 grid grid-cols-12 rounded-md bg-red-700 p-1 cursor-pointer hover:bg-red-500"
           @click="callReconnectModal"
         >
-          <div
-            class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1"
-          >
-            <img
-              class="w-8"
-              src="/img/icon/connection-status/searching.gif"
-              alt="WIFI Icon"
-            />
+          <div class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1">
+            <img class="w-8" src="/img/icon/connection-status/searching.gif" alt="WIFI Icon" />
           </div>
           <div class="col-start-5 col-span-full flex flex-col justify-center items-start">
-            <span class="text-[8px] text-gray-100 font-semibold uppercase"
-              >Poor Connection</span
-            >
+            <span class="text-[8px] text-gray-100 font-semibold uppercase">Poor Connection</span>
 
-            <span class="text-[8px] text-left text-gray-100 font-semibold lowercase"
-              >> Click to reconnect</span
-            >
+            <span class="text-[8px] text-left text-gray-100 font-semibold lowercase">> Click to reconnect</span>
           </div>
         </div>
 
         <router-link
-          v-if="synchronizationErrorControl"
+          v-if="synchronizationErrorControl && (alertShowState === 'showAll' || alertShowState === 'red')"
           to="/control"
           class="status-message_red h-9"
         >
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-sync-error.gif"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -146,15 +152,12 @@
           </div>
         </router-link>
         <div
-          v-if="errorAlarm"
+          v-if="errorAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
           class="status-message_red h-9"
           @click="isTaskModalActive = true"
         >
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-task-error.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -163,39 +166,41 @@
           </div>
         </div>
 
-        <div
-          v-for="validator in notSetAddresses"
-          :key="validator"
-          class="status-message_red h-9 pointer"
-          @mouseenter="cursorLocation = `${clkFee}`"
-          @mouseleave="cursorLocation = ''"
-          @click="expertHandler(validator.serviceID)"
-        >
-          <div class="message-icon">
-            <img :src="validator.icon" />
-          </div>
-          <div class="message-text_container">
-            <div class="main-message">
-              <span>{{ $t("nodeAlert.noFee") }}</span>
+        <template v-if="notSetAddresses && (alertShowState === 'showAll' || alertShowState === 'red')">
+          <div
+            v-for="validator in notSetAddresses"
+            :key="validator"
+            class="status-message_red h-9 pointer"
+            @mouseenter="cursorLocation = `${clkFee}`"
+            @mouseleave="cursorLocation = ''"
+            @click="expertHandler(validator.serviceID)"
+          >
+            <div class="message-icon">
+              <img :src="validator.icon" />
             </div>
-            <div class="val-message">
-              <span> > {{ validator.name }} vc</span>
+            <div class="message-text_container">
+              <div class="main-message">
+                <span>{{ $t("nodeAlert.noFee") }}</span>
+              </div>
+              <div class="val-message">
+                <span> > {{ validator.name }} vc</span>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
 
         <div
-          v-if="stereumUpdate.current !== stereumUpdate.version"
+          v-if="
+            stereumUpdate.current !== stereumUpdate.version &&
+            (alertShowState === 'showAll' || alertShowState === 'green')
+          "
           class="status-message_green h-9"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
           @click="showUpdate"
         >
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-notification-stereum-update.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-notification-stereum-update.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -206,26 +211,28 @@
             </div>
           </div>
         </div>
-        <div
-          v-for="item in updatedNewUpdates"
-          :key="item"
-          class="status-message_green h-9"
-          @mouseenter="cursorLocation = `${clkUpdate}`"
-          @mouseleave="cursorLocation = ''"
-          @click="showUpdate"
-        >
-          <div class="message-icon">
-            <img :src="item.sIcon" alt="warn_storage" />
-          </div>
-          <div class="message-text_container update-items">
-            <div class="main-message">
-              <span class="overflow-hidden truncate text-md">{{ item.name }} UPDATE</span>
+        <template v-if="updatedNewUpdates && (alertShowState === 'showAll' || alertShowState === 'green')">
+          <div
+            v-for="item in updatedNewUpdates"
+            :key="item"
+            class="status-message_green h-9"
+            @mouseenter="cursorLocation = `${clkUpdate}`"
+            @mouseleave="cursorLocation = ''"
+            @click="showUpdate"
+          >
+            <div class="message-icon">
+              <img :src="item.sIcon" alt="warn_storage" />
             </div>
-            <div class="val-message">
-              <span>{{ item.version }}</span>
+            <div class="message-text_container update-items">
+              <div class="main-message">
+                <span class="overflow-hidden truncate text-md">{{ item.name }} UPDATE</span>
+              </div>
+              <div class="val-message">
+                <span>{{ item.version }}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
   </div>
@@ -262,6 +269,7 @@ export default {
       clkUpdate: this.$t("nodeAlert.clkUpdate"),
       loadingAlerts: false,
       skeletons: [1, 2, 3, 4, 5, 6, 7, 8],
+      alertShowState: "showAll",
     };
   },
   computed: {
@@ -293,6 +301,7 @@ export default {
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
       stereumStatus: "stereumStatus",
+      volState: "volState",
     }),
     ...mapWritableState(useNodeStore, {
       skeletonLoading: "skeletonLoading",
@@ -321,8 +330,7 @@ export default {
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
         const matchingService = this.allServices.find(
-          (service) =>
-            service.service.replace(/(Beacon|Validator|Service)/gm, "") === update.name
+          (service) => service.service.replace(/(Beacon|Validator|Service)/gm, "") === update.name
         );
         if (matchingService) {
           return {
@@ -365,6 +373,7 @@ export default {
     },
   },
   mounted() {
+    this.checkSettings();
     this.readService();
     this.watchAlertStatus();
     this.polling = setInterval(() => {
@@ -379,6 +388,46 @@ export default {
     this.cpuMeth();
   },
   methods: {
+    alertPicker(color) {
+      if (this.alertShowState === color) {
+        this.alertShowState = "showAll";
+      } else {
+        this.alertShowState = color;
+      }
+    },
+    async checkSettings() {
+      try {
+        const savedConfig = await ControlService.readConfig();
+
+        if (savedConfig?.savedVolume?.volume !== undefined) {
+          this.volState = savedConfig.savedVolume.volume !== 0;
+          this.currentVolume = savedConfig.savedVolume.volume;
+        } else {
+          this.volState = false;
+          console.warn("Volume configuration is missing or invalid.");
+        }
+      } catch (error) {
+        console.error("Failed to load saved settings:", error);
+      }
+    },
+
+    async updateSettings(vol) {
+      try {
+        const prevConf = await ControlService.readConfig();
+        const conf = {
+          ...prevConf,
+          savedVolume: { volume: vol },
+        };
+        await ControlService.writeConfig(conf);
+      } catch (error) {
+        console.error("Failed to update settings:", error);
+      }
+    },
+
+    volToggle() {
+      this.volState = !this.volState;
+      this.updateSettings(this.volState ? 0.95 : 0);
+    },
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
         return "/img/icon/service-icons/Other/PrometheusNodeExporter-s.png";
@@ -400,9 +449,7 @@ export default {
       this.stereumStatus = false;
     },
     expertHandler(el) {
-      let selectedObject = this.installedServices.find(
-        (obj) => obj.config.serviceID === el
-      );
+      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
       this.selectedValidatorFromNodeAlert = selectedObject;
       this.openModalFromNodeAlert = true;
     },
@@ -421,15 +468,11 @@ export default {
           }
           if (!validator.yaml)
             try {
-              validator.yaml = await ControlService.getServiceYAML(
-                validator.config.serviceID
-              );
+              validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
             } catch (e) {
               console.log("couldn't get service yaml");
             }
-          const patternIndex = validator.expertOptions.findIndex(
-            (o) => o.title === "Default Fee Recipient"
-          );
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
           if (patternIndex === -1 || !validator.yaml) {
             continue;
           }
@@ -447,8 +490,7 @@ export default {
           }
         }
         const notSetAddresses = addresses.filter(
-          (validator) =>
-            validator.address === "0x0000000000000000000000000000000000000000"
+          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
       }
@@ -504,6 +546,9 @@ export default {
 </script>
 
 <style scoped>
+.volBtn:active {
+  transform: scale(0.9);
+}
 .update-items {
   height: 90% !important;
   justify-content: center !important;
@@ -559,9 +604,6 @@ export default {
 }
 
 .status-box_header {
-  width: 100%;
-  height: 8%;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -608,7 +650,7 @@ export default {
 
 .icon-line {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   padding-top: 4px;
   width: 100%;
   height: 30px;
@@ -622,9 +664,14 @@ export default {
   align-items: center;
   opacity: 25%;
   border-radius: 5px;
+  margin-right: 5px;
 }
 .active {
   opacity: 100%;
+  cursor: pointer;
+}
+.active:hover {
+  transform: scale(1.1);
 }
 
 .status-icon img {
