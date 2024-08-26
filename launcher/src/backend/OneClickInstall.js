@@ -328,6 +328,7 @@ export class OneClickInstall {
     }
 
     this.handleArchiveTags(selectedPreset);
+    this.handleLidoTags(selectedPreset);
 
     let versions;
     try {
@@ -404,12 +405,34 @@ export class OneClickInstall {
           this.beaconService.command.push("--history=archive");
           break;
         case "PrysmBeaconService":
-          this.beaconService.command += " --slots-per-archive-point=32";
+          if (Array.isArray(this.beaconService.command)) {
+            this.beaconService.command.push("--slots-per-archive-point=32");
+          } else {
+            this.beaconService.command += " --slots-per-archive-point=32";
+          }
           break;
         case "TekuBeaconService":
           this.beaconService.command[this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))] =
             "--data-storage-mode=archive";
       }
+    }
+  }
+
+  handleLidoTags(selectedPreset) {
+    if (selectedPreset == "obol") {
+      const networkFeeAdress = {
+        mainnet: "0x388C818CA8B9251b393131C08a736A67ccB19297",
+        holesky: "0xE73a3602b99f1f913e72F8bdcBC235e206794Ac8",
+      }
+      const serviceFeeAdressCommand = {
+        LighthouseValidatorService: "--suggested-fee-recipient=",
+        LodestarValidatorService: "--suggestedFeeRecipient=",
+        NimbusValidatorService: "--suggested-fee-recipient=",
+        PrysmValidatorService: "--suggested-fee-recipient=",
+        TekuValidatorService: "--validators-proposer-default-fee-recipient=",
+      }
+      this.validatorService.command[this.validatorService.command.findIndex((c) => c.includes(serviceFeeAdressCommand[this.validatorService.service]))] =
+      serviceFeeAdressCommand[this.validatorService.service] + networkFeeAdress[this.network];
     }
   }
 

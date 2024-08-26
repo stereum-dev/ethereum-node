@@ -1,0 +1,58 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    # PrysmBeaconService
+    - name: Read PrysmBeaconService file
+      slurp:
+        src: "/etc/stereum/services/bc148566-de35-88b8-6f5a-02e76360a2f1.yaml"
+      register: Prysm_Beacon_service_configuration_raw
+
+    # PrysmValidatorService
+    - name: Read PrysmValidatorService file
+      slurp:
+        src: "/etc/stereum/services/2b374159-df35-7afb-66d8-5114ac03dd5e.yaml"
+      register: Prysm_Validator_service_configuration_raw
+
+    # PrysmValidatorService 2
+    - name: Read PrysmValidatorService 2 file
+      slurp:
+        src: "/etc/stereum/services/fe23d5fb-055f-4475-bf66-b452e71582fb.yaml"
+      register: Prysm_Validator_2_service_configuration_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        Prysm_Beacon_service_configuration: "{{ Prysm_Beacon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Prysm_Validator_service_configuration: "{{ Prysm_Validator_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Prysm_Validator_2_service_configuration: "{{ Prysm_Validator_2_service_configuration_raw['content'] | b64decode | from_yaml }}"
+    
+    - debug:
+        msg: "{{ Prysm_Beacon_service_configuration }}"
+    - debug:
+        msg: "{{ Prysm_Beacon_service_configuration_raw['content'] | b64decode }}"
+    
+    - debug:
+        msg: "{{ Prysm_Validator_service_configuration }}"
+    - debug:
+        msg: "{{ Prysm_Validator_service_configuration_raw['content'] | b64decode }}"
+    
+    - debug:
+        msg: "{{ Prysm_Validator_2_service_configuration }}"
+    - debug:
+        msg: "{{ Prysm_Validator_2_service_configuration_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - not (Prysm_Beacon_service_configuration.command is string)
+          - Prysm_Beacon_service_configuration.command | select('match', '--p2p-host-dns=\"\"') | length == 0
+          - Prysm_Beacon_service_configuration.command | select('match', '/app/cmd/beacon-chain/beacon-chain') | length == 0
+          - Prysm_Beacon_service_configuration.entrypoint | first == '/app/cmd/beacon-chain/beacon-chain'
+          - not (Prysm_Validator_service_configuration.command is string)
+          - Prysm_Validator_service_configuration.command | select('match', '/app/cmd/validator/validator') | length == 0
+          - Prysm_Validator_service_configuration.entrypoint | first == '/app/cmd/validator/validator'
+          - not (Prysm_Validator_2_service_configuration.command is string)
+          - Prysm_Validator_2_service_configuration.command | select('match', '/app/cmd/validator/validator') | length == 0
+          - Prysm_Validator_2_service_configuration.entrypoint | first == '/app/cmd/validator/validator'
+# EOF
