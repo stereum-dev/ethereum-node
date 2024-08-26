@@ -167,7 +167,7 @@ test("addConnection String", () => {
   const sm = new ServiceManager();
   const result = sm.addCommandConnection(prysm, endpointCommand, dependencies, filter);
 
-  expect(result).toMatch(/--execution-endpoint=http:\/\/stereum-.{36}:8551,http:\/\/stereum-.{36}:8551/);
+  expect(result).toContain(`--execution-endpoint=http://stereum-${geth1.id}:8551,http://stereum-${geth2.id}:8551`);
 });
 
 test("addConnection array empty dependencies", () => {
@@ -208,7 +208,7 @@ test("addConnection String empty dependencies", () => {
   const sm = new ServiceManager();
   const result = sm.addCommandConnection(prysm, endpointCommand, dependencies, filter);
 
-  expect(result).not.toMatch(/--execution-endpoint=/);
+  expect(result).not.toContain('--execution-endpoint=');
 });
 
 test("removeConnection String", () => {
@@ -325,7 +325,7 @@ test("change network", () => {
   let checkpointURL = undefined;
   let relayURL =
     "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com";
-  let oldNetwork = "goerli";
+  let oldNetwork = "holesky";
   let newNetwork = "mainnet";
   const sm = new ServiceManager();
   services.push(GethService.buildByUserInput(oldNetwork, [], installDir + "/geth"));
@@ -353,9 +353,9 @@ test("change network", () => {
   }
   expect(services.map((s) => s.network)).not.toContain("goerli");
   expect(services.find((s) => s.service === "FlashbotsMevBoostService").entrypoint).toContain("-mainnet");
-  expect(services.find((s) => s.service === "PrysmBeaconService").command).toMatch(/--mainnet/);
-  expect(services.find((s) => s.service === "PrysmBeaconService").command).not.toMatch(
-    /--genesis-state=\/opt\/app\/genesis\/prysm-prater-genesis\.ssz/
+  expect(services.find((s) => s.service === "PrysmBeaconService").command).toContain('--mainnet');
+  expect(services.find((s) => s.service === "PrysmBeaconService").command).not.toContain(
+    '--genesis-state=/opt/app/genesis/prysm-holesky-genesis.ssz'
   );
   expect(services.find((s) => s.service === "LighthouseBeaconService").command).toContain("--network=mainnet");
 });

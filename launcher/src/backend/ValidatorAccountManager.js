@@ -882,19 +882,26 @@ export class ValidatorAccountManager {
     switch (client.service.replace(/(Beacon|Validator|Service)/gm, "")) {
       case "Prysm": {
         let command = structuredClone(client.command);
-        if (!client.command.includes("--validators-external-signer-url=")) {
+
+        let isString = false;
+        let changed = false;
+        if (typeof command === "string") {
+          isString = true;
           command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+        }
+
+        let urlCommand = command.find((arg) => arg.includes("--validators-external-signer-url="));
+
+        if (!urlCommand) {
           command.push(`--validators-external-signer-url=${url}`);
-        } else if (
-          client.command.includes("--validators-external-signer-url=") &&
-          !client.command.includes(`--validators-external-signer-url=${url}`)
-        ) {
-          command = command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+          changed = true;
+        } else if (urlCommand && urlCommand !== `--validators-external-signer-url=${url}`) {
           command = command.filter((arg) => !arg.includes("--validators-external-signer-url="));
           command.push(`--validators-external-signer-url=${url}`);
+          changed = true;
         }
-        if (Array.isArray(command)) {
-          command = command.join(" ").trim();
+        if (changed) {
+          if (isString) command = command.join(" ").trim();
           client.command = command;
           await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
           await this.serviceManager.manageServiceState(client.id, "stopped");
