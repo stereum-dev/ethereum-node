@@ -45,7 +45,9 @@
           src="/animation/loading/loading-circle.gif"
         />
         <div v-else class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center">
-          <span class="text-sm font-semibold text-gray-300 text-center">{{ numberOfUpdatablePackages }}</span>
+          <span class="text-sm font-semibold text-gray-300 text-center">{{
+            serverStore.numberOfUpdatablePackages
+          }}</span>
         </div>
 
         <span class="col-start-2 col-span-full text-md font-semibold text-gray-300">{{
@@ -98,11 +100,13 @@ import { ref, onMounted, computed, reactive, watchEffect } from "vue";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { useUpgradablePackages } from "@/composables/version.js";
 
 const t = i18n.global.t;
 
 const footerStore = useFooter();
 const serverStore = useServers();
+const { getUpgradablePackages } = useUpgradablePackages();
 
 const osVersionCurrent = ref("");
 const updateStatus = reactive({
@@ -114,11 +118,12 @@ const stereumApp = ref({
   latest: "2.0",
   autoUpdate: "",
 });
-const numberOfUpdatablePackages = ref(null);
+
 const searchingForUpdatablePackages = ref(false);
 
-const newUpdates = computed(() => serverStore.upgradablePackages);
+const newUpdates = computed(() => serverStore.upgradablePackages.value);
 const onOff = computed(() => (stereumApp.value.autoUpdate == "on" ? "text-green-700" : "text-red-700"));
+console.log("klnklm", serverStore.upgradablePackages);
 
 //Watchers
 
@@ -132,9 +137,16 @@ watchEffect(() => {
 
 //Lifecycle
 onMounted(async () => {
-  await getUpgradablePackages();
+  searchingForUpdatablePackages.value = true;
+
+  if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
+    await getUpgradablePackages();
+  }
+
   await getOsVersion();
   await getSettings();
+
+  searchingForUpdatablePackages.value = false;
 });
 
 //Methods
@@ -161,17 +173,21 @@ const getOsVersion = async () => {
   }
 };
 
-const getUpgradablePackages = async () => {
+const fetchUpgradablePackages = async () => {
   searchingForUpdatablePackages.value = true;
-  try {
-    serverStore.upgradablePackages = await ControlService.getUpgradeablePackages();
-    if (serverStore.upgradablePackages) {
-      numberOfUpdatablePackages.value = serverStore.upgradablePackages.length;
+
+  if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
+    try {
+      await getUpgradablePackages();
+
+      serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length;
+    } catch (error) {
+      console.error("Failed to fetch upgradable packages:", error);
+    } finally {
       searchingForUpdatablePackages.value = false;
     }
-  } catch (error) {
-    console.error("Failed to fetch upgradable packages:", error);
-    serverStore.upgradablePackages = [];
+  } else {
+    searchingForUpdatablePackages.value = false;
   }
 };
 
@@ -179,7 +195,9 @@ const updateAll = async () => {
   serverStore.isUpdateProcessing = true;
   try {
     await ControlService.updateOS();
-    await getUpgradablePackages(); // Refresh the list of upgradable packages
+
+    await fetchUpgradablePackages();
+
     updateStatus.message = "All packages updated successfully!";
     updateStatus.color = "text-green-500";
   } catch (error) {

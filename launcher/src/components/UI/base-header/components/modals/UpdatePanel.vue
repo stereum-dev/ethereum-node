@@ -43,7 +43,7 @@
                         v-else
                         class="w-4 h-4 bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-5"
                       >
-                        <span>{{ numberOfUpdatablePackages }}</span>
+                        <span>{{ serverStore.numberOfUpdatablePackages }}</span>
                       </div>
                     </div>
                   </div>
@@ -257,7 +257,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { onMounted, computed, ref, watchEffect } from "vue";
-import { useUpdateCheck } from "@/composables/version.js";
+import { useUpdateCheck, useUpgradablePackages } from "@/composables/version.js";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 
@@ -273,6 +273,8 @@ const footerStore = useFooter();
 
 const openButton = ref("Open OS Update Panel");
 
+const { getUpgradablePackages } = useUpgradablePackages();
+
 //Data
 const stereumApp = ref({
   current: "alpha",
@@ -280,7 +282,7 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 const osVersionCurrent = ref("-");
-const numberOfUpdatablePackages = ref(0);
+
 const searchingForOsUpdates = ref(false);
 
 //Computed
@@ -358,19 +360,15 @@ const searchOsUpdates = async () => {
   }
 
   searchingForOsUpdates.value = true;
-  setTimeout(async () => {
-    await getUpdatablePackagesCount();
-    searchingForOsUpdates.value = false;
-  }, 10);
-};
 
-const getUpdatablePackagesCount = async () => {
-  try {
-    const packages = await ControlService.getUpgradeablePackages();
-    numberOfUpdatablePackages.value = packages ? packages.length : 0;
-  } catch (error) {
-    console.error("Failed to fetch upgradable packages:", error);
-    numberOfUpdatablePackages.value = 0;
+  if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
+    setTimeout(async () => {
+      await getUpgradablePackages();
+      serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length || 0;
+      searchingForOsUpdates.value = false;
+    }, 10);
+  } else {
+    searchingForOsUpdates.value = false;
   }
 };
 

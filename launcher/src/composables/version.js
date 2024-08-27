@@ -1,7 +1,37 @@
-import ControlService from '@/store/ControlService'
+import ControlService from "@/store/ControlService";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
-import { useBackendServices } from '@/composables/services';
+import { useBackendServices } from "@/composables/services";
+import { useServers } from "@/store/servers";
+
+export function useUpgradablePackages() {
+  const serverStore = useServers();
+
+  // Method to get upgradable packages
+  const getUpgradablePackages = async () => {
+    // Only fetch if the data hasn't been loaded before
+    if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
+      try {
+        // Fetch the upgradable packages
+        const packages = await ControlService.getUpgradeablePackages();
+        serverStore.upgradablePackages.value = packages || [];
+
+        if (serverStore.upgradablePackages.value.length > 0) {
+          serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length;
+        } else {
+          serverStore.numberOfUpdatablePackages = 0;
+        }
+      } catch (error) {
+        console.error("Failed to fetch upgradable packages:", error);
+        serverStore.upgradablePackages.value = [];
+      }
+    }
+  };
+
+  return {
+    getUpgradablePackages,
+  };
+}
 
 export async function useUpdateCheck() {
   const serviceStore = useServices();
@@ -9,10 +39,10 @@ export async function useUpdateCheck() {
   if (!nodeHeaderStore.updating) {
     nodeHeaderStore.searchingForUpdates = true;
 
-    let services = await useBackendServices() //get configurations of all services in backend format
+    let services = await useBackendServices(); //get configurations of all services in backend format
 
     // fetch all version information
-    let versions = {}
+    let versions = {};
     try {
       versions.latest = await ControlService.checkUpdates();
       versions.currentStereum = await ControlService.getCurrentStereumVersion();
@@ -30,8 +60,10 @@ export async function useUpdateCheck() {
     let newAvailableUpdates = [];
     if (versions.latest && services?.length > 0) {
       services.forEach((service) => {
-        if (!versions.latest[service.network] || !versions.latest[service.network][service.service]) service.network = "mainnet";
-        if (!versions.latest[service.network] || !versions.latest[service.network][service.service]) service.network = "prater";
+        if (!versions.latest[service.network] || !versions.latest[service.network][service.service])
+          service.network = "mainnet";
+        if (!versions.latest[service.network] || !versions.latest[service.network][service.service])
+          service.network = "prater";
         if (versions.latest[service.network] && versions.latest[service.network][service.service]) {
           if (service.service === "ErigonService" && !service.imageVersion.startsWith("v")) {
             service.imageVersion = "v" + service.imageVersion;
@@ -39,14 +71,18 @@ export async function useUpdateCheck() {
           }
           if (
             service.imageVersion !=
-            versions.latest[service.network][service.service][versions.latest[service.network][service.service].length - 1]
+            versions.latest[service.network][service.service][
+              versions.latest[service.network][service.service].length - 1
+            ]
           ) {
             nodeHeaderStore.isUpdateAvailable = true;
             newAvailableUpdates.push({
               id: service.id,
               name: service.service.replace(/(Beacon|Validator|Service)/gm, ""),
               version:
-                versions.latest[service.network][service.service][versions.latest[service.network][service.service].length - 1],
+                versions.latest[service.network][service.service][
+                  versions.latest[service.network][service.service].length - 1
+                ],
             });
             console.log("Service Update Available!");
           }
@@ -75,4 +111,3 @@ export async function useUpdateCheck() {
     nodeHeaderStore.searchingForUpdates = false;
   }
 }
-
