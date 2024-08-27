@@ -123,7 +123,6 @@ const searchingForUpdatablePackages = ref(false);
 
 const newUpdates = computed(() => serverStore.upgradablePackages.value);
 const onOff = computed(() => (stereumApp.value.autoUpdate == "on" ? "text-green-700" : "text-red-700"));
-console.log("klnklm", serverStore.upgradablePackages);
 
 //Watchers
 
