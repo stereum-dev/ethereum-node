@@ -26,6 +26,7 @@ export class HetznerServer {
       try {
         tries++
         log.info(`Trying to connect (${tries})`)
+        await this.Sleep(2000)
         connected = await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 5000)
       } catch (err) {
         log.info(err)
