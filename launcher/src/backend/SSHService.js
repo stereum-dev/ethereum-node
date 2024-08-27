@@ -90,7 +90,7 @@ export class SSHService {
 
     if (
       this.connectionInfo &&
-      !this.addingConnection &&
+      this.addingConnection &&
       (this.connectionPool.length < 6 || this.connectionPool[threshholdIndex]?._chanMgr?._count > 0)
     ) {
       await this.connect(this.connectionInfo);
@@ -118,8 +118,8 @@ export class SSHService {
 
   async connect(connectionInfo, currentWindow = null) {
     this.connectionInfo = connectionInfo;
-    this.addingConnection = true;
     let conn = new Client();
+    let passwordBanner = false;
     return new Promise((resolve, reject) => {
       conn.on("error", (error) => {
         this.addingConnection = false;
@@ -130,6 +130,7 @@ export class SSHService {
       //only works for ubuntu 22.04
       conn.on("banner", (msg) => {
         if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())) {
+          passwordBanner = true;
           if (process.env.NODE_ENV === "test") {
             resolve(conn);
           }
@@ -148,17 +149,18 @@ export class SSHService {
         .on("ready", async () => {
           this.connectionPool.push(conn);
           this.connected = true;
-          this.addingConnection = false;
-          if (this.connectionPool.length === 1) {
-            let test = await this.exec("ls");
-            if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
-              if (process.env.NODE_ENV === "test") {
-                resolve(conn);
+          if (!passwordBanner) {
+            if (this.connectionPool.length === 1) {
+              let test = await this.exec("ls");
+              if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
+                if (process.env.NODE_ENV === "test") {
+                  resolve(conn);
+                }
+                reject(test.stderr);
               }
-              reject(test.stderr);
             }
+            resolve(conn);
           }
-          resolve(conn);
         })
         .connect({
           host: connectionInfo.host,

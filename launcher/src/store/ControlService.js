@@ -675,6 +675,10 @@ class ControlService extends EventEmitter {
   async readGasConfigFile(args) {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
+
+  async handleOTPChange(args) {
+    return this.promiseIpc.send("handleOTPChange", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

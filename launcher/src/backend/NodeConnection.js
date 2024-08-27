@@ -34,9 +34,17 @@ export class NodeConnection {
   }
 
   async establish(taskManager, currentWindow) {
-    await this.sshService.connect(this.nodeConnectionParams, currentWindow);
-    await this.findStereumSettings();
-    this.taskManager = taskManager;
+    try {
+      if (this.sshService.connectionPool.length > 0) {
+        await this.sshService.disconnect(true);
+      }
+      await this.sshService.connect(this.nodeConnectionParams, currentWindow);
+      this.sshService.addingConnection = true;
+      await this.findStereumSettings();
+      this.taskManager = taskManager;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   /**
@@ -342,17 +350,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-          playbookRunRef +
-          "\
+        playbookRunRef +
+        "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-          StringUtils.escapeStringForShell(extraVarsJson) +
-          "\
+        StringUtils.escapeStringForShell(extraVarsJson) +
+        "\
                         " +
-          this.settings.stereum.settings.controls_install_path +
-          "/ansible/controls/genericPlaybook.yaml\
+        this.settings.stereum.settings.controls_install_path +
+        "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -1800,10 +1808,10 @@ export class NodeConnection {
       }
       configStatus = await this.sshService.exec(
         "echo -e " +
-          StringUtils.escapeStringForShell(service.data.trim()) +
-          " > /etc/stereum/services/" +
-          service.id +
-          ".yaml"
+        StringUtils.escapeStringForShell(service.data.trim()) +
+        " > /etc/stereum/services/" +
+        service.id +
+        ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -1850,10 +1858,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-          " > /etc/stereum/services/" +
-          serviceConfiguration.id +
-          ".yaml"
+        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+        " > /etc/stereum/services/" +
+        serviceConfiguration.id +
+        ".yaml"
       );
       if (setupID) await this.configManager.addServiceIntoSetup(serviceConfiguration, setupID);
     } catch (err) {
@@ -1876,9 +1884,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-          serviceConfiguration.id +
-          ": " +
-          SSHService.extractExecError(configStatus)
+        serviceConfiguration.id +
+        ": " +
+        SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
