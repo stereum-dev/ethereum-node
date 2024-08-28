@@ -4,8 +4,8 @@
     icon-size="w-24"
     bg-color="bg-[#1c1d1d]"
     :main-title="'Password Change Required'"
-    :confirm-text="`${t('twoFactorAuth.submit')}`"
-    :click-outside-text="t('deleteModal.close')"
+    :confirm-text="t('twoFactorAuth.submit')"
+    :click-outside-text="t('twoFactorAuth.submit')"
     :is-disabled="btnDisabled"
     @close-window="closeWindow"
     @confirm-action="submitPassword"
@@ -13,11 +13,11 @@
     <template #content>
       <div class="2fa-content-parent w-full h-full grid grid-cols-24 grid-rows-6 items-center">
         <span class="col-start-5 col-end-21 row-start-1 row-end-3 text-md text-center text-gray-300">
-          Type in your new Password
+          {{ t("otpModal.newPass") }}
         </span>
         <input
           v-model="password"
-          class="col-start-6 col-end-20 row-start-5 row-span-2 h-full rounded-lg px-2 text-md text-gray-800"
+          class="col-start-6 col-end-20 row-start-5 row-span-3 h-full rounded-lg px-2 text-md text-gray-800"
           type="password"
         />
       </div>

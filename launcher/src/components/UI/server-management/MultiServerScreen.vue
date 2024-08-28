@@ -33,7 +33,11 @@ import ServerHeader from './components/ServerHeader.vue';
       @close-window="closeWindow"
     />
     <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
-    <ChangeOTPModal v-if="serverStore.isOTPActive" @submit-password="submitPasswordHandler" @close-window="closeAndCancel" />
+    <ChangeOTPModal
+      v-if="serverStore.isOTPActive"
+      @submit-password="submitPasswordHandler"
+      @close-window="closeAndCancel"
+    />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
     <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
   </div>
@@ -140,7 +144,7 @@ const submitPasswordHandler = async (pass) => {
   serverStore.connectingProcess = true;
   loginAbortController = new AbortController();
   try {
-    await ControlService.handleOTPChange({newPassword: pass});
+    await ControlService.handleOTPChange({ newPassword: pass });
   } catch (error) {
     console.error("Couldn't Change Password:", error);
     serverStore.isServerAnimationActive = false;
@@ -150,7 +154,7 @@ const submitPasswordHandler = async (pass) => {
   }
   serverStore.loginState.password = pass;
   await loginHandler();
-}
+};
 
 //Server Management Login Handler
 
