@@ -741,6 +741,10 @@ ipcMain.handle("readGasConfigFile", async (event, args) => {
   return await tekuGasLimitConfig.readGasConfigFile(args);
 });
 
+ipcMain.handle("fetchObolCharonAlerts", async () => {
+  return await monitoring.fetchObolCharonAlerts();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

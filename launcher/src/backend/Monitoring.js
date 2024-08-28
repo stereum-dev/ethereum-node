@@ -436,11 +436,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-            jsonrpc: "2.0",
-            method: rpc_method.trim(),
-            params: rpc_params,
-            id: 1,
-          })
+          jsonrpc: "2.0",
+          method: rpc_method.trim(),
+          params: rpc_params,
+          id: 1,
+        })
         : rpc_method;
 
     // Define default response
@@ -2623,8 +2623,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-      ? "str"
-      : "invalid";
+        ? "str"
+        : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2712,7 +2712,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-        serviceInfos[i].config.dependencies.executionClients.length
+          serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({
@@ -3249,9 +3249,8 @@ rm -rf diskoutput
         const parsedJson = JSON.parse(stdoutJson);
 
         let message =
-          `${parsedJson?.message || ""}${parsedJson?.message && parsedJson?.stacktraces ? "\n" : ""}${
-            parsedJson?.stacktraces || ""
-          }`.trim() || output;
+          `${parsedJson?.message || ""}${parsedJson?.message && parsedJson?.stacktraces ? "\n" : ""}${parsedJson?.stacktraces || ""
+            }`.trim() || output;
 
         return {
           pubkey: pubkey,
@@ -3339,6 +3338,105 @@ rm -rf diskoutput
           msg: error.toString(),
         },
       ];
+    }
+  }
+  /**
+   * Will gather metrics from Prometheus and evaluate.
+   * If thresholds are exceeded, an alert will be generated and added to the retuned array.
+   * @returns {Object[]} Array of alerts e.g. [{name: "Cluster in Unknown Status", level: "warning"}, {name: "Beacon Node Down", level: "critical"}]
+   */
+  async fetchObolCharonAlerts() {
+    const queries = {
+      app_monitoring_readyz: "max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer)",
+      cluster_missed_attestations: "max(increase(core_tracker_failed_duties_total[10m])) by (cluster_hash, cluster_name)",
+      cluster_failure_rate: "floor(100 * (max(increase(core_tracker_success_duties_total[15m])) by (cluster_hash, cluster_name) / max(increase(core_tracker_expect_duties_total[15m])) by (cluster_hash, cluster_name)))",
+      percentage_failed_sync_message_duty: "(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer)\n) \n/ \n(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n    + \n    sum(increase(core_bcast_broadcast_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n)",
+      connected_relays: "group (p2p_relay_connections) by (cluster_peer)",
+      peer_ping_latency: "histogram_quantile(0.90, sum(rate(p2p_ping_latency_secs_bucket[2m])) by (le,peer))",
+    }
+
+    const queryPromises = Object.entries(queries).map(([key, query]) => {
+      return this.queryPrometheus(encodeURIComponent(query)).then(result => ({ key, result }));
+    });
+
+    const results = await Promise.all(queryPromises);
+    log.info(JSON.stringify(results, null, 2));
+    let alerts = results.map((metric) => {
+      if (metric.result.status != "success") {
+        return;
+      }
+      if (metric.key === "peer_ping_latency") {
+        let value = Math.max(...metric.result.data.result.map((r) => r.value[1]));
+        return this.parseObolCharonAlerts(metric.key, value);
+      }
+      let value = metric.result.data.result[0].value[1];
+      return this.parseObolCharonAlerts(metric.key, value);
+    }).filter((alert) => alert);
+
+    return alerts;
+  }
+
+  parseObolCharonAlerts(key, value) {
+    value = 0
+    //app_monitoring_readyz
+    if (key === "app_monitoring_readyz") {
+      switch (value) {
+        case 0:
+          return {
+            name: "Cluster in Unknown Status",
+            level: "warning"
+          };
+        case 2:
+          return {
+            name: "Beacon Node Down",
+            level: "critical"
+          };
+        case 4:
+          return {
+            name: "Cluster Insufficient Peers",
+            level: "warning"
+          };
+        case 6:
+          return {
+            name: "Cluster Missing Validators",
+            level: "critical"
+          };
+        case 7:
+          return {
+            name: "Beacon Node Zero Peers",
+            level: "critical"
+          };
+      }
+    }
+    if (key === "cluster_missed_attestations" && value > 0) {
+      return {
+        name: "Cluster Missed Attestations",
+        level: "critical"
+      };
+    }
+    if (key === "cluster_failure_rate" && value < 95) {
+      return {
+        name: "Cluster Failure Rate",
+        level: "critical"
+      };
+    }
+    if (key === "percentage_failed_sync_message_duty" && value > 0.1) {
+      return {
+        name: "Failed Sync Msg Duty",
+        level: "critical"
+      };
+    }
+    if (key === "connected_relays" && value < 1) {
+      return {
+        name: "Num. Connected Relays",
+        level: "warning"
+      };
+    }
+    if (key === "peer_ping_latency" && value > 0.4) {
+      return {
+        name: "Peer Ping Latency",
+        level: "warning"
+      };
     }
   }
 }
