@@ -2445,12 +2445,12 @@ export class ServiceManager {
     console.log(chainParams);
     const workingDir = await this.getCurrentPath();
 
-    this.nodeConnection.runPlaybook("Copy Devnet Genesis", {
+    await this.nodeConnection.runPlaybook("Copy Devnet Genesis", {
       stereum_role: "copy-devnet-genesis",
       working_dir: workingDir,
     });
 
-    this.nodeConnection.runPlaybook("Initiate Devnet Genesis", {
+    await this.nodeConnection.runPlaybook("Initiate Devnet Genesis", {
       stereum_role: "initiate-devnet-genesis",
       working_dir: workingDir,
     });

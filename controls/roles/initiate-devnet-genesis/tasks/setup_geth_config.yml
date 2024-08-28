@@ -7,4 +7,8 @@
     volumes:
       - "{{ working_dir }}/genesis/execution:/execution"
     auto_remove: true
+
+- name: Wait for 5 seconds
+  pause:
+    seconds: 5
 #EOF
