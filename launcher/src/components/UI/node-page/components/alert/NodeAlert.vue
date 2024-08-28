@@ -6,26 +6,27 @@
       >
         <div class="icon-line">
           <div
-            v-if="alertShowState === 'showAll' || alertShowState === 'green'"
             class="status-icon"
-            :class="{ active: perfect }"
+            :class="{
+              filtered: alertShowState !== 'green' && alertShowState !== 'showAll',
+            }"
             @click="alertPicker(perfect ? 'green' : 'showAll')"
           >
             <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
           </div>
           <div
-            v-if="alertShowState === 'showAll' || alertShowState === 'yellow'"
             class="status-icon"
-            :class="{ active: warning || pointStatus.length !== 0 }"
+            :class="{
+              filtered: alertShowState !== 'yellow' && alertShowState !== 'showAll',
+            }"
             @click="alertPicker(warning || pointStatus.length !== 0 ? 'yellow' : 'showAll')"
           >
             <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
           </div>
           <div
-            v-if="alertShowState === 'showAll' || alertShowState === 'red'"
             class="status-icon"
             :class="{
-              active: alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm,
+              filtered: alertShowState !== 'red' && alertShowState !== 'showAll',
             }"
             @click="
               alertPicker(
@@ -651,7 +652,7 @@ export default {
 .icon-line {
   display: flex;
   justify-content: flex-start;
-  padding-top: 4px;
+  padding-top: 2px;
   width: 100%;
   height: 30px;
 }
@@ -662,21 +663,27 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 25%;
   border-radius: 5px;
   margin-right: 5px;
-}
-.active {
-  opacity: 100%;
+  box-sizing: border-box;
+  border: 2px solid #151618;
   cursor: pointer;
 }
-.active:hover {
-  transform: scale(1.1);
+
+.status-icon.filtered {
+  opacity: 30%; /* Green border when filtered is active */
+}
+
+/* Prevent hover effect when .filtered class is present */
+.status-icon.filtered:hover {
+  opacity: 100%; /* Keep the green border on hover if filtered is active */
 }
 
 .status-icon img {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
+  justify-self: center;
+  align-self: center;
 }
 
 .status-message_yellow,
