@@ -2441,22 +2441,18 @@ export class ServiceManager {
     }
   }
 
-  async createDevnet() {
+  async createDevnet(chainParams) {
+    console.log(chainParams);
     const workingDir = await this.getCurrentPath();
-    const devnetServices = {
-      EL: "geth",
-      CL: "prysm",
-      VL: "prysm",
-    };
 
-    devnetServices.EL += `-${StringUtils.createRandomString()}`;
-    devnetServices.CL += `-${StringUtils.createRandomString()}`;
-    devnetServices.VL += `-${StringUtils.createRandomString()}`;
-
-    this.nodeConnection.runPlaybook("Create Devnet", {
-      stereum_role: "create-devnet",
+    this.nodeConnection.runPlaybook("Copy Devnet Genesis", {
+      stereum_role: "copy-devnet-genesis",
       working_dir: workingDir,
-      devnet_services: devnetServices,
+    });
+
+    this.nodeConnection.runPlaybook("Initiate Devnet Genesis", {
+      stereum_role: "initiate-devnet-genesis",
+      working_dir: workingDir,
     });
   }
 }

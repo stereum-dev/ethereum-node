@@ -686,8 +686,8 @@ ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });
 
-ipcMain.handle("createDevnet", async () => {
-  return await serviceManager.createDevnet();
+ipcMain.handle("createDevnet", async (event, args) => {
+  return await serviceManager.createDevnet(args);
 });
 
 ipcMain.handle("startShell", async (event) => {

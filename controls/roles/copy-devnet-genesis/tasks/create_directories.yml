@@ -1,0 +1,20 @@
+---
+- name: Check if directories exist
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  register: dir_stat
+  loop:
+    - "{{ working_dir }}"
+    - "{{ working_dir }}/genesis/execution"
+    - "{{ working_dir }}/genesis/consensus"
+
+- name: Create directories if they do not exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0777"
+  when: not item.stat.exists
+  loop: "{{ dir_stat.results | map(attribute='stat.path') | list }}"
+  loop_control:
+    loop_var: item
+# EOF

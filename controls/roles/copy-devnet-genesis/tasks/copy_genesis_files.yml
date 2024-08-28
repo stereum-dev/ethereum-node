@@ -1,0 +1,21 @@
+---
+- name: Check if config.yml and genesis.json exist
+  ansible.builtin.stat:
+    path: "{{ working_dir }}/genesis/{{ item }}"
+  register: file_stat
+  with_items:
+    - consensus/config.yml
+    - execution/genesis.json
+
+- name: Copy config.yml and genesis.json if they do not exist
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/{{ item.split('/')[-1] }}"
+    dest: "{{ working_dir }}/genesis/{{ item }}"
+    mode: "0777"
+  when: not file_stat.results[item_index].stat.exists
+  with_items:
+    - consensus/config.yml
+    - execution/genesis.json
+  vars:
+    item_index: "{{ item == 'consensus/config.yml' | ternary(0, 1) }}"
+# EOF

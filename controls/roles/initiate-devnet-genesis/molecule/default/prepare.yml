@@ -1,0 +1,11 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Update cache & OS (Ubuntu)
+      apt:
+        update_cache: true
+        upgrade: dist
+      become: true
+      changed_when: false
+# EOF

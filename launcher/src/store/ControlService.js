@@ -676,8 +676,8 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
 
-  async createDevnet() {
-    return this.promiseIpc.send("createDevnet");
+  async createDevnet(args) {
+    return this.promiseIpc.send("createDevnet", args);
   }
 }
 if (!instance) {

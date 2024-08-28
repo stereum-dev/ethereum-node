@@ -1,0 +1,9 @@
+---
+- name: Create directories
+  include_tasks: create_directories.yml
+  register: create_directories_result
+
+- name: Copy genesis files
+  include_tasks: copy_genesis_files.yml
+  when: create_directories_result is succeeded
+#EOF

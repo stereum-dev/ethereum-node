@@ -463,8 +463,23 @@ const openNetworkMenu = () => {
   manageStore.isServicesDrawerActive = false;
   manageStore.isSetupsDrawerActive = true;
 };
-const createCustomSetup = () => {
+
+const decToHex = (decimal) => {
+  return "0x" + decimal.toString(16);
+};
+
+const createCustomSetup = async () => {
   console.log("Create Custom Setup");
+  let chainId = "11111";
+  let account = "123463a4b065722e99115d6c222f267d9cabb555";
+  let balanceDecimal = 20000000000000000000000;
+  let balance = decToHex(balanceDecimal);
+  let chainParams = {
+    chainId: chainId ? chainId : null,
+    account: account ? account : null,
+    balance: balance ? balance : null,
+  };
+  await ControlService.createDevnet(chainParams);
 };
 
 const getSetupNetwork = (network) => {
@@ -905,7 +920,9 @@ const deleteSetup = async (item) => {
   });
   const subtasks =
     item?.services.flatMap((service) => {
-      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
+      const matchedServices = manageStore.newConfiguration.filter(
+        (e) => e.config?.serviceID === service.config?.serviceID
+      );
 
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,

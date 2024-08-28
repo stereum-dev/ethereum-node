@@ -1,0 +1,10 @@
+---
+- name: Include task create_genesis
+  include_tasks: create_genesis.yml
+
+- name: Remove any pre-existing Geth database folder if present
+  include_tasks: geth_remove_db.yml
+
+- name: Set's up the genesis conf for the geth client from the genesis.json file
+  include_tasks: setup_geth_config.yml
+#EOF

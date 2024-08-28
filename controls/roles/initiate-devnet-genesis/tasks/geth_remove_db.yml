@@ -1,7 +1,7 @@
 ---
 - name: Ensure Geth directory is removed
   ansible.builtin.file:
-    path: "{{ working_dir }}/execution/geth"
+    path: "{{ working_dir }}/genesis/execution/geth"
     state: absent
   become: true
 #EOF

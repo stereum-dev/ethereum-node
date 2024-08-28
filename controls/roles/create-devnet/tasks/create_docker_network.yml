@@ -1,4 +1,0 @@
----
-- name: Create Docker Network DevNet
-  docker_network:
-    name: DevNet
