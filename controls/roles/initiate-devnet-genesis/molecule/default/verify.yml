@@ -8,9 +8,10 @@
         path: "{{ item }}"
       register: dir_stat
       loop:
-        - "{{ working_dir }}"
-        - "{{ working_dir }}/genesis/execution"
-        - "{{ working_dir }}/genesis/consensus"
+        - "{{ working_dir }}/genesis/execution/geth"
+        - "{{ working_dir }}/genesis/execution/geth/chaindata"
+        - "{{ working_dir }}/genesis/execution/geth/lightchaindata"
+        - "{{ working_dir }}/genesis/execution/keystore"
 
     - name: Assert directories exist
       assert:
@@ -20,13 +21,14 @@
       loop_control:
         loop_var: dir_stat
 
-    - name: Check if config.yml and genesis.json exist
+    - name: Check if genesis files exist
       stat:
         path: "{{ working_dir }}/genesis/{{ item }}"
       register: file_stat
       with_items:
-        - consensus/config.yml
-        - execution/genesis.json
+        - consensus/genesis.ssz
+        - execution/geth/LOCK
+        - execution/geth/nodekey
 
     - name: Assert files exist
       assert:
