@@ -6,28 +6,27 @@
           class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pt-0.5"
         >
           <div
-            v-if="alertShowState === 'showAll' || alertShowState === 'green'"
             class="icon_alarm"
-            :class="{ active: perfect }"
+            :class="{
+              filtered: alertShowState !== 'green' && alertShowState !== 'showAll',
+            }"
             @click="alertPicker(perfect ? 'green' : 'showAll')"
           >
             <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
           </div>
           <div
-            v-if="alertShowState === 'showAll' || alertShowState === 'yellow'"
             class="icon_alarm"
             :class="{
-              active: warning || pointStatus.length !== 0,
+              filtered: alertShowState !== 'yellow' && alertShowState !== 'showAll',
             }"
             @click="alertPicker(warning || pointStatus.length !== 0 ? 'yellow' : 'showAll')"
           >
             <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
           </div>
           <div
-            v-if="alertShowState === 'showAll' || alertShowState === 'red'"
             class="icon_alarm"
             :class="{
-              active: alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm,
+              filtered: alertShowState !== 'red' && alertShowState !== 'showAll',
             }"
             @click="
               alertPicker(
@@ -557,16 +556,17 @@ export default {
   align-items: center;
   box-sizing: border-box;
   margin: 0 1.5px;
-  opacity: 25%;
+  cursor: pointer;
   padding: 2px;
 }
-.active {
+.icon_alarm.filtered {
+  opacity: 30%;
+}
+
+.icon_alarm.filtered:hover {
   opacity: 100%;
-  cursor: pointer;
 }
-.active:hover {
-  transform: scale(1.1);
-}
+
 .icon_alarm img {
   height: 100%;
 }

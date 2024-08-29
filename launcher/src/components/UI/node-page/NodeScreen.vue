@@ -15,7 +15,7 @@
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
         <div class="h-[60px] self-center w-full flex flex-col justify-center items-center">
           <button
-            class="w-full h-[53px] rounded-md bg-[#264744] hover:bg-[#2f5a50] px-2 py-1 text-gray-200 active:scale-95 active:shadow-none transition-all duration-100 ease-in-out uppercase flex justify-center items-center shadow-md shadow-zinc-700"
+            class="info-toggle-btn w-full h-[34px] rounded-full bg-[#264744] hover:bg-[#325e5a] px-2 py-1 text-gray-200 active:scale-95 shadow-md shadow-zinc-800 active:shadow-none transition-all duration-200 ease-in-out uppercase flex justify-center items-center"
             @click="alarmToggle"
             @mouseenter="
               footerStore.cursorLocation = nodeStore.infoAlarm
@@ -24,7 +24,7 @@
             "
             @mouseleave="footerStore.cursorLocation = ''"
           >
-            <img class="w-10" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
+            <img class="w-8" src="/img/icon/node-page-icons/access-tutorial-icon.png" alt="information" />
           </button>
         </div>
         <AlertSection :info-aralm="nodeStore.infoAlarm" />

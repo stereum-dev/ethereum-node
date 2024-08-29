@@ -671,12 +671,10 @@ export default {
 }
 
 .status-icon.filtered {
-  opacity: 30%; /* Green border when filtered is active */
+  opacity: 30%;
 }
-
-/* Prevent hover effect when .filtered class is present */
 .status-icon.filtered:hover {
-  opacity: 100%; /* Keep the green border on hover if filtered is active */
+  opacity: 100%;
 }
 
 .status-icon img {
