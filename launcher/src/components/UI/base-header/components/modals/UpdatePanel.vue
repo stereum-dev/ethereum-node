@@ -184,7 +184,7 @@
                   class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800"
                 >
                   <div class="w-5 h-5 bg-[#243d36] rounded-full p-1">
-                    <img class="w-3" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" />
+                    <img class="w-3" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" @click="copyUpdates"/>
                   </div>
                   <span class="text-center text-sm text-gray-300 font-semibold">{{
                     $t("updatePanel.availablePlugin")
@@ -324,6 +324,10 @@ const clickOutside = () => {
 };
 const searchUpdate = () => {
   useUpdateCheck();
+};
+
+const copyUpdates = () => {
+  navigator.clipboard.writeText(serviceStore.newUpdates.map(u => "- " + u.name + " to " + u.version).join("\n"));
 };
 
 const checkStereumUpdate = computed(() => {
