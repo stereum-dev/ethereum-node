@@ -464,22 +464,26 @@ const openNetworkMenu = () => {
   manageStore.isSetupsDrawerActive = true;
 };
 
-const decToHex = (decimal) => {
-  return "0x" + decimal.toString(16);
-};
+// const decToHex = (decimal) => {
+//   return "0x" + decimal.toString(16);
+// };
 
+// console.log("Create Custom Setup");
+// let chainId = "11111";
+// let account = "123463a4b065722e99115d6c222f267d9cabb555";
+// let balanceDecimal = 20000000000000000000000;
+// let balance = decToHex(balanceDecimal);
+// let chainParams = {
+//   chainId: chainId ? chainId : null,
+//   account: account ? account : null,
+//   balance: balance ? balance : null,
+// };
 const createCustomSetup = async () => {
-  console.log("Create Custom Setup");
-  let chainId = "11111";
-  let account = "123463a4b065722e99115d6c222f267d9cabb555";
-  let balanceDecimal = 20000000000000000000000;
-  let balance = decToHex(balanceDecimal);
-  let chainParams = {
-    chainId: chainId ? chainId : null,
-    account: account ? account : null,
-    balance: balance ? balance : null,
-  };
-  await ControlService.createDevnet(chainParams);
+  await ControlService.copyGenesisConfigFile();
+  let initGenesis = await ControlService.getGenesis();
+  initGenesis.config.chainId = 11111;
+  await ControlService.writeGenesis(initGenesis);
+  await ControlService.initGenesis();
 };
 
 const getSetupNetwork = (network) => {
