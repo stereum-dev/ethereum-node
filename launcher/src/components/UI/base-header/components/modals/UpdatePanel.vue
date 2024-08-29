@@ -327,7 +327,14 @@ const searchUpdate = () => {
 };
 
 const copyUpdates = () => {
-  navigator.clipboard.writeText(serviceStore.newUpdates.map(u => "- " + u.name + " to " + u.version).join("\n"));
+  let string = serviceStore.newUpdates.map(u => "- " + u.name + " to " + u.version).join("\n")
+  if(checkStereumUpdate.value){
+    string += "\n- Stereum to " + headerStore.stereumUpdate.version
+  }
+  if(serverStore.numberOfUpdatablePackages && serverStore.numberOfUpdatablePackages > 0){
+    string += "\n- OS Updates"
+  }
+  navigator.clipboard.writeText(string);
 };
 
 const checkStereumUpdate = computed(() => {
