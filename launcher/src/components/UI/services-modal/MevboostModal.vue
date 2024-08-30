@@ -62,6 +62,7 @@
 import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
+import { useSetups } from "@/store/setups";
 import ControlService from "@/store/ControlService";
 import { toRaw } from "vue";
 export default {
@@ -84,7 +85,9 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       relaysList: "relaysList",
-      currentNetwork: "currentNetwork",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     combinedBlocs() {
       let names = new Set();
@@ -101,8 +104,9 @@ export default {
   mounted() {
     this.filtermevService();
     this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter((r) => r[this.currentNetwork.network.toLowerCase()])
+      this.relaysList.filter((r) => r[this.selectedSetup?.network.toLowerCase()])
     );
+    console.log(this.selectedSetup);
   },
   methods: {
     shuffleRelaysList(array) {
@@ -136,7 +140,7 @@ export default {
                 if (service.entrypoint[relayEntryPointIndex + 1]) {
                   const relayURLs = service.entrypoint[relayEntryPointIndex + 1].split(",");
                   relayURLs.forEach((relay) => {
-                    let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
+                    let relayData = this.relaysList.find((r) => r[this.selectedSetup?.network.toLowerCase()] === relay);
                     if (relayData) this.checkedRelays.push(relayData);
                   });
                 }
@@ -174,7 +178,7 @@ export default {
       this.loading = true;
       if (this.serviceConfig.entrypoint) {
         this.serviceConfig.entrypoint[this.serviceConfig.entrypoint.findIndex((e) => e === "-relays") + 1] =
-          this.checkedRelays.map((r) => r[this.currentNetwork.network.toLowerCase()]).join();
+          this.checkedRelays.map((r) => r[this.selectedSetup?.network.toLowerCase()]).join();
         ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(() => {
           setTimeout(() => {
             this.loading = false;

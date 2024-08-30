@@ -1,5 +1,7 @@
 <template>
-  <div class="w-10/12 h-full grid grid-cols-2 grid-flow-row p-2 mx-auto trasnform duration-200 mt-6">
+  <div
+    class="w-10/12 h-full grid grid-cols-2 grid-flow-row p-2 mx-auto trasnform duration-200 mt-6"
+  >
     <RelaysCheckbox
       v-for="relay in availableBlocks"
       :key="relay.id"
@@ -15,6 +17,7 @@
 import RelaysCheckbox from "./RelaysCheckbox.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { onMounted, computed } from "vue";
+import { useSetups } from "@/store/setups";
 
 const manageStore = useNodeManage();
 
@@ -29,11 +32,13 @@ const props = defineProps({
   },
 });
 
+const setupsStore = useSetups();
+
 const availableBlocks = computed({
   get: () => manageStore.availableBlocks,
   set: () =>
     (manageStore.availableBlocks = shuffleRelaysList(
-      manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network])
+      manageStore.relaysList.filter((r) => r[setupsStore.selectedSetup.network])
     )),
 });
 
@@ -43,7 +48,7 @@ onMounted(() => {
     relay.isSelected = false;
   });
   manageStore.availableBlocks = shuffleRelaysList(
-    manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network])
+    manageStore.relaysList.filter((r) => r[setupsStore.selectedSetup.network])
   );
 });
 

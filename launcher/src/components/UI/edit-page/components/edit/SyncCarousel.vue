@@ -136,7 +136,7 @@ const selectedIcon = ref("");
 // Computed properties
 
 const getCategory = computed(() => {
-  return props.service.category;
+  return props.service?.category || "";
 });
 
 const currentNetwork = computed(() => {
