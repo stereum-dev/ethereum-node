@@ -1,9 +1,7 @@
 name: 🤖 Automated Testing Improvement
 description: Suggest an enhancement or report an issue related to automated testing.
 title: "[Automated Testing]: "
-labels:
-  - enhancement
-  - automated testing
+labels: ["automated testing"]
 
 body:
   - type: textarea
