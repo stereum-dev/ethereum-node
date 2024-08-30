@@ -144,7 +144,7 @@
           v-for="alerWarn in warningObol"
           :key="alerWarn"
           class="alert-message_yellow"
-          @mouseenter="cursorLocation = `warning`"
+          @mouseenter="cursorLocation = `${alerWarn}`"
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
