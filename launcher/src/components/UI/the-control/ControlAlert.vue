@@ -118,6 +118,48 @@
             </div>
           </div>
         </div>
+        <!-- obol red start -->
+        <div
+          v-for="alerCrit in criticalObol"
+          :key="alerCrit"
+          class="alert-message_red"
+          @mouseenter="cursorLocation = `${alerCrit}`"
+          @mouseleave="cursorLocation = ''"
+        >
+          <div class="icon-box">
+            <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
+          </div>
+          <div class="message">
+            <div class="main-message">
+              <span>{{ alerCrit }}</span>
+            </div>
+            <div class="val-message">
+              <span>> Obol Charon</span>
+            </div>
+          </div>
+        </div>
+        <!-- obol red end -->
+        <!-- obol yellow start -->
+        <div
+          v-for="alerWarn in warningObol"
+          :key="alerWarn"
+          class="alert-message_yellow"
+          @mouseenter="cursorLocation = `warning`"
+          @mouseleave="cursorLocation = ''"
+        >
+          <div class="icon-box">
+            <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
+          </div>
+          <div class="message">
+            <div class="main-message text-gray-900">
+              <span>{{ alerWarn }}</span>
+            </div>
+            <div class="val-message text-gray-900">
+              <span>> Obol Charon</span>
+            </div>
+          </div>
+        </div>
+        <!-- obol yellow end -->
         <div
           v-if="synchronizationErrorControl && (alertShowState === 'showAll' || alertShowState === 'red')"
           class="alert-message_red"
@@ -247,6 +289,10 @@ export default {
       use: this.$t("nodeAlert.use"),
       sync: this.$t("nodeAlert.sync"),
       taskFail: this.$t("nodeAlert.taskFail"),
+      polling: null,
+      criticalObol: [],
+      warningObol: [],
+      obolInterval: null,
     };
   },
   computed: {
@@ -344,9 +390,17 @@ export default {
     this.polling = setInterval(() => {
       this.readService();
     }, 10000);
+
+    this.fetchObolCharonAlerts();
+    this.obolInterval = setInterval(() => {
+      this.fetchObolCharonAlerts();
+    }, 120000);
   },
   beforeUnmount() {
     clearInterval(this.polling);
+    if (this.obolInterval) {
+      clearInterval(this.obolInterval);
+    }
   },
   created() {
     this.storageCheck();
@@ -374,6 +428,24 @@ export default {
       } catch (error) {
         console.error("Failed to load saved settings:", error);
       }
+    },
+
+    async fetchObolCharonAlerts() {
+      try {
+        const alerts = await ControlService.fetchObolCharonAlerts();
+        this.processAlerts(alerts);
+      } catch (error) {
+        console.error("Failed to fetch Obol Charon alerts:", error);
+      }
+    },
+    processAlerts(alerts) {
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
+
+      const warningAlertNames = alerts.filter((alert) => alert.level === "warning").map((alert) => alert.name);
+
+      this.criticalObol = criticalAlertNames;
+
+      this.warningObol = warningAlertNames;
     },
     async updateSettings(vol) {
       try {
@@ -665,18 +737,22 @@ export default {
   display: flex;
   width: 100%;
   height: 60%;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   font-size: 52%;
   font-weight: 800;
   text-transform: uppercase;
+  margin-top: 5%;
 }
+
 .main-message span {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  display: block;
   width: 100%;
   height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 }
 .val-message {
   display: flex;
@@ -687,5 +763,6 @@ export default {
   font-size: 42%;
   font-weight: 700;
   text-transform: uppercase;
+  margin-bottom: 2%;
 }
 </style>
