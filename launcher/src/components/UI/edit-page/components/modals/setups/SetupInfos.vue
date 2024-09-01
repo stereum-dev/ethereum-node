@@ -19,7 +19,7 @@
         </div>
         <div class="w-full flex justify-center items-center">
           <div class="w-full grid grid-cols-12 items-center text-md">
-            <img class="col-start-1 w-7 h-7" src="/img/icon/edit-node-icons/service-category.png" alt="Client Icon" />
+            <img class="col-start-1 w-7 h-7" src="/img/icon/staking-page-icons/rename.png" alt="Client Icon" />
             <span class="col-start-2 col-span-3 text-gray-400 text-left"> Setup Name </span>
             <span v-if="getSelectedSetup" class="col-start-6 col-end-13 text-lg text-gray-400 text-center capitalize">{{
               getSelectedSetup.setupName
