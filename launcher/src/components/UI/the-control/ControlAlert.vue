@@ -414,7 +414,6 @@ export default {
       } else {
         this.alertShowState.push(color);
       }
-      console.log(this.alertShowState);
     },
     async checkSettings() {
       try {

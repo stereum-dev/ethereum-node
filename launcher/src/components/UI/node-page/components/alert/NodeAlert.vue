@@ -8,31 +8,27 @@
           <div
             class="status-icon"
             :class="{
-              filtered: alertShowState !== 'green' && alertShowState !== 'showAll',
+              filtered: alertShowState.includes('green'),
             }"
-            @click="alertPicker(perfect ? 'green' : 'showAll')"
+            @click="alertPicker('green')"
           >
             <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
           </div>
           <div
             class="status-icon"
             :class="{
-              filtered: alertShowState !== 'yellow' && alertShowState !== 'showAll',
+              filtered: alertShowState.includes('yellow'),
             }"
-            @click="alertPicker(warning || pointStatus.length !== 0 ? 'yellow' : 'showAll')"
+            @click="alertPicker('yellow')"
           >
             <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
           </div>
           <div
             class="status-icon"
             :class="{
-              filtered: alertShowState !== 'red' && alertShowState !== 'showAll',
+              filtered: alertShowState.includes('red'),
             }"
-            @click="
-              alertPicker(
-                alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm ? 'red' : 'showAll'
-              )
-            "
+            @click="alertPicker('red')"
           >
             <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
           </div>
@@ -56,7 +52,7 @@
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
       <div v-show="!loadingAlerts" class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]">
         <router-link
-          v-if="storageWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
+          v-if="storageWarning && !alertShowState.includes('yellow')"
           to="/control"
           class="status-message_yellow h-9"
         >
@@ -71,7 +67,7 @@
           </div>
         </router-link>
         <router-link
-          v-if="cpuWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
+          v-if="cpuWarning && !alertShowState.includes('yellow')"
           to="/control"
           class="status-message_yellow h-9"
         >
@@ -87,7 +83,7 @@
             </div>
           </div>
         </router-link>
-        <template v-if="pointStatus && (alertShowState === 'showAll' || alertShowState === 'yellow')">
+        <template v-if="pointStatus && !alertShowState.includes('yellow')">
           <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow h-9">
             <div class="message-icon">
               <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
@@ -102,11 +98,7 @@
             </div>
           </router-link>
         </template>
-        <router-link
-          v-if="cpuAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
-          to="/control"
-          class="status-message_red h-9"
-        >
+        <router-link v-if="cpuAlarm && !alertShowState.includes('red')" to="/control" class="status-message_red h-9">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-cpu-red.png" alt="warn_storage" />
           </div>
@@ -136,7 +128,7 @@
         </div>
 
         <router-link
-          v-if="synchronizationErrorControl && (alertShowState === 'showAll' || alertShowState === 'red')"
+          v-if="synchronizationErrorControl && !alertShowState.includes('red')"
           to="/control"
           class="status-message_red h-9"
         >
@@ -153,7 +145,7 @@
           </div>
         </router-link>
         <div
-          v-if="errorAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
+          v-if="errorAlarm && !alertShowState.includes('red')"
           class="status-message_red h-9"
           @click="isTaskModalActive = true"
         >
@@ -167,7 +159,7 @@
           </div>
         </div>
 
-        <template v-if="notSetAddresses && (alertShowState === 'showAll' || alertShowState === 'red')">
+        <template v-if="notSetAddresses && !alertShowState.includes('red')">
           <div
             v-for="validator in notSetAddresses"
             :key="validator"
@@ -191,10 +183,7 @@
         </template>
 
         <div
-          v-if="
-            stereumUpdate.current !== stereumUpdate.version &&
-            (alertShowState === 'showAll' || alertShowState === 'green')
-          "
+          v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="status-message_green h-9"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
@@ -212,7 +201,7 @@
             </div>
           </div>
         </div>
-        <template v-if="updatedNewUpdates && (alertShowState === 'showAll' || alertShowState === 'green')">
+        <template v-if="updatedNewUpdates && !alertShowState.includes('green')">
           <div
             v-for="item in updatedNewUpdates"
             :key="item"
@@ -270,7 +259,7 @@ export default {
       clkUpdate: this.$t("nodeAlert.clkUpdate"),
       loadingAlerts: false,
       skeletons: [1, 2, 3, 4, 5, 6, 7, 8],
-      alertShowState: "showAll",
+      alertShowState: [],
     };
   },
   computed: {
@@ -390,10 +379,12 @@ export default {
   },
   methods: {
     alertPicker(color) {
-      if (this.alertShowState === color) {
-        this.alertShowState = "showAll";
+      const index = this.alertShowState.indexOf(color);
+
+      if (index !== -1) {
+        this.alertShowState.splice(index, 1);
       } else {
-        this.alertShowState = color;
+        this.alertShowState.push(color);
       }
     },
     async checkSettings() {
@@ -674,7 +665,7 @@ export default {
   opacity: 30%;
 }
 .status-icon.filtered:hover {
-  opacity: 100%;
+  opacity: 70%;
 }
 
 .status-icon img {
