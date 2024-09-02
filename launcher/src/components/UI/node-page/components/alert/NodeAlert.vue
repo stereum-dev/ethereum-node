@@ -111,7 +111,54 @@
             </div>
           </div>
         </router-link>
+        <!-- obol red start -->
+        <template v-if="criticalObol && !alertShowState.includes('red')">
+          <div
+            v-for="alerCrit in criticalObol"
+            :key="alerCrit"
+            class="status-message_red h-9"
+            @mouseenter="cursorLocation = `${alerCrit}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="message-icon">
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
+            </div>
+            <div class="message-text_container">
+              <div class="main-message">
+                <span>{{ alerCrit }}</span>
+              </div>
+              <div class="val-message">
+                <span>> Obol Charon</span>
+              </div>
+            </div>
+          </div>
+        </template>
 
+        <!-- obol red end -->
+        <!-- obol yellow start -->
+        <template v-if="warningObol && !alertShowState.includes('yellow')">
+          <div
+            v-for="alerWarn in warningObol"
+            :key="alerWarn"
+            class="status-message_yellow h-9"
+            @mouseenter="cursorLocation = `${alerWarn}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="message-icon">
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
+            </div>
+            <div class="message">
+              <div class="main-message text-gray-900">
+                <span>{{ alerWarn }}</span>
+              </div>
+              <div class="val-message text-gray-900">
+                <span>> Obol Charon</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- obol yellow end -->
         <div
           v-if="connectionStatusIsPoor && (alertShowState === 'showAll' || alertShowState === 'red')"
           class="w-full h-10 grid grid-cols-12 rounded-md bg-red-700 p-1 cursor-pointer hover:bg-red-500"
@@ -260,6 +307,9 @@ export default {
       loadingAlerts: false,
       skeletons: [1, 2, 3, 4, 5, 6, 7, 8],
       alertShowState: [],
+      criticalObol: [],
+      warningObol: [],
+      obolInterval: null,
     };
   },
   computed: {
@@ -369,15 +419,41 @@ export default {
     this.polling = setInterval(() => {
       this.readService();
     }, 10000);
+    this.fetchObolCharonAlerts();
+    this.obolInterval = setInterval(() => {
+      this.fetchObolCharonAlerts();
+    }, 120000);
   },
   beforeUnmount() {
     clearInterval(this.polling);
+    if (this.obolInterval) {
+      clearInterval(this.obolInterval);
+    }
   },
   created() {
     this.storageCheck();
     this.cpuMeth();
   },
   methods: {
+    async fetchObolCharonAlerts() {
+      try {
+        const alerts = await ControlService.fetchObolCharonAlerts();
+        console.log("Obol Charon alerts:", alerts);
+
+        this.processAlerts(alerts);
+      } catch (error) {
+        console.error("Failed to fetch Obol Charon alerts:", error);
+      }
+    },
+    processAlerts(alerts) {
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
+
+      const warningAlertNames = alerts.filter((alert) => alert.level === "warning").map((alert) => alert.name);
+
+      this.criticalObol = criticalAlertNames;
+
+      this.warningObol = warningAlertNames;
+    },
     alertPicker(color) {
       const index = this.alertShowState.indexOf(color);
 
@@ -742,6 +818,15 @@ export default {
   font-size: 50%;
   font-weight: 800;
   text-transform: uppercase;
+}
+.main-message span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 }
 .main-message-rpc {
   display: flex;
