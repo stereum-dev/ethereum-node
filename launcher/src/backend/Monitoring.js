@@ -3346,34 +3346,44 @@ rm -rf diskoutput
    * @returns {Object[]} Array of alerts e.g. [{name: "Cluster in Unknown Status", level: "warning"}, {name: "Beacon Node Down", level: "critical"}]
    */
   async fetchObolCharonAlerts() {
-    const queries = {
-      app_monitoring_readyz: "max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer)",
-      cluster_missed_attestations: "max(increase(core_tracker_failed_duties_total[10m])) by (cluster_hash, cluster_name)",
-      cluster_failure_rate: "floor(100 * (max(increase(core_tracker_success_duties_total[15m])) by (cluster_hash, cluster_name) / max(increase(core_tracker_expect_duties_total[15m])) by (cluster_hash, cluster_name)))",
-      percentage_failed_sync_message_duty: "(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer)\n) \n/ \n(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n    + \n    sum(increase(core_bcast_broadcast_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n)",
-      connected_relays: "group (p2p_relay_connections) by (cluster_peer)",
-      peer_ping_latency: "histogram_quantile(0.90, sum(rate(p2p_ping_latency_secs_bucket[2m])) by (le,peer))",
-    }
-
-    const queryPromises = Object.entries(queries).map(([key, query]) => {
-      return this.queryPrometheus(encodeURIComponent(query)).then(result => ({ key, result }));
-    });
-
-    const results = await Promise.all(queryPromises);
-    log.info(JSON.stringify(results, null, 2));
-    let alerts = results.map((metric) => {
-      if (metric.result.status != "success") {
-        return;
+    try {
+      const serviceInfos = await this.getServiceInfos("CharonService");
+      if (serviceInfos.length < 1) {
+        return [];
       }
-      if (metric.key === "peer_ping_latency") {
-        let value = Math.max(...metric.result.data.result.map((r) => r.value[1]));
+      const queries = {
+        app_monitoring_readyz: "max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer)",
+        cluster_missed_attestations: "max(increase(core_tracker_failed_duties_total[10m])) by (cluster_hash, cluster_name)",
+        cluster_failure_rate: "floor(100 * (max(increase(core_tracker_success_duties_total[15m])) by (cluster_hash, cluster_name) / max(increase(core_tracker_expect_duties_total[15m])) by (cluster_hash, cluster_name)))",
+        percentage_failed_sync_message_duty: "(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer)\n) \n/ \n(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n    + \n    sum(increase(core_bcast_broadcast_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n)",
+        connected_relays: "group (p2p_relay_connections) by (cluster_peer)",
+        peer_ping_latency: "histogram_quantile(0.90, sum(rate(p2p_ping_latency_secs_bucket[2m])) by (le,peer))",
+      }
+
+      const queryPromises = Object.entries(queries).map(([key, query]) => {
+        return this.queryPrometheus(encodeURIComponent(query)).then(result => ({ key, result }));
+      });
+
+      const results = await Promise.all(queryPromises);
+
+      let alerts = results.map((metric) => {
+        if (metric.result.status != "success") {
+          return;
+        }
+        if (metric.key === "peer_ping_latency") {
+          let value = Math.max(...metric.result.data.result.map((r) => r.value[1]));
+          return this.parseObolCharonAlerts(metric.key, value);
+        }
+        let value = metric.result.data.result[0].value[1];
         return this.parseObolCharonAlerts(metric.key, value);
-      }
-      let value = metric.result.data.result[0].value[1];
-      return this.parseObolCharonAlerts(metric.key, value);
-    }).filter((alert) => alert);
+      }).filter((alert) => alert);
 
-    return alerts;
+      return alerts;
+
+    } catch (error) {
+      log.error("Fetching Obol Charon Alerts Failed:\n" + error);
+      return []
+    }
   }
 
   parseObolCharonAlerts(key, value) {
