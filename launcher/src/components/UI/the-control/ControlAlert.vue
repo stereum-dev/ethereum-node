@@ -8,31 +8,27 @@
           <div
             class="icon_alarm"
             :class="{
-              filtered: alertShowState !== 'green' && alertShowState !== 'showAll',
+              filtered: alertShowState.includes('green'),
             }"
-            @click="alertPicker(perfect ? 'green' : 'showAll')"
+            @click="alertPicker('green')"
           >
             <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
           </div>
           <div
             class="icon_alarm"
             :class="{
-              filtered: alertShowState !== 'yellow' && alertShowState !== 'showAll',
+              filtered: alertShowState.includes('yellow'),
             }"
-            @click="alertPicker(warning || pointStatus.length !== 0 ? 'yellow' : 'showAll')"
+            @click="alertPicker('yellow')"
           >
             <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
           </div>
           <div
             class="icon_alarm"
             :class="{
-              filtered: alertShowState !== 'red' && alertShowState !== 'showAll',
+              filtered: alertShowState.includes('red'),
             }"
-            @click="
-              alertPicker(
-                alarm || notSetAddresses.length !== 0 || synchronizationErrorControl || errorAlarm ? 'red' : 'showAll'
-              )
-            "
+            @click="alertPicker('red')"
           >
             <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
           </div>
@@ -52,7 +48,7 @@
       </div>
       <div class="alert-box_messages overflow-x-hidden overflow-y-auto">
         <div
-          v-if="storageWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
+          v-if="storageWarning && !alertShowState.includes('yellow')"
           class="alert-message_yellow"
           @mouseenter="cursorLocation = `${lowSpace}`"
           @mouseleave="cursorLocation = ''"
@@ -68,7 +64,7 @@
           </div>
         </div>
         <div
-          v-if="cpuWarning && (alertShowState === 'showAll' || alertShowState === 'yellow')"
+          v-if="cpuWarning && !alertShowState.includes('yellow')"
           class="alert-message_yellow"
           @mouseenter="cursorLocation = `cpu ${use}`"
           @mouseleave="cursorLocation = ''"
@@ -85,7 +81,7 @@
             </div>
           </div>
         </div>
-        <template v-if="pointStatus && (alertShowState === 'showAll' || alertShowState === 'yellow')">
+        <template v-if="pointStatus && !alertShowState.includes('yellow')">
           <div v-for="point in pointStatus" :key="point" class="alert-message_yellow">
             <div class="icon-box">
               <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
@@ -101,7 +97,7 @@
           </div>
         </template>
         <div
-          v-if="cpuAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
+          v-if="cpuAlarm && !alertShowState.includes('red')"
           class="alert-message_red"
           @mouseenter="cursorLocation = `cpu ${use}`"
           @mouseleave="cursorLocation = ''"
@@ -118,8 +114,56 @@
             </div>
           </div>
         </div>
+        <!-- obol red start -->
+        <template v-if="criticalObol && !alertShowState.includes('red')">
+          <div
+            v-for="alerCrit in criticalObol"
+            :key="alerCrit"
+            class="alert-message_red"
+            @mouseenter="cursorLocation = `${alerCrit}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="icon-box">
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
+            </div>
+            <div class="message">
+              <div class="main-message">
+                <span>{{ alerCrit }}</span>
+              </div>
+              <div class="val-message">
+                <span>> Obol Charon</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- obol red end -->
+        <!-- obol yellow start -->
+        <template v-if="warningObol && !alertShowState.includes('yellow')">
+          <div
+            v-for="alerWarn in warningObol"
+            :key="alerWarn"
+            class="alert-message_yellow"
+            @mouseenter="cursorLocation = `${alerWarn}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="icon-box">
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
+            </div>
+            <div class="message">
+              <div class="main-message text-gray-900">
+                <span>{{ alerWarn }}</span>
+              </div>
+              <div class="val-message text-gray-900">
+                <span>> Obol Charon</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- obol yellow end -->
         <div
-          v-if="synchronizationErrorControl && (alertShowState === 'showAll' || alertShowState === 'red')"
+          v-if="synchronizationErrorControl && !alertShowState.includes('red')"
           class="alert-message_red"
           @mouseenter="cursorLocation = ` ${sync}`"
           @mouseleave="cursorLocation = ''"
@@ -135,7 +179,7 @@
           </div>
         </div>
         <div
-          v-if="errorAlarm && (alertShowState === 'showAll' || alertShowState === 'red')"
+          v-if="errorAlarm && !alertShowState.includes('red')"
           class="alert-message_red"
           @click="isTaskModalActive = true"
           @mouseenter="cursorLocation = ` ${taskFail}`"
@@ -151,7 +195,7 @@
             </div>
           </div>
         </div>
-        <template v-if="notSetAddresses && (alertShowState === 'showAll' || alertShowState === 'red')">
+        <template v-if="notSetAddresses && !alertShowState.includes('red')">
           <div
             v-for="validator in notSetAddresses"
             :key="validator"
@@ -173,10 +217,7 @@
         </template>
 
         <div
-          v-if="
-            stereumUpdate.current !== stereumUpdate.version &&
-            (alertShowState === 'showAll' || alertShowState === 'green')
-          "
+          v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="alert-message_green"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
@@ -193,7 +234,7 @@
             </div>
           </div>
         </div>
-        <template v-if="updatedNewUpdates && (alertShowState === 'showAll' || alertShowState === 'green')">
+        <template v-if="updatedNewUpdates && !alertShowState.includes('green')">
           <div
             v-for="item in updatedNewUpdates"
             :key="item"
@@ -239,7 +280,7 @@ export default {
       alarm: false,
       notification: false,
       newUpdate: false,
-      alertShowState: "showAll",
+      alertShowState: [],
       notSetAddresses: [],
       clkFee: this.$t("nodeAlert.clkFee"),
       clkUpdate: this.$t("nodeAlert.clkUpdate"),
@@ -247,6 +288,10 @@ export default {
       use: this.$t("nodeAlert.use"),
       sync: this.$t("nodeAlert.sync"),
       taskFail: this.$t("nodeAlert.taskFail"),
+      polling: null,
+      criticalObol: [],
+      warningObol: [],
+      obolInterval: null,
     };
   },
   computed: {
@@ -344,9 +389,17 @@ export default {
     this.polling = setInterval(() => {
       this.readService();
     }, 10000);
+
+    this.fetchObolCharonAlerts();
+    this.obolInterval = setInterval(() => {
+      this.fetchObolCharonAlerts();
+    }, 120000);
   },
   beforeUnmount() {
     clearInterval(this.polling);
+    if (this.obolInterval) {
+      clearInterval(this.obolInterval);
+    }
   },
   created() {
     this.storageCheck();
@@ -354,11 +407,14 @@ export default {
   },
   methods: {
     alertPicker(color) {
-      if (this.alertShowState === color) {
-        this.alertShowState = "showAll";
+      const index = this.alertShowState.indexOf(color);
+
+      if (index !== -1) {
+        this.alertShowState.splice(index, 1);
       } else {
-        this.alertShowState = color;
+        this.alertShowState.push(color);
       }
+      console.log(this.alertShowState);
     },
     async checkSettings() {
       try {
@@ -375,6 +431,27 @@ export default {
         console.error("Failed to load saved settings:", error);
       }
     },
+
+    async fetchObolCharonAlerts() {
+      try {
+        const alerts = await ControlService.fetchObolCharonAlerts();
+        console.log("Obol Charon alerts:", alerts);
+
+        this.processAlerts(alerts);
+      } catch (error) {
+        console.error("Failed to fetch Obol Charon alerts:", error);
+      }
+    },
+    processAlerts(alerts) {
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
+
+      const warningAlertNames = alerts.filter((alert) => alert.level === "warning").map((alert) => alert.name);
+
+      this.criticalObol = criticalAlertNames;
+
+      this.warningObol = warningAlertNames;
+    },
+
     async updateSettings(vol) {
       try {
         const prevConf = await ControlService.readConfig();
@@ -564,7 +641,7 @@ export default {
 }
 
 .icon_alarm.filtered:hover {
-  opacity: 100%;
+  opacity: 70%;
 }
 
 .icon_alarm img {
@@ -665,18 +742,22 @@ export default {
   display: flex;
   width: 100%;
   height: 60%;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   font-size: 52%;
   font-weight: 800;
   text-transform: uppercase;
+  margin-top: 5%;
 }
+
 .main-message span {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  display: block;
   width: 100%;
   height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 }
 .val-message {
   display: flex;
@@ -687,5 +768,6 @@ export default {
   font-size: 42%;
   font-weight: 700;
   text-transform: uppercase;
+  margin-bottom: 2%;
 }
 </style>
