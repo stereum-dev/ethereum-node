@@ -1,6 +1,7 @@
 name: 🛠️ Refactor
 description: Suggest a code refactoring task aimed at improving code without altering functionality
 title: "[Refactor]: "
+labels: ["refactor"]
 body:
   - type: textarea
     id: description
