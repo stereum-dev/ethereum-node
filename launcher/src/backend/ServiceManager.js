@@ -858,12 +858,19 @@ export class ServiceManager {
     let service;
     switch (name) {
       case "GethService":
-        ports = [
-          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
-          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
-        ];
+        ports =
+          args.network === "mainnet"
+            ? [
+                new ServicePort(null, 8551, 8551, servicePortProtocol.tcp),
+                new ServicePort(null, 8545, 8545, servicePortProtocol.tcp),
+                new ServicePort(null, 8546, 8546, servicePortProtocol.tcp),
+              ]
+            : [
+                new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+                new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+                new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+                new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+              ];
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
 
       case "RethService":
@@ -2441,44 +2448,65 @@ export class ServiceManager {
     }
   }
 
-  async getGenesis() {
-    try {
-      const workingDir = await this.getCurrentPath();
-      const genesis = await this.nodeConnection.sshService.exec(`cat ${workingDir}/genesis/execution/genesis.json`);
-      return JSON.parse(genesis.stdout);
-    } catch (error) {
-      console.error("Error getting genesis:", error);
-      throw error;
-    }
-  }
-
-  async copyGenesisConfigFile() {
-    try {
-      const workingDir = await this.getCurrentPath();
-      await this.nodeConnection.runPlaybook("Copy Devnet Genesis", {
-        stereum_role: "copy-devnet-genesis",
-        working_dir: workingDir,
-      });
-    } catch (error) {
-      console.error("Error during Copy Devnet Genesis playbook execution:", error);
-      throw error;
-    }
-  }
-
-  async writeGenesis(genesis) {
+  async writeGenesisJson(genesis) {
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Genesis JSON`);
     try {
       const workingDir = await this.getCurrentPath();
 
-      await this.nodeConnection.sshService.exec(
-        `echo ${StringUtils.escapeStringForShell(
-          JSON.stringify(genesis)
-        )} > ${workingDir}/genesis/execution/genesis.json`
-      );
+      const escapedGenesisJsonString = StringUtils.escapeStringForShell(JSON.stringify(genesis, null, 2));
+
+      await this.nodeConnection.sshService.exec(`
+        mkdir -p ${workingDir}/genesis/execution && \
+        echo ${escapedGenesisJsonString} > ${workingDir}/genesis/execution/genesis.json && \
+        chmod 0777 ${workingDir}/genesis ${workingDir}/genesis/execution ${workingDir}/genesis/execution/genesis.json
+      `);
 
       console.log("Genesis file has been written successfully.");
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Genesis JSON Written`, true);
     } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Writing Genesis JSON Failed`,
+        false,
+        `Failed to write genesis file: ${error}`
+      );
       console.error("Error writing genesis file:", error);
       throw error;
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+    }
+  }
+
+  async writeConfigYaml(configYamlString) {
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Config YAML`);
+    try {
+      const workingDir = await this.getCurrentPath();
+
+      const escapedYamlString = StringUtils.escapeStringForShell(configYamlString);
+
+      const command = `
+        mkdir -p ${workingDir}/genesis/consensus && \
+        echo -e ${escapedYamlString} > ${workingDir}/genesis/consensus/config.yml && \
+        chmod 0777 ${workingDir}/genesis/consensus ${workingDir}/genesis/consensus/config.yml
+      `;
+
+      await this.nodeConnection.sshService.exec(command);
+
+      console.log("Config YAML file has been written successfully.");
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Config YAML Written`, true);
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Writing Config YAML Failed`,
+        false,
+        `Failed to write config YAML file: ${error}`
+      );
+      console.error("Error writing config YAML file:", error);
+      throw error;
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
     }
   }
 
