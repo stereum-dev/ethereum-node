@@ -1,132 +1,127 @@
 <script setup>
-import { ref, computed, watch } from "vue";
-import CustomModal from "../CustomModal.vue";
-import CreateSetup from "./components/CreateSetup.vue";
-import SelectGenesis from "./components/SelectGenesis.vue";
-import ConfigGenesis from "./components/ConfigGenesis.vue";
-import AddAllocation from "./components/AddAllocation.vue";
-import SummeryDisplay from "./components/SummeryDisplay.vue";
+import { computed, ref, watchEffect } from "vue";
 import { useSetups } from "../../../../../../store/setups";
-import { useMultiSetups } from "../../../../../../composables/multiSetups";
+import CustomModal from "../CustomModal.vue";
+import AddAllocation from "./components/AddAllocation.vue";
+import ConfigGenesis from "./components/ConfigGenesis.vue";
+import CreateSetup from "./components/CreateSetup.vue";
+import SelectCilent from "./components/SelectCilent.vue";
+import SelectGenesis from "./components/SelectGenesis.vue";
+import SummeryDisplay from "./components/SummeryDisplay.vue";
 
 const setupStore = useSetups();
-const subtitle = ref("");
-const buttonText = ref("Next");
-const isGenesisUploaded = ref(false);
+const isGenesisConfigChanged = ref(false);
+const allocations = ref([]);
 
-const { updateDom } = useMultiSetups();
-
-const currentComponent = computed(() => {
-  switch (setupStore.currentStep) {
-    case 1:
-      return CreateSetup;
-    case 2:
-      return SelectGenesis;
-    case 3:
-      return isGenesisUploaded.value ? SummeryDisplay : ConfigGenesis;
-    case 4:
-      return AddAllocation;
-    case 5:
-      return SummeryDisplay;
-    default:
-      return null;
+const getComponent = computed(() => {
+  let comp;
+  let btnText = "Next";
+  let btnState = false;
+  let subtitle = "";
+  if (setupStore.currentStep === 1) {
+    comp = CreateSetup;
+    subtitle = "SETUP NAME AND COLOR";
+    btnState = !(setupStore.devnetConfigData.setupName && setupStore.devnetConfigData.setupColor);
+  } else if (setupStore.currentStep === 2) {
+    comp = SelectGenesis;
+    subtitle = "GENESIS JSON SELECTION";
+  } else if (setupStore.currentStep === 3) {
+    comp = setupStore.devnetConfigData.uploadedGenesisConfig ? SelectCilent : ConfigGenesis;
+    subtitle = setupStore.devnetConfigData.uploadedGenesisConfig ? "SETUP SUMMARY" : "GENESIS JSON CONFIGURATION";
+  } else if (setupStore.currentStep === 4) {
+    comp = AddAllocation;
+    subtitle = "INITIAL ADDRESS ALLOCATION";
+  } else if (setupStore.currentStep === 5) {
+    comp = SelectCilent;
+    subtitle = "INIT CLIENTS";
+  } else if (setupStore.currentStep === 6) {
+    comp = SummeryDisplay;
+    subtitle = "SETUP SUMMARY";
+    btnText = "Confirm";
   }
+
+  return { modal: comp, buttonText: btnText, buttonState: btnState, subtitle: subtitle };
 });
 
-const isButtonDisabled = computed(() => {
-  switch (setupStore.currentStep) {
-    case 1:
-      return setupStore.devnetButtonDisabled;
-    case 2:
-      return !setupStore.uploadedGenesisFile && !setupStore.isGenesisCreated;
-    case 3:
-      return !setupStore.isGenesisConfigValid;
-    case 4:
-      return !setupStore.isAllocationValid;
-    case 5:
-      return false; // Always enabled on summary page
-    default:
-      return true;
-  }
+watchEffect(() => {
+  console.log("uploadedGenesisConfig:", setupStore.devnetConfigData.uploadedGenesisConfig);
+  console.log("currentComponent:", getComponent.value.modal.__name);
 });
-
-watch(
-  () => setupStore.currentStep,
-  () => {
-    getSubtitles();
-    getConfirmText();
-  }
-);
-
-const getSubtitles = () => {
-  switch (setupStore.currentStep) {
-    case 1:
-      subtitle.value = "SETUP NAME AND COLOR";
-      break;
-    case 2:
-      subtitle.value = "GENESIS JSON SELECTION";
-      break;
-    case 3:
-      subtitle.value = isGenesisUploaded.value ? "SETUP SUMMARY" : "GENESIS JSON CONFIGURATION";
-      break;
-    case 4:
-      subtitle.value = "INITIAL ADDRESS ALLOCATION";
-      break;
-    case 5:
-      subtitle.value = "SETUP SUMMARY";
-      break;
-    default:
-      subtitle.value = "";
-  }
-};
-
-const getConfirmText = () => {
-  buttonText.value = setupStore.currentStep === 5 ? "Confirm" : "Next";
-};
 
 const closeWindow = () => {
-  console.log("closeWindow");
+  setupStore.isDevnetSetupModalActive = false;
   setupStore.currentStep = 1;
-  isGenesisUploaded.value = false;
-  setupStore.uploadedGenesisFile = null;
-  setupStore.isGenesisCreated = false;
-  setupStore.isGenesisConfigValid = false;
-  setupStore.isAllocationValid = false;
-  setupStore.devnetButtonDisabled = true;
+  setupStore.devnetConfigData = {
+    network: "devnet",
+    setupName: "",
+    setupColor: "",
+    genesisConfig: null,
+    uploadedGenesisConfig: null,
+    genesisChanged: false,
+    configYaml: "",
+    services: [],
+  };
 };
 
-const confirmInstall = () => {
-  if (setupStore.currentStep < 5) {
-    if (setupStore.currentStep === 2 && isGenesisUploaded.value) {
+const buttonAction = () => {
+  if (setupStore.currentStep < 6) {
+    if (setupStore.currentStep === 2 && setupStore.devnetConfigData.uploadedGenesisConfig) {
       setupStore.currentStep = 5;
     } else {
       setupStore.currentStep++;
     }
   } else {
-    console.log("Finish installation");
+    finalizeSetup();
   }
 };
 
 const handleGenesisUpload = (uploaded) => {
-  isGenesisUploaded.value = uploaded;
+  setupStore.devnetConfigData.uploadedGenesisConfig = uploaded;
   if (uploaded) {
     setupStore.currentStep = 5;
   }
+};
+
+// New methods to handle input changes
+const updateSetupInfo = (name, color) => {
+  setupStore.devnetConfigData.setupName = name;
+  setupStore.devnetConfigData.setupColor = color;
+};
+
+const updateGenesisConfig = () => {
+  isGenesisConfigChanged.value = true;
+};
+
+const updateAllocations = (newAllocations) => {
+  allocations.value = newAllocations;
+};
+
+const finalizeSetup = () => {
+  setupStore.isDevnetSetupModalActive = false;
+  setupStore.currentStep = 1;
+  console.log("finalizeSetup");
+  console.log("devnet data", setupStore.devnetConfigData);
 };
 </script>
 
 <template>
   <custom-modal
     main-title="Create A Custom Setup"
-    :sub-title="subtitle"
-    :confirm-text="buttonText"
-    :disabled-button="isButtonDisabled"
+    :sub-title="getComponent.subtitle"
+    :confirm-text="getComponent.buttonText"
+    :disabled-button="getComponent.buttonState"
     click-outside-text="Click outside to cancel"
     @close-window="closeWindow"
-    @confirm-action="confirmInstall"
+    @confirm-action="buttonAction"
   >
     <template #content>
-      <component :is="currentComponent" @genesis-uploaded="handleGenesisUpload" />
+      <component
+        :is="getComponent.modal"
+        @genesis-uploaded="handleGenesisUpload"
+        @update-setup-info="updateSetupInfo"
+        @update-genesis-config="updateGenesisConfig"
+        @update-allocations="updateAllocations"
+      />
     </template>
   </custom-modal>
 </template>

@@ -8,10 +8,21 @@ export const useSetups = defineStore("setups", {
     stakingSetups: [],
 
     //DEVNET NETWORK CONFIGURATION
+    devnetConfigData: {
+      network: "devnet",
+      setupName: "",
+      setupColor: "",
+      genesisConfig: null,
+      uploadedGenesisConfig: null,
+      genesisChanged: false,
+      configYaml: "",
+      services: [],
+    },
+    devnetButtonDisabled: true,
     isDevnetSetupModalActive: false,
     currentStep: 1,
     uploadedGenesisFile: null,
-    devnetButtonDisabled: true,
+
     configYaml: `
     CONFIG_NAME: interop
     PRESET_BASE: interop

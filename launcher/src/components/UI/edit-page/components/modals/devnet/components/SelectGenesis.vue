@@ -3,20 +3,18 @@ import { ref } from "vue";
 import { useSetups } from "../../../../../../../store/setups"; // Adjust the path as needed
 
 const setupStore = useSetups();
-const uploadedFile = ref(null);
 const errorMessage = ref("");
 
 const getGenesisFile = (event) => {
   const file = event.target.files[0];
   if (file && file.name.endsWith(".json")) {
-    uploadedFile.value = file;
-    errorMessage.value = "";
-    setupStore.uploadedGenesisFile = file;
+    setupStore.devnetConfigData.uploadedGenesisConfig = file;
     setupStore.devnetButtonDisabled = false;
+    setupStore.currentStep = 5; // Automatically move to the summary step
+    errorMessage.value = "";
   } else {
-    uploadedFile.value = null;
+    setupStore.devnetConfigData.uploadedGenesisConfig = null;
     errorMessage.value = "Please upload a valid JSON file.";
-    setupStore.uploadedGenesisFile = null;
     setupStore.devnetButtonDisabled = true;
   }
 };
@@ -30,11 +28,9 @@ const createNewGenesis = () => {
 };
 
 const confirmSelection = () => {
-  if (uploadedFile.value) {
-    // If a file is uploaded, move to the SummaryDisplay step
+  if (setupStore.devnetConfigData.uploadedGenesisConfig) {
     setupStore.currentStep = 5;
   } else if (setupStore.isGenesisCreated) {
-    // If "Create Genesis" was selected, move to the ConfigGenesis step
     setupStore.currentStep = 3;
   } else {
     errorMessage.value = "Please either upload a Genesis file or choose to create a new one.";
@@ -73,7 +69,11 @@ defineExpose({ confirmSelection });
         <div
           class="w-full h-9 bg-white text-[#333] flex items-center shadow-md shadow-black p-1 font-[sans-serif] rounded-md overflow-hidden my-4 mx-auto"
         >
-          <span v-if="uploadedFile">{{ uploadedFile.name }}</span>
+          <span
+            v-if="setupStore.devnetConfigData.uploadedGenesisConfig"
+            class="pl-2 text-xs font-semibold overflow-clip"
+            >{{ setupStore.devnetConfigData.uploadedGenesisConfig.path }}</span
+          >
           <span v-else-if="setupStore.isGenesisCreated">New Genesis will be created</span>
           <span v-else-if="errorMessage" class="text-red-500">{{ errorMessage }}</span>
           <span v-else> </span>
