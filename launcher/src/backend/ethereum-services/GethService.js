@@ -7,25 +7,59 @@ export class GethService extends NodeService {
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
-    const JWTDir = "/engine.jwt";
-    const dataDir = "/opt/data/geth";
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
-    ];
+    const JWTDir = network === "mainnet" ? "/execution/engine.jwt" : "/engine.jwt";
+    const dataDir = network === "mainnet" ? "/execution" : "/opt/data/geth";
+    const volumes =
+      network === "mainnet"
+        ? [new ServiceVolume(workingDir, dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)]
+        : [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
 
-    //   // if (network === "devnet") {
-    //   //   // initGenesis(/path/to/genesisfile/onVM )
-    //   // }
-    //   let cmd = network === "devnet" ? [
-    //     "--ws.origins=*11111111111111111111",
-    //     "--authrpc.port=8551",
-    //     "--authrpc.vhosts=*"
-    // ] : [
-    //     "--ws.origins=*22222222222222",
-    //     "--authrpc.port=8551",
-    //     "--authrpc.vhosts=*ddddddd"
-    // ];
+    const cmd =
+      network === "mainnet"
+        ? [
+            "--http",
+            "--http.api=eth,web3,net",
+            "--http.port=8545",
+            "--http.addr=0.0.0.0",
+            "--http.corsdomain=*",
+            "--ws",
+            "--ws.api=eth,net,web3",
+            "--ws.port=8546",
+            "--ws.addr=0.0.0.0",
+            "--ws.origins=*",
+            "--authrpc.port=8551",
+            "--authrpc.vhosts=*",
+            "--authrpc.addr=0.0.0.0",
+            `--authrpc.jwtsecret=${JWTDir}`,
+            `--datadir=${dataDir}`,
+            "--allow-insecure-unlock",
+            "--nodiscover",
+            "--syncmode=full",
+          ]
+        : [
+            `--${network}`,
+            `--datadir=${dataDir}`,
+            "--state.scheme=path",
+            "--http",
+            "--http.port=8545",
+            "--http.addr=0.0.0.0",
+            "--http.vhosts=*",
+            "--http.api=eth,web3,net",
+            "--http.corsdomain=*",
+            "--ws",
+            "--ws.port=8546",
+            "--ws.addr=0.0.0.0",
+            "--ws.api=eth,net,web3",
+            "--ws.origins=*",
+            "--authrpc.port=8551",
+            "--authrpc.addr=0.0.0.0",
+            "--authrpc.vhosts=*",
+            `--authrpc.jwtsecret=${JWTDir}`,
+            "--metrics",
+            "--metrics.expensive",
+            "--metrics.port=6060",
+            "--metrics.addr=0.0.0.0",
+          ];
 
     service.init(
       "GethService", // service
@@ -33,34 +67,7 @@ export class GethService extends NodeService {
       1, // configVersion
       "ethereum/client-go", // image
       "v1.10.25", // imageVersion
-
-      // cmd
-      [
-        `--${network}`,
-        `--datadir=${dataDir}`,
-        "--state.scheme=path",
-
-        "--http",
-        "--http.port=8545",
-        "--http.addr=0.0.0.0",
-        "--http.vhosts=*",
-        "--http.api=eth,web3,net",
-        "--http.corsdomain=*",
-        "--ws",
-        "--ws.port=8546",
-        "--ws.addr=0.0.0.0",
-        "--ws.api=eth,net,web3",
-        "--ws.origins=*",
-
-        "--authrpc.port=8551",
-        "--authrpc.addr=0.0.0.0",
-        "--authrpc.vhosts=*",
-        "--authrpc.jwtsecret=/engine.jwt",
-        "--metrics",
-        "--metrics.expensive",
-        "--metrics.port=6060",
-        "--metrics.addr=0.0.0.0",
-      ], // command
+      cmd, // command
       ["geth"], // entrypoint
       null, // env
       ports, // ports
