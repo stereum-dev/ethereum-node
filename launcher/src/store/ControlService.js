@@ -675,6 +675,10 @@ class ControlService extends EventEmitter {
   async readGasConfigFile(args) {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
+
+  async fetchObolCharonAlerts() {
+    return this.promiseIpc.send("fetchObolCharonAlerts");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

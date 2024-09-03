@@ -1,0 +1,727 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name:  Cluster
+      folder: Charon
+      interval: 1m
+      rules:
+        - uid: f0e3fcb2-7325-47c0-a63b-c9d5cb31178f
+          title: ' Cluster BeaconNode Down '
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: 'max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer) == 2'
+                hide: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          dashboardUid: d6qujIJVk
+          panelId: 141
+          noDataState: OK
+          execErrState: OK
+          for: 10m
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "141"
+            summary: Beacon node is down for node {{ $labels.cluster_peer }} in {{ $labels.cluster_name }}
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+            cluster_peer: '{{ $labels.cluster_peer }}'
+            severity: notify
+          isPaused: false
+        - uid: fdd9f034-22e8-428b-9d7c-52e031bf8cee
+          title: ' Cluster BeaconNode Syncing '
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: 'max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer) == 3'
+                hide: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          dashboardUid: d6qujIJVk
+          panelId: 141
+          noDataState: OK
+          execErrState: OK
+          for: 10m
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "141"
+            summary: Beacon node is syncing for node {{ $labels.cluster_peer }} in {{ $labels.cluster_name }}
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+            cluster_peer: '{{ $labels.cluster_peer }}'
+            severity: notify
+          isPaused: false
+        - uid: d1cf2f49-e3a9-4aaa-98d9-f478b1faa1d2
+          title:   Cluster Missed Attestations
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: 'max(increase(core_tracker_failed_duties_total[$__rate_interval])) by (cluster_hash, cluster_name) > 0 '
+                hide: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: "-100"
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          dashboardUid: d6qujIJVk
+          panelId: 85
+          noDataState: OK
+          execErrState: OK
+          for: 10m
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "85"
+            summary: Missed attestations in  cluster {{ $labels.cluster_name }}
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+            severity: notify
+          isPaused: false
+        - uid: e874c008-2ff0-46ef-a1a1-bf62a60337cf
+          title:  Cluster in Unknown Status
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: 'max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer, cluster_network) == 0'
+                hide: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: "-100"
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: count
+                refId: B
+                settings:
+                    mode: ""
+                type: reduce
+          dashboardUid: d6qujIJVk
+          panelId: 87
+          noDataState: OK
+          execErrState: OK
+          for: 10m
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "87"
+            summary: Node {{ $labels.cluster_peer }} in cluster {{ $labels.cluster_name }} is in unknown state
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+          isPaused: false
+        - uid: c23c531e-4386-466a-b9e8-3a3809148cb5
+          title:  Cluster Insufficient Peers
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 60
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: 'max((app_monitoring_readyz)) by (cluster_name,cluster_hash,cluster_peer) == 4'
+                hide: false
+                intervalMs: 1000
+                legendFormat: '{{cluster_name}} {{cluster_peer}}'
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 60
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: max
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          dashboardUid: d6qujIJVk
+          panelId: 186
+          noDataState: OK
+          execErrState: OK
+          for: 10m
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "186"
+            summary: Insufficient Peers for node {{ $labels.cluster_peer }} in cluster {{ $labels.cluster_name }}
+          labels:
+            cluster_hash: '{{$labels.cluster_hash}}'
+            cluster_name: '{{$labels.cluster_name}}'
+            cluster_peer: '{{$labels.cluster_peer}}'
+            severity: warning
+          isPaused: false
+        - uid: a2cf313f-e5dc-4a3c-a3ff-d7e51b55183e
+          title:  Cluster Failure Rate
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 900
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: "floor(\n    100 * \n    (\n        max(increase(core_tracker_success_duties_total[$__range])) by (cluster_hash, cluster_name) / \n        max(increase(core_tracker_expect_duties_total[$__range])) by (cluster_hash, cluster_name)\n    )\n) < 95"
+                hide: false
+                instant: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 900
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: "-100"
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          dashboardUid: d6qujIJVk
+          panelId: 91
+          noDataState: OK
+          execErrState: OK
+          for: 6h
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "91"
+            summary: Cluster {{ $labels.cluster_name }} success rate is less than {{ $values.B }}%
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+            severity: notify
+          isPaused: false
+        - uid: f5b9fb9d-66b8-49b6-813d-cdb2928425f2
+          title: ' Cluster VC missing validators '
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: 'max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer) == 6'
+                hide: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          noDataState: OK
+          execErrState: OK
+          for: 10m
+          annotations:
+            summary: VC missing some validators for node {{ $labels.cluster_peer }} in cluster {{ $labels.cluster_name }}
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+            cluster_peer: '{{ $labels.cluster_peer }}'
+            severity: warning
+          isPaused: false
+        - uid: fdhg9rxn9mmf4a
+          title: ' Cluster BeaconNode has zero peers '
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: 'max((app_monitoring_readyz)) by (cluster_name, cluster_hash, cluster_peer) == 7'
+                hide: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          noDataState: OK
+          execErrState: OK
+          for: 10m
+          annotations:
+            summary: BeaconNode has zero peers for node {{ $labels.cluster_peer }} in cluster {{ $labels.cluster_name }}
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+            cluster_peer: '{{ $labels.cluster_peer }}'
+            service: charon
+          isPaused: false
+        - uid: e7e9de6b-f7f4-4a69-85b4-0512f5ef0aec
+          title: High percentage failed sync message duty
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 10800
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                editorMode: code
+                expr: "(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer)\n) \n/ \n(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n    + \n    sum(increase(core_bcast_broadcast_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n) > 0.1"
+                hide: false
+                instant: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 10800
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 3
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: "-100"
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: max
+                refId: B
+                settings:
+                    mode: dropNN
+                type: reduce
+          noDataState: OK
+          execErrState: OK
+          for: 5m
+          annotations:
+            summary: High percentage failed sync message duty for node {{ $labels.cluster_peer }} in cluster {{ $labels.cluster_name }}
+          labels:
+            cluster_hash: '{{ $labels.cluster_hash }}'
+            cluster_name: '{{ $labels.cluster_name }}'
+            cluster_peer: '{{ $labels.cluster_peer }}'
+            service: charon
+          isPaused: false
+        - uid: f20e8a2f-8533-4524-bd5f-587e167c05ab
+          title:  Cluster - Number of Connected Relays
+          condition: B
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 3600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                datasource:
+                    type: prometheus
+                    uid: PBFA97CFB590B2093
+                editorMode: code
+                expr: 'group (p2p_relay_connections) by (cluster_peer)'
+                instant: false
+                interval: 2m
+                intervalMs: 15000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              relativeTimeRange:
+                from: 3600
+                to: 0
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - A
+                      reducer:
+                        params: []
+                        type: min
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: ""
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: B
+                type: classic_conditions
+          dashboardUid: d6qujIJVk
+          panelId: 156
+          noDataState: OK
+          execErrState: Error
+          for: 10m
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "156"
+            summary:  Cluster has no Connected Relays
+          isPaused: false
+        - uid: ee8dd3f8-bf16-4d1e-b644-ba01bb8c273b
+          title: Peer ping latency (400ms threshold)
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 3600
+                to: 0
+              datasourceUid: PBFA97CFB590B2093
+              model:
+                datasource:
+                    type: prometheus
+                    uid: prometheus
+                editorMode: code
+                exemplar: true
+                expr: 'histogram_quantile(0.90, sum(rate(p2p_ping_latency_secs_bucket[2m])) by (le,peer))  '
+                interval: 2m
+                intervalMs: 15000
+                legendFormat: '{{peer}}'
+                maxDataPoints: 43200
+                range: true
+                refId: A
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: B
+                type: reduce
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0.4
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: B
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: d6qujIJVk
+          panelId: 25
+          noDataState: OK
+          execErrState: Error
+          for: 5m
+          annotations:
+            __dashboardUid__: d6qujIJVk
+            __panelId__: "25"
+            summary: Peer ping latency is greater than (400ms threshold)
+          isPaused: false
+          
