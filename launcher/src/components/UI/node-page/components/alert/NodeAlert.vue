@@ -159,6 +159,55 @@
         </template>
 
         <!-- obol yellow end -->
+        <!-- csm red start -->
+        <template v-if="criticalCsm && !alertShowState.includes('red')">
+          <div
+            v-for="csmCrit in criticalCsm"
+            :key="csmCrit"
+            class="status-message_red h-9"
+            @mouseenter="cursorLocation = `${csmCrit}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="message-icon">
+              <img src="/img/icon/service-icons/Other/LCOM.png" alt="warn_obol" />
+            </div>
+            <div class="message-text_container">
+              <div class="main-message">
+                <span>{{ csmCrit }}</span>
+              </div>
+              <div class="val-message">
+                <span>> {{ $t("nodeAlert.csm") }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- csm red end -->
+        <!-- csm green start -->
+        <template v-if="notifCsm && !alertShowState.includes('green')">
+          <div
+            v-for="notif in notifCsm"
+            :key="notif"
+            class="status-message_green h-9"
+            @mouseenter="cursorLocation = `${notif}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="message-icon">
+              <img src="/img/icon/service-icons/Other/LCOM.png" alt="warn_obol" />
+            </div>
+            <div class="message">
+              <div class="main-message">
+                <span>{{ notif }}</span>
+              </div>
+
+              <div class="val-message">
+                <span>> {{ $t("nodeAlert.csm") }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- csm Green end -->
         <div
           v-if="connectionStatusIsPoor && (alertShowState === 'showAll' || alertShowState === 'red')"
           class="w-full h-10 grid grid-cols-12 rounded-md bg-red-700 p-1 cursor-pointer hover:bg-red-500"
@@ -310,6 +359,9 @@ export default {
       criticalObol: [],
       warningObol: [],
       obolInterval: null,
+      criticalCsm: ["njknmkl"],
+      notifCsm: ["juhnjkl"],
+      csmInterval: null,
     };
   },
   computed: {
@@ -438,7 +490,6 @@ export default {
     async fetchObolCharonAlerts() {
       try {
         const alerts = await ControlService.fetchObolCharonAlerts();
-        console.log("Obol Charon alerts:", alerts);
 
         this.processAlerts(alerts);
       } catch (error) {
@@ -843,10 +894,19 @@ export default {
   display: flex;
   width: 95%;
   height: 35%;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-end;
   font-size: 45%;
   font-weight: 700;
   text-transform: uppercase;
+}
+.val-message span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 }
 </style>
