@@ -676,8 +676,24 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
 
-  async createDevnet() {
-    return this.promiseIpc.send("createDevnet");
+  async copyGenesisConfigFile() {
+    return this.promiseIpc.send("copyGenesisConfigFile");
+  }
+
+  async getGenesis() {
+    return this.promiseIpc.send("getGenesis");
+  }
+
+  async writeGenesis(args) {
+    return this.promiseIpc.send("writeGenesis", args);
+  }
+
+  async initGenesis() {
+    return this.promiseIpc.send("initGenesis");
+  }
+
+  async fetchObolCharonAlerts() {
+    return this.promiseIpc.send("fetchObolCharonAlerts");
   }
 }
 if (!instance) {

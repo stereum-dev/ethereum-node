@@ -6,10 +6,7 @@
       class="col-start-1 col-span-full row-start-1 row-span-1 w-full h-full bg-[#151618] rounded-md p-1 flex justify-center items-center"
     >
       <div class="w-full h-full rounded-sm flex justify-center items-center">
-        <span
-          class="text-xs text-center text-gray-300 font-normal font-sans uppercase mt-1"
-          >Select A Network</span
-        >
+        <span class="text-xs text-center text-gray-300 font-normal font-sans uppercase mt-1">Select A Network</span>
       </div>
     </div>
     <div
@@ -24,13 +21,8 @@
           class="w-full h-7 bg-[#282a2c] rounded-sm border border-gray-500 items-center mx-auto cursor-pointer hover:bg-gray-700 transition-all duration-100 grid grid-cols-5"
           @click="getNetwork(network)"
         >
-          <img
-            class="col-start-1 col-span-1 w-5 self-center mx-auto"
-            :src="network.icon"
-            alt="Network"
-          />
-          <span
-            class="col-start-2 col-span-full text-left text-xs font-sans text-gray-200 ml-1"
+          <img class="col-start-1 col-span-1 w-5 self-center mx-auto" :src="network.icon" alt="Network" />
+          <span class="col-start-2 col-span-full text-left text-xs font-sans text-gray-200 ml-1"
             >{{ network?.name }}
           </span>
         </div>
@@ -40,10 +32,7 @@
     <div
       class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700"
     >
-      <span
-        class="text-2xs text-center text-gray-100 font-semibold font-sans uppercase mt-1"
-        >Custom Network</span
-      >
+      <span class="text-2xs text-center text-gray-100 font-semibold font-sans uppercase mt-1">Custom Network</span>
 
       <div
         class="w-full h-8 bg-teal-700 rounded-sm text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"

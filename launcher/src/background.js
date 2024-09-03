@@ -686,8 +686,20 @@ ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });
 
-ipcMain.handle("createDevnet", async () => {
-  return await serviceManager.createDevnet();
+ipcMain.handle("copyGenesisConfigFile", async () => {
+  return await serviceManager.copyGenesisConfigFile();
+});
+
+ipcMain.handle("getGenesis", async () => {
+  return await serviceManager.getGenesis();
+});
+
+ipcMain.handle("writeGenesis", async (event, args) => {
+  return await serviceManager.writeGenesis(args);
+});
+
+ipcMain.handle("initGenesis", async () => {
+  return await serviceManager.initGenesis();
 });
 
 ipcMain.handle("startShell", async (event) => {
@@ -743,6 +755,10 @@ ipcMain.handle("removeGasConfigFile", async (event, args) => {
 
 ipcMain.handle("readGasConfigFile", async (event, args) => {
   return await tekuGasLimitConfig.readGasConfigFile(args);
+});
+
+ipcMain.handle("fetchObolCharonAlerts", async () => {
+  return await monitoring.fetchObolCharonAlerts();
 });
 
 // Scheme must be registered before the app is ready

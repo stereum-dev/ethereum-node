@@ -1127,7 +1127,7 @@ export class ValidatorAccountManager {
       this.nodeConnection.sshService.exec(`rm -rf ${dataDir}`);
       const result = await this.nodeConnection.sshService.uploadDirectorySSH(path.normalize(localPath), dataDir);
       if (result) {
-        log.info("Obol Backup downloaded from: ", localPath);
+        log.info("Obol Backup uploaded from: ", localPath);
       }
     } catch (err) {
       log.error("Error uploading Obol Backup: ", err);

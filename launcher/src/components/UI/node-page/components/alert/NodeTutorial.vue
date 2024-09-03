@@ -33,14 +33,14 @@
       </div>
     </div> -->
 
-    <div
+    <!-- <div
       class="back-button"
       @click="infoAlarm = !infoAlarm"
       @mouseenter="cursorLocation = `${returnStatus}`"
       @mouseleave="cursorLocation = ''"
     >
       <div class="up-arrow"></div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>

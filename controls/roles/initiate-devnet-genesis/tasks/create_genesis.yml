@@ -14,7 +14,11 @@
       - --geth-genesis-json-in=/execution/genesis.json
       - --geth-genesis-json-out=/execution/genesis.json
     volumes:
-      - "{{ working_dir }}/{{ devnet_services.CL }}:/consensus"
-      - "{{ working_dir }}/{{ devnet_services.EL }}:/execution"
+      - "{{ working_dir }}/genesis/consensus:/consensus"
+      - "{{ working_dir }}/genesis/execution:/execution"
     auto_remove: true
+
+- name: Wait for 5 seconds
+  pause:
+    seconds: 5
 #EOF

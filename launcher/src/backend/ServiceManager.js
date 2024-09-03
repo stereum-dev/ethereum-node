@@ -2441,22 +2441,57 @@ export class ServiceManager {
     }
   }
 
-  async createDevnet() {
-    const workingDir = await this.getCurrentPath();
-    const devnetServices = {
-      EL: "geth",
-      CL: "prysm",
-      VL: "prysm",
-    };
+  async getGenesis() {
+    try {
+      const workingDir = await this.getCurrentPath();
+      const genesis = await this.nodeConnection.sshService.exec(`cat ${workingDir}/genesis/execution/genesis.json`);
+      return JSON.parse(genesis.stdout);
+    } catch (error) {
+      console.error("Error getting genesis:", error);
+      throw error;
+    }
+  }
 
-    devnetServices.EL += `-${StringUtils.createRandomString()}`;
-    devnetServices.CL += `-${StringUtils.createRandomString()}`;
-    devnetServices.VL += `-${StringUtils.createRandomString()}`;
+  async copyGenesisConfigFile() {
+    try {
+      const workingDir = await this.getCurrentPath();
+      await this.nodeConnection.runPlaybook("Copy Devnet Genesis", {
+        stereum_role: "copy-devnet-genesis",
+        working_dir: workingDir,
+      });
+    } catch (error) {
+      console.error("Error during Copy Devnet Genesis playbook execution:", error);
+      throw error;
+    }
+  }
 
-    this.nodeConnection.runPlaybook("Create Devnet", {
-      stereum_role: "create-devnet",
-      working_dir: workingDir,
-      devnet_services: devnetServices,
-    });
+  async writeGenesis(genesis) {
+    try {
+      const workingDir = await this.getCurrentPath();
+
+      await this.nodeConnection.sshService.exec(
+        `echo ${StringUtils.escapeStringForShell(
+          JSON.stringify(genesis)
+        )} > ${workingDir}/genesis/execution/genesis.json`
+      );
+
+      console.log("Genesis file has been written successfully.");
+    } catch (error) {
+      console.error("Error writing genesis file:", error);
+      throw error;
+    }
+  }
+
+  async initGenesis() {
+    try {
+      const workingDir = await this.getCurrentPath();
+      await this.nodeConnection.runPlaybook("Initiate Devnet Genesis", {
+        stereum_role: "initiate-devnet-genesis",
+        working_dir: workingDir,
+      });
+    } catch (error) {
+      console.error("Error during Initiate Devnet Genesis playbook execution:", error);
+      throw error;
+    }
   }
 }

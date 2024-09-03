@@ -14,16 +14,32 @@ export class GethService extends NodeService {
       new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
     ];
 
+    //   // if (network === "devnet") {
+    //   //   // initGenesis(/path/to/genesisfile/onVM )
+    //   // }
+    //   let cmd = network === "devnet" ? [
+    //     "--ws.origins=*11111111111111111111",
+    //     "--authrpc.port=8551",
+    //     "--authrpc.vhosts=*"
+    // ] : [
+    //     "--ws.origins=*22222222222222",
+    //     "--authrpc.port=8551",
+    //     "--authrpc.vhosts=*ddddddd"
+    // ];
+
     service.init(
       "GethService", // service
       service.id, // id
       1, // configVersion
       "ethereum/client-go", // image
       "v1.10.25", // imageVersion
+
+      // cmd
       [
         `--${network}`,
         `--datadir=${dataDir}`,
         "--state.scheme=path",
+
         "--http",
         "--http.port=8545",
         "--http.addr=0.0.0.0",
@@ -35,6 +51,7 @@ export class GethService extends NodeService {
         "--ws.addr=0.0.0.0",
         "--ws.api=eth,net,web3",
         "--ws.origins=*",
+
         "--authrpc.port=8551",
         "--authrpc.addr=0.0.0.0",
         "--authrpc.vhosts=*",
