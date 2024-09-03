@@ -686,16 +686,12 @@ ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });
 
-ipcMain.handle("copyGenesisConfigFile", async () => {
-  return await serviceManager.copyGenesisConfigFile();
+ipcMain.handle("writeGenesisJson", async (event, args) => {
+  return await serviceManager.writeGenesisJson(args);
 });
 
-ipcMain.handle("getGenesis", async () => {
-  return await serviceManager.getGenesis();
-});
-
-ipcMain.handle("writeGenesis", async (event, args) => {
-  return await serviceManager.writeGenesis(args);
+ipcMain.handle("writeConfigYaml", async (event, args) => {
+  return await serviceManager.writeConfigYaml(args);
 });
 
 ipcMain.handle("initGenesis", async () => {
