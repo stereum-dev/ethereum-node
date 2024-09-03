@@ -859,7 +859,7 @@ export class ServiceManager {
     switch (name) {
       case "GethService":
         ports =
-          args.network === "mainnet"
+          args.network === "devnet"
             ? [
                 new ServicePort(null, 8551, 8551, servicePortProtocol.tcp),
                 new ServicePort(null, 8545, 8545, servicePortProtocol.tcp),
@@ -936,12 +936,21 @@ export class ServiceManager {
         );
 
       case "PrysmBeaconService":
-        ports = [
-          new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
-          new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
-          new ServicePort("127.0.0.1", 4000, 4000, servicePortProtocol.tcp),
-          new ServicePort("127.0.0.1", args.port ? args.port : 3500, 3500, servicePortProtocol.tcp),
-        ];
+        ports =
+          args.network === "devnet"
+            ? [
+                new ServicePort(null, 4000, 4000, servicePortProtocol.tcp),
+                new ServicePort(null, 3500, 3500, servicePortProtocol.tcp),
+                new ServicePort(null, 8080, 8080, servicePortProtocol.tcp),
+                new ServicePort(null, 6060, 6060, servicePortProtocol.tcp),
+                new ServicePort(null, 9090, 9090, servicePortProtocol.tcp),
+              ]
+            : [
+                new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
+                new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
+                new ServicePort("127.0.0.1", 4000, 4000, servicePortProtocol.tcp),
+                new ServicePort("127.0.0.1", args.port ? args.port : 3500, 3500, servicePortProtocol.tcp),
+              ];
         return PrysmBeaconService.buildByUserInput(
           args.network,
           ports,
@@ -952,7 +961,10 @@ export class ServiceManager {
         );
 
       case "PrysmValidatorService":
-        ports = [new ServicePort("127.0.0.1", args.port ? args.port : 7500, 7500, servicePortProtocol.tcp)];
+        ports =
+          args.network === "devnet"
+            ? []
+            : [new ServicePort("127.0.0.1", args.port ? args.port : 7500, 7500, servicePortProtocol.tcp)];
         return PrysmValidatorService.buildByUserInput(
           args.network,
           ports,

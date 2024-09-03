@@ -7,15 +7,15 @@ export class GethService extends NodeService {
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
-    const JWTDir = network === "mainnet" ? "/execution/engine.jwt" : "/engine.jwt";
-    const dataDir = network === "mainnet" ? "/execution" : "/opt/data/geth";
+    const JWTDir = network === "devnet" ? "/execution/engine.jwt" : "/engine.jwt";
+    const dataDir = network === "devnet" ? "/execution" : "/opt/data/geth";
     const volumes =
-      network === "mainnet"
+      network === "devnet"
         ? [new ServiceVolume(workingDir, dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)]
         : [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
 
     const cmd =
-      network === "mainnet"
+      network === "devnet"
         ? [
             "--http",
             "--http.api=eth,web3,net",
@@ -61,6 +61,8 @@ export class GethService extends NodeService {
             "--metrics.addr=0.0.0.0",
           ];
 
+    const entrypoint = network === "devnet" ? [] : ["geth"];
+
     service.init(
       "GethService", // service
       service.id, // id
@@ -68,7 +70,7 @@ export class GethService extends NodeService {
       "ethereum/client-go", // image
       "v1.10.25", // imageVersion
       cmd, // command
-      ["geth"], // entrypoint
+      entrypoint, // entrypoint
       null, // env
       ports, // ports
       volumes, // volumes

@@ -10,26 +10,43 @@ export class PrysmBeaconService extends NodeService {
 
     const image = "prysmaticlabs/prysm-beacon-chain";
 
-    const JWTDir = "/engine.jwt";
-    const dataDir = "/opt/app/beacon";
-    const genesisDir = "/opt/app/genesis";
+    const JWTDir = network === "devnet" ? "/execution/engine.jwt" : "/engine.jwt";
+    const dataDir = network === "devnet" ? "/consensus/beacondata" : "/opt/app/beacon";
+    const genesisDir = network === "devnet" ? "/consensus" : "/opt/app/genesis";
+    const configYamlDir = "/consensus";
+    const executionDir = "/execution";
 
     //volumes
-    const volumes = [
-      new ServiceVolume(workingDir + "/beacon", dataDir),
-      new ServiceVolume(workingDir + "/genesis", genesisDir),
-    ];
+    const volumes =
+      network === "devnet"
+        ? [new ServiceVolume(workingDir, configYamlDir)]
+        : [new ServiceVolume(workingDir + "/beacon", dataDir), new ServiceVolume(workingDir + "/genesis", genesisDir)];
 
     //execution endpoint
-    const executionEndpoint = executionClients
-      .map((client) => {
-        const elJWTDir = client.volumes.find(
-          (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
-        ).destinationPath;
-        volumes.push(new ServiceVolume(elJWTDir, JWTDir));
-        return client.buildExecutionClientEngineRPCHttpEndpointUrl();
-      })
-      .join();
+    const executionEndpoint =
+      network === "devnet"
+        ? executionClients
+            .map((client) => {
+              const elJWTDir = client.volumes.find(
+                (vol) => vol.servicePath === "/execution/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
+              ).destinationPath;
+
+              const baseDir = elJWTDir.split("/engine.jwt")[0];
+              volumes.push(new ServiceVolume(baseDir, executionDir));
+              volumes.push(new ServiceVolume(elJWTDir, JWTDir));
+
+              return client.buildExecutionClientEngineRPCHttpEndpointUrl();
+            })
+            .join()
+        : executionClients
+            .map((client) => {
+              const elJWTDir = client.volumes.find(
+                (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
+              ).destinationPath;
+              volumes.push(new ServiceVolume(elJWTDir, JWTDir));
+              return client.buildExecutionClientEngineRPCHttpEndpointUrl();
+            })
+            .join();
 
     // mevboost endpoint
     const mevboostEndpoint = mevboost
@@ -38,28 +55,53 @@ export class PrysmBeaconService extends NodeService {
       })
       .join();
 
+    const cmd =
+      network === "devnet"
+        ? [
+            `--datadir=${dataDir}`,
+            "--min-sync-peers=0",
+            `--genesis-state=${genesisDir}/genesis.ssz`,
+            "--bootstrap-node=",
+            "--interop-eth1data-votes",
+            `--chain-config-file=${configYamlDir}/config.yml`,
+            "--contract-deployment-block=0",
+            "--chain-id=${CHAIN_ID:-32382}",
+            "--rpc-host=0.0.0.0",
+            "--grpc-gateway-host=0.0.0.0",
+            `--execution-endpoint=${executionEndpoint}`,
+            "--accept-terms-of-use=true",
+            `--jwt-secret=${JWTDir}`,
+            "--suggested-fee-recipient=0x123463a4b065722e99115d6c222f267d9cabb524",
+            "--minimum-peers-per-subnet=0",
+            "--enable-debug-rpc-endpoints",
+            "--force-clear-db",
+          ]
+        : [
+            "--accept-terms-of-use=true",
+            `--${network}`,
+            `--datadir=${dataDir}`,
+            `--block-batch-limit=512`,
+            "--rpc-host=0.0.0.0",
+            "--grpc-gateway-host=0.0.0.0",
+            "--p2p-max-peers=100",
+            `--execution-endpoint=${executionEndpoint}`,
+            `--jwt-secret=${JWTDir}`,
+            "--monitoring-host=0.0.0.0",
+            "--monitoring-port=8080",
+            "--p2p-tcp-port=13001",
+            "--p2p-udp-port=12001",
+          ];
+
+    const entrypoint = network === "devnet" ? [] : ["/app/cmd/beacon-chain/beacon-chain"];
+
     service.init(
       "PrysmBeaconService", //service
       service.id, //id
       1, // configVersion
       image, //image
       "v5.1.0", //imageVersion
-      [
-        "--accept-terms-of-use=true",
-        `--${network}`,
-        `--datadir=${dataDir}`,
-        `--block-batch-limit=512`,
-        "--rpc-host=0.0.0.0",
-        "--grpc-gateway-host=0.0.0.0",
-        "--p2p-max-peers=100",
-        `--execution-endpoint=${executionEndpoint}`,
-        `--jwt-secret=${JWTDir}`,
-        "--monitoring-host=0.0.0.0",
-        "--monitoring-port=8080",
-        "--p2p-tcp-port=13001",
-        "--p2p-udp-port=12001",
-      ], //command
-      ['/app/cmd/beacon-chain/beacon-chain'], //entrypoint
+      cmd, // command
+      entrypoint, //entrypoint
       null, //env
       ports, //ports
       volumes, //volumes
@@ -71,15 +113,15 @@ export class PrysmBeaconService extends NodeService {
     );
 
     if (network == "holesky" || network == "sepolia") {
-      service.command.push(`--genesis-state=/opt/app/genesis/prysm-${network}-genesis.ssz`)
+      service.command.push(`--genesis-state=/opt/app/genesis/prysm-${network}-genesis.ssz`);
     }
 
     if (checkpointURL) {
-      service.command.push(`--checkpoint-sync-url=${checkpointURL}`)
+      service.command.push(`--checkpoint-sync-url=${checkpointURL}`);
     }
 
     if (mevboostEndpoint) {
-      service.command.push(`--http-mev-relay=${mevboostEndpoint}`)
+      service.command.push(`--http-mev-relay=${mevboostEndpoint}`);
     }
 
     return service;
@@ -110,8 +152,9 @@ export class PrysmBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${
+      this.id
+    }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {
