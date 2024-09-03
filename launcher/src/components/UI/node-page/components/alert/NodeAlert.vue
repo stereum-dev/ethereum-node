@@ -478,7 +478,7 @@ export default {
     this.fetchCsm();
     this.csmInterval = setInterval(() => {
       this.fetchCsm();
-    }, 2000);
+    }, 120000);
   },
   beforeUnmount() {
     clearInterval(this.polling);

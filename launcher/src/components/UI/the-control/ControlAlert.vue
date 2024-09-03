@@ -445,11 +445,19 @@ export default {
     this.obolInterval = setInterval(() => {
       this.fetchObolCharonAlerts();
     }, 120000);
+
+    this.fetchCsm();
+    this.csmInterval = setInterval(() => {
+      this.fetchCsm();
+    }, 120000);
   },
   beforeUnmount() {
     clearInterval(this.polling);
     if (this.obolInterval) {
       clearInterval(this.obolInterval);
+    }
+    if (this.csmInterval) {
+      clearInterval(this.csmInterval);
     }
   },
   created() {
@@ -465,6 +473,24 @@ export default {
       } else {
         this.alertShowState.push(color);
       }
+    },
+    async fetchCsm() {
+      try {
+        const alerts = await ControlService.fetchCsmAlerts();
+
+        this.processCsm(alerts);
+      } catch (error) {
+        console.error("Failed to fetch Obol Charon alerts:", error);
+      }
+    },
+    processCsm(alerts) {
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
+
+      const notifictionsNames = alerts.filter((alert) => alert.level === "notification").map((alert) => alert.name);
+
+      this.criticalCsm = criticalAlertNames;
+
+      this.notifCsm = notifictionsNames;
     },
     async checkSettings() {
       try {
