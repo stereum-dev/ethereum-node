@@ -162,6 +162,54 @@
         </template>
 
         <!-- obol yellow end -->
+        <!-- csm red start -->
+        <template v-if="criticalCsm && !alertShowState.includes('red')">
+          <div
+            v-for="csmCrit in criticalCsm"
+            :key="csmCrit"
+            class="alert-message_red"
+            @mouseenter="cursorLocation = `${csmCrit}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="icon-box">
+              <img src="/img/icon/service-icons/Other/LCOM.png" alt="warn_obol" />
+            </div>
+            <div class="message">
+              <div class="main-message">
+                <span>{{ csmCrit }}</span>
+              </div>
+              <div class="val-message">
+                <span>> {{ $t("nodeAlert.csm") }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- csm red end -->
+        <!-- csm green start -->
+        <template v-if="notifCsm && !alertShowState.includes('green')">
+          <div
+            v-for="notif in notifCsm"
+            :key="notif"
+            class="alert-message_green"
+            @mouseenter="cursorLocation = `${notif}`"
+            @mouseleave="cursorLocation = ''"
+          >
+            <div class="icon-box">
+              <img src="/img/icon/service-icons/Other/LCOM.png" alt="warn_obol" />
+            </div>
+            <div class="message">
+              <div class="main-message">
+                <span>{{ notif }}</span>
+              </div>
+              <div class="val-message">
+                <span>> {{ $t("nodeAlert.csm") }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- csm green end -->
         <div
           v-if="synchronizationErrorControl && !alertShowState.includes('red')"
           class="alert-message_red"
@@ -292,6 +340,9 @@ export default {
       criticalObol: [],
       warningObol: [],
       obolInterval: null,
+      criticalCsm: [],
+      notifCsm: [],
+      csmInterval: null,
     };
   },
   computed: {
@@ -394,11 +445,19 @@ export default {
     this.obolInterval = setInterval(() => {
       this.fetchObolCharonAlerts();
     }, 120000);
+
+    this.fetchCsm();
+    this.csmInterval = setInterval(() => {
+      this.fetchCsm();
+    }, 120000);
   },
   beforeUnmount() {
     clearInterval(this.polling);
     if (this.obolInterval) {
       clearInterval(this.obolInterval);
+    }
+    if (this.csmInterval) {
+      clearInterval(this.csmInterval);
     }
   },
   created() {
@@ -414,6 +473,24 @@ export default {
       } else {
         this.alertShowState.push(color);
       }
+    },
+    async fetchCsm() {
+      try {
+        const alerts = await ControlService.fetchCsmAlerts();
+
+        this.processCsm(alerts);
+      } catch (error) {
+        console.error("Failed to fetch Obol Charon alerts:", error);
+      }
+    },
+    processCsm(alerts) {
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
+
+      const notifictionsNames = alerts.filter((alert) => alert.level === "notification").map((alert) => alert.name);
+
+      this.criticalCsm = criticalAlertNames;
+
+      this.notifCsm = notifictionsNames;
     },
     async checkSettings() {
       try {

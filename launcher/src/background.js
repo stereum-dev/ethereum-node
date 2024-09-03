@@ -745,6 +745,10 @@ ipcMain.handle("fetchObolCharonAlerts", async () => {
   return await monitoring.fetchObolCharonAlerts();
 });
 
+ipcMain.handle("fetchCsmAlerts", async () => {
+  return await monitoring.fetchCsmAlerts();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
