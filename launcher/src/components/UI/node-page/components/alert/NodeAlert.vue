@@ -359,8 +359,8 @@ export default {
       criticalObol: [],
       warningObol: [],
       obolInterval: null,
-      criticalCsm: ["njknmkl"],
-      notifCsm: ["juhnjkl"],
+      criticalCsm: [],
+      notifCsm: [],
       csmInterval: null,
     };
   },
@@ -475,11 +475,18 @@ export default {
     this.obolInterval = setInterval(() => {
       this.fetchObolCharonAlerts();
     }, 120000);
+    this.fetchCsm();
+    this.csmInterval = setInterval(() => {
+      this.fetchCsm();
+    }, 2000);
   },
   beforeUnmount() {
     clearInterval(this.polling);
     if (this.obolInterval) {
       clearInterval(this.obolInterval);
+    }
+    if (this.csmInterval) {
+      clearInterval(this.csmInterval);
     }
   },
   created() {
@@ -496,6 +503,25 @@ export default {
         console.error("Failed to fetch Obol Charon alerts:", error);
       }
     },
+    async fetchCsm() {
+      try {
+        const alerts = await ControlService.fetchCsmAlerts();
+
+        this.processCsm(alerts);
+      } catch (error) {
+        console.error("Failed to fetch Obol Charon alerts:", error);
+      }
+    },
+    processCsm(alerts) {
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
+
+      const notifictionsNames = alerts.filter((alert) => alert.level === "notification").map((alert) => alert.name);
+
+      this.criticalCsm = criticalAlertNames;
+
+      this.notifCsm = notifictionsNames;
+    },
+
     processAlerts(alerts) {
       const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
 
@@ -514,6 +540,7 @@ export default {
         this.alertShowState.push(color);
       }
     },
+
     async checkSettings() {
       try {
         const savedConfig = await ControlService.readConfig();
