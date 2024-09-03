@@ -43,7 +43,7 @@
                         v-else
                         class="w-4 h-4 bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-5"
                       >
-                        <span>{{ numberOfUpdatablePackages }}</span>
+                        <span>{{ serverStore.numberOfUpdatablePackages }}</span>
                       </div>
                     </div>
                   </div>
@@ -184,7 +184,7 @@
                   class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800"
                 >
                   <div class="w-5 h-5 bg-[#243d36] rounded-full p-1">
-                    <img class="w-3" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" />
+                    <img class="w-3" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" @click="copyUpdates"/>
                   </div>
                   <span class="text-center text-sm text-gray-300 font-semibold">{{
                     $t("updatePanel.availablePlugin")
@@ -257,7 +257,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { onMounted, computed, ref, watchEffect } from "vue";
-import { useUpdateCheck } from "@/composables/version.js";
+import { useUpdateCheck, useUpgradablePackages } from "@/composables/version.js";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 
@@ -273,6 +273,8 @@ const footerStore = useFooter();
 
 const openButton = ref("Open OS Update Panel");
 
+const { getUpgradablePackages } = useUpgradablePackages();
+
 //Data
 const stereumApp = ref({
   current: "alpha",
@@ -280,7 +282,7 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 const osVersionCurrent = ref("-");
-const numberOfUpdatablePackages = ref(0);
+
 const searchingForOsUpdates = ref(false);
 
 //Computed
@@ -324,6 +326,17 @@ const searchUpdate = () => {
   useUpdateCheck();
 };
 
+const copyUpdates = () => {
+  let string = serviceStore.newUpdates.map(u => "- " + u.name + " to " + u.version).join("\n")
+  if(checkStereumUpdate.value){
+    string += "\n- Stereum to " + headerStore.stereumUpdate.version
+  }
+  if(serverStore.numberOfUpdatablePackages && serverStore.numberOfUpdatablePackages > 0){
+    string += "\n- OS Updates"
+  }
+  navigator.clipboard.writeText(string);
+};
+
 const checkStereumUpdate = computed(() => {
   if (headerStore.stereumUpdate && headerStore.stereumUpdate.version)
     return headerStore.stereumUpdate.commit != headerStore.stereumUpdate.current_commit ? true : false;
@@ -358,19 +371,15 @@ const searchOsUpdates = async () => {
   }
 
   searchingForOsUpdates.value = true;
-  setTimeout(async () => {
-    await getUpdatablePackagesCount();
-    searchingForOsUpdates.value = false;
-  }, 10);
-};
 
-const getUpdatablePackagesCount = async () => {
-  try {
-    const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
-    const numPackages = Number(packagesCount);
-    numberOfUpdatablePackages.value = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-  } catch (error) {
-    console.log(error);
+  if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
+    setTimeout(async () => {
+      await getUpgradablePackages();
+      serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length || 0;
+      searchingForOsUpdates.value = false;
+    }, 10);
+  } else {
+    searchingForOsUpdates.value = false;
   }
 };
 

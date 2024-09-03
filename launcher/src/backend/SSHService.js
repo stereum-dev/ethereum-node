@@ -573,7 +573,10 @@ export class SSHService {
    * @param {Client} [conn]
    * @returns `void`
    */
-  async uploadFileSSH(localPath, remotePath, conn = this.getConnectionFromPool()) {
+  async uploadFileSSH(localPath, remotePath, conn) {
+    if (!conn) {
+      conn = await this.getConnectionFromPool();
+    }
     return new Promise((resolve, reject) => {
       const readStream = fs.createReadStream(localPath);
       readStream.on("error", reject);
@@ -623,7 +626,7 @@ export class SSHService {
         if (item.isDirectory()) {
           await this.uploadDirectorySSH(localFilePath, remoteFilePath, conn);
         } else {
-          await this.uploadFileSSH(localFilePath, remoteFilePath);
+          await this.uploadFileSSH(localFilePath, remoteFilePath, conn);
         }
       }
       return true;

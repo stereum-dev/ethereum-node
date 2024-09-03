@@ -679,6 +679,10 @@ class ControlService extends EventEmitter {
   async handleOTPChange(args) {
     return this.promiseIpc.send("handleOTPChange", args);
   }
+  
+  async fetchObolCharonAlerts() {
+    return this.promiseIpc.send("fetchObolCharonAlerts");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

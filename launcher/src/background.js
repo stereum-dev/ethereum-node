@@ -745,6 +745,10 @@ ipcMain.handle("handleOTPChange", async (event, args) => {
   return await AuthenticationService.handleOTPChange(nodeConnection.nodeConnectionParams.password, args.newPassword, nodeConnection.sshService);
 });
 
+ipcMain.handle("fetchObolCharonAlerts", async () => {
+  return await monitoring.fetchObolCharonAlerts();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
