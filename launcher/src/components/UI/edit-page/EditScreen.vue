@@ -4,7 +4,10 @@
 
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
-        <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
+        <SidebarSection
+          @network-modal="displaySwitchNetwork"
+          @nuke-node="openNukeNodeModal"
+        />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full relative">
         <EditBody
@@ -21,10 +24,16 @@
       </div>
       <div class="col-start-17 col-end-21 ml-1 grid grid-cols-2 grid-rows-9">
         <NetworkStatus />
-        <ServiceSection @change-connection="serviceModifyHandler" @delete-service="selectedServiceToRemove" />
+        <ServiceSection
+          @change-connection="serviceModifyHandler"
+          @delete-service="selectedServiceToRemove"
+        />
       </div>
       <div class="col-start-21 col-end-25 px-1 flex flex-col justify-between">
-        <ChangesSection @remove-change="cancelChangeHandler" @confirm-changes="confirmHandler" />
+        <ChangesSection
+          @remove-change="cancelChangeHandler"
+          @confirm-changes="confirmHandler"
+        />
       </div>
     </div>
     <!-- End Node main layout -->
@@ -50,7 +59,7 @@
           <SetupsDrawer
             v-else-if="manageStore.isSetupsDrawerActive"
             @close-window="closeSetupModal"
-            @create-custom="createCustomSetup"
+            @create-devnet="createDevnetModal"
             @get-network="getSetupNetwork"
           />
           <ServicesDrawer
@@ -125,16 +134,32 @@
       <!-- End Nuke Modal -->
 
       <!-- Start Import Setup -->
-      <ImportSetup v-if="manageStore.isImportSetupYamlActive" @confirm-import="confirmImportSingleSetup" />
+      <ImportSetup
+        v-if="manageStore.isImportSetupYamlActive"
+        @confirm-import="confirmImportSingleSetup"
+      />
       <!-- End Import Setup -->
       <!-- Start Create Setup -->
-      <CreateSetup v-if="setupStore.isCreateSetupModalActive" :network="selectedSetupNetwork" />
+      <CreateSetup
+        v-if="setupStore.isCreateSetupModalActive"
+        :network="selectedSetupNetwork"
+      />
       <!-- End Create Setup -->
 
       <!-- Start Setup Infos -->
       <SetupInfos v-if="setupStore.selectedSetupInfos" />
+      <!-- End Setup Infos -->
+      <!-- Start Devnet Configs Modal -->
+      <DevnetSetup
+        v-if="setupStore.isDevnetSetupModalActive"
+        @close-window="closeDevnetModal"
+        @confirm-action="validationForm"
+      />
     </TransitionGroup>
-    <LoaderAnime v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive" :anime="getAimationSrc" />
+    <LoaderAnime
+      v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive"
+      :anime="getAimationSrc"
+    />
   </base-layout>
 </template>
 <script setup>
@@ -164,6 +189,7 @@ import ModifyModal from "./components/modals/ModifyModal.vue";
 import NetworkModal from "./components/modals/NetworkModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
+import DevnetSetup from "./components/modals/devnet/DevnetSetup.vue";
 import AddCustom from "./components/modals/custom-service/AddCustom.vue";
 import CreateSetup from "./components/modals/setups/CreateSetup.vue";
 import ImportSetup from "./components/modals/setups/ImportSetup.vue";
@@ -359,7 +385,9 @@ const switchClientConfirm = (properties) => {
         executionClients: [],
         consensusClients: [],
         otherServices: [],
-        checkpointURL: properties.checkPointSyncUrl ? properties.checkPointSyncUrl : false,
+        checkpointURL: properties.checkPointSyncUrl
+          ? properties.checkPointSyncUrl
+          : false,
       },
     },
   });
@@ -396,7 +424,9 @@ const serviceModifyHandler = (item) => {
 const hideModifyModal = () => {
   manageStore.isLineHidden = false;
   isModifyModalOpen.value = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = JSON.parse(
+    JSON.stringify(serviceStore.installedServices)
+  );
 };
 const confirmConsensusConnection = (item) => {
   clientToConnect.value.isNotConnectedToConsensus = false;
@@ -463,9 +493,19 @@ const openNetworkMenu = () => {
   manageStore.isServicesDrawerActive = false;
   manageStore.isSetupsDrawerActive = true;
 };
-const createCustomSetup = () => {
-  console.log("Create Custom Setup");
+
+const createDevnetModal = () => {
+  setupStore.isDevnetSetupModalActive = true;
 };
+
+// const createCustomConfig = () => {
+//   setupStore.isDevnetSetupModalActive = false;
+//   console.log("genesis");
+//   console.log("config");
+//   console.log('Clients');
+//   await ControlService.writeGenesis('genesis in Object');
+//   await ControlService.writeConfig('Config in String');
+// };
 
 const getSetupNetwork = (network) => {
   selectedSetupNetwork.value = network;
@@ -495,7 +535,9 @@ const cancelChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
-      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+      manageStore.newConfiguration = JSON.parse(
+        JSON.stringify(serviceStore.installedServices)
+      );
     }
 
     if (item.content === "MODIFY") {
@@ -535,7 +577,10 @@ const addServices = (service) => {
 const addServerServices = (service) => {
   let item = useDeepClone(service);
 
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s?.service).includes(item?.service)) {
+  if (
+    item.category === "service" &&
+    manageStore.newConfiguration.map((s) => s?.service).includes(item?.service)
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -545,7 +590,9 @@ const addServerServices = (service) => {
     };
     manageStore.newConfiguration.push(newItem);
 
-    setupStore.editSetups.find((s) => s.setupId === setupStore.selectedSetup?.setupId)?.services.push(newItem);
+    setupStore.editSetups
+      .find((s) => s.setupId === setupStore.selectedSetup?.setupId)
+      ?.services.push(newItem);
 
     clientToInstall.value = newItem;
     clientToInstall.value.addPanel = true;
@@ -568,7 +615,10 @@ const onDrop = (event) => {
   const allServices = useDeepClone(serviceStore.allServices);
   const itemId = event.dataTransfer.getData("itemId");
   let item = allServices.find((item) => item.id == itemId);
-  if (item.category === "service" && manageStore.newConfiguration.map((s) => s.service).includes(item.service)) {
+  if (
+    item.category === "service" &&
+    manageStore.newConfiguration.map((s) => s.service).includes(item.service)
+  ) {
     return;
   } else {
     item.id = manageStore.newConfiguration.length;
@@ -657,7 +707,9 @@ const switchNetworkConfirm = (network) => {
   manageStore.displayNetworkList = false;
   if (network?.network != setupStore.selectedSetup?.network) {
     if (manageStore.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
-      let index = manageStore.confirmChanges.findIndex((j) => j.content.includes("CHANGE NETWORK"));
+      let index = manageStore.confirmChanges.findIndex((j) =>
+        j.content.includes("CHANGE NETWORK")
+      );
       if (setupStore.selectedSetup.network === network.network) {
         manageStore.confirmChanges.splice(index, 1);
       } else {
@@ -721,7 +773,9 @@ const selectedServiceToRemove = (item) => {
     content: "DELETE",
     contentIcon: "/img/icon/edit-node-icons/delete-service.png",
     service: item,
-    setupId: commonServiceExistance ? commonService.setupId : setupStore.selectedSetup?.setupId,
+    setupId: commonServiceExistance
+      ? commonService.setupId
+      : setupStore.selectedSetup?.setupId,
   };
   const itemExists = manageStore.confirmChanges.some(
     (e) => (e.id === item.config?.serviceID || e.id === item.id) && e.content === "DELETE"
@@ -804,21 +858,32 @@ const confirmHandler = async () => {
   );
 
   const serverServiceExists = manageStore.confirmChanges.some(
-    (change) => change.content === "INSTALL" && setupStore.serverServices.includes(change.service.service)
+    (change) =>
+      change.content === "INSTALL" &&
+      setupStore.serverServices.includes(change.service.service)
   );
 
   try {
     if (serverServiceExists) {
       await handleServerServiceChanges();
-    } else if (setupExists && manageStore.confirmChanges.some((e) => e.content === "DELETE")) {
+    } else if (
+      setupExists &&
+      manageStore.confirmChanges.some((e) => e.content === "DELETE")
+    ) {
       await handleSetupChanges();
     } else if (manageStore.confirmChanges.some((e) => e.content === "NETWORK")) {
       await handleSwitchSetupNetwork();
-      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
     } else if (manageStore.confirmChanges.some((e) => e.content === "MODIFY")) {
-      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
     } else {
-      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+      await ControlService.handleServiceChanges(
+        JSON.parse(JSON.stringify(manageStore.confirmChanges))
+      );
     }
   } catch (error) {
     console.error("Error processing changes:", error);
@@ -829,17 +894,27 @@ const confirmHandler = async () => {
 };
 
 const handleServerServiceChanges = async () => {
-  const commonServicesId = setupStore.editSetups.find((s) => s.setupName === "commonServices")?.setupId;
+  const commonServicesId = setupStore.editSetups.find(
+    (s) => s.setupName === "commonServices"
+  )?.setupId;
   manageStore.confirmChanges.forEach((change) => {
     change.data.setupId = commonServicesId ?? change.data.setupId;
   });
-  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+  await ControlService.handleServiceChanges(
+    JSON.parse(JSON.stringify(manageStore.confirmChanges))
+  );
 };
 
 const handleSetupChanges = async () => {
-  const setupsToRemoveIds = new Set(setupStore.selectedSetupToRemove.map((s) => s.setupId));
-  setupStore.allSetups = setupStore.allSetups.filter((e) => !setupsToRemoveIds.has(e.setupId));
-  setupStore.editSetups = setupStore.editSetups.filter((e) => !setupsToRemoveIds.has(e.setupId));
+  const setupsToRemoveIds = new Set(
+    setupStore.selectedSetupToRemove.map((s) => s.setupId)
+  );
+  setupStore.allSetups = setupStore.allSetups.filter(
+    (e) => !setupsToRemoveIds.has(e.setupId)
+  );
+  setupStore.editSetups = setupStore.editSetups.filter(
+    (e) => !setupsToRemoveIds.has(e.setupId)
+  );
 
   let subtasks = manageStore.confirmChanges.flatMap((e) => e.subTasks);
   await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(subtasks)));
@@ -905,7 +980,9 @@ const deleteSetup = async (item) => {
   });
   const subtasks =
     item?.services.flatMap((service) => {
-      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
+      const matchedServices = manageStore.newConfiguration.filter(
+        (e) => e.config?.serviceID === service.config?.serviceID
+      );
 
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,
@@ -925,7 +1002,9 @@ const deleteSetup = async (item) => {
     subTasks: subtasks,
   };
 
-  const itemExists = manageStore.confirmChanges.some((e) => e.id === item.setupId && e.content === "DELETE");
+  const itemExists = manageStore.confirmChanges.some(
+    (e) => e.id === item.setupId && e.content === "DELETE"
+  );
   if (!itemExists) {
     manageStore.confirmChanges.push(confirmDelete);
   }
@@ -949,7 +1028,9 @@ const closeNetworkModal = () => {
 const closeSwitchModal = () => {
   isSwitchModalOpen.value = false;
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = JSON.parse(
+    JSON.stringify(serviceStore.installedServices)
+  );
 };
 
 const closeInfoModal = () => {
