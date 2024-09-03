@@ -499,7 +499,8 @@
     "sync": "Erreur de synchronisation",
     "taskFail": "Tâche échouée",
     "stats": "STATUT : OUVERT",
-    "clientService": "CLIENT / SERVICE"
+    "clientService": "CLIENT / SERVICE",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "VOTRE CLIENT stocke les données de la blockchain SUR VOTRE SERVEUR afin que votre nœud puisse servir le réseau. cela est nécessaire pour que votre nœud REPRENNE son DEVOIR D'ATTESTATION dans la MISE. EN UTILISANT CETTE OPTION, VOUS SUPPRIMEZ LES DONNÉES ACTUELLES DE LA BLOCKCHAIN DE VOS CLIENTS ET UTILISEZ L'OPTION SÉLECTIONNÉE COMME SOURCE POUR SYNCHRONISER VOTRE NŒUD À NOUVEAU.",
