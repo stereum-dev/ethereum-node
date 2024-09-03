@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -807,10 +807,6 @@ video {
   top: -90px;
 }
 
-.bottom-0{
-  bottom: 0px;
-}
-
 .bottom-0\.5{
   bottom: 0.125rem;
 }
@@ -1426,6 +1422,11 @@ video {
   margin-right: auto;
 }
 
+.my-4{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .my-auto{
   margin-top: auto;
   margin-bottom: auto;
@@ -1738,6 +1739,10 @@ video {
 
 .h-\[210px\]{
   height: 210px;
+}
+
+.h-\[240px\]{
+  height: 240px;
 }
 
 .h-\[250px\]{
@@ -2390,11 +2395,6 @@ video {
           flex: none;
 }
 
-.flex-shrink{
-  -ms-flex-negative: 1;
-      flex-shrink: 1;
-}
-
 .flex-shrink-0{
   -ms-flex-negative: 0;
       flex-shrink: 0;
@@ -2714,11 +2714,6 @@ video {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-}
-
-.flex-wrap{
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
 }
 
 .place-content-center{
@@ -4399,6 +4394,10 @@ video {
   text-indent: 0px;
 }
 
+.font-\[sans-serif\]{
+  font-family: sans-serif;
+}
+
 .font-mono{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -4562,6 +4561,11 @@ video {
 .text-\[\#14171a\]{
   --tw-text-opacity: 1;
   color: rgb(20 23 26 / var(--tw-text-opacity));
+}
+
+.text-\[\#333\]{
+  --tw-text-opacity: 1;
+  color: rgb(51 51 51 / var(--tw-text-opacity));
 }
 
 .text-\[\#336666\]{
@@ -5354,11 +5358,6 @@ html body {
 .after\:left-\[2px\]::after{
   content: var(--tw-content);
   left: 2px;
-}
-
-.after\:top-0::after{
-  content: var(--tw-content);
-  top: 0px;
 }
 
 .after\:top-0\.5::after{
