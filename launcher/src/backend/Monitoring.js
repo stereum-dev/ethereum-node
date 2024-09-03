@@ -3341,6 +3341,7 @@ rm -rf diskoutput
       ];
     }
   }
+
   /**
    * Will gather metrics from Prometheus and evaluate.
    * If thresholds are exceeded, an alert will be generated and added to the retuned array.
@@ -3362,57 +3363,6 @@ rm -rf diskoutput
           "(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer)\n) \n/ \n(\n    sum(increase(core_tracker_failed_duties_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n    + \n    sum(increase(core_bcast_broadcast_total[1h])) by (cluster_name,cluster_hash,cluster_peer) \n)",
         connected_relays: "group (p2p_relay_connections) by (cluster_peer)",
         peer_ping_latency: "histogram_quantile(0.90, sum(rate(p2p_ping_latency_secs_bucket[2m])) by (le,peer))",
-      };
-
-      const queryPromises = Object.entries(queries).map(([key, query]) => {
-        return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
-      });
-
-      const results = await Promise.all(queryPromises);
-
-      let alerts = results
-        .map((metric) => {
-          if (metric.result.status != "success") {
-            return;
-          }
-          if (metric.key === "peer_ping_latency") {
-            let value = Math.max(...metric.result.data.result.map((r) => r.value[1]));
-            return this.parseObolCharonAlerts(metric.key, value);
-          }
-          let value = metric.result.data.result[0].value[1];
-          return this.parseObolCharonAlerts(metric.key, value);
-        })
-        .filter((alert) => alert);
-
-      return alerts;
-    } catch (error) {
-      log.error("Fetching Obol Charon Alerts Failed:\n" + error);
-      return [];
-    }
-  }
-
-  /**
-   * Will gather metrics from Prometheus and evaluate.
-   * If thresholds are exceeded, an alert will be generated and added to the retuned array.
-   * @returns {Object[]} Array of alerts e.g. [{name: "Cluster in Unknown Status", level: "warning"}, {name: "Beacon Node Down", level: "critical"}]
-   */
-  async fetchCsmAlerts() {
-    try {
-      const serviceInfos = await this.getServiceInfos("LCOMService");
-      if (serviceInfos.length < 1) {
-        return [];
-      }
-      const queries = {
-        lcoms_initial_slashing_submitted: "lcoms_initial_slashing_submitted",
-        lcoms_withdrawal_submitted: "lcoms_withdrawal_submitted",
-        lcoms_stealing_penalty: "lcoms_stealing_penalty",
-        lcoms_stealing_penalty_stolenAmount: "lcoms_stealing_penalty_stolenAmount",
-        lcoms_exit_request: "lcoms_exit_request",
-        lcoms_exit_request_timestamp: "lcoms_exit_request_timestamp",
-        lcoms_fee_to_distribute: "lcoms_fee_to_distribute",
-        lcoms_node_operator_status: "lcoms_node_operator_status",
-        lcoms_current_bond: "lcoms_current_bond",
-        lcoms_required_bond: "lcoms_required_bond",
       };
 
       const queryPromises = Object.entries(queries).map(([key, query]) => {
@@ -3504,5 +3454,118 @@ rm -rf diskoutput
         level: "warning",
       };
     }
+  }
+
+  /**
+   * Will gather metrics from Prometheus and evaluate.
+   * If thresholds are exceeded, an alert will be generated and added to the retuned array.
+   * @returns {Object[]} Array of alerts e.g. [{name: "Cluster in Unknown Status", level: "warning"}, {name: "Beacon Node Down", level: "critical"}]
+   */
+  async fetchCsmAlerts() {
+    try {
+      const serviceInfos = await this.getServiceInfos("LCOMService");
+      if (serviceInfos.length < 1) {
+        return [];
+      }
+
+      const queries = {
+        lcoms_initial_slashing_submitted: "lcoms_initial_slashing_submitted",
+        lcoms_withdrawal_submitted: "lcoms_withdrawal_submitted",
+        lcoms_stealing_penalty: "lcoms_stealing_penalty",
+        lcoms_stealing_penalty_stolenAmount: "lcoms_stealing_penalty_stolenAmount",
+        lcoms_exit_request: "lcoms_exit_request",
+        lcoms_exit_request_timestamp: "lcoms_exit_request_timestamp",
+        lcoms_fee_to_distribute: "lcoms_fee_to_distribute",
+        lcoms_node_operator_status: "lcoms_node_operator_status",
+        lcoms_current_bond: "lcoms_current_bond",
+        lcoms_required_bond: "lcoms_required_bond",
+      };
+
+      const queryPromises = Object.entries(queries).map(([key, query]) => {
+        return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
+      });
+
+      const results = await Promise.all(queryPromises);
+
+      let currentBond = null;
+      let requiredBond = null;
+
+      let alerts = results
+        .map((metric) => {
+          if (metric.result.status !== "success") {
+            return [];
+          }
+
+          const value = parseFloat(metric.result.data.result[0].value[1]);
+
+          if (metric.key === "lcoms_current_bond") {
+            currentBond = value;
+          } else if (metric.key === "lcoms_required_bond") {
+            requiredBond = value;
+          }
+
+          return this.parseCsmAlerts(metric.key, value);
+        })
+        .filter((alert) => alert !== null);
+
+      if (currentBond !== null && requiredBond !== null) {
+        const bondDifference = currentBond - requiredBond;
+        const bondAlert = this.parseCsmAlerts("bond_difference", bondDifference);
+        if (bondAlert) {
+          alerts.push(bondAlert);
+        }
+      }
+
+      return alerts;
+    } catch (error) {
+      log.error("Fetching CSM Alerts Failed:\n" + error);
+      return [];
+    }
+  }
+
+  parseCsmAlerts(key, value) {
+    if (key === "lcoms_initial_slashing_submitted" && value > 0) {
+      return {
+        name: "slashing event",
+        level: "critical",
+      };
+    }
+    if (key === "lcoms_withdrawal_submitted" && value > 0) {
+      return {
+        name: "withdrawal submitted",
+        level: "notification",
+      };
+    }
+    if (key === "lcoms_stealing_penalty" && value > 0) {
+      return {
+        name: "EL stealing penalty",
+        level: "critical",
+      };
+    }
+    if (key === "lcoms_exit_request" && value > 0) {
+      return {
+        name: "exit request",
+        level: "critical",
+      };
+    }
+    if (key === "lcoms_fee_to_distribute" && value > 0) {
+      return {
+        name: "none-claimed rewards",
+        level: "notification",
+      };
+    }
+    if (key === "lcoms_node_operator_status" && value < 1) {
+      return {
+        name: "node operator inactive",
+        level: "critical",
+      };
+    }
+    if (key === "bond_difference" && value < 0) {
+      return {
+        name: "Insufficient Bond",
+        level: "critical",
+      };
+    }
+    return [];
   }
 }
