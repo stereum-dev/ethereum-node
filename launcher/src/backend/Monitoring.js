@@ -3391,6 +3391,69 @@ rm -rf diskoutput
     }
   }
 
+  parseObolCharonAlerts(key, value) {
+    value = 0
+    //app_monitoring_readyz
+    if (key === "app_monitoring_readyz") {
+      switch (value) {
+        case 0:
+          return {
+            name: "Cluster in Unknown Status",
+            level: "warning"
+          };
+        case 2:
+          return {
+            name: "Beacon Node Down",
+            level: "critical"
+          };
+        case 4:
+          return {
+            name: "Cluster Insufficient Peers",
+            level: "warning"
+          };
+        case 6:
+          return {
+            name: "Cluster Missing Validators",
+            level: "critical"
+          };
+        case 7:
+          return {
+            name: "Beacon Node Zero Peers",
+            level: "critical"
+          };
+      }
+    }
+    if (key === "cluster_missed_attestations" && value > 0) {
+      return {
+        name: "Cluster Missed Attestations",
+        level: "critical"
+      };
+    }
+    if (key === "cluster_failure_rate" && value < 95) {
+      return {
+        name: "Cluster Failure Rate",
+        level: "critical"
+      };
+    }
+    if (key === "percentage_failed_sync_message_duty" && value > 0.1) {
+      return {
+        name: "Failed Sync Msg Duty",
+        level: "critical"
+      };
+    }
+    if (key === "connected_relays" && value < 1) {
+      return {
+        name: "Num. Connected Relays",
+        level: "warning"
+      };
+    }
+    if (key === "peer_ping_latency" && value > 0.4) {
+      return {
+        name: "Peer Ping Latency",
+        level: "warning"
+      };
+    }
+
   /**
    * Will gather metrics from Prometheus and evaluate.
    * If thresholds are exceeded, an alert will be generated and added to the retuned array.
@@ -3426,83 +3489,64 @@ rm -rf diskoutput
           if (metric.result.status != "success") {
             return;
           }
-          if (metric.key === "peer_ping_latency") {
-            let value = Math.max(...metric.result.data.result.map((r) => r.value[1]));
-            return this.parseObolCharonAlerts(metric.key, value);
+          if (metric.key === "lcoms_current_bond") {
+            let value = lcoms_current_bond - lcoms_required_bond);
+            return this.parseCsmAlerts(metric.key, value);
+
+          else {
+            let value = metric.result.data.result[0].value[1];
+            return this.parseCsmAlerts(metric.key, value);
           }
-          let value = metric.result.data.result[0].value[1];
-          return this.parseObolCharonAlerts(metric.key, value);
-        })
-        .filter((alert) => alert);
+        }
 
       return alerts;
     } catch (error) {
-      log.error("Fetching Obol Charon Alerts Failed:\n" + error);
+      log.error("Fetching some CSM Alerts Failed:\n" + error);
       return [];
     }
   }
 
-  parseObolCharonAlerts(key, value) {
-    value = 0;
-    //app_monitoring_readyz
-    if (key === "app_monitoring_readyz") {
-      switch (value) {
-        case 0:
-          return {
-            name: "Cluster in Unknown Status",
-            level: "warning",
-          };
-        case 2:
-          return {
-            name: "Beacon Node Down",
-            level: "critical",
-          };
-        case 4:
-          return {
-            name: "Cluster Insufficient Peers",
-            level: "warning",
-          };
-        case 6:
-          return {
-            name: "Cluster Missing Validators",
-            level: "critical",
-          };
-        case 7:
-          return {
-            name: "Beacon Node Zero Peers",
-            level: "critical",
-          };
-      }
-    }
-    if (key === "cluster_missed_attestations" && value > 0) {
+  parseCsmAlerts(key, value){
+    if (key === "lcoms_initial_slashing_submitted" && value > 0) {
       return {
-        name: "Cluster Missed Attestations",
-        level: "critical",
+        name: "lcoms_initial_slashing_submitted",
+        level: "citical",
       };
     }
-    if (key === "cluster_failure_rate" && value < 95) {
+    if (key === "lcoms_withdrawal_submitted" && value > 0) {
       return {
-        name: "Cluster Failure Rate",
-        level: "critical",
-      };
-    }
-    if (key === "percentage_failed_sync_message_duty" && value > 0.1) {
-      return {
-        name: "Failed Sync Msg Duty",
-        level: "critical",
-      };
-    }
-    if (key === "connected_relays" && value < 1) {
-      return {
-        name: "Num. Connected Relays",
+        name: "lcoms_withdrawal_submitted",
         level: "warning",
       };
     }
-    if (key === "peer_ping_latency" && value > 0.4) {
+    if (key === "lcoms_stealing_penalty" && value > 0) {
       return {
-        name: "Peer Ping Latency",
+        name: "lcoms_stealing_penalty",
+        level: "critical",
+      };
+    }
+    if (key === "lcoms_exit_request" && value > 0) {
+      return {
+        name: "lcoms_exit_request",
         level: "warning",
       };
     }
+    if (key === "lcoms_fee_to_distribute" && value > 0) {
+      return {
+        name: "lcoms_fee_to_distribute",
+        level: "warning",
+      };
+    }
+    if (key === "lcoms_node_operator_status" && value < 1) {
+      return {
+        name: "lcoms_node_operator_statuse",
+        level: "warning",
+      };
+    }
+    if (key === "lcoms_required_bond" && value < 0 ) {
+      return {
+        name: "insufficient bond",
+        level: "warning",
+      };
   }
-}
+  }
