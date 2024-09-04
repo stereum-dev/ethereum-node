@@ -10,11 +10,7 @@
         class="text-lg text-amber-300 font-semibold text-left"
         @mouseenter="footerStore.cursorLocation = `${serverName}`"
         @mouseleave="footerStore.cursorLocation = ''"
-        >{{
-          serverStore.selectedServerConnection?.name
-            ? serverStore.selectedServerConnection?.name
-            : controlStore.ServerName
-        }}</span
+        >{{ serverStore.selectedServerConnection?.name ? serverStore.selectedServerConnection?.name : controlStore.ServerName }}</span
       >
     </div>
     <div
@@ -94,9 +90,7 @@ const serverStore = useServers();
 const footerStore = useFooter();
 
 const serverName = t("serverDetail.serverName", {
-  serverName: serverStore.selectedServerConnection?.name
-    ? serverStore.selectedServerConnection?.name
-    : controlStore.ServerName,
+  serverName: serverStore.selectedServerConnection?.name ? serverStore.selectedServerConnection?.name : controlStore.ServerName,
 });
 const serverIp = t("serverDetail.serverIp", { serverIp: controlStore.ipAddress });
 const machine = t("serverDetail.machine", { machineName: controlStore.ServerName });

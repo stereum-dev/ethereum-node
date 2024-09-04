@@ -47,7 +47,7 @@ const renameSetup = () => {
 };
 
 const confirmRename = () => {
-  if(setupStore.setupToRename.trim() === "" || setupStore.setupToRename.trim() === "commonServices") return;
+  if (setupStore.setupToRename.trim() === "" || setupStore.setupToRename.trim() === "commonServices") return;
   emit("confirmRename");
 };
 </script>

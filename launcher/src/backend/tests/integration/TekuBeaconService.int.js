@@ -12,16 +12,14 @@ jest.setTimeout(1000000);
 
 test("teku validator import", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Teku--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Teku--integration-test--ubuntu-2204");
 
   const serverSettings = {
     name: "Teku--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx31",
     start_after_create: true,
-    ssh_keys: [
-      keyResponse.ssh_key.id
-    ],
+    ssh_keys: [keyResponse.ssh_key.id],
   };
 
   await testServer.create(serverSettings);
@@ -39,7 +37,7 @@ test("teku validator import", async () => {
   const serviceManager = new ServiceManager(nodeConnection);
   await testServer.checkServerConnection(nodeConnection);
 
-  await nodeConnection.establish(taskManager)
+  await nodeConnection.establish(taskManager);
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -55,20 +53,23 @@ test("teku validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-
   //install geth
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
 
   //install tekuBC
-  let tekuBC = serviceManager.getService("TekuBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
+  let tekuBC = serviceManager.getService("TekuBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] });
 
   //install tekuVC
-  let tekuVC = serviceManager.getService("TekuValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [tekuBC] })
+  let tekuVC = serviceManager.getService("TekuValidatorService", {
+    network: "holesky",
+    installDir: "/opt/stereum",
+    consensusClients: [tekuBC],
+  });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
-  tekuBC.imageVersion = versions[tekuBC.network][tekuBC.service].slice(-1).pop()
-  tekuVC.imageVersion = versions[tekuVC.network][tekuVC.service].slice(-1).pop()
+  tekuBC.imageVersion = versions[tekuBC.network][tekuBC.service].slice(-1).pop();
+  tekuVC.imageVersion = versions[tekuVC.network][tekuVC.service].slice(-1).pop();
 
   //write config and start geth
   await nodeConnection.writeServiceConfiguration(geth.buildConfiguration());
@@ -92,7 +93,7 @@ test("teku validator import", async () => {
       '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "fa52987837af01ec48e2b21f2078acef3368983943751013758052e07dae841d"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "8c055c8c504cd3ad20bcb1101431b2b1a506b1a4d0efdbd294d75c39c0f2268b"}}, "description": "", "pubkey": "948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458", "path": "m/12381/3600/2/0/0", "uuid": "c7521eed-533a-4fd1-90b7-ad1aa0f24a2d", "version": 4}',
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
-  })
+  });
   await validatorAccountManager.importKey(tekuVC.id);
 
   //get logs
@@ -130,12 +131,10 @@ test("teku validator import", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
   const teku_api_keystore = await nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_keystore`);
   const teku_api_password = await nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_password.txt`);
-  const validator_api_bearer = await nodeConnection.sshService.exec(
-    `cat ${dataDir}/validator/key-manager/validator-api-bearer`
-  );
+  const validator_api_bearer = await nodeConnection.sshService.exec(`cat ${dataDir}/validator/key-manager/validator-api-bearer`);
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection)
+  await testServer.finishTestGracefully(nodeConnection);
 
   //check ufw
   expect(ufw.stdout).toMatch(/9001\/tcp/);
@@ -160,8 +159,6 @@ test("teku validator import", async () => {
   expect(VCstatus.stdout).toMatch(/Listening on https:\/\/.*:5052/);
   expect(VCstatus.stdout).toMatch(/Successfully connected to beacon node event stream/);
   expect(VCstatus.stdout).toMatch(/Starting doppelganger detection for public keys: .{7}, .{7}, .{7}/);
-
-
 
   //check docker container
   expect(docker.stdout).toMatch(/consensys\/teku/);

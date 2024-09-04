@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="MachineNameParent"
-    @mouseenter="footerStore.cursorLocation = `${machine}`"
-    @mouseleave="footerStore.cursorLocation = ''"
-  >
+  <div class="MachineNameParent" @mouseenter="footerStore.cursorLocation = `${machine}`" @mouseleave="footerStore.cursorLocation = ''">
     <div class="ubuntuIcon">
       <img src="/img/icon/control-page-icons/ubuntuIco.svg" />
     </div>

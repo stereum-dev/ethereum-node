@@ -2,9 +2,7 @@
   <div class="alert-box_parent">
     <div class="alert-box">
       <div class="alert-box_header h-8 w-full flex justify-center items-center">
-        <div
-          class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pt-0.5"
-        >
+        <div class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pt-0.5">
           <div
             class="icon_alarm"
             :class="{
@@ -36,11 +34,7 @@
         <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
           <div class="volBtn cursor-pointer w-8" @click="volToggle">
             <img
-              :src="
-                volState
-                  ? '/img/icon/node-alert-icons/alert-settings.png'
-                  : '/img/icon/node-alert-icons/alert-settings-mute.png'
-              "
+              :src="volState ? '/img/icon/node-alert-icons/alert-settings.png' : '/img/icon/node-alert-icons/alert-settings-mute.png'"
               alt="green"
             />
           </div>
@@ -511,7 +505,6 @@ export default {
     async fetchObolCharonAlerts() {
       try {
         const alerts = await ControlService.fetchObolCharonAlerts();
-        console.log("Obol Charon alerts:", alerts);
 
         this.processAlerts(alerts);
       } catch (error) {
@@ -584,15 +577,10 @@ export default {
             validator.address = match; // Update the address property directly
             addresses.push(validator);
           } else {
-            console.error(
-              "Could not find default-fee-recipient address in the service YAML for validator:",
-              validator.name
-            );
+            console.error("Could not find default-fee-recipient address in the service YAML for validator:", validator.name);
           }
         }
-        const notSetAddresses = addresses.filter(
-          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
-        );
+        const notSetAddresses = addresses.filter((validator) => validator.address === "0x0000000000000000000000000000000000000000");
         this.notSetAddresses = notSetAddresses;
       }
     },
@@ -845,5 +833,16 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 2%;
+}
+
+.val-message span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  font-size: 42%;
 }
 </style>

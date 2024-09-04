@@ -11,16 +11,14 @@ jest.setTimeout(500000);
 
 test("prepareStereumNode on ubuntu", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("NodeConnection--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("NodeConnection--integration-test--ubuntu-2204");
 
   const serverSettings = {
     name: "NodeConnection--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
-    ssh_keys: [
-      keyResponse.ssh_key.id
-    ],
+    ssh_keys: [keyResponse.ssh_key.id],
   };
 
   await testServer.create(serverSettings);
@@ -37,8 +35,7 @@ test("prepareStereumNode on ubuntu", async () => {
   const taskManager = new TaskManager(nodeConnection);
   await testServer.checkServerConnection(nodeConnection);
 
-  await nodeConnection.establish(taskManager)
-
+  await nodeConnection.establish(taskManager);
 
   await nodeConnection.findOS();
 
@@ -58,7 +55,7 @@ test("prepareStereumNode on ubuntu", async () => {
   const ansibleRoles = await nodeConnection.sshService.exec("ls /opt/stereum/ansible/controls");
   const ansibleVersion = await nodeConnection.sshService.exec("ansible --version");
 
-  await testServer.finishTestGracefully(nodeConnection)
+  await testServer.finishTestGracefully(nodeConnection);
 
   const ansible = ansibleVersion.stdout.split("\n")[0].split(" ");
   ansible[2] = ansible[2].split(".");

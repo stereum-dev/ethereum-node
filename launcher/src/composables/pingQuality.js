@@ -13,7 +13,7 @@ export function usePingQuality() {
       nodeStore.pingHistory.shift();
     }
 
-    if (nodeStore.pingHistory.every(val => val === "unknown") && nodeStore.pingHistory.length === 3) {
+    if (nodeStore.pingHistory.every((val) => val === "unknown") && nodeStore.pingHistory.length === 3) {
       return {
         status: "unknown",
         description: "Unable to determine connection quality.",
@@ -21,7 +21,7 @@ export function usePingQuality() {
     }
 
     if (pingTime === "unknown") {
-      pingTime = nodeStore.pingHistory.find(val => val !== "unknown")
+      pingTime = nodeStore.pingHistory.find((val) => val !== "unknown");
     }
 
     for (let i = 0; i < nodeStore.pingQuality.length; i++) {

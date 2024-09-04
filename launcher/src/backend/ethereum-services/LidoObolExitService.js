@@ -3,11 +3,9 @@ import { ServiceVolume } from "./ServiceVolume";
 
 export class LidoObolExitService extends NodeService {
   static buildByUserInput(network, ports, dir, consensusClients, otherServices) {
-
     let ejector = otherServices.find((service) => service.service === "ValidatorEjectorService");
     let charon = consensusClients.find((service) => service.service === "CharonService");
-    if (charon)
-      otherServices.push(charon);
+    if (charon) otherServices.push(charon);
     consensusClients = consensusClients.filter((service) => !(service.service === "CharonService"));
 
     const service = new LidoObolExitService();
@@ -19,19 +17,12 @@ export class LidoObolExitService extends NodeService {
     const exitmessagesDir = "/exitmessages";
     const charonDir = "/charon";
 
-
     const charonFoler = charon ? `${charon.getDataDir()}/.charon` : workingDir + "/charon";
 
-    let messageVolume = ejector ? ejector.volumes.find((volume) => volume.servicePath === '/app/messages') : "";
+    let messageVolume = ejector ? ejector.volumes.find((volume) => volume.servicePath === "/app/messages") : "";
     const messageDir = messageVolume ? messageVolume.destinationPath : workingDir + "/exitmessages";
 
-    const volumes = [
-      new ServiceVolume(messageDir, exitmessagesDir),
-      new ServiceVolume(charonFoler, charonDir),
-    ];
-
-
-
+    const volumes = [new ServiceVolume(messageDir, exitmessagesDir), new ServiceVolume(charonFoler, charonDir)];
 
     service.init(
       "LidoObolExitService", //service
@@ -49,7 +40,7 @@ export class LidoObolExitService extends NodeService {
         "--log-format=console",
         "--log-level=info",
         "--obol-api-url=https://api.obol.tech",
-        "--validator-query-chunk-size=50"
+        "--validator-query-chunk-size=50",
       ], // command
       ["/usr/local/bin/lido-dv-exit"], // entrypoint
       null, // env

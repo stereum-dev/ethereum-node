@@ -20,12 +20,7 @@ const { client } = defineProps({
   },
 });
 
-const emit = defineEmits([
-  "close-log",
-  "export-log",
-  "export-all-log",
-  "export-customized-logs",
-]);
+const emit = defineEmits(["close-log", "export-log", "export-all-log", "export-customized-logs"]);
 
 const closeLog = () => {
   emit("close-log");

@@ -14,9 +14,7 @@
   >
     <template #content>
       <div class="w-full h-20 flex justify-center items-center">
-        <span class="text-xl font-semibold" :class="props.mainIcon ? 'text-teal-500' : 'text-red-400'">{{
-          getContentText
-        }}</span>
+        <span class="text-xl font-semibold" :class="props.mainIcon ? 'text-teal-500' : 'text-red-400'">{{ getContentText }}</span>
       </div>
     </template>
   </custom-modal>

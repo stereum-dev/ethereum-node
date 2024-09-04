@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-end-2 grid grid-cols-12 bg-[#2d3035] border-b border-gray-500"
-  >
+  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-end-2 grid grid-cols-12 bg-[#2d3035] border-b border-gray-500">
     <div class="w-full h-full col-start-2 col-end-5 flex justify-start items-center space-x-2">
       <img class="w-7 h-7" :src="client.sIcon" alt="Service Icon" @mousedown.prevent />
       <div class="text-gray-200 text-lg font-semibold">{{ client.name }}</div>

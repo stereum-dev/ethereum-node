@@ -1,11 +1,6 @@
 <template>
   <div class="task-parent">
-    <div
-      class="task-icon"
-      @click="taskModalHandler"
-      @mouseenter="cursorLocation = taskMng"
-      @mouseleave="cursorLocation = ''"
-    >
+    <div class="task-icon" @click="taskModalHandler" @mouseenter="cursorLocation = taskMng" @mouseleave="cursorLocation = ''">
       <img :src="mainTaskIcon" alt="icon" />
       <span class="notification">{{ displayingTasks.length }}</span>
     </div>

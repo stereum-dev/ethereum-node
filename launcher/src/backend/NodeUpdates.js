@@ -150,9 +150,7 @@ export class NodeUpdates {
    */
   async getCountOfUpdatableOSUpdate() {
     try {
-      const res = await this.nodeConnection.sshService.exec(
-        `LANG=C apt-get upgrade -s |grep -P '^\\d+ upgraded'|cut -d" " -f1`
-      );
+      const res = await this.nodeConnection.sshService.exec(`LANG=C apt-get upgrade -s |grep -P '^\\d+ upgraded'|cut -d" " -f1`);
 
       return res.stdout;
     } catch (err) {
@@ -185,7 +183,7 @@ export class NodeUpdates {
    * @returns {number} - playbook runtime
    */
   async updatePackage(packages) {
-    let packagesListString = packages.join(',');
+    let packagesListString = packages.join(",");
     let extraVars = {
       stereum_role: "update-package",
       packages_list: packagesListString,

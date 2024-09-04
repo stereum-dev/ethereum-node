@@ -37,9 +37,7 @@
             <div class="w-full grid grid-cols-12 items-center text-md">
               <img class="col-start-1 w-5" src="/img/icon/edit-node-icons/service-connected.png" alt="Client Icon" />
               <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editBody.executionClient") }}</span>
-              <div
-                class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
-              >
+              <div class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden">
                 <img class="w-5" :src="getConnectedExecution.icon" alt="Service Icon" />
                 <span class="text-gray-800 text-left font-semibold text-sm">{{ getConnectedExecution.name }}</span>
                 <span class="text-gray-800 text-left text-sm">{{ getConnectedExecution.config.serviceID }}</span>
@@ -50,9 +48,7 @@
             <div class="w-full grid grid-cols-12 items-center text-md">
               <img class="col-start-1 w-5" src="/img/icon/edit-node-icons/service-connected.png" alt="Client Icon" />
               <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editBody.consensusClient") }}</span>
-              <div
-                class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
-              >
+              <div class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden">
                 <img class="w-5" :src="getConnectedConsensus.icon" alt="Service Icon" />
                 <span class="text-gray-800 text-left font-semibold text-sm">{{ getConnectedConsensus.name }}</span>
                 <span class="text-gray-800 text-left text-sm">{{ getConnectedConsensus.config.serviceID }}</span>
@@ -63,9 +59,7 @@
             <div class="w-full grid grid-cols-12 items-center text-md">
               <img class="col-start-1 w-5" src="/img/icon/edit-node-icons/service-connected.png" alt="Client Icon" />
               <span class="col-start-2 col-span-3 text-gray-400 text-left">Mevboost</span>
-              <div
-                class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden"
-              >
+              <div class="col-start-5 col-end-13 flex justify-between items-center bg-teal-600 rounded-md p-1 overflow-hidden">
                 <img class="w-5" :src="getConnectedMevboost.icon" alt="Service Icon" />
                 <span class="text-gray-800 text-left font-semibold text-sm">MEVBOOST</span>
                 <span class="text-gray-800 text-left text-sm">{{ getConnectedMevboost.config.serviceID }}</span>

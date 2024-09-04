@@ -30,9 +30,7 @@ const selectItemToInstall = async (item) => {
     includedPlugins.map((e) => e.service).includes("RocketpoolService")
   ) {
     includedPlugins.splice(
-      includedPlugins.findIndex(
-        (e) => e.service != "SSVNetworkService" && e.service != "RocketpoolService" && e.category === "validator"
-      ),
+      includedPlugins.findIndex((e) => e.service != "SSVNetworkService" && e.service != "RocketpoolService" && e.category === "validator"),
       1
     );
   }

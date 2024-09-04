@@ -7,12 +7,7 @@ export class ConfigManager {
     this.nodeConnection = nodeConnection;
     this.serviceManager = null;
     this.multiSetupPath = "/etc/stereum/multisetup.yaml";
-    this.commonServices = [
-      "PrometheusService",
-      "GrafanaService",
-      "PrometheusNodeExporterService",
-      "NotificationService",
-    ];
+    this.commonServices = ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"];
   }
   setServiceManager(serviceManager) {
     this.serviceManager = serviceManager;
@@ -56,9 +51,7 @@ export class ConfigManager {
    * @returns {Promise<Object>} Resolves with command execution result, indicating file existence.
    */
   async checkFileExistence() {
-    const fileExistResult = await this.nodeConnection.sshService.exec(
-      `test -f ${this.multiSetupPath} && echo "exist" || echo "notExist"`
-    );
+    const fileExistResult = await this.nodeConnection.sshService.exec(`test -f ${this.multiSetupPath} && echo "exist" || echo "notExist"`);
     return fileExistResult;
   }
 
@@ -166,9 +159,7 @@ export class ConfigManager {
     }
 
     if (commonServices.length > 0) {
-      commonServicesObj[setupId].services = commonServicesObj[setupId].services.concat(
-        commonServices.map((service) => service.id)
-      );
+      commonServicesObj[setupId].services = commonServicesObj[setupId].services.concat(commonServices.map((service) => service.id));
     }
     return commonServicesObj;
   }

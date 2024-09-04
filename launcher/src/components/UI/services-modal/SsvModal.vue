@@ -1,9 +1,6 @@
 <template>
   <div class="w-full h-full absolute inset-0 flex justify-center items-center">
-    <div
-      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
-      @click="$emit('closeWindow')"
-    ></div>
+    <div class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="ssv-header">
         <!-- <div class="icon-box">
@@ -92,9 +89,7 @@
           <ImportBox
             v-else-if="!switchEncryptedKeyGenerator || (passGenerateEncryptKeyConfirmed && importEncryptedKey)"
             :btn-bg-color="`#1ba5f8`"
-            :import-box-title="
-              importRawOperatorKeyOldMethod ? `${$t('serviceModal.selPk')}` : `${$t('serviceModal.selEnc')}`
-            "
+            :import-box-title="importRawOperatorKeyOldMethod ? `${$t('serviceModal.selPk')}` : `${$t('serviceModal.selEnc')}`"
             import-box-placeholder=""
             :try-again="true"
             :empty-disabled="false"
@@ -472,9 +467,7 @@ export default {
 
           // Get operator ID from SSV
           try {
-            const response = await axios.get(
-              `https://api.ssv.network/api/v4/${this.network}/operators/public_key/` + this.pubkey
-            );
+            const response = await axios.get(`https://api.ssv.network/api/v4/${this.network}/operators/public_key/` + this.pubkey);
             if (response && response?.data?.data?.id) {
               // Get operator metadata from SSV
               const operator_id = response?.data?.data?.id;
@@ -651,9 +644,7 @@ export default {
           if (this.selectedUncryptedKey) {
             // B -> B1
             console.log("B) clicked import old keys");
-            console.log(
-              "B1) clicked migrate: overwrite existing stuff with given stuff and migrate to encrypted keystore"
-            );
+            console.log("B1) clicked migrate: overwrite existing stuff with given stuff and migrate to encrypted keystore");
             result = await this.sendSSVCommand(
               {
                 command: "migrateToSSVEncryptedKeys",
@@ -944,8 +935,7 @@ export default {
           let backupFileName = "";
           if (this.operatorData) {
             backupFileName =
-              this.getCurrentDateTimeString(now) +
-              `_ssv_unencrypted_operator_${this.operatorData.id}_${this.network}_backup.zip`;
+              this.getCurrentDateTimeString(now) + `_ssv_unencrypted_operator_${this.operatorData.id}_${this.network}_backup.zip`;
             downloadObjects.push({
               filename: "readme.txt",
               content: this.formatReadmeContent(`
@@ -968,8 +958,7 @@ export default {
               `),
             });
           } else if (this.apiUnavailable) {
-            backupFileName =
-              this.getCurrentDateTimeString(now) + `_ssv_unencrypted_operator_unavailable_${this.network}_backup.zip`;
+            backupFileName = this.getCurrentDateTimeString(now) + `_ssv_unencrypted_operator_unavailable_${this.network}_backup.zip`;
             downloadObjects.push({
               filename: "readme.txt",
               content: this.formatReadmeContent(`
@@ -992,8 +981,7 @@ export default {
               `),
             });
           } else {
-            backupFileName =
-              this.getCurrentDateTimeString() + `_ssv_unencrypted_operator_unregistered_${this.network}_backup.zip`;
+            backupFileName = this.getCurrentDateTimeString() + `_ssv_unencrypted_operator_unregistered_${this.network}_backup.zip`;
             downloadObjects.push({
               filename: "readme.txt",
               content: this.formatReadmeContent(`
@@ -1059,10 +1047,7 @@ export default {
           });
           let keyFileName = this.getFilenameFromPath(this.ssvTotalConfig.privateKeyFilePath);
           let keyFileData = this.ssvTotalConfig.privateKeyFileData;
-          if (
-            typeof this.ssvTotalConfig.privateKeyFileData === "object" &&
-            this.ssvTotalConfig.privateKeyFileData !== null
-          ) {
+          if (typeof this.ssvTotalConfig.privateKeyFileData === "object" && this.ssvTotalConfig.privateKeyFileData !== null) {
             // SSV generated keystore uses "pubKey" since v1.3.3, previously it was "publicKey"
             // If we have both here then the backend attached "publicKey" for consistency -> remove it from the backup
             if (keyFileData?.publicKey && keyFileData?.pubKey) {
@@ -1077,8 +1062,7 @@ export default {
           });
           let backupFileName = "";
           if (this.operatorData) {
-            backupFileName =
-              this.getCurrentDateTimeString(now) + `_ssv_operator_${this.operatorData.id}_${this.network}_backup.zip`;
+            backupFileName = this.getCurrentDateTimeString(now) + `_ssv_operator_${this.operatorData.id}_${this.network}_backup.zip`;
             downloadObjects.push({
               filename: "readme.txt",
               content: this.formatReadmeContent(`
@@ -1103,8 +1087,7 @@ export default {
               `),
             });
           } else if (this.apiUnavailable) {
-            backupFileName =
-              this.getCurrentDateTimeString(now) + `_ssv_unencrypted_operator_unavailable_${this.network}_backup.zip`;
+            backupFileName = this.getCurrentDateTimeString(now) + `_ssv_unencrypted_operator_unavailable_${this.network}_backup.zip`;
             downloadObjects.push({
               filename: "readme.txt",
               content: this.formatReadmeContent(`
@@ -1129,8 +1112,7 @@ export default {
               `),
             });
           } else {
-            backupFileName =
-              this.getCurrentDateTimeString(now) + `_ssv_operator_unregistered_${this.network}_backup.zip`;
+            backupFileName = this.getCurrentDateTimeString(now) + `_ssv_operator_unregistered_${this.network}_backup.zip`;
             downloadObjects.push({
               filename: "readme.txt",
               content: this.formatReadmeContent(`

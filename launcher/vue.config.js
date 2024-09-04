@@ -23,8 +23,7 @@ module.exports = {
         },
         mac: {
           hardenedRuntime: true,
-          entitlements:
-            "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
+          entitlements: "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
           gatekeeperAssess: false,
           artifactName: "Stereum-Launcher-${version}.${ext}",
         },

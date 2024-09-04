@@ -8,9 +8,7 @@ export class CharonService extends NodeService {
     const workingDir = service.buildWorkingDir(dir);
 
     const dataDir = "/opt/charon";
-    const volumes = [
-      new ServiceVolume(workingDir, dataDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir, dataDir)];
 
     const beaconNodes = consensusClients
       .map((client) => {
@@ -33,7 +31,7 @@ export class CharonService extends NodeService {
         "--p2p-tcp-address=0.0.0.0:3610",
         "--validator-api-address=0.0.0.0:3600",
         "--monitoring-address=0.0.0.0:3620",
-        "--builder-api"
+        "--builder-api",
       ], // command
       ["/usr/local/bin/charon"], // entrypoint
       null, // env
@@ -42,22 +40,23 @@ export class CharonService extends NodeService {
       null, // user
       network, // network
       null, // executionClients
-      consensusClients // consensusClients    
+      consensusClients // consensusClients
     );
 
-    if (consensusClients.map(s => s.service).includes("NimbusBeaconService")) {
-      service.command.push("--feature-set-enable=json_requests")
+    if (consensusClients.map((s) => s.service).includes("NimbusBeaconService")) {
+      service.command.push("--feature-set-enable=json_requests");
     }
 
-    if (consensusClients.map(s => s.service).includes("TekuBeaconService")) {
-      consensusClients.filter(s => s.service === "TekuBeaconService").forEach(s => {
-        s.command.push(`--validators-graffiti-client-append-format=DISABLED`)
-      })
+    if (consensusClients.map((s) => s.service).includes("TekuBeaconService")) {
+      consensusClients
+        .filter((s) => s.service === "TekuBeaconService")
+        .forEach((s) => {
+          s.command.push(`--validators-graffiti-client-append-format=DISABLED`);
+        });
     }
 
     return service;
   }
-
 
   static buildByConfiguration(config) {
     const service = new CharonService();
@@ -78,7 +77,6 @@ export class CharonService extends NodeService {
   buildConsensusClientGateway() {
     return "stereum-" + this.id + ":3600";
   }
-
 
   getDataDir() {
     return this.volumes.find((volume) => volume.servicePath === "/opt/charon").destinationPath;
@@ -105,20 +103,21 @@ export class CharonService extends NodeService {
   }
 
   getWriteENRPrivateKeyCommand(privateKey) {
-    return `echo "${privateKey}" > ${this.getDataDir()}/.charon/charon-enr-private-key`
+    return `echo "${privateKey}" > ${this.getDataDir()}/.charon/charon-enr-private-key`;
   }
 
   getReadENRPrivateKeyCommand() {
-    return `cat ${this.getDataDir()}/.charon/charon-enr-private-key`
+    return `cat ${this.getDataDir()}/.charon/charon-enr-private-key`;
   }
 
   getListCharonFolderContentsCommand() {
-    return `ls -1 -a ${this.getDataDir()}/.charon`
+    return `ls -1 -a ${this.getDataDir()}/.charon`;
   }
 
   //definitionFile as URL or Path to file (default ".charon/cluster-definition.json" by dkg command)
   getDKGCommand(definitionFile) {
-    return `docker run -u 0 --name "dkg-container" -d -v "${this.getDataDir()}:/opt/charon" ${this.image + ":" + this.imageVersion} dkg ${definitionFile ? "--definition-file=" + definitionFile : ""} --publish`;
-
+    return `docker run -u 0 --name "dkg-container" -d -v "${this.getDataDir()}:/opt/charon" ${this.image + ":" + this.imageVersion} dkg ${
+      definitionFile ? "--definition-file=" + definitionFile : ""
+    } --publish`;
   }
 }
