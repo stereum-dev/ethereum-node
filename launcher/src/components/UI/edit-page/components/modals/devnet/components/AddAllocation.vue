@@ -2,14 +2,8 @@
   <div class="w-full mt-4 mx-auto px-4">
     <div class="w-full h-[240px]">
       <div class="flex flex-col justify-start space-y-1 p-2 items-center">
-        <div
-          class="w-full h-[180px] overflow-y-auto bg-[#101111] rounded-md p-2 flex flex-col justify-start items-center space-y-2"
-        >
-          <div
-            v-for="(item, address) in allocData"
-            :key="address"
-            class="w-full max-h-8 p-1 flex justify-between items-center space-x-1"
-          >
+        <div class="w-full h-[180px] overflow-y-auto bg-[#101111] rounded-md p-2 flex flex-col justify-start items-center space-y-2">
+          <div v-for="(item, address) in allocData" :key="address" class="w-full max-h-8 p-1 flex justify-between items-center space-x-1">
             <div class="w-1/2 flex items-center bg-slate-600 rounded-full p-1 overflow-hidden">
               <span class="text-sm font-normal text-gray-200 truncate">{{ address }} </span>
             </div>
