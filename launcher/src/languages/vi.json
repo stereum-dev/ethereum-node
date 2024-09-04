@@ -499,7 +499,8 @@
     "sync": "Lỗi Đồng bộ",
     "taskFail": "Nhiệm vụ Thất bại",
     "stats": "TRẠNG THÁI: MỞ",
-    "clientService": "KHÁCH HÀNG / DỊCH VỤ"
+    "clientService": "KHÁCH HÀNG / DỊCH VỤ",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "CLIENT CỦA BẠN lưu trữ dữ liệu blockchain TRÊN SERVER CỦA BẠN để NODE CỦA BẠN có thể phục vụ mạng. điều này là cần thiết cho NODE CỦA BẠN ĐỂ TIẾP TỤC nhiệm vụ CHỨNG THỰC TRONG STAKING. BẰNG CÁCH SỬ DỤNG TÙY CHỌN NÀY BẠN ĐANG XÓA DỮ LIỆU BLOCKCHAIN HIỆN TẠI CỦA CLIENT & SỬ DỤNG TÙY CHỌN ĐÃ CHỌN LÀM NGUỒN ĐỂ ĐỒNG BỘ NODE MỚI.",

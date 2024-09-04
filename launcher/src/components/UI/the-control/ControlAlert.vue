@@ -511,7 +511,6 @@ export default {
     async fetchObolCharonAlerts() {
       try {
         const alerts = await ControlService.fetchObolCharonAlerts();
-        console.log("Obol Charon alerts:", alerts);
 
         this.processAlerts(alerts);
       } catch (error) {
@@ -845,5 +844,16 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 2%;
+}
+
+.val-message span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  font-size: 42%;
 }
 </style>
