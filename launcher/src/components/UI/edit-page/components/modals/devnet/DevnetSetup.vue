@@ -8,8 +8,10 @@ import CreateSetup from "./components/CreateSetup.vue";
 import SelectCilent from "./components/SelectCilent.vue";
 import SelectGenesis from "./components/SelectGenesis.vue";
 import SummeryDisplay from "./components/SummeryDisplay.vue";
+import { useGenesis } from "../../../../../../store/genesis";
 
 const setupStore = useSetups();
+const genesisStore = useGenesis();
 const isGenesisConfigChanged = ref(false);
 const allocations = ref([]);
 
@@ -21,13 +23,19 @@ const getComponent = computed(() => {
   if (setupStore.currentStep === 1) {
     comp = CreateSetup;
     subtitle = "SETUP NAME AND COLOR";
-    btnState = !(setupStore.devnetConfigData.setupName && setupStore.devnetConfigData.setupColor);
+    btnState = !(
+      setupStore.devnetConfigData.setupName && setupStore.devnetConfigData.setupColor
+    );
   } else if (setupStore.currentStep === 2) {
     comp = SelectGenesis;
     subtitle = "GENESIS JSON SELECTION";
   } else if (setupStore.currentStep === 3) {
-    comp = setupStore.devnetConfigData.uploadedGenesisConfig ? SelectCilent : ConfigGenesis;
-    subtitle = setupStore.devnetConfigData.uploadedGenesisConfig ? "SETUP SUMMARY" : "GENESIS JSON CONFIGURATION";
+    comp = setupStore.devnetConfigData.uploadedGenesisConfig
+      ? SelectCilent
+      : ConfigGenesis;
+    subtitle = setupStore.devnetConfigData.uploadedGenesisConfig
+      ? "SETUP SUMMARY"
+      : "GENESIS JSON CONFIGURATION";
   } else if (setupStore.currentStep === 4) {
     comp = AddAllocation;
     subtitle = "INITIAL ADDRESS ALLOCATION";
@@ -44,7 +52,10 @@ const getComponent = computed(() => {
 });
 
 watchEffect(() => {
-  console.log("uploadedGenesisConfig:", setupStore.devnetConfigData.uploadedGenesisConfig);
+  console.log(
+    "uploadedGenesisConfig:",
+    setupStore.devnetConfigData.uploadedGenesisConfig
+  );
   console.log("currentComponent:", getComponent.value.modal.__name);
 });
 
@@ -65,7 +76,10 @@ const closeWindow = () => {
 
 const buttonAction = () => {
   if (setupStore.currentStep < 6) {
-    if (setupStore.currentStep === 2 && setupStore.devnetConfigData.uploadedGenesisConfig) {
+    if (
+      setupStore.currentStep === 2 &&
+      setupStore.devnetConfigData.uploadedGenesisConfig
+    ) {
       setupStore.currentStep = 5;
     } else {
       setupStore.currentStep++;
@@ -97,10 +111,14 @@ const updateAllocations = (newAllocations) => {
 };
 
 const finalizeSetup = () => {
+  setupStore.devnetConfigData.genesisConfig = {
+    ...genesisStore.genesis,
+  };
+
+  console.log("finalizeSetup");
+  console.log("Final data for backend", setupStore.devnetConfigData);
   setupStore.isDevnetSetupModalActive = false;
   setupStore.currentStep = 1;
-  console.log("finalizeSetup");
-  console.log("devnet data", setupStore.devnetConfigData);
 };
 </script>
 
