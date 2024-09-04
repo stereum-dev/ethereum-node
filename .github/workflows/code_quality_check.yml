@@ -17,5 +17,5 @@ jobs:
           node-version: "20"
       - run: npm install
         working-directory: ./launcher
-      - run: npm run fromat:check
+      - run: npm run format:check
         working-directory: ./launcher
