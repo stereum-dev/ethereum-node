@@ -19,6 +19,7 @@ export const useSetups = defineStore("setups", {
       services: [],
     },
     devnetButtonDisabled: true,
+    genesisChanged: false,
     isDevnetSetupModalActive: false,
     currentStep: 1,
     uploadedGenesisFile: null,

@@ -1391,6 +1391,10 @@ video {
   grid-row-end: 9;
 }
 
+.row-end-1{
+  grid-row-end: 1;
+}
+
 .float-right{
   float: right;
 }
@@ -1861,6 +1865,14 @@ video {
 
 .h-screen{
   height: 100vh;
+}
+
+.h-\[180px\]{
+  height: 180px;
+}
+
+.h-\[35px\]{
+  height: 35px;
 }
 
 .max-h-10{
@@ -4123,6 +4135,11 @@ video {
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#101111\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 17 17 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
 }
@@ -5026,6 +5043,11 @@ video {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
+.shadow-\[\#101111\]{
+  --tw-shadow-color: #101111;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
 .outline-none{
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -5778,6 +5800,16 @@ html body {
 .hover\:bg-teal-950:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(4 47 46 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#274d4d\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(39 77 77 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-\[\#407d7d\]:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(64 125 125 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-opacity-10:hover{
