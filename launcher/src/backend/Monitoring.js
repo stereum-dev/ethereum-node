@@ -3459,7 +3459,7 @@ rm -rf diskoutput
   /**
    * Will gather metrics from Prometheus and evaluate.
    * If thresholds are exceeded, an alert will be generated and added to the retuned array.
-   * @returns {Object[]} Array of alerts e.g. [{name: "Cluster in Unknown Status", level: "warning"}, {name: "Beacon Node Down", level: "critical"}]
+   * @returns {Object[]} Array of alerts e.g. [{name: "slashing event", level: "critical"},]
    */
   async fetchCsmAlerts() {
     try {
@@ -3496,7 +3496,16 @@ rm -rf diskoutput
             return [];
           }
 
-          const value = parseFloat(metric.result.data.result[0].value[1]);
+          if (!metric.result.data.result || metric.result.data.result.length === 0) {
+            return [];
+          }
+
+          const metricData = metric.result.data.result[0];
+          if (!metricData || !metricData.value || metricData.value.length < 2) {
+            return [];
+          }
+
+          const value = parseFloat(metricData.value[1]);
 
           if (metric.key === "lcoms_current_bond") {
             currentBond = value;
