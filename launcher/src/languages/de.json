@@ -499,7 +499,8 @@
     "sync": "Synchronisierungsfehler",
     "taskFail": "Aufgabe fehlgeschlagen",
     "stats": "STATUS: OFFEN",
-    "clientService": "CLIENT / DIENST"
+    "clientService": "CLIENT / DIENST",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "IHR CLIENT speichert Blockchain-Daten AUF IHREM SERVER, damit Ihr Node das Netzwerk bedienen kann. Dies ist notwendig, damit Ihr Node seine BEGUTACHTUNGSPFLICHTEN im Staking aufnehmen kann. MIT DIESER OPTION LÖSCHEN SIE DIE AKTUELLEN BLOCKCHAIN-DATEN IHRES CLIENTS & VERWENDEN DIE AUSGEWÄHLTE OPTION ALS QUELLE, UM IHREN NODE NEU ZU SYNCHRONISIEREN.",

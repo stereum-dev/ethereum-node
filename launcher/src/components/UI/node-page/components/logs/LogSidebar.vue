@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full overflow-x-hidden overflow-y-auto"
-  >
+  <div class="w-full h-full col-start-1 col-span-1 row-start-1 row-span-full overflow-x-hidden overflow-y-auto">
     <div
       class="w-full h-full row-start-2 row-span-full grid grid-flow-row auto-rows-min items-center justify-start pt-4 gap-y-1 overflow-x-hidden overflow-y-auto"
       style="grid-auto-rows: minmax(28px, auto)"
@@ -13,8 +11,7 @@
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             currentService === item.config?.serviceID,
-          ' bg-[#e8ebeb] border border-gray-600':
-            currentService !== item.config?.serviceID,
+          ' bg-[#e8ebeb] border border-gray-600': currentService !== item.config?.serviceID,
         }"
         @click="getService(index)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
@@ -67,15 +64,11 @@ const currentService = ref(null);
 const hoveredIndex = ref(null);
 
 const installedClients = computed(() => {
-  return serviceStore.installedServices
-    .map((service) => ({ ...service, selected: false }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  return serviceStore.installedServices.map((service) => ({ ...service, selected: false })).sort((a, b) => a.name.localeCompare(b.name));
 });
 
 watch(currentService, (newService) => {
-  const selectedService = installedClients.value.find(
-    (service) => service.config?.serviceID === newService
-  );
+  const selectedService = installedClients.value.find((service) => service.config?.serviceID === newService);
   if (selectedService) {
     nodeStore.clientToLogs = selectedService;
   }

@@ -4,9 +4,7 @@
     :class="{ 'active-btn': active }"
     @click="toggleActive"
   >
-    <span class="col-start-1 col-end-4 text-sm font-semibold" :class="active ? 'text-gray-900' : 'text-gray-200'">{{
-      props.btnName
-    }}</span>
+    <span class="col-start-1 col-end-4 text-sm font-semibold" :class="active ? 'text-gray-900' : 'text-gray-200'">{{ props.btnName }}</span>
     <img
       class="col-start-4 col-span-1 w-5 h-5 justify-self-center self-center"
       :src="

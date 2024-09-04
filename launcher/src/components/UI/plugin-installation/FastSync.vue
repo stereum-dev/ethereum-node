@@ -110,12 +110,8 @@ export default {
       }
     },
     filterServices() {
-      this.executionClient = this.selectedPreset.includedPlugins.filter(
-        (service) => service.category === "execution"
-      )[0];
-      this.consensusClient = this.selectedPreset.includedPlugins.filter(
-        (service) => service.category === "consensus"
-      )[0];
+      this.executionClient = this.selectedPreset.includedPlugins.filter((service) => service.category === "execution")[0];
+      this.consensusClient = this.selectedPreset.includedPlugins.filter((service) => service.category === "consensus")[0];
     },
   },
 };

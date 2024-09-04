@@ -21,13 +21,7 @@
       </div>
       <!-- removed node-connection-row template end -->
       <div class="scrollable">
-        <div
-          v-for="item in filteredRpcItems"
-          :key="item.id"
-          ref="clone"
-          class="rpc-data"
-          @click="copy(item.value, item.title)"
-        >
+        <div v-for="item in filteredRpcItems" :key="item.id" ref="clone" class="rpc-data" @click="copy(item.value, item.title)">
           <span>{{ item.title }}</span>
         </div>
       </div>

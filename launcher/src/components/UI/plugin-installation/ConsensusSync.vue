@@ -24,12 +24,7 @@
               <span>{{ item.type }}</span>
             </div>
             <div class="inputBox">
-              <input
-                v-model="checkPointSync"
-                type="text"
-                placeholder="https://example.cc/"
-                class="placeholder:text-gray-500"
-              />
+              <input v-model="checkPointSync" type="text" placeholder="https://example.cc/" class="placeholder:text-gray-500" />
             </div>
           </div>
           <div v-else-if="item.type === 'recommended'" class="syncContent">

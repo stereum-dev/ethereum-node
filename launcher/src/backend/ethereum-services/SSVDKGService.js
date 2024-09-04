@@ -25,10 +25,7 @@ outputPath: /data/output`;
 
     // Note that local secrets volume will be replaced with
     // shared volume from SSVNetworkService later on...
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", "/data"),
-      new ServiceVolume(workingDir + "/secrets", "/secrets"),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", "/data"), new ServiceVolume(workingDir + "/secrets", "/secrets")];
 
     console.log("-------> TTT :: otherServices", otherServices);
 
@@ -64,10 +61,7 @@ outputPath: /data/output`;
   }
 
   getAvailablePorts() {
-    return [
-      new ServicePortDefinition(3030, "tcp", "TCP connections"),
-      new ServicePortDefinition(3030, "udp", "UDP connections"),
-    ];
+    return [new ServicePortDefinition(3030, "tcp", "TCP connections"), new ServicePortDefinition(3030, "udp", "UDP connections")];
   }
 }
 

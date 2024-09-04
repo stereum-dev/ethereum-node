@@ -8,18 +8,15 @@
         </h3>
         <form class="mt-2 grid grid-cols-12 grid-rows-8 items-center gap-y-2">
           <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 items-center">
-            <span
-              class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-              >{{ $t("multiServer.keyType") }}</span
-            >
+            <span class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase">{{
+              $t("multiServer.keyType")
+            }}</span>
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
                 class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
                 @click.prevent.stop="isOpen = !isOpen"
               >
-                <span class="text-center font-semibold">{{
-                  serverStore.selectedKeyType || `${$t("multiServer.selectKeyType")}`
-                }}</span>
+                <span class="text-center font-semibold">{{ serverStore.selectedKeyType || `${$t("multiServer.selectKeyType")}` }}</span>
                 <span class="float-right">
                   <svg class="w-4 h-4 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -27,11 +24,7 @@
                 </span>
               </button>
 
-              <div
-                v-show="isOpen"
-                class="absolute w-full mt-1 bg-white rounded-md shadow-lg z-20"
-                @click="isOpen = false"
-              >
+              <div v-show="isOpen" class="absolute w-full mt-1 bg-white rounded-md shadow-lg z-20" @click="isOpen = false">
                 <div
                   v-for="type in serverStore.keyTypes"
                   :key="type"
@@ -44,10 +37,7 @@
             </div>
           </div>
           <div class="col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-12 items-center">
-            <label
-              for="savePath"
-              class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-            >
+            <label for="savePath" class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase">
               {{ $t("multiServer.savePath") }}
             </label>
             <div class="col-start-4 col-span-8 relative bg-gray-100 rounded-l-md">
@@ -93,9 +83,7 @@
 
           <!-- Toggle -->
           <div class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 items-center">
-            <span
-              class="col-start-1 col-end-8 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-            >
+            <span class="col-start-1 col-end-8 w-full text-left self-center text-md font-semibold text-gray-200 uppercase">
               {{ $t("multiServer.unlockExpertOptions") }}</span
             >
             <label
@@ -112,13 +100,7 @@
               <span
                 class="absolute inset-y-0 start-0 z-10 m-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:start-6 peer-checked:text-green-600"
               >
-                <svg
-                  data-unchecked-icon
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
+                <svg data-unchecked-icon xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fill-rule="evenodd"
                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -126,13 +108,7 @@
                   />
                 </svg>
 
-                <svg
-                  data-checked-icon
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="hidden h-4 w-4"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
+                <svg data-checked-icon xmlns="http://www.w3.org/2000/svg" class="hidden h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fill-rule="evenodd"
                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -141,9 +117,7 @@
                 </svg>
               </span>
 
-              <span
-                class="w-[53px] absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"
-              ></span>
+              <span class="w-[53px] absolute inset-0 rounded-full bg-gray-300 transition peer-checked:bg-green-500"></span>
             </label>
           </div>
           <div
@@ -152,10 +126,9 @@
               'opacity-50 pointer-events-none cursor-not-allowed': disableDiv,
             }"
           >
-            <span
-              class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-              >{{ $t("multiServer.specCypher") }}</span
-            >
+            <span class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase">{{
+              $t("multiServer.specCypher")
+            }}</span>
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
                 class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
@@ -164,9 +137,7 @@
                 }"
                 @click="isCustomCyperActive = !isCustomCyperActive"
               >
-                <span class="text-center font-semibold">{{
-                  serverStore.selectedCyper || `${$t("multiServer.useCostumCypher")}`
-                }}</span>
+                <span class="text-center font-semibold">{{ serverStore.selectedCyper || `${$t("multiServer.useCostumCypher")}` }}</span>
                 <span class="float-right">
                   <svg class="w-4 h-4 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -191,10 +162,9 @@
             </div>
           </div>
           <div class="col-start-1 col-span-full row-start-6 row-span-1 grid grid-cols-12 items-center">
-            <span
-              class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase"
-              >{{ $t("multiServer.bitAmount") }}</span
-            >
+            <span class="col-start-1 col-end-4 w-full text-left self-center text-md font-semibold text-gray-200 uppercase">{{
+              $t("multiServer.bitAmount")
+            }}</span>
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
                 class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
@@ -203,9 +173,7 @@
                 }"
                 @click="isSpecifyAmountActive = !isSpecifyAmountActive"
               >
-                <span class="text-center font-semibold">{{
-                  serverStore.bitAmount || `${$t("multiServer.specSshBitAmount")}`
-                }}</span>
+                <span class="text-center font-semibold">{{ serverStore.bitAmount || `${$t("multiServer.specSshBitAmount")}` }}</span>
                 <span class="float-right">
                   <svg class="w-4 h-4 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -318,9 +286,7 @@ const selectKeySize = (size) => {
 };
 const openDirectoryPicker = async () => {
   try {
-    const paths = await ControlService.openDirectoryDialog(
-      useDeepClone({ properties: ["openDirectory", "createDirectory"] })
-    );
+    const paths = await ControlService.openDirectoryDialog(useDeepClone({ properties: ["openDirectory", "createDirectory"] }));
     serverStore.savePath = paths[0];
   } catch (error) {
     // Handle case when user cancels directory picker

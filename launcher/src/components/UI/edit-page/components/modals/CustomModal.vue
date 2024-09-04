@@ -26,11 +26,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
           <button
             v-if="!props.isLoading"
             class="mr-4 min-w-[100px] bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full uppercase"
-            :class="
-              disabledButton
-                ? 'opacity-40 pointer-events-none'
-                : 'hover:bg-green-600  active:scale-95 transition duration-200'
-            "
+            :class="disabledButton ? 'opacity-40 pointer-events-none' : 'hover:bg-green-600  active:scale-95 transition duration-200'"
             @click="emitConfirmAction"
           >
             {{ confirmText }}

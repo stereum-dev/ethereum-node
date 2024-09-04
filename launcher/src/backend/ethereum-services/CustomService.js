@@ -10,18 +10,18 @@ export class CustomService extends NodeService {
 
     const image = CustomService.parseImageString(imageString);
 
-    command = command.replace(/\s\s+/g, ' ').trim();
+    command = command.replace(/\s\s+/g, " ").trim();
 
-    const finalPorts = ports.map(p => {
+    const finalPorts = ports.map((p) => {
       return ServicePort.buildByConfig(p);
     });
 
-    const finalVolumes = volumes.map(v => {
+    const finalVolumes = volumes.map((v) => {
       if (v.includes("<iDir>")) {
         v = v.replace("<iDir>", workingDir);
       }
       return ServiceVolume.buildByConfig(v);
-    })
+    });
 
     service.init(
       "CustomService", // service

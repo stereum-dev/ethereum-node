@@ -136,9 +136,7 @@ export const useServerLogin = () => {
   const add = () => {
     const newConnection = createConnection();
     if (newConnection.name !== "" && newConnection.host !== "" && newConnection.user !== "") {
-      const existingConnectionIndex = serverStore.connections.findIndex(
-        (connection) => connection.name == serverStore.loginState.hostName
-      );
+      const existingConnectionIndex = serverStore.connections.findIndex((connection) => connection.name == serverStore.loginState.hostName);
 
       if (existingConnectionIndex === -1) {
         serverStore.connections.push(newConnection);

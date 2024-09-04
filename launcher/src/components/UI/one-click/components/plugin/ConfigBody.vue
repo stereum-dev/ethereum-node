@@ -17,11 +17,7 @@ import { ref, computed, onMounted, watch } from 'vue';
         </div>
       </div>
 
-      <PluginRows
-        :filtered-plugin="filteredPluginsOnCategory"
-        @change-handler="pluginChangeHandler"
-        @plugin-exchange="pluginExChange"
-      />
+      <PluginRows :filtered-plugin="filteredPluginsOnCategory" @change-handler="pluginChangeHandler" @plugin-exchange="pluginExChange" />
 
       <InstallationPath />
     </div>
@@ -76,17 +72,12 @@ const filterMonitoringServices = () => {
   if (clickStore.installMonitoring) {
     clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.concat(
       serviceStore.allServices.filter((s) =>
-        ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(
-          s.service
-        )
+        ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
       )
     );
   } else {
     clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
-      (s) =>
-        !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(
-          s.service
-        )
+      (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
     );
   }
 };
@@ -114,9 +105,7 @@ const pluginChangeHandler = (plugin, item, idx) => {
       );
     } else if (item.category === "validator") {
       let conIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "consensus");
-      clickStore.selectedPreset.includedPlugins[conIndex] = serviceStore.allServices.find(
-        (e) => e.service === item.name + "BeaconService"
-      );
+      clickStore.selectedPreset.includedPlugins[conIndex] = serviceStore.allServices.find((e) => e.service === item.name + "BeaconService");
     }
   }
   sortPlugins();
@@ -151,9 +140,7 @@ const checkPluginCategory = (element) => {
     case "staking":
       filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) =>
-          item.category === element.category &&
-          /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
+        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
     case "ssv.network":
@@ -185,12 +172,10 @@ const checkPluginCategory = (element) => {
       //filter = (item) => item.category === element.category
       break;
     case "mev boost":
-      filter = (item) =>
-        item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
+      filter = (item) => item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
       break;
     case "stereum on arm":
-      filter = (item) =>
-        item.category === element.category && !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) => item.category === element.category && !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
       }
@@ -198,9 +183,7 @@ const checkPluginCategory = (element) => {
     case "archive":
       filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) =>
-          item.category === element.category &&
-          /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
+        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
     default:

@@ -499,7 +499,8 @@
     "sync": "Kesalahan Sinkronisasi",
     "taskFail": "Tugas Gagal",
     "stats": "STATUS: BUKA",
-    "clientService": "KLIEN / LAYANAN"
+    "clientService": "KLIEN / LAYANAN",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "KLIENT ANDA Menyimpan data blockchain DI SERVER ANDA AGAR NODE ANDA DAPAT melayani jaringan. ini diperlukan agar node ANDA DAPAT MELAKUKAN TUGAS ATTESTASI DALAM STAKING. DENGAN MENGGUNAKAN OPSI INI ANDA MENGHAPUS DATA BLOCKCHAIN KLIENT ANDA SAAT INI & MENGGUNAKAN OPSI YANG DIPILIH SEBAGAI SUMBER UNTUK MENYINKRONKAN NODE ANDA BARU.",

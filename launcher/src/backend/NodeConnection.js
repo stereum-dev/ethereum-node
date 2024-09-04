@@ -393,9 +393,7 @@ export class NodeConnection {
     }
 
     if (SSHService.checkExecError(statusResult)) {
-      throw new Error(
-        "Failed reading status of ref '" + playbookRunRef + "': " + SSHService.extractExecError(statusResult)
-      );
+      throw new Error("Failed reading status of ref '" + playbookRunRef + "': " + SSHService.extractExecError(statusResult));
     }
 
     return statusResult.stdout;
@@ -434,9 +432,7 @@ export class NodeConnection {
     }
 
     if (SSHService.checkExecError(serviceConfig)) {
-      throw new Error(
-        "Failed reading service configuration " + serviceId + ": " + SSHService.extractExecError(serviceConfig)
-      );
+      throw new Error("Failed reading service configuration " + serviceId + ": " + SSHService.extractExecError(serviceConfig));
     }
 
     return YAML.parse(serviceConfig.stdout);
@@ -584,9 +580,7 @@ export class NodeConnection {
 
   async getSSVLastKnownOperatorIdFilePath(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const getSSVNetworkConfig = getSsvNetworkCfg
-        ? getSsvNetworkCfg
-        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const getSSVNetworkConfig = getSsvNetworkCfg ? getSsvNetworkCfg : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
       const ssvNetworkConfigDir = getSSVNetworkConfig.ssvNetworkConfigDir;
       return ssvNetworkConfigDir + "/last_known_operator_id";
     } catch (err) {
@@ -607,27 +601,16 @@ export class NodeConnection {
     try {
       try {
         if (!force) {
-          const existing = await this.getSSVLastKnownOperatorId(
-            serviceID,
-            return_details,
-            getSsvServiceCfg,
-            getSsvNetworkCfg
-          );
+          const existing = await this.getSSVLastKnownOperatorId(serviceID, return_details, getSsvServiceCfg, getSsvNetworkCfg);
           const existingLastKnownOperatorId = return_details ? existing.lastKnownOperatorIdFileData : existing;
           if (existingLastKnownOperatorId == strOperatorId.trim()) {
             return existing;
           }
         }
       } catch (err) {}
-      const lastKnownOperatorIdFilePath = await this.getSSVLastKnownOperatorIdFilePath(
-        serviceID,
-        getSsvServiceCfg,
-        getSsvNetworkCfg
-      );
+      const lastKnownOperatorIdFilePath = await this.getSSVLastKnownOperatorIdFilePath(serviceID, getSsvServiceCfg, getSsvNetworkCfg);
       const lastKnownOperatorIdFileData = strOperatorId.trim();
-      const result = await this.sshService.exec(
-        `echo -n "${lastKnownOperatorIdFileData}" > "${lastKnownOperatorIdFilePath}"`
-      );
+      const result = await this.sshService.exec(`echo -n "${lastKnownOperatorIdFileData}" > "${lastKnownOperatorIdFilePath}"`);
       if (SSHService.checkExecError(result, true)) {
         throw new Error(SSHService.extractExecError(result));
       }
@@ -644,11 +627,7 @@ export class NodeConnection {
 
   async getSSVLastKnownOperatorId(serviceID, return_details = false, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const lastKnownOperatorIdFilePath = await this.getSSVLastKnownOperatorIdFilePath(
-        serviceID,
-        getSsvServiceCfg,
-        getSsvNetworkCfg
-      );
+      const lastKnownOperatorIdFilePath = await this.getSSVLastKnownOperatorIdFilePath(serviceID, getSsvServiceCfg, getSsvNetworkCfg);
       let lastKnownOperatorIdFileContent = "";
       if (lastKnownOperatorIdFilePath) {
         let lastKnownOperatorIdFileRequest = await this.sshService.exec(
@@ -673,9 +652,7 @@ export class NodeConnection {
 
   async getSSVLastBackedPublicKeyFilePath(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const getSSVNetworkConfig = getSsvNetworkCfg
-        ? getSsvNetworkCfg
-        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const getSSVNetworkConfig = getSsvNetworkCfg ? getSsvNetworkCfg : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
       const ssvNetworkConfigDir = getSSVNetworkConfig.ssvNetworkConfigDir;
       return ssvNetworkConfigDir + "/last_backed_public_key";
     } catch (err) {
@@ -684,23 +661,11 @@ export class NodeConnection {
     }
   }
 
-  async setSSVLastBackedPublicKey(
-    serviceID,
-    strPublicKey,
-    return_details = false,
-    getSsvServiceCfg = null,
-    getSsvNetworkCfg = null
-  ) {
+  async setSSVLastBackedPublicKey(serviceID, strPublicKey, return_details = false, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const lastBackedPublicKeyFilePath = await this.getSSVLastBackedPublicKeyFilePath(
-        serviceID,
-        getSsvServiceCfg,
-        getSsvNetworkCfg
-      );
+      const lastBackedPublicKeyFilePath = await this.getSSVLastBackedPublicKeyFilePath(serviceID, getSsvServiceCfg, getSsvNetworkCfg);
       const lastBackedPublicKeyFileData = strPublicKey.trim();
-      const result = await this.sshService.exec(
-        `echo -n "${lastBackedPublicKeyFileData}" > "${lastBackedPublicKeyFilePath}"`
-      );
+      const result = await this.sshService.exec(`echo -n "${lastBackedPublicKeyFileData}" > "${lastBackedPublicKeyFilePath}"`);
       if (SSHService.checkExecError(result, true)) {
         throw new Error(SSHService.extractExecError(result));
       }
@@ -717,11 +682,7 @@ export class NodeConnection {
 
   async getSSVLastBackedPublicKey(serviceID, return_details = false, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const lastBackedPublicKeyFilePath = await this.getSSVLastBackedPublicKeyFilePath(
-        serviceID,
-        getSsvServiceCfg,
-        getSsvNetworkCfg
-      );
+      const lastBackedPublicKeyFilePath = await this.getSSVLastBackedPublicKeyFilePath(serviceID, getSsvServiceCfg, getSsvNetworkCfg);
       let lastBackedPublicKeyFileContent = "";
       if (lastBackedPublicKeyFilePath) {
         let lastBackedPublicKeyFileRequest = await this.sshService.exec(
@@ -820,9 +781,7 @@ export class NodeConnection {
           throw new Error(SSHService.extractExecError(service_config_read));
         }
         const escapedServiceConfigFile = StringUtils.escapeStringForShell(
-          service_config_read.stdout
-            .replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "")
-            .trim()
+          service_config_read.stdout.replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "").trim()
         );
         const service_config_write = await this.sshService.exec(`
           mkdir -p ${service_config_dir} &&
@@ -986,9 +945,7 @@ export class NodeConnection {
 
       // Check (unencrypted) SSV secret key (private_key)
       if (!private_key) {
-        throw new Error(
-          "Unencrypted SSV secret key (private key) is invalid (neither given as argument nor found on the server)"
-        );
+        throw new Error("Unencrypted SSV secret key (private key) is invalid (neither given as argument nor found on the server)");
       }
       if (!StringUtils.isBase64(private_key)) {
         throw new Error("Unencrypted SSV secret key (private key) is invalid (not base 64 encoded)");
@@ -1067,9 +1024,7 @@ export class NodeConnection {
         }
         const service_config_content = service_config_read.stdout;
         const escapedServiceConfigFile = StringUtils.escapeStringForShell(
-          service_config_content
-            .replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "")
-            .trim()
+          service_config_content.replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "").trim()
         );
         const service_config_write = await this.sshService.exec(
           `mkdir -p ${service_config_dir} && echo ${escapedServiceConfigFile} > ${service_config_file} &&
@@ -1179,9 +1134,7 @@ export class NodeConnection {
           throw new Error(SSHService.extractExecError(service_config_read));
         }
         const escapedServiceConfigFile = StringUtils.escapeStringForShell(
-          service_config_read.stdout
-            .replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "")
-            .trim()
+          service_config_read.stdout.replace(/^(ssv_pk|ssv_sk|# BEGIN ANSIBLE MANAGED BLOCK|# END ANSIBLE MANAGED BLOCK).*/gm, "").trim()
         );
         const service_config_write = await this.sshService.exec(`
           mkdir -p ${service_config_dir} &&
@@ -1260,9 +1213,7 @@ export class NodeConnection {
 
   async getSSVLastKnownPublicKeyFilePath(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const getSSVNetworkConfig = getSsvNetworkCfg
-        ? getSsvNetworkCfg
-        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const getSSVNetworkConfig = getSsvNetworkCfg ? getSsvNetworkCfg : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
       const ssvNetworkConfigDir = getSSVNetworkConfig.ssvNetworkConfigDir;
       return ssvNetworkConfigDir + "/last_known_public_key";
     } catch (err) {
@@ -1273,15 +1224,9 @@ export class NodeConnection {
 
   async writeSSVLastKnownPublicKeyFile(serviceID, strPublicKey, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const lastKnownPublicKeyFilePath = await this.getSSVLastKnownPublicKeyFilePath(
-        serviceID,
-        getSsvServiceCfg,
-        getSsvNetworkCfg
-      );
+      const lastKnownPublicKeyFilePath = await this.getSSVLastKnownPublicKeyFilePath(serviceID, getSsvServiceCfg, getSsvNetworkCfg);
       const lastKnownPublicKeyFileData = strPublicKey.trim();
-      const result = await this.sshService.exec(
-        `echo -n "${lastKnownPublicKeyFileData}" > "${lastKnownPublicKeyFilePath}"`
-      );
+      const result = await this.sshService.exec(`echo -n "${lastKnownPublicKeyFileData}" > "${lastKnownPublicKeyFilePath}"`);
       if (SSHService.checkExecError(result, true)) {
         throw new Error(SSHService.extractExecError(result));
       }
@@ -1297,11 +1242,7 @@ export class NodeConnection {
 
   async getSSVLastKnownPublicKeyFile(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const lastKnownPublicKeyFilePath = await this.getSSVLastKnownPublicKeyFilePath(
-        serviceID,
-        getSsvServiceCfg,
-        getSsvNetworkCfg
-      );
+      const lastKnownPublicKeyFilePath = await this.getSSVLastKnownPublicKeyFilePath(serviceID, getSsvServiceCfg, getSsvNetworkCfg);
       let lastKnownPublicKeyFileContent = "";
       if (lastKnownPublicKeyFilePath) {
         let lastKnownPublicKeyFileRequest = await this.sshService.exec(
@@ -1325,9 +1266,7 @@ export class NodeConnection {
 
   async getSSVTotalConfig(serviceID, getSsvServiceCfg = null, getSsvNetworkCfg = null) {
     try {
-      const getSsvNetworkConfig = getSsvNetworkCfg
-        ? getSsvNetworkCfg
-        : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
+      const getSsvNetworkConfig = getSsvNetworkCfg ? getSsvNetworkCfg : await this.getSSVNetworkConfig(serviceID, getSsvServiceCfg);
       const getSsvServiceConfig = getSsvNetworkConfig.getSsvServiceConfig;
       const ssvServiceConfig = getSsvNetworkConfig.ssvServiceConfig;
       const ssvServiceConfigDir = getSsvNetworkConfig.ssvServiceConfigDir;
@@ -1352,9 +1291,7 @@ export class NodeConnection {
       } else if (regexS.test(keyStorePasswordFile)) {
         keyStorePasswordFile = ssvSecretsDir + "/" + keyStorePasswordFile.replace(regexS, ""); // password file found in secrets dir
       }
-      let keyStorePrivateKeyFile = ssvNetworkConfig?.KeyStore?.PrivateKeyFile
-        ? ssvNetworkConfig.KeyStore.PrivateKeyFile
-        : "";
+      let keyStorePrivateKeyFile = ssvNetworkConfig?.KeyStore?.PrivateKeyFile ? ssvNetworkConfig.KeyStore.PrivateKeyFile : "";
       if (regexC.test(keyStorePrivateKeyFile)) {
         keyStorePrivateKeyFile = ssvNetworkConfigDir + "/" + keyStorePrivateKeyFile.replace(regexC, ""); // keystore file found in config dir
       } else if (regexS.test(keyStorePrivateKeyFile)) {
@@ -1367,10 +1304,7 @@ export class NodeConnection {
           `if [ -f "${keyStorePasswordFile}" ]; then cat "${keyStorePasswordFile}"; else echo ""; fi`
         );
         if (SSHService.checkExecError(keyStorePasswordFileRequest, true)) {
-          log.error(
-            "Can't read SSV keystore password file content from service " + serviceID,
-            keyStorePasswordFileRequest.stderr
-          );
+          log.error("Can't read SSV keystore password file content from service " + serviceID, keyStorePasswordFileRequest.stderr);
         } else {
           keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
         }
@@ -1382,10 +1316,7 @@ export class NodeConnection {
           `if [ -f "${keyStorePrivateKeyFile}" ]; then cat "${keyStorePrivateKeyFile}"; else echo ""; fi`
         );
         if (SSHService.checkExecError(keyStorePrivateKeyFileRequest, true)) {
-          log.error(
-            "Can't read SSV keystore private key file content from service " + serviceID,
-            keyStorePrivateKeyFileRequest.stderr
-          );
+          log.error("Can't read SSV keystore private key file content from service " + serviceID, keyStorePrivateKeyFileRequest.stderr);
         } else {
           keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
         }
@@ -1394,34 +1325,20 @@ export class NodeConnection {
       let operatorPrivateKey = ssvNetworkConfig?.OperatorPrivateKey ? ssvNetworkConfig.OperatorPrivateKey : "";
 
       // Last known public key that was generated or imported by the end-user via ssv modal generate/import buttons
-      const getSSVLastKnownPublicKeyFile = await this.getSSVLastKnownPublicKeyFile(
-        serviceID,
-        getSsvServiceConfig,
-        getSsvNetworkConfig
-      );
+      const getSSVLastKnownPublicKeyFile = await this.getSSVLastKnownPublicKeyFile(serviceID, getSsvServiceConfig, getSsvNetworkConfig);
       const lastKnownPublicKeyFilePath = getSSVLastKnownPublicKeyFile.lastKnownPublicKeyFilePath;
       const lastKnownPublicKeyFileData = getSSVLastKnownPublicKeyFile.lastKnownPublicKeyFileData;
 
       // Last backed public key (empty as long as user did not do any backup)
       let lastBackedPublicKey = "";
       try {
-        lastBackedPublicKey = await this.getSSVLastBackedPublicKey(
-          serviceID,
-          false,
-          getSsvServiceConfig,
-          getSsvNetworkConfig
-        );
+        lastBackedPublicKey = await this.getSSVLastBackedPublicKey(serviceID, false, getSsvServiceConfig, getSsvNetworkConfig);
       } catch (err) {}
 
       // Last known operator id that was responded by SSV API (empty as long as operator is not registered or SSV-API is unreachable)
       let lastKnownOperatorId = "";
       try {
-        lastKnownOperatorId = await this.getSSVLastKnownOperatorId(
-          serviceID,
-          false,
-          getSsvServiceConfig,
-          getSsvNetworkConfig
-        );
+        lastKnownOperatorId = await this.getSSVLastKnownOperatorId(serviceID, false, getSsvServiceConfig, getSsvNetworkConfig);
       } catch (err) {}
 
       return {
@@ -1466,9 +1383,7 @@ export class NodeConnection {
     let SSVNetworkConfig;
     try {
       const service = await this.readServiceConfiguration(serviceID);
-      let configPath = ServiceVolume.buildByConfig(
-        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
-      ).destinationPath;
+      let configPath = ServiceVolume.buildByConfig(service.volumes.find((v) => v.split(":").slice(-1) == "/data")).destinationPath;
       if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
 
       SSVNetworkConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
@@ -1490,9 +1405,7 @@ export class NodeConnection {
     this.taskManager.tasks.push({ name: "write SSV config", otherRunRef: ref });
     const service = await this.readServiceConfiguration(serviceID);
     try {
-      let configPath = ServiceVolume.buildByConfig(
-        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
-      ).destinationPath;
+      let configPath = ServiceVolume.buildByConfig(service.volumes.find((v) => v.split(":").slice(-1) == "/data")).destinationPath;
       if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
       configStatus = await this.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(config.trim()) + ` > ${configPath}/config.yaml`
@@ -1543,9 +1456,7 @@ export class NodeConnection {
 
   async getSSVDKGConfig(serviceID, getSsvDkgServiceCfg = null) {
     try {
-      const getSsvDkgServiceConfig = getSsvDkgServiceCfg
-        ? getSsvDkgServiceCfg
-        : await this.getSSVDKGServiceConfig(serviceID);
+      const getSsvDkgServiceConfig = getSsvDkgServiceCfg ? getSsvDkgServiceCfg : await this.getSSVDKGServiceConfig(serviceID);
       const ssvDkgServiceConfig = getSsvDkgServiceConfig.ssvDkgServiceConfig;
       const ssvDkgServiceConfigDir = getSsvDkgServiceConfig.ssvDkgServiceConfigDir;
       let ssvDkgConfigDir = ".";
@@ -1610,10 +1521,7 @@ export class NodeConnection {
           `if [ -f "${keyStorePasswordFile}" ]; then cat "${keyStorePasswordFile}"; else echo ""; fi`
         );
         if (SSHService.checkExecError(keyStorePasswordFileRequest, true)) {
-          log.error(
-            "Can't read SSVDKG keystore password file content from service " + serviceID,
-            keyStorePasswordFileRequest.stderr
-          );
+          log.error("Can't read SSVDKG keystore password file content from service " + serviceID, keyStorePasswordFileRequest.stderr);
         } else {
           keyStorePasswordFileContent = keyStorePasswordFileRequest.stdout;
         }
@@ -1624,10 +1532,7 @@ export class NodeConnection {
           `if [ -f "${keyStorePrivateKeyFile}" ]; then cat "${keyStorePrivateKeyFile}"; else echo ""; fi`
         );
         if (SSHService.checkExecError(keyStorePrivateKeyFileRequest, true)) {
-          log.error(
-            "Can't read SSVDKG keystore private key file content from service " + serviceID,
-            keyStorePrivateKeyFileRequest.stderr
-          );
+          log.error("Can't read SSVDKG keystore private key file content from service " + serviceID, keyStorePrivateKeyFileRequest.stderr);
         } else {
           keyStorePrivateKeyFileContent = keyStorePrivateKeyFileRequest.stdout;
         }
@@ -1665,9 +1570,7 @@ export class NodeConnection {
     let SSVDKGConfig;
     try {
       const service = await this.readServiceConfiguration(serviceID);
-      let configPath = ServiceVolume.buildByConfig(
-        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
-      ).destinationPath;
+      let configPath = ServiceVolume.buildByConfig(service.volumes.find((v) => v.split(":").slice(-1) == "/data")).destinationPath;
       if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
 
       SSVDKGConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
@@ -1689,9 +1592,7 @@ export class NodeConnection {
     this.taskManager.tasks.push({ name: "write SSVDKG config", otherRunRef: ref });
     const service = await this.readServiceConfiguration(serviceID);
     try {
-      let configPath = ServiceVolume.buildByConfig(
-        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
-      ).destinationPath;
+      let configPath = ServiceVolume.buildByConfig(service.volumes.find((v) => v.split(":").slice(-1) == "/data")).destinationPath;
       if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
       configStatus = await this.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(config.trim()) + ` > ${configPath}/config.yaml`
@@ -1743,9 +1644,7 @@ export class NodeConnection {
     }
 
     if (SSHService.checkExecError(prometheusConfig)) {
-      throw new Error(
-        "Failed reading Prometheus config " + serviceID + ": " + SSHService.extractExecError(prometheusConfig)
-      );
+      throw new Error("Failed reading Prometheus config " + serviceID + ": " + SSHService.extractExecError(prometheusConfig));
     }
 
     return prometheusConfig.stdout;
@@ -1807,11 +1706,7 @@ export class NodeConnection {
         throw new Error("Config is not in the right format!");
       }
       configStatus = await this.sshService.exec(
-        "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+        "echo -e " + StringUtils.escapeStringForShell(service.data.trim()) + " > /etc/stereum/services/" + service.id + ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -1832,9 +1727,7 @@ export class NodeConnection {
         status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      throw new Error(
-        "Failed writing service configuration " + service.id + ": " + SSHService.extractExecError(configStatus)
-      );
+      throw new Error("Failed writing service configuration " + service.id + ": " + SSHService.extractExecError(configStatus));
     }
     this.taskManager.otherSubTasks.push({
       name: "write " + service.service + " config",
@@ -1882,12 +1775,7 @@ export class NodeConnection {
         status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      throw new Error(
-        "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
-      );
+      throw new Error("Failed writing service configuration " + serviceConfiguration.id + ": " + SSHService.extractExecError(configStatus));
     }
     this.taskManager.otherSubTasks.push({
       name: "write " + serviceConfiguration.service + " config",
@@ -1937,9 +1825,7 @@ export class NodeConnection {
     }
 
     if (SSHService.checkExecError(serviceJson)) {
-      throw new Error(
-        "Failed getting service details of '" + serviceId + "': " + SSHService.extractExecError(serviceJson)
-      );
+      throw new Error("Failed getting service details of '" + serviceId + "': " + SSHService.extractExecError(serviceJson));
     }
 
     return JSON.parse(serviceJson.stdout);
@@ -2123,9 +2009,7 @@ export class NodeConnection {
   async getCurrentStereumVersion() {
     let response;
     try {
-      response = await this.sshService.exec(
-        `cd ${this.settings.stereum.settings.controls_install_path}/ansible && git rev-parse HEAD`
-      );
+      response = await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible && git rev-parse HEAD`);
     } catch (err) {
       log.error("Couldn't get Stereum Version:", err);
       throw new Error("Couldn't get Stereum Version:\n" + err);
@@ -2144,9 +2028,7 @@ export class NodeConnection {
 
   async getLargestVolumePath() {
     try {
-      const dfOutput = await this.sshService.exec(
-        "df | grep -wv /var/lib/docker | tail -n +2 | sort -k 4 -rn | head -n 1"
-      );
+      const dfOutput = await this.sshService.exec("df | grep -wv /var/lib/docker | tail -n +2 | sort -k 4 -rn | head -n 1");
 
       if (SSHService.checkExecError(dfOutput)) {
         throw new Error("Failed reading df command: " + SSHService.extractExecError(dfOutput));
@@ -2440,16 +2322,13 @@ export class NodeConnection {
     // Calculate the timestamp for the 'since' days ago
     const sinceDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * since).toISOString();
     // Calculate the timestamp for the 'until' days ago
-    const untilDate =
-      until === 0 ? new Date().toISOString() : new Date(Date.now() - 1000 * 60 * 60 * 24 * until).toISOString();
+    const untilDate = until === 0 ? new Date().toISOString() : new Date(Date.now() - 1000 * 60 * 60 * 24 * until).toISOString();
 
     try {
       if (dateOrLines === "lines") {
         logResult = await this.sshService.exec(`docker logs ${containerName}  --tail=${lines} 2>&1`);
       } else {
-        logResult = await this.sshService.exec(
-          `docker logs ${containerName} --since=${sinceDate} --until=${untilDate} 2>&1`
-        );
+        logResult = await this.sshService.exec(`docker logs ${containerName} --since=${sinceDate} --until=${untilDate} 2>&1`);
       }
 
       if (logResult.rc || !logResult.stdout || logResult.stderr) {

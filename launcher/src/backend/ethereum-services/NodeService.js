@@ -63,7 +63,7 @@ export class NodeService {
     executionClients,
     consensusClients,
     mevboost,
-    otherServices,
+    otherServices
   ) {
     this.service = service;
     this.setId(id);
@@ -135,12 +135,8 @@ export class NodeService {
       network: this.network,
 
       dependencies: {
-        executionClients: (this.dependencies.executionClients || []).map((service) =>
-          service.buildMinimalConfiguration()
-        ),
-        consensusClients: (this.dependencies.consensusClients || []).map((service) =>
-          service.buildMinimalConfiguration()
-        ),
+        executionClients: (this.dependencies.executionClients || []).map((service) => service.buildMinimalConfiguration()),
+        consensusClients: (this.dependencies.consensusClients || []).map((service) => service.buildMinimalConfiguration()),
         mevboost: (this.dependencies.mevboost || []).map((service) => service.buildMinimalConfiguration()),
         otherServices: (this.dependencies.otherServices || []).map((service) => service.buildMinimalConfiguration()),
       },

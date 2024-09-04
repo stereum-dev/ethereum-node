@@ -63,11 +63,7 @@ export default {
       return "Loading...";
     },
     flag() {
-      if (
-        this.currentResult === undefined ||
-        this.currentResult.beaconStatus === undefined ||
-        this.currentResult.beaconStatus !== 0
-      ) {
+      if (this.currentResult === undefined || this.currentResult.beaconStatus === undefined || this.currentResult.beaconStatus !== 0) {
         return true;
       }
 

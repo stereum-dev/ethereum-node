@@ -23,12 +23,7 @@
         @open-resync="openResync(item)"
       />
       <TransitionGroup name="fadeModal">
-        <ResyncModal
-          v-if="item.isResyncModalOpen"
-          icon-size="w-14"
-          :item="item"
-          @close-window="closeResyncModal(item)"
-        />
+        <ResyncModal v-if="item.isResyncModalOpen" icon-size="w-14" :item="item" @close-window="closeResyncModal(item)" />
       </TransitionGroup>
     </div>
   </div>
@@ -43,15 +38,7 @@ import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { useSetups } from "../../../../../../store/setups";
 
-const emit = defineEmits([
-  "openExpert",
-  "openLog",
-  "openDoc",
-  "stateHandler",
-  "restartHandler",
-  "mouseOver",
-  "mouseLeave",
-]);
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver", "mouseLeave"]);
 
 //Refs
 const nodeStore = useNodeStore();
@@ -64,11 +51,7 @@ const getConsensusServices = computed(() => {
   }
 
   const services = serviceStore.installedServices
-    .filter(
-      (s) =>
-        s.category === "consensus" &&
-        s.setupId === setupStore.selectedSetup?.setupId
-    )
+    .filter((s) => s.category === "consensus" && s.setupId === setupStore.selectedSetup?.setupId)
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
       const fb = b.name.toLowerCase();

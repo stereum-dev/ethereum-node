@@ -31,9 +31,6 @@ const pagesTabsHandler = computed(() => {
 });
 
 const isActiveTab = computed(() => {
-  return (
-    router.currentRoute.value.fullPath === props.tab.path ||
-    router.currentRoute.value.fullPath === props.tab?.relativePath
-  );
+  return router.currentRoute.value.fullPath === props.tab.path || router.currentRoute.value.fullPath === props.tab?.relativePath;
 });
 </script>

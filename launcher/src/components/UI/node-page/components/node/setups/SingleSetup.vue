@@ -10,12 +10,7 @@
     </div>
     <SetupLayout :setup="props.setup" />
 
-    <SetupButtons
-      :setup="props.setup"
-      @open-setup="openSetup"
-      @export-setup="exportSetup"
-      @state-handler="setupState"
-    />
+    <SetupButtons :setup="props.setup" @open-setup="openSetup" @export-setup="exportSetup" @state-handler="setupState" />
   </div>
 </template>
 

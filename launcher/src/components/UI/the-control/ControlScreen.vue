@@ -37,10 +37,7 @@
                 </div>
                 <div class="service-edit">
                   <div class="edit-box">
-                    <div
-                      v-if="item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'"
-                      class="icon-bg"
-                    >
+                    <div v-if="item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'" class="icon-bg">
                       <div class="power-icon">
                         <img
                           v-if="item.isServicePending"
@@ -83,9 +80,7 @@
                           src="/img/icon/node-page-icons/service-command-turn-on.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
-                          @mouseenter="
-                            footerStore.cursorLocation = `${t('controlScreenTooltips.turnon', { service: item.name })}`
-                          "
+                          @mouseenter="footerStore.cursorLocation = `${t('controlScreenTooltips.turnon', { service: item.name })}`"
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
                       </div>
@@ -129,12 +124,7 @@
       @export-all-log="updateAndExportAllLogs"
       @export-customized-logs="updateAndExportAllLogs"
     />
-    <ExpertWindow
-      v-if="isExpertWindowOpen"
-      :item="expertModeClient"
-      bg-opacity="opacity-25"
-      @hide-modal="hideExpertMode(item)"
-    />
+    <ExpertWindow v-if="isExpertWindowOpen" :item="expertModeClient" bg-opacity="opacity-25" @hide-modal="hideExpertMode(item)" />
     <!-- End Control main layout -->
   </base-layout>
 </template>
@@ -189,8 +179,7 @@ const selecteConfigServices = computed(() => {
     const selectedServiceIds = selectedSetup.services.map((service) => service.config.serviceID);
     serviceStore.installedServices.forEach((service) => {
       if (
-        (["execution", "validator", "consensus"].includes(service.category) &&
-          selectedServiceIds.includes(service.config.serviceID)) ||
+        (["execution", "validator", "consensus"].includes(service.category) && selectedServiceIds.includes(service.config.serviceID)) ||
         service.category === "service"
       ) {
         test.push({
@@ -370,9 +359,7 @@ const updateAndExportAllLogs = async (client) => {
 };
 
 const exportLogs = async (client) => {
-  const currentService = nodeStore.serviceLogs.find(
-    (service) => service.config?.serviceID === client.config?.serviceID
-  );
+  const currentService = nodeStore.serviceLogs.find((service) => service.config?.serviceID === client.config?.serviceID);
 
   const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
 

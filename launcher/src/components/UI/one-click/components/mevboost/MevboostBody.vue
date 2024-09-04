@@ -1,8 +1,6 @@
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
-    <div
-      class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-4"
-    >
+    <div class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-4">
       <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-12 gap-1">
         <div class="w-full h-10 col-start-1 col-end-7 flex justify-center items-center">
           <div class="w-2/3 h-8 border border-gray-600 rounded-md p-1 flex justify-center items-center mr-[25px]">
@@ -34,11 +32,7 @@
           </div>
         </div>
         <div class="col-start-7 col-span-6 row-start-2 row-span-full flex justify-center items-center">
-          <UsedRelays
-            :used-relays="manageStore.usedBlocks"
-            @remove-item="selectItemToRemove"
-            @double-remove="removeFromUsedBlocks"
-          />
+          <UsedRelays :used-relays="manageStore.usedBlocks" @remove-item="selectItemToRemove" @double-remove="removeFromUsedBlocks" />
         </div>
       </div>
     </div>
@@ -56,19 +50,14 @@ const manageStore = useNodeManage();
 
 const availableBlocks = computed({
   get: () => manageStore.availableBlocks,
-  set: () =>
-    (manageStore.availableBlocks = shuffleRelaysList(
-      manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network])
-    )),
+  set: () => (manageStore.availableBlocks = shuffleRelaysList(manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network]))),
 });
 
 //Lifecycle Hooks
 
 // Initialize availableBlocks with shuffled relays
 onMounted(() => {
-  manageStore.availableBlocks = shuffleRelaysList(
-    manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network])
-  );
+  manageStore.availableBlocks = shuffleRelaysList(manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network]));
   if (installStore.resetMevBoost) {
     removeAll();
     installStore.resetMevBoost = false;
@@ -76,7 +65,7 @@ onMounted(() => {
   if (/lidocsm|lidoobol/.test(installStore.selectedPreset.name)) {
     addAll();
   }
-  if(installStore.selectedPreset.name === "lidossv") {
+  if (installStore.selectedPreset.name === "lidossv") {
     const flashbots = manageStore.availableBlocks.find((r) => r.name.toLowerCase() === "flashbots");
     flashbots.isSelected = true;
     addBlocksToUse();

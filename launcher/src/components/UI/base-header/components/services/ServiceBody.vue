@@ -20,23 +20,15 @@ const slides = computed(() => {
   if (!selectedSetup || !Array.isArray(selectedSetup.services)) {
     return services.filter(
       (service) =>
-        service.service !== "FlashbotsMevBoostService" &&
-        service.service !== "SSVNetworkService" &&
-        service.service !== "CharonService"
+        service.service !== "FlashbotsMevBoostService" && service.service !== "SSVNetworkService" && service.service !== "CharonService"
     );
   }
 
-  const mevBoostInSetup = selectedSetup.services.some(
-    (service) => service.service === "FlashbotsMevBoostService"
-  );
+  const mevBoostInSetup = selectedSetup.services.some((service) => service.service === "FlashbotsMevBoostService");
 
-  const ssvInSetup = selectedSetup.services.some(
-    (service) => service.service === "SSVNetworkService"
-  );
+  const ssvInSetup = selectedSetup.services.some((service) => service.service === "SSVNetworkService");
 
-  const obolInSetup = selectedSetup.services.some(
-    (service) => service.service === "CharonService"
-  );
+  const obolInSetup = selectedSetup.services.some((service) => service.service === "CharonService");
 
   let filteredServices = services.filter((service) => {
     if (!mevBoostInSetup && service.service === "FlashbotsMevBoostService") return false;
@@ -45,20 +37,12 @@ const slides = computed(() => {
     return true;
   });
 
-  const uniqueServices = [
-    "FlashbotsMevBoostService",
-    "SSVNetworkService",
-    "CharonService",
-  ];
+  const uniqueServices = ["FlashbotsMevBoostService", "SSVNetworkService", "CharonService"];
 
   uniqueServices.forEach((uniqueService) => {
-    const serviceIndex = filteredServices.findIndex(
-      (service) => service.service === uniqueService
-    );
+    const serviceIndex = filteredServices.findIndex((service) => service.service === uniqueService);
     if (serviceIndex !== -1) {
-      filteredServices = filteredServices.filter(
-        (service, index) => service.service !== uniqueService || index === serviceIndex
-      );
+      filteredServices = filteredServices.filter((service, index) => service.service !== uniqueService || index === serviceIndex);
     }
   });
 

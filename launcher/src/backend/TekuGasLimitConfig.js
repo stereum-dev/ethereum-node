@@ -1,11 +1,10 @@
-export class TekuGasLimitConfig{
+export class TekuGasLimitConfig {
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
   }
 
-  async createGasConfigFile(gasLimit, feeRecipient, configPath){
-    const configContent =
-    `{
+  async createGasConfigFile(gasLimit, feeRecipient, configPath) {
+    const configContent = `{
       "default_config": {
         "fee_recipient": "${feeRecipient}",
         "builder": {
@@ -17,23 +16,21 @@ export class TekuGasLimitConfig{
     await this.nodeConnection.sshService.exec(`echo '${configContent}' > ${configPath}/gas_config.json`);
   }
 
-  async removeGasConfigFile(configPath){
+  async removeGasConfigFile(configPath) {
     await this.nodeConnection.sshService.exec(`rm -f ${configPath}/gas_config.json`);
   }
 
-  async readGasConfigFile(configPath){
-    let result = await this.nodeConnection.sshService.exec(`test -f ${configPath}/gas_config.json`)
-    if(result.rc == 0){
-      let gasLimit = await this.nodeConnection.sshService.exec(`cat ${configPath}/gas_config.json`)
-      if(gasLimit.includes("gas_limit")){
-        gasLimit = gasLimit.stdout.match(/^.*gas_limit.*$/gm)[0].split(':')[1];
+  async readGasConfigFile(configPath) {
+    let result = await this.nodeConnection.sshService.exec(`test -f ${configPath}/gas_config.json`);
+    if (result.rc == 0) {
+      let gasLimit = await this.nodeConnection.sshService.exec(`cat ${configPath}/gas_config.json`);
+      if (gasLimit.includes("gas_limit")) {
+        gasLimit = gasLimit.stdout.match(/^.*gas_limit.*$/gm)[0].split(":")[1];
         return gasLimit;
-      }
-      else{
+      } else {
         return "";
       }
-    }
-    else{
+    } else {
       return "";
     }
   }

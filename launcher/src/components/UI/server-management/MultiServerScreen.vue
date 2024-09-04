@@ -1,14 +1,8 @@
 import ServerHeader from './components/ServerHeader.vue';
 <template>
-  <div
-    class="w-full h-[95.5%] absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
-  >
+  <div class="w-full h-[95.5%] absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300">
     <SwitchAnimation
-      v-if="
-        (serverStore.isServerAnimationActive || serverStore.connectingProcess) &&
-        !serverStore.errorMsgExists &&
-        !isTwoFactorAuthActive
-      "
+      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists && !isTwoFactorAuthActive"
       @cancel-login="cancelLoginHandler"
     />
     <ServerHeader @tab-picker="tabPicker" />
@@ -22,16 +16,8 @@ import ServerHeader from './components/ServerHeader.vue';
       @quick-login="quickLoginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
-    <GenerateKey
-      v-if="serverStore.isGenerateModalActive"
-      @close-modal="closeGenerateModal"
-      @generate-key="generateKeyHandler"
-    />
-    <RemoveModal
-      v-if="serverStore.isRemoveModalActive"
-      @remove-handler="removeServerHandler"
-      @close-window="closeWindow"
-    />
+    <GenerateKey v-if="serverStore.isGenerateModalActive" @close-modal="closeGenerateModal" @generate-key="generateKeyHandler" />
+    <RemoveModal v-if="serverStore.isRemoveModalActive" @remove-handler="removeServerHandler" @close-window="closeWindow" />
     <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
     <ChangeOTPModal
       v-if="serverStore.isOTPActive"
@@ -274,8 +260,7 @@ const closeBarcode = () => {
 const removeServerHandler = async () => {
   serverStore.isRemoveProcessing = true;
   serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
-    (item) =>
-      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
+    (item) => item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
   );
 
   await remove();

@@ -9,10 +9,7 @@ export class GethService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/data/geth";
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
 
     service.init(
       "GethService", // service

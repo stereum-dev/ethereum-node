@@ -499,7 +499,8 @@
     "sync": "Erro de Sincronização",
     "taskFail": "Tarefa Falhou",
     "stats": "STATUS: ABERTO",
-    "clientService": "CLIENTE / SERVIÇO"
+    "clientService": "CLIENTE / SERVIÇO",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "SEU CLIENTE Armazena dados da blockchain EM SEU SERVIDOR PARA QUE SEU NÓ POSSA servir a rede. isso é necessário para que seu nó ASSUMA sua FUNÇÃO DE ATTESTAÇÃO EM STAKING. AO USAR ESTA OPÇÃO VOCÊ ESTÁ DELETANDO OS DADOS ATUAIS DA BLOCKCHAIN DO SEU CLIENTE & USARÁ A OPÇÃO SELECIONADA COMO FONTE PARA SINCRONIZAR SEU NÓ NOVAMENTE.",

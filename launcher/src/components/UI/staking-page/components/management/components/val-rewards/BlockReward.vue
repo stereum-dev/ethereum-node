@@ -5,19 +5,10 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]">
-      <img
-        class="col-start-1 col-span-1 w-4 h-4"
-        src="/img/icon/staking-page-icons/cube.png"
-        alt="Block Icon"
-        @mousedown.prevent
-      />
-      <span class="col-start-2 col-span-full text-[9px] text-amber-300 font-semibold">{{
-        $t("stakingPage.reward")
-      }}</span>
+      <img class="col-start-1 col-span-1 w-4 h-4" src="/img/icon/staking-page-icons/cube.png" alt="Block Icon" @mousedown.prevent />
+      <span class="col-start-2 col-span-full text-[9px] text-amber-300 font-semibold">{{ $t("stakingPage.reward") }}</span>
     </div>
-    <div
-      class="w-full h-full col-start-3 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1"
-    >
+    <div class="w-full h-full col-start-3 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1">
       <span class="text-2xs text-gray-300 font-semibold">{{ totalRewards }}</span>
     </div>
   </div>

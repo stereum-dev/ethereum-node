@@ -6,11 +6,7 @@
     @mouseenter="footerStore.cursorLocation = `${props.setup.setupName}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
-    <img
-      class="max-w-10 col-start-1 col-span-full row-start-2 row-end-9 mx-auto"
-      :src="matchedNetworkIcon"
-      alt="icon"
-    />
+    <img class="max-w-10 col-start-1 col-span-full row-start-2 row-end-9 mx-auto" :src="matchedNetworkIcon" alt="icon" />
 
     <div
       class="col-start-1 col-span-full row-start-9 row-span-1 text-[8px] text-center font-semibold overflow-hidden whitespace-nowrap truncate flex justify-center items-center text-gray-400"
@@ -38,17 +34,13 @@ const props = defineProps({
 
 // find the matching network and its icon
 const matchedNetworkIcon = computed(() => {
-  const matchedNetwork = manageStore.networkList.find(
-    (network) => network.network === props.setup.network
-  );
+  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
   return matchedNetwork ? matchedNetwork.icon : "";
 });
 
 const setupType = computed(() => {
   let shortName;
-  const matchedNetwork = manageStore.networkList.find(
-    (network) => network.network === props.setup.network
-  );
+  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
 
   if (
     matchedNetwork?.network === "mainnet" ||

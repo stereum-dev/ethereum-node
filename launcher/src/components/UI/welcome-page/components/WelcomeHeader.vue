@@ -1,9 +1,7 @@
 import { ref } from 'vue';
 <template>
   <div class="col-start-1 col-end-25 row-start-1 row-span-1 grid grid-cols-12 p-1 bg-[#264744] rounded-t-md">
-    <div
-      class="justify-self-center col-start-4 col-end-10 row-start-1 row-span-1 self-center flex justify-center items-center"
-    >
+    <div class="justify-self-center col-start-4 col-end-10 row-start-1 row-span-1 self-center flex justify-center items-center">
       <span class="text-2xl text-gray-300 font-bold uppercase">{{ $t("welcomePage.welcomeStereum") }}</span>
     </div>
     <div

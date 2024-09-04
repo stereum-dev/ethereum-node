@@ -1,6 +1,6 @@
 export class TaskManager {
   constructor(nodeConnection) {
-    this.nodeConnection = nodeConnection
+    this.nodeConnection = nodeConnection;
     this.tasks = []; //all tasks
     this.polishedTasks = []; //all tasks prepared for displaying
     this.finishedPlaybooks = []; //finished playbook tasks
@@ -59,7 +59,7 @@ export class TaskManager {
           let logs = "";
           try {
             logs = await this.nodeConnection.playbookStatus(task.ref);
-          } catch (err) { }
+          } catch (err) {}
           let buffer = logs.split("\n\n");
           buffer.pop();
           task.subTasks = [];
@@ -127,8 +127,9 @@ export class TaskManager {
                 name: subTask.name,
                 action: subTask.name,
                 status: subTask.status ? "OK" : "FAILED",
-                data: `TASK: ${subTask.name}\nACTION: ${subTask.name}\nCATEGORY: ${subTask.status ? "OK" : "FAILED"
-                  }\nDATA: ${subTask.data ? subTask.data : "There is no data for these kind of tasks ¯\\_(ツ)_/¯"}`,
+                data: `TASK: ${subTask.name}\nACTION: ${subTask.name}\nCATEGORY: ${subTask.status ? "OK" : "FAILED"}\nDATA: ${
+                  subTask.data ? subTask.data : "There is no data for these kind of tasks ¯\\_(ツ)_/¯"
+                }`,
               };
             });
           if (this.finishedOtherTasks.map((other) => other.otherRunRef).includes(task.otherRunRef)) {

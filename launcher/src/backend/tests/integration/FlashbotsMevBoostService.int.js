@@ -11,16 +11,14 @@ jest.setTimeout(600000);
 
 test("mevboost installation", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Mevboost--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Mevboost--integration-test--ubuntu-2204");
 
   const serverSettings = {
     name: "Mevboost--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
-    ssh_keys: [
-      keyResponse.ssh_key.id
-    ],
+    ssh_keys: [keyResponse.ssh_key.id],
   };
 
   await testServer.create(serverSettings);
@@ -38,7 +36,7 @@ test("mevboost installation", async () => {
   const serviceManager = new ServiceManager(nodeConnection);
   await testServer.checkServerConnection(nodeConnection);
 
-  await nodeConnection.establish(taskManager)
+  await nodeConnection.establish(taskManager);
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -55,7 +53,11 @@ test("mevboost installation", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install mevboost
-  let mevboost = serviceManager.getService("FlashbotsMevBoostService", { network: "holesky", relays: "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-holesky.flashbots.net" })
+  let mevboost = serviceManager.getService("FlashbotsMevBoostService", {
+    network: "holesky",
+    relays:
+      "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-holesky.flashbots.net",
+  });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   mevboost.imageVersion = versions[mevboost.network][mevboost.service].slice(-1).pop();
@@ -82,7 +84,7 @@ test("mevboost installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection)
+  await testServer.finishTestGracefully(nodeConnection);
 
   //check docker container
   expect(docker.stdout).toMatch(/flashbots\/mev-boost/);
