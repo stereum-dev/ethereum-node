@@ -938,18 +938,9 @@ export class ServiceManager {
         );
 
       case "PrysmValidatorService":
-
         ports =
-          args.network === "devnet"
-            ? []
-            : [new ServicePort("127.0.0.1", args.port ? args.port : 7500, 7500, servicePortProtocol.tcp)];
-        return PrysmValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/prysm",
-          args.consensusClients
-        );
-
+          args.network === "devnet" ? [] : [new ServicePort("127.0.0.1", args.port ? args.port : 7500, 7500, servicePortProtocol.tcp)];
+        return PrysmValidatorService.buildByUserInput(args.network, ports, args.installDir + "/prysm", args.consensusClients);
 
       case "LodestarBeaconService":
         //LodestarBeaconService

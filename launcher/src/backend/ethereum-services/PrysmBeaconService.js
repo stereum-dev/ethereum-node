@@ -23,7 +23,6 @@ export class PrysmBeaconService extends NodeService {
         ? [new ServiceVolume(workingDir, configYamlDir)]
         : [new ServiceVolume(workingDir + "/beacon", dataDir), new ServiceVolume(workingDir + "/genesis", genesisDir)];
 
-
     //execution endpoint
     const executionEndpoint =
       network === "devnet"
@@ -156,9 +155,7 @@ export class PrysmBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-
     return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
-
   }
 
   getAvailablePorts() {

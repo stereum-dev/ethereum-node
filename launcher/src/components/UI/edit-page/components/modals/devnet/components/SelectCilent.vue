@@ -42,9 +42,7 @@ const sortedServices = computed(() => {
   return serviceStore.allServices
     .filter(
       (service) =>
-        service.service === "GethService" ||
-        service.service === "PrysmBeaconService" ||
-        service.service === "PrysmValidatorService"
+        service.service === "GethService" || service.service === "PrysmBeaconService" || service.service === "PrysmValidatorService"
     )
     .sort(sortServices);
 });

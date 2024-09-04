@@ -122,11 +122,7 @@
       <SetupInfos v-if="setupStore.selectedSetupInfos" />
       <!-- End Setup Infos -->
       <!-- Start Devnet Configs Modal -->
-      <DevnetSetup
-        v-if="setupStore.isDevnetSetupModalActive"
-        @close-window="closeDevnetModal"
-        @confirm-action="validationForm"
-      />
+      <DevnetSetup v-if="setupStore.isDevnetSetupModalActive" @close-window="closeDevnetModal" @confirm-action="validationForm" />
     </TransitionGroup>
     <LoaderAnime v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive" :anime="getAimationSrc" />
   </base-layout>
@@ -900,9 +896,7 @@ const deleteSetup = async (item) => {
   });
   const subtasks =
     item?.services.flatMap((service) => {
-      const matchedServices = manageStore.newConfiguration.filter(
-        (e) => e.config?.serviceID === service.config?.serviceID
-      );
+      const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
 
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,

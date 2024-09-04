@@ -43,17 +43,12 @@ defineExpose({ confirmSelection });
 
 <template>
   <div class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto">
-    <div
-      class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-8 flex flex-col justify-between items-center"
-    >
+    <div class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-8 flex flex-col justify-between items-center">
       <div class="w-full flex justify-between items-center">
         <div
           class="bg-[#336666] flex justify-center items-center shadow-md shadow-black p-1 h-12 w-[150px] font-[sans-serif] rounded-md overflow-hidden my-4 mx-auto active:shadow-none"
         >
-          <label
-            for="uploadFile"
-            class="text-white text-md px-2 py-2.5 outline-none rounded-md cursor-pointer mx-auto w-max block"
-          >
+          <label for="uploadFile" class="text-white text-md px-2 py-2.5 outline-none rounded-md cursor-pointer mx-auto w-max block">
             Import Genesis
           </label>
           <input id="uploadFile" type="file" class="hidden" accept=".json" @change="getGenesisFile" />
@@ -69,11 +64,9 @@ defineExpose({ confirmSelection });
         <div
           class="w-full h-9 bg-white text-[#333] flex items-center shadow-md shadow-black p-1 font-[sans-serif] rounded-md overflow-hidden my-4 mx-auto"
         >
-          <span
-            v-if="setupStore.devnetConfigData.uploadedGenesisConfig"
-            class="pl-2 text-xs font-semibold overflow-clip"
-            >{{ setupStore.devnetConfigData.uploadedGenesisConfig.path }}</span
-          >
+          <span v-if="setupStore.devnetConfigData.uploadedGenesisConfig" class="pl-2 text-xs font-semibold overflow-clip">{{
+            setupStore.devnetConfigData.uploadedGenesisConfig.path
+          }}</span>
           <span v-else-if="setupStore.isGenesisCreated">New Genesis will be created</span>
           <span v-else-if="errorMessage" class="text-red-500">{{ errorMessage }}</span>
           <span v-else> </span>

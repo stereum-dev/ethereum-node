@@ -61,9 +61,7 @@ const getSetupColor = (color) => {
     <div class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-9 flex justify-center items-center">
       <form class="w-full h-full rounded p-1 grid grid-cols-5 grid-rows-3 items-center gap-y-1">
         <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-2 grid-rows-2 items-center">
-          <span v-if="nameMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{
-            nameMsg
-          }}</span>
+          <span v-if="nameMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{ nameMsg }}</span>
           <span v-else class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-300 text-sm">Setup Name</span>
           <input
             id="setupName"
@@ -77,9 +75,7 @@ const getSetupColor = (color) => {
         </div>
 
         <div class="col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-10 grid-rows-2 items-center">
-          <span v-if="colorMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{
-            colorMsg
-          }}</span>
+          <span v-if="colorMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{ colorMsg }}</span>
           <span v-else class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-300 text-sm">Setup color</span>
           <div
             v-for="col in colorPalette"

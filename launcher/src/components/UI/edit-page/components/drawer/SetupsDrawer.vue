@@ -20,7 +20,6 @@
           <img class="col-start-1 col-span-1 w-5 self-center mx-auto" :src="network.icon" alt="Network" />
 
           <span class="col-start-2 col-span-full text-left text-xs font-sans text-gray-200 ml-1">{{ network?.name }} </span>
-
         </div>
       </div>
     </div>
@@ -28,9 +27,7 @@
     <div
       class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700"
     >
-
       <span class="text-2xs text-center text-gray-100 font-semibold font-sans uppercase mt-1">Custom Network</span>
-
 
       <div
         class="w-full h-8 bg-teal-700 rounded-sm text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"
