@@ -155,33 +155,25 @@ const getOsVersion = async () => {
   }
 };
 
-const fetchUpgradablePackages = async () => {
-  searchingForUpdatablePackages.value = true;
-
-  if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
-    try {
-      await getUpgradablePackages();
-
-      serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length;
-    } catch (error) {
-      console.error("Failed to fetch upgradable packages:", error);
-    } finally {
-      searchingForUpdatablePackages.value = false;
-    }
-  } else {
-    searchingForUpdatablePackages.value = false;
-  }
-};
-
 const updateAll = async () => {
   serverStore.isUpdateProcessing = true;
+  updateUIWithInProgressMessage("all packages");
   try {
-    await ControlService.updateOS();
+    const allPackageNames = serverStore.upgradablePackages.value.map((pkg) => pkg.packageName);
 
-    await fetchUpgradablePackages();
+    if (allPackageNames.length > 0) {
+      await ControlService.updatePackage(allPackageNames);
 
-    updateStatus.message = "All packages updated successfully!";
-    updateStatus.color = "text-green-500";
+      serverStore.upgradablePackages.value = [];
+
+      serverStore.numberOfUpdatablePackages = 0;
+
+      updateStatus.message = "All packages updated successfully!";
+      updateStatus.color = "text-green-500";
+    } else {
+      updateStatus.message = "No packages to update.";
+      updateStatus.color = "text-red-500";
+    }
   } catch (error) {
     console.error("Failed to update all packages:", error);
     updateStatus.message = "Failed to update all packages.";
@@ -193,21 +185,24 @@ const updateAll = async () => {
 
 const updatePackage = async (item) => {
   serverStore.isUpdateProcessing = true;
-  const pkgName = [];
-  serverStore.upgradablePackages.forEach((el) => {
-    if (el.packageName === item.packageName) {
-      pkgName.push(el.packageName);
-    }
-  });
 
-  updateUIWithInProgressMessage(pkgName);
+  const pkgName = [item.packageName];
+
+  updateUIWithInProgressMessage(pkgName.join(", "));
   try {
-    const result = await ControlService.updatePackage(pkgName);
-    if (result) {
-      await getUpgradablePackages(); // Refresh the list
-    }
+    await ControlService.updatePackage(pkgName);
+
+    serverStore.upgradablePackages.value = serverStore.upgradablePackages.value.filter((pkg) => pkg.packageName !== item.packageName);
+
+    serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length;
+
+    updateStatus.message = `${item.packageName} updated successfully!`;
+
+    updateStatus.color = "text-green-500";
   } catch (error) {
-    console.error(`Failed to update ${pkgName}:`, error);
+    console.error(`Failed to update ${item.packageName}:`, error);
+    updateStatus.message = `Failed to update ${item.packageName}.`;
+    updateStatus.color = "text-red-500";
   } finally {
     serverStore.isUpdateProcessing = false;
   }
