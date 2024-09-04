@@ -7,6 +7,7 @@ export class GethService extends NodeService {
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
+
     const JWTDir = network === "devnet" ? "/execution/engine.jwt" : "/engine.jwt";
     const dataDir = network === "devnet" ? "/execution" : "/opt/data/geth";
     const volumes =
@@ -62,6 +63,7 @@ export class GethService extends NodeService {
           ];
 
     const entrypoint = network === "devnet" ? [] : ["geth"];
+
 
     service.init(
       "GethService", // service

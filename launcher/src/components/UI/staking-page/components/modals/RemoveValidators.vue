@@ -34,9 +34,7 @@
             v-if="stakingStore.removeKeys.length === 0 && stakingStore.removeResponse.length > 0 && localKeyNo"
             class="h-7 w-full col-start-1 col-span-full row-span-1 flex flex-col justify-center items-center px-3 rounded-md bg-[#242628] p-1 gap-y-1 mx-1"
           >
-            <span v-if="localKeyNo" class="text-sm text-red-400 text-left font-semibold">{{
-              `${localKeyNo} key(s) deleted `
-            }}</span>
+            <span v-if="localKeyNo" class="text-sm text-red-400 text-left font-semibold">{{ `${localKeyNo} key(s) deleted ` }}</span>
           </div>
           <div
             v-if="stakingStore.removeKeys.length === 0 && stakingStore.removeResponse.length > 0 && remoteKeyNo"
@@ -55,11 +53,7 @@
             <div>
               <input id="yes" v-model="stakingStore.pickedSlashing" type="radio" value="yes" class="peer hidden" />
 
-              <label
-                for="yes"
-                class="flex justify-center items-center space-x-2"
-                @click="stakingStore.pickedSlashing === 'yes'"
-              >
+              <label for="yes" class="flex justify-center items-center space-x-2" @click="stakingStore.pickedSlashing === 'yes'">
                 <span
                   class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                   :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'yes' }"
@@ -71,11 +65,7 @@
             <div>
               <input id="no" v-model="stakingStore.pickedSlashing" type="radio" value="no" class="peer hidden" />
 
-              <label
-                for="no"
-                class="flex justify-center items-center space-x-2"
-                @click="stakingStore.pickedSlashing === 'no'"
-              >
+              <label for="no" class="flex justify-center items-center space-x-2" @click="stakingStore.pickedSlashing === 'no'">
                 <span
                   class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                   :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'no' }"

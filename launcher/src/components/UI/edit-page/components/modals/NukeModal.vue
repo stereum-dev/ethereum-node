@@ -77,9 +77,7 @@ export default {
       return this.loadingDump ? "animate-spin" : "";
     },
     loadingIconsClass() {
-      return this.loadingDump
-        ? "/img/icon/loading-icons/loading-circle.png"
-        : "/img/icon/service-log-icons/150-log-export-button.png";
+      return this.loadingDump ? "/img/icon/loading-icons/loading-circle.png" : "/img/icon/service-log-icons/150-log-export-button.png";
     },
   },
   mounted() {

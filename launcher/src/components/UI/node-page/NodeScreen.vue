@@ -251,9 +251,7 @@ const closeExpertMode = () => {
 // ********** LOGS **********
 
 const exportLogs = async (client) => {
-  const currentService = nodeStore.serviceLogs.find(
-    (service) => service.config?.serviceID === client.config?.serviceID
-  );
+  const currentService = nodeStore.serviceLogs.find((service) => service.config?.serviceID === client.config?.serviceID);
 
   const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
 

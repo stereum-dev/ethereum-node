@@ -9,10 +9,7 @@ export class ErigonService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/data/erigon";
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
 
     service.init(
       "ErigonService", // service
@@ -28,7 +25,7 @@ export class ErigonService extends NodeService {
         `--authrpc.vhosts=*`,
         `--authrpc.port=8551`,
         `--authrpc.jwtsecret=/engine.jwt`,
-        '--rpc.returndata.limit=1000000',
+        "--rpc.returndata.limit=1000000",
         `--ws`,
         `--http`,
         `--http.vhosts=*`,
@@ -39,8 +36,8 @@ export class ErigonService extends NodeService {
         `--metrics`,
         `--metrics.addr=0.0.0.0`,
         `--metrics.port=6060`,
-        '--db.pagesize=16K',
-        '--db.size.limit=8TB',
+        "--db.pagesize=16K",
+        "--db.size.limit=8TB",
       ], // command
       [], // entrypoint
       null, // env
@@ -85,12 +82,12 @@ export class ErigonService extends NodeService {
   }
 
   switchImageTag(arch) {
-    const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"] //Possible arm architectures: https://stackoverflow.com/questions/45125516/possible-values-for-uname-m
+    const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"]; //Possible arm architectures: https://stackoverflow.com/questions/45125516/possible-values-for-uname-m
     if (armArchs.includes(arch)) {
       this.imageVersion = this.imageVersion.endsWith("-arm64") ? this.imageVersion : this.imageVersion + "-arm64";
       this.imageVersion = this.imageVersion.startsWith("v") ? this.imageVersion.slice(1) : this.imageVersion;
     } else {
-      this.imageVersion = this.imageVersion.endsWith("-arm64") ? this.imageVersion.replace("-arm64", "") : this.imageVersion
+      this.imageVersion = this.imageVersion.endsWith("-arm64") ? this.imageVersion.replace("-arm64", "") : this.imageVersion;
       this.imageVersion = this.imageVersion.startsWith("v") ? this.imageVersion : "v" + this.imageVersion;
     }
   }
@@ -116,8 +113,9 @@ export class ErigonService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${
+      this.id
+    }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }
 

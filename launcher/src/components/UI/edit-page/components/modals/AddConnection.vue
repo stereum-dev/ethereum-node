@@ -17,9 +17,7 @@ import { onMounted, computed } from 'vue';
         class="w-full h-[250px] overflow-y-auto overflow-x-hidden flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
       >
         <div
-          v-for="option in list.filter(
-            (e) => e.category === 'consensus' && e.setupId === setupStore.selectedSetup.setupId
-          )"
+          v-for="option in list.filter((e) => e.category === 'consensus' && e.setupId === setupStore.selectedSetup.setupId)"
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
@@ -38,10 +36,7 @@ import { onMounted, computed } from 'vue';
               <div class="font-semibold capitalize">
                 <span> {{ option.name }}</span>
               </div>
-              <div
-                class="text-xs font-normal overflow-x-hidden"
-                :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'"
-              >
+              <div class="text-xs font-normal overflow-x-hidden" :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'">
                 <span class="min-w-[120px] min-h-[18px]"> {{ shortID(option) }}</span>
               </div>
             </div>
@@ -60,9 +55,7 @@ import { onMounted, computed } from 'vue';
         class="w-full h-[250px] overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1"
       >
         <div
-          v-for="option in list.filter(
-            (e) => e.category === 'execution' && e.setupId === setupStore.selectedSetup.setupId
-          )"
+          v-for="option in list.filter((e) => e.category === 'execution' && e.setupId === setupStore.selectedSetup.setupId)"
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
@@ -81,10 +74,7 @@ import { onMounted, computed } from 'vue';
               <div class="font-semibold capitalize">
                 <span> {{ option.name }}</span>
               </div>
-              <div
-                class="text-xs font-normal overflow-x-hidden"
-                :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'"
-              >
+              <div class="text-xs font-normal overflow-x-hidden" :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'">
                 <span> {{ shortID(option) }}</span>
               </div>
             </div>
@@ -103,9 +93,7 @@ import { onMounted, computed } from 'vue';
         class="w-full h-[250px] flex flex-col justify-start items-center mx-auto rounded-lg space-y-2 mt-1 overflow-x-hidden overflow-y-auto"
       >
         <div
-          v-for="option in list.filter(
-            (e) => e.category === 'validator' && e.setupId === setupStore.selectedSetup.setupId
-          )"
+          v-for="option in list.filter((e) => e.category === 'validator' && e.setupId === setupStore.selectedSetup.setupId)"
           :key="option.service"
           class="group mx-auto rounded-md cursor-pointer transition duration-200 shadow-xl shadow-[#141516] p-2"
           :class="{
@@ -124,10 +112,7 @@ import { onMounted, computed } from 'vue';
               <div class="font-semibold capitalize">
                 <span> {{ option.name }}</span>
               </div>
-              <div
-                class="text-xs font-normal overflow-x-hidden"
-                :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'"
-              >
+              <div class="text-xs font-normal overflow-x-hidden" :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'">
                 <span> {{ shortID(option) }}</span>
               </div>
             </div>
@@ -135,10 +120,7 @@ import { onMounted, computed } from 'vue';
         </div>
       </div>
     </div>
-    <div
-      v-if="list.length && list.some((e) => e.category === 'service')"
-      class="w-1/3 h-[280px] flex flex-col justify-start items-center"
-    >
+    <div v-if="list.length && list.some((e) => e.category === 'service')" class="w-1/3 h-[280px] flex flex-col justify-start items-center">
       <div class="w-full h-5 flex justify-center items-center mt-2">
         <span class="text-lg font-semibold text-gray-500">{{ "Other Services" }}</span>
       </div>
@@ -165,10 +147,7 @@ import { onMounted, computed } from 'vue';
               <div class="font-semibold capitalize">
                 <span> {{ option.name }}</span>
               </div>
-              <div
-                class="text-xs font-normal overflow-x-hidden"
-                :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'"
-              >
+              <div class="text-xs font-normal overflow-x-hidden" :class="option.isConnected ? 'text-gray-800' : 'text-gray-400'">
                 <span> {{ shortID(option) }}</span>
               </div>
             </div>
@@ -254,9 +233,7 @@ const getConnectionOptions = () => {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
       if (props.client.service === "LidoObolExitService") {
-        return manageStore.newConfiguration.filter(
-          (e) => /ValidatorEjector|Charon/.test(e.service) || e.category === "consensus"
-        );
+        return manageStore.newConfiguration.filter((e) => /ValidatorEjector|Charon/.test(e.service) || e.category === "consensus");
       }
       if (props.client.service === "ValidatorEjectorService") {
         return manageStore.newConfiguration.filter((e) => /consensus|execution/.test(e.category));

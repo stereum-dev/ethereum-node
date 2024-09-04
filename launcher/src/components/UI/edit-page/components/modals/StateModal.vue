@@ -4,9 +4,7 @@
     class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
   >
     <div class="absolute bg-black opacity-80 inset-0 z-0" @click="$emit('closeWindow')"></div>
-    <div
-      class="w-full max-w-lg p-5 relative mx-auto my-auto rounded-[35px] shadow-lg bg-white border-4 border-gray-400"
-    >
+    <div class="w-full max-w-lg p-5 relative mx-auto my-auto rounded-[35px] shadow-lg bg-white border-4 border-gray-400">
       <!--content-->
       <div class="">
         <!--body-->
@@ -45,9 +43,7 @@
           >
             {{ $t("editModals.trnOff") }}
           </button>
-          <span class="text-xs flex justify-center items-center text-red-500 mx-auto">{{
-            $t("editModals.clckOutside")
-          }}</span>
+          <span class="text-xs flex justify-center items-center text-red-500 mx-auto">{{ $t("editModals.clckOutside") }}</span>
         </div>
       </div>
     </div>

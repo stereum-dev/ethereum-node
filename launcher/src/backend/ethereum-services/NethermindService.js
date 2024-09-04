@@ -9,10 +9,7 @@ export class NethermindService extends NodeService {
     const dataDir = "/opt/app/data";
     const JWTDir = "/engine.jwt";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
 
     service.init(
       "NethermindService", // service
@@ -83,7 +80,6 @@ export class NethermindService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }

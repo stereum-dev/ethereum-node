@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="h-full col-start-1 col-span-full row-start-2 row-span-2 rounded-md grid grid-cols-4 grid-rows-2 items-center"
-  >
+  <div class="h-full col-start-1 col-span-full row-start-2 row-span-2 rounded-md grid grid-cols-4 grid-rows-2 items-center">
     <CommitteeEpoch
       :epoch="props.epoch"
       @mouseenter="footerStore.cursorLocation = `${upcomingSync}`"

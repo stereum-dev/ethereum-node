@@ -3,10 +3,7 @@
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="restart-icon">
-        <img
-          :src="mainIcon ? '/img/icon/node-page-icons/turn-on.png' : '/img/icon/node-page-icons/turn-off.png'"
-          alt="restart warning"
-        />
+        <img :src="mainIcon ? '/img/icon/node-page-icons/turn-on.png' : '/img/icon/node-page-icons/turn-off.png'" alt="restart warning" />
       </div>
       <div class="text-container">
         <div class="toggle-message">

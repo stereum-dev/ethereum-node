@@ -3,9 +3,7 @@
     class="min-w-screen h-screen animated fadeIn faster fixed left-0 top-0 flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover"
   >
     <div class="absolute bg-black opacity-80 inset-0 z-0" @click="closeModal"></div>
-    <div
-      class="w-2/3 min-h-[400px] py-1 px-2 relative mx-auto my-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-400"
-    >
+    <div class="w-2/3 min-h-[400px] py-1 px-2 relative mx-auto my-auto rounded-[55px] shadow-lg bg-[#1c1d1d] border-4 border-gray-400">
       <div class="flex flex-col justify-between gap-5">
         <div class="text-center p-2 flex-auto justify-center space-y-4">
           <div class="flex flex-col justify-center items-center py-2 px-4 mx-auto">

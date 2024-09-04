@@ -80,8 +80,10 @@ export class PrysmValidatorService extends NodeService {
       1, // configVersion
       image, //image
       "v5.1.0", //imageVersion
+
       cmd, //command
       entrypoint, // entrypoint
+
       null, // env
       ports, //ports
       volumes, //volumes

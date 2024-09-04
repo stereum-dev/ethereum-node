@@ -28,9 +28,7 @@
           @mouseleave="footerStore.cursorLocation = ''"
         />
 
-        <div
-          class="w-full h-full col-start-10 col-span-full row-start-2 row-span-2 flex justify-evenly items-center relative"
-        >
+        <div class="w-full h-full col-start-10 col-span-full row-start-2 row-span-2 flex justify-evenly items-center relative">
           <img
             class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
             :src="getTrashImg"
@@ -102,11 +100,9 @@
         </div>
       </div>
       <div class="col-start-7 col-span-full row-start-2 row-span-1 grid grid-cols-12 grid-rows-3">
-        <label
-          for="port"
-          class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2"
-          >{{ $t("multiServer.port") }}</label
-        >
+        <label for="port" class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold mb-2">{{
+          $t("multiServer.port")
+        }}</label>
 
         <input
           id="port"
@@ -160,13 +156,7 @@
           <span
             class="absolute inset-y-0 start-0 z-10 m-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:start-6 peer-checked:text-green-600"
           >
-            <svg
-              data-unchecked-icon
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
+            <svg data-unchecked-icon xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -174,13 +164,7 @@
               />
             </svg>
 
-            <svg
-              data-checked-icon
-              xmlns="http://www.w3.org/2000/svg"
-              class="hidden h-4 w-4"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
+            <svg data-checked-icon xmlns="http://www.w3.org/2000/svg" class="hidden h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -193,10 +177,7 @@
         </label>
       </div>
 
-      <div
-        v-if="useSSHKey && !usePassword"
-        class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div v-if="useSSHKey && !usePassword" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="keypath"
           class="col-start-1 col-end-12 row-start-1 row-span-1 block text-xs font-bold"
@@ -225,15 +206,10 @@
           <input id="keypath-file" type="file" class="hidden" @change="handleFileSelect" />
         </label>
       </div>
-      <div
-        v-if="useSSHKey && !usePassword"
-        class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
-        <label
-          for="password"
-          class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
-          >{{ $t("multiServer.pass") }}</label
-        >
+      <div v-if="useSSHKey && !usePassword" class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 grid-rows-3">
+        <label for="password" class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold">{{
+          $t("multiServer.pass")
+        }}</label>
         <input
           id="password"
           v-model="serverStore.loginState.passphrase"
@@ -244,10 +220,7 @@
           @mouseleave="footerStore.cursorLocation = ''"
         />
       </div>
-      <div
-        v-if="usePassword && !useSSHKey"
-        class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3"
-      >
+      <div v-if="usePassword && !useSSHKey" class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 grid-rows-3">
         <label
           for="password"
           class="col-start-1 col-span-full row-start-1 row-span-1 block text-gray-300 text-xs font-bold"
@@ -271,11 +244,7 @@
         <button
           v-if="!serverStore.connectingProcess"
           class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
-          :class="
-            serverStore.isIpScannerModalActive || buttonDisabled
-              ? 'bg-gray-400 opacity-50 pointer-events-none '
-              : 'bg-gray-200'
-          "
+          :class="serverStore.isIpScannerModalActive || buttonDisabled ? 'bg-gray-400 opacity-50 pointer-events-none ' : 'bg-gray-200'"
           type="submit"
           :disabled="buttonDisabled"
         >
@@ -286,10 +255,7 @@
           v-else
           class="w-full h-[50px] bg-teal-700 text-gray-200 font-semibold py-1 px-4 rounded-md pointer-events-none flex justify-center items-center text-md"
         >
-          <svg
-            class="animate-spin h-6 w-6 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full"
-            viewBox="0 0 24 24"
-          ></svg>
+          <svg class="animate-spin h-6 w-6 mr-3 border-2 border-gray-400 border-tr-2 border-r-white rounded-full" viewBox="0 0 24 24"></svg>
           {{ $t("multiServer.conecting") }}
         </div>
       </div>

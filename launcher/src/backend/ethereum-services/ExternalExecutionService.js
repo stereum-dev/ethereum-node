@@ -7,10 +7,7 @@ export class ExternalExecutionService extends NodeService {
     service.setId();
 
     const workingDir = service.buildWorkingDir(dir);
-    const volumes = [
-      new ServiceVolume(workingDir + "/link.txt", ""),
-      new ServiceVolume(workingDir + "/engine.jwt", ""),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/link.txt", ""), new ServiceVolume(workingDir + "/engine.jwt", "")];
 
     service.init(
       "ExternalExecutionService", // service

@@ -12,16 +12,14 @@ jest.setTimeout(1000000);
 
 test("lighthouse validator import", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Lighthouse--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Lighthouse--integration-test--ubuntu-2204");
 
   const serverSettings = {
     name: "Lighthouse--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx31",
     start_after_create: true,
-    ssh_keys: [
-      keyResponse.ssh_key.id
-    ],
+    ssh_keys: [keyResponse.ssh_key.id],
   };
 
   await testServer.create(serverSettings);
@@ -39,7 +37,7 @@ test("lighthouse validator import", async () => {
   const serviceManager = new ServiceManager(nodeConnection);
   await testServer.checkServerConnection(nodeConnection);
 
-  await nodeConnection.establish(taskManager)
+  await nodeConnection.establish(taskManager);
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -55,22 +53,27 @@ test("lighthouse validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
 
+  let lhBC = serviceManager.getService("LighthouseBeaconService", {
+    network: "holesky",
+    installDir: "/opt/stereum",
+    executionClients: [geth],
+  });
 
-  let lhBC = serviceManager.getService("LighthouseBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
-
-
-  let lhVC = serviceManager.getService("LighthouseValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [lhBC] })
+  let lhVC = serviceManager.getService("LighthouseValidatorService", {
+    network: "holesky",
+    installDir: "/opt/stereum",
+    consensusClients: [lhBC],
+  });
 
   //get latest versions
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
-  lhBC.imageVersion = versions[lhBC.network][lhBC.service].slice(-1).pop()
-  lhVC.imageVersion = versions[lhVC.network][lhVC.service].slice(-1).pop()
+  lhBC.imageVersion = versions[lhBC.network][lhBC.service].slice(-1).pop();
+  lhVC.imageVersion = versions[lhVC.network][lhVC.service].slice(-1).pop();
 
-  await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
-    await serviceManager.manageServiceState(geth.id, "started");
+  await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()), await serviceManager.manageServiceState(geth.id, "started");
 
   //write configs for lighhouse BC and VC
   await nodeConnection.writeServiceConfiguration(lhBC.buildConfiguration());
@@ -92,7 +95,7 @@ test("lighthouse validator import", async () => {
       '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "fa52987837af01ec48e2b21f2078acef3368983943751013758052e07dae841d"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "8c055c8c504cd3ad20bcb1101431b2b1a506b1a4d0efdbd294d75c39c0f2268b"}}, "description": "", "pubkey": "948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458", "path": "m/12381/3600/2/0/0", "uuid": "c7521eed-533a-4fd1-90b7-ad1aa0f24a2d", "version": 4}',
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
-  })
+  });
   await validatorAccountManager.importKey(lhVC.id);
 
   //get logs
@@ -127,12 +130,10 @@ test("lighthouse validator import", async () => {
 
   const ufw = await nodeConnection.sshService.exec("ufw status");
   const docker = await nodeConnection.sshService.exec("docker ps");
-  const api_token = await nodeConnection.sshService.exec(
-    `cat /opt/stereum/lighthouse-${lhVC.id}/validator/validators/api-token.txt`
-  );
+  const api_token = await nodeConnection.sshService.exec(`cat /opt/stereum/lighthouse-${lhVC.id}/validator/validators/api-token.txt`);
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection)
+  await testServer.finishTestGracefully(nodeConnection);
 
   //check ufw
   expect(ufw.stdout).toMatch(/9000\/tcp/);
@@ -169,5 +170,4 @@ test("lighthouse validator import", async () => {
   expect(VCstatus.stderr).toMatch(/HTTP API started/);
   expect(VCstatus.stderr).toMatch(/Importing keystores via standard HTTP API, count: 3/);
   expect(VCstatus.stderr).toMatch(/Enabled validator/);
-
 });

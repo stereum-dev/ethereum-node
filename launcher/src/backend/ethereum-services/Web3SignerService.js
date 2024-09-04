@@ -13,10 +13,7 @@ export class Web3SignerService extends NodeService {
     const dataDir = "/opt/web3signer/data";
     const keysDir = "/opt/web3signer/keys";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/keys", keysDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/keys", keysDir)];
 
     service.init(
       "Web3SignerService", // service
@@ -75,10 +72,7 @@ export class Web3SignerService extends NodeService {
   }
 
   getAvailablePorts() {
-    return [
-      new ServicePortDefinition(9000, "tcp", "REST API Port"),
-      new ServicePortDefinition(9001, "tcp", "METRICS Port"),
-    ];
+    return [new ServicePortDefinition(9000, "tcp", "REST API Port"), new ServicePortDefinition(9001, "tcp", "METRICS Port")];
   }
 }
 

@@ -9,10 +9,7 @@
   >
     <div
       class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-[10px] font-semibold capitalize"
-      :class="[
-        setupStore.getBGColor(setupStore.selectedSetup?.color),
-        setupStore.getTextColor(setupStore.selectedSetup?.color),
-      ]"
+      :class="[setupStore.getBGColor(setupStore.selectedSetup?.color), setupStore.getTextColor(setupStore.selectedSetup?.color)]"
     >
       <span> {{ props.client.name }}</span>
 
@@ -35,16 +32,10 @@
         @mouseenter="footerStore.cursorLocation = ` ${getKeyNumbers} ${keyMsg}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img
-          class="w-5"
-          src="/img/icon/node-page-icons/validator-key-icon.png"
-          alt="icon"
-        />
-        <span
-          class="text-md font-semibold"
-          :class="props.client.state === 'running' ? 'text-green-500' : 'text-red-600 '"
-          >{{ getKeyNumbers }}</span
-        >
+        <img class="w-5" src="/img/icon/node-page-icons/validator-key-icon.png" alt="icon" />
+        <span class="text-md font-semibold" :class="props.client.state === 'running' ? 'text-green-500' : 'text-red-600 '">{{
+          getKeyNumbers
+        }}</span>
       </div>
     </div>
 
@@ -135,9 +126,7 @@ const getPercent = () => {
   const syncResult = useDeepClone(controlStore.syncstatus);
   if (syncResult?.code === 0) {
     const flatArray = syncResult.data.flat();
-    let data = flatArray.find(
-      (e) => e.title.toLowerCase() === props.client.name.toLowerCase()
-    );
+    let data = flatArray.find((e) => e.title.toLowerCase() === props.client.name.toLowerCase());
 
     if (data) {
       const lo = parseInt(data.frstVal);
@@ -184,10 +173,7 @@ const clientStatus = computed(() => {
     return "w-5 h-[16px] bg-green-500 border border-green-500 rounded-r-full";
   } else if (props.client.state === "restarting") {
     return "w-5 h-[16px] bg-orange-500 border border-orange-500 rounded-r-full";
-  } else if (
-    props.client.service === "ExternalExecutionService" ||
-    props.client.service === "ExternalConsensusService"
-  ) {
+  } else if (props.client.service === "ExternalExecutionService" || props.client.service === "ExternalConsensusService") {
     return "w-5 h-[16px] bg-gray-400 border border-gray-400 rounded-r-full";
   }
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";

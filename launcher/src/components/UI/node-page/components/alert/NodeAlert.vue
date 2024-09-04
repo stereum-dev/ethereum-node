@@ -1,9 +1,7 @@
 <template>
   <div class="status-box flex flex-col justify-between items-center">
     <div class="status-box_header h-[8%] w-full flex">
-      <div
-        class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pl-2"
-      >
+      <div class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pl-2">
         <div class="icon-line">
           <div
             class="status-icon"
@@ -37,11 +35,7 @@
       <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
         <div class="volBtn cursor-pointer w-8" @click="volToggle">
           <img
-            :src="
-              volState
-                ? '/img/icon/node-alert-icons/alert-settings.png'
-                : '/img/icon/node-alert-icons/alert-settings-mute.png'
-            "
+            :src="volState ? '/img/icon/node-alert-icons/alert-settings.png' : '/img/icon/node-alert-icons/alert-settings-mute.png'"
             alt="green"
           />
         </div>
@@ -51,11 +45,7 @@
     <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md overflow-x-hidden overflow-y-auto">
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
       <div v-show="!loadingAlerts" class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]">
-        <router-link
-          v-if="storageWarning && !alertShowState.includes('yellow')"
-          to="/control"
-          class="status-message_yellow h-9"
-        >
+        <router-link v-if="storageWarning && !alertShowState.includes('yellow')" to="/control" class="status-message_yellow h-9">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
           </div>
@@ -66,11 +56,7 @@
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </router-link>
-        <router-link
-          v-if="cpuWarning && !alertShowState.includes('yellow')"
-          to="/control"
-          class="status-message_yellow h-9"
-        >
+        <router-link v-if="cpuWarning && !alertShowState.includes('yellow')" to="/control" class="status-message_yellow h-9">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
           </div>
@@ -223,11 +209,7 @@
           </div>
         </div>
 
-        <router-link
-          v-if="synchronizationErrorControl && !alertShowState.includes('red')"
-          to="/control"
-          class="status-message_red h-9"
-        >
+        <router-link v-if="synchronizationErrorControl && !alertShowState.includes('red')" to="/control" class="status-message_red h-9">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
           </div>
@@ -240,11 +222,7 @@
             </div>
           </div>
         </router-link>
-        <div
-          v-if="errorAlarm && !alertShowState.includes('red')"
-          class="status-message_red h-9"
-          @click="isTaskModalActive = true"
-        >
+        <div v-if="errorAlarm && !alertShowState.includes('red')" class="status-message_red h-9" @click="isTaskModalActive = true">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
           </div>
@@ -635,9 +613,7 @@ export default {
             });
           }
         }
-        const notSetAddresses = addresses.filter(
-          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
-        );
+        const notSetAddresses = addresses.filter((validator) => validator.address === "0x0000000000000000000000000000000000000000");
         this.notSetAddresses = notSetAddresses;
       }
     },

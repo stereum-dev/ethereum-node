@@ -1,20 +1,14 @@
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12">
     <CustomHeader />
-    <div
-      class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
-    >
-      <div
-        class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-4"
-      >
+    <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
+      <div class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-4">
         <div class="col-start-1 col-span-full row-start-1 row-span-2 flex justify-center items-center p-2">
           <span class="text-left text-gray-300 text-md font-sans font-semibold">
             {{ $t("customInstallation.customInstallationText") }}</span
           >
         </div>
-        <div
-          class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7 relative duration-500"
-        >
+        <div class="col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-7 relative duration-500">
           <!-- <div
             class="col-start-3 col-span-8 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
             @click="networkListDropdown = !networkListDropdown"
@@ -66,9 +60,7 @@
               >
             </li>
           </TransitionGroup> -->
-          <div
-            class="w-full col-start-1 col-span-full row-start-2 row-span-full mx-auto flex flex-col justify-start items-center px-2"
-          >
+          <div class="w-full col-start-1 col-span-full row-start-2 row-span-full mx-auto flex flex-col justify-start items-center px-2">
             <div class="w-full h-10 flex justify-center items-center">
               <span class="text-center text-gray-200 text-md">{{ inputTitle }}:</span>
             </div>

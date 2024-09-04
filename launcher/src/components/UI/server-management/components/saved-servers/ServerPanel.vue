@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md"
-  >
+  <div class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md">
     <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
       <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("multiServer.saveServerCon") }}</span>
     </div>
@@ -23,14 +21,7 @@
         <button type="button" class="text-gray-600 hover:text-gray-700">
           <span class="sr-only">{{ $t("multiServer.serch") }} </span>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-4 w-4"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -94,9 +85,7 @@ const getFilteredServers = () => {
   if (!searchQuery.value) {
     return serverStore.savedServers?.savedConnections;
   }
-  return serverStore.savedServers.savedConnections.filter((server) =>
-    server.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  return serverStore.savedServers.savedConnections.filter((server) => server.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
 };
 
 // Watch for changes in both searchQuery and serverStore.refreshServers
@@ -130,9 +119,7 @@ onMounted(async () => {
 const loadStoredConnections = async () => {
   serverStore.savedServers = await ControlService.readConfig();
 
-  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find(
-    (item) => item.host === controlStore.ipAddress
-  );
+  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find((item) => item.host === controlStore.ipAddress);
 
   serverStore.refreshServers = false;
 };

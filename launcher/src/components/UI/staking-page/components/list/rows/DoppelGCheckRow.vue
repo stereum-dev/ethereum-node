@@ -6,9 +6,7 @@ import { computed } from 'vue';
     <div
       class="w-6 h-6 rounded-full cursor-pointer bg-white col-start-1 col-span-1 self-center overflow-hidden flex justify-center items-center"
     >
-      <span
-        class="w-4 h-4 rounded-full animate-spin border border-blue-500 border-b-transparent border-r-transparent"
-      ></span>
+      <span class="w-4 h-4 rounded-full animate-spin border border-blue-500 border-b-transparent border-r-transparent"></span>
     </div>
     <div
       class="col-start-2 col-end-16 w-full rounded-full self-center overflow-hidden flex justify-start items-center"

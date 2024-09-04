@@ -23,10 +23,7 @@ test("buildConfiguration", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
 
@@ -82,10 +79,7 @@ test("buildConsensusClientWsEndpointUrl", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
 
@@ -115,10 +109,7 @@ test("getAvailablePorts", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const nimbusServicePorts = NimbusBeaconService.buildByUserInput(
@@ -147,10 +138,7 @@ test("network", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const nimbusService = NimbusBeaconService.buildByUserInput(

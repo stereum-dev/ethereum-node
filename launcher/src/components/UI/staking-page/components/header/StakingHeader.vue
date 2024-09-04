@@ -9,12 +9,7 @@
       <NetworkStatus :copatible-size="getNetworkSize" />
     </div>
     <div class="col-start-18 col-span-full h-8 flex justify-end items-center">
-      <SetupDropdown
-        :list="setupList"
-        :new-height="newHeight"
-        @select-setup="selectSetup"
-        @server-view="serverView"
-      />
+      <SetupDropdown :list="setupList" :new-height="newHeight" @select-setup="selectSetup" @server-view="serverView" />
     </div>
   </div>
 </template>

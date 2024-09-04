@@ -12,13 +12,7 @@
       @modify-service="modifyService"
       @remove-lines="removeConnectionLines"
     />
-    <SetupBody
-      v-else
-      @delete-setup="deleteSetup"
-      @connect-setup="connectSetup"
-      @setup-infos="setupInfos"
-      @open-configs="openConfigs"
-    />
+    <SetupBody v-else @delete-setup="deleteSetup" @connect-setup="connectSetup" @setup-infos="setupInfos" @open-configs="openConfigs" />
   </div>
 </template>
 

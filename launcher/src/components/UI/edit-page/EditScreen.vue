@@ -53,11 +53,7 @@
             @create-devnet="createDevnetModal"
             @get-network="getSetupNetwork"
           />
-          <ServicesDrawer
-            v-else-if="manageStore.isServicesDrawerActive"
-            :dragging="startDrag"
-            @add-services="addServices"
-          />
+          <ServicesDrawer v-else-if="manageStore.isServicesDrawerActive" :dragging="startDrag" @add-services="addServices" />
         </template>
       </drawer-box>
     </transition>
@@ -65,11 +61,7 @@
     <!-- Custom Modals -->
     <TransitionGroup name="fadeModal">
       <!-- Start Network Switch Modal -->
-      <NetworkModal
-        v-if="manageStore.displayNetworkList"
-        @close-window="closeNetworkModal"
-        @switch-confirm="switchNetworkConfirm"
-      />
+      <NetworkModal v-if="manageStore.displayNetworkList" @close-window="closeNetworkModal" @switch-confirm="switchNetworkConfirm" />
       <!-- End Switch Network Modal -->
       <!-- Start Switch Client Modal -->
       <SwitchModal
@@ -80,12 +72,7 @@
       />
       <!-- End Switch Client Modal -->
       <!-- Start Info Modal -->
-      <InfoModal
-        v-if="isInfoModalOpen"
-        :client="clientForInfo"
-        @close-window="closeInfoModal"
-        @ok-button="isInfoModalOpen = false"
-      />
+      <InfoModal v-if="isInfoModalOpen" :client="clientForInfo" @close-window="closeInfoModal" @ok-button="isInfoModalOpen = false" />
       <!-- End Info Modal -->
       <!-- Start Modify Services Modal -->
       <ModifyModal
@@ -328,9 +315,7 @@ const switchClientModalhandler = (item) => {
 
 const switchClientConfirm = (properties) => {
   isSwitchModalOpen.value = false;
-  const current = manageStore.newConfiguration.find(
-    (e) => e?.config.serviceID === properties.itemToReplace.config.serviceID
-  );
+  const current = manageStore.newConfiguration.find((e) => e?.config.serviceID === properties.itemToReplace.config.serviceID);
 
   const currentClientIndex = manageStore.newConfiguration.indexOf(current);
 
@@ -719,12 +704,7 @@ const selectedServiceToRemove = (item) => {
   let commonService = setupStore.editSetups.find((s) => {
     return s.setupName === "commonServices";
   });
-  if (
-    item.isNotConnectedToConsensus ||
-    item.isNotConnectedToValidator ||
-    item.isNotConnectedToMevboost ||
-    item.isDisplayPluginMenu
-  ) {
+  if (item.isNotConnectedToConsensus || item.isNotConnectedToValidator || item.isNotConnectedToMevboost || item.isDisplayPluginMenu) {
     return;
   } else {
     clientToRemove.value = item;
@@ -815,10 +795,7 @@ const confirmHandler = async () => {
   manageStore.disableConfirmButton = true;
 
   const setupExists = manageStore.confirmChanges.some(
-    (item) =>
-      item.service?.hasOwnProperty("setupName") &&
-      item.service?.hasOwnProperty("setupId") &&
-      item.service.setupId == item.id
+    (item) => item.service?.hasOwnProperty("setupName") && item.service?.hasOwnProperty("setupId") && item.service.setupId == item.id
   );
 
   const serverServiceExists = manageStore.confirmChanges.some(

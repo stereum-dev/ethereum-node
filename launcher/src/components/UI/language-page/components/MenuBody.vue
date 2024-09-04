@@ -30,11 +30,9 @@
         @click="handleClick(lang, index)"
       >
         <img :src="lang.flag" :alt="`${lang.name} Flag`" class="col-start-1 col-span-3 w-10 h-10 rounded-full" />
-        <span
-          class="col-start-4 col-span-full text-lg font-bold uppercase"
-          :class="{ 'text-gray-700': selectedLanguage }"
-          >{{ lang.name }}</span
-        >
+        <span class="col-start-4 col-span-full text-lg font-bold uppercase" :class="{ 'text-gray-700': selectedLanguage }">{{
+          lang.name
+        }}</span>
       </swiper-slide>
     </swiper>
   </div>
