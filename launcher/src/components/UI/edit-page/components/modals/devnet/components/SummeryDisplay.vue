@@ -1,8 +1,6 @@
 <template>
   <div class="w-full mt-4 mx-auto px-4">
-    <div
-      class="w-full h-[240px] bg-[#101111] rounded-md overflow-y-auto overflow-x-hidden p-2"
-    >
+    <div class="w-full h-[240px] bg-[#101111] rounded-md overflow-y-auto overflow-x-hidden p-2">
       <!-- Genesis Config Section -->
       <div class="w-full mb-4">
         <h3 class="text-yellow-500 font-bold text-sm uppercase mb-2">Config</h3>
@@ -12,19 +10,11 @@
           class="flex items-center justify-between w-full py-2 border-b border-gray-700"
         >
           <div class="flex items-center">
-            <img
-              src="/img/icon/edit-node-icons/setting.png"
-              alt="Gear Icon"
-              class="w-5 h-5 mr-2"
-            />
-            <span class="text-sm text-gray-300 font-semibold">{{
-              formatLabel(key)
-            }}</span>
+            <img src="/img/icon/edit-node-icons/setting.png" alt="Gear Icon" class="w-5 h-5 mr-2" />
+            <span class="text-sm text-gray-300 font-semibold">{{ formatLabel(key) }}</span>
           </div>
           <div class="text-right">
-            <span class="text-sm font-semibold text-gray-300 truncate overflow-x-auto">{{
-              value
-            }}</span>
+            <span class="text-sm font-semibold text-gray-300 truncate overflow-x-auto">{{ value }}</span>
           </div>
         </div>
       </div>
@@ -38,14 +28,8 @@
           class="flex items-center justify-between w-full py-2 border-b border-gray-700"
         >
           <div class="flex items-center">
-            <img
-              src="/img/icon/edit-node-icons/setting.png"
-              alt="Gear Icon"
-              class="w-5 h-5 mr-2"
-            />
-            <span class="text-sm text-gray-300 font-semibold truncate overflow-x-auto">{{
-              address
-            }}</span>
+            <img src="/img/icon/edit-node-icons/setting.png" alt="Gear Icon" class="w-5 h-5 mr-2" />
+            <span class="text-sm text-gray-300 font-semibold truncate overflow-x-auto">{{ address }}</span>
           </div>
           <div class="text-right truncate overflow-x-auto">
             <span class="text-sm font-semibold text-gray-300"> {{ alloc.balance }}</span>
@@ -62,14 +46,8 @@
           class="flex items-center justify-between w-full py-2 border-b border-gray-700"
         >
           <div class="flex items-center overflow-x-hidden">
-            <img
-              src="/img/icon/edit-node-icons/setting.png"
-              alt="Gear Icon"
-              class="w-5 h-5 mr-2"
-            />
-            <span class="text-sm text-gray-300 font-semibold truncate overflow-x-auto">{{
-              formatLabel(key)
-            }}</span>
+            <img src="/img/icon/edit-node-icons/setting.png" alt="Gear Icon" class="w-5 h-5 mr-2" />
+            <span class="text-sm text-gray-300 font-semibold truncate overflow-x-auto">{{ formatLabel(key) }}</span>
           </div>
           <div class="text-right truncate overflow-x-auto">
             <span class="text-sm font-semibold text-gray-300">{{ value }}</span>
