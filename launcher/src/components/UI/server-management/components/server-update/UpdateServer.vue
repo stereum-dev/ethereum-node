@@ -180,6 +180,10 @@ const updateAll = async () => {
 
     await fetchUpgradablePackages();
 
+    serverStore.upgradablePackages.value = [];
+
+    serverStore.numberOfUpdatablePackages = 0;
+
     updateStatus.message = "All packages updated successfully!";
     updateStatus.color = "text-green-500";
   } catch (error) {
@@ -203,6 +207,11 @@ const updatePackage = async (item) => {
   updateUIWithInProgressMessage(pkgName);
   try {
     const result = await ControlService.updatePackage(pkgName);
+
+    serverStore.upgradablePackages.value = serverStore.upgradablePackages.value.filter((pkg) => pkg.packageName !== item.packageName);
+
+    serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length;
+
     if (result) {
       await getUpgradablePackages(); // Refresh the list
     }
