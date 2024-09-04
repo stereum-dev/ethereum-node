@@ -2,37 +2,19 @@
   <div class="w-full mt-4 mx-auto px-4">
     <div class="w-full h-[240px]">
       <div class="flex flex-col justify-start space-y-1 p-2 items-center">
-        <div
-          class="w-full h-[180px] overflow-y-auto bg-[#101111] border border-gray-500 rounded-md p-2 flex flex-col justify-start items-center space-y-2"
-        >
-          <div
-            v-for="(item, address) in allocData"
-            :key="address"
-            class="w-full max-h-8 p-1 flex justify-between items-center space-x-1"
-          >
-            <div
-              class="w-1/2 flex items-center bg-slate-600 rounded-full p-1 overflow-hidden"
-            >
-              <span class="text-sm font-normal text-gray-200 truncate"
-                >{{ address }}
-              </span>
+        <div class="w-full h-[180px] overflow-y-auto bg-[#101111] rounded-md p-2 flex flex-col justify-start items-center space-y-2">
+          <div v-for="(item, address) in allocData" :key="address" class="w-full max-h-8 p-1 flex justify-between items-center space-x-1">
+            <div class="w-1/2 flex items-center bg-slate-600 rounded-full p-1 overflow-hidden">
+              <span class="text-sm font-normal text-gray-200 truncate">{{ address }} </span>
             </div>
-            <div
-              class="w-1/2 flex items-center bg-slate-600 rounded-full p-1 overflow-hidden"
-            >
-              <span class="text-sm font-normal text-gray-200 truncate">{{
-                item.balance
-              }}</span>
+            <div class="w-1/2 flex items-center bg-slate-600 rounded-full p-1 overflow-hidden">
+              <span class="text-sm font-normal text-gray-200 truncate">{{ item.balance }}</span>
             </div>
           </div>
         </div>
 
-        <div
-          class="w-full max-h-[60px] col-start-1 col-span-full grid grid-cols-12 items-center gap-x-2 py-2"
-        >
-          <div
-            class="h-full col-start-1 col-end-6 flex flex-col justify-between items-center"
-          >
+        <div class="w-full max-h-[60px] col-start-1 col-span-full grid grid-cols-12 items-center gap-x-2 py-2">
+          <div class="h-full col-start-1 col-end-6 flex flex-col justify-between items-center">
             <input
               v-model="newAddress"
               type="text"
@@ -41,9 +23,7 @@
               placeholder="Account"
             />
           </div>
-          <div
-            class="h-full col-start-6 col-end-11 flex flex-col justify-between items-center"
-          >
+          <div class="h-full col-start-6 col-end-11 flex flex-col justify-between items-center">
             <input
               v-model="newBalance"
               type="text"
