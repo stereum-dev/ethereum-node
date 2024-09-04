@@ -29,8 +29,8 @@ After installing the launcher start it up and connect to a server of your choice
 ## Contribute
 
 Want to get involved? 
-If you want to merge something into Stereum, please use `npm run format:check` to check the format of your code and `run npm run format` to format your code, before making a pull request.
-We'll have a look at it!
+Please use `npm run format:check` to check the format of your code and `run npm run format` to format your code, before making a pull request.
+Push the pull request & we'll have a look at it!
 
 - [Contribution Guidelines](launcher/CONTRIBUTING.md)
 
