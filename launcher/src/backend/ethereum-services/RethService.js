@@ -8,10 +8,7 @@ export class RethService extends NodeService {
     const workingDir = service.buildWorkingDir(dir);
     const dataDir = "/opt/data/reth";
     const JWTDir = "/engine.jwt";
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
 
     service.init(
       "RethService", // service
@@ -26,12 +23,12 @@ export class RethService extends NodeService {
         "--http",
         "--http.port=8545",
         "--http.addr=0.0.0.0",
-        '--http.api=debug,web3,eth,net',
+        "--http.api=debug,web3,eth,net",
         "--http.corsdomain=*",
         "--ws",
         "--ws.port=8546",
         "--ws.addr=0.0.0.0",
-        '--ws.api=debug,web3,eth,net',
+        "--ws.api=debug,web3,eth,net",
         "--ws.origins=*",
         "--authrpc.port=8551",
         "--authrpc.addr=0.0.0.0",
@@ -80,8 +77,7 @@ export class RethService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }
 

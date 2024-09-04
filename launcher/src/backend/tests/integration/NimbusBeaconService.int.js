@@ -13,16 +13,14 @@ jest.setTimeout(1000000);
 test("nimbus validator import", async () => {
   //create server
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Nimbus--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Nimbus--integration-test--ubuntu-2204");
 
   const serverSettings = {
     name: "Nimbus--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx31",
     start_after_create: true,
-    ssh_keys: [
-      keyResponse.ssh_key.id
-    ],
+    ssh_keys: [keyResponse.ssh_key.id],
   };
 
   await testServer.create(serverSettings);
@@ -40,7 +38,7 @@ test("nimbus validator import", async () => {
   const serviceManager = new ServiceManager(nodeConnection);
   await testServer.checkServerConnection(nodeConnection);
 
-  await nodeConnection.establish(taskManager)
+  await nodeConnection.establish(taskManager);
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -57,18 +55,25 @@ test("nimbus validator import", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install geth
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
 
   //install nimbus
-  let nimbusBC = serviceManager.getService("NimbusBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
+  let nimbusBC = serviceManager.getService("NimbusBeaconService", {
+    network: "holesky",
+    installDir: "/opt/stereum",
+    executionClients: [geth],
+  });
 
-  let nimbusVC = serviceManager.getService("NimbusValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [nimbusBC] })
+  let nimbusVC = serviceManager.getService("NimbusValidatorService", {
+    network: "holesky",
+    installDir: "/opt/stereum",
+    consensusClients: [nimbusBC],
+  });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
-  nimbusBC.imageVersion = versions[nimbusBC.network][nimbusBC.service].slice(-1).pop()
-  nimbusVC.imageVersion = versions[nimbusVC.network][nimbusVC.service].slice(-1).pop()
-
+  nimbusBC.imageVersion = versions[nimbusBC.network][nimbusBC.service].slice(-1).pop();
+  nimbusVC.imageVersion = versions[nimbusVC.network][nimbusVC.service].slice(-1).pop();
 
   //write config and start geth
   await nodeConnection.writeServiceConfiguration(geth.buildConfiguration());
@@ -92,7 +97,7 @@ test("nimbus validator import", async () => {
       '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "fa52987837af01ec48e2b21f2078acef3368983943751013758052e07dae841d"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "8c055c8c504cd3ad20bcb1101431b2b1a506b1a4d0efdbd294d75c39c0f2268b"}}, "description": "", "pubkey": "948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458", "path": "m/12381/3600/2/0/0", "uuid": "c7521eed-533a-4fd1-90b7-ad1aa0f24a2d", "version": 4}',
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
-  })
+  });
   await validatorAccountManager.importKey(nimbusVC.id);
 
   //get logs
@@ -123,7 +128,7 @@ test("nimbus validator import", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection)
+  await testServer.finishTestGracefully(nodeConnection);
 
   //check ufw
   expect(ufw.stdout).toMatch(/9000\/tcp/);
@@ -150,5 +155,4 @@ test("nimbus validator import", async () => {
   expect(VCstatus.stdout).toMatch(/Local validator attached/);
   expect(VCstatus.stdout).toMatch(/REST service started/);
   expect(VCstatus.stdout).toMatch(/Slot start/);
-
 });

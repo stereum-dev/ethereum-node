@@ -5,15 +5,8 @@ import { ref } from 'vue'; import { useStakingStore } from '@/store/theStaking';
     :class="displayButtonByCondition ? 'pointer-events-none opacity-30 ' : 'cursor-pointer '"
     @click="props.button.events"
   >
-    <img
-      class="col-start-1 col-span-1 row-start-1 w-5 h-5"
-      :src="props.button.icon"
-      alt="Button Icon"
-      @mousedown.prevent
-    />
-    <span class="col-start-2 col-span-full row-start-1 text-2xs font-semibold text-center uppercase">{{
-      props.button.text
-    }}</span>
+    <img class="col-start-1 col-span-1 row-start-1 w-5 h-5" :src="props.button.icon" alt="Button Icon" @mousedown.prevent />
+    <span class="col-start-2 col-span-full row-start-1 text-2xs font-semibold text-center uppercase">{{ props.button.text }}</span>
   </div>
 </template>
 
@@ -31,8 +24,7 @@ const props = defineProps({
 const stakingStore = useStakingStore();
 
 const displayButtonByCondition = computed(() => {
-  const isValidatorFilterRunning =
-    stakingStore.selectedServiceToFilter && stakingStore.selectedServiceToFilter.state === "running";
+  const isValidatorFilterRunning = stakingStore.selectedServiceToFilter && stakingStore.selectedServiceToFilter.state === "running";
 
   //Web3SignerService is selected in filter
   const isSelectedFilterWeb3Signer = stakingStore.selectedServiceToFilter?.service === "Web3SignerService";
@@ -41,9 +33,7 @@ const displayButtonByCondition = computed(() => {
   const isImportRemoteButton = props.button.text === "Import Remote Keys";
 
   //Imported keys for selected validator service
-  const matchingKeyForService = stakingStore.keys.some(
-    (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config.serviceID
-  );
+  const matchingKeyForService = stakingStore.keys.some((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config.serviceID);
 
   if (isImportRemoteButton && stakingStore.isStakingDisabled) {
     return true;

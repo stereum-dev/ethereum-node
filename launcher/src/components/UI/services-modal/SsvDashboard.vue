@@ -3,13 +3,7 @@
     <div class="pubkey-box">
       <div class="pub-key">
         <span class="input-text">{{ $t("registerSSV.pubKey") }}</span>
-        <input
-          v-model="localpubkey"
-          type="hidden"
-          class="pubkey-input"
-          disabled
-          :placeholder="`${$t('serviceModal.pubKey')}`"
-        />
+        <input v-model="localpubkey" type="hidden" class="pubkey-input" disabled :placeholder="`${$t('serviceModal.pubKey')}`" />
         <div class="copy-icon" @click="copyPubKey">
           <img src="/img/icon/service-modals-icons/copy.png" alt="icon" />
           <span>copied!</span>
@@ -84,9 +78,7 @@ export default {
       this.ssvNetworkUrl.operatorUrl = `https://${
         ["holesky"].includes(this.currentNetwork.network) ? this.currentNetwork.network + "." : ""
       }explorer.ssv.network/operators/${this.operatorData?.id ? this.operatorData?.id : ""}`;
-      this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl
-        ? grafana.linkUrl + "/d/QNiMrdoVz/node-dashboard?orgId=1"
-        : "";
+      this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl ? grafana.linkUrl + "/d/QNiMrdoVz/node-dashboard?orgId=1" : "";
     },
   },
 };

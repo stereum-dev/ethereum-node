@@ -16,10 +16,7 @@ export async function useListKeys(forceRefresh) {
   if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
     for (let client of clients) {
       //if there is already a list of keys ()
-      if (
-        (client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) &&
-        client.state === "running"
-      ) {
+      if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
         //refresh validaotr list
         let result = await ControlService.listValidators(client.config.serviceID);
 
@@ -80,10 +77,7 @@ export async function useListKeys(forceRefresh) {
       }
     });
     for (let key in alias) {
-      if (
-        keysToWrite[key] === undefined &&
-        serviceStore.installedServices.some((s) => s.config?.serviceID === alias[key].validatorID)
-      ) {
+      if (keysToWrite[key] === undefined && serviceStore.installedServices.some((s) => s.config?.serviceID === alias[key].validatorID)) {
         keysToWrite[key] = alias[key];
       }
     }
@@ -130,14 +124,11 @@ export async function useUpdateValidatorStats() {
       for (let i = 0; i < buffer.length; i += chunkSize) {
         //split validator accounts into chunks of 50 (api url limit)
         const chunk = buffer.slice(i, i + chunkSize);
-        let response = await axios.get(
-          nodeManageStore.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()),
-          {
-            validateStatus: function (status) {
-              return status < 500;
-            },
-          }
-        );
+        let response = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()), {
+          validateStatus: function (status) {
+            return status < 500;
+          },
+        });
 
         if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
       }
@@ -168,17 +159,11 @@ export async function useUpdateValidatorStats() {
       if (key.network === "gnosis") {
         dateActive.setMilliseconds(dateActive.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
         dateExit =
-          exitEpoch > latestEpoch
-            ? null
-            : dateExit.setMilliseconds(dateExit.getMilliseconds() - (latestEpoch - exitEpoch) * 80000);
+          exitEpoch > latestEpoch ? null : dateExit.setMilliseconds(dateExit.getMilliseconds() - (latestEpoch - exitEpoch) * 80000);
         dateWithdrawable =
           withdrawableEpoch > latestEpoch
             ? null
-            : new Date(
-                dateWithdrawable.setMilliseconds(
-                  dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 80000
-                )
-              );
+            : new Date(dateWithdrawable.setMilliseconds(dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 80000));
         dateEligibility.setMilliseconds(dateEligibility.getMilliseconds() - (latestEpoch - elgibilityEpoch) * 80000);
       } else {
         dateActive.setMilliseconds(dateActive.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
@@ -189,11 +174,7 @@ export async function useUpdateValidatorStats() {
         dateWithdrawable =
           withdrawableEpoch > latestEpoch
             ? null
-            : new Date(
-                dateWithdrawable.setMilliseconds(
-                  dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 384000
-                )
-              );
+            : new Date(dateWithdrawable.setMilliseconds(dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 384000));
         dateEligibility.setMilliseconds(dateEligibility.getMilliseconds() - (latestEpoch - elgibilityEpoch) * 384000);
       }
 
@@ -204,9 +185,7 @@ export async function useUpdateValidatorStats() {
       key.exitSince = dateExit === null ? null : ((now.getTime() - dateExit.getTime()) / 86400000).toFixed(1) + " Days";
       key.elgibilitySince = ((now.getTime() - dateEligibility.getTime()) / 86400000).toFixed(1) + " Days";
       key.withdrawableSince =
-        dateWithdrawable === null
-          ? null
-          : ((now.getTime() - dateWithdrawable.getTime()) / 86400000).toFixed(1) + " Days";
+        dateWithdrawable === null ? null : ((now.getTime() - dateWithdrawable.getTime()) / 86400000).toFixed(1) + " Days";
       if (key.isRemote) {
         if (!stakingStore.keys.some((k) => k.key === key.key && !k.isRemote)) {
           totalBalance += key.balance;

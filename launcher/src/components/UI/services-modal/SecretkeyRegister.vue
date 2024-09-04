@@ -7,11 +7,7 @@
       </label>
     </div>
     <div class="btn-box">
-      <button
-        :class="{ 'btn-disabled': isBtnDisabled }"
-        :disabled="isBtnDisabled"
-        @click="$emit('insertKey', enteredSecretkey)"
-      >
+      <button :class="{ 'btn-disabled': isBtnDisabled }" :disabled="isBtnDisabled" @click="$emit('insertKey', enteredSecretkey)">
         {{ $t("secretKeyReg.apply") }}
       </button>
     </div>

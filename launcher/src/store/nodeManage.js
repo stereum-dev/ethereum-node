@@ -102,8 +102,7 @@ export const useNodeManage = defineStore("nodeManage", {
         {
           icon: "/img/icon/one-click-icons/mevboost-icons/aestus.png",
           name: "Aestus",
-          mainnet:
-            "https://0xa15b52576bcbf1072f4a011c0f99f9fb6c66f3e1ff321f11f461d15e31b1cb359caa092c71bbded0bae5b5ea401aab7e@aestus.live",
+          mainnet: "https://0xa15b52576bcbf1072f4a011c0f99f9fb6c66f3e1ff321f11f461d15e31b1cb359caa092c71bbded0bae5b5ea401aab7e@aestus.live",
 
           holesky:
             "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@holesky.aestus.live",
@@ -225,17 +224,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://holesky.beaconcha.in/api/v1",
-          support: [
-            "staking",
-            "ssv.network",
-            "stereum on arm",
-            "mev boost",
-            "archive",
-            "obol",
-            "lidoobol",
-            "lidossv",
-            "lidocsm",
-          ],
+          support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol", "lidoobol", "lidossv", "lidocsm"],
         },
       ],
       currentNetwork: {},

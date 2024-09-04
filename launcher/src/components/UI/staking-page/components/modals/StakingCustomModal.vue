@@ -13,10 +13,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
           <span class="text-[26px] font-bold uppercase" :class="getTitleColor">{{ mainTitle }}</span>
         </div>
 
-        <div
-          v-if="subTitle || messageText"
-          class="col-start-1 col-span-full row-start-2 row-span-2 flex justify-center items-center"
-        >
+        <div v-if="subTitle || messageText" class="col-start-1 col-span-full row-start-2 row-span-2 flex justify-center items-center">
           <span v-if="subTitle" class="text-[22px] font-bold text-amber-600 uppercase">{{ subTitle }}</span>
           <span v-if="messageText" class="text-md font-bold text-gray-400">{{ messageText }}</span>
         </div>

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="col-start-3 col-end-4 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative"
-    @mousedown.prevent
-  >
+  <div class="col-start-3 col-end-4 gap-1 pt-4 pb-2 space-y-4 grid grid-flow-row auto-rows-max relative" @mousedown.prevent>
     <div
       v-for="item in getValidators"
       :key="item.name"
@@ -39,14 +36,7 @@ import { useSetups } from "@/store/setups";
 import ClientLayout from "./ClientLayout.vue";
 import GeneralMenu from "./GeneralMenu.vue";
 
-const emit = defineEmits([
-  "deleteService",
-  "switchClient",
-  "modifyService",
-  "infoModal",
-  "mouseOver",
-  "mouseLeave",
-]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
@@ -54,9 +44,7 @@ const setupStore = useSetups();
 // Use computed for reactivity
 const getValidators = computed(() => {
   const services = manageStore.newConfiguration
-    .filter(
-      (s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "validator"
-    )
+    .filter((s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "validator")
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
       const fb = b.name.toLowerCase();

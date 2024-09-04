@@ -211,8 +211,7 @@ export class SSHService {
   }
 
   async exec(command, useSudo = true, useRoot = true) {
-    const ensureSudoCommand =
-      `sudo -u ${useRoot ? "root" : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
+    const ensureSudoCommand = `sudo -u ${useRoot ? "root" : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
     return this.execCommand(useSudo ? ensureSudoCommand : command);
   }
 
@@ -298,11 +297,7 @@ export class SSHService {
         while (i--) {
           // loop backwards to splice array from specific ports
           let tunnel = this.tunnels[i];
-          if (
-            Array.isArray(onlySpecificPorts) &&
-            onlySpecificPorts.length &&
-            !onlySpecificPorts.includes(tunnel.config.localPort)
-          ) {
+          if (Array.isArray(onlySpecificPorts) && onlySpecificPorts.length && !onlySpecificPorts.includes(tunnel.config.localPort)) {
             continue;
           }
           tunnel.server.close();
@@ -399,10 +394,7 @@ export class SSHService {
     try {
       if (sshDirPath.endsWith("/")) sshDirPath = sshDirPath.slice(0, -1, ""); //if path ends with '/' remove it
       let newKeys = keys.join("\n");
-      let result = await this.exec(
-        `echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`,
-        false
-      );
+      let result = await this.exec(`echo -e ${StringUtils.escapeStringForShell(newKeys)} > ${sshDirPath}/authorized_keys`, false);
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed writing authorized keys:\n" + SSHService.extractExecError(result));
       }

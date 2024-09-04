@@ -3,10 +3,7 @@ import { ServicePort, servicePortProtocol } from "../../ethereum-services/Servic
 const log = require("electron-log");
 
 test("buildConfiguration", () => {
-  const ports = [
-    new ServicePort(null, 100, 200, servicePortProtocol.tcp),
-    new ServicePort(null, 101, 202, servicePortProtocol.udp),
-  ];
+  const ports = [new ServicePort(null, 100, 200, servicePortProtocol.tcp), new ServicePort(null, 101, 202, servicePortProtocol.udp)];
 
   jest.mock("../../ethereum-services/GethService");
   const GethService = require("../../ethereum-services/GethService");
@@ -92,11 +89,7 @@ test("getServiceConfiguration", () => {
     "/opt/stereum/ssv",
     [new GethService.GethService()],
     [new LighthouseBeaconService.LighthouseBeaconService()]
-  ).getServiceConfiguration(
-    "prater",
-    [new GethService.GethService()],
-    [new LighthouseBeaconService.LighthouseBeaconService()]
-  );
+  ).getServiceConfiguration("prater", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]);
 
   expect(ssvService).toBeDefined();
   expect(ssvService).toMatch(/prater/);
@@ -105,37 +98,19 @@ test("getServiceConfiguration", () => {
 });
 
 test("getAvailablePorts", () => {
-  const service = SSVNetworkService.buildByUserInput(
-    "prater",
-    null,
-    "/opt/stereum/ssv",
-    [],
-    []
-  ).getAvailablePorts();
+  const service = SSVNetworkService.buildByUserInput("prater", null, "/opt/stereum/ssv", [], []).getAvailablePorts();
 
   expect(service).toHaveLength(3);
 });
 
 test("service name", () => {
-  const service = SSVNetworkService.buildByUserInput(
-    "prater",
-    null,
-    "/opt/stereum/ssv",
-    [],
-    []
-  ).buildConfiguration();
+  const service = SSVNetworkService.buildByUserInput("prater", null, "/opt/stereum/ssv", [], []).buildConfiguration();
 
   expect(service.service).toMatch(/SSVNetworkService/);
 });
 
 test("autoupdate", () => {
-  const service = SSVNetworkService.buildByUserInput(
-    "prater",
-    null,
-    "/opt/stereum/ssv",
-    [],
-    []
-  ).buildConfiguration();
+  const service = SSVNetworkService.buildByUserInput("prater", null, "/opt/stereum/ssv", [], []).buildConfiguration();
 
   expect(service.autoupdate).toBe(true);
 });

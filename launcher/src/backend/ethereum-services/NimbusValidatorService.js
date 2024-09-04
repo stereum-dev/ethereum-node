@@ -58,8 +58,8 @@ export class NimbusValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
-    if (consensusClients.some(c => c.service === "CharonService")) {
-      service.command[service.command.findIndex(c => c === "--doppelganger-detection=true")] = "--doppelganger-detection=false"
+    if (consensusClients.some((c) => c.service === "CharonService")) {
+      service.command[service.command.findIndex((c) => c === "--doppelganger-detection=true")] = "--doppelganger-detection=false";
     }
 
     return service;
@@ -78,9 +78,6 @@ export class NimbusValidatorService extends NodeService {
   }
 
   getAvailablePorts() {
-    return [
-      new ServicePortDefinition(8108, "tcp", "Metrics Port"),
-      new ServicePortDefinition(5052, "tcp", "Keymanager Port"),
-    ];
+    return [new ServicePortDefinition(8108, "tcp", "Metrics Port"), new ServicePortDefinition(5052, "tcp", "Keymanager Port")];
   }
 }

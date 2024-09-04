@@ -75,8 +75,7 @@
             src="/img/icon/stereum-icons/stereum-logo.png"
             alt="Node Server View"
           />
-          <span
-            class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
+          <span class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
             >Server View</span
           >
         </div>

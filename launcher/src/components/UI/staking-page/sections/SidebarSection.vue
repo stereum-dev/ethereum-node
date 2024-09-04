@@ -4,9 +4,7 @@
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div
-      class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start"
-    >
+    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start">
       <div
         v-for="(item, index) in installedValidators"
         :key="item.config?.serviceID"
@@ -14,8 +12,7 @@
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             currentService === item.config?.serviceID,
-          'bg-[#202123] border border-gray-600':
-            currentService !== item.config?.serviceID,
+          'bg-[#202123] border border-gray-600': currentService !== item.config?.serviceID,
         }"
         @click="getService(index)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
@@ -65,18 +62,14 @@ const hoveredIndex = ref(null);
 const installedValidators = computed(() => {
   let services = [];
   if (setupStore.selectedSetup === null) {
-    services = serviceStore.installedServices.filter(
-      (s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service)
-    );
+    services = serviceStore.installedServices.filter((s) => s.category === "validator" && !/SSVNetwork|Charon/.test(s.service));
   } else {
     services = serviceStore.installedServices
       .filter(
         (s) =>
           s.category === "validator" &&
           !/SSVNetwork|Charon/.test(s.service) &&
-          setupStore.selectedSetup?.services
-            ?.map((s) => s.config.serviceID)
-            .includes(s.config.serviceID)
+          setupStore.selectedSetup?.services?.map((s) => s.config.serviceID).includes(s.config.serviceID)
       )
       .map((service) => ({ ...service, selected: false }));
   }
@@ -94,9 +87,7 @@ onMounted(() => {
 const getCurrentService = () => {
   if (setupStore.selectedSetup) {
     const matchingService = installedValidators.value.find((validator) =>
-      setupStore.selectedSetup.services.some(
-        (service) => service.id === validator.config?.serviceID
-      )
+      setupStore.selectedSetup.services.some((service) => service.id === validator.config?.serviceID)
     );
     currentService.value = matchingService?.config?.serviceID;
   } else {

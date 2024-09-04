@@ -7,8 +7,7 @@ test("buildConfiguration", () => {
 });
 
 test("buildPrometheusNodeExporterClientHttpEndpointUrl", () => {
-  const pneService =
-    PrometheusNodeExporterService.buildByUserInput().buildPrometheusNodeExporterClientHttpEndpointUrl();
+  const pneService = PrometheusNodeExporterService.buildByUserInput().buildPrometheusNodeExporterClientHttpEndpointUrl();
 
   expect(pneService).toMatch(/http:\/\/stereum-.{36}:9100/);
 });

@@ -23,10 +23,7 @@ test("buildConfiguration", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
 
@@ -63,10 +60,7 @@ test("buildConsensusClientHttpEndpointUrl", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const ports = [
@@ -101,10 +95,7 @@ test("getAvailablePorts", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const lServicePorts = LodestarBeaconService.buildByUserInput(
@@ -133,10 +124,7 @@ test("network", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const lServicePorts = LodestarBeaconService.buildByUserInput(

@@ -49,7 +49,6 @@ export class ServicePort {
     const servicePort = servicePortSettings?.length >= 1 ? servicePortSettings[0] : "";
     const servicePortProtocol = servicePortSettings?.length >= 2 ? servicePortSettings[1] : "";
 
-
     return new ServicePort(destinationIp, destinationPort, servicePort, servicePortProtocol);
   }
 

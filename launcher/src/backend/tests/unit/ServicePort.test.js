@@ -5,9 +5,7 @@ test("serviceport any destination ip", () => {
 });
 
 test("serviceport specific destination ip", () => {
-  expect(new ServicePort("8.8.8.8", 1234, 5678, servicePortProtocol.udp).buildPortMapping()).toBe(
-    "8.8.8.8:1234:5678/udp"
-  );
+  expect(new ServicePort("8.8.8.8", 1234, 5678, servicePortProtocol.udp).buildPortMapping()).toBe("8.8.8.8:1234:5678/udp");
 });
 
 test("buildByConfig", () => {

@@ -47,13 +47,12 @@ export async function useRefreshNodeStats() {
           controlStore.wsstatus = nodeStats.data.wsstatus;
           controlStore.beaconstatus = nodeStats.data.beaconstatus;
           controlStore.portstatus = nodeStats.data.portstatus;
-        } catch (e) { }
+        } catch (e) {}
       }
     });
   } catch (err) {
     console.log("some other error occured", err);
   }
-
 }
 
 export async function useRefreshMetrics() {
@@ -85,7 +84,7 @@ export async function useRefreshMetrics() {
           controlStore.wsstatus = nodeStats.data.wsstatus;
           controlStore.beaconstatus = nodeStats.data.beaconstatus;
           controlStore.portstatus = nodeStats.data.portstatus;
-        } catch (e) { }
+        } catch (e) {}
       }
     });
     // Get Storage Status
@@ -93,7 +92,7 @@ export async function useRefreshMetrics() {
       if (response) {
         try {
           controlStore.storagestatus = response.data;
-        } catch (e) { }
+        } catch (e) {}
       }
     });
     // Get Balance Status
@@ -101,7 +100,7 @@ export async function useRefreshMetrics() {
       if (response) {
         try {
           controlStore.balancestatus = response.data;
-        } catch (e) { }
+        } catch (e) {}
       }
     });
     // Get Server Vitals
@@ -124,4 +123,3 @@ export async function useRefreshMetrics() {
     console.log("some other error occured", err);
   }
 }
-

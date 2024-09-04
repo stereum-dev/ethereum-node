@@ -14,10 +14,7 @@ export class LighthouseBeaconService extends NodeService {
     const slasherDir = "/opt/app/slasher";
 
     // volumes
-    const volumes = [
-      new ServiceVolume(workingDir + "/beacon", dataDir),
-      new ServiceVolume(workingDir + "/slasher", slasherDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir), new ServiceVolume(workingDir + "/slasher", slasherDir)];
 
     // eth1 nodes
     const eth1Nodes = executionClients
@@ -110,8 +107,7 @@ export class LighthouseBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

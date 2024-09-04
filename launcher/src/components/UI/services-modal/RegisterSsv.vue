@@ -4,14 +4,7 @@
       <div class="pubkey-box">
         <div class="pub-key">
           <span class="pubkey-input_text">{{ $t("registerSSV.pubKey") }}</span>
-          <input
-            ref="pubkeyRef"
-            v-model="localpubkey"
-            type="hidden"
-            class="pubkey-input"
-            readonly
-            @focus="$event.target.select()"
-          />
+          <input ref="pubkeyRef" v-model="localpubkey" type="hidden" class="pubkey-input" readonly @focus="$event.target.select()" />
           <div class="copy-icon" @click="copyPubKey">
             <img src="/img/icon/service-modals-icons/copy.png" alt="icon" />
             <span>{{ $t("registerSSV.copied") }}</span>

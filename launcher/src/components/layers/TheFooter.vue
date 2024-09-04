@@ -10,20 +10,14 @@
       </div>
 
       <div class="col-start-3 col-end-8 flex justify-start items-center">
-        <span class="text-sm font-semibold" :class="getStatusClass">{{
-          footerStore.stereumStatus ? "Online" : "Offline"
-        }}</span>
+        <span class="text-sm font-semibold" :class="getStatusClass">{{ footerStore.stereumStatus ? "Online" : "Offline" }}</span>
       </div>
 
       <div class="w-full h-full col-start-8 col-span-full flex justify-end items-center">
-        <span class="w-2/3 text-2xs text-center font-sans rounded-full p-[1px]" :class="getPingTimeClass"
-          >{{ getPingTime }} ms</span
-        >
+        <span class="w-2/3 text-2xs text-center font-sans rounded-full p-[1px]" :class="getPingTimeClass">{{ getPingTime }} ms</span>
       </div>
     </div>
-    <div
-      class="col-start-7 col-span-full rounded-full text-sm text-gray-200 capitalize z-20 flex justify-start items-center"
-    >
+    <div class="col-start-7 col-span-full rounded-full text-sm text-gray-200 capitalize z-20 flex justify-start items-center">
       <span class="w-full text-xs font-sans ml-2">{{ footerStore.cursorLocation }}</span>
     </div>
   </div>

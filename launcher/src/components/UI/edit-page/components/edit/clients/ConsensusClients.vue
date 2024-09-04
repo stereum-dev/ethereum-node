@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="col-start-2 col-end-3 gap-y-5 pt-4 pb-2 grid grid-flow-row auto-rows-max relative"
-  >
+  <div class="col-start-2 col-end-3 gap-y-5 pt-4 pb-2 grid grid-flow-row auto-rows-max relative">
     <div
       v-for="item in getConsensus"
       :key="item.config.serviceID + item.id"
@@ -40,14 +38,7 @@ import { computed } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 
 //Props & Emits
-const emit = defineEmits([
-  "deleteService",
-  "switchClient",
-  "modifyService",
-  "infoModal",
-  "mouseOver",
-  "mouseLeave",
-]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
 
 //Refs
 
@@ -57,9 +48,7 @@ const setupStore = useSetups();
 // computed & watchers properties
 const getConsensus = computed(() => {
   const services = manageStore.newConfiguration
-    .filter(
-      (s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "consensus"
-    )
+    .filter((s) => s.setupId === setupStore.selectedSetup?.setupId && s.category === "consensus")
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
       const fb = b.name.toLowerCase();

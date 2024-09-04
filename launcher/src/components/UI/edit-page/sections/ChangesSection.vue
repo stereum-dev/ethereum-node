@@ -1,8 +1,6 @@
 <template>
   <div class="h-full grid grid-cols-1 grid-rows-8">
-    <div
-      class="col-start-1 col-span-full row-start-1 row-span-1 h-[60px] self-center w-full flex flex-col justify-center items-center"
-    >
+    <div class="col-start-1 col-span-full row-start-1 row-span-1 h-[60px] self-center w-full flex flex-col justify-center items-center">
       <button
         v-if="editStore.disableConfirmButton"
         type="button"
@@ -23,10 +21,7 @@
       >
         {{ $t("changeConfirm.confirm") }}
       </button>
-      <button
-        v-else
-        class="w-full h-[34px] rounded-full bg-[#264744] px-2 text-gray-200 uppercase text-sm opacity-70 pointer-events-none"
-      >
+      <button v-else class="w-full h-[34px] rounded-full bg-[#264744] px-2 text-gray-200 uppercase text-sm opacity-70 pointer-events-none">
         {{ $t("changeConfirm.confirm") }}
       </button>
     </div>

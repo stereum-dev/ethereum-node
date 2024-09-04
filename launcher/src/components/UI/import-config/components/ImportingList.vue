@@ -1,19 +1,11 @@
 <template>
-  <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 p-1"
-  >
+  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-24 grid-rows-12 p-1">
     <div
       class="w-full h-full col-start-5 col-end-21 row-start-3 row-end-11 grid grid-cols-12 grid-rows-12 p-2 mx-auto bg-[#1E2429] rounded-md"
     >
-      <div
-        class="col-start-1 col-span-full row-start-1 row-span-1 bg-teal-600 rounded-md py-1 px-2 flex justify-between items-center z-10"
-      >
-        <span class="text-sm text-gray-200 font-normal uppercase">{{
-          $t("ImportConfigHeader.toImport")
-        }}</span>
-        <span class="text-sm text-gray-200 font-normal uppercase">{{
-          $t("ImportConfigHeader.rem")
-        }}</span>
+      <div class="col-start-1 col-span-full row-start-1 row-span-1 bg-teal-600 rounded-md py-1 px-2 flex justify-between items-center z-10">
+        <span class="text-sm text-gray-200 font-normal uppercase">{{ $t("ImportConfigHeader.toImport") }}</span>
+        <span class="text-sm text-gray-200 font-normal uppercase">{{ $t("ImportConfigHeader.rem") }}</span>
       </div>
       <div
         class="col-start-1 col-span-full row-start-2 row-span-full overflow-x-hidden overscroll-y-auto flex flex-col justify-start items-start space-y-2 mt-2"
@@ -23,15 +15,11 @@
             <span class="text-sm text-gray-300 font-semibold uppercase">Setups</span>
           </div>
           <div
-            v-for="(setup, index) in setups.filter(
-              (item) => item.name !== 'commonServices'
-            )"
+            v-for="(setup, index) in setups.filter((item) => item.name !== 'commonServices')"
             :key="`${setup.name} + ${index}`"
             class="table-row duration-500"
           >
-            <div
-              class="col-start-1 col-end-6 row-start-1 row-span-1 w-full h-full grid grid-cols-6"
-            >
+            <div class="col-start-1 col-end-6 row-start-1 row-span-1 w-full h-full grid grid-cols-6">
               <span
                 class="col-start-1 col-span-1 w-[27px] h-[27px] rounded-full self-center justify-self-start"
                 :style="getIconColor(setup)"
@@ -44,14 +32,10 @@
             </div>
           </div>
           <div v-if="configServices.length" class="configTitle">
-            <span class="text-sm text-gray-300 font-semibold uppercase">{{
-              $t("importingList.nodeConf")
-            }}</span>
+            <span class="text-sm text-gray-300 font-semibold uppercase">{{ $t("importingList.nodeConf") }}</span>
           </div>
           <div
-            v-for="(plugin, index) in categoryConfig.filter(
-              (item) => item.category !== undefined
-            )"
+            v-for="(plugin, index) in categoryConfig.filter((item) => item.category !== undefined)"
             :key="`${plugin.name} + ${index}`"
             class="table-row duration-500"
           >
@@ -69,21 +53,13 @@
               </div>
             </div>
             <div class="remove">
-              <img
-                src="/img/icon/import-config-icons/cancel-import.png"
-                alt="remove"
-                @click="removeServiceFromList(plugin, index)"
-              />
+              <img src="/img/icon/import-config-icons/cancel-import.png" alt="remove" @click="removeServiceFromList(plugin, index)" />
             </div>
           </div>
           <div v-if="configServices.length" class="serviceTitle">
             <span class="text-sm text-gray-300 font-semibold uppercase">Services</span>
           </div>
-          <div
-            v-for="(plugin, index) in categoryService"
-            :key="`${plugin.name} + ${index}`"
-            class="table-row duration-500"
-          >
+          <div v-for="(plugin, index) in categoryService" :key="`${plugin.name} + ${index}`" class="table-row duration-500">
             <div class="plugins">
               <img :src="plugin.icon" alt="icon" class="pluginIcon" />
               <div class="pluginName">
@@ -98,11 +74,7 @@
               </div>
             </div>
             <div class="remove">
-              <img
-                src="/img/icon/import-config-icons/cancel-import.png"
-                alt="remove"
-                @click="removeServiceFromList(plugin, index)"
-              />
+              <img src="/img/icon/import-config-icons/cancel-import.png" alt="remove" @click="removeServiceFromList(plugin, index)" />
             </div>
           </div>
         </TransitionGroup>
@@ -158,9 +130,7 @@ export default {
   },
   methods: {
     getAllSetups() {
-      const configs = this.configServices.filter(
-        (item) => item.category === undefined && item.name === undefined
-      );
+      const configs = this.configServices.filter((item) => item.category === undefined && item.name === undefined);
 
       const content = configs[0].content;
 
@@ -191,20 +161,14 @@ export default {
 
     removeServiceFromList(item, index) {
       if (item.category === "service") {
-        this.removedServices = this.removedServices.concat(
-          this.categoryService.splice(index, 1)
-        );
+        this.removedServices = this.removedServices.concat(this.categoryService.splice(index, 1));
       } else {
-        this.removedServices = this.removedServices.concat(
-          this.categoryConfig.splice(index, 1)
-        );
+        this.removedServices = this.removedServices.concat(this.categoryConfig.splice(index, 1));
       }
       this.configServices = this.categoryConfig.concat(this.categoryService);
     },
     extractNetwork() {
-      this.configNetwork = this.networkList.find(
-        (network) => network?.network === this.configServices[0]?.network
-      );
+      this.configNetwork = this.networkList.find((network) => network?.network === this.configServices[0]?.network);
     },
     categoryFilter() {
       this.removedServices = [];

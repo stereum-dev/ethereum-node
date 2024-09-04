@@ -506,12 +506,7 @@ ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
 
 ipcMain.handle("beginAuthSetup", async (event, args) => {
   const current_window = event.sender;
-  return await authenticationService.beginAuthSetup(
-    args.timeBased,
-    args.increaseTimeLimit,
-    args.enableRateLimit,
-    current_window
-  );
+  return await authenticationService.beginAuthSetup(args.timeBased, args.increaseTimeLimit, args.enableRateLimit, current_window);
 });
 
 ipcMain.handle("finishAuthSetup", async () => {

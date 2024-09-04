@@ -16,27 +16,15 @@
         />
         <div v-else class="wrapper">
           <div class="side-top">
-            <div
-              class="top-value"
-              @mouseenter="cursorLocation = `${ttlBal}`"
-              @mouseleave="cursorLocation = ''"
-            >
+            <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
               <span>{{ formattedBalance }}</span>
             </div>
-            <div
-              class="top-icon"
-              @mouseenter="cursorLocation = `${currentNetwork?.name}`"
-              @mouseleave="cursorLocation = ''"
-            >
+            <div class="top-icon" @mouseenter="cursorLocation = `${currentNetwork?.name}`" @mouseleave="cursorLocation = ''">
               <img :src="setSelectedCurrency" alt="coin-icon" />
             </div>
           </div>
           <div class="side-bottom">
-            <div
-              class="number-of-validators"
-              @mouseenter="cursorLocation = `${enteredKeys}`"
-              @mouseleave="cursorLocation = ''"
-            >
+            <div class="number-of-validators" @mouseenter="cursorLocation = `${enteredKeys}`" @mouseleave="cursorLocation = ''">
               <span>{{ formattedValidatorNo }}</span>
             </div>
             <div class="number-of-validators_title">
@@ -116,10 +104,7 @@ export default {
       }
     },
     flagNoData() {
-      if (
-        this.currentResult !== undefined &&
-        this.currentResult.beaconStatus === undefined
-      ) {
+      if (this.currentResult !== undefined && this.currentResult.beaconStatus === undefined) {
         return true;
       }
       return false;
