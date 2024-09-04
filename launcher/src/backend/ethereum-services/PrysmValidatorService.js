@@ -28,8 +28,10 @@ export class PrysmValidatorService extends NodeService {
 
     const provider = consensusClients
       .map((client) => {
-        const consensusDir = client.volumes.find((vol) => vol.servicePath.includes("/consensus")).destinationPath;
-        volumes.push(new ServiceVolume(consensusDir, configYamlDir));
+        if (network === "devnet") {
+          const consensusDir = client.volumes.find((vol) => vol.servicePath.includes("/consensus")).destinationPath;
+          volumes.push(new ServiceVolume(consensusDir, configYamlDir));
+        }
         return client.buildConsensusClientEndpoint();
       })
       .join();
