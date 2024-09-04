@@ -3495,8 +3495,18 @@ rm -rf diskoutput
           if (metric.result.status !== "success") {
             return [];
           }
+          // Check if the data array has valid results
+          if (!metric.result.data.result || metric.result.data.result.length === 0) {
+            return [];
+          }
 
-          const value = parseFloat(metric.result.data.result[0].value[1]);
+          // Safely access the value
+          const metricData = metric.result.data.result[0];
+          if (!metricData || !metricData.value || metricData.value.length < 2) {
+            return [];
+          }
+
+          const value = parseFloat(metricData.value[1]);
 
           if (metric.key === "lcoms_current_bond") {
             currentBond = value;
