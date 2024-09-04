@@ -33,7 +33,8 @@ const confirmSelection = () => {
   } else if (setupStore.isGenesisCreated) {
     setupStore.currentStep = 3;
   } else {
-    errorMessage.value = "Please either upload a Genesis file or choose to create a new one.";
+    errorMessage.value =
+      "Please either upload a Genesis file or choose to create a new one.";
   }
 };
 
@@ -42,34 +43,39 @@ defineExpose({ confirmSelection });
 </script>
 
 <template>
-  <div class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto">
-    <div class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-8 flex flex-col justify-between items-center">
+  <div
+    class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto"
+  >
+    <div
+      class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-8 flex flex-col justify-between items-center"
+    >
       <div class="w-full flex justify-between items-center">
         <div
-          class="bg-[#336666] flex justify-center items-center shadow-md shadow-black p-1 h-12 w-[150px] font-[sans-serif] rounded-md overflow-hidden my-4 mx-auto active:shadow-none"
+          class="bg-[#336666] hover:bg-[#488d8d] hover:scale-105 transition-all ease-in-out duration-150 hover:shadow-2xl hover:shadow-black active:scale-100 flex justify-center items-center shadow-md shadow-black p-1 h-14 w-[170px] rounded-md overflow-hidden my-4 mx-auto active:shadow-none"
         >
-          <label for="uploadFile" class="text-white text-md px-2 py-2.5 outline-none rounded-md cursor-pointer mx-auto w-max block">
+          <label
+            for="uploadFile"
+            class="capitalize font-sans font-semibold text-lg px-2 py-2.5 outline-none rounded-md cursor-pointer mx-auto w-max block text-gray-200"
+          >
             Import Genesis
           </label>
-          <input id="uploadFile" type="file" class="hidden" accept=".json" @change="getGenesisFile" />
+          <input
+            id="uploadFile"
+            type="file"
+            class="hidden"
+            accept=".json"
+            @change="getGenesisFile"
+          />
         </div>
         <div
-          class="bg-[#336666] text-white flex justify-center items-center shadow-md shadow-black p-1 h-12 w-[150px] font-[sans-serif] rounded-md overflow-hidden my-4 mx-auto cursor-pointer active:shadow-none"
+          class="bg-[#336666] hover:bg-[#488d8d] hover:scale-105 transition-all ease-in-out duration-150 hover:shadow-2xl hover:shadow-black active:scale-100 flex justify-center items-center shadow-md shadow-black p-1 h-14 w-[170px] rounded-md overflow-hidden my-4 mx-auto cursor-pointer active:shadow-none"
           @click="createNewGenesis"
         >
-          <div class="flex justify-evenly items-center">Create Genesis</div>
-        </div>
-      </div>
-      <div class="w-full flex justify-center items-center px-8">
-        <div
-          class="w-full h-9 bg-white text-[#333] flex items-center shadow-md shadow-black p-1 font-[sans-serif] rounded-md overflow-hidden my-4 mx-auto"
-        >
-          <span v-if="setupStore.devnetConfigData.uploadedGenesisConfig" class="pl-2 text-xs font-semibold overflow-clip">{{
-            setupStore.devnetConfigData.uploadedGenesisConfig.path
-          }}</span>
-          <span v-else-if="setupStore.isGenesisCreated">New Genesis will be created</span>
-          <span v-else-if="errorMessage" class="text-red-500">{{ errorMessage }}</span>
-          <span v-else> </span>
+          <span
+            class="text-center text-lg capitalize font-sans font-semibold text-gray-200"
+          >
+            Create Genesis
+          </span>
         </div>
       </div>
     </div>
