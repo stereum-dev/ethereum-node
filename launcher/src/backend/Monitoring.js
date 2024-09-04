@@ -3459,7 +3459,7 @@ rm -rf diskoutput
   /**
    * Will gather metrics from Prometheus and evaluate.
    * If thresholds are exceeded, an alert will be generated and added to the retuned array.
-   * @returns {Object[]} Array of alerts e.g. [{name: "Cluster in Unknown Status", level: "warning"}, {name: "Beacon Node Down", level: "critical"}]
+   * @returns {Object[]} Array of alerts e.g. [{name: "slashing event", level: "critical"},]
    */
   async fetchCsmAlerts() {
     try {
