@@ -1,11 +1,7 @@
 <template>
   <div class="h-full col-start-20 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 px-1 gap-y-1">
     <ValidatorRewards />
-    <ClientCommands
-      @graffiti-panel="graffitiPanel"
-      @import-remote="importRemote"
-      @withdraw-multiple="withdrawMultiple"
-    />
+    <ClientCommands @graffiti-panel="graffitiPanel" @import-remote="importRemote" @withdraw-multiple="withdrawMultiple" />
     <EpochDuty />
   </div>
 </template>

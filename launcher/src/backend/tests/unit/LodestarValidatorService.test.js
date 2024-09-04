@@ -38,39 +38,21 @@ test("LodestarValidatorService buildConfiguration", () => {
 
 test("LodestarValidatorService getAvailablePorts", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const lService = LodestarValidatorService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/l",
-    [],
-    "foobar"
-  ).getAvailablePorts();
+  const lService = LodestarValidatorService.buildByUserInput("prater", ports, "/opt/stereum/l", [], "foobar").getAvailablePorts();
 
   expect(lService).toHaveLength(1);
 });
 
 test("LodestarValidatorService autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const lService = LodestarValidatorService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/l",
-    [],
-    "foobar"
-  ).buildConfiguration();
+  const lService = LodestarValidatorService.buildByUserInput("prater", ports, "/opt/stereum/l", [], "foobar").buildConfiguration();
 
   expect(lService.autoupdate).toBe(true);
 });
 
 test("LodestarValidatorService network", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const lService = LodestarValidatorService.buildByUserInput(
-    "mainnet",
-    ports,
-    "/opt/stereum/l",
-    [],
-    "foobar"
-  ).buildConfiguration();
+  const lService = LodestarValidatorService.buildByUserInput("mainnet", ports, "/opt/stereum/l", [], "foobar").buildConfiguration();
 
   expect(lService.network).toBe("mainnet");
 });

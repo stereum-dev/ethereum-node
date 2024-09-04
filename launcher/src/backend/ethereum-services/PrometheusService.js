@@ -13,10 +13,7 @@ export class PrometheusService extends NodeService {
     const dataDir = "/prometheus";
     const configDir = "/etc/prometheus";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/data/prometheus", dataDir),
-      new ServiceVolume(workingDir + "/config", configDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data/prometheus", dataDir), new ServiceVolume(workingDir + "/config", configDir)];
 
     service.init(
       "PrometheusService",

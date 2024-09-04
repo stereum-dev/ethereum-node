@@ -2,10 +2,7 @@
   <div class="flex w-full m-auto items-center h-32 justify-center bg-[#33393E] rounded-md">
     <div class="px-2 py-1 relative w-10/12">
       <div ref="sliderBar" class="h-2 bg-gray-200 rounded-full mx-auto">
-        <div
-          :style="{ width: (volumePercentage <= 92 ? volumePercentage : 92) + '%' }"
-          class="absolute h-2 rounded-full bg-teal-600"
-        ></div>
+        <div :style="{ width: (volumePercentage <= 92 ? volumePercentage : 92) + '%' }" class="absolute h-2 rounded-full bg-teal-600"></div>
         <div
           :style="{
             left: (volumePercentage <= 92 ? volumePercentage : 92) + '%',

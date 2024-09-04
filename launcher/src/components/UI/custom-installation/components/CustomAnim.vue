@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-screen h-screen colstart-1 col-span-full row-start-1 row-span-full flex flex-col justify-evenly items-center"
-  >
+  <div class="w-screen h-screen colstart-1 col-span-full row-start-1 row-span-full flex flex-col justify-evenly items-center">
     <div class="w-full h-full flex justify-center items-center">
       <div class="anim__content__box">
         <div class="anim__img__content">
@@ -32,11 +30,7 @@ import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      customAnims: [
-        "/animation/custom/custom-2.png",
-        "/animation/custom/custom-3.png",
-        "/animation/custom/custom-4.png",
-      ],
+      customAnims: ["/animation/custom/custom-2.png", "/animation/custom/custom-3.png", "/animation/custom/custom-4.png"],
       images: [],
       currentIndex: null,
       Tasks: [],

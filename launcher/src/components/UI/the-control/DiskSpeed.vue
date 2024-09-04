@@ -12,9 +12,7 @@
           class="disk-speed_value"
           @mouseenter="
             footerStore.cursorLocation = `write speed is ${convertWriteValueToMb} ${
-              controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
-                ? 'Kilobyte'
-                : 'MegaByte'
+              controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'Kilobyte' : 'MegaByte'
             }`
           "
           @mouseleave="footerStore.cursorLocation = ''"
@@ -25,11 +23,7 @@
           <div class="write_val">
             <span
               >{{ convertWriteValueToMb }}
-              {{
-                controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
-                  ? "KB"
-                  : "MB"
-              }}</span
+              {{ controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}</span
             >
           </div>
         </div>
@@ -37,9 +31,7 @@
           class="disk-speed_value"
           @mouseenter="
             footerStore.cursorLocation = `read speed is ${convertReadValueToMb} ${
-              controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
-                ? 'Kilobyte'
-                : 'MegaByte'
+              controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'Kilobyte' : 'MegaByte'
             }`
           "
           @mouseleave="footerStore.cursorLocation = ''"
@@ -49,12 +41,7 @@
           </div>
           <div class="read_val">
             <span
-              >{{ convertReadValueToMb }}
-              {{
-                controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
-                  ? "KB"
-                  : "MB"
-              }}</span
+              >{{ convertReadValueToMb }} {{ controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}</span
             >
           </div>
         </div>

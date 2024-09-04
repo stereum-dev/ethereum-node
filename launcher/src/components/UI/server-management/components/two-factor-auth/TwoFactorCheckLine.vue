@@ -5,15 +5,9 @@
       { 'row-span-2': multiLine, 'row-span-1': !multiLine },
     ]"
   >
-    <span class="text-xs text-gray-100 w-5/6 flex justify-start items-center h-full leading-5"
-      >{{ props.checkText }}
-    </span>
+    <span class="text-xs text-gray-100 w-5/6 flex justify-start items-center h-full leading-5">{{ props.checkText }} </span>
     <div class="checkBox-container w-1/6 h-full flex justify-center items-center">
-      <div
-        class="checkBox w-4 h-4 bg-white rounded-sm flex justify-center items-center"
-        :style="checkboxStyle"
-        @click="toggleCheckbox"
-      >
+      <div class="checkBox w-4 h-4 bg-white rounded-sm flex justify-center items-center" :style="checkboxStyle" @click="toggleCheckbox">
         <span v-if="isChecked" class="text-[greenyellow]">✓</span>
       </div>
     </div>

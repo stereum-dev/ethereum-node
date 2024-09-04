@@ -1,10 +1,7 @@
 <template>
   <div class="col-start-1 col-span-full row-start-2 row-span-1 z-10 flex">
     <div class="w-full relative mt-1">
-      <button
-        class="relative w-full cursor-default rounded-md bg-gray-200 p-1 text-left shadow-md text-sm"
-        @click="toggleDropdown"
-      >
+      <button class="relative w-full cursor-default rounded-md bg-gray-200 p-1 text-left shadow-md text-sm" @click="toggleDropdown">
         <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <ChevronUpDownIcon class="h-3 w-3 text-gray-400" aria-hidden="true" />
         </span>
@@ -52,13 +49,7 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useSetups } from "../../../../../store/setups";
 
-const filters = [
-  { name: "all" },
-  { name: "execution" },
-  { name: "consensus" },
-  { name: "validator" },
-  { name: "service" },
-];
+const filters = [{ name: "all" }, { name: "execution" }, { name: "consensus" }, { name: "validator" }, { name: "service" }];
 
 const serviceStore = useServices();
 const setupStore = useSetups();
@@ -80,9 +71,7 @@ const selectFilter = (filter) => {
 const archFilter = (service) => {
   const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"];
 
-  return armArchs.includes(manageStore.architecture)
-    ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service.service)
-    : true;
+  return armArchs.includes(manageStore.architecture) ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service.service) : true;
 };
 
 const networkFilter = (service) => {

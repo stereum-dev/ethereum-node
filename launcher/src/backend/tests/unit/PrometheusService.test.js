@@ -46,13 +46,7 @@ test("buildConfiguration", () => {
 });
 
 test("getAvailablePorts", () => {
-  const prometheus = PrometheusService.buildByUserInput(
-    "prater",
-    [],
-    "/opt/stereum/prometheus",
-    [],
-    []
-  ).getAvailablePorts();
+  const prometheus = PrometheusService.buildByUserInput("prater", [], "/opt/stereum/prometheus", [], []).getAvailablePorts();
 
   expect(prometheus).toHaveLength(1);
 });

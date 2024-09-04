@@ -1,10 +1,9 @@
 <template>
   <div class="credit-header w-full h-full grid grid-cols-3 grid-rows-2 border-b border-[#3e4347]">
     <div class="credit-header_title col-start-1 col-end-4 row-start-1 row-end-3 grid grid-cols-1 grid-rows-3">
-      <span
-        class="row-start-1 row-end-2 text-[#e6e4e4] text-2xl font-medium flex justify-center items-center w-full h-full mt-2"
-        >{{ title }}</span
-      >
+      <span class="row-start-1 row-end-2 text-[#e6e4e4] text-2xl font-medium flex justify-center items-center w-full h-full mt-2">{{
+        title
+      }}</span>
       <div
         class="link-github row-start-2 row-end-3 text-wrap text-[#e6e4e4] text-base font-normal flex justify-center items-center w-full h-full mt-4"
       >

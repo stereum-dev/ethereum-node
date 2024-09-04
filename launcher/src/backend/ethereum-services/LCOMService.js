@@ -25,9 +25,7 @@ export class LCOMService extends NodeService {
       ["python", "main.py"], // entrypoint
       {
         RPC_API: executionClients[0] ? executionClients[0].buildExecutionClientHttpEndpointUrl() : "http://RPC-api",
-        BEACON_API: consensusClients[0]
-          ? consensusClients[0].buildConsensusClientHttpEndpointUrl()
-          : "http://beacon-api",
+        BEACON_API: consensusClients[0] ? consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http://beacon-api",
         IPFS_API: ipfs ? ipfs.buildIPFSHttpEndpointUrl() : "http://IPFS-api",
         NO_ID: "123456",
         LOG_LEVEL: "INFO",

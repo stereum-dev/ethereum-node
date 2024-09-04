@@ -10,9 +10,7 @@ test("network test goerli", () => {
 });
 
 test("network test mainnet", () => {
-  expect(GethService.buildByUserInput("mainnet", null, null).buildConfiguration().command).not.toContain(
-    "--goerli"
-  );
+  expect(GethService.buildByUserInput("mainnet", null, null).buildConfiguration().command).not.toContain("--goerli");
 });
 
 test("user", () => {
@@ -20,9 +18,7 @@ test("user", () => {
 });
 
 test("image", () => {
-  expect(GethService.buildByUserInput("mainnet", null, null).buildConfiguration().image).toMatch(
-    /ethereum\/client-go/
-  );
+  expect(GethService.buildByUserInput("mainnet", null, null).buildConfiguration().image).toMatch(/ethereum\/client-go/);
 });
 
 test("endpoint url", () => {
@@ -43,18 +39,10 @@ test("empty ports", () => {
 
 test("ports", () => {
   expect(
-    GethService.buildByUserInput(
-      "goerli",
-      [new ServicePort(null, 100, 200, servicePortProtocol.tcp)],
-      null
-    ).buildConfiguration().ports
+    GethService.buildByUserInput("goerli", [new ServicePort(null, 100, 200, servicePortProtocol.tcp)], null).buildConfiguration().ports
   ).toHaveLength(1);
   expect(
-    GethService.buildByUserInput(
-      "goerli",
-      [new ServicePort(null, 100, 200, servicePortProtocol.tcp)],
-      null
-    ).buildConfiguration().ports
+    GethService.buildByUserInput("goerli", [new ServicePort(null, 100, 200, servicePortProtocol.tcp)], null).buildConfiguration().ports
   ).toContain("0.0.0.0:100:200/tcp");
 });
 

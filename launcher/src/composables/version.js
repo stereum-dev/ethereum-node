@@ -60,10 +60,8 @@ export async function useUpdateCheck() {
     let newAvailableUpdates = [];
     if (versions.latest && services?.length > 0) {
       services.forEach((service) => {
-        if (!versions.latest[service.network] || !versions.latest[service.network][service.service])
-          service.network = "mainnet";
-        if (!versions.latest[service.network] || !versions.latest[service.network][service.service])
-          service.network = "prater";
+        if (!versions.latest[service.network] || !versions.latest[service.network][service.service]) service.network = "mainnet";
+        if (!versions.latest[service.network] || !versions.latest[service.network][service.service]) service.network = "prater";
         if (versions.latest[service.network] && versions.latest[service.network][service.service]) {
           if (service.service === "ErigonService" && !service.imageVersion.startsWith("v")) {
             service.imageVersion = "v" + service.imageVersion;
@@ -71,18 +69,13 @@ export async function useUpdateCheck() {
           }
           if (
             service.imageVersion !=
-            versions.latest[service.network][service.service][
-              versions.latest[service.network][service.service].length - 1
-            ]
+            versions.latest[service.network][service.service][versions.latest[service.network][service.service].length - 1]
           ) {
             nodeHeaderStore.isUpdateAvailable = true;
             newAvailableUpdates.push({
               id: service.id,
               name: service.service.replace(/(Beacon|Validator|Service)/gm, ""),
-              version:
-                versions.latest[service.network][service.service][
-                  versions.latest[service.network][service.service].length - 1
-                ],
+              version: versions.latest[service.network][service.service][versions.latest[service.network][service.service].length - 1],
             });
             console.log("Service Update Available!");
           }

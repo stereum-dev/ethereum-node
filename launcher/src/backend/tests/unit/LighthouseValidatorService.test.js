@@ -39,39 +39,21 @@ test("LighthouseValidatorService buildConfiguration", () => {
 
 test("LighthouseValidatorService getAvailablePorts", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const lhService = LighthouseValidatorService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/lh",
-    [],
-    "foobar"
-  ).getAvailablePorts();
+  const lhService = LighthouseValidatorService.buildByUserInput("prater", ports, "/opt/stereum/lh", [], "foobar").getAvailablePorts();
 
   expect(lhService).toHaveLength(1);
 });
 
 test("LighthouseValidatorService autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const lhService = LighthouseValidatorService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/lh",
-    [],
-    "foobar"
-  ).buildConfiguration();
+  const lhService = LighthouseValidatorService.buildByUserInput("prater", ports, "/opt/stereum/lh", [], "foobar").buildConfiguration();
 
   expect(lhService.autoupdate).toBe(true);
 });
 
 test("LighthouseValidatorService network", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
-  const lhService = LighthouseValidatorService.buildByUserInput(
-    "mainnet",
-    ports,
-    "/opt/stereum/lh",
-    [],
-    "foobar"
-  ).buildConfiguration();
+  const lhService = LighthouseValidatorService.buildByUserInput("mainnet", ports, "/opt/stereum/lh", [], "foobar").buildConfiguration();
 
   expect(lhService.network).toBe("mainnet");
 });

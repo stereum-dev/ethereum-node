@@ -7,8 +7,7 @@
     </div>
 
     <div class="w-2/3 flex justify-center items-center p-1">
-      <span class="animate-pulse col-start-1 col-span-full row-start-1 row-span-1 w-full h-3 rounded-full bg-slate-400">
-      </span>
+      <span class="animate-pulse col-start-1 col-span-full row-start-1 row-span-1 w-full h-3 rounded-full bg-slate-400"> </span>
     </div>
   </div>
 </template>

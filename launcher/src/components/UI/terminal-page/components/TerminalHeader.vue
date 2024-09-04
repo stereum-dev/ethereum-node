@@ -18,10 +18,7 @@
         <span class="w-full text-[#336666] text-md font-semibold text-left">{{ controlStore.ipAddress }}</span>
       </p>
     </div>
-    <div
-      class="col-start-22 col-span-1 flex items-center justify-center cursor-pointer relative"
-      @click="clearTerminal"
-    >
+    <div class="col-start-22 col-span-1 flex items-center justify-center cursor-pointer relative" @click="clearTerminal">
       <img
         class="w-7 hover:scale-105 active:scale-100 hover:shadow-md hover:shadow-[#1b1d20] active:shadow-none transition duration-300 ease-in-out rounded-md bg-[#1f2226] p-[2px]"
         src="/img/icon/terminal-page-icons/broom.png"

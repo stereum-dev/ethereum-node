@@ -12,10 +12,7 @@ export class KuboIPFSService extends NodeService {
     const dataDir = "/data/ipfs";
     const exportDir = "/export";
 
-    const volumes = [
-      new ServiceVolume(workingDir + dataDir, dataDir),
-      new ServiceVolume(workingDir + exportDir, exportDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + dataDir, dataDir), new ServiceVolume(workingDir + exportDir, exportDir)];
 
     service.init(
       "KuboIPFSService", //service

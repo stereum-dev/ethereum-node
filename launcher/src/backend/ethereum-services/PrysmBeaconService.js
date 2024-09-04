@@ -15,10 +15,7 @@ export class PrysmBeaconService extends NodeService {
     const genesisDir = "/opt/app/genesis";
 
     //volumes
-    const volumes = [
-      new ServiceVolume(workingDir + "/beacon", dataDir),
-      new ServiceVolume(workingDir + "/genesis", genesisDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir), new ServiceVolume(workingDir + "/genesis", genesisDir)];
 
     //execution endpoint
     const executionEndpoint = executionClients
@@ -59,7 +56,7 @@ export class PrysmBeaconService extends NodeService {
         "--p2p-tcp-port=13001",
         "--p2p-udp-port=12001",
       ], //command
-      ['/app/cmd/beacon-chain/beacon-chain'], //entrypoint
+      ["/app/cmd/beacon-chain/beacon-chain"], //entrypoint
       null, //env
       ports, //ports
       volumes, //volumes
@@ -71,15 +68,15 @@ export class PrysmBeaconService extends NodeService {
     );
 
     if (network == "holesky" || network == "sepolia") {
-      service.command.push(`--genesis-state=/opt/app/genesis/prysm-${network}-genesis.ssz`)
+      service.command.push(`--genesis-state=/opt/app/genesis/prysm-${network}-genesis.ssz`);
     }
 
     if (checkpointURL) {
-      service.command.push(`--checkpoint-sync-url=${checkpointURL}`)
+      service.command.push(`--checkpoint-sync-url=${checkpointURL}`);
     }
 
     if (mevboostEndpoint) {
-      service.command.push(`--http-mev-relay=${mevboostEndpoint}`)
+      service.command.push(`--http-mev-relay=${mevboostEndpoint}`);
     }
 
     return service;
@@ -110,8 +107,7 @@ export class PrysmBeaconService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
   getAvailablePorts() {

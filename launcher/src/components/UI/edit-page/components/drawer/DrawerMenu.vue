@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-6 grid-rows-15 items-center gap-y-2"
-  >
+  <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-6 grid-rows-15 items-center gap-y-2">
     <div
       class="col-start-1 col-span-full row-start-1 row-end-3 w-full h-full bg-[#232428] rounded-md flex flex-col justify-between items-center p-1"
     >
@@ -29,8 +27,7 @@
     <div
       class="col-start-1 col-span-full row-start-5 row-end-10 w-full h-full bg-[#232428] rounded-md grid grid-cols-6 grid-rows-6 items-start gap-y-1 p-1"
     >
-      <span
-        class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-300 font-sans uppercase self-center"
+      <span class="col-start-1 col-span-full row-start-1 row-span-1 text-xs text-center text-gray-300 font-sans uppercase self-center"
         >ADD A SERVER SERVICE</span
       >
       <div
@@ -80,9 +77,7 @@ const getServerServices = computed(() => {
 });
 
 onMounted(() => {
-  allServices.value = serviceStore.allServices
-    .filter((e) => e.category === "service")
-    .map((e) => ({ ...e, isDuplicated: false }));
+  allServices.value = serviceStore.allServices.filter((e) => e.category === "service").map((e) => ({ ...e, isDuplicated: false }));
 });
 
 // Methods

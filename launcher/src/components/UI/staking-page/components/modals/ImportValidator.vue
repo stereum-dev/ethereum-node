@@ -25,10 +25,7 @@
         </div>
       </div>
 
-      <div
-        v-if="isSlashingActive"
-        class="col-start-1 col-span-full row-start-3 row-span-3 flex flex-col justify-start items-center"
-      >
+      <div v-if="isSlashingActive" class="col-start-1 col-span-full row-start-3 row-span-3 flex flex-col justify-start items-center">
         <span class="col-start-1 col-end-5 row-start-1 row-span-1 text-center text-sm font-semibold text-gray-300">{{
           $t("importSlashingModal.slashModalMessage")
         }}</span>
@@ -70,9 +67,7 @@
         v-else-if="!activeButton && !isSlashingActive"
         class="w-full col-start-1 col-span-full row-start-3 row-end-6 grid grid-cols-3 grid-rows-3 items-center overflow-hidden"
       >
-        <div
-          class="w-full col-start-1 col-span-full row-start-1 row-end-3 flex justify-start items-center overflow-hidden"
-        >
+        <div class="w-full col-start-1 col-span-full row-start-1 row-end-3 flex justify-start items-center overflow-hidden">
           <img class="h-24 sliding-animation" src="/animation/staking/alice.gif" alt="Animation" />
         </div>
         <div
@@ -90,9 +85,7 @@
       >
         <div class="w-full h-fit flex flex-col justify-center items-center space-y-2">
           <span class="w-full text-lg font-semibold text-left text-gray-300">{{ $t("stakingPage.impDet") }}</span>
-          <div
-            class="w-full max-h-32 overflow-x-hidden overflow-y-auto border border-gray-700 rounded-md bg-[#111213] mx-2 p-2 space-y-2"
-          >
+          <div class="w-full max-h-32 overflow-x-hidden overflow-y-auto border border-gray-700 rounded-md bg-[#111213] mx-2 p-2 space-y-2">
             <div
               v-for="(line, index) in getMessage"
               :key="index"

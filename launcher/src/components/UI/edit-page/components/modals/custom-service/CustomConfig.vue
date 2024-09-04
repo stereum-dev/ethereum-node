@@ -18,11 +18,7 @@
           :class="{ 'animate__animated animate__fadeOut': !isCustomConfigActive }"
         >
           <div class="w-full col-start-2 col-end-12 row-start-2 row-end-4 items-center grid grid-cols-24">
-            <img
-              class="col-start-1 col-span-2 w-7 justify-self-center"
-              src="/img/icon/edit-node-icons/image-icon.png"
-              alt="Image Icon"
-            />
+            <img class="col-start-1 col-span-2 w-7 justify-self-center" src="/img/icon/edit-node-icons/image-icon.png" alt="Image Icon" />
             <span class="col-start-3 col-span-4 text-md text-gray-200 text-left font-semibold capitalize">IMAGE</span>
 
             <div class="col-start-8 col-end-24 flex justify-start items-center bg-gray-200 rounded-md">
@@ -35,14 +31,8 @@
             </div>
           </div>
           <div class="w-full col-start-2 col-end-12 row-start-5 row-end-7 items-center grid grid-cols-24">
-            <img
-              class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/edit-node-icons/entrypoint.png"
-              alt="Image Icon"
-            />
-            <span class="col-start-3 col-span-4 text-md text-gray-300 text-left font-semibold capitalize"
-              >ENTRYPOINT</span
-            >
+            <img class="col-start-1 col-span-2 w-8 justify-self-center" src="/img/icon/edit-node-icons/entrypoint.png" alt="Image Icon" />
+            <span class="col-start-3 col-span-4 text-md text-gray-300 text-left font-semibold capitalize">ENTRYPOINT</span>
 
             <div class="col-start-8 col-end-24 flex justify-start items-center bg-gray-200 rounded-md">
               <input
@@ -54,11 +44,7 @@
             </div>
           </div>
           <div class="w-full col-start-2 col-end-12 row-start-8 row-end-10 items-center grid grid-cols-24">
-            <img
-              class="col-start-1 col-span-2 w-7 justify-self-center"
-              src="/img/icon/edit-node-icons/command.png"
-              alt="Image Icon"
-            />
+            <img class="col-start-1 col-span-2 w-7 justify-self-center" src="/img/icon/edit-node-icons/command.png" alt="Image Icon" />
             <span class="col-start-3 col-span-4 text-md text-gray-300 text-left font-semibold capitalize">COMMAND</span>
 
             <div class="col-start-8 col-end-24 flex justify-start items-center bg-gray-200 rounded-md">
@@ -80,11 +66,7 @@
             >Ensure that the volumes are in the correct format.</span
           >
           <div class="w-full col-start-2 col-end-12 row-start-3 row-end-5 items-center grid grid-cols-24">
-            <img
-              class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/edit-node-icons/volume-icon.png"
-              alt="Image Icon"
-            />
+            <img class="col-start-1 col-span-2 w-8 justify-self-center" src="/img/icon/edit-node-icons/volume-icon.png" alt="Image Icon" />
             <span class="col-start-3 col-span-4 text-md text-gray-200 text-left font-semibold capitalize">VOLUMES</span>
 
             <div class="col-start-8 col-end-24 bg-gray-200 rounded-md grid grid-cols-12 items-center p-[2px]">
@@ -108,12 +90,7 @@
           <div
             class="w-full h-full max-h-[120px] col-start-2 col-end-12 row-start-6 row-span-full items-center flex flex-col justify-start bg-black rounded-md overflow-x-hidden overflow-y-auto p-1 gap-y-1"
           >
-            <PathRows
-              v-for="path in manageStore.customConfig.paths"
-              :key="path"
-              :path="path"
-              @remove-path="removePaths"
-            />
+            <PathRows v-for="path in manageStore.customConfig.paths" :key="path" :path="path" @remove-path="removePaths" />
           </div>
         </div>
         <div
@@ -124,11 +101,7 @@
             >Ensure that the ports are in the correct format.</span
           >
           <div class="w-full col-start-2 col-end-12 row-start-3 row-end-5 items-center grid grid-cols-24">
-            <img
-              class="col-start-1 col-span-2 w-8 justify-self-center"
-              src="/img/icon/edit-node-icons/service-port.png"
-              alt="Image Icon"
-            />
+            <img class="col-start-1 col-span-2 w-8 justify-self-center" src="/img/icon/edit-node-icons/service-port.png" alt="Image Icon" />
             <span class="col-start-3 col-span-4 text-md text-gray-200 text-left font-semibold capitalize">PORTS</span>
 
             <div class="col-start-8 col-end-24 bg-gray-200 rounded-md grid grid-cols-12 items-center p-[2px]">
@@ -150,12 +123,7 @@
           <div
             class="w-full h-full max-h-[120px] col-start-2 col-end-12 row-start-6 row-span-full items-center flex flex-col justify-start bg-black rounded-md overflow-x-hidden overflow-y-auto p-1 gap-y-1"
           >
-            <PortRows
-              v-for="port in manageStore.customConfig.ports"
-              :key="port"
-              :port="port"
-              @remove-ports="removePorts"
-            />
+            <PortRows v-for="port in manageStore.customConfig.ports" :key="port" :port="port" @remove-ports="removePorts" />
           </div>
         </div>
       </Transition>

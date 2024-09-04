@@ -4,11 +4,7 @@ import { ServicePort, servicePortProtocol } from "../../ethereum-services/Servic
 test("buildByUserInput", () => {
   const ports = [new ServicePort(null, 4040, 4040, servicePortProtocol.tcp)];
 
-  const nethermindService = NethermindService.buildByUserInput(
-    "goerli",
-    ports,
-    "/opt/stereum/nethermind"
-  ).buildConfiguration();
+  const nethermindService = NethermindService.buildByUserInput("goerli", ports, "/opt/stereum/nethermind").buildConfiguration();
 
   expect(nethermindService.service).toBe("NethermindService");
   expect(nethermindService.id).toMatch(/.{8}-.{4}-.{4}-.{4}-.{12}/);
@@ -19,9 +15,7 @@ test("buildByUserInput", () => {
   expect(nethermindService.entrypoint).toContain("./nethermind");
   expect(nethermindService.ports).toHaveLength(1);
   expect(nethermindService.ports).toContain("0.0.0.0:4040:4040/tcp");
-  expect(nethermindService.volumes).toContain(
-    "/opt/stereum/nethermind-" + nethermindService.id + "/data:/opt/app/data"
-  );
+  expect(nethermindService.volumes).toContain("/opt/stereum/nethermind-" + nethermindService.id + "/data:/opt/app/data");
   expect(nethermindService.user).toBe("root");
   expect(nethermindService.network).toBe("goerli");
 });
@@ -54,14 +48,8 @@ test("buildExecutionClientMetricsEndpoint", () => {
 });
 
 test("buildPrometheusJob", () => {
-  const nethermindPrometheusJob = NethermindService.buildByUserInput(
-    "goerli",
-    [],
-    "/opt/stereum/nethermind"
-  ).buildPrometheusJob();
-  expect(nethermindPrometheusJob).toMatch(
-    /\n {2}- job_name: stereum-.{36}\n {4}static_configs:\n {6}- targets: \[stereum-.{36}:6060]/
-  );
+  const nethermindPrometheusJob = NethermindService.buildByUserInput("goerli", [], "/opt/stereum/nethermind").buildPrometheusJob();
+  expect(nethermindPrometheusJob).toMatch(/\n {2}- job_name: stereum-.{36}\n {4}static_configs:\n {6}- targets: \[stereum-.{36}:6060]/);
 });
 
 test("buildByConfiguration", () => {

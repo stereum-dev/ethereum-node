@@ -1,10 +1,6 @@
 <template>
   <div class="amsterdam-parent">
-    <div
-      class="icoTitle"
-      @mouseenter="cursorLocation = `${footerInfo} ${getSetupNetwork?.name}`"
-      @mouseleave="cursorLocation = ''"
-    >
+    <div class="icoTitle" @mouseenter="cursorLocation = `${footerInfo} ${getSetupNetwork?.name}`" @mouseleave="cursorLocation = ''">
       <div class="icoContainer">
         <img :src="getSetupNetwork?.icon" />
       </div>
@@ -56,9 +52,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the justified epoch: ${
-                  currentResult?.currentJustifiedEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber}`
+                cursorLocation = `the justified epoch: ${currentResult?.currentJustifiedEpoch || 'N/A'} and the slot number is ${
+                  n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -74,9 +70,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the previous justified epoch: ${
-                  currentResult?.previousJustifiedEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber}`
+                cursorLocation = `the previous justified epoch: ${currentResult?.previousJustifiedEpoch || 'N/A'} and the slot number is ${
+                  n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -94,9 +90,7 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the Finalized epoch: ${
-                  currentResult?.finalizedEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber}`
+                cursorLocation = `the Finalized epoch: ${currentResult?.finalizedEpoch || 'N/A'} and the slot number is ${n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>

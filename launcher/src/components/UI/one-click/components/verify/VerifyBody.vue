@@ -7,15 +7,9 @@ import { ref, onMounted } from 'vue';
       <div
         class="col-start-1 col-span-full row-start-1 row-span-1 w-full h-10 bg-[#336666] grid grid-cols-12 rounded-md justify-start items-center px-2"
       >
-        <span class="col-start-1 col-span-2 text-left text-gray-300 text-sm font-normal">{{
-          $t("verifyInstallation.name")
-        }}</span>
-        <span class="col-start-5 col-span-2 text-left text-gray-300 text-sm font-normal">{{
-          $t("verifyInstallation.cat")
-        }}</span>
-        <span class="col-start-7 col-span-2 text-left text-gray-300 text-sm font-normal">{{
-          $t("verifyInstallation.path")
-        }}</span>
+        <span class="col-start-1 col-span-2 text-left text-gray-300 text-sm font-normal">{{ $t("verifyInstallation.name") }}</span>
+        <span class="col-start-5 col-span-2 text-left text-gray-300 text-sm font-normal">{{ $t("verifyInstallation.cat") }}</span>
+        <span class="col-start-7 col-span-2 text-left text-gray-300 text-sm font-normal">{{ $t("verifyInstallation.path") }}</span>
       </div>
       <div
         class="col-start-1 col-span-full row-start-2 row-span-full w-full flex flex-col justify-start items-center rounded-md space-y-2 overflow-y-auto overflow-x-hidden"
@@ -25,12 +19,8 @@ import { ref, onMounted } from 'vue';
           :key="index"
           class="w-full h-12 bg-[#21272c] rounded-md p-2 mx-1 grid grid-cols-12 justify-start items-center"
         >
-          <span class="col-start-1 col-end-5 text-left text-gray-300 text-sm font-normal overflow-hidden w-full">{{
-            item.name
-          }}</span>
-          <span class="col-start-5 col-span-2 text-left text-gray-300 text-sm font-normal overflow-hidden w-full">{{
-            item.category
-          }}</span>
+          <span class="col-start-1 col-end-5 text-left text-gray-300 text-sm font-normal overflow-hidden w-full">{{ item.name }}</span>
+          <span class="col-start-5 col-span-2 text-left text-gray-300 text-sm font-normal overflow-hidden w-full">{{ item.category }}</span>
           <span class="col-start-7 col-span-full text-left text-amber-500 text-sm font-normal overflow-hidden">
             {{ clickStore.installationPath + item.path }}
           </span>

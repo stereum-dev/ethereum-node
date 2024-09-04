@@ -1066,8 +1066,7 @@ export const useServices = defineStore("services", {
           icon: "/img/icon/service-icons/Other/ValidatorEjector.png",
           sIcon: "/img/icon/service-icons/Other/ValidatorEjector-s.png",
           linkUrl: "",
-          docsUrl:
-            "https://enchanted-direction-844.notion.site/Validator-Exits-NO-Setup-Overview-07436e1694ce4b7091473602049664d7",
+          docsUrl: "https://enchanted-direction-844.notion.site/Validator-Exits-NO-Setup-Overview-07436e1694ce4b7091473602049664d7",
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [

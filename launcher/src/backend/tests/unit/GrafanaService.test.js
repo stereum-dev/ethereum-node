@@ -4,17 +4,10 @@ import { ServicePort, servicePortProtocol } from "../../ethereum-services/Servic
 test("buildConfiguration", () => {
   const ports = [new ServicePort("127.0.0.1", 3000, 3000, servicePortProtocol.tcp)];
 
-  const grafanaService = GrafanaService.buildByUserInput(
-    "prater",
-    ports,
-    "/opt/stereum/grafana",
-    "nimbus"
-  ).buildConfiguration();
+  const grafanaService = GrafanaService.buildByUserInput("prater", ports, "/opt/stereum/grafana", "nimbus").buildConfiguration();
 
   expect(grafanaService.volumes).toHaveLength(3);
-  expect(grafanaService.volumes).toContain(
-    "/opt/stereum/grafana-" + grafanaService.id + "/provisioning:/etc/grafana/provisioning"
-  );
+  expect(grafanaService.volumes).toContain("/opt/stereum/grafana-" + grafanaService.id + "/provisioning:/etc/grafana/provisioning");
   expect(grafanaService.volumes).toContain("/opt/stereum/grafana-" + grafanaService.id + "/data:/var/lib/grafana");
   expect(grafanaService.volumes).toContain("/opt/stereum/grafana-" + grafanaService.id + ":/etc/grafana");
   expect(grafanaService.ports).toHaveLength(1);
@@ -25,12 +18,7 @@ test("buildConfiguration", () => {
 });
 
 test("getAvailablePorts", () => {
-  const grafanaServicePorts = GrafanaService.buildByUserInput(
-    "prater",
-    [],
-    "/opt/stereum/grafana",
-    "nimbus"
-  ).getAvailablePorts();
+  const grafanaServicePorts = GrafanaService.buildByUserInput("prater", [], "/opt/stereum/grafana", "nimbus").getAvailablePorts();
 
   expect(grafanaServicePorts).toHaveLength(1);
 });

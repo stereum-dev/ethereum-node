@@ -12,9 +12,7 @@
   >
     <template #content>
       <div class="2fa-content-parent w-full h-full grid grid-cols-24 grid-rows-6 items-center">
-        <span class="col-start-5 col-end-21 row-start-1 row-end-3 text-md text-center text-gray-300">{{
-          t("twoFactorAuth.has2fa")
-        }}</span>
+        <span class="col-start-5 col-end-21 row-start-1 row-end-3 text-md text-center text-gray-300">{{ t("twoFactorAuth.has2fa") }}</span>
         <input
           v-model="password"
           class="col-start-6 col-end-20 row-start-5 row-span-2 h-full rounded-lg px-2 text-md text-gray-800"

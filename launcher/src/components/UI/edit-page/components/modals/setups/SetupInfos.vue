@@ -35,11 +35,9 @@
               class="w-6 h-6 rounded-full col-start-8 col-span-1 text-lg text-gray-400 font-sans text-center capitalize"
               :class="setupStore.getBGColor(getSelectedSetup.color)"
             ></span>
-            <span
-              v-if="getSelectedSetup"
-              class="col-start-9 col-end-13 text-lg text-gray-400 font-sans text-left capitalize"
-              >{{ getSelectedSetup.color }}</span
-            >
+            <span v-if="getSelectedSetup" class="col-start-9 col-end-13 text-lg text-gray-400 font-sans text-left capitalize">{{
+              getSelectedSetup.color
+            }}</span>
           </div>
         </div>
         <div class="w-full flex justify-center items-center">

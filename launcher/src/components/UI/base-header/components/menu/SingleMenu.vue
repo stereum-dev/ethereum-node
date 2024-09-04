@@ -34,10 +34,7 @@ const handleClick = () => {
 const menuIcon = computed(() => {
   if (props.item.name !== "Available Update") {
     return props.item.icon;
-  } else if (
-    props.item.name === "Available Update" &&
-    (headerStore.isUpdateAvailable || headerStore.isOsUpdateAvailable)
-  ) {
+  } else if (props.item.name === "Available Update" && (headerStore.isUpdateAvailable || headerStore.isOsUpdateAvailable)) {
     return props.item.activeIcon;
   } else {
     return props.item.icon;
