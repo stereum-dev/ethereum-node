@@ -19,11 +19,7 @@ import ServerHeader from './components/ServerHeader.vue';
     <GenerateKey v-if="serverStore.isGenerateModalActive" @close-modal="closeGenerateModal" @generate-key="generateKeyHandler" />
     <RemoveModal v-if="serverStore.isRemoveModalActive" @remove-handler="removeServerHandler" @close-window="closeWindow" />
     <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
-    <ChangeOTPModal
-      v-if="serverStore.isOTPActive"
-      @submit-password="submitPasswordHandler"
-      @close-window="closeAndCancel"
-    />
+    <ChangeOTPModal v-if="serverStore.isOTPActive" @submit-password="submitPasswordHandler" @close-window="closeAndCancel" />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
     <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
   </div>

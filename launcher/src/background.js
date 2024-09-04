@@ -737,7 +737,11 @@ ipcMain.handle("readGasConfigFile", async (event, args) => {
 });
 
 ipcMain.handle("handleOTPChange", async (event, args) => {
-  return await AuthenticationService.handleOTPChange(nodeConnection.nodeConnectionParams.password, args.newPassword, nodeConnection.sshService);
+  return await AuthenticationService.handleOTPChange(
+    nodeConnection.nodeConnectionParams.password,
+    args.newPassword,
+    nodeConnection.sshService
+  );
 });
 
 ipcMain.handle("fetchObolCharonAlerts", async () => {

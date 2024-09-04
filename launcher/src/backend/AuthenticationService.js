@@ -172,9 +172,9 @@ export class AuthenticationService {
 
   static async handleOTPChange(oldPassword, newPassword, sshService) {
     return new Promise((resolve, reject) => {
-      let oldPasswordWritten = false
-      let newPasswordWrittenInitial = false
-      let newPasswordWrittenConfirmation = false
+      let oldPasswordWritten = false;
+      let newPasswordWrittenInitial = false;
+      let newPasswordWrittenConfirmation = false;
       const conn = sshService.getConnectionFromPool();
       conn.shell((err, stream) => {
         // Set timeout for 20 seconds for the password change
@@ -187,7 +187,7 @@ export class AuthenticationService {
         // Catch enitial error
         if (err) throw err;
         stream.on("close", () => {
-          log.info("Closing OTP handle stream...")
+          log.info("Closing OTP handle stream...");
           resolve();
         });
 
@@ -208,12 +208,21 @@ export class AuthenticationService {
             stream.write(`${oldPassword}\r\n`);
 
             // Check if new password is being asked
-          } else if (new RegExp(/^(?=.*\b(new)\b)(?=.*\bpassword\b).*$/gm).test(recieved) && oldPasswordWritten && !newPasswordWrittenInitial) {
+          } else if (
+            new RegExp(/^(?=.*\b(new)\b)(?=.*\bpassword\b).*$/gm).test(recieved) &&
+            oldPasswordWritten &&
+            !newPasswordWrittenInitial
+          ) {
             newPasswordWrittenInitial = true;
             stream.write(`${newPassword}\r\n`);
 
             // Check for password confirmation
-          } else if (new RegExp(/^(?=.*\b(retype|repeat|confirm)\b)(?=.*\bpassword\b).*$/gm).test(recieved) && oldPasswordWritten && newPasswordWrittenInitial && !newPasswordWrittenConfirmation) {
+          } else if (
+            new RegExp(/^(?=.*\b(retype|repeat|confirm)\b)(?=.*\bpassword\b).*$/gm).test(recieved) &&
+            oldPasswordWritten &&
+            newPasswordWrittenInitial &&
+            !newPasswordWrittenConfirmation
+          ) {
             newPasswordWrittenConfirmation = true;
             stream.write(`${newPassword}\r\n`);
 
@@ -222,7 +231,12 @@ export class AuthenticationService {
             reject("Error changing password: " + recieved);
 
             // Check for success
-          } else if (recieved.includes(sshService.connectionInfo.user || "root") && oldPasswordWritten && newPasswordWrittenInitial && newPasswordWrittenConfirmation) {
+          } else if (
+            recieved.includes(sshService.connectionInfo.user || "root") &&
+            oldPasswordWritten &&
+            newPasswordWrittenInitial &&
+            newPasswordWrittenConfirmation
+          ) {
             stream.end();
             conn.end();
             resolve();
