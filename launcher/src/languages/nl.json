@@ -499,7 +499,8 @@
     "sync": "Synchronisatiefout",
     "taskFail": "Taak Mislukt",
     "stats": "STATUS: OPEN",
-    "clientService": "CLIENT / SERVICE"
+    "clientService": "CLIENT / SERVICE",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "UW CLIENT Slaat blockchain data OP UW SERVER OP ZODAT UW NODE het netwerk kan dienen. dit is noodzakelijk voor uw node OM zijn ATTESTATIE PLICHT OP TE PAKKEN IN STAKING. DOOR DEZE OPTIE TE GEBRUIKEN VERWIJDERT U DE HUIDIGE BLOCKCHAIN DATA VAN UW CLIENTS & GEBRUIKT U DE GESELECTEERDE OPTIE ALS EEN BRON OM UW NODE OPNIEUW TE SYNCHRONISEREN.",
