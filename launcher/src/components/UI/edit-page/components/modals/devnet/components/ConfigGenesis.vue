@@ -15,7 +15,6 @@
               :class="getInputType(flattenedGenesis[key]) === 'checkbox' ? 'w-5 h-5' : 'w-full h-9'"
               :type="getInputType(flattenedGenesis[key])"
               @input="updateStore"
-              @change="setupStore.genesisChanged = true"
             />
           </div>
         </template>
@@ -29,11 +28,8 @@ import { useGenesis } from "@/store/genesis";
 import { onMounted, ref, watch } from "vue";
 
 const genesisStore = useGenesis();
-const flattenedGenesis = ref({});
 
-onMounted(() => {
-  initializeFlattenedGenesis();
-});
+const flattenedGenesis = ref({});
 
 watch(
   () => genesisStore.genesis,
@@ -77,12 +73,6 @@ const getInputType = (value) => {
   return "text";
 };
 
-//Update genesis store in pina
-const updateStore = () => {
-  const updatedGenesis = unflattenObject(flattenedGenesis.value);
-  genesisStore.updateGenesisExceptAlloc(updatedGenesis);
-};
-
 const unflattenObject = (obj) => {
   const result = {};
   for (const key in obj) {
@@ -95,6 +85,17 @@ const unflattenObject = (obj) => {
 
   return result;
 };
+
+//Update genesis store in pina
+const updateStore = () => {
+  const updatedGenesis = unflattenObject(flattenedGenesis.value);
+  genesisStore.updateGenesisExceptAlloc(updatedGenesis);
+};
+
+//Lifecycle hooks
+onMounted(() => {
+  initializeFlattenedGenesis();
+});
 </script>
 
 <style scoped>
