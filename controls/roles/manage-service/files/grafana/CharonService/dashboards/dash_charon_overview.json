@@ -829,7 +829,7 @@
                     "options": {
                       "0": {
                         "index": 0,
-                        "text": " ❌"
+                        "text": "❌"
                       },
                       "1": {
                         "index": 1,
@@ -2455,7 +2455,7 @@
                     "options": {
                       "0": {
                         "index": 0,
-                        "text": " ❌"
+                        "text": "❌"
                       },
                       "1": {
                         "index": 1,
@@ -6453,8 +6453,8 @@
       {
         "current": {
           "selected": false,
-          "text": "test-cluster",
-          "value": "test-cluster"
+          "text": "test-lido-cluster",
+          "value": "test-lido-cluster"
         },
         "datasource": "${DS_PROMETHEUS}",
         "definition": "label_values(app_peer_name{cluster_network=~\"$cluster_network\"},cluster_name)",
@@ -6503,8 +6503,8 @@
       {
         "current": {
           "selected": false,
-          "text": "calm-game",
-          "value": "calm-game"
+          "text": "thoughtful-sister",
+          "value": "thoughtful-sister"
         },
         "datasource": "${DS_PROMETHEUS}",
         "definition": "label_values(app_peer_name{cluster_name=\"$cluster_name\",cluster_hash=\"$cluster_hash\"}, cluster_peer)",
