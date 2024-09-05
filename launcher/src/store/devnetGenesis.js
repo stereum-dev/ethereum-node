@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useGenesis = defineStore("devnetGenesis", {
+export const useDevGenesis = defineStore("devnetGenesis", {
   state: () => {
     return {
       config: `CONFIG_NAME: interop

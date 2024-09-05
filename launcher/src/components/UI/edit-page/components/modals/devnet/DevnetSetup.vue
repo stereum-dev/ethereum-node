@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 import CustomModal from "../CustomModal.vue";
 import AddAllocation from "./components/AddAllocation.vue";
@@ -8,10 +8,10 @@ import CreateSetup from "./components/CreateSetup.vue";
 import SelectCilent from "./components/SelectCilent.vue";
 import SelectGenesis from "./components/SelectGenesis.vue";
 import SummeryDisplay from "./components/SummeryDisplay.vue";
-import { useGenesis } from "../../../../../../store/genesis";
+
+const emit = defineEmits(["confirmDevnet"]);
 
 const setupStore = useSetups();
-const genesisStore = useGenesis();
 const isGenesisConfigChanged = ref(false);
 const allocations = ref([]);
 
@@ -45,11 +45,6 @@ const getComponent = computed(() => {
   return { modal: comp, buttonText: btnText, buttonState: btnState, subtitle: subtitle };
 });
 
-watchEffect(() => {
-  console.log("uploadedGenesisConfig:", setupStore.devnetConfigData.uploadedGenesisConfig);
-  console.log("currentComponent:", getComponent.value.modal.__name);
-});
-
 const closeWindow = () => {
   setupStore.isDevnetSetupModalActive = false;
   setupStore.currentStep = 1;
@@ -73,7 +68,7 @@ const buttonAction = () => {
       setupStore.currentStep++;
     }
   } else {
-    finalizeSetup();
+    confirmDevnet();
   }
 };
 
@@ -98,15 +93,8 @@ const updateAllocations = (newAllocations) => {
   allocations.value = newAllocations;
 };
 
-const finalizeSetup = () => {
-  setupStore.devnetConfigData.genesisConfig = {
-    ...genesisStore.genesis,
-  };
-
-  console.log("finalizeSetup");
-  console.log("Final data for backend", setupStore.devnetConfigData);
-  setupStore.isDevnetSetupModalActive = false;
-  setupStore.currentStep = 1;
+const confirmDevnet = () => {
+  emit("confirmDevnet");
 };
 </script>
 

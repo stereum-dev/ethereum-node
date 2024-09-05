@@ -122,7 +122,7 @@
       <SetupInfos v-if="setupStore.selectedSetupInfos" />
       <!-- End Setup Infos -->
       <!-- Start Devnet Configs Modal -->
-      <DevnetSetup v-if="setupStore.isDevnetSetupModalActive" @close-window="closeDevnetModal" @confirm-action="validationForm" />
+      <DevnetSetup v-if="setupStore.isDevnetSetupModalActive" @confirm-devnet="setupDevnet" />
     </TransitionGroup>
     <LoaderAnime v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive" :anime="getAimationSrc" />
   </base-layout>
@@ -163,6 +163,8 @@ import ChangesSection from "./sections/ChangesSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
 import { useFrontendServices } from "@/composables/services";
+import { useGenesis } from "../../../store/genesis";
+import { useDevGenesis } from "../../../store/devnetGenesis";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -171,6 +173,8 @@ const manageStore = useNodeManage();
 const headerStore = useNodeHeader();
 const stakingStore = useStakingStore();
 const serverStore = useServers();
+const genesisStore = useGenesis();
+const devGenStore = useDevGenesis();
 
 // Router
 const router = useRouter();
@@ -457,14 +461,85 @@ const createDevnetModal = () => {
   setupStore.isDevnetSetupModalActive = true;
 };
 
-// const createCustomConfig = () => {
-//   setupStore.isDevnetSetupModalActive = false;
-//   console.log("genesis");
-//   console.log("config");
-//   console.log('Clients');
-//   await ControlService.writeGenesis('genesis in Object');
-//   await ControlService.writeConfig('Config in String');
-// };
+//Create Devnet setup  and Install services
+const setupDevnet = async () => {
+  setupStore.devnetConfigData.genesisConfig = { ...genesisStore.genesis };
+
+  try {
+    await ControlService.writeGenesisJson(useDeepClone(genesisStore.genesis));
+    await ControlService.writeConfigYaml(devGenStore.config);
+    await ControlService.initGenesis();
+
+    //Create Setup Data
+    const setupData = {
+      name: setupStore.devnetConfigData.setupName.trim(),
+      network: setupStore.devnetConfigData.network,
+      color: setupStore.devnetConfigData.setupColor,
+      type: "ETH",
+      services: [],
+    };
+    //Create Setup
+    await ControlService.createSetup(setupData);
+    //Fetch Setups
+    await fetchSetups();
+    const setupId = setupStore.editSetups.find((s) => s.setupName === setupStore.devnetConfigData.setupName)?.setupId;
+
+    if (!setupId) {
+      throw new Error("Setup ID not found after setup creation");
+    }
+
+    //Installing Single service in a loop
+    for (const client of setupStore.devnetConfigData.services) {
+      const serviceIsConsensus = client.category === "consensus" ? client : null;
+      const serviceIsValidator = client.category === "validator" ? client : null;
+
+      const executionClients = setupStore.devnetConfigData.services.filter((e) => e.category === "execution");
+      const consensusClients = setupStore.devnetConfigData.services.filter((e) => e.category === "consensus");
+
+      const serviceData = {
+        setupId: setupId,
+        network: "devnet",
+        installDir: client.installDir || "/opt/stereum",
+        executionClients: serviceIsConsensus ? executionClients : client.executionClients,
+        consensusClients: serviceIsValidator ? consensusClients : client.consensusClients,
+        otherServices: client.otherServices,
+        relays: null,
+        checkpointURL: client.checkPointSyncUrl || false,
+        image: client.image,
+        entrypoint: client.entrypoint,
+        command: client.command,
+        ports: client.ports,
+        volumes: client.volumes,
+      };
+      //ADD SERVICE TO CONFIRM CHANGES
+      manageStore.confirmChanges.push({
+        id: randomId,
+        content: "INSTALL",
+        contentIcon: "/img/icon/edit-node-icons/add-service-icon.png",
+        service: client,
+        data: serviceData,
+      });
+    }
+
+    //Installing services
+    await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+    manageStore.confirmChanges = [];
+    setupStore.isDevnetSetupModalActive = false;
+    setupStore.currentStep = 1;
+    setupStore.devnetConfigData = {
+      network: "devnet",
+      setupName: "",
+      setupColor: "",
+      genesisConfig: null,
+      uploadedGenesisConfig: null,
+      genesisChanged: false,
+      configYaml: "",
+      services: [],
+    };
+  } catch (error) {
+    console.error("Error in setupDevnet", error);
+  }
+};
 
 const getSetupNetwork = (network) => {
   selectedSetupNetwork.value = network;
@@ -584,6 +659,8 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
+  console.log("item", item);
+
   if (item.client.service === "CustomService" && !item.customConfigReady) {
     manageStore.customConfig.installDir = item.installDir;
     clientToInstall.value.configPanel = true;
@@ -605,6 +682,8 @@ const addServiceHandler = (item) => {
     ports: item.ports,
     volumes: item.volumes,
   };
+
+  console.log("dataObject", dataObject);
 
   if (item.client.service === "ExternalExecutionService") {
     dataObject.source = item.client.config?.source;
