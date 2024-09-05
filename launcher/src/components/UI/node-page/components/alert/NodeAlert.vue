@@ -10,7 +10,7 @@
             }"
             @click="alertPicker('green')"
           >
-            <img src="/img/icon/node-alert-icons/NOTIFICATION-GRÜN.png" alt="green" />
+            <img src="/img/icon/node-alert-icons/green-notification.png" alt="green" />
           </div>
           <div
             class="status-icon"
