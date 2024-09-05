@@ -61,8 +61,6 @@ export class GethService extends NodeService {
             "--metrics.addr=0.0.0.0",
           ];
 
-    const entrypoint = network === "devnet" ? [] : ["geth"];
-
     service.init(
       "GethService", // service
       service.id, // id
@@ -70,7 +68,7 @@ export class GethService extends NodeService {
       "ethereum/client-go", // image
       "v1.10.25", // imageVersion
       cmd, // command
-      entrypoint, // entrypoint
+      ["geth"], // entrypoint
       null, // env
       ports, // ports
       volumes, // volumes

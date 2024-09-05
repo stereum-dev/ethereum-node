@@ -74,18 +74,14 @@ export class PrysmValidatorService extends NodeService {
             "--enable-doppelganger=true",
           ];
 
-    const entrypoint = network === "devnet" ? [] : ["/app/cmd/validator/validator"];
-
     service.init(
       "PrysmValidatorService", //service
       service.id, //id
       1, // configVersion
       image, //image
       "v5.1.0", //imageVersion
-
       cmd, //command
-      entrypoint, // entrypoint
-
+      ["/app/cmd/validator/validator"], // entrypoint
       null, // env
       ports, //ports
       volumes, //volumes

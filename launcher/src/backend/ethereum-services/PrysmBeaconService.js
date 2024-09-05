@@ -93,18 +93,14 @@ export class PrysmBeaconService extends NodeService {
             "--p2p-udp-port=12001",
           ];
 
-    const entrypoint = network === "devnet" ? [] : ["/app/cmd/beacon-chain/beacon-chain"];
-
     service.init(
       "PrysmBeaconService", //service
       service.id, //id
       1, // configVersion
       image, //image
       "v5.1.0", //imageVersion
-
       cmd, // command
-      entrypoint, //entrypoint
-
+      ["/app/cmd/beacon-chain/beacon-chain"], //entrypoint
       null, //env
       ports, //ports
       volumes, //volumes
