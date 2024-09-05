@@ -464,6 +464,8 @@ const createDevnetModal = () => {
 //Create Devnet setup  and Install services
 const setupDevnet = async () => {
   setupStore.devnetConfigData.genesisConfig = { ...genesisStore.genesis };
+  setupStore.isDevnetSetupModalActive = false;
+  setupStore.currentStep = 1;
 
   try {
     await ControlService.writeGenesisJson(useDeepClone(genesisStore.genesis));
@@ -524,8 +526,7 @@ const setupDevnet = async () => {
     //Installing services
     await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
     manageStore.confirmChanges = [];
-    setupStore.isDevnetSetupModalActive = false;
-    setupStore.currentStep = 1;
+
     setupStore.devnetConfigData = {
       network: "devnet",
       setupName: "",

@@ -4,11 +4,7 @@
       <div class="grid grid-cols-2 gap-4 p-2">
         <template v-for="(value, key) in flattenedGenesis" :key="key">
           <div class="flex items-center">
-            <img
-              src="/img/icon/edit-node-icons/setting.png"
-              alt="Gear"
-              class="w-6 h-6 mr-2"
-            />
+            <img src="/img/icon/edit-node-icons/setting.png" alt="Gear" class="w-6 h-6 mr-2" />
             <span class="text-xs uppercase text-gray-300">{{ formatLabel(key) }}</span>
           </div>
           <div class="flex justify-end items-center">
@@ -16,11 +12,7 @@
               v-model="flattenedGenesis[key]"
               :placeholder="key"
               class="bg-gray-700 text-white p-2 rounded"
-              :class="
-                getInputType(flattenedGenesis[key]) === 'checkbox'
-                  ? 'w-5 h-5'
-                  : 'w-full h-9'
-              "
+              :class="getInputType(flattenedGenesis[key]) === 'checkbox' ? 'w-5 h-5' : 'w-full h-9'"
               :type="getInputType(flattenedGenesis[key])"
               @input="updateStore"
             />
