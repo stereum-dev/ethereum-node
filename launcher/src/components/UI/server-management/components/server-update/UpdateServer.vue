@@ -155,34 +155,11 @@ const getOsVersion = async () => {
   }
 };
 
-const fetchUpgradablePackages = async () => {
-  searchingForUpdatablePackages.value = true;
-
-  if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
-    try {
-      await getUpgradablePackages();
-
-      serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length;
-    } catch (error) {
-      console.error("Failed to fetch upgradable packages:", error);
-    } finally {
-      searchingForUpdatablePackages.value = false;
-    }
-  } else {
-    searchingForUpdatablePackages.value = false;
-  }
-};
-
 const updateAll = async () => {
   serverStore.isUpdateProcessing = true;
   try {
     await ControlService.updateOS();
-
-    await fetchUpgradablePackages();
-
-    serverStore.upgradablePackages.value = [];
-
-    serverStore.numberOfUpdatablePackages = 0;
+    await getUpgradablePackages();
 
     updateStatus.message = "All packages updated successfully!";
     updateStatus.color = "text-green-500";
@@ -197,26 +174,20 @@ const updateAll = async () => {
 
 const updatePackage = async (item) => {
   serverStore.isUpdateProcessing = true;
-  const pkgName = [];
-  serverStore.upgradablePackages.forEach((el) => {
-    if (el.packageName === item.packageName) {
-      pkgName.push(el.packageName);
-    }
-  });
+  const pkgName = item.packageName;
 
   updateUIWithInProgressMessage(pkgName);
+
   try {
-    const result = await ControlService.updatePackage(pkgName);
+    await ControlService.updatePackage([pkgName]);
+    await getUpgradablePackages();
 
-    serverStore.upgradablePackages.value = serverStore.upgradablePackages.value.filter((pkg) => pkg.packageName !== item.packageName);
-
-    serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length;
-
-    if (result) {
-      await getUpgradablePackages(); // Refresh the list
-    }
+    updateStatus.message = `${pkgName} updated successfully.`;
+    updateStatus.color = "text-green-500";
   } catch (error) {
     console.error(`Failed to update ${pkgName}:`, error);
+    updateStatus.message = `Error occurred while updating ${pkgName}.`;
+    updateStatus.color = "text-red-500";
   } finally {
     serverStore.isUpdateProcessing = false;
   }
