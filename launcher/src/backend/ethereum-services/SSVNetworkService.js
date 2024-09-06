@@ -10,7 +10,7 @@ export class SSVNetworkService extends NodeService {
 
   # Number of log files preserved (roughly equivalent to number of days)
   # Increase if you want to preserve log files for longer. This would require more disk space
-  LogFileBackups: 10
+  LogFileBackups: 28
   
   # Debug logs file path
   #LogFilePath: ./data/debug.log
@@ -53,10 +53,7 @@ MetricsAPIPort: 15000`;
 
     const image = "bloxstaking/ssv-node";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", "/data"),
-      new ServiceVolume(workingDir + "/secrets", "/secrets"),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", "/data"), new ServiceVolume(workingDir + "/secrets", "/secrets")];
 
     // build service
     service.init(

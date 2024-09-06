@@ -11,11 +11,7 @@ import { usePingQuality } from "@/composables/pingQuality";
 export async function useBackendServices(force = false) {
   const serviceStore = useServices();
   const currentTimestamp = Date.now();
-  if (
-    !serviceStore.backendServicesTimestamp ||
-    serviceStore.backendServicesTimestamp < currentTimestamp - 10000 ||
-    force
-  ) {
+  if (!serviceStore.backendServicesTimestamp || serviceStore.backendServicesTimestamp < currentTimestamp - 10000 || force) {
     serviceStore.backendServicesTimestamp = currentTimestamp;
     serviceStore.backendServices = await ControlService.getServices();
     // when we get the services from the backend, we can update the frontend service format as well
@@ -75,10 +71,7 @@ export async function useFrontendServices() {
             serviceStore.installedServices.map((s) => s?.config?.serviceID).includes(service?.config?.serviceID)
           ) {
             oldService = serviceStore.installedServices.find(
-              (s) =>
-                s.service === service.service &&
-                s?.config?.serviceID &&
-                s?.config?.serviceID === service?.config?.serviceID
+              (s) => s.service === service.service && s?.config?.serviceID && s?.config?.serviceID === service?.config?.serviceID
             );
           } else {
             oldService = allServices.find((s) => s.service === service.service);
@@ -99,9 +92,7 @@ export async function useFrontendServices() {
             oldService?.config?.configVersion < 2
           ) {
             let existing = serviceStore.installedServices.find(
-              (s) =>
-                s?.config?.serviceID === oldService?.config?.serviceID &&
-                s?.service === oldService.name + "ValidatorService"
+              (s) => s?.config?.serviceID === oldService?.config?.serviceID && s?.service === oldService.name + "ValidatorService"
             );
             let vs;
             if (existing) {

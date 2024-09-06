@@ -29,8 +29,8 @@ test("buildConfiguration", () => {
     new PrysmBeaconService.PrysmBeaconService(),
   ]).buildConfiguration();
 
-  expect(prysm.command).toMatch(/--beacon-rpc-provider="buildConsensusClientEndpoint"/);
-  expect(prysm.command).toMatch(/--beacon-rpc-gateway-provider="buildConsensusClientGateway"/);
+  expect(prysm.command).toContain("--beacon-rpc-provider=buildConsensusClientEndpoint");
+  expect(prysm.command).toContain("--beacon-rpc-gateway-provider=buildConsensusClientGateway");
   expect(prysm.volumes).toHaveLength(4);
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/data/db:/opt/app/data/db");
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/data/wallets:/opt/app/data/wallets");

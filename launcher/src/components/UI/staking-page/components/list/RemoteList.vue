@@ -6,12 +6,7 @@
 
     <RemoteRow
       v-for="item in stakingStore.previewRemoteKeys"
-      v-show="
-        !stakingStore.isPreviewListActive &&
-        !stakingStore.isGroupListActive &&
-        stakingStore.keys.length > 0 &&
-        !props.isLoading
-      "
+      v-show="!stakingStore.isPreviewListActive && !stakingStore.isGroupListActive && stakingStore.keys.length > 0 && !props.isLoading"
       :key="item.pubkey"
       :item="item"
       @click="pickRemoteKey(item)"

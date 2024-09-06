@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "stereum-molecule-test-environment"
+version = "0.1.0"
+description = "A test environment for testing Ansible roles with Molecule."
+authors = ["stereum.com"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+ansible = "^10.3.0"
+molecule = {extras = ["docker-lint"], version = "^24.8.0"}
+molecule-docker = "^2.1.0"
+molecule-hetznercloud = "^2.3.0"
+docker = "^7.1.0"
+hcloud = "^2.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[virtualenvs]
+in-project = true

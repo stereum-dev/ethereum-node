@@ -23,10 +23,7 @@ test("buildConfiguration", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
 
@@ -38,7 +35,7 @@ test("buildConfiguration", () => {
     []
   ).buildConfiguration();
 
-  expect(prysm.command).toMatch(/--execution-endpoint=http-endpoint-string/);
+  expect(prysm.command).toContain("--execution-endpoint=http-endpoint-string,http-endpoint-string");
   expect(prysm.volumes).toHaveLength(4);
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/beacon:/opt/app/beacon");
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/genesis:/opt/app/genesis");
@@ -64,10 +61,7 @@ test("buildConsensusClientHttpEndpointUrl", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const ports = [
@@ -102,10 +96,7 @@ test("buildConsensusClientGateway", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const ports = [
@@ -140,10 +131,7 @@ test("buildConsensusClientEndpoint", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
   const ports = [
@@ -189,10 +177,7 @@ test("getAvailablePorts", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
 
@@ -222,10 +207,7 @@ test("network", () => {
           service: "GethService",
         };
       }),
-      volumes: [
-        new ServiceVolume("some/path/data", "some/path/other/data"),
-        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
-      ],
+      volumes: [new ServiceVolume("some/path/data", "some/path/other/data"), new ServiceVolume("some/path/engine.jwt", "/engine.jwt")],
     };
   });
 

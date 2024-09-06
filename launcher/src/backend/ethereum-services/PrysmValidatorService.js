@@ -38,24 +38,29 @@ export class PrysmValidatorService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v3.1.1", //imageVersion
-      '/app/cmd/validator/validator --accept-terms-of-use=true --beacon-rpc-provider="' +
-        provider +
-        '" --beacon-rpc-gateway-provider="' +
-        providerGateway +
-        '" --web --' +
-        network +
-        "=true --datadir=" +
-        dataDir +
-        " --wallet-dir=" +
-        walletDir +
-        " --wallet-password-file=" +
-        passwordDir +
-        '/wallet-password --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0 --grpc-gateway-corsdomain="*"  --monitoring-host=0.0.0.0 --monitoring-port=8081 --suggested-fee-recipient=0x0000000000000000000000000000000000000000' +
-        " --graffiti-file=" +
-        graffitiDir +
-        "/graffitis.yaml --enable-builder=true --enable-doppelganger=true", //command
-      null, // entrypoint
+      "v5.1.0", //imageVersion
+      [
+        "--accept-terms-of-use=true",
+        `--beacon-rpc-provider=${provider}`,
+        `--beacon-rpc-gateway-provider=${providerGateway}`,
+        "--web",
+        `--${network}`,
+        `--datadir=${dataDir}`,
+        `--keymanager-token-file=${walletDir + "/auth-token"}`,
+        `--wallet-dir=${walletDir}`,
+        `--wallet-password-file=${passwordDir + "/wallet-password"}`,
+        "--monitoring-host=0.0.0.0",
+        "--grpc-gateway-port=7500",
+        "--grpc-gateway-host=0.0.0.0",
+        '--grpc-gateway-corsdomain="*"',
+        "--monitoring-host=0.0.0.0",
+        "--monitoring-port=8081",
+        "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
+        `--graffiti-file=${graffitiDir + "/graffitis.yaml"}`,
+        "--enable-builder=true",
+        "--enable-doppelganger=true",
+      ], //command
+      ["/app/cmd/validator/validator"], // entrypoint
       null, // env
       ports, //ports
       volumes, //volumes

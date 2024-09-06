@@ -8,12 +8,14 @@ body:
       value: |
         Thank you for taking the time to fill out this bug report for Stereum!
 
-  - type: input
+  - type: dropdown
     id: environment
     attributes:
-      label: Environment
-      description: In which environment did you encounter the bug (e.g., development, staging, production)?
-      placeholder: Enter the environment here
+      label: "Environment"
+      description: "Select the environment where the issue occurs"
+      options:
+        - "Development"
+        - "Release"
     validations:
       required: true
 

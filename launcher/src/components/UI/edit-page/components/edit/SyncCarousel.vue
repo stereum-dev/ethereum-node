@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2"
-  >
+  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2">
     <Carousel
       ref="carousel"
       v-model="currentSlide"
@@ -10,23 +8,15 @@
       :wrap-around="true"
       :transition="500"
       snap-align="center"
+      :mouse-drag="getCategory !== 'execution'"
+      :can-navigate="getCategory !== 'execution'"
     >
       <slide v-for="(item, index) in installStore.syncType" :key="index" aria-current="0">
-        <div
-          class="w-11/12 h-full bg-[#33393e] flex justify-center items-center border border-gray-600 rounded-lg"
-          :style="{ 'pointer-events': getCategory === 'execution' ? 'none' : '' }"
-        >
-          <div
-            v-if="item.name === 'genesis'"
-            class="w-full h-full flex justify-evenly items-center p-1"
-          >
-            <div
-              class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1"
-            >
+        <div class="w-11/12 h-full bg-[#33393e] flex justify-center items-center border border-gray-600 rounded-lg">
+          <div v-if="item.name === 'genesis'" class="w-full h-full flex justify-evenly items-center p-1">
+            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1">
               <span class="w-full font-semibold text-md uppercase">{{ item.name }}</span>
-              <span class="w-full font-semibold text-md uppercase text-teal-600">{{
-                item.type
-              }}</span>
+              <span class="w-full font-semibold text-md uppercase text-teal-600">{{ item.type }}</span>
             </div>
           </div>
           <div
@@ -35,9 +25,7 @@
           >
             <div class="w-1/3 h-full flex flex-col justify-evenly items-center">
               <span class="text-sm text-gray-400 capitalize">{{ item.name }}</span>
-              <span class="text-xs font-semibold uppercase text-teal-600">{{
-                item.type
-              }}</span>
+              <span class="text-xs font-semibold uppercase text-teal-600">{{ item.type }}</span>
             </div>
             <div class="w-2/3 h-full cursor-pointer">
               <input
@@ -54,9 +42,7 @@
           >
             <div class="w-1/3 h-full flex flex-col justify-evenly items-center">
               <span class="text-sm text-gray-400 capitalize">{{ item.name }}</span>
-              <span class="text-xs font-semibold uppercase text-teal-600">{{
-                item.type
-              }}</span>
+              <span class="text-xs font-semibold uppercase text-teal-600">{{ item.type }}</span>
             </div>
 
             <div class="w-2/3 h-full cursor-pointer p-1">
@@ -67,29 +53,18 @@
               >
                 <span>{{ selectedItem }}</span>
               </div>
-              <div
-                v-else
-                class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md"
-              >
+              <div v-else class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md">
                 <div v-if="selectedIcon !== ''" class="w-1/6" @click="openDropdown">
                   <img class="w-6 h-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
                 </div>
-                <div
-                  v-if="selectedIcon !== ''"
-                  class="w-4/6 text-md text-gray-300 font-semibold"
-                  @click="openDropdown"
-                >
+                <div v-if="selectedIcon !== ''" class="w-4/6 text-md text-gray-300 font-semibold" @click="openDropdown">
                   {{ selectedItem }}
                 </div>
                 <div v-else class="w-4/6 text-gray-500 text-sm" @click="openDropdown">
                   {{ selectedItem }}
                 </div>
                 <div class="w-1/6" @click="openWindow">
-                  <img
-                    class="w-6"
-                    src="/img/icon/service-modals-icons/internet.png"
-                    alt="Internet"
-                  />
+                  <img class="w-6" src="/img/icon/service-modals-icons/internet.png" alt="Internet" />
                 </div>
               </div>
             </div>
@@ -112,12 +87,7 @@
           class="w-full h-12 grid grid-cols-6 p-2 hover:bg-blue-400 bg-[#212225]"
           @click="linkPicker(link)"
         >
-          <img
-            v-if="link.icon"
-            class="w-7 h-7 col-start-1 col-end-2 self-center justify-self-center"
-            :src="link.icon"
-            alt="service Icon"
-          />
+          <img v-if="link.icon" class="w-7 h-7 col-start-1 col-end-2 self-center justify-self-center" :src="link.icon" alt="service Icon" />
           <span
             class="col-start-3 col-end-6 px-4 py-1 flex justify-start links-center outline-0 whitespace-nowrap cursor-pointer text-md text-gray-200 font-normal font-sans"
             >{{ link.name }}</span
@@ -135,13 +105,10 @@ import { computed, onBeforeMount, ref, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Navigation, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import { useSetups } from "../../../../../store/setups";
+import { useSetups } from "@/store/setups";
 
 const props = defineProps({
-  cat: {
-    type: String,
-    default: null,
-  },
+  service: Object,
 });
 
 //Store
@@ -161,7 +128,7 @@ const selectedIcon = ref("");
 // Computed properties
 
 const getCategory = computed(() => {
-  return props.cat;
+  return props.service?.category || "";
 });
 
 const currentNetwork = computed(() => {
@@ -185,10 +152,7 @@ watchEffect(() => {
 
 // Watchers
 watch(currentSlide, (val) => {
-  if (
-    router.currentRoute.value.path === "/sync" ||
-    router.currentRoute.value.path === "/importingSyncing"
-  ) {
+  if (router.currentRoute.value.path === "/sync" || router.currentRoute.value.path === "/importingSyncing") {
     if (val !== prevVal.value) {
       prevVal.value = val;
       installStore.checkPointSync = "";

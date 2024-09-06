@@ -1,0 +1,20 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Adjust Lodestar Config if charon service connected to it
+  lineinfile:
+    path: "{{ config_file.path }}"
+    insertafter: "--builder"
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --builder') | first | split('-') | first }}- --builder.selection=builderalways"
+  when: 
+    - service_configuration.service == "LodestarValidatorService"
+    - service_configuration.command | select('match', '--builder.selection') | length == 0
+    - service_configuration.dependencies.consensusClients | selectattr('service', 'equalto', 'CharonService') | list | length > 0

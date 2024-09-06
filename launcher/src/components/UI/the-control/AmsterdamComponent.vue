@@ -1,10 +1,6 @@
 <template>
   <div class="amsterdam-parent">
-    <div
-      class="icoTitle"
-      @mouseenter="cursorLocation = `${footerInfo} ${getSetupNetwork?.name}`"
-      @mouseleave="cursorLocation = ''"
-    >
+    <div class="icoTitle" @mouseenter="cursorLocation = `${footerInfo} ${getSetupNetwork?.name}`" @mouseleave="cursorLocation = ''">
       <div class="icoContainer">
         <img :src="getSetupNetwork?.icon" />
       </div>
@@ -36,9 +32,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the current epoch: ${
-                  currentResult?.currentEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber === 0 ? 'N/A' : n.slotNumber}`
+                cursorLocation = `the current epoch: ${currentResult?.currentEpoch || 'N/A'} and the slot number is ${
+                  n.slotNumber === 0 ? 'N/A' : n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -56,9 +52,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the justified epoch: ${
-                  currentResult?.currentJustifiedEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber}`
+                cursorLocation = `the justified epoch: ${currentResult?.currentJustifiedEpoch || 'N/A'} and the slot number is ${
+                  n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -74,9 +70,9 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the previous justified epoch: ${
-                  currentResult?.previousJustifiedEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber}`
+                cursorLocation = `the previous justified epoch: ${currentResult?.previousJustifiedEpoch || 'N/A'} and the slot number is ${
+                  n.slotNumber
+                }`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -94,9 +90,7 @@
                 red: n.slotStatus == 'missed',
               }"
               @mouseenter="
-                cursorLocation = `the Finalized epoch: ${
-                  currentResult?.finalizedEpoch || 'N/A'
-                } and the slot number is ${n.slotNumber}`
+                cursorLocation = `the Finalized epoch: ${currentResult?.finalizedEpoch || 'N/A'} and the slot number is ${n.slotNumber}`
               "
               @mouseleave="cursorLocation = ''"
             ></div>
@@ -136,6 +130,8 @@ export default {
       loadingStrater: false,
       // prometheusIsOff: false,
       consensusClientIsOff: false,
+      changeCounter: 0,
+      networkFlag: false,
     };
   },
   computed: {
@@ -220,6 +216,8 @@ export default {
         return false;
       } else if (this.loadingStrater) {
         return true;
+      } else if (this.networkFlag) {
+        return true;
       }
       return false;
     },
@@ -228,6 +226,12 @@ export default {
   watch: {
     selectedSetup(newVal, oldVal) {
       if (newVal?.network !== oldVal?.network) {
+        // If the network changes to or from "gnosis", set the networkFlag to true
+        if (newVal?.network === "gnosis" || oldVal?.network === "gnosis") {
+          this.networkFlag = true;
+        }
+
+        // Existing logic
         this.currentEpochSlot(this.consensusName);
       }
     },
@@ -246,17 +250,11 @@ export default {
     },
     currentResult: {
       handler(newResult) {
-        if (
-          newResult &&
-          newResult.currentEpochStatus &&
-          newResult?.currentEpochStatus[0]
-        ) {
-          const newArray = newResult?.currentEpochStatus[0]
-            .slice(0, this.proposedBlock.length)
-            .map((slot) => ({
-              slotNumber: slot.slotNumber,
-              slotStatus: slot.slotStatus,
-            }));
+        if (newResult && newResult.currentEpochStatus && newResult?.currentEpochStatus[0]) {
+          const newArray = newResult?.currentEpochStatus[0].slice(0, this.proposedBlock.length).map((slot) => ({
+            slotNumber: slot.slotNumber,
+            slotStatus: slot.slotStatus,
+          }));
 
           while (newArray.length < this.proposedBlock.length) {
             newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -264,8 +262,21 @@ export default {
 
           this.proposedBlock.splice(0, this.proposedBlock.length, ...newArray);
         }
+
+        if (this.networkFlag) {
+          this.changeCounter++;
+          if (this.selectedSetup?.network === "gnosis" && this.changeCounter === 4) {
+            this.networkFlag = false;
+            this.changeCounter = 0;
+          } else if (this.selectedSetup?.network !== "gnosis" && this.changeCounter === 2) {
+            this.networkFlag = false;
+            this.changeCounter = 0;
+          }
+        }
       },
+
       deep: true,
+      immediate: true,
     },
   },
 
@@ -309,17 +320,13 @@ export default {
       }
 
       const categories = ["consensus", "execution"];
-      const missingCategories = categories.filter(
-        (category) => !foundCategories.has(category)
-      );
+      const missingCategories = categories.filter((category) => !foundCategories.has(category));
 
       if (!hasPrometheus) {
         missingCategories.push("Prometheus");
       }
 
-      this.installedServicesController = missingCategories
-        .join(", ")
-        .replace(/, (?=[^,]*$)/, " and ");
+      this.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
     },
 
     refreshTimer() {

@@ -35,46 +35,13 @@ export class OneClickInstall {
     echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`);
     await this.configManager.createMultiSetupYaml({}, "");
     await this.nodeConnection.findStereumSettings();
-    return await this.nodeConnection.prepareStereumNode(
-      this.nodeConnection.settings.stereum.settings.controls_install_path
-    );
+    return await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path);
   }
 
   //this is broken
-  async chooseClient(clients) {
-    clients = {
-      PRYSM: 24,
-      LIGHTHOUSE: 24,
-      NIMBUS: 24,
-      TEKU: 20,
-    };
-    let buffer = [];
-    let clientDistribution = [];
-    let sum = 0;
-    let range = 0;
-
-    Object.keys(clients).forEach((key) => {
-      buffer.push({ name: key, coverage: clients[key] });
-    });
-
-    buffer.forEach((client) => {
-      sum += 100 / client.coverage;
-    });
-
-    buffer.forEach((client) => {
-      clientDistribution.push({ name: client.name, percentage: (100 / client.coverage / sum) * 100 });
-    });
-
-    clientDistribution.forEach((client) => {
-      client.min = range;
-      range = range + client.percentage;
-      client.max = range;
-    });
-
-    const ran = Math.random() * 100;
-    const winner = clientDistribution.find((client) => client.min <= ran && client.max >= ran);
-    log.info(winner, ran);
-    return winner.name.toLowerCase();
+  chooseClient(clients) {
+    let client = clients[Math.floor(Math.random() * clients.length)].toLowerCase();
+    return client.charAt(0).toUpperCase() + client.slice(1);
   }
 
   clearSetup() {
@@ -83,7 +50,6 @@ export class OneClickInstall {
     this.installDir = undefined;
     this.executionClient = undefined;
     this.setup = undefined;
-    this.choosenClient = undefined;
     this.network = undefined;
     this.mevboost = undefined;
     this.needsKeystore = [];
@@ -293,10 +259,25 @@ export class OneClickInstall {
       this.extraServices.push(
         this.serviceManager.getService("LidoObolExitService", {
           ...args,
-          consensusClients: [this.beaconService].concat(
-            this.extraServices.filter((s) => s.service === "CharonService")
-          ),
+          consensusClients: [this.beaconService].concat(this.extraServices.filter((s) => s.service === "CharonService")),
           otherServices: this.extraServices.filter((s) => s.service === "ValidatorEjectorService"),
+        })
+      );
+    }
+
+    if (constellation.includes("KuboIPFSService")) {
+      //KuboIPFSService
+      this.extraServices.push(this.serviceManager.getService("KuboIPFSService", args));
+    }
+
+    if (constellation.includes("LCOMService")) {
+      //LCOMService
+      this.extraServices.push(
+        this.serviceManager.getService("LCOMService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+          otherServices: this.extraServices.filter((s) => s.service === "KuboIPFSService"),
         })
       );
     }
@@ -311,6 +292,7 @@ export class OneClickInstall {
     }
 
     this.handleArchiveTags(selectedPreset);
+    this.handleLidoTags(selectedPreset);
 
     let versions;
     try {
@@ -360,18 +342,13 @@ export class OneClickInstall {
           this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--prune"));
           break;
         case "BesuService":
-          this.executionClient.command[
-            this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))
-          ] = "--sync-mode=FULL";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))] = "--sync-mode=FULL";
           break;
         case "NethermindService":
-          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] +=
-            "_archive";
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--config"))] += "_archive";
           this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--Pruning.Mode="))] =
             "--Pruning.Mode=None";
-          this.executionClient.command = this.executionClient.command.filter(
-            (c) => !c.includes("--Pruning.FullPruningTrigger")
-          );
+          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--Pruning.FullPruningTrigger"));
           break;
       }
       switch (this.beaconService.service) {
@@ -388,12 +365,44 @@ export class OneClickInstall {
           this.beaconService.command.push("--history=archive");
           break;
         case "PrysmBeaconService":
-          this.beaconService.command += " --slots-per-archive-point=32";
+          if (Array.isArray(this.beaconService.command)) {
+            this.beaconService.command.push("--slots-per-archive-point=32");
+          } else {
+            this.beaconService.command += " --slots-per-archive-point=32";
+          }
           break;
         case "TekuBeaconService":
           this.beaconService.command[this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))] =
             "--data-storage-mode=archive";
       }
+    }
+  }
+
+  handleLidoTags(selectedPreset) {
+    if (/lidocsm/.test(selectedPreset)) {
+      const networkFeeAdress = {
+        mainnet: "0x388C818CA8B9251b393131C08a736A67ccB19297",
+        holesky: "0xE73a3602b99f1f913e72F8bdcBC235e206794Ac8",
+      };
+      const serviceFeeAdressCommand = {
+        LighthouseValidatorService: "--suggested-fee-recipient=",
+        LodestarValidatorService: "--suggestedFeeRecipient=",
+        NimbusValidatorService: "--suggested-fee-recipient=",
+        PrysmValidatorService: "--suggested-fee-recipient=",
+        TekuValidatorService: "--validators-proposer-default-fee-recipient=",
+      };
+      this.validatorService.command[
+        this.validatorService.command.findIndex((c) => c.includes(serviceFeeAdressCommand[this.validatorService.service]))
+      ] = serviceFeeAdressCommand[this.validatorService.service] + networkFeeAdress[this.network];
+    }
+    if (this.extraServices.some((s) => s.service === "ValidatorEjectorService")) {
+      const moduleIDs = {
+        lidocsm: "4",
+        lidossv: "2",
+        lidoobol: "2",
+      };
+      let ejector = this.extraServices.find((s) => s.service === "ValidatorEjectorService");
+      ejector.env.STAKING_MODULE_ID = moduleIDs[selectedPreset];
     }
   }
 
@@ -444,19 +453,16 @@ export class OneClickInstall {
     this.clearSetup();
     this.setup = setup;
     this.network = network;
-    let services = [
-      "GethService",
-      "GrafanaService",
-      "PrometheusNodeExporterService",
-      "PrometheusService",
-      "NotificationService",
-    ];
+    let services = ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
 
-    this.choosenClient = await this.chooseClient();
-    this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1);
+    const selectedCC_VC = this.chooseClient(["PRYSM", "LIGHTHOUSE", "NIMBUS", "TEKU", "LODESTAR"]);
 
-    services.push(this.choosenClient + "ValidatorService");
-    services.push(this.choosenClient + "BeaconService");
+    services.push(selectedCC_VC + "ValidatorService");
+    services.push(selectedCC_VC + "BeaconService");
+
+    const selectedEC = this.chooseClient(["GETH", "BESU", "NETHERMIND"]);
+
+    services.push(selectedEC + "Service");
 
     if (network === "gnosis")
       services = [
@@ -479,45 +485,23 @@ export class OneClickInstall {
         services.push("SSVNetworkService");
         break;
       case "obol":
-        services = [
-          "GethService",
-          "LighthouseBeaconService",
-          "TekuValidatorService",
-          "CharonService",
-          "GrafanaService",
-          "PrometheusNodeExporterService",
-          "PrometheusService",
-          "NotificationService",
-        ];
-        break;
-      case "rocketpool":
-        services.push("ROCKETPOOL");
+        services.push("FlashbotsMevBoostService", "CharonService");
         break;
       case "stereum on arm":
         services = services.filter(
-          (s) =>
-            !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s)
+          (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s)
         );
         break;
       case "archive":
         break;
       case "lidoobol":
-        services = [
-          "NethermindService",
-          "LighthouseBeaconService",
-          "LodestarValidatorService",
-          "GrafanaService",
-          "PrometheusNodeExporterService",
-          "PrometheusService",
-          "NotificationService",
-        ];
         services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
         break;
       case "lidossv":
-        services.push("SSVNetworkService", "SSVDKGService");
+        services.push("SSVNetworkService", "SSVDKGService", "FlashbotsMevBoostService");
         break;
       case "lidocsm":
-        services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService");
+        services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService", "KuboIPFSService", "LCOMService");
     }
     return services;
   }

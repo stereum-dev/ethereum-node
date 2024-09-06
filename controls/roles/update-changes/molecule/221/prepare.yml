@@ -111,6 +111,97 @@
                 id: e021e341-d3cc-003a-7ba4-8d062ea218e4
             mevboost: []
             otherServices: []
+      become: yes
 
+    - name: Create Lodestar config 1
+      copy:
+        dest: "/etc/stereum/services/ac920956-a1d3-b414-7968-bda477b97390.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LodestarValidatorService
+          id: ac920956-a1d3-b414-7968-bda477b97390
+          configVersion: 1
+          command:
+            - validator
+            - --network=holesky
+            - --dataDir=/opt/app/validator
+            - --beaconNodes=http://stereum-abf6ae27-234e-468d-be1e-380ce9420d2a:3600
+            - --keymanager=true
+            - --keymanager.address=0.0.0.0
+            - --keymanager.port=5062
+            - --metrics=true
+            - --metrics.port=5064
+            - --metrics.address=0.0.0.0
+            - --builder
+            - --suggestedFeeRecipient=0x0000000000000000000000000000000000000000
+            - --doppelgangerProtection=false
+            - --distributed
+            - --useProduceBlockV3=false
+          entrypoint:
+            - node
+            - ./packages/cli/bin/lodestar
+          env: {}
+          image: chainsafe/lodestar:v1.20.1
+          ports:
+            - 127.0.0.1:5063:5062/tcp
+          volumes:
+            - /opt/stereum/lodestar-ac920956-a1d3-b414-7968-bda477b97390/validator:/opt/app/validator
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: CharonService
+                id: abf6ae27-234e-468d-be1e-380ce9420d2a
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create Lodestar config 2
+      copy:
+        dest: "/etc/stereum/services/9dc815f7-582e-4753-8aa3-3a24578c982d.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LodestarValidatorService
+          id: 9dc815f7-582e-4753-8aa3-3a24578c982d
+          configVersion: 1
+          command:
+            - validator
+            - --network=holesky
+            - --dataDir=/opt/app/validator
+            - --keymanager=true
+            - --keymanager.address=0.0.0.0
+            - --keymanager.port=5062
+            - --metrics=true
+            - --metrics.port=5064
+            - --metrics.address=0.0.0.0
+            - --builder
+            - --suggestedFeeRecipient=0x0000000000000000000000000000000000000000
+            - --doppelgangerProtection=false
+            - --distributed
+            - --useProduceBlockV3=false
+          entrypoint:
+            - node
+            - ./packages/cli/bin/lodestar
+          env: {}
+          image: chainsafe/lodestar:v1.20.1
+          ports:
+            - 127.0.0.1:5063:5062/tcp
+          volumes:
+            - /opt/stereum/lodestar-9dc815f7-582e-4753-8aa3-3a24578c982d/validator:/opt/app/validator
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
 
 #EOF

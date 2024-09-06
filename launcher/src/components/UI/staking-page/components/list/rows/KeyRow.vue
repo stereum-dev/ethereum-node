@@ -2,15 +2,10 @@ import { computed } from 'vue';
 <template>
   <div
     class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate__slideInLeft animate__delay-0.5s mt-1"
-    :class="[
-      props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 ',
-      props.item?.showExitText ? 'bg-red-500 z-10' : '',
-    ]"
+    :class="[props.item?.selected ? 'bg-blue-400 ' : 'bg-gray-700 ', props.item?.showExitText ? 'bg-red-500 z-10' : '']"
     @click="selectKey(props.item)"
   >
-    <div
-      class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center"
-    >
+    <div class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center">
       <div
         class="w-6 h-6 rounded-full cursor-pointer p-[2px]"
         :class="setupStore.getBGColor(props.item?.color)"
@@ -24,13 +19,7 @@ import { computed } from 'vue';
           alt="Key Icon"
           @mousedown.prevent
         />
-        <img
-          v-else
-          class="w-full h-full"
-          src="/img/icon/staking-page-icons/key-icon.png"
-          alt="Key Icon"
-          @mousedown.prevent
-        />
+        <img v-else class="w-full h-full" src="/img/icon/staking-page-icons/key-icon.png" alt="Key Icon" @mousedown.prevent />
       </div>
     </div>
     <div
@@ -38,11 +27,9 @@ import { computed } from 'vue';
       @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span
-        class="text-center font-semibold text-xs"
-        :class="props.item?.selected ? 'text-gray-800' : 'text-gray-300'"
-        >{{ displayText }}</span
-      >
+      <span class="text-center font-semibold text-xs" :class="props.item?.selected ? 'text-gray-800' : 'text-gray-300'">{{
+        displayText
+      }}</span>
     </div>
 
     <img
@@ -83,10 +70,7 @@ import { computed } from 'vue';
       >{{ props.item.balance }}</span
     >
 
-    <div
-      class="h-full col-start-18 col-span-full bg-[#151618] rounded-full grid grid-cols-5 items-center"
-      @mousedown.prevent
-    >
+    <div class="h-full col-start-18 col-span-full bg-[#151618] rounded-full grid grid-cols-5 items-center" @mousedown.prevent>
       <div
         class="col-start-1 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${copyPub}`"
@@ -178,11 +162,9 @@ const t = i18n.global.t;
 //Key Status Icons
 const activeStatusIcon = "/img/icon/staking-page-icons/validator-state-active.png";
 const slashedStatusIcon = "/img/icon/staking-page-icons/validator-state-slashed.png";
-const depositStatusIcon =
-  "/img/icon/staking-page-icons/validator-state-not-deposited.png";
+const depositStatusIcon = "/img/icon/staking-page-icons/validator-state-not-deposited.png";
 const offlineStatusIcon = "/img/icon/staking-page-icons/validator-state-offline.png";
-const pendingStatusIcon =
-  "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
+const pendingStatusIcon = "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
 const exitedStatusIcon = "/img/icon/staking-page-icons/validator-state-exited.png";
 const apiProblems = "/img/icon/staking-page-icons/validator-state-unknown.png";
 const apiLoading = "/animation/loading/turning-circle.gif";

@@ -75,8 +75,7 @@
             src="/img/icon/stereum-icons/stereum-logo.png"
             alt="Node Server View"
           />
-          <span
-            class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
+          <span class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
             >Server View</span
           >
         </div>
@@ -200,7 +199,11 @@ const noValidatorHandler = (setup) => {
 };
 
 const toggleDropdown = () => {
-  isOpen.value = !isOpen.value;
+  if (setupsList.value.length > 1 && route.path === "/control") {
+    isOpen.value = !isOpen.value;
+  } else if (setupsList.value.length > 0 && route.path !== "/control") {
+    isOpen.value = !isOpen.value;
+  }
 };
 
 const selectRename = () => {

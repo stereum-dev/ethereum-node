@@ -1,0 +1,10 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+**/coverage
+**/dist
+**/dist_electron
+package-lock.json
+public/output.css
+

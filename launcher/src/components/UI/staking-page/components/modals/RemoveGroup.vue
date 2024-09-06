@@ -24,9 +24,7 @@
           class="w-full h-full col-start-3 col-end-11 row-start-3 row-span-1 text-sm text-left text-gray-300 flex justify-start items-center px-1"
         >
           <span class="w-fit text-sm font-semibold text-left text-gray-400">{{ $t("stakingPage.keys") }}</span>
-          <span class="w-fit text-amber-400 text-md font-semibold ml-5">{{
-            `Contains ${group.keys.length} key(s)`
-          }}</span>
+          <span class="w-fit text-amber-400 text-md font-semibold ml-5">{{ `Contains ${group.keys.length} key(s)` }}</span>
         </div>
       </div>
     </template>

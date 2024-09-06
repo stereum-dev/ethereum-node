@@ -1,9 +1,7 @@
 import { ServiceVolume } from "../../ethereum-services/ServiceVolume";
 
 test("servicevolume", () => {
-  expect(new ServiceVolume("/opt/stereum/foo", "/opt/app/data").buildVolumeMapping()).toBe(
-    "/opt/stereum/foo:/opt/app/data"
-  );
+  expect(new ServiceVolume("/opt/stereum/foo", "/opt/app/data").buildVolumeMapping()).toBe("/opt/stereum/foo:/opt/app/data");
 });
 
 test("buildByConfig", () => {

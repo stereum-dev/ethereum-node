@@ -1,9 +1,6 @@
 <template>
   <div class="w-full h-full absolute inset-0 flex justify-center items-center">
-    <div
-      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
-      @click="$emit('closeWindow')"
-    ></div>
+    <div class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="mev-header">
         <div class="icon-box">
@@ -40,9 +37,7 @@
               {{ $t("serviceModals.process") }}...
               <img class="animate-spin" src="/img/icon/loading-icons/loading-circle.png" alt="icon" />
             </div>
-            <span v-else class="btn" :class="{ disabled: applyBtnDisabled }" @click="applyRelays">{{
-              $t("secretKeyReg.apply")
-            }}</span>
+            <span v-else class="btn" :class="{ disabled: applyBtnDisabled }" @click="applyRelays">{{ $t("secretKeyReg.apply") }}</span>
           </div>
         </div>
         <div v-else class="browserBox">
@@ -62,6 +57,7 @@
 import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
+import { useSetups } from "@/store/setups";
 import ControlService from "@/store/ControlService";
 import { toRaw } from "vue";
 export default {
@@ -84,7 +80,9 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       relaysList: "relaysList",
-      currentNetwork: "currentNetwork",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     combinedBlocs() {
       let names = new Set();
@@ -100,9 +98,8 @@ export default {
   },
   mounted() {
     this.filtermevService();
-    this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter((r) => r[this.currentNetwork.network.toLowerCase()])
-    );
+    this.availableBlocks = this.shuffleRelaysList(this.relaysList.filter((r) => r[this.selectedSetup?.network.toLowerCase()]));
+    console.log(this.selectedSetup);
   },
   methods: {
     shuffleRelaysList(array) {
@@ -136,7 +133,7 @@ export default {
                 if (service.entrypoint[relayEntryPointIndex + 1]) {
                   const relayURLs = service.entrypoint[relayEntryPointIndex + 1].split(",");
                   relayURLs.forEach((relay) => {
-                    let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
+                    let relayData = this.relaysList.find((r) => r[this.selectedSetup?.network.toLowerCase()] === relay);
                     if (relayData) this.checkedRelays.push(relayData);
                   });
                 }
@@ -173,8 +170,9 @@ export default {
     applyRelays() {
       this.loading = true;
       if (this.serviceConfig.entrypoint) {
-        this.serviceConfig.entrypoint[this.serviceConfig.entrypoint.findIndex((e) => e === "-relays") + 1] =
-          this.checkedRelays.map((r) => r[this.currentNetwork.network.toLowerCase()]).join();
+        this.serviceConfig.entrypoint[this.serviceConfig.entrypoint.findIndex((e) => e === "-relays") + 1] = this.checkedRelays
+          .map((r) => r[this.selectedSetup?.network.toLowerCase()])
+          .join();
         ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(() => {
           setTimeout(() => {
             this.loading = false;

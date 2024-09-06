@@ -12,16 +12,14 @@ jest.setTimeout(1000000);
 
 test("prysm validator import", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Prysm--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Prysm--integration-test--ubuntu-2204");
 
   const serverSettings = {
     name: "Prysm--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx31",
     start_after_create: true,
-    ssh_keys: [
-      keyResponse.ssh_key.id
-    ],
+    ssh_keys: [keyResponse.ssh_key.id],
   };
 
   await testServer.create(serverSettings);
@@ -39,7 +37,7 @@ test("prysm validator import", async () => {
   const serviceManager = new ServiceManager(nodeConnection);
   await testServer.checkServerConnection(nodeConnection);
 
-  await nodeConnection.establish(taskManager)
+  await nodeConnection.establish(taskManager);
 
   //prepare node
   // create stereum settings
@@ -56,18 +54,25 @@ test("prysm validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-
   //install geth
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" })
+  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
 
-  let prysmBC = serviceManager.getService("PrysmBeaconService", { network: "holesky", installDir: "/opt/stereum", executionClients: [geth] })
+  let prysmBC = serviceManager.getService("PrysmBeaconService", {
+    network: "holesky",
+    installDir: "/opt/stereum",
+    executionClients: [geth],
+  });
 
-  let prysmVC = serviceManager.getService("PrysmValidatorService", { network: "holesky", installDir: "/opt/stereum", consensusClients: [prysmBC] })
+  let prysmVC = serviceManager.getService("PrysmValidatorService", {
+    network: "holesky",
+    installDir: "/opt/stereum",
+    consensusClients: [prysmBC],
+  });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
-  prysmBC.imageVersion = versions[prysmBC.network][prysmBC.service].slice(-1).pop()
-  prysmVC.imageVersion = versions[prysmVC.network][prysmVC.service].slice(-1).pop()
+  prysmBC.imageVersion = versions[prysmBC.network][prysmBC.service].slice(-1).pop();
+  prysmVC.imageVersion = versions[prysmVC.network][prysmVC.service].slice(-1).pop();
 
   //write config and start geth
   await nodeConnection.writeServiceConfiguration(geth.buildConfiguration());
@@ -91,18 +96,12 @@ test("prysm validator import", async () => {
       '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "fa52987837af01ec48e2b21f2078acef3368983943751013758052e07dae841d"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "8c055c8c504cd3ad20bcb1101431b2b1a506b1a4d0efdbd294d75c39c0f2268b"}}, "description": "", "pubkey": "948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458", "path": "m/12381/3600/2/0/0", "uuid": "c7521eed-533a-4fd1-90b7-ad1aa0f24a2d", "version": 4}',
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
-  })
+  });
   await validatorAccountManager.importKey(prysmVC.id);
 
-  await Promise.all([
-    serviceManager.manageServiceState(prysmBC.id, "stopped"),
-    serviceManager.manageServiceState(prysmVC.id, "stopped"),
-  ]);
+  await Promise.all([serviceManager.manageServiceState(prysmBC.id, "stopped"), serviceManager.manageServiceState(prysmVC.id, "stopped")]);
 
-  await Promise.all([
-    serviceManager.manageServiceState(prysmBC.id, "started"),
-    serviceManager.manageServiceState(prysmVC.id, "started"),
-  ]);
+  await Promise.all([serviceManager.manageServiceState(prysmBC.id, "started"), serviceManager.manageServiceState(prysmVC.id, "started")]);
 
   //get logs
   let condition = false;
@@ -117,7 +116,7 @@ test("prysm validator import", async () => {
       /Finished reading JWT secret/.test(BCstatus.stderr) &&
       /Starting beacon node/.test(BCstatus.stderr) &&
       /Starting initial chain sync/.test(BCstatus.stderr) &&
-      /Peer summary/.test(BCstatus.stderr) &&
+      /Connected peers/.test(BCstatus.stderr) &&
       /Connected to new endpoint/.test(BCstatus.stderr) &&
       /Beacon chain started/.test(VCstatus.stderr) &&
       /Waiting for beacon node to sync to latest chain head/.test(VCstatus.stderr)
@@ -140,20 +139,18 @@ test("prysm validator import", async () => {
   log.debug(passwords_path);
 
   const ufw = await nodeConnection.sshService.exec("ufw status");
-  const validatorAccounts = await nodeConnection.sshService.exec(
-    `cat ${wallet_path}/direct/accounts/all-accounts.keystore.json`
-  );
+  const validatorAccounts = await nodeConnection.sshService.exec(`cat ${wallet_path}/direct/accounts/all-accounts.keystore.json`);
   const auth_token = await nodeConnection.sshService.exec(`cat ${wallet_path}/auth-token`);
   const docker = await nodeConnection.sshService.exec("docker ps");
   let responseValidator = await nodeConnection.sshService.exec(
     "docker exec stereum-" +
-    prysmVC.id +
-    " /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use"
+      prysmVC.id +
+      " /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use"
   );
   const runningValidator = responseValidator.stdout.replace("\x1B[93m3\x1B[0m", "3"); //remove yellow color coding
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection)
+  await testServer.finishTestGracefully(nodeConnection);
 
   //check ufw
   expect(ufw.stdout).toMatch(/13001\/tcp/);
@@ -180,7 +177,7 @@ test("prysm validator import", async () => {
   expect(BCstatus.stderr).toMatch(/Finished reading JWT secret/);
   expect(BCstatus.stderr).toMatch(/Starting beacon node/);
   expect(BCstatus.stderr).toMatch(/Starting initial chain sync/);
-  expect(BCstatus.stderr).toMatch(/Peer summary/);
+  expect(BCstatus.stderr).toMatch(/Connected peers/);
   expect(BCstatus.stderr).toMatch(/Connected to new endpoint/);
 
   //check prysm VC logs

@@ -1,10 +1,5 @@
 <template>
-  <installation-box
-    :title="title"
-    :back="back"
-    :icon="selectedPreset.icon"
-    :next="selectedUsedBlocks ? 'verify' : 'disabled'"
-  >
+  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" :next="selectedUsedBlocks ? 'verify' : 'disabled'">
     <div class="plugin-parent">
       <div class="content-box">
         <div class="options-box">

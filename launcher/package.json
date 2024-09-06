@@ -21,7 +21,8 @@
     "lint:fix": "eslint --ext .js,.vue --ignore-path ../.gitignore --fix src",
     "stereum": "concurrently \"npm:electron:serve\" \"npm:watch:css\"",
     "backend:watch": "nodemon --watch 'src/backend' --exec 'npm run electron:serve'",
-    "format": "prettier .  --write"
+    "format": "prettier .  --write",
+    "format:check": "prettier .  --check"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",

@@ -1,9 +1,6 @@
 <template>
   <div class="w-full h-full absolute inset-0 flex justify-center items-center">
-    <div
-      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
-      @click="$emit('closeWindow')"
-    ></div>
+    <div class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="obol_charon-header">
         <div class="icon-box">
@@ -25,12 +22,8 @@
         <div v-if="!headerStore.generatorPlugin" class="wrapper">
           <div class="browserBox">
             <ConfirmBox
-              :top-line="`${
-                !headerStore.continueForExistENR ? $t('serviceModal.createEnr') : $t('serviceModal.openObol')
-              }`"
-              :bottom-line="`${
-                !headerStore.continueForExistENR ? $t('serviceModal.generateEnrToJoin') : $t('serviceModal.joinCluster')
-              }`"
+              :top-line="`${!headerStore.continueForExistENR ? $t('serviceModal.createEnr') : $t('serviceModal.openObol')}`"
+              :bottom-line="`${!headerStore.continueForExistENR ? $t('serviceModal.generateEnrToJoin') : $t('serviceModal.joinCluster')}`"
               :btn-name="`${!headerStore.continueForExistENR ? $t('multiServer.gen') : $t('serviceModal.openBrowser')}`"
               :btn-bg-color="`#192d31`"
               :btn-name-color="`#2fe4ab`"
@@ -68,11 +61,7 @@
                 }`"
                 :btn-name="`${areYouSureToRemove ? $t('exitMultipleValidator.confirm') : $t('serviceModal.copy')}`"
                 :second-btn-name="`${
-                  headerStore.depositFile
-                    ? ''
-                    : areYouSureToRemove
-                    ? $t('displayValidator.cancel')
-                    : $t('serviceModal.rem')
+                  headerStore.depositFile ? '' : areYouSureToRemove ? $t('displayValidator.cancel') : $t('serviceModal.rem')
                 }`"
                 :btn-bg-color="`${areYouSureToRemove ? '#74FA65' : '#494949'}`"
                 :second-btn-bg-color="`#eb5353`"
@@ -96,19 +85,13 @@
                   class="col-start-12 col-span-1 bg-gray-300 rounded-r-full flex justify-center items-center"
                   @click="selectBackupPath"
                 >
-                  <span
-                    class="absolute cursor-pointer"
-                    style="color: #192d31; top: 1; left: 3%; font-size: 2rem; font-weight: 600"
-                    >+</span
-                  >
+                  <span class="absolute cursor-pointer" style="color: #192d31; top: 1; left: 3%; font-size: 2rem; font-weight: 600">+</span>
                 </label>
                 <input
                   v-model="thirdRowInput"
                   :style="`${dkgControl !== true ? 'padding-left: 14px; text-indent: 14px;' : ''}`"
                   type="text"
-                  :placeholder="`${
-                    dkgControl !== true ? 'e.g., C:\\path\\to\\backup.zip' : $t('serviceModal.entrUrl')
-                  }`"
+                  :placeholder="`${dkgControl !== true ? 'e.g., C:\\path\\to\\backup.zip' : $t('serviceModal.entrUrl')}`"
                 />
                 <div class="import-btn" @click="dkgImporter">
                   {{ $t("serviceModal.srart") }}
@@ -139,11 +122,7 @@
                   : $t('serviceModal.srart')
               }`"
               :second-btn-name="`${
-                !headerStore.depositFile
-                  ? ''
-                  : areYouSureToRemoveCluster
-                  ? $t('displayValidator.cancel')
-                  : $t('serviceModal.rem')
+                !headerStore.depositFile ? '' : areYouSureToRemoveCluster ? $t('displayValidator.cancel') : $t('serviceModal.rem')
               }`"
               :second-btn-bg-color="`#eb5353`"
               :btn-bg-color="`${areYouSureToRemoveCluster ? '#74FA65' : '#192d31'}`"

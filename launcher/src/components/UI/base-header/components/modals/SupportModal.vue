@@ -1,9 +1,6 @@
 <template>
   <div class="w-full h-full absolute inset-0 flex justify-center items-center">
-    <div
-      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
-      @click="$emit('closeWindow')"
-    ></div>
+    <div class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10" @click="$emit('closeWindow')"></div>
     <div class="support-modal-content">
       <div class="content">
         <support-modal-box
@@ -25,9 +22,7 @@
           @card-action="openStereumDocs"
         ></support-modal-box>
       </div>
-      <span class="email"
-        >{{ $t("supportModal.emailText") }}<a href="mailto:support@stereum.net">support@stereum.net</a></span
-      >
+      <span class="email">{{ $t("supportModal.emailText") }}<a href="mailto:support@stereum.net">support@stereum.net</a></span>
     </div>
   </div>
 </template>
@@ -56,8 +51,7 @@ export default {
   },
   methods: {
     OpenStereumGithub() {
-      let URL =
-        "https://github.com/stereum-dev/ethereum-node/issues/new?assignees=&labels=bug&template=bug_report.yml&title=%5BBug%5D%3A+";
+      let URL = "https://github.com/stereum-dev/ethereum-node/issues/new?assignees=&labels=bug&template=bug_report.yml&title=%5BBug%5D%3A+";
       window.open(URL, "_blank");
     },
     OpenStereumDiscord() {

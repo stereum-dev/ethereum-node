@@ -44,11 +44,12 @@ Pull requests will be reviewed/merged ASAP - please follow this steps:
 1. Open your [local development environment](#getting-started)
 2. Create your feature branch:
    - `git checkout -b feat/new-feature`
-3. Commit your changes:
+3. Use `npm run format:check` to check the format of your code and `run npm run format` to format your code
+4. Commit your changes:
    - `git commit -m "feat(optional): new feature"`
-4. Push the branch:
+5. Push the branch:
    - `git push origin feat/new-feature`
-5. Open a pull request
+6. Open a pull request
 
 #### Pull Request Titles
 

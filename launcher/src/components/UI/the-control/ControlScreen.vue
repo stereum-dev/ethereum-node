@@ -16,9 +16,7 @@
                 v-for="(item, index) in selecteConfigServices"
                 :key="index"
                 class="plugins-row"
-                @mouseenter="
-                  footerStore.cursorLocation = `${item.name + ' / ' + item.category}`
-                "
+                @mouseenter="footerStore.cursorLocation = `${item.name + ' / ' + item.category}`"
                 @mouseleave="footerStore.cursorLocation = ''"
               >
                 <div
@@ -39,13 +37,7 @@
                 </div>
                 <div class="service-edit">
                   <div class="edit-box">
-                    <div
-                      v-if="
-                        item.service !== 'ExternalExecutionService' &&
-                        item.service !== 'ExternalConsensusService'
-                      "
-                      class="icon-bg"
-                    >
+                    <div v-if="item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'" class="icon-bg">
                       <div class="power-icon">
                         <img
                           v-if="item.isServicePending"
@@ -53,12 +45,9 @@
                           src="/animation/loading/turning-circle.gif"
                           alt="icon"
                           @mouseenter="
-                            footerStore.cursorLocation = `${t(
-                              'controlScreenTooltips.isPending',
-                              {
-                                service: item.name,
-                              }
-                            )}`
+                            footerStore.cursorLocation = `${t('controlScreenTooltips.isPending', {
+                              service: item.name,
+                            })}`
                           "
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
@@ -68,12 +57,9 @@
                           alt="icon"
                           @click.stop="stateHandler(item)"
                           @mouseenter="
-                            footerStore.cursorLocation = `${t(
-                              'controlScreenTooltips.turnoff',
-                              {
-                                service: item.name,
-                              }
-                            )}`
+                            footerStore.cursorLocation = `${t('controlScreenTooltips.turnoff', {
+                              service: item.name,
+                            })}`
                           "
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
@@ -83,12 +69,9 @@
                           alt="icon"
                           @click.stop="stateHandler(item)"
                           @mouseenter="
-                            footerStore.cursorLocation = `${t(
-                              'controlScreenTooltips.restart',
-                              {
-                                service: item.name,
-                              }
-                            )}`
+                            footerStore.cursorLocation = `${t('controlScreenTooltips.restart', {
+                              service: item.name,
+                            })}`
                           "
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
@@ -97,12 +80,7 @@
                           src="/img/icon/node-page-icons/service-command-turn-on.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
-                          @mouseenter="
-                            footerStore.cursorLocation = `${t(
-                              'controlScreenTooltips.turnon',
-                              { service: item.name }
-                            )}`
-                          "
+                          @mouseenter="footerStore.cursorLocation = `${t('controlScreenTooltips.turnon', { service: item.name })}`"
                           @mouseleave="footerStore.cursorLocation = ''"
                         />
                       </div>
@@ -118,21 +96,11 @@
                         "
                         @mouseleave="footerStore.cursorLocation = ''"
                       >
-                        <img
-                          src="/img/icon/node-page-icons/service-command-open-logs.png"
-                          alt="icon"
-                        />
+                        <img src="/img/icon/node-page-icons/service-command-open-logs.png" alt="icon" />
                       </div>
                     </div>
                   </div>
                 </div>
-                <ExpertWindow
-                  v-if="isExpertWindowOpen"
-                  :item="expertModeClient"
-                  left-distance="left-[45px]"
-                  bg-opacity="opacity-25"
-                  @hide-modal="hideExpertMode(item)"
-                />
               </div>
             </div>
             <div class="arrow-down" @click="scrollDown">
@@ -144,10 +112,8 @@
       <div class="dashboard-container border-4 border-gray-500 bg-black rounded-md">
         <control-dashboard></control-dashboard>
       </div>
-      <div
-        class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2"
-      >
-        <control-alert @expert-handler="expertModeHandlerAlert"></control-alert>
+      <div class="absolute bottom-[8px] right-[8px] col-start-21 col-end-25 row-start-2 row-end-5 py-2">
+        <control-alert @expert-handler="expertModeHandlerAlert" />
       </div>
     </div>
     <LogsSection
@@ -158,6 +124,7 @@
       @export-all-log="updateAndExportAllLogs"
       @export-customized-logs="updateAndExportAllLogs"
     />
+    <ExpertWindow v-if="isExpertWindowOpen" :item="expertModeClient" bg-opacity="opacity-25" @hide-modal="hideExpertMode(item)" />
     <!-- End Control main layout -->
   </base-layout>
 </template>
@@ -214,8 +181,7 @@ const selecteConfigServices = computed(() => {
     );
     serviceStore.installedServices.forEach((service) => {
       if (
-        (["execution", "validator", "consensus"].includes(service.category) &&
-          selectedServiceIds.includes(service.config.serviceID)) ||
+        (["execution", "validator", "consensus"].includes(service.category) && selectedServiceIds.includes(service.config.serviceID)) ||
         service.category === "service"
       ) {
         test.push({
@@ -230,12 +196,8 @@ const selecteConfigServices = computed(() => {
 
 const missingServices = computed(() => {
   const selectedServices = selecteConfigServices.value;
-  const hasValidator = selectedServices.some(
-    (service) => service.category === "validator"
-  );
-  const hasConsensus = selectedServices.some(
-    (service) => service.category === "consensus"
-  );
+  const hasValidator = selectedServices.some((service) => service.category === "validator");
+  const hasConsensus = selectedServices.some((service) => service.category === "consensus");
 
   let missing = [];
   if (!hasValidator) missing.push("validator");
@@ -253,23 +215,20 @@ watch(
 );
 
 const isAnyConsensusRunning = computed(() => {
-  const consensusServices = selecteConfigServices.value.filter(
-    (service) => service.category === "consensus"
-  );
-  return (
-    consensusServices.length > 0 &&
-    consensusServices.some((service) => service.state === "running")
-  );
+  const consensusServices = selecteConfigServices.value.filter((service) => service.category === "consensus");
+  return consensusServices.length > 0 && consensusServices.some((service) => service.state === "running");
 });
-watch(isAnyConsensusRunning, (newValue) => {
-  footerStore.isConsensusRunning = newValue;
-});
+watch(
+  isAnyConsensusRunning,
+  (newValue) => {
+    footerStore.isConsensusRunning = newValue;
+  },
+  { immediate: true }
+);
 
 //is prometheus off
 const isPrometheusOff = computed(() => {
-  const prometheusService = selecteConfigServices.value.find(
-    (service) => service.name === "Prometheus"
-  );
+  const prometheusService = selecteConfigServices.value.find((service) => service.name === "Prometheus");
   return prometheusService?.state === "running" ? false : true;
 });
 
@@ -389,13 +348,9 @@ const updateAndExportAllLogs = async (client) => {
     until: nodeStore.untilDateParsDays,
   });
 
-  const fileName = `${client.name}_${
-    nodeStore.isExportCustomizedDateLoading ? "customized" : "all"
-  }_logs.txt`;
+  const fileName = `${client.name}_${nodeStore.isExportCustomizedDateLoading ? "customized" : "all"}_logs.txt`;
   const data = [...nodeStore.allLogsForExp.logs].reverse();
-  const lineByLine = data
-    .map((line, index) => `#${data.length - index}: ${line}`)
-    .join("\n\n");
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
 
@@ -406,31 +361,19 @@ const updateAndExportAllLogs = async (client) => {
 };
 
 const exportLogs = async (client) => {
-  const currentService = nodeStore.serviceLogs.find(
-    (service) => service.config?.serviceID === client.config?.serviceID
-  );
+  const currentService = nodeStore.serviceLogs.find((service) => service.config?.serviceID === client.config?.serviceID);
 
-  const fileName = nodeStore.exportLogs
-    ? `${client.name}_150_logs.txt`
-    : `${client.name}_all_logs.txt`;
+  const fileName = nodeStore.exportLogs ? `${client.name}_150_logs.txt` : `${client.name}_all_logs.txt`;
 
   // Select the data based on the condition
-  const data = nodeStore.exportLogs
-    ? currentService.logs.slice(-150).reverse()
-    : currentService.logs.reverse();
+  const data = nodeStore.exportLogs ? currentService.logs.slice(-150).reverse() : currentService.logs.reverse();
 
-  const lineByLine = data
-    .map((line, index) => `#${data.length - index}: ${line}`)
-    .join("\n\n");
+  const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
 };
 const updateServiceLogs = async () => {
-  if (
-    serviceStore.installedServices &&
-    serviceStore.installedServices.length > 0 &&
-    headerStore.refresh
-  ) {
+  if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
     const data = await ControlService.getServiceLogs({ logs_tail: 150 });
     nodeStore.serviceLogs = data;
   }

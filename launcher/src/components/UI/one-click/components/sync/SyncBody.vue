@@ -1,20 +1,12 @@
 import { ref, computed } from 'vue';
 <template>
-  <div
-    class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
-  >
-    <div
-      class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
-    >
-      <div
-        class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center"
-      >
+  <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
+    <div class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2">
+      <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
         <span class="text-gray-300 text-sm">{{ $t("oneClick.setNodeClient") }}</span>
       </div>
 
-      <div
-        class="col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-12 grid-rows-2 gap-2"
-      >
+      <div class="col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-12 grid-rows-2 gap-2">
         <div
           v-if="executionClient"
           class="h-14 col-start-1 col-span-full row-start-1 row-span-1 w-full flex justify-between items-center space-x-2"
@@ -35,9 +27,7 @@ import { ref, computed } from 'vue';
         </div>
       </div>
 
-      <div
-        class="col-start-2 col-end-12 row-start-6 row-span-1 flex flex-col justify-center items-center px-2"
-      >
+      <div class="col-start-2 col-end-12 row-start-6 row-span-1 flex flex-col justify-center items-center px-2">
         <span class="text-gray-300 text-sm text-left">
           {{ $t("fastSync.message") }}
         </span>
@@ -59,15 +49,11 @@ const clickStore = useClickInstall();
 
 //Computed & Watcher
 const executionClient = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.filter(
-    (service) => service.category === "execution"
-  )[0];
+  return clickStore.selectedPreset.includedPlugins.filter((service) => service.category === "execution")[0];
 });
 
 const consensusClient = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.filter(
-    (service) => service.category === "consensus"
-  )[0];
+  return clickStore.selectedPreset.includedPlugins.filter((service) => service.category === "consensus")[0];
 });
 
 const isPresetArchive = computed(() => {

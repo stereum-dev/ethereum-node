@@ -26,3 +26,4 @@ yarn-error.log*
 
 # Molecule temp files
 stereum-pwd
+.venv

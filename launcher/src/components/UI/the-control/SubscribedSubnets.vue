@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="np2p-parent"
-    @mouseenter="footerStore.cursorLocation = `${compName}`"
-    @mouseleave="footerStore.cursorLocation = ''"
-  >
+  <div class="np2p-parent" @mouseenter="footerStore.cursorLocation = `${compName}`" @mouseleave="footerStore.cursorLocation = ''">
     <div class="np2p-icon-box">
       <div class="np2p-icon-box_container">
         <img src="/img/icon/control-page-icons/SubnetSubscriptions.png" alt="" />
@@ -36,9 +32,7 @@
       >
         <img
           :class="controlStore.currentConsensusIcon == '' ? 'animate-spin' : ''"
-          :src="
-            controlStore.currentConsensusIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentConsensusIcon
-          "
+          :src="controlStore.currentConsensusIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentConsensusIcon"
           alt="consensus"
         />
       </div>
@@ -51,9 +45,7 @@
       >
         <img
           :class="controlStore.currentExecutionIcon == '' ? 'animate-spin' : ''"
-          :src="
-            controlStore.currentExecutionIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentExecutionIcon
-          "
+          :src="controlStore.currentExecutionIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : controlStore.currentExecutionIcon"
           alt="execution"
         />
       </div>

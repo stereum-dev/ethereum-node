@@ -27,9 +27,7 @@
           </div>
         </div>
         <div class="categoryBox">
-          <p class="category">
-            {{ logsItem.category }}<span v-if="logsItem.category != 'service'" class="client"> client</span>
-          </p>
+          <p class="category">{{ logsItem.category }}<span v-if="logsItem.category != 'service'" class="client"> client</span></p>
           <span id="serviceVersion">{{ logsItem.config.runningImageVersion }}</span>
         </div>
         <div class="closeBox" @click="$emit('closeLog')">
@@ -38,12 +36,7 @@
       </div>
       <div class="logBox">
         <div class="log-box_nav">
-          <div
-            v-for="service in sortedServices"
-            :key="service"
-            class="nav-button"
-            @click="displayPluginLogPage(service)"
-          >
+          <div v-for="service in sortedServices" :key="service" class="nav-button" @click="displayPluginLogPage(service)">
             <img :src="service.icon" :alt="service.name" />
           </div>
         </div>

@@ -11,16 +11,14 @@ jest.setTimeout(500000);
 
 test("nethermind installationm", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Nethermind--integration-test--ubuntu-2204")
+  const keyResponse = await testServer.createSSHKey("Nethermind--integration-test--ubuntu-2204");
 
   const serverSettings = {
     name: "Nethermind--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
-    ssh_keys: [
-      keyResponse.ssh_key.id
-    ],
+    ssh_keys: [keyResponse.ssh_key.id],
   };
 
   await testServer.create(serverSettings);
@@ -38,7 +36,7 @@ test("nethermind installationm", async () => {
   const serviceManager = new ServiceManager(nodeConnection);
   await testServer.checkServerConnection(nodeConnection);
 
-  await nodeConnection.establish(taskManager)
+  await nodeConnection.establish(taskManager);
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -55,7 +53,7 @@ test("nethermind installationm", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install nethermind
-  let executionClient = serviceManager.getService("NethermindService", { network: "holesky", installDir: "/opt/stereum" })
+  let executionClient = serviceManager.getService("NethermindService", { network: "holesky", installDir: "/opt/stereum" });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
@@ -84,7 +82,7 @@ test("nethermind installationm", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
-  await testServer.finishTestGracefully(nodeConnection)
+  await testServer.finishTestGracefully(nodeConnection);
 
   //check ufw
   expect(ufw.stdout).toMatch(/30303\/tcp/);

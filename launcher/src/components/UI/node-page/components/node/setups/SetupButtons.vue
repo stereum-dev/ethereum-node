@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="col-start-2 col-span-1 row-start-3 row-span-full grid grid-cols-2 grid-rows-2 relative p-2 gap-2"
-  >
+  <div class="col-start-2 col-span-1 row-start-3 row-span-full grid grid-cols-2 grid-rows-2 relative p-2 gap-2">
     <!-- <div
       class="p-1 w-8 h-8 col-start-1 col-span-1 row-start-1 row-span-1 flex justify-center items-center transition-colors duration-200 bg-gray-600 border border-gray-600 hover:border-gray-300 rounded-sm shadow-lg shadow-black active:shadow-none active:scale-95"
     >
@@ -39,12 +37,7 @@
       @mouseenter="footerStore.cursorLocation = `${exportConfig}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img
-        class="w-5 active:scale-95"
-        src="/img/icon/node-page-icons/export-config-icon.png"
-        alt="Export Icon"
-        @pointerdown.prevent.stop
-      />
+      <img class="w-5 active:scale-95" src="/img/icon/node-page-icons/export-config-icon.png" alt="Export Icon" @pointerdown.prevent.stop />
     </button>
 
     <button

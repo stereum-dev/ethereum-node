@@ -1,0 +1,175 @@
+name: 💼 Add Issue to Project Task Board
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  track_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get project data
+        env:
+          GH_TOKEN: ${{ secrets.PUSH_TO_PROJECT }}
+        run: |
+          gh api graphql -f query='
+            query($owner: String!, $repo: String!) {
+              repository(owner: $owner, name: $repo) {
+                projectV2(number: 24) {
+                  id
+                  fields(first: 20) {
+                    nodes {
+                      ... on ProjectV2Field {
+                        id
+                        name
+                      }
+                      ... on ProjectV2SingleSelectField {
+                        id
+                        name
+                        options {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f owner=${{ github.repository_owner }} -f repo=${{ github.event.repository.name }} > project_data.json
+
+          PROJECT_ID=$(jq -r '.data.repository.projectV2.id' project_data.json)
+          STATUS_FIELD_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Status") | .id' project_data.json)
+          BACKLOG_OPTION_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Status") | .options[] | select(.name == "BackLog") | .id' project_data.json)
+          DEPARTMENT_FIELD_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Department") | .id' project_data.json)
+          MAIN_TASK_FIELD_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Main Task ID") | .id' project_data.json)
+          SUB_TASK_FIELD_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Sub Task ID") | .id' project_data.json)
+          CREATION_DATE_FIELD_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Creation Date") | .id' project_data.json)
+          PRIORITY_FIELD_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Priority") | .id' project_data.json)
+          SET_PRIORITY_OPTION_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Priority") | .options[] | select(.name == "Set A Priority!") | .id' project_data.json)
+          DEPARTMENT_OPTION_ID=$(jq -r '.data.repository.projectV2.fields.nodes[] | select(.name == "Department") | .options[] | select(.name == "Development") | .id' project_data.json)
+
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+          echo "STATUS_FIELD_ID=$STATUS_FIELD_ID" >> $GITHUB_ENV
+          echo "BACKLOG_OPTION_ID=$BACKLOG_OPTION_ID" >> $GITHUB_ENV
+          echo "DEPARTMENT_FIELD_ID=$DEPARTMENT_FIELD_ID" >> $GITHUB_ENV
+          echo "MAIN_TASK_FIELD_ID=$MAIN_TASK_FIELD_ID" >> $GITHUB_ENV
+          echo "SUB_TASK_FIELD_ID=$SUB_TASK_FIELD_ID" >> $GITHUB_ENV
+          echo "CREATION_DATE_FIELD_ID=$CREATION_DATE_FIELD_ID" >> $GITHUB_ENV
+          echo "PRIORITY_FIELD_ID=$PRIORITY_FIELD_ID" >> $GITHUB_ENV
+          echo "SET_PRIORITY_OPTION_ID=$SET_PRIORITY_OPTION_ID" >> $GITHUB_ENV
+          echo "DEPARTMENT_OPTION_ID=$DEPARTMENT_OPTION_ID" >> $GITHUB_ENV
+
+      - name: Add issue to project
+        env:
+          GH_TOKEN: ${{ secrets.PUSH_TO_PROJECT }}
+          ISSUE_ID: ${{ github.event.issue.node_id }}
+          PROJECT_ID: ${{ env.PROJECT_ID }}
+        run: |
+          project_item_id=$(gh api graphql -f query='
+            mutation($project: ID!, $issue: ID!) {
+              addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
+                item {
+                  id
+                }
+              }
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID --jq '.data.addProjectV2ItemById.item.id')
+          echo "PROJECT_ITEM_ID=$project_item_id" >> $GITHUB_ENV
+
+      - name: Update project item fields
+        env:
+          GH_TOKEN: ${{ secrets.PUSH_TO_PROJECT }}
+          PROJECT_ID: ${{ env.PROJECT_ID }}
+          PROJECT_ITEM_ID: ${{ env.PROJECT_ITEM_ID }}
+          DEPARTMENT_FIELD_ID: ${{ env.DEPARTMENT_FIELD_ID }}
+          DEPARTMENT_OPTION_ID: ${{ env.DEPARTMENT_OPTION_ID }}
+          MAIN_TASK_FIELD_ID: ${{ env.MAIN_TASK_FIELD_ID }}
+          SUB_TASK_FIELD_ID: ${{ env.SUB_TASK_FIELD_ID }}
+          BACKLOG_OPTION_ID: ${{ env.BACKLOG_OPTION_ID }}
+          STATUS_FIELD_ID: ${{ env.STATUS_FIELD_ID }}
+          CREATION_DATE_FIELD_ID: ${{ env.CREATION_DATE_FIELD_ID }}
+          PRIORITY_FIELD_ID: ${{ env.PRIORITY_FIELD_ID }}
+          SET_PRIORITY_OPTION_ID: ${{ env.SET_PRIORITY_OPTION_ID }}
+        run: |
+          if [ -n "$DEPARTMENT_FIELD_ID" ] && [ -n "$DEPARTMENT_OPTION_ID" ]; then
+            gh api graphql -f query='
+              mutation($projectId: ID!, $projectItemId: ID!, $fieldId: ID!, $value: String!) {
+                updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $projectItemId, fieldId: $fieldId, value: {singleSelectOptionId: $value}}) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }' -f projectId=$PROJECT_ID -f projectItemId=$PROJECT_ITEM_ID -f fieldId=$DEPARTMENT_FIELD_ID -f value=$DEPARTMENT_OPTION_ID
+          fi
+
+          if [ -n "$MAIN_TASK_FIELD_ID" ]; then
+            gh api graphql -f query='
+              mutation($projectId: ID!, $projectItemId: ID!, $fieldId: ID!, $value: String!) {
+                updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $projectItemId, fieldId: $fieldId, value: {text: $value}}) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }' -f projectId=$PROJECT_ID -f projectItemId=$PROJECT_ITEM_ID -f fieldId=$MAIN_TASK_FIELD_ID -f value="Development - Stereum"
+          fi
+
+          if [ -n "$SUB_TASK_FIELD_ID" ]; then
+            LABEL_NAME="${{ github.event.issue.labels[0].name }}"
+            if [[ "$LABEL_NAME" == "bug" ]]; then
+              SUB_TASK_NAME="Stereum | Bug"
+            elif [[ "$LABEL_NAME" == "enhancement" ]]; then
+              SUB_TASK_NAME="Stereum | Enhancement"
+            elif [[ "$LABEL_NAME" == "refactor" ]]; then
+              SUB_TASK_NAME="Stereum | Refactor"
+            elif [[ "$LABEL_NAME" == "service integration" ]]; then
+              SUB_TASK_NAME="Stereum | Integration"
+            elif [[ "$LABEL_NAME" == "automated testing" ]]; then
+              SUB_TASK_NAME="Stereum | Testing"
+            else
+              SUB_TASK_NAME="Stereum | General"
+            fi
+
+            gh api graphql -f query='
+              mutation($projectId: ID!, $projectItemId: ID!, $fieldId: ID!, $value: String!) {
+                updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $projectItemId, fieldId: $fieldId, value: {text: $value}}) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }' -f projectId=$PROJECT_ID -f projectItemId=$PROJECT_ITEM_ID -f fieldId=$SUB_TASK_FIELD_ID -f value="$SUB_TASK_NAME"
+          fi
+
+          if [ -n "$STATUS_FIELD_ID" ] && [ -n "$BACKLOG_OPTION_ID" ]; then
+            gh api graphql -f query='
+              mutation($projectId: ID!, $projectItemId: ID!, $fieldId: ID!, $value: String!) {
+                updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $projectItemId, fieldId: $fieldId, value: {singleSelectOptionId: $value}}) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }' -f projectId=$PROJECT_ID -f projectItemId=$PROJECT_ITEM_ID -f fieldId=$STATUS_FIELD_ID -f value=$BACKLOG_OPTION_ID
+          fi
+
+          current_date=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          if [ -n "$CREATION_DATE_FIELD_ID" ]; then
+            gh api graphql -f query='
+              mutation($projectId: ID!, $projectItemId: ID!, $fieldId: ID!, $value: Date!) {
+                updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $projectItemId, fieldId: $fieldId, value: {date: $value}}) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }' -f projectId=$PROJECT_ID -f projectItemId=$PROJECT_ITEM_ID -f fieldId=$CREATION_DATE_FIELD_ID -f value=$current_date
+          fi
+
+          if [ -n "$PRIORITY_FIELD_ID" ] && [ -n "$SET_PRIORITY_OPTION_ID" ]; then
+            gh api graphql -f query='
+              mutation($projectId: ID!, $projectItemId: ID!, $fieldId: ID!, $value: String!) {
+                updateProjectV2ItemFieldValue(input: {projectId: $projectId, itemId: $projectItemId, fieldId: $fieldId, value: {singleSelectOptionId: $value}}) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }' -f projectId=$PROJECT_ID -f projectItemId=$PROJECT_ITEM_ID -f fieldId=$PRIORITY_FIELD_ID -f value=$SET_PRIORITY_OPTION_ID
+          fi

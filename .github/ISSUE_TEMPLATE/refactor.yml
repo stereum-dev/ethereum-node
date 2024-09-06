@@ -1,0 +1,33 @@
+name: 🛠️ Refactor
+description: Suggest a code refactoring task aimed at improving code without altering functionality
+title: "[Refactor]: "
+labels: ["refactor"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Refactor Description"
+      description: "Describe the refactoring task and its benefits"
+      placeholder: "Provide a detailed description of the refactor"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: "Reason for Refactor"
+      description: "Explain why this refactor is necessary"
+      placeholder: "State the reason for refactoring (e.g., code readability, performance)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: potential_risks
+    attributes:
+      label: "Potential Risks"
+      description: "Describe any potential risks associated with this refactor"
+    validations:
+      required: false
+
+labels:
+  - refactor

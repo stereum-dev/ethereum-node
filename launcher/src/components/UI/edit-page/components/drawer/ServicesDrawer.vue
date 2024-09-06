@@ -6,9 +6,7 @@
       >ADD A CONFIG SERVICE</span
     >
     <DrawerFilter />
-    <div
-      class="h-7 col-start-1 col-span-full row-start-3 row-span-1 mb-1 self-end flex justify-start items-center relative"
-    >
+    <div class="h-7 col-start-1 col-span-full row-start-3 row-span-1 mb-1 self-end flex justify-start items-center relative">
       <label for="Search" class="sr-only"> {{ $t("multiServer.serch") }} </label>
 
       <input
@@ -23,14 +21,7 @@
         <button type="button" class="text-gray-600 hover:text-gray-700">
           <span class="sr-only">{{ $t("multiServer.serch") }} </span>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-4 w-4"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -54,9 +45,7 @@
         @mouseenter="footerStore.cursorLocation = `${service.name} ${serv}`"
       >
         <img :src="service.icon" alt="Client Icon" class="col-start-1 col-span-1 w-full mx-auto" />
-        <span class="col-start-2 col-span-full w-full self-center text-xs text-gray-100 truncate ml-2">{{
-          service.name
-        }}</span>
+        <span class="col-start-2 col-span-full w-full self-center text-xs text-gray-100 truncate ml-2">{{ service.name }}</span>
       </div>
     </div>
     <div

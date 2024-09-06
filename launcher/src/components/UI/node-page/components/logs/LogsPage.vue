@@ -2,12 +2,7 @@
   <div class="w-full h-full items-center grid grid-cols-24 grid-rows-12 rounded-md">
     <LogHeader :client="client" @close-log="closeLog" />
     <LogBody :client="client" />
-    <LogFooter
-      :client="client"
-      @export-log="exportLog"
-      @export-all-log="exportAllLog"
-      @export-customized-logs="exportCustomizedLogs"
-    />
+    <LogFooter :client="client" @export-log="exportLog" @export-all-log="exportAllLog" @export-customized-logs="exportCustomizedLogs" />
   </div>
 </template>
 

@@ -23,9 +23,7 @@
                     <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.version") }}:</span>
                     </div>
-                    <div
-                      class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold mr-3"
-                    >
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold mr-3">
                       <span>{{ osVersionCurrent }}</span>
                     </div>
                   </div>
@@ -43,13 +41,11 @@
                         v-else
                         class="w-4 h-4 bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-5"
                       >
-                        <span>{{ numberOfUpdatablePackages }}</span>
+                        <span>{{ serverStore.numberOfUpdatablePackages }}</span>
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1"
-                  >
+                  <div class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1">
                     <div
                       class="w-[100px] h-[30px] bg-teal-800 hover:bg-teal-900 flex justify-center items-center p-1 rounded-md cursor-pointer active:scale-95 transition-transform"
                       @click="openOsUpdatePanel"
@@ -80,9 +76,7 @@
                     <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.current") }}:</span>
                     </div>
-                    <div
-                      class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold ml-2"
-                    >
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold ml-2">
                       <span>{{ serviceStore?.launcherVersion }}</span>
                     </div>
                   </div>
@@ -113,9 +107,7 @@
                       <span>{{ headerStore.stereumUpdate?.version }}</span>
                     </div>
                   </div>
-                  <div
-                    class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1"
-                  >
+                  <div class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1">
                     <div
                       class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       @click="searchUpdate"
@@ -125,8 +117,7 @@
                     <div
                       class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
                       :class="{
-                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
-                          !checkStereumUpdate || headerStore.updating,
+                        'opacity-40 pointer-events-none bg-[#3d4244] scale-95': !checkStereumUpdate || headerStore.updating,
                       }"
                       @click="$emit('runUpdate', headerStore.stereumUpdate)"
                     >
@@ -134,16 +125,9 @@
                     </div>
                   </div>
 
-                  <div
-                    v-if="checkStereumUpdate"
-                    class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4"
-                  >
+                  <div v-if="checkStereumUpdate" class="col-start-8 col-end-13 row-start-3 row-span-1 flex justify-start items-center ml-4">
                     <div class="w-[15px] h-[15px] rounded-full bg-teal-600 flex justify-center items-center p-1">
-                      <img
-                        class="w-2 h-2"
-                        src="/img/icon/base-header-icons/header-update-button-green.png"
-                        alt="icon"
-                      />
+                      <img class="w-2 h-2" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" />
                     </div>
                     <span class="text-[8px] text-gray-200 font-semibold ml-2"
                       >{{ headerStore.stereumUpdate.version }} {{ $t("updatePanel.available") }}</span
@@ -177,18 +161,12 @@
           </div>
           <div class="col-start-1 col-span-3 row-start-7 row-span-5 flex flex-col justify-between items-center">
             <div class="w-full h-[200px] flex justify-center items-center mx-auto px-1">
-              <div
-                class="w-full h-full flex flex-col justify-start items-center bg-[#334d4d] border border-gray-500 rounded-sm"
-              >
-                <div
-                  class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800"
-                >
+              <div class="w-full h-full flex flex-col justify-start items-center bg-[#334d4d] border border-gray-500 rounded-sm">
+                <div class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800">
                   <div class="w-5 h-5 bg-[#243d36] rounded-full p-1">
-                    <img class="w-3" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" />
+                    <img class="w-3" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" @click="copyUpdates" />
                   </div>
-                  <span class="text-center text-sm text-gray-300 font-semibold">{{
-                    $t("updatePanel.availablePlugin")
-                  }}</span>
+                  <span class="text-center text-sm text-gray-300 font-semibold">{{ $t("updatePanel.availablePlugin") }}</span>
                 </div>
                 <div
                   class="w-full h-[170px] max-h-[170px] flex flex-col justify-start items-center bg-[#1c2021] overflow-x-hidden overflow-y-auto gap-1 pt-1"
@@ -202,11 +180,7 @@
                       v-if="item.running || headerStore.updating"
                       class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
                     >
-                      <img
-                        class="w-5"
-                        src="/img/icon/base-header-icons/update-modal-download-disabled.png"
-                        alt="icon"
-                      />
+                      <img class="w-5" src="/img/icon/base-header-icons/update-modal-download-disabled.png" alt="icon" />
                     </div>
                     <div
                       v-else
@@ -257,7 +231,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { onMounted, computed, ref, watchEffect } from "vue";
-import { useUpdateCheck } from "@/composables/version.js";
+import { useUpdateCheck, useUpgradablePackages } from "@/composables/version.js";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 
@@ -273,6 +247,8 @@ const footerStore = useFooter();
 
 const openButton = ref("Open OS Update Panel");
 
+const { getUpgradablePackages } = useUpgradablePackages();
+
 //Data
 const stereumApp = ref({
   current: "alpha",
@@ -280,7 +256,7 @@ const stereumApp = ref({
   autoUpdate: "",
 });
 const osVersionCurrent = ref("-");
-const numberOfUpdatablePackages = ref(0);
+
 const searchingForOsUpdates = ref(false);
 
 //Computed
@@ -324,6 +300,17 @@ const searchUpdate = () => {
   useUpdateCheck();
 };
 
+const copyUpdates = () => {
+  let string = serviceStore.newUpdates.map((u) => "- " + u.name + " to " + u.version).join("\n");
+  if (checkStereumUpdate.value) {
+    string += "\n- Stereum to " + headerStore.stereumUpdate.version;
+  }
+  if (serverStore.numberOfUpdatablePackages && serverStore.numberOfUpdatablePackages > 0) {
+    string += "\n- OS Updates";
+  }
+  navigator.clipboard.writeText(string);
+};
+
 const checkStereumUpdate = computed(() => {
   if (headerStore.stereumUpdate && headerStore.stereumUpdate.version)
     return headerStore.stereumUpdate.commit != headerStore.stereumUpdate.current_commit ? true : false;
@@ -358,19 +345,15 @@ const searchOsUpdates = async () => {
   }
 
   searchingForOsUpdates.value = true;
-  setTimeout(async () => {
-    await getUpdatablePackagesCount();
-    searchingForOsUpdates.value = false;
-  }, 10);
-};
 
-const getUpdatablePackagesCount = async () => {
-  try {
-    const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
-    const numPackages = Number(packagesCount);
-    numberOfUpdatablePackages.value = isNaN(numPackages) || !numPackages ? 0 : numPackages;
-  } catch (error) {
-    console.log(error);
+  if (serverStore.numberOfUpdatablePackages === null || serverStore.upgradablePackages.value.length === 0) {
+    setTimeout(async () => {
+      await getUpgradablePackages();
+      serverStore.numberOfUpdatablePackages = serverStore.upgradablePackages.value.length || 0;
+      searchingForOsUpdates.value = false;
+    }, 10);
+  } else {
+    searchingForOsUpdates.value = false;
   }
 };
 

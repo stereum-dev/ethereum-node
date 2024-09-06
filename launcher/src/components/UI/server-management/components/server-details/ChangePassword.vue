@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="col-start-1 col-span-full row-start-4 row-span-full grid grid-cols-2 grid-rows-4 justify-start items-start space-y-1"
-  >
+  <div class="col-start-1 col-span-full row-start-4 row-span-full grid grid-cols-2 grid-rows-4 justify-start items-start space-y-1">
     <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
-      <span v-if="!error" class="text-gray-300 text-md font-semibold uppercase">{{
-        $t("multiServer.chngResPass")
-      }}</span>
+      <span v-if="!error" class="text-gray-300 text-md font-semibold uppercase">{{ $t("multiServer.chngResPass") }}</span>
       <span
         v-else
         :class="{ 'text-red-500': error, 'text-gray-300': !error }"
@@ -32,12 +28,8 @@
           @input="handleInput"
         />
       </div>
-      <div
-        class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1 flex flex-col justify-evenly items-start"
-      >
-        <div
-          class="col-start-1 col-span-full row-start-2 row-span-2 w-full h-full rounded-md grid grid-cols-12 items-center"
-        >
+      <div class="w-full h-full col-start-1 col-span-full row-start-2 row-span-1 flex flex-col justify-evenly items-start">
+        <div class="col-start-1 col-span-full row-start-2 row-span-2 w-full h-full rounded-md grid grid-cols-12 items-center">
           <input
             id="pass"
             v-model="serverStore.verifyPassword"
@@ -53,9 +45,7 @@
           />
         </div>
       </div>
-      <div
-        class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center space-x-4 py-1"
-      >
+      <div class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center space-x-4 py-1">
         <div
           class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-teal-800 hover:bg-teal-950 p-[3px] border border-teal-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
           @click="changePassword"

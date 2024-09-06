@@ -1,20 +1,24 @@
 <template>
-  <div class="MachineNameParent">
+  <div class="MachineNameParent" @mouseenter="footerStore.cursorLocation = `${machine}`" @mouseleave="footerStore.cursorLocation = ''">
     <div class="ubuntuIcon">
       <img src="/img/icon/control-page-icons/ubuntuIco.svg" />
     </div>
     <div class="machineNam">
-      <span>{{ ServerName }}</span>
+      <span>{{ controlStore.ServerName }}</span>
     </div>
   </div>
 </template>
 <script setup>
-import { computed } from "vue";
 import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
 
 const controlStore = useControlStore();
+const footerStore = useFooter();
 
-const ServerName = computed(() => controlStore.ServerName);
+const t = i18n.global.t;
+
+const machine = t("serverDetail.machine", { machineName: controlStore.ServerName });
 </script>
 
 <style scoped>

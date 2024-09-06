@@ -1,0 +1,41 @@
+name: 🤖 Automated Testing Improvement
+description: Suggest an enhancement or report an issue related to automated testing.
+title: "[Automated Testing]: "
+labels: ["automated testing"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Issue/Improvement Description"
+      description: "Briefly describe the issue or improvement related to automated testing."
+      placeholder: "Provide a short summary of the testing issue or enhancement."
+    validations:
+      required: true
+
+  - type: input
+    id: scope
+    attributes:
+      label: "Testing Scope"
+      description: "Specify the type of tests affected (e.g., unit, integration, e2e)."
+      placeholder: "e.g., Unit tests, Integration tests"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Suggested Solution"
+      description: "Provide a brief suggestion for improving the testing process."
+      placeholder: "Describe the proposed solution."
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "Additional Context"
+      description: "Add any extra information or related issues."
+      placeholder: "e.g., Related issues, screenshots."
+    validations:
+      required: false

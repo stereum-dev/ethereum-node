@@ -15,6 +15,7 @@
 import RelaysCheckbox from "./RelaysCheckbox.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { onMounted, computed } from "vue";
+import { useSetups } from "@/store/setups";
 
 const manageStore = useNodeManage();
 
@@ -29,12 +30,11 @@ const props = defineProps({
   },
 });
 
+const setupsStore = useSetups();
+
 const availableBlocks = computed({
   get: () => manageStore.availableBlocks,
-  set: () =>
-    (manageStore.availableBlocks = shuffleRelaysList(
-      manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network])
-    )),
+  set: () => (manageStore.availableBlocks = shuffleRelaysList(manageStore.relaysList.filter((r) => r[setupsStore.selectedSetup.network]))),
 });
 
 onMounted(() => {
@@ -42,9 +42,7 @@ onMounted(() => {
   manageStore.relaysList.map((relay) => {
     relay.isSelected = false;
   });
-  manageStore.availableBlocks = shuffleRelaysList(
-    manageStore.relaysList.filter((r) => r[manageStore.currentNetwork.network])
-  );
+  manageStore.availableBlocks = shuffleRelaysList(manageStore.relaysList.filter((r) => r[setupsStore.selectedSetup.network]));
 });
 
 // Shuffles an array randomly

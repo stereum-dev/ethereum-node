@@ -141,8 +141,8 @@ test("addDependencies LighthouseBeaconService", () => {
   const lhService = LighthouseBeaconService.buildByUserInput("prater", [], "/opt/stereum/lh", [], []);
 
   const result = sm.addDependencies(lhService, [geth1, geth2]);
-  expect(result.command.join(" ")).toMatch(/--execution-endpoint=http:\/\/stereum-.{36}:8551,http:\/\/stereum-.{36}:8551/)
-  expect(result.dependencies.executionClients).toHaveLength(2)
+  expect(result.command.join(" ")).toMatch(/--execution-endpoint=http:\/\/stereum-.{36}:8551,http:\/\/stereum-.{36}:8551/);
+  expect(result.dependencies.executionClients).toHaveLength(2);
 });
 
 test("addDependencies FlashbotsMevBoost", () => {
@@ -152,8 +152,8 @@ test("addDependencies FlashbotsMevBoost", () => {
   const mevboost = FlashbotsMevBoostService.buildByUserInput("goerli");
 
   const result = sm.addDependencies(mevboost, [lhService1, lhService2]);
-  expect(result).toHaveLength(2)
-  expect(result[0].command.join(" ")).toMatch(/--builder=http:\/\/stereum-.{36}:18550/)
+  expect(result).toHaveLength(2);
+  expect(result[0].command.join(" ")).toMatch(/--builder=http:\/\/stereum-.{36}:18550/);
 });
 
 test("addConnection String", () => {
@@ -167,13 +167,13 @@ test("addConnection String", () => {
   const sm = new ServiceManager();
   const result = sm.addCommandConnection(prysm, endpointCommand, dependencies, filter);
 
-  expect(result).toMatch(/--execution-endpoint=http:\/\/stereum-.{36}:8551,http:\/\/stereum-.{36}:8551/);
+  expect(result).toContain(`--execution-endpoint=http://stereum-${geth1.id}:8551,http://stereum-${geth2.id}:8551`);
 });
 
 test("addConnection array empty dependencies", () => {
   const geth1 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth");
   const lhService = LighthouseBeaconService.buildByUserInput("prater", [], "/opt/stereum/prysm", [geth1], []);
-  const dependencies = []
+  const dependencies = [];
   const endpointCommand = "--execution-endpoint=";
   const filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
 
@@ -201,14 +201,14 @@ test("addConnection array", () => {
 test("addConnection String empty dependencies", () => {
   const geth1 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth");
   const prysm = PrysmBeaconService.buildByUserInput("prater", [], "/opt/stereum/prysm", [geth1], []);
-  const dependencies = []
+  const dependencies = [];
   const endpointCommand = "--execution-endpoint=";
   const filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
 
   const sm = new ServiceManager();
   const result = sm.addCommandConnection(prysm, endpointCommand, dependencies, filter);
 
-  expect(result).not.toMatch(/--execution-endpoint=/);
+  expect(result).not.toContain("--execution-endpoint=");
 });
 
 test("removeConnection String", () => {
@@ -251,12 +251,8 @@ test("removeConnection String multiple endpoints", () => {
   const sm = new ServiceManager();
   const result = sm.removeCommandConnection(command, id);
 
-  expect(result).not.toMatch(
-    /--beacon-rpc-provider="stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:4000,stereum-foo:3000,stereum-bar:2000"/
-  );
-  expect(result).not.toMatch(
-    /--beacon-rpc-gateway-provider=stereum-foo:3000,stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:3500/
-  );
+  expect(result).not.toMatch(/--beacon-rpc-provider="stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:4000,stereum-foo:3000,stereum-bar:2000"/);
+  expect(result).not.toMatch(/--beacon-rpc-gateway-provider=stereum-foo:3000,stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:3500/);
   expect(result).toMatch(/--beacon-rpc-provider="stereum-foo:3000,stereum-bar:2000"/);
   expect(result).toMatch(/--beacon-rpc-gateway-provider=stereum-foo:3000/);
 });
@@ -313,9 +309,7 @@ test("removeConnection array multiple endpoints", () => {
   const sm = new ServiceManager();
   const result = sm.removeCommandConnection(command, id);
 
-  expect(result).not.toContain(
-    '--ee-endpoint="http://stereum-9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d:8551,foo:3000,bar:2000"'
-  );
+  expect(result).not.toContain('--ee-endpoint="http://stereum-9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d:8551,foo:3000,bar:2000"');
   expect(result).toContain('--ee-endpoint="foo:3000,bar:2000"');
 });
 
@@ -325,16 +319,14 @@ test("change network", () => {
   let checkpointURL = undefined;
   let relayURL =
     "https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com";
-  let oldNetwork = "goerli";
+  let oldNetwork = "holesky";
   let newNetwork = "mainnet";
   const sm = new ServiceManager();
   services.push(GethService.buildByUserInput(oldNetwork, [], installDir + "/geth"));
   services.push(BesuService.buildByUserInput(oldNetwork, [], installDir + "/besu"));
   services.push(NethermindService.buildByUserInput(oldNetwork, [], installDir + "/nethermind"));
   services.push(FlashbotsMevBoostService.buildByUserInput(oldNetwork, relayURL));
-  services.push(
-    LighthouseBeaconService.buildByUserInput(oldNetwork, [], installDir + "/lighthouse", [], [], checkpointURL)
-  );
+  services.push(LighthouseBeaconService.buildByUserInput(oldNetwork, [], installDir + "/lighthouse", [], [], checkpointURL));
   services.push(LighthouseValidatorService.buildByUserInput(oldNetwork, [], installDir + "/lighthouse", []));
   services.push(PrysmBeaconService.buildByUserInput(oldNetwork, [], installDir + "/prysm", [], [], checkpointURL));
   services.push(PrysmValidatorService.buildByUserInput(oldNetwork, [], installDir + "/prysm", []));
@@ -353,9 +345,9 @@ test("change network", () => {
   }
   expect(services.map((s) => s.network)).not.toContain("goerli");
   expect(services.find((s) => s.service === "FlashbotsMevBoostService").entrypoint).toContain("-mainnet");
-  expect(services.find((s) => s.service === "PrysmBeaconService").command).toMatch(/--mainnet/);
-  expect(services.find((s) => s.service === "PrysmBeaconService").command).not.toMatch(
-    /--genesis-state=\/opt\/app\/genesis\/prysm-prater-genesis\.ssz/
+  expect(services.find((s) => s.service === "PrysmBeaconService").command).toContain("--mainnet");
+  expect(services.find((s) => s.service === "PrysmBeaconService").command).not.toContain(
+    "--genesis-state=/opt/app/genesis/prysm-holesky-genesis.ssz"
   );
   expect(services.find((s) => s.service === "LighthouseBeaconService").command).toContain("--network=mainnet");
 });

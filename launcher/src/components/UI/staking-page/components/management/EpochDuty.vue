@@ -1,9 +1,7 @@
 import { ref } from 'vue';
 <template>
   <div class="col-start-1 col-span-full row-start-10 row-span-full flex justify-center items-center">
-    <div
-      class="w-full h-full border border-gray-600 rounded-md grid grid-cols-12 grid-rows-4 items-center bg-[#151618]"
-    >
+    <div class="w-full h-full border border-gray-600 rounded-md grid grid-cols-12 grid-rows-4 items-center bg-[#151618]">
       <DutyHeader />
       <DutyBody :epoch="epoch" />
       <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter?.name }" />
@@ -58,9 +56,7 @@ const setupInterval = async () => {
 
 //TODO: Get Slot and Epoch in a separate interval, maybe move this to composables
 const getStats = async () => {
-  const data = await ControlService.getValidatorDuties(
-    getFilteredValidators.value.map((k) => k.index).filter((k) => k)
-  );
+  const data = await ControlService.getValidatorDuties(getFilteredValidators.value.map((k) => k.index).filter((k) => k));
   stakingStore.currentEpoch = data.currentEpoch | 0;
   stakingStore.currentSlot = data.currentSlot | 0;
   epoch.value.syncDuties = data.syncDuties?.length | 0;

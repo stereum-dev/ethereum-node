@@ -13,10 +13,7 @@ export class LighthouseValidatorService extends NodeService {
     const dataDir = "/opt/app/validator";
     const graffitiDir = "/opt/app/graffitis";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/validator", dataDir),
-      new ServiceVolume(workingDir + "/graffitis", graffitiDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/validator", dataDir), new ServiceVolume(workingDir + "/graffitis", graffitiDir)];
 
     const eth2Nodes = consensusClients
       .map((client) => {
@@ -60,9 +57,8 @@ export class LighthouseValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
-    if (consensusClients.some(c => c.service === "CharonService")) {
-      service.command.push("--produce-block-v3=false");
-      service.command = service.command.filter(c => c !== "--enable-doppelganger-protection");
+    if (consensusClients.some((c) => c.service === "CharonService")) {
+      service.command = service.command.filter((c) => c !== "--enable-doppelganger-protection");
     }
 
     return service;

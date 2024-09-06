@@ -28,9 +28,7 @@ const graffitiPanel = () => {
   emit("graffitiPanel");
 };
 const removeMultiple = () => {
-  const keys = stakingStore.keys.filter(
-    (key) => key.validatorID === stakingStore.selectedServiceToFilter.config.serviceID
-  );
+  const keys = stakingStore.keys.filter((key) => key.validatorID === stakingStore.selectedServiceToFilter.config.serviceID);
   stakingStore.removeKeys = [...keys];
   stakingStore.setActiveModal("removeValidator");
 };
