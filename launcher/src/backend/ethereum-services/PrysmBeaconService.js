@@ -93,12 +93,14 @@ export class PrysmBeaconService extends NodeService {
             "--p2p-udp-port=12001",
           ];
 
+    const imageVersion = network === "devnet" ? "v5.0.4" : "v5.1.0";
+
     service.init(
       "PrysmBeaconService", //service
       service.id, //id
       1, // configVersion
       image, //image
-      network === "devnet" ? "v5.0.4" : "v5.1.0", //imageVersion
+      imageVersion, //imageVersion
       cmd, // command
       ["/app/cmd/beacon-chain/beacon-chain"], //entrypoint
       null, //env
