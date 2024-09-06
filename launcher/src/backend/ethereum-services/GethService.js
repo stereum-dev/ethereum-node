@@ -35,6 +35,10 @@ export class GethService extends NodeService {
             "--allow-insecure-unlock",
             "--nodiscover",
             "--syncmode=full",
+            "--metrics",
+            "--metrics.expensive",
+            "--metrics.port=6060",
+            "--metrics.addr=0.0.0.0",
           ]
         : [
             `--${network}`,

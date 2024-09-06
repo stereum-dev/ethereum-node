@@ -62,7 +62,6 @@ export class PrysmBeaconService extends NodeService {
             `--datadir=${dataDir}`,
             "--min-sync-peers=0",
             `--genesis-state=${genesisDir}/genesis.ssz`,
-            "--bootstrap-node=",
             "--interop-eth1data-votes",
             `--chain-config-file=${configYamlDir}/config.yml`,
             "--contract-deployment-block=0",
@@ -74,7 +73,8 @@ export class PrysmBeaconService extends NodeService {
             `--jwt-secret=${JWTDir}`,
             "--suggested-fee-recipient=0x123463a4b065722e99115d6c222f267d9cabb524",
             "--minimum-peers-per-subnet=0",
-            "--enable-debug-rpc-endpoints",
+            "--monitoring-host=0.0.0.0",
+            "--monitoring-port=8080",
             "--force-clear-db",
           ]
         : [
@@ -98,7 +98,7 @@ export class PrysmBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v5.1.0", //imageVersion
+      network === "devnet" ? "v5.0.4" : "v5.1.0", //imageVersion
       cmd, // command
       ["/app/cmd/beacon-chain/beacon-chain"], //entrypoint
       null, //env

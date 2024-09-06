@@ -50,6 +50,8 @@ export class PrysmValidatorService extends NodeService {
             "--interop-num-validators=64",
             "--interop-start-index=0",
             `--chain-config-file=${configYamlDir}/config.yml`,
+            "--monitoring-host=0.0.0.0",
+            "--monitoring-port=8081",
             "--force-clear-db",
           ]
         : [
@@ -79,7 +81,7 @@ export class PrysmValidatorService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v5.1.0", //imageVersion
+      network === "devnet" ? "v5.0.4" : "v5.1.0", //imageVersion
       cmd, //command
       ["/app/cmd/validator/validator"], // entrypoint
       null, // env
