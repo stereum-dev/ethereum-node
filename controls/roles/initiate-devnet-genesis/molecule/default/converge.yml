@@ -5,9 +5,9 @@
     - ../../../../defaults/stereum_defaults.yaml
 
   tasks:
-    - name: "Include copy-devnet-genesis"
+    - name: "initiate-devnet-genesis"
       include_role:
-        name: "copy-devnet-genesis"
+        name: "initiate-devnet-genesis"
       vars:
         working_dir: "{{ stereum_static.defaults.controls_install_path }}"
 #EOF

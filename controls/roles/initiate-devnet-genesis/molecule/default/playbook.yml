@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include copy-devnet-genesis"
+    - name: "Include initiate-devnet-genesis"
       include_role:
-        name: "copy-devnet-genesis"
+        name: "initiate-devnet-genesis"
 #EOF

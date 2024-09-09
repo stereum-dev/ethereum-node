@@ -2,6 +2,8 @@
 - name: Verify
   hosts: all
   gather_facts: false
+  vars:
+    working_dir: "/opt/stereum"
   tasks:
     - name: Check if directories exist
       stat:
