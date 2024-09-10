@@ -96,6 +96,7 @@
         dest: "{{ item.split(':') | first }}/prysm-{{ stereum_service_configuration.network }}-genesis.ssz"
         mode: 0644
         force: false
+        timeout: 200
       become: yes
       when: >
         (stereum_service_configuration.service == 'PrysmBeaconService') and

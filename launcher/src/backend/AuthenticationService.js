@@ -1,4 +1,5 @@
 import * as QRCode from "qrcode";
+import * as log from "electron-log";
 
 export class AuthenticationService {
   constructor(nodeConnection) {
@@ -167,5 +168,81 @@ export class AuthenticationService {
     let otpauth = `otpauth://${type}/${ip}@${name}?secret=${secret}&issuer=${name}`;
     const url = await QRCode.toDataURL(otpauth);
     return url;
+  }
+
+  static async handleOTPChange(oldPassword, newPassword, sshService) {
+    return new Promise((resolve, reject) => {
+      let oldPasswordWritten = false;
+      let newPasswordWrittenInitial = false;
+      let newPasswordWrittenConfirmation = false;
+      const conn = sshService.getConnectionFromPool();
+      conn.shell((err, stream) => {
+        // Set timeout for 20 seconds for the password change
+        setTimeout(() => {
+          stream.end();
+          conn.end();
+          reject("Timeout");
+        }, 20000);
+
+        // Catch enitial error
+        if (err) throw err;
+        stream.on("close", () => {
+          log.info("Closing OTP handle stream...");
+          resolve();
+        });
+
+        // Catch error
+        stream.on("error", (err) => {
+          stream.end();
+          conn.end();
+          reject(err);
+        });
+
+        // Handle data
+        stream.on("data", (data) => {
+          const recieved = data.toString().toLowerCase();
+
+          // Check if current password is being asked
+          if (new RegExp(/^(?=.*\b(current|old)\b)(?=.*\bpassword\b).*$/gm).test(recieved) && !oldPasswordWritten) {
+            oldPasswordWritten = true;
+            stream.write(`${oldPassword}\r\n`);
+
+            // Check if new password is being asked
+          } else if (
+            new RegExp(/^(?=.*\b(new)\b)(?=.*\bpassword\b).*$/gm).test(recieved) &&
+            oldPasswordWritten &&
+            !newPasswordWrittenInitial
+          ) {
+            newPasswordWrittenInitial = true;
+            stream.write(`${newPassword}\r\n`);
+
+            // Check for password confirmation
+          } else if (
+            new RegExp(/^(?=.*\b(retype|repeat|confirm)\b)(?=.*\bpassword\b).*$/gm).test(recieved) &&
+            oldPasswordWritten &&
+            newPasswordWrittenInitial &&
+            !newPasswordWrittenConfirmation
+          ) {
+            newPasswordWrittenConfirmation = true;
+            stream.write(`${newPassword}\r\n`);
+
+            // Check for Errors
+          } else if (new RegExp(/.*\b(error)\b.*/gm).test(recieved)) {
+            reject("Error changing password: " + recieved);
+
+            // Check for success
+          } else if (
+            recieved.includes(sshService.connectionInfo.user || "root") &&
+            oldPasswordWritten &&
+            newPasswordWrittenInitial &&
+            newPasswordWrittenConfirmation
+          ) {
+            stream.end();
+            conn.end();
+            resolve();
+          }
+        });
+      });
+    });
   }
 }

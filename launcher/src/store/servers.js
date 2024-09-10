@@ -123,6 +123,9 @@ export const useServers = defineStore("servers", {
         { name: "2fa", icon: "/img/icon/server-management-icons/2fa.png", isActive: false, isDisabled: false },
       ],
       selectedTab: null,
+
+      //OTP Handling
+      isOTPActive: false,
     };
   },
   actions: {
