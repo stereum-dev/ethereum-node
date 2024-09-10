@@ -676,7 +676,6 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
 
-
   async writeGenesisJson(args) {
     return this.promiseIpc.send("writeGenesisJson", args);
   }
@@ -688,7 +687,7 @@ class ControlService extends EventEmitter {
   async initGenesis() {
     return this.promiseIpc.send("initGenesis");
   }
-  
+
   async handleOTPChange(args) {
     return this.promiseIpc.send("handleOTPChange", args);
   }
