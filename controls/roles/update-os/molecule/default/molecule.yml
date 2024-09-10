@@ -5,7 +5,7 @@ driver:
   name: molecule_hetznercloud
 platforms:
   - name: "update-os--default--ubuntu-22.04"
-    server_type: cx11
+    server_type: cx22
     image: ubuntu-22.04
 provisioner:
   name: ansible
