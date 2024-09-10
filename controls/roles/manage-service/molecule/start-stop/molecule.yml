@@ -8,7 +8,7 @@ platforms:
     server_type: cpx21
     image: ubuntu-22.04
   # - name: "role-manage-service-centos-7"
-  #   server_type: cx21
+  #   server_type: cx22
   #   image: centos-7
 provisioner:
   name: ansible

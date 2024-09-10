@@ -5,10 +5,10 @@ driver:
   name: molecule_hetznercloud
 platforms:
   - name: "update-stereum--default--ubuntu-22.04"
-    server_type: cx21
+    server_type: cx22
     image: ubuntu-22.04
 #  - name: "update-stereum--default--centos-stream-8"
-#    server_type: cx21
+#    server_type: cx22
 #    image: centos-stream-8
 provisioner:
   name: ansible

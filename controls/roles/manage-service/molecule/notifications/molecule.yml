@@ -6,11 +6,11 @@ driver:
 platforms:
   - name: "manage-service--notifications--ubuntu-22.04"
     hostname: ubuntu
-    server_type: cx21
+    server_type: cx22
     image: ubuntu-22.04
 #  - name: "manage-service--notifications--centos-stream-8"
 #    hostname: "centos"
-#    server_type: cx21
+#    server_type: cx22
 #    image: centos-stream-8
 provisioner:
   name: ansible
