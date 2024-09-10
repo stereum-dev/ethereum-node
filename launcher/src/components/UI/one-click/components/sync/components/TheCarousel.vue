@@ -175,6 +175,7 @@ watch(currentSlide, (val) => {
 
 // Lifecycle hooks
 onMounted(() => {
+  installStore.checkPointSync = "";
   currentSlide.value = 3;
 });
 

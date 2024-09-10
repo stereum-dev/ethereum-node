@@ -307,13 +307,14 @@ export class ServiceManager {
     if (checkpointSyncIndex > -1) {
       command.splice(checkpointSyncIndex, 1);
     }
+    // remove genesisSync if used
+    if (genesisSyncCommands[client.service]) command = command.filter((c) => !c.includes(genesisSyncCommands[client.service]));
     //add checkpointSync if Url was send
-    if (checkpointUrl) {
+    if (checkpointUrl && checkpointCommands[client.service]) {
       command.push(checkpointCommands[client.service] + checkpointUrl);
-      if (genesisSyncCommands[client.service]) command = command.filter((c) => !c.includes(genesisSyncCommands[client.service]));
-    } else {
+    } else if (genesisSyncCommands[client.service]) {
       //add genesisSync if no Url was send
-      if (genesisSyncCommands[client.service]) command.push(genesisSyncCommands[client.service]);
+      command.push(genesisSyncCommands[client.service]);
     }
 
     if (isString) {
