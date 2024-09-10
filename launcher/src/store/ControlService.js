@@ -676,6 +676,10 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
 
+  async handleOTPChange(args) {
+    return this.promiseIpc.send("handleOTPChange", args);
+  }
+
   async fetchObolCharonAlerts() {
     return this.promiseIpc.send("fetchObolCharonAlerts");
   }

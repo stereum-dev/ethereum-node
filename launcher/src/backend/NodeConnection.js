@@ -34,9 +34,17 @@ export class NodeConnection {
   }
 
   async establish(taskManager, currentWindow) {
-    await this.sshService.connect(this.nodeConnectionParams, currentWindow);
-    await this.findStereumSettings();
-    this.taskManager = taskManager;
+    try {
+      if (this.sshService.connectionPool.length > 0) {
+        await this.sshService.disconnect(true);
+      }
+      await this.sshService.connect(this.nodeConnectionParams, currentWindow);
+      this.sshService.addingConnection = true;
+      await this.findStereumSettings();
+      this.taskManager = taskManager;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   /**
