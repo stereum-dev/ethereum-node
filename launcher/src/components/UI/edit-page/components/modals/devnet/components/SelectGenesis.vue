@@ -50,7 +50,7 @@ defineExpose({ confirmSelection });
         >
           <label
             for="uploadFile"
-            class="capitalize font-sans font-semibold text-lg px-2 py-2.5 outline-none rounded-md cursor-pointer mx-auto w-max block text-gray-200"
+            class="capitalize font-normal text-lg px-2 py-2.5 outline-none rounded-md cursor-pointer mx-auto w-max block text-gray-200"
           >
             Import Genesis
           </label>
@@ -60,7 +60,7 @@ defineExpose({ confirmSelection });
           class="bg-[#336666] hover:bg-[#488d8d] hover:scale-105 transition-all ease-in-out duration-150 hover:shadow-2xl hover:shadow-black active:scale-100 flex justify-center items-center shadow-md shadow-black p-1 h-14 w-[170px] rounded-md overflow-hidden my-4 mx-auto cursor-pointer active:shadow-none"
           @click="createNewGenesis"
         >
-          <span class="text-center text-lg capitalize font-sans font-semibold text-gray-200"> Create Genesis </span>
+          <span class="text-center text-lg capitalize font-normal text-gray-200"> Create Genesis </span>
         </div>
       </div>
     </div>

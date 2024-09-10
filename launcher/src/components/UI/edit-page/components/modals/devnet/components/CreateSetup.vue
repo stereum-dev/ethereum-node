@@ -45,6 +45,7 @@ watch(
 
 onMounted(() => {
   setupNameInput.value.focus();
+  setupStore.devnetConfigData.setupName = "";
 });
 
 const getSetupColor = (color) => {

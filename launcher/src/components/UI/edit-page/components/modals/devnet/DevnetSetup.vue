@@ -26,6 +26,7 @@ const getComponent = computed(() => {
     btnState = !(setupStore.devnetConfigData.setupName && setupStore.devnetConfigData.setupColor);
   } else if (setupStore.currentStep === 2) {
     comp = SelectGenesis;
+    btnState = true;
     subtitle = "GENESIS JSON SELECTION";
   } else if (setupStore.currentStep === 3) {
     comp = setupStore.devnetConfigData.uploadedGenesisConfig ? SelectCilent : ConfigGenesis;
@@ -105,6 +106,7 @@ const confirmDevnet = () => {
     :confirm-text="getComponent.buttonText"
     :disabled-button="getComponent.buttonState"
     click-outside-text="Click outside to cancel"
+    icon="/img/icon/network-icons/devnet-square.png"
     @close-window="closeWindow"
     @confirm-action="buttonAction"
   >
