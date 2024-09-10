@@ -33,7 +33,7 @@
         class="w-full h-8 bg-teal-700 rounded-sm text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"
         @click="createDevnet"
       >
-        <span class="text-sm text-gray-200 uppercase">Create DevNet</span>
+        <span class="text-sm text-gray-200">Setup Devnet</span>
       </div>
     </div>
   </div>
