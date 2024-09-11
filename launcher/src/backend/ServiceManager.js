@@ -835,7 +835,7 @@ export class ServiceManager {
     }
   }
 
-  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays, // for external -> source, jwtToken
+  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays // for external -> source, jwtToken // chainId, feeRecipient -> for devnet
   getService(name, args) {
     let ports;
     let service;
@@ -935,7 +935,9 @@ export class ServiceManager {
           args.installDir + "/prysm",
           args.executionClients,
           args.mevboost ? args.mevboost : [],
-          args.checkpointURL
+          args.checkpointURL,
+          args.chainId ? args.chainId : 32382,
+          args.feeRecipient ? args.feeRecipient : null
         );
 
       case "PrysmValidatorService":
@@ -2380,13 +2382,17 @@ export class ServiceManager {
     }
   }
 
-  async writeConfigYaml(configYamlString) {
+  async writeConfigYaml(writeConfigData) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Config YAML`);
     try {
+      if (!writeConfigData.existDepositContract) {
+        writeConfigData.configYaml = writeConfigData.configYaml.replace(/^.*DEPOSIT_CONTRACT_ADDRESS.*\n?/gm, "");
+      }
+
       const workingDir = await this.getCurrentPath();
 
-      const escapedYamlString = StringUtils.escapeStringForShell(configYamlString);
+      const escapedYamlString = StringUtils.escapeStringForShell(writeConfigData.configYaml);
 
       const command = `
         mkdir -p ${workingDir}/genesis/consensus && \
