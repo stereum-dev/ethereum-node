@@ -28,6 +28,7 @@ export class HetznerServer {
     let connected = false;
     while (!connected && tries < 300) {
       try {
+        await this.Sleep(2000);
         tries++;
         log.info(`Trying to connect (${tries})`);
         connected = await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 5000);

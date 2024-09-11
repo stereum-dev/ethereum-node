@@ -73,7 +73,7 @@ test("mevboost installation", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${mevboost.id}`);
     if (
-      /listening on 0.0.0.0:18550/.test(status.stdout) &&
+      /Listening on 0.0.0.0:18550/.test(status.stdout) &&
       /using 1 relays/.test(status.stdout) &&
       !/Invalid relay URL/.test(status.stdout)
     ) {
@@ -94,7 +94,7 @@ test("mevboost installation", async () => {
   }
 
   // check if Mevboost service is running properly
-  expect(status.stdout).toMatch(/listening on 0.0.0.0:18550/);
+  expect(status.stdout).toMatch(/Listening on 0.0.0.0:18550/);
   expect(status.stdout).toMatch(/using 1 relays/);
   expect(status.stdout).not.toMatch(/Invalid relay URL/);
 });

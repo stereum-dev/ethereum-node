@@ -188,10 +188,11 @@ export class SSHService {
         this.connectionInfo = null;
       }
       let counter = 0;
-      while (this.connectionPool.some((conn) => conn._chanMgr?._count > 0 && counter < 30)) {
+      while (this.connectionPool.length > 0 && counter < 30) {
         this.connectionPool.forEach((conn) => {
-          if (conn._chanMgr?._count > 0) {
+          if (conn._chanMgr?._count == 0) {
             conn.end();
+            this.connectionPool = this.connectionPool.filter((c) => c !== conn);
           }
         });
         await new Promise((resolve) => setTimeout(resolve, 1000));
