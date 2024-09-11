@@ -1,7 +1,59 @@
 <template>
   <div class="w-full mt-4 mx-auto px-4">
     <div class="w-full">
-      <div class="flex flex-col justify-start space-y-2 p-2 items-center">
+      <div v-if="allocDataReview">
+        <div
+          class="max-h-[190px] flex flex-col justify-start space-y-4 p-2 items-center overflow-x-hidden overflow-y-auto"
+        >
+          <div
+            v-for="(accountData, address) in allocData"
+            :key="address"
+            class="w-full h-fit bg-[#336666] rounded-md p-2 flex flex-col justify-start items-start space-y-1"
+          >
+            <div class="w-full flex justify-between items-center mb-2">
+              <h3 class="text-md font-normal text-white">{{ address }}</h3>
+              <button
+                class="w-7 h-7 bg-red-500 text-white p-1 rounded shadow-sm shadow-gray-700 flex justify-center items-center hover:bg-red-700 active:scale-90 active:shadow-none"
+                :class="{ 'opacity-50 pointer-events-none': isDeleting }"
+                @click="deleteAccount(address)"
+              >
+                <svg
+                  v-if="isDeleting === address"
+                  class="animate-spin h-5 w-5 border-2 border-white rounded-full border-t-white border-r-white border-b-white border-l-red-500"
+                  viewBox="0 0 24 24"
+                ></svg>
+                <img
+                  v-else
+                  src="/img/icon/terminal-page-icons/trash.png"
+                  alt="Trash Icon"
+                  class="w-4 h-4"
+                />
+              </button>
+            </div>
+            <div
+              v-for="(value, key) in accountData"
+              :key="key"
+              class="w-full flex justify-between items-center mb-1"
+            >
+              <span class="text-sm text-gray-200">{{ key }}:</span>
+              <div class="w-3/4 flex items-center overflow-x-clip truncate ml-2">
+                <span class="text-xs text-yellow-300 mr-2 overflow-hidden">{{
+                  JSON.stringify(value)
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-full px-8 flex justify-center items-center mt-2">
+          <div
+            class="justify-self-center bg-[#336666] hover:bg-[#407d7d] cursor-pointer shadow-sm shadow-[#101111] active:scale-95 active:shadow-none text-white px-4 py-1 rounded"
+            @click="allocDataReview = false"
+          >
+            Back to Add Account
+          </div>
+        </div>
+      </div>
+      <div v-else class="flex flex-col justify-start space-y-2 p-2 items-center">
         <div class="w-full flex justify-between items-center space-x-2">
           <input
             v-model="accountAddress"
@@ -53,13 +105,25 @@
           >
         </div>
 
-        <!-- Add Account Button -->
-        <div
-          class="w-1/3 h-[35px] rounded-md shadow-sm shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center bg-[#336666] hover:bg-[#407d7d]"
-          :class="buttonDisabled ? 'opacity-50 pointer-events-none' : ''"
-          @click="addAccount"
-        >
-          <span class="text-xs text-center text-gray-200 font-normal">Add Account</span>
+        <div class="w-full flex justify-center items-center space-x-2">
+          <!-- Add Account Button -->
+          <div
+            class="w-1/3 h-[35px] rounded-md shadow-sm shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center bg-[#336666] hover:bg-[#407d7d]"
+            :class="buttonDisabled ? 'opacity-50 pointer-events-none' : ''"
+            @click="addAccount"
+          >
+            <span class="text-xs text-center text-gray-200 font-normal">Add Account</span>
+          </div>
+          <!-- Review Button -->
+          <div
+            v-if="Object.keys(allocData).length > 0"
+            class="w-1/3 h-[35px] rounded-md shadow-sm shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center text-white px-4 py-2 bg-[#336666] hover:bg-[#407d7d]"
+            @click="allocDataReview = true"
+          >
+            <span class="text-xs text-center text-gray-200 font-normal"
+              >Edit Allocation
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -67,7 +131,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useGenesis } from "@/store/genesis";
 
 const genesisStore = useGenesis();
@@ -77,6 +141,8 @@ const balance = ref("");
 const addAccountScript = ref(false);
 const accountDetails = ref("");
 const errorMsg = ref("");
+const allocDataReview = ref(false);
+const isDeleting = ref(false);
 
 const placeHolderSample = ref({
   "0x0420420420420420420420420420420420420420": {
@@ -89,7 +155,7 @@ const placeHolderSample = ref({
   },
 });
 
-const allocData = ref({});
+const allocData = computed(() => genesisStore.genesis.alloc);
 
 const buttonDisabled = computed(() => {
   return (
@@ -98,16 +164,26 @@ const buttonDisabled = computed(() => {
   );
 });
 
-const updateAllocData = () => {
-  allocData.value = genesisStore.genesis.alloc;
-};
-
-watch(() => genesisStore.genesis.alloc, updateAllocData, { immediate: true });
-
 const inputClass = (disabled) => {
   return `w-full h-[35px] text-sm font-semibold pl-2 rounded-md ${
     disabled ? "bg-zinc-400 text-gray-600" : "bg-zinc-200 text-gray-800"
   }`;
+};
+
+const deleteAccount = async (address) => {
+  isDeleting.value = true;
+
+  try {
+    const updatedAlloc = { ...allocData.value };
+    delete updatedAlloc[address];
+    await genesisStore.updateGenesisAlloc(updatedAlloc);
+  } catch (e) {
+    console.error("Error deleting account:", e);
+  } finally {
+    setTimeout(() => {
+      isDeleting.value = false;
+    }, 1000);
+  }
 };
 
 const addAccount = () => {
@@ -138,15 +214,12 @@ const addAccount = () => {
   } else {
     newAccount[accountAddress.value] = { balance: balance.value || "0x0" };
   }
-  Object.keys(newAccount).forEach((address) => {
-    genesisStore.updateGenesisAlloc({ [address]: newAccount[address] });
-  });
+
+  genesisStore.updateGenesisAlloc({ ...allocData.value, ...newAccount });
 
   accountAddress.value = "";
   balance.value = "";
   addAccountScript.value = false;
   accountDetails.value = "";
-
-  console.log("Updated allocData:", genesisStore.genesis.alloc);
 };
 </script>
