@@ -70,7 +70,7 @@ import { computed } from 'vue';
       >{{ props.item.balance }}</span
     >
 
-    <div class="h-full col-start-18 col-span-full bg-[#151618] rounded-full grid grid-cols-5 items-center" @mousedown.prevent>
+    <div class="h-full col-start-17 col-span-full bg-[#151618] rounded-full grid grid-cols-6 items-center" @mousedown.prevent>
       <div
         class="col-start-1 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${copyPub}`"
@@ -136,6 +136,19 @@ import { computed } from 'vue';
           @click="withdrawHandler"
         />
       </div>
+      <div
+        class="col-start-6 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = `Beaconcha.in`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
+        <img
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          src="/img/icon/staking-page-icons/beaconcha.png"
+          alt="Icon"
+          @mousedown.prevent
+          @click="navToBeaconcha(props.item.network)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -145,7 +158,7 @@ import { computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
-import { useSetups } from "../../../../../../store/setups";
+import { useSetups } from "@/store/setups";
 
 const props = defineProps({
   item: {
@@ -288,6 +301,22 @@ const displayText = computed(() => {
 });
 
 //Methods
+const navToBeaconcha = (network) => {
+  const urls = {
+    gnosis: "https://gnosischa.in/",
+    sepolia: "https://sepolia.beaconcha.in/",
+    mainnet: "https://beaconcha.in/",
+    holesky: "https://holesky.beaconcha.in/",
+  };
+
+  const url = urls[network];
+  if (url) {
+    window.open(url, "_blank");
+  } else {
+    console.error("Invalid network provided");
+  }
+};
+
 const selectKey = (key) => {
   if (stakingStore.isGroupingAllowed) {
     const updatedKeys = stakingStore.keys.map((item) => {
