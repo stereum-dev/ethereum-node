@@ -1,10 +1,6 @@
 <template>
   <div class="epockSlot_parent">
-    <NoData
-      v-if="
-        isConsensusMissing || isConsensusRunning || selectedSetup?.network === 'devnet'
-      "
-    />
+    <NoData v-if="isConsensusMissing || isConsensusRunning || selectedSetup?.network === 'devnet'" />
     <div v-else-if="flag" class="wrapper">
       {{ beaconControler }}
     </div>
@@ -71,11 +67,7 @@ export default {
       return "Loading...";
     },
     flag() {
-      if (
-        this.currentResult === undefined ||
-        this.currentResult.beaconStatus === undefined ||
-        this.currentResult.beaconStatus !== 0
-      ) {
+      if (this.currentResult === undefined || this.currentResult.beaconStatus === undefined || this.currentResult.beaconStatus !== 0) {
         return true;
       }
 

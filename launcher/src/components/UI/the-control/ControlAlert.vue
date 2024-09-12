@@ -2,9 +2,7 @@
   <div class="alert-box_parent">
     <div class="alert-box">
       <div class="alert-box_header h-8 w-full flex justify-center items-center">
-        <div
-          class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pt-0.5"
-        >
+        <div class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pt-0.5">
           <div
             class="icon_alarm"
             :class="{
@@ -36,11 +34,7 @@
         <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
           <div class="volBtn cursor-pointer w-8" @click="volToggle">
             <img
-              :src="
-                volState
-                  ? '/img/icon/node-alert-icons/alert-settings.png'
-                  : '/img/icon/node-alert-icons/alert-settings-mute.png'
-              "
+              :src="volState ? '/img/icon/node-alert-icons/alert-settings.png' : '/img/icon/node-alert-icons/alert-settings-mute.png'"
               alt="green"
             />
           </div>
@@ -54,10 +48,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img
-              src="/img/icon/node-alert-icons/alert-storage-yellow.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message">
@@ -73,10 +64,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img
-              src="/img/icon/node-alert-icons/alert-cpu-yellow.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message">
@@ -90,10 +78,7 @@
         <template v-if="pointStatus && !alertShowState.includes('yellow')">
           <div v-for="point in pointStatus" :key="point" class="alert-message_yellow">
             <div class="icon-box">
-              <img
-                src="/img/icon/control-page-icons/PORT_LIST_ICON.png"
-                alt="warn_storage"
-              />
+              <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
             </div>
             <div class="message">
               <div class="main-message">
@@ -133,10 +118,7 @@
             @mouseleave="cursorLocation = ''"
           >
             <div class="icon-box">
-              <img
-                src="/img/icon/service-icons/validator/ObolCharon.png"
-                alt="warn_obol"
-              />
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
             </div>
             <div class="message">
               <div class="main-message">
@@ -160,10 +142,7 @@
             @mouseleave="cursorLocation = ''"
           >
             <div class="icon-box">
-              <img
-                src="/img/icon/service-icons/validator/ObolCharon.png"
-                alt="warn_obol"
-              />
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
             </div>
             <div class="message">
               <div class="main-message text-gray-900">
@@ -232,10 +211,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img
-              src="/img/icon/node-alert-icons/alert-sync-error.gif"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message"><span>CLIENT / SERVICE</span></div>
@@ -252,10 +228,7 @@
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box">
-            <img
-              src="/img/icon/node-alert-icons/alert-task-error.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
           </div>
 
           <div class="message">
@@ -286,19 +259,13 @@
         </template>
 
         <div
-          v-if="
-            stereumUpdate.current !== stereumUpdate.version &&
-            !alertShowState.includes('green')
-          "
+          v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="alert-message_green"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
         >
           <div class="icon-box" @click="showUpdate">
-            <img
-              src="/img/icon/node-alert-icons/alert-notification-stereum-update.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-notification-stereum-update.png" alt="warn_storage" />
           </div>
           <div class="message">
             <div class="main-message" @click="showUpdate">
@@ -424,9 +391,7 @@ export default {
     },
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
-        const matchingService = this.installedServices.find(
-          (service) => service.name === update.name
-        );
+        const matchingService = this.installedServices.find((service) => service.name === update.name);
         if (matchingService) {
           return {
             ...update,
@@ -517,13 +482,9 @@ export default {
       }
     },
     processCsm(alerts) {
-      const criticalAlertNames = alerts
-        .filter((alert) => alert.level === "critical")
-        .map((alert) => alert.name);
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
 
-      const notifictionsNames = alerts
-        .filter((alert) => alert.level === "notification")
-        .map((alert) => alert.name);
+      const notifictionsNames = alerts.filter((alert) => alert.level === "notification").map((alert) => alert.name);
 
       this.criticalCsm = criticalAlertNames;
 
@@ -555,13 +516,9 @@ export default {
       }
     },
     processAlerts(alerts) {
-      const criticalAlertNames = alerts
-        .filter((alert) => alert.level === "critical")
-        .map((alert) => alert.name);
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
 
-      const warningAlertNames = alerts
-        .filter((alert) => alert.level === "warning")
-        .map((alert) => alert.name);
+      const warningAlertNames = alerts.filter((alert) => alert.level === "warning").map((alert) => alert.name);
 
       this.criticalObol = criticalAlertNames;
 
@@ -604,9 +561,7 @@ export default {
     },
 
     async readService() {
-      const validators = this.installedServices?.filter(
-        (i) => i.category === "validator"
-      );
+      const validators = this.installedServices?.filter((i) => i.category === "validator");
 
       if (validators && validators.length > 0 && validators[0].config) {
         const addresses = [];
@@ -615,13 +570,8 @@ export default {
           if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
             continue;
           }
-          if (!validator.yaml)
-            validator.yaml = await ControlService.getServiceYAML(
-              validator.config.serviceID
-            );
-          const patternIndex = validator.expertOptions.findIndex(
-            (o) => o.title === "Default Fee Recipient"
-          );
+          if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
           if (patternIndex === -1) {
             continue;
           }
@@ -635,10 +585,7 @@ export default {
             return;
           }
         }
-        const notSetAddresses = addresses.filter(
-          (validator) =>
-            validator.address === "0x0000000000000000000000000000000000000000"
-        );
+        const notSetAddresses = addresses.filter((validator) => validator.address === "0x0000000000000000000000000000000000000000");
         this.notSetAddresses = notSetAddresses;
       }
     },
