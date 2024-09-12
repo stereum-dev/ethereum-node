@@ -6,21 +6,31 @@
       @click="$emit('hideModal')"
     ></div>
     <div
-      class="w-full h-[492px] absolute top-[56px] left-[1px] z-30 overflow-y-auto bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      class="w-full h-[492px] absolute top-[56px] left-[1px] z-30 bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
       :class="leftDistance ? leftDistance : 'left-0'"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
     >
-      <div class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600">
-        <span class="text-xl text-gray-200 font-bold uppercase">{{ item.name }}</span>
-        <p class="text-sm text-gray-200 capitalize">
-          {{ item.category }}
-          <span v-if="item.category != 'service'">client</span>
-        </p>
-        <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
+      <div class="expert-header w-full h-1/6">
+        <div class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600">
+          <span class="text-xl text-gray-200 font-bold uppercase">{{ item.name }}</span>
+          <p class="text-sm text-gray-200 capitalize">
+            {{ item.category }}
+            <span v-if="item.category != 'service'">client</span>
+          </p>
+          <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
+        </div>
       </div>
-      <div class="w-full h-[30px] space-y-2 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
+
+      <div
+        class="w-full overflow-y-auto space-y-2 mt-2"
+        :class="
+          isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive
+            ? 'h-[40px]'
+            : 'h-[74%]'
+        "
+      >
         <!-- expert mode row -->
         <div
           v-if="!ssvExpertModeActive && !ssvDkgExpertModeActive && !prometheusExpertModeActive"
@@ -262,7 +272,7 @@
           ></textarea>
         </div>
       </div>
-      <div class="w-full flex justify-between items-center absolute bottom-1 px-4 pb-2">
+      <div class="footer-expert h-10 w-full flex justify-between items-center absolute bottom-1 px-4 pb-2">
         <!-- service version -->
         <p class="w-1/2 text-sm text-gray-200">
           version: <span>{{ item.config.imageVersion }}</span>
@@ -279,7 +289,7 @@
 
         <button
           v-if="!nothingsChanged"
-          class="expert-modal-btn w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white transition-colors duration-300 transform bg-[#609879] rounded-sm hover:bg-[#4c7960] focus:outline-none uppercase text-sm"
+          class="expert-modal-btn w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white divnsition-colors duration-300 transform bg-[#609879] rounded-sm hover:bg-[#4c7960] focus:outline-none uppercase text-sm"
           @click="confirmExpertChanges(item, false)"
         >
           Confirm
@@ -382,8 +392,8 @@ export default {
       this.item.yaml = await ControlService.getServiceYAML(this.item.config.serviceID);
 
       let tekuGasLimit = "";
-      if(this.item.service === "TekuValidatorService"){
-        tekuGasLimit = await ControlService.readGasConfigFile(this.item.config.volumes[0].destinationPath)
+      if (this.item.service === "TekuValidatorService") {
+        tekuGasLimit = await ControlService.readGasConfigFile(this.item.config.volumes[0].destinationPath);
       }
 
       if (this.item.service === "SSVNetworkService") {
@@ -409,12 +419,12 @@ export default {
               if (this.item.yaml.includes(command)) {
                 let match = this.item.yaml.match(new RegExp(`${command}[:=]?([\\S*]*)`));
                 option.changeValue = match ? match[match.length - 1] : "";
-              } else if(this.item.service === "TekuValidatorService" && command == "--gas-limit"){
-                if(tekuGasLimit != null){
+              } else if (this.item.service === "TekuValidatorService" && command == "--gas-limit") {
+                if (tekuGasLimit != null) {
                   tekuGasLimit = tekuGasLimit.replace(/"/g, "");
                 }
                 option.changeValue = tekuGasLimit;
-                this.somethingIsChanged(option)
+                this.somethingIsChanged(option);
               } else {
                 option.changeValue = "";
               }
@@ -597,23 +607,24 @@ export default {
       if (this.item.service === "TekuValidatorService") {
         if (this.item.yaml.includes("--gas-limit")) {
           await ControlService.createGasConfigFile({
-            gasLimit: this.item.yaml.match(/^.*--gas-limit.*$/gm)[0].split('=')[1],
-            feeRecipient: this.item.yaml.match(/^.*fee-recipient.*$/gm)[0].split('=')[1],
+            gasLimit: this.item.yaml.match(/^.*--gas-limit.*$/gm)[0].split("=")[1],
+            feeRecipient: this.item.yaml.match(/^.*fee-recipient.*$/gm)[0].split("=")[1],
             configPath: this.item.config.volumes[0].destinationPath,
           });
-          if(!this.item.yaml.includes("validators-proposer-config")){
-            this.item.yaml = this.item.yaml.replace(/^.*--gas-limit.*$/gm,"  - --validators-proposer-config=" +  this.item.config.volumes[0].servicePath + "/gas_config.json");
+          if (!this.item.yaml.includes("validators-proposer-config")) {
+            this.item.yaml = this.item.yaml.replace(
+              /^.*--gas-limit.*$/gm,
+              "  - --validators-proposer-config=" + this.item.config.volumes[0].servicePath + "/gas_config.json"
+            );
+          } else {
+            this.item.yaml = this.item.yaml.replace(/\n^.*--gas-limit.*$/gm, "");
           }
-          else{
-            this.item.yaml = this.item.yaml.replace(/\n^.*--gas-limit.*$/gm,"");
-          }
-        }
-        else if (!this.item.yaml.includes("--gas-limit") && this.item.yaml.includes("validators-proposer-config")){
-          await ControlService.removeGasConfigFile(this.item.config.volumes[0].destinationPath)
-          this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*validators-proposer-config.*$/gm),"");
+        } else if (!this.item.yaml.includes("--gas-limit") && this.item.yaml.includes("validators-proposer-config")) {
+          await ControlService.removeGasConfigFile(this.item.config.volumes[0].destinationPath);
+          this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*validators-proposer-config.*$/gm), "");
         }
       }
-      
+
       await ControlService.writeServiceYAML({
         id: this.item.config.serviceID,
         data: this.item.yaml,
@@ -1172,7 +1183,7 @@ input:checked + .slider:before {
   position: relative;
   z-index: 8;
 
-  margin-top: 2%;
+  margin-top: 1%;
 }
 .showExpertTable {
   display: flex;
