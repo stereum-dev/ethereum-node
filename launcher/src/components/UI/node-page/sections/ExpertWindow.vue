@@ -24,11 +24,11 @@
       </div>
 
       <div
-        class="w-full overflow-y-auto space-y-2 mt-2"
+        class="row-part-scrollable w-full overflow-y-auto space-y-2 mt-2"
         :class="
           isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive
             ? 'h-[40px]'
-            : 'h-[74%]'
+            : 'max-h-[59vh]'
         "
       >
         <!-- expert mode row -->

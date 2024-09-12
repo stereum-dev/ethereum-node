@@ -1612,6 +1612,10 @@ video {
   height: 33.333333%;
 }
 
+.h-1\/6{
+  height: 16.666667%;
+}
+
 .h-10{
   height: 2.5rem;
 }
@@ -1800,10 +1804,6 @@ video {
   height: 50px;
 }
 
-.h-\[53px\]{
-  height: 53px;
-}
-
 .h-\[554px\]{
   height: 554px;
 }
@@ -1826,6 +1826,10 @@ video {
 
 .h-\[70px\]{
   height: 70px;
+}
+
+.h-\[74\%\]{
+  height: 74%;
 }
 
 .h-\[8\%\]{
@@ -2012,6 +2016,30 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-\[74vh\]{
+  max-height: 74vh;
+}
+
+.max-h-\[72vh\]{
+  max-height: 72vh;
+}
+
+.max-h-\[65vh\]{
+  max-height: 65vh;
+}
+
+.max-h-\[50vh\]{
+  max-height: 50vh;
+}
+
+.max-h-\[60vh\]{
+  max-height: 60vh;
+}
+
+.max-h-\[59vh\]{
+  max-height: 59vh;
 }
 
 .min-h-11{
@@ -5017,11 +5045,6 @@ video {
   --tw-shadow: var(--tw-shadow-colored);
 }
 
-.shadow-zinc-700{
-  --tw-shadow-color: #3f3f46;
-  --tw-shadow: var(--tw-shadow-colored);
-}
-
 .shadow-zinc-800{
   --tw-shadow-color: #27272a;
   --tw-shadow: var(--tw-shadow-colored);
@@ -5624,11 +5647,6 @@ html body {
 .hover\:bg-\[\#2b3034\]:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(43 48 52 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#2f5a50\]:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(47 90 80 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-\[\#325e5a\]:hover{
