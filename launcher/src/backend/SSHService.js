@@ -91,7 +91,8 @@ export class SSHService {
     if (
       this.connectionInfo &&
       this.addingConnection &&
-      (this.connectionPool.length < 6 || this.connectionPool[threshholdIndex]?._chanMgr?._count > 0)
+      (this.connectionPool.length < 6 || this.connectionPool[threshholdIndex]?._chanMgr?._count > 0) &&
+      process.env.NODE_ENV != "test"
     ) {
       await this.connect(this.connectionInfo);
     }
