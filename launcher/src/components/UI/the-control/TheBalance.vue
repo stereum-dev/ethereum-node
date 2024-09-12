@@ -1,15 +1,24 @@
 <template>
   <div class="balance-parent">
-    <NoData v-if="isConsensusMissing" />
+    <NoData v-if="isConsensusMissing || selectedSetup?.network === 'devnet'" />
     <div v-else class="wrapper">
       <div class="finalized-box">
-        <div class="finalized-value" @mouseenter="cursorLocation = `${finEPOCH} `" @mouseleave="cursorLocation = ''">
+        <div
+          class="finalized-value"
+          @mouseenter="cursorLocation = `${finEPOCH} `"
+          @mouseleave="cursorLocation = ''"
+        >
           {{ finalized_epoch }}
         </div>
         <div class="title">{{ $t("balWid.fin") }} EPOCH</div>
       </div>
       <div class="balance-box">
-        <div class="balance-value" :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }">{{ fmtBalance }} GWei</div>
+        <div
+          class="balance-value"
+          :style="{ color: balance < 0 ? '#EC590A' : '#74fa65' }"
+        >
+          {{ fmtBalance }} GWei
+        </div>
         <div class="title">{{ $t("balWid.bal") }}</div>
       </div>
     </div>
@@ -17,10 +26,11 @@
 </template>
 <script>
 import NoData from "./NoData.vue";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useFooter } from "@/store/theFooter";
-import { mapState } from "pinia";
+
 import { useControlStore } from "@/store/theControl";
+import { useSetups } from "@/store/setups";
 export default {
   components: {
     NoData,
@@ -37,6 +47,9 @@ export default {
     ...mapState(useControlStore, {
       balancestatus: "balancestatus",
       noDataFlag: "noDataFlag",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",

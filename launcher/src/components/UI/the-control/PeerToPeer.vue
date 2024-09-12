@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <no-data
-          v-if="isConsensusMissing || prometheusIsOff || !isConsensusRunning"
+          v-if="isConsensusMissing || prometheusIsOff || !isConsensusRunning || selectedSetup?.network === 'devnet'"
           @mouseenter="cursorLocation = `${nodataMessage}`"
           @mouseleave="cursorLocation = ''"
         />
