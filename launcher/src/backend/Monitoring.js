@@ -3331,7 +3331,6 @@ rm -rf diskoutput
   }
 
   parseObolCharonAlerts(key, value) {
-    value = 0;
     //app_monitoring_readyz
     if (key === "app_monitoring_readyz") {
       switch (value) {
