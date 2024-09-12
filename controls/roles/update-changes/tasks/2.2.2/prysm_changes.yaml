@@ -12,7 +12,7 @@
   ansible.utils.update_fact:
     updates:
       - path: service_configuration.command
-        value: "{{ service_configuration.command | split(' ') | difference(['--p2p-host-dns=\"\"', '/app/cmd/beacon-chain/beacon-chain', '/app/cmd/validator/validator']) | select('string') | select('match', '^(?!\\s*$).+') | list }}"
+        value: "{{ service_configuration.command | split(' ') | difference(['--p2p-host-ip=\"\"', '--p2p-host-dns=\"\"', '/app/cmd/beacon-chain/beacon-chain', '/app/cmd/validator/validator']) | select('string') | select('match', '^(?!\\s*$).+') | list }}"
       - path: service_configuration.entrypoint
         value: ["{{ service_configuration.command | split(' ') | select('string') | select('match', '^(?!\\s*$).+') | list | first}}"]
   register: updated
