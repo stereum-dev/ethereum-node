@@ -546,6 +546,9 @@ const setupDevnet = async () => {
 
     //Installing services
     await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+    await ControlService.startServicesForSetup(setupId);
+    await ControlService.removeConfigGenesisCopy();
+
     manageStore.confirmChanges = [];
 
     setupStore.devnetConfigData = {

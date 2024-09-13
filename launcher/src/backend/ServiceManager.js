@@ -2430,4 +2430,47 @@ export class ServiceManager {
       throw error;
     }
   }
+
+  async removeConfigGenesisCopy() {
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Remove initial copies`);
+    try {
+      const workingDir = await this.getCurrentPath();
+
+      await this.nodeConnection.sshService.exec(`rm -rf ${workingDir}/genesis/`);
+
+      console.log("Config and Genesis Copy removed successfully.");
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Config and Genesis Copy removed`, true);
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Removing Config and Genesis Copy Failed`,
+        false,
+        `Failed to remove Config and genesis copy: ${error}`
+      );
+      console.error("Error removing Config and genesis copy:", error);
+      throw error;
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+    }
+  }
+
+  async startServicesForSetup(setupId) {
+    let setup = await this.configManager.getSetup(setupId);
+
+    const runRefs = [];
+    const services = setup[setupId].services;
+
+    if (services.length > 0) {
+      await Promise.all(
+        services.map(async (serviceId, index) => {
+          await Sleep(index * 1000);
+          const result = await this.manageServiceState(serviceId, "started");
+          runRefs.push(result);
+        })
+      );
+    }
+
+    return runRefs;
+  }
 }

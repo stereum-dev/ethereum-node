@@ -688,6 +688,14 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("initGenesis");
   }
 
+  async removeConfigGenesisCopy() {
+    return this.promiseIpc.send("removeConfigGenesisCopy");
+  }
+
+  async startServicesForSetup(args) {
+    return this.promiseIpc.send("startServicesForSetup", args);
+  }
+
   async handleOTPChange(args) {
     return this.promiseIpc.send("handleOTPChange", args);
   }
@@ -695,6 +703,7 @@ class ControlService extends EventEmitter {
   async fetchObolCharonAlerts() {
     return this.promiseIpc.send("fetchObolCharonAlerts");
   }
+
   async fetchCsmAlerts() {
     return this.promiseIpc.send("fetchCsmAlerts");
   }
