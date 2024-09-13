@@ -31,6 +31,12 @@
       become: yes
       when: stereum.manage_service.state == "stopped" or stereum.manage_service.state == "restarted"
 
+    - include_tasks: copy-devnet-genesis.yml
+      when: >
+        (stereum_service_configuration.network == "devnet") and
+        (stereum.manage_service.state == "started") and
+        ("Validator" not in stereum_service_configuration.service)
+
     - name: Set directory permissions
       file:
         path: "{{ item.split(':') | first }}"
@@ -117,28 +123,6 @@
       when:
         - stereum_service_configuration.service in ['BesuService', 'GethService', 'RethService', 'NethermindService', 'ErigonService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService', 'LodestarBeaconService']
         - stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt') | length > 0
-
-    - name: Copy genesis files to devnet-geth directory
-      copy:
-        src: /opt/stereum/genesis/execution/
-        dest: "{{ item.split(':')[0] }}"
-        owner: "{{ stereum_service_configuration.user }}"
-        group: "{{ stereum_service_configuration.user }}"
-        mode: 0777
-      become: yes
-      when: (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and stereum_service_configuration.service == "GethService" and stereum_service_configuration.network == "devnet"
-      with_items: "{{ stereum_service_configuration.volumes | select('search', ':/execution$') }}"
-
-    - name: Copy config file to devnet-prysm directory
-      copy:
-        src: /opt/stereum/genesis/consensus/
-        dest: "{{ item.split(':')[0] }}"
-        owner: "{{ stereum_service_configuration.user }}"
-        group: "{{ stereum_service_configuration.user }}"
-        mode: 0777
-      become: yes
-      when: (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and stereum_service_configuration.service == "PrysmBeaconService" and stereum_service_configuration.network == "devnet"
-      with_items: "{{ stereum_service_configuration.volumes | select('search', ':/consensus$') }}"
 
     - include_tasks: write-graffiti-files.yml
       when: >
