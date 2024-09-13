@@ -50,6 +50,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useServices } from "@/store/services";
+import { useSetups } from "@/store/setups";
 import SyncCarousel from "../edit/SyncCarousel";
 
 const props = defineProps({
@@ -69,12 +70,22 @@ const switchDropdownOpen = ref(false);
 
 //Store
 const serviceStore = useServices();
+const setupStore = useSetups();
 //Computed & Watcher
 const getServices = computed(() => {
   let service;
-  service = serviceStore.allServices.filter((e) => e?.category == props.client.category && e?.name != props.client.name);
+  // it's devnet filtering the services
+  if (setupStore.selectedSetup.network === "devnet") {
+    service = [];
+  } //end of devnet filtering
+  else {
+    service = serviceStore.allServices.filter((e) => e?.category == props.client.category && e?.name != props.client.name);
+  }
+
   return service;
 });
+
+console.log(props.client.category);
 
 //Methods
 
