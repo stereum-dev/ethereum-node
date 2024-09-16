@@ -835,7 +835,7 @@ export class ServiceManager {
     }
   }
 
-  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays // for external -> source, jwtToken // chainId, feeRecipient -> for devnet
+  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays // for external -> source, jwtToken // chainId -> for devnet
   getService(name, args) {
     let ports;
     let service;
@@ -936,8 +936,7 @@ export class ServiceManager {
           args.executionClients,
           args.mevboost ? args.mevboost : [],
           args.checkpointURL,
-          args.chainId ? args.chainId : 32382,
-          args.feeRecipient ? args.feeRecipient : null
+          args.chainId ? args.chainId : 32382
         );
 
       case "PrysmValidatorService":

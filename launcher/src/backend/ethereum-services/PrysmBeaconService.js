@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class PrysmBeaconService extends NodeService {
-  static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL, chainId, feeRecipient) {
+  static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL, chainId) {
     const service = new PrysmBeaconService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
@@ -71,7 +71,7 @@ export class PrysmBeaconService extends NodeService {
             `--execution-endpoint=${executionEndpoint}`,
             "--accept-terms-of-use=true",
             `--jwt-secret=${JWTDir}`,
-            ...(feeRecipient ? [`--suggested-fee-recipient=${feeRecipient}`] : []),
+            "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
             "--minimum-peers-per-subnet=0",
             "--monitoring-host=0.0.0.0",
             "--monitoring-port=8080",

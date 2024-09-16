@@ -496,20 +496,6 @@ const setupDevnet = async () => {
       throw new Error("Setup ID not found after setup creation");
     }
 
-    let existFeeRecipientAddress = false;
-    // Extract properties that only have a balance and exclude other properties
-    const filteredAlloc = Object.keys(genesisStore.genesis.alloc)
-      .filter(
-        (key) => genesisStore.genesis.alloc[key].hasOwnProperty("balance") && Object.keys(genesisStore.genesis.alloc[key]).length === 1
-      )
-      .reduce((obj, key) => {
-        obj[key] = { balance: genesisStore.genesis.alloc[key].balance };
-        return obj;
-      }, {});
-
-    // Get the first property key or return false if none exist
-    existFeeRecipientAddress = Object.keys(filteredAlloc)[0] || false;
-
     //Installing Single service in a loop
     for (const client of setupStore.devnetConfigData.services) {
       const serviceIsConsensus = client.category === "consensus" ? client : null;
@@ -521,7 +507,6 @@ const setupDevnet = async () => {
         setupId: setupId,
         network: "devnet",
         chainId: useDeepClone(setupStore.devnetConfigData.genesisConfig.config.chainId),
-        feeRecipient: existFeeRecipientAddress ? existFeeRecipientAddress : null,
         installDir: client.installDir || "/opt/stereum",
         executionClients: serviceIsConsensus ? executionClients : client.executionClients,
         consensusClients: serviceIsValidator ? consensusClients : client.consensusClients,
