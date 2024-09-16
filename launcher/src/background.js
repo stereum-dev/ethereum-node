@@ -754,11 +754,11 @@ ipcMain.handle("fetchCsmAlerts", async () => {
 
 ipcMain.handle("ignoreUpdate", async (event) => {
   return await stereumUpdater.ignoreUpdate(event.sender);
-})
+});
 
 ipcMain.handle("updateLauncher", async () => {
   return stereumUpdater.downloadUpdate();
-})
+});
 
 ipcMain.handle("getNewLauncherVersion", async () => {
   return stereumUpdater.getNewLauncherVersion();

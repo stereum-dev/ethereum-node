@@ -31,7 +31,7 @@ export class StereumUpdater {
     this.updater.on("update-available", async (data) => {
       this.newVersion = data.version;
       this.updateWindow = await this.createWindow("update");
-      if (this.updateWindow) this.updateWindow.webContents.send("UpdateEvents", { message: "Update available.", type: "available"});
+      if (this.updateWindow) this.updateWindow.webContents.send("UpdateEvents", { message: "Update available.", type: "available" });
       this.logger.info("Update available.");
     });
 
@@ -55,7 +55,7 @@ export class StereumUpdater {
       app.showExitPrompt = false;
       if (this.updateWindow)
         this.updateWindow.webContents.send("UpdateEvents", { message: "Update downloaded. " + data.version, type: "downloaded" });
-      this.newVersion = null
+      this.newVersion = null;
       this.updater.quitAndInstall();
       this.logger.info("Update downloaded.", data);
     });

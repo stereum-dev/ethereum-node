@@ -15,12 +15,7 @@
     <div class="update-text h-1/6 w-full flex justify-center items-center text-2xl text-gray-50 font-semibold">
       <span>{{ `${updateState.message}${updateState.MBps ? "" + updateState.MBps.toFixed(2) + " MBps" : ""}` }}</span>
     </div>
-    <UpdateModal
-        v-if="updateModel"
-        :version="serviceStore?.launcherVersion"
-        @update="runUpdate"
-        @close-window="closeUpdateModal"
-      />
+    <UpdateModal v-if="updateModel" :version="serviceStore?.launcherVersion" @update="runUpdate" @close-window="closeUpdateModal" />
   </div>
 </template>
 <script setup>
@@ -43,7 +38,7 @@ const serviceStore = useServices();
 const updateModel = ref(true);
 
 onMounted(() => {
-  ControlService.getNewLauncherVersion().then(version => {
+  ControlService.getNewLauncherVersion().then((version) => {
     updateState.value.version = version;
   });
   ControlService.addListener("UpdateEvents", updateHandler);
