@@ -8,13 +8,8 @@
     @close-window="closeWindow"
   >
     <template #content>
-      <div
-        class="update-content-parent w-full h-full grid grid-cols-24 grid-rows-12 items-center"
-      >
-        <span
-          class="col-start-5 col-end-21 row-start-2 row-end-4 text-md text-center text-gray-300"
-          >{{ t("updateModal.updateQ") }}</span
-        >
+      <div class="update-content-parent w-full h-full grid grid-cols-24 grid-rows-12 items-center">
+        <span class="col-start-5 col-end-21 row-start-2 row-end-4 text-md text-center text-gray-300">{{ t("updateModal.updateQ") }}</span>
         <div
           class="btn-modal col-start-3 col-end-10 row-start-8 row-span-4 h-full rounded-2xl px-2 font-semibold text-xl text-gray-700 bg-[#70E763] flex items-center justify-center uppercase cursor-pointer"
           @click="submitUpdate"

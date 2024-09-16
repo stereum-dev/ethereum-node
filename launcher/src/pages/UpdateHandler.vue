@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="update-parent rounded-lg w-full h-full flex flex-col justify-center items-center bg-[#336666]"
-  >
-    <div
-      class="update-page-title w-full h-1/6 flex justify-center items-center text-gray-50 text-3xl font-semibold"
-    >
+  <div class="update-parent rounded-lg w-full h-full flex flex-col justify-center items-center bg-[#336666]">
+    <div class="update-page-title w-full h-1/6 flex justify-center items-center text-gray-50 text-3xl font-semibold">
       <span>{{ t("updateModal.updateTo", { version: version }) }} </span>
     </div>
     <div class="loading-icon w-full flex justify-center items-center h-3/6">
@@ -16,14 +12,8 @@
         <div :style="{ width: updateState.percent }"></div>
       </div>
     </div>
-    <div
-      class="update-text h-1/6 w-full flex justify-center items-center text-2xl text-gray-50 font-semibold"
-    >
-      <span>{{
-        `${updateState.message}${
-          updateState.MBps ? "" + updateState.MBps.toFixed(2) + " MBps" : ""
-        }`
-      }}</span>
+    <div class="update-text h-1/6 w-full flex justify-center items-center text-2xl text-gray-50 font-semibold">
+      <span>{{ `${updateState.message}${updateState.MBps ? "" + updateState.MBps.toFixed(2) + " MBps" : ""}` }}</span>
     </div>
   </div>
 </template>

@@ -1091,6 +1091,10 @@ video {
   grid-column-start: 14;
 }
 
+.col-start-16{
+  grid-column-start: 16;
+}
+
 .col-start-17{
   grid-column-start: 17;
 }
@@ -1153,10 +1157,6 @@ video {
 
 .col-start-9{
   grid-column-start: 9;
-}
-
-.col-start-16{
-  grid-column-start: 16;
 }
 
 .col-end-10{
@@ -1543,6 +1543,10 @@ video {
   margin-top: 1rem;
 }
 
+.mt-40{
+  margin-top: 10rem;
+}
+
 .mt-5{
   margin-top: 1.25rem;
 }
@@ -1557,10 +1561,6 @@ video {
 
 .mt-\[9\.5rem\]{
   margin-top: 9.5rem;
-}
-
-.mt-40{
-  margin-top: 10rem;
 }
 
 .box-border{
@@ -1620,6 +1620,10 @@ video {
   height: 33.333333%;
 }
 
+.h-1\/6{
+  height: 16.666667%;
+}
+
 .h-10{
   height: 2.5rem;
 }
@@ -1662,6 +1666,10 @@ video {
 
 .h-3\/4{
   height: 75%;
+}
+
+.h-3\/6{
+  height: 50%;
 }
 
 .h-32{
@@ -1864,34 +1872,6 @@ video {
 
 .h-screen{
   height: 100vh;
-}
-
-.h-\[20\%\]{
-  height: 20%;
-}
-
-.h-\[15\%\]{
-  height: 15%;
-}
-
-.h-\[10\%\]{
-  height: 10%;
-}
-
-.h-\[5\%\]{
-  height: 5%;
-}
-
-.h-\[0\%\]{
-  height: 0%;
-}
-
-.h-1\/6{
-  height: 16.666667%;
-}
-
-.h-3\/6{
-  height: 50%;
 }
 
 .max-h-10{
@@ -2142,6 +2122,10 @@ video {
   width: 66.666667%;
 }
 
+.w-2\/4{
+  width: 50%;
+}
+
 .w-20{
   width: 5rem;
 }
@@ -2380,26 +2364,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-\[50\%\]{
-  width: 50%;
-}
-
-.w-\[15\%\]{
-  width: 15%;
-}
-
-.w-\[20\%\]{
-  width: 20%;
-}
-
-.w-\[25\%\]{
-  width: 25%;
-}
-
-.w-2\/4{
-  width: 50%;
 }
 
 .min-w-\[100px\]{
@@ -3921,6 +3885,11 @@ video {
   background-color: rgb(96 152 121 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#70E763\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(112 231 99 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#A0A0A0\]{
   --tw-bg-opacity: 1;
   background-color: rgb(160 160 160 / var(--tw-bg-opacity));
@@ -3929,6 +3898,11 @@ video {
 .bg-\[\#D1BB9E\]{
   --tw-bg-opacity: 1;
   background-color: rgb(209 187 158 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#EB5353\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(235 83 83 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#F7C566\]{
@@ -4178,16 +4152,6 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#70E763\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(112 231 99 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#EB5353\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(235 83 83 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
