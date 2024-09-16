@@ -48,8 +48,12 @@ import ServerHeader from './components/ServerHeader.vue';
       @close-window="closeErrorDialog"
     />
     <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
-    <UpdateModal v-if="true" />
-    <!-- :version="serverStore.updateVersion" @update="serverStore.updateHandler" @close-window="serverStore.closeUpdateModal" -->
+    <UpdateModal
+      v-if="serverStore.updateHandlerModal"
+      :version="serviceStore?.launcherVersion"
+      @update="updateHandler"
+      @close-window="closeUpdateModal"
+    />
   </div>
 </template>
 
@@ -67,6 +71,7 @@ import UpdateModal from "./components/modals/UpdateModal.vue";
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
+import { useServices } from "@/store/services";
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import RemoveModal from "./components/modals/RemoveModal.vue";
 import ErrorModal from "./components/modals/ErrorModal.vue";
@@ -74,6 +79,7 @@ import { useServerLogin } from "@/composables/useLogin";
 import { useRouter } from "vue-router";
 
 const serverStore = useServers();
+const serviceStore = useServices();
 const authStore = useTwoFactorAuth();
 
 const { login, remove, loadStoredConnections } = useServerLogin();
@@ -147,6 +153,16 @@ const closeAndCancel = async () => {
 // authentification handling
 const submitAuthHandler = async (val) => {
   loginHandler(val);
+};
+
+//update handling
+const updateHandler = async () => {
+  console.log("Update Handler");
+  router.push("/update");
+};
+
+const closeUpdateModal = () => {
+  serverStore.updateHandlerModal = false;
 };
 
 const submitPasswordHandler = async (pass) => {

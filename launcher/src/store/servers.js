@@ -35,6 +35,7 @@ export const useServers = defineStore("servers", {
       isRemoveModalActive: false,
       isRemoveProcessing: false,
       selectedAvatar: null,
+      updateHandlerModal: true,
 
       avatars: [
         { id: 1, img: "/avatar/server_selection_1.png" },

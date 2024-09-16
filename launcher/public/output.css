@@ -1559,6 +1559,10 @@ video {
   margin-top: 9.5rem;
 }
 
+.mt-40{
+  margin-top: 10rem;
+}
+
 .box-border{
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -1880,6 +1884,14 @@ video {
 
 .h-\[0\%\]{
   height: 0%;
+}
+
+.h-1\/6{
+  height: 16.666667%;
+}
+
+.h-3\/6{
+  height: 50%;
 }
 
 .max-h-10{
@@ -2384,6 +2396,10 @@ video {
 
 .w-\[25\%\]{
   width: 25%;
+}
+
+.w-2\/4{
+  width: 50%;
 }
 
 .min-w-\[100px\]{
