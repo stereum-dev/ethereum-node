@@ -686,6 +686,18 @@ class ControlService extends EventEmitter {
   async fetchCsmAlerts() {
     return this.promiseIpc.send("fetchCsmAlerts");
   }
+
+  async ignoreUpdate() {
+    return this.promiseIpc.send("ignoreUpdate");
+  }
+
+  async updateLauncher() {
+    return this.promiseIpc.send("updateLauncher");
+  }
+
+  async getNewLauncherVersion() {
+    return this.promiseIpc.send("getNewLauncherVersion");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

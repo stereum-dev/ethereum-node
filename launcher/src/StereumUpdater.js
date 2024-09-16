@@ -7,6 +7,7 @@ export class StereumUpdater {
     this.updateWindow = null;
     this.logger = logger;
     this.createWindow = createWindow;
+    this.newVersion = null;
   }
 
   checkForUpdates() {
@@ -14,17 +15,23 @@ export class StereumUpdater {
     this.updater.checkForUpdates();
   }
 
+  getNewLauncherVersion() {
+    return this.newVersion;
+  }
+
   initUpdater() {
     this.updater.logger = this.logger;
     this.updater.logger.transports.file.level = "debug";
+    this.updater.autoDownload = false;
 
     this.updater.on("checking-for-update", () => {
       this.logger.info("Stereum is checking for updates.");
     });
 
-    this.updater.on("update-available", async () => {
+    this.updater.on("update-available", async (data) => {
+      this.newVersion = data.version;
       this.updateWindow = await this.createWindow("update");
-      if (this.updateWindow) this.updateWindow.webContents.send("UpdateEvents", { message: "Update available.", type: "available" });
+      if (this.updateWindow) this.updateWindow.webContents.send("UpdateEvents", { message: "Update available.", type: "available"});
       this.logger.info("Update available.");
     });
 
@@ -48,6 +55,7 @@ export class StereumUpdater {
       app.showExitPrompt = false;
       if (this.updateWindow)
         this.updateWindow.webContents.send("UpdateEvents", { message: "Update downloaded. " + data.version, type: "downloaded" });
+      this.newVersion = null
       this.updater.quitAndInstall();
       this.logger.info("Update downloaded.", data);
     });
@@ -61,6 +69,18 @@ export class StereumUpdater {
       this.createWindow();
       this.logger.error("Error: ", error);
     });
+  }
+
+  async downloadUpdate() {
+    this.updater.downloadUpdate();
+    this.logger.info("Downloading update...");
+  }
+
+  async ignoreUpdate(win) {
+    app.showExitPrompt = false;
+    await win.close();
+    this.createWindow();
+    this.logger.info("Update ignored.");
   }
 
   async runDebug() {
