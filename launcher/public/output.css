@@ -1051,6 +1051,10 @@ video {
   grid-column: span 4 / span 4;
 }
 
+.col-span-5{
+  grid-column: span 5 / span 5;
+}
+
 .col-span-6{
   grid-column: span 6 / span 6;
 }
@@ -3435,6 +3439,11 @@ video {
 .border-white{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
+.border-blue-600{
+  --tw-border-opacity: 1;
+  border-color: rgb(37 99 235 / var(--tw-border-opacity));
 }
 
 .border-b-transparent{

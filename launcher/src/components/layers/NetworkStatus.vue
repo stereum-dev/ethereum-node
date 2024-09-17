@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-full h-full col-start-1 col-span-full bg-[#151618] border border-gray-600 px-1 grid grid-cols-3"
-    :class="route.path === '/staking' ? 'rounded-[4px]' : 'mt-1 rounded-md'"
+    :class="route.path === '/staking' ? 'rounded-[4px]' : route.path === '/control' ? ' rounded-md' : 'mt-1 rounded-md'"
   >
     <div class="w-[32px] h-[32px] self-center col-start-1 col-span-1 flex justify-center items-center">
       <WiFiSign :status="nodeStore.connectionStatus?.status" />
