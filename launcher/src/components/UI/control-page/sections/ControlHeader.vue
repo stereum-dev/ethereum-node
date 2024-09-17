@@ -3,10 +3,10 @@
     class="control-header col-start-2 col-end-25 row-start-1 row-span-1 grid h-full p-[.10rem] gap-1 bg-[#0F1217] mx-h-[145px] border border-gray-500 rounded-lg mt-2 mr-1"
     style="grid-template-columns: repeat(22, 1fr)"
   >
-    <ThinCard class="server-name col-start-1 col-span-5"><ServerName /></ThinCard>
-    <ThinCard class="network-status col-start-6 col-end-12"><NetworkStatus /></ThinCard>
+    <ThinCard class="server-name col-start-1 col-span-6"><ServerName /></ThinCard>
+    <ThinCard class="network-status col-start-7 col-end-13"><NetworkStatus /></ThinCard>
 
-    <SetupDetails class="SetupDetails col-start-12 col-span-5" :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
+    <SetupDetails class="SetupDetails col-start-13 col-span-4" :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
     <ThinCard class="setup-services col-start-17 col-span-6"><SetupServices /></ThinCard>
   </div>
 </template>
