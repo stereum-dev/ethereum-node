@@ -1058,5 +1058,12 @@
   },
   "otpModal": {
     "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

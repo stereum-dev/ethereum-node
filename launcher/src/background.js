@@ -772,6 +772,18 @@ ipcMain.handle("fetchCsmAlerts", async () => {
   return await monitoring.fetchCsmAlerts();
 });
 
+ipcMain.handle("ignoreUpdate", async (event) => {
+  return await stereumUpdater.ignoreUpdate(event.sender);
+});
+
+ipcMain.handle("updateLauncher", async () => {
+  return stereumUpdater.downloadUpdate();
+});
+
+ipcMain.handle("getNewLauncherVersion", async () => {
+  return stereumUpdater.getNewLauncherVersion();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
