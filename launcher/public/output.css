@@ -2090,6 +2090,10 @@ video {
   width: 25%;
 }
 
+.w-1\/5{
+  width: 20%;
+}
+
 .w-1\/6{
   width: 16.666667%;
 }
@@ -2368,10 +2372,6 @@ video {
 
 .w-screen{
   width: 100vw;
-}
-
-.w-1\/5{
-  width: 20%;
 }
 
 .min-w-\[100px\]{
@@ -2867,6 +2867,12 @@ video {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-x-3 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]){
@@ -4245,6 +4251,10 @@ video {
 
 .p-8{
   padding: 2rem;
+}
+
+.p-\[\.10rem\]{
+  padding: .10rem;
 }
 
 .p-\[1px\]{

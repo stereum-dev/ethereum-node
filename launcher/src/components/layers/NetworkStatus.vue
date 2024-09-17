@@ -1,14 +1,23 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full bg-[#151618] border border-gray-600 px-1 grid grid-cols-3"
-    :class="route.path === '/staking' ? 'rounded-[4px]' : route.path === '/control' ? ' rounded-md' : 'mt-1 rounded-md'"
+    class="w-full h-full bg-[#151618] border border-gray-600 px-1 grid"
+    :class="[
+      route.path === '/staking' || route.path === '/control' ? 'rounded-[4px]' : 'mt-1 rounded-md',
+      route.path === '/control' ? 'grid-cols-6' : 'grid-cols-3 col-start-1 col-span-full',
+    ]"
   >
     <div class="w-[32px] h-[32px] self-center col-start-1 col-span-1 flex justify-center items-center">
       <WiFiSign :status="nodeStore.connectionStatus?.status" />
     </div>
     <div
       class="col-start-2 col-span-full"
-      :class="route.path === '/staking' ? 'flex justify-start items-center space-x-4' : 'flex flex-col  justify-center items-start ml-1'"
+      :class="
+        route.path === '/staking'
+          ? 'flex justify-start items-center space-x-4'
+          : route.path === '/control'
+          ? 'flex justify-start items-center space-x-3 '
+          : 'flex flex-col  justify-center items-start ml-1'
+      "
     >
       <div class="flex justify-start items-center space-x-1">
         <span class="text-xs text-gray-200">status:</span>

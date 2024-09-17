@@ -9,3 +9,8 @@
 <script setup>
 import ControlHeader from "./sections/ControlHeader.vue";
 </script>
+<style scoped>
+.Control-screen {
+  max-height: 488px;
+}
+</style>

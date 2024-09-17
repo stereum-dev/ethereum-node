@@ -1,7 +1,11 @@
 <template>
-  <div class="control-header col-start-1 col-end-25 row-start-1 row-span-1 grid grid-cols-24 grid-rows-1 h-full p-1 gap-1">
-    <ThinCard class="machine-name col-start-3 col-span-5"><MachineName /></ThinCard>
-    <NetworkStatus class="network-status col-start-8 col-end-12" />
+  <div
+    class="control-header col-start-2 col-end-25 row-start-1 row-span-1 grid h-full p-[.10rem] gap-1 bg-[#0F1217] mx-h-[145px] border border-gray-500 rounded-lg mt-2 mr-1"
+    style="grid-template-columns: repeat(22, 1fr)"
+  >
+    <ThinCard class="server-name col-start-1 col-span-5"><ServerName /></ThinCard>
+    <ThinCard class="network-status col-start-6 col-end-12"><NetworkStatus /></ThinCard>
+
     <SetupDetails class="SetupDetails col-start-12 col-span-5" :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
     <ThinCard class="setup-services col-start-17 col-span-6"><SetupServices /></ThinCard>
   </div>
@@ -17,10 +21,11 @@ import { useControlStore } from "@/store/theControl";
 import { useMultiSetups } from "@/composables/multiSetups";
 
 import ThinCard from "../components/cards/ThinCard.vue";
-import MachineName from "../components/widgets/MachineName.vue";
+// import MachineName from "../components/widgets/MachineName.vue";
 import NetworkStatus from "../../../layers/NetworkStatus.vue";
 import SetupDetails from "../../edit-page/components/edit/header/SetupDetails.vue";
 import SetupServices from "../../control-page/components/widgets/SetupServices.vue";
+import ServerName from "../../control-page/components/widgets/ServerName.vue";
 
 const { getSelectedSetup, getServerView } = useMultiSetups();
 
