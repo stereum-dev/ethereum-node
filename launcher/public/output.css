@@ -999,6 +999,10 @@ video {
   top: 7rem;
 }
 
+.left-2{
+  left: 0.5rem;
+}
+
 .z-0{
   z-index: 0;
 }
@@ -2391,6 +2395,10 @@ video {
   width: 50%;
 }
 
+.w-64{
+  width: 16rem;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -2983,6 +2991,11 @@ video {
 .divide-gray-100 > :not([hidden]) ~ :not([hidden]){
   --tw-divide-opacity: 1;
   border-color: rgb(243 244 246 / var(--tw-divide-opacity));
+}
+
+.divide-gray-500 > :not([hidden]) ~ :not([hidden]){
+  --tw-divide-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-divide-opacity));
 }
 
 .self-start{

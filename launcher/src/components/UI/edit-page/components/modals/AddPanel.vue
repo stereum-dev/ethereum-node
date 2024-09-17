@@ -65,7 +65,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
             class="col-start-1 col-span-full flex justify-center items-center overflow-hidden"
           >
             <div
-              class="w-3/4 px-4 py-2 text-sm text-gray-400 capitalize flex justify-start items-center space-x-4"
+              class="w-3/4 px-2 py-1 text-sm text-gray-400 capitalize flex justify-start items-center space-x-4"
             >
               <img
                 v-if="selectedSource.icon ? selectedSource.icon : null"
@@ -78,7 +78,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
             </div>
 
             <button
-              class="w-1/4 h-full p-2 text-gray-500 hover:text-gray-200 flex justify-end items-center"
+              class="w-1/4 h-full p-1 text-gray-500 hover:text-gray-200 flex justify-end items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -97,16 +97,14 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
 
           <div
             v-if="isOpen"
-            class="absolute top-8 end-2 z-10 mt-2 max-h-[160px] w-56 rounded-md bg-gray-700 shadow-lg overflow-x-hidden overflow-y-auto"
-            role="menu"
+            class="absolute top-8 left-0 z-10 mt-2 max-h-[160px] w-64 rounded-md bg-gray-700 shadow-lg overflow-x-hidden overflow-y-auto"
             @mouseleave="isOpen = false"
           >
-            <div class="p-2 divide-y" @mouseleave="isOpen = false">
+            <div class="divide-y divide-gray-500">
               <div
                 v-for="source in sources"
                 :key="source"
-                class="flex justify-center items-center space-x-4 rounded-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-100 hover:bg-blue-500 uppercase cursor-pointer"
-                role="menuitem"
+                class="w-full flex justify-center items-center space-x-4 px-4 py-2 text-sm text-gray-300 hover:text-gray-100 hover:bg-blue-500 uppercase cursor-pointer"
                 @click="pickSource(source)"
               >
                 <img v-if="source.icon" :src="source.icon" class="w-6" />
@@ -119,8 +117,9 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
     </div>
     <div
       v-if="
-        props.client.service === 'ExternalExecutionService' ||
-        props.client.service === 'ExternalConsensusService'
+        (props.client.service === 'ExternalExecutionService' ||
+          props.client.service === 'ExternalConsensusService') &&
+        selectedSource.name === 'custom'
       "
       class="w-full flex justify-center items-center"
     >
@@ -224,9 +223,9 @@ const dropdown = () => {
 };
 
 const pickSource = (source) => {
+  isOpen.value = false;
   selectedSource.value = source;
   manageStore.ExternalConsensusSelectedService = source;
-  isOpen.value = false;
 };
 
 const getInstallPath = async () => {
