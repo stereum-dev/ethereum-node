@@ -1065,5 +1065,8 @@
     "acc": "accept",
     "deny": "deny",
     "updateTo": "Updating Stereum Launcher to {version}"
+  },
+  "setupServicesWidget": {
+    "text": "total services on setup"
   }
 }

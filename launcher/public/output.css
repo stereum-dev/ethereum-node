@@ -2370,6 +2370,10 @@ video {
   width: 100vw;
 }
 
+.w-1\/5{
+  width: 20%;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -3439,11 +3443,6 @@ video {
 .border-white{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
-
-.border-blue-600{
-  --tw-border-opacity: 1;
-  border-color: rgb(37 99 235 / var(--tw-border-opacity));
 }
 
 .border-b-transparent{
