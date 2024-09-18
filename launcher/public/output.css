@@ -2378,6 +2378,14 @@ video {
   width: 100vw;
 }
 
+.w-2\/5{
+  width: 40%;
+}
+
+.w-\[90\%\]{
+  width: 90%;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }

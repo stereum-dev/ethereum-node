@@ -63,7 +63,7 @@ import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
 import SyncStatus from "./SyncStatus.vue";
 import EpochSlot from "./EpochSlot.vue";
-import TheCpu from "./TheCpu.vue";
+import TheCpu from "../control-page/components/widgets/TheCpu.vue";
 import TheHard from "./TheHard.vue";
 import MachineName from "./MachineName.vue";
 import DashboardCard from "./DashboardCard.vue";

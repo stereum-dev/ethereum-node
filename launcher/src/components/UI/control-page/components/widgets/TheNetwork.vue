@@ -8,7 +8,7 @@
         $t("controlPage.network")
       }}</span>
     </div>
-    <div class="totalReceived w-1/3 h-full flex flex-col">
+    <div class="totalReceived w-1/3 h-full flex flex-col justify-center items-center">
       <div class="receivePerSecond w-full h-1/2 flex justify-center items-end">
         <span class="text-orange-600 font-semibold text-lg">{{ controlStore.rx }}</span>
       </div>
