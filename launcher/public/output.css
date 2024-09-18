@@ -4605,6 +4605,14 @@ video {
   font-size: 60%;
 }
 
+.text-\[30\%\]{
+  font-size: 30%;
+}
+
+.text-\[40\%\]{
+  font-size: 40%;
+}
+
 .font-\[400\]{
   font-weight: 400;
 }
