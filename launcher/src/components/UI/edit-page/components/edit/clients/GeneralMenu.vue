@@ -1,17 +1,8 @@
 <template>
-  <div
-    class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10"
-    @mousedown.prevent
-  >
-    <div
-      class="w-2/3 h-2/3 grid grid-cols-2 grid-rows-2 bg-gray-800 p-1 rounded-md gap-1"
-    >
+  <div class="absolute inset-x-0 w-full h-full flex justify-center items-center z-10" @mousedown.prevent>
+    <div class="w-2/3 h-2/3 grid grid-cols-2 grid-rows-2 bg-gray-800 p-1 rounded-md gap-1">
       <img
-        v-if="
-          item.category !== 'execution' &&
-          item.service !== 'ExternalExecutionService' &&
-          item.service !== 'ExternalConsensusService'
-        "
+        v-if="item.category !== 'execution' && item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'"
         class="w-7 bg-gray-900 hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200 border border-gray-700 rounded-md"
         src="/img/icon/edit-node-icons/service-connecting.png"
         alt="Trash Icon"
@@ -20,10 +11,7 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
-        v-if="
-          item.service !== 'ExternalExecutionService' &&
-          item.service !== 'ExternalConsensusService'
-        "
+        v-if="item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'"
         class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
         src="/img/icon/edit-node-icons/switch-client.png"
         alt="Trash Icon"
@@ -32,10 +20,7 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
-        v-if="
-          item.service === 'ExternalExecutionService' ||
-          item.service === 'ExternalConsensusService'
-        "
+        v-if="item.service === 'ExternalExecutionService' || item.service === 'ExternalConsensusService'"
         class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
         src="/img/icon/edit-node-icons/service-connecting.png"
         alt="Trash Icon"
@@ -48,9 +33,7 @@
         src="/img/icon/edit-node-icons/service-delete.png"
         alt="Trash Icon"
         @click="deleteService"
-        @mouseenter="
-          footerStore.cursorLocation = `${deleteServiceTooltip} ${item.name} ${service}`
-        "
+        @mouseenter="footerStore.cursorLocation = `${deleteServiceTooltip} ${item.name} ${service}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
@@ -86,13 +69,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits([
-  "deleteService",
-  "switchClient",
-  "modifyService",
-  "infoModal",
-  "externalModify",
-]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "externalModify"]);
 
 const deleteService = () => {
   emit("deleteService", props.item);

@@ -11,15 +11,9 @@
       <div
         class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-xs font-[400] font-sans"
       >
-        <span class="col-start-1 justify-self-center self-center">{{
-          $t("editModals.executionClients")
-        }}</span>
-        <span class="col-start-2 justify-self-center self-center">{{
-          $t("editModals.consensusClients")
-        }}</span>
-        <span class="col-start-3 justify-self-center self-center"
-          >{{ $t("editBody.validator") }}
-        </span>
+        <span class="col-start-1 justify-self-center self-center">{{ $t("editModals.executionClients") }}</span>
+        <span class="col-start-2 justify-self-center self-center">{{ $t("editModals.consensusClients") }}</span>
+        <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }} </span>
       </div>
       <ClientSkeleton v-for="i in skeletons" v-show="loadingClients" :key="i" />
       <ExecutionClients

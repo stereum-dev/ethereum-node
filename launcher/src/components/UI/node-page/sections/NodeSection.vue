@@ -1,12 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between items-center">
     <NodeHeader />
-    <NodeBody
-      @open-expert="openExpert"
-      @open-log="openLog"
-      @export-setup="exportSetup"
-      @external-modify="externalModify"
-    />
+    <NodeBody @open-expert="openExpert" @open-log="openLog" @export-setup="exportSetup" @external-modify="externalModify" />
   </div>
 </template>
 

@@ -26,17 +26,8 @@
         @external-modify="externalModify"
       />
       <TransitionGroup name="fadeModal">
-        <ResyncModal
-          v-if="item.isResyncModalOpen"
-          icon-size="w-14"
-          :item="item"
-          @close-window="closeResyncModal(item)"
-        />
-        <PrunningModal
-          v-if="showPruningModal"
-          :item="item"
-          @cancel-warning="closePruning"
-        />
+        <ResyncModal v-if="item.isResyncModalOpen" icon-size="w-14" :item="item" @close-window="closeResyncModal(item)" />
+        <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
       </TransitionGroup>
     </div>
   </div>
@@ -78,9 +69,7 @@ const getExecutionServices = computed(() => {
     return [];
   }
   const services = serviceStore.installedServices
-    .filter(
-      (s) => s.category === "execution" && s.setupId === setupStore.selectedSetup?.setupId
-    )
+    .filter((s) => s.category === "execution" && s.setupId === setupStore.selectedSetup?.setupId)
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
       const fb = b.name.toLowerCase();
