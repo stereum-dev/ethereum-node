@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full col-start-7 col-end-10 row-start-2 row-span-full flex justify-center items-center pt-2 pb-2">
+  <div class="w-full h-full col-start-7 col-end-10 row-start-2 row-span-full flex justify-center items-center pt-2 pb-1">
     <ControlAlert />
   </div>
 </template>

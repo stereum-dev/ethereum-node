@@ -25,7 +25,7 @@
       </div>
       <div class="info-row w-full h-1/3 flex justify-center items-center rounded-lg border border-gray-500">
         <div class="w-1/6 h-full flex justify-center items-center">
-          <img class="w-1/2 h-4/5" src="/img/icon/control-page-icons/Earth_Western.png" alt="" />
+          <img class="w-3/4 h-4/5" src="/img/icon/control-page-icons/Earth_Western.png" alt="" />
         </div>
         <div class="time-box w-2/6 h-full flex justify-center items-center text-gray-200 font-semibold text-[60%]">
           {{ utcTime }}

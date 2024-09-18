@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full h-full col-start-1 col-end-7 row-start-2 row-span-full grid grid-cols-6 grid-rows-15 items-center gap-1 p-1">
+  <div
+    class="w-full h-full col-start-1 col-end-7 row-start-2 row-span-full grid grid-cols-6 grid-rows-15 items-center gap-1 pt-2 pb-1 pr-1 pl-1"
+  >
     <WidgetCard class="info-widget col-start-1 col-span-6 row-start-1 row-span-3"><InfoWidget /></WidgetCard>
     <WidgetCard class="info-widget col-start-1 col-span-6 row-start-4 row-span-3"><VolumeWidget /></WidgetCard>
     <WidgetCard class="cpu-widget col-start-1 col-span-6 row-start-7 row-span-3"><TheCpu /></WidgetCard>
