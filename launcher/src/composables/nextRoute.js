@@ -14,11 +14,17 @@ export function goToNext() {
     case "/oneClick/preset":
       return "/oneClick/config";
     case "/oneClick/config":
-      if (installStore.selectedPreset.includedPlugins.some((plugin) => plugin.service === "FlashbotsMevBoostService")) {
-        return "/oneClick/mevboost";
+      if (installStore.selectedPreset.name === "vc only") {
+        return "/oneClick/source";
       } else {
-        return "/oneClick/sync";
+        if (installStore.selectedPreset.includedPlugins.some((plugin) => plugin.service === "FlashbotsMevBoostService")) {
+          return "/oneClick/mevboost";
+        } else {
+          return "/oneClick/sync";
+        }
       }
+    case "/oneClick/source":
+      return "/oneClick/sync";
     case "/oneClick/mevboost":
       return "/oneClick/sync";
     case "/oneClick/sync":
