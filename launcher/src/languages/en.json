@@ -144,7 +144,8 @@
     "p2pNet": "Peer to peer network",
     "selConcensus": "Select the consensus client",
     "selExecution": "Select the execution client",
-    "subsribeSubnet": "subscribed subnets"
+    "subsribeSubnet": "subscribed subnets",
+    "info": "INFO"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

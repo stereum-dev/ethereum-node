@@ -33,10 +33,10 @@ const serverName = t("serverDetail.serverName", {
   white-space: nowrap;
   overflow-x: scroll;
   display: inline-block;
-  scrollbar-width: none; /* Firefox - Hide scrollbar */
+  scrollbar-width: none;
 }
 
 .server-name::-webkit-scrollbar {
-  display: none; /* WebKit browsers - Hide scrollbar */
+  display: none;
 }
 </style>
