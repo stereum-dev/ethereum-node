@@ -1,11 +1,9 @@
 <template>
-  <div class="w-full h-full col-start-7 col-end-10 grid-cols-5 grid-rows-12 items-center">
-    <AlertHeader />
-    <AlertBody />
+  <div class="w-full h-full col-start-7 col-end-10 row-start-2 row-span-full flex justify-center items-center pt-2 pb-2">
+    <ControlAlert />
   </div>
 </template>
 
 <script setup>
-import AlertBody from "../components/alert/AlertBody.vue";
-import AlertHeader from "../components/alert/AlertHeader.vue";
+import ControlAlert from "../components/alert/ControlAlert.vue";
 </script>
