@@ -21,9 +21,15 @@
         @restart-handler="restartHandler"
         @open-doc="openDoc"
         @open-resync="openResync(item)"
+        @external-modify="externalModify"
       />
       <TransitionGroup name="fadeModal">
-        <ResyncModal v-if="item.isResyncModalOpen" icon-size="w-14" :item="item" @close-window="closeResyncModal(item)" />
+        <ResyncModal
+          v-if="item.isResyncModalOpen"
+          icon-size="w-14"
+          :item="item"
+          @close-window="closeResyncModal(item)"
+        />
       </TransitionGroup>
     </div>
   </div>
@@ -38,7 +44,16 @@ import ClientLayout from "./ClientLayout.vue";
 import ClientButtons from "./ClientButtons.vue";
 import { useSetups } from "../../../../../../store/setups";
 
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver", "mouseLeave"]);
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "openDoc",
+  "stateHandler",
+  "restartHandler",
+  "mouseOver",
+  "mouseLeave",
+  "externalModify",
+]);
 
 //Refs
 const nodeStore = useNodeStore();
@@ -51,7 +66,9 @@ const getConsensusServices = computed(() => {
   }
 
   const services = serviceStore.installedServices
-    .filter((s) => s.category === "consensus" && s.setupId === setupStore.selectedSetup?.setupId)
+    .filter(
+      (s) => s.category === "consensus" && s.setupId === setupStore.selectedSetup?.setupId
+    )
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
       const fb = b.name.toLowerCase();
@@ -96,6 +113,10 @@ const stateHandler = (item) => {
 
 const restartHandler = (item) => {
   emit("restartHandler", item);
+};
+
+const externalModify = (item) => {
+  emit("externalModify", item);
 };
 </script>
 

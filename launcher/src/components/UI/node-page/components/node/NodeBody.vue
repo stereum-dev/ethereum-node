@@ -1,17 +1,28 @@
 <template>
-  <div class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center">
+  <div
+    class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center"
+  >
     <ConfigBody
       v-if="setupStore.isConfigViewActive"
       @open-expert="openExpert"
       @open-docs="openDocs"
       @open-log="openLog"
       @copy-jwt="copyJwt"
+      @external-modify="externalModify"
       @click-outside="clickOutside"
       @line-draw="lineDrawHandler"
       @remove-lines="removeConnectionLines"
     />
-    <SetupBody v-if="!setupStore.isConfigViewActive" @open-setup="openSetup" @export-setup="exportSetup" />
-    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
+    <SetupBody
+      v-if="!setupStore.isConfigViewActive"
+      @open-setup="openSetup"
+      @export-setup="exportSetup"
+    />
+    <PluginLogs
+      v-if="isPluginLogPageActive"
+      :item="itemToLogs"
+      @close-log="closePluginLogsPage"
+    />
   </div>
 </template>
 
@@ -28,7 +39,13 @@ import ControlService from "@/store/ControlService";
 import LeaderLine from "leader-line-new";
 import { useSetups } from "@/store/setups";
 
-const emit = defineEmits(["openExpert", "openLog", "setupState", "exportSetup"]);
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "setupState",
+  "exportSetup",
+  "externalModify",
+]);
 
 // Refs
 const isPluginLogPageActive = ref(false);
@@ -61,7 +78,12 @@ watchEffect(() => {
 
 const oneWayConnection = (start, end, startSocket, endSocket) => {
   if (start && end) {
-    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
+    let newLine = new LeaderLine(
+      start,
+      end,
+      { dash: { animation: true } },
+      { hide: true }
+    );
     newLine.position();
     newLine.setOptions({
       size: 2,
@@ -83,7 +105,9 @@ const lineDrawHandler = (item) => {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
             s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
+            s.config?.dependencies?.executionClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "consensus") {
@@ -100,8 +124,12 @@ const lineDrawHandler = (item) => {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
             (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
+              s.config?.dependencies?.consensusClients.some(
+                (d) => d.id === item.config?.serviceID
+              )) ||
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -124,9 +152,15 @@ const lineDrawHandler = (item) => {
       case "validator": {
         const dependencies = serviceStore.installedServices.filter(
           (s) =>
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
-            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
-            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
+            item.config?.dependencies?.executionClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            item.config?.dependencies?.consensusClients.some(
+              (d) => d.id === s.config?.serviceID
+            ) ||
+            s.config?.dependencies?.consensusClients.some(
+              (d) => d.id === item.config?.serviceID
+            )
         );
         dependencies.forEach((d) => {
           if (d.category === "validator") {
@@ -203,6 +237,10 @@ const openSetup = (setup) => {
 
 const exportSetup = (setup) => {
   emit("exportSetup", setup);
+};
+
+const externalModify = (item) => {
+  emit("externalModify", item);
 };
 
 const copyJwt = async (item) => {

@@ -201,7 +201,8 @@ const sources = [
 // });
 
 watchEffect(() => {
-  props.client.config.source = addressLink.value;
+  props.client.config.source = selectedSource.value.name;
+  props.client.config.address = addressLink.value;
   props.client.config.jwtToken = jwtToken.value;
 });
 

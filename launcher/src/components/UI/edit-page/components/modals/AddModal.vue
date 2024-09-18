@@ -10,8 +10,17 @@
     @confirm-action="confirmInstall"
   >
     <template #content>
-      <AddPanel v-if="isAddPanelActivated" ref="addPanelComponent" :client="client" :properties="properties" />
-      <MevboostRelays v-if="isRelaysActivated" :client="client" :properties="properties" />
+      <AddPanel
+        v-if="isAddPanelActivated"
+        ref="addPanelComponent"
+        :client="client"
+        :properties="properties"
+      />
+      <MevboostRelays
+        v-if="isRelaysActivated"
+        :client="client"
+        :properties="properties"
+      />
       <AddConnection v-if="isModifyActivated" :client="client" :properties="properties" />
     </template>
   </custom-modal>
@@ -59,19 +68,32 @@ const properties = ref({
 const getConfirmText = computed(() => {
   let text = "";
   if (isAddPanelActivated.value) {
-    if (props.client.category === "consensus" && props.client.service === "ExternalConsensusService") {
+    if (
+      props.client.category === "consensus" &&
+      props.client.service === "ExternalConsensusService"
+    ) {
       text = "confirm";
-    } else if (props.client.category === "execution" && props.client.service === "ExternalExecutionService") {
+    } else if (
+      props.client.category === "execution" &&
+      props.client.service === "ExternalExecutionService"
+    ) {
       text = "confirm";
     } else if (
       props.client.category === "consensus" ||
-      (props.client.category === "validator" && !/Web3Signer/.test(props.client.service)) ||
+      (props.client.category === "validator" &&
+        !/Web3Signer/.test(props.client.service)) ||
       /LidoObolExit|ValidatorEjector/.test(props.client.service)
     ) {
       text = "next";
-    } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
+    } else if (
+      props.client.category === "service" &&
+      props.client.service !== "FlashbotsMevBoostService"
+    ) {
       text = "confirm";
-    } else if (props.client.category === "service" && props.client.service === "FlashbotsMevBoostService") {
+    } else if (
+      props.client.category === "service" &&
+      props.client.service === "FlashbotsMevBoostService"
+    ) {
       text = "next";
     }
   } else if (isRelaysActivated.value) {
@@ -96,11 +118,9 @@ const getSubTitles = computed(() => {
 
 const externalServiceConfirmBtn = computed(() => {
   if (props.client.service === "ExternalExecutionService") {
-    return props.client.config.source === "" || props.client.config.jwtToken === "";
-  } else if (props.client.service === "ExternalConsensusService" && manageStore.externalConsensusSelectedService !== "prysm") {
+    return props.client.config.source === "" && props.client.config.jwtToken === "";
+  } else if (props.client.service === "ExternalConsensusService") {
     return props.client.config.source === "";
-  } else if (props.client.service === "ExternalConsensusService" && manageStore.externalConsensusSelectedService === "prysm") {
-    return props.client.config.source === "" || props.client.config.gateway === "";
   }
   return false;
 });

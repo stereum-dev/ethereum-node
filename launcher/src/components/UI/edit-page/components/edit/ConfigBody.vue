@@ -11,11 +11,20 @@
   >
     <div
       class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 border border-gray-950 rounded-t-[5px] text-xs font-[400] font-sans"
-      :class="[setupStore.getBGColor(setupStore.selectedSetup?.color), setupStore.getTextColor(setupStore.selectedSetup?.color)]"
+      :class="[
+        setupStore.getBGColor(setupStore.selectedSetup?.color),
+        setupStore.getTextColor(setupStore.selectedSetup?.color),
+      ]"
     >
-      <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>
-      <span class="col-start-2 justify-self-center self-center">{{ $t("editBody.consensusClient") }}</span>
-      <span class="col-start-3 justify-self-center self-center">{{ $t("editBody.validator") }}</span>
+      <span class="col-start-1 justify-self-center self-center">{{
+        $t("editBody.executionClient")
+      }}</span>
+      <span class="col-start-2 justify-self-center self-center">{{
+        $t("editBody.consensusClient")
+      }}</span>
+      <span class="col-start-3 justify-self-center self-center">{{
+        $t("editBody.validator")
+      }}</span>
     </div>
     <div
       ref="dropZoneRef"
@@ -38,6 +47,7 @@
         @switch-client="switchClient"
         @confirm-consensus="confirmConsensus"
         @info-modal="infoModal"
+        @external-modify="externalModify"
         @mouse-over="lineDraw"
         @mouse-leave="removeLines"
       />
@@ -49,6 +59,7 @@
         @switch-client="switchClient"
         @modify-service="modifyService"
         @info-modal="infoModal"
+        @external-modify="externalModify"
         @mouse-over="lineDraw"
         @mouse-leave="removeLines"
       />
@@ -82,6 +93,7 @@ const emit = defineEmits([
   "deleteService",
   "confirmConsensus",
   "infoModal",
+  "externalModify",
   "modifyService",
   "removeLines",
   "lineDraw",
@@ -94,9 +106,15 @@ const { updateDom } = useMultiSetups();
 const isOverDropZone = ref(false);
 
 const activateScrollBar = computed(() => {
-  const validators = manageStore.newConfiguration.filter((service) => service.category === "validator");
-  const consensus = manageStore.newConfiguration.filter((service) => service.category === "consensus");
-  const execution = manageStore.newConfiguration.filter((service) => service.category === "execution");
+  const validators = manageStore.newConfiguration.filter(
+    (service) => service.category === "validator"
+  );
+  const consensus = manageStore.newConfiguration.filter(
+    (service) => service.category === "consensus"
+  );
+  const execution = manageStore.newConfiguration.filter(
+    (service) => service.category === "execution"
+  );
   return !!(validators.length > 3 || consensus.length > 3 || execution.length > 3);
 });
 
@@ -150,5 +168,9 @@ const infoModal = (service) => {
 
 const modifyService = (service) => {
   emit("modifyService", service);
+};
+
+const externalModify = (service) => {
+  emit("externalModify", service);
 };
 </script>

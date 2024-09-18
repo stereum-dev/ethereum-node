@@ -10,9 +10,16 @@
       @confirm-consensus="confirmConsensus"
       @info-modal="infoModal"
       @modify-service="modifyService"
+      @external-modify="externalModify"
       @remove-lines="removeConnectionLines"
     />
-    <SetupBody v-else @delete-setup="deleteSetup" @connect-setup="connectSetup" @setup-infos="setupInfos" @open-configs="openConfigs" />
+    <SetupBody
+      v-else
+      @delete-setup="deleteSetup"
+      @connect-setup="connectSetup"
+      @setup-infos="setupInfos"
+      @open-configs="openConfigs"
+    />
   </div>
 </template>
 
@@ -37,7 +44,7 @@ const emit = defineEmits([
   "confirmConsensus",
   "infoModal",
   "modifyService",
-
+  "externalModify",
   "openConfigs",
   "deleteSetup",
 ]);
@@ -113,6 +120,11 @@ const confirmConsensus = (item) => {
 const infoModal = (item) => {
   manageStore.isLineHidden = true;
   emit("infoModal", item);
+};
+
+const externalModify = (item) => {
+  manageStore.isLineHidden = true;
+  emit("externalModify", item);
 };
 
 const selectRename = async (setup) => {

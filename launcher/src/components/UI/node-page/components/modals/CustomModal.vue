@@ -18,14 +18,18 @@
           <div v-if="mainTitle" class="text-xl font-bold py-2 text-gray-200 uppercase">
             <p>{{ mainTitle }}</p>
           </div>
-          <div v-if="messageText" class="text-md font-bold py-2" :class="bgColor ? 'text-gray-200' : null">
+          <div
+            v-if="messageText"
+            class="text-md font-bold py-2"
+            :class="bgColor ? 'text-gray-200' : null"
+          >
             <p>{{ messageText }}</p>
           </div>
           <slot name="content"></slot>
         </div>
         <div class="flex justify-end text-md font-bold py-3 mt-2 text-center space-y-4">
           <button
-            v-if="confirmText !== ''"
+            v-if="confirmText !== '' && confirmText !== null"
             class="w-[8rem] mr-2 px-5 py-2 shadow-sm rounded-full hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-110 active:scale-100 text-gray-200 font-semibold uppercase"
             :class="[
               btnColor === 'red'
@@ -38,9 +42,10 @@
             {{ confirmText }}
           </button>
 
-          <span class="absolute bottom-1 left-[17rem] text-xs flex justify-center items-center text-red-500 mx-auto">{{
-            clickOutsideText
-          }}</span>
+          <span
+            class="absolute bottom-1 left-[17rem] text-xs flex justify-center items-center text-red-500 mx-auto"
+            >{{ clickOutsideText }}</span
+          >
         </div>
       </div>
     </div>
@@ -58,7 +63,17 @@ const emitConfirmAction = () => {
   emit("confirmAction");
 };
 
-const { icon, altText, mainTitle, messageText, confirmText, clickOutsideText, bgColor, btnColor, iconSize } = defineProps({
+const {
+  icon,
+  altText,
+  mainTitle,
+  messageText,
+  confirmText,
+  clickOutsideText,
+  bgColor,
+  btnColor,
+  iconSize,
+} = defineProps({
   icon: String,
   altText: String,
   mainTitle: String,
