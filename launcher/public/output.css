@@ -1878,6 +1878,10 @@ video {
   height: 100vh;
 }
 
+.h-1\/5{
+  height: 20%;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -4543,6 +4547,10 @@ video {
   line-height: 1rem;
 }
 
+.text-\[50\%\]{
+  font-size: 50%;
+}
+
 .font-\[400\]{
   font-weight: 400;
 }
@@ -4815,6 +4823,11 @@ video {
 .text-yellow-500{
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
+}
+
+.text-orange-600{
+  --tw-text-opacity: 1;
+  color: rgb(234 88 12 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-400\/70::-webkit-input-placeholder{

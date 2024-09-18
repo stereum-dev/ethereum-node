@@ -4,7 +4,7 @@
     @mouseenter="footerStore.cursorLocation = `${serverName}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
-    <span class="server-name text-xs text-amber-300 font-semibold flex items-center justify-start pl-1">{{
+    <span class="server-name text-xs text-amber-300 font-semibold flex items-center justify-start pl-2">{{
       serverStore.selectedServerConnection?.name ? serverStore.selectedServerConnection?.name : controlStore.ServerName
     }}</span>
   </div>
