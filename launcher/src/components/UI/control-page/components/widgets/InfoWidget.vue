@@ -30,7 +30,9 @@
         <div class="time-box w-2/6 h-full flex justify-center items-center text-gray-200 font-semibold text-[60%]">
           {{ utcTime }}
         </div>
-        <div class="time-box w-2/6 h-full flex justify-center items-center text-gray-200 font-semibold text-[60%]">--:--:--</div>
+        <div class="time-box w-2/6 h-full flex justify-center items-center text-gray-200 font-semibold text-[60%]">
+          {{ serverTime }}
+        </div>
         <div class="w-1/6 h-full flex justify-center items-center">
           <img class="w-1/2 h-4/5" src="/img/icon/control-page-icons/server-icon-download-icons.png" alt="" />
         </div>
@@ -44,6 +46,7 @@ import { useControlStore } from "@/store/theControl";
 import { onMounted, ref, onUnmounted } from "vue";
 
 const utcTime = ref("");
+const serverTime = ref("--:--:--");
 let polling = null;
 
 const controlStore = useControlStore();
