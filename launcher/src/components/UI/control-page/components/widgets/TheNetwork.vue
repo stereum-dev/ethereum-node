@@ -1,6 +1,6 @@
 <template>
   <div class="networkParent flex w-full h-full justify-center items-center">
-    <div class="networkIco w-1/3 h-full flex flex-col">
+    <div class="networkIco w-1/3 h-full flex flex-col justify-center items-center">
       <div class="networkIco-container flex justify-center items-center w-full h-4/5">
         <img class="w-3/4" src="/img/icon/control-page-icons/wifiIcon.svg" />
       </div>

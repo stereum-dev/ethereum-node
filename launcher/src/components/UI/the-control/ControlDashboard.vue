@@ -68,7 +68,7 @@ import TheHard from "./TheHard.vue";
 import MachineName from "./MachineName.vue";
 import DashboardCard from "./DashboardCard.vue";
 import AmsterdamComponent from "./AmsterdamComponent.vue";
-import TheRam from "./TheRam.vue";
+import TheRam from "../control-page/components/widgets/TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
 import TheBalance from "./TheBalance";

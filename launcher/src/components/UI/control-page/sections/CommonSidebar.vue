@@ -4,7 +4,7 @@
   >
     <WidgetCard class="info-widget col-start-1 col-span-6 row-start-1 row-span-3" />
     <WidgetCard class="info-widget col-start-1 col-span-6 row-start-4 row-span-3" />
-    <WidgetCard class="info-widget col-start-1 col-span-6 row-start-7 row-span-3" />
+    <WidgetCard class="ram-widget col-start-1 col-span-6 row-start-7 row-span-3"><TheRam /></WidgetCard>
     <WidgetCard class="network-widget col-start-1 col-span-6 row-start-10 row-span-3"><TheNetwork /></WidgetCard>
   </div>
 </template>
@@ -12,4 +12,5 @@
 <script setup>
 import WidgetCard from "../components/cards/WidgetCard.vue";
 import TheNetwork from "../components/widgets/TheNetwork.vue";
+import TheRam from "../components/widgets/TheRam.vue";
 </script>
