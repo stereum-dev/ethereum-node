@@ -86,6 +86,10 @@ const serviceStore = useServices();
 const totalDisk = computed(() => controlStore.totalDisk);
 
 const storagestatus = computed(() => {
+  if (!serviceStore.installedServices.length) {
+    return [];
+  }
+
   return controlStore.storagestatus.map((item) => {
     let valueInGB = parseFloat(item.storageValue);
     if (item.storageValue.includes("MB")) {
@@ -119,7 +123,7 @@ const readValue = computed(() => controlStore.readValue);
 
 const getDynamicClass = (percentage) => {
   if (percentage < 10) {
-    return "w-[10%] h-[30%]";
+    return "w-[8%] h-[30%]";
   } else if (percentage < 25) {
     return "w-[20%] h-[50%]";
   } else if (percentage < 40) {
