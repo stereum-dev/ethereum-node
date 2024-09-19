@@ -1,24 +1,11 @@
 <template>
-  <div
-    class="select-service-widget-parent flex flex-col w-full h-full justify-center items-center"
-  >
+  <div class="select-service-widget-parent flex flex-col w-full h-full justify-center items-center">
     <div class="h-1/2 w-full justify-center items-center flex p-1">
-      <div
-        class="selector-services w-full h-full flex rounded-md border border-gray-500"
-        @click="deopdownHandler"
-      >
-        <div
-          class="selected-service-name flex justify-center items-center w-[90%] h-full text-gray-200 text-2xs font-semibold uppercase"
-        >
-          {{
-            controlStore.pickeedService === "exeCons"
-              ? "EXECUTION & CONSENSUS CLIENTS"
-              : "VALIDATOR CLIENT"
-          }}
+      <div class="selector-services w-full h-full flex rounded-md border border-gray-500" @click="deopdownHandler">
+        <div class="selected-service-name flex justify-center items-center w-[90%] h-full text-gray-200 text-2xs font-semibold uppercase">
+          {{ controlStore.pickeedService === "exeCons" ? "EXECUTION & CONSENSUS CLIENTS" : "VALIDATOR CLIENT" }}
         </div>
-        <div
-          class="arrow-box flex justify-center items-center w-[10%] h-full text-gray-200 text-lg font-semibold uppercase"
-        >
+        <div class="arrow-box flex justify-center items-center w-[10%] h-full text-gray-200 text-lg font-semibold uppercase">
           <svg
             fill="none"
             viewBox="0 0 24 24"
@@ -26,12 +13,7 @@
             class="h-3 w-3 text-white self-center col-span-1 transform transition-transform duration-200 ease-in-out"
             :class="[isOpen ? 'rotate-180' : 'rotate-0']"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </div>
@@ -52,8 +34,7 @@
             class="p-2 bg-gray-200 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer text-2xs font-bold"
             @click="servicePicker('exeCons')"
           >
-            <span
-              class="col-start-1 col-span-full self-center text-left text-xs font-semibold overflow-hidden truncate font-sans uppercase"
+            <span class="col-start-1 col-span-full self-center text-left text-xs font-semibold overflow-hidden truncate font-sans uppercase"
               >EXECUTION & CONSENSUS CLIENTS</span
             >
           </div>
@@ -61,8 +42,7 @@
             class="p-2 bg-gray-200 capitalize transition-colors duration-300 transform text-gray-600 hover:bg-blue-300 hover:text-gray-700 cursor-pointer font-bold overflow-hidden truncate grid grid-cols-6 gap-x-1"
             @click="servicePicker('vld')"
           >
-            <span
-              class="col-start-1 col-span-full self-center text-xs font-bold overflow-hidden truncate font-sans uppercase"
+            <span class="col-start-1 col-span-full self-center text-xs font-bold overflow-hidden truncate font-sans uppercase"
               >VALIDATOR CLIENT</span
             >
           </div>
@@ -86,9 +66,7 @@ const deopdownHandler = () => {
 };
 
 const servicePicker = (arg) => {
-  arg === "vld"
-    ? (controlStore.pickeedService = "vld")
-    : (controlStore.pickeedService = "exeCons");
+  arg === "vld" ? (controlStore.pickeedService = "vld") : (controlStore.pickeedService = "exeCons");
   isOpen.value = !isOpen.value;
 };
 </script>

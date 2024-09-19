@@ -4,15 +4,10 @@
       <div class="volume-Ico-container flex justify-center items-center w-full h-4/5">
         <img class="w-3/4" src="/img/icon/control-page-icons/hdd.svg" />
       </div>
-      <span
-        class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase"
-        >volume</span
-      >
+      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">volume</span>
     </div>
     <div class="volume-box w-2/3 h-full flex flex-col justify-center items-center p-1">
-      <div
-        class="volume_services p-1 gap-1 flex w-full h-2/3 border rounded-md border-gray-500 overflow-x-scroll"
-      >
+      <div class="volume_services p-1 gap-1 flex w-full h-2/3 border rounded-md border-gray-500 overflow-x-scroll">
         <div
           v-for="item in storagestatus"
           :key="item.id"
@@ -24,49 +19,23 @@
         </div>
       </div>
       <div class="hdd-services w-full h-1/3 flex">
-        <div
-          class="left-side w-3/5 h-full flex justify-center items-center text-[40%] text-green-500 uppercase"
-        >
+        <div class="left-side w-3/5 h-full flex justify-center items-center text-[40%] text-green-500 uppercase">
           <span>{{ availDisk }} GB {{ $t("controlPage.free") }} </span
-          ><span class="text-gray-400">
-            / {{ totalDisk }} GB {{ $t("controlPage.total") }}</span
-          >
+          ><span class="text-gray-400"> / {{ totalDisk }} GB {{ $t("controlPage.total") }}</span>
         </div>
         <div class="right-side w-2/5 h-full flex justify-center items-center uppercase">
           <div class="ttl-box w-1/4 h-full flex flex-col justify-center items-center">
-            <div
-              class="title w-full text-[40%] h-1/2 flex justify-center items-center text-gray-200 uppercase"
-            >
-              write
-            </div>
-            <div
-              class="title w-full text-[40%] h-1/2 flex justify-center items-center text-gray-200 uppercase"
-            >
-              read
-            </div>
+            <div class="title w-full text-[40%] h-1/2 flex justify-center items-center text-gray-200 uppercase">write</div>
+            <div class="title w-full text-[40%] h-1/2 flex justify-center items-center text-gray-200 uppercase">read</div>
           </div>
-          <div
-            class="val-box w-3/4 h-full flex flex-col text-[60%] justify-center font-semibold items-center"
-          >
-            <div
-              class="title w-full h-1/2 flex justify-center items-center text-orange-500 uppercase"
-            >
+          <div class="val-box w-3/4 h-full flex flex-col text-[60%] justify-center font-semibold items-center">
+            <div class="title w-full h-1/2 flex justify-center items-center text-orange-500 uppercase">
               {{ convertWriteValueToMb }}
-              {{
-                controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
-                  ? "KB"
-                  : "MB"
-              }}
+              {{ controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
             </div>
-            <div
-              class="title w-full h-1/2 flex justify-center items-center text-teal-700 uppercase"
-            >
+            <div class="title w-full h-1/2 flex justify-center items-center text-teal-700 uppercase">
               {{ convertReadValueToMb }}
-              {{
-                controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
-                  ? "KB"
-                  : "MB"
-              }}
+              {{ controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
             </div>
           </div>
         </div>
@@ -100,12 +69,8 @@ const storagestatus = computed(() => {
 
     const percentage = (valueInGB / totalDisk.value) * 100;
 
-    const matchingService = serviceStore.installedServices.find(
-      (service) => service.service === item.service
-    );
-    const serviceIcon = matchingService
-      ? matchingService.icon
-      : "/path/to/default/icon.png";
+    const matchingService = serviceStore.installedServices.find((service) => service.service === item.service);
+    const serviceIcon = matchingService ? matchingService.icon : "/path/to/default/icon.png";
 
     return {
       ...item,
