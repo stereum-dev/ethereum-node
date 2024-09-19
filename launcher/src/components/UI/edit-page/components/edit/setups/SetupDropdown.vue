@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full relative col-start-1 col-span-full grid grid-cols-6 gap-x-1" :class="newHeight">
+  <div
+    class="w-full relative col-start-1 col-span-full grid grid-cols-6 gap-x-1"
+    :class="newHeight"
+  >
     <label
       v-if="setupStore.isRenameSetupActive && route.path === '/edit'"
       for="rename"
@@ -19,7 +22,9 @@
     <div
       v-else
       class="col-start-1 relative p-1 grid rounded-[4px] border border-gray-600"
-      :class="route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'"
+      :class="
+        route.path === '/edit' ? 'col-end-6 grid-cols-9' : 'col-span-full  grid-cols-12'
+      "
       @click="toggleDropdown"
     >
       <span
@@ -44,9 +49,17 @@
         viewBox="0 0 24 24"
         stroke="currentColor"
         class="h-3 w-3 text-white self-center col-span-1 transform transition-transform duration-200 ease-in-out"
-        :class="[isOpen ? 'rotate-180' : 'rotate-0', route.path === '/edit' ? 'col-start-9' : 'col-start-12']"
+        :class="[
+          isOpen ? 'rotate-180' : 'rotate-0',
+          route.path === '/edit' ? 'col-start-9' : 'col-start-12',
+        ]"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"
+        />
       </svg>
     </div>
 
@@ -75,7 +88,8 @@
             src="/img/icon/stereum-icons/stereum-logo.png"
             alt="Node Server View"
           />
-          <span class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
+          <span
+            class="col-start-2 col-span-full self-center text-left text-sm font-semibold overflow-hidden truncate font-sans"
             >Server View</span
           >
         </div>
@@ -93,16 +107,21 @@
             class="col-start-1 col-span-1 w-5 h-5 rounded-full border border-gray-300 self-center justify-self-start"
             :class="setupStore.getBGColor(setup.color)"
           ></span>
-          <span class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate font-sans">{{
-            setup.setupName
-          }}</span>
+          <span
+            class="col-start-2 col-span-full self-center text-sm font-bold overflow-hidden truncate font-sans"
+            >{{ setup.setupName }}</span
+          >
         </div>
       </div>
     </Transition>
 
     <!-- Rename setup button -->
     <!-- Rename Button  -->
-    <RenameSetup v-if="route.path === '/edit'" @confirm-rename="confirmRename" @rename-setup="selectRename" />
+    <RenameSetup
+      v-if="route.path === '/edit'"
+      @confirm-rename="confirmRename"
+      @rename-setup="selectRename"
+    />
   </div>
 </template>
 <script setup>
@@ -135,14 +154,18 @@ const serviceStore = useServices();
 const isOpen = ref(false);
 
 const setupsList = computed(() => {
-  const validators = serviceStore.installedServices.filter((s) => s.category === "validator").map((v) => v.service);
+  const validators = serviceStore.installedServices
+    .filter((s) => s.category === "validator")
+    .map((v) => v.service);
 
   let output = setupStore.allSetups.filter((s) => s.setupName !== "commonServices");
   output = output.map((setup) => {
     if (!setup.services || setup.services.length === 0) {
       setup.noValidator = true;
     } else {
-      const hasValidator = setup.services.some((service) => validators.includes(service.service));
+      const hasValidator = setup.services.some((service) =>
+        validators.includes(service.service)
+      );
       if (!hasValidator) {
         setup.noValidator = true;
       }
@@ -197,7 +220,6 @@ const noValidatorHandler = (setup) => {
 const toggleDropdown = () => {
   if (route.path === "/control") {
     isOpen.value = !isOpen.value;
-    console.log("Control");
   } else if (setupsList.value.length > 0 && route.path !== "/control") {
     isOpen.value = !isOpen.value;
   }
