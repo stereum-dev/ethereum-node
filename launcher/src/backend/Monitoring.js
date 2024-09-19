@@ -1710,6 +1710,7 @@ export class Monitoring {
     var storagesizes = result.stdout.trim().split("\n");
     storagesizes.forEach(function (val, index) {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
+
       if (svc) {
         // Prometheus NE does not store data but using "/" as volume, see #1095
         // Likely not queried at all if defined in ignoreServices (see above)
@@ -1725,6 +1726,7 @@ export class Monitoring {
             .replace(/NodeExporter/gi, " ne")
             .toUpperCase(),
           storageValue: (!val || val < 1 ? "0 " : val.replace(/([a-z]+)/is, " $1")) + "B",
+          service: svc.service,
         });
       }
     });
