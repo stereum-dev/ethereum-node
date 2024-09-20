@@ -76,7 +76,7 @@ import RpcEndpoint from "./RpcEndpoint.vue";
 import WsEndpoint from "./WsEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
-import TheStaking from "./TheStaking.vue";
+import TheStaking from "../control-page/components/widgets/TheStaking.vue";
 
 // import NewPeerToPeer from "./NewPeerToPeer.vue";
 // import SubscribedSubnets from "./SubscribedSubnets.vue";
