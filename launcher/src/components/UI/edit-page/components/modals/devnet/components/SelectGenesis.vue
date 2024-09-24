@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto"
-  >
-    <div
-      class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-8 flex flex-col justify-between items-center"
-    >
+  <div class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto">
+    <div class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-8 flex flex-col justify-between items-center">
       <div class="w-full flex justify-between items-center">
         <div
           class="bg-[#336666] hover:bg-[#488d8d] hover:scale-105 transition-all ease-in-out duration-150 hover:shadow-2xl hover:shadow-black active:scale-100 flex justify-center items-center shadow-md shadow-black p-1 h-14 w-[170px] rounded-md overflow-hidden my-4 mx-auto active:shadow-none"
@@ -15,21 +11,13 @@
           >
             Import Genesis
           </label>
-          <input
-            id="uploadFile"
-            type="file"
-            class="hidden"
-            accept=".json"
-            @change="getGenesisFile"
-          />
+          <input id="uploadFile" type="file" class="hidden" accept=".json" @change="getGenesisFile" />
         </div>
         <div
           class="bg-[#336666] hover:bg-[#488d8d] hover:scale-105 transition-all ease-in-out duration-150 hover:shadow-2xl hover:shadow-black active:scale-100 flex justify-center items-center shadow-md shadow-black p-1 h-14 w-[170px] rounded-md overflow-hidden my-4 mx-auto cursor-pointer active:shadow-none"
           @click="createNewGenesis"
         >
-          <span class="text-center text-lg capitalize font-normal text-gray-200">
-            Create Genesis
-          </span>
+          <span class="text-center text-lg capitalize font-normal text-gray-200"> Create Genesis </span>
         </div>
       </div>
     </div>
@@ -56,8 +44,7 @@ const getGenesisFile = (event) => {
         errorMessage.value = "";
       } catch (error) {
         setupStore.uploadedGenesisConfig = null;
-        errorMessage.value =
-          "Error parsing the JSON file. Please upload a valid genesis.json.";
+        errorMessage.value = "Error parsing the JSON file. Please upload a valid genesis.json.";
         setupStore.devnetButtonDisabled = true;
         console.error("Error parsing JSON file:", error);
       }
@@ -83,8 +70,7 @@ const confirmSelection = () => {
   } else if (setupStore.isGenesisCreated) {
     setupStore.currentStep = 3;
   } else {
-    errorMessage.value =
-      "Please either upload a Genesis file or choose to create a new one.";
+    errorMessage.value = "Please either upload a Genesis file or choose to create a new one.";
   }
 };
 
