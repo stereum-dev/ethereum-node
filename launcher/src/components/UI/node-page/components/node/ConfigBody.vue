@@ -26,6 +26,7 @@
         @mouse-over="lineDraw"
         @mouse-leave="removeLines"
         @copy-jwt="copyJwt"
+        @external-modify="externalModify"
       />
       <ConsensusClients
         @open-expert="openExpert"
@@ -36,6 +37,7 @@
         @open-doc="openDocs"
         @mouse-over="lineDraw"
         @mouse-leave="removeLines"
+        @external-modify="externalModify"
       />
       <ValidatorClients
         @open-expert="openExpert"
@@ -71,6 +73,7 @@ const emit = defineEmits([
   "lineDraw",
   "removeLines",
   "copyJwt",
+  "externalModify",
 ]);
 
 // Refs
@@ -120,5 +123,9 @@ const removeLines = () => {
 
 const copyJwt = (jwt) => {
   emit("copyJwt", jwt);
+};
+
+const externalModify = (service) => {
+  emit("externalModify", service);
 };
 </script>

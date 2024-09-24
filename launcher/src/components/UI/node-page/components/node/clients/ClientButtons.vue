@@ -44,8 +44,17 @@ import { useNodeStore } from '@/store/theNode';
       <img src="/img/icon//node-page-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
+      v-if="props.client.service === 'ExternalExecutionService' || props.client.service === 'ExternalConsensusService'"
+      class="col-start-1 col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
+      @click="externalModify"
+      @mouseenter="footerStore.cursorLocation = `${restart}`"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
+      <img src="/img/icon//edit-node-icons/service-connecting.png" alt="icon" class="w-4 active:scale-95" />
+    </button>
+    <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"
-      :class="props.client.name === 'External' ? 'col-start-1' : 'col-start-3'"
+      :class="props.client.name === 'External' ? '' : 'col-start-3'"
       @click="openExpert"
       @mouseenter="footerStore.cursorLocation = `${expert}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -111,6 +120,7 @@ import { useNodeStore } from '@/store/theNode';
     >
       <img src="/img/icon/node-page-icons/service-command-copy-jwt.png" alt="icon" class="w-4 h-4 active:scale-95" />
     </button>
+
     <slot></slot>
   </div>
 </template>
@@ -138,7 +148,17 @@ const props = defineProps({
   client: Object,
 });
 
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "openResync", "openPruning", "copyJwt"]);
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "openDoc",
+  "stateHandler",
+  "restartHandler",
+  "openResync",
+  "openPruning",
+  "copyJwt",
+  "externalModify",
+]);
 
 const nodeStore = useNodeStore();
 
@@ -190,6 +210,12 @@ const openPruning = () => {
 
 const copyJwt = () => {
   emit("copyJwt", props.client);
+  footerStore.cursorLocation = "";
+};
+
+const externalModify = () => {
+  nodeStore.isLineHidden = true;
+  emit("externalModify", props.client);
   footerStore.cursorLocation = "";
 };
 </script>

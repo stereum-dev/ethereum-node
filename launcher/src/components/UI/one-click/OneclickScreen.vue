@@ -10,6 +10,7 @@ import ConfigPlugins from "./sections/ConfigPlugins.vue";
 import MevboostRelays from "./sections/MevboostRelays.vue";
 import SelectSync from "./sections/SelectSync.vue";
 import VerifyCheck from "./sections/VerifyCheck.vue";
+import OnlySource from "./sections/OnlySource.vue";
 import AnimationSection from "./sections/AnimationSection.vue";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
@@ -25,6 +26,11 @@ const components = [
     path: "/oneClick/config",
     component: ConfigPlugins,
   },
+  {
+    path: "/oneClick/source",
+    component: OnlySource,
+  },
+
   {
     path: "/oneClick/mevboost",
     component: MevboostRelays,

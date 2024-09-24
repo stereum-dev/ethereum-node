@@ -97,7 +97,7 @@ const pluginChangeHandler = (plugin, item, idx) => {
 
   clickStore.selectedPreset.includedPlugins.splice(idx, 0, item);
 
-  if (["staking", "mev boost", "stereum on arm", "archive", "lidocsm"].includes(clickStore.selectedPreset.name)) {
+  if (["staking", "mev boost", "stereum on arm", "archive", "lidocsm", "vc only"].includes(clickStore.selectedPreset.name)) {
     if (item.category === "consensus") {
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
       clickStore.selectedPreset.includedPlugins[valIndex] = serviceStore.allServices.find(
@@ -138,6 +138,7 @@ const checkPluginCategory = (element) => {
   switch (clickStore.selectedPreset.name) {
     case "lidocsm":
     case "staking":
+    case "vc only":
       filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);

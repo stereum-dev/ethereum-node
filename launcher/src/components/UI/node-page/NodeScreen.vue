@@ -6,7 +6,12 @@
         <SidebarSection />
       </div>
       <div class="col-start-2 col-end-17 w-full h-full">
-        <NodeSection @open-expert="openExpertModal" @open-log="openLogPage" @export-setup="exportSetup" />
+        <NodeSection
+          @open-expert="openExpertModal"
+          @open-log="openLogPage"
+          @export-setup="exportSetup"
+          @external-modify="openExternalModifying"
+        />
       </div>
       <div class="col-start-17 col-end-21 ml-1 grid grid-cols-2 grid-rows-9">
         <NetworkStatus />
@@ -28,6 +33,12 @@
           </button>
         </div>
         <AlertSection :info-aralm="nodeStore.infoAlarm" />
+        <ExternalModifying
+          v-if="isExternalModifyingActive"
+          :client="externalService"
+          @close-window="closeExternalModal"
+          @confirm-install="confirmExternalModifying"
+        />
       </div>
       <LogsSection
         v-if="isLogsPageActive"
@@ -65,6 +76,7 @@ import LogsSection from "./sections/LogsSection.vue";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection";
+import ExternalModifying from "../edit-page/components/modals/ExternalModifying.vue";
 
 //*****************  Store & Refs *****************
 const nodeStore = useNodeStore();
@@ -79,6 +91,8 @@ const { updateDom } = useMultiSetups();
 const expertModeClient = ref(null);
 const isExpertModeOpen = ref(false);
 const isLogsPageActive = ref(false);
+const isExternalModifyingActive = ref(false);
+const externalService = ref(null);
 
 let polling = null;
 let pollingVitals = null;
@@ -236,6 +250,15 @@ const openExpertModal = (item) => {
   expertModeClient.value.expertOptionsModal = true;
   isExpertModeOpen.value = true;
 };
+const closeExternalModal = () => {
+  isExternalModifyingActive.value = false;
+};
+
+const confirmExternalModifying = async (client, properties) => {
+  console.log("confirmExternalModifying", properties);
+
+  isExternalModifyingActive.value = false;
+};
 
 const updateNodeStats = async () => {
   await useRefreshNodeStats();
@@ -261,6 +284,11 @@ const exportLogs = async (client) => {
   const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
   const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
   saveAs(blob, fileName);
+};
+
+const openExternalModifying = (item) => {
+  externalService.value = item;
+  isExternalModifyingActive.value = true;
 };
 
 const openLogPage = (item) => {

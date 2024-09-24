@@ -23,6 +23,7 @@
           @modify-service="modifyService"
           @delete-service="deleteService"
           @info-modal="infoModal"
+          @external-modify="externalModify"
         />
       </TransitionGroup>
     </div>
@@ -38,7 +39,7 @@ import { computed } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 
 //Props & Emits
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "mouseOver", "mouseLeave"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "externalModify", "infoModal", "mouseOver", "mouseLeave"]);
 
 //Refs
 
@@ -113,6 +114,10 @@ const modifyService = (item) => {
 };
 const infoModal = (item) => {
   emit("infoModal", item);
+};
+
+const externalModify = (item) => {
+  emit("externalModify", item);
 };
 </script>
 <style scoped>

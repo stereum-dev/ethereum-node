@@ -118,10 +118,17 @@ export const useClickInstall = defineStore("clickInstallation", {
           includedPlugins: [],
         },
         {
-          id: 7,
+          id: 8,
           name: "lidocsm",
           defaultPath: "/opt/stereum",
           icon: "/img/icon/one-click-icons/preset-icons/LIDO-CSM.png",
+          includedPlugins: [],
+        },
+        {
+          id: 9,
+          name: "vc only",
+          defaultPath: "/opt/stereum",
+          icon: "/img/icon/one-click-icons/preset-icons/vconly.png",
           includedPlugins: [],
         },
       ],
