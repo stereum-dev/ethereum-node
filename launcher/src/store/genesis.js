@@ -52,9 +52,7 @@ export const useGenesis = defineStore("genesis", {
       excessBlobGas: null,
       blobGasUsed: null,
     },
-    configYaml: `
-    
-    CONFIG_NAME: interop
+    configYaml: `CONFIG_NAME: interop
     PRESET_BASE: interop
 
     # Genesis
@@ -84,7 +82,10 @@ export const useGenesis = defineStore("genesis", {
 
     # Deposit contract
     DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242
-    `,
+    `
+      .split("\n")
+      .map((line) => line.trimStart())
+      .join("\n"),
 
     finalGenesisFile: null,
   }),
