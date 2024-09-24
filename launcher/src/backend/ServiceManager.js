@@ -2386,7 +2386,7 @@ export class ServiceManager {
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Config YAML`);
     try {
       if (!writeConfigData.existDepositContract) {
-        writeConfigData.configYaml = writeConfigData.configYaml.replace(/^.*DEPOSIT_CONTRACT_ADDRESS.*\n?/gm, "");
+        writeConfigData.configYaml = writeConfigData.configYaml?.replace(/^.*DEPOSIT_CONTRACT_ADDRESS.*\n?/gm, "");
       }
 
       const workingDir = await this.getCurrentPath();

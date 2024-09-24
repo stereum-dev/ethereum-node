@@ -8,12 +8,14 @@ export const useSetups = defineStore("setups", {
     stakingSetups: [],
 
     //DEVNET NETWORK CONFIGURATION
+    uploadedGenesisConfig: null,
+    genesisFile: null,
     devnetConfigData: {
       network: "devnet",
       setupName: "",
       setupColor: "",
       genesisConfig: null,
-      uploadedGenesisConfig: null,
+
       genesisChanged: false,
       configYaml: "",
       services: [],
@@ -116,6 +118,18 @@ export const useSetups = defineStore("setups", {
       if (updatedSetup) {
         this.selectedSetup = updatedSetup;
       }
+    },
+    resetDevnetConfigData() {
+      this.devnetConfigData = {
+        network: "devnet",
+        setupName: "",
+        setupColor: "",
+        genesisConfig: null,
+        uploadedGenesisConfig: null,
+        genesisChanged: false,
+        configYaml: "",
+        services: [],
+      };
     },
   },
 });

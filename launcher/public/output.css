@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -805,10 +805,6 @@ video {
 
 .-top-\[90px\]{
   top: -90px;
-}
-
-.bottom-0{
-  bottom: 0px;
 }
 
 .bottom-0\.5{
@@ -2391,6 +2387,10 @@ video {
   width: 100vw;
 }
 
+.w-2\/6{
+  width: 33.333333%;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -2423,6 +2423,14 @@ video {
   max-width: 20rem;
 }
 
+.max-w-\[200px\]{
+  max-width: 200px;
+}
+
+.max-w-\[300px\]{
+  max-width: 300px;
+}
+
 .flex-auto{
   -webkit-box-flex: 1;
       -ms-flex: 1 1 auto;
@@ -2433,11 +2441,6 @@ video {
   -webkit-box-flex: 0;
       -ms-flex: none;
           flex: none;
-}
-
-.flex-shrink{
-  -ms-flex-negative: 1;
-      flex-shrink: 1;
 }
 
 .flex-shrink-0{
@@ -2759,11 +2762,6 @@ video {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-}
-
-.flex-wrap{
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
 }
 
 .place-content-center{
@@ -5461,11 +5459,6 @@ html body {
 .after\:left-\[2px\]::after{
   content: var(--tw-content);
   left: 2px;
-}
-
-.after\:top-0::after{
-  content: var(--tw-content);
-  top: 0px;
 }
 
 .after\:top-0\.5::after{

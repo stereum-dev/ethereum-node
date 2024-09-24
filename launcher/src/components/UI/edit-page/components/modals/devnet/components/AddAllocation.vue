@@ -2,7 +2,9 @@
   <div class="w-full mt-4 mx-auto px-4">
     <div class="w-full">
       <div v-if="allocDataReview">
-        <div class="max-h-[190px] flex flex-col justify-start space-y-4 p-2 items-center overflow-x-hidden overflow-y-auto">
+        <div
+          class="max-h-[190px] flex flex-col justify-start space-y-4 p-2 items-center overflow-x-hidden overflow-y-auto"
+        >
           <div
             v-for="(accountData, address) in allocData"
             :key="address"
@@ -20,13 +22,24 @@
                   class="animate-spin h-5 w-5 border-2 border-white rounded-full border-t-white border-r-white border-b-white border-l-red-500"
                   viewBox="0 0 24 24"
                 ></svg>
-                <img v-else src="/img/icon/terminal-page-icons/trash.png" alt="Trash Icon" class="w-4 h-4" />
+                <img
+                  v-else
+                  src="/img/icon/terminal-page-icons/trash.png"
+                  alt="Trash Icon"
+                  class="w-4 h-4"
+                />
               </button>
             </div>
-            <div v-for="(value, key) in accountData" :key="key" class="w-full flex justify-between items-center mb-1">
+            <div
+              v-for="(value, key) in accountData"
+              :key="key"
+              class="w-full flex justify-between items-center mb-1"
+            >
               <span class="text-sm text-gray-200">{{ key }}:</span>
               <div class="w-3/4 flex items-center overflow-x-clip truncate ml-2">
-                <span class="text-xs text-yellow-300 mr-2 overflow-hidden">{{ JSON.stringify(value) }}</span>
+                <span class="text-xs text-yellow-300 mr-2 overflow-hidden">{{
+                  JSON.stringify(value)
+                }}</span>
               </div>
             </div>
           </div>
@@ -61,8 +74,16 @@
 
         <!-- Checkbox for Account Script -->
         <div class="w-full flex items-center py-1">
-          <label for="addAccountScript" class="text-sm text-gray-200 cursor-pointer flex items-center">
-            <input id="addAccountScript" v-model="addAccountScript" type="checkbox" class="mr-2 w-4 h-4" />
+          <label
+            for="addAccountScript"
+            class="text-sm text-gray-200 cursor-pointer flex items-center"
+          >
+            <input
+              id="addAccountScript"
+              v-model="addAccountScript"
+              type="checkbox"
+              class="mr-2 w-4 h-4"
+            />
             Enable Advanced Account Configuration
           </label>
         </div>
@@ -78,9 +99,10 @@
 
         <!-- Display Added Account Details -->
         <div v-else-if="Object.keys(allocData).length > 0" class="w-full">
-          <pre class="w-full h-[100px] p-2 bg-black text-amber-300 rounded-md text-sm overflow-auto max-h-[200px]">{{
-            JSON.stringify(allocData, null, 2)
-          }}</pre>
+          <pre
+            class="w-full h-[100px] p-2 bg-black text-amber-300 rounded-md text-sm overflow-auto max-h-[200px]"
+            >{{ JSON.stringify(allocData, null, 2) }}</pre
+          >
         </div>
 
         <div class="w-full flex justify-center items-center space-x-2">
@@ -98,7 +120,9 @@
             class="w-1/3 h-[35px] rounded-md shadow-sm shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center text-white px-4 py-2 bg-[#336666] hover:bg-[#407d7d]"
             @click="allocDataReview = true"
           >
-            <span class="text-xs text-center text-gray-200 font-normal">Edit Allocation </span>
+            <span class="text-xs text-center text-gray-200 font-normal"
+              >Edit Allocation
+            </span>
           </div>
         </div>
       </div>
@@ -107,8 +131,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
 import { useGenesis } from "@/store/genesis";
+import { computed, ref } from "vue";
 
 const genesisStore = useGenesis();
 
@@ -134,11 +158,16 @@ const placeHolderSample = ref({
 const allocData = computed(() => genesisStore.genesis.alloc);
 
 const buttonDisabled = computed(() => {
-  return (!addAccountScript.value && !accountAddress.value) || (addAccountScript.value && !accountDetails.value);
+  return (
+    (!addAccountScript.value && !accountAddress.value) ||
+    (addAccountScript.value && !accountDetails.value)
+  );
 });
 
 const inputClass = (disabled) => {
-  return `w-full h-[35px] text-sm font-semibold pl-2 rounded-md ${disabled ? "bg-zinc-400 text-gray-600" : "bg-zinc-200 text-gray-800"}`;
+  return `w-full h-[35px] text-sm font-semibold pl-2 rounded-md ${
+    disabled ? "bg-zinc-400 text-gray-600" : "bg-zinc-200 text-gray-800"
+  }`;
 };
 
 const deleteAccount = async (address) => {

@@ -23,14 +23,20 @@ const getComponent = computed(() => {
   if (setupStore.currentStep === 1) {
     comp = CreateSetup;
     subtitle = "SETUP NAME AND COLOR";
-    btnState = !(setupStore.devnetConfigData.setupName && setupStore.devnetConfigData.setupColor);
+    btnState = !(
+      setupStore.devnetConfigData.setupName && setupStore.devnetConfigData.setupColor
+    );
   } else if (setupStore.currentStep === 2) {
     comp = SelectGenesis;
     btnState = true;
     subtitle = "GENESIS JSON SELECTION";
   } else if (setupStore.currentStep === 3) {
-    comp = setupStore.devnetConfigData.uploadedGenesisConfig ? SelectCilent : ConfigGenesis;
-    subtitle = setupStore.devnetConfigData.uploadedGenesisConfig ? "SETUP SUMMARY" : "GENESIS JSON CONFIGURATION";
+    comp = setupStore.devnetConfigData.uploadedGenesisConfig
+      ? SelectCilent
+      : ConfigGenesis;
+    subtitle = setupStore.devnetConfigData.uploadedGenesisConfig
+      ? "SETUP SUMMARY"
+      : "GENESIS JSON CONFIGURATION";
   } else if (setupStore.currentStep === 4) {
     comp = AddAllocation;
     subtitle = "INITIAL ADDRESS ALLOCATION";
@@ -49,12 +55,12 @@ const getComponent = computed(() => {
 const closeWindow = () => {
   setupStore.isDevnetSetupModalActive = false;
   setupStore.currentStep = 1;
+  setupStore.uploadedGenesisFile = null;
   setupStore.devnetConfigData = {
     network: "devnet",
     setupName: "",
     setupColor: "",
     genesisConfig: null,
-    uploadedGenesisConfig: null,
     genesisChanged: false,
     configYaml: "",
     services: [],
@@ -63,7 +69,10 @@ const closeWindow = () => {
 
 const buttonAction = () => {
   if (setupStore.currentStep < 6) {
-    if (setupStore.currentStep === 2 && setupStore.devnetConfigData.uploadedGenesisConfig) {
+    if (
+      setupStore.currentStep === 2 &&
+      setupStore.devnetConfigData.uploadedGenesisConfig
+    ) {
       setupStore.currentStep = 5;
     } else {
       setupStore.currentStep++;
