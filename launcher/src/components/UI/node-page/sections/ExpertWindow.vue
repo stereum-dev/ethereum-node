@@ -12,7 +12,9 @@
       role="dialog"
       aria-modal="true"
     >
-      <div class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600">
+      <div
+        class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600"
+      >
         <span class="text-xl text-gray-200 font-bold uppercase">{{ item.name }}</span>
         <p class="text-sm text-gray-200 capitalize">
           {{ item.category }}
@@ -20,49 +22,98 @@
         </p>
         <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
       </div>
-      <div class="w-full h-[30px] space-y-2 mt-2" :class="{ shorterRowBox: isExpertModeActive }">
+      <div
+        class="w-full h-[30px] space-y-2 mt-2"
+        :class="{ shorterRowBox: isExpertModeActive }"
+      >
         <!-- expert mode row -->
         <div
-          v-if="!ssvExpertModeActive && !ssvDkgExpertModeActive && !prometheusExpertModeActive"
+          v-if="
+            !ssvExpertModeActive && !ssvDkgExpertModeActive && !prometheusExpertModeActive
+          "
           class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
           @click="openExpertMode"
         >
-          <img class="titleIcon" src="/img/icon/service-setting-icons/crown.png" alt="icon" />
+          <img
+            class="titleIcon"
+            src="/img/icon/service-setting-icons/crown.png"
+            alt="icon"
+          />
 
-          <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">Expert Mode</span>
-          <div class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full">
-            <img v-if="isExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+          <span
+            class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            >Expert Mode</span
+          >
+          <div
+            class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+          >
+            <img
+              v-if="isExpertModeActive"
+              src="/img/icon/task-manager-icons/up.png"
+              alt=""
+            />
             <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
           </div>
         </div>
 
-        <template v-if="selectedSetup.network !== 'devnet'">
+        <template v-if="selectedSetup?.network !== 'devnet'">
           <div
-            v-if="item.service === 'SSVNetworkService' && !isExpertModeActive && !prometheusExpertModeActive"
+            v-if="
+              item.service === 'SSVNetworkService' &&
+              !isExpertModeActive &&
+              !prometheusExpertModeActive
+            "
             class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
             @click="openSSVExpertMode"
           >
-            <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
-            <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            <img
+              class="titleIcon"
+              src="/img/icon/service-setting-icons/ssv-config.png"
+              alt="icon"
+            />
+            <span
+              class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
               >SSV Configuration</span
             >
-            <div class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full">
-              <img v-if="ssvExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <div
+              class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+            >
+              <img
+                v-if="ssvExpertModeActive"
+                src="/img/icon/task-manager-icons/up.png"
+                alt=""
+              />
               <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
             </div>
           </div>
           <!-- DKG START -->
           <div
-            v-if="item.service === 'SSVDKGService' && !ssvExpertModeActive && !isExpertModeActive && !prometheusExpertModeActive"
+            v-if="
+              item.service === 'SSVDKGService' &&
+              !ssvExpertModeActive &&
+              !isExpertModeActive &&
+              !prometheusExpertModeActive
+            "
             class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
             @click="openSSVDKGExpertMode"
           >
-            <img class="titleIcon" src="/img/icon/service-setting-icons/ssv-config.png" alt="icon" />
-            <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            <img
+              class="titleIcon"
+              src="/img/icon/service-setting-icons/ssv-config.png"
+              alt="icon"
+            />
+            <span
+              class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
               >SSV DKG Configuration</span
             >
-            <div class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full">
-              <img v-if="ssvDkgExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <div
+              class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+            >
+              <img
+                v-if="ssvDkgExpertModeActive"
+                src="/img/icon/task-manager-icons/up.png"
+                alt=""
+              />
               <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
             </div>
           </div>
@@ -72,11 +123,18 @@
             class="dataTitleBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
             @click="openPrometheusExpertMode"
           >
-            <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+            <span
+              class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
               >Prometheus Configuration</span
             >
-            <div class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full">
-              <img v-if="prometheusExpertModeActive" src="/img/icon/task-manager-icons/up.png" alt="" />
+            <div
+              class="arrow-box col-start-12 col-span-1 row-start-1 row-span-2 justify-end items-center flex w-full h-full"
+            >
+              <img
+                v-if="prometheusExpertModeActive"
+                src="/img/icon/task-manager-icons/up.png"
+                alt=""
+              />
               <img v-else src="/img/icon/task-manager-icons/down.png" alt="" />
             </div>
           </div>
@@ -92,36 +150,57 @@
           }
         -->
           <div
-            v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
+            v-for="(option, index) in item.expertOptions.filter(
+              (option) => option.type === 'select'
+            )"
             :key="index"
             class="selectBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
             :class="{
-              invisible: isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
+              invisible:
+                isExpertModeActive ||
+                ssvExpertModeActive ||
+                ssvDkgExpertModeActive ||
+                prometheusExpertModeActive,
             }"
           >
             <img class="titleIcon" :src="option.icon" alt="icon" />
-            <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
-              option.title
-            }}</span>
+            <span
+              class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+              >{{ option.title }}</span
+            >
 
-            <select id="value" v-model="option.changeValue" class="toggleTextInput" @change="somethingIsChanged(option)">
-              <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
+            <select
+              id="value"
+              v-model="option.changeValue"
+              class="toggleTextInput"
+              @change="somethingIsChanged(option)"
+            >
+              <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">
+                {{ rate }} {{ option.unit }}
+              </option>
             </select>
           </div>
 
           <!-- Fee recipient -->
           <div
-            v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
+            v-for="(option, index) in item.expertOptions.filter(
+              (option) => option.type === 'text'
+            )"
             :key="index"
             class="toggleTextBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
             :class="{
-              invisible: isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
+              invisible:
+                isExpertModeActive ||
+                ssvExpertModeActive ||
+                ssvDkgExpertModeActive ||
+                prometheusExpertModeActive,
             }"
           >
             <img class="titleIcon" :src="option.icon" alt="icon" />
-            <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
-              option.title
-            }}</span>
+            <span
+              class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+              >{{ option.title }}</span
+            >
             <!-- <Transition name="slide-up">
             <img
               v-if="option.buttonState"
@@ -138,7 +217,12 @@
               @click="buttonOn(option)"
             />
           </Transition> -->
-            <input v-model="option.changeValue" class="toggleTextInput" type="text" @input="somethingIsChanged(option)" />
+            <input
+              v-model="option.changeValue"
+              class="toggleTextInput"
+              type="text"
+              @input="somethingIsChanged(option)"
+            />
           </div>
 
           <!--
@@ -151,16 +235,24 @@
         -->
           <!-- toggle btn -->
           <div
-            v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
+            v-for="(option, index) in item.expertOptions.filter(
+              (option) => option.type === 'action'
+            )"
             :key="index"
             class="actionBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
             :class="{
-              invisible: isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
+              invisible:
+                isExpertModeActive ||
+                ssvExpertModeActive ||
+                ssvDkgExpertModeActive ||
+                prometheusExpertModeActive,
             }"
           >
             <img class="titleIcon justify-self-center" :src="option.icon" alt="icon" />
             <span class="actionBoxTitle">{{ option.title }}</span>
-            <div class="w-full flex justify-end items-center col-start-12 col-span-1 row-start-1 row-span-1">
+            <div
+              class="w-full flex justify-end items-center col-start-12 col-span-1 row-start-1 row-span-1"
+            >
               <label class="relative inline-flex items-center cursor-pointer">
                 <input
                   v-model="option.changeValue"
@@ -179,18 +271,27 @@
           </div>
           <!-- toggle btn -->
           <div
-            v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
+            v-for="(option, index) in item.expertOptions.filter(
+              (option) => option.type === 'toggle'
+            )"
             :key="index"
             class="actionBox w-full h-10 bg-[#242529] rounded-xl shadow-2xl text-gray-300"
             :class="{
-              invisible: isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
+              invisible:
+                isExpertModeActive ||
+                ssvExpertModeActive ||
+                ssvDkgExpertModeActive ||
+                prometheusExpertModeActive,
             }"
           >
             <img class="titleIcon" :src="option.icon" alt="icon" />
-            <span class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full">{{
-              option.title
-            }}</span>
-            <div class="col-start-12 col-span-1 row-start-1 row-span-1 w-full flex justify-end items-center">
+            <span
+              class="col-start-2 col-span-4 row-start-1 row-span-2 justify-start items-center flex w-full h-full"
+              >{{ option.title }}</span
+            >
+            <div
+              class="col-start-12 col-span-1 row-start-1 row-span-1 w-full flex justify-end items-center"
+            >
               <label class="relative inline-flex items-center cursor-pointer">
                 <input
                   v-model="option.changeValue"
@@ -213,7 +314,11 @@
       <div
         class="expertTable"
         :class="{
-          showExpertTable: isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive,
+          showExpertTable:
+            isExpertModeActive ||
+            ssvExpertModeActive ||
+            ssvDkgExpertModeActive ||
+            prometheusExpertModeActive,
         }"
       >
         <div v-if="isExpertModeActive" class="expertMode">
@@ -268,7 +373,10 @@
           Confirm
         </button>
 
-        <button v-else class="w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white rounded-sm disabled uppercase text-sm">
+        <button
+          v-else
+          class="w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white rounded-sm disabled uppercase text-sm"
+        >
           <span>Confirm</span>
         </button>
         <button
@@ -278,7 +386,10 @@
         >
           Confirm & Restart
         </button>
-        <button v-else class="w-[200px] h-8 px-6 py-1 font-medium tracking-wide text-white uppercase rounded-sm disabled text-sm">
+        <button
+          v-else
+          class="w-[200px] h-8 px-6 py-1 font-medium tracking-wide text-white uppercase rounded-sm disabled text-sm"
+        >
           <span>Confirm & Restart</span>
         </button>
       </div>
@@ -349,7 +460,8 @@ export default {
   methods: {
     openDocs(docsUrl) {
       window.open(docsUrl, "_blank");
-      if (this.selectedSetup.network === "gnosis") window.open("https://docs.gnosischain.com/node/", "_blank");
+      if (this.selectedSetup.network === "gnosis")
+        window.open("https://docs.gnosischain.com/node/", "_blank");
     },
 
     somethingIsChanged(item) {
@@ -362,17 +474,25 @@ export default {
 
       let tekuGasLimit = "";
       if (this.item.service === "TekuValidatorService") {
-        tekuGasLimit = await ControlService.readGasConfigFile(this.item.config.volumes[0].destinationPath);
+        tekuGasLimit = await ControlService.readGasConfigFile(
+          this.item.config.volumes[0].destinationPath
+        );
       }
 
       if (this.item.service === "SSVNetworkService") {
-        this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
+        this.item.ssvConfig = await ControlService.readSSVNetworkConfig(
+          this.item.config.serviceID
+        );
       }
       if (this.item.service === "SSVDKGService") {
-        this.item.ssvDkgConfig = await ControlService.readSSVDKGConfig(this.item.config.serviceID);
+        this.item.ssvDkgConfig = await ControlService.readSSVDKGConfig(
+          this.item.config.serviceID
+        );
       }
       if (this.item.service === "PrometheusService") {
-        this.item.prometheusConfig = await ControlService.readPrometheusConfig(this.item.config.serviceID);
+        this.item.prometheusConfig = await ControlService.readPrometheusConfig(
+          this.item.config.serviceID
+        );
         this.prometheusConfig = this.item.prometheusConfig;
       }
       this.item.expertOptions = this.item.expertOptions.map((option) => {
@@ -388,7 +508,10 @@ export default {
               if (this.item.yaml.includes(command)) {
                 let match = this.item.yaml.match(new RegExp(`${command}[:=]?([\\S*]*)`));
                 option.changeValue = match ? match[match.length - 1] : "";
-              } else if (this.item.service === "TekuValidatorService" && command == "--gas-limit") {
+              } else if (
+                this.item.service === "TekuValidatorService" &&
+                command == "--gas-limit"
+              ) {
                 if (tekuGasLimit != null) {
                   tekuGasLimit = tekuGasLimit.replace(/"/g, "");
                 }
@@ -403,7 +526,9 @@ export default {
           case "toggle": {
             option.commands.forEach((command) => {
               if (this.item.yaml.includes(command)) {
-                let match = this.item.yaml.match(new RegExp(`${command}([=]?)([\\S*]+)?`));
+                let match = this.item.yaml.match(
+                  new RegExp(`${command}([=]?)([\\S*]+)?`)
+                );
                 if (match[1] == "=") {
                   option.changeValue = match[2] === "true" ? true : false;
                 } else {
@@ -425,7 +550,10 @@ export default {
     },
 
     async writeService() {
-      this.item.yaml = this.item.yaml.replace(new RegExp("(autoupdate: )(.*)(\\n)"), "$1" + this.checkAutoUpdate() + "$3");
+      this.item.yaml = this.item.yaml.replace(
+        new RegExp("(autoupdate: )(.*)(\\n)"),
+        "$1" + this.checkAutoUpdate() + "$3"
+      );
 
       this.item.expertOptions.forEach((option) => {
         if (option.changed) {
@@ -433,7 +561,10 @@ export default {
             case "select": {
               option.commands.forEach((command) => {
                 if (option.changeValue && this.item.yaml.includes(command)) {
-                  this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern[0]), `$1${option.changeValue}$3`);
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(option.pattern[0]),
+                    `$1${option.changeValue}$3`
+                  );
                 }
               });
               break;
@@ -442,23 +573,39 @@ export default {
             case "toggle": {
               option.commands.forEach((command) => {
                 if (this.item.yaml.includes(command)) {
-                  let match = this.item.yaml.match(new RegExp(`${command}([=]?)([\\S*]+)?`));
+                  let match = this.item.yaml.match(
+                    new RegExp(`${command}([=]?)([\\S*]+)?`)
+                  );
                   if (match[1] == "=") {
-                    this.item.yaml = this.item.yaml.replace(new RegExp(match[0]), command + "=" + (option.changeValue ? "true" : "false"));
+                    this.item.yaml = this.item.yaml.replace(
+                      new RegExp(match[0]),
+                      command + "=" + (option.changeValue ? "true" : "false")
+                    );
                   } else {
                     if (option.changeValue == false) {
-                      this.item.yaml = this.item.yaml.replace(new RegExp(`\n.*${command}.*`), "");
+                      this.item.yaml = this.item.yaml.replace(
+                        new RegExp(`\n.*${command}.*`),
+                        ""
+                      );
                     }
                   }
-                } else if (option.changeValue == true && !this.item.yaml.includes(command)) {
+                } else if (
+                  option.changeValue == true &&
+                  !this.item.yaml.includes(command)
+                ) {
                   const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
                   const lastCommand = matchAllCommands[matchAllCommands.length - 1];
-                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
+                  const matchSpaces = this.item.yaml.match(
+                    new RegExp(`(\\s*- )${lastCommand}`)
+                  );
                   let spaces = " ";
                   if (matchSpaces) {
                     spaces = matchSpaces[1];
                   }
-                  this.item.yaml = this.item.yaml.replace(new RegExp(`${lastCommand}`), lastCommand + spaces + command);
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`${lastCommand}`),
+                    lastCommand + spaces + command
+                  );
                 }
               });
               break;
@@ -468,10 +615,14 @@ export default {
               option.commands.forEach((command) => {
                 if (option.changeValue && this.item.yaml.includes(command)) {
                   if (option.needsPortForwarding) {
-                    const matchCurrentValue = this.item.yaml.match(new RegExp(`${command}([=]?)([\\S*]*)`));
+                    const matchCurrentValue = this.item.yaml.match(
+                      new RegExp(`${command}([=]?)([\\S*]*)`)
+                    );
                     const currentValue = matchCurrentValue[2];
                     const matchPortForwardings = this.item.yaml.match(
-                      new RegExp(/ports:([\s]*- \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}:\d{1,5}(\/[tcpudp]*)?)*/gm)
+                      new RegExp(
+                        /ports:([\s]*- \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}:\d{1,5}(\/[tcpudp]*)?)*/gm
+                      )
                     );
                     let portForwardings = matchPortForwardings[0].split("\n");
                     portForwardings.shift();
@@ -480,7 +631,9 @@ export default {
                         new RegExp(`:\\d{1,5}:${currentValue}(\\/[tcpudp]*)?`).test(pf)
                       );
                       const allreadyExists = portForwardings.filter((pf) =>
-                        new RegExp(`:\\d{1,5}:${option.changeValue}(\\/[tcpudp]*)?`).test(pf)
+                        new RegExp(`:\\d{1,5}:${option.changeValue}(\\/[tcpudp]*)?`).test(
+                          pf
+                        )
                       );
                       if (existingPortForwarding) {
                         const portObj = this.getPortObject(existingPortForwarding);
@@ -491,7 +644,9 @@ export default {
                             option.changeValue +
                             ":" +
                             option.changeValue +
-                            (portObj.servicePortProtocol ? "/" + portObj.servicePortProtocol : "")
+                            (portObj.servicePortProtocol
+                              ? "/" + portObj.servicePortProtocol
+                              : "")
                         );
                       } else if (allreadyExists.length === 0) {
                         const firstPortForwarding = portForwardings[0];
@@ -512,12 +667,17 @@ export default {
                   if (!/^["'`].*["'`]$/.test(option.changeValue) && option.isENV) {
                     option.changeValue = `"${option.changeValue}"`;
                   }
-                  this.item.yaml = this.item.yaml.replace(new RegExp(`${command}([=]?)([\\S*]*)`), `${command}$1${option.changeValue}`);
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`${command}([=]?)([\\S*]*)`),
+                    `${command}$1${option.changeValue}`
+                  );
                 } else if (option.changeValue && !this.item.yaml.includes(command)) {
                   let matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
                   if (matchAllCommands) {
                     const lastCommand = matchAllCommands[matchAllCommands.length - 1];
-                    const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
+                    const matchSpaces = this.item.yaml.match(
+                      new RegExp(`(\\s*- )${lastCommand}`)
+                    );
                     let spaces = " ";
                     if (matchSpaces) {
                       spaces = matchSpaces[1];
@@ -525,7 +685,9 @@ export default {
 
                     this.item.yaml = this.item.yaml.replace(
                       new RegExp(`${lastCommand}`),
-                      `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${option.changeValue}`
+                      `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${
+                        option.changeValue
+                      }`
                     );
                   } else {
                     const matchENV = this.item.yaml.match(/env:([\s]+)/);
@@ -535,7 +697,10 @@ export default {
                     );
                   }
                 } else if (!option.changeValue && this.item.yaml.includes(command)) {
-                  this.item.yaml = this.item.yaml.replace(new RegExp(`\n.*${command}.*`), "");
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`\n.*${command}.*`),
+                    ""
+                  );
                 }
               });
               break;
@@ -555,7 +720,10 @@ export default {
           serviceID: this.item.config.serviceID,
           config: this.item.ssvDkgConfig,
         });
-      if (this.item.service === "PrometheusService" && this.item.prometheusConfig != this.prometheusConfig) {
+      if (
+        this.item.service === "PrometheusService" &&
+        this.item.prometheusConfig != this.prometheusConfig
+      ) {
         if (!this.item.yaml.includes("overwrite: false")) {
           this.item.yaml = this.item.yaml.trim() + "\noverwrite: false";
         }
@@ -574,14 +742,24 @@ export default {
           if (!this.item.yaml.includes("validators-proposer-config")) {
             this.item.yaml = this.item.yaml.replace(
               /^.*--gas-limit.*$/gm,
-              "  - --validators-proposer-config=" + this.item.config.volumes[0].servicePath + "/gas_config.json"
+              "  - --validators-proposer-config=" +
+                this.item.config.volumes[0].servicePath +
+                "/gas_config.json"
             );
           } else {
             this.item.yaml = this.item.yaml.replace(/\n^.*--gas-limit.*$/gm, "");
           }
-        } else if (!this.item.yaml.includes("--gas-limit") && this.item.yaml.includes("validators-proposer-config")) {
-          await ControlService.removeGasConfigFile(this.item.config.volumes[0].destinationPath);
-          this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*validators-proposer-config.*$/gm), "");
+        } else if (
+          !this.item.yaml.includes("--gas-limit") &&
+          this.item.yaml.includes("validators-proposer-config")
+        ) {
+          await ControlService.removeGasConfigFile(
+            this.item.config.volumes[0].destinationPath
+          );
+          this.item.yaml = this.item.yaml.replace(
+            new RegExp(/\n^.*validators-proposer-config.*$/gm),
+            ""
+          );
         }
       }
 
@@ -598,7 +776,8 @@ export default {
       const destinationIp = portSettings?.length >= 1 ? portSettings[0] : "";
       const destinationPort = portSettings?.length >= 2 ? portSettings[1] : "";
       const servicePort = servicePortSettings?.length >= 1 ? servicePortSettings[0] : "";
-      const servicePortProtocol = servicePortSettings?.length >= 2 ? servicePortSettings[1] : "";
+      const servicePortProtocol =
+        servicePortSettings?.length >= 2 ? servicePortSettings[1] : "";
 
       return { destinationIp, destinationPort, servicePort, servicePortProtocol };
     },
