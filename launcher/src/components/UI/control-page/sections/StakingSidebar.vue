@@ -31,7 +31,8 @@
     <WidgetCard
       v-if="controlStore.pickeedService === 'exeCons'"
       class="peer-over-time-widget col-start-7 col-span-12 row-start-13 row-span-3"
-    ></WidgetCard>
+      ><PeersOverTime
+    /></WidgetCard>
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import EndpointWidget from "../components/widgets/EndpointWidget.vue";
 import PeerToPeer from "../components/widgets/PeerToPeer.vue";
 import NewPeerToPeer from "../components/widgets/NewPeerToPeer.vue";
 import SyncStatus from "../components/widgets/SyncStatus.vue";
+import PeersOverTime from "../components/widgets/PeersOverTime.vue";
 
 import { useControlStore } from "@/store/theControl";
 
