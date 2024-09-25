@@ -103,7 +103,38 @@
         </svg>
       </div>
     </div>
-    <div v-else class="h-1/2 w-full flex justify-center items-center"></div>
+    <div v-else class="h-1/2 w-full flex justify-center items-center">
+      <div class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer">
+        <svg
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="h-3 w-3 text-white self-center col-span-1 transform transition-transform duration-200 ease-in-out rotate-90"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div class="pairs-info w-4/5 h-full flex justify-center items-center">
+        <div class="exec-info w-1/2 h-full flex justify-center items-center flex-col">
+          <div class="exec-name w-full h-1/2 flex justify-center items-center text-2xs text-gray-200 font-semibold">Lorem.</div>
+          <div class="exec-id w-full h-1/2 flex justify-center items-center text-[40%] text-gray-200">Lorem ipsum dolor sit.</div>
+        </div>
+        <div class="cons-info w-1/2 h-full flex justify-center items-center flex-col">
+          <div class="cons-name w-full h-1/2 flex justify-center items-center text-2xs text-gray-200 font-semibold">Lorem.</div>
+          <div class="cons-id w-full h-1/2 flex justify-center items-center text-[40%] text-gray-200">Lorem ipsum dolor sit.</div>
+        </div>
+      </div>
+      <div class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer">
+        <svg
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          class="h-3 w-3 text-white self-center col-span-1 transform transition-transform duration-200 ease-in-out rotate-[270deg]"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+    </div>
   </div>
 </template>
 
