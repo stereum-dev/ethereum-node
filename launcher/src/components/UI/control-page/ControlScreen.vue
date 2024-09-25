@@ -10,15 +10,17 @@
 </template>
 
 <script setup>
+import { useSetups } from "@/store/setups";
+import { useFooter } from "@/store/theFooter";
+import { useServices } from "@/store/services";
+
+import { watch, computed } from "vue";
+
 import ControlHeader from "./sections/ControlHeader.vue";
 import CommonSidebar from "./sections/CommonSidebar.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import StakingSidebar from "./sections/StakingSidebar.vue";
-import { watch, computed } from "vue";
-
-import { useSetups } from "@/store/setups";
-import { useFooter } from "@/store/theFooter";
-import { useServices } from "@/store/services";
+import EndpointWidget from "./components/widgets/EndpointWidget.vue";
 
 const setupStore = useSetups();
 const footerStore = useFooter();

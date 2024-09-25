@@ -7,10 +7,9 @@
       <AmsterdamComponent v-if="controlStore.pickeedService === 'exeCons'" />
       <TheStaking v-else />
     </WidgetCard>
-    <WidgetCard
-      v-if="controlStore.pickeedService === 'exeCons'"
-      class="endpoint-widget col-start-1 col-span-6 row-start-7 row-span-3"
-    ></WidgetCard>
+    <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="endpoint-widget col-start-1 col-span-6 row-start-7 row-span-3"
+      ><EndpointWidget
+    /></WidgetCard>
     <WidgetCard
       v-if="controlStore.pickeedService === 'exeCons'"
       class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3"
@@ -44,6 +43,7 @@ import WidgetCard from "../components/cards/WidgetCard.vue";
 import SelectServiceWidget from "../components/widgets/SelectServiceWidget.vue";
 import AmsterdamComponent from "../components/widgets/AmsterdamComponent.vue";
 import TheStaking from "../components/widgets/TheStaking.vue";
+import EndpointWidget from "../components/widgets/EndpointWidget.vue";
 
 import { useControlStore } from "@/store/theControl";
 
