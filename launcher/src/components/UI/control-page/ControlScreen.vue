@@ -1,8 +1,6 @@
 <template>
   <base-layout>
-    <div
-      class="Control-screen w-full h-full grid grid-cols-24 grid-rows-12 items-center bg-[#242529]"
-    >
+    <div class="Control-screen w-full h-full grid grid-cols-24 grid-rows-12 items-center bg-[#242529]">
       <ControlHeader />
       <CommonSidebar />
       <AlertSection />
@@ -38,13 +36,10 @@ const selecteConfigServices = computed(() => {
   let test = [];
   const selectedSetup = setupStore.selectedSetup;
   if (selectedSetup && selectedSetup.services) {
-    const selectedServiceIds = selectedSetup.services.map(
-      (service) => service.config.serviceID
-    );
+    const selectedServiceIds = selectedSetup.services.map((service) => service.config.serviceID);
     serviceStore.installedServices.forEach((service) => {
       if (
-        (["execution", "validator", "consensus"].includes(service.category) &&
-          selectedServiceIds.includes(service.config.serviceID)) ||
+        (["execution", "validator", "consensus"].includes(service.category) && selectedServiceIds.includes(service.config.serviceID)) ||
         service.category === "service"
       ) {
         test.push({
@@ -59,12 +54,8 @@ const selecteConfigServices = computed(() => {
 
 const missingServices = computed(() => {
   const selectedServices = selecteConfigServices.value;
-  const hasValidator = selectedServices.some(
-    (service) => service.category === "validator"
-  );
-  const hasConsensus = selectedServices.some(
-    (service) => service.category === "consensus"
-  );
+  const hasValidator = selectedServices.some((service) => service.category === "validator");
+  const hasConsensus = selectedServices.some((service) => service.category === "consensus");
 
   let missing = [];
   if (!hasValidator) missing.push("validator");
@@ -81,13 +72,8 @@ watch(
   { immediate: true }
 );
 const isAnyConsensusRunning = computed(() => {
-  const consensusServices = selecteConfigServices.value.filter(
-    (service) => service.category === "consensus"
-  );
-  return (
-    consensusServices.length > 0 &&
-    consensusServices.some((service) => service.state === "running")
-  );
+  const consensusServices = selecteConfigServices.value.filter((service) => service.category === "consensus");
+  return consensusServices.length > 0 && consensusServices.some((service) => service.state === "running");
 });
 
 watch(
@@ -99,9 +85,7 @@ watch(
 );
 
 const isPrometheusOff = computed(() => {
-  const prometheusService = selecteConfigServices.value.find(
-    (service) => service.name === "Prometheus"
-  );
+  const prometheusService = selecteConfigServices.value.find((service) => service.name === "Prometheus");
   return prometheusService?.state === "running" ? false : true;
 });
 
