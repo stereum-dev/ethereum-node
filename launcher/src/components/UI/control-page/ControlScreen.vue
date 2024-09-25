@@ -20,7 +20,6 @@ import ControlHeader from "./sections/ControlHeader.vue";
 import CommonSidebar from "./sections/CommonSidebar.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import StakingSidebar from "./sections/StakingSidebar.vue";
-import EndpointWidget from "./components/widgets/EndpointWidget.vue";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
