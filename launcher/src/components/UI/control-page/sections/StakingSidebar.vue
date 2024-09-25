@@ -10,18 +10,16 @@
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="endpoint-widget col-start-1 col-span-6 row-start-7 row-span-3"
       ><EndpointWidget
     /></WidgetCard>
-    <WidgetCard
-      v-if="controlStore.pickeedService === 'exeCons'"
-      class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3"
-    ></WidgetCard>
+    <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3"
+      ><NewPeerToPeer
+    /></WidgetCard>
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="p2p-widget col-start-1 col-span-6 row-start-13 row-span-3"
       ><PeerToPeer
     /></WidgetCard>
     <WidgetCard class="connected-validator-widget col-start-7 col-span-12 row-start-1 row-span-3"></WidgetCard>
-    <WidgetCard
-      v-if="controlStore.pickeedService === 'exeCons'"
-      class="sync-status-widget col-start-7 col-span-12 row-start-4 row-span-3"
-    ></WidgetCard>
+    <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="sync-status-widget col-start-7 col-span-12 row-start-4 row-span-3">
+      <SyncStatus
+    /></WidgetCard>
     <WidgetCard
       v-if="controlStore.pickeedService === 'exeCons'"
       class="epoch-slot-widget col-start-7 col-span-12 row-start-7 row-span-3"
@@ -44,6 +42,8 @@ import AmsterdamComponent from "../components/widgets/AmsterdamComponent.vue";
 import TheStaking from "../components/widgets/TheStaking.vue";
 import EndpointWidget from "../components/widgets/EndpointWidget.vue";
 import PeerToPeer from "../components/widgets/PeerToPeer.vue";
+import NewPeerToPeer from "../components/widgets/NewPeerToPeer.vue";
+import SyncStatus from "../components/widgets/SyncStatus.vue";
 
 import { useControlStore } from "@/store/theControl";
 
