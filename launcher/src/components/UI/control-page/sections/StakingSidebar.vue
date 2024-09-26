@@ -11,7 +11,7 @@
       ><EndpointWidget
     /></WidgetCard>
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3"
-      ><NewPeerToPeer
+      ><SubscribedSubnets
     /></WidgetCard>
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="p2p-widget col-start-1 col-span-6 row-start-13 row-span-3"
       ><PeerToPeer
@@ -43,9 +43,10 @@ import AmsterdamComponent from "../components/widgets/AmsterdamComponent.vue";
 import TheStaking from "../components/widgets/TheStaking.vue";
 import EndpointWidget from "../components/widgets/EndpointWidget.vue";
 import PeerToPeer from "../components/widgets/PeerToPeer.vue";
-import NewPeerToPeer from "../components/widgets/NewPeerToPeer.vue";
+// import NewPeerToPeer from "../components/widgets/NewPeerToPeer.vue";
 import SyncStatus from "../components/widgets/SyncStatus.vue";
 import PeersOverTime from "../components/widgets/PeersOverTime.vue";
+import SubscribedSubnets from "../components/widgets/SubscribedSubnets.vue";
 
 import { useControlStore } from "@/store/theControl";
 
