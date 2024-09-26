@@ -11,7 +11,7 @@
       ><EndpointWidget
     /></WidgetCard>
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3"
-      ><SubscribedSubnets
+      ><PeersOverTime
     /></WidgetCard>
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="p2p-widget col-start-1 col-span-6 row-start-13 row-span-3"
       ><PeerToPeer
@@ -27,11 +27,7 @@
     <WidgetCard
       v-if="controlStore.pickeedService === 'exeCons'"
       class="subscribed-subnet-widget col-start-7 col-span-12 row-start-10 row-span-3"
-    ></WidgetCard>
-    <WidgetCard
-      v-if="controlStore.pickeedService === 'exeCons'"
-      class="peer-over-time-widget col-start-7 col-span-12 row-start-13 row-span-3"
-      ><PeersOverTime
+      ><SubscribedSubnets
     /></WidgetCard>
   </div>
 </template>

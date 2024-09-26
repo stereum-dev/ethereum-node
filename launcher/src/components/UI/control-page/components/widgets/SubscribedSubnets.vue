@@ -99,7 +99,7 @@ export default defineComponent({
           padding: {
             top: -20,
             right: 0,
-            bottom: -20,
+            bottom: 0,
             left: 0,
           },
         },
