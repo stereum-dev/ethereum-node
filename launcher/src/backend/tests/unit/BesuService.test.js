@@ -22,37 +22,23 @@ test("buildByUserInput", () => {
 });
 
 test("buildExecutionClientHttpEndpointUrl", () => {
-  const besuHttpEndpoint = BesuService.buildByUserInput(
-    "goerli",
-    [],
-    "/opt/stereum/besu"
-  ).buildExecutionClientHttpEndpointUrl();
+  const besuHttpEndpoint = BesuService.buildByUserInput("goerli", [], "/opt/stereum/besu").buildExecutionClientHttpEndpointUrl();
   expect(besuHttpEndpoint).toMatch(/http:\/\/stereum-.{36}:8545/);
 });
 
 test("buildExecutionClientWsEndpointUrl", () => {
-  const besuWsEndpoint = BesuService.buildByUserInput(
-    "goerli",
-    [],
-    "/opt/stereum/besu"
-  ).buildExecutionClientWsEndpointUrl();
+  const besuWsEndpoint = BesuService.buildByUserInput("goerli", [], "/opt/stereum/besu").buildExecutionClientWsEndpointUrl();
   expect(besuWsEndpoint).toMatch(/ws:\/\/stereum-.{36}:8546/);
 });
 
 test("buildExecutionClientMetricsEndpoint", () => {
-  const besuMetricsEndpoint = BesuService.buildByUserInput(
-    "goerli",
-    [],
-    "/opt/stereum/besu"
-  ).buildExecutionClientMetricsEndpoint();
+  const besuMetricsEndpoint = BesuService.buildByUserInput("goerli", [], "/opt/stereum/besu").buildExecutionClientMetricsEndpoint();
   expect(besuMetricsEndpoint).toMatch(/stereum-.{36}:9545/);
 });
 
 test("buildPrometheusJob", () => {
   const besuPrometheusJob = BesuService.buildByUserInput("goerli", [], "/opt/stereum/besu").buildPrometheusJob();
-  expect(besuPrometheusJob).toMatch(
-    /\n {2}- job_name: stereum-.{36}\n {4}static_configs:\n {6}- targets: \[stereum-.{36}:9545]/
-  );
+  expect(besuPrometheusJob).toMatch(/\n {2}- job_name: stereum-.{36}\n {4}static_configs:\n {6}- targets: \[stereum-.{36}:9545]/);
 });
 
 test("buildByConfiguration", () => {

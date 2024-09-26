@@ -19,10 +19,7 @@ export class TekuValidatorService extends NodeService {
     const dataDir = "/opt/app/data";
     const graffitiDir = "/opt/app/graffitis";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/graffitis", graffitiDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/graffitis", graffitiDir)];
 
     service.init(
       "TekuValidatorService", // service
@@ -65,8 +62,9 @@ export class TekuValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
-    if (consensusClients.some(c => c.service === "CharonService")) {
-      service.command[service.command.findIndex(c => c === "--doppelganger-detection-enabled=true")] = "--doppelganger-detection-enabled=false"
+    if (consensusClients.some((c) => c.service === "CharonService")) {
+      service.command[service.command.findIndex((c) => c === "--doppelganger-detection-enabled=true")] =
+        "--doppelganger-detection-enabled=false";
     }
 
     return service;

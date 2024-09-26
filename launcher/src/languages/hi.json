@@ -499,7 +499,8 @@
     "sync": "सिंक्रनाइज़ेशन त्रुटि",
     "taskFail": "कार्य विफल",
     "stats": "स्थिति: खुला",
-    "clientService": "क्लाइंट / सेवा"
+    "clientService": "क्लाइंट / सेवा",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "आपका क्लाइंट ब्लॉकचेन डेटा आपके सर्वर पर स्टोर करता है ताकि आपका नोड नेटवर्क की सेवा कर सके। यह आपके नोड को अपने स्टेकिंग कर्तव्य में उठाने के लिए आवश्यक है। इस विकल्प का उपयोग करके आप अपने क्लाइंट के वर्तमान ब्लॉकचेन डेटा को हटा रहे हैं और अपने नोड को नए सिरे से सिंक्रनाइज़ करने के लिए चयनित विकल्प का उपयोग करेंगे।",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

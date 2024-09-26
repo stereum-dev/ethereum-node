@@ -499,7 +499,8 @@
     "sync": "خطأ في التزامن",
     "taskFail": "فشل المهمة",
     "stats": "الحالة: مفتوح",
-    "clientService": "العميل / الخدمة"
+    "clientService": "العميل / الخدمة",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "يخزن عميلك بيانات البلوكشين على خادمك حتى تتمكن عقدتك من خدمة الشبكة. هذا ضروري لعقدتك لبدء واجب الشهادة في التخزين. باستخدام هذا الخيار، أنت تحذف بيانات البلوكشين الحالية لعملائك وتستخدم الخيار المحدد كمصدر لمزامنة عقدتك من جديد.",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

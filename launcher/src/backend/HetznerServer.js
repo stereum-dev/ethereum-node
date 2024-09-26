@@ -1,4 +1,6 @@
-const { utils: { generateKeyPairSync } } = require('ssh2');
+const {
+  utils: { generateKeyPairSync },
+} = require("ssh2");
 const log = require("electron-log");
 const https = require("https");
 
@@ -9,26 +11,29 @@ export class HetznerServer {
     this.serverName = null;
     this.serverIPv4 = null;
     this.serverRootPassword = null;
-    this.sshKeyPair = generateKeyPairSync("ed25519")
+    this.sshKeyPair = generateKeyPairSync("ed25519");
     this.sshKeyName = null;
   }
 
   async Sleep(ms) {
-    let interval
-    await new Promise((resolve) => { interval = setTimeout(resolve, ms) });
+    let interval;
+    await new Promise((resolve) => {
+      interval = setTimeout(resolve, ms);
+    });
     clearInterval(interval);
   }
 
   async checkServerConnection(nodeConnection) {
     let tries = 0;
-    let connected = false
+    let connected = false;
     while (!connected && tries < 300) {
       try {
-        tries++
-        log.info(`Trying to connect (${tries})`)
-        connected = await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 5000)
+        await this.Sleep(2000);
+        tries++;
+        log.info(`Trying to connect (${tries})`);
+        connected = await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 5000);
       } catch (err) {
-        log.info(err)
+        log.info(err);
       }
     }
   }
@@ -71,16 +76,16 @@ export class HetznerServer {
           data += d;
         });
         res.on("end", () => {
-          log.debug(`${options.method} ${options.path} ${res.statusCode} ${res.statusMessage}`)
+          log.debug(`${options.method} ${options.path} ${res.statusCode} ${res.statusMessage}`);
           if (res.statusCode >= 300) {
-            log.error(data)
+            log.error(data);
           }
           resolve(data);
         });
       });
 
       req.on("error", (err) => {
-        log.info(`${method} ${path} ${query} ${body}`)
+        log.info(`${method} ${path} ${query} ${body}`);
         log.error(err);
         reject(err);
       });
@@ -137,7 +142,7 @@ export class HetznerServer {
    * Destroys Server via API call
    */
   async destroy() {
-    log.info("Destroying Server with ID " + this.serverID + " ...")
+    log.info("Destroying Server with ID " + this.serverID + " ...");
 
     await this.makeRequest("DELETE", `/v1/servers/${this.serverID}`);
 
@@ -177,7 +182,7 @@ export class HetznerServer {
       ip: ip,
       network: networkID,
     };
-    await this.makeRequest("POST", `/v1/servers/${this.serverID}/actions/attach_to_network`, "", JSON.stringify(settings))
+    await this.makeRequest("POST", `/v1/servers/${this.serverID}/actions/attach_to_network`, "", JSON.stringify(settings));
   }
 
   async getSSHKeyByName(name) {
@@ -203,16 +208,18 @@ export class HetznerServer {
     const existing = response.ssh_keys.find((key) => key.name === name);
     if (existing && existing.id) {
       await this.deleteSSHKey(existing.id);
-      log.debug("deleted existing ssh key with name " + name + " and id " + existing.id)
+      log.debug("deleted existing ssh key with name " + name + " and id " + existing.id);
     }
-    return JSON.parse(await this.makeRequest("POST", "/v1/ssh_keys", "", JSON.stringify({ name: name, public_key: this.sshKeyPair.public })));
+    return JSON.parse(
+      await this.makeRequest("POST", "/v1/ssh_keys", "", JSON.stringify({ name: name, public_key: this.sshKeyPair.public }))
+    );
   }
 
   async finishTestGracefully(nodeConnection) {
-    clearInterval(nodeConnection.sshService.checkPoolPolling)
-    await this.Sleep(10000)
+    clearInterval(nodeConnection.sshService.checkPoolPolling);
+    await this.Sleep(10000);
     await nodeConnection.sshService.disconnect();
-    await this.deleteSSHKey()
+    await this.deleteSSHKey();
     await this.destroy();
   }
 }

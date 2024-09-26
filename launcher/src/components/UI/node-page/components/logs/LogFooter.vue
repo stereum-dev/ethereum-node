@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full h-full col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 bg-[#2d3035] border-t border-gray-500 p-1"
-  >
+  <div class="w-full h-full col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 bg-[#2d3035] border-t border-gray-500 p-1">
     <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center space-x-2">
       <span class="text-sm text-gray-400 font-semibold">{{ $t("pluginLogs.serviceId") }}</span>
       <span class="text-amber-200 text-sm font-semibold">
@@ -35,12 +33,7 @@
           >
             line
           </div>
-          <label
-            v-if="isExportCustomizedDate"
-            for="kind-of-customize "
-            class="text-gray-100 font-light text-xs uppercase mr-2"
-            >from</label
-          >
+          <label v-if="isExportCustomizedDate" for="kind-of-customize " class="text-gray-100 font-light text-xs uppercase mr-2">from</label>
           <input
             v-if="isExportCustomizedDate"
             v-model="sinceDate"
@@ -48,12 +41,7 @@
             class="kind-of-customize w-40 h-4/5 rounded-md flex justify-center items-center text-xs uppercase font-semibold mr-2"
             placeholder="since"
           />
-          <label
-            v-if="isExportCustomizedDate"
-            for="kind-of-customize "
-            class="text-gray-100 font-light text-xs uppercase mr-2"
-            >to</label
-          >
+          <label v-if="isExportCustomizedDate" for="kind-of-customize " class="text-gray-100 font-light text-xs uppercase mr-2">to</label>
           <input
             v-if="isExportCustomizedDate"
             v-model="untilDate"
@@ -81,10 +69,7 @@
         />
       </div>
       <div class="w-full h-full col-start-6 col-end-7 flex items-center cursor-pointer relative">
-        <div
-          v-if="isAllHovered"
-          class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md"
-        >
+        <div v-if="isAllHovered" class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md">
           <span class="text-xs text-gray-200 font-semibold">{{ $t("pluginLogs.exportAll") }}</span>
         </div>
 
@@ -100,10 +85,7 @@
         />
       </div>
       <div class="w-full h-full col-start-7 col-end-8 flex items-center cursor-pointer relative">
-        <div
-          v-if="is150Hovered"
-          class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md"
-        >
+        <div v-if="is150Hovered" class="absolute -top-8 flex justify-center items-center w-32 h-8 px-2 bg-black rounded-md">
           <span class="text-xs text-gray-200 font-semibold">{{ $t("pluginLogs.export150") }}</span>
         </div>
         <img
@@ -121,10 +103,7 @@
     <div
       class="w-full h-full col-start-8 col-span-full flex justify-center items-center border border-gray-400 rounded-md bg-gray-200 relative"
     >
-      <div
-        v-if="!isExportCustomizedLines"
-        class="w-8 flex justify-evenly items-center px-1 relative bg-gray-200 rounded-sm"
-      >
+      <div v-if="!isExportCustomizedLines" class="w-8 flex justify-evenly items-center px-1 relative bg-gray-200 rounded-sm">
         <svg
           aria-hidden="true"
           class="w-5 h-5 text-gray-500 dark:text-gray-400"
@@ -181,9 +160,7 @@ const sinceDate = ref(null);
 const untilDate = ref(null);
 
 const loadingIconsClass = computed(() => {
-  return nodeStore.isLogLoading
-    ? "/img/icon/loading-icons/loading-circle.png"
-    : "/img/icon/service-log-icons/all-log-export-button.png";
+  return nodeStore.isLogLoading ? "/img/icon/loading-icons/loading-circle.png" : "/img/icon/service-log-icons/all-log-export-button.png";
 });
 
 const loadingIconsClassCustomized = computed(() => {

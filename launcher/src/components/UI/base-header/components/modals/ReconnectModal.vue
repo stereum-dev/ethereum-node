@@ -19,9 +19,7 @@
         class="w-full h-full col-start-1 col-span-full row-start-2 row-span-5 flex flex-col justify-evenly items-center"
       >
         <img v-if="reconnecting" class="w-52" src="/animation/reconnect/stereum_connected.gif" />
-        <span class="text-md text-gray-200 font-semibold uppercase">{{
-          $t("reconnectModal.reconnectingMessage")
-        }}</span>
+        <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("reconnectModal.reconnectingMessage") }}</span>
       </div>
       <div class="w-full h-full col-start-1 col-span-full row-start-7 row-span-full grid grid-cols-5 items-center">
         <div

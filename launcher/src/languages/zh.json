@@ -499,7 +499,8 @@
     "sync": "同步错误",
     "taskFail": "任务失败",
     "stats": "状态：开启",
-    "clientService": "客户端/服务"
+    "clientService": "客户端/服务",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "您的客户端将把区块链数据存储在您的服务器上，以便您的节点可以为网络提供服务。这对于您的节点在质押中提高其证明工作是必要的。使用此选项删除您的客户端数据，并使用所选源同步您的节点。",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

@@ -499,7 +499,8 @@
     "sync": "Грешка у синхронизацији",
     "taskFail": "Задатак није успео",
     "stats": "СТАТУС: ОТВОРЕН",
-    "clientService": "КЛИЈЕНТ / УСЛУГА"
+    "clientService": "КЛИЈЕНТ / УСЛУГА",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "ВАШ КЛИЈЕНТ чува податке о блокчејну НА ВАШЕМ СЕРВЕРУ тако да ваш чвор може служити мрежи. ово је потребно за ваш чвор ДА ПРЕУЗМЕ своју ДУЖНОСТ ПОТВРДЕ у СТЕЈКИНГУ. КОРИШЋЕЊЕМ ОВЕ ОПЦИЈЕ БРИШЕТЕ ТРЕНУТНЕ ПОДАТКЕ О БЛОКЧЕЈНУ ВАШЕГ КЛИЈЕНТА & КОРИСТИТЕ ИЗАБРАНУ ОПЦИЈУ КАО ИЗВОР ЗА ПОНОВНУ СИНХРОНИЗАЦИЈУ ВАШЕГ ЧВОРА.",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

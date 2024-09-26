@@ -1,9 +1,6 @@
 <template>
   <div class="col-start-6 col-end-20 row-start-11 row-end-12 w-full h-full">
-    <div
-      v-if="active"
-      class="bg-[#1E2429] rounded-full flex justify-evenly items-center p-2 text-gray-300 font-normal text-md"
-    >
+    <div v-if="active" class="bg-[#1E2429] rounded-full flex justify-evenly items-center p-2 text-gray-300 font-normal text-md">
       {{ t("installitionMenu.osCheck") }}
       <svg
         class="animate-spin h-5 w-5 mr-3 border-2 border-gray-200 border-r-2 border-r-transparent rounded-full"
@@ -11,10 +8,7 @@
       ></svg>
     </div>
 
-    <div
-      v-if="!active"
-      class="bg-[#1E2429] rounded-full flex justify-center items-center p-2 text-gray-300 font-normal text-md"
-    >
+    <div v-if="!active" class="bg-[#1E2429] rounded-full flex justify-center items-center p-2 text-gray-300 font-normal text-md">
       <img v-if="isSupported" src="/img/icon/welcome-page-icons/like.png" alt="icon" class="w-5 h-5 mr-2" />
       <img v-else src="/img/icon/welcome-page-icons/dislike.png" alt="icon" class="w-5 h-5 mr-2" />
       <span :class="{ 'text-gray-300': isSupported, 'text-red-500': !isSupported }" class="font-semibold text-md">

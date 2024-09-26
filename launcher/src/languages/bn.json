@@ -499,7 +499,8 @@
     "sync": "সিঙ্ক্রোনাইজেশন ত্রুটি",
     "taskFail": "কাজ ব্যর্থ হয়েছে",
     "stats": "অবস্থা: খোলা",
-    "clientService": "ক্লায়েন্ট / সেবা"
+    "clientService": "ক্লায়েন্ট / সেবা",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "আপনার ক্লায়েন্ট আপনার সার্ভারে ব্লকচেইন ডেটা সংরক্ষণ করে যাতে আপনার নোড নেটওয়ার্কে সেবা দিতে পারে। এটি আপনার নোডকে স্টেকিং-এ তার প্রমাণীকরণ কর্তব্য গ্রহণ করতে আবশ্যক। এই অপশনটি ব্যবহার করে আপনি আপনার ক্লায়েন্টের বর্তমান ব্লকচেইন ডেটা মুছে ফেলছেন এবং আপনার নোডকে নতুন করে সিঙ্ক্রোনাইজ করার জন্য নির্বাচিত উৎস হিসেবে ব্যবহার করছেন।",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

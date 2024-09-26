@@ -35,6 +35,7 @@ export const useServers = defineStore("servers", {
       isRemoveModalActive: false,
       isRemoveProcessing: false,
       selectedAvatar: null,
+      updateHandlerModal: true,
 
       avatars: [
         { id: 1, img: "/avatar/server_selection_1.png" },
@@ -123,6 +124,9 @@ export const useServers = defineStore("servers", {
         { name: "2fa", icon: "/img/icon/server-management-icons/2fa.png", isActive: false, isDisabled: false },
       ],
       selectedTab: null,
+
+      //OTP Handling
+      isOTPActive: false,
     };
   },
   actions: {

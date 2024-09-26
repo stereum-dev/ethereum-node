@@ -22,10 +22,7 @@
         >back up</span
       >
 
-      <div
-        :class="['SSVDKG-generator_btn', errorGenerate ? 'text-red-600' : 'text-gray-50', 'uppercase']"
-        @click="modalHandling"
-      >
+      <div :class="['SSVDKG-generator_btn', errorGenerate ? 'text-red-600' : 'text-gray-50', 'uppercase']" @click="modalHandling">
         {{ errorGenerate ? "return" : "complete" }}
       </div>
     </div>

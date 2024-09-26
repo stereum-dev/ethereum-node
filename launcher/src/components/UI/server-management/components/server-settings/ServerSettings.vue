@@ -2,9 +2,7 @@
   <div
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 space-y-2"
   >
-    <div
-      class="col-start-1 col-span-full row-start-1 row-span-2 border-b border-gray-700 p-1 grid grid-cols-12 grid-rows-2"
-    >
+    <div class="col-start-1 col-span-full row-start-1 row-span-2 border-b border-gray-700 p-1 grid grid-cols-12 grid-rows-2">
       <div class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-bold uppercase text-[#336666]">
         {{ t("serverSetting.nodeServerTtl") }}
       </div>
@@ -24,9 +22,7 @@
               class="bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"
               :class="{ 'translate-x-8': isAutoUpdateEnabled }"
             ></div>
-            <span class="text-xs text-white font-semibold uppercase" :class="onOff">{{
-              isAutoUpdateEnabled ? "ON" : "OFF"
-            }}</span>
+            <span class="text-xs text-white font-semibold uppercase" :class="onOff">{{ isAutoUpdateEnabled ? "ON" : "OFF" }}</span>
           </div>
         </label>
       </div>

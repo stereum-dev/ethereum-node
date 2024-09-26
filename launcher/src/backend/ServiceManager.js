@@ -307,14 +307,14 @@ export class ServiceManager {
     if (checkpointSyncIndex > -1) {
       command.splice(checkpointSyncIndex, 1);
     }
+    // remove genesisSync if used
+    if (genesisSyncCommands[client.service]) command = command.filter((c) => !c.includes(genesisSyncCommands[client.service]));
     //add checkpointSync if Url was send
-    if (checkpointUrl) {
+    if (checkpointUrl && checkpointCommands[client.service]) {
       command.push(checkpointCommands[client.service] + checkpointUrl);
-      if (genesisSyncCommands[client.service])
-        command = command.filter((c) => !c.includes(genesisSyncCommands[client.service]));
-    } else {
+    } else if (genesisSyncCommands[client.service]) {
       //add genesisSync if no Url was send
-      if (genesisSyncCommands[client.service]) command.push(genesisSyncCommands[client.service]);
+      command.push(genesisSyncCommands[client.service]);
     }
 
     if (isString) {
@@ -331,8 +331,7 @@ export class ServiceManager {
   getWorkindDir(service) {
     if (service.volumes.length > 0) {
       let volumeWithID = service.volumes.find((v) => v.destinationPath.includes(service.id));
-      if (volumeWithID && volumeWithID.destinationPath)
-        return volumeWithID.destinationPath.replace(new RegExp(`(?<=${service.id}).*`), "");
+      if (volumeWithID && volumeWithID.destinationPath) return volumeWithID.destinationPath.replace(new RegExp(`(?<=${service.id}).*`), "");
     }
     return undefined;
   }
@@ -351,28 +350,24 @@ export class ServiceManager {
     for (let task of tasks) {
       let ssvConfig;
       let service = services.find((s) => s.id === task.service.config.serviceID);
-      let dependencies = task.data.executionClients
-        .concat(task.data.consensusClients, task.data.otherServices)
-        .map((s) =>
-          services.find((e) => {
-            if (e.id === s.config.serviceID) {
-              return true;
-            } else if (
-              newInstallTasks &&
-              newInstallTasks.length > 0 &&
-              e.id === newInstallTasks.find((i) => i.service.id === s.id).service.config.serviceID
-            ) {
-              return true;
-            }
-            return false;
-          })
-        );
+      let dependencies = task.data.executionClients.concat(task.data.consensusClients, task.data.otherServices).map((s) =>
+        services.find((e) => {
+          if (e.id === s.config.serviceID) {
+            return true;
+          } else if (
+            newInstallTasks &&
+            newInstallTasks.length > 0 &&
+            e.id === newInstallTasks.find((i) => i.service.id === s.id).service.config.serviceID
+          ) {
+            return true;
+          }
+          return false;
+        })
+      );
 
       if (service.service === "FlashbotsMevBoostService") {
         modifiedServices.push(service);
-        let dependenciesToRemove = services.filter((s) =>
-          s.dependencies.mevboost.map((m) => m.id).includes(service.id)
-        );
+        let dependenciesToRemove = services.filter((s) => s.dependencies.mevboost.map((m) => m.id).includes(service.id));
         dependenciesToRemove.forEach((dependency) => {
           modifiedServices.push(this.removeDependencies(dependency, service));
         });
@@ -499,12 +494,8 @@ export class ServiceManager {
           },
         ];
         this.addENVConnction(service, dependencies, keyValuePairs);
-        service.dependencies.executionClients = dependencies.filter(
-          (d) => typeof d.buildExecutionClientHttpEndpointUrl === "function"
-        );
-        service.dependencies.consensusClients = dependencies.filter(
-          (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function"
-        );
+        service.dependencies.executionClients = dependencies.filter((d) => typeof d.buildExecutionClientHttpEndpointUrl === "function");
+        service.dependencies.consensusClients = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function");
         return service;
       case "KeysAPI":
         // create a new function to handle dependencies for env vars
@@ -521,12 +512,8 @@ export class ServiceManager {
           },
         ];
         this.addENVConnction(service, dependencies, keyValuePairs);
-        service.dependencies.executionClients = dependencies.filter(
-          (d) => typeof d.buildExecutionClientHttpEndpointUrl === "function"
-        );
-        service.dependencies.consensusClients = dependencies.filter(
-          (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function"
-        );
+        service.dependencies.executionClients = dependencies.filter((d) => typeof d.buildExecutionClientHttpEndpointUrl === "function");
+        service.dependencies.consensusClients = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function");
         return service;
       default:
         return service;
@@ -565,9 +552,7 @@ export class ServiceManager {
     command = command.filter((c) => !c.includes(endpointCommand));
     let newProps;
     if (fullCommand) {
-      newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)].filter(
-        (c) => c !== undefined
-      );
+      newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)].filter((c) => c !== undefined);
     } else {
       newProps = endpointCommand + dependencies.map(filter).join();
     }
@@ -773,9 +758,7 @@ export class ServiceManager {
       );
     }
     if (serviceToDelete.service === "KeysAPIService") {
-      await this.nodeConnection.sshService.exec(
-        `docker stop cachingDB-${serviceToDelete.id} && docker rm cachingDB-${serviceToDelete.id}`
-      );
+      await this.nodeConnection.sshService.exec(`docker stop cachingDB-${serviceToDelete.id} && docker rm cachingDB-${serviceToDelete.id}`);
     }
     await this.nodeConnection.runPlaybook("Delete Service", {
       stereum_role: "delete-service",
@@ -921,12 +904,7 @@ export class ServiceManager {
 
       case "LighthouseValidatorService":
         ports = [new ServicePort("127.0.0.1", args.port ? args.port : 5062, 5062, servicePortProtocol.tcp)];
-        return LighthouseValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/lighthouse",
-          args.consensusClients
-        );
+        return LighthouseValidatorService.buildByUserInput(args.network, ports, args.installDir + "/lighthouse", args.consensusClients);
 
       case "PrysmBeaconService":
         ports = [
@@ -946,12 +924,7 @@ export class ServiceManager {
 
       case "PrysmValidatorService":
         ports = [new ServicePort("127.0.0.1", args.port ? args.port : 7500, 7500, servicePortProtocol.tcp)];
-        return PrysmValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/prysm",
-          args.consensusClients
-        );
+        return PrysmValidatorService.buildByUserInput(args.network, ports, args.installDir + "/prysm", args.consensusClients);
 
       case "LodestarBeaconService":
         //LodestarBeaconService
@@ -972,12 +945,7 @@ export class ServiceManager {
       case "LodestarValidatorService":
         //LodestarValidatorService
         ports = [new ServicePort("127.0.0.1", args.port ? args.port : 5062, 5062, servicePortProtocol.tcp)];
-        return LodestarValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/lodestar",
-          args.consensusClients
-        );
+        return LodestarValidatorService.buildByUserInput(args.network, ports, args.installDir + "/lodestar", args.consensusClients);
 
       case "NimbusBeaconService":
         ports = [
@@ -996,12 +964,7 @@ export class ServiceManager {
 
       case "NimbusValidatorService":
         ports = [];
-        return NimbusValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/nimbus",
-          args.consensusClients
-        );
+        return NimbusValidatorService.buildByUserInput(args.network, ports, args.installDir + "/nimbus", args.consensusClients);
 
       case "TekuBeaconService":
         ports = [
@@ -1021,12 +984,7 @@ export class ServiceManager {
 
       case "TekuValidatorService":
         ports = [];
-        return TekuValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/teku",
-          args.consensusClients
-        );
+        return TekuValidatorService.buildByUserInput(args.network, ports, args.installDir + "/teku", args.consensusClients);
 
       case "PrometheusNodeExporterService":
         return PrometheusNodeExporterService.buildByUserInput(args.network);
@@ -1081,12 +1039,7 @@ export class ServiceManager {
 
       case "ExternalExecutionService":
         ports = [];
-        return ExternalExecutionService.buildByUserInput(
-          args.network,
-          args.installDir + "/externalExecution",
-          args.source,
-          args.jwtToken
-        );
+        return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution", args.source, args.jwtToken);
       case "ExternalConsensusService":
         ports = [];
         return ExternalConsensusService.buildByUserInput(
@@ -1116,10 +1069,7 @@ export class ServiceManager {
           args.otherServices
         );
       case "SSVDKGService":
-        ports = [
-          new ServicePort(null, 3030, 3030, servicePortProtocol.udp),
-          new ServicePort(null, 3030, 3030, servicePortProtocol.tcp),
-        ];
+        ports = [new ServicePort(null, 3030, 3030, servicePortProtocol.udp), new ServicePort(null, 3030, 3030, servicePortProtocol.tcp)];
         return SSVDKGService.buildByUserInput(
           args.network,
           ports,
@@ -1164,9 +1114,7 @@ export class ServiceManager {
       keyAPI.env.DB_HOST = `cachingDB-${keyAPI.id}`;
     } catch (err) {
       log.error("Creating CachingDB failed: ", err);
-      await this.nodeConnection.sshService.exec(
-        `docker stop cachingDB-${keyAPI.id} && docker rm cachingDB-${keyAPI.id}`
-      );
+      await this.nodeConnection.sshService.exec(`docker stop cachingDB-${keyAPI.id} && docker rm cachingDB-${keyAPI.id}`);
     }
   }
 
@@ -1202,9 +1150,7 @@ export class ServiceManager {
       );
     } catch (err) {
       log.error("Creating SlashingDB failed: ", err);
-      await this.nodeConnection.sshService.exec(
-        `docker stop slashingdb-${web3signer.id} && docker rm slashingdb-${web3signer.id}`
-      );
+      await this.nodeConnection.sshService.exec(`docker stop slashingdb-${web3signer.id} && docker rm slashingdb-${web3signer.id}`);
     }
   }
 
@@ -1212,9 +1158,7 @@ export class ServiceManager {
     for (const service of services) {
       await this.manageServiceState(service.id, "started");
       const workingDir = this.getWorkindDir(service);
-      await this.nodeConnection.sshService.exec(
-        "docker cp stereum-" + service.id + ":/opt/web3signer/migrations/postgresql " + workingDir
-      );
+      await this.nodeConnection.sshService.exec("docker cp stereum-" + service.id + ":/opt/web3signer/migrations/postgresql " + workingDir);
       await this.manageServiceState(service.id, "stopped");
       service.command = service.command.filter((c) => c != "--slashing-protection-enabled=false");
       await this.createSlashingDB(service, workingDir);
@@ -1224,18 +1168,12 @@ export class ServiceManager {
 
   async createKeystores(services) {
     for (const service of services) {
-      if (
-        service.service === "NimbusValidatorService" ||
-        (service.service === "NimbusBeaconService" && service.configVersion < 2)
-      ) {
+      if (service.service === "NimbusValidatorService" || (service.service === "NimbusBeaconService" && service.configVersion < 2)) {
         const valDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/validators").destinationPath;
         const token = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`);
         await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`);
-      } else if (
-        service.service === "TekuValidatorService" ||
-        (service.service === "TekuBeaconService" && service.configVersion < 2)
-      ) {
+      } else if (service.service === "TekuValidatorService" || (service.service === "TekuBeaconService" && service.configVersion < 2)) {
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
         const password = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec("apt install -y openjdk-8-jre-headless");
@@ -1259,18 +1197,13 @@ export class ServiceManager {
         if (config.ssv_sk) {
           replacementString = "OperatorPrivateKey: " + config.ssv_sk;
         } else {
-          replacementString =
-            "KeyStore:\n  PrivateKeyFile: /secrets/encrypted_private_key.json\n  PasswordFile: /secrets/password";
+          replacementString = "KeyStore:\n  PrivateKeyFile: /secrets/encrypted_private_key.json\n  PasswordFile: /secrets/password";
         }
 
         // prepare service's config file
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
-        const escapedConfigFile = StringUtils.escapeStringForShell(
-          ssvConfig.replace(/^OperatorPrivateKey.*/gm, replacementString)
-        );
-        this.nodeConnection.sshService.exec(
-          `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
-        );
+        const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm, replacementString));
+        this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
       } else if (service.service.includes("External")) {
         const extConnDir = service.volumes
           .find((vol) => vol.destinationPath.includes("link.txt"))
@@ -1344,10 +1277,7 @@ export class ServiceManager {
     });
     let DVTInstalls = tasks.filter((t) => /SSVNetwork|Charon/.test(t.service.service));
     DVTInstalls.forEach((t) => {
-      if (
-        t.service.service == "SSVNetworkService" &&
-        services.filter((s) => s.service === "SSVNetworkService").length
-      ) {
+      if (t.service.service == "SSVNetworkService" && services.filter((s) => s.service === "SSVNetworkService").length) {
         // TODO: Make SSVNetworkService multiservice (which depends also on SSVDKGService)
         log.error("Multiple SSVNetworkService services currently not supported - ignoring setup!");
         return;
@@ -1358,9 +1288,7 @@ export class ServiceManager {
       setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
-    let VLInstalls = tasks.filter(
-      (t) => t.service.category === "validator" && !/SSVNetwork|Charon/.test(t.service.service)
-    );
+    let VLInstalls = tasks.filter((t) => t.service.category === "validator" && !/SSVNetwork|Charon/.test(t.service.service));
     VLInstalls.forEach((t) => {
       this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls, undefined, DVTInstalls);
       let service = this.getService(t.service.service, t.data);
@@ -1457,10 +1385,7 @@ export class ServiceManager {
     await this.createKeystores(
       newServices.filter(
         (s) =>
-          s.service.includes("Teku") ||
-          s.service.includes("Nimbus") ||
-          s.service.includes("SSVNetwork") ||
-          s.service.includes("External")
+          s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork") || s.service.includes("External")
       )
     );
     await this.prepareSSVDKG(newServices.find((s) => s.service === "SSVDKGService"));
@@ -1658,10 +1583,7 @@ export class ServiceManager {
         // 2. Adjust SSV operator ID in DKG config
         if (ssvTotalConfig) {
           // Set operator ID to last known operator ID (revert or 0) in DKG config file (if needed)
-          if (
-            ssvTotalConfig.lastKnownOperatorId &&
-            ssvDkgTotalConfig.operatorId != ssvTotalConfig.lastKnownOperatorId
-          ) {
+          if (ssvTotalConfig.lastKnownOperatorId && ssvDkgTotalConfig.operatorId != ssvTotalConfig.lastKnownOperatorId) {
             log.silly("SSVNetworkService exists");
             log.info(`Update operator ID in DKG config file to ${ssvTotalConfig.lastKnownOperatorId}`);
             ssvDkgTotalConfig.ssvDkgConfig.operatorID = parseInt(ssvTotalConfig.lastKnownOperatorId, 10);
@@ -1720,8 +1642,7 @@ export class ServiceManager {
   //make sure there are no double tasks (for example: TekuBeaconService, TekuValidatorService share the same id)
   static uniqueByID(job) {
     return (value, index, self) =>
-      self.map((t) => t.service.config.serviceID).indexOf(value.service.config.serviceID) === index &&
-      value.content === job;
+      self.map((t) => t.service.config.serviceID).indexOf(value.service.config.serviceID) === index && value.content === job;
   }
 
   //remove all service data
@@ -1912,12 +1833,7 @@ export class ServiceManager {
 
       return serviceNameConfig;
     } catch (error) {
-      this.nodeConnection.taskManager.otherTasksHandler(
-        ref,
-        `Export Failed`,
-        false,
-        `Failed to export setup: ${error}`
-      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Export Failed`, false, `Failed to export setup: ${error}`);
       console.error(`Failed to export setup: ${error}`);
     } finally {
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -1950,12 +1866,7 @@ export class ServiceManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Export Configuration Completed`, true);
       return serviceNameConfig;
     } catch (error) {
-      this.nodeConnection.taskManager.otherTasksHandler(
-        ref,
-        `Export Failed`,
-        false,
-        `Failed to export config: ${error}`
-      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Export Failed`, false, `Failed to export config: ${error}`);
       console.error(`Failed to export config: ${error}`);
     } finally {
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -2018,9 +1929,7 @@ export class ServiceManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Wrote multi setup`, true);
 
       let services = await this.readServiceConfigurations();
-      let importingSetupServices = services.filter((service) =>
-        multiSetup[Object.keys(multiSetup)[0]].services.includes(service.id)
-      );
+      let importingSetupServices = services.filter((service) => multiSetup[Object.keys(multiSetup)[0]].services.includes(service.id));
 
       await Promise.all(
         importingSetupServices.map(async (service) => {
@@ -2043,12 +1952,7 @@ export class ServiceManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Configuration Completed`, true);
       return runRefs;
     } catch (error) {
-      this.nodeConnection.taskManager.otherTasksHandler(
-        ref,
-        `Import Failed`,
-        false,
-        `Failed to import config: ${error}`
-      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Failed`, false, `Failed to import config: ${error}`);
       console.error(`Failed to import config: ${error}`);
     } finally {
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -2151,12 +2055,7 @@ export class ServiceManager {
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Configuration Completed`, true);
       return runRefs;
     } catch (error) {
-      this.nodeConnection.taskManager.otherTasksHandler(
-        ref,
-        `Import Failed`,
-        false,
-        `Failed to import config: ${error}`
-      );
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Failed`, false, `Failed to import config: ${error}`);
       console.error(`Failed to import config: ${error}`);
     } finally {
       this.nodeConnection.taskManager.otherTasksHandler(ref);
@@ -2197,9 +2096,7 @@ export class ServiceManager {
   async beaconchainMonitoringModification(data) {
     let services = await this.readServiceConfigurations();
     let selectedValidator = services.find((service) => service.id === data.selectedVal);
-    let firstConsensusClient = services.find(
-      (service) => service.id === selectedValidator.dependencies.consensusClients[0].id
-    );
+    let firstConsensusClient = services.find((service) => service.id === selectedValidator.dependencies.consensusClients[0].id);
 
     const metricsExporterCommands = {
       LighthouseValidatorService: "--monitoring-endpoint=",
@@ -2275,10 +2172,7 @@ export class ServiceManager {
         `--system.partition=/host/rootfs`
       );
       if (selectedValidator.service == "PrysmValidatorService") {
-        metricsExporter.command.push(
-          `--validator.type=prysm`,
-          `--validator.address=http://stereum-${selectedValidator.id}:8081/metrics`
-        );
+        metricsExporter.command.push(`--validator.type=prysm`, `--validator.address=http://stereum-${selectedValidator.id}:8081/metrics`);
       }
       if (firstConsensusClient.service == "PrysmBeaconService") {
         metricsExporter.command.push(
@@ -2350,18 +2244,14 @@ export class ServiceManager {
 
     let services = await this.readServiceConfigurations();
     let selectedValidator = services.find((service) => service.id === data.selectedVal);
-    let firstConsensusClient = services.find(
-      (service) => service.id === selectedValidator.dependencies.consensusClients[0].id
-    );
+    let firstConsensusClient = services.find((service) => service.id === selectedValidator.dependencies.consensusClients[0].id);
 
     switch (selectedValidator.service) {
       case "LighthouseValidatorService":
       case "TekuValidatorService":
       case "LodestarValidatorService":
         await this.manageServiceState(selectedValidator.id, "stopped");
-        metricsCommandIndex = selectedValidator.command.findIndex((c) =>
-          c.includes(metricsExporterCommands[selectedValidator.service])
-        );
+        metricsCommandIndex = selectedValidator.command.findIndex((c) => c.includes(metricsExporterCommands[selectedValidator.service]));
         if (metricsCommandIndex > -1) {
           selectedValidator.command.splice(metricsCommandIndex, 1);
         }

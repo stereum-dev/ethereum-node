@@ -499,7 +499,8 @@
     "sync": "Chyba synchronizace",
     "taskFail": "Úkol selhal",
     "stats": "STAV: OTEVŘENO",
-    "clientService": "KLIENT / SLUŽBA"
+    "clientService": "KLIENT / SLUŽBA",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "VÁŠ KLIENT UCHOVÁVÁ DATA BLOKCHAINU NA VAŠEM SERVERU. DÍKY TOMU VÁŠ UZEL MŮŽE PLNIT POVINOSTI V SÍTI. Je to nezbytné pro to, aby váš uzel PLNIL SVOU ÚLOHU ATESTOVÁNÍ V STAKINGU. POUŽITÍ TÉTO VOLBY BUDE ZNAMENAT VYMAZÁNÍ AKTUÁLNÍCH DAT BLOKCHAINU VÁŠEHO KLIENTA A POUŽITÍ VYBRANÉ VOLBY JAKO ZDROJE PRO \n OPĚTOVNÉ ZSYNCHRONIZACI VAŠEHO UZLU.",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

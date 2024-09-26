@@ -8,10 +8,7 @@ export class BesuService extends NodeService {
     const workingDir = service.buildWorkingDir(dir);
     const dataDir = "/opt/app/data";
     const JWTDir = "/engine.jwt";
-    const volumes = [
-      new ServiceVolume(workingDir + "/data", "/opt/app/data"),
-      new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/data", "/opt/app/data"), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
 
     service.init(
       "BesuService", // service
@@ -83,8 +80,7 @@ export class BesuService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id
-      }\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }
 

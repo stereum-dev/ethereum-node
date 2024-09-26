@@ -1,14 +1,8 @@
 import ServerHeader from './components/ServerHeader.vue';
 <template>
-  <div
-    class="w-full h-[95.5%] absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300"
-  >
+  <div class="w-full h-[95.5%] absolute inset-0 grid grid-cols-24 grid-rows-7 bg-[#336666] z-10 p-2 rounded-md divide-y-2 divide-gray-300">
     <SwitchAnimation
-      v-if="
-        (serverStore.isServerAnimationActive || serverStore.connectingProcess) &&
-        !serverStore.errorMsgExists &&
-        !isTwoFactorAuthActive
-      "
+      v-if="(serverStore.isServerAnimationActive || serverStore.connectingProcess) && !serverStore.errorMsgExists && !isTwoFactorAuthActive"
       @cancel-login="cancelLoginHandler"
     />
     <ServerHeader @tab-picker="tabPicker" />
@@ -22,17 +16,10 @@ import ServerHeader from './components/ServerHeader.vue';
       @quick-login="quickLoginHandler"
     />
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
-    <GenerateKey
-      v-if="serverStore.isGenerateModalActive"
-      @close-modal="closeGenerateModal"
-      @generate-key="generateKeyHandler"
-    />
-    <RemoveModal
-      v-if="serverStore.isRemoveModalActive"
-      @remove-handler="removeServerHandler"
-      @close-window="closeWindow"
-    />
+    <GenerateKey v-if="serverStore.isGenerateModalActive" @close-modal="closeGenerateModal" @generate-key="generateKeyHandler" />
+    <RemoveModal v-if="serverStore.isRemoveModalActive" @remove-handler="removeServerHandler" @close-window="closeWindow" />
     <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
+    <ChangeOTPModal v-if="serverStore.isOTPActive" @submit-password="submitPasswordHandler" @close-window="closeAndCancel" />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
     <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
   </div>
@@ -46,6 +33,7 @@ import PasswordModal from "./components/modals/PasswordModal.vue";
 import SwitchAnimation from "./components/SwitchAnimation.vue";
 import TwofactorModal from "./components/modals/TwofactorModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
+import ChangeOTPModal from "./components/modals/ChangeOTPModal.vue";
 
 import { ref, onMounted, watchEffect, onUnmounted } from "vue";
 import ControlService from "@/store/ControlService";
@@ -130,6 +118,24 @@ const closeAndCancel = async () => {
 // authentification handling
 const submitAuthHandler = async (val) => {
   loginHandler(val);
+};
+
+const submitPasswordHandler = async (pass) => {
+  serverStore.isOTPActive = false;
+  serverStore.isServerAnimationActive = true;
+  serverStore.connectingProcess = true;
+  loginAbortController = new AbortController();
+  try {
+    await ControlService.handleOTPChange({ newPassword: pass });
+  } catch (error) {
+    console.error("Couldn't Change Password:", error);
+    serverStore.isServerAnimationActive = false;
+    serverStore.errorMsgExists = true;
+    serverStore.error = "Couldn't Change Password. Please try again.\n" + error;
+    return;
+  }
+  serverStore.loginState.password = pass;
+  await loginHandler();
 };
 
 //Server Management Login Handler
@@ -234,6 +240,7 @@ const acceptChangePass = async (pass) => {
 const closeWindow = () => {
   serverStore.isRemoveModalActive = false;
   isTwoFactorAuthActive.value = false;
+  serverStore.isOTPActive = false;
 };
 
 const closeErrorDialog = () => {
@@ -249,8 +256,7 @@ const closeBarcode = () => {
 const removeServerHandler = async () => {
   serverStore.isRemoveProcessing = true;
   serverStore.savedServers.savedConnections = serverStore.savedServers.savedConnections.filter(
-    (item) =>
-      item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
+    (item) => item.host !== serverStore.selectedServerToConnect?.host && item.name !== serverStore.selectedServerToConnect?.name
   );
 
   await remove();

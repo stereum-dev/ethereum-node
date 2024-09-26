@@ -5,10 +5,10 @@ driver:
   name: molecule_hetznercloud
 platforms:
   - name: "manage-service--write-start--ubuntu-22.04"
-    server_type: cx21
+    server_type: cx22
     image: ubuntu-22.04
   # - name: "role-manage--write-start--ubuntu-20.04"
-  #   server_type: cx21
+  #   server_type: cx22
   #   image: centos-7
 provisioner:
   name: ansible

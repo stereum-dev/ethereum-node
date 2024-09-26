@@ -55,25 +55,19 @@ async function createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOpt
       autoClose(server, connection);
     }
     try {
-      conn.forwardOut(
-        forwardOptions.srcAddr,
-        forwardOptions.srcPort,
-        forwardOptions.dstAddr,
-        forwardOptions.dstPort,
-        (err, stream) => {
-          if (err) {
-            return err;
-          }
-          connection.pipe(stream).pipe(connection);
+      conn.forwardOut(forwardOptions.srcAddr, forwardOptions.srcPort, forwardOptions.dstAddr, forwardOptions.dstPort, (err, stream) => {
+        if (err) {
+          return err;
         }
-      );
+        connection.pipe(stream).pipe(connection);
+      });
     } catch (e) {
       return e;
     }
   });
 
   server.on("close", () => conn.end());
-  return [server, conn]
+  return [server, conn];
 }
 
 exports.createTunnel = createTunnel;

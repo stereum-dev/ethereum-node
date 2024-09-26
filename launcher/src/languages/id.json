@@ -499,7 +499,8 @@
     "sync": "Kesalahan Sinkronisasi",
     "taskFail": "Tugas Gagal",
     "stats": "STATUS: BUKA",
-    "clientService": "KLIEN / LAYANAN"
+    "clientService": "KLIEN / LAYANAN",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "KLIENT ANDA Menyimpan data blockchain DI SERVER ANDA AGAR NODE ANDA DAPAT melayani jaringan. ini diperlukan agar node ANDA DAPAT MELAKUKAN TUGAS ATTESTASI DALAM STAKING. DENGAN MENGGUNAKAN OPSI INI ANDA MENGHAPUS DATA BLOCKCHAIN KLIENT ANDA SAAT INI & MENGGUNAKAN OPSI YANG DIPILIH SEBAGAI SUMBER UNTUK MENYINKRONKAN NODE ANDA BARU.",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

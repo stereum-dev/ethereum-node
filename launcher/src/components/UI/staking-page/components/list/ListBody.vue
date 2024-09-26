@@ -5,9 +5,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed  border-blue-500 ' : 'border-gray-600',
       stakingStore.inputWrongKey ? 'border-red-500' : '',
-      stakingStore.isPreviewListActive ||
-      stakingStore.isRemoteListActive ||
-      stakingStore.isGroupListActive
+      stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
         ? 'row-start-2 row-end-12'
         : 'row-start-1 row-end-12 rounded-t-md',
     ]"
@@ -27,10 +25,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       <span
         v-if="stakingStore.isOverDropZone"
         class="w-full h-full self-center justify-self-center flex justify-center items-center text-2xl"
-        :class="[
-          stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400',
-          isDropZoneDisabled ? 'cursor-not-allowed ' : '',
-        ]"
+        :class="[stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400', isDropZoneDisabled ? 'cursor-not-allowed ' : '']"
         >+</span
       >
       <div
@@ -48,11 +43,9 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           class="text-lg font-bold text-gray-300 text-center uppercase select-none"
           >{{ $t("stakingPage.noVal") }}</span
         >
-        <span
-          v-if="searchNotFound && getFilteredValidators.length > 0"
-          class="text-lg font-bold text-gray-300 text-center uppercase"
-          >{{ $t("stakingPage.noMatch") }}</span
-        >
+        <span v-if="searchNotFound && getFilteredValidators.length > 0" class="text-lg font-bold text-gray-300 text-center uppercase">{{
+          $t("stakingPage.noMatch")
+        }}</span>
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
@@ -86,11 +79,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <GroupRow
           v-for="group in getCorrectValidatorGroups"
-          v-show="
-            !stakingStore.isPreviewListActive &&
-            stakingStore.validatorKeyGroups.length > 0 &&
-            !isLoading
-          "
+          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0 && !isLoading"
           :key="group.groupID"
           :item="group"
           @open-group="openGroup"
@@ -100,12 +89,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <KeyRow
           v-for="key in getFilteredValidators"
-          v-show="
-            !isKeyInGroup(key) &&
-            !stakingStore.isPreviewListActive &&
-            stakingStore.keys.length > 0 &&
-            !isLoading
-          "
+          v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
           :key="key.pubkey"
           :item="key"
           @remove-single="removeSingle"
@@ -153,11 +137,8 @@ stakingStore.filteredKeys = computed(() => {
   }
   return stakingStore.keys.filter(
     (key) =>
-      (key.key &&
-        key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
-      (key.displayName &&
-        key.displayName !== "" &&
-        key.displayName.toLowerCase().includes(stakingStore.searchContent.toLowerCase()))
+      (key.key && key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
+      (key.displayName && key.displayName !== "" && key.displayName.toLowerCase().includes(stakingStore.searchContent.toLowerCase()))
   );
 });
 
@@ -168,26 +149,19 @@ const getFilteredValidators = computed(() => {
   } else {
     const serviceIds = setupStore.selectedSetup.services.map((service) => service.config.serviceID);
     // Filter keys by checking if validatorID exists in serviceIds
-    return stakingStore.filteredKeys.filter((key) =>
-      serviceIds.includes(key.validatorID)
-    );
+    return stakingStore.filteredKeys.filter((key) => serviceIds.includes(key.validatorID));
   }
 });
 
 const getCorrectValidatorGroups = computed(() => {
   return stakingStore.validatorKeyGroups.filter(
-    (group) =>
-      group.keys.length > 0 &&
-      group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    (group) => group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   );
 });
 
 const searchNotFound = computed(() => {
   return (
-    !stakingStore.isPreviewListActive &&
-    !isLoading.value &&
-    stakingStore.searchContent !== "" &&
-    stakingStore.filteredKeys.length === 0
+    !stakingStore.isPreviewListActive && !isLoading.value && stakingStore.searchContent !== "" && stakingStore.filteredKeys.length === 0
   );
 });
 
@@ -303,9 +277,7 @@ const listKeys = async () => {
 };
 
 const isKeyInGroup = (key) => {
-  return stakingStore.validatorKeyGroups.some((group) =>
-    group.keys.some((groupKey) => groupKey.key === key.key)
-  );
+  return stakingStore.validatorKeyGroups.some((group) => group.keys.some((groupKey) => groupKey.key === key.key));
 };
 
 const onDrop = (event) => {

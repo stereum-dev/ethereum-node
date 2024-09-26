@@ -6,11 +6,11 @@ driver:
 platforms:
   - name: "manage-service--ssv-prysm--ubuntu-22.04"
     hostname: ubuntu
-    server_type: cx51
+    server_type: cx42
     image: ubuntu-22.04
 #  - name: "manage-service--ssv-prysm--centos-stream-8"
 #    hostname: "centos"
-#    server_type: cx51
+#    server_type: cx42
 #    image: centos-stream-8
 provisioner:
   name: ansible

@@ -499,7 +499,8 @@
     "sync": "同期エラー",
     "taskFail": "タスク失敗",
     "stats": "ステータス：オープン",
-    "clientService": "クライアント/サービス"
+    "clientService": "クライアント/サービス",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "クライアントはブロックチェーンデータをサーバーに保存して、ノードがネットワークにサービスを提供できるようにします。これは、ノードがステーキングで証明義務を果たすために必要です。このオプションを使用すると、クライアントの現在のブロックチェーンデータを削除し、選択したオプションをソースとして使用して、ノードを再同期します。",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

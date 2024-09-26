@@ -1,9 +1,6 @@
 <template>
   <div class="w-full h-full absolute inset-0 flex justify-center items-center">
-    <div
-      class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10"
-      @click="$emit('closeWindow')"
-    ></div>
+    <div class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10" @click="$emit('closeWindow')"></div>
     <div class="notif-modal-content">
       <div v-if="qrPage && !beaconchaDashboard" class="content">
         <div class="notif-Title">
@@ -104,12 +101,7 @@
               <div class="enter-input">
                 <div class="enter-input_title">{{ $t("notifModal.apikey") }}</div>
                 <div class="enter-input_input">
-                  <input
-                    v-model="apiKey"
-                    type="text"
-                    :class="apiKey == '' && haveToFill ? 'emptyInput' : ''"
-                    :disabled="readyToRemove"
-                  />
+                  <input v-model="apiKey" type="text" :class="apiKey == '' && haveToFill ? 'emptyInput' : ''" :disabled="readyToRemove" />
                 </div>
               </div>
             </div>
@@ -176,9 +168,7 @@ export default {
         });
       }
 
-      return test.filter(
-        (obj) => obj.category === "validator" && obj.name !== "ssv.network" && obj.name !== "Obol Charon"
-      );
+      return test.filter((obj) => obj.category === "validator" && obj.name !== "ssv.network" && obj.name !== "Obol Charon");
     },
     installedMetricsExporter() {
       const copyOfInstalledServices = [...this.installedServices];

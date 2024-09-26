@@ -53,10 +53,7 @@
               >
                 <span>{{ selectedItem }}</span>
               </div>
-              <div
-                v-else
-                class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md"
-              >
+              <div v-else class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md">
                 <div v-if="selectedIcon !== ''" class="w-1/6" @click="openDropdown">
                   <img class="w-6 h-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
                 </div>
@@ -90,12 +87,7 @@
           class="w-full h-12 grid grid-cols-6 p-2 hover:bg-blue-400 bg-[#212225]"
           @click="linkPicker(link)"
         >
-          <img
-            v-if="link.icon"
-            class="w-7 h-7 col-start-1 col-end-2 self-center justify-self-center"
-            :src="link.icon"
-            alt="service Icon"
-          />
+          <img v-if="link.icon" class="w-7 h-7 col-start-1 col-end-2 self-center justify-self-center" :src="link.icon" alt="service Icon" />
           <span
             class="col-start-3 col-end-6 px-4 py-1 flex justify-start links-center outline-0 whitespace-nowrap cursor-pointer text-md text-gray-200 font-normal font-sans"
             >{{ link.name }}</span
@@ -109,7 +101,7 @@
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
-import { computed, onBeforeMount, ref, watch, watchEffect } from "vue";
+import { computed, onBeforeMount, ref, watch, watchEffect, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Navigation, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
@@ -179,6 +171,10 @@ watch(currentSlide, (val) => {
 });
 
 // Lifecycle hooks
+onMounted(() => {
+  installStore.checkPointSync = "";
+});
+
 onBeforeMount(() => {
   currentSlide.value = 2;
 });

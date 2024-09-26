@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-24 grid-rows-12 p-2 gap-x-1"
-  >
-    <div
-      class="col-start-14 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
-    >
+  <div class="w-full h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-24 grid-rows-12 p-2 gap-x-1">
+    <div class="col-start-14 col-span-full row-start-1 row-span-full p-1 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md">
       <LoginPanel v-if="isLoginActive" @server-login="serverLogin" />
       <DetailsPanel v-if="isDetailsActive" @change-password="changePassword" @set-avatar="setServerAvatar" />
       <UpdatePanel v-if="isUpdateActive" />
@@ -12,9 +8,7 @@
       <SettingsPanel v-if="isSettingsActive" />
       <TwoFAPanel v-if="isTwoFactorAuthActive" />
     </div>
-    <div
-      class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md"
-    >
+    <div class="col-start-1 col-end-14 row-start-1 row-span-full p-3 grid grid-cols-12 grid-rows-12 bg-[#1b3231] rounded-md">
       <ServerPanel @select-server="selectServer" @server-login="addNewServer" @quick-login="quickLogin" />
     </div>
   </div>

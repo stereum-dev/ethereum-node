@@ -499,7 +499,8 @@
     "sync": "ஒத்திசைவு பிழை",
     "taskFail": "பணி தோல்வி",
     "stats": "நிலைமை: திறந்த",
-    "clientService": "கிளையண்ட் / சேவை"
+    "clientService": "கிளையண்ட் / சேவை",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "உங்கள் கிளையண்ட் உங்கள் சர்வரில் பிளாக்செயின் தரவுகளை சேமிக்கிறது என்பதால் உங்கள் நோட் நெட்வொர்க்கை சேவை செய்ய முடியும். ஸ்டேக்கிங்கில் அதன் சான்று கடமையை ஏற்க உங்கள் நோட் தேவை. இந்த விருப்பத்தை பயன்படுத்துவதன் மூலம் நீங்கள் உங்கள் கிளையண்டின் தற்போதைய பிளாக்செயின் தரவுகளை அழிக்கிறீர்கள் & உங்கள் நோட்டை புதிதாக ஒத்திசைக்க தேர்ந்தெடுத்த விருப்பத்தை ஒரு மூலமாக பயன்படுத்துகிறீர்கள்.",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

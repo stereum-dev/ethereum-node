@@ -40,27 +40,27 @@ export class PrysmValidatorService extends NodeService {
       image, //image
       "v5.1.0", //imageVersion
       [
-        '--accept-terms-of-use=true',
+        "--accept-terms-of-use=true",
         `--beacon-rpc-provider=${provider}`,
         `--beacon-rpc-gateway-provider=${providerGateway}`,
-        '--web',
+        "--web",
         `--${network}`,
         `--datadir=${dataDir}`,
         `--keymanager-token-file=${walletDir + "/auth-token"}`,
         `--wallet-dir=${walletDir}`,
         `--wallet-password-file=${passwordDir + "/wallet-password"}`,
-        '--monitoring-host=0.0.0.0',
-        '--grpc-gateway-port=7500',
-        '--grpc-gateway-host=0.0.0.0',
+        "--monitoring-host=0.0.0.0",
+        "--grpc-gateway-port=7500",
+        "--grpc-gateway-host=0.0.0.0",
         '--grpc-gateway-corsdomain="*"',
-        '--monitoring-host=0.0.0.0',
-        '--monitoring-port=8081',
-        '--suggested-fee-recipient=0x0000000000000000000000000000000000000000',
+        "--monitoring-host=0.0.0.0",
+        "--monitoring-port=8081",
+        "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
         `--graffiti-file=${graffitiDir + "/graffitis.yaml"}`,
-        '--enable-builder=true',
-        '--enable-doppelganger=true',
+        "--enable-builder=true",
+        "--enable-doppelganger=true",
       ], //command
-      ['/app/cmd/validator/validator'], // entrypoint
+      ["/app/cmd/validator/validator"], // entrypoint
       null, // env
       ports, //ports
       volumes, //volumes

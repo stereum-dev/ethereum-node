@@ -32,7 +32,7 @@
       that:
       - notification_container.container.NetworkSettings.Networks.stereum.Aliases is search("notifications")
   
-  - stat: path=/opt/app/services/62aa1873-7b62-410b-ae8e-2cd8615165b9/grafana/provisioning/alerting/alerts.yaml
+  - stat: path=/opt/app/services/62aa1873-7b62-410b-ae8e-2cd8615165b9/grafana/provisioning/alerting/HardwareAlerts.yaml
     register: grafana_alerts
   - debug:
       msg: "{{ grafana_alerts }}"

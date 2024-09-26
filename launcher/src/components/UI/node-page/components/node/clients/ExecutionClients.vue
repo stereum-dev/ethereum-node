@@ -25,12 +25,7 @@
         @copy-jwt="copyJwt"
       />
       <TransitionGroup name="fadeModal">
-        <ResyncModal
-          v-if="item.isResyncModalOpen"
-          icon-size="w-14"
-          :item="item"
-          @close-window="closeResyncModal(item)"
-        />
+        <ResyncModal v-if="item.isResyncModalOpen" icon-size="w-14" :item="item" @close-window="closeResyncModal(item)" />
         <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
       </TransitionGroup>
     </div>
@@ -48,16 +43,7 @@ import { computed, ref } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 
 //Emits
-const emit = defineEmits([
-  "openExpert",
-  "openLog",
-  "openDoc",
-  "stateHandler",
-  "restartHandler",
-  "mouseOver",
-  "mouseLeave",
-  "copyJwt",
-]);
+const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver", "mouseLeave", "copyJwt"]);
 
 //Refs
 const showPruningModal = ref(false);
@@ -72,11 +58,7 @@ const getExecutionServices = computed(() => {
     return [];
   }
   const services = serviceStore.installedServices
-    .filter(
-      (s) =>
-        s.category === "execution" &&
-        s.setupId === setupStore.selectedSetup?.setupId
-    )
+    .filter((s) => s.category === "execution" && s.setupId === setupStore.selectedSetup?.setupId)
     .sort((a, b) => {
       const fa = a.name.toLowerCase();
       const fb = b.name.toLowerCase();

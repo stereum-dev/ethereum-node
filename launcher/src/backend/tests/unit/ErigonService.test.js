@@ -6,15 +6,11 @@ test("id test", () => {
 });
 
 test("network test goerli", () => {
-  expect(ErigonService.buildByUserInput("goerli", null, null).buildConfiguration().command).toContain(
-    "--chain=goerli"
-  );
+  expect(ErigonService.buildByUserInput("goerli", null, null).buildConfiguration().command).toContain("--chain=goerli");
 });
 
 test("network test mainnet", () => {
-  expect(ErigonService.buildByUserInput("mainnet", null, null).buildConfiguration().command).not.toContain(
-    "--chain=goerli"
-  );
+  expect(ErigonService.buildByUserInput("mainnet", null, null).buildConfiguration().command).not.toContain("--chain=goerli");
 });
 
 test("user", () => {
@@ -22,9 +18,7 @@ test("user", () => {
 });
 
 test("image", () => {
-  expect(ErigonService.buildByUserInput("mainnet", null, null).buildConfiguration().image).toMatch(
-    /thorax\/erigon/
-  );
+  expect(ErigonService.buildByUserInput("mainnet", null, null).buildConfiguration().image).toMatch(/thorax\/erigon/);
 });
 
 test("endpoint url", () => {
@@ -45,18 +39,10 @@ test("empty ports", () => {
 
 test("ports", () => {
   expect(
-    ErigonService.buildByUserInput(
-      "goerli",
-      [new ServicePort(null, 100, 200, servicePortProtocol.tcp)],
-      null
-    ).buildConfiguration().ports
+    ErigonService.buildByUserInput("goerli", [new ServicePort(null, 100, 200, servicePortProtocol.tcp)], null).buildConfiguration().ports
   ).toHaveLength(1);
   expect(
-    ErigonService.buildByUserInput(
-      "goerli",
-      [new ServicePort(null, 100, 200, servicePortProtocol.tcp)],
-      null
-    ).buildConfiguration().ports
+    ErigonService.buildByUserInput("goerli", [new ServicePort(null, 100, 200, servicePortProtocol.tcp)], null).buildConfiguration().ports
   ).toContain("0.0.0.0:100:200/tcp");
 });
 
@@ -76,11 +62,7 @@ test("multiple ports", () => {
 });
 
 test("workingDir", () => {
-  const erigonConfig = ErigonService.buildByUserInput(
-    "goerli",
-    null,
-    "/opt/stereum/erigon"
-  ).buildConfiguration();
+  const erigonConfig = ErigonService.buildByUserInput("goerli", null, "/opt/stereum/erigon").buildConfiguration();
 
   expect(erigonConfig.volumes).toHaveLength(2);
   expect(erigonConfig.volumes).toContain("/opt/stereum/erigon-" + erigonConfig.id + "/data:/opt/data/erigon");

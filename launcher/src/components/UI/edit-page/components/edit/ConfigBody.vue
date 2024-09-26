@@ -11,10 +11,7 @@
   >
     <div
       class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 border border-gray-950 rounded-t-[5px] text-xs font-[400] font-sans"
-      :class="[
-        setupStore.getBGColor(setupStore.selectedSetup?.color),
-        setupStore.getTextColor(setupStore.selectedSetup?.color),
-      ]"
+      :class="[setupStore.getBGColor(setupStore.selectedSetup?.color), setupStore.getTextColor(setupStore.selectedSetup?.color)]"
     >
       <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>
       <span class="col-start-2 justify-self-center self-center">{{ $t("editBody.consensusClient") }}</span>
@@ -24,8 +21,7 @@
       ref="dropZoneRef"
       class="w-full h-full max-h-[428px] grid grid-cols-3 pt-5 z-10"
       :class="{
-        'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto':
-          activateScrollBar,
+        'scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto': activateScrollBar,
       }"
       @drop="onDrop($event)"
       @dragover.prevent="isOverDropZone = true"

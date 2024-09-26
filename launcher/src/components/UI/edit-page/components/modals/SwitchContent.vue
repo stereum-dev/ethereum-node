@@ -8,15 +8,8 @@
           class="w-11/12 h-[40px] mx-auto border border-gray-500 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-2 justify-center relative"
           @click="switchDropdownOpen = !switchDropdownOpen"
         >
-          <img
-            v-if="properties.itemToInstall?.icon"
-            class="w-6 h-6 mr-2"
-            :src="properties.itemToInstall?.sIcon"
-            alt="Client Icon"
-          />
-          <span>{{
-            properties.itemToInstall ? properties.itemToInstall.name : `${$t("editModals.selectClient")}`
-          }}</span>
+          <img v-if="properties.itemToInstall?.icon" class="w-6 h-6 mr-2" :src="properties.itemToInstall?.sIcon" alt="Client Icon" />
+          <span>{{ properties.itemToInstall ? properties.itemToInstall.name : `${$t("editModals.selectClient")}` }}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-5 h-5 inline ml-1 absolute right-1 text-gray-400"
@@ -38,11 +31,7 @@
               class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
               @click="switchService(service)"
             >
-              <img
-                class="h-[30px] col-start-1 col-end-2 self-center justify-self-center"
-                :src="service.sIcon"
-                alt="service Icon"
-              />
+              <img class="h-[30px] col-start-1 col-end-2 self-center justify-self-center" :src="service.sIcon" alt="service Icon" />
               <span
                 class="col-start-3 col-end-6 px-4 py-1 flex justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
                 >{{ service.name }}</span
@@ -83,9 +72,7 @@ const serviceStore = useServices();
 //Computed & Watcher
 const getServices = computed(() => {
   let service;
-  service = serviceStore.allServices.filter(
-    (e) => e?.category == props.client.category && e?.name != props.client.name
-  );
+  service = serviceStore.allServices.filter((e) => e?.category == props.client.category && e?.name != props.client.name);
   return service;
 });
 

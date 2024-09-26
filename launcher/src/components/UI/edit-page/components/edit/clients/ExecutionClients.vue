@@ -73,12 +73,7 @@ const displayMenu = (item) => {
   serviceStore.installedServices.forEach((service) => {
     service.displayPluginMenu = false;
   });
-  if (
-    !item.isNotConnectedToConsensus &&
-    !item.isNotConnectedToValidator &&
-    !item.isRemoveProcessing &&
-    !item.isNewClient
-  ) {
+  if (!item.isNotConnectedToConsensus && !item.isNotConnectedToValidator && !item.isRemoveProcessing && !item.isNewClient) {
     item.displayPluginMenu = true;
   }
 };

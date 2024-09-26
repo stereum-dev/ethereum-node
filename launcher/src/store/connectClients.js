@@ -5,7 +5,7 @@ export const useConnectClients = defineStore("connectClients", {
     return {
       isConnectedToMevboost: false,
       mevboostOptions: [],
-      selectedToConnectToMevboost:null,
+      selectedToConnectToMevboost: null,
     };
   },
   actions: {},

@@ -110,6 +110,12 @@ export const useServerLogin = () => {
       }
       startShell();
     } catch (error) {
+      if (typeof error.message === "string" && error.message.toLowerCase().includes("password")) {
+        serverStore.isOTPActive = true;
+        serverStore.isServerAnimationActive = false;
+        serverStore.connectingProcess = false;
+        return;
+      }
       console.error("Login failed:", error);
       serverStore.isServerAnimationActive = false;
       serverStore.errorMsgExists = true;
@@ -121,8 +127,6 @@ export const useServerLogin = () => {
         serverStore.isServerAnimationActive = false;
         serverStore.connectingProcess = false;
         return;
-      } else if (typeof error === "string" && error.toLowerCase().includes("password")) {
-        serverStore.error = "You need to change your password first";
       }
 
       router.push("/login");
@@ -132,9 +136,7 @@ export const useServerLogin = () => {
   const add = () => {
     const newConnection = createConnection();
     if (newConnection.name !== "" && newConnection.host !== "" && newConnection.user !== "") {
-      const existingConnectionIndex = serverStore.connections.findIndex(
-        (connection) => connection.name == serverStore.loginState.hostName
-      );
+      const existingConnectionIndex = serverStore.connections.findIndex((connection) => connection.name == serverStore.loginState.hostName);
 
       if (existingConnectionIndex === -1) {
         serverStore.connections.push(newConnection);

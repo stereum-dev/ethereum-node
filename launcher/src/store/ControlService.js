@@ -675,6 +675,29 @@ class ControlService extends EventEmitter {
   async readGasConfigFile(args) {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
+
+  async handleOTPChange(args) {
+    return this.promiseIpc.send("handleOTPChange", args);
+  }
+
+  async fetchObolCharonAlerts() {
+    return this.promiseIpc.send("fetchObolCharonAlerts");
+  }
+  async fetchCsmAlerts() {
+    return this.promiseIpc.send("fetchCsmAlerts");
+  }
+
+  async ignoreUpdate() {
+    return this.promiseIpc.send("ignoreUpdate");
+  }
+
+  async updateLauncher() {
+    return this.promiseIpc.send("updateLauncher");
+  }
+
+  async getNewLauncherVersion() {
+    return this.promiseIpc.send("getNewLauncherVersion");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

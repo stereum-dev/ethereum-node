@@ -499,7 +499,8 @@
     "sync": "Errore di Sincronizzazione",
     "taskFail": "Compito Fallito",
     "stats": "STATO: APERTO",
-    "clientService": "CLIENT / SERVIZIO"
+    "clientService": "CLIENT / SERVIZIO",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "IL TUO CLIENT Memorizza i dati della blockchain SUL TUO SERVER COSÌ IL TUO NODO PUÒ servire la rete. questo è necessario affinché il tuo nodo POSSA iniziare il suo DOVERE DI ATTESTAZIONE nello STAKING. UTILIZZANDO QUESTA OPZIONE STAI CANCELLANDO I DATI ATTUALI DELLA BLOCKCHAIN DEL TUO CLIENT & USI L'OPZIONE SELEZIONATA COME FONTE PER SINCRONIZZARE DI NUOVO IL TUO NODO.",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

@@ -499,7 +499,8 @@
     "sync": "Senkronizasyon Hatası",
     "taskFail": "Görev Başarısız",
     "stats": "DURUM: AÇIK",
-    "clientService": "İSTEMCİ / HİZMET"
+    "clientService": "İSTEMCİ / HİZMET",
+    "csm": "csm operator monitoring"
   },
   "resyncModal": {
     "message": "İSTEMCİNİZ sunucunuzda blok zincir verilerini saklar, böylece düğümünüz ağa hizmet edebilir. Bu, düğümünüzün STAKING'deki ATAMA GÖREVİNİ alabilmesi için gereklidir. BU SEÇENEĞİ KULLANARAK İSTEMCİNİZİN MEVCUT BLOK ZİNCİR VERİLERİNİ SİLİYOR VE SEÇTİĞİNİZ KAYNAK KULLANILARAK DÜĞÜMÜNÜZÜ YENİDEN SENKRONİZE EDİYORSUNUZ.",
@@ -1054,5 +1055,15 @@
     "rem": "click to remove 2FA",
     "send": "click to send the verification code",
     "zoomQr": "click to zoom in the QR code"
+  },
+  "otpModal": {
+    "newPass": "Type in your new Password"
+  },
+  "updateModal": {
+    "updateTitle": "Update {version} available",
+    "updateQ": "Do you want to update now?",
+    "acc": "accept",
+    "deny": "deny",
+    "updateTo": "Updating Stereum Launcher to {version}"
   }
 }

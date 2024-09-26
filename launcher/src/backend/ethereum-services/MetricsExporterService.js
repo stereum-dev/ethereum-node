@@ -38,7 +38,7 @@ export class MetricsExporterService extends NodeService {
     return service;
   }
 
-  static buildByConfiguration(config) { 
+  static buildByConfiguration(config) {
     const service = new MetricsExporterService();
 
     service.initByConfig(config);

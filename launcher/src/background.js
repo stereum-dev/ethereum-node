@@ -506,12 +506,7 @@ ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
 
 ipcMain.handle("beginAuthSetup", async (event, args) => {
   const current_window = event.sender;
-  return await authenticationService.beginAuthSetup(
-    args.timeBased,
-    args.increaseTimeLimit,
-    args.enableRateLimit,
-    current_window
-  );
+  return await authenticationService.beginAuthSetup(args.timeBased, args.increaseTimeLimit, args.enableRateLimit, current_window);
 });
 
 ipcMain.handle("finishAuthSetup", async () => {
@@ -739,6 +734,34 @@ ipcMain.handle("removeGasConfigFile", async (event, args) => {
 
 ipcMain.handle("readGasConfigFile", async (event, args) => {
   return await tekuGasLimitConfig.readGasConfigFile(args);
+});
+
+ipcMain.handle("handleOTPChange", async (event, args) => {
+  return await AuthenticationService.handleOTPChange(
+    nodeConnection.nodeConnectionParams.password,
+    args.newPassword,
+    nodeConnection.sshService
+  );
+});
+
+ipcMain.handle("fetchObolCharonAlerts", async () => {
+  return await monitoring.fetchObolCharonAlerts();
+});
+
+ipcMain.handle("fetchCsmAlerts", async () => {
+  return await monitoring.fetchCsmAlerts();
+});
+
+ipcMain.handle("ignoreUpdate", async (event) => {
+  return await stereumUpdater.ignoreUpdate(event.sender);
+});
+
+ipcMain.handle("updateLauncher", async () => {
+  return stereumUpdater.downloadUpdate();
+});
+
+ipcMain.handle("getNewLauncherVersion", async () => {
+  return stereumUpdater.getNewLauncherVersion();
 });
 
 // Scheme must be registered before the app is ready
