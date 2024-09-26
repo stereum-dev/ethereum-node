@@ -20,10 +20,9 @@
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="sync-status-widget col-start-7 col-span-12 row-start-4 row-span-3">
       <SyncStatus
     /></WidgetCard>
-    <WidgetCard
-      v-if="controlStore.pickeedService === 'exeCons'"
-      class="epoch-slot-widget col-start-7 col-span-12 row-start-7 row-span-3"
-    ></WidgetCard>
+    <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="epoch-slot-widget col-start-7 col-span-12 row-start-7 row-span-3"
+      ><EpochSlot
+    /></WidgetCard>
     <WidgetCard
       v-if="controlStore.pickeedService === 'exeCons'"
       class="subscribed-subnet-widget col-start-7 col-span-12 row-start-10 row-span-3"
@@ -43,6 +42,7 @@ import PeerToPeer from "../components/widgets/PeerToPeer.vue";
 import SyncStatus from "../components/widgets/SyncStatus.vue";
 import PeersOverTime from "../components/widgets/PeersOverTime.vue";
 import SubscribedSubnets from "../components/widgets/SubscribedSubnets.vue";
+import EpochSlot from "../components/widgets/EpochSlot.vue";
 
 import { useControlStore } from "@/store/theControl";
 

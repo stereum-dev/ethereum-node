@@ -97,9 +97,9 @@ export default defineComponent({
             },
           },
           padding: {
-            top: -20,
+            top: -25,
             right: 0,
-            bottom: -25,
+            bottom: -27,
             left: 0,
           },
         },
