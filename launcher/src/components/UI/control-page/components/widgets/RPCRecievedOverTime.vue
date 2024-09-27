@@ -37,7 +37,7 @@ export default defineComponent({
             show: false,
           },
           animations: {
-            enabled: false,
+            enabled: true,
           },
           parentHeightOffset: 0,
         },
@@ -96,9 +96,9 @@ export default defineComponent({
           enabled: false,
         },
         legend: {
-          show: false, // Show series names in a minimal way
+          show: false,
           labels: {
-            colors: "#ffffff", // Adjust color to match your style
+            colors: "#ffffff",
           },
         },
       },

@@ -2438,6 +2438,10 @@ video {
   width: 100vw;
 }
 
+.w-11{
+  width: 2.75rem;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -4669,6 +4673,10 @@ video {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-\[30\%\]{
+  font-size: 30%;
 }
 
 .font-\[400\]{

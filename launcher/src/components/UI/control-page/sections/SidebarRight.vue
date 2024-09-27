@@ -9,7 +9,9 @@
     <MiniCard v-if="controlStore.pickeedService === 'exeCons'" class="col-start-1 col-span-3 row-start-7 row-span-3"
       ><RPCRecievedOverTime
     /></MiniCard>
-    <MiniCard v-if="controlStore.pickeedService === 'exeCons'" class="col-start-1 col-span-3 row-start-10 row-span-3" />
+    <MiniCard v-if="controlStore.pickeedService === 'exeCons'" class="col-start-1 col-span-3 row-start-10 row-span-3"
+      ><ServicePort
+    /></MiniCard>
   </div>
 </template>
 
@@ -18,6 +20,7 @@ import MiniCard from "../components/cards/MiniCard.vue";
 import ClientPairWidget from "../components/widgets/ClientPairWidget.vue";
 import PairStatusWidget from "../components/widgets/PairStatusWidget.vue";
 import RPCRecievedOverTime from "../components/widgets/RPCRecievedOverTime.vue";
+import ServicePort from "../components/widgets/ServicePort.vue";
 
 import { useControlStore } from "@/store/theControl";
 
