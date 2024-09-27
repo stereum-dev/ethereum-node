@@ -16,7 +16,9 @@
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="p2p-widget col-start-1 col-span-6 row-start-13 row-span-3"
       ><PeerToPeer
     /></WidgetCard>
-    <WidgetCard class="connected-validator-widget col-start-7 col-span-12 row-start-1 row-span-3"><ConnectedValidatorWidget /></WidgetCard>
+    <WidgetCard class="connected-validator-widget col-start-7 col-span-12 row-start-1 row-span-3"
+      ><ConnectedValidatorWidget v-if="controlStore.pickeedService === 'exeCons'" /><ConnectedClientPair v-else
+    /></WidgetCard>
     <WidgetCard v-if="controlStore.pickeedService === 'exeCons'" class="sync-status-widget col-start-7 col-span-12 row-start-4 row-span-3">
       <SyncStatus
     /></WidgetCard>
@@ -44,6 +46,7 @@ import PeersOverTime from "../components/widgets/PeersOverTime.vue";
 import SubscribedSubnets from "../components/widgets/SubscribedSubnets.vue";
 import EpochSlot from "../components/widgets/EpochSlot.vue";
 import ConnectedValidatorWidget from "../components/widgets/ConnectedValidatorWidget.vue";
+import ConnectedClientPair from "../components/widgets/ConnectedClientPair.vue";
 
 import { useControlStore } from "@/store/theControl";
 
