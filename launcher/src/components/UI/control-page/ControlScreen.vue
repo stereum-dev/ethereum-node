@@ -5,6 +5,7 @@
       <CommonSidebar />
       <AlertSection />
       <StakingSidebar />
+      <SidebarRight />
     </div>
   </base-layout>
 </template>
@@ -20,6 +21,7 @@ import ControlHeader from "./sections/ControlHeader.vue";
 import CommonSidebar from "./sections/CommonSidebar.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import StakingSidebar from "./sections/StakingSidebar.vue";
+import SidebarRight from "./sections/SidebarRight.vue";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
