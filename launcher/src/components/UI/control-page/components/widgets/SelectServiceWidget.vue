@@ -142,11 +142,13 @@
 import { ref, computed } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
+import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 
 const controlStore = useControlStore();
 const setupStore = useSetups();
 const stakingStore = useStakingStore();
+const serviceStore = useServices();
 
 const formattedValidatorNo = computed(() => {
   return stakingStore.keys.length.toString().padStart(3, "0");
@@ -161,6 +163,7 @@ const deopdownHandler = () => {
 const servicePicker = (arg) => {
   arg === "vld" ? (controlStore.pickeedService = "vld") : (controlStore.pickeedService = "exeCons");
   isOpen.value = !isOpen.value;
+  console.log(serviceStore.installedServices.dependencies);
 };
 
 const filteredValidatorServices = computed(() => {
@@ -174,16 +177,15 @@ const filteredValidatorServices = computed(() => {
 const currentIndex = ref(0);
 
 const prev = () => {
-  if (!filteredValidatorServices.value.length) return; // If no services, do nothing
+  if (!filteredValidatorServices.value.length) return;
   currentIndex.value = (currentIndex.value - 1 + filteredValidatorServices.value.length) % filteredValidatorServices.value.length;
 };
 
 const next = () => {
-  if (!filteredValidatorServices.value.length) return; // If no services, do nothing
+  if (!filteredValidatorServices.value.length) return;
   currentIndex.value = (currentIndex.value + 1) % filteredValidatorServices.value.length;
 };
 
-// This computed property will return the currently selected service based on currentIndex
 const selectedValidatorService = computed(() => {
   return filteredValidatorServices.value.length ? filteredValidatorServices.value[currentIndex.value] : null;
 });

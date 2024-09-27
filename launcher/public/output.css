@@ -1898,6 +1898,10 @@ video {
   height: 100vh;
 }
 
+.h-1\/4{
+  height: 25%;
+}
+
 .max-h-10{
   max-height: 2.5rem;
 }
@@ -2841,6 +2845,12 @@ video {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.items-baseline{
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
 }
 
 .justify-normal{
@@ -4242,6 +4252,11 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
+}
+
+.bg-red-400{
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
