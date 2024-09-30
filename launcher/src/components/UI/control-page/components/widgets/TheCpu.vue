@@ -1,10 +1,21 @@
 <template>
-  <div class="theCpuParent flex w-full h-full justify-center items-center">
+  <div
+    class="theCpuParent flex w-full h-full justify-center items-center"
+    @mouseenter="
+      footerStore.cursorLocation = `${t('controlPage.cpuUsageIs', {
+        usage: cpu,
+      })}`
+    "
+    @mouseleave="footerStore.cursorLocation = ''"
+  >
     <div class="cpuIco w-1/3 h-full flex flex-col justify-center items-center">
       <div class="cpuIco-container flex justify-center items-center w-full h-4/5">
         <img class="w-3/4" src="/img/icon/control-page-icons/cpuIcon.svg" />
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">CPU</span>
+      <span
+        class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase"
+        >CPU</span
+      >
     </div>
     <div class="cpuCountPart w-2/3 h-full flex flex-col justify-center items-center">
       <div class="cpuUsage flex justify-center items-center w-full h-1/2">
@@ -16,7 +27,9 @@
           </div>
         </div>
       </div>
-      <div class="cpuTemp flex justify-center items-center w-full h-1/2 text-gray-200 text-[90%] uppercase">
+      <div
+        class="cpuTemp flex justify-center items-center w-full h-1/2 text-gray-200 text-[90%] uppercase"
+      >
         <div class="cpuTemp-title flex justify-center items-center w-2/5 h-full">
           <span>{{ $t("controlPage.usage") }} :</span>
         </div>
@@ -31,8 +44,14 @@
 <script setup>
 import { useControlStore } from "@/store/theControl";
 import { computed } from "vue";
+import { useFooter } from "@/store/theFooter";
+
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
 
 const controlStore = useControlStore();
+const footerStore = useFooter();
 
 const cpu = computed(() => controlStore.cpu);
 
@@ -47,7 +66,7 @@ const getStyle = computed(() => {
   background: #33393e;
   height: 50%;
   border: 1px solid #33393e;
-  border-radius: 10px;
+  border-radius: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,7 +79,7 @@ const getStyle = computed(() => {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 3px;
 }
 .cpuProccessBar_value {
   height: 100%;

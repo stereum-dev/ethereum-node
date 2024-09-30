@@ -145,7 +145,13 @@
     "selConcensus": "Select the consensus client",
     "selExecution": "Select the execution client",
     "subsribeSubnet": "subscribed subnets",
-    "info": "INFO"
+    "info": "INFO",
+    "machineNameIs": "Machine Name is {name}",
+    "machineIp": "Machine IP is {ip}",
+    "utcTime": "UTC Time is {time}",
+    "cpuUsageIs": "CPU Usage is {usage}%",
+    "ramUsageIs": "RAM Usage is {usage} MB",
+    "ramTotalis": "Total RAM is {total} MB"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
