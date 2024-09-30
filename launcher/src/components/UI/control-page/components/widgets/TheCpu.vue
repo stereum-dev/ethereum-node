@@ -12,10 +12,7 @@
       <div class="cpuIco-container flex justify-center items-center w-full h-4/5">
         <img class="w-3/4" src="/img/icon/control-page-icons/cpuIcon.svg" />
       </div>
-      <span
-        class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase"
-        >CPU</span
-      >
+      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">CPU</span>
     </div>
     <div class="cpuCountPart w-2/3 h-full flex flex-col justify-center items-center">
       <div class="cpuUsage flex justify-center items-center w-full h-1/2">
@@ -27,9 +24,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="cpuTemp flex justify-center items-center w-full h-1/2 text-gray-200 text-[90%] uppercase"
-      >
+      <div class="cpuTemp flex justify-center items-center w-full h-1/2 text-gray-200 text-[90%] uppercase">
         <div class="cpuTemp-title flex justify-center items-center w-2/5 h-full">
           <span>{{ $t("controlPage.usage") }} :</span>
         </div>
