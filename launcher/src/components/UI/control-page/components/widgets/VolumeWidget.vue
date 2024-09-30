@@ -31,8 +31,19 @@
         <div
           class="left-side w-2/3 h-full flex justify-center items-center text-[45%] text-green-500 uppercase"
         >
-          <span>{{ availDisk }} GB {{ $t("controlPage.free") }} </span
-          ><span class="text-gray-400">
+          <span
+            @mouseenter="
+              footerStore.cursorLocation = `${availDisk} GB ${t('controlPage.free')}`
+            "
+            @mouseleave="footerStore.cursorLocation = ''"
+            >{{ availDisk }} GB {{ t("controlPage.free") }} </span
+          ><span
+            class="text-gray-400"
+            @mouseenter="
+              footerStore.cursorLocation = `${totalDisk} GB ${t('controlPage.total')}`
+            "
+            @mouseleave="footerStore.cursorLocation = ''"
+          >
             / {{ totalDisk }} GB {{ $t("controlPage.total") }}</span
           >
         </div>
@@ -54,6 +65,14 @@
           >
             <div
               class="title w-full h-1/2 flex justify-center items-center text-orange-500 uppercase"
+              @mouseenter="
+                footerStore.cursorLocation = `Write: ${convertWriteValueToMb} ${
+                  controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
+                    ? 'KB'
+                    : 'MB'
+                }`
+              "
+              @mouseleave="footerStore.cursorLocation = ''"
             >
               {{ convertWriteValueToMb }}
               {{
@@ -64,6 +83,14 @@
             </div>
             <div
               class="title w-full h-1/2 flex justify-center items-center text-teal-700 uppercase"
+              @mouseenter="
+                footerStore.cursorLocation = `Read: ${convertReadValueToMb} ${
+                  controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0
+                    ? 'KB'
+                    : 'MB'
+                }`
+              "
+              @mouseleave="footerStore.cursorLocation = ''"
             >
               {{ convertReadValueToMb }}
               {{
