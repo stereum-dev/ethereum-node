@@ -412,6 +412,49 @@ export default {
                 } else {
                   option.changeValue = true;
                 }
+              } else if (this.item.service === "ErigonService") {
+                let match = this.item.yaml.match(new RegExp(`--prune([=]?)([\\S*]+)?`));
+                switch (option.commands[0]) {
+                  case "--prune-history": {
+                    option.changeValue = match[2].includes("h") ? true : false;
+                  break;
+                  }
+                  case "--prune-receipts": {
+                    option.changeValue = match[2].includes("r") ? true : false;
+                  break;
+                  }
+                  case "--prune-transaction": {
+                    option.changeValue = match[2].includes("t") ? true : false;
+                  break;
+                  }
+                  case "--prune-call-traces": {
+                    option.changeValue = match[2].includes("c") ? true : false;
+                  break;
+                  }
+                }
+                this.somethingIsChanged(option);
+              } 
+              else if (this.item.service === "NethermindService") {
+                if(!this.item.yaml.includes("Pruning.AvailableSpaceCheckEnabled=")){
+                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
+                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
+                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
+                  let spaces = " ";
+                  if (matchSpaces) {
+                    spaces = matchSpaces[1];
+                  }
+                  this.item.yaml = this.item.yaml.replace(new RegExp(`${lastCommand}`), lastCommand + spaces + "--Pruning.AvailableSpaceCheckEnabled=true");
+                }
+                if(!this.item.yaml.includes("Pruning.FullPruningDisableLowPriorityWrites=")){
+                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
+                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
+                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
+                  let spaces = " ";
+                  if (matchSpaces) {
+                    spaces = matchSpaces[1];
+                  }
+                  this.item.yaml = this.item.yaml.replace(new RegExp(`${lastCommand}`), lastCommand + spaces + "--Pruning.FullPruningDisableLowPriorityWrites=false");
+                }
               } else {
                 option.changeValue = false;
               }
@@ -585,6 +628,32 @@ export default {
         } else if (!this.item.yaml.includes("--gas-limit") && this.item.yaml.includes("validators-proposer-config")) {
           await ControlService.removeGasConfigFile(this.item.config.volumes[0].destinationPath);
           this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*validators-proposer-config.*$/gm), "");
+        }
+      }
+      if (this.item.service === "LighthouseBeaconService") {
+        if (!this.item.yaml.includes("--slasher\n") && this.item.yaml.includes("/opt/app/slasher")) {
+          this.item.yaml = this.item.yaml.replace(/\n^.*--slasher-dir.*$/gm, "");
+          await ControlService.deleteSlasherVolume(this.item.config.serviceID);
+          this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*\/opt\/app\/slasher*$/gm), "");
+        } else if (this.item.yaml.includes("--slasher") && !this.item.yaml.includes("/opt/app/slasher")) {
+          this.item.yaml = this.item.yaml.replace("--slasher","--slasher\n  - --slasher-dir=/opt/app/slasher");
+          this.item.yaml = this.item.yaml.replace("volumes:" ,"volumes:\n  - /opt/stereum/lighthouse-" + this.item.config.serviceID +"/slasher:/opt/app/slasher")
+        }
+      }
+      if (this.item.service === "ErigonService") {
+        let erigonPruneSetting = "";
+        if (this.item.yaml.includes("--prune-history")) erigonPruneSetting += "h";
+        if (this.item.yaml.includes("--prune-receipts")) erigonPruneSetting += "r";
+        if (this.item.yaml.includes("--prune-transaction")) erigonPruneSetting += "t";
+        if (this.item.yaml.includes("--prune-call-traces")) erigonPruneSetting += "c";
+        if(erigonPruneSetting == "") erigonPruneSetting = "disabled";
+        this.item.yaml = this.item.yaml.replace(/\n^.*--prune-.*$/gm, "");
+        this.item.yaml = this.item.yaml.replace(/--prune=.*$/gm, "--prune=" + erigonPruneSetting);
+      }
+      if (this.item.service === "NethermindService") {let erigonPruneSetting = "";
+        if (!this.item.yaml.includes("--FullPruningDisableLowPriorityWrites=")) {
+        this.item.yaml = this.item.yaml.replace(/\n^.*--prune-.*$/gm, "");
+        this.item.yaml = this.item.yaml.replace(/--prune=.*$/gm, "--prune=" + erigonPruneSetting);
         }
       }
 
