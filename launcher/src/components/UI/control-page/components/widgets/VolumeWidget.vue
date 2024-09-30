@@ -120,10 +120,6 @@ const controlStore = useControlStore();
 const serviceStore = useServices();
 const footerStore = useFooter();
 
-const test = (item) => {
-  console.log(item);
-};
-
 const totalDisk = computed(() => controlStore.totalDisk);
 
 const storagestatus = computed(() => {
