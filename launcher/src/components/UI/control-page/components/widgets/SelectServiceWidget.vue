@@ -155,7 +155,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
 // import { useServices } from "@/store/services";
@@ -225,6 +225,25 @@ const selectedPair = computed(() => {
   return servicePairs.value.length ? servicePairs.value[currentPairIndex.value] : null;
 });
 
+watch(
+  selectedPair,
+  (newPair) => {
+    setupStore.selectedServicePairs = newPair;
+    console.log("selectedServicePairs =====>", setupStore.selectedServicePairs);
+  },
+  { immediate: true }
+);
+
+watch(
+  servicePairs,
+  (newPairs) => {
+    if (currentPairIndex.value >= newPairs.length) {
+      currentPairIndex.value = 0; // Reset index if out of bounds
+    }
+  },
+  { immediate: true }
+);
+
 const formattedValidatorNo = computed(() => {
   return stakingStore.keys.length.toString().padStart(3, "0");
 });
@@ -238,7 +257,6 @@ const deopdownHandler = () => {
 const servicePicker = (arg) => {
   arg === "vld" ? (controlStore.pickeedService = "vld") : (controlStore.pickeedService = "exeCons");
   isOpen.value = !isOpen.value;
-  console.log("servicePairs =====>", servicePairs.value);
 };
 
 const filteredValidatorServices = computed(() => {
