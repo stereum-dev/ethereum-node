@@ -10,7 +10,16 @@
     </div>
     <div class="totalReceived w-1/3 h-full flex flex-col justify-center items-center">
       <div class="receivePerSecond w-full h-1/2 flex justify-center items-end">
-        <span class="text-orange-600 font-semibold text-lg">{{ controlStore.rx }}</span>
+        <span
+          class="text-orange-600 font-semibold text-lg"
+          @mouseenter="
+            footerStore.cursorLocation = `${t('controlPage.receiveDataIs', {
+              data: controlStore.rx,
+            })} `
+          "
+          @mouseleave="footerStore.cursorLocation = ''"
+          >{{ controlStore.rx }}</span
+        >
       </div>
       <div class="w-full h-1/3 font-semibold text-gray-200 text-sm flex justify-center items-end">
         <span>KB/s</span>
@@ -21,7 +30,16 @@
     </div>
     <div class="totalTransmitted w-1/3 h-full flex flex-col">
       <div class="transPerSecond w-full h-1/2 flex justify-center items-end">
-        <span class="text-teal-700 font-semibold text-lg">{{ controlStore.tx }}</span>
+        <span
+          class="text-teal-700 font-semibold text-lg"
+          @mouseenter="
+            footerStore.cursorLocation = `${t('controlPage.transmitDataIs', {
+              data: controlStore.tx,
+            })} `
+          "
+          @mouseleave="footerStore.cursorLocation = ''"
+          >{{ controlStore.tx }}</span
+        >
       </div>
       <div class="w-full h-1/3 font-semibold text-gray-200 text-sm flex justify-center items-end">
         <span>KB/s</span>
@@ -35,6 +53,12 @@
 
 <script setup>
 import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
+
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
 
 const controlStore = useControlStore();
+const footerStore = useFooter();
 </script>

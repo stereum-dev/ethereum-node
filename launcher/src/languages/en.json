@@ -151,7 +151,9 @@
     "utcTime": "UTC Time is {time}",
     "cpuUsageIs": "CPU Usage is {usage}%",
     "ramUsageIs": "RAM Usage is {usage} MB",
-    "ramTotalis": "Total RAM is {total} MB"
+    "ramTotalis": "Total RAM is {total} MB",
+    "receiveDataIs": "Receiving Data is {data} KB/s",
+    "transmitDataIs": "Transmitting Data is {data} KB/s"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

@@ -77,7 +77,7 @@
           <div class="name-val h-full w-2/6 flex justify-center items-center text-2xs text-gray-200 font-semibold">
             {{ !selectedValidatorService?.name ? "" : selectedValidatorService.name }}
           </div>
-          <div class="id-val h-full w-2/6 flex justify-center items-center text-[40%] text-gray-200">
+          <div class="id-val h-full w-2/6 flex justify-center items-center text-[60%] text-gray-200">
             {{ !selectedValidatorService?.config.serviceID ? "" : formatServiceId(selectedValidatorService?.config.serviceID) }}
           </div>
         </div>
@@ -104,7 +104,11 @@
       </div>
     </div>
     <div v-else class="h-1/2 w-full flex justify-center items-center">
-      <div class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer">
+      <div
+        v-if="servicePairs.length > 1"
+        class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer"
+        @click="prevPair"
+      >
         <svg
           fill="none"
           viewBox="0 0 24 24"
@@ -116,15 +120,27 @@
       </div>
       <div class="pairs-info w-4/5 h-full flex justify-center items-center">
         <div class="exec-info w-1/2 h-full flex justify-center items-center flex-col">
-          <div class="exec-name w-full h-1/2 flex justify-center items-center text-2xs text-gray-200 font-semibold">Lorem.</div>
-          <div class="exec-id w-full h-1/2 flex justify-center items-center text-[40%] text-gray-200">Lorem ipsum dolor sit.</div>
+          <div class="exec-name w-full h-1/2 flex justify-center items-center text-2xs text-gray-200 font-semibold">
+            {{ selectedPair?.executionService?.name || "" }}
+          </div>
+          <div class="exec-id w-full h-1/2 flex justify-center items-center text-[60%] text-gray-200">
+            {{ formatServiceId(selectedPair?.executionService?.id) || "" }}
+          </div>
         </div>
         <div class="cons-info w-1/2 h-full flex justify-center items-center flex-col">
-          <div class="cons-name w-full h-1/2 flex justify-center items-center text-2xs text-gray-200 font-semibold">Lorem.</div>
-          <div class="cons-id w-full h-1/2 flex justify-center items-center text-[40%] text-gray-200">Lorem ipsum dolor sit.</div>
+          <div class="cons-name w-full h-1/2 flex justify-center items-center text-2xs text-gray-200 font-semibold">
+            {{ selectedPair?.consensusService?.name || "" }}
+          </div>
+          <div class="cons-id w-full h-1/2 flex justify-center items-center text-[60%] text-gray-200">
+            {{ formatServiceId(selectedPair?.consensusService?.id) || "" }}
+          </div>
         </div>
       </div>
-      <div class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer">
+      <div
+        v-if="servicePairs.length > 1"
+        class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer"
+        @click="nextPair"
+      >
         <svg
           fill="none"
           viewBox="0 0 24 24"
@@ -142,13 +158,72 @@
 import { ref, computed } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
-import { useServices } from "@/store/services";
+// import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 
 const controlStore = useControlStore();
 const setupStore = useSetups();
 const stakingStore = useStakingStore();
-const serviceStore = useServices();
+// const serviceStore = useServices();
+
+const servicePairs = computed(() => {
+  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
+    return [];
+  }
+
+  const consensusServices = setupStore.selectedSetup.services.filter((service) => service.category === "consensus");
+
+  const pairs = consensusServices.flatMap((consensusService) => {
+    const executionClients = consensusService.config?.dependencies?.executionClients || [];
+
+    return executionClients.map((executionClient) => {
+      const executionDetails =
+        setupStore.selectedSetup.services.find(
+          (service) => service.service === executionClient.service && service.config.serviceID === executionClient.id
+        ) || {};
+
+      const consensusDetails =
+        setupStore.selectedSetup.services.find(
+          (service) => service.service === consensusService.service && service.config.serviceID === consensusService.config.serviceID
+        ) || {};
+
+      return {
+        consensusService: {
+          service: consensusService.service,
+          id: consensusService.config.serviceID,
+          name: consensusDetails.name || "",
+          icon: consensusDetails.icon || "",
+          state: consensusDetails.state || "",
+        },
+        executionService: {
+          service: executionClient.service,
+          id: executionClient.id,
+          name: executionDetails.name || "",
+          icon: executionDetails.icon || "",
+          state: executionDetails.state || "",
+        },
+      };
+    });
+  });
+
+  return pairs;
+});
+
+const currentPairIndex = ref(0);
+
+const prevPair = () => {
+  if (!servicePairs.value.length) return;
+  currentPairIndex.value = (currentPairIndex.value - 1 + servicePairs.value.length) % servicePairs.value.length;
+};
+
+const nextPair = () => {
+  if (!servicePairs.value.length) return;
+  currentPairIndex.value = (currentPairIndex.value + 1) % servicePairs.value.length;
+};
+
+const selectedPair = computed(() => {
+  return servicePairs.value.length ? servicePairs.value[currentPairIndex.value] : null;
+});
 
 const formattedValidatorNo = computed(() => {
   return stakingStore.keys.length.toString().padStart(3, "0");
@@ -163,7 +238,7 @@ const deopdownHandler = () => {
 const servicePicker = (arg) => {
   arg === "vld" ? (controlStore.pickeedService = "vld") : (controlStore.pickeedService = "exeCons");
   isOpen.value = !isOpen.value;
-  console.log(serviceStore.installedServices.dependencies);
+  console.log("servicePairs =====>", servicePairs.value);
 };
 
 const filteredValidatorServices = computed(() => {
