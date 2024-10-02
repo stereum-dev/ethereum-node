@@ -194,9 +194,10 @@ const createServicePair = (consensusService, executionClient, services) => {
 
   return {
     consensusService: formatServiceDetails(consensusService, consensusDetails),
+
     executionService: {
-      ...executionDetails, // Ensures we pass the executionDetails correctly
-      id: executionClient.id, // Make sure the execution client ID is preserved and used
+      ...executionDetails,
+      id: executionClient.id,
     },
   };
 };
@@ -207,6 +208,7 @@ const formatServiceDetails = (service, details) => ({
   name: details.name || "",
   icon: details.icon || "",
   state: details.state || "",
+  ports: service.config?.ports || [],
 });
 
 // Handle previous and next service pair navigation
@@ -254,7 +256,30 @@ watch(
   { immediate: true }
 );
 
-// Validator-related functions and computed properties
+const relatedValidators = computed(() => {
+  if (!selectedPair.value || !selectedPair.value.consensusService) return [];
+
+  return (
+    setupStore.selectedSetup?.services.filter((service) => {
+      if (service.category !== "validator") return false;
+
+      const consensusDependencies = service.config?.dependencies?.consensusClients || [];
+      return consensusDependencies.some(
+        (dependency) =>
+          dependency.service === selectedPair.value.consensusService.service && dependency.id === selectedPair.value.consensusService.id
+      );
+    }) || []
+  );
+});
+
+watch(
+  () => relatedValidators.value,
+  (newValidators) => {
+    setupStore.relatedValidators = newValidators;
+  },
+  { deep: true, immediate: true }
+);
+
 const formattedValidatorNo = computed(() => stakingStore.keys.length.toString().padStart(3, "0"));
 
 const isOpen = ref(false);
