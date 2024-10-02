@@ -1,7 +1,8 @@
 <template>
   <div class="select-service-widget-parent flex flex-col w-full h-full justify-center items-center">
+    <!-- Service Selection Dropdown -->
     <div class="h-1/2 w-full justify-center items-center flex p-1">
-      <div class="selector-services w-full h-full flex rounded-md border border-gray-500" @click="deopdownHandler">
+      <div class="selector-services w-full h-full flex rounded-md border border-gray-500" @click="toggleDropdown">
         <div class="selected-service-name flex justify-center items-center w-[90%] h-full text-gray-200 text-2xs font-semibold uppercase">
           {{ controlStore.pickeedService === "exeCons" ? "EXECUTION & CONSENSUS CLIENTS" : "VALIDATOR CLIENT" }}
         </div>
@@ -18,7 +19,8 @@
         </div>
       </div>
 
-      <Transition
+      <!-- Dropdown Content -->
+      <transition
         enter-active-class="transform transition duration-500 ease-custom"
         enter-class="-translate-y-1/2 scale-y-0 opacity-0"
         enter-to-class="translate-y-0 scale-y-100 opacity-100"
@@ -47,14 +49,15 @@
             >
           </div>
         </div>
-      </Transition>
+      </transition>
     </div>
 
+    <!-- Validator Service Section -->
     <div v-if="controlStore.pickeedService === 'vld'" class="h-1/2 w-full flex justify-center items-center">
       <div
         v-if="filteredValidatorServices.length > 1"
         class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer"
-        @click="prev"
+        @click="prevValidator"
       >
         <svg
           fill="none"
@@ -91,7 +94,7 @@
       <div
         v-if="filteredValidatorServices.length > 1"
         class="right-arro w-1/10 h-full flex justify-center items-center cursor-pointer"
-        @click="next"
+        @click="nextValidator"
       >
         <svg
           fill="none"
@@ -103,6 +106,8 @@
         </svg>
       </div>
     </div>
+
+    <!-- Execution & Consensus Client Section -->
     <div v-else class="h-1/2 w-full flex justify-center items-center">
       <div
         v-if="servicePairs.length > 1"
@@ -158,71 +163,64 @@
 import { ref, computed, watch } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
-// import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 
 const controlStore = useControlStore();
 const setupStore = useSetups();
 const stakingStore = useStakingStore();
-// const serviceStore = useServices();
 
+// Create service pairs based on setup services
 const servicePairs = computed(() => {
-  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
-    return [];
-  }
+  const setup = setupStore.selectedSetup;
+  if (!setup || !setup.services) return [];
 
-  const consensusServices = setupStore.selectedSetup.services.filter((service) => service.category === "consensus");
-
-  const pairs = consensusServices.flatMap((consensusService) => {
-    const executionClients = consensusService.config?.dependencies?.executionClients || [];
-
-    return executionClients.map((executionClient) => {
-      const executionDetails =
-        setupStore.selectedSetup.services.find(
-          (service) => service.service === executionClient.service && service.config.serviceID === executionClient.id
-        ) || {};
-
-      const consensusDetails =
-        setupStore.selectedSetup.services.find(
-          (service) => service.service === consensusService.service && service.config.serviceID === consensusService.config.serviceID
-        ) || {};
-
-      return {
-        consensusService: {
-          service: consensusService.service,
-          id: consensusService.config.serviceID,
-          name: consensusDetails.name || "",
-          icon: consensusDetails.icon || "",
-          state: consensusDetails.state || "",
-        },
-        executionService: {
-          service: executionClient.service,
-          id: executionClient.id,
-          name: executionDetails.name || "",
-          icon: executionDetails.icon || "",
-          state: executionDetails.state || "",
-        },
-      };
+  return setup.services
+    .filter((service) => service.category === "consensus")
+    .flatMap((consensusService) => {
+      const executionClients = consensusService.config?.dependencies?.executionClients || [];
+      return executionClients.map((executionClient) => createServicePair(consensusService, executionClient, setup.services));
     });
-  });
-
-  return pairs;
 });
 
+const createServicePair = (consensusService, executionClient, services) => {
+  const executionDetails =
+    services.find((service) => service.service === executionClient.service && service.config.serviceID === executionClient.id) || {};
+
+  const consensusDetails =
+    services.find(
+      (service) => service.service === consensusService.service && service.config.serviceID === consensusService.config.serviceID
+    ) || {};
+
+  return {
+    consensusService: formatServiceDetails(consensusService, consensusDetails),
+    executionService: formatServiceDetails(executionClient, executionDetails),
+  };
+};
+
+const formatServiceDetails = (service, details) => ({
+  service: service.service,
+  id: service.config.serviceID,
+  name: details.name || "",
+  icon: details.icon || "",
+  state: details.state || "",
+});
+
+// Handle previous and next service pair navigation
 const prevPair = () => {
-  if (!servicePairs.value.length) return;
-  setupStore.currentPairIndex = (setupStore.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
+  if (servicePairs.value.length) {
+    setupStore.currentPairIndex = (setupStore.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
+  }
 };
 
 const nextPair = () => {
-  if (!servicePairs.value.length) return;
-  setupStore.currentPairIndex = (setupStore.currentPairIndex + 1) % servicePairs.value.length;
+  if (servicePairs.value.length) {
+    setupStore.currentPairIndex = (setupStore.currentPairIndex + 1) % servicePairs.value.length;
+  }
 };
 
-const selectedPair = computed(() => {
-  return servicePairs.value.length ? servicePairs.value[setupStore.currentPairIndex] : null;
-});
+const selectedPair = computed(() => servicePairs.value[setupStore.currentPairIndex] || null);
 
+// Watchers to keep the selected pair and index in sync
 watch(
   selectedPair,
   (newPair) => {
@@ -235,7 +233,7 @@ watch(
   servicePairs,
   (newPairs) => {
     if (setupStore.currentPairIndex >= newPairs.length) {
-      setupStore.currentPairIndex = 0; // Reset index if out of bounds
+      setupStore.currentPairIndex = 0;
     }
   },
   { immediate: true }
@@ -252,49 +250,43 @@ watch(
   { immediate: true }
 );
 
-const formattedValidatorNo = computed(() => {
-  return stakingStore.keys.length.toString().padStart(3, "0");
-});
+// Validator-related functions and computed properties
+const formattedValidatorNo = computed(() => stakingStore.keys.length.toString().padStart(3, "0"));
 
 const isOpen = ref(false);
 
-const deopdownHandler = () => {
+const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
-const servicePicker = (arg) => {
-  arg === "vld" ? (controlStore.pickeedService = "vld") : (controlStore.pickeedService = "exeCons");
-  isOpen.value = !isOpen.value;
+const servicePicker = (type) => {
+  controlStore.pickeedService = type === "vld" ? "vld" : "exeCons";
+  toggleDropdown();
 };
 
 const filteredValidatorServices = computed(() => {
-  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
-    return [];
-  }
-
-  return setupStore.selectedSetup.services.filter((service) => service.category === "validator");
+  const setup = setupStore.selectedSetup;
+  return setup?.services.filter((service) => service.category === "validator") || [];
 });
 
 const currentIndex = ref(0);
 
-const prev = () => {
-  if (!filteredValidatorServices.value.length) return;
-  currentIndex.value = (currentIndex.value - 1 + filteredValidatorServices.value.length) % filteredValidatorServices.value.length;
+const prevValidator = () => {
+  if (filteredValidatorServices.value.length) {
+    currentIndex.value = (currentIndex.value - 1 + filteredValidatorServices.value.length) % filteredValidatorServices.value.length;
+  }
 };
 
-const next = () => {
-  if (!filteredValidatorServices.value.length) return;
-  currentIndex.value = (currentIndex.value + 1) % filteredValidatorServices.value.length;
+const nextValidator = () => {
+  if (filteredValidatorServices.value.length) {
+    currentIndex.value = (currentIndex.value + 1) % filteredValidatorServices.value.length;
+  }
 };
 
-const selectedValidatorService = computed(() => {
-  return filteredValidatorServices.value.length ? filteredValidatorServices.value[currentIndex.value] : null;
-});
+const selectedValidatorService = computed(() => filteredValidatorServices.value[currentIndex.value] || null);
 
-const formatServiceId = (id) => {
-  if (!id || id.length < 7) return id; // Return as-is if ID is too short
-  return `${id.slice(0, 5)}...${id.slice(-5)}`;
-};
+// Format the service ID for display
+const formatServiceId = (id) => (id && id.length >= 7 ? `${id.slice(0, 5)}...${id.slice(-5)}` : id);
 </script>
 
 <style scoped>
