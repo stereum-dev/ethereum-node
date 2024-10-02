@@ -183,23 +183,27 @@ const servicePairs = computed(() => {
 });
 
 const createServicePair = (consensusService, executionClient, services) => {
-  const executionDetails =
-    services.find((service) => service.service === executionClient.service && service.config.serviceID === executionClient.id) || {};
+  const executionDetails = services.find(
+    (service) => service.service === executionClient.service && service.config?.serviceID === executionClient.id
+  ) || { name: executionClient.service, config: { serviceID: executionClient.id } };
 
   const consensusDetails =
     services.find(
-      (service) => service.service === consensusService.service && service.config.serviceID === consensusService.config.serviceID
+      (service) => service.service === consensusService.service && service.config?.serviceID === consensusService.config?.serviceID
     ) || {};
 
   return {
     consensusService: formatServiceDetails(consensusService, consensusDetails),
-    executionService: formatServiceDetails(executionClient, executionDetails),
+    executionService: {
+      ...executionDetails, // Ensures we pass the executionDetails correctly
+      id: executionClient.id, // Make sure the execution client ID is preserved and used
+    },
   };
 };
 
 const formatServiceDetails = (service, details) => ({
   service: service.service,
-  id: service.config.serviceID,
+  id: service.config?.serviceID || "",
   name: details.name || "",
   icon: details.icon || "",
   state: details.state || "",
