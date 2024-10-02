@@ -636,8 +636,9 @@ export default {
           await ControlService.deleteSlasherVolume(this.item.config.serviceID);
           this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*\/opt\/app\/slasher*$/gm), "");
         } else if (this.item.yaml.includes("--slasher") && !this.item.yaml.includes("/opt/app/slasher")) {
+          let path = this.item.yaml.match(/^.*beacon:\/opt\/app\/beacon.*$/gm)[0].replace(new RegExp(/beacon/gm), "slasher");
           this.item.yaml = this.item.yaml.replace("--slasher","--slasher\n  - --slasher-dir=/opt/app/slasher");
-          this.item.yaml = this.item.yaml.replace("volumes:" ,"volumes:\n  - /opt/stereum/lighthouse-" + this.item.config.serviceID +"/slasher:/opt/app/slasher")
+          this.item.yaml = this.item.yaml.replace("volumes:" ,"volumes:\n" + path)
         }
       }
       if (this.item.service === "ErigonService") {
