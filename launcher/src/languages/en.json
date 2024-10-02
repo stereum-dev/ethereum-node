@@ -153,7 +153,9 @@
     "ramUsageIs": "RAM Usage is {usage} MB",
     "ramTotalis": "Total RAM is {total} MB",
     "receiveDataIs": "Receiving Data is {data} KB/s",
-    "transmitDataIs": "Transmitting Data is {data} KB/s"
+    "transmitDataIs": "Transmitting Data is {data} KB/s",
+    "clientPairIndexIs": "Client Pair Index is {index}",
+    "totalClientPairs": "Total Client Pairs is {total}"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

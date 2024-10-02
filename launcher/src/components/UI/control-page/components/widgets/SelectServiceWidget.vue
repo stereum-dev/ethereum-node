@@ -209,27 +209,24 @@ const servicePairs = computed(() => {
   return pairs;
 });
 
-const currentPairIndex = ref(0);
-
 const prevPair = () => {
   if (!servicePairs.value.length) return;
-  currentPairIndex.value = (currentPairIndex.value - 1 + servicePairs.value.length) % servicePairs.value.length;
+  setupStore.currentPairIndex = (setupStore.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
 };
 
 const nextPair = () => {
   if (!servicePairs.value.length) return;
-  currentPairIndex.value = (currentPairIndex.value + 1) % servicePairs.value.length;
+  setupStore.currentPairIndex = (setupStore.currentPairIndex + 1) % servicePairs.value.length;
 };
 
 const selectedPair = computed(() => {
-  return servicePairs.value.length ? servicePairs.value[currentPairIndex.value] : null;
+  return servicePairs.value.length ? servicePairs.value[setupStore.currentPairIndex] : null;
 });
 
 watch(
   selectedPair,
   (newPair) => {
     setupStore.selectedServicePairs = newPair;
-    console.log("selectedServicePairs =====>", setupStore.selectedServicePairs);
   },
   { immediate: true }
 );
@@ -237,8 +234,19 @@ watch(
 watch(
   servicePairs,
   (newPairs) => {
-    if (currentPairIndex.value >= newPairs.length) {
-      currentPairIndex.value = 0; // Reset index if out of bounds
+    if (setupStore.currentPairIndex >= newPairs.length) {
+      setupStore.currentPairIndex = 0; // Reset index if out of bounds
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  () => servicePairs.value.length,
+  (newLength) => {
+    setupStore.clientPairsLength = newLength;
+    if (setupStore.currentPairIndex >= newLength) {
+      setupStore.currentPairIndex = 0;
     }
   },
   { immediate: true }

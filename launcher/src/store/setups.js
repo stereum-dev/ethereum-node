@@ -6,7 +6,11 @@ export const useSetups = defineStore("setups", {
     allSetups: [],
     editSetups: [],
     stakingSetups: [],
+
+    //select service pairs widget
     selectedServicePairs: null,
+    currentPairIndex: 0,
+    clientPairsLength: 0,
 
     //Setup Node Page
     isConfigViewActive: false,
