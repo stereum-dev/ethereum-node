@@ -156,7 +156,8 @@
     "transmitDataIs": "Transmitting Data is {data} KB/s",
     "clientPairIndexIs": "Client Pair Index is {index}",
     "totalClientPairs": "Total Client Pairs is {total}",
-    "connectValWidg": "CONNECTED VALIDATOR CLIENTS"
+    "connectValWidg": "CONNECTED VALIDATOR CLIENTS",
+    "keyImported": "in this validator client {imported} {key} {isAre} imported"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
