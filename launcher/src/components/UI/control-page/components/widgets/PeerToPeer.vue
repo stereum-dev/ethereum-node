@@ -10,12 +10,34 @@
       <div class="wrapper">
         <no-data
           v-if="isConsensusMissing || !footerStore.isConsensusRunning"
-          @mouseenter="cursorLocation = footerStore.nodataMessage"
-          @mouseleave="cursorLocation = ''"
+          @mouseenter="footerStore.cursorLocation = footerStore.nodataMessage"
+          @mouseleave="footerStore.cursorLocation = ''"
         />
         <div v-else class="p2pBarBox">
-          <ClientStatus :client-name="consensusClient" :client-val="consensusValPeer" :client-num="consensusNumPeer" />
-          <ClientStatus :client-name="executionClient" :client-val="executionValPeer" :client-num="executionNumPeer" />
+          <ClientStatus
+            :client-name="consensusClient"
+            :client-val="consensusValPeer"
+            :client-num="consensusNumPeer"
+            @mouseenter="
+              footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
+                client: consensusClient,
+                peer: consensusValPeer,
+              })} `
+            "
+            @mouseleave="cursorLocation = ''"
+          />
+          <ClientStatus
+            :client-name="executionClient"
+            :client-val="executionValPeer"
+            :client-num="executionNumPeer"
+            @mouseenter="
+              footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
+                client: executionClient,
+                peer: executionValPeer,
+              })} `
+            "
+            @mouseleave="cursorLocation = ''"
+          />
         </div>
       </div>
     </div>
@@ -27,8 +49,12 @@ import { computed } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
+
 import NoData from "./NoData.vue";
 import ClientStatus from "../fragments/ClientStatus.vue";
+
+const t = i18n.global.t;
 
 const controlStore = useControlStore();
 const setupStore = useSetups();

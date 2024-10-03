@@ -159,7 +159,8 @@
     "connectValWidg": "CONNECTED VALIDATOR CLIENTS",
     "keyImported": "in this validator client {imported} {key} {isAre} imported",
     "portIs": "{name} port is {port} and protocol is {prot}",
-    "servicePort": "Service Ports"
+    "servicePort": "Service Ports",
+    "connectedPairsTo": "connected pairs to {client} is {peer}%"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
