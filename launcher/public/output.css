@@ -1840,6 +1840,10 @@ video {
   height: 70px;
 }
 
+.h-\[74\%\]{
+  height: 74%;
+}
+
 .h-\[8\%\]{
   height: 8%;
 }
@@ -2024,6 +2028,30 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-\[74vh\]{
+  max-height: 74vh;
+}
+
+.max-h-\[72vh\]{
+  max-height: 72vh;
+}
+
+.max-h-\[65vh\]{
+  max-height: 65vh;
+}
+
+.max-h-\[50vh\]{
+  max-height: 50vh;
+}
+
+.max-h-\[60vh\]{
+  max-height: 60vh;
+}
+
+.max-h-\[59vh\]{
+  max-height: 59vh;
 }
 
 .min-h-11{
