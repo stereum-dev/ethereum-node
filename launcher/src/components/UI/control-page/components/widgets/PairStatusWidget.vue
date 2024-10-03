@@ -1,34 +1,44 @@
 <template>
   <div class="pair-state-parent w-full h-full flex flex-col justify-center items-center">
-    <div class="index-line w-full h-1/2 flex justify-center items-center pl-2">
-      <div class="icon-box w-1/4 h-full flex justify-center items-center">
-        <img class="w-7 h-7" :src="setupStore.selectedServicePairs?.executionService?.icon" alt="execution" />
-      </div>
-      <div
-        class="status-box w-3/4 h-full flex justify-center items-center uppercase text-xs text-green-500 font-semibold"
-        :class="setupStore.selectedServicePairs?.executionService?.state == 'running' ? 'text-green-500' : 'text-red-500'"
-      >
-        {{ setupStore.selectedServicePairs?.executionService?.state == "running" ? "online" : "offline" }}
-      </div>
-    </div>
-    <div class="index-line w-full h-1/2 flex justify-center items-center pl-2">
-      <div class="icon-box w-1/4 h-full flex justify-center items-center">
-        <img class="w-7 h-7" :src="setupStore.selectedServicePairs?.consensusService?.icon" alt="execution" />
-      </div>
-      <div
-        class="status-box w-3/4 h-full flex justify-center items-center uppercase text-xs font-semibold"
-        :class="setupStore.selectedServicePairs?.consensusService?.state == 'running' ? 'text-green-500' : 'text-red-500'"
-      >
-        {{ setupStore.selectedServicePairs?.consensusService?.state == "running" ? "online" : "offline" }}
-      </div>
-    </div>
+    <ServiceState
+      v-for="(service, type) in reactiveServiceStates"
+      :key="type"
+      :icon="service.icon"
+      :name="service.name"
+      :state="service.state"
+      @mouseenter="setCursor(service.name)"
+      @mouseleave="clearCursor"
+    />
   </div>
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useSetups } from "@/store/setups";
+import { useFooter } from "@/store/theFooter";
+import ServiceState from "../fragments/ServiceState.vue";
 
 const setupStore = useSetups();
-</script>
+const footerStore = useFooter();
 
-<style scoped></style>
+const reactiveServiceStates = computed(() => ({
+  execution: {
+    name: setupStore.selectedServicePairs?.executionService?.name || "",
+    icon: setupStore.selectedServicePairs?.executionService?.icon || "",
+    state: setupStore.selectedServicePairs?.executionService?.state || "",
+  },
+  consensus: {
+    name: setupStore.selectedServicePairs?.consensusService?.name || "",
+    icon: setupStore.selectedServicePairs?.consensusService?.icon || "",
+    state: setupStore.selectedServicePairs?.consensusService?.state || "",
+  },
+}));
+
+const setCursor = (name) => {
+  footerStore.cursorLocation = name;
+};
+
+const clearCursor = () => {
+  footerStore.cursorLocation = "";
+};
+</script>
