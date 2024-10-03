@@ -1421,6 +1421,7 @@ export class Monitoring {
         details[clientType]["service"] = clt.service;
         details[clientType]["client"] = clt.service.replace(/Beacon|Service/gi, "").toUpperCase();
         details[clientType]["state"] = clt.state;
+        details[clientType]["serviceID"] = clt.config.serviceID;
         opttyp = Object.keys(services).find((key) => services[key].hasOwnProperty(clt.service));
         if (!opttyp) {
           return;
