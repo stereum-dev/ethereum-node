@@ -2609,11 +2609,13 @@ export class Monitoring {
       for (let n = 0; n < ports.length; n++) {
         if (addr == "public" && addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))) continue;
         if ((addr_type == "arr" || addr == "local") && !addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))) continue;
+
         data.push({
           name: svc.service.replace(/Beacon|Service/gi, "").toUpperCase(),
           port: ports[n].destinationPort,
           prot: ports[n].servicePortProtocol,
           type: addr_type == "arr" ? addresses.find((w) => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
+          id: svc.config.serviceID,
         });
       }
     }

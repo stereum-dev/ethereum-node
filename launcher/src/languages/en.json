@@ -157,7 +157,9 @@
     "clientPairIndexIs": "Client Pair Index is {index}",
     "totalClientPairs": "Total Client Pairs is {total}",
     "connectValWidg": "CONNECTED VALIDATOR CLIENTS",
-    "keyImported": "in this validator client {imported} {key} {isAre} imported"
+    "keyImported": "in this validator client {imported} {key} {isAre} imported",
+    "portIs": "{name} port is {port} and protocol is {prot}",
+    "servicePort": "Service Ports"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
