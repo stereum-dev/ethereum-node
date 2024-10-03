@@ -1252,7 +1252,7 @@ export const useServices = defineStore("services", {
               pattern: ["(- --JsonRpc.WebSocketsPort=)(.*)(\\n)"],
               commands: ["--JsonRpc.WebSocketsPort"],
             },
-            
+
             {
               title: "Metrics Port",
               type: "text",

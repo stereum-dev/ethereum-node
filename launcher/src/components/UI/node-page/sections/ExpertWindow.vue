@@ -26,9 +26,7 @@
       <div
         class="row-part-scrollable w-full overflow-y-auto space-y-2 mt-2"
         :class="
-          isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive
-            ? 'h-[40px]'
-            : 'max-h-[59vh]'
+          isExpertModeActive || ssvExpertModeActive || ssvDkgExpertModeActive || prometheusExpertModeActive ? 'h-[40px]' : 'max-h-[59vh]'
         "
       >
         <!-- expert mode row -->
@@ -417,25 +415,24 @@ export default {
                 switch (option.commands[0]) {
                   case "--prune-history": {
                     option.changeValue = match[2].includes("h") ? true : false;
-                  break;
+                    break;
                   }
                   case "--prune-receipts": {
                     option.changeValue = match[2].includes("r") ? true : false;
-                  break;
+                    break;
                   }
                   case "--prune-transaction": {
                     option.changeValue = match[2].includes("t") ? true : false;
-                  break;
+                    break;
                   }
                   case "--prune-call-traces": {
                     option.changeValue = match[2].includes("c") ? true : false;
-                  break;
+                    break;
                   }
                 }
                 this.somethingIsChanged(option);
-              } 
-              else if (this.item.service === "NethermindService") {
-                if(!this.item.yaml.includes("Pruning.AvailableSpaceCheckEnabled=")){
+              } else if (this.item.service === "NethermindService") {
+                if (!this.item.yaml.includes("Pruning.AvailableSpaceCheckEnabled=")) {
                   const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
                   const lastCommand = matchAllCommands[matchAllCommands.length - 1];
                   const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
@@ -443,9 +440,12 @@ export default {
                   if (matchSpaces) {
                     spaces = matchSpaces[1];
                   }
-                  this.item.yaml = this.item.yaml.replace(new RegExp(`${lastCommand}`), lastCommand + spaces + "--Pruning.AvailableSpaceCheckEnabled=true");
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`${lastCommand}`),
+                    lastCommand + spaces + "--Pruning.AvailableSpaceCheckEnabled=true"
+                  );
                 }
-                if(!this.item.yaml.includes("Pruning.FullPruningDisableLowPriorityWrites=")){
+                if (!this.item.yaml.includes("Pruning.FullPruningDisableLowPriorityWrites=")) {
                   const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
                   const lastCommand = matchAllCommands[matchAllCommands.length - 1];
                   const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
@@ -453,7 +453,10 @@ export default {
                   if (matchSpaces) {
                     spaces = matchSpaces[1];
                   }
-                  this.item.yaml = this.item.yaml.replace(new RegExp(`${lastCommand}`), lastCommand + spaces + "--Pruning.FullPruningDisableLowPriorityWrites=false");
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`${lastCommand}`),
+                    lastCommand + spaces + "--Pruning.FullPruningDisableLowPriorityWrites=false"
+                  );
                 }
               } else {
                 option.changeValue = false;
@@ -637,8 +640,8 @@ export default {
           this.item.yaml = this.item.yaml.replace(new RegExp(/\n^.*\/opt\/app\/slasher*$/gm), "");
         } else if (this.item.yaml.includes("--slasher") && !this.item.yaml.includes("/opt/app/slasher")) {
           let path = this.item.yaml.match(/^.*beacon:\/opt\/app\/beacon.*$/gm)[0].replace(new RegExp(/beacon/gm), "slasher");
-          this.item.yaml = this.item.yaml.replace("--slasher","--slasher\n  - --slasher-dir=/opt/app/slasher");
-          this.item.yaml = this.item.yaml.replace("volumes:" ,"volumes:\n" + path)
+          this.item.yaml = this.item.yaml.replace("--slasher", "--slasher\n  - --slasher-dir=/opt/app/slasher");
+          this.item.yaml = this.item.yaml.replace("volumes:", "volumes:\n" + path);
         }
       }
       if (this.item.service === "ErigonService") {
@@ -647,14 +650,15 @@ export default {
         if (this.item.yaml.includes("--prune-receipts")) erigonPruneSetting += "r";
         if (this.item.yaml.includes("--prune-transaction")) erigonPruneSetting += "t";
         if (this.item.yaml.includes("--prune-call-traces")) erigonPruneSetting += "c";
-        if(erigonPruneSetting == "") erigonPruneSetting = "disabled";
+        if (erigonPruneSetting == "") erigonPruneSetting = "disabled";
         this.item.yaml = this.item.yaml.replace(/\n^.*--prune-.*$/gm, "");
         this.item.yaml = this.item.yaml.replace(/--prune=.*$/gm, "--prune=" + erigonPruneSetting);
       }
-      if (this.item.service === "NethermindService") {let erigonPruneSetting = "";
+      if (this.item.service === "NethermindService") {
+        let erigonPruneSetting = "";
         if (!this.item.yaml.includes("--FullPruningDisableLowPriorityWrites=")) {
-        this.item.yaml = this.item.yaml.replace(/\n^.*--prune-.*$/gm, "");
-        this.item.yaml = this.item.yaml.replace(/--prune=.*$/gm, "--prune=" + erigonPruneSetting);
+          this.item.yaml = this.item.yaml.replace(/\n^.*--prune-.*$/gm, "");
+          this.item.yaml = this.item.yaml.replace(/--prune=.*$/gm, "--prune=" + erigonPruneSetting);
         }
       }
 

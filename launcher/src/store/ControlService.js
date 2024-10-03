@@ -699,8 +699,8 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("getNewLauncherVersion");
   }
 
-  async deleteSlasherVolume(args){
-    return this.promiseIpc.send("deleteSlasherVolume", args)
+  async deleteSlasherVolume(args) {
+    return this.promiseIpc.send("deleteSlasherVolume", args);
   }
 }
 if (!instance) {
