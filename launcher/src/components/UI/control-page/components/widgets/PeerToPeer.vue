@@ -5,7 +5,7 @@
         <div class="p2pIco-container">
           <img src="/img/icon/control-page-icons/PeerToPeerIcon.svg" alt="Peer to Peer Icon" />
         </div>
-        <span>PEER NETWORK</span>
+        <span>{{ t("controlPage.peerNetwork") }}</span>
       </div>
       <div class="wrapper">
         <no-data
@@ -24,7 +24,7 @@
                 peer: consensusValPeer,
               })} `
             "
-            @mouseleave="cursorLocation = ''"
+            @mouseleave="footerStore.cursorLocation = ''"
           />
           <ClientStatus
             :client-name="executionClient"
@@ -36,7 +36,7 @@
                 peer: executionValPeer,
               })} `
             "
-            @mouseleave="cursorLocation = ''"
+            @mouseleave="footerStore.cursorLocation = ''"
           />
         </div>
       </div>

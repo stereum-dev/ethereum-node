@@ -160,7 +160,10 @@
     "keyImported": "in this validator client {imported} {key} {isAre} imported",
     "portIs": "{name} port is {port} and protocol is {prot}",
     "servicePort": "Service Ports",
-    "connectedPairsTo": "connected pairs to {client} is {peer}%"
+    "connectedPairsTo": "connected pairs to {client} is {peer}%",
+    "connectedPairs": "now there {isAre} {connected} connected pairs",
+    "peerNetwork": "PEER NETWORK",
+    "pOverTime": "Peers Over Time"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
