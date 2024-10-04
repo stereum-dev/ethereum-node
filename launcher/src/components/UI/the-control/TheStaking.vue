@@ -10,7 +10,7 @@
 
       <div class="staking-container">
         <NoData
-          v-if="flagNoData || isValidatorMissing"
+          v-if="flagNoData || isValidatorMissing || selectedSetup?.network === 'devnet'"
           @mouseenter="cursorLocation = `${nodataMessage}`"
           @mouseleave="cursorLocation = ''"
         />

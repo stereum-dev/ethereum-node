@@ -681,6 +681,26 @@ ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });
 
+ipcMain.handle("writeGenesisJson", async (event, args) => {
+  return await serviceManager.writeGenesisJson(args);
+});
+
+ipcMain.handle("writeConfigYaml", async (event, args) => {
+  return await serviceManager.writeConfigYaml(args);
+});
+
+ipcMain.handle("initGenesis", async () => {
+  return await serviceManager.initGenesis();
+});
+
+ipcMain.handle("removeConfigGenesisCopy", async () => {
+  return await serviceManager.removeConfigGenesisCopy();
+});
+
+ipcMain.handle("startServicesForSetup", async (event, args) => {
+  return await serviceManager.startServicesForSetup(args);
+});
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {

@@ -1,6 +1,6 @@
 <template>
   <div class="epockSlot_parent">
-    <NoData v-if="isConsensusMissing || isConsensusRunning" />
+    <NoData v-if="isConsensusMissing || isConsensusRunning || selectedSetup?.network === 'devnet'" />
     <div v-else-if="flag" class="wrapper">
       {{ beaconControler }}
     </div>
@@ -22,6 +22,7 @@ import NoData from "./NoData.vue";
 import { mapState, mapWritableState } from "pinia";
 import { useControlStore } from "@/store/theControl";
 import { useNodeManage } from "@/store/nodeManage";
+import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
 
 export default {
@@ -48,6 +49,9 @@ export default {
       installedServicesController: "installedServicesController",
       missingServices: "missingServices",
       nodataMessage: "nodataMessage",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     isConsensusMissing() {
       return this.missingServices?.includes("consensus");

@@ -35,23 +35,16 @@ const props = defineProps({
 // find the matching network and its icon
 const matchedNetworkIcon = computed(() => {
   const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
-  return matchedNetwork ? matchedNetwork.icon : "";
+  return matchedNetwork ? matchedNetwork.icon : "/img/icon/network-icons/devnet-circle.png";
 });
 
 const setupType = computed(() => {
   let shortName;
   const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
-
-  if (
-    matchedNetwork?.network === "mainnet" ||
-    matchedNetwork?.network === "holesky" ||
-    matchedNetwork?.network === "gnosis" ||
-    matchedNetwork?.network === "goerli" ||
-    matchedNetwork?.network === "sepolia"
-  ) {
-    shortName = "ETH ";
-  } else if (matchedNetwork?.network === "optimism") {
+  if (matchedNetwork?.network === "optimism") {
     shortName = "OPT";
+  } else {
+    shortName = "ETH";
   }
 
   return shortName;

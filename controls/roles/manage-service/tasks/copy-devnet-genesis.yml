@@ -1,0 +1,38 @@
+---
+- name: Reset service_exists fact
+  set_fact:
+    service_exists: false
+
+- name: Find existing directories
+  find:
+    paths: "{{ stereum.settings.controls_install_path }}"
+    recurse: no
+    file_type: directory
+  register: existing_services_dirs
+
+- name: Check if service directory exists
+  set_fact:
+    service_exists: "{{ existing_services_dirs.files | selectattr('path', 'search', stereum_service_configuration.id) | list | length > 0 }}"
+
+- name: Copy genesis files to devnet-geth directory
+  copy:
+    src: /opt/stereum/genesis/execution/
+    dest: "{{ item.split(':')[0] }}"
+    owner: "{{ stereum_service_configuration.user }}"
+    group: "{{ stereum_service_configuration.user }}"
+    mode: 0777
+  become: yes
+  when: stereum_service_configuration.service == "GethService" and not service_exists
+  with_items: "{{ stereum_service_configuration.volumes | select('search', ':/execution$') }}"
+
+- name: Copy config file to devnet-prysm directory
+  copy:
+    src: /opt/stereum/genesis/consensus/
+    dest: "{{ item.split(':')[0] }}"
+    owner: "{{ stereum_service_configuration.user }}"
+    group: "{{ stereum_service_configuration.user }}"
+    mode: 0777
+  become: yes
+  when: stereum_service_configuration.service == "PrysmBeaconService" and not service_exists
+  with_items: "{{ stereum_service_configuration.volumes | select('search', ':/consensus$') }}"
+# EOF

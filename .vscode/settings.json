@@ -19,5 +19,6 @@
   },
   "vue3snippets.enable-compile-vue-file-on-did-save-code": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
-  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "cSpell.words": ["devnet"]
 }

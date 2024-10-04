@@ -65,6 +65,7 @@ const props = defineProps({
   subTitle: String,
   clickOutsideText: String,
   isLoading: Boolean,
+  icon: String,
 });
 
 //Emits
@@ -75,7 +76,7 @@ const emit = defineEmits(["closeWindow", "confirmAction"]);
 //Watchers
 
 const getClientIcon = computed(() => {
-  return props.client?.sIcon ? props.client?.sIcon : "";
+  return props.client?.sIcon ? props.client?.sIcon : props.icon;
 });
 
 //Methods
