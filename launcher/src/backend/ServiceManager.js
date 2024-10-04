@@ -328,6 +328,16 @@ export class ServiceManager {
     await this.nodeConnection.sshService.exec(`rm -r ${dataDir}/*`);
   }
 
+  async deleteSlasherVolume(serviceID) {
+    let services = await this.readServiceConfigurations();
+    let service = services.find((s) => s.id === serviceID);
+    let workingDir = this.getWorkindDir(service);
+    if (!workingDir.endsWith("/")) {
+      workingDir += "/";
+    }
+    await this.nodeConnection.sshService.exec(`rm -r ${workingDir}/slasher`);
+  }
+
   getWorkindDir(service) {
     if (service.volumes.length > 0) {
       let volumeWithID = service.volumes.find((v) => v.destinationPath.includes(service.id));
