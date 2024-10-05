@@ -82,7 +82,7 @@ const chartOptions = {
         isAre: value === 1 || value === 0 ? "is" : "are",
         count: value,
       })}`;
-      return `<div style="padding:5px;">Subscribed Subnets: ${value}</div>`;
+      return ``;
     },
   },
   dataLabels: { enabled: false },
