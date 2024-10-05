@@ -702,6 +702,10 @@ class ControlService extends EventEmitter {
   async getSubnetSubs() {
     return this.promiseIpc.send("getSubnetSubs");
   }
+
+  async deleteSlasherVolume(args) {
+    return this.promiseIpc.send("deleteSlasherVolume", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
