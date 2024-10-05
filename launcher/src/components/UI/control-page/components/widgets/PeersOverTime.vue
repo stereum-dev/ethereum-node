@@ -9,11 +9,12 @@
       </span>
     </div>
 
-    <div class="peers-over-time_part w-3/4 h-full flex justify-start items-start" @mouseleave="footerStore.cursorLocation = ''">
-      <VueApexCharts :options="chartOptions" :series="chartSeries" class="full-size-chart" />
+    <div class="peers-over-time_part w-3/4 h-full flex justify-start items-start relative" @mouseleave="footerStore.cursorLocation = ''">
+      <NoData v-if="setupStore.selectedServicePairs === null" class="ml-5" />
+      <VueApexCharts v-else :options="chartOptions" :series="chartSeries" class="full-size-chart" />
     </div>
 
-    <div class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1">
+    <div v-if="setupStore.selectedServicePairs !== null" class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1">
       <div
         class="service-icon flex justify-center items-center w-8 p-1 rounded-md"
         :style="{ background: selectedService === 'consensus' ? '#94DEFF' : '' }"
@@ -40,6 +41,7 @@ import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import NoData from "./NoData.vue";
 
 const t = i18n.global.t;
 const controlStore = useControlStore();

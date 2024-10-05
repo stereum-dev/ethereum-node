@@ -8,8 +8,9 @@
         {{ t("controlPage.subscribedSubnets") }}
       </span>
     </div>
-    <div class="peers-over-time_part w-3/4 h-full flex justify-start items-start">
-      <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
+    <div class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative">
+      <NoData v-if="setupStore.selectedServicePairs === null" class="ml-5" />
+      <VueApexCharts v-else :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
     </div>
   </div>
 </template>
@@ -21,6 +22,7 @@ import { useSetups } from "@/store/setups";
 import ControlService from "@/store/ControlService";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import NoData from "./NoData.vue";
 
 const t = i18n.global.t;
 
