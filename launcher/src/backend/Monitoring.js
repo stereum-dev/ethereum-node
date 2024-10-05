@@ -2691,6 +2691,90 @@ export class Monitoring {
     };
   }
 
+  // Retrieve the number of subnet subscriptions for consensus clients
+  async getSubnetSubs() {
+    // Service definitions with type and Prometheus labels for subnet subscription status
+    const services = {
+      consensus: {
+        TekuBeaconService: ["network_subnet_peer_count"],
+        LighthouseBeaconService: ["gossipsub_mesh_peer_counts"],
+        PrysmBeaconService: ["p2p_topic_peer_count"],
+        NimbusBeaconService: ["libp2p_gossipsub_healthy_peers_topics"],
+        LodestarBeaconService: ["gossipsub_topic_peer_count"],
+      },
+    };
+
+    // Merge all labels for Prometheus query
+    const serviceLabels = [];
+    for (let property in services) {
+      for (let prop in services[property]) {
+        for (let p of services[property][prop]) {
+          serviceLabels.push(p);
+        }
+      }
+    }
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if (serviceInfos.length < 1) {
+      return {
+        code: 221,
+        info: "error: service infos for subnet-subscription not available",
+        data: "",
+      };
+    }
+
+    // Query Prometehus for all possible labels
+    const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
+    if (typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success") {
+      return {
+        code: 223,
+        info: "error: prometheus query for subnet-subscription failed",
+        data: prometheus_result,
+      };
+    }
+    // Object to store the counts of instances
+    const instanceCounts = {};
+
+    // Iterate over the result array and count instances
+    prometheus_result.data.result.forEach((item) => {
+      const serviceId = item.metric.instance.replace(/^stereum-/, "").replace(/:\d+$/, "");
+      if (instanceCounts[serviceId]) {
+        instanceCounts[serviceId]++;
+      } else {
+        instanceCounts[serviceId] = 1;
+      }
+    });
+
+    // Check serviceID in serviceInfos and count it
+    const beaconServiceCounts = serviceInfos
+      .filter((serviceInfo) => serviceInfo.service.includes("BeaconService"))
+      .map((serviceInfo) => {
+        const serviceId = serviceInfo.config.serviceID;
+        return {
+          serviceId: serviceId,
+          subnetCount: instanceCounts[serviceId] || 0,
+        };
+      });
+    console.log("instanceCounts-------------------------------------------------------", beaconServiceCounts);
+
+    // Make sure at least one consensus service currently running/existing
+    if (beaconServiceCounts.length < 1) {
+      return {
+        code: 225,
+        info: "error: consensus client does not exist/not running (in subnet subscription)",
+        data: serviceInfos,
+      };
+    }
+
+    // success
+    return {
+      code: 0,
+      info: "success: subnet subscription retrieved successfully",
+      data: beaconServiceCounts,
+    };
+  }
+
   // Get node stats (mostly by Prometheus)
   async getNodeStats() {
     try {
@@ -2715,6 +2799,7 @@ export class Monitoring {
       const p2pstatus = await this.getP2PStatus();
       // if(p2pstatus.code)
       //   return p2pstatus;
+      const subnetSubs = await this.getSubnetSubs();
       return {
         code: 0,
         info: "success: data successfully retrieved",
@@ -2726,6 +2811,7 @@ export class Monitoring {
           wsstatus: wsstatus,
           beaconstatus: beaconstatus,
           portstatus: portstatus,
+          subnetSubs: subnetSubs,
         },
       };
     } catch (err) {
