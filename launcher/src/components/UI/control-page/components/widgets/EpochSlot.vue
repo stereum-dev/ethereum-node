@@ -2,6 +2,8 @@
   <div
     v-if="!footerStore.isConsensusRunning || isConsensusMissing"
     class="NoDataParent flex w-full h-full justify-center items-center relative"
+    @mouseenter="cursorLocation = `${footerStore.nodataMessage}`"
+    @mouseleave="cursorLocation = ''"
   >
     <NoData />
   </div>

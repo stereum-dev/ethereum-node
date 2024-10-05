@@ -698,6 +698,10 @@ class ControlService extends EventEmitter {
   async getNewLauncherVersion() {
     return this.promiseIpc.send("getNewLauncherVersion");
   }
+
+  async getSubnetSubs() {
+    return this.promiseIpc.send("getSubnetSubs");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

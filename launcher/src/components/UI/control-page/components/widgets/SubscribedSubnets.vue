@@ -4,162 +4,126 @@
       <div class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5">
         <img class="w-3/4" src="/img/icon/control-page-icons/SubnetSubscriptions.png" />
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
-        >SUBSCRIBED SUBNETS</span
-      >
+      <span class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase">
+        {{ t("controlPage.subscribedSubnets") }}
+      </span>
     </div>
     <div class="peers-over-time_part w-3/4 h-full flex justify-start items-start">
-      <apex-chart :options="chartOptions" :series="chartOptions.series" class="fullSizeChart"></apex-chart>
-    </div>
-    <div class="iconss w-1/4 h-full flex justify-center flex-col gap-1">
-      <div class="service-icon" :style="{ background: selectedService == consensus ? '#94DEFF' : '' }" @click="selectService(consensus)">
-        <img
-          :class="currentConsensusIcon == '' ? 'animate-spin' : ''"
-          :src="currentConsensusIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : currentConsensusIcon"
-          alt="consensus"
-        />
-      </div>
-      <div class="service-icon" :style="{ background: selectedService == execution ? '#94DEFF' : '' }" @click="selectService(execution)">
-        <img
-          :class="currentExecutionIcon == '' ? 'animate-spin' : ''"
-          :src="currentExecutionIcon == '' ? '/img/icon/loading-icons/loading-circle.png' : currentExecutionIcon"
-          alt="execution"
-        />
-      </div>
+      <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
     </div>
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import VueApexCharts from "vue3-apexcharts";
-import { useControlStore } from "@/store/theControl";
-import { mapState } from "pinia";
+import { useSetups } from "@/store/setups";
+import ControlService from "@/store/ControlService";
+import { useFooter } from "@/store/theFooter";
+import i18n from "@/includes/i18n";
 
-export default defineComponent({
-  components: {
-    ApexChart: VueApexCharts,
+const t = i18n.global.t;
+
+const footerStore = useFooter();
+const setupStore = useSetups();
+const chartData = ref([]);
+let pollingInterval = null;
+
+const chartSeries = computed(() => [
+  {
+    name: "Subnet Subscriptions",
+    data: chartData.value,
   },
-  data() {
-    return {
-      chartOptions: {
-        series: [
-          {
-            name: "Series 1",
-            data: [10, 20, 10, 40, 30, 50, 40, 22, 38, 41], // Adjusted for 10 values
-          },
-        ],
-        chart: {
-          type: "line",
-          height: "100%",
-          toolbar: {
-            show: false,
-          },
-          animations: {
-            enabled: false,
-          },
-          parentHeightOffset: 0, // Ensures the chart takes up the full height
-        },
-        xaxis: {
-          labels: {
-            show: false,
-          },
-          axisBorder: {
-            show: true,
-          },
-          axisTicks: {
-            show: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            show: false,
-          },
-          axisBorder: {
-            show: false,
-          },
-          axisTicks: {
-            show: false,
-          },
-        },
-        grid: {
-          show: true,
-          borderColor: "gray",
-          strokeDashArray: 5,
-          xaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          yaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          padding: {
-            top: -25,
-            right: 0,
-            bottom: -2,
-            left: 0,
-          },
-        },
-        stroke: {
-          width: 1,
-          colors: ["#00ff00"],
-        },
-        tooltip: {
-          enabled: false,
-        },
-      },
-      selectedService: "consensus",
-      consensus: "consensus",
-      execution: "execution",
-    };
-  },
-  computed: {
-    ...mapState(useControlStore, {
-      currentConsensusIcon: "currentConsensusIcon",
-      currentExecutionIcon: "currentExecutionIcon",
-    }),
-  },
-  methods: {
-    selectService(service) {
-      console.log(service);
-      this.selectedService = service;
+]);
+
+const chartOptions = {
+  chart: {
+    type: "area",
+    width: "100%",
+    height: "100%",
+    toolbar: { show: false },
+    animations: {
+      enabled: true,
+      easing: "linear",
+      dynamicAnimation: { speed: 1000 },
     },
   },
+  xaxis: {
+    type: "datetime",
+    labels: { show: false },
+    axisTicks: { show: false },
+    axisBorder: { show: false },
+    tooltip: { enabled: false },
+    crosshairs: {
+      show: false,
+    },
+  },
+  yaxis: {
+    labels: { show: false },
+    axisTicks: { show: false },
+    axisBorder: { show: false },
+  },
+  grid: {
+    borderColor: "gray",
+    strokeDashArray: 5,
+    xaxis: { lines: { show: true } },
+    yaxis: { lines: { show: true } },
+    padding: { top: -25, bottom: 20 },
+  },
+  stroke: { width: 1, colors: ["#00ff00"] },
+  markers: { size: 5 },
+  tooltip: {
+    enabled: true,
+    custom: function ({ seriesIndex, dataPointIndex, w }) {
+      const hoveredData = w.config.series[seriesIndex].data[dataPointIndex];
+      const value = hoveredData[1];
+
+      footerStore.cursorLocation = `${t("controlPage.connectedSubnets", {
+        isAre: value === 1 || value === 0 ? "is" : "are",
+        count: value,
+      })}`;
+      return `<div style="padding:5px;">Subscribed Subnets: ${value}</div>`;
+    },
+  },
+  dataLabels: { enabled: false },
+};
+
+const fetchSubnet = async () => {
+  try {
+    const subscriber = await ControlService.getSubnetSubs();
+
+    if (subscriber && subscriber.data && Array.isArray(subscriber.data)) {
+      const serviceId = setupStore.selectedServicePairs?.consensusService?.id;
+
+      const subnetInfo = subscriber.data.find((item) => item.serviceId === serviceId);
+
+      if (subnetInfo) {
+        const subnetCount = subnetInfo.subnetCount || 0;
+        const currentTime = new Date().getTime();
+
+        chartData.value.push([currentTime, subnetCount]);
+
+        if (chartData.value.length > 10) {
+          chartData.value.shift();
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching subnet subscriptions", error);
+  }
+};
+
+onMounted(() => {
+  fetchSubnet();
+  pollingInterval = setInterval(fetchSubnet, 1000);
+});
+
+onBeforeUnmount(() => {
+  if (pollingInterval) clearInterval(pollingInterval);
 });
 </script>
 
 <style scoped>
-.service-icon {
-  width: 90%;
-  height: 40%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #232222;
-  border-radius: 10px;
-  margin: 1.2px;
-  border: 1px solid #232222;
-  box-shadow: 1px 1px 5px 1px #171717;
-  cursor: pointer;
-}
-.service-icon img {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-.service-icon:hover {
-  background: #313131;
-  border: 1px solid #c1c1c1;
-  box-shadow: none;
-}
-.service-icon:active {
-  background: #313131;
-  border: none;
-  box-shadow: inset 1px 1px 5px 1px #171717;
-}
-
 .fullSizeChart {
   width: 100%;
   height: 100%;

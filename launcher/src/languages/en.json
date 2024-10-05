@@ -165,7 +165,9 @@
     "peerNetwork": "PEER NETWORK",
     "pOverTime": "Peers Over Time",
     "currentEpochIs": "Current Epoch is {epoch}",
-    "currentSlotIs": "Current Slot is {slot}"
+    "currentSlotIs": "Current Slot is {slot}",
+    "connectedSubnets": "now there {isAre} {count} connected subnets",
+    "subscribedSubnets": "SUBSCRIBED SUBNETS"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
