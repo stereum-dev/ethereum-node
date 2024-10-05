@@ -163,7 +163,9 @@
     "connectedPairsTo": "connected pairs to {client} is {peer}%",
     "connectedPairs": "now there {isAre} {connected} connected pairs",
     "peerNetwork": "PEER NETWORK",
-    "pOverTime": "Peers Over Time"
+    "pOverTime": "Peers Over Time",
+    "currentEpochIs": "Current Epoch is {epoch}",
+    "currentSlotIs": "Current Slot is {slot}"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

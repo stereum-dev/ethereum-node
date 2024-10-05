@@ -1,41 +1,52 @@
 <template>
-  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1">
-    <div class="service-line w-full h-1/3 flex justify-start items-center">
-      <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center mr-4 ml-1">
-        CURRENT EPOCH
-      </div>
+  <div
+    v-if="!footerStore.isConsensusRunning || isConsensusMissing"
+    class="NoDataParent flex w-full h-full justify-center items-center relative"
+  >
+    <NoData />
+  </div>
 
-      <div
-        class="service-ip w-2/3 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] text-gray-200 font-semibold"
-      >
-        255.255.255.225:12345
-      </div>
-    </div>
-    <div class="service-line w-full h-1/3 flex justify-start items-center">
-      <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center mr-4 ml-1">
-        INDEX
-      </div>
-
-      <div
-        class="service-ip w-2/3 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] text-gray-200 font-semibold"
-      >
-        255.255.255.225:12345
-      </div>
-    </div>
-    <div class="service-line w-full h-1/3 flex justify-start items-center">
-      <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center mr-4 ml-1">
-        CURRENT SLOT
-      </div>
-
-      <div
-        class="service-ip w-2/3 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] text-gray-200 font-semibold"
-      >
-        255.255.255.225:12345
-      </div>
-    </div>
+  <div v-else class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1">
+    <ServiceLine
+      :label="t('controlPage.currentEpoch')"
+      :value="flag ? beaconControler : controlStore?.currentResult?.currentEpoch"
+      :hover-text="
+        t('controlPage.currentEpochIs', {
+          epoch: flag ? beaconControler : controlStore?.currentResult?.currentEpoch,
+        })
+      "
+    />
+    <ServiceLine label="INDEX" value="-----" />
+    <ServiceLine
+      :label="t('controlPage.currentSlot')"
+      :value="flag ? beaconControler : controlStore?.currentResult?.currentSlot"
+      :hover-text="
+        t('controlPage.currentSlotIs', {
+          slot: flag ? beaconControler : controlStore?.currentResult?.currentSlot,
+        })
+      "
+    />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useControlStore } from "@/store/theControl";
+import { useFooter } from "@/store/theFooter";
+import { computed } from "vue";
+import NoData from "./NoData.vue";
+import ServiceLine from "../fragments/ServiceLine.vue"; // Assuming ServiceLine is the reusable component
+import i18n from "@/includes/i18n";
 
-<style scoped></style>
+const t = i18n.global.t;
+const controlStore = useControlStore();
+const footerStore = useFooter();
+
+const beaconControler = computed(() => {
+  if (!controlStore.currentResult || controlStore.currentResult.beaconStatus === undefined) {
+    return "Checking Beacon Status...";
+  }
+  return controlStore.currentResult.beaconStatus !== 0 ? "No Running Beacon Node!" : "Loading...";
+});
+
+const flag = computed(() => !controlStore.currentResult || controlStore.currentResult.beaconStatus !== 0);
+</script>
