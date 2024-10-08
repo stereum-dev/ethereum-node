@@ -4,18 +4,18 @@
   tasks:
     - name: Make sure Stereum's config path exists
       file:
-        path: '/etc/stereum/services'
+        path: "/etc/stereum/services"
         state: directory
-        owner: 'root'
-        group: 'root'
+        owner: "root"
+        group: "root"
         mode: 0644
       become: yes
 
     - name: Create ValidatorEjectorService config
       copy:
-        dest: '/etc/stereum/services/15ce3684-4dbd-4657-8a21-b1243b72b1ca.yaml'
-        owner: 'root'
-        group: 'root'
+        dest: "/etc/stereum/services/15ce3684-4dbd-4657-8a21-b1243b72b1ca.yaml"
+        owner: "root"
+        group: "root"
         mode: 0644
         content: |
           service: ValidatorEjectorService
@@ -63,9 +63,9 @@
 
     - name: Create ValidatorEjectorService config
       copy:
-        dest: '/etc/stereum/services/41b15ea7-12d4-49f6-8448-8a6164edef36.yaml'
-        owner: 'root'
-        group: 'root'
+        dest: "/etc/stereum/services/41b15ea7-12d4-49f6-8448-8a6164edef36.yaml"
+        owner: "root"
+        group: "root"
         mode: 0644
         content: |
           service: ValidatorEjectorService
@@ -99,6 +99,112 @@
             consensusClients:
               - service: LighthouseBeaconService
                 id: 62cb879b-b0f0-4ea2-bc13-f606b7f4cfb9
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create ErigonService config
+      copy:
+        dest: "/etc/stereum/services/b180d035-f390-d644-5fae-6671659dbcdb.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ErigonService
+          id: b180d035-f390-d644-5fae-6671659dbcdb
+          configVersion: 1
+          command:
+            - erigon
+            - --chain=holesky
+            - --datadir=/opt/data/erigon
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.vhosts=*
+            - --authrpc.port=8551
+            - --authrpc.jwtsecret=/engine.jwt
+            - --rpc.returndata.limit=1000000
+            - --ws
+            - --http
+            - --http.vhosts=*
+            - --http.corsdomain=*
+            - --http.addr=0.0.0.0
+            - --http.port=8545
+            - --http.api=engine,net,eth,web3
+            - --metrics
+            - --metrics.addr=0.0.0.0
+            - --metrics.port=6060
+            - --db.pagesize=16K
+            - --db.size.limit=8TB
+            - --prune=htc
+          entrypoint: []
+          env: {}
+          image: thorax/erigon:v2.60.8
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+            - 127.0.0.1:8545:8545/tcp
+            - 127.0.0.1:8546:8546/tcp
+          volumes:
+            - /opt/stereum/erigon-b180d035-f390-d644-5fae-6671659dbcdb/data:/opt/data/erigon
+            - /opt/stereum/erigon-b180d035-f390-d644-5fae-6671659dbcdb/engine.jwt:/engine.jwt
+          user: root
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create ErigonService config
+      copy:
+        dest: "/etc/stereum/services/580c2c43-ad2a-405d-ab78-eb3678383f59.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ErigonService
+          id: 580c2c43-ad2a-405d-ab78-eb3678383f59
+          configVersion: 1
+          command:
+            - erigon
+            - --chain=holesky
+            - --datadir=/opt/data/erigon
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.vhosts=*
+            - --authrpc.port=8551
+            - --authrpc.jwtsecret=/engine.jwt
+            - --rpc.returndata.limit=1000000
+            - --ws
+            - --http
+            - --http.vhosts=*
+            - --http.corsdomain=*
+            - --http.addr=0.0.0.0
+            - --http.port=8545
+            - --http.api=engine,net,eth,web3
+            - --metrics
+            - --metrics.addr=0.0.0.0
+            - --metrics.port=6060
+            - --db.pagesize=16K
+            - --db.size.limit=8TB
+            - --prune=htc
+          entrypoint: []
+          env: {}
+          image: erigontech/erigon:v2.60.8
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+            - 127.0.0.1:8545:8545/tcp
+            - 127.0.0.1:8546:8546/tcp
+          volumes:
+            - /opt/stereum/erigon-580c2c43-ad2a-405d-ab78-eb3678383f59/data:/opt/data/erigon
+            - /opt/stereum/erigon-580c2c43-ad2a-405d-ab78-eb3678383f59/engine.jwt:/engine.jwt
+          user: root
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
             mevboost: []
             otherServices: []
       become: yes
