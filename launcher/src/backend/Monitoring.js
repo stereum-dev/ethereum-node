@@ -2691,9 +2691,9 @@ export class Monitoring {
     };
   }
 
-  // Retrieve the number of subnet subscriptions for consensus clients
+  // Get the number of subnet subscriptions for consensus clients
   async getSubnetSubs() {
-    // Service definitions with type and Prometheus labels for subnet subscription status
+    // Service definitions with type and Prometheus labels for subnet subscription
     const services = {
       consensus: {
         TekuBeaconService: ["network_subnet_peer_count"],
@@ -2705,14 +2705,9 @@ export class Monitoring {
     };
 
     // Merge all labels for Prometheus query
-    const serviceLabels = [];
-    for (let property in services) {
-      for (let prop in services[property]) {
-        for (let p of services[property][prop]) {
-          serviceLabels.push(p);
-        }
-      }
-    }
+    const serviceLabels = Object.values(services)
+      .flatMap((service) => Object.values(service))
+      .flatMap((labels) => labels);
 
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
@@ -2724,7 +2719,7 @@ export class Monitoring {
       };
     }
 
-    // Query Prometehus for all possible labels
+    // Query Prometheus for all possible labels
     const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
     if (typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success") {
       return {
@@ -2733,7 +2728,7 @@ export class Monitoring {
         data: prometheus_result,
       };
     }
-    // Object to store the counts of instances
+
     const instanceCounts = {};
 
     // Iterate over the result array and count instances
@@ -2756,7 +2751,6 @@ export class Monitoring {
           subnetCount: instanceCounts[serviceId] || 0,
         };
       });
-    console.log("instanceCounts-------------------------------------------------------", beaconServiceCounts);
 
     // Make sure at least one consensus service currently running/existing
     if (beaconServiceCounts.length < 1) {
