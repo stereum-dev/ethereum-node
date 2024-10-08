@@ -61,9 +61,10 @@ const chartSeries = computed(() => [
 
 const chartOptions = {
   chart: {
-    type: "area",
+    type: "line",
     width: "100%",
     height: "100%",
+    zoom: { enabled: false },
     toolbar: { show: false },
     animations: {
       enabled: true,
@@ -94,7 +95,8 @@ const chartOptions = {
     padding: { top: -25, bottom: -5 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
-  markers: { size: 5 },
+  markers: { size: 0 },
+
   tooltip: {
     enabled: true,
     custom: function ({ seriesIndex, dataPointIndex, w }) {

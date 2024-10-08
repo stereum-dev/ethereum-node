@@ -38,6 +38,7 @@ const chartOptions = {
     width: "100%",
     height: "100%",
     toolbar: { show: false },
+    zoom: { enabled: false },
     animations: {
       enabled: true,
       easing: "linear",
@@ -67,7 +68,7 @@ const chartOptions = {
     padding: { top: -5, bottom: -5 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
-  markers: { size: 5 },
+  markers: { size: 0 },
   dataLabels: { enabled: false },
   tooltip: { enabled: false },
 };

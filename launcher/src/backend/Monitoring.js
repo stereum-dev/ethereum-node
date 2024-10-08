@@ -1267,6 +1267,7 @@ export class Monitoring {
           }
           data.push({
             id: index + 1,
+            serviceID: clt.config.serviceID,
             title: clt.service.replace(/Beacon|Service/gi, "").toUpperCase(),
             frstVal: frstVal ? frstVal : 0,
             scndVal: scndVal ? scndVal : 0,
@@ -1293,7 +1294,7 @@ export class Monitoring {
         data: serviceInfos,
       };
     }
-
+    // console.log("groups", groups);
     // success
     return {
       code: 0,
@@ -1365,6 +1366,7 @@ export class Monitoring {
         data: prometheus_result,
       };
     }
+
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
@@ -2719,7 +2721,7 @@ export class Monitoring {
       };
     }
 
-    // Query Prometheus for all possible labels
+    // Query Prometehus for all possible labels
     const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
     if (typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success") {
       return {
