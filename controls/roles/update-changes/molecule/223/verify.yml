@@ -27,12 +27,26 @@
         src: "/etc/stereum/services/580c2c43-ad2a-405d-ab78-eb3678383f59.yaml"
       register: Erigon_service_configuration2_raw
 
+    # SSVNetworkService
+    - name: Read SSVNetworkService file
+      slurp:
+        src: "/etc/stereum/services/cb941f15-6eef-4e4d-fc81-4d524b627373.yaml"
+      register: SSVNetwork_service_configuration_raw
+
+    # SSVNetworkService2
+    - name: Read SSVNetworkService file
+      slurp:
+        src: "/etc/stereum/services/611cf17d-adf7-433e-bc4e-2e38c0f502c3.yaml"
+      register: SSVNetwork_service_configuration2_raw
+
     - name: Parse Service configurations
       set_fact:
         Ejector_service_configuration: "{{ Ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Ejector_service_configuration2: "{{ Ejector_service_configuration2_raw['content'] | b64decode | from_yaml }}"
         Erigon_service_configuration: "{{ Erigon_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Erigon_service_configuration2: "{{ Erigon_service_configuration2_raw['content'] | b64decode | from_yaml }}"
+        SSVNetwork_service_configuration: "{{ SSVNetwork_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        SSVNetwork_service_configuration2: "{{ SSVNetwork_service_configuration2_raw['content'] | b64decode | from_yaml }}"
 
     - debug:
         msg: "{{ Ejector_service_configuration }}"
@@ -54,6 +68,16 @@
     - debug:
         msg: "{{ Erigon_service_configuration2_raw['content'] | b64decode }}"
 
+    - debug:
+        msg: "{{ SSVNetwork_service_configuration }}"
+    - debug:
+        msg: "{{ SSVNetwork_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ SSVNetwork_service_configuration2 }}"
+    - debug:
+        msg: "{{ SSVNetwork_service_configuration2_raw['content'] | b64decode }}"
+
     - assert:
         that:
           - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0xe57B3792aDCc5da47EF4fF588883F0ee0c9835C9') | length == 1
@@ -62,4 +86,6 @@
           - Ejector_service_configuration2.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0xEC4BfbAF681eb505B94E4a7849877DC6c600Ca3A') | length == 0
           - Erigon_service_configuration.image | split(':') | first == 'erigontech/erigon'
           - Erigon_service_configuration2.image == 'erigontech/erigon:v2.60.8'
+          - SSVNetwork_service_configuration.image | split(':') | first == 'ssvlabs/ssv-node'
+          - SSVNetwork_service_configuration2.image == 'ssvlabs/ssv-node:v1.3.8'
 # EOF
