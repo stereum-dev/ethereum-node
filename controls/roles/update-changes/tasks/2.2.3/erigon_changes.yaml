@@ -1,0 +1,48 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Update Erigon image
+  when: service_configuration.service == "ErigonService" and "thorax" in service_configuration.image
+  block:
+    - name: Download update metadata
+      uri:
+        url: https://stereum.net/downloads/updates.json
+        method: GET
+        return_content: true
+        status_code: 200
+        body_format: json
+      register: update_data_download
+
+    - name: Set update data
+      set_fact:
+        update_data: "{{ update_data_test | default(update_data_download) }}"
+
+    - name: Get latest version for this service
+      set_fact:
+        new_service_docker_image_tag: "{{ update_data.json[service_configuration.network][service_configuration.service] | default(update_data.json['mainnet'][service_configuration.service]) | last }}"
+
+    - name: set new config
+      ansible.utils.update_fact:
+        updates:
+          - path: service_configuration.image
+            value: "erigontech/erigon:{{ new_service_docker_image_tag }}"
+      register: updated
+
+    - name: update config
+      set_fact:
+        new_service_configuration: "{{ updated.service_configuration }}"
+
+    - name: Write Config
+      copy:
+        dest: "{{ config_file.path }}"
+        content: "{{ new_service_configuration | to_nice_yaml(indent=2) }}"
+        owner: "root"
+        group: "root"
+        mode: 0644
