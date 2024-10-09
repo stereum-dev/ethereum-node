@@ -21,7 +21,7 @@ outputPath: /data/output`;
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
-    const image = "bloxstaking/ssv-dkg";
+    const image = "ssvlabs/ssv-dkg";
 
     // Note that local secrets volume will be replaced with
     // shared volume from SSVNetworkService later on...
