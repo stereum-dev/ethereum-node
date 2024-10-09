@@ -2117,6 +2117,8 @@ export class Monitoring {
       };
     }
 
+    // console.log("hahadata----------------------------------------", data);
+
     // Respond success
     return {
       code: 0,
@@ -2853,6 +2855,64 @@ export class Monitoring {
     return resp;
   }
 
+  // Get CPU temperature from the remote server using lm-sensors or hwmon
+  async getCPUTemperature() {
+    try {
+      // Check and install lm-sensors if not installed
+      const installed = await this.checkAndInstallLmSensors();
+      if (installed) {
+        const temperature = await this.getTemperatureFromLmSensors();
+        if (temperature && temperature !== null) return temperature;
+      }
+      // Fallback to hwmon if lm-sensors does not provide a valid temperature
+      return await this.getTemperatureFromHwmon();
+    } catch (error) {
+      console.error("Error determining CPU temperature:", error);
+      throw error;
+    }
+  }
+
+  async checkAndInstallLmSensors() {
+    const checkInstalled = await this.nodeConnection.sshService.exec("dpkg -l lm-sensors");
+    if (!checkInstalled.stdout.includes("ii  lm-sensors")) {
+      await this.nodeConnection.sshService.exec("sudo apt-get update && sudo apt-get install -y lm-sensors");
+    }
+    // Run sensors-detect
+    const detectSensor = await this.nodeConnection.sshService.exec("sudo sensors-detect --auto");
+    const lines = detectSensor.stdout.split("\n").map((line) => line.replace(/\s+/g, " ").trim());
+    return lines.some((line) => line.includes("thermal sensor... Success!"));
+  }
+
+  async getTemperatureFromLmSensors() {
+    const tempCPU = await this.nodeConnection.sshService.exec("sudo sensors");
+    const tempCPUMatch = tempCPU.stdout.match(/Package id 0:\s*\+([0-9.]+)°C/);
+    if (tempCPUMatch && tempCPUMatch[1]) {
+      return tempCPUMatch[1];
+    } else {
+      return null;
+    }
+  }
+
+  async getTemperatureFromHwmon() {
+    const hwmonDevices = await this.nodeConnection.sshService.exec("ls /sys/class/hwmon/");
+    const hwmonDirs = hwmonDevices.stdout.trim().split("\n");
+
+    for (const dir of hwmonDirs) {
+      const name = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/name`);
+      if (name.stdout.trim() === "coretemp" || name.stdout.trim() === "k10temp") {
+        const tempCPUResult = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/temp1_input`);
+        const tempInMillidegrees = parseInt(tempCPUResult.stdout.trim(), 10);
+
+        if (!isNaN(tempInMillidegrees)) {
+          const cpuTemperature = (tempInMillidegrees / 1000).toFixed(1);
+          return cpuTemperature;
+        }
+      }
+    }
+    console.log("hwmon directory not found for CPU temperature");
+    return null;
+  }
+
   //serverNmae
   //totalRam, usedRam
   //Total, usedDisk, used%
@@ -2860,6 +2920,7 @@ export class Monitoring {
   //rx tx
   //readSpeed writeSpeed
   async getServerVitals() {
+    const tempCPU = await this.getCPUTemperature();
     const serverVitals = await this.nodeConnection.sshService.exec(`
         hostname &&
         free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
@@ -2903,6 +2964,7 @@ rm -rf diskoutput
         tx: arr[4].split(" ")[1],
         readValue: arr[5].split(" ")[1],
         writeValue: arr[5].split(" ")[2],
+        tempCPU: tempCPU,
       };
       return data;
     } catch (e) {
