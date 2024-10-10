@@ -748,6 +748,10 @@ ipcMain.handle("fetchObolCharonAlerts", async () => {
   return await monitoring.fetchObolCharonAlerts();
 });
 
+ipcMain.handle("getSubnetSubs", async () => {
+  return await monitoring.getSubnetSubs();
+});
+
 ipcMain.handle("fetchCsmAlerts", async () => {
   return await monitoring.fetchCsmAlerts();
 });

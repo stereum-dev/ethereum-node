@@ -3,6 +3,7 @@
     <ServerDetails />
     <SetupDetails
       :list="setupsList"
+      class="col-start-4 col-end-7 p-2"
       @select-rename="selectRename"
       @confirm-rename="confirmRename"
       @select-setup="selectSetup"

@@ -2,7 +2,7 @@
   <div class="amsterdam-parent">
     <div class="icoTitle" @mouseenter="cursorLocation = `${footerInfo} ${getSetupNetwork?.name}`" @mouseleave="cursorLocation = ''">
       <div class="icoContainer">
-        <img :src="getSetupNetwork?.icon" />
+        <img :src="!selectedSetup ? getSetupNetwork : getSetupNetwork?.icon" />
       </div>
       <span>{{ $t("controlPage.node") }}</span>
     </div>
@@ -15,7 +15,7 @@
         </div>
       </div>
       <no-data
-        v-else-if="isConsensusMissing || !isConsensusRunning || prometheusIsOff"
+        v-else-if="!selectedSetup || isConsensusMissing || !isConsensusRunning || prometheusIsOff"
         @mouseenter="cursorLocation = `${nodataMessage}`"
         @mouseleave="cursorLocation = ''"
       />
@@ -183,9 +183,13 @@ export default {
     },
     getSetupNetwork() {
       let setupNet;
-      const net = this.selectedSetup?.network;
-      if (net && this.networkList) {
-        setupNet = this.networkList.find((network) => network.network === net);
+      if (!this.selectedSetup) {
+        setupNet = "/animation/loading/mushroom-spinner.gif";
+      } else {
+        const net = this.selectedSetup?.network;
+        if (net && this.networkList) {
+          setupNet = this.networkList.find((network) => network.network === net);
+        }
       }
       return setupNet;
     },

@@ -66,7 +66,7 @@
         @mouseleave="isOpen = false"
       >
         <div
-          v-if="(setupStore.isConfigViewActive || setupStore.isEditConfigViewActive) && notShowServerViewInControl"
+          v-if="setupStore.isConfigViewActive || setupStore.isEditConfigViewActive"
           class="p-2 bg-gray-300 capitalize transition-colors duration-300 transform text-[#336666] hover:bg-blue-300 cursor-pointer grid grid-cols-6 items-center"
           @click="selectServerView"
         >
@@ -169,10 +169,6 @@ const getDropdownWidth = computed(() => {
   return width;
 });
 
-const notShowServerViewInControl = computed(() => {
-  return route.path !== "/control";
-});
-
 const getSelectedOption = computed(() => {
   let option;
   if (setupStore.selectedSetup === null) {
@@ -197,9 +193,9 @@ watch(
 const noValidatorHandler = (setup) => {
   return !!(route.path === "/staking" && setup.noValidator);
 };
-
+// setupsList.value.length > 1 &&
 const toggleDropdown = () => {
-  if (setupsList.value.length > 1 && route.path === "/control") {
+  if (route.path === "/control") {
     isOpen.value = !isOpen.value;
   } else if (setupsList.value.length > 0 && route.path !== "/control") {
     isOpen.value = !isOpen.value;

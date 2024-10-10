@@ -1267,6 +1267,7 @@ export class Monitoring {
           }
           data.push({
             id: index + 1,
+            serviceID: clt.config.serviceID,
             title: clt.service.replace(/Beacon|Service/gi, "").toUpperCase(),
             frstVal: frstVal ? frstVal : 0,
             scndVal: scndVal ? scndVal : 0,
@@ -1293,7 +1294,7 @@ export class Monitoring {
         data: serviceInfos,
       };
     }
-
+    // console.log("groups", groups);
     // success
     return {
       code: 0,
@@ -1365,6 +1366,7 @@ export class Monitoring {
         data: prometheus_result,
       };
     }
+
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
@@ -1421,6 +1423,7 @@ export class Monitoring {
         details[clientType]["service"] = clt.service;
         details[clientType]["client"] = clt.service.replace(/Beacon|Service/gi, "").toUpperCase();
         details[clientType]["state"] = clt.state;
+        details[clientType]["serviceID"] = clt.config.serviceID;
         opttyp = Object.keys(services).find((key) => services[key].hasOwnProperty(clt.service));
         if (!opttyp) {
           return;
@@ -1710,6 +1713,7 @@ export class Monitoring {
     var storagesizes = result.stdout.trim().split("\n");
     storagesizes.forEach(function (val, index) {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
+
       if (svc) {
         // Prometheus NE does not store data but using "/" as volume, see #1095
         // Likely not queried at all if defined in ignoreServices (see above)
@@ -1725,6 +1729,7 @@ export class Monitoring {
             .replace(/NodeExporter/gi, " ne")
             .toUpperCase(),
           storageValue: (!val || val < 1 ? "0 " : val.replace(/([a-z]+)/is, " $1")) + "B",
+          service: svc.service,
         });
       }
     });
@@ -2111,6 +2116,8 @@ export class Monitoring {
         data: "",
       };
     }
+
+    // console.log("hahadata----------------------------------------", data);
 
     // Respond success
     return {
@@ -2607,11 +2614,13 @@ export class Monitoring {
       for (let n = 0; n < ports.length; n++) {
         if (addr == "public" && addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))) continue;
         if ((addr_type == "arr" || addr == "local") && !addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))) continue;
+
         data.push({
           name: svc.service.replace(/Beacon|Service/gi, "").toUpperCase(),
           port: ports[n].destinationPort,
           prot: ports[n].servicePortProtocol,
           type: addr_type == "arr" ? addresses.find((w) => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
+          id: svc.config.serviceID,
         });
       }
     }
@@ -2686,6 +2695,84 @@ export class Monitoring {
     };
   }
 
+  // Get the number of subnet subscriptions for consensus clients
+  async getSubnetSubs() {
+    // Service definitions with type and Prometheus labels for subnet subscription
+    const services = {
+      consensus: {
+        TekuBeaconService: ["network_subnet_peer_count"],
+        LighthouseBeaconService: ["gossipsub_mesh_peer_counts"],
+        PrysmBeaconService: ["p2p_topic_peer_count"],
+        NimbusBeaconService: ["libp2p_gossipsub_healthy_peers_topics"],
+        LodestarBeaconService: ["gossipsub_topic_peer_count"],
+      },
+    };
+
+    // Merge all labels for Prometheus query
+    const serviceLabels = Object.values(services)
+      .flatMap((service) => Object.values(service))
+      .flatMap((labels) => labels);
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if (serviceInfos.length < 1) {
+      return {
+        code: 221,
+        info: "error: service infos for subnet-subscription not available",
+        data: "",
+      };
+    }
+
+    // Query Prometehus for all possible labels
+    const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
+    if (typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success") {
+      return {
+        code: 223,
+        info: "error: prometheus query for subnet-subscription failed",
+        data: prometheus_result,
+      };
+    }
+
+    const instanceCounts = {};
+
+    // Iterate over the result array and count instances
+    prometheus_result.data.result.forEach((item) => {
+      const serviceId = item.metric.instance.replace(/^stereum-/, "").replace(/:\d+$/, "");
+      if (instanceCounts[serviceId]) {
+        instanceCounts[serviceId]++;
+      } else {
+        instanceCounts[serviceId] = 1;
+      }
+    });
+
+    // Check serviceID in serviceInfos and count it
+    const beaconServiceCounts = serviceInfos
+      .filter((serviceInfo) => serviceInfo.service.includes("BeaconService"))
+      .map((serviceInfo) => {
+        const serviceId = serviceInfo.config.serviceID;
+        return {
+          serviceId: serviceId,
+          subnetCount: instanceCounts[serviceId] || 0,
+        };
+      });
+
+    // Make sure at least one consensus service currently running/existing
+    if (beaconServiceCounts.length < 1) {
+      return {
+        code: 225,
+        info: "error: consensus client does not exist/not running (in subnet subscription)",
+        data: serviceInfos,
+      };
+    }
+
+    // success
+    return {
+      code: 0,
+      info: "success: subnet subscription retrieved successfully",
+      data: beaconServiceCounts,
+    };
+  }
+
   // Get node stats (mostly by Prometheus)
   async getNodeStats() {
     try {
@@ -2710,6 +2797,7 @@ export class Monitoring {
       const p2pstatus = await this.getP2PStatus();
       // if(p2pstatus.code)
       //   return p2pstatus;
+      const subnetSubs = await this.getSubnetSubs();
       return {
         code: 0,
         info: "success: data successfully retrieved",
@@ -2721,6 +2809,7 @@ export class Monitoring {
           wsstatus: wsstatus,
           beaconstatus: beaconstatus,
           portstatus: portstatus,
+          subnetSubs: subnetSubs,
         },
       };
     } catch (err) {
@@ -2766,6 +2855,64 @@ export class Monitoring {
     return resp;
   }
 
+  // Get CPU temperature from the remote server using lm-sensors or hwmon
+  async getCPUTemperature() {
+    try {
+      // Check and install lm-sensors if not installed
+      const installed = await this.checkAndInstallLmSensors();
+      if (installed) {
+        const temperature = await this.getTemperatureFromLmSensors();
+        if (temperature && temperature !== null) return temperature;
+      }
+      // Fallback to hwmon if lm-sensors does not provide a valid temperature
+      return await this.getTemperatureFromHwmon();
+    } catch (error) {
+      console.error("Error determining CPU temperature:", error);
+      throw error;
+    }
+  }
+
+  async checkAndInstallLmSensors() {
+    const checkInstalled = await this.nodeConnection.sshService.exec("dpkg -l lm-sensors");
+    if (!checkInstalled.stdout.includes("ii  lm-sensors")) {
+      await this.nodeConnection.sshService.exec("sudo apt-get update && sudo apt-get install -y lm-sensors");
+    }
+    // Run sensors-detect
+    const detectSensor = await this.nodeConnection.sshService.exec("sudo sensors-detect --auto");
+    const lines = detectSensor.stdout.split("\n").map((line) => line.replace(/\s+/g, " ").trim());
+    return lines.some((line) => line.includes("thermal sensor... Success!"));
+  }
+
+  async getTemperatureFromLmSensors() {
+    const tempCPU = await this.nodeConnection.sshService.exec("sudo sensors");
+    const tempCPUMatch = tempCPU.stdout.match(/Package id 0:\s*\+([0-9.]+)°C/);
+    if (tempCPUMatch && tempCPUMatch[1]) {
+      return tempCPUMatch[1];
+    } else {
+      return null;
+    }
+  }
+
+  async getTemperatureFromHwmon() {
+    const hwmonDevices = await this.nodeConnection.sshService.exec("ls /sys/class/hwmon/");
+    const hwmonDirs = hwmonDevices.stdout.trim().split("\n");
+
+    for (const dir of hwmonDirs) {
+      const name = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/name`);
+      if (name.stdout.trim() === "coretemp" || name.stdout.trim() === "k10temp") {
+        const tempCPUResult = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/temp1_input`);
+        const tempInMillidegrees = parseInt(tempCPUResult.stdout.trim(), 10);
+
+        if (!isNaN(tempInMillidegrees)) {
+          const cpuTemperature = (tempInMillidegrees / 1000).toFixed(1);
+          return cpuTemperature;
+        }
+      }
+    }
+    console.log("hwmon directory not found for CPU temperature");
+    return null;
+  }
+
   //serverNmae
   //totalRam, usedRam
   //Total, usedDisk, used%
@@ -2773,6 +2920,7 @@ export class Monitoring {
   //rx tx
   //readSpeed writeSpeed
   async getServerVitals() {
+    const tempCPU = await this.getCPUTemperature();
     const serverVitals = await this.nodeConnection.sshService.exec(`
         hostname &&
         free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
@@ -2816,6 +2964,7 @@ rm -rf diskoutput
         tx: arr[4].split(" ")[1],
         readValue: arr[5].split(" ")[1],
         writeValue: arr[5].split(" ")[2],
+        tempCPU: tempCPU,
       };
       return data;
     } catch (e) {
