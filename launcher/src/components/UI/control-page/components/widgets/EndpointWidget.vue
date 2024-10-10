@@ -1,60 +1,98 @@
 <template>
-  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1">
-    <div class="service-line w-full h-1/3 flex justify-start items-center">
-      <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center">
-        RPC ENDPOINT
-      </div>
-      <div
-        class="toggle-btn w-1/6 h-5/6 border border-gray-400 uppercase text-[45%] font-semibold flex justify-center items-center rounded-xl cursor-pointer"
-      >
-        open
-      </div>
-      <div class="service-icon w-6 h-full flex justify-center items-center p-[0.10rem]">
-        <img src="/img/icon/service-icons/consensus/LightHouse.png" alt="Service Icon" class="w-3/4 h-3/4" />
-      </div>
-      <div
-        class="service-ip w-28 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] text-gray-200 font-semibold"
-      >
-        255.255.255.225:12345
-      </div>
-    </div>
-    <div class="service-line w-full h-1/3 flex justify-start items-center">
-      <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center">data-api</div>
-      <div
-        class="toggle-btn w-1/6 h-5/6 border border-gray-400 uppercase text-[45%] font-semibold flex justify-center items-center rounded-xl cursor-pointer"
-      >
-        open
-      </div>
-      <div class="service-icon w-6 h-full flex justify-center items-center p-[0.10rem]">
-        <img src="/img/icon/service-icons/consensus/LightHouse.png" alt="Service Icon" class="w-3/4 h-3/4" />
-      </div>
-      <div
-        class="service-ip w-28 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] text-gray-200 font-semibold"
-      >
-        255.255.255.225:12345
-      </div>
-    </div>
-    <div class="service-line w-full h-1/3 flex justify-start items-center">
-      <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center">
-        ws ENDPOINT
-      </div>
-      <div
-        class="toggle-btn w-1/6 h-5/6 border border-gray-400 uppercase text-[45%] font-semibold flex justify-center items-center rounded-xl cursor-pointer"
-      >
-        open
-      </div>
-      <div class="service-icon w-6 h-full flex justify-center items-center p-[0.10rem]">
-        <img src="/img/icon/service-icons/consensus/LightHouse.png" alt="Service Icon" class="w-3/4 h-3/4" />
-      </div>
-      <div
-        class="service-ip w-28 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] text-gray-200 font-semibold"
-      >
-        255.255.255.225:12345
-      </div>
-    </div>
+  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
+    <NoData v-if="!setupStore.selectedSetup" />
+    <template v-else>
+      <EndpointServiceLine
+        v-if="setupStore?.selectedServicePairs?.executionService"
+        name="RPC ENDPOINT"
+        :service="setupStore.selectedServicePairs.executionService"
+        :is-active="nodeHeaderStore.rpcState"
+        :url="executionRpcUrl"
+        :is-loading="rpcIsLoading"
+        @toggle="rpcToggle"
+        @copy="copyToClipboard"
+      />
+
+      <EndpointServiceLine
+        v-if="setupStore?.selectedServicePairs?.consensusService"
+        name="Data API"
+        :service="setupStore.selectedServicePairs.consensusService"
+        :is-active="nodeHeaderStore.dataState"
+        :url="beaconDataUrl"
+        :is-loading="beaconstatusIsLoading"
+        @toggle="dataToggle"
+        @copy="copyToClipboard"
+      />
+
+      <EndpointServiceLine
+        v-if="setupStore?.selectedServicePairs?.executionService"
+        name="WS ENDPOINT"
+        :service="setupStore.selectedServicePairs.executionService"
+        :is-active="nodeHeaderStore.wsState"
+        :url="wsDataUrl"
+        :is-loading="wsIsLoading"
+        @toggle="wsToggle"
+        @copy="copyToClipboard"
+      />
+    </template>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref, computed } from "vue";
+import { useControlStore } from "@/store/theControl";
+import { useSetups } from "@/store/setups";
+import { useNodeHeader } from "@/store/nodeHeader";
+import ControlService from "@/store/ControlService";
+import NoData from "./NoData.vue";
+import EndpointServiceLine from "../fragments/EndpointServiceLine.vue";
 
-<style scoped></style>
+const controlStore = useControlStore();
+const setupStore = useSetups();
+const nodeHeaderStore = useNodeHeader();
+
+// Toggle functions for RPC, Data API, and WS
+const rpcToggle = async () => {
+  nodeHeaderStore.rpcState = !nodeHeaderStore.rpcState;
+  await (nodeHeaderStore.rpcState ? ControlService.openRpcTunnel() : ControlService.closeRpcTunnel());
+};
+
+const dataToggle = async () => {
+  nodeHeaderStore.dataState = !nodeHeaderStore.dataState;
+  await (nodeHeaderStore.dataState ? ControlService.openBeaconTunnel() : ControlService.closeBeaconTunnel());
+};
+
+const wsToggle = async () => {
+  nodeHeaderStore.wsState = !nodeHeaderStore.wsState;
+  await (nodeHeaderStore.wsState ? ControlService.openWsTunnel() : ControlService.closeWsTunnel());
+};
+
+const executionRpcUrl = computed(() => getServiceUrl("executionService", controlStore.rpcstatus.data));
+const beaconDataUrl = computed(() => getServiceUrl("consensusService", controlStore.beaconstatus.data));
+const wsDataUrl = computed(() => getServiceUrl("executionService", controlStore.wsstatus.data));
+
+const getServiceUrl = (serviceType, statusData) => {
+  const serviceId =
+    setupStore?.selectedServicePairs?.[serviceType]?.config?.serviceID || setupStore?.selectedServicePairs?.[serviceType]?.id;
+  const matchedService = statusData?.find((service) => service.sid === serviceId);
+  return matchedService ? matchedService.url : "";
+};
+
+const rpcIsLoading = computed(() => controlStore.rpcstatus.info !== "success: rpcstatus successfully retrieved");
+const beaconstatusIsLoading = computed(() => controlStore.beaconstatus.info !== "success: beaconstatus successfully retrieved");
+const wsIsLoading = computed(() => controlStore.wsstatus.info !== "success: wsstatus successfully retrieved");
+
+// Function to copy URL to clipboard
+const copied = ref(false);
+const copyToClipboard = async (url) => {
+  if (url) {
+    try {
+      await navigator.clipboard.writeText(url);
+      copied.value = true;
+      setTimeout(() => (copied.value = false), 2000); // Reset "copied" status after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  }
+};
+</script>

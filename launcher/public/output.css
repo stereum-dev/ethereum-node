@@ -5438,6 +5438,10 @@ video {
   -webkit-tap-highlight-color: transparent;
 }
 
+.\[rpc\:url\]{
+  rpc: url;
+}
+
 html body {
   min-width: 1024px;
   min-height: 576px;
