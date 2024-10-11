@@ -2909,7 +2909,6 @@ export class Monitoring {
         }
       }
     }
-    console.log("hwmon directory not found for CPU temperature");
     return null;
   }
 
