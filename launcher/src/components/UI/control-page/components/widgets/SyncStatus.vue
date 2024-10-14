@@ -1,81 +1,154 @@
 <template>
-  <div class="Sync-parent">
-    <div class="sync-box">
+  <div class="Sync-parent relative">
+    <no-data
+      v-if="isConsensusMissing || footerStore.prometheusIsOff || !setupsStore?.selectedSetup"
+      @mouseenter="cursorLocation = `${nodataMessage}`"
+      @mouseleave="cursorLocation = ''"
+    />
+    <div v-else class="sync-box">
       <div class="sync-icon">
         <div class="sync-icon_container">
-          <img :src="syncSituation()" />
+          <img :src="syncIconPath" />
         </div>
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="wrapper">
-        <!--new form start-->
-        <no-data
-          v-if="isConsensusMissing || prometheusIsOff"
-          @mouseenter="cursorLocation = `${nodataMessage}`"
-          @mouseleave="cursorLocation = ''"
-        />
-        <div v-if="syncItemsShow" class="activeWidget">
+        <div class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
-              <span>{{ consensusName }}</span>
+              <span class="text-gray-200 mt-2">{{ setupsStore?.selectedServicePairs?.consensusService?.name }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress :color="consensuColor" :sync-percent="consensusPer" />
+              <sync-circular-progress :color="consensusColor" :sync-percent="consensusCyrcle" />
             </div>
-            <div class="syncStatusStatus" :class="consensusClass">
-              <span>{{ consensusText }}</span>
+            <div class="syncStatusStatus">
+              <span :style="{ color: consensusColor }">{{ consensusState }}</span>
             </div>
-            <div
-              class="consensusIconCons"
-              @mouseenter="cursorLocation = `${consensusName} : ${consensusFirstVal} / ${consensusSecondVal}`"
-              @mouseleave="cursorLocation = ''"
-            >
-              <img :src="clientImage(consensusName)" alt="consensus" />
+            <div class="consensusIconCons">
+              <img :src="setupsStore?.selectedServicePairs?.consensusService?.icon" alt="consensus" />
             </div>
           </div>
 
           <div class="executionContainer">
             <div class="executionName">
-              <span>{{ executionName }}</span>
+              <span class="text-gray-200 mt-2">{{ setupsStore?.selectedServicePairs?.executionService?.name }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress :color="executionColor" :sync-percent="executionPer" />
+              <sync-circular-progress :color="executionColor" :sync-percent="executionCyrcle" />
             </div>
-            <div class="syncStatusStatus" :class="executionClass">
-              <span>{{ executionText }}</span>
+            <div class="syncStatusStatus">
+              <span :style="{ color: executionColor }">{{ executionState }}</span>
             </div>
-            <div
-              class="executionIconCons"
-              @mouseenter="cursorLocation = `${executionName} : ${executionFirstVal} / ${executionSecondVal}`"
-              @mouseleave="cursorLocation = ''"
-            >
-              <img :src="clientImage(executionName)" alt="execution" />
+            <div class="executionIconCons">
+              <img :src="setupsStore?.selectedServicePairs?.executionService?.icon" alt="execution" />
             </div>
           </div>
         </div>
-        <!--new form end-->
-      </div>
-    </div>
-    <div v-if="isMultiService" v-show="syncItemsShow" class="arrowBox">
-      <div class="arrowUp" @click="backPage">
-        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
-      </div>
-      <div class="pageNumber">
-        <span>{{ pageNumber }}</span>
-      </div>
-      <div class="arrowDown" @click="nextPage">
-        <img src="/img/icon/control-page-icons/arrow-up-small.png" alt="arrow" />
       </div>
     </div>
   </div>
 </template>
-<script>
-import SyncCircularProgress from "./SyncCircularProgress.vue";
-import { mapState, mapWritableState } from "pinia";
+
+<script setup>
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
 import NoData from "./NoData.vue";
+import SyncCircularProgress from "./SyncCircularProgress.vue";
 import { useSetups } from "@/store/setups";
+import { computed, watch, ref } from "vue";
+
+const controlStore = useControlStore();
+const footerStore = useFooter();
+const setupsStore = useSetups();
+
+const isConsensusMissing = computed(() => footerStore.missingServices?.includes("consensus"));
+const consensusColor = ref("grey");
+const consensusCyrcle = ref(0);
+const executionColor = ref("grey");
+const executionCyrcle = ref(0);
+const consensusState = ref(null);
+const executionState = ref(null);
+const syncIconPath = ref("");
+
+// Icon setup for sync statuses
+const syncIcons = {
+  error: "/animation/synchronisation/synchronisation-icon-error.gif",
+  onHold: "/animation/synchronisation/synchronisation-icon-unknown.gif",
+  syncing: "/animation/synchronisation/synchronisation-icon-active.gif",
+  synced: "/animation/synchronisation/synchronisation-icon-sucess.gif",
+};
+
+// Handle sync status and colors
+const handleSyncStatus = (client, colorRef, cyrcleRef, stateRef) => {
+  if (!client) {
+    setSyncValues("grey", 100, "on-hold", colorRef, cyrcleRef, stateRef);
+    return;
+  }
+
+  const { frstVal: lo, scndVal: hi, state: st } = client;
+  if (st !== "running") {
+    setSyncValues("red", 100, "error", colorRef, cyrcleRef, stateRef);
+  } else if (lo > hi) {
+    setSyncValues("orange", 100, "unknown", colorRef, cyrcleRef, stateRef);
+  } else if (lo < 1 && hi < 1) {
+    setSyncValues("grey", 100, "on-hold", colorRef, cyrcleRef, stateRef);
+  } else if (lo < hi) {
+    setSyncValues("lightblue", getSyncPercentage(lo, hi), "syncing", colorRef, cyrcleRef, stateRef);
+  } else {
+    setSyncValues("green", getSyncPercentage(lo, hi), "synced", colorRef, cyrcleRef, stateRef);
+  }
+};
+
+const setSyncValues = (color, percent, state, colorRef, cyrcleRef, stateRef) => {
+  colorRef.value = color;
+  cyrcleRef.value = percent;
+  stateRef.value = state;
+};
+
+const getSyncPercentage = (firstVal, secondVal) => ((firstVal / secondVal) * 100).toFixed(2);
+
+// Sync Icon update
+const updateSyncIcon = () => {
+  const iconType =
+    consensusState.value === "error" || executionState.value === "error"
+      ? "error"
+      : consensusState.value === "on-hold" || executionState.value === "on-hold"
+      ? "onHold"
+      : consensusState.value === "syncing" || executionState.value === "syncing"
+      ? "syncing"
+      : "synced";
+
+  syncIconPath.value = syncIcons[iconType];
+};
+
+// Watchers for state changes
+watch([consensusState, executionState], updateSyncIcon);
+
+const getServiceSyncStatus = (serviceType, syncData) => {
+  const serviceId =
+    setupsStore?.selectedServicePairs?.[serviceType]?.config?.serviceID || setupsStore?.selectedServicePairs?.[serviceType]?.id;
+
+  if (!Array.isArray(syncData)) return null;
+  return syncData.flat().find((data) => data.serviceID === serviceId) || null;
+};
+
+const consensusSyncData = computed(() => getServiceSyncStatus("consensusService", controlStore.syncstatus.data));
+const executionSyncData = computed(() => getServiceSyncStatus("executionService", controlStore.syncstatus.data));
+
+watch(
+  () => consensusSyncData.value,
+  (newVal) => handleSyncStatus(newVal, consensusColor, consensusCyrcle, consensusState),
+  { immediate: true }
+);
+watch(
+  () => executionSyncData.value,
+  (newVal) => handleSyncStatus(newVal, executionColor, executionCyrcle, executionState),
+  { immediate: true }
+);
+</script>
+
+<!--<script>
+import { mapState, mapWritableState } from "pinia";
 
 export default {
   components: { NoData, SyncCircularProgress },
@@ -245,6 +318,7 @@ export default {
       });
     },
   },
+
   watch: {
     selectedSetup() {
       this.pageNumber = 1;
@@ -254,6 +328,9 @@ export default {
       this.pageNumber = 1;
       this.syncControler();
     },
+    // syncstatus() {
+    //   console.log(this.syncstatus);
+    // },
   },
 
   mounted() {
@@ -435,7 +512,7 @@ export default {
     },
   },
 };
-</script>
+</script> -->
 
 <style scoped>
 .activeWidget {
