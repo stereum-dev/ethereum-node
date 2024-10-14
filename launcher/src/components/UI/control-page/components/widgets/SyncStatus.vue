@@ -137,7 +137,9 @@ const executionSyncData = computed(() => getServiceSyncStatus("executionService"
 
 watch(
   () => consensusSyncData.value,
-  (newVal) => handleSyncStatus(newVal, consensusColor, consensusCyrcle, consensusState),
+  (newVal) => {
+    handleSyncStatus(newVal, consensusColor, consensusCyrcle, consensusState);
+  },
   { immediate: true }
 );
 watch(

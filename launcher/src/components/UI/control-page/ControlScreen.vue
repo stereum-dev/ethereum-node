@@ -27,14 +27,6 @@ const setupStore = useSetups();
 const footerStore = useFooter();
 const serviceStore = useServices();
 
-watch(
-  setupStore.selectedSetup,
-  () => {
-    console.log(setupStore.selectedSetup);
-  },
-  { immediate: true }
-);
-
 const selecteConfigServices = computed(() => {
   let test = [];
   const selectedSetup = setupStore.selectedSetup;
