@@ -6,7 +6,7 @@
     <div class="widget-box w-full h-4/5 flex flex-col gap-1 p-1 justify-start items-center">
       <div
         v-for="portData in matchingPorts"
-        :key="portData.id"
+        :key="portData.uniqueKey"
         class="row-port w-full h-1/5 flex justify-start items-center border border-gray-400 rounded-sm pl-1 pr-1"
         @mouseenter="updateCursorLocation(portData)"
         @mouseleave="clearCursorLocation"
@@ -50,11 +50,16 @@ const matchingPorts = computed(() => {
   const consensusName = consensusService.name.trim().toLowerCase();
   const executionName = executionService.name.trim().toLowerCase();
 
-  return portStatus.value.filter((port) => {
+  const filteredPorts = portStatus.value.filter((port) => {
     const portId = port.id.trim();
     const portName = port.name.trim().toLowerCase();
     return (portId === consensusId || portId === executionId) && (portName === consensusName || portName === executionName);
   });
+
+  return [...filteredPorts].map((port, index) => ({
+    ...port,
+    uniqueKey: `${port.id}-${index}`,
+  }));
 });
 
 const updateCursorLocation = (portData) => {
