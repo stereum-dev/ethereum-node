@@ -14,7 +14,7 @@
               controlStore.tempCPU === null
                 ? ''
                 : `brightness(0) saturate(100%) sepia(1) hue-rotate(${
-                    cpuColor.value === 'green' ? '120deg' : cpuColor.value === 'orange' ? '40deg' : '0deg'
+                    tempCPU.value === 'green' ? '120deg' : tempCPU.value === 'orange' ? '40deg' : '0deg'
                   })`,
           }"
         />
@@ -87,7 +87,7 @@ const chartOptions = {
 };
 
 const tempCPU = computed(() => {
-  if (controlStore.tempCPU == null) return "";
+  if (controlStore.tempCPU == null || controlStore.tempCPU === undefined) return "";
   if (controlStore.tempCPU > 40) return "red";
   if (controlStore.tempCPU > 30) return "yellow";
   if (controlStore.tempCPU <= 30) return "green";
