@@ -10,7 +10,14 @@
           class="w-3/4"
           src="/img/icon/control-page-icons/cpuIcon.svg"
           :style="{
-            fill: controlStore.tempCPU === null || controlStore.tempCPU === undefined || controlStore.tempCPU === '' ? '' : tempCPU,
+            filter:
+              controlStore.tempCPU === null || controlStore.tempCPU === undefined || controlStore.tempCPU === ''
+                ? ''
+                : tempCPU === 'green'
+                ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(90deg)' // Green filter
+                : tempCPU === 'orange'
+                ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(20deg)' // Orange filter
+                : 'invert(40%) sepia(90%) saturate(500%) hue-rotate(0deg)', // Red filter
           }"
         />
       </div>
