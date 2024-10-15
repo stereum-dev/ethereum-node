@@ -21,3 +21,9 @@
   loop: "{{ service_config_files.files }}"
   loop_control:
     loop_var: config_file
+
+- name: Include MEV Changes
+  include_tasks: mev_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
