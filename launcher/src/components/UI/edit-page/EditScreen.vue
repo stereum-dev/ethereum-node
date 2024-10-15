@@ -17,6 +17,7 @@
           @delete-setup="deleteSetup"
           @confirm-consensus="confirmConsensusConnection"
           @info-modal="openInfoModal"
+          @external-modify="openExternalModifyingModal"
         />
       </div>
       <div class="col-start-17 col-end-21 ml-1 grid grid-cols-2 grid-rows-9">
@@ -82,6 +83,15 @@
         @confirm-modify="confirmModifyingService"
       />
       <!-- End Modify Services Modal -->
+      <!-- Start External Modify for External Service -->
+      <ExternalModifying
+        v-if="isExternalModifyOpen"
+        :client="clientToModify"
+        @close-window="hideExternalModify"
+        @confirm-install="confirmExternalModifying"
+      />
+      <!-- End External Modify for External Service -->
+
       <!-- Start Add configs for Custom Service -->
 
       <AddCustom
@@ -149,6 +159,7 @@ import AddModal from "./components/modals/AddModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";
 import ModifyModal from "./components/modals/ModifyModal.vue";
 import NetworkModal from "./components/modals/NetworkModal.vue";
+import ExternalModifying from "./components/modals/ExternalModifying.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
 import AddCustom from "./components/modals/custom-service/AddCustom.vue";
@@ -184,6 +195,7 @@ const isModifyModalOpen = ref(false);
 const isAddModalOpen = ref(false);
 const clientToConnect = ref(null);
 const isNukeModalOpen = ref(false);
+const isExternalModifyOpen = ref(false);
 const nukeModalComponent = ref();
 const selectedSetupNetwork = ref("");
 const changeAnime = ref("/animation/confirm-changes/modify.gif");
@@ -351,6 +363,12 @@ const switchClientConfirm = (properties) => {
   manageStore.isLineHidden = false;
 };
 // Clients Modifying methods
+
+const confirmExternalModifying = (client, properties) => {
+  isExternalModifyOpen.value = false;
+  console.log("External Confirm", client);
+  console.log("External Confirm", properties);
+};
 
 const confirmModifyingService = (item) => {
   isModifyModalOpen.value = false;
@@ -916,6 +934,20 @@ const confirmImportSingleSetup = async (data) => {
   setupStore.setupDataToImport = [];
   manageStore.isImportSetupYamlActive = false;
   setupStore.isImportAnimeActive = true;
+};
+
+const openExternalModifyingModal = (item) => {
+  console.log("item", item);
+
+  clientToModify.value = item;
+  console.log("clientToModify", clientToModify.value);
+
+  isExternalModifyOpen.value = true;
+};
+
+const hideExternalModify = () => {
+  manageStore.isLineHidden = false;
+  isExternalModifyOpen.value = false;
 };
 
 const closeNetworkModal = () => {

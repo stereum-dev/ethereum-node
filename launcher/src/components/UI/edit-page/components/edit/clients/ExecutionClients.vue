@@ -23,6 +23,7 @@
           @connect-client="connectClient"
           @delete-service="deleteService"
           @info-modal="infoModal"
+          @external-modify="externalModify"
         />
       </TransitionGroup>
     </div>
@@ -107,6 +108,10 @@ const switchClient = (item) => {
 
 const infoModal = (item) => {
   emit("infoModal", item);
+};
+
+const externalModify = (item) => {
+  emit("externalModify", item);
 };
 </script>
 <style scoped>

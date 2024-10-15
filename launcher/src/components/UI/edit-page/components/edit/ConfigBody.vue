@@ -38,6 +38,7 @@
         @switch-client="switchClient"
         @confirm-consensus="confirmConsensus"
         @info-modal="infoModal"
+        @external-modify="externalModify"
         @mouse-over="lineDraw"
         @mouse-leave="removeLines"
       />
@@ -49,6 +50,7 @@
         @switch-client="switchClient"
         @modify-service="modifyService"
         @info-modal="infoModal"
+        @external-modify="externalModify"
         @mouse-over="lineDraw"
         @mouse-leave="removeLines"
       />
@@ -82,6 +84,7 @@ const emit = defineEmits([
   "deleteService",
   "confirmConsensus",
   "infoModal",
+  "externalModify",
   "modifyService",
   "removeLines",
   "lineDraw",
@@ -150,5 +153,9 @@ const infoModal = (service) => {
 
 const modifyService = (service) => {
   emit("modifyService", service);
+};
+
+const externalModify = (service) => {
+  emit("externalModify", service);
 };
 </script>

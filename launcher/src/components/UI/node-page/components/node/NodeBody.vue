@@ -6,6 +6,7 @@
       @open-docs="openDocs"
       @open-log="openLog"
       @copy-jwt="copyJwt"
+      @external-modify="externalModify"
       @click-outside="clickOutside"
       @line-draw="lineDrawHandler"
       @remove-lines="removeConnectionLines"
@@ -28,7 +29,7 @@ import ControlService from "@/store/ControlService";
 import LeaderLine from "leader-line-new";
 import { useSetups } from "@/store/setups";
 
-const emit = defineEmits(["openExpert", "openLog", "setupState", "exportSetup"]);
+const emit = defineEmits(["openExpert", "openLog", "setupState", "exportSetup", "externalModify"]);
 
 // Refs
 const isPluginLogPageActive = ref(false);
@@ -203,6 +204,10 @@ const openSetup = (setup) => {
 
 const exportSetup = (setup) => {
   emit("exportSetup", setup);
+};
+
+const externalModify = (item) => {
+  emit("externalModify", item);
 };
 
 const copyJwt = async (item) => {

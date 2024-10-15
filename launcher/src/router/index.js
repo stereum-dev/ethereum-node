@@ -7,6 +7,7 @@ import OneclickPage from "@/pages/OneclickPage.vue";
 import SelectPreset from "../../src/components/UI/one-click/sections/SelectPreset.vue";
 import ConfigPlugins from "../../src/components/UI/one-click/sections/ConfigPlugins.vue";
 import MevboostRelays from "../../src/components/UI/one-click/sections/MevboostRelays.vue";
+import OnlySource from "../../src/components/UI/one-click/sections/OnlySource.vue";
 import SelectSync from "../../src/components/UI/one-click/sections/SelectSync.vue";
 import VerifyCheck from "../../src/components/UI/one-click/sections/VerifyCheck.vue";
 import AnimationSection from "../../src/components/UI/one-click/sections/AnimationSection.vue";
@@ -78,6 +79,11 @@ const routes = [
         path: "config",
         name: "ConfigPlugins",
         component: ConfigPlugins,
+      },
+      {
+        path: "source",
+        name: "OnlySource",
+        component: OnlySource,
       },
       {
         path: "mevboost",

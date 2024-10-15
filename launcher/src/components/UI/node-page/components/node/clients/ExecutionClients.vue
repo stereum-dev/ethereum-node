@@ -23,6 +23,7 @@
         @open-resync="openResync(item)"
         @open-pruning="openPruning"
         @copy-jwt="copyJwt"
+        @external-modify="externalModify"
       />
       <TransitionGroup name="fadeModal">
         <ResyncModal v-if="item.isResyncModalOpen" icon-size="w-14" :item="item" @close-window="closeResyncModal(item)" />
@@ -43,7 +44,17 @@ import { computed, ref } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 
 //Emits
-const emit = defineEmits(["openExpert", "openLog", "openDoc", "stateHandler", "restartHandler", "mouseOver", "mouseLeave", "copyJwt"]);
+const emit = defineEmits([
+  "openExpert",
+  "openLog",
+  "openDoc",
+  "stateHandler",
+  "restartHandler",
+  "mouseOver",
+  "mouseLeave",
+  "copyJwt",
+  "externalModify",
+]);
 
 //Refs
 const showPruningModal = ref(false);
@@ -116,6 +127,10 @@ const restartHandler = (item) => {
 
 const copyJwt = (item) => {
   emit("copyJwt", item);
+};
+
+const externalModify = (item) => {
+  emit("externalModify", item);
 };
 </script>
 

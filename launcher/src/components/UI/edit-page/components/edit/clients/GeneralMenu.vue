@@ -20,6 +20,15 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
+        v-if="item.service === 'ExternalExecutionService' || item.service === 'ExternalConsensusService'"
+        class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
+        src="/img/icon/edit-node-icons/service-connecting.png"
+        alt="Trash Icon"
+        @click="externalModify"
+        @mouseenter="footerStore.cursorLocation = `${switchClientTooltip}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      />
+      <img
         class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
         src="/img/icon/edit-node-icons/service-delete.png"
         alt="Trash Icon"
@@ -60,7 +69,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
+const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal", "externalModify"]);
 
 const deleteService = () => {
   emit("deleteService", props.item);
@@ -79,6 +88,11 @@ const modifyService = () => {
 
 const infoModal = () => {
   emit("infoModal", props.item);
+  footerStore.cursorLocation = "";
+};
+
+const externalModify = () => {
+  emit("externalModify", props.item);
   footerStore.cursorLocation = "";
 };
 </script>

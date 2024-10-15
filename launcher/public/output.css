@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /*
-! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -807,10 +807,6 @@ video {
   top: -90px;
 }
 
-.bottom-0{
-  bottom: 0px;
-}
-
 .bottom-0\.5{
   bottom: 0.125rem;
 }
@@ -845,10 +841,6 @@ video {
 
 .end-1{
   inset-inline-end: 0.25rem;
-}
-
-.end-2{
-  inset-inline-end: 0.5rem;
 }
 
 .left-0{
@@ -2234,6 +2226,10 @@ video {
   width: 15rem;
 }
 
+.w-64{
+  width: 16rem;
+}
+
 .w-7{
   width: 1.75rem;
 }
@@ -2436,11 +2432,6 @@ video {
   -webkit-box-flex: 0;
       -ms-flex: none;
           flex: none;
-}
-
-.flex-shrink{
-  -ms-flex-negative: 1;
-      flex-shrink: 1;
 }
 
 .flex-shrink-0{
@@ -2764,11 +2755,6 @@ video {
           flex-direction: column;
 }
 
-.flex-wrap{
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-}
-
 .place-content-center{
   place-content: center;
 }
@@ -2975,6 +2961,11 @@ video {
 .divide-gray-400 > :not([hidden]) ~ :not([hidden]){
   --tw-divide-opacity: 1;
   border-color: rgb(156 163 175 / var(--tw-divide-opacity));
+}
+
+.divide-gray-500 > :not([hidden]) ~ :not([hidden]){
+  --tw-divide-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-divide-opacity));
 }
 
 .divide-gray-600 > :not([hidden]) ~ :not([hidden]){
@@ -4538,11 +4529,6 @@ video {
   line-height: 1.25rem;
 }
 
-.text-sm\/none{
-  font-size: 0.875rem;
-  line-height: 1;
-}
-
 .text-xl{
   font-size: 1.25rem;
   line-height: 1.75rem;
@@ -5412,11 +5398,6 @@ html body {
 .after\:left-\[2px\]::after{
   content: var(--tw-content);
   left: 2px;
-}
-
-.after\:top-0::after{
-  content: var(--tw-content);
-  top: 0px;
 }
 
 .after\:top-0\.5::after{
