@@ -10,12 +10,7 @@
           class="w-3/4"
           src="/img/icon/control-page-icons/cpuIcon.svg"
           :style="{
-            filter:
-              controlStore.tempCPU === null
-                ? ''
-                : `brightness(0) saturate(100%) sepia(1) hue-rotate(${
-                    tempCPU.value === 'green' ? '120deg' : tempCPU.value === 'orange' ? '40deg' : '0deg'
-                  })`,
+            fill: controlStore.tempCPU === null || controlStore.tempCPU === undefined || controlStore.tempCPU === '' ? '' : tempCPU,
           }"
         />
       </div>
@@ -89,7 +84,7 @@ const chartOptions = {
 const tempCPU = computed(() => {
   if (controlStore.tempCPU == null || controlStore.tempCPU === undefined) return "";
   if (controlStore.tempCPU > 40) return "red";
-  if (controlStore.tempCPU > 30) return "yellow";
+  if (controlStore.tempCPU > 30) return "orange";
   if (controlStore.tempCPU <= 30) return "green";
   return "";
 });
