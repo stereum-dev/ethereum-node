@@ -1357,8 +1357,12 @@ export class Monitoring {
       };
     }
 
+    // const tenMinutesAgo = Math.floor(Date.now() / 1000) - 10 * 60;
+
     // Query Prometehus for all possible labels
     const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
+
+    // console.log("prometheus_result ========>", prometheus_result.data.result);
     if (typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success") {
       return {
         code: 223,

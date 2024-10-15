@@ -67,9 +67,17 @@ const wsToggle = async () => {
   await (nodeHeaderStore.wsState ? ControlService.openWsTunnel() : ControlService.closeWsTunnel());
 };
 
-const executionRpcUrl = computed(() => getServiceUrl("executionService", controlStore.rpcstatus.data));
-const beaconDataUrl = computed(() => getServiceUrl("consensusService", controlStore.beaconstatus.data));
-const wsDataUrl = computed(() => getServiceUrl("executionService", controlStore.wsstatus.data));
+const executionRpcUrl = computed(() => {
+  return controlStore.rpcstatus?.data ? getServiceUrl("executionService", controlStore.rpcstatus.data) : "";
+});
+
+const beaconDataUrl = computed(() => {
+  return controlStore.beaconstatus?.data ? getServiceUrl("consensusService", controlStore.beaconstatus.data) : "";
+});
+
+const wsDataUrl = computed(() => {
+  return controlStore.wsstatus?.data ? getServiceUrl("executionService", controlStore.wsstatus.data) : "";
+});
 
 const getServiceUrl = (serviceType, statusData) => {
   const serviceId =

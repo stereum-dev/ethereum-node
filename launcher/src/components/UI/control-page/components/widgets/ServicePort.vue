@@ -39,24 +39,26 @@ const controlStore = useControlStore();
 const setupStore = useSetups();
 const footerStore = useFooter();
 
-const portStatus = ref(controlStore.portstatus.data);
+const portStatus = ref(controlStore.portstatus.data || []);
 
 const matchingPorts = computed(() => {
+  if (!Array.isArray(portStatus.value)) return [];
+
   const { consensusService, executionService } = setupStore.selectedServicePairs || {};
   if (!consensusService || !executionService) return [];
 
-  const consensusId = consensusService.id.trim();
-  const executionId = executionService.config.serviceID.trim();
-  const consensusName = consensusService.name.trim().toLowerCase();
-  const executionName = executionService.name.trim().toLowerCase();
+  const consensusId = consensusService.id?.trim();
+  const executionId = executionService.config?.serviceID?.trim();
+  const consensusName = consensusService.name?.trim().toLowerCase();
+  const executionName = executionService.name?.trim().toLowerCase();
 
   const filteredPorts = portStatus.value.filter((port) => {
-    const portId = port.id.trim();
-    const portName = port.name.trim().toLowerCase();
+    const portId = port.id?.trim();
+    const portName = port.name?.trim().toLowerCase();
     return (portId === consensusId || portId === executionId) && (portName === consensusName || portName === executionName);
   });
 
-  return [...filteredPorts].map((port, index) => ({
+  return filteredPorts.map((port, index) => ({
     ...port,
     uniqueKey: `${port.id}-${index}`,
   }));

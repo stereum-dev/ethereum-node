@@ -117,6 +117,7 @@ export async function useRefreshMetrics() {
         controlStore.tx = response.tx;
         controlStore.readValue = response.readValue;
         controlStore.writeValue = response.writeValue;
+        controlStore.tempCPU = response.tempCPU;
       }
     });
   } catch (err) {

@@ -8,7 +8,7 @@
         {{ t("controlPage.subscribedSubnets") }}
       </span>
     </div>
-    <div class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative">
+    <div v-if="chartOptions && chartSeries" class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative">
       <NoData v-if="setupStore.selectedServicePairs === null" class="ml-5" />
       <VueApexCharts v-else :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
     </div>

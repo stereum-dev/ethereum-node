@@ -10,13 +10,13 @@
       </div>
       <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">CPU</span>
     </div>
-    <div class="cpuCountPart w-2/3 h-full flex justify-center items-center">
-      <VueApexCharts :options="chartOptions" :series="chartSeries" class="full-size-chart" />
+    <div v-if="chartSeries && chartOptions" class="cpuCountPart w-2/3 h-full flex justify-center items-center">
+      <VueApexCharts v-if="chartSeries" :options="chartOptions" :series="chartSeries" class="full-size-chart" />
     </div>
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
@@ -73,6 +73,12 @@ const chartOptions = {
   tooltip: { enabled: false },
 };
 
+const cpuTemp = computed(() => (controlStore.cpuTemp ? controlStore.cpuTemp.toFixed(2) : null));
+
+watch(cpuTemp, () => {
+  console.log(cpuTemp.value);
+});
+
 const updateChartData = () => {
   const currentTime = Date.now();
   chartData.value.push([currentTime, cpu.value]);
@@ -84,6 +90,7 @@ const updateChartData = () => {
 
 onMounted(() => {
   pollingInterval = setInterval(updateChartData, 1000);
+  console.log(cpuTemp.value);
 });
 
 onBeforeUnmount(() => {

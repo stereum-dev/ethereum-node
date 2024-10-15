@@ -1,6 +1,6 @@
 <template>
   <div
-    class="control-header col-start-2 col-end-25 row-start-1 row-span-1 grid h-full p-[.10rem] gap-1 bg-[#0F1217] mx-h-[145px] border border-gray-500 rounded-lg mt-2 mr-1"
+    class="control-header col-start-1 col-end-25 row-start-1 row-span-1 grid h-full p-[.10rem] gap-1 bg-[#0F1217] mx-h-[145px] border border-gray-500 rounded-lg mt-2 mr-1"
     style="grid-template-columns: repeat(22, 1fr)"
   >
     <ThinCard class="server-name col-start-1 col-span-6"><ServerName /></ThinCard>

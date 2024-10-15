@@ -3,7 +3,7 @@
     <div class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]">
       RPC RECEIVED OVER TIME
     </div>
-    <div class="widget-box w-full h-4/5 justify-center items-center flex flex-col">
+    <div v-if="chartOptions && chartOptions.series" class="widget-box w-full h-4/5 justify-center items-center flex flex-col">
       <apex-chart :options="chartOptions" :series="chartOptions.series" class="fullSizeChart"></apex-chart>
     </div>
   </div>

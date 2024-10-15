@@ -9,6 +9,7 @@ export const useControlStore = defineStore("theControl", {
       currentExecutionIcon: "",
       synchronizationError: false,
       synchronizationErrorControl: false,
+      tempCPU: null,
       pageNumber: 1,
       consensusName: "",
       request: [],

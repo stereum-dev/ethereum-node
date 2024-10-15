@@ -399,6 +399,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getQRCode");
   }
 
+  async getCPUTemperature() {
+    return await this.promiseIpc.send("getCPUTemperature");
+  }
+
   async importRemoteKeys(args) {
     return await this.promiseIpc.send("importRemoteKeys", args);
   }
