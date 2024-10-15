@@ -6,9 +6,22 @@
   >
     <div class="cpuIco w-1/3 h-full flex flex-col justify-center items-center">
       <div class="cpuIco-container flex justify-center items-center w-full h-4/5">
-        <img class="w-3/4" src="/img/icon/control-page-icons/cpuIcon.svg" />
+        <img
+          class="w-3/4"
+          src="/img/icon/control-page-icons/cpuIcon.svg"
+          :style="{
+            filter:
+              controlStore.tempCPU === null
+                ? ''
+                : `brightness(0) saturate(100%) sepia(1) hue-rotate(${
+                    cpuColor.value === 'green' ? '120deg' : cpuColor.value === 'orange' ? '40deg' : '0deg'
+                  })`,
+          }"
+        />
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">CPU</span>
+      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">{{
+        controlStore.tempCPU
+      }}</span>
     </div>
     <div v-if="chartSeries && chartOptions" class="cpuCountPart w-2/3 h-full flex justify-center items-center">
       <VueApexCharts v-if="chartSeries" :options="chartOptions" :series="chartSeries" class="full-size-chart" />
@@ -16,7 +29,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
@@ -73,10 +86,12 @@ const chartOptions = {
   tooltip: { enabled: false },
 };
 
-const cpuTemp = computed(() => (controlStore.cpuTemp ? controlStore.cpuTemp.toFixed(2) : null));
-
-watch(cpuTemp, () => {
-  console.log(cpuTemp.value);
+const tempCPU = computed(() => {
+  if (controlStore.tempCPU == null) return "";
+  if (controlStore.tempCPU > 40) return "red";
+  if (controlStore.tempCPU > 30) return "yellow";
+  if (controlStore.tempCPU <= 30) return "green";
+  return "";
 });
 
 const updateChartData = () => {
@@ -90,7 +105,6 @@ const updateChartData = () => {
 
 onMounted(() => {
   pollingInterval = setInterval(updateChartData, 1000);
-  console.log(cpuTemp.value);
 });
 
 onBeforeUnmount(() => {
