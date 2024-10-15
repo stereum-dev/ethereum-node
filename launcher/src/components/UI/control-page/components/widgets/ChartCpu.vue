@@ -16,7 +16,7 @@
                 : tempCPU === 'green'
                 ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(90deg)' // Green filter
                 : tempCPU === 'orange'
-                ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(20deg)' // Orange filter
+                ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(40deg)' // Orange filter
                 : 'invert(40%) sepia(90%) saturate(500%) hue-rotate(0deg)', // Red filter
           }"
         />
@@ -89,11 +89,11 @@ const chartOptions = {
 };
 
 const tempCPU = computed(() => {
-  if (controlStore.tempCPU == null || controlStore.tempCPU === undefined) return "";
-  if (controlStore.tempCPU > 40) return "red";
-  if (controlStore.tempCPU > 30) return "orange";
-  if (controlStore.tempCPU <= 30) return "green";
-  return "";
+  if (controlStore.tempCPU == null || controlStore.tempCPU === undefined) return ""; // No color for undefined/null
+  if (controlStore.tempCPU >= 80) return "red"; // Red for CPU >= 80
+  if (controlStore.tempCPU >= 60) return "orange"; // Orange for CPU >= 60
+  if (controlStore.tempCPU >= 30) return "green"; // Green for CPU >= 30
+  return ""; // Default case (below 30 or null)
 });
 
 const updateChartData = () => {
