@@ -301,7 +301,7 @@ export class SSHService {
 
             // Listen for data on the stream
             stream.on("data", (data) => {
-              // Call the rpcReceivedData method to handle the received data
+              // Call the handleReceivedData method to handle the received data
               this.handleReceivedData(data.length, forwardOptions.srcPort);
             });
           });
