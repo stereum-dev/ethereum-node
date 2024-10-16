@@ -2793,6 +2793,11 @@ video {
           justify-content: space-between;
 }
 
+.justify-around{
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
 .justify-evenly{
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
