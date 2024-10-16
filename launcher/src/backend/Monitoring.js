@@ -2802,6 +2802,7 @@ export class Monitoring {
       // if(p2pstatus.code)
       //   return p2pstatus;
       const subnetSubs = await this.getSubnetSubs();
+      const rpcReceivedData = await this.nodeConnection.sshService.getRPCReceivedData();
       return {
         code: 0,
         info: "success: data successfully retrieved",
@@ -2814,6 +2815,7 @@ export class Monitoring {
           beaconstatus: beaconstatus,
           portstatus: portstatus,
           subnetSubs: subnetSubs,
+          rpcReceivedData: rpcReceivedData,
         },
       };
     } catch (err) {
