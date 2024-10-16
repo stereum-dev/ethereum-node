@@ -5,7 +5,7 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="cpuIco w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="cpuIco-container flex justify-center items-center w-full h-4/5">
+      <div class="cpuIco-container flex justify-center items-center w-full h-4/5 relative p-2">
         <img
           class="w-3/4"
           src="/img/icon/control-page-icons/cpuIcon.svg"
@@ -22,10 +22,13 @@
                 : 'invert(21%) sepia(100%) saturate(7414%) hue-rotate(359deg) brightness(94%) contrast(117%)',
           }"
         />
+        <span
+          v-if="controlStore.tempCPU !== null || controlStore.tempCPU !== undefined"
+          class="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 text-gray-200 text-2xs font-semibold"
+          >{{ controlStore.tempCPU }}</span
+        >
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">{{
-        controlStore.tempCPU
-      }}</span>
+      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">cpu</span>
     </div>
     <div v-if="chartSeries && chartOptions" class="cpuCountPart w-2/3 h-full flex justify-center items-center">
       <VueApexCharts v-if="chartSeries" :options="chartOptions" :series="chartSeries" class="full-size-chart" />
@@ -89,6 +92,8 @@ const chartOptions = {
   dataLabels: { enabled: false },
   tooltip: { enabled: false },
 };
+
+const ttt = ref(10.0);
 
 const tempCPU = computed(() => {
   if (controlStore.tempCPU == null || controlStore.tempCPU === undefined) return ""; // No color for undefined/null
