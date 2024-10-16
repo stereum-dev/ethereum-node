@@ -90,6 +90,10 @@ const footerStore = useFooter();
 const totalDisk = computed(() => controlStore.totalDisk);
 
 const storagestatus = computed(() => {
+  if (!Array.isArray(controlStore.storagestatus)) {
+    return [];
+  }
+
   if (!serviceStore.installedServices.length) {
     return [];
   }

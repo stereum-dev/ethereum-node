@@ -96,7 +96,6 @@ const tempCPU = computed(() => {
   if (controlStore.tempCPU >= 60) return "orange";
   if (controlStore.tempCPU >= 35) return "yellow";
   if (controlStore.tempCPU >= 0) return "green";
-
   return "";
 });
 

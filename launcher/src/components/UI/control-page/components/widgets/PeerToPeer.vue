@@ -63,8 +63,11 @@ const footerStore = useFooter();
 const consensusClient = computed(() => setupStore.selectedServicePairs?.consensusService?.name || "Unknown");
 const executionClient = computed(() => setupStore.selectedServicePairs?.executionService?.name || "Unknown");
 
-const findPeerDetails = (serviceType, id) =>
-  controlStore.p2pstatus?.data?.find((pair) => pair.details[serviceType].serviceID === id)?.details[serviceType] || {};
+const findPeerDetails = (serviceType, id) => {
+  const p2pData = Array.isArray(controlStore.p2pstatus?.data) ? controlStore.p2pstatus.data : [];
+
+  return p2pData.find((pair) => pair.details[serviceType]?.serviceID === id)?.details[serviceType] || {};
+};
 
 const consensusValPeer = computed(() => findPeerDetails("consensus", setupStore.selectedServicePairs?.consensusService?.id).valPeer || 0);
 const consensusNumPeer = computed(() => findPeerDetails("consensus", setupStore.selectedServicePairs?.consensusService?.id).numPeer || 0);

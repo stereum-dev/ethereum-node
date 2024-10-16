@@ -120,9 +120,13 @@ const chartOptions = {
 const updateChartData = () => {
   const serviceType = selectedService.value;
   const serviceId = setupStore.selectedServicePairs?.[`${serviceType}Service`]?.id;
+
   if (!serviceId) return;
 
-  const peerDetails = controlStore.p2pstatus?.data?.find((pair) => pair.details[serviceType].serviceID === serviceId)?.details[serviceType];
+  const p2pData = Array.isArray(controlStore.p2pstatus?.data) ? controlStore.p2pstatus.data : [];
+
+  const peerDetails = p2pData.find((pair) => pair.details[serviceType]?.serviceID === serviceId)?.details[serviceType];
+
   const newPeerData = peerDetails ? peerDetails.numPeer : 0;
   const currentTime = new Date().getTime();
 
