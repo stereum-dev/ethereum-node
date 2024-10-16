@@ -1,7 +1,7 @@
 <template>
   <div class="info-Parent flex w-full h-full justify-center items-center">
     <div class="info-Ico w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="info-Ico-container flex justify-center items-center w-full h-4/5">
+      <div class="info-Ico-container flex justify-center items-center w-full h-4/5 p-1">
         <img class="w-3/4" src="/img/icon/control-page-icons/server-icon.png" />
       </div>
       <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">{{

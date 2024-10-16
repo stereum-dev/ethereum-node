@@ -4232,6 +4232,11 @@ video {
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
 }
 
+.bg-red-200{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 202 202 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-80{
   --tw-bg-opacity: 0.8;
 }
@@ -4503,6 +4508,10 @@ video {
   padding-top: 2rem;
 }
 
+.pr-3{
+  padding-right: 0.75rem;
+}
+
 .text-left{
   text-align: left;
 }
@@ -4513,6 +4522,10 @@ video {
 
 .indent-0{
   text-indent: 0px;
+}
+
+.align-baseline{
+  vertical-align: baseline;
 }
 
 .font-mono{
@@ -4645,6 +4658,18 @@ video {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-\[20\%\]{
+  font-size: 20%;
+}
+
+.text-\[6px\]{
+  font-size: 6px;
+}
+
+.text-\[7px\]{
+  font-size: 7px;
 }
 
 .font-\[400\]{
@@ -4928,6 +4953,11 @@ video {
 .text-yellow-500{
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
+}
+
+.text-blue-300{
+  --tw-text-opacity: 1;
+  color: rgb(147 197 253 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-400\/70::-webkit-input-placeholder{

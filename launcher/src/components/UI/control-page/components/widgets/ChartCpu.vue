@@ -30,7 +30,7 @@
       </div>
       <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">cpu</span>
     </div>
-    <div v-if="chartSeries && chartOptions" class="cpuCountPart w-2/3 h-full flex justify-center items-center">
+    <div v-if="chartSeries && chartOptions" class="cpuCountPart w-2/3 h-full flex justify-start items-center pr-1">
       <VueApexCharts v-if="chartSeries" :options="chartOptions" :series="chartSeries" class="full-size-chart" />
     </div>
   </div>
@@ -92,8 +92,6 @@ const chartOptions = {
   dataLabels: { enabled: false },
   tooltip: { enabled: false },
 };
-
-const ttt = ref(10.0);
 
 const tempCPU = computed(() => {
   if (controlStore.tempCPU == null || controlStore.tempCPU === undefined) return ""; // No color for undefined/null

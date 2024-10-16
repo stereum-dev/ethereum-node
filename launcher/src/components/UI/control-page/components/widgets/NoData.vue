@@ -1,72 +1,16 @@
 <template>
-  <div class="no-data_parent">
-    <div class="no-data_box">
-      <span class="big-sign"> &gt; {{ $t("noData.noData") }} &lt; </span>
-    </div>
+  <div class="no-data_box flex justify-center items-center w-full h-full absolute text-blue-300">
+    <span class="big-sign flex justify-center items-center w-full h-full uppercase text-xl font-semibold">
+      &gt; {{ $t("noData.noData") }} &lt;
+    </span>
   </div>
 </template>
 <script setup></script>
 
 <style scoped>
-[data-tooltip] {
-  position: relative;
-  cursor: default;
-}
-[data-tooltip]::after {
-  position: absolute;
-  width: max-content;
-  left: calc(50%-25%);
-  bottom: 110%;
-  text-align: center;
-  content: attr(data-tooltip);
-  color: #eee;
-  background: black;
-  border-radius: 5px;
-  font-size: 70%;
-  padding: 10% 15%;
-  border: 1px solid #929292;
-  text-transform: uppercase;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(20%);
-  transition: opacity 0.3s transform 0.2s;
-}
-[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-  transform: rotateY(0);
-}
-.no-data_parent {
-  width: 70%;
-  height: 95%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  cursor: pointer;
-}
-.no-data_box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  color: aqua;
-  position: absolute;
-}
 .big-sign {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  text-transform: uppercase;
-  font-size: 150%;
-  font-weight: 800;
   animation: blink 1s linear infinite;
   text-shadow: rgb(86, 202, 234) 1px 0 4px;
-  text-transform: uppercase;
 }
 .bottom-part {
   width: 100%;

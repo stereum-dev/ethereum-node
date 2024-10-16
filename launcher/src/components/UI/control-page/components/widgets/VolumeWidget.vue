@@ -1,13 +1,13 @@
 <template>
   <div class="volume-Parent flex w-full h-full justify-center items-center">
     <div class="volume-Ico w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="volume-Ico-container flex justify-center items-center w-full h-4/5">
+      <div class="volume-Ico-container flex justify-center items-center w-full h-4/5 p-2">
         <img class="w-3/4" src="/img/icon/control-page-icons/hdd.svg" />
       </div>
       <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">volume</span>
     </div>
-    <div class="volume-box w-2/3 h-full flex flex-col justify-center items-center p-1">
-      <div class="volume_services flex w-full h-1/3 border rounded-sm border-gray-500 overflow-hidden relative">
+    <div class="volume-box w-2/3 h-full flex flex-col justify-center items-center">
+      <div class="volume_services flex w-full h-1/4 border rounded-sm border-gray-700 overflow-hidden relative mt-1 mr-2">
         <div
           v-for="item in storagestatus"
           :key="item.id"
@@ -22,8 +22,58 @@
         ></div>
       </div>
 
-      <div class="hdd-services w-full h-2/3 flex">
-        <div class="left-side w-2/3 h-full flex justify-center items-center text-[45%] text-green-500 uppercase">
+      <div class="hdd-services w-full h-3/4 flex pt-1 pb-1">
+        <div class="write-read-box h-full w-2/5 flex justify-start items-center text-[50%] border-r-2 border-gray-600">
+          <div class="ttl-box w-1/4 h-full flex flex-col justify-center items-center mr-1">
+            <div class="title w-full text-[7px] h-1/2 flex justify-start items-center text-gray-200 uppercase mr-1">
+              <span>write</span>
+            </div>
+            <div class="title w-full text-[7px] h-1/2 flex justify-center items-center text-gray-200 uppercase">read</div>
+          </div>
+          <div class="val-box w-3/4 h-full flex flex-col text-xs justify-center font-semibold items-center">
+            <div
+              class="title w-full h-1/2 flex justify-center items-center text-orange-500 uppercase"
+              @mouseenter="
+                footerStore.cursorLocation = `Write: ${convertWriteValueToMb} ${
+                  controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'KB' : 'MB'
+                }`
+              "
+              @mouseleave="footerStore.cursorLocation = ''"
+            >
+              {{ convertWriteValueToMb }}
+              {{ controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
+            </div>
+            <div
+              class="title w-full h-1/2 flex justify-center items-center text-teal-700 uppercase"
+              @mouseenter="
+                footerStore.cursorLocation = `Read: ${convertReadValueToMb} ${
+                  controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'KB' : 'MB'
+                }`
+              "
+              @mouseleave="footerStore.cursorLocation = ''"
+            >
+              {{ convertReadValueToMb }}
+              {{ controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
+            </div>
+          </div>
+        </div>
+        <div class="storage-box flex h-full w-3/5 flex-col pl-1">
+          <div
+            class="used-storage h-1/2 w-full text-xs flex justify-start items-center text-green-500"
+            @mouseenter="footerStore.cursorLocation = `${availDisk} GB ${t('controlPage.free')}`"
+            @mouseleave="footerStore.cursorLocation = ''"
+          >
+            {{ availDisk }} GB {{ t("controlPage.free") }}
+          </div>
+          <div
+            class="total-storage h-1/2 w-full text-xs text-gray-300 flex justify-start items-center"
+            @mouseenter="footerStore.cursorLocation = `${totalDisk} GB ${t('controlPage.total')}`"
+            @mouseleave="footerStore.cursorLocation = ''"
+          >
+            {{ totalDisk }} GB {{ $t("controlPage.total") }}
+          </div>
+        </div>
+        <!-- <div class="left-side w-2/3 h-full flex justify-center items-center text-[45%] text-green-500 uppercase">
           <span
             @mouseenter="footerStore.cursorLocation = `${availDisk} GB ${t('controlPage.free')}`"
             @mouseleave="footerStore.cursorLocation = ''"
@@ -35,8 +85,8 @@
           >
             / {{ totalDisk }} GB {{ $t("controlPage.total") }}</span
           >
-        </div>
-        <div class="right-side w-1/3 h-full flex justify-center items-center uppercase">
+        </div> -->
+        <!-- <div class="right-side w-1/3 h-full flex justify-center items-center uppercase">
           <div class="ttl-box w-1/4 h-full flex flex-col justify-center items-center">
             <div class="title w-full text-[50%] h-1/2 flex justify-center items-center text-gray-200 uppercase mr-1">write</div>
             <div class="title w-full text-[50%] h-1/2 flex justify-center items-center text-gray-200 uppercase mr-1">read</div>
@@ -67,7 +117,7 @@
               {{ controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
