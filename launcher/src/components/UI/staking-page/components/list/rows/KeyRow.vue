@@ -309,7 +309,7 @@ const navToBeaconcha = (network) => {
     holesky: "https://holesky.beaconcha.in/",
   };
 
-  const url = urls[network];
+  const url = urls[network] + "validator/" + props.item.key;
   if (url) {
     window.open(url, "_blank");
   } else {
