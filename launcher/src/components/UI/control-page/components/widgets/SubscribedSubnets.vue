@@ -87,7 +87,7 @@ const chartOptions = {
     strokeDashArray: 5,
     xaxis: { lines: { show: true } },
     yaxis: { lines: { show: true } },
-    padding: { top: -25, bottom: 15 },
+    padding: { top: -25, bottom: 15, left: -5, right: 5 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
   markers: { size: 0 },
