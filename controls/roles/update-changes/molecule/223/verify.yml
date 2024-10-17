@@ -33,18 +33,6 @@
         src: "/etc/stereum/services/580c2c43-ad2a-405d-ab78-eb3678383f59.yaml"
       register: Erigon_service_configuration2_raw
 
-    # SSVNetworkService
-    - name: Read SSVNetworkService file
-      slurp:
-        src: "/etc/stereum/services/cb941f15-6eef-4e4d-fc81-4d524b627373.yaml"
-      register: SSVNetwork_service_configuration_raw
-
-    # SSVNetworkService2
-    - name: Read SSVNetworkService file
-      slurp:
-        src: "/etc/stereum/services/611cf17d-adf7-433e-bc4e-2e38c0f502c3.yaml"
-      register: SSVNetwork_service_configuration2_raw
-
     # FlashbotsMevBoostService
     - name: Read FlashbotsMevBoostService file
       slurp:
@@ -64,8 +52,6 @@
         Ejector_service_configuration3: "{{ Ejector_service_configuration3_raw['content'] | b64decode | from_yaml }}"
         Erigon_service_configuration: "{{ Erigon_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Erigon_service_configuration2: "{{ Erigon_service_configuration2_raw['content'] | b64decode | from_yaml }}"
-        SSVNetwork_service_configuration: "{{ SSVNetwork_service_configuration_raw['content'] | b64decode | from_yaml }}"
-        SSVNetwork_service_configuration2: "{{ SSVNetwork_service_configuration2_raw['content'] | b64decode | from_yaml }}"
         Mev_service_configuration: "{{ Mev_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Mev_service_configuration2: "{{ Mev_service_configuration2_raw['content'] | b64decode | from_yaml }}"
 
@@ -95,16 +81,6 @@
         msg: "{{ Erigon_service_configuration2_raw['content'] | b64decode }}"
 
     - debug:
-        msg: "{{ SSVNetwork_service_configuration }}"
-    - debug:
-        msg: "{{ SSVNetwork_service_configuration_raw['content'] | b64decode }}"
-
-    - debug:
-        msg: "{{ SSVNetwork_service_configuration2 }}"
-    - debug:
-        msg: "{{ SSVNetwork_service_configuration2_raw['content'] | b64decode }}"
-
-    - debug:
         msg: "{{ Mev_service_configuration }}"
     - debug:
         msg: "{{ Mev_service_configuration_raw['content'] | b64decode }}"
@@ -124,8 +100,6 @@
           - Ejector_service_configuration3.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0x3799bDA7B884D33F79CEC926af21160dc47fbe05') | length == 0
           - Erigon_service_configuration.image | split(':') | first == 'erigontech/erigon'
           - Erigon_service_configuration2.image == 'erigontech/erigon:v2.60.8'
-          - SSVNetwork_service_configuration.image | split(':') | first == 'ssvlabs/ssv-node'
-          - SSVNetwork_service_configuration2.image == 'ssvlabs/ssv-node:v1.3.8'
           - Mev_service_configuration.entrypoint | select('match', 'eden') | length == 0
           - Mev_service_configuration2.entrypoint | select('match', 'eden') | length == 0
 # EOF
