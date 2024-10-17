@@ -15,7 +15,7 @@ export class ErigonService extends NodeService {
       "ErigonService", // service
       service.id, // id
       1, // configVersion
-      "erigontech/erigon", // image
+      "thorax/erigon", // image
       "v2.60.8", // imageVersion
       [
         `erigon`,
