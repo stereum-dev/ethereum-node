@@ -894,6 +894,7 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         service = ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
+        service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
         return service;
 
       case "LighthouseBeaconService":
@@ -1382,6 +1383,7 @@ export class ServiceManager {
       } else if (versions["prater"] && versions["prater"][service.service]) {
         service.imageVersion = versions["prater"][service.service].slice(-1).pop();
       }
+      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
     });
     for (const service of newServices) {
       await this.nodeConnection.writeServiceConfiguration(

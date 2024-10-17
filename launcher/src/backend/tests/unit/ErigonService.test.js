@@ -18,7 +18,7 @@ test("user", () => {
 });
 
 test("image", () => {
-  expect(ErigonService.buildByUserInput("mainnet", null, null).buildConfiguration().image).toMatch(/erigontech\/erigon/);
+  expect(ErigonService.buildByUserInput("mainnet", null, null).buildConfiguration().image).toMatch(/thorax\/erigon/);
 });
 
 test("endpoint url", () => {
