@@ -63,6 +63,9 @@ export class OneClickInstall {
     if (this.mevboost) serviceList.push(this.mevboost);
     if (this.validatorService) serviceList.push(this.validatorService);
     if (this.extraServices) this.extraServices.forEach((service) => serviceList.push(service));
+    serviceList.forEach((service) => {
+      if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
+    });
     return serviceList.map((service) => service.buildConfiguration());
   }
 
