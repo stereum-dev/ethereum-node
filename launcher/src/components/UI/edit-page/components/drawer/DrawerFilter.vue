@@ -81,7 +81,7 @@ const networkFilter = (service) => {
     case "holesky":
       return true;
     case "sepolia":
-      return service.service !== "SSVNetworkService";
+      return service.service !== "SSVNetworkService" && service.service !== "SSVDKGService";
     case "gnosis":
       return /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(service.service);
     default:

@@ -1,14 +1,16 @@
 <template>
   <div class="alert-box_parent rounded-md">
     <div class="alert-box">
-      <div class="alert-box_header h-7 w-full flex justify-center items-center">
-        <div class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-start items-center pt-0.5">
+      <div class="alert-box_header h-8 w-full flex justify-center items-center">
+        <div class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-center items-center pt-0.5">
           <div
             class="icon_alarm"
             :class="{
               filtered: alertShowState.includes('green'),
             }"
             @click="alertPicker('green')"
+            @mouseenter="cursorLocation = `filter to not show notifications`"
+            @mouseleave="cursorLocation = ''"
           >
             <img src="/img/icon/node-alert-icons/green-notification.png" alt="green" />
           </div>
@@ -18,6 +20,8 @@
               filtered: alertShowState.includes('yellow'),
             }"
             @click="alertPicker('yellow')"
+            @mouseenter="cursorLocation = `filter to not show warnings`"
+            @mouseleave="cursorLocation = ''"
           >
             <img src="/img/icon/node-alert-icons/alert-general-yellow.png" alt="green" />
           </div>
@@ -27,12 +31,19 @@
               filtered: alertShowState.includes('red'),
             }"
             @click="alertPicker('red')"
+            @mouseenter="cursorLocation = `filter to not show alarms`"
+            @mouseleave="cursorLocation = ''"
           >
             <img src="/img/icon/node-alert-icons/alert-general-red.png" alt="green" />
           </div>
         </div>
-        <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center ml-1">
-          <div class="volBtn cursor-pointer w-8" @click="volToggle">
+        <div class="status-box_vol-state w-1/4 h-full flex justify-center items-center">
+          <div
+            class="volBtn cursor-pointer w-8"
+            @click="volToggle"
+            @mouseenter="cursorLocation = `${volState ? 'mute' : 'unmute'}`"
+            @mouseleave="cursorLocation = ''"
+          >
             <img
               :src="volState ? '/img/icon/node-alert-icons/alert-settings.png' : '/img/icon/node-alert-icons/alert-settings-mute.png'"
               alt="green"
@@ -537,6 +548,7 @@ export default {
     volToggle() {
       this.volState = !this.volState;
       this.updateSettings(this.volState ? 0.95 : 0);
+      this.cursorLocation = ``;
     },
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
