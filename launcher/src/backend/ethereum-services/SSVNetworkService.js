@@ -51,7 +51,7 @@ MetricsAPIPort: 15000`;
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
-    const image = "bloxstaking/ssv-node";
+    const image = "ssvlabs/ssv-node";
 
     const volumes = [new ServiceVolume(workingDir + "/data", "/data"), new ServiceVolume(workingDir + "/secrets", "/secrets")];
 
