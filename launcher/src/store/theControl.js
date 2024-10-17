@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 export const useControlStore = defineStore("theControl", {
   state: () => {
     return {
+      rpcReceivedData: [],
+      subnetSubs: [],
       setupServices: 0,
       pickeedService: "exeCons",
       currentConsensusIcon: "",

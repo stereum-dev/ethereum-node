@@ -5,13 +5,17 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div class="cpuIco w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="cpuIco-container flex justify-center items-center w-full h-4/5 relative p-2">
+      <div
+        class="cpuIco-container flex justify-center items-center w-full h-4/5 relative p-2"
+      >
         <img
           class="w-3/4"
           src="/img/icon/control-page-icons/cpuIcon.svg"
           :style="{
             filter:
-              controlStore.tempCPU === null || controlStore.tempCPU === undefined || controlStore.tempCPU === ''
+              controlStore.tempCPU === null ||
+              controlStore.tempCPU === undefined ||
+              controlStore.tempCPU === ''
                 ? ''
                 : tempCPU === 'green'
                 ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(90deg)'
@@ -28,10 +32,21 @@
           >{{ controlStore.tempCPU }}</span
         >
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">cpu</span>
+      <span
+        class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase"
+        >cpu</span
+      >
     </div>
-    <div v-if="chartSeries && chartOptions" class="cpuCountPart w-2/3 h-full flex justify-start items-center pr-1">
-      <VueApexCharts v-if="chartSeries" :options="chartOptions" :series="chartSeries" class="full-size-chart" />
+    <div
+      v-if="chartSeries && chartOptions"
+      class="cpuCountPart w-2/3 h-full flex justify-start items-center pr-1"
+    >
+      <VueApexCharts
+        v-if="chartSeries"
+        :options="chartOptions"
+        :series="chartSeries"
+        class="full-size-chart"
+      />
     </div>
   </div>
 </template>
@@ -50,7 +65,12 @@ const cpu = computed(() => controlStore.cpu);
 const chartData = ref([]);
 let pollingInterval;
 
-const chartSeries = computed(() => [{ name: "CPU Usage", data: chartData.value }]);
+const chartSeries = computed(() => [
+  {
+    name: "CPU Usage",
+    data: chartData.value.length ? chartData.value : [[Date.now(), 0]],
+  },
+]);
 
 const chartOptions = {
   chart: {

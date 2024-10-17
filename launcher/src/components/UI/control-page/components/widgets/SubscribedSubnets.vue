@@ -1,16 +1,31 @@
 <template>
   <div class="peers-over-time_parent flex w-full h-full justify-center items-center">
-    <div class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5">
+    <div
+      class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center"
+    >
+      <div
+        class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5"
+      >
         <img class="w-3/4" src="/img/icon/control-page-icons/SubnetSubscriptions.png" />
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase">
+      <span
+        class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
+      >
         {{ t("controlPage.subscribedSubnets") }}
       </span>
     </div>
-    <div v-if="chartOptions && chartSeries" class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative">
+
+    <div
+      v-if="chartOptions && chartSeries"
+      class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative"
+    >
       <NoData v-if="setupStore.selectedServicePairs === null" />
-      <VueApexCharts v-else :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
+      <VueApexCharts
+        v-else
+        :options="chartOptions"
+        :series="chartSeries"
+        class="fullSizeChart"
+      />
     </div>
   </div>
 </template>
@@ -19,7 +34,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useSetups } from "@/store/setups";
-import ControlService from "@/store/ControlService";
+import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 import NoData from "./NoData.vue";
@@ -28,6 +43,7 @@ const t = i18n.global.t;
 
 const footerStore = useFooter();
 const setupStore = useSetups();
+const controlStore = useControlStore();
 const chartData = ref([]);
 let pollingInterval = null;
 
@@ -71,7 +87,7 @@ const chartOptions = {
     strokeDashArray: 5,
     xaxis: { lines: { show: true } },
     yaxis: { lines: { show: true } },
-    padding: { top: -25, bottom: 20 },
+    padding: { top: -25, bottom: 15 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
   markers: { size: 0 },
@@ -91,34 +107,30 @@ const chartOptions = {
   dataLabels: { enabled: false },
 };
 
-const fetchSubnet = async () => {
-  try {
-    const subscriber = await ControlService.getSubnetSubs();
+const subnetData = async () => {
+  const serviceId = setupStore.selectedServicePairs?.consensusService?.id;
 
-    if (subscriber && subscriber.data && Array.isArray(subscriber.data)) {
-      const serviceId = setupStore.selectedServicePairs?.consensusService?.id;
+  if (!serviceId) return;
 
-      const subnetInfo = subscriber.data.find((item) => item.serviceId === serviceId);
+  const subnetSubs = Array.isArray(controlStore.subnetSubs?.data)
+    ? controlStore.subnetSubs.data // Use subnetSubs.data instead of subnetSubs
+    : [];
 
-      if (subnetInfo) {
-        const subnetCount = subnetInfo.subnetCount || 0;
-        const currentTime = new Date().getTime();
+  const customerDetails = subnetSubs.find((item) => item.serviceId === serviceId);
 
-        chartData.value.push([currentTime, subnetCount]);
+  const subnetCount = customerDetails?.subnetCount || 0;
 
-        if (chartData.value.length > 10) {
-          chartData.value.shift();
-        }
-      }
-    }
-  } catch (error) {
-    console.error("Error fetching subnet subscriptions", error);
+  const currentTime = new Date().getTime();
+
+  chartData.value.push([currentTime, subnetCount]);
+
+  if (chartData.value.length > 10) {
+    chartData.value.shift();
   }
 };
 
 onMounted(() => {
-  fetchSubnet();
-  pollingInterval = setInterval(fetchSubnet, 1000);
+  pollingInterval = setInterval(subnetData, 1000);
 });
 
 onBeforeUnmount(() => {

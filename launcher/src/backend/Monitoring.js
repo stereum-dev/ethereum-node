@@ -2803,6 +2803,8 @@ export class Monitoring {
       //   return p2pstatus;
       const subnetSubs = await this.getSubnetSubs();
       const rpcReceivedData = await this.nodeConnection.sshService.getRPCReceivedData();
+
+      console.log("rpcReceivedData ========>", rpcReceivedData);
       return {
         code: 0,
         info: "success: data successfully retrieved",
