@@ -1947,7 +1947,6 @@ export class Monitoring {
 
   // Open RPC tunnel(s) on request
   async openRpcTunnel(args) {
-    // Extract arguments
     var { force_fresh } = Object.assign(
       {
         force_fresh: false,
@@ -2804,7 +2803,6 @@ export class Monitoring {
       const subnetSubs = await this.getSubnetSubs();
       const rpcReceivedData = await this.nodeConnection.sshService.getRPCReceivedData();
 
-      console.log("rpcReceivedData ========>", rpcReceivedData);
       return {
         code: 0,
         info: "success: data successfully retrieved",

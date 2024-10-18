@@ -64,7 +64,9 @@ const extractPort = (url) => {
 const rpcToggle = async () => {
   nodeHeaderStore.rpcState = !nodeHeaderStore.rpcState;
   await (nodeHeaderStore.rpcState
-    ? ControlService.openRpcTunnel()
+    ? ControlService.openRpcTunnel(
+        setupStore?.selectedServicePairs?.executionService?.config?.serviceID
+      )
     : ControlService.closeRpcTunnel());
 };
 

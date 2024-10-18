@@ -50,7 +50,6 @@ export async function useRefreshNodeStats() {
           controlStore.rpcReceivedData = nodeStats.data.rpcReceivedData;
           controlStore.subnetSubs = nodeStats.data.subnetSubs;
         } catch (e) {}
-        // console.log("nodeStats ===>", controlStore.rpcReceivedData);
       }
     });
   } catch (err) {
